@@ -1,0 +1,5 @@
+jobs:
+  include:
+    - stage: feature build and test and merge into dev
+      script:
+      - 

@@ -1,5 +1,9 @@
 sudo: true
 dist: trusty
+language: node_js
+node_js:
+  - "iojs"
+  - "8"
 notifications:
   email: false
 jobs:

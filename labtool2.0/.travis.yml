@@ -1,0 +1,7 @@
+stages:
+  - build
+  - test
+  - automerge
+  - name: build feature
+    if: branch =~ ^[0-9]
+  
