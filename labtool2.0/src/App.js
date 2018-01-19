@@ -7,7 +7,10 @@ class App extends Component {
       <div className="App">
         <p> Hello world </p>
         <p> Hello from Inka </p>
-        });>
+        <p> Hello from Topi </p>
+        <p>Hello from Saku</p>
+        <p> Hello from Joona </p>
+
       </div>
     );
   }
