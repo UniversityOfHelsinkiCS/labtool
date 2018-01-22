@@ -2,26 +2,32 @@ sudo: true
 dist: trusty
 language: node_js
 node_js:
-  - "iojs"
   - "8"
 notifications:
   email: false
+before_install:
+  - cd labtool2.0
+  - npm config set spin false
+  - npm install -g npm
+install:
+  - npm install
 jobs:
   include:
     - stage: build feature
       script:
-      - echo "build stage"
-      - echo "tehdään testit"
+      - npm test
+      after_success:
+      - echo "onnistumisen jälkeen ei tehdä konttia, mutta jotain muuta ehkä? "
       if: branch =~ ^[0-9]
     - stage: development
       script:
-      - echo "dev build stage"
-      - echo "tehdään testit"
+      - npm test
+      after_success:
       - echo "tehdään development ympäristön kontti ja pushataan dockerhubiin"
       if: branch = dev
     - stage: master
       script:
-      - echo "master build stage"
-      - echo "ajetaan testit"
+      - npm test
+      after_success:
       - echo "tehdään master ympäristön kontti ja pushataan dockerhubiin"
       if: branch = master
