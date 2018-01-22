@@ -1,0 +1,35 @@
+sudo: true
+dist: trusty
+notifications:
+  email: false
+language: node_js
+node_js:
+  - "8"
+notifications:
+  email: false
+before_install:
+  - cd labtool2.0
+  - npm config set spin false
+  - npm install -g npm
+install:
+  - npm install
+jobs:
+  include:
+    - stage: build feature
+      script:
+      - npm test
+      after_success:
+      - echo "onnistumisen jalkeen ei tehda konttia, mutta jotain muuta ehka?"
+      if: branch =~ ^[0-9]
+    - stage: development
+      script:
+      - npm test
+      after_success:
+      - echo "tehdaan development ymparistan kontti ja pushataan dockerhubiin"
+      if: branch = dev
+    - stage: master
+      script:
+      - npm test
+      after_success:
+      - echo "tehdaan master ympariston kontti ja pushataan dockerhubiin"
+      if: branch = master
