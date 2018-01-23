@@ -4,4 +4,4 @@ WORKDIR /code
 RUN npm install
 ENV PATH=".:${PATH}"
 EXPOSE 3000
-CMD [ "npm", "run" ]
+CMD [ "react-scripts", "start" ]
