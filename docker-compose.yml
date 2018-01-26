@@ -1,0 +1,16 @@
+version: '3'
+services:
+  web:
+    image: labtool/labtool:dev
+    ports:
+     - "3000:3000"
+    depends_on:
+     - db
+  db:
+    environment:
+      PGDATA: /data/pg_db
+      POSTGRES_PASSWORD: example
+    volumes:
+      - /data/pg_db:/data/pg_db
+    image: postgres:10.1
+    restart: unless-stopped
