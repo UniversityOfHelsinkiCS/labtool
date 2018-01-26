@@ -28,7 +28,7 @@ module.exports = {
     "rules": {
         "no-console": 0,
         "indent": [
-            2,
+            "error",
             2
         ],
         "quotes": [
@@ -38,6 +38,8 @@ module.exports = {
         "semi": [
             2,
             "always"
-        ]
+        ],
+        "no-undef": 1,
+        "no-unused-vars": 1
     }
 };
