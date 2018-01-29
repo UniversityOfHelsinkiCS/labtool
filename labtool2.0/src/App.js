@@ -36,13 +36,15 @@ class App extends Component {
       password: this.state.password
     })
       .then(response => {
-        this.setState({
-          loggedIn: true,
+        if (!response.data.error) {
+          this.setState({ loggedIn: true })          
+        }
+        this.setState({          
           username: '',
           password: ''  
         })
       })
-      .catch(response => {
+      .catch(error => {
         this.setState({
           username: '',
           password: ''
