@@ -1,26 +1,23 @@
 import React from 'react';
 
-class Login extends React.Component {
-  render() {
+const Login = ({ postLogin, handlePasswordChange, handleUsernameChange }) => {
     return (
       <div className="Login">
         <p>Kirjautumissivu</p>
-        <form>
+        <form onSubmit={postLogin}>
           <label>
             Käyttäjätunnus: <br />
-            <input type="text" className="form-control" name="name" />
+            <input type="text" className="form-control" name="name" onChange={handleUsernameChange} />
           </label>
           <label> <br />
             Salasana: <br />
-            <input type="password" className="form-control" name="password" />
+            <input type="password" className="form-control" name="password" onChange={handlePasswordChange} />
           </label> <br />
-          <button onClick={this.props.login} >
-          Kirjaudu
-          </button>
+          <button type="submit">Kirjaudu</button>
         </form>
       </div>
     );
   }
-}
+
 
 export default Login;
