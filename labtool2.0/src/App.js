@@ -5,10 +5,23 @@ import Etusivu from './Etusivu'
 
 class App extends Component {
 
+  constructor(props) {
+    super(props);
+    this.state = { loggedIn: false};
+    this.changeUserState = this.changeUserState.bind(this);
+  }
+  changeUserState() {
+    this.setState({loggedIn: !this.state.loggedIn});
+  }
+
   render() {
+    let page = this.state.loggedIn ?
+    <Etusivu logout={this.changeUserState} />:
+    <Login login={this.changeUserState} />;
+
     return (
-      <div >
-        <Login />
+      <div className="App" >
+        {page}
       </div>
     );
   }
