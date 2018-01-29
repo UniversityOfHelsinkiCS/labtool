@@ -1,9 +1,11 @@
 import React from 'react';
 
 const Login = ({ postLogin, handlePasswordChange, handleUsernameChange }) => {
+    console.log(postLogin)
     return (
       <div className="Login">
         <p>Kirjautumissivu</p>
+        
         <form onSubmit={postLogin}>
           <label>
             Käyttäjätunnus: <br />

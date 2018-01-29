@@ -4,21 +4,33 @@ import Login from './Login';
 import Etusivu from './Etusivu'
 import axios from 'axios'
 
+const Notification = ({ message }) => {
+  if (message === null) {
+    return null
+  }
+  return (
+    <div className="error">
+      {message}
+    </div>
+  )
+}
+
 class App extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-        loggedIn: false,
-        username: '',
-        password: ''
-      };
+      loggedIn: false,
+      username: '',
+      password: '',
+      error: ''
+    };
 
     this.changeUserState = this.changeUserState.bind(this);
   }
-  
+
   changeUserState() {
-    this.setState({loggedIn: !this.state.loggedIn});
+    this.setState({ loggedIn: !this.state.loggedIn });
   }
 
   handlePasswordChange = (event) => {
@@ -30,6 +42,7 @@ class App extends Component {
   }
 
   postLogin = (event) => {
+    let retVal = 0
     event.preventDefault()
     axios.post('https://opetushallinto.cs.helsinki.fi/login', {
       username: this.state.username,
@@ -37,11 +50,18 @@ class App extends Component {
     })
       .then(response => {
         if (!response.data.error) {
-          this.setState({ loggedIn: true })          
+          this.setState({ loggedIn: true })
+          console.log('login onnistui :)')
+          this.setState({error: ''})
+          retVal = 1
+        } else {
+          this.setState({error: 'väärä tunnus tai salasana'})
+          console.log('väärä tunnus tai salasana')
+          
         }
-        this.setState({          
+        this.setState({
           username: '',
-          password: ''  
+          password: ''
         })
       })
       .catch(error => {
@@ -50,21 +70,24 @@ class App extends Component {
           password: ''
         })
       });
+      return retVal 
   }
 
   render() {
     let page = this.state.loggedIn ?
-    <Etusivu logout={this.changeUserState} />:
+      <Etusivu logout={this.changeUserState} /> :
+      
       <Login
         login={this.changeUserState}
         postLogin={this.postLogin}
         handlePasswordChange={this.handlePasswordChange}
         handleUsernameChange={this.handleUsernameChange}
       />
-
+    
     return (
       <div className="App" >
         {page}
+        <Notification message={this.state.error} />
       </div>
     );
   }
