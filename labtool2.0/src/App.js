@@ -53,9 +53,13 @@ class App extends Component {
   }
 
   render() {
+    const u = this.state.username
+    const p = this.state.password
     let page = this.state.loggedIn ?
     <Etusivu logout={this.changeUserState} />:
       <Login
+        username={u}
+        password={p}
         login={this.changeUserState}
         postLogin={this.postLogin}
         handlePasswordChange={this.handlePasswordChange}

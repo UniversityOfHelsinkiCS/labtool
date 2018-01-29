@@ -1,17 +1,17 @@
 import React from 'react';
 
-const Login = ({ postLogin, handlePasswordChange, handleUsernameChange }) => {
+const Login = ({ postLogin, handlePasswordChange, handleUsernameChange, username, password }) => {
     return (
       <div className="Login">
         <p>Kirjautumissivu</p>
         <form onSubmit={postLogin}>
           <label>
             Käyttäjätunnus: <br />
-            <input type="text" className="form-control" name="name" onChange={handleUsernameChange} />
+            <input value={username} type="text" className="form-control" name="name" onChange={handleUsernameChange} />
           </label>
           <label> <br />
             Salasana: <br />
-            <input type="password" className="form-control" name="password" onChange={handlePasswordChange} />
+            <input value={password} type="password" className="form-control" name="password" onChange={handlePasswordChange} />
           </label> <br />
           <button type="submit">Kirjaudu</button>
         </form>
