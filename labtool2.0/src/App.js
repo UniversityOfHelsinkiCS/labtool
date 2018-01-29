@@ -35,8 +35,18 @@ class App extends Component {
       username: this.state.username,
       password: this.state.password
     })
-      .then(this.changeUserState)
-      .catch(function (error) {
+      .then(response => {
+        this.setState({
+          loggedIn: true,
+          username: '',
+          password: ''  
+        })
+      })
+      .catch(response => {
+        this.setState({
+          username: '',
+          password: ''
+        })
       });
   }
 
