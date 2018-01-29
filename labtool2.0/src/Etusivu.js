@@ -14,6 +14,11 @@ class Etusivu extends Component {
             <tr><Kurssi nimi="Kurssi 3" /></tr>
           </td>
         </table>
+
+        <button 
+        onClick={this.props.logout}>
+        Kirjaudu ulos
+        </button>
       </div>
     );
   }

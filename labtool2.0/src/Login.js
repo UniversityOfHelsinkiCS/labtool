@@ -14,7 +14,9 @@ class Login extends React.Component {
             Salasana: <br />
             <input type="password" class="form-control" name="password" />
           </label> <br />
-          <input type="submit" value="Login" />
+          <button onClick={this.props.login} >
+          Kirjaudu
+          </button>
         </form>
       </div>
     );
