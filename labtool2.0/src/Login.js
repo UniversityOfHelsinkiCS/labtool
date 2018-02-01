@@ -1,8 +1,8 @@
 import React from 'react';
 
 const Login = ({ postLogin, handlePasswordChange, handleUsernameChange }) => {
-    console.log(postLogin)
-    return (
+    
+    return(
       <div className="Login">
         <p>Kirjautumissivu</p>
         

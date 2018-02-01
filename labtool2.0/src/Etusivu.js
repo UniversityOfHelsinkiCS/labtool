@@ -16,7 +16,7 @@ class Etusivu extends Component {
         </table>
 
         <button 
-        onClick={this.props.logout}>
+          onClick={this.props.logout}>
         Kirjaudu ulos
         </button>
       </div>
@@ -29,8 +29,8 @@ const Kurssi = ({ nimi }) => {
     <div>
       <p>{nimi}</p>
     </div>
-  )
-}
+  );
+};
 
 
 
