@@ -4,18 +4,18 @@ const Login = ({ postLogin, handlePasswordChange, handleUsernameChange }) => {
     
     return(
       <div className="Login">
-        <p>Kirjautumissivu</p>
+        <p>Login page</p>
         
         <form onSubmit={postLogin}>
           <label>
-            Käyttäjätunnus: <br />
+            Username: <br />
             <input type="text" className="form-control" name="name" onChange={handleUsernameChange} />
           </label>
           <label> <br />
-            Salasana: <br />
+            Password: <br />
             <input type="password" className="form-control" name="password" onChange={handlePasswordChange} />
           </label> <br />
-          <button type="submit">Kirjaudu</button>
+          <button type="submit">Login</button>
         </form>
       </div>
     );

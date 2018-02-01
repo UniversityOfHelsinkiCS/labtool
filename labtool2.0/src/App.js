@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
-import Login from './Login';
-import Etusivu from './Etusivu'
+import Login from './components/pages/LoginPage';
+import Etusivu from './components/pages/MainPage';
 import axios from 'axios'
 
 const Notification = ({ message }) => {
@@ -51,12 +51,12 @@ class App extends Component {
       .then(response => {
         if (!response.data.error) {
           this.setState({ loggedIn: true })
-          console.log('login onnistui :)')
+          console.log('You have succesfully logged in')
           this.setState({error: ''})
           retVal = 1
         } else {
-          this.setState({error: 'väärä tunnus tai salasana'})
-          console.log('väärä tunnus tai salasana')
+          this.setState({error: 'Wrong username or password'})
+          console.log('Wrong username or password')
           
         }
         this.setState({
