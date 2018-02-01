@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import './MainPage.css';
+import React, { Component } from 'react'
+import './MainPage.css'
 
 class MainPage extends Component {
 
@@ -15,7 +15,7 @@ class MainPage extends Component {
           Logout
         </button>
       </div>
-    );
+    )
   }
 }
 
@@ -23,4 +23,4 @@ class MainPage extends Component {
 
 
 
-export default MainPage;
+export default MainPage

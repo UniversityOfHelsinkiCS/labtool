@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import './App.css';
-import Login from './components/pages/LoginPage';
-import Etusivu from './components/pages/MainPage';
+import React, { Component } from 'react'
+import './App.css'
+import Login from './components/pages/LoginPage'
+import Etusivu from './components/pages/MainPage'
 import axios from 'axios'
 
 const Notification = ({ message }) => {
@@ -18,19 +18,19 @@ const Notification = ({ message }) => {
 class App extends Component {
 
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       loggedIn: false,
       username: '',
       password: '',
       error: ''
-    };
+    }
 
-    this.changeUserState = this.changeUserState.bind(this);
+    this.changeUserState = this.changeUserState.bind(this)
   }
 
   changeUserState() {
-    this.setState({ loggedIn: !this.state.loggedIn });
+    this.setState({ loggedIn: !this.state.loggedIn })
   }
 
   handlePasswordChange = (event) => {
@@ -69,8 +69,8 @@ class App extends Component {
           username: '',
           password: ''
         })
-      });
-      return retVal 
+      })
+    return retVal 
   }
 
   render() {
@@ -93,8 +93,8 @@ class App extends Component {
         {page}
         <Notification message={this.state.error} />
       </div>
-    );
+    )
   }
 }
 
-export default App;
+export default App
