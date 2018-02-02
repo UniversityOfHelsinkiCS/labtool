@@ -44,20 +44,27 @@ class App extends Component {
   postLogin = (event) => {
     let retVal = 0
     event.preventDefault()
-    axios.post('https://opetushallinto.cs.helsinki.fi/login', {
+    axios.post('http://localhost:3001/login', {
       username: this.state.username,
       password: this.state.password
     })
       .then(response => {
         if (!response.data.error) {
-          this.setState({ loggedIn: true })
-          console.log('You have succesfully logged in')
-          this.setState({error: ''})
-          retVal = 1
+          if (response.data.body.error !== 'wrong credentials') {
+            this.setState({loggedIn: true})
+            console.log('You have succesfully logged in')
+            this.setState({error: ''})
+
+            retVal = 1
+          } else {
+            this.setState({error: 'Wrong username or password'})
+            console.log('Wrong username or password')
+
+
+          }
         } else {
-          this.setState({error: 'Wrong username or password'})
-          console.log('Wrong username or password')
-          
+          this.setState({error: 'Server error'})
+          console.log('Server error')
         }
         this.setState({
           username: '',
