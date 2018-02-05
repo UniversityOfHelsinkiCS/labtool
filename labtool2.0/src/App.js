@@ -44,7 +44,7 @@ class App extends Component {
   postLogin = (event) => {
 
     event.preventDefault()
-    console.log("given password: ", this.state.password)
+    
     if (this.state.password !== "" && this.state.username !== "") {
       axios.post('https://opetushallinto.cs.helsinki.fi/login', {
         username: this.state.username,
