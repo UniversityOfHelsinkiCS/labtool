@@ -73,7 +73,7 @@ class App extends Component {
           })
         })
     } else {
-      this.setState({error: 'no username or password given'})
+      this.setState({error: 'No username or password given'}) 
     }
 
   }
