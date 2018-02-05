@@ -17,7 +17,7 @@
   "devDependencies": {},
   "scripts": {
     "start": "node app.js",
-    "migrate": "node node_modules/.bin/sequelize db:migrate",
+    "migrate": "node_modules/.bin/sequelize db:migrate",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
