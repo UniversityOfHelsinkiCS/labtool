@@ -26,11 +26,6 @@ class App extends Component {
       error: ''
     }
 
-    this.changeUserState = this.changeUserState.bind(this)
-  }
-
-  changeUserState() {
-    this.setState({ loggedIn: !this.state.loggedIn })
   }
 
   handlePasswordChange = (event) => {
@@ -39,6 +34,12 @@ class App extends Component {
 
   handleUsernameChange = (event) => {
     this.setState({ username: event.target.value })
+  }
+
+  postLogout = (event) => {
+    this.setState({
+      loggedIn: false
+    })
   }
 
   postLogin = (event) => {
@@ -61,14 +62,11 @@ class App extends Component {
         }
         this.setState({
           username: '',
-          password: ''
+          password: ''sada
         })
       })
       .catch(error => {
-        this.setState({
-          username: '',
-          password: ''
-        })
+        console.log("errror")
       });
     return retVal
   }
@@ -82,7 +80,6 @@ class App extends Component {
       <Login
         username={u}
         password={p}
-        login={this.changeUserState}
         postLogin={this.postLogin}
         handlePasswordChange={this.handlePasswordChange}
         handleUsernameChange={this.handleUsernameChange}

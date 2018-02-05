@@ -17,7 +17,6 @@ app.use(function (req, res, next) {
 
 // login
 app.post('/login', function (req, res) {
-  console.log(req.body.username)
   const request = require('request')
   const options = {
     method: 'post',
@@ -26,11 +25,11 @@ app.post('/login', function (req, res) {
     json: {'username': req.body.username, 'password': req.body.password}
   }
 
-  request(options, function (err, resp, body) {
+  const result = request(options, function (err, resp, body) {
 
-    console.log(body.error)
+    console.log(result.response.body.error)
 
-    if (body.error !== 'wrong credentials') {
+    if (result.response.body.error!== 'wrong credentials') {
       const User = require('./models').User
       User
         .findOrCreate({

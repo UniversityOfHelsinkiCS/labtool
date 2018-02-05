@@ -15,8 +15,7 @@ userRoutes.post('/', (req, res) => {
 })
 
 userRoutes.get('/all', (req, res) => {
-  res.send(User.findAll().toString())
-
+  User.findAll()
     .then(user => res.status(200).send(user))
     .catch(error => res.status(400).send(error))
 })
