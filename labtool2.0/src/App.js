@@ -44,8 +44,8 @@ class App extends Component {
   postLogin = (event) => {
 
     event.preventDefault()
-    
-    axios.post('https://opetushallinto.cs.helsinki.fi/login', {
+
+    axios.post('http://localhost:3001/login', {
       username: this.state.username,
       password: this.state.password
     })
