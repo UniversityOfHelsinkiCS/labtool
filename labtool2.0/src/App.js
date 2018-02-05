@@ -44,37 +44,35 @@ class App extends Component {
   postLogin = (event) => {
 
     event.preventDefault()
-    console.log("given password: ", this.state.password)
-    if (this.state.password !== "" && this.state.username !== "") {
-      axios.post('https://opetushallinto.cs.helsinki.fi/login', {
-        username: this.state.username,
-        password: this.state.password
+    console.log("username: ", this.state.username)
+    axios.post('https://opetushallinto.cs.helsinki.fi/login', {
+      username: this.state.username,
+      password: this.state.password
+    })
+      .then(response => {
+        if (!response.data.error) {
+          this.setState({ loggedIn: true })
+          console.log('You have succesfully logged in')
+          this.setState({ error: '' })
+          console.log('login info reset')
+          this.setState({
+            username: '',
+            password: ''
+          })
+
+        } else {
+          this.setState({ error: 'Wrong username or password' })
+          console.log('Wrong username or password')
+
+        }
+
       })
-        .then(response => {
-          if (!response.data.error) {
-            this.setState({ loggedIn: true })
-            console.log('You have succesfully logged in')
-            this.setState({ error: '' })
-
-          } else {
-            this.setState({ error: 'Wrong username or password' })
-            console.log('Wrong username or password')
-
-          }
-          this.setState({
-            username: '',
-            password: ''
-          })
+      .catch(error => {
+        this.setState({
+          username: '',
+          password: ''
         })
-        .catch(error => {
-          this.setState({
-            username: '',
-            password: ''
-          })
-        })
-    } else {
-      this.setState({error: 'No username or password given'}) 
-    }
+      })
 
   }
 
