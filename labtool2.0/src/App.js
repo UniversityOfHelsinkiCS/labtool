@@ -42,35 +42,40 @@ class App extends Component {
   }
 
   postLogin = (event) => {
-    let retVal = 0
+
     event.preventDefault()
-    axios.post('https://opetushallinto.cs.helsinki.fi/login', {
-      username: this.state.username,
-      password: this.state.password
-    })
-      .then(response => {
-        if (!response.data.error) {
-          this.setState({ loggedIn: true })
-          console.log('You have succesfully logged in')
-          this.setState({error: ''})
-          retVal = 1
-        } else {
-          this.setState({error: 'Wrong username or password'})
-          console.log('Wrong username or password')
-          
-        }
-        this.setState({
-          username: '',
-          password: ''
-        })
+    console.log("given password: ", this.state.password)
+    if (this.state.password !== "" && this.state.username !== "") {
+      axios.post('https://opetushallinto.cs.helsinki.fi/login', {
+        username: this.state.username,
+        password: this.state.password
       })
-      .catch(error => {
-        this.setState({
-          username: '',
-          password: ''
+        .then(response => {
+          if (!response.data.error) {
+            this.setState({ loggedIn: true })
+            console.log('You have succesfully logged in')
+            this.setState({ error: '' })
+
+          } else {
+            this.setState({ error: 'Wrong username or password' })
+            console.log('Wrong username or password')
+
+          }
+          this.setState({
+            username: '',
+            password: ''
+          })
         })
-      })
-    return retVal 
+        .catch(error => {
+          this.setState({
+            username: '',
+            password: ''
+          })
+        })
+    } else {
+      this.setState({error: 'no username or password given'})
+    }
+
   }
 
   render() {
@@ -78,7 +83,7 @@ class App extends Component {
     const p = this.state.password
     let page = this.state.loggedIn ?
       <Etusivu logout={this.changeUserState} /> :
-      
+
       <Login
         username={u}
         password={p}
@@ -87,7 +92,7 @@ class App extends Component {
         handlePasswordChange={this.handlePasswordChange}
         handleUsernameChange={this.handleUsernameChange}
       />
-    
+
     return (
       <div className="App" >
         {page}
