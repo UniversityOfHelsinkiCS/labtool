@@ -1,19 +1,19 @@
 import React from 'react'
 
 const Login = ({ postLogin, handlePasswordChange, handleUsernameChange }) => {
-    
-  return(
+
+  return (
     <div className="Login">
       <p>Login page</p>
-        
+
       <form onSubmit={postLogin}>
         <label>
-            Username: <br />
-          <input type="text" className="form-control" name="name" onChange={handleUsernameChange} />
+          Username: <br />
+          <input type="text" className="form-control" name="name" onChange={handleUsernameChange} required />
         </label>
         <label> <br />
-            Password: <br />
-          <input type="password" className="form-control" name="password" onChange={handlePasswordChange} />
+          Password: <br />
+          <input type="password" className="form-control" name="password" onChange={handlePasswordChange} required />
         </label> <br />
         <button type="submit">Login</button>
       </form>

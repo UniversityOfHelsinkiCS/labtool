@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import './App.css'
 import Login from './components/pages/LoginPage'
-import Etusivu from './components/pages/MainPage'
+import MainPage from './components/pages/MainPage'
 import axios from 'axios'
 
 const Notification = ({ message }) => {
@@ -45,36 +45,34 @@ class App extends Component {
 
     event.preventDefault()
     
-    if (this.state.password !== "" && this.state.username !== "") {
-      axios.post('https://opetushallinto.cs.helsinki.fi/login', {
-        username: this.state.username,
-        password: this.state.password
+    axios.post('https://opetushallinto.cs.helsinki.fi/login', {
+      username: this.state.username,
+      password: this.state.password
+    })
+      .then(response => {
+        if (!response.data.error) {
+          this.setState({ loggedIn: true })
+          console.log('You have succesfully logged in')
+          this.setState({ error: '' })
+          console.log('login info reset')
+          this.setState({
+            username: '',
+            password: ''
+          })
+
+        } else {
+          this.setState({ error: 'Wrong username or password' })
+          console.log('Wrong username or password')
+
+        }
+
       })
-        .then(response => {
-          if (!response.data.error) {
-            this.setState({ loggedIn: true })
-            console.log('You have succesfully logged in')
-            this.setState({ error: '' })
-
-          } else {
-            this.setState({ error: 'Wrong username or password' })
-            console.log('Wrong username or password')
-
-          }
-          this.setState({
-            username: '',
-            password: ''
-          })
+      .catch(error => {
+        this.setState({
+          username: '',
+          password: ''
         })
-        .catch(error => {
-          this.setState({
-            username: '',
-            password: ''
-          })
-        })
-    } else {
-      this.setState({error: 'No username or password given'}) 
-    }
+      })
 
   }
 
@@ -82,7 +80,7 @@ class App extends Component {
     const u = this.state.username
     const p = this.state.password
     let page = this.state.loggedIn ?
-      <Etusivu logout={this.changeUserState} /> :
+      <MainPage logout={this.changeUserState} /> :
 
       <Login
         username={u}
