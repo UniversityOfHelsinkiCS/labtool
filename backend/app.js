@@ -25,27 +25,30 @@ app.post('/login', function (req, res) {
   }
 
   request(options, function (err, resp, body) {
-    console.log(body)
-    res.send(body)
-    const User = require('./models').User
-    User
-      .findOrCreate({
-        where: {username: body.username},
-        defaults: {
-          firsts: body.first_names,
-          lastname: body.lastname,
-          studentnumber: body.student_number,
-        }
-      })
-      .spread((user, created) => {
-        console.log(user.get({
-          plain: true
-        }))
-        console.log(created)
-        res = user.get({plain: true})
-      })
 
+    console.log(body.error)
+
+    if (body.error !== 'wrong credentials') {
+      const User = require('./models').User
+      User
+        .findOrCreate({
+          where: {username: body.username},
+          defaults: {
+            firsts: body.first_names,
+            lastname: body.last_name,
+            studentnumber: body.student_number,
+          }
+        })
+        .spread((user, created) => {
+          console.log(user.get({
+            plain: true
+          }))
+          console.log(created)
+          res = user.get({plain: true})
+        })
+    }
   })
+
 
 
 })
