@@ -1,6 +1,8 @@
 let express = require('express')
 let app = express()
 let bodyParser = require('body-parser')
+
+
 app.use(bodyParser.json())
 // respond with "hello world" when a GET request is made to the homepage
 app.get('/', function (req, res) {
@@ -47,6 +49,7 @@ app.post('/login', function (req, res) {
           res = user.get({plain: true})
         })
     }
+    res.send(body)
   })
 
 

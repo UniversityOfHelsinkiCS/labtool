@@ -50,21 +50,14 @@ class App extends Component {
     })
       .then(response => {
         if (!response.data.error) {
-          if (response.data.body.error !== 'wrong credentials') {
-            this.setState({loggedIn: true})
-            console.log('You have succesfully logged in')
-            this.setState({error: ''})
-
-            retVal = 1
-          } else {
-            this.setState({error: 'Wrong username or password'})
-            console.log('Wrong username or password')
-
-
-          }
+          this.setState({ loggedIn: true })
+          console.log('login onnistui :)')
+          this.setState({error: ''})
+          retVal = 1
         } else {
-          this.setState({error: 'Server error'})
-          console.log('Server error')
+          this.setState({error: 'väärä tunnus tai salasana'})
+          console.log('väärä tunnus tai salasana')
+
         }
         this.setState({
           username: '',
@@ -76,8 +69,8 @@ class App extends Component {
           username: '',
           password: ''
         })
-      })
-    return retVal 
+      });
+    return retVal
   }
 
   render() {
