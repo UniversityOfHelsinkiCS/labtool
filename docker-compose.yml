@@ -5,12 +5,19 @@ services:
     ports:
      - "3000:3000"
     depends_on:
-     - db
+     - backend
+  backend:
+    environment:
+      TOKEN: "changeme"
+    image: labtool/labtool-backend:dev
+    ports:
+      - "3001:3000"
+    depends_on:
+      - db
   db:
     environment:
-      PGDATA: /data/pg_db
-      POSTGRES_PASSWORD: example
+      PGDATA: /data/pg10.1_labtool_2018k
     volumes:
-      - /data/pg_db:/data/pg_db
+      - /data/pg10.1_labtool_2018k:/data/pg10.1_labtool_2018k
     image: postgres:10.1
     restart: unless-stopped
