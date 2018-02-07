@@ -9,9 +9,10 @@ services:
   backend:
     environment:
       TOKEN: "changeme"
+      ENV: "test"
     image: labtool/labtool-backend:dev
     ports:
-      - "3001:3000"
+      - "3001:3001"
     depends_on:
       - db
   db:
