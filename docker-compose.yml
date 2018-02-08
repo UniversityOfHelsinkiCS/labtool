@@ -1,11 +1,10 @@
-version: '3'
+version: '2'
 services:
   web:
     environment:
-      - BACKEND_LOGIN_URL=https://svm-61.cs.helsinki.fi/labtool-backend/
-      - PUBLIC_HOST=svm-61.cs.helsinki.fi
-      - PUBLIC_PATH=/labtool
-      - PUBLIC_URL=https://svm-61.cs.helsinki.fi/labtool/...
+      - BACKEND_LOGIN_URL=https://svm-61.cs.helsinki.fi/labtool-backend/login
+      - PUBLIC_URL=https://svm-61.cs.helsinki.fi/labtool/
+      - NODE_ENV=production
     image: labtool/labtool:test
     ports:
      - "6000:3000"
@@ -15,7 +14,7 @@ services:
   backend:
     environment:
       - TOKEN=changeme
-      - NODE_ENV=test
+      - NODE_ENV=production
     image: labtool/labtool-backend:test
     ports:
       - "6001:3001"
