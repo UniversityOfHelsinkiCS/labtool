@@ -7,4 +7,4 @@ RUN npm run build
 RUN npm install -g serve
 ENV PATH=".:${PATH}"
 EXPOSE 3000
-CMD [ "serve", "-s", "build" ]
+CMD [ "serve", "-p", "3000", "-s", "build" ]
