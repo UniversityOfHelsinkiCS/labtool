@@ -4,6 +4,7 @@ WORKDIR /code
 COPY ./labtool2.0/package.json ../
 RUN npm install
 RUN npm run build
+RUN npm install -g serve
 ENV PATH=".:${PATH}"
 EXPOSE 3000
-CMD [ "npm", "start" ]
+CMD [ "serve", "-s", "build" ]
