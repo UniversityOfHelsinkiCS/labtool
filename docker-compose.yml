@@ -1,6 +1,8 @@
 version: '3'
 services:
   web:
+    environment:
+      BACKEND_LOGIN_URL: "http://svm-61.cs.helsinki.fi/labtool-backend/"
     image: labtool/labtool:dev
     ports:
      - "3000:3000"
@@ -9,7 +11,7 @@ services:
   backend:
     environment:
       TOKEN: "changeme"
-      ENV: "test"
+      NODE_ENV: "test"
     image: labtool/labtool-backend:dev
     ports:
       - "3001:3001"
