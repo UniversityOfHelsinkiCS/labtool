@@ -44,7 +44,7 @@ class App extends Component {
   postLogin = (event) => {
 
     event.preventDefault()
-    let backend = process.env.BACKEND_LOGIN_URL || 'localhost:3001/'
+    let backend = `${process.env.BACKEND_LOGIN_URL}` || 'localhost:3001/'
 
     axios.post('http://'+backend+'/login', {
       username: this.state.username,
