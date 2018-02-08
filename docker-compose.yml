@@ -1,16 +1,30 @@
 version: '3'
 services:
   web:
-    image: labtool/labtool:dev
+    environment:
+      - BACKEND_LOGIN_URL=https://svm-61.cs.helsinki.fi/labtool-backend/
+      - PUBLIC_HOST=svm-61.cs.helsinki.fi
+      - PUBLIC_PATH=/labtool
+      - PUBLIC_URL=https://svm-61.cs.helsinki.fi/labtool/...
+    image: labtool/labtool:test
     ports:
-     - "3000:3000"
+     - "6000:3000"
     depends_on:
+     - backend
      - db
+  backend:
+    environment:
+      - TOKEN=changeme
+      - NODE_ENV=test
+    image: labtool/labtool-backend:test
+    ports:
+      - "6001:3001"
+    depends_on:
+      - db
   db:
     environment:
-      PGDATA: /data/pg_db
-      POSTGRES_PASSWORD: example
+      PGDATA: /data/pg10.1_labtool_2018k
     volumes:
-      - /data/pg_db:/data/pg_db
+      - /data/pg10.1_labtool_2018k:/data/pg10.1_labtool_2018k
     image: postgres:10.1
     restart: unless-stopped
