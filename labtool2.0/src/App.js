@@ -45,7 +45,7 @@ class App extends Component {
 
     event.preventDefault()
 
-    let backend = '/backend/login' || 'https://localhost:3001/login'
+    let backend = '/labtool-backend/login' || 'https://localhost:3001/login'
 
     axios.post(backend, {
       username: this.state.username,
