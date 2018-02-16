@@ -1,24 +1,25 @@
 import React from 'react'
-import './RegisterPage.css'
+
 
 const Register = () => {
 
     return (
-      <div className="Register"  style={{textAlignVertical: "center",textAlign: "center",}}>
+      <div className="Register" style={{textAlignVertical: "center",textAlign: "center",}} >
         <h3>Register for TiraLabra</h3>
   
         <form >
-          <label>
-            Github link: <br />
-            <input type="text" className="form-control" name="github"  required />
+          <label >
+            GitHub link: <br/>
+            <input type="url" className="form-control" name="github"  required={true}  />
           </label>
-          <label> <br />
+          <br />
+          <label> 
         
-            Project name: <br />
+            Project name:  <br/>
             <input type="text" className="form-control" name="name" required />
           </label> <br />
-         
-          <button type="submit">Submit</button>
+        
+          <button  type="submit">Submit</button>
         </form>
       </div>
     )
