@@ -1,7 +1,7 @@
-
+'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('course_instances', {
+    return queryInterface.createTable('Course_instances', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -13,27 +13,21 @@ module.exports = {
         type: Sequelize.STRING
       },
       start: {
-        allowNull: false,
         type: Sequelize.DATE
       },
       end: {
-        allowNull: false,
         type: Sequelize.DATE
       },
       active: {
-        allowNull: false,
         type: Sequelize.BOOLEAN
       },
       week_amount: {
-        allowNull: false,
         type: Sequelize.INTEGER
       },
       week_max_points: {
-        allowNull: false,
         type: Sequelize.INTEGER
       },
       current_week: {
-        allowNull: false,
         type: Sequelize.INTEGER
       },
       createdAt: {
@@ -43,10 +37,19 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
-      }
+      },
+      courseId:{
+        type: Sequelize.INTEGER,
+        onDelete: 'CASCADE',
+        references: {
+          model: 'Courses',
+          key: 'id',
+          as: 'courseId',
+        },
+      },
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('course_instances');
+    return queryInterface.dropTable('Course_instances');
   }
 };

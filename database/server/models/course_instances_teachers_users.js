@@ -1,8 +1,8 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  var course_instances_teachers_users = sequelize.define('course_instances_teachers_users', {}, {});
-  course_instances_teachers_users.associate = function(models) {
+  var Course_instances_teachers_users = sequelize.define('Course_instances_teachers_users', {}, {});
+  Course_instances_teachers_users.associate = function(models) {
     // associations can be defined here
   };
-  return course_instances_teachers_users;
+  return Course_instances_teachers_users;
 };

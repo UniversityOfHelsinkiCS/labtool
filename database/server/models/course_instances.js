@@ -1,6 +1,6 @@
-
+'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const course_instances = sequelize.define('course_instances', {
+  var Course_instances = sequelize.define('Course_instances', {
     name: DataTypes.STRING,
     start: DataTypes.DATE,
     end: DataTypes.DATE,
@@ -9,12 +9,12 @@ module.exports = (sequelize, DataTypes) => {
     week_max_points: DataTypes.INTEGER,
     current_week: DataTypes.INTEGER
   }, {});
-  course_instances.associate = function (models) {
+  Course_instances.associate = function(models) {
     // associations can be defined here
-    course_instances.belongsTo(models.courses, {
-      foreignKey: 'courseId',
+    Course_instances.belongsTo(models.Course,{
+      foeignKey: 'courseId',
       onDelete: 'CASCADE',
     })
   };
-  return course_instances;
+  return Course_instances;
 };

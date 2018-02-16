@@ -5,5 +5,6 @@ module.exports = (app) => {
     message: 'Welcome to the COURSES API!',
   }));
 
-  app.post('/api/courses', todosController.create);
+  app.post('/api/courses', coursesController.create);
+  app.get('/api/courses', coursesController.list);
 };
