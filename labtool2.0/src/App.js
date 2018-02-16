@@ -53,10 +53,14 @@ class App extends Component {
   }
 
   postLogin = (event) => {
-
     event.preventDefault()
-
-    axios.post('http://localhost:3001/login', {
+    let backend
+    if (process.env.NODE_ENV === "development") {
+      backend = 'http://localhost:3001/login'
+    } else {
+      backend = '/labtool-backend/login'
+    }
+    axios.post(backend, {
       username: this.state.username,
       password: this.state.password
     })
