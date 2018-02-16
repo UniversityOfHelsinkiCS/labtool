@@ -3,6 +3,7 @@ import './App.css'
 import Login from './components/pages/LoginPage'
 import MainPage from './components/pages/MainPage'
 import axios from 'axios'
+import SetEmail from './components/pages/SetEmail'
 
 const Notification = ({ message }) => {
   if (message === null) {
@@ -22,6 +23,8 @@ class App extends Component {
     this.state = {
       username: '',
       password: '',
+      email: '',
+      firstLogin: false,
       error: '',
       user: null,
       token: null
@@ -44,12 +47,20 @@ class App extends Component {
     this.setState({ username: event.target.value })
   }
 
+  handleEmailChange = (event) => {
+    this.setState({ email: event.target.value })
+  }
+
   postLogout = (event) => {
     window.localStorage.removeItem('loggedUser')
     this.setState({ 
       user: null,
       token: null
     })
+  }
+
+  postEmail = (event) => {
+
   }
 
   postLogin = (event) => {
@@ -77,6 +88,13 @@ class App extends Component {
             user: response.data
           })
           window.localStorage.setItem('loggedUser', JSON.stringify(response.data))
+
+          if(response.data.created) {
+            this.setState({ firstLogin: true })
+            //Enter new email
+
+            //Update new email to DB
+          }
         } else {
           this.setState({ error: 'Wrong username or password' })
           console.log('Wrong username or password')
@@ -96,16 +114,18 @@ class App extends Component {
   render() {
     const u = this.state.username
     const p = this.state.password
-    let page = this.state.user ?
-      <MainPage logout={this.postLogout} /> :
+    this.state.firstLogin ? 
+      <SetEmail postEmail={this.postEmail} handleEmailChange={this.handleEmailChange} /> :
+      let page = this.state.user ?
+        <MainPage logout={this.postLogout} /> :
 
-      <Login
-        username={u}
-        password={p}
-        postLogin={this.postLogin}
-        handlePasswordChange={this.handlePasswordChange}
-        handleUsernameChange={this.handleUsernameChange}
-      />
+        <Login
+          username={u}
+          password={p}
+          postLogin={this.postLogin}
+          handlePasswordChange={this.handlePasswordChange}
+          handleUsernameChange={this.handleUsernameChange}
+        />
 
     return (
       <div className="App" >
