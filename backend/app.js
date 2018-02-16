@@ -60,27 +60,17 @@ app.post('/login', function (req, res) {
           console.log(created)
           const token = jwt.sign({ username: user.username, id: user.id }, process.env.SECRET)
 
-
-          jwt.verify(token, process.env.SECRET, function (err, decoded) {
-            if (err) {
-              console.log(err)
-              return ({ error: 'token verification failed' })
-            } else {
-              console.log(decoded)
-              console.log(decoded.id)
-              console.log(decoded.username)
-              return decoded
-            }
-          })
-
-          res.send({
+          res.status(200).send({
             body,
             token
           })
         })
     
+    } else {
+      res.status(401).send({
+        body
+      })
     }
-
   })
 })
 
