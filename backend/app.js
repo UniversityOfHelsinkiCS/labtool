@@ -2,6 +2,8 @@ let express = require('express')
 let app = express()
 let bodyParser = require('body-parser')
 
+require('dotenv').config()
+
 app.use(bodyParser.json())
 // respond with "hello world" when a GET request is made to the homepage
 app.get('/', function (req, res) {
