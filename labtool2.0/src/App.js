@@ -20,18 +20,21 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      loggedIn: false,
       username: '',
       password: '',
-      error: ''
+      error: '',
+      user: null,
+      token: null
     }
-
-    this.changeUserState = this.changeUserState.bind(this)
   }
 
-  changeUserState() {
-    this.setState({ loggedIn: !this.state.loggedIn })
-  }
+  componentWillMount() {
+    const loggedUserJSON = window.localStorage.getItem('loggedUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      this.setState({ user, token: user.token })
+    }
+  } 
 
   handlePasswordChange = (event) => {
     this.setState({ password: event.target.value })
@@ -39,6 +42,14 @@ class App extends Component {
 
   handleUsernameChange = (event) => {
     this.setState({ username: event.target.value })
+  }
+
+  postLogout = (event) => {
+    window.localStorage.removeItem('loggedUser')
+    this.setState({ 
+      user: null,
+      token: null
+    })
   }
 
   postLogin = (event) => {
@@ -55,15 +66,17 @@ class App extends Component {
     })
       .then(response => {
         if (!response.data.error) {
-          this.setState({ loggedIn: true })
           console.log('You have succesfully logged in')
           this.setState({ error: '' })
           console.log('login info reset')
+          console.log(response.data.token)
           this.setState({
             username: '',
-            password: ''
+            password: '',
+            token: response.data.token,
+            user: response.data
           })
-
+          window.localStorage.setItem('loggedUser', JSON.stringify(response.data))
         } else {
           this.setState({ error: 'Wrong username or password' })
           console.log('Wrong username or password')
@@ -83,13 +96,12 @@ class App extends Component {
   render() {
     const u = this.state.username
     const p = this.state.password
-    let page = this.state.loggedIn ?
-      <MainPage logout={this.changeUserState} /> :
+    let page = this.state.user ?
+      <MainPage logout={this.postLogout} /> :
 
       <Login
         username={u}
         password={p}
-        login={this.changeUserState}
         postLogin={this.postLogin}
         handlePasswordChange={this.handlePasswordChange}
         handleUsernameChange={this.handleUsernameChange}
