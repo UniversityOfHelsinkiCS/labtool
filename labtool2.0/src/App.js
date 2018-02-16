@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import './App.css'
 import Login from './components/pages/LoginPage'
-import Etusivu from './components/pages/MainPage'
+import MainPage from './components/pages/MainPage'
 import axios from 'axios'
 
 const Notification = ({ message }) => {
@@ -20,18 +20,21 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      loggedIn: false,
       username: '',
       password: '',
-      error: ''
+      error: '',
+      user: null,
+      token: null
     }
-
-    this.changeUserState = this.changeUserState.bind(this)
   }
 
-  changeUserState() {
-    this.setState({ loggedIn: !this.state.loggedIn })
-  }
+  componentWillMount() {
+    const loggedUserJSON = window.localStorage.getItem('loggedUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      this.setState({ user, token: user.token })
+    }
+  } 
 
   handlePasswordChange = (event) => {
     this.setState({ password: event.target.value })
@@ -41,53 +44,64 @@ class App extends Component {
     this.setState({ username: event.target.value })
   }
 
+  postLogout = (event) => {
+    window.localStorage.removeItem('loggedUser')
+    this.setState({ 
+      user: null,
+      token: null
+    })
+  }
+
   postLogin = (event) => {
-
     event.preventDefault()
-    
-    if (this.state.password !== "" && this.state.username !== "") {
-      axios.post('https://opetushallinto.cs.helsinki.fi/login', {
-        username: this.state.username,
-        password: this.state.password
-      })
-        .then(response => {
-          if (!response.data.error) {
-            this.setState({ loggedIn: true })
-            console.log('You have succesfully logged in')
-            this.setState({ error: '' })
-
-          } else {
-            this.setState({ error: 'Wrong username or password' })
-            console.log('Wrong username or password')
-
-          }
-          this.setState({
-            username: '',
-            password: ''
-          })
-        })
-        .catch(error => {
-          this.setState({
-            username: '',
-            password: ''
-          })
-        })
+    let backend
+    if (process.env.NODE_ENV === "development") {
+      backend = 'http://localhost:3001/login'
     } else {
-      this.setState({error: 'No username or password given'}) 
+      backend = '/labtool-backend/login'
     }
+    axios.post(backend, {
+      username: this.state.username,
+      password: this.state.password
+    })
+      .then(response => {
+        if (!response.data.error) {
+          console.log('You have succesfully logged in')
+          this.setState({ error: '' })
+          console.log('login info reset')
+          console.log(response.data.token)
+          this.setState({
+            username: '',
+            password: '',
+            token: response.data.token,
+            user: response.data
+          })
+          window.localStorage.setItem('loggedUser', JSON.stringify(response.data))
+        } else {
+          this.setState({ error: 'Wrong username or password' })
+          console.log('Wrong username or password')
+
+        }
+
+      })
+      .catch(error => {
+        this.setState({
+          username: '',
+          password: ''
+        })
+      })
 
   }
 
   render() {
     const u = this.state.username
     const p = this.state.password
-    let page = this.state.loggedIn ?
-      <Etusivu logout={this.changeUserState} /> :
+    let page = this.state.user ?
+      <MainPage logout={this.postLogout} /> :
 
       <Login
         username={u}
         password={p}
-        login={this.changeUserState}
         postLogin={this.postLogin}
         handlePasswordChange={this.handlePasswordChange}
         handleUsernameChange={this.handleUsernameChange}
