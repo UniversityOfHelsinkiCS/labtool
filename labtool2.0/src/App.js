@@ -98,7 +98,6 @@ class App extends Component {
       <Login
         username={u}
         password={p}
-        login={this.changeUserState}
         postLogin={this.postLogin}
         handlePasswordChange={this.handlePasswordChange}
         handleUsernameChange={this.handleUsernameChange}
