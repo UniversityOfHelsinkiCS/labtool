@@ -16,4 +16,10 @@ module.exports = (app) => {
   app.delete('/api/courses/:courseId', coursesController.destroy)
 
   app.put('/api/courses/:courseId', coursesController.update)
+
+  app.put('/api/courses/:courseId/instances/:courseInstanceId', courseInstanceController.update)
+
+  app.delete(
+      '/api/courses/:courseId/instances/:courseInstanceId', courseInstanceController.destroy
+  )
 };
