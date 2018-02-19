@@ -59,9 +59,18 @@ app.post('/login', function (req, res) {
           }
         })
         .spread((user, created) => {
+
+          if (!(user.firsts === body.first_names && user.lastname === body.last_name)) {
+            User.update(
+              { firsts: body.first_names, lastname: body.last_name },
+              { where: { id: user.id } }
+            )
+          }
+
           console.log(user.get({
             plain: true
           }))
+
           const token = jwt.sign({ username: user.username, id: user.id }, process.env.SECRET)
           const returnedUser = {
             email: user.email,
