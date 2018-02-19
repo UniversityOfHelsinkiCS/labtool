@@ -113,7 +113,7 @@ class App extends Component {
             token: response.data.token,
             user: response.data.body
           })
-          window.localStorage.setItem('loggedUser', JSON.stringify(response.data))
+          window.localStorage.setItem('loggedUser', JSON.stringify(response.data.body))
 
           if(response.data.created) {
             this.setState({ firstLogin: true })

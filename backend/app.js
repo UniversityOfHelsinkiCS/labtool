@@ -54,7 +54,8 @@ app.post('/login', function (req, res) {
           defaults: {
             firsts: body.first_names,
             lastname: body.last_name,
-            studentnumber: body.student_number
+            studentnumber: body.student_number,
+            email: ''
           }
         })
         .spread((user, created) => {
