@@ -1,4 +1,3 @@
-'use strict'
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('Course_instances_teachers_users', {

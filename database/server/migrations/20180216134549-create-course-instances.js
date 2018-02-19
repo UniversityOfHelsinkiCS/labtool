@@ -1,4 +1,3 @@
-'use strict'
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('Course_instances', {
@@ -41,7 +40,7 @@ module.exports = {
       courseId:{
         type: Sequelize.INTEGER,
         onDelete: 'CASCADE',
-        references: {
+        references:{
           model: 'Courses',
           key: 'id',
           as: 'courseId',
