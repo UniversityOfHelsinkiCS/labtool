@@ -39,6 +39,11 @@ class App extends Component {
     }
   } 
 
+  handleFirstLoginFalse = (event) => {
+    this.setState({ firstLogin: false })
+  }
+
+
   handlePasswordChange = (event) => {
     this.setState({ password: event.target.value })
   }
@@ -137,7 +142,7 @@ class App extends Component {
     const p = this.state.password
     let page  = null
     page = this.state.firstLogin ? 
-      <SetEmail postEmail={this.postEmail} handleEmailChange={this.handleEmailChange} /> :
+      <SetEmail postEmail={this.postEmail} handleEmailChange={this.handleEmailChange} handleFirstLoginFalse={this.handleFirstLoginFalse} /> :
       page = this.state.user ?
         <MainPage logout={this.postLogout} /> :
 

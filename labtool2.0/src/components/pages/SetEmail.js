@@ -1,6 +1,6 @@
 import React from 'react'
 
-const SetEmail = ({ postEmail, handleEmailChange }) => {
+const SetEmail = ({ postEmail, handleEmailChange, handleFirstLoginFalse }) => {
 
   return (
     <div className="Email">
@@ -12,6 +12,8 @@ const SetEmail = ({ postEmail, handleEmailChange }) => {
         </label>
         <button type="submit">Submit</button>
       </form>
+
+      <button onClick={handleFirstLoginFalse}>Cancel</button>
     </div>
   )
 }
