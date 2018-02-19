@@ -16,17 +16,23 @@ userRoutes.post('/', (req, res) => {
 })
 
 userRoutes.put('/update', (req, res) => {
-  console.log('tadaa')
   jwt.verify(req.token, process.env.SECRET, function (err, decoded) {
     if (err) {
-      console.log(err)
-      return ({ error: 'token verification failed' })
+      const error = ({ error: 'token verification failed' })
+      res.status(400).send(error)
     } else {
-      console.log(decoded)
-      console.log(decoded.id)
-      console.log(decoded.username)
-      return decoded
-    }
+      if (!req.body.email || req.body.email.length < 1) {
+        const error = ({ error: 'Email was too short... Implementing valid email check can be done here' })
+        res.status(400).send(error)
+      } else {
+        User.update(
+          { email: req.body.email },
+          { where: { id: decoded.id } }
+        )
+          .then(user => res.status(201).send(user))
+          .catch(error => res.status(400).send(error))
+      }
+    }    
   })
 })
 
