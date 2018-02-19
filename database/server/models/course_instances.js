@@ -14,6 +14,6 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'courseId',
       onDelete: 'CASCADE',
     })
-  };
-  return Course_instances;
-};
+  }
+  return Course_instances
+}

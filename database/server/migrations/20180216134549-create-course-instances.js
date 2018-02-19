@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('Course_instances', {
@@ -47,9 +47,9 @@ module.exports = {
           as: 'courseId',
         },
       },
-    });
+    })
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Course_instances');
+    return queryInterface.dropTable('Course_instances')
   }
-};
+}

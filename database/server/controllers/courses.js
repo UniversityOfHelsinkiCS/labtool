@@ -1,4 +1,4 @@
-const Course = require('../models').Course;
+const Course = require('../models').Course
 const CourseInstance = require('../models').Course_instances
 
 module.exports = {
@@ -10,7 +10,7 @@ module.exports = {
         label: req.body.label
       })
       .then(todo => res.status(201).send(todo))
-      .catch(error => res.status(400).send(error));
+      .catch(error => res.status(400).send(error))
   },
 
   retrieve(req, res) {
@@ -43,7 +43,7 @@ module.exports = {
         }]
       })
       .then(course => res.status(200).send(course))
-      .catch(error => res.status(400).send(error));
+      .catch(error => res.status(400).send(error))
   },
   destroy(req, res) {
     return Course
@@ -84,4 +84,4 @@ module.exports = {
       })
       .catch((error) => res.status(400).send(error))
   }
-};
+}
