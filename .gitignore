@@ -9,6 +9,11 @@ coverage/
 # production
 build/
 
+#Enviroment variables
+.env
+/.env
+.env/
+
 # misc
 .DS_Store
 .env.local

@@ -1,5 +1,6 @@
 const User = require('../models').User
 const userRoutes = require('express').Router()
+const jwt = require('jsonwebtoken')
 
 userRoutes.post('/', (req, res) => {
   User
@@ -12,6 +13,39 @@ userRoutes.post('/', (req, res) => {
     })
     .then(user => res.status(201).send(user))
     .catch(error => res.status(400).send(error))
+})
+
+userRoutes.put('/update', (req, res) => {
+  jwt.verify(req.token, process.env.SECRET, function (err, decoded) {
+    if (err) {
+      const error = ({ error: 'token verification failed' })
+      res.status(400).send(error)
+    } else {
+      if (!req.body.email || req.body.email.length < 1) {
+        const error = ({ error: 'Email was too short... Implementing valid email check can be done here' })
+        res.status(400).send(error)
+      } else {
+        User.update(
+          { email: req.body.email },
+          { where: { id: decoded.id } }
+        )
+          .then(
+            User.findById(decoded.id)
+              .then(user => {
+                const returnedUser = {
+                  email: user.email,
+                  firsts: user.firsts,
+                  lastname: user.lastname,
+                  studentnumber: user.studentnumber,
+                  username: user.username
+                }
+                res.status(201).send(returnedUser)
+              })
+              .catch(error => res.status(400).send(error))
+          )
+      }
+    }
+  })
 })
 
 userRoutes.get('/all', (req, res) => {
