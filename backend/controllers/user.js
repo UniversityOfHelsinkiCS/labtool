@@ -1,5 +1,6 @@
 const User = require('../models').User
 const userRoutes = require('express').Router()
+const jwt = require('jsonwebtoken')
 
 userRoutes.post('/', (req, res) => {
   User
@@ -12,6 +13,21 @@ userRoutes.post('/', (req, res) => {
     })
     .then(user => res.status(201).send(user))
     .catch(error => res.status(400).send(error))
+})
+
+userRoutes.put('/update', (req, res) => {
+  console.log('tadaa')
+  jwt.verify(req.token, process.env.SECRET, function (err, decoded) {
+    if (err) {
+      console.log(err)
+      return ({ error: 'token verification failed' })
+    } else {
+      console.log(decoded)
+      console.log(decoded.id)
+      console.log(decoded.username)
+      return decoded
+    }
+  })
 })
 
 userRoutes.get('/all', (req, res) => {

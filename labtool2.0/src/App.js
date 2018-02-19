@@ -63,14 +63,14 @@ class App extends Component {
     event.preventDefault()
     let backend
     if (process.env.NODE_ENV === "development") {
-      backend = 'http://localhost:3001/user'
+      backend = 'http://localhost:3001/users/update'
     } else {
-      backend = '/labtool-backend/user/'
+      backend = '/labtool-backend/users/update'
     }
     const userWithEmail = {...this.state.user, email: this.state.email}
     console.log(userWithEmail)
     const config = {headers: { 'Authorization': 'bearer ' + this.state.token }}
-    axios.post(backend, userWithEmail, config )
+    axios.put(backend, userWithEmail, config )
       .then(response => {
         console.log(config)
         console.log('You have updated email')
