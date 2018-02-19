@@ -29,10 +29,22 @@ userRoutes.put('/update', (req, res) => {
           { email: req.body.email },
           { where: { id: decoded.id } }
         )
-          .then(res.status(201).send())
-          .catch(error => res.status(400).send(error))
+          .then(
+            User.findById(decoded.id)
+              .then(user => {
+                const returnedUser = {
+                  email: user.email,
+                  firsts: user.firsts,
+                  lastname: user.lastname,
+                  studentnumber: user.studentnumber,
+                  username: user.username
+                }
+                res.status(201).send(returnedUser)
+              })
+              .catch(error => res.status(400).send(error))
+          )
       }
-    }    
+    }
   })
 })
 

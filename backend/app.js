@@ -63,9 +63,15 @@ app.post('/login', function (req, res) {
             plain: true
           }))
           const token = jwt.sign({ username: user.username, id: user.id }, process.env.SECRET)
-
+          const returnedUser = {
+            email: user.email,
+            firsts: user.firsts,
+            lastname: user.lastname,
+            studentnumber: user.studentnumber,
+            username: user.username            
+          }
           res.status(200).send({
-            body,
+            returnedUser,
             token,
             created
           })

@@ -35,7 +35,7 @@ class App extends Component {
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
-      this.setState({ user, token: user.token })
+      this.setState({ user: user.returnedUser, token: user.token })
     }
   } 
 
@@ -43,6 +43,12 @@ class App extends Component {
     this.setState({ firstLogin: false })
   }
 
+  handleFirstLoginTrue = (event) => {
+    this.setState({ 
+      firstLogin: true,
+      email: this.state.user.email
+    })
+  }
 
   handlePasswordChange = (event) => {
     this.setState({ password: event.target.value })
@@ -82,8 +88,9 @@ class App extends Component {
         this.setState({ 
           email: '',
           firstLogin: false,
-          user: userWithEmail
+          user: response.returnedUser
         })
+        window.localStorage.setItem('loggedUser', JSON.stringify(response.data))
         console.log('state has been cleared and user state refreshed')
       })
       .catch(error => this.setState(error))
@@ -111,9 +118,9 @@ class App extends Component {
             username: '',
             password: '',
             token: response.data.token,
-            user: response.data.body
+            user: response.data.returnedUser
           })
-          window.localStorage.setItem('loggedUser', JSON.stringify(response.data.body))
+          window.localStorage.setItem('loggedUser', JSON.stringify(response.data))
 
           if(response.data.created) {
             this.setState({ firstLogin: true })
@@ -142,9 +149,9 @@ class App extends Component {
     const p = this.state.password
     let page  = null
     page = this.state.firstLogin ? 
-      <SetEmail postEmail={this.postEmail} handleEmailChange={this.handleEmailChange} handleFirstLoginFalse={this.handleFirstLoginFalse} /> :
+      <SetEmail postEmail={this.postEmail} handleEmailChange={this.handleEmailChange} handleFirstLoginFalse={this.handleFirstLoginFalse} email={this.state.email} /> :
       page = this.state.user ?
-        <MainPage logout={this.postLogout} /> :
+        <MainPage logout={this.postLogout} handleFirstLoginTrue={this.handleFirstLoginTrue} /> :
 
         <Login
           username={u}
