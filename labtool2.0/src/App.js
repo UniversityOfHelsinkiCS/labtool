@@ -123,9 +123,6 @@ class App extends Component {
 
           if(response.data.created) {
             this.setState({ firstLogin: true })
-            //Enter new email
-
-            //Update new email to DB
           }
         } else {
           this.setState({ error: 'Wrong username or password' })
