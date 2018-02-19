@@ -1,4 +1,3 @@
-'use strict'
 module.exports = (sequelize, DataTypes) => {
   var Users = sequelize.define('Users', {
     username: DataTypes.STRING,
@@ -7,8 +6,11 @@ module.exports = (sequelize, DataTypes) => {
     lastname: DataTypes.STRING,
     token: DataTypes.STRING
   }, {})
-  Users.associate = function(models) {
-    // associations can be defined here
+  Users.associate = (models) => {
+    Users.hasMany(models.Course_instances_students_users, {
+      foreignKey: 'userId',
+      as: 'course_instances_students_users'
+    })
   }
   return Users
 }

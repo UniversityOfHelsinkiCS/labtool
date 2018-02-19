@@ -38,15 +38,24 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       },
-      courseId:{
+      courseId: {
         type: Sequelize.INTEGER,
         onDelete: 'CASCADE',
-        references: {
+        references: {
           model: 'Courses',
           key: 'id',
           as: 'courseId',
         },
       },
+      usersId: {
+        type: Sequelize.INTEGER,
+        onDelete: 'CASCADE',
+        references: {
+          model: 'Users',
+          key: 'id',
+          as: 'usersId'
+        }
+      }
     })
   },
   down: (queryInterface, Sequelize) => {

@@ -10,10 +10,17 @@ module.exports = (sequelize, DataTypes) => {
     courseId: DataTypes.INTEGER
   })
   Course_instances.associate = (models) => {
-    Course_instances.belongsTo(models.Course,{
+
+    Course_instances.belongsTo(models.Course, {
       foreignKey: 'courseId',
       onDelete: 'CASCADE',
     })
+
+    Course_instances.hasMany(models.Course_instances_students_users, {
+      foreignKey: 'course_instancesId',
+      as: 'course_instances_students_usersItems'
+    })
   }
+
   return Course_instances
 }
