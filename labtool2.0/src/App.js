@@ -68,12 +68,16 @@ class App extends Component {
       backend = '/labtool-backend/user/'
     }
     const userWithEmail = {...this.state.user, email: this.state.email}
+    console.log(userWithEmail)
     const config = {headers: { 'Authorization': 'bearer ' + this.state.token }}
     axios.post(backend, userWithEmail, config )
       .then(response => {
         console.log(config)
         console.log('You have updated email')
-        this.setState({ email: '' })
+        this.setState({ 
+          email: '',
+          firstLogin: false
+        })
         console.log('state has been cleared')
       })
   }
@@ -100,7 +104,7 @@ class App extends Component {
             username: '',
             password: '',
             token: response.data.token,
-            user: response.data
+            user: response.data.body
           })
           window.localStorage.setItem('loggedUser', JSON.stringify(response.data))
 
