@@ -8,6 +8,7 @@ module.exports = (app) => {
 
   app.post('/api/courses', coursesController.create);
   app.get('/api/courses', coursesController.list);
-  
+  app.get('/api/courses/:courseId', coursesController.retrieve)
+
   app.post('/api/courses/:courseId/instances', courseInstanceController.create)
 };

@@ -13,6 +13,25 @@ module.exports = {
       .catch(error => res.status(400).send(error));
   },
 
+  retrieve(req, res) {
+    return Course
+      .findById(req.params.courseId, {
+        include: [{
+          model: CourseInstance,
+          as: 'course_instances'
+        }],
+      })
+      .then(course => {
+        if (!course) {
+          return res.status(404).send({
+            message: 'Course not Found',
+          })
+        }
+        return res.status(200).send(course)
+      })
+      .catch(error => res.status(400).send(error))
+  },
+
   list(req, res) {
     console.log('CourseInstance: ', CourseInstance)
     return Course
