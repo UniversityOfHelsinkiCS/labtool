@@ -5,24 +5,23 @@ module.exports = {
   create(req, res) {
     return Course
       .create({
-        title: req.body.title,
-        name: req.body.name
+
+        name: req.body.name,
+        label: req.body.label
       })
       .then(todo => res.status(201).send(todo))
       .catch(error => res.status(400).send(error));
   },
 
   list(req, res) {
+    console.log('CourseInstance: ', CourseInstance)
     return Course
+
       .findAll({
         include: [{
           model: CourseInstance,
-          as: 'courseInstances',
-        }],
-        order: [
-          ['createdAt', 'DESC'],
-          [{model: CourseInstance, as: 'courseInstances'}, 'createdAt', 'ASC']
-        ]
+          as: 'course_instances'
+        }]
       })
       .then(course => res.status(200).send(course))
       .catch(error => res.status(400).send(error));

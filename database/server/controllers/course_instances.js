@@ -12,7 +12,8 @@ module.exports = {
         active: req.body.active,
         week_amount: req.body.week_amount,
         week_max_points: req.body.week_max_points,
-        current_week: req.body.current_week
+        current_week: req.body.current_week,
+        courseId: req.body.courseId
       })
       .then(CourseInstance => res.status(201).send(CourseInstance))
       .catch(error => res.status(400).send(error))

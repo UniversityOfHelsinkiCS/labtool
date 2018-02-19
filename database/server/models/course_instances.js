@@ -7,10 +7,10 @@ module.exports = (sequelize, DataTypes) => {
     week_amount: DataTypes.INTEGER,
     week_max_points: DataTypes.INTEGER,
     current_week: DataTypes.INTEGER
-  }, {});
+  })
   Course_instances.associate = (models) => {
     Course_instances.belongsTo(models.Course,{
-      foeignKey: 'courseId',
+      foreignKey: 'courseId',
       onDelete: 'CASCADE',
     })
   };
