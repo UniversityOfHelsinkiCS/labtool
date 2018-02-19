@@ -29,7 +29,7 @@ userRoutes.put('/update', (req, res) => {
           { email: req.body.email },
           { where: { id: decoded.id } }
         )
-          .then(user => res.status(201).send(user))
+          .then(res.status(201).send())
           .catch(error => res.status(400).send(error))
       }
     }    

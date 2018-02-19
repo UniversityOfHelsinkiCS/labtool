@@ -76,10 +76,12 @@ class App extends Component {
         console.log('You have updated email')
         this.setState({ 
           email: '',
-          firstLogin: false
+          firstLogin: false,
+          user: userWithEmail
         })
-        console.log('state has been cleared')
+        console.log('state has been cleared and user state refreshed')
       })
+      .catch(error => this.setState(error))
   }
 
   postLogin = (event) => {
