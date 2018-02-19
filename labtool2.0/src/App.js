@@ -114,9 +114,10 @@ class App extends Component {
   render() {
     const u = this.state.username
     const p = this.state.password
-    this.state.firstLogin ? 
+    let page  = null
+    page = this.state.firstLogin ? 
       <SetEmail postEmail={this.postEmail} handleEmailChange={this.handleEmailChange} /> :
-      let page = this.state.user ?
+      page = this.state.user ?
         <MainPage logout={this.postLogout} /> :
 
         <Login
