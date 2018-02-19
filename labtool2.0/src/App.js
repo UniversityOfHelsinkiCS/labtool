@@ -88,9 +88,8 @@ class App extends Component {
         this.setState({ 
           email: '',
           firstLogin: false,
-          user: response.returnedUser
+          user: response.data
         })
-        window.localStorage.setItem('loggedUser', JSON.stringify(response.data))
         console.log('state has been cleared and user state refreshed')
       })
       .catch(error => this.setState(error))
