@@ -41,4 +41,28 @@ module.exports = {
           .catch(error => res.status(400).send(error))
       })
   },
+  update(req, res){
+    return Course
+      .findById(req.params.courseId, {
+        include: [{
+          model: CourseInstance,
+          as: 'course_instances'
+        }],
+      })
+      .then(course =>{
+        if(!course){
+          return res.status(400).send({
+            message: 'Course no found!',
+          })
+        }
+        return course
+          .update({
+            name: req.body.name || course.name,
+            label: req.body.label || course.label
+          })
+          .then(() => res.status(200).send(course))
+          .catch((error) => res.status(400).send(error))
+      })
+      .catch((error) => res.status(400).send(error))
+  }
 };

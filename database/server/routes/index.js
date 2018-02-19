@@ -12,4 +12,6 @@ module.exports = (app) => {
     app.post('/api/courses/:courseId/instances', courseInstanceController.create)
 
     app.delete('/api/courses/:courseId', coursesController.destroy)
+
+    app.put('/api/courses/:courseId', coursesController.update)
 };
