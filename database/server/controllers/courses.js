@@ -26,4 +26,19 @@ module.exports = {
       .then(course => res.status(200).send(course))
       .catch(error => res.status(400).send(error));
   },
+  destroy(req, res) {
+    return Course
+      .findById(req.params.courseId)
+      .then(course => {
+        if (!course) {
+          return res.status(400).send({
+            message: 'course not found',
+          })
+        }
+        return course
+          .destroy()
+          .then(() => res.status(204).send())
+          .catch(error => res.status(400).send(error))
+      })
+  },
 };

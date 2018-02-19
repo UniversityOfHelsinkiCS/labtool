@@ -6,7 +6,8 @@ module.exports = (sequelize, DataTypes) => {
     active: DataTypes.BOOLEAN,
     week_amount: DataTypes.INTEGER,
     week_max_points: DataTypes.INTEGER,
-    current_week: DataTypes.INTEGER
+    current_week: DataTypes.INTEGER,
+    courseId: DataTypes.INTEGER
   })
   Course_instances.associate = (models) => {
     Course_instances.belongsTo(models.Course,{
