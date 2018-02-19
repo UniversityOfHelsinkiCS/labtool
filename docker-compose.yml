@@ -15,6 +15,7 @@ services:
     environment:
       - TOKEN=changeme
       - NODE_ENV=production
+      - SECRET=changeme
     image: labtool/labtool-backend:test
     ports:
       - "6001:3001"
