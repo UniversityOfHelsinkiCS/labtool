@@ -47,15 +47,6 @@ module.exports = {
           as: 'courseId',
         },
       },
-      usersId: {
-        type: Sequelize.INTEGER,
-        onDelete: 'CASCADE',
-        references: {
-          model: 'Users',
-          key: 'id',
-          as: 'usersId'
-        }
-      }
     })
   },
   down: (queryInterface, Sequelize) => {

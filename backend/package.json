@@ -6,9 +6,11 @@
   "dependencies": {
     "axios": "^0.17.1",
     "body-parser": "^1.18.2",
+    "dotenv": "^5.0.0",
     "eslint": "^4.17.0",
     "express": "^4.16.2",
     "fs": "0.0.1-security",
+    "jsonwebtoken": "^8.1.1",
     "path": "^0.12.7",
     "pg": "^7.4.1",
     "request": "^2.83.0",
@@ -19,6 +21,8 @@
   "scripts": {
     "start": "node app.js",
     "migrate": "node_modules/.bin/sequelize db:migrate",
+    "createdb": "node_modules/.bin/sequelize db:create",
+    "dropdb": "node_modules/.bin/sequelize db:drop",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
