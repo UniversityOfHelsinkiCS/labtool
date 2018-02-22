@@ -17,13 +17,16 @@
     "sequelize": "^4.32.6",
     "sequelize-cli": "^3.2.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "mocha": "^5.0.1",
+    "supertest": "^3.0.0"
+  },
   "scripts": {
     "start": "node app.js",
     "migrate": "node_modules/.bin/sequelize db:migrate",
     "createdb": "node_modules/.bin/sequelize db:create",
     "dropdb": "node_modules/.bin/sequelize db:drop",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node_modules/.bin/mocha -R spec"
   },
   "author": "",
   "license": "ISC"
