@@ -89,9 +89,4 @@ const tokenVerify = ({ token }) => {
 
 app.use('/users', require('./controllers/user').userRoutes)
 
-var server = app.listen(3001, function () {
-  var port = server.address().port;
-  console.log('Example app listening at port %s', port);
-});
-
-module.exports = server;
+app.listen(3001, () => console.log('Example app listening on port 3001!'))

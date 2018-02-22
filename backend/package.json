@@ -17,17 +17,21 @@
     "sequelize": "^4.32.6",
     "sequelize-cli": "^3.2.0"
   },
+<<<<<<< HEAD
   "devDependencies": {
     "mocha": "^5.0.1",
     "nock": "^9.1.9",
     "supertest": "^3.0.0"
   },
+=======
+  "devDependencies": {},
+>>>>>>> parent of 8f7525c... travis testing test for both backend and frontend
   "scripts": {
     "start": "node app.js",
     "migrate": "node_modules/.bin/sequelize db:migrate",
     "createdb": "node_modules/.bin/sequelize db:create",
     "dropdb": "node_modules/.bin/sequelize db:drop",
-    "test": "node_modules/.bin/mocha -R spec"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC"
