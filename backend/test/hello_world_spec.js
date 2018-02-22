@@ -1,6 +1,6 @@
-var request = require('supertest');
+let request = require('supertest');
 describe('loading express', function () {
-  var server;
+  let server;
   beforeEach(function () {
     server = require('../app');
   });
