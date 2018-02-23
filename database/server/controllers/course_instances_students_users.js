@@ -7,6 +7,8 @@ module.exports = {
                 usersId: req.body.usersId,
                 course_instancesId: req.body.course_instancesId
             })
+            .then(course => res.status(200).send(course))
+            .catch(error => res.status(400).send(error))
     },
     list(req, res) {
         return CourseInstanceStudentUser
