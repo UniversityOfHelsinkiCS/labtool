@@ -2,9 +2,6 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import App from '../App'
 import Login from '../components/pages/LoginPage'
-import { shallow, mount, render , wrapper } from 'enzyme';
-import { shallowToJson } from 'enzyme-to-json'
-
 
 
 describe.only('<Login />', () => {
@@ -20,7 +17,7 @@ describe.only('<Login />', () => {
       const output = shallow(
         <Login />
       )
-      expect(shallowToJson(output)).toMatchSnapshot();
+      expect(output).toMatchSnapshot();
     })
 
     it('renders a username input', () => {
