@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import App from '../App'
 import Login from '../components/pages/LoginPage'
 import { shallow, mount, render } from 'enzyme';
+import { shallowToJson } from 'enzyme-to-json'
 
 
 
@@ -15,6 +16,12 @@ describe.only('<Login />', () => {
       expect(shallow(<Login />).exists(<form className='Login'></form>)).toBe(true)
     })
 
+    it('should render correctly', () => {
+      const output = shallow(
+        <Login />
+      )
+      expect(shallowToJson(output)).toMatchSnapshot();
+    })
 
     it('renders a username input', () => {
       expect(shallow(<Login />).find('#name').length).toEqual(0)
