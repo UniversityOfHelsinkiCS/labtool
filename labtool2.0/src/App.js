@@ -74,7 +74,7 @@ class App extends Component {
     event.preventDefault()
     let backend
     if (process.env.NODE_ENV === "development") {
-      backend = 'http://localhost:3001/users/update'
+      backend = 'http://localhost:3001/api/users/update'
     } else {
       backend = '/labtool-backend/users/update'
     }
