@@ -15,13 +15,13 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       },
-      course_instanceId: {
+      course_instancesId: {
         type: Sequelize.INTEGER,
         onDelete: 'CASCADE',
         references: {
           model: 'Course_instances',
           key: 'id',
-          as: 'course_instanceId'
+          as: 'course_instancesId'
         }
       },
       usersId: {
