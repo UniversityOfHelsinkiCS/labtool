@@ -1,7 +1,7 @@
-const usersController = require('../controllers').users
+const userController = require('../controllers').users
 
 module.exports = (app) => {
-  app.post('/api/users', usersController.create)
-  app.get('/api/users', usersController.list)
-  app.put('/api/users/update', usersController.update)
+  app.post('/api/users', userController.create)
+  app.get('/api/users', userController.list)
+  app.put('/api/users/update', userController.update)
 }

@@ -1,5 +1,5 @@
 const Course = require('../models').Course
-const CourseInstance = require('../models').Course_instances
+const courseInst = require('../models').Course_instances
 
 module.exports = {
   create(req, res) {
@@ -17,7 +17,7 @@ module.exports = {
     return Course
       .findById(req.params.courseId, {
         include: [{
-          model: CourseInstance,
+          model: courseInst,
           as: 'course_instances'
         }],
       })
@@ -33,12 +33,12 @@ module.exports = {
   },
 
   list(req, res) {
-    console.log('CourseInstance: ', CourseInstance)
+    console.log('CourseInstance: ', courseInst)
     return Course
 
       .findAll({
         include: [{
-          model: CourseInstance,
+          model: courseInst,
           as: 'course_instances'
         }]
       })
@@ -64,7 +64,7 @@ module.exports = {
     return Course
       .findById(req.params.courseId, {
         include: [{
-          model: CourseInstance,
+          model: courseInst,
           as: 'course_instances'
         }],
       })

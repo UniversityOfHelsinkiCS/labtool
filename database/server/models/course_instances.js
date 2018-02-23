@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  const Course_instances = sequelize.define('Course_instances', {
+  const courseInst = sequelize.define('Course_instances', {
     name: DataTypes.STRING,
     start: DataTypes.DATE,
     end: DataTypes.DATE,
@@ -10,18 +10,18 @@ module.exports = (sequelize, DataTypes) => {
     courseId: DataTypes.INTEGER,
     ohid: DataTypes.STRING
   })
-  Course_instances.associate = (models) => {
+  courseInst.associate = (models) => {
 
-    Course_instances.belongsTo(models.Course, {
+    courseInst.belongsTo(models.Course, {
       foreignKey: 'courseId',
       onDelete: 'CASCADE',
     })
 
-    Course_instances.hasMany(models.Course_instances_students_users, {
+    courseInst.hasMany(models.Course_instances_students_users, {
       foreignKey: 'course_instancesId',
       as: 'course_instances_students_usersItems'
     })
   }
 
-  return Course_instances
+  return courseInst
 }

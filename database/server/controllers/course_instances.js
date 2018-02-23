@@ -1,10 +1,10 @@
-const CourseInstance = require('../models').Course_instances
+const CourseInst = require('../models').Course_instances
 
 module.exports = {
 
   create(req, res) {
-    console.log(CourseInstance, 'JEEEEEEEEEEEEE')
-    return CourseInstance
+    console.log(CourseInst, 'JEEEEEEEEEEEEE')
+    return CourseInst
       .create({
         name: req.body.name,
         start: req.body.start,
@@ -20,7 +20,7 @@ module.exports = {
   },
 
   update(req, res) {
-    return CourseInstance
+    return CourseInst
       .find({
         where: {
           id: req.params.courseInstanceId,
@@ -50,13 +50,13 @@ module.exports = {
   },
 
   list(req, res) {
-    return CourseInstance.findAll()
+    return CourseInst.findAll()
       .then(instance => res.status(200).send(instance))
       .catch(error => res.status(400).send(error))
   },
 
   destroy(req, res) {
-    return CourseInstance
+    return CourseInst
       .find({
         where: {
           id: req.params.courseInstanceId,
@@ -97,7 +97,7 @@ module.exports = {
         const json = JSON.parse(body)
         console.log(json)
         json.forEach(instance => {
-          CourseInstance.findOrCreate({
+          CourseInst.findOrCreate({
             where: { ohid: instance.id },
             defaults: {
               name: instance.name,
