@@ -3,6 +3,7 @@ let app = express()
 let bodyParser = require('body-parser')
 const jwt = require('jsonwebtoken')
 const User = require('./models').User
+const request = require('request')
 
 require('dotenv').config()
 
@@ -33,10 +34,9 @@ app.use(function (req, res, next) {
 
 // login
 app.post('/login', function (req, res) {
-  const request = require('request')
-  const options = {
+    const options = {
     method: 'post',
-    uri: 'https://opetushallinto.cs.helsinki.fi/login',
+    uri: 'https://opetushallinto.cs.helsinki.fi:443/login',
     strictSSL: false,
     json: {'username': req.body.username, 'password': req.body.password}
   }
@@ -45,7 +45,6 @@ app.post('/login', function (req, res) {
     if (err) {
       console.log(err)
     }
-    console.log(result.response.body.error)
 
     if (result.response.body.error !== 'wrong credentials') {
       User
@@ -110,4 +109,9 @@ const tokenVerify = ({ token }) => {
 
 app.use('/users', require('./controllers/user').userRoutes)
 
-app.listen(3001, () => console.log('Example app listening on port 3001!'))
+let server = app.listen(3001, function () {
+  let port = server.address().port;
+  console.log('Example app listening at port %s', port);
+});
+
+module.exports = server;
