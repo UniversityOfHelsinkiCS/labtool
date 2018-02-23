@@ -12,7 +12,7 @@ exports[`<Login /> Login Component should render correctly 1`] = `
       Username: 
       <br />
       <input
-        className="form-control"
+        className="form-control1"
         name="name"
         required={true}
         type="text"
@@ -24,7 +24,7 @@ exports[`<Login /> Login Component should render correctly 1`] = `
       Password: 
       <br />
       <input
-        className="form-control"
+        className="form-control2"
         name="password"
         required={true}
         type="password"
