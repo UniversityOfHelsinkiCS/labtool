@@ -49,6 +49,12 @@ module.exports = {
       .catch(error => res.status(400).send(error))
   },
 
+  list(req, res) {
+    return CourseInstance.findAll()
+      .then(instance => res.status(200).send(instance))
+      .catch(error => res.status(400).send(error))
+  },
+
   destroy(req, res) {
     return CourseInstance
       .find({
@@ -69,6 +75,40 @@ module.exports = {
           .catch(error => res.status(400).send(error))
       })
       .catch(error => res.status(400).send(error))
-  }
+  },
 
+  getNew(req, res) {
+    const auth = process.env.TOKEN || 'notset' //You have to set TOKEN in .env file in order for this to work
+    if (auth === 'notset') {
+      res.send('Please restart the backend with the correct TOKEN environment variable set')
+    } else {
+      const request = require('request')
+      const options = {
+        method: 'get',
+        // terms: S = autumn, K = spring, V = summer
+        uri: 'https://opetushallinto.cs.helsinki.fi/labtool/courses?year=2018&term=K',
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": auth
+        },
+        strictSSL: false
+      }
+      request(options, function (err, resp, body) {
+        const json = JSON.parse(body)
+        console.log(json)
+        json.forEach(instance => {
+          CourseInstance.findOrCreate({
+            where: { ohid: instance.id },
+            defaults: {
+              name: instance.name,
+              start: instance.starts,
+              end: instance.ends,
+              ohid: instance.id
+            }
+          })
+        })
+        res.status(204).send({ 'hello': 'hello' })
+      })
+    }
+  }
 }

@@ -30,6 +30,10 @@ module.exports = {
       current_week: {
         type: Sequelize.INTEGER
       },
+      ohid: {
+        allowNull: true,
+        type: Sequelize.STRING
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

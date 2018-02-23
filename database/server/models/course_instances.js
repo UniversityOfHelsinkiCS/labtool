@@ -7,7 +7,8 @@ module.exports = (sequelize, DataTypes) => {
     week_amount: DataTypes.INTEGER,
     week_max_points: DataTypes.INTEGER,
     current_week: DataTypes.INTEGER,
-    courseId: DataTypes.INTEGER
+    courseId: DataTypes.INTEGER,
+    ohid: DataTypes.STRING
   })
   Course_instances.associate = (models) => {
 
