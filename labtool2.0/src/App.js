@@ -4,6 +4,9 @@ import Login from './components/pages/LoginPage'
 import MainPage from './components/pages/MainPage'
 import axios from 'axios'
 import SetEmail from './components/pages/SetEmail'
+import { BrowserRouter as Router } from 'react-router-dom'
+import courseInstanceStudentService from './services/courseInstanceStudent'
+import RegisterPage from './components/pages/RegisterPage'
 
 const Notification = ({ message }) => {
   if (message === null) {
@@ -27,7 +30,10 @@ class App extends Component {
       firstLogin: false,
       error: '',
       user: null,
-      token: null
+      token: null,
+      courseInstanceId: null,
+      github: '',
+      projectname: ''
     }
   }
 
@@ -36,8 +42,13 @@ class App extends Component {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       this.setState({ user: user.returnedUser, token: user.token })
+      courseInstanceStudentService.setToken(user.token)
     }
-  } 
+  }
+  
+  handleFieldChange = (event) => {
+    this.setState({ [event.target.name]: event.target.value })
+  }
 
   handleFirstLoginFalse = (event) => {
     this.setState({ firstLogin: false })
@@ -50,24 +61,32 @@ class App extends Component {
     })
   }
 
-  handlePasswordChange = (event) => {
-    this.setState({ password: event.target.value })
-  }
-
-  handleUsernameChange = (event) => {
-    this.setState({ username: event.target.value })
-  }
-
-  handleEmailChange = (event) => {
-    this.setState({ email: event.target.value })
-  }
-
   postLogout = (event) => {
     window.localStorage.removeItem('loggedUser')
     this.setState({ 
       user: null,
       token: null
     })
+    courseInstanceStudentService.setToken('')
+  }
+
+  postCourseinstanceRegisteration = (event) => {
+    event.preventDefault()
+
+    courseInstanceStudentService.create({
+      courseInstanceId: this.state.courseInstanceId,
+      github: this.github,
+      projectname: this.state.projectname
+    })
+  }
+
+  updateUserinformationInLocalStorage = (user) => {
+    console.log(user)
+    const updatedUser = {
+      user: user,
+      token: this.state.token
+    }
+    window.localStorage.setItem('loggedUser', JSON.stringify(updatedUser))   
   }
 
   postEmail = (event) => {
@@ -88,8 +107,10 @@ class App extends Component {
         this.setState({ 
           email: '',
           firstLogin: false,
-          user: response.data
+          user: userWithEmail // Cannot get the backend to return user with updated email, should be found in response.data
         })
+        this.updateUserinformationInLocalStorage(userWithEmail) //See the comment above
+        
         console.log('state has been cleared and user state refreshed')
       })
       .catch(error => this.setState(error))
@@ -119,6 +140,7 @@ class App extends Component {
             token: response.data.token,
             user: response.data.returnedUser
           })
+          courseInstanceStudentService.setToken(response.data.token)
           window.localStorage.setItem('loggedUser', JSON.stringify(response.data))
 
           if(response.data.created) {
@@ -145,7 +167,7 @@ class App extends Component {
     const p = this.state.password
     let page  = null
     page = this.state.firstLogin ? 
-      <SetEmail postEmail={this.postEmail} handleEmailChange={this.handleEmailChange} handleFirstLoginFalse={this.handleFirstLoginFalse} email={this.state.email} /> :
+      <SetEmail postEmail={this.postEmail} handleFieldChange={this.handleFieldChange} handleFirstLoginFalse={this.handleFirstLoginFalse} email={this.state.email} /> :
       page = this.state.user ?
         <MainPage logout={this.postLogout} handleFirstLoginTrue={this.handleFirstLoginTrue} /> :
 
@@ -153,17 +175,34 @@ class App extends Component {
           username={u}
           password={p}
           postLogin={this.postLogin}
-          handlePasswordChange={this.handlePasswordChange}
-          handleUsernameChange={this.handleUsernameChange}
+          handleFieldChange={this.handleFieldChange}
         />
 
     return (
       <div className="App" >
+        
         {page}
         <Notification message={this.state.error} />
+        <RegisterPage onSubmit={this.postCourseinstanceRegisteration} handleFieldChange={this.handleFieldChange} github={this.state.github} projectname={this.state.projectname} />
+        
       </div>
     )
   }
 }
+
+/*
+      <div>
+        <Router>
+          <div>
+            <div>
+              <Link to="/">home</Link> &nbsp;
+              <Link to="/course">courses</Link>
+            </div>
+            <Route exact path="/" render={() => <Home />} />
+            <Route path="/coursese" render={() => <Notes />} />
+          </div>
+        </Router>
+      </div>
+      */
 
 export default App
