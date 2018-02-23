@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     })
 
     Course_instances_students_users.belongsTo(models.Course_instances, {
-      foreignKey: 'course_instancesId',
+      foreignKey: 'course_instanceId',
       onDelete: 'CASCADE'
     })
   }

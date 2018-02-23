@@ -12,4 +12,6 @@ module.exports = (app) => {
         '/api/courses/:courseId/instances/:courseInstanceId', courseInstanceController.destroy
     )
 
+    app.get('/api/courseinstancestudent')
+
 }
