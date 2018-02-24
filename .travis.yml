@@ -8,7 +8,6 @@ language: node_js
 node_js:
 - '8'
 before_install:
-- cd labtool2.0
 - npm config set spin false
 - npm install -g npm
 install:
