@@ -12,7 +12,11 @@ before_install:
 - npm config set spin false
 - npm install -g npm
 install:
+- cd labtool2.0 
 - npm install
+- cd ../backend
+- npm install
+- cd ..
 jobs:
   include:
   - stage: build feature
