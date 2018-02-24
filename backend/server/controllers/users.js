@@ -29,7 +29,7 @@ module.exports = {
           } else {
             User.update(
               { email: req.body.email },
-              { where: { id: req.params.id } }
+              { where: { id: decoded.id } }
             )
               .then(
                 User.findById(req.params.id)
