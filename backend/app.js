@@ -2,7 +2,6 @@ let express = require('express')
 let app = express()
 let bodyParser = require('body-parser')
 const jwt = require('jsonwebtoken')
-const User = require('./models').User
 
 require('dotenv').config()
 
@@ -31,8 +30,8 @@ app.use(function (req, res, next) {
   next()
 })
 
-// login
-app.post('/login', function (req, res) {
+// login Oikea logini server/controllers/login ...
+/* app.post('/login', function (req, res) {
   const request = require('request')
   const options = {
     method: 'post',
@@ -83,7 +82,7 @@ app.post('/login', function (req, res) {
       })
     }
   })
-})
+}) */
 
 const tokenVerify = ({ token }) => {
   jwt.verify(token, process.env.SECRET, function (err, decoded) {
@@ -99,6 +98,18 @@ const tokenVerify = ({ token }) => {
   })
 }
 
-app.use('/users', require('./controllers/user').userRoutes)
+// Sequelize reitti määrittelyt
+require('./server/routes')(app)
+require('./server/routes/userRouter')(app)
+require('./server/routes/courseInstanceRouter')(app)
+require('./server/routes/courseRouter')(app)
+require('./server/routes/loginRouter')(app)
+require('./server/routes/studentInstanceRouter')(app)
+require('./server/routes/teacherInstanceRouter')(app)
+require('./server/routes/weekRouter')(app)
+app.get('*', (req, res) => res.status(200).send({
+  message: 'Welcome to the beginning of nothingness.',
+}))
+
 
 app.listen(3001, () => console.log('Example app listening on port 3001!'))

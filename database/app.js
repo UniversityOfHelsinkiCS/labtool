@@ -42,8 +42,10 @@ require('./server/routes')(app)
 require('./server/routes/userRouter')(app)
 require('./server/routes/courseInstanceRouter')(app)
 require('./server/routes/courseRouter')(app)
-require('./server/routes/courseInstanceStudentsUsersRouter')(app)
 require('./server/routes/loginRouter')(app)
+require('./server/routes/studentInstanceRouter')(app)
+require('./server/routes/teacherInstanceRouter')(app)
+require('./server/routes/weekRouter')(app)
 app.get('*', (req, res) => res.status(200).send({
   message: 'Welcome to the beginning of nothingness.',
 }))

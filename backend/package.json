@@ -5,17 +5,20 @@
   "main": "index.js",
   "dependencies": {
     "axios": "^0.17.1",
-    "body-parser": "^1.18.2",
-    "dotenv": "^5.0.0",
     "eslint": "^4.17.0",
-    "express": "^4.16.2",
     "fs": "0.0.1-security",
-    "jsonwebtoken": "^8.1.1",
     "path": "^0.12.7",
+    "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
+    "dotenv": "^5.0.0",
+    "express": "^4.16.2",
+    "jsonwebtoken": "^8.1.1",
+    "morgan": "^1.9.0",
     "pg": "^7.4.1",
+    "pg-hstore": "^2.3.2",
     "request": "^2.83.0",
-    "sequelize": "^4.32.6",
-    "sequelize-cli": "^3.2.0"
+    "sequelize": "^4.33.4",
+    "sequelize-cli": "^4.0.0"
   },
   "devDependencies": {},
   "scripts": {
