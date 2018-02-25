@@ -32,7 +32,6 @@
     "createdb": "node_modules/.bin/sequelize db:create",
     "dropdb": "node_modules/.bin/sequelize db:drop",
     "test": "./bin/test.sh test",
-    "test-ci": "./bin/test.sh travis"
   },
   "author": "",
   "license": "ISC"

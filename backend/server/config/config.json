@@ -13,10 +13,6 @@
     "host": "127.0.0.1",
     "dialect": "postgres"
   },
-  "travis": {
-    "dialect": "sqlite",
-    "storage": "./travis-sqlite.db"  
-  },
   "production": {
     "username": "postgres",
     "password": null,
