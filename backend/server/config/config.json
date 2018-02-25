@@ -14,10 +14,8 @@
     "dialect": "postgres"
   },
   "travis": {
-    "database": "labtool_test",
-    "host": "127.0.0.1",
     "dialect": "sqlite",
-    "storage": "travis-sqlite.db"  
+    "storage": "./travis-sqlite.db"  
   },
   "production": {
     "username": "postgres",
