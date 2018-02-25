@@ -31,7 +31,7 @@
     "migrate": "node_modules/.bin/sequelize db:migrate",
     "createdb": "node_modules/.bin/sequelize db:create",
     "dropdb": "node_modules/.bin/sequelize db:drop",
-    "test": "./bin/test.sh test",
+    "test": "./bin/test.sh test"
   },
   "author": "",
   "license": "ISC"
