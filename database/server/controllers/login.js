@@ -1,9 +1,10 @@
 const jwt = require('jsonwebtoken')
-const User = require('../models').Users
+const User = require('../models').User
 const request = require('request')
 
 module.exports = {
   login(req, res) {
+    //console.log('req.body saa: ', req.body)
     const options = {
       method: 'post',
       uri: 'https://opetushallinto.cs.helsinki.fi/login',
@@ -15,9 +16,10 @@ module.exports = {
       if (err) {
         console.log(err)
       }
-      console.log(result.response.body.error)
+      console.log('diu diu ', result.response.body)
+      //console.log('öyh öyh ', result.respone.body)
 
-      if (result.response.body.error !== 'wrong credentials') {
+      if (result.response.body.username) {
         User
           .findOrCreate({
             where: { username: body.username },
