@@ -107,9 +107,13 @@ require('./server/routes/loginRouter')(app)
 require('./server/routes/studentInstanceRouter')(app)
 require('./server/routes/teacherInstanceRouter')(app)
 require('./server/routes/weekRouter')(app)
-app.get('*', (req, res) => res.status(200).send({
-  message: 'Welcome to the beginning of nothingness.',
+app.get('*', (req, res) => res.status(404).send({
+  message: 'Not found.',
 }))
 
+let server = app.listen(3001, function () {
+    let port = server.address().port;
+    console.log('Backend is listening on port %s', port);
+});
 
-app.listen(3001, () => console.log('Example app listening on port 3001!'))
+module.exports = server;
