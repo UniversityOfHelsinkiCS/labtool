@@ -5,31 +5,45 @@ notifications:
   slack:
     secure: otVal+5p4efIi1Ms8lWV64WrAJN22cBjYy/ZLL7ufzoup3ibEcyxuDRDh/0iyUU8BVbyXTJSZsnSPjQHjmCAh0l+BaXAXmr+fMIYXbYr98uPSNReWCadWiDyW2+hbDylz845d6qX0qaMQ0OVc4QPwcanI42h5qTfTjcPc/1PkpIxoNWJM/wcEbdiXk66vOBagkZD46aRxehvAi8f+EEcMNUb5k2BoZDMb/pVKGSRRGHO9uJ1sYzxgFQKmDHgRores/UAfUOr0xnU8X9k3FZ2VqKgxjaLtMiqHDiABUtQblEEXEKspjifonMxc974hgkQwWQ/PvKZhnzatPLKTLjL5tcMXfGxfnznJpIRUBm17H5aGRt8cR/ba9SlCzGKQu5WLXZ+VE6acXgdFjhmkvmp+ESBjZ312F9hKmy2/A8VKJMpZs2W9Nu05HB+1+l6fLkQNCFkCzhAg9xA1aaihyNdPCd6GDarqE26YGL5auN4n/tlajLxUAEN2GxixxRk4e17PFor24xe8tYbp5X1knFFVSiQcUKpItJooDDqBFEkDy7uDk1Tyc4w1/mClQX2gwwUnPmVKeJ4e7E30/4iZsR4xlI8OSL4mc2DIbo4GslGFaf0Bmexku68qJHL0gegw8XNtNr2L+JG0zVbre0r6r0uvrue3tptohPTVKyGngFAq5g=
 language: node_js
+services:
+  - postgresql
 node_js:
 - '8'
 before_install:
-- cd labtool2.0
 - npm config set spin false
 - npm install -g npm
 install:
+- cd labtool2.0 
 - npm install
+- cd ../backend
+- npm install
+- cd ..
 jobs:
   include:
   - stage: build feature
     script:
+    - cd labtool2.0
     - npm test
+    - cd ../backend
+    - npm run test
     after_success:
     - echo "onnistumisen jalkeen ei tehda konttia, mutta jotain muuta ehka?"
     if: branch =~ ^[0-9]
   - stage: development
     script:
+    - cd labtool2.0
     - npm test
+    - cd ../backend
+    - npm run test
     after_success:
     - echo "tehdaan development ymparistan kontti ja pushataan dockerhubiin"
     if: branch = dev
   - stage: master
     script:
+    - cd labtool2.0
     - npm test
+    - cd ../backend
+    - npm run test
     after_success:
     - echo "tehdaan master ympariston kontti ja pushataan dockerhubiin"
     if: branch = master

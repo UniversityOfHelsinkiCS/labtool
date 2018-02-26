@@ -1,23 +1,23 @@
 {
   "development": {
     "username": "postgres",
-    "password": "test",
-    "database": "labtool_development",
+    "password": "postgres",
+    "database": "mydb",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },
   "test": {
-    "username": "postgres",
+    "username": "root",
     "password": null,
-    "database": "labtool_test",
-    "host": "db",
+    "database": "database_test",
+    "host": "127.0.0.1",
     "dialect": "postgres"
   },
   "production": {
-    "username": "postgres",
+    "username": "root",
     "password": null,
-    "database": "labtool_production",
-    "host": "db",
+    "database": "database_production",
+    "host": "127.0.0.1",
     "dialect": "postgres"
   }
 }
