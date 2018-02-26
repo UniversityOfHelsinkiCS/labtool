@@ -1,11 +1,20 @@
 import React from 'react'
 
-const SetEmail = ({ postEmail, handleFieldChange, handleFirstLoginFalse, email }) => {
+const SetEmail = ({ history, postEmail, handleFieldChange, handleFirstLoginFalse, email }) => {
+
+
+  const onSubmit = async (event) => {
+    event.preventDefault()
+    const message = await postEmail
+    if (message === 'succ' ) {
+      history.push('/')
+    } 
+  }
 
   return (
     <div className="Email">
 
-      <form onSubmit={postEmail}>
+      <form onSubmit={onSubmit}>
         <label>
           Email address: <br />
           <input value={email} type="text" className="form-control" name="email" onChange={handleFieldChange} required />

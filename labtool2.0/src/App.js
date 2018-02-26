@@ -4,7 +4,7 @@ import Login from './components/pages/LoginPage'
 import MainPage from './components/pages/MainPage'
 import axios from 'axios'
 import SetEmail from './components/pages/SetEmail'
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
+import { Redirect, BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import studentinstancesService from './services/studentinstances'
 import courseInstancesService from './services/courseInstance'
 import RegisterPage from './components/pages/RegisterPage'
@@ -129,12 +129,15 @@ class App extends Component {
         this.updateUserinformationInLocalStorage(userWithEmail) //See the comment above
 
         console.log('state has been cleared and user state refreshed')
+        return 'succ'
       })
-      .catch(error => this.setState(error))
+      .catch(error => {
+        this.setState(error) 
+        return 'error'
+      })
   }
 
-  postLogin = (event) => {
-    event.preventDefault()
+  postLogin = () => {
     let backend
     if (process.env.NODE_ENV === "development") {
       backend = 'http://localhost:3001/login'
@@ -162,11 +165,13 @@ class App extends Component {
 
           if (response.data.created) {
             this.setState({ firstLogin: true })
+            return 'create'
           }
+          return 'succ'
         } else {
           this.setState({ error: 'Wrong username or password' })
           console.log('Wrong username or password')
-
+          return 'error'
         }
 
       })
@@ -180,6 +185,7 @@ class App extends Component {
   }
 
   render() {
+
 
     const listingPage = (
       <div>
@@ -214,14 +220,50 @@ class App extends Component {
             handleFieldChange={this.handleFieldChange}
           />
 
+    const courseById = (id) =>
+      this.state.courseInstances.find(course => course.id === Number(id))
+
     return (
       <div className="App" >
-        {page}
-        <Notification message={this.state.error} />
+        <Router>
+          <div>
+            <div>
+              <Link to="/">home</Link> &nbsp;
+              <Link to="/courses">courses</Link> &nbsp;
+              <Link to="/courses/create">create</Link> &nbsp;
+              {this.state.user
+                ? <em>{this.state.user.firsts} logged in</em>
+                : <Link to="/login">login</Link>
+              }
+              {this.state.user ?
+                <Link to="/settings">settings</Link> :
+                <p></p>
+              }
+            </div>
+            <Route exact path="/" render={() => <MainPage logout={this.postLogout} handleFirstLoginTrue={this.handleFirstLoginTrue} />} />
+            <Route exact path="/courses" render={() => listingPage } />
+            <Route exact path="/courses/:id" render={({ match }) => 
+              <RegisterPage course={courseById(match.params.id)} onSubmit={this.postCourseinstanceRegisteration} handleFieldChange={this.handleFieldChange} github={this.state.github} projectname={this.state.projectname} 
+              />}            
+            />
+            <Route exact path="/settings" render={({ history }) => 
+              <SetEmail history={history} postEmail={this.postEmail} handleFieldChange={this.handleFieldChange} handleFirstLoginFalse={this.handleFirstLoginFalse} email={this.state.email} />} 
+            />
+            <Route path="/login" render={({ history }) =>
+              <Login history={history} username={this.state.username} password={this.state.password} postLogin={this.postLogin} handleFieldChange={this.handleFieldChange}
+              />}
+            />
 
+          </div>
+
+
+
+        </Router>
 
       </div>
     )
+      //        {page}
+      // < Notification message = { this.state.error } />
   }
 }
 export default App

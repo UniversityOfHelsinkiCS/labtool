@@ -1,12 +1,22 @@
 import React from 'react'
 
-const Login = ({ postLogin, handleFieldChange, username, password }) => {
+const Login = ({ history, postLogin, handleFieldChange, username, password }) => {
+  
+  const onSubmit = async (event) => {
+    event.preventDefault()
+    const message = await postLogin()
+    if (message === 'succ') {
+      history.push('/')
+    } else if (message === 'create') {
+      history.push('/settings')
+    }
+  }
 
   return (
     <div className="Login">
       <p>Login page</p>
 
-      <form onSubmit={postLogin}>
+      <form onSubmit={onSubmit}>
         <label>
           Username: <br />
           <input type="text" className="form-control" value={username} name="username" onChange={handleFieldChange} required />
