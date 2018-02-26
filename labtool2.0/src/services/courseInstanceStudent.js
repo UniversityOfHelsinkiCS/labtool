@@ -4,8 +4,8 @@ const baseUrl = 'http://localhost:3001/api/courseinstancestudent'
 
 let token = null
 
-const getAll = () => {
-  const request = axios.get(baseUrl)
+const getAll = async () => {
+  const request = await axios.get(baseUrl)
   return request.then(response => response.data)
 }
 
