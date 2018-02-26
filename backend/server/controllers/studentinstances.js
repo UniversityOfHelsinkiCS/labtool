@@ -1,16 +1,29 @@
 const StudentInstance = require('../models').StudentInstance
+const jwt = require('jsonwebtoken')
 
 module.exports = {
   create(req, res) {
-    return StudentInstance
-      .create({
-        github: req.body.github,
-        projectName: req.body.projectName,
-        userId: req.body.userId,
-        courseInstanceId: req.body.courseInstanceId
+    return (
+      jwt.verify(req.token, process.env.SECRET, function (err, decoded) {
+        if (err) {
+          const error = ({ error: 'token verification failed' })
+          res.status(400).send(error)
+        } else {
+          StudentInstance
+            .findOrCreate({
+              where: { userId: decoded.id, courseInstanceId: req.body.courseInstanceId },
+              defaults: {
+                github: req.body.github,
+                projectName: req.body.projectName,
+                userId: decoded.id,
+                courseInstanceId: req.body.courseInstanceId
+              }
+            })
+            .then(studentInstance => res.status(201).send(studentInstance))
+            .catch(error => res.status(400).send(error))
+        }
       })
-      .then(studentInstance => res.status(201).send(studentInstance))
-      .catch(error => res.status(400).send(error))
+    )
   },
   list(req, res) {
     return StudentInstance
