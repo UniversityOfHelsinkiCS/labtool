@@ -5,9 +5,11 @@ import MainPage from './components/pages/MainPage'
 import axios from 'axios'
 import SetEmail from './components/pages/SetEmail'
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
-import courseInstanceStudentService from './services/courseInstanceStudent'
+import studentinstancesService from './services/studentinstances'
+import courseInstancesService from './services/courseInstance'
 import RegisterPage from './components/pages/RegisterPage'
 import ReactDOM from 'react-dom'
+import CourseInstance from './components/pages/CourseInstance'
 
 const Notification = ({ message }) => {
   if (message === null) {
@@ -34,19 +36,23 @@ class App extends Component {
       token: null,
       courseInstanceId: null,
       github: '',
-      projectname: ''
+      projectname: '',
+      courseInstances: []
     }
   }
 
   componentWillMount() {
+    courseInstancesService.getAll().then(instances =>
+      this.setState({ courseInstances: instances }))
+
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       this.setState({ user: user.returnedUser, token: user.token })
-      courseInstanceStudentService.setToken(user.token)
+      studentinstancesService.setToken(user.token)
     }
   }
-  
+
   handleFieldChange = (event) => {
     this.setState({ [event.target.name]: event.target.value })
   }
@@ -56,7 +62,7 @@ class App extends Component {
   }
 
   handleFirstLoginTrue = (event) => {
-    this.setState({ 
+    this.setState({
       firstLogin: true,
       email: this.state.user.email
     })
@@ -64,20 +70,20 @@ class App extends Component {
 
   postLogout = (event) => {
     window.localStorage.removeItem('loggedUser')
-    this.setState({ 
+    this.setState({
       user: null,
       token: null
     })
-    courseInstanceStudentService.setToken('')
+    studentinstancesService.setToken('')
   }
 
   postCourseinstanceRegisteration = (event) => {
     event.preventDefault()
 
-    courseInstanceStudentService.create({
+    studentinstancesService.create({
       courseInstanceId: this.state.courseInstanceId,
-      github: this.github,
-      projectname: this.state.projectname
+      github: this.state.github,
+      projectName: this.state.projectname
     })
   }
 
@@ -87,31 +93,31 @@ class App extends Component {
       user: user,
       token: this.state.token
     }
-    window.localStorage.setItem('loggedUser', JSON.stringify(updatedUser))   
+    window.localStorage.setItem('loggedUser', JSON.stringify(updatedUser))
   }
 
   postEmail = (event) => {
     event.preventDefault()
     let backend
-      /* This quick hax can be made more sane by introducing a ENV variable that
-      * specifies the backend host uri such as:
-      *
-      *      BACKEND_URI=http://my.host.name/backend
-      *  or
-      *      BACKEND_URI=http://localhost:3001
-      *
-      *  And this could be used across the frontend by using the BACKEND_URI + '/path/to/wherever'
-      *
-      * */
+    /* This quick hax can be made more sane by introducing a ENV variable that
+    * specifies the backend host uri such as:
+    *
+    *      BACKEND_URI=http://my.host.name/backend
+    *  or
+    *      BACKEND_URI=http://localhost:3001
+    *
+    *  And this could be used across the frontend by using the BACKEND_URI + '/path/to/wherever'
+    *
+    * */
     if (process.env.NODE_ENV === "development") {
       backend = 'http://localhost:3001/api/users/update'
     } else {
       backend = '/labtool-backend/users/update'
     }
-    const userWithEmail = {...this.state.user, email: this.state.email}
+    const userWithEmail = { ...this.state.user, email: this.state.email }
     console.log(userWithEmail)
-    const config = {headers: { 'Authorization': 'bearer ' + this.state.token }}
-    axios.put(backend, userWithEmail, config )
+    const config = { headers: { 'Authorization': 'bearer ' + this.state.token } }
+    axios.put(backend, userWithEmail, config)
       .then(response => {
         console.log(config)
         console.log('You have updated email')
@@ -121,7 +127,7 @@ class App extends Component {
           user: userWithEmail // Cannot get the backend to return user with updated email, should be found in response.data
         })
         this.updateUserinformationInLocalStorage(userWithEmail) //See the comment above
-        
+
         console.log('state has been cleared and user state refreshed')
       })
       .catch(error => this.setState(error))
@@ -151,10 +157,10 @@ class App extends Component {
             token: response.data.token,
             user: response.data.returnedUser
           })
-          courseInstanceStudentService.setToken(response.data.token)
+          studentinstancesService.setToken(response.data.token)
           window.localStorage.setItem('loggedUser', JSON.stringify(response.data))
 
-          if(response.data.created) {
+          if (response.data.created) {
             this.setState({ firstLogin: true })
           }
         } else {
@@ -174,27 +180,47 @@ class App extends Component {
   }
 
   render() {
+
+    const listingPage = (
+      <div>
+        <MainPage logout={this.postLogout} handleFirstLoginTrue={this.handleFirstLoginTrue}/>
+        <p></p>
+        <p></p>
+        {this.state.courseInstances.map(instance =>
+          <CourseInstance
+            handleFieldChange={this.handleFieldChange}
+            key={instance.id}
+            instance={instance}
+          />
+        )}
+      </div>
+    )
+
     const u = this.state.username
     const p = this.state.password
-    let page  = null
-    page = this.state.firstLogin ? 
-      <SetEmail postEmail={this.postEmail} handleFieldChange={this.handleFieldChange} handleFirstLoginFalse={this.handleFirstLoginFalse} email={this.state.email} /> :
-      page = this.state.user ?
-        <MainPage logout={this.postLogout} handleFirstLoginTrue={this.handleFirstLoginTrue} /> :
+    let page = null
+    page = this.state.courseInstanceId ?
+      <RegisterPage onSubmit={this.postCourseinstanceRegisteration} handleFieldChange={this.handleFieldChange} github={this.state.github} projectname={this.state.projectname} /> :
+      page = this.state.firstLogin ?
+        <SetEmail postEmail={this.postEmail} handleFieldChange={this.handleFieldChange} handleFirstLoginFalse={this.handleFirstLoginFalse} email={this.state.email} /> :
+        page = this.state.user ?
+          listingPage :
 
-        <Login
-          username={u}
-          password={p}
-          postLogin={this.postLogin}
-          handleFieldChange={this.handleFieldChange}
-        />
+
+          <Login
+            username={u}
+            password={p}
+            postLogin={this.postLogin}
+            handleFieldChange={this.handleFieldChange}
+          />
 
     return (
-      <div className="App" >        
+      <div className="App" >
         {page}
         <Notification message={this.state.error} />
+
+
       </div>
-      // <RegisterPage onSubmit={this.postCourseinstanceRegisteration} handleFieldChange={this.handleFieldChange} github={this.state.github} projectname={this.state.projectname} />
     )
   }
 }
