@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 module.exports = (sequelize, DataTypes) => {
   var CourseInstance = sequelize.define('CourseInstance', {
     name: DataTypes.STRING,
@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     weekMaxPoints: DataTypes.INTEGER,
     currentWeek: DataTypes.INTEGER,
     ohid: DataTypes.STRING
-  }, {});
+  }, {})
   CourseInstance.associate = (models) => {
     CourseInstance.belongsTo(models.Course, {
       foreignKey: 'courseId',
@@ -23,5 +23,5 @@ module.exports = (sequelize, DataTypes) => {
 
   }
 
-  return CourseInstance;
-};
+  return CourseInstance
+}

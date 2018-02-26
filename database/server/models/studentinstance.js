@@ -1,9 +1,9 @@
-'use strict';
+'use strict'
 module.exports = (sequelize, DataTypes) => {
   var StudentInstance = sequelize.define('StudentInstance', {
     github: DataTypes.STRING,
     projectName: DataTypes.STRING
-  }, {});
+  }, {})
   StudentInstance.associate = (models) => {
 
     StudentInstance.hasMany(models.Week, {
@@ -22,5 +22,5 @@ module.exports = (sequelize, DataTypes) => {
     })
   }
 
-  return StudentInstance;
-};
+  return StudentInstance
+}

@@ -1,6 +1,6 @@
-'use strict';
+'use strict'
 module.exports = (sequelize, DataTypes) => {
-  var TeacherInstance = sequelize.define('TeacherInstance', {}, {});
+  var TeacherInstance = sequelize.define('TeacherInstance', {}, {})
   TeacherInstance.associate = function (models) {
 
     TeacherInstance.associate = (models) => {
@@ -15,6 +15,6 @@ module.exports = (sequelize, DataTypes) => {
       })
     }
     // associations can be defined here
-  };
-  return TeacherInstance;
-};
+  }
+  return TeacherInstance
+}

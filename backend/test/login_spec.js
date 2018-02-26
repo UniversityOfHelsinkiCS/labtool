@@ -1,33 +1,33 @@
-let request = require('supertest');
-let nock = require('nock');
+let request = require('supertest')
+let nock = require('nock')
 const jwt = require('jsonwebtoken')
-const assert = require('assert');
+const assert = require('assert')
 
 describe('Login', function () {
-    let User
-    let server
+  let User
+  let server
 
-    beforeEach(function () {
-        User = require('../server/models').User
-        nock.disableNetConnect = true
-        server = require('../app');
-
-
-    });
-    // https://github.com/visionmedia/supertest/issues/253  LOL INTERNET FULL OF SHIT
-    afterEach(function () {
-        server.close(); // <- STUPID SHIT. AFTER EACH DOESNT EVEN WORK.
-
-    });
+  beforeEach(function () {
+    User = require('../server/models').User
+    nock.disableNetConnect = true
+    server = require('../app')
 
 
-    it('respond to /login with correct credentials', function (done) {
-        // https://gauntface.com/blog/2015/10/30/node-unit-testing
-        // like that crap but does not work. What's the point when the documentation
-        // is mostly stackoverflow watching people having problems... not worth the while.
+  })
+  // https://github.com/visionmedia/supertest/issues/253  LOL INTERNET FULL OF SHIT
+  afterEach(function () {
+    server.close() // <- STUPID SHIT. AFTER EACH DOESNT EVEN WORK.
+
+  })
 
 
-        /* this shit does not work
+  it('respond to /login with correct credentials', function (done) {
+    // https://gauntface.com/blog/2015/10/30/node-unit-testing
+    // like that crap but does not work. What's the point when the documentation
+    // is mostly stackoverflow watching people having problems... not worth the while.
+
+
+    /* this shit does not work
         nock.disableNetConnect = true
         process.env.SECRET = 'testest'
         let token = jwt.sign({username: 'rkeskiva', id: 1}, process.env.SECRET);
@@ -67,20 +67,20 @@ describe('Login', function () {
         });
         */
 
-        done(); // so lets assume that this shit works.
-    });
+    done() // so lets assume that this shit works.
+  })
 
-    it('respond to /login with incorrect credentials with "wrong credentials"', function (done) {
-        nock("https://opetushallinto.cs.helsinki.fi").post('/login').reply(200, {
-            error: 'wrong credentials'
-        })
-        request(server).post('/login').expect('{"body":{"error":"wrong credentials"}}', done());
-    });
+  it('respond to /login with incorrect credentials with "wrong credentials"', function (done) {
+    nock('https://opetushallinto.cs.helsinki.fi').post('/login').reply(200, {
+      error: 'wrong credentials'
+    })
+    request(server).post('/login').expect('{"body":{"error":"wrong credentials"}}', done())
+  })
 
-    it('respond to /login with correct credentials second time',
-        function (done) {
+  it('respond to /login with correct credentials second time',
+    function (done) {
 
-        /*  // this shit does not work either lol. some internet page says that
+      /*  // this shit does not work either lol. some internet page says that
             // when dealing with javascript, it is important to test the code since
             // you do not know if it is broken or not while it works or not,
             // so even the tests do not work so its safe to assume that the code
@@ -131,8 +131,8 @@ describe('Login', function () {
 
 */
 
-        done(); // this piece of shit does seem to be working all right.
-        });
+      done() // this piece of shit does seem to be working all right.
+    })
 
 })
 

@@ -99,8 +99,8 @@ module.exports = {
         // terms: S = autumn, K = spring, V = summer
         uri: 'https://opetushallinto.cs.helsinki.fi/labtool/courses?year=2018&term=K',
         headers: {
-          "Content-Type": "application/json",
-          "Authorization": auth
+          'Content-Type': 'application/json',
+          'Authorization': auth
         },
         strictSSL: false
       }

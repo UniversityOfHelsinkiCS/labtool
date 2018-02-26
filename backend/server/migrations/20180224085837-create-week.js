@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('Weeks', {
@@ -28,9 +28,9 @@ module.exports = {
           as: 'studentInstanceId',
         }
       },
-    });
+    })
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Weeks');
+    return queryInterface.dropTable('Weeks')
   }
-};
+}

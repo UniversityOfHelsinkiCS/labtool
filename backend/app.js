@@ -112,8 +112,8 @@ app.get('*', (req, res) => res.status(404).send({
 }))
 
 let server = app.listen(3001, function () {
-    let port = server.address().port;
-    console.log('Backend is listening on port %s', port);
-});
+  let port = server.address().port
+  console.log('Backend is listening on port %s', port)
+})
 
-module.exports = server;
+module.exports = server
