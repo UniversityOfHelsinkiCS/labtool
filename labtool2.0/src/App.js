@@ -4,7 +4,7 @@ import Login from './components/pages/LoginPage'
 import MainPage from './components/pages/MainPage'
 import axios from 'axios'
 import SetEmail from './components/pages/SetEmail'
-import { BrowserRouter as Router } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import courseInstanceStudentService from './services/courseInstanceStudent'
 import RegisterPage from './components/pages/RegisterPage'
 
@@ -189,30 +189,12 @@ class App extends Component {
         />
 
     return (
-      <div className="App" >
-        
+      <div className="App" >        
         {page}
         <Notification message={this.state.error} />
-        <RegisterPage onSubmit={this.postCourseinstanceRegisteration} handleFieldChange={this.handleFieldChange} github={this.state.github} projectname={this.state.projectname} />
-        
       </div>
+      // <RegisterPage onSubmit={this.postCourseinstanceRegisteration} handleFieldChange={this.handleFieldChange} github={this.state.github} projectname={this.state.projectname} />
     )
   }
 }
-
-/*
-      <div>
-        <Router>
-          <div>
-            <div>
-              <Link to="/">home</Link> &nbsp;
-              <Link to="/course">courses</Link>
-            </div>
-            <Route exact path="/" render={() => <Home />} />
-            <Route path="/coursese" render={() => <Notes />} />
-          </div>
-        </Router>
-      </div>
-      */
-
 export default App
