@@ -22,7 +22,7 @@ module.exports = {
     return CourseInstance
       .find({
         where: {
-          courseId: req.params.courseId,
+          courseId: req.body.courseId,
         }
       })
       .then(courseInstance => {
