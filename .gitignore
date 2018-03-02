@@ -13,7 +13,6 @@ build/
 .env
 /.env
 .env/
-.idea/
 
 # misc
 .DS_Store

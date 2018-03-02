@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<Register /> Testing register Component matches snapshot 1`] = `
+exports[`<Register /> Register Component should render correctly 1`] = `
 <div
   className="Register"
   style={
