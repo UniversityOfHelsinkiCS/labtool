@@ -4,11 +4,11 @@ import Login from './components/pages/LoginPage'
 import MainPage from './components/pages/MainPage'
 import axios from 'axios'
 import SetEmail from './components/pages/SetEmail'
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
+
 import studentinstancesService from './services/studentinstances'
 import courseInstancesService from './services/courseInstance'
 import RegisterPage from './components/pages/RegisterPage'
-import ReactDOM from 'react-dom'
+
 import CourseInstance from './components/pages/CourseInstance'
 
 const Notification = ({ message }) => {
