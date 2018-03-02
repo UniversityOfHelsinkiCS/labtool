@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Login /> Login Component should render correctly 1`] = `
+<div
+  className="Login"
+>
+  <p>
+    Login page
+  </p>
+  <form>
+    <label>
+      Username: 
+      <br />
+      <input
+        className="form-control1"
+        name="name"
+        required={true}
+        type="text"
+      />
+    </label>
+    <label>
+       
+      <br />
+      Password: 
+      <br />
+      <input
+        className="form-control2"
+        name="password"
+        required={true}
+        type="password"
+      />
+    </label>
+     
+    <br />
+    <button
+      type="submit"
+    >
+      Login
+    </button>
+  </form>
+</div>
+`;
