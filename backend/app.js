@@ -2,8 +2,6 @@ let express = require('express')
 let app = express()
 let bodyParser = require('body-parser')
 const jwt = require('jsonwebtoken')
-const User = require('./models').User
-const request = require('request')
 
 require('dotenv').config()
 
@@ -32,11 +30,12 @@ app.use(function (req, res, next) {
   next()
 })
 
-// login
-app.post('/login', function (req, res) {
-    const options = {
+// login Oikea logini server/controllers/login ...
+/* app.post('/login', function (req, res) {
+  const request = require('request')
+  const options = {
     method: 'post',
-    uri: 'https://opetushallinto.cs.helsinki.fi:443/login',
+    uri: 'https://opetushallinto.cs.helsinki.fi/login',
     strictSSL: false,
     json: {'username': req.body.username, 'password': req.body.password}
   }
@@ -45,6 +44,7 @@ app.post('/login', function (req, res) {
     if (err) {
       console.log(err)
     }
+    console.log(result.response.body.error)
 
     if (result.response.body.error !== 'wrong credentials') {
       User
@@ -91,7 +91,7 @@ app.post('/login', function (req, res) {
       })
     }
   })
-})
+}) */
 
 const tokenVerify = ({ token }) => {
   jwt.verify(token, process.env.SECRET, function (err, decoded) {
@@ -107,11 +107,22 @@ const tokenVerify = ({ token }) => {
   })
 }
 
-app.use('/users', require('./controllers/user').userRoutes)
+// Sequelize reitti määrittelyt
+require('./server/routes')(app)
+require('./server/routes/userRouter')(app)
+require('./server/routes/courseInstanceRouter')(app)
+require('./server/routes/courseRouter')(app)
+require('./server/routes/loginRouter')(app)
+require('./server/routes/studentInstanceRouter')(app)
+require('./server/routes/teacherInstanceRouter')(app)
+require('./server/routes/weekRouter')(app)
+app.get('*', (req, res) => res.status(404).send({
+  message: 'Not found.',
+}))
 
 let server = app.listen(3001, function () {
-  let port = server.address().port;
-  console.log('Example app listening at port %s', port);
-});
+  let port = server.address().port
+  console.log('Backend is listening on port %s', port)
+})
 
-module.exports = server;
+module.exports = server
