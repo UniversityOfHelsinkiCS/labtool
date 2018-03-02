@@ -6,17 +6,9 @@ import App from '../App'
 describe('App', () => {
 
   it('should render without throwing an error', () => {
+    //for future tests
   
   })
 
-  /*
-  Jostain syystä räjähtää käsiin joka kerta, kuulemma undefined
- it('should have the correct state', () => {
-    const output = shallow(
-      <App />
-    )
-    
-    expect(output.state().firstLogin).toEqual(false)
-  })
-  */
+  
  })
