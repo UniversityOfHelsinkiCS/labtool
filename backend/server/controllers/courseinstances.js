@@ -3,13 +3,14 @@ const CourseInstance = require('../models').CourseInstance
 module.exports = {
 
   create(req, res) {
+    console.log('REQ BODY: ', req.body)
     return CourseInstance
       .create({
         name: req.body.name,
         start: req.body.start,
         end: req.body.end,
         active: req.body.active,
-        week_amount: req.body.week_amount,
+        weekAmount: req.body.weekAmount,
         week_max_points: req.body.week_max_points,
         current_week: req.body.current_week,
         courseId: req.body.courseId
@@ -19,10 +20,12 @@ module.exports = {
   },
 
   update(req, res) {
+    console.log('REQ body: ', req.body)
+    console.log('REQ params: ', req.params)
     return CourseInstance
       .find({
         where: {
-          courseId: req.params.courseId,
+          id: req.params.id
         }
       })
       .then(courseInstance => {
@@ -37,9 +40,9 @@ module.exports = {
             start: req.body.start || courseInstance.start,
             end: req.body.end || courseInstance.end,
             active: req.body.active || courseInstance.active,
-            week_amount: req.body.week_amount || courseInstance.week_amount,
-            week_max_points: req.body.week_max_points || courseInstance.week_max_points,
-            current_week: req.body.current_week || courseInstance.current_week,
+            weekAmount: req.body.weekAmount || courseInstance.weekAmount,
+            weekMaxPoints: req.body.weekMaxPoints || courseInstance.weekMaxPoints,
+            currentWeek: req.body.currentWeek || courseInstance.currentWeek,
           })
           .then(updatedCourseInstance => res.status(200).send(updatedCourseInstance))
           .catch(error => res.status(400).send(error))
