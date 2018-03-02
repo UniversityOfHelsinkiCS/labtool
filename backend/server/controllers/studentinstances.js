@@ -3,11 +3,13 @@ const jwt = require('jsonwebtoken')
 
 module.exports = {
   create(req, res) {
-    return (
+    const errors = []
+    return (      
       jwt.verify(req.token, process.env.SECRET, function (err, decoded) {
+        
         if (err) {
-          const error = ({ error: 'token verification failed' })
-          res.status(400).send(error)
+          errors.push( 'token verification failed' )
+          res.status(400).send(errors)
         } else {
           StudentInstance
             .findOrCreate({
@@ -19,7 +21,13 @@ module.exports = {
                 courseInstanceId: req.body.courseInstanceId
               }
             })
-            .then(studentInstance => res.status(201).send(studentInstance))
+            .spread((si, created) => {
+              if(created) {
+                errors.push('You are not registered to course in WebOodi')
+                res.status(200).send(errors)
+              } 
+              res.status(200).send(si)
+            })
             .catch(error => res.status(400).send(error))
         }
       })
