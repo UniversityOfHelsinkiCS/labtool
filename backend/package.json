@@ -26,12 +26,24 @@
     "nock": "^9.2.0",
     "supertest": "^3.0.0"
   },
+<<<<<<< HEAD
+  "devDependencies": {
+    "mocha": "^5.0.1",
+    "nock": "^9.1.9",
+    "supertest": "^3.0.0"
+  },
+=======
+>>>>>>> 536c6c61a3677e7890222a06c3b8c878f4a7f7d9
   "scripts": {
     "start": "node app.js",
     "migrate": "node_modules/.bin/sequelize db:migrate",
     "createdb": "node_modules/.bin/sequelize db:create",
     "dropdb": "node_modules/.bin/sequelize db:drop",
+<<<<<<< HEAD
+    "test": "node_modules/.bin/mocha -R spec"
+=======
     "test": "./bin/test.sh test"
+>>>>>>> 536c6c61a3677e7890222a06c3b8c878f4a7f7d9
   },
   "author": "",
   "license": "ISC"

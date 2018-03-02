@@ -9,11 +9,11 @@ const Login = ({ postLogin, handlePasswordChange, handleUsernameChange }) => {
       <form onSubmit={postLogin}>
         <label>
           Username: <br />
-          <input type="text" className="form-control" name="name" onChange={handleUsernameChange} required />
+          <input type="text" className="form-control1" name="name" onChange={handleUsernameChange} required />
         </label>
         <label> <br />
           Password: <br />
-          <input type="password" className="form-control" name="password" onChange={handlePasswordChange} required />
+          <input type="password" className="form-control2" name="password" onChange={handlePasswordChange} required />
         </label> <br />
         <button type="submit">Login</button>
       </form>

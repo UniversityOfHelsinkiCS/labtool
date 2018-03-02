@@ -2,6 +2,11 @@ let express = require('express')
 let app = express()
 let bodyParser = require('body-parser')
 const jwt = require('jsonwebtoken')
+<<<<<<< HEAD
+const User = require('./models').User
+const request = require('request')
+=======
+>>>>>>> 536c6c61a3677e7890222a06c3b8c878f4a7f7d9
 
 require('dotenv').config()
 
@@ -30,12 +35,18 @@ app.use(function (req, res, next) {
   next()
 })
 
+<<<<<<< HEAD
+// login
+app.post('/login', function (req, res) {
+    const options = {
+=======
 // login Oikea logini server/controllers/login ...
 /* app.post('/login', function (req, res) {
   const request = require('request')
   const options = {
+>>>>>>> 536c6c61a3677e7890222a06c3b8c878f4a7f7d9
     method: 'post',
-    uri: 'https://opetushallinto.cs.helsinki.fi/login',
+    uri: 'https://opetushallinto.cs.helsinki.fi:443/login',
     strictSSL: false,
     json: {'username': req.body.username, 'password': req.body.password}
   }
@@ -44,7 +55,6 @@ app.use(function (req, res, next) {
     if (err) {
       console.log(err)
     }
-    console.log(result.response.body.error)
 
     if (result.response.body.error !== 'wrong credentials') {
       User
@@ -125,4 +135,13 @@ let server = app.listen(3001, function () {
   console.log('Backend is listening on port %s', port)
 })
 
+<<<<<<< HEAD
+let server = app.listen(3001, function () {
+  let port = server.address().port;
+  console.log('Example app listening at port %s', port);
+});
+
+module.exports = server;
+=======
 module.exports = server
+>>>>>>> 536c6c61a3677e7890222a06c3b8c878f4a7f7d9

@@ -12,11 +12,20 @@ node_js:
 before_install:
 - npm config set spin false
 - npm install -g npm
+- cd ../backend
+- npm config set spin false
+- cd ..
 install:
 - cd labtool2.0 
+<<<<<<< HEAD
 - npm install
 - cd ../backend
 - npm install
+=======
+- npm install
+- cd ../backend
+- npm install
+>>>>>>> 536c6c61a3677e7890222a06c3b8c878f4a7f7d9
 - cd ..
 jobs:
   include:
