@@ -9,8 +9,8 @@ module.exports = {
     'dialect': 'postgres'
   },
   'test': {
-    'username': 'postgres',
-    'password': null,
+    'username': process.env.CI_DB_USERNAME,
+    'password': process.env.CI_DB_PASSWORD,
     'database': 'labtool_test',
     'host': '127.0.0.1',
     'dialect': 'postgres'
