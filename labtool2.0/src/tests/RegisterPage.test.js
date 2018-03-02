@@ -6,19 +6,16 @@ import { shallowToJson } from 'enzyme-to-json'
 
 
 describe.only('<Register />', () => {
-  
-  describe('Register Component', () => {
 
-    // make our assertion and what we expect to happen 
+  describe('Testing register Component', () => {
+ 
     it('should render without throwing an error', () => {
       expect(shallow(<Register />).exists(<form className='Register'></form>)).toBe(true)
     })
 
-    it('should render correctly', () => {
-        const output = shallow(
-          <Register />
-        )
-        expect(output).toMatchSnapshot();
+    it('matches snapshot', () => {
+      const output = shallow(<Register />)
+      expect(output).toMatchSnapshot()
     })
 
     it('renders a GitHub link input', () => {

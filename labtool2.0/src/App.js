@@ -73,8 +73,18 @@ class App extends Component {
   postEmail = (event) => {
     event.preventDefault()
     let backend
+      /* This quick hax can be made more sane by introducing a ENV variable that
+      * specifies the backend host uri such as:
+      *
+      *      BACKEND_URI=http://my.host.name/backend
+      *  or
+      *      BACKEND_URI=http://localhost:3001
+      *
+      *  And this could be used across the frontend by using the BACKEND_URI + '/path/to/wherever'
+      *
+      * */
     if (process.env.NODE_ENV === "development") {
-      backend = 'http://localhost:3001/users/update'
+      backend = 'http://localhost:3001/api/users/update'
     } else {
       backend = '/labtool-backend/users/update'
     }
@@ -85,7 +95,7 @@ class App extends Component {
       .then(response => {
         console.log(config)
         console.log('You have updated email')
-        this.setState({ 
+        this.setState({
           email: '',
           firstLogin: false,
           user: response.data
