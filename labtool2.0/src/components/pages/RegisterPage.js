@@ -10,13 +10,13 @@ const Register = () => {
         <form >
           <label >
             GitHub link: <br/>
-            <input type="url" className="form-control" name="github"  required={true}  />
+            <input type="url" className="form-control1" name="github"  required={true}  />
           </label>
           <br />
           <label> 
         
             Project name:  <br/>
-            <input type="text" className="form-control" name="name" required />
+            <input type="text" className="form-control2" name="name" required />
           </label> <br />
         
           <button  type="submit">Submit</button>
