@@ -23,29 +23,17 @@ install:
 jobs:
   include:
   - stage: build feature
-    script:
-    - cd labtool2.0
-    - npm test
-    - cd ../backend
-    - npm run test
+    script: cd labtool2.0 && npm test && cd ../backend && npm run test
     after_success:
     - echo "onnistumisen jalkeen ei tehda konttia, mutta jotain muuta ehka?"
     if: branch =~ ^[0-9]
   - stage: development
-    script:
-    - cd labtool2.0
-    - npm test
-    - cd ../backend
-    - npm run test
+    script: cd labtool2.0 && npm test && cd ../backend && npm run test
     after_success:
     - echo "tehdaan development ymparistan kontti ja pushataan dockerhubiin"
     if: branch = dev
   - stage: master
-    script:
-    - cd labtool2.0
-    - npm test
-    - cd ../backend
-    - npm run test
+    script: cd labtool2.0 && npm test && cd ../backend && npm run test
     after_success:
     - echo "tehdaan master ympariston kontti ja pushataan dockerhubiin"
     if: branch = master
