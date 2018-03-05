@@ -32,7 +32,7 @@ module.exports = {
               { where: { id: decoded.id } }
             )
               .then(
-                User.findById(req.params.id)
+                User.findById(decoded.id)
                   .then(user => {
                     const returnedUser = {
                       email: user.email,
