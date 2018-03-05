@@ -158,8 +158,6 @@ class App extends Component {
       })
       .catch(error => {
         this.setState({
-          username: '',
-          password: '',
           error: 'Wrong username or password'
         })
         setTimeout(() => {
