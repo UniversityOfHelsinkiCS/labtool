@@ -23,7 +23,7 @@ describe('Express routes', function () {
 
 
   it('renders / with "hello world"', function testHello(done) {
-    request(server).get('/').expect('hello world', done)  // just checking if travis will fail
+    request(server).get('/').expect('hello world', done)
   })
 
   it('404 everything else', function testPath(done) {
