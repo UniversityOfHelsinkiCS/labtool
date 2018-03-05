@@ -1,6 +1,6 @@
 import React from 'react'
 
-const ModifyCourseInstance = (onSubmit, handleFieldChange, weekamount, weekmaxpoints, currentweek, courseactive) => {
+const ModifyCourseInstance = ({ onSubmit, handleFieldChange, weekamount, weekmaxpoints, currentweek, courseactive }) => {
 
     return (
         <div className="CourseInstance" style={{ textAlignVertical: "center", textAlign: "center" }}>
@@ -9,7 +9,7 @@ const ModifyCourseInstance = (onSubmit, handleFieldChange, weekamount, weekmaxpo
             <form onSubmit={onSubmit} >
                 <label>
                     Week amount: <br />
-                    <input type="text" onChange={handleFieldChange} value={weekamount} className="form-control1" name="weekamount" requred="true"/>
+                    <input type="text" onChange={handleFieldChange} value={weekamount} className="form-control1" name="weekamount" required />
                 </label>
                 <label> <br />
                     Weekly maxpoints: <br />
