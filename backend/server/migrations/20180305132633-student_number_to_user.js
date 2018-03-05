@@ -11,7 +11,10 @@ module.exports = {
 
   down: (queryInterface, Sequelize) => {
     // should not need any returns ?
-    
+
+    queryInterface.removeColumn('Users', 'studentNumber');
+
+
     /*
       Add reverting commands here.
       Return a promise to correctly handle asynchronicity.
