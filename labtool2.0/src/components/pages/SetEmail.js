@@ -3,7 +3,7 @@ import React from 'react'
 const SetEmail = ({ postEmail, handleFieldChange, handleFirstLoginFalse, email }) => {
 
   return (
-    <div className="Email">
+    <div className="Email" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
 
       <form onSubmit={postEmail}>
         <label>
