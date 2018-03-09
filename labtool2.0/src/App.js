@@ -5,25 +5,24 @@ import Login from './Login'
 
 
 const App = () => {
-    return (
-        <div>
-            {/* <Header /> */}
-            <Main />
-        </div>
-    )
+  return (
+    <div>
+      {/* <Header /> */}
+      <Main />
+    </div>
+  )
 }
 
 const Main = () => {
-    return (
-        <main>
-            <Switch>
-                <Route exact path='/' component={Login} />
-                <Route path='/courses' component={Courses} />
-                {/* <Route path='/schedule' component={Schedule} /> */}
-            </Switch>
-        </main>
-    )
+  return (
+    <main>
+      <Switch>
+        <Route exact path='/' component={Login} />
+        <Route path='/courses' component={Courses} />
+        {/* <Route path='/schedule' component={Schedule} /> */}
+      </Switch>
+    </main>
+  )
 }
 
 export default App
-
