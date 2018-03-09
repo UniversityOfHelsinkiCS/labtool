@@ -98,21 +98,16 @@ class Login extends Component {
   postEmail = (event) => {
     event.preventDefault()
     let backend
-    /* This quick hax can be made more sane by introducing a ENV variable that
-    * specifies the backend host uri such as:
-    *
-    *      BACKEND_URI=http://my.host.name/backend
-    *  or
-    *      BACKEND_URI=http://localhost:3001
-    *
-    *  And this could be used across the frontend by using the BACKEND_URI + '/path/to/wherever'
+
+    /*
+    *  Like this. Now all you have to do is to set the url for the backend like if its located
+    *  in the server example.com with https in the path of /my/backend then you would tell
+    *  REACT_APP_BACKEND_URL=http://example.com/my/backend or in development just
+    *  REACT_APP_BACKEND_URL=http://localhost:3001
     *
     * */
-    if (process.env.NODE_ENV === 'development') {
-      backend = 'http://localhost:3001/api/users/update'
-    } else {
-      backend = '/labtool-backend/users/update'
-    }
+    backend = process.env.REACT_APP_BACKEND_URL + '/api/users/update'
+
     const userWithEmail = { ...this.state.user, email: this.state.email }
     console.log(userWithEmail)
     const config = { headers: { 'Authorization': 'bearer ' + this.state.token } }
@@ -135,11 +130,7 @@ class Login extends Component {
   postLogin = (event) => {
     event.preventDefault()
     let backend
-    if (process.env.NODE_ENV === 'development') {
-      backend = 'http://localhost:3001/login'
-    } else {
-      backend = '/labtool-backend/login'
-    }
+    backend = process.env.REACT_APP_BACKEND_URL + '/login'
     axios.post(backend, {
       username: this.state.username,
       password: this.state.password
