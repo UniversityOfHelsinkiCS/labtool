@@ -8,4 +8,5 @@ module.exports = (app) => {
   app.delete('/api/courseinstances/:id', courseInstanceController.destroy)
 
   app.post('/api/courseinstances/update', courseInstanceController.getNew) //For updating DB with data from opetushallitus
+  app.post('/api/courseinstances/update/next', courseInstanceController.getNewer)
 }
