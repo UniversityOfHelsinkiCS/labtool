@@ -91,7 +91,7 @@ class App extends Component {
   postEmail = (event) => {
     event.preventDefault()
     let backend
-    if (process.env.NODE_ENV === "development") {
+    if (process.env.NODE_ENV === 'development') {
       backend = 'http://localhost:3001/api/users/update'
     } else {
       backend = '/labtool-backend/users/update'
@@ -120,7 +120,7 @@ class App extends Component {
   postLogin = (event) => {
     event.preventDefault()
     let backend
-    if (process.env.NODE_ENV === "development") {
+    if (process.env.NODE_ENV === 'development') {
       backend = 'http://localhost:3001/login'
     } else {
       backend = '/labtool-backend/login'

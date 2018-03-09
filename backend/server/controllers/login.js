@@ -13,7 +13,7 @@ module.exports = {
     }
 
     const result = request(options, function (err, resp, body) {
-      console.log("testitulostus: ", result.response.body)
+      console.log('testitulostus: ', result.response.body)
       if (err) {
         console.log(err)
       }
