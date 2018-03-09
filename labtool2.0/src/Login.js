@@ -108,7 +108,7 @@ class Login extends Component {
     *  And this could be used across the frontend by using the BACKEND_URI + '/path/to/wherever'
     *
     * */
-    if (process.env.NODE_ENV === "development") {
+    if (process.env.NODE_ENV === 'development') {
       backend = 'http://localhost:3001/api/users/update'
     } else {
       backend = '/labtool-backend/users/update'
@@ -135,7 +135,7 @@ class Login extends Component {
   postLogin = (event) => {
     event.preventDefault()
     let backend
-    if (process.env.NODE_ENV === "development") {
+    if (process.env.NODE_ENV === 'development') {
       backend = 'http://localhost:3001/login'
     } else {
       backend = '/labtool-backend/login'

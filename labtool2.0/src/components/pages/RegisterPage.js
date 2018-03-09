@@ -4,7 +4,7 @@ import React from 'react'
 const RegisterPage = ({ onSubmit, handleFieldChange, projectname, github }) => {
 
   return (
-    <div className="Register" style={{ textAlignVertical: "center", textAlign: "center", }} >
+    <div className="Register" style={{ textAlignVertical: 'center', textAlign: 'center', }} >
       <h3>Register for TiraLabra</h3>
 
       <form onSubmit={onSubmit} >
