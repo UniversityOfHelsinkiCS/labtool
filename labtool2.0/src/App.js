@@ -4,7 +4,7 @@ import Login from './components/pages/LoginPage'
 import MainPage from './components/pages/MainPage'
 import axios from 'axios'
 import SetEmail from './components/pages/SetEmail'
-import ModifyCourseInstance from './components/pages/ModifyCourseInstancePage'
+
 const Notification = ({ message }) => {
   if (message === null) {
     return null
