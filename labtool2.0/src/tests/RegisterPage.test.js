@@ -15,10 +15,10 @@ describe.only('<Register />', () => {
     })
 
     it('should render correctly', () => {
-        const output = shallow(
-          <Register />
-        )
-        expect(output).toMatchSnapshot();
+      const output = shallow(
+        <Register />
+      )
+      expect(output).toMatchSnapshot()
     })
 
     it('renders a GitHub link input', () => {
