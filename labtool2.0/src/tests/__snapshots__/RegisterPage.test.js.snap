@@ -11,7 +11,7 @@ exports[`<Register /> Register Component should render correctly 1`] = `
   }
 >
   <h3>
-    Register for TiraLabra
+    Register for 
   </h3>
   <form>
     <label>
@@ -43,5 +43,8 @@ exports[`<Register /> Register Component should render correctly 1`] = `
       Submit
     </button>
   </form>
+  <button>
+    Cancel
+  </button>
 </div>
 `;

@@ -8,7 +8,7 @@ const SetEmail = ({ postEmail, handleFieldChange, handleFirstLoginFalse, email }
       <form onSubmit={postEmail}>
         <label>
           Email address: <br />
-          <input value={email} type="text" className="form-control" name="email" onChange={handleFieldChange} required />
+          <input value={email} type="email" className="form-control" name="email" onChange={handleFieldChange} required />
         </label>
         <button type="submit">Submit</button>
       </form>

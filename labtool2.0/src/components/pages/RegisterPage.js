@@ -1,11 +1,11 @@
 import React from 'react'
 
 
-const RegisterPage = ({ onSubmit, handleFieldChange, projectname, github }) => {
+const RegisterPage = ({ onSubmit, handleFieldChange, projectname, github, cancel, name }) => {
 
   return (
     <div className="Register" style={{ textAlignVertical: 'center', textAlign: 'center', }} >
-      <h3>Register for TiraLabra</h3>
+      <h3>Register for {name}</h3>
 
       <form onSubmit={onSubmit} >
         <label >
@@ -21,6 +21,7 @@ const RegisterPage = ({ onSubmit, handleFieldChange, projectname, github }) => {
 
         <button type="submit">Submit</button>
       </form>
+      <button onClick={cancel}>Cancel</button>
     </div>
   )
 }
