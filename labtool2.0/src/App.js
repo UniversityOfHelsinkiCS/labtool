@@ -171,7 +171,6 @@ class App extends Component {
   render() {
     const u = this.state.username
     const p = this.state.password
-   // const a = this.state.
     let page  = null
     page = this.state.firstLogin ? 
       <SetEmail postEmail={this.postEmail} handleEmailChange={this.handleEmailChange} handleFirstLoginFalse={this.handleFirstLoginFalse} email={this.state.email} /> :
