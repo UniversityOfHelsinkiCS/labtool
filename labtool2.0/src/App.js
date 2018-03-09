@@ -16,6 +16,17 @@ const Notification = ({ message }) => {
   )
 }
 
+const Successful = ({ message }) => {
+  if (message === null) {
+    return null
+  }
+  return (
+    <div className="success">
+      {message}
+    </div>
+  )
+}
+
 class App extends Component {
 
   constructor(props) {
@@ -26,6 +37,7 @@ class App extends Component {
       email: '',
       firstLogin: false,
       error: '',
+      success:'',
       user: null,
       token: null
     }
@@ -46,7 +58,9 @@ class App extends Component {
   handleFirstLoginTrue = (event) => {
     this.setState({ 
       firstLogin: true,
-      email: this.state.user.email
+      email: this.state.user.email,
+      error: null,
+      success: null
     })
   }
 
@@ -66,24 +80,18 @@ class App extends Component {
     window.localStorage.removeItem('loggedUser')
     this.setState({ 
       user: null,
-      token: null
+      token: null,
+      success: 'You have logged out'
     })
+    setTimeout(() => {
+      this.setState({ success: null })
+    }, 5000)
   }
 
   postEmail = (event) => {
     event.preventDefault()
     let backend
-      /* This quick hax can be made more sane by introducing a ENV variable that
-      * specifies the backend host uri such as:
-      *
-      *      BACKEND_URI=http://my.host.name/backend
-      *  or
-      *      BACKEND_URI=http://localhost:3001
-      *
-      *  And this could be used across the frontend by using the BACKEND_URI + '/path/to/wherever'
-      *
-      * */
-    if (process.env.NODE_ENV === "development") {
+    if (process.env.NODE_ENV === 'development') {
       backend = 'http://localhost:3001/api/users/update'
     } else {
       backend = '/labtool-backend/users/update'
@@ -95,11 +103,15 @@ class App extends Component {
       .then(response => {
         console.log(config)
         console.log('You have updated email')
-        this.setState({
+        this.setState({ 
           email: '',
           firstLogin: false,
-          user: response.data
+          user: response.data,
+          success: 'Email updated'
         })
+        setTimeout(() => {
+          this.setState({success: null})
+        }, 3000)
         console.log('state has been cleared and user state refreshed')
       })
       .catch(error => this.setState(error))
@@ -108,7 +120,7 @@ class App extends Component {
   postLogin = (event) => {
     event.preventDefault()
     let backend
-    if (process.env.NODE_ENV === "development") {
+    if (process.env.NODE_ENV === 'development') {
       backend = 'http://localhost:3001/login'
     } else {
       backend = '/labtool-backend/login'
@@ -119,8 +131,8 @@ class App extends Component {
     })
       .then(response => {
         if (!response.data.error) {
-          console.log('You have succesfully logged in')
-          this.setState({ error: '' })
+          console.log('You have successfully logged in')
+          this.setState({ error: '', success: 'You have successfully logged in' })
           console.log('login info reset')
           console.log(response.data.token)
           this.setState({
@@ -129,6 +141,9 @@ class App extends Component {
             token: response.data.token,
             user: response.data.returnedUser
           })
+          setTimeout(() => {
+            this.setState({ success: null })
+          }, 5000)
           window.localStorage.setItem('loggedUser', JSON.stringify(response.data))
 
           if(response.data.created) {
@@ -143,9 +158,12 @@ class App extends Component {
       })
       .catch(error => {
         this.setState({
-          username: '',
-          password: ''
+          error: 'Wrong username or password'
         })
+        setTimeout(() => {
+          this.setState({error: null})
+        }, 5000)
+        console.log('Wrong username or password')
       })
 
   }
@@ -172,6 +190,7 @@ class App extends Component {
       <div className="App" >
         {page}
         <Notification message={this.state.error} />
+        <Successful message={this.state.success} />
       </div>
     )
   }

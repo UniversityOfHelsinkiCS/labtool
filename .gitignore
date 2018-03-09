@@ -13,10 +13,10 @@ build/
 .env
 /.env
 .env/
-.idea/
 
 # misc
 .DS_Store
+.idea/
 .env.local
 .env.development.local
 .env.test.local
