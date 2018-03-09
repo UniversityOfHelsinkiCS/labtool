@@ -3,7 +3,7 @@ import React from 'react'
 const Login = ({ postLogin, handleFieldChange, username, password }) => {
 
   return (
-    <div className="Login">
+    <div className="Login" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
       <p>Login page</p>
 
       <form onSubmit={postLogin}>

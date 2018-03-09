@@ -3,6 +3,12 @@
 exports[`<Login /> Login Component should render correctly 1`] = `
 <div
   className="Login"
+  style={
+    Object {
+      "textAlign": "center",
+      "textAlignVertical": "center",
+    }
+  }
 >
   <p>
     Login page

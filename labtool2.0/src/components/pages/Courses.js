@@ -8,7 +8,7 @@ class Courses extends Component {
 
   render() {
     return (
-      <div>
+      <div style={{ textAlignVertical: 'center', textAlign: 'center', }}>
         <h2>Kursseja!</h2>
         <Switch>
           <Route exact path='/courses' component={AllCourses} />
