@@ -21,17 +21,17 @@ describe.only('<ModifyCourseInstancePage />', () => {
 
         })
 
-        it('renders a GitHub link input', () => {
+        it('renders weekly amount', () => {
             expect(shallow(<ModifyCourseInstancePage />).find('.form-control1').length).toEqual(1)
         })
 
-        it('renders project name input', () => {
+        it('renders weekly maxpoints', () => {
             expect(shallow(<ModifyCourseInstancePage />).find('.form-control2').length).toEqual(1)
         })
-        it('renders project name input', () => {
+        it('renders current week', () => {
             expect(shallow(<ModifyCourseInstancePage />).find('.form-control3').length).toEqual(1)
         })
-        it('renders project name input', () => {
+        it('renders active course checkbox', () => {
             expect(shallow(<ModifyCourseInstancePage />).find('.form-control4').length).toEqual(1)
         })
     })
