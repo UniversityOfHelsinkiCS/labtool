@@ -13,7 +13,7 @@ exports[`<Login /> Login Component should render correctly 1`] = `
       <br />
       <input
         className="form-control1"
-        name="name"
+        name="username"
         required={true}
         type="text"
       />

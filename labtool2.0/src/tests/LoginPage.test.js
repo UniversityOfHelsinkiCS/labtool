@@ -16,7 +16,7 @@ describe.only('<Login />', () => {
       const output = shallow(
         <Login />
       )
-    //  expect(output).toMatchSnapshot()
+    expect(output).toMatchSnapshot()
     })
 
     it('renders a username input', () => {
