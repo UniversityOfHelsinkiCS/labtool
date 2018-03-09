@@ -6,17 +6,17 @@ import Course from './Course'
 class Courses extends Component {
     
 
-    render() {
-        return (
-            <div>
-                <h2>Kursseja!</h2>
-                <Switch>
-                    <Route exact path='/courses' component={AllCourses} />
-                    <Route path='/courses/:number' component={Course} />
-                </Switch>
-            </div >
-        )
-    }
+  render() {
+    return (
+      <div>
+        <h2>Kursseja!</h2>
+        <Switch>
+          <Route exact path='/courses' component={AllCourses} />
+          <Route path='/courses/:number' component={Course} />
+        </Switch>
+      </div >
+    )
+  }
 }
 
 
