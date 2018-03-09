@@ -2,7 +2,7 @@ const User = require('../models').User
 const jwt = require('jsonwebtoken')
 
 module.exports = {
-  create(req, res) {
+  create(req, res) { // EI OK...
     return User
       .create({
         username: req.body.username,
@@ -18,7 +18,7 @@ module.exports = {
 
   update(req, res) {
     return (
-      jwt.verify(req.token, process.env.SECRET, function (err, decoded) {
+      jwt.verify(req.token, process.env.SECRET, function (err, decoded) {  // OK
         if (err) {
           const error = ({ error: 'token verification failed' })
           res.status(400).send(error)

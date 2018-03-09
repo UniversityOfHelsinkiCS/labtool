@@ -29,6 +29,7 @@
   "scripts": {
     "start": "node app.js",
     "migrate": "node_modules/.bin/sequelize db:migrate",
+    "debug": "node --inspect=0.0.0.0:9229 app.js",
     "createdb": "node_modules/.bin/sequelize db:create",
     "dropdb": "node_modules/.bin/sequelize db:drop",
     "test": "./bin/test.sh test"
