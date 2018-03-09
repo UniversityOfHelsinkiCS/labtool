@@ -15,7 +15,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "debug": "react-scripts --inspect=0.0.0.0:9230 start .env.development.local", /* strongly recommended to figure skate this .env.development.local out for now :) */
+    "debug": "react-scripts --inspect=0.0.0.0:9230 start .env.development.local",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
