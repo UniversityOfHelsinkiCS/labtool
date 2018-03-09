@@ -4,7 +4,7 @@ const request = require('request')
 
 module.exports = {
   login(req, res) {
-
+    
     const options = {
       method: 'post',
       uri: 'https://opetushallinto.cs.helsinki.fi/login',
@@ -13,11 +13,11 @@ module.exports = {
     }
 
     const result = request(options, function (err, resp, body) {
-      console.log('testitulostus: ', result.response.body)
+      console.log("testitulostus: ", result.response.body)
       if (err) {
         console.log(err)
       }
-
+      
 
       if (result.response.body.username && result.response.body.error !== 'wrong credentials') {
         User

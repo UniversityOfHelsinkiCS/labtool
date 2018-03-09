@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Login = ({ postLogin, handlePasswordChange, handleUsernameChange }) => {
+const Login = ({ postLogin, handleFieldChange, username, password }) => {
 
   return (
     <div className="Login">
@@ -9,11 +9,11 @@ const Login = ({ postLogin, handlePasswordChange, handleUsernameChange }) => {
       <form onSubmit={postLogin}>
         <label>
           Username: <br />
-          <input type="text" className="form-control1" name="name" onChange={handleUsernameChange} required />
+          <input type="text" className="form-control" value={username} name="username" onChange={handleFieldChange} required />
         </label>
         <label> <br />
           Password: <br />
-          <input type="password" className="form-control2" name="password" onChange={handlePasswordChange} required />
+          <input type="password" className="form-control" value={password} name="password" onChange={handleFieldChange} required />
         </label> <br />
         <button type="submit">Login</button>
       </form>
