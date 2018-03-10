@@ -1,6 +1,5 @@
 {
   "name": "labtool2.0",
-  "homepage": "https://svm-61.cs.helsinki.fi/labtool/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
