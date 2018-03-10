@@ -15,7 +15,18 @@ const Notification = ({ message }) => {
     return null
   }
   return (
-    <div className="error">
+    <div class="error" className="error" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
+      {message}
+    </div>
+  )
+}
+
+const Successful = ({ message }) => {
+  if (message === null) {
+    return null
+  }
+  return (
+    <div class="success" className="success" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
       {message}
     </div>
   )
@@ -30,10 +41,12 @@ class Login extends Component {
       password: '',
       email: '',
       firstLogin: false,
-      error: '',
+      error: null,
+      success: null,
       user: null,
       token: null,
       courseInstanceId: null,
+      courseInstanceName: null,
       github: '',
       projectname: '',
       courseInstances: []
@@ -52,8 +65,19 @@ class Login extends Component {
     }
   }
 
+  cancelRegister = () => {
+    this.setState({ courseInstanceId: null })
+  }
+
   handleFieldChange = (event) => {
     this.setState({ [event.target.name]: event.target.value })
+  }
+
+  handleRegister = (event) => {
+    this.setState({
+      courseInstanceId: event.target.value,
+      courseInstanceName: event.target.name
+    })
   }
 
   handleFirstLoginFalse = (event) => {
@@ -71,8 +95,12 @@ class Login extends Component {
     window.localStorage.removeItem('loggedUser')
     this.setState({
       user: null,
-      token: null
+      token: null,
+      success: 'You have logged out'
     })
+    setTimeout(() => {
+      this.setState({ success: null })
+    }, 5000)
     studentinstancesService.setToken('')
   }
 
@@ -84,6 +112,13 @@ class Login extends Component {
       github: this.state.github,
       projectName: this.state.projectname
     })
+    this.setState({
+      success: 'Register successful!',
+      courseInstanceId: null
+    })
+    setTimeout(() => {
+      this.setState({ success: null })
+    }, 5000)
   }
 
   updateUserinformationInLocalStorage = (user) => {
@@ -98,16 +133,21 @@ class Login extends Component {
   postEmail = (event) => {
     event.preventDefault()
     let backend
-
-    /*
-    *  Like this. Now all you have to do is to set the url for the backend like if its located
-    *  in the server example.com with https in the path of /my/backend then you would tell
-    *  REACT_APP_BACKEND_URL=http://example.com/my/backend or in development just
-    *  REACT_APP_BACKEND_URL=http://localhost:3001
+    /* This quick hax can be made more sane by introducing a ENV variable that
+    * specifies the backend host uri such as:
+    *
+    *      BACKEND_URI=http://my.host.name/backend
+    *  or
+    *      BACKEND_URI=http://localhost:3001
+    *
+    *  And this could be used across the frontend by using the BACKEND_URI + '/path/to/wherever'
     *
     * */
-    backend = process.env.REACT_APP_BACKEND_URL + '/api/users/update'
-
+    if (process.env.NODE_ENV === 'development') {
+      backend = 'http://localhost:3001/api/users/update'
+    } else {
+      backend = '/labtool-backend/users/update'
+    }
     const userWithEmail = { ...this.state.user, email: this.state.email }
     console.log(userWithEmail)
     const config = { headers: { 'Authorization': 'bearer ' + this.state.token } }
@@ -118,8 +158,12 @@ class Login extends Component {
         this.setState({
           email: '',
           firstLogin: false,
-          user: userWithEmail // Cannot get the backend to return user with updated email, should be found in response.data
+          user: userWithEmail, // Cannot get the backend to return user with updated email, should be found in response.data
+          success: 'Email updated'
         })
+        setTimeout(() => {
+          this.setState({success: null})
+        }, 3000)
         this.updateUserinformationInLocalStorage(userWithEmail) //See the comment above
 
         console.log('state has been cleared and user state refreshed')
@@ -130,7 +174,11 @@ class Login extends Component {
   postLogin = (event) => {
     event.preventDefault()
     let backend
-    backend = process.env.REACT_APP_BACKEND_URL + '/login'
+    if (process.env.NODE_ENV === 'development') {
+      backend = 'http://localhost:3001/login'
+    } else {
+      backend = '/labtool-backend/login'
+    }
     axios.post(backend, {
       username: this.state.username,
       password: this.state.password
@@ -138,7 +186,10 @@ class Login extends Component {
       .then(response => {
         if (!response.data.error) {
           console.log('You have succesfully logged in')
-          this.setState({ error: '' })
+          this.setState({ error: null, success: 'You have successfully logged in' })
+          setTimeout(() => {
+            this.setState({ success: null })
+          }, 5000)
           console.log('login info reset')
           console.log(response.data.token)
           this.setState({
@@ -154,17 +205,19 @@ class Login extends Component {
             this.setState({ firstLogin: true })
           }
         } else {
-          this.setState({ error: 'Wrong username or password' })
           console.log('Wrong username or password')
-
         }
 
       })
       .catch(error => {
         this.setState({
           username: '',
-          password: ''
+          password: '',
+          error: 'Wrong username or password'
         })
+        setTimeout(() => {
+          this.setState({error: null})
+        }, 5000)
       })
 
   }
@@ -178,7 +231,7 @@ class Login extends Component {
         <p></p>
         {this.state.courseInstances.map(instance =>
           <CourseInstance
-            handleFieldChange={this.handleFieldChange}
+            handleFieldChange={this.handleRegister}
             key={instance.id}
             instance={instance}
           />
@@ -190,7 +243,7 @@ class Login extends Component {
     const p = this.state.password
     let page = null
     page = this.state.courseInstanceId ?
-      <RegisterPage onSubmit={this.postCourseinstanceRegisteration} handleFieldChange={this.handleFieldChange} github={this.state.github} projectname={this.state.projectname} /> :
+      <RegisterPage name={this.state.courseInstanceName} cancel={this.cancelRegister} onSubmit={this.postCourseinstanceRegisteration} handleFieldChange={this.handleFieldChange} github={this.state.github} projectname={this.state.projectname} /> :
       page = this.state.firstLogin ?
         <SetEmail postEmail={this.postEmail} handleFieldChange={this.handleFieldChange} handleFirstLoginFalse={this.handleFirstLoginFalse} email={this.state.email} /> :
         page = this.state.user ?
@@ -207,8 +260,10 @@ class Login extends Component {
     return (
       <div className="App" >
         {page}
+        <p></p>
         <Notification message={this.state.error} />
-
+        <p></p>
+        <Successful message={this.state.success} />
       </div>
     )
   }

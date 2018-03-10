@@ -2,7 +2,7 @@ import React from 'react'
 
 const CourseInstance = ({ instance, handleFieldChange }) => {
   return(
-    <li> {instance.name} <button onClick={handleFieldChange} name="courseInstanceId" value={instance.id}>Register</button>
+    <li style={{ textAlignVertical: 'center', textAlign: 'center' }}> {instance.name} <button name={instance.name} onClick={handleFieldChange} value={instance.id}>Register</button>
     </li>
   )
 }
