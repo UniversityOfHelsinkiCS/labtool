@@ -11,7 +11,8 @@
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
     "react-scripts": "1.1.0",
-    "sequelize": "^4.35.2"
+    "sequelize": "^4.35.2",
+    "serve": "^6.5.2"
   },
   "scripts": {
     "start": "react-scripts start",
