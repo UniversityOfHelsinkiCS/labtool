@@ -113,9 +113,9 @@ class Login extends Component {
       projectName: this.state.projectname
     })
     this.setState({
-       success: 'Register successful!',
-       courseInstanceId: null 
-       })
+      success: 'Register successful!',
+      courseInstanceId: null
+    })
     setTimeout(() => {
       this.setState({ success: null })
     }, 5000)

@@ -7,8 +7,8 @@ const CurrentTermAndYear = () => {
   var year = date.getFullYear()
   console.log('month is: ', month)
   console.log('date: ', date)
-  if(month >= 11){
-    year = year + 1 
+  if (month >= 11) {
+    year = year + 1
   }
   const currentYear = year.toString()
   var nextYear = getNextYear(currentTerm, year)
@@ -19,33 +19,33 @@ const CurrentTermAndYear = () => {
 }
 
 const getCurrentTerm = (month) => {
-  if(1 <= month <= 5){
+  if (1 <= month <= 5) {
     return 'K'
   }
-  if (6 <= month <= 8){
+  if (6 <= month <= 8) {
     return 'V'
   }
-  if (9 <= month <= 12){
+  if (9 <= month <= 12) {
     return 'S'
   }
 }
 
 const getNextYear = (currentTerm, currentYear) => {
-  if(currentTerm === 'S'){
+  if (currentTerm === 'S') {
     return currentYear + 1
-  }else{
+  } else {
     return currentYear
   }
 }
 
 const getNextTerm = (term) => {
-  if(term === 'K'){
+  if (term === 'K') {
     return 'V'
   }
-  if(term === 'V'){
+  if (term === 'V') {
     return 'S'
   }
-  if(term === 'S'){
+  if (term === 'S') {
     return 'K'
   }
 }
@@ -150,32 +150,38 @@ module.exports = {
     if (auth === 'notset') {
       res.send('Please restart the backend with the correct TOKEN environment variable set')
     } else {
-      const request = require('request')
-      const options = {
-        method: 'get',
-        uri: `https://opetushallinto.cs.helsinki.fi/labtool/courses?year=${termAndYear.currentYear}&term=${termAndYear.currentTerm}`,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': auth
-        },
-        strictSSL: false
+      if (this.remoteAddress !== '127.0.0.1') {
+        res.send('gtfo')
+
+      } else {
+        const request = require('request')
+        const options = {
+          method: 'get',
+          uri: `https://opetushallinto.cs.helsinki.fi/labtool/courses?year=${termAndYear.currentYear}&term=${termAndYear.currentTerm}`,
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': auth
+          },
+          strictSSL: false
+        }
+        request(options, function (err, resp, body) {
+            const json = JSON.parse(body)
+            console.log(json)
+            json.forEach(instance => {
+              CourseInstance.findOrCreate({
+                where: {ohid: instance.id},
+                defaults: {
+                  name: instance.name,
+                  start: instance.starts,
+                  end: instance.ends,
+                  ohid: instance.id
+                }
+              })
+            })
+            res.status(204).send({'hello': 'hello'})
+          }
+        )
       }
-      request(options, function (err, resp, body) {
-        const json = JSON.parse(body)
-        console.log(json)
-        json.forEach(instance => {
-          CourseInstance.findOrCreate({
-            where: { ohid: instance.id },
-            defaults: {
-              name: instance.name,
-              start: instance.starts,
-              end: instance.ends,
-              ohid: instance.id
-            }
-          })
-        })
-        res.status(204).send({ 'hello': 'hello' })
-      })
     }
   },
 
@@ -187,32 +193,38 @@ module.exports = {
     if (auth === 'notset') {
       res.send('Please restart the backend with the correct TOKEN environment variable set')
     } else {
-      const request = require('request')
-      const options = {
-        method: 'get',
-        uri: `https://opetushallinto.cs.helsinki.fi/labtool/courses?year=${termAndYear.nextYear}&term=${termAndYear.nextTerm}`,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': auth
-        },
-        strictSSL: false
-      }
-      request(options, function (err, resp, body) {
-        const json = JSON.parse(body)
-        console.log(json)
-        json.forEach(instance => {
-          CourseInstance.findOrCreate({
-            where: { ohid: instance.id },
-            defaults: {
-              name: instance.name,
-              start: instance.starts,
-              end: instance.ends,
-              ohid: instance.id
-            }
+      if (this.remoteAddress !== '127.0.0.1') {
+        res.send('gtfo')
+
+      } else {
+
+        const request = require('request')
+        const options = {
+          method: 'get',
+          uri: `https://opetushallinto.cs.helsinki.fi/labtool/courses?year=${termAndYear.nextYear}&term=${termAndYear.nextTerm}`,
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': auth
+          },
+          strictSSL: false
+        }
+        request(options, function (err, resp, body) {
+          const json = JSON.parse(body)
+          console.log(json)
+          json.forEach(instance => {
+            CourseInstance.findOrCreate({
+              where: {ohid: instance.id},
+              defaults: {
+                name: instance.name,
+                start: instance.starts,
+                end: instance.ends,
+                ohid: instance.id
+              }
+            })
           })
+          res.status(204).send({'hello': 'hello'})
         })
-        res.status(204).send({ 'hello': 'hello' })
-      })
+      }
     }
   }
 }

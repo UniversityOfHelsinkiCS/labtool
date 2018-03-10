@@ -1,6 +1,6 @@
 {
   "name": "labtool2.0",
-  "homepage": "https://svm-61.cs.helsinki.fi/labtool/",
+  "homepage": "https://example.com/labtool",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -11,10 +11,12 @@
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
     "react-scripts": "1.1.0",
-    "sequelize": "^4.35.2"
+    "sequelize": "^4.35.2",
+    "serve": "^6.5.2"
   },
   "scripts": {
     "start": "react-scripts start",
+    "debug": "react-scripts --inspect=0.0.0.0:9230 start .env.development.local",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"

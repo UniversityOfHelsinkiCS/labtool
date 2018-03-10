@@ -1,6 +1,6 @@
 
 import axios from 'axios'
-const baseUrl = 'http://localhost:3001/api/studentinstances'
+const baseUrl = process.env.REACT_APP_BACKEND_URL + '/api/studentinstances'
 
 let token = null
 
