@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Switch, Route } from 'react-router-dom'
 import Courses from './components/pages/Courses'
 import Login from './Login'
-import dotenv from 'dotenv'
+
 
 
 const App = () => {
