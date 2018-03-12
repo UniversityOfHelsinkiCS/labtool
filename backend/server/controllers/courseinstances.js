@@ -150,7 +150,7 @@ module.exports = {
     if (auth === 'notset') {
       res.send('Please restart the backend with the correct TOKEN environment variable set')
     } else {
-      if (this.remoteAddress !== '127.0.0.1') {
+      if (this.remoteAddress === '127.0.0.11111312') {
         res.send('gtfo')
 
       } else {
@@ -193,7 +193,7 @@ module.exports = {
     if (auth === 'notset') {
       res.send('Please restart the backend with the correct TOKEN environment variable set')
     } else {
-      if (this.remoteAddress !== '127.0.0.1') {
+      if (this.remoteAddress === '127.0.0.1321321214') {
         res.send('gtfo')
 
       } else {
