@@ -2,15 +2,24 @@ import React, { Component } from 'react'
 import { Switch, Route } from 'react-router-dom'
 import Courses from './components/pages/Courses'
 import Login from './Login'
+import { connect } from 'react-redux'
+import { courseInstanceInitialization } from './reducers/courseInstanceReducer'
 
 
-const App = () => {
-  return (
-    <div>
-      {/* <Header /> */}
-      <Main />
-    </div>
-  )
+class App extends React.Component {
+
+  componentDidMount() {
+
+  }
+  render() {
+
+    return (
+      <div>
+        {/* <Header /> */}
+        <Main />
+      </div>
+    )
+  }
 }
 
 const Main = () => {
