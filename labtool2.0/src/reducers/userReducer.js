@@ -1,4 +1,5 @@
 import loginService from '../services/login'
+import { createNotification } from './notificationReducer'
 
 const userReducer = (store = null, action) => {
     if (action.type === 'LOGIN') {
@@ -8,13 +9,20 @@ const userReducer = (store = null, action) => {
     return store
 }
 
-export const login = (username, password) => {
+export const login = (user) => {
     return async (dispatch) => {
-        const user = await loginService.login(username, password)
-        dispatch({
-            type: 'LOGIN',
-            data: user
-        })
+        console.log('hello: ', user)
+        try {
+            const dbUser = await loginService.login(user)
+            dispatch({
+                type: 'LOGIN',
+                data: dbUser
+            })
+        } catch (error) {
+            dispatch(createNotification(error.response.data.body.error))            
+        }
+        
+
     }
 }
 

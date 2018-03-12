@@ -4,6 +4,7 @@ import Courses from './components/pages/Courses'
 import Login from './Login'
 import { connect } from 'react-redux'
 import { courseInstanceInitialization } from './reducers/courseInstanceReducer'
+import LoginPage from './components/pages/LoginPage';
 
 
 class App extends React.Component {
@@ -29,6 +30,7 @@ const Main = () => {
       <Switch>
         <Route exact path='/labtool' component={Login} />
         <Route path='/labtool/courses' component={Courses} />
+        <Route path='/labtool/test' component={LoginPage} />
         {/* <Route path='/schedule' component={Schedule} /> */}
       </Switch>
     </main>
