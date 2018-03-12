@@ -38,4 +38,4 @@ const Main = () => {
 export default connect(
   null,
   { courseInstanceInitialization }
-)
+)(App)

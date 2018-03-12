@@ -2,6 +2,7 @@ import courseInstanceService from '../services/courseInstance'
 
 const courseInstancereducer = (store = [], action) => {
     if (action.type === 'INITIATE') {
+        console.log(action.data)
         return action.data
     }
     return store
@@ -9,10 +10,10 @@ const courseInstancereducer = (store = [], action) => {
 
 export const courseInstanceInitialization = () => {
     return async (dispatch) => {
-        const anecdotes = await courseInstanceService.getAll()
+        const courseInstances = await courseInstanceService.getAll()
         dispatch({
             type: 'INITIATE',
-            data: anecdotes
+            data: courseInstances
         })
     }
 }
