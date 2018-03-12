@@ -1,24 +1,26 @@
 import React from 'react'
 
-const Login = ({ postLogin, handleFieldChange, username, password }) => {
+class LoginPage extends React.Component {
 
-  return (
-    <div className="Login" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
-      <p>Login page</p>
+  handleSubmit = async (e) => {
+    e.preventDefault()
+    const content = e.target.anecdote.value
+    e.target.anecdote.value = ''
+    this.props.anecdoteCreation(content)
 
-      <form onSubmit={postLogin}>
-        <label>
-          Username: <br />
-          <input type="text" className="form-control1" value={username} name="username" onChange={handleFieldChange} required />
-        </label>
-        <label> <br />
-          Password: <br />
-          <input type="password" className="form-control2" value={password} name="password" onChange={handleFieldChange} required />
-        </label> <br />
-        <button type="submit">Login</button>
-      </form>
-    </div>
-  )
+  }
+  render() {
+    return (
+      <div>
+        <h2>Login</h2>
+        <form onSubmit={this.handleSubmit}>
+          <div><input name='anecdote' /></div>
+          <div><input name='password' /></div>
+          <button>create</button>
+        </form>
+      </div>
+    )
+  }
 }
 
 
