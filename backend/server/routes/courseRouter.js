@@ -1,6 +1,7 @@
 const coursesController = require('../controllers').courses
 
 module.exports = (app) => {
+  app.get('/api/courseinstances', courseInstanceController.list)
   //app.post('/api/courses', coursesController.create)
   //app.get('/api/courses', coursesController.list)
   //app.get('/api/courses/:id', coursesController.retrieve)
