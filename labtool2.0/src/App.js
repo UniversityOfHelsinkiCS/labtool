@@ -9,8 +9,9 @@ import { courseInstanceInitialization } from './reducers/courseInstanceReducer'
 class App extends React.Component {
 
   componentDidMount() {
-
+    this.props.courseInstanceInitialization()
   }
+
   render() {
 
     return (
@@ -34,4 +35,7 @@ const Main = () => {
   )
 }
 
-export default App
+export default connect(
+  null,
+  { courseInstanceInitialization }
+)
