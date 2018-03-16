@@ -229,18 +229,6 @@ class Login extends Component {
         <MainPage logout={this.postLogout} handleFirstLoginTrue={this.handleFirstLoginTrue} />
         <p></p>
         <p></p>
-        {this.state.courseInstances
-          ? this.state.courseInstances.map(instance =>
-            <CourseInstance
-              handleFieldChange={this.handleRegister}
-              key={instance.id}
-              instance={instance}
-            />
-          )
-
-          : <p>hello</p>
-        }
-
       </div>
     )
 
