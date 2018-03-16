@@ -1,4 +1,5 @@
 import loginService from '../services/login'
+import { } from 'react-router-dom'
 
 const userReducer = (store = null, action) => {
     if (action.type === 'LOGIN') {
@@ -10,7 +11,6 @@ const userReducer = (store = null, action) => {
 
 export const login = (user) => {
     return async (dispatch) => {
-        console.log('hello: ', user)
         try {
             const dbUser = await loginService.login(user)
             dispatch({
@@ -18,7 +18,7 @@ export const login = (user) => {
                 data: dbUser
             })
         } catch (error) {
-            console.log('ERRORI:', error)
+            console.log('errori', error)
         }
     }
 }
