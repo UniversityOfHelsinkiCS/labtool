@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import { courseInstanceInitialization } from './reducers/courseInstanceReducer'
 import LoginPage from './components/pages/LoginPage';
 import { Container } from 'semantic-ui-react'
+import Notification from './components/pages/Notification'
 import RegisterPage from './components/pages/RegisterPage';
 class App extends React.Component {
 
@@ -19,6 +20,7 @@ class App extends React.Component {
       <Container>
         <div>
           {/* <Header /> */}
+          <Notification />
           <Main />
         </div>
       </Container>
@@ -31,8 +33,13 @@ const Main = () => {
     <main>
       <Switch>
         <Route exact path='/labtool' component={Login} />
+<<<<<<< HEAD
         <Route exact path='/labtool/courses' render={({ history }) =>
           <Courses history={history} />} 
+=======
+        <Route path='/labtool/courses' render={({ history }) =>
+          <Courses history={history} />}
+>>>>>>> a662fb4399e177f3ef4e6b56ac1e98e8d78c135f
         />
         <Route exact path='/labtool' render={({ history }) =>
           <LoginPage history={history} />}

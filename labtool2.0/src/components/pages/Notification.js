@@ -1,26 +1,25 @@
 import React from 'react'
-import '../styles/error.css'
 import { connect } from 'react-redux'
 
 class Notification extends React.Component {
   render() {
     const message = this.props.notification.message
-    const success = this.props.notification.success
+    const error = this.props.notification.error
 
-    if (message === '') {
+    if (message === undefined) {
       return (
         <div>
         </div>
       )
-    } else if (success) {
+    } else if (error) {
       return (
-        <div className="success">
+        <div className="error">
           {message}
         </div>
       )
     } else {
       return (
-        <div className="error">
+        <div className="success">
           {message}
         </div>
       )
