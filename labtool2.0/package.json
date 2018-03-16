@@ -1,21 +1,31 @@
 {
   "name": "labtool2.0",
+  "homepage": "https://example.com/labtool",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
     "axios": "^0.17.1",
+    "jest-cli": "^22.4.2",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
-    "react-scripts": "1.1.0"
+    "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.2",
+    "react-scripts": "1.1.0",
+    "sequelize": "^4.35.2",
+    "serve": "^6.5.2"
   },
   "scripts": {
     "start": "react-scripts start",
+    "debug": "react-scripts --inspect=0.0.0.0:9230 start .env.development.local",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.1",
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
+    "enzyme-to-json": "^3.3.1",
     "eslint": "^4.16.0",
     "eslint-config-google": "^0.9.1",
     "eslint-config-standard": "^11.0.0-beta.0",
@@ -23,6 +33,16 @@
     "eslint-plugin-node": "^5.2.1",
     "eslint-plugin-promise": "^3.6.0",
     "eslint-plugin-react": "^7.5.1",
-    "eslint-plugin-standard": "^3.0.1"
+    "eslint-plugin-standard": "^3.0.1",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^22.4.2",
+    "jest-css-modules": "^1.1.0",
+    "jest-enzyme": "^4.2.0",
+    "react-test-renderer": "^16.2.0"
+  },
+  "jest": {
+    "snapshotSerializers": [
+      "enzyme-to-json/serializer"
+    ]
   }
 }

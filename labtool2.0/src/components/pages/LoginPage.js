@@ -1,19 +1,19 @@
 import React from 'react'
 
-const Login = ({ postLogin, handlePasswordChange, handleUsernameChange }) => {
-    
-  return(
-    <div className="Login">
+const Login = ({ postLogin, handleFieldChange, username, password }) => {
+
+  return (
+    <div className="Login" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
       <p>Login page</p>
-        
+
       <form onSubmit={postLogin}>
         <label>
-            Username: <br />
-          <input type="text" className="form-control" name="name" onChange={handleUsernameChange} />
+          Username: <br />
+          <input type="text" className="form-control1" value={username} name="username" onChange={handleFieldChange} required />
         </label>
         <label> <br />
-            Password: <br />
-          <input type="password" className="form-control" name="password" onChange={handlePasswordChange} />
+          Password: <br />
+          <input type="password" className="form-control2" value={password} name="password" onChange={handleFieldChange} required />
         </label> <br />
         <button type="submit">Login</button>
       </form>

@@ -1,0 +1,50 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Register /> Register Component should render correctly 1`] = `
+<div
+  className="Register"
+  style={
+    Object {
+      "textAlign": "center",
+      "textAlignVertical": "center",
+    }
+  }
+>
+  <h3>
+    Register for 
+  </h3>
+  <form>
+    <label>
+      GitHub link: 
+      <br />
+      <input
+        className="form-control1"
+        name="github"
+        required={true}
+        type="url"
+      />
+    </label>
+    <br />
+    <label>
+      Project name:  
+      <br />
+      <input
+        className="form-control2"
+        name="projectname"
+        required={true}
+        type="text"
+      />
+    </label>
+     
+    <br />
+    <button
+      type="submit"
+    >
+      Submit
+    </button>
+  </form>
+  <button>
+    Cancel
+  </button>
+</div>
+`;
