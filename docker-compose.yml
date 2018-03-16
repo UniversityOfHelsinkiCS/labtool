@@ -3,7 +3,7 @@ services:
   web:
     environment:
       - BACKEND_LOGIN_URL=https://svm-61.cs.helsinki.fi/labtool-backend/login
-      - PUBLIC_URL=https://svm-61.cs.helsinki.fi/labtool/
+      - PUBLIC_URL=http://svm-61.cs.helsinki.fi/labtool/
       - NODE_ENV=production
     image: labtool/labtool:test
     ports:
