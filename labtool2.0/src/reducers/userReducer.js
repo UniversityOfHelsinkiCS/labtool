@@ -26,13 +26,8 @@ export const login = (user) => {
             //}
             
         } catch (error) {
-<<<<<<< HEAD
             console.log('errori',error)
             dispatch(createNotification({ message: error.response.data.body.error, error:true }))            
-=======
-            console.log('ERRORI:', error)
-            dispatch(createNotification(error.response.data.body.error))
->>>>>>> 13754bfdacd180e248e955929b2b590090708be2
         }
     }
 }

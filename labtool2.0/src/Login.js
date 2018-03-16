@@ -19,7 +19,7 @@ const Notification = ({ message }) => {
   return (
     <div class="error" className="error" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
       {message}
-    </div>createNotification
+    </div>
   )
 }
 
