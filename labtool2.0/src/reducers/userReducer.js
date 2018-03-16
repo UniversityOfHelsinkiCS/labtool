@@ -20,7 +20,8 @@ export const login = (user) => {
             })
             dispatch(createNotification('You have successfully logged in'))
         } catch (error) {
-            dispatch(createNotification(error.response.data.body.error))            
+            console.log('ERRORI:', error)
+            dispatch(createNotification(error.response.data.body.error))
         }
     }
 }

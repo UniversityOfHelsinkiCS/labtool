@@ -5,8 +5,7 @@ import Login from './Login'
 import { connect } from 'react-redux'
 import { courseInstanceInitialization } from './reducers/courseInstanceReducer'
 import LoginPage from './components/pages/LoginPage';
-
-
+import { Container } from 'semantic-ui-react'
 class App extends React.Component {
 
   componentDidMount() {
@@ -16,10 +15,12 @@ class App extends React.Component {
   render() {
 
     return (
-      <div>
-        {/* <Header /> */}
-        <Main />
-      </div>
+      <Container>
+        <div>
+          {/* <Header /> */}
+          <Main />
+        </div>
+      </Container>
     )
   }
 }

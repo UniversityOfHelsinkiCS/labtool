@@ -5,12 +5,17 @@ class LoginPage extends React.Component {
 
   handleSubmit = async (e) => {
     e.preventDefault()
-    const content = {
-      username: e.target.username.value,
-      password: e.target.password.value
+    try {
+      const content = {
+        username: e.target.username.value,
+        password: e.target.password.value
+      }
+      this.props.login(content)
+      this.props.notificationSet(`Tervetuloa ${content.username}`)
+    } catch (e) {
+
     }
-    this.props.login(content)
-    e.target.username.value = ''
+    e.target.password.value = ''
   }
   render() {
     return (
