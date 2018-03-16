@@ -20,25 +20,10 @@ export const newNotification = (notification) => {
       message: notification.message,
       error: notification.error
     })
-  }
-}
-
-export const clearNotification = () => {
-  return {
-    type: 'CLEAR_NOTIFICATION'
-  }
-  return async (dispatch) => {
-    dispatch({
-      type:'CLEAR_NOTIFICATION',
-    })
-  }
-}
-
-export const createNotification = (notification) => {
-  return async () => {
-    newNotification(notification)
     setTimeout(() => {
-      clearNotification()
+      dispatch({
+        type: 'CLEAR_NOTIFICATION'
+      })
     }, 5000)
   }
 }

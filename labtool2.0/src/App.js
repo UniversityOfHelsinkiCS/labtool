@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import { courseInstanceInitialization } from './reducers/courseInstanceReducer'
 import LoginPage from './components/pages/LoginPage';
 import { Container } from 'semantic-ui-react'
+import Notification from './components/pages/Notification'
 class App extends React.Component {
 
   componentDidMount() {
@@ -18,6 +19,7 @@ class App extends React.Component {
       <Container>
         <div>
           {/* <Header /> */}
+          <Notification />
           <Main />
         </div>
       </Container>

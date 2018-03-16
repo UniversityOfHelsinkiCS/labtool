@@ -1,6 +1,7 @@
 import React from 'react'
 import { login } from '../../reducers/userReducer'
 import { connect } from 'react-redux'
+import { newNotification } from '../../reducers/notificationReducer'
 class LoginPage extends React.Component {
 
   handleSubmit = async (e) => {
@@ -11,8 +12,9 @@ class LoginPage extends React.Component {
         password: e.target.password.value
       }
       this.props.login(content)
-      this.props.notificationSet(`Tervetuloa ${content.username}`)
+      this.props.newNotification({ message: 'Teretulemasta', error: false })
     } catch (e) {
+      this.props.newNotification({ message: 'VÄÄRÄ', error: true })
 
     }
     e.target.password.value = ''
@@ -32,4 +34,4 @@ class LoginPage extends React.Component {
 }
 
 
-export default connect(null, { login })(LoginPage)
+export default connect(null, { login, newNotification })(LoginPage)
