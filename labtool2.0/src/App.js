@@ -32,7 +32,7 @@ const Main = () => {
         <Route path='/labtool/courses' render={({ history }) =>
           <Courses history={history} />} 
         />
-        <Route path='/labtool/test' render={({ history }) =>
+        <Route exact path='/labtool' render={({ history }) =>
           <LoginPage history={history} />}
         />
         {/* <Route path='/schedule' component={Schedule} /> */}

@@ -3,6 +3,8 @@ import LoginPage from './components/pages/LoginPage'
 import MainPage from './components/pages/MainPage'
 import axios from 'axios'
 import SetEmail from './components/pages/SetEmail'
+import { logout } from './reducers/userReducer'
+import { createNotification } from './reducers/notificationReducer'
 
 import studentinstancesService from './services/studentinstances'
 import courseInstancesService from './services/courseInstance'
@@ -17,7 +19,7 @@ const Notification = ({ message }) => {
   return (
     <div class="error" className="error" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
       {message}
-    </div>
+    </div>createNotification
   )
 }
 
@@ -91,16 +93,11 @@ class Login extends Component {
     })
   }
 
-  postLogout = (event) => {
+  postLogout = async (e) => {
+    e.preventDefault()
     window.localStorage.removeItem('loggedUser')
-    this.setState({
-      user: null,
-      token: null,
-      success: 'You have logged out'
-    })
-    setTimeout(() => {
-      this.setState({ success: null })
-    }, 5000)
+    await this.props.logout()    
+    this.props.createNotification({ message: 'You have logged out', error: false })
     studentinstancesService.setToken('')
   }
 
@@ -170,8 +167,9 @@ class Login extends Component {
       })
       .catch(error => this.setState(error))
   }
+  
+  
   /*
-
   postLogin = (event) => {
 
       .then(response => {
