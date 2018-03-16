@@ -1,15 +1,21 @@
 import React from 'react'
 import { login } from '../../reducers/userReducer'
 import { connect } from 'react-redux'
+import { createNotification } from '../../reducers/notificationReducer'
 class LoginPage extends React.Component {
 
   handleSubmit = async (e) => {
     e.preventDefault()
-    const content = {
-      username: e.target.username.value,
-      password: e.target.password.value
+    try {
+      const content = {
+        username: e.target.username.value,
+        password: e.target.password.value
+      }
+      this.props.login(content)
+      this.props.createNotification({ message:`Tervetuloa ${content.username}`, error:false })
+    } catch (e) {
+
     }
-    this.props.login(content)
     e.target.username.value = ''
     this.props.history.push('/labtool/courses')
   }
@@ -28,4 +34,4 @@ class LoginPage extends React.Component {
 }
 
 
-export default connect(null, { login })(LoginPage)
+export default connect(null, { login, createNotification })(LoginPage)
