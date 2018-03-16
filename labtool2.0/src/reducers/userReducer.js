@@ -28,7 +28,7 @@ export const login = (user) => {
 
 export const logout = () => {
     return async (dispatch) => {
-        const user = await loginService.logout()
+        await loginService.logout()
         dispatch({
             type: 'LOGOUT',
         })

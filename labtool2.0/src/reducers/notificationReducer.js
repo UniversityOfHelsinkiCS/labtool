@@ -2,7 +2,10 @@
 const notificationReducer = (state = {}, action) => {
   switch (action.type) {
     case 'NEW_NOTIFICATION':
-      return action.notification
+      return {
+        message: action.message,
+        error: action.error
+      }
     case 'CLEAR_NOTIFICATION':
       return {}
     default:
@@ -11,9 +14,12 @@ const notificationReducer = (state = {}, action) => {
 }
 
 export const newNotification = (notification) => {
-  return {
-    type: 'NEW_NOTIFICATION',
-    notification
+  return async (dispatch) => {
+    dispatch({
+      type: 'NEW_NOTIFICATION',
+      message: notification.message,
+      error: notification.error
+    })
   }
 }
 
@@ -21,13 +27,18 @@ export const clearNotification = () => {
   return {
     type: 'CLEAR_NOTIFICATION'
   }
+  return async (dispatch) => {
+    dispatch({
+      type:'CLEAR_NOTIFICATION',
+    })
+  }
 }
 
 export const createNotification = (notification) => {
-  return async (dispatch) => {
-    dispatch(newNotification(notification))
+  return async () => {
+    newNotification(notification)
     setTimeout(() => {
-      dispatch(clearNotification())
+      clearNotification()
     }, 5000)
   }
 }
