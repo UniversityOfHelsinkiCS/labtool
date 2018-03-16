@@ -3,6 +3,24 @@ import React from 'react'
 
 const RegisterPage = ({ onSubmit, handleFieldChange, projectname, github, cancel, name }) => {
 
+
+  postCourseinstanceRegisteration = (event) => {
+    event.preventDefault()
+
+    studentinstancesService.create({
+      courseInstanceId: this.state.courseInstanceId,
+      github: this.state.github,
+      projectName: this.state.projectname
+    })
+    this.setState({
+      success: 'Register successful!',
+      courseInstanceId: null
+    })
+    setTimeout(() => {
+      this.setState({ success: null })
+    }, 5000)
+  }
+  
   return (
     <div className="Register" style={{ textAlignVertical: 'center', textAlign: 'center', }} >
       <h3>Register for {name}</h3>

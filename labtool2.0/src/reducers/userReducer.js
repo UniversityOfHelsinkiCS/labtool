@@ -1,6 +1,6 @@
 import loginService from '../services/login'
 import { createNotification } from './notificationReducer'
-import {  } from 'react-router-dom'
+import { } from 'react-router-dom'
 
 const userReducer = (store = null, action) => {
     if (action.type === 'LOGIN') {
@@ -24,10 +24,10 @@ export const login = (user) => {
             //this.setState({ firstLogin: true })
             //Tähän siis history.push(Emailin muutos sivu)
             //}
-            
+
         } catch (error) {
-            console.log('errori',error)
-            dispatch(createNotification({ message: error.response.data.body.error, error:true }))            
+            console.log('errori', error)
+            dispatch(createNotification({ message: error.response.data.body.error, error: true }))
         }
     }
 }

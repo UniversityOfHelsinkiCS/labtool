@@ -31,13 +31,13 @@ const Main = () => {
     <main>
       <Switch>
         <Route exact path='/labtool' component={Login} />
-        <Route path='/labtool/courses' render={({ history }) =>
+        <Route exact path='/labtool/courses' render={({ history }) =>
           <Courses history={history} />} 
         />
         <Route exact path='/labtool' render={({ history }) =>
           <LoginPage history={history} />}
         />
-        <Route exact path="/labtool/courses/:id" render={({ match, history }) =>
+        <Route path="/labtool/courses/:id" render={({ match, history }) =>
           <RegisterPage history={history} courseinstanceId={(match.params.id)} />}
         />
         {/* <Route path='/schedule' component={Schedule} /> */}
