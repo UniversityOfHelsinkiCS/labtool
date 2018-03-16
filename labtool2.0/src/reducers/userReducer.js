@@ -1,5 +1,6 @@
 import loginService from '../services/login'
 import { createNotification } from './notificationReducer'
+import {  } from 'react-router-dom'
 
 const userReducer = (store = null, action) => {
     if (action.type === 'LOGIN') {
@@ -11,16 +12,22 @@ const userReducer = (store = null, action) => {
 
 export const login = (user) => {
     return async (dispatch) => {
-        console.log('hello: ', user)
         try {
             const dbUser = await loginService.login(user)
             dispatch({
                 type: 'LOGIN',
                 data: dbUser
             })
-            dispatch(createNotification('You have successfully logged in'))
+            dispatch(createNotification({ message: 'You have successfully logged in' }))
+
+            //if (dbUser.created) {
+            //this.setState({ firstLogin: true })
+            //Tähän siis history.push(Emailin muutos sivu)
+            //}
+            
         } catch (error) {
-            dispatch(createNotification(error.response.data.body.error))            
+            console.log('errori',error)
+            dispatch(createNotification({ message: error.response.data.body.error, error:true }))            
         }
     }
 }

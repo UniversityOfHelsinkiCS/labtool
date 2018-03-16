@@ -11,6 +11,7 @@ class LoginPage extends React.Component {
     }
     this.props.login(content)
     e.target.username.value = ''
+    this.props.history.push('/labtool/courses')
   }
   render() {
     return (

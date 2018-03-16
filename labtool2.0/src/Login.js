@@ -170,58 +170,23 @@ class Login extends Component {
       })
       .catch(error => this.setState(error))
   }
-  
+  /*
 
   postLogin = (event) => {
-    event.preventDefault()
-    let backend
-    if (process.env.NODE_ENV === 'development') {
-      backend = 'http://localhost:3001/login'
-    } else {
-      backend = '/labtool-backend/login'
-    }
-    axios.post(backend, {
-      username: this.state.username,
-      password: this.state.password
-    })
+
       .then(response => {
+
         if (!response.data.error) {
-          console.log('You have succesfully logged in')
-          this.setState({ error: null, success: 'You have successfully logged in' })
-          setTimeout(() => {
-            this.setState({ success: null })
-          }, 5000)
-          console.log('login info reset')
-          console.log(response.data.token)
+
           this.setState({
             username: '',
             password: '',
             token: response.data.token,
             user: response.data.returnedUser
           })
-          studentinstancesService.setToken(response.data.token)
-          window.localStorage.setItem('loggedUser', JSON.stringify(response.data))
-
-          if (response.data.created) {
-            this.setState({ firstLogin: true })
-          }
-        } else {
-          console.log('Wrong username or password')
-        }
-
-      })
-      .catch(error => {
-        this.setState({
-          username: '',
-          password: '',
-          error: 'Wrong username or password'
-        })
-        setTimeout(() => {
-          this.setState({error: null})
-        }, 5000)
-      })
 
   }
+  */
 
   render() {
 

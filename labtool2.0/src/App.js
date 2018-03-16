@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Switch, Route } from 'react-router-dom'
+import { Switch, Route, withRouter } from 'react-router-dom'
 import Courses from './components/pages/Courses'
 import Login from './Login'
 import { connect } from 'react-redux'
@@ -29,15 +29,19 @@ const Main = () => {
     <main>
       <Switch>
         <Route exact path='/labtool' component={Login} />
-        <Route path='/labtool/courses' component={Courses} />
-        <Route path='/labtool/test' component={LoginPage} />
+        <Route path='/labtool/courses' render={({ history }) =>
+          <Courses history={history} />} 
+        />
+        <Route path='/labtool/test' render={({ history }) =>
+          <LoginPage history={history} />}
+        />
         {/* <Route path='/schedule' component={Schedule} /> */}
       </Switch>
     </main>
   )
 }
 
-export default connect(
+export default withRouter(connect(
   null,
   { courseInstanceInitialization }
-)(App)
+)(App))
