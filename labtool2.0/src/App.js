@@ -10,6 +10,7 @@ import LoginPage from './components/pages/LoginPage.js'
 import RegisterPage from './components/pages/RegisterPage.js'
 import ModifyCourseInstancePage from './components/pages/ModifyCourseInstancePage'
 import ReviewStudent from './components/pages/ReviewStudent'
+import BrowseReviews from './components/pages/BrowseReviews'
 
 // Tähän navigation bar
 const App = () => {
@@ -30,16 +31,14 @@ const Main = () => {
       <Switch>
         <Route exact path={`${process.env.PUBLIC_URL}/`} component={Login} />
         <Route path={`${process.env.PUBLIC_URL}/courses`} component={Courses} />
+        <Route path={`${process.env.PUBLIC_URL}/browsereviews`} component={BrowseReviews} />
         <Route  path={`${process.env.PUBLIC_URL}/coursePage`} component={CoursePage} />
         <Route  path={`${process.env.PUBLIC_URL}/email`} component={Email} />
-<<<<<<< HEAD
         <Route path={`${process.env.PUBLIC_URL}/loginPage`} component={LoginPage} />  
         <Route path={`${process.env.PUBLIC_URL}/registerPage`} component={RegisterPage} />    
-=======
         <Route path={`${process.env.PUBLIC_URL}/loginPage`} component={LoginPage} />     
         <Route path={`${process.env.PUBLIC_URL}/reviewstudent`} component={ReviewStudent} />     
         <Route path={`${process.env.PUBLIC_URL}/ModifyCourseInstancePage`} component={ModifyCourseInstancePage} />   
->>>>>>> 65daaff40aa8914f6ce8b3b330506e3359ff7460
         {/* <Route path='/schedule' component={Schedule} /> */}
       </Switch>
     </main>
