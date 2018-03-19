@@ -1,32 +1,34 @@
-import React from 'react'
+import React, { Component } from 'react'
+import { Form, Input, Button } from 'semantic-ui-react'
 
-const ModifyCourseInstance = ({ onSubmit, handleFieldChange, weekamount, weekmaxpoints, currentweek, courseactive }) => {
-
-  return (
-    <div className="CourseInstance" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
-      <p>Modify course instance for this course</p>
-
-      <form onSubmit={onSubmit} >
-        <label>
-          Week amount: <br />
-          <input type="text" onChange={handleFieldChange} value={weekamount} className="form-control1" name="weekamount" required />
-        </label>
-        <label> <br />
-          Weekly maxpoints: <br />
-          <input type="text" onChange={handleFieldChange} value={weekmaxpoints} className="form-control2" name="maxpointsweek" required />
-        </label> <br />
-        <label>
-          Current week: <br />
-          <input type="text" onChange={handleFieldChange} value={currentweek} className="form-control3" name="currentweek" required />
-        </label> <br />
-        <label> <br />
-          Activate course
-          <input type="checkbox" onChange={handleFieldChange} value={courseactive} className="form-control4" name="courseactive" /> <br />
-        </label> <br />
-        <button type="submit">Sumbit</button>
-      </form>
-    </div>
-  )
-}
-
-export default ModifyCourseInstance
+class ModyfyCourseInstancePage extends Component {
+  render() {
+    return (
+      <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
+        <h2> Edit Tiralabra 2018 kevät </h2>
+        <Form>
+          <Form.Field inline>
+            <label>Week amount</label>
+            <Input />
+          </Form.Field>
+          <Form.Field inline>
+            <label>Weekly maxpoints</label>
+            <Input />
+          </Form.Field>
+          <Form.Field inline>
+            <label>Current week</label>
+            <Input />
+          </Form.Field>
+     
+          <Form.Field inline>
+            <label>Course active</label>
+            <Input type='checkbox'/>
+        </Form.Field>
+            <Button color='green' type='submit'>Save</Button>
+      </Form>
+      </div>
+        )
+      }
+    }
+    
+export default ModyfyCourseInstancePage

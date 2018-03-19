@@ -8,7 +8,8 @@ import CoursePage from './components/pages/CoursePage'
 import Email from './components/pages/Email.js'
 import LoginPage from './components/pages/LoginPage.js'
 import RegisterPage from './components/pages/RegisterPage.js'
-
+import ModifyCourseInstancePage from './components/pages/ModifyCourseInstancePage'
+import ReviewStudent from './components/pages/ReviewStudent'
 
 // Tähän navigation bar
 const App = () => {
@@ -31,8 +32,14 @@ const Main = () => {
         <Route path={`${process.env.PUBLIC_URL}/courses`} component={Courses} />
         <Route  path={`${process.env.PUBLIC_URL}/coursePage`} component={CoursePage} />
         <Route  path={`${process.env.PUBLIC_URL}/email`} component={Email} />
+<<<<<<< HEAD
         <Route path={`${process.env.PUBLIC_URL}/loginPage`} component={LoginPage} />  
         <Route path={`${process.env.PUBLIC_URL}/registerPage`} component={RegisterPage} />    
+=======
+        <Route path={`${process.env.PUBLIC_URL}/loginPage`} component={LoginPage} />     
+        <Route path={`${process.env.PUBLIC_URL}/reviewstudent`} component={ReviewStudent} />     
+        <Route path={`${process.env.PUBLIC_URL}/ModifyCourseInstancePage`} component={ModifyCourseInstancePage} />   
+>>>>>>> 65daaff40aa8914f6ce8b3b330506e3359ff7460
         {/* <Route path='/schedule' component={Schedule} /> */}
       </Switch>
     </main>
