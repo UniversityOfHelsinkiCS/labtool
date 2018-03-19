@@ -4,7 +4,7 @@ const Login = ({ postLogin, handleFieldChange, username, password }) => {
 
   return (
     <div className="Login" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
-      <p>Login page</p>
+      <p>Labtool 2.0</p>
 
       <form onSubmit={postLogin}>
         <label>
