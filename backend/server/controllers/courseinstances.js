@@ -1,4 +1,5 @@
 const CourseInstance = require('../models').CourseInstance
+const jwt = require('jsonwebtoken')
 
 const CurrentTermAndYear = () => {
   const date = new Date()
@@ -15,7 +16,7 @@ const CurrentTermAndYear = () => {
   nextYear.toString()
   const nextTerm = getNextTerm(currentTerm)
   console.log('year: ', year)
-  return {currentYear, currentTerm, nextTerm, nextYear}
+  return { currentYear, currentTerm, nextTerm, nextYear }
 }
 
 const getCurrentTerm = (month) => {
@@ -67,6 +68,31 @@ module.exports = {
       })
       .then(CourseInstance => res.status(201).send(CourseInstance))
       .catch(error => res.status(400).send(error))
+  },
+
+  testi(req, res) {
+    console.log('REQ:', req)
+    const errors = []
+    jwt.verify(req.token, process.env.SECRET, function (err, decoded) {
+      if (err) {
+        errors.push("token verification failed")
+        res.status(400).send(errors)
+      } else {
+        CourseInstance.find({
+          where: {
+            ohid: req.params.ohid //what if null?
+          }
+        })
+          .then(courseInstance => {
+            if (!courseInstance) {
+              return res.status(400).send({
+                message: 'course instance not found',
+              })
+            }
+            return courseInstance
+          })
+      }
+    })
   },
 
   update(req, res) {
@@ -128,17 +154,29 @@ module.exports = {
   },
 
   retrieve(req, res) {
-    return CourseInstance
-      .findById(req.params.id, {})
-      .then(courseInstance => {
-        if (!courseInstance) {
-          return res.status(404).send({
-            message: 'Course not Found',
-          })
+    const errors = []
+    return (
+      jwt.verify(req.token, process.env.SECRET, function (err, decoded) {
+        if (err) {
+          errors.push('token verification failed')
+          res.status(400).send(errors)
+        } else {
+          CourseInstance
+            .findById(req.params.id, {})
+            .then(courseInstance => {
+              if (!courseInstance) {
+                return res.status(404).send({
+                  message: 'Course not Found',
+                })
+              }
+              return res.status(200).send(courseInstance)
+            })
+            .catch(error => res.status(400).send(error))
         }
-        return res.status(200).send(courseInstance)
-      })
-      .catch(error => res.status(400).send(error))
+      }
+
+      )
+    )
   },
 
   getNew(req, res) {
@@ -165,21 +203,21 @@ module.exports = {
           strictSSL: false
         }
         request(options, function (err, resp, body) {
-            const json = JSON.parse(body)
-            console.log(json)
-            json.forEach(instance => {
-              CourseInstance.findOrCreate({
-                where: {ohid: instance.id},
-                defaults: {
-                  name: instance.name,
-                  start: instance.starts,
-                  end: instance.ends,
-                  ohid: instance.id
-                }
-              })
+          const json = JSON.parse(body)
+          console.log(json)
+          json.forEach(instance => {
+            CourseInstance.findOrCreate({
+              where: { ohid: instance.id },
+              defaults: {
+                name: instance.name,
+                start: instance.starts,
+                end: instance.ends,
+                ohid: instance.id
+              }
             })
-            res.status(204).send({'hello': 'hello'})
-          }
+          })
+          res.status(204).send({ 'hello': 'hello' })
+        }
         )
       }
     }
@@ -213,7 +251,7 @@ module.exports = {
           console.log(json)
           json.forEach(instance => {
             CourseInstance.findOrCreate({
-              where: {ohid: instance.id},
+              where: { ohid: instance.id },
               defaults: {
                 name: instance.name,
                 start: instance.starts,
@@ -222,7 +260,7 @@ module.exports = {
               }
             })
           })
-          res.status(204).send({'hello': 'hello'})
+          res.status(204).send({ 'hello': 'hello' })
         })
       }
     }
