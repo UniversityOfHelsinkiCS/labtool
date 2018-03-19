@@ -17,7 +17,7 @@ export const getAxios = () => {
 function callApi(url, method = 'get', data, prefix, token) {
   const options = {
     headers: {
-      'bearer ': token
+      'Authorization': 'bearer ', token
     }
   }
   switch (method) {
@@ -54,6 +54,6 @@ export const handleRequest = store => next => (action) => {
       .then((res) => {
         store.dispatch({ type: `${payload.prefix}SUCCESS`, response: res.data })
       })
-      .catch(err => store.dispatch({ type: `${payload.prefix}FAILURE`, response: err }))
+      .catch(err => console.log('hellooo', err))
   }
 }
