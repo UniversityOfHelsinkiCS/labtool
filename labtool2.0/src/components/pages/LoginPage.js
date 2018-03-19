@@ -1,51 +1,63 @@
-import React, {Component} from 'react'
-import { Form, Input, Button } from 'semantic-ui-react'
+import React, { Component } from 'react'
+import { Form, Input, Button, Grid } from 'semantic-ui-react'
 
 class LoginPage extends Component {
-  
+
   render() {
     //const LoginPage = ({ postLogin, handleFieldChange, username, password }) => {
     return (
-      
-      <div className="LoginPage"
-        style={{
-          textAlignVertical: 'center',
-          textAlign: 'center',
-        }}>
 
-        <p>Enter your University of Helsinki username and password.</p>
+      <div className='ui'>
+        <Grid>
+          <Grid.Row centered>
+            <h3>Enter your University of Helsinki username and password.</h3>
+          </Grid.Row>
+        </Grid>
 
-        <Form>
+        <Grid>
+          <Grid.Row centered>
+            <Form>
 
-          <Form.Field>
-            <label>
-              Username:
-              <Form.Input
-                type="text"
-                className="form-control1"
-                //value={username}
-                name="username"
-                //onChange={handleFieldChange}
-                required />
-            </label>
+              <Form.Group inline>
+                <label>
+                  Username
+                </label>
+                <Input
+                  style={{ minWidth: '25em' }}
+                  type='text'
+                  className='form-control1'
+                  placeholder='Your username'
+                  //value={username}
+                  name="username"
+                  //onChange={handleFieldChange}
+                  required />
+              </Form.Group>
 
-            <label>
-              Password:
-              <Form.Input
-                type="password"
-                className="form-control2"
-                //value={password}
-                name="password"
-                //onChange={handleFieldChange}
-                required />
-            </label>
-          </Form.Field>
+              <Form.Group inline>
+                <label>Password</label>
+                <Input
+                  type='password'
+                  className='form-control2'
+                  placeholder='Your password'
+                  //value={password}
+                  name='password'
+                  //onChange={handleFieldChange}
+                  style={{ minWidth: '25em' }}
+                  required />
+              </Form.Group>
 
-          <Form.Field>
-            <Button type="submit">Login</Button>
-          </Form.Field>
+              <Form.Group inline>
+                <Button
+                  type='submit'
+                  color='blue'>
+                  Login
+                </Button>
+              </Form.Group>
 
-        </Form>
+            </Form>
+
+          </Grid.Row>
+        </Grid>
       </div>
 
     )
