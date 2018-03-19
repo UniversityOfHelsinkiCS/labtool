@@ -75,7 +75,7 @@ module.exports = {
     const errors = []
     jwt.verify(req.token, process.env.SECRET, function (err, decoded) {
       if (err) {
-        errors.push("token verification failed")
+        errors.push('token verification failed')
         res.status(400).send(errors)
       } else {
         CourseInstance.find({
