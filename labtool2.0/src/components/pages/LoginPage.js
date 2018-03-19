@@ -1,25 +1,51 @@
 import React from 'react'
+import { Form, Input, Button } from 'semantic-ui-react'
 
-const Login = ({ postLogin, handleFieldChange, username, password }) => {
+class LoginPage extends Component {
+  render() {
 
-  return (
-    <div className="Login" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
-      <p>Login page</p>
+    //const LoginPage = ({ postLogin, handleFieldChange, username, password }) => {
+    return (
+      <div className="LoginPage" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
 
-      <form onSubmit={postLogin}>
-        <label>
-          Username: <br />
-          <input type="text" className="form-control1" value={username} name="username" onChange={handleFieldChange} required />
-        </label>
-        <label> <br />
-          Password: <br />
-          <input type="password" className="form-control2" value={password} name="password" onChange={handleFieldChange} required />
-        </label> <br />
-        <button type="submit">Login</button>
-      </form>
-    </div>
-  )
+        <p>Enter your University of Helsinki username and password.</p>
+
+        <Form onSubmit={postLogin}>
+
+          <Form.Field>
+            <label>
+              Username:
+              <Form.Input
+                type="text"
+                className="form-control1"
+                value={username}
+                name="username"
+                onChange={handleFieldChange}
+                required />
+            </label>
+
+            <label> <br />
+              Password: <br />
+              <Form.Input
+                type="password"
+                className="form-control2"
+                value={password}
+                name="password"
+                onChange={handleFieldChange}
+                required />
+            </label> <br />
+          </Form.Field>
+
+          <Form.Field>
+            <Button type="submit">Login</Button>
+          </Form.Field>
+
+        </Form>
+      </div>
+
+    )
+  }
 }
 
 
-export default Login
+export default LoginPage

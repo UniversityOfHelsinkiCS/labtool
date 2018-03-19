@@ -4,6 +4,7 @@ import Courses from './components/pages/Courses'
 import Login from './Login'
 import { Container } from 'semantic-ui-react'
 import Email from './components/pages/Email.js'
+import LoginPage from './components/pages/LoginPage.js'
 
 
 const App = () => {
