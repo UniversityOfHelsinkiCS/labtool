@@ -1,19 +1,19 @@
 
-const notificationReducer = (state = {}, action) => {
+const notificationReducer = (state = { }, action) => {
   switch (action.type) {
-    case 'NEW_NOTIFICATION':
+    case 'LOGIN_SUCCESS':
       return {
-        message: action.message,
-        error: action.error
+        message: 'You have logged in',
+        error: false
       }
-    case 'CLEAR_NOTIFICATION':
+    case 'NOTIFICATION_CLEAR':
       return {}
     default:
       return state
   }
 }
 
-export const newNotification = (notification) => {
+/* export const newNotification = (notification) => {
   return async (dispatch) => {
     dispatch({
       type: 'NEW_NOTIFICATION',
@@ -25,6 +25,12 @@ export const newNotification = (notification) => {
         type: 'CLEAR_NOTIFICATION'
       })
     }, 5000)
+  } 
+}*/
+
+export const clearNotifications = () => {
+  return async (dispatch) => {
+    dispatch({ type: 'NOTIFICATION_CLEAR' })  
   }
 }
 

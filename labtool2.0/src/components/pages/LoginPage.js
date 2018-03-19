@@ -1,6 +1,5 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { newNotification } from '../../reducers/notificationReducer'
 import { login } from '../../services/login'
 class LoginPage extends React.Component {
 
@@ -12,7 +11,6 @@ class LoginPage extends React.Component {
       password: e.target.password.value
     }
     const valid = this.props.login(content)
-    this.props.newNotification({ message: 'Teretulemasta', error: false })
 
 
 
@@ -38,4 +36,4 @@ class LoginPage extends React.Component {
 }
 
 
-export default connect(null, { login, newNotification })(LoginPage)
+export default connect(null, { login })(LoginPage)

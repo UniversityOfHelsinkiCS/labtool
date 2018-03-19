@@ -1,10 +1,24 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { clearNotifications } from '../../reducers/notificationReducer'
+
+
+const EVENT_MESSAGE_CLEAR_TIMEOUT = 1000
+let timeout
 
 class Notification extends React.Component {
   render() {
     const message = this.props.notification.message
     const error = this.props.notification.error
+
+    clearTimeout(timeout)
+    timeout = setTimeout(clearNotifications, EVENT_MESSAGE_CLEAR_TIMEOUT)
+
+/*     const closeMessage = () => {
+      clearTimeout(timeout)
+      clearNotifications()
+    } */
+
 
     if (message === undefined) {
       return (
@@ -33,8 +47,13 @@ const mapStateToProps = (state) => {
   }
 }
 
+const mapDispatchToProps = () => {
+  clearNotifications()
+}
+
 const ConnectedNotification = connect(
-  mapStateToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(Notification)
 
 export default ConnectedNotification
