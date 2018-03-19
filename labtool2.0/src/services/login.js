@@ -1,5 +1,4 @@
 
-import axios from 'axios'
 import { callController } from '../util/apiConnection'
 const baseUrl = process.env.REACT_APP_BACKEND_URL + '/login'
 

@@ -1,9 +1,8 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Switch, Route, withRouter } from 'react-router-dom'
 import Courses from './components/pages/Courses'
-import Login from './Login'
 import { connect } from 'react-redux'
-import { courseInstanceInitialization, getCourseInstance } from './reducers/courseInstanceReducer'
+import { courseInstanceInitialization } from './reducers/courseInstanceReducer'
 import LoginPage from './components/pages/LoginPage';
 import { Container } from 'semantic-ui-react'
 import Notification from './components/pages/Notification'

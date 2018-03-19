@@ -10,16 +10,10 @@ class LoginPage extends React.Component {
       username: e.target.username.value,
       password: e.target.password.value
     }
-    const valid = this.props.login(content)
-
-
-
+    this.props.login(content)
     /* this.props.newNotification({ message: 'VÄÄRÄ', error: true }) */
 
-
-    e.target.username.value = ''
-
-    this.props.history.push('/labtool/courses')
+    this.props.history.push('/labtool/courses') 
   }
   render() {
     return (

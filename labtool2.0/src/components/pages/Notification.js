@@ -3,19 +3,21 @@ import { connect } from 'react-redux'
 import { clearNotifications } from '../../reducers/notificationReducer'
 
 
+let timeout
+
 class Notification extends React.Component {
+  componentDidUpdate() {
+    const message = this.props.notification.message
+    if (message !== undefined) {
+      clearTimeout(timeout)
+      timeout = setTimeout(() => {
+        this.props.clearNotifications()
+      }, 5000)
+    }
+  }
   render() {
     const message = this.props.notification.message
     const error = this.props.notification.error
-
-
-
-/*     const closeMessage = () => {
-      clearTimeout(timeout)
-      clearNotifications()
-    } */
-
-
     if (message === undefined) {
       return (
         <div>
@@ -43,13 +45,9 @@ const mapStateToProps = (state) => {
   }
 }
 
-const mapDispatchToProps = () => {
-  clearNotifications()
-}
-
 const ConnectedNotification = connect(
   mapStateToProps,
-  mapDispatchToProps
+  { clearNotifications }
 )(Notification)
 
 export default ConnectedNotification

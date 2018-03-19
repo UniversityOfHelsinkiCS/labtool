@@ -3,7 +3,6 @@ import LoginPage from './components/pages/LoginPage'
 import MainPage from './components/pages/MainPage'
 import axios from 'axios'
 import SetEmail from './components/pages/SetEmail'
-import { createNotification } from './reducers/notificationReducer'
 
 import studentinstancesService from './services/studentinstances'
 import courseInstancesService from './services/courseInstance'
