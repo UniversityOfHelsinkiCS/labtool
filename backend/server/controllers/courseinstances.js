@@ -181,6 +181,33 @@ module.exports = {
     )
   },
 
+  checkWebOodi(req, res, param, student) {
+    console.log('checking weboodi..')
+    onst auth = process.env.TOKEN || 'notset'
+    if (auth == 'notset') {
+      res.send('Please restart the backend with the correct TOKEN environment variable set')
+    } else {
+      const request = require('request')
+      const options = {
+        method: 'get',
+        uri: `https://opetushallinto.cs.helsinki.fi/labtool/courses/${param}`,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': auth
+        }
+      strictSSL: false
+      }
+      request(options, function (err, resp, body) {
+        const json = JSON.parse(body)
+        console.log('json palautta...')
+        console.log(json)
+        
+
+        res.status(204).send({ 'hello': 'hello' })
+      }
+    }
+  }
+
   getNew(req, res) {
     console.log('update current...')
     const auth = process.env.TOKEN || 'notset' //You have to set TOKEN in .env file in order for this to work
@@ -206,6 +233,7 @@ module.exports = {
         }
         request(options, function (err, resp, body) {
           const json = JSON.parse(body)
+          console.log('json palautta...')
           console.log(json)
           json.forEach(instance => {
             CourseInstance.findOrCreate({
