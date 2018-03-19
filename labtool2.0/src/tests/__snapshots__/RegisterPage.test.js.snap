@@ -2,7 +2,7 @@
 
 exports[`<Register /> Register Component should render correctly 1`] = `
 <div
-  className="Register"
+  className="RegisterPage"
   style={
     Object {
       "textAlign": "center",
@@ -10,41 +10,67 @@ exports[`<Register /> Register Component should render correctly 1`] = `
     }
   }
 >
-  <h3>
-    Register for 
-  </h3>
-  <form>
-    <label>
-      GitHub link: 
-      <br />
-      <input
-        className="form-control1"
-        name="github"
-        required={true}
-        type="url"
-      />
-    </label>
-    <br />
-    <label>
-      Project name:  
-      <br />
-      <input
-        className="form-control2"
-        name="projectname"
-        required={true}
-        type="text"
-      />
-    </label>
-     
-    <br />
-    <button
-      type="submit"
+  <Grid>
+    <GridRow
+      centered={true}
     >
-      Submit
-    </button>
-  </form>
-  <button>
-    Cancel
-  </button>
+      <h3>
+        Register for *kurssin nimi*
+      </h3>
+    </GridRow>
+  </Grid>
+  <Grid>
+    <GridRow
+      centered={true}
+    >
+      <Form
+        as="form"
+      >
+        <FormField
+          inline={true}
+        >
+          <label>
+             Project name 
+          </label>
+          <Input
+            className="form-control2"
+            name="project name"
+            placeholder="MyProjectName"
+            required={true}
+            type="text"
+          />
+        </FormField>
+        <FormField
+          inline={true}
+        >
+          <label>
+             GitHub link 
+          </label>
+          <Input
+            className="form-control1"
+            name="github"
+            placeholder="https://github.com/myrepository"
+            required={true}
+            type="url"
+          />
+        </FormField>
+        <FormField>
+          <Button
+            as="button"
+            color="blue"
+            type="submit"
+          >
+            Submit
+          </Button>
+          <Button
+            as="button"
+            color="red"
+          >
+            Cancel
+          </Button>
+        </FormField>
+      </Form>
+    </GridRow>
+  </Grid>
 </div>
 `;

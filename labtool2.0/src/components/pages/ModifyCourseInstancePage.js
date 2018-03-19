@@ -9,20 +9,24 @@ class ModyfyCourseInstancePage extends Component {
         <Form>
           <Form.Field inline>
             <label>Week amount</label>
-            <Input />
+            <Input 
+            className="form-control1"/>
           </Form.Field>
           <Form.Field inline>
             <label>Weekly maxpoints</label>
-            <Input />
+            <Input 
+            className="form-control2"/>
           </Form.Field>
           <Form.Field inline>
             <label>Current week</label>
-            <Input />
+            <Input
+            className="form-control3"/>
           </Form.Field>
      
           <Form.Field inline>
             <label>Course active</label>
-            <Input type='checkbox'/>
+            <Input type='checkbox'
+            className="form-control4"/>
         </Form.Field>
             <Button color='green' type='submit'>Save</Button>
       </Form>
