@@ -17,7 +17,7 @@ export const getAxios = () => {
 function callApi(url, method = 'get', data, prefix, token) {
   const options = {
     headers: {
-      'Authorization': 'bearer ', token
+      'Authorization': `bearer ${token}`
     }
   }
   switch (method) {
