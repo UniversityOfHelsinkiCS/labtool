@@ -9,45 +9,44 @@ class ModyfyCourseInstancePage extends Component {
         <Form>
           <Form.Field inline>
             <label>Week amount</label>
-            <Input 
-                  type="text"
-                  className="form-control1"
-                  name="week amount"
-                  placeholder="WeekAmount"
-                  required />
+            <Input
+              type="text"
+              className="form-control1"
+              name="week amount"
+              placeholder="WeekAmount"
+              required />
+            className="form-control1"/>
           </Form.Field>
           <Form.Field inline>
             <label>Weekly maxpoints</label>
-            <Input 
-                  type="text"
-                  className="form-control2"
-                  name="weekly maxpoints"
-                  placeholder="WeeklyMaxpoints"
-                  required /> 
+            <Input
+              className="form-control2"
+              name="weekly maxpoints"
+              placeholder="WeeklyMaxpoints"
+              required />
           </Form.Field>
           <Form.Field inline>
             <label>Current week</label>
-            <Input 
-                  type="text"
-                  className="form-control3"
-                  name="current week"
-                  placeholder="CurrentWeek"
-                  required /> 
+            <Input
+              className="form-control3"
+              name="current week"
+              placeholder="CurrentWeek"
+              required />
           </Form.Field>
-     
+
           <Form.Field inline>
             <label>Course active</label>
             <Input type='checkbox'
-                  className="form-control4"
-                  name="course active"
-                  placeholder="CourseActive"
-                  required />
-        </Form.Field>
-            <Button color='green' type='submit'>Save</Button>
-      </Form>
+              className="form-control4"
+              name="course active"
+              placeholder="CourseActive"
+              required />
+          </Form.Field>
+          <Button color='green' type='submit'>Save</Button>
+        </Form>
       </div>
-        )
-      }
-    }
-    
+    )
+  }
+}
+
 export default ModyfyCourseInstancePage
