@@ -5,6 +5,7 @@ import Login from './Login'
 import { Container } from 'semantic-ui-react'
 import TestFile from './components/pages/TestFile.js'
 import CoursePage from './components/pages/CoursePage'
+import Email from './components/pages/Email.js'
 
 
 const App = () => {
@@ -25,6 +26,7 @@ const Main = () => {
         <Route exact path={`${process.env.PUBLIC_URL}/`} component={Login} />
         <Route path={`${process.env.PUBLIC_URL}/courses`} component={Courses} />
         <Route  path={`${process.env.PUBLIC_URL}/coursePage`} component={CoursePage} />
+        <Route  path={`${process.env.PUBLIC_URL}/email`} component={Email} />
         {/* <Route path='/schedule' component={Schedule} /> */}
       </Switch>
     </main>
