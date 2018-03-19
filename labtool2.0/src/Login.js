@@ -3,7 +3,6 @@ import LoginPage from './components/pages/LoginPage'
 import MainPage from './components/pages/MainPage'
 import axios from 'axios'
 import SetEmail from './components/pages/SetEmail'
-import { logout } from './reducers/userReducer'
 import { createNotification } from './reducers/notificationReducer'
 
 import studentinstancesService from './services/studentinstances'
@@ -96,7 +95,7 @@ class Login extends Component {
   postLogout = async (e) => {
     e.preventDefault()
     window.localStorage.removeItem('loggedUser')
-    await this.props.logout()    
+    await this.props.logout()
     this.props.createNotification({ message: 'You have logged out', error: false })
     studentinstancesService.setToken('')
   }
@@ -141,7 +140,7 @@ class Login extends Component {
           success: 'Email updated'
         })
         setTimeout(() => {
-          this.setState({success: null})
+          this.setState({ success: null })
         }, 3000)
         this.updateUserinformationInLocalStorage(userWithEmail) //See the comment above
 
@@ -149,8 +148,8 @@ class Login extends Component {
       })
       .catch(error => this.setState(error))
   }
-  
-  
+
+
   /*
   postLogin = (event) => {
 
@@ -172,7 +171,7 @@ class Login extends Component {
 
     const listingPage = (
       <div>
-        <MainPage logout={this.postLogout} handleFirstLoginTrue={this.handleFirstLoginTrue}/>
+        <MainPage logout={this.postLogout} handleFirstLoginTrue={this.handleFirstLoginTrue} />
         <p></p>
         <p></p>
         {this.state.courseInstances.map(instance =>

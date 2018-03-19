@@ -1,10 +1,13 @@
 
 import axios from 'axios'
+import { callController } from '../util/apiConnection'
 const baseUrl = process.env.REACT_APP_BACKEND_URL + '/login'
 
-const login = async (loginInformation) => {
-  const response = await axios.post(baseUrl, loginInformation)
-  return response.data
+export const login = (loginInformation) => {
+  const route = baseUrl
+  const prefix = 'LOGIN_'
+  const method = 'post'
+  return callController(route, prefix, loginInformation, method)
 }
 
 export default { login }

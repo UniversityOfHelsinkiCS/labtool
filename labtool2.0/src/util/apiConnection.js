@@ -7,7 +7,7 @@ import axios from 'axios'
 }*/
 
 export const getAxios = () => {
-  const hostUrl = 'http://localhost:3001'
+  const hostUrl = 'http://localhost:3001/'
   const apiPath = '/api' //createApiUrl(window.location.pathname)
   return axios.create({
     baseURL: `${hostUrl}${apiPath}`
@@ -24,6 +24,7 @@ function callApi(url, method = 'get', data, prefix, token) {
     case 'get':
       return getAxios().get(url, options)
     case 'post':
+      console.log('urli, data options', url, data, options)
       return getAxios().post(url, data, options)
     case 'put':
       return getAxios().put(url, data, options)

@@ -1,7 +1,7 @@
 import React from 'react'
-import { login } from '../../reducers/userReducer'
 import { connect } from 'react-redux'
 import { newNotification } from '../../reducers/notificationReducer'
+import { login } from '../../services/login'
 class LoginPage extends React.Component {
 
   handleSubmit = async (e) => {
@@ -16,7 +16,7 @@ class LoginPage extends React.Component {
 
 
 
-    this.props.newNotification({ message: 'VÄÄRÄ', error: true })
+    /* this.props.newNotification({ message: 'VÄÄRÄ', error: true }) */
 
 
     e.target.username.value = ''

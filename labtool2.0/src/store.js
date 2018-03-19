@@ -5,12 +5,12 @@ import { composeWithDevTools } from 'redux-devtools-extension'
 import { handleRequest } from './util/apiConnection'
 
 import courseInstance from './reducers/courseInstanceReducer'
-import user from './reducers/userReducer'
+import login from './reducers/loginReducer'
 import notification from './reducers/notificationReducer'
 
 const reducer = combineReducers({
   courseInstance: courseInstance,
-  user: user,
+  user: login,
   notification: notification
 })
 
