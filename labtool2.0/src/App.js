@@ -3,6 +3,8 @@ import { Switch, Route } from 'react-router-dom'
 import Courses from './components/pages/Courses'
 import Login from './Login'
 import { Container } from 'semantic-ui-react'
+import TestFile from './components/pages/TestFile.js'
+import CoursePage from './components/pages/CoursePage'
 import Email from './components/pages/Email.js'
 import LoginPage from './components/pages/LoginPage.js'
 
@@ -26,6 +28,7 @@ const Main = () => {
       <Switch>
         <Route exact path={`${process.env.PUBLIC_URL}/`} component={Login} />
         <Route path={`${process.env.PUBLIC_URL}/courses`} component={Courses} />
+        <Route  path={`${process.env.PUBLIC_URL}/coursePage`} component={CoursePage} />
         <Route  path={`${process.env.PUBLIC_URL}/email`} component={Email} />
         <Route path={`${process.env.PUBLIC_URL}/loginPage`} component={LoginPage} />      
         {/* <Route path='/schedule' component={Schedule} /> */}
