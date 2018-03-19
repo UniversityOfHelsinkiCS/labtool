@@ -7,12 +7,14 @@ import Email from './components/pages/Email.js'
 import LoginPage from './components/pages/LoginPage.js'
 
 
+// Tähän navigation bar
 const App = () => {
   return (
     <Container >
       <div>
         {/* <Header /> */}
         <Main />
+        
       </div>
     </Container>
   )
@@ -25,6 +27,7 @@ const Main = () => {
         <Route exact path={`${process.env.PUBLIC_URL}/`} component={Login} />
         <Route path={`${process.env.PUBLIC_URL}/courses`} component={Courses} />
         <Route  path={`${process.env.PUBLIC_URL}/email`} component={Email} />
+        <Route path={`${process.env.PUBLIC_URL}/loginPage`} component={LoginPage} />      
         {/* <Route path='/schedule' component={Schedule} /> */}
       </Switch>
     </main>

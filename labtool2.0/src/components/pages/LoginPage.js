@@ -1,16 +1,21 @@
-import React from 'react'
+import React, {Component} from 'react'
 import { Form, Input, Button } from 'semantic-ui-react'
 
 class LoginPage extends Component {
+  
   render() {
-
     //const LoginPage = ({ postLogin, handleFieldChange, username, password }) => {
     return (
-      <div className="LoginPage" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
+      
+      <div className="LoginPage"
+        style={{
+          textAlignVertical: 'center',
+          textAlign: 'center',
+        }}>
 
         <p>Enter your University of Helsinki username and password.</p>
 
-        <Form onSubmit={postLogin}>
+        <Form>
 
           <Form.Field>
             <label>
@@ -18,22 +23,22 @@ class LoginPage extends Component {
               <Form.Input
                 type="text"
                 className="form-control1"
-                value={username}
+                //value={username}
                 name="username"
-                onChange={handleFieldChange}
+                //onChange={handleFieldChange}
                 required />
             </label>
 
-            <label> <br />
-              Password: <br />
+            <label>
+              Password:
               <Form.Input
                 type="password"
                 className="form-control2"
-                value={password}
+                //value={password}
                 name="password"
-                onChange={handleFieldChange}
+                //onChange={handleFieldChange}
                 required />
-            </label> <br />
+            </label>
           </Form.Field>
 
           <Form.Field>
