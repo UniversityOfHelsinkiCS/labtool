@@ -22,7 +22,7 @@ module.exports = (app) => {
       })
     }
   })*/
-  app.post('/api/course/register/:ohid/:id', courseInstanceController.testi)
+  app.post('/api/course/register/:ohid', courseInstanceController.testi)
   app.get('/api/courseinstances', courseInstanceController.list) // Skolen kurssit on julkista tietoa eli periaattessa ok.
   app.post('/api/courseinstances/', courseInstanceController.create) // Ei käy
   app.get('/api/courseinstances/:id', courseInstanceController.retrieve) // En tiedä joten ei käy

@@ -54,7 +54,7 @@ module.exports = {
               email: user.email,
               firsts: user.firsts,
               lastname: user.lastname,
-              studentnumber: user.studentnumber,
+              studentNumber: user.studentnumber,
               username: user.username
             }
             res.status(200).send({

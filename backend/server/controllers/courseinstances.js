@@ -71,16 +71,16 @@ module.exports = {
   },
 
   testi(req, res) {
-    console.log('REQ:', req)
     const errors = []
-    jwt.verify(req.token, process.env.SECRET, function (err, decoded) {
+
+    jwt.verify(req.body.token, process.env.SECRET, function (err, decoded) {
       if (err) {
         errors.push('token verification failed')
         res.status(400).send(errors)
       } else {
-        CourseInstance.find({
+        CourseInstance.findAll({
           where: {
-            ohid: req.params.ohid //what if null?
+            ohid: req.params.ohid
           }
         })
           .then(courseInstance => {
@@ -89,7 +89,9 @@ module.exports = {
                 message: 'course instance not found',
               })
             }
-            return courseInstance
+            console.log(decoded.studentNumber)
+
+            return courseInstance //  tämän sijaan tsekki että jou onko decoded.studentNumber kurssilla 
           })
       }
     })
