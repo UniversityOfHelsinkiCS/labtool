@@ -2,7 +2,7 @@
 
 exports[`<Login /> Login Component should render correctly 1`] = `
 <div
-  className="Login"
+  className="LoginPage"
   style={
     Object {
       "textAlign": "center",
@@ -11,38 +11,43 @@ exports[`<Login /> Login Component should render correctly 1`] = `
   }
 >
   <p>
-    Login page
+    Enter your University of Helsinki username and password.
   </p>
-  <form>
-    <label>
-      Username: 
-      <br />
-      <input
-        className="form-control1"
-        name="username"
-        required={true}
-        type="text"
-      />
-    </label>
-    <label>
-       
-      <br />
-      Password: 
-      <br />
-      <input
-        className="form-control2"
-        name="password"
-        required={true}
-        type="password"
-      />
-    </label>
-     
-    <br />
-    <button
-      type="submit"
-    >
-      Login
-    </button>
-  </form>
+  <Form
+    as="form"
+  >
+    <FormField>
+      <label>
+        Username:
+        <FormInput
+          as={[Function]}
+          className="form-control1"
+          control={[Function]}
+          name="username"
+          required={true}
+          type="text"
+        />
+      </label>
+      <label>
+        Password:
+        <FormInput
+          as={[Function]}
+          className="form-control2"
+          control={[Function]}
+          name="password"
+          required={true}
+          type="password"
+        />
+      </label>
+    </FormField>
+    <FormField>
+      <Button
+        as="button"
+        type="submit"
+      >
+        Login
+      </Button>
+    </FormField>
+  </Form>
 </div>
 `;
