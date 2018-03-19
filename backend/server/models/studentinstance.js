@@ -1,6 +1,5 @@
-'use strict'
 module.exports = (sequelize, DataTypes) => {
-  var StudentInstance = sequelize.define('StudentInstance', {
+  const StudentInstance = sequelize.define('StudentInstance', {
     github: DataTypes.STRING,
     projectName: DataTypes.STRING
   }, {})
