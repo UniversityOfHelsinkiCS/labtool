@@ -32,7 +32,6 @@ const Main = () => {
   return (
     <main>
       <Switch>
-        <Route exact path='/labtool' component={Login} />
         <Route path='/labtool/courses' render={({ history }) =>
           <Courses history={history} />}
         />

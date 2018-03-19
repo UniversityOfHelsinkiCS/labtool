@@ -18,7 +18,8 @@ export const login = (user) => {
                 data: dbUser
             })
         } catch (error) {
-            console.log('errori', error)
+            console.log(error)
+            return error
         }
     }
 }

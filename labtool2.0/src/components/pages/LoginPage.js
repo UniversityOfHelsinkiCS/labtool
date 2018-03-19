@@ -6,18 +6,21 @@ class LoginPage extends React.Component {
 
   handleSubmit = async (e) => {
     e.preventDefault()
-    try {
-      const content = {
-        username: e.target.username.value,
-        password: e.target.password.value
-      }
-      this.props.login(content)
-      this.props.newNotification({ message: 'Teretulemasta', error: false })
-    } catch (e) {
-      this.props.newNotification({ message: 'VÄÄRÄ', error: true })
 
+    const content = {
+      username: e.target.username.value,
+      password: e.target.password.value
     }
+    const valid = this.props.login(content)
+    this.props.newNotification({ message: 'Teretulemasta', error: false })
+
+
+
+    this.props.newNotification({ message: 'VÄÄRÄ', error: true })
+
+
     e.target.username.value = ''
+
     this.props.history.push('/labtool/courses')
   }
   render() {
