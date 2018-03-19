@@ -1,6 +1,5 @@
-'use strict'
 module.exports = (sequelize, DataTypes) => {
-  var TeacherInstance = sequelize.define('TeacherInstance', {}, {})
+  const TeacherInstance = sequelize.define('TeacherInstance', {}, {})
   TeacherInstance.associate = (models) => {
 
 

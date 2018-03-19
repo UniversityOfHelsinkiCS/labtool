@@ -11,8 +11,8 @@ class Courses extends React.Component {
       <div style={{ textAlignVertical: 'center', textAlign: 'center', }}>
         <h2>Kursseja!</h2>
         <Switch>
-          <Route exact path='/courses' component={AllCourses} />
-          <Route path='/courses/:number' component={Course} />
+          <Route exact path={`${process.env.PUBLIC_URL}/courses`} component={AllCourses} />
+          <Route path={`${process.env.PUBLIC_URL}/courses:number`} component={Course} />
         </Switch>
       </div >
     )

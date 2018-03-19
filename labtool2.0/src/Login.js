@@ -162,6 +162,30 @@ class Login extends Component {
             token: response.data.token,
             user: response.data.returnedUser
           })
+<<<<<<< HEAD
+=======
+          studentinstancesService.setToken(response.data.token)
+          window.localStorage.setItem('loggedUser', JSON.stringify(response.data))
+
+          if (response.data.created) {
+            this.setState({ firstLogin: true })
+          }
+        } else {
+          console.log('Wrong username or password')
+        }
+
+      })
+      .catch(error => {
+        this.setState({
+          username: '',
+          password: '',
+          error: 'Wrong username or password'
+        })
+        setTimeout(() => {
+          this.setState({ error: null })
+        }, 5000)
+      })
+>>>>>>> 2ff3a1063faa7a0c49d528e3282d633a0f1f68ab
 
   }
   */
@@ -173,13 +197,6 @@ class Login extends Component {
         <MainPage logout={this.postLogout} handleFirstLoginTrue={this.handleFirstLoginTrue} />
         <p></p>
         <p></p>
-        {this.state.courseInstances.map(instance =>
-          <CourseInstance
-            handleFieldChange={this.handleRegister}
-            key={instance.id}
-            instance={instance}
-          />
-        )}
       </div>
     )
 
