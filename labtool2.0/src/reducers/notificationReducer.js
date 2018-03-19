@@ -12,4 +12,10 @@ const notificationReducer = (state = { }, action) => {
   }
 }
 
+export const clearNotifications = () => {
+  return async (dispatch) => {
+    dispatch({ type: 'NOTIFICATION_CLEAR' })  
+  }
+}
+
 export default notificationReducer
