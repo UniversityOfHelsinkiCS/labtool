@@ -1,30 +1,50 @@
 import React from 'react'
+import studentinstancesService from '../../services/studentinstances'
 
 
-const RegisterPage = ({ onSubmit, handleFieldChange, projectname, github, cancel, name }) => {
+class RegisterPage extends React.Component {
 
-  return (
-    <div className="Register" style={{ textAlignVertical: 'center', textAlign: 'center', }} >
-      <h3>Register for {name}</h3>
+  postCourseinstanceRegisteration = (event) => {
+    event.preventDefault()
 
-      <form onSubmit={onSubmit} >
-        <label >
-          GitHub link: <br />
-          <input type="url" onChange={handleFieldChange} className="form-control1" name="github" required={true} value={github} />
-        </label>
-        <br />
-        <label>
+    studentinstancesService.create({
+      courseInstanceId: this.state.courseInstanceId,
+      github: this.state.github,
+      projectName: this.state.projectname
+    })
+    this.setState({
+      success: 'Register successful!',
+      courseInstanceId: null
+    })
+    setTimeout(() => {
+      this.setState({ success: null })
+    }, 5000)
+  }
 
-          Project name:  <br />
-          <input type="text" onChange={handleFieldChange} className="form-control2" name="projectname" value={projectname} required />
-        </label> <br />
+  render() {
+    return (
+      <div className="Register" style={{ textAlignVertical: 'center', textAlign: 'center', }} >
+        <h3>Register for {this.props.courseinstance.name}</h3>
 
-        <button type="submit">Submit</button>
-      </form>
-      <button onClick={cancel}>Cancel</button>
-    </div>
-  )
+        <form onSubmit={this.postCourseinstanceRegisteration} >
+          <label >
+            GitHub link: <br />
+            <input type="url"  className="form-control1" name="github" required={true} />
+          </label>
+          <br />
+          <label>
+            Project name:  <br />
+            <input type="text"  className="form-control2" name="projectname" required />
+          </label> <br />
+
+          <button type="submit">Submit</button>
+        </form>
+        
+      </div>
+    )
+  }
 }
+//<button onClick={cancel}>Cancel</button>
 
 
 export default RegisterPage

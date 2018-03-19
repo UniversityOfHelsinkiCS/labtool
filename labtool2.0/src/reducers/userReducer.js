@@ -1,5 +1,4 @@
 import loginService from '../services/login'
-import { } from 'react-router-dom'
 
 const userReducer = (store = null, action) => {
     if (action.type === 'LOGIN') {

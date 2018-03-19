@@ -100,24 +100,6 @@ class Login extends Component {
     this.props.createNotification({ message: 'You have logged out', error: false })
     studentinstancesService.setToken('')
   }
-
-  postCourseinstanceRegisteration = (event) => {
-    event.preventDefault()
-
-    studentinstancesService.create({
-      courseInstanceId: this.state.courseInstanceId,
-      github: this.state.github,
-      projectName: this.state.projectname
-    })
-    this.setState({
-      success: 'Register successful!',
-      courseInstanceId: null
-    })
-    setTimeout(() => {
-      this.setState({ success: null })
-    }, 5000)
-  }
-
   updateUserinformationInLocalStorage = (user) => {
     console.log(user)
     const updatedUser = {
