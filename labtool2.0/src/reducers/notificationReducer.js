@@ -13,6 +13,14 @@ const notificationReducer = (state = { }, action) => {
   }
 }
 
+
+const EVENT_MESSAGE_CLEAR_TIMEOUT = 1000
+let timeout
+
+clearTimeout(timeout)
+timeout = setTimeout(clearNotifications, EVENT_MESSAGE_CLEAR_TIMEOUT)
+
+
 /* export const newNotification = (notification) => {
   return async (dispatch) => {
     dispatch({
