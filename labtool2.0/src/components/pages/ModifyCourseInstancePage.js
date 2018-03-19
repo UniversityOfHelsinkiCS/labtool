@@ -15,7 +15,6 @@ class ModyfyCourseInstancePage extends Component {
               name="week amount"
               placeholder="WeekAmount"
               required />
-            className="form-control1"/>
           </Form.Field>
           <Form.Field inline>
             <label>Weekly maxpoints</label>
