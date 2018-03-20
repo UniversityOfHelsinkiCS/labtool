@@ -181,9 +181,9 @@ module.exports = {
     )
   },
 
-  checkWebOodi(req, res, param, student) {
+  /* checkWebOodi(req, res, param, student) {
     console.log('checking weboodi..')
-    onst auth = process.env.TOKEN || 'notset'
+    const auth = process.env.TOKEN || 'notset'
     if (auth == 'notset') {
       res.send('Please restart the backend with the correct TOKEN environment variable set')
     } else {
@@ -194,7 +194,7 @@ module.exports = {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': auth
-        }
+        },
       strictSSL: false
       }
       request(options, function (err, resp, body) {
@@ -206,7 +206,7 @@ module.exports = {
         res.status(204).send({ 'hello': 'hello' })
       }
     }
-  }
+  } */
 
   getNew(req, res) {
     console.log('update current...')
