@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     email: DataTypes.STRING,
     firsts: DataTypes.STRING,
     lastname: DataTypes.STRING,
-    studentNumber: DataTypes.STRING
+    studentnumber: DataTypes.STRING
   }, {})
   User.associate = (models) => {
     User.hasMany(models.StudentInstance, {

@@ -31,26 +31,33 @@ app.use(function (req, res, next) {
 })
 
 
-const tokenVerify = ({ token }) => {
-  jwt.verify(token, process.env.SECRET, function (err, decoded) {
+
+// This doesn't seem to do anything.
+app.use(function (request, res, jwt, next) {
+  jwt.verify(request.token, process.env.SECRET, function (err, decoded) {
     if (err) {
       console.log(err)
-      return ( { error: 'token verification failed'})
+      request.labtool_authorized = false
     } else {
       console.log(decoded)
       console.log(decoded.id)
       console.log(decoded.username)
-      return decoded
+      request.params.decoded = decoded
+      request.params.labtool_authorized = true
     }
   })
-}
+  next()
 
-// Sequelize reitti määrittelyt
+} )
+
+
+
+// express routet
+require('./server/routes/loginRouter')(app)
 require('./server/routes')(app)
 require('./server/routes/userRouter')(app)
 require('./server/routes/courseInstanceRouter')(app)
 require('./server/routes/courseRouter')(app)
-require('./server/routes/loginRouter')(app)
 require('./server/routes/studentInstanceRouter')(app)
 require('./server/routes/teacherInstanceRouter')(app)
 require('./server/routes/weekRouter')(app)

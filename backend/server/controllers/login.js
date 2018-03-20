@@ -45,6 +45,8 @@ module.exports = {
               )
             }
 
+            // ^ SIDENOTE HERE: There can be a situation where the user has not a studentnumber but later gets it.
+
             console.log(user.get({
               plain: true
             }))

@@ -1,4 +1,5 @@
 const CourseInstance = require('../models').CourseInstance
+const User = require('../models').User
 const jwt = require('jsonwebtoken')
 
 const CurrentTermAndYear = () => {
@@ -16,7 +17,7 @@ const CurrentTermAndYear = () => {
   nextYear.toString()
   const nextTerm = getNextTerm(currentTerm)
   console.log('year: ', year)
-  return { currentYear, currentTerm, nextTerm, nextYear }
+  return {currentYear, currentTerm, nextTerm, nextYear}
 }
 
 const getCurrentTerm = (month) => {
@@ -50,6 +51,38 @@ const getNextTerm = (term) => {
     return 'K'
   }
 }
+const checkWebOodi = (req, res, user) => {
+  console.log('checking weboodi..')
+  const auth = process.env.TOKEN || 'notset'
+  if (auth == 'notset') {
+    res.send('Please restart the backend with the correct TOKEN environment variable set')
+  } else {
+    const request = require('request')
+    const options = {
+      method: 'get',
+      uri: `https://opetushallinto.cs.helsinki.fi/labtool/courses/${req.params.ohid}`,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': auth
+      },
+      strictSSL: false
+    }
+    request(options, function (err, resp, body) {
+      const json = JSON.parse(body)
+      console.log('json palautta...')
+      console.log(json)
+      let found
+      if (json['students'][user.studentnumber]) {
+        console.log('found')
+        found = true
+      } else {
+        console.log('notfound')
+        found = false
+      }
+      return found
+    })
+  }
+}
 
 module.exports = {
 
@@ -72,8 +105,10 @@ module.exports = {
 
   testi(req, res) {
     const errors = []
+    console.log(req)
 
-    jwt.verify(req.body.token, process.env.SECRET, function (err, decoded) {
+
+    jwt.verify(req.headers['authorization'], process.env.SECRET, function (err, decoded) {
       if (err) {
         errors.push('token verification failed')
         res.status(400).send(errors)
@@ -89,10 +124,20 @@ module.exports = {
                 message: 'course instance not found',
               })
             }
-            console.log(decoded.studentNumber)
+            User.findById(decoded.id).then(user => {
+              if (!user) {
+                return res.status(400).send({
+                  message: 'something went wrong',
+                })
+              }
+              let found = checkWebOodi(req,res,user)
+              console.log(found)
 
-            return courseInstance //  tämän sijaan tsekki että jou onko decoded.studentNumber kurssilla 
-          })
+            })
+            console.log(decoded)
+              res.status(200).send('ok')
+          }
+        )
       }
     })
   },
@@ -176,37 +221,10 @@ module.exports = {
             .catch(error => res.status(400).send(error))
         }
       }
-
       )
     )
   },
 
-  /* checkWebOodi(req, res, param, student) {
-    console.log('checking weboodi..')
-    const auth = process.env.TOKEN || 'notset'
-    if (auth == 'notset') {
-      res.send('Please restart the backend with the correct TOKEN environment variable set')
-    } else {
-      const request = require('request')
-      const options = {
-        method: 'get',
-        uri: `https://opetushallinto.cs.helsinki.fi/labtool/courses/${param}`,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': auth
-        },
-      strictSSL: false
-      }
-      request(options, function (err, resp, body) {
-        const json = JSON.parse(body)
-        console.log('json palautta...')
-        console.log(json)
-        
-
-        res.status(204).send({ 'hello': 'hello' })
-      }
-    }
-  } */
 
   getNew(req, res) {
     console.log('update current...')
@@ -217,7 +235,7 @@ module.exports = {
     if (auth === 'notset') {
       res.send('Please restart the backend with the correct TOKEN environment variable set')
     } else {
-      if (this.remoteAddress === '127.0.0.11111312') {
+      if (this.remoteAddress === '127.0.0.1') {
         res.send('gtfo')
 
       } else {
@@ -237,7 +255,7 @@ module.exports = {
           console.log(json)
           json.forEach(instance => {
             CourseInstance.findOrCreate({
-              where: { ohid: instance.id },
+              where: {ohid: instance.id},
               defaults: {
                 name: instance.name,
                 start: instance.starts,
@@ -246,12 +264,13 @@ module.exports = {
               }
             })
           })
-          res.status(204).send({ 'hello': 'hello' })
+          res.status(204).send({'hello': 'hello'})
         }
         )
       }
     }
-  },
+  }
+  ,
 
   getNewer(req, res) {
     console.log('update next...')
@@ -281,7 +300,7 @@ module.exports = {
           console.log(json)
           json.forEach(instance => {
             CourseInstance.findOrCreate({
-              where: { ohid: instance.id },
+              where: {ohid: instance.id},
               defaults: {
                 name: instance.name,
                 start: instance.starts,
@@ -290,7 +309,7 @@ module.exports = {
               }
             })
           })
-          res.status(204).send({ 'hello': 'hello' })
+          res.status(204).send({'hello': 'hello'})
         })
       }
     }
