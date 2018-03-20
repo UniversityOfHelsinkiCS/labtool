@@ -1,90 +1,7 @@
 const CourseInstance = require('../models').CourseInstance
 const StudentInstance = require('../models').StudentInstance
 const User = require('../models').User
-const helper = require('../helpers/application_helper')
-
-
-const CurrentTermAndYear = () => {
-  const date = new Date()
-  const month = date.getMonth() + 1
-  const currentTerm = getCurrentTerm(month)
-  var year = date.getFullYear()
-  console.log('month is: ', month)
-  console.log('date: ', date)
-  if (month >= 11) {
-    year = year + 1
-  }
-  const currentYear = year.toString()
-  var nextYear = getNextYear(currentTerm, year)
-  nextYear.toString()
-  const nextTerm = getNextTerm(currentTerm)
-  console.log('year: ', year)
-  return {currentYear, currentTerm, nextTerm, nextYear}
-}
-
-const getCurrentTerm = (month) => {
-  if (1 <= month <= 5) {
-    return 'K'
-  }
-  if (6 <= month <= 8) {
-    return 'V'
-  }
-  if (9 <= month <= 12) {
-    return 'S'
-  }
-}
-
-const getNextYear = (currentTerm, currentYear) => {
-  if (currentTerm === 'S') {
-    return currentYear + 1
-  } else {
-    return currentYear
-  }
-}
-
-const getNextTerm = (term) => {
-  if (term === 'K') {
-    return 'V'
-  }
-  if (term === 'V') {
-    return 'S'
-  }
-  if (term === 'S') {
-    return 'K'
-  }
-}
-const checkWebOodi = (req, res, user) => {
-  console.log('checking weboodi..')
-  const auth = process.env.TOKEN || 'notset'
-  if (auth == 'notset') {
-    res.send('Please restart the backend with the correct TOKEN environment variable set')
-  } else {
-    const request = require('request')
-    const options = {
-      method: 'get',
-      uri: `https://opetushallinto.cs.helsinki.fi/labtool/courses/${req.params.ohid}`,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': auth
-      },
-      strictSSL: false
-    }
-    request(options, function (err, resp, body) {
-      const json = JSON.parse(body)
-      console.log('json palautta...')
-      console.log(json)
-      let found
-      if (json['students'][user.studentnumber]) {
-        console.log('found')
-        found = true
-      } else {
-        console.log('notfound')
-        found = false
-      }
-      return found
-    })
-  }
-}
+const helper = require('../helpers/course_instance_helper')
 
 
 module.exports = {
@@ -131,7 +48,7 @@ module.exports = {
                 message: 'something went wrong',
               })
             }
-            if (checkWebOodi(req, res, user)) {
+            if (helper.checkWebOodi(req, res, user)) {
               StudentInstance.findOrCreate({
                 where: {
                   userId: user.id,
@@ -260,7 +177,7 @@ module.exports = {
     console.log('update current...')
     const auth = process.env.TOKEN || 'notset' //You have to set TOKEN in .env file in order for this to work
     console.log('autentikaatio: ', auth)
-    const termAndYear = CurrentTermAndYear()
+    const termAndYear = helper.CurrentTermAndYear()
     console.log('term and year: ', termAndYear)
     if (auth === 'notset') {
       res.send('Please restart the backend with the correct TOKEN environment variable set')
@@ -305,7 +222,7 @@ module.exports = {
   getNewer(req, res) {
     console.log('update next...')
     const auth = process.env.TOKEN || 'notset' //You have to set TOKEN in .env file in order for this to work
-    const termAndYear = CurrentTermAndYear()
+    const termAndYear = helper.CurrentTermAndYear()
     console.log('term and year: ', termAndYear)
     if (auth === 'notset') {
       res.send('Please restart the backend with the correct TOKEN environment variable set')
