@@ -1,7 +1,7 @@
 let express = require('express')
 let app = express()
 let bodyParser = require('body-parser')
-const jwt = require('jsonwebtoken')
+let jwt = require('jsonwebtoken')
 
 require('dotenv').config()
 
@@ -14,13 +14,14 @@ const extractToken = (request, response, next) => {
   next()
 }
 
-app.use(extractToken)
 
+app.use(extractToken)
 app.use(bodyParser.json())
+
+
 // respond with "hello world" when a GET request is made to the homepage
 app.get('/', function (req, res) {
   res.send('hello world')
-
 })
 
 app.use(function (req, res, next) {
@@ -31,26 +32,27 @@ app.use(function (req, res, next) {
 })
 
 
-
+/*
 // This doesn't seem to do anything.
 app.use(function (request, res, jwt, next) {
   jwt.verify(request.token, process.env.SECRET, function (err, decoded) {
     if (err) {
       console.log(err)
-      request.labtool_authorized = false
+      res.labtool_authorized = false
     } else {
       console.log(decoded)
       console.log(decoded.id)
       console.log(decoded.username)
-      request.params.decoded = decoded
-      request.params.labtool_authorized = true
+      res.decoded = decoded
+      res.labtool_authorized = true
     }
   })
+  console.log('this shit does get run.. some fucking how')
   next()
 
 } )
 
-
+*/
 
 // express routet
 require('./server/routes/loginRouter')(app)
@@ -61,6 +63,7 @@ require('./server/routes/courseRouter')(app)
 require('./server/routes/studentInstanceRouter')(app)
 require('./server/routes/teacherInstanceRouter')(app)
 require('./server/routes/weekRouter')(app)
+
 app.get('*', (req, res) => res.status(404).send({
   message: 'Not found.',
 }))

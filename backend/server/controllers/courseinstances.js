@@ -1,7 +1,8 @@
 const CourseInstance = require('../models').CourseInstance
 const StudentInstance = require('../models').StudentInstance
 const User = require('../models').User
-const jwt = require('jsonwebtoken')
+const helper = require('../helpers/application_helper')
+
 
 const CurrentTermAndYear = () => {
   const date = new Date()
@@ -85,6 +86,7 @@ const checkWebOodi = (req, res, user) => {
   }
 }
 
+
 module.exports = {
 
   create(req, res) {
@@ -106,69 +108,68 @@ module.exports = {
 
   testi(req, res) {
     const errors = []
-    console.log(req)
+    let token = helper.tokenVerify(req)
 
+    console.log(token)
 
-    jwt.verify(req.headers['authorization'], process.env.SECRET, function (err, decoded) {
-      if (err) {
-        errors.push('token verification failed')
-        res.status(400).send(errors)
-      } else {
-        CourseInstance.findAll({
-          where: {
-            ohid: req.params.ohid
+    if (token.verified) {
+
+      CourseInstance.findAll({
+        where: {
+          ohid: req.params.ohid
+        }
+      })
+        .then(course => {
+          if (!course) {
+            return res.status(400).send({
+              message: 'course instance not found',
+            })
           }
-        })
-          .then(course => {
-            if (!course) {
+          User.findById(token.data.id).then(user => {
+            if (!user) {
               return res.status(400).send({
-                message: 'course instance not found',
+                message: 'something went wrong',
               })
             }
-            User.findById(decoded.id).then(user => {
-              if (!user) {
-                return res.status(400).send({
-                  message: 'something went wrong',
-                })
-              }
-              if (checkWebOodi(req, res, user)) {
-                StudentInstance.findOrCreate({
-                  where: {
-                    userId: user.id,
-                    courseInstanceId: course.id
-                  },
-                  defaults: {
-                    userId: user.id,
-                    courseInstanceId: course.id,
-                    github: 'forgot_this...',
-                    projectName: 'also this..'
-                  }
-                }).then(student_added_and_these_table_names_are_not_what_they_should => {
-                  if (!student_added_and_these_table_names_are_not_what_they_should) {
-                    res.status(400).send({
-                      message: 'something went wrong'
-                    })
-                  } else {
-                    res.status(200).send({
-                      message: 'something went right',
-                      whatever: student_added_and_these_table_names_are_not_what_they_should
-                    })
-                  }
+            if (checkWebOodi(req, res, user)) {
+              StudentInstance.findOrCreate({
+                where: {
+                  userId: user.id,
+                  courseInstanceId: course.id
+                },
+                defaults: {
+                  userId: user.id,
+                  courseInstanceId: course.id,
+                  github: 'forgot_this...',
+                  projectName: 'also this..'
+                }
+              }).then(student_added_and_these_table_names_are_not_what_they_should => {
+                if (!student_added_and_these_table_names_are_not_what_they_should) {
+                  res.status(400).send({
+                    message: 'something went wrong'
+                  })
+                } else {
+                  res.status(200).send({
+                    message: 'something went right',
+                    whatever: student_added_and_these_table_names_are_not_what_they_should
+                  })
+                }
 
-                })
+              })
 
-              } else {
+            } else {
 
-                res.status(400).send({
-                  message: 'something went wrong'
-                })
+              res.status(400).send({
+                message: 'something went wrong'
+              })
 
-              }
-            })
+            }
           })
-      }
+        })
+    } else {
+      errors.push('token verification failed')
+      res.status(400).send(errors)
     }
-    )
   },
 
   update(req, res) {
@@ -231,27 +232,27 @@ module.exports = {
 
   retrieve(req, res) {
     const errors = []
-    return (
-      jwt.verify(req.token, process.env.SECRET, function (err, decoded) {
-        if (err) {
-          errors.push('token verification failed')
-          res.status(400).send(errors)
-        } else {
-          CourseInstance
-            .findById(req.params.id, {})
-            .then(courseInstance => {
-              if (!courseInstance) {
-                return res.status(404).send({
-                  message: 'Course not Found',
-                })
-              }
-              return res.status(200).send(courseInstance)
+    let token = helper.tokenVerify(req)
+
+    console.log(token)
+
+    if (token.verified) {
+      CourseInstance
+        .findById(req.params.id, {})
+        .then(courseInstance => {
+          if (!courseInstance) {
+            return res.status(404).send({
+              message: 'Course not Found',
             })
-            .catch(error => res.status(400).send(error))
-        }
-      }
-      )
-    )
+          }
+          return res.status(200).send(courseInstance)
+        })
+        .catch(error => res.status(400).send(error))
+    } else {
+      errors.push('token verification failed')
+      res.status(400).send(errors)
+    }
+
   },
 
 
@@ -309,7 +310,7 @@ module.exports = {
     if (auth === 'notset') {
       res.send('Please restart the backend with the correct TOKEN environment variable set')
     } else {
-      if (this.remoteAddress === '127.0.0.1321321214') {
+      if (this.remoteAddress === '127.0.0.1') {
         res.send('gtfo')
 
       } else {
