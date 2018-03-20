@@ -1,4 +1,5 @@
 const CourseInstance = require('../models').CourseInstance
+const StudentInstance = require('../models').StudentInstance
 const User = require('../models').User
 const jwt = require('jsonwebtoken')
 
@@ -118,8 +119,8 @@ module.exports = {
             ohid: req.params.ohid
           }
         })
-          .then(courseInstance => {
-            if (!courseInstance) {
+          .then(course => {
+            if (!course) {
               return res.status(400).send({
                 message: 'course instance not found',
               })
@@ -130,16 +131,44 @@ module.exports = {
                   message: 'something went wrong',
                 })
               }
-              let found = checkWebOodi(req,res,user)
-              console.log(found)
+              if (checkWebOodi(req, res, user)) {
+                StudentInstance.findOrCreate({
+                  where: {
+                    userId: user.id,
+                    courseInstanceId: course.id
+                  },
+                  defaults: {
+                    userId: user.id,
+                    courseInstanceId: course.id,
+                    github: 'forgot_this...',
+                    projectName: 'also this..'
+                  }
+                }).then(student_added_and_these_table_names_are_not_what_they_should => {
+                  if (!student_added_and_these_table_names_are_not_what_they_should) {
+                    res.status(400).send({
+                      message: 'something went wrong'
+                    })
+                  } else {
+                    res.status(200).send({
+                      message: 'something went right',
+                      whatever: student_added_and_these_table_names_are_not_what_they_should
+                    })
+                  }
 
+                })
+
+              } else {
+
+                res.status(400).send({
+                  message: 'something went wrong'
+                })
+
+              }
             })
-            console.log(decoded)
-              res.status(200).send('ok')
-          }
-        )
+          })
       }
-    })
+    }
+    )
   },
 
   update(req, res) {
