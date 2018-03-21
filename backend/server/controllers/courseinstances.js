@@ -28,10 +28,11 @@ module.exports = {
     let token = helper.tokenVerify(req)
 
     console.log(token)
+    console.log(req.body)
 
     if (token.verified) {
 
-      CourseInstance.findAll({
+      CourseInstance.findOne({
         where: {
           ohid: req.params.ohid
         }
@@ -45,42 +46,60 @@ module.exports = {
           User.findById(token.data.id).then(user => {
             if (!user) {
               return res.status(400).send({
-                message: 'something went wrong',
+                message: 'something went wrong (clear these specific error messages later): user not found',
               })
             }
-            if (helper.checkWebOodi(req, res, user)) {
-              StudentInstance.findOrCreate({
-                where: {
-                  userId: user.id,
-                  courseInstanceId: course.id
-                },
-                defaults: {
-                  userId: user.id,
-                  courseInstanceId: course.id,
-                  github: 'forgot_this...',
-                  projectName: 'also this..'
-                }
-              }).then(student_added_and_these_table_names_are_not_what_they_should => {
-                if (!student_added_and_these_table_names_are_not_what_they_should) {
+            let thisPromiseJustMakesThisCodeEvenMoreHorrible = new Promise((resolve, reject) => {
+              helper.checkWebOodi(req, res, user, resolve)
+
+              setTimeout(function () {
+                resolve('shitaintright') // Yay! everything went to hell.
+              }, 250)
+            })
+
+            thisPromiseJustMakesThisCodeEvenMoreHorrible.then((successMessageIfYouLikeToThinkThat) => {
+              console.log('Yay! ' + successMessageIfYouLikeToThinkThat)
+              console.log(req.body)
+
+              if (successMessageIfYouLikeToThinkThat === 'found') {
+                StudentInstance.findOrCreate({
+                  where: {
+                    userId: user.id,
+                    courseInstanceId: course.dataValues.id
+                  },
+                  defaults: {
+                    userId: user.id,
+                    courseInstanceId: course.dataValues.id,
+                    github: req.body.github || '',                     // model would like to validate this to be an URL but seems like crap
+                    projectName: req.body.projectName || '',           // model would like to validate this to alphanumeric but seems like this needs specific nulls or empties or whatever
+                  }
+                }).then(student => {
+                  if (!student) {
+                    res.status(400).send({
+                      message: 'something went wrong: if somehow we could not find or create a record we see this'
+                    })
+                  } else {
+                    res.status(200).send({
+                      message: 'something went right',
+                      whatever: student
+                    })
+                  }
+
+                }).catch(function(error) {
                   res.status(400).send({
-                    message: 'something went wrong'
+                    message: error.errors
                   })
-                } else {
-                  res.status(200).send({
-                    message: 'something went right',
-                    whatever: student_added_and_these_table_names_are_not_what_they_should
-                  })
-                }
+                })
 
-              })
+              } else {
 
-            } else {
+                res.status(400).send({
+                  message: 'something went wrong'
+                })
 
-              res.status(400).send({
-                message: 'something went wrong'
-              })
+              }
+            })
 
-            }
           })
         })
     } else {

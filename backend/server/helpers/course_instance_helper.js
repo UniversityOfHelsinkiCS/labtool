@@ -8,8 +8,7 @@ exports.checkWebOodi = checkWebOodi
 exports.tokenVerify = application_helpers.tokenVerify
 
 
-
-function CurrentTermAndYear()  {
+function CurrentTermAndYear() {
   const date = new Date()
   const month = date.getMonth() + 1
   const currentTerm = getCurrentTerm(month)
@@ -47,7 +46,7 @@ function getNextYear(currentTerm, currentYear) {
   }
 }
 
-function getNextTerm(term){
+function getNextTerm(term) {
   if (term === 'K') {
     return 'V'
   }
@@ -58,7 +57,11 @@ function getNextTerm(term){
     return 'K'
   }
 }
-function checkWebOodi(req, res, user) {
+
+
+
+function checkWebOodi(req, res, user, resolve) {
+
   console.log('checking weboodi..')
   const auth = process.env.TOKEN || 'notset'
   if (auth == 'notset') {
@@ -74,19 +77,18 @@ function checkWebOodi(req, res, user) {
       },
       strictSSL: false
     }
-    request(options, function (err, resp, body) {
+    request(options, function (req, res, body) {
       const json = JSON.parse(body)
-      console.log('json palautta...')
-      console.log(json)
-      let found
-      if (json['students'][user.studentnumber]) {
+      if (json['students'].toString().match(user.studentnumber) !== null) {  // stupid javascript.. even regex match is simpler than json array that has or not has a key of whatever.
         console.log('found')
-        found = true
+        resolve('found')
+        return
       } else {
         console.log('notfound')
-        found = false
+        resolve('notfound')
+        return
       }
-      return found
     })
+
   }
 }

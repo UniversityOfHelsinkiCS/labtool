@@ -1,7 +1,19 @@
 module.exports = (sequelize, DataTypes) => {
   const StudentInstance = sequelize.define('StudentInstance', {
-    github: DataTypes.STRING,
-    projectName: DataTypes.STRING
+    github: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        isUrl: {msg: 'not a valid url'}
+      }
+    },
+    projectName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        isAlphanumeric: {msg: 'projectName not accepted'}
+      }
+    }
   }, {})
   StudentInstance.associate = (models) => {
 
