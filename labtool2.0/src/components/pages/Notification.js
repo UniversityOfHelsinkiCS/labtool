@@ -1,6 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { clearNotifications } from '../../reducers/notificationReducer'
+import { Message, Grid } from 'semantic-ui-react'
+
 
 
 let timeout
@@ -15,25 +17,43 @@ class Notification extends React.Component {
       }, 5000)
     }
   }
+  
   render() {
     const message = this.props.notification.message
     const error = this.props.notification.error
+   
     if (message === undefined) {
       return (
-        <div>
-        </div>
+        <Grid>
+          <Grid.Row>
+            <br/>
+            <br />
+            <br />
+          </Grid.Row>
+        </Grid> 
       )
+   
     } else if (error) {
       return (
-        <div className="error">
+        <Message
+          className='error'
+          color='red'
+          error='true'
+          size='large'>
           {message}
-        </div>
+        </Message>
       )
+
     } else {
       return (
-        <div className="success">
+        <Message
+          className='success'
+          color='green'
+          success='true'
+          size='large' >
           {message}
-        </div>
+        </Message>
+       
       )
     }
   }
