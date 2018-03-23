@@ -4,21 +4,23 @@ import React from 'react'
 import { Form, Input, Button, Grid } from 'semantic-ui-react'
 
 class LoginPage extends React.Component {
+  
+  handleSubmit = async (e) => {
+    e.preventDefault()
+
+    const content = {
+      username: e.target.username.value,
+      password: e.target.password.value
+    }
+    this.props.login(content)
+    /* this.props.newNotification({ message: 'VÄÄRÄ', error: true }) */
+
+    //this.props.history.goBack() //Will be changed
+  }
 
   render() {
 
-    handleSubmit = async (e) => {
-      e.preventDefault()
 
-      const content = {
-        username: e.target.username.value,
-        password: e.target.password.value
-      }
-      this.props.login(content)
-      /* this.props.newNotification({ message: 'VÄÄRÄ', error: true }) */
-
-      //this.props.history.goBack() //Will be changed
-    }
     return (
 
       <div className='ui'>
@@ -30,7 +32,7 @@ class LoginPage extends React.Component {
 
         <Grid>
           <Grid.Row centered>
-            <Form onSubmit={handleSubmit}>
+            <Form onSubmit={this.handleSubmit}>
 
               <Form.Group inline>
                 <label>
