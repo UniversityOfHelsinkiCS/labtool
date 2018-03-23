@@ -38,8 +38,7 @@ class ModyfyCourseInstancePage extends Component {
             <Input type='checkbox'
               className="form-control4"
               name="course active"
-              placeholder="CourseActive"
-              required />
+              placeholder="CourseActive" />
           </Form.Field>
           <Button color='green' type='submit'>Save</Button>
         </Form>
