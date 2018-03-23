@@ -9,11 +9,6 @@ class MyPageStudent extends Component {
     const user = { ... this.props.user.returnedUser }
     return (
       <div>
-        <Message
-          success
-          header='Login successful'
-          color='green'
-        />
         <Card fluid color='green'>
           <Card.Content>
             <Table fixed basic='very'>

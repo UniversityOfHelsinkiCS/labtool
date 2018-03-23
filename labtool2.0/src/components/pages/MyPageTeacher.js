@@ -6,17 +6,12 @@ class MyPageStudent extends Component {
   render() {
     return (
       <div>
-        <Message
-          success
-          header='Login successful'
-          color='green'
-        />
         <Card fluid color='yellow'>
           <Card.Content>
             <Table fixed basic='very'>
               <Table.Header>
                 <Header as='h3' block>
-    Tatti Teikäläinen
+                  Tatti Teikäläinen
                 </Header>
               </Table.Header>
               <Table.Row>
@@ -27,7 +22,7 @@ class MyPageStudent extends Component {
               <Table.Row>
                 <Table.Cell></Table.Cell>
                 <Table.Cell>I want to receive emails regarding my courses</Table.Cell>
-                <Table.Cell><Checkbox/></Table.Cell>
+                <Table.Cell><Checkbox /></Table.Cell>
               </Table.Row>
             </Table>
           </Card.Content>
@@ -46,15 +41,15 @@ class MyPageStudent extends Component {
               <Table.Row>
                 <Table.Cell>Aineopintojen harjoitustyö: Tietokantasovellus (periodi IV)</Table.Cell>
                 <Table.Cell textAlign='center'><div>
-                  <Button circular color="teal" size="tiny" icon="large black edit icon"/>  
-                  <Button circular size="tiny" icon="large black eye icon"/>
+                  <Button circular color="teal" size="tiny" icon="large black edit icon" />
+                  <Button circular size="tiny" icon="large black eye icon" />
                 </div></Table.Cell>
                 <Table.Cell textAlign='center'></Table.Cell>
               </Table.Row>
               <Table.Row>
                 <Table.Cell>Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit (periodi III)</Table.Cell>
                 <Table.Cell textAlign='center'><div>
-                  <Button circular color="teal" size="tiny" icon="large black edit icon"/>
+                  <Button circular color="teal" size="tiny" icon="large black edit icon" />
                   <Button circular size="tiny" icon="large black eye icon"></Button>
                 </div></Table.Cell>
                 <Table.Cell></Table.Cell>
