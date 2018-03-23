@@ -33,10 +33,15 @@ exports[`<Register /> Register Component should render correctly 1`] = `
              Project name 
           </label>
           <Input
-            className="form-control2"
+            className="form-control1"
             name="project name"
             placeholder="MyProjectName"
             required={true}
+            style={
+              Object {
+                "minWidth": "20em",
+              }
+            }
             type="text"
           />
         </FormField>
@@ -47,27 +52,30 @@ exports[`<Register /> Register Component should render correctly 1`] = `
              GitHub link 
           </label>
           <Input
-            className="form-control1"
+            className="form-control2"
             name="github"
-            placeholder="https://github.com/myrepository"
+            placeholder="https://github.com/myaccount/myrepo"
             required={true}
+            style={
+              Object {
+                "minWidth": "20em",
+              }
+            }
             type="url"
           />
         </FormField>
         <FormField>
-          <Button
-            as="button"
-            color="blue"
+          <button
+            class="ui left floated blue button"
             type="submit"
           >
             Submit
-          </Button>
-          <Button
-            as="button"
-            color="red"
+          </button>
+          <button
+            class="ui right floated red button"
           >
             Cancel
-          </Button>
+          </button>
         </FormField>
       </Form>
     </GridRow>

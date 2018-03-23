@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
-import GridRow, { Form, Input, Button, Grid } from 'semantic-ui-react'
-import GridColumn from 'semantic-ui-react';
+import { Form, Input, Button, Grid } from 'semantic-ui-react'
 
 class RegisterPage extends Component {
 
@@ -23,11 +22,12 @@ class RegisterPage extends Component {
 
             <Form>
 
-              <Form.Field inline >
+              <Form.Field inline>
                 <label> Project name </label>
                 <Input
+                  style={{ minWidth: "20em" }}
                   type="text"
-                  className="form-control2"
+                  className="form-control1"
                   name="project name"
                   placeholder="MyProjectName"
                   required />
@@ -36,17 +36,18 @@ class RegisterPage extends Component {
               <Form.Field inline>
                 <label> GitHub link </label>
                 <Input
+                  style={{ minWidth: "20em" }}
                   type="url"
-                  className="form-control1"
+                  className="form-control2"
                   name="github"
-                  placeholder="https://github.com/myrepository"
+                  placeholder="https://github.com/myaccount/myrepo"
                   required />
               </Form.Field>
 
-                <Form.Field>
-                    <Button type="submit" color="blue">Submit</Button>
-                    <Button color="red">Cancel</Button>
-                </Form.Field>
+              <Form.Field>
+                <button class="ui left floated blue button" type="submit">Submit</button>
+                <button class="ui right floated red button">Cancel</button>
+              </Form.Field>
 
             </Form>
           </Grid.Row>
@@ -57,29 +58,5 @@ class RegisterPage extends Component {
 }
 
 // const RegisterPage = ({onSubmit, handleFieldChange, projectname, github, cancel, name }) => {
-
-//   return (
-//     <div className="Register" style={{ textAlignVertical: 'center', textAlign: 'center', }} >
-//       <h3>Register for {name}</h3>
-
-//       <form onSubmit={onSubmit} >
-//         <label >
-//           GitHub link: <br />
-//           <input type="url" onChange={handleFieldChange} className="form-control1" name="github" required={true} value={github} />
-//         </label>
-//         <br />
-//         <label>
-
-//           Project name:  <br />
-//           <input type="text" onChange={handleFieldChange} className="form-control2" name="projectname" value={projectname} required />
-//         </label> <br />
-
-//         <button type="submit">Submit</button>
-//       </form>
-//       <button onClick={cancel}>Cancel</button>
-//     </div>
-//   )
-// }
-
 
 export default RegisterPage
