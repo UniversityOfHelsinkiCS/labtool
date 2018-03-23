@@ -55,6 +55,9 @@ const Nav = () => {
             <Link to="/courses">Courses</Link>
           </Menu.Item>
 
+
+
+
         </Menu.Menu>
 
 
@@ -65,8 +68,8 @@ const Nav = () => {
           </Menu.Item>
 
           <Menu.Item link>
-            <Button color='grey'>
-              Logout
+            <Button color='white' >
+              <Link to="/loginpage" color='white'>Logout</Link>
             </Button>
           </Menu.Item>
 
@@ -85,17 +88,17 @@ const Main = () => {
         <Route exact path={`${process.env.PUBLIC_URL}/`} component={Login} />
         <Route path={`${process.env.PUBLIC_URL}/courses`} component={Courses} />
         <Route path={`${process.env.PUBLIC_URL}/browsereviews`} component={BrowseReviews} />
-        <Route  path={`${process.env.PUBLIC_URL}/coursePage`} component={CoursePage} />
-        <Route  path={`${process.env.PUBLIC_URL}/email`} component={Email} />
-        <Route path={`${process.env.PUBLIC_URL}/loginPage`} component={LoginPage} />  
-        <Route path={`${process.env.PUBLIC_URL}/registerPage`} component={RegisterPage} />    
-        <Route path={`${process.env.PUBLIC_URL}/loginPage`} component={LoginPage} />     
-        <Route path={`${process.env.PUBLIC_URL}/reviewstudent`} component={ReviewStudent} />     
-        <Route path={`${process.env.PUBLIC_URL}/ModifyCourseInstancePage`} component={ModifyCourseInstancePage} />   
-        <Route  path={`${process.env.PUBLIC_URL}/myPageStudent`} component={MyPageStudent} />
-        <Route  path={`${process.env.PUBLIC_URL}/myPageTeacher`} component={MyPageTeacher} />
-         
-        
+        <Route path={`${process.env.PUBLIC_URL}/coursePage`} component={CoursePage} />
+        <Route path={`${process.env.PUBLIC_URL}/email`} component={Email} />
+        <Route path={`${process.env.PUBLIC_URL}/loginPage`} component={LoginPage} />
+        <Route path={`${process.env.PUBLIC_URL}/registerPage`} component={RegisterPage} />
+        <Route path={`${process.env.PUBLIC_URL}/loginPage`} component={LoginPage} />
+        <Route path={`${process.env.PUBLIC_URL}/reviewstudent`} component={ReviewStudent} />
+        <Route path={`${process.env.PUBLIC_URL}/ModifyCourseInstancePage`} component={ModifyCourseInstancePage} />
+        <Route path={`${process.env.PUBLIC_URL}/myPageStudent`} component={MyPageStudent} />
+        <Route path={`${process.env.PUBLIC_URL}/myPageTeacher`} component={MyPageTeacher} />
+
+
         {/* <Route path='/schedule' component={Schedule} /> */}
       </Switch>
     </main>
