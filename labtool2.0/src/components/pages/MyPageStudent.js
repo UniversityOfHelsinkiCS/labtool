@@ -23,7 +23,7 @@ class MyPageStudent extends Component {
                 </Header>
               </Table.Header>
               <Table.Row>
-                <Table.Cell><Card.Description><Header size='small'>014 555 555</Header></Card.Description></Table.Cell>
+                <Table.Cell><Card.Description><Header size='small'>*opiskelijanumero*</Header></Card.Description></Table.Cell>
                 <Table.Cell><Card.Description>email@gmail.com</Card.Description></Table.Cell>
                 <Table.Cell><Button color='yellow' > <List.Item icon='edit' /></Button></Table.Cell>
               </Table.Row>
