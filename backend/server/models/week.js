@@ -1,6 +1,5 @@
-'use strict'
 module.exports = (sequelize, DataTypes) => {
-  var Week = sequelize.define('Week', {
+  const Week = sequelize.define('Week', {
     points: DataTypes.INTEGER
   }, {})
   Week.associate = (models) => {

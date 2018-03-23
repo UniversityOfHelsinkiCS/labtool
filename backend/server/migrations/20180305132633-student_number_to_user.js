@@ -1,9 +1,7 @@
-'use strict'
-
 module.exports = {
   up: (queryInterface, Sequelize) => {
 
-    queryInterface.addColumn('Users', 'studentNumber', Sequelize.STRING, {
+    queryInterface.addColumn('Users', 'studentnumber', Sequelize.STRING, {
       after: 'username'
     })
 
@@ -12,7 +10,7 @@ module.exports = {
   down: (queryInterface, Sequelize) => {
     // should not need any returns ?
 
-    queryInterface.removeColumn('Users', 'studentNumber')
+    queryInterface.removeColumn('Users', 'studentnumber')
 
 
     /*

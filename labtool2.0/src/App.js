@@ -11,6 +11,8 @@ import RegisterPage from './components/pages/RegisterPage.js'
 import ModifyCourseInstancePage from './components/pages/ModifyCourseInstancePage'
 import ReviewStudent from './components/pages/ReviewStudent'
 import BrowseReviews from './components/pages/BrowseReviews'
+import MyPageStudent from './components/pages/MyPageStudent'
+import MyPageTeacher from './components/pages/MyPageTeacher'
 
 // Tähän navigation bar
 const App = () => {
@@ -39,6 +41,8 @@ const Main = () => {
         <Route path={`${process.env.PUBLIC_URL}/loginPage`} component={LoginPage} />     
         <Route path={`${process.env.PUBLIC_URL}/reviewstudent`} component={ReviewStudent} />     
         <Route path={`${process.env.PUBLIC_URL}/ModifyCourseInstancePage`} component={ModifyCourseInstancePage} />   
+        <Route  path={`${process.env.PUBLIC_URL}/myPageStudent`} component={MyPageStudent} />
+        <Route  path={`${process.env.PUBLIC_URL}/myPageTeacher`} component={MyPageTeacher} />
         {/* <Route path='/schedule' component={Schedule} /> */}
       </Switch>
     </main>

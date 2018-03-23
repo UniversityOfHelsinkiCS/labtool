@@ -1,6 +1,5 @@
-'use strict'
 module.exports = (sequelize, DataTypes) => {
-  var CourseInstance = sequelize.define('CourseInstance', {
+  const CourseInstance = sequelize.define('CourseInstance', {
     name: DataTypes.STRING,
     start: DataTypes.DATE,
     end: DataTypes.DATE,

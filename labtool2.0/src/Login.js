@@ -162,7 +162,7 @@ class Login extends Component {
           success: 'Email updated'
         })
         setTimeout(() => {
-          this.setState({success: null})
+          this.setState({ success: null })
         }, 3000)
         this.updateUserinformationInLocalStorage(userWithEmail) //See the comment above
 
@@ -216,7 +216,7 @@ class Login extends Component {
           error: 'Wrong username or password'
         })
         setTimeout(() => {
-          this.setState({error: null})
+          this.setState({ error: null })
         }, 5000)
       })
 
@@ -226,16 +226,9 @@ class Login extends Component {
 
     const listingPage = (
       <div>
-        <MainPage logout={this.postLogout} handleFirstLoginTrue={this.handleFirstLoginTrue}/>
+        <MainPage logout={this.postLogout} handleFirstLoginTrue={this.handleFirstLoginTrue} />
         <p></p>
         <p></p>
-        {this.state.courseInstances.map(instance =>
-          <CourseInstance
-            handleFieldChange={this.handleRegister}
-            key={instance.id}
-            instance={instance}
-          />
-        )}
       </div>
     )
 
