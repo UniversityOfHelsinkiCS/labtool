@@ -1,6 +1,7 @@
 import { Table } from 'semantic-ui-react'
 import React, { Component } from 'react'
 import { Button, List } from 'semantic-ui-react'
+import { Link } from 'react-router-dom'
 
 class CoursePage extends Component {
     render() {
@@ -8,7 +9,8 @@ class CoursePage extends Component {
             //const CoursePage = ({ name, start, end, week_amount, week_max_points, current_week, handleFieldChange }) => {
             <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
                 <h2>TiraLabra 2018 Kevät</h2>
-                <Button color='blue'>Register</Button>
+                <Button color='white'>
+              <Link to="/registerpage">Register</Link></Button>
                 <h3> Kurssin tietoja: Week maxpoints: 5, Current week: 5, Course active: Yes</h3>
                 <h3> Students </h3>
                 <Table celled   >
