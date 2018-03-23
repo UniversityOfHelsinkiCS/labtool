@@ -48,7 +48,7 @@ const Nav = () => {
           </Menu.Item>
 
           <Menu.Item link>
-            <Link to="/mypage">My page</Link>
+            <Link to="/mypagestudent">My page</Link>
           </Menu.Item>
 
           <Menu.Item link>
