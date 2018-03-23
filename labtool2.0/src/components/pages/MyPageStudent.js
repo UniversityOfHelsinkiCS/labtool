@@ -1,9 +1,12 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { Card, Button, Checkbox, Header, Table, Container, Message, List } from 'semantic-ui-react'
 import './MyPage.css'
 
 class MyPageStudent extends Component {
+
   render() {
+    const user = { ... this.props.user.returnedUser }
     return (
       <div>
         <Message
@@ -16,7 +19,7 @@ class MyPageStudent extends Component {
             <Table fixed basic='very'>
               <Table.Header>
                 <Header as='h3' block>
-    Matti Meikäläinen
+                  {user.firsts} {user.lastname}
                 </Header>
               </Table.Header>
               <Table.Row>
@@ -27,7 +30,7 @@ class MyPageStudent extends Component {
               <Table.Row>
                 <Table.Cell></Table.Cell>
                 <Table.Cell>I want to receive emails regarding my courses</Table.Cell>
-                <Table.Cell><Checkbox/></Table.Cell>
+                <Table.Cell><Checkbox /></Table.Cell>
               </Table.Row>
             </Table>
           </Card.Content>
@@ -69,4 +72,11 @@ class MyPageStudent extends Component {
   }
 }
 
-export default MyPageStudent
+const mapStateToProps = (state) => {
+  return {
+    user: state.user,
+  }
+}
+
+
+export default connect(mapStateToProps, {})(MyPageStudent)

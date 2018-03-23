@@ -37,6 +37,7 @@ class App extends React.Component {
     return (
       <Container>
         <Nav />
+        <Notification />
         <Main />
       </Container>
     )
