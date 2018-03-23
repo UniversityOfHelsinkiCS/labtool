@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { Switch, Route, withRouter, Link } from 'react-router-dom'
 import Courses from './components/pages/Courses'
 import { connect } from 'react-redux'
@@ -19,7 +19,7 @@ import MyPageStudent from './components/pages/MyPageStudent'
 import MyPageTeacher from './components/pages/MyPageTeacher'
 import { Menu, Button } from 'semantic-ui-react'
 
-class App extends React {
+class App extends React.Component {
   componentDidMount() {
     this.props.courseInstanceInitialization()
     try {
