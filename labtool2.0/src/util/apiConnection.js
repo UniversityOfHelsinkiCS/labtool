@@ -24,7 +24,6 @@ function callApi(url, method = 'get', data, prefix, token) {
     case 'get':
       return getAxios().get(url, options)
     case 'post':
-      console.log('urli, data options', url, data, options)
       return getAxios().post(url, data, options)
     case 'put':
       return getAxios().put(url, data, options)
