@@ -2,18 +2,19 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Card, Button, Checkbox, Header, Table, Container, Message, List } from 'semantic-ui-react'
 import './MyPage.css'
+import { Link } from 'react-router-dom'
 
 class MyPageStudent extends Component {
+
+  editEmail = (event) => {
+    event.preventDefault()
+    
+  }
 
   render() {
     const user = { ... this.props.user.returnedUser }
     return (
       <div>
-        <Message
-          success
-          header='Login successful'
-          color='green'
-        />
         <Card fluid color='yellow'>
           <Card.Content>
             <Table fixed basic='very'>
@@ -23,9 +24,9 @@ class MyPageStudent extends Component {
                 </Header>
               </Table.Header>
               <Table.Row>
-                <Table.Cell><Card.Description><Header size='small'>*opiskelijanumero*</Header></Card.Description></Table.Cell>
-                <Table.Cell><Card.Description>email@gmail.com</Card.Description></Table.Cell>
-                <Table.Cell><Button color='yellow' > <List.Item icon='edit' /></Button></Table.Cell>
+                <Table.Cell><Card.Description><Header size='small'>{user.studentnumber}</Header></Card.Description></Table.Cell>
+                <Table.Cell><Card.Description>{user.email}</Card.Description></Table.Cell>
+                <Table.Cell><Button color='yellow' ><Link to="/email" color='white'> <List.Item icon='edit' /></Link></Button></Table.Cell>
               </Table.Row>
               <Table.Row>
                 <Table.Cell></Table.Cell>

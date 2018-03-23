@@ -8,6 +8,7 @@ import { Menu, Button } from 'semantic-ui-react'
 class Nav extends React.Component {
 
   render() {
+    const user = { ... this.props.user.returnedUser }
 
     return (
       <main>
@@ -42,7 +43,7 @@ class Nav extends React.Component {
           <Menu.Menu position='right'>
 
             <Menu.Item text>
-              <em>*Matti-Kalevi Meikäläinen-Teikäläinen* logged in</em>
+              <em>{user.firsts} logged in</em>
             </Menu.Item>
 
             <Menu.Item link>
@@ -60,4 +61,11 @@ class Nav extends React.Component {
   }
 }
 
-export default Nav
+const mapStateToProps = (state) => {
+  return {
+    user: state.user,
+  }
+}
+
+
+export default connect(mapStateToProps, {})(Nav)
