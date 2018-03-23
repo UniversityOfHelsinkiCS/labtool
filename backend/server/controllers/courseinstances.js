@@ -1,3 +1,5 @@
+import Course from '../../../labtool2.0/src/components/pages/Course';
+
 const CourseInstance = require('../models').CourseInstance
 const StudentInstance = require('../models').StudentInstance
 const User = require('../models').User
@@ -23,7 +25,7 @@ module.exports = {
       .catch(error => res.status(400).send(error))
   },
 
-  testi(req, res) {
+  testi(req, res) {//register 
     const errors = []
     let token = helper.tokenVerify(req)
 
@@ -85,7 +87,7 @@ module.exports = {
                     })
                   }
 
-                }).catch(function(error) {
+                }).catch(function (error) {
                   res.status(400).send({
                     message: error.errors
                   })
@@ -221,7 +223,7 @@ module.exports = {
           console.log(json)
           json.forEach(instance => {
             CourseInstance.findOrCreate({
-              where: {ohid: instance.id},
+              where: { ohid: instance.id },
               defaults: {
                 name: instance.name,
                 start: instance.starts,
@@ -230,7 +232,7 @@ module.exports = {
               }
             })
           })
-          res.status(204).send({'hello': 'hello'})
+          res.status(204).send({ 'hello': 'hello' })
         }
         )
       }
@@ -266,7 +268,7 @@ module.exports = {
           console.log(json)
           json.forEach(instance => {
             CourseInstance.findOrCreate({
-              where: {ohid: instance.id},
+              where: { ohid: instance.id },
               defaults: {
                 name: instance.name,
                 start: instance.starts,
@@ -275,7 +277,7 @@ module.exports = {
               }
             })
           })
-          res.status(204).send({'hello': 'hello'})
+          res.status(204).send({ 'hello': 'hello' })
         })
       }
     }
