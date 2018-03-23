@@ -29,6 +29,8 @@ class LoginPage extends Component {
                   placeholder='Your username'
                   //value={username}
                   name="username"
+                  icon='user'
+                  iconPosition='left'
                   //onChange={handleFieldChange}
                   required />
               </Form.Group>
@@ -37,6 +39,8 @@ class LoginPage extends Component {
                 <label>Password</label>
                 <Input
                   type='password'
+                  icon='lock'
+                  iconPosition='left'
                   className='form-control2'
                   placeholder='Your password'
                   //value={password}
