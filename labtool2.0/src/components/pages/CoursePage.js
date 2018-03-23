@@ -11,7 +11,7 @@ class CoursePage extends Component {
                 <Button color='blue'>Register</Button>
                 <h3> Kurssin tietoja: Week maxpoints: 5, Current week: 5, Course active: Yes</h3>
                 <h3> Students </h3>
-                <Table celled size="small"  >
+                <Table celled   >
                     <Table.Header>
                         <Table.Row>
                             <Table.HeaderCell>Name</Table.HeaderCell>
@@ -33,7 +33,7 @@ class CoursePage extends Component {
                             <Table.Cell>1</Table.Cell>
                             <Table.Cell>0</Table.Cell>
                             <Table.Cell>4</Table.Cell>
-                            <Table.Cell><Button color='yellow' > <List.Item icon='edit' /></Button></Table.Cell>
+                            <Table.Cell><Button circular color='orange' size="tiny" icon="large black edit icon"></Button></Table.Cell>
                         </Table.Row>
                         <Table.Row>
                             <Table.Cell>Toivo Untonen </Table.Cell>
@@ -43,7 +43,7 @@ class CoursePage extends Component {
                             <Table.Cell>2</Table.Cell>
                             <Table.Cell>5</Table.Cell>
                             <Table.Cell>4.5</Table.Cell>
-                            <Table.Cell><Button color='yellow' > <List.Item icon='edit' /></Button></Table.Cell>
+                            <Table.Cell><Button circular color='orange' size="tiny" icon="large black edit icon"></Button></Table.Cell>
                         </Table.Row>
                         <Table.Row>
                             <Table.Cell>Joonatan Järvinen </Table.Cell>
@@ -53,7 +53,7 @@ class CoursePage extends Component {
                             <Table.Cell>4</Table.Cell>
                             <Table.Cell>5 </Table.Cell>
                             <Table.Cell>1.5</Table.Cell>
-                            <Table.Cell><Button color='yellow' > <List.Item icon='edit' /></Button></Table.Cell>
+                            <Table.Cell><Button circular color='orange' size="tiny" icon="large black edit icon"></Button></Table.Cell>
                         </Table.Row>
                     </Table.Body>
 
