@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
 import { Button, Form, Input, TextArea, Grid } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
+import { connect } from 'react-redux'
 class ReviewStudent extends Component {
 
 
     render() {
+        const user = { ... this.props.user.returnedUser }
         return (
             <div className='ReviewStudent' style={{ textAlignVertical: 'center', textAlign: 'center', }}>
                 <h2> Tiralabra 2018 Kevät</h2>
@@ -35,4 +37,12 @@ class ReviewStudent extends Component {
     }
 }
 
-export default ReviewStudent
+const mapStateToProps = (state) => {
+    return {
+        user: state.user,
+    }
+}
+
+
+export default connect(mapStateToProps, {})(ReviewStudent)
+

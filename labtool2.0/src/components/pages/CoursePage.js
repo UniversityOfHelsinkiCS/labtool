@@ -10,7 +10,7 @@ class CoursePage extends Component {
             <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
                 <h2>TiraLabra 2018 Kevät</h2>
                 <Button color='white'>
-              <Link to="/registerpage">Register</Link></Button>
+                    <Link to="/registerpage">Register</Link></Button>
                 <h3> Kurssin tietoja: Week maxpoints: 5, Current week: 5, Course active: Yes</h3>
                 <h3> Students </h3>
                 <Table celled   >
@@ -125,7 +125,7 @@ class CoursePage extends Component {
                         </Table.Row>
                     </Table.Body>
                 </Table>
-
+                <br />
             </div >
 
         )
