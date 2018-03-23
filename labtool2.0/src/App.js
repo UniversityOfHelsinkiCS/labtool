@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Switch, Route } from 'react-router-dom'
+import { Switch, Route, Link } from 'react-router-dom'
 import Courses from './components/pages/Courses'
 import Login from './Login'
 import { Container } from 'semantic-ui-react'
@@ -13,17 +13,68 @@ import ReviewStudent from './components/pages/ReviewStudent'
 import BrowseReviews from './components/pages/BrowseReviews'
 import MyPageStudent from './components/pages/MyPageStudent'
 import MyPageTeacher from './components/pages/MyPageTeacher'
+import { Menu, Button } from 'semantic-ui-react'
 
-// Tähän navigation bar
-const App = () => {
-  return (
-    <Container >
-      <div>
-        {/* <Header /> */}
+class App extends React.Component {
+
+  render() {
+    return (
+      <Container>
+        <Nav />
         <Main />
-        
-      </div>
-    </Container>
+      </Container>
+    )
+  }
+}
+
+const Nav = () => {
+  return (
+    <main>
+
+      <Menu
+        stackable
+        inverted
+        borderless
+        animation='overlay'
+        style={{
+          marginBottom: 25,
+          backgroundColor: '#e9af43',
+        }}>
+
+        <Menu.Menu position='left'>
+
+          <Menu.Item header>
+            Labtool 2.0
+          </Menu.Item>
+
+          <Menu.Item link>
+            <Link to="/mypage">My page</Link>
+          </Menu.Item>
+
+          <Menu.Item link>
+            <Link to="/courses">Courses</Link>
+          </Menu.Item>
+
+        </Menu.Menu>
+
+
+        <Menu.Menu position='right'>
+
+          <Menu.Item text>
+            <em>*Matti-Kalevi Meikäläinen-Teikäläinen* logged in</em>
+          </Menu.Item>
+
+          <Menu.Item link>
+            <Button color='grey'>
+              Logout
+            </Button>
+          </Menu.Item>
+
+        </Menu.Menu>
+
+      </Menu>
+
+    </main>
   )
 }
 
