@@ -57,11 +57,12 @@ export default Courses
 
 
 /* import React, { Component } from 'react'
+import React from 'react'
 import { Switch, Route } from 'react-router-dom'
 import AllCourses from './AllCourses'
 import Course from './Course'
 
-class Courses extends Component {
+class Courses extends React.Component {
     
 
   render() {

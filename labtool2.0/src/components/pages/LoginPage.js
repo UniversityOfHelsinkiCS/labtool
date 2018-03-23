@@ -1,10 +1,28 @@
-import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { login } from '../../services/login'
+import React from 'react'
 import { Form, Input, Button, Grid } from 'semantic-ui-react'
 
-class LoginPage extends Component {
+class LoginPage extends React.Component {
+
+  handleSubmit = async (e) => {
+    e.preventDefault()
+
+    const content = {
+      username: e.target.username.value,
+      password: e.target.password.value
+    }
+    await this.props.login(content)
+  }
+
+  componentWillReceiveProps(nProps) {
+    // Kutsutaan kun kirjautuminen onnistuu -->
+    window.localStorage.setItem('loggedLabtool', JSON.stringify(nProps.user))
+  }
 
   render() {
-    //const LoginPage = ({ postLogin, handleFieldChange, username, password }) => {
+
+
     return (
 
       <div className='ui'>
@@ -16,7 +34,7 @@ class LoginPage extends Component {
 
         <Grid>
           <Grid.Row centered>
-            <Form>
+            <Form onSubmit={this.handleSubmit}>
 
               <Form.Group inline>
                 <label>
@@ -67,6 +85,11 @@ class LoginPage extends Component {
     )
   }
 }
+const mapStateToProps = (state) => {
+  return {
+    user: state.user
+  }
+}
 
 
-export default LoginPage
+export default connect(mapStateToProps, { login })(LoginPage)
