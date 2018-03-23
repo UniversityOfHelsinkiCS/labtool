@@ -175,9 +175,9 @@ class Login extends Component {
     event.preventDefault()
     let backend
     if (process.env.NODE_ENV === 'development') {
-      backend = 'http://localhost:3001/login'
+      backend = 'http://localhost:3001/api/login'
     } else {
-      backend = '/labtool-backend/login'
+      backend = '/labtool-backend/api/login'
     }
     axios.post(backend, {
       username: this.state.username,
