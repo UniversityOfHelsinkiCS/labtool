@@ -1,6 +1,6 @@
 import { Table } from 'semantic-ui-react'
 import React, { Component } from 'react'
-import { Button, List } from 'semantic-ui-react'
+import { Button, List, Container, Header } from 'semantic-ui-react'
 import { Switch, Route } from 'react-router-dom'
 import AllCourses from './AllCourses'
 import Course from './Course'
@@ -8,48 +8,44 @@ import Course from './Course'
 class Courses extends Component {
   render() {
     return (
-      <div >
-        <h2 > Courses </h2>
-        <h4 />
-        <List divided verticalAlign='middle'>
-          <List.Item>
-            <List.Content floated='right'>
-              <Button color='blue'> <List.Item icon='eye' size='big' /></Button>
-              <Button color='orange'>  <List.Item icon='edit' size='big' /></Button>
-            </List.Content>
-            <List.Content>
-              <h3> Tietokantasovellus 2018 Kevät </h3>
-            </List.Content>
-          </List.Item>
-          <List.Item>
-            <List.Content floated='right'>
-              <Button color='blue'>  <List.Item icon='eye' size='big' /></Button>
-              <Button color='orange'>  <List.Item icon='edit' size='big' /></Button>
-            </List.Content>
-            <List.Content>
-              <h3> Tiralabra 2017 Kesä </h3>
-            </List.Content>
-          </List.Item>
-          <List.Item>
-            <List.Content floated='right'>
-              <Button color='blue'>  <List.Item icon='eye' size='big' /></Button>
-              <Button color='orange'>  <List.Item icon='edit' size='big' /></Button>
-            </List.Content>
-            <List.Content>
-              <h3> Tietokantasovellus 2016 Syksy </h3>
-            </List.Content>
-          </List.Item>
-          <List.Item>
-            <List.Content floated='right'>
-              <Button color='blue'>  <List.Item icon='eye' size='big' /></Button>
-              <Button color='orange'>  <List.Item icon='edit' size='big' /></Button>
-            </List.Content>
-            <List.Content>
-              <h3> Tiralabra 2018 Syksy</h3>
-            </List.Content>
-          </List.Item>
-        </List>
-      </div>
+      <div>
+        <Container>
+          <Header as='h2' className='CoursesHeader'>Courses</Header>
+          <Table singleline key='grey'>
+            <Table.Body>
+              <Table.Row>
+                <Table.Cell>Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit (periodi IV)</Table.Cell>
+                <Table.Cell textAlign='right'><div>
+                  <Button circular color="teal" size='tiny' icon="large black eye icon" />
+                  <Button circular color='orange' size="tiny" icon="large black edit icon"></Button>
+                </div></Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell>Aineopintojen harjoitustyö: Tietokantasovellus (periodi IV)</Table.Cell>
+                <Table.Cell textAlign='right'><div>
+                  <Button circular color="teal" size="tiny" icon="large black eye icon" />
+                  <Button circular color='orange' size="tiny" icon="large black edit icon" />
+                </div></Table.Cell>
+                <Table.Cell textAlign='center'></Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell>Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit (periodi III)</Table.Cell>
+                <Table.Cell textAlign='right'><div>
+                  <Button circular color="teal" size="tiny" icon="large black eye icon" />
+                  <Button circular color='orange' size="tiny" icon="large black edit icon"></Button>
+                </div></Table.Cell>
+                <Table.Cell></Table.Cell>
+              </Table.Row>
+            </Table.Body>
+          </Table>
+          <div className="Instructions">
+            <List>
+              <List.Item icon='eye' content='Show course page' />
+              <List.Item icon='edit' content='Edit course' />
+              <List.Item icon='plus' content='Create course' />
+            </List>
+          </div>
+        </Container> </div>
     )
   }
 }
