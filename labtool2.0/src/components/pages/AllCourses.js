@@ -19,7 +19,8 @@ class AllCourses extends Component {
   render() {
     return (
       <div>
-        <p>holoo</p>
+        <p>Tiralabra 2018 Kevät</p>
+        <p> Tietokantasovellus 2016 Syksy </p>
         <ul>
           {
             this.state.courses.map(c => (

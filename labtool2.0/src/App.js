@@ -39,6 +39,8 @@ const Main = () => {
         <Route path={`${process.env.PUBLIC_URL}/loginPage`} component={LoginPage} />     
         <Route path={`${process.env.PUBLIC_URL}/reviewstudent`} component={ReviewStudent} />     
         <Route path={`${process.env.PUBLIC_URL}/ModifyCourseInstancePage`} component={ModifyCourseInstancePage} />   
+         
+        
         {/* <Route path='/schedule' component={Schedule} /> */}
       </Switch>
     </main>

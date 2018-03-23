@@ -1,6 +1,6 @@
 import { Table } from 'semantic-ui-react'
 import React, { Component } from 'react'
-import { Button } from 'semantic-ui-react'
+import { Button, List } from 'semantic-ui-react'
 
 class CoursePage extends Component {
     render() {
@@ -8,7 +8,7 @@ class CoursePage extends Component {
             //const CoursePage = ({ name, start, end, week_amount, week_max_points, current_week, handleFieldChange }) => {
             <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
                 <h2>TiraLabra 2018 Kevät</h2>
-                <Button color='orange'>Register</Button>
+                <Button color='blue'>Register</Button>
                 <h3> Kurssin tietoja: Week maxpoints: 5, Current week: 5, Course active: Yes</h3>
                 <h3> Students </h3>
                 <Table celled size="small"  >
@@ -33,7 +33,7 @@ class CoursePage extends Component {
                             <Table.Cell>1</Table.Cell>
                             <Table.Cell>0</Table.Cell>
                             <Table.Cell>4</Table.Cell>
-                            <Table.Cell><Button size='tiny' color='green'>Review</Button></Table.Cell>
+                            <Table.Cell><Button color='yellow' > <List.Item icon='edit' /></Button></Table.Cell>
                         </Table.Row>
                         <Table.Row>
                             <Table.Cell>Toivo Untonen </Table.Cell>
@@ -43,7 +43,7 @@ class CoursePage extends Component {
                             <Table.Cell>2</Table.Cell>
                             <Table.Cell>5</Table.Cell>
                             <Table.Cell>4.5</Table.Cell>
-                            <Table.Cell><Button size='tiny' color='green'>Review</Button></Table.Cell>
+                            <Table.Cell><Button color='yellow' > <List.Item icon='edit' /></Button></Table.Cell>
                         </Table.Row>
                         <Table.Row>
                             <Table.Cell>Joonatan Järvinen </Table.Cell>
@@ -53,7 +53,7 @@ class CoursePage extends Component {
                             <Table.Cell>4</Table.Cell>
                             <Table.Cell>5 </Table.Cell>
                             <Table.Cell>1.5</Table.Cell>
-                            <Table.Cell><Button size='tiny' color='green'>Review</Button></Table.Cell>
+                            <Table.Cell><Button color='yellow' > <List.Item icon='edit' /></Button></Table.Cell>
                         </Table.Row>
                     </Table.Body>
 
@@ -82,6 +82,7 @@ class CoursePage extends Component {
                             <Table.Cell>0</Table.Cell>
                             <Table.Cell>4</Table.Cell>
                             <Table.Cell>11</Table.Cell>
+
                         </Table.Row>
                     </Table.Body>
                 </Table>
