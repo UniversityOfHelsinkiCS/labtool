@@ -16,6 +16,7 @@ class LoginPage extends React.Component {
   }
 
   componentWillReceiveProps(nProps) {
+    // Kutsutaan kun kirjautuminen onnistuu -->
     window.localStorage.setItem('loggedLabtool', JSON.stringify(nProps.user))
   }
 
