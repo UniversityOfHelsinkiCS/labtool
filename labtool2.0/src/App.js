@@ -4,7 +4,6 @@ import Courses from './components/pages/Courses'
 import { connect } from 'react-redux'
 import { courseInstanceInitialization } from './reducers/courseInstanceReducer'
 import LoginPage from './components/pages/LoginPage';
-import { Container } from 'semantic-ui-react'
 import Notification from './components/pages/Notification'
 import RegisterPage from './components/pages/RegisterPage';
 import Login from './Login'
@@ -12,7 +11,6 @@ import { Container } from 'semantic-ui-react'
 import TestFile from './components/pages/TestFile.js'
 import CoursePage from './components/pages/CoursePage'
 import Email from './components/pages/Email.js'
-import LoginPage from './components/pages/LoginPage.js'
 import ModifyCourseInstancePage from './components/pages/ModifyCourseInstancePage'
 class App extends React.Component {
   componentDidMount() {
