@@ -4,7 +4,7 @@ import React from 'react'
 import { Form, Input, Button, Grid } from 'semantic-ui-react'
 
 class LoginPage extends React.Component {
-  
+
   handleSubmit = async (e) => {
     e.preventDefault()
 
@@ -12,10 +12,11 @@ class LoginPage extends React.Component {
       username: e.target.username.value,
       password: e.target.password.value
     }
-    this.props.login(content)
-    /* this.props.newNotification({ message: 'VÄÄRÄ', error: true }) */
+    await this.props.login(content)
+  }
 
-    //this.props.history.goBack() //Will be changed
+  componentWillReceiveProps(nProps) {
+    window.localStorage.setItem('loggedLabtool', JSON.stringify(nProps.user))
   }
 
   render() {
@@ -79,6 +80,11 @@ class LoginPage extends React.Component {
     )
   }
 }
+const mapStateToProps = (state) => {
+  return {
+    user: state.user
+  }
+}
 
 
-export default connect(null, { login })(LoginPage)
+export default connect(mapStateToProps, { login })(LoginPage)

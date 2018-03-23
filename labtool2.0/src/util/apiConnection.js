@@ -54,6 +54,6 @@ export const handleRequest = store => next => (action) => {
       .then((res) => {
         store.dispatch({ type: `${payload.prefix}SUCCESS`, response: res.data })
       })
-      .catch(err => console.log('hellooo', err))
+      .catch(err => store.dispatch({ type: `${payload.prefix}FAILURE`, response: err }))
   }
 }

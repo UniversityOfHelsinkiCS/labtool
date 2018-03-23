@@ -1,24 +1,31 @@
-import loginService from '../services/login'
-
 const loginReducer = (state = {}, action) => {
-    if (action.type === 'LOGIN_SUCCESS') {
-        return action.response
-    } else if (action.type === 'LOGOUT_SUCCESS')
-        return {}
-    return state
+    switch (action.type) {
+        case 'LOGIN_SUCCESS':
+            return action.response
+        case 'LOGIN_FAILURE':
+            return {}
+        case 'LOGIN_BYTOKEN':
+            return action.user
+        case 'LOGOUT_SUCCESS':
+            return {}
+        default:
+            return state
+    }
 }
 
-export const login = (user) => {
-    return {
-
+export const tokenLogin = (user) => {
+    return async (dispatch) => {
+        dispatch({
+            type: 'LOGIN_BYTOKEN',
+            user
+        })
     }
 }
 
 export const logout = () => {
     return async (dispatch) => {
-        await loginService.logout()
         dispatch({
-            type: 'LOGOUT',
+            type: 'LOGOUT_SUCCESS',
         })
     }
 }

@@ -1,4 +1,4 @@
-const notificationReducer = (state = { }, action) => {
+const notificationReducer = (state = {}, action) => {
   switch (action.type) {
     case 'LOGIN_SUCCESS':
       return {
@@ -7,6 +7,11 @@ const notificationReducer = (state = { }, action) => {
       }
     case 'NOTIFICATION_CLEAR':
       return {}
+    case 'LOGIN_FAILURE':
+      return {
+        message: 'Wrong credentials!',
+        error: true
+      }
     default:
       return state
   }
@@ -14,7 +19,7 @@ const notificationReducer = (state = { }, action) => {
 
 export const clearNotifications = () => {
   return async (dispatch) => {
-    dispatch({ type: 'NOTIFICATION_CLEAR' })  
+    dispatch({ type: 'NOTIFICATION_CLEAR' })
   }
 }
 
