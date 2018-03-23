@@ -9,12 +9,7 @@ class MyPageStudent extends Component {
     const user = { ... this.props.user.returnedUser }
     return (
       <div>
-        <Message
-          success
-          header='Login successful'
-          color='green'
-        />
-        <Card fluid color='yellow'>
+        <Card fluid color='green'>
           <Card.Content>
             <Table fixed basic='very'>
               <Table.Header>
@@ -25,7 +20,7 @@ class MyPageStudent extends Component {
               <Table.Row>
                 <Table.Cell><Card.Description><Header size='small'>*opiskelijanumero*</Header></Card.Description></Table.Cell>
                 <Table.Cell><Card.Description>email@gmail.com</Card.Description></Table.Cell>
-                <Table.Cell><Button color='yellow' > <List.Item icon='edit' /></Button></Table.Cell>
+                <Table.Cell><Button>Muokkaa</Button></Table.Cell>
               </Table.Row>
               <Table.Row>
                 <Table.Cell></Table.Cell>
