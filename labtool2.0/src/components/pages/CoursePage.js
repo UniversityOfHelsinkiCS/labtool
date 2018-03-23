@@ -13,7 +13,7 @@ class CoursePage extends Component {
                     <Link to="/registerpage">Register</Link></Button>
                 <h3> Kurssin tietoja: Week maxpoints: 5, Current week: 5, Course active: Yes</h3>
                 <h3> Students </h3>
-                <Table celled   >
+                <Table celled unstackable>
                     <Table.Header>
                         <Table.Row>
                             <Table.HeaderCell>Name</Table.HeaderCell>
@@ -61,7 +61,7 @@ class CoursePage extends Component {
 
                 </Table>
                 <h3> Your points </h3>
-                <Table celled size="small">
+                <Table celled size="small" unstackable>
                     <Table.Header>
                         <Table.Row>
                             <Table.HeaderCell>Name </Table.HeaderCell>
@@ -89,7 +89,7 @@ class CoursePage extends Component {
                     </Table.Body>
                 </Table>
                 <h3> Comments and feedback </h3>
-                <Table celled padded >
+                <Table celled padded unstackable>
                     <Table.Header>
                         <Table.Row>
                             <Table.HeaderCell>Week</Table.HeaderCell>
@@ -125,7 +125,7 @@ class CoursePage extends Component {
                         </Table.Row>
                     </Table.Body>
                 </Table>
-                <br />
+
             </div >
 
         )

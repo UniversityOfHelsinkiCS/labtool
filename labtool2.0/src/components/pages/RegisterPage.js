@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Input, Button, Grid } from 'semantic-ui-react'
+import { Form, Input, Grid } from 'semantic-ui-react'
 
 class RegisterPage extends Component {
 
@@ -45,8 +45,8 @@ class RegisterPage extends Component {
               </Form.Field>
 
               <Form.Field>
-                <button class="ui left floated blue button" type="submit">Submit</button>
-                <button class="ui right floated red button">Cancel</button>
+                <button className="ui left floated blue button" type="submit">Submit</button>
+                <button className="ui right floated button">Cancel</button>
               </Form.Field>
 
             </Form>
@@ -56,7 +56,6 @@ class RegisterPage extends Component {
     )
   }
 }
-//<button onClick={cancel}>Cancel</button>
 
 // const RegisterPage = ({onSubmit, handleFieldChange, projectname, github, cancel, name }) => {
 

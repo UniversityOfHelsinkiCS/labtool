@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Input, Button, Grid } from 'semantic-ui-react'
+import { Form, Grid } from 'semantic-ui-react'
 
 /*
 take some elements from SetEmail.js, if user has already email in db
@@ -31,8 +31,8 @@ class Email extends Component {
                             </Form.Field>
 
                             <Form.Field>
-                                <button class="ui left floated green button" type="submit">Save</button>
-                                <button class="ui right floated button">Cancel</button>
+                                <button className="ui left floated green button" type="submit">Save</button>
+                                <button className="ui right floated button">Cancel</button>
                             </Form.Field>
                         </Form>
 
@@ -44,26 +44,5 @@ class Email extends Component {
         )
     }
 }
-
-/*
-code below from SetEmail.js
-*/
-// const SetEmail = ({ postEmail, handleFieldChange, handleFirstLoginFalse, email }) => {
-
-//     return (
-//         <div className="Email" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
-
-//             <form onSubmit={postEmail}>
-//                 <label>
-//                     Email address: <br />
-//                     <input value={email} type="email" className="form-control" name="email" onChange={handleFieldChange} required />
-//                 </label>
-//                 <button type="submit">Submit</button>
-//             </form>
-
-//             <button onClick={handleFirstLoginFalse}>Cancel</button>
-//         </div>
-//     )
-// }
 
 export default Email
