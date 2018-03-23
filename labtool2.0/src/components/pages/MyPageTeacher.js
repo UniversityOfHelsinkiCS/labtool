@@ -11,7 +11,7 @@ class MyPageStudent extends Component {
           header='Login successful'
           color='green'
         />
-        <Card fluid color='green'>
+        <Card fluid color='yellow'>
           <Card.Content>
             <Table fixed basic='very'>
               <Table.Header>
@@ -22,7 +22,7 @@ class MyPageStudent extends Component {
               <Table.Row>
                 <Table.Cell><Card.Description><Header size='small'>014 555 555</Header></Card.Description></Table.Cell>
                 <Table.Cell><Card.Description>email@gmail.com</Card.Description></Table.Cell>
-                <Table.Cell><Button>Muokkaa</Button></Table.Cell>
+                <Table.Cell><Button color='yellow' > <List.Item icon='edit' /></Button></Table.Cell>
               </Table.Row>
               <Table.Row>
                 <Table.Cell></Table.Cell>
