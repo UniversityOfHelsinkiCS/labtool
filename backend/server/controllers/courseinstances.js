@@ -1,4 +1,4 @@
-import Course from '../../../labtool2.0/src/components/pages/Course';
+ //import Course from '../../../labtool2.0/src/components/pages/Course';
 
 const CourseInstance = require('../models').CourseInstance
 const StudentInstance = require('../models').StudentInstance
@@ -23,6 +23,36 @@ module.exports = {
       })
       .then(CourseInstance => res.status(201).send(CourseInstance))
       .catch(error => res.status(400).send(error))
+  },
+
+  findByUser(req, res) {
+    const errors = []
+    console.log('***REQ BODY***: ', req.body)
+    let token = helper.tokenVerify(req)
+    console.log('TOKEN VERIFIED: ', token)
+    if (token.verified) {
+      CourseInstance.findById(req.params.userId, {
+        include: [{
+          model: StudentInstance,
+          as: 'studentinstance'
+        }]
+      })
+        .then(courseInstance => {
+          if (!courseInstance) {
+            console.log('ERRORIA PUKKOO')
+            return res.status(404).send({
+              message: 'ERROR - COURSEINSTANCE NOT FOUND'
+            })
+          }
+          return res.status(200).send(courseInstance)
+        })
+        .catch(error => res.status(400).send(error))
+    }else{
+      console.log('EEE OO VALIDI TOKENI!')
+      return res.status(404).send({
+        message: 'ERROR - TOKEN NOT VALID!'
+      })
+    }
   },
 
   testi(req, res) {//register 
