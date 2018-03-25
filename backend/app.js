@@ -15,6 +15,21 @@ const extractToken = (request, response, next) => {
 }
 
 
+const authenticate = (request, response, next) => {
+  const excludedPaths = [ '/api/login' ]
+  console.log(request.path)
+  if ( !excludedPaths.includes(request.path) ) {
+    try {
+      let decoded = jwt.verify(request.token, process.env.SECRET)
+      request.decoded = decoded
+    } catch (e) {
+      response.status(400).send({error: 'token verification failed'})
+    }
+  }
+  next()
+}
+
+
 app.use(extractToken)
 app.use(bodyParser.json())
 
@@ -31,28 +46,11 @@ app.use(function (req, res, next) {
   next()
 })
 
+app.use(authenticate)
 
-/*
-// This doesn't seem to do anything.
-app.use(function (request, res, jwt, next) {
-  jwt.verify(request.token, process.env.SECRET, function (err, decoded) {
-    if (err) {
-      console.log(err)
-      res.labtool_authorized = false
-    } else {
-      console.log(decoded)
-      console.log(decoded.id)
-      console.log(decoded.username)
-      res.decoded = decoded
-      res.labtool_authorized = true
-    }
-  })
-  console.log('this shit does get run.. some fucking how')
-  next()
 
-} )
 
-*/
+
 
 // express routet
 require('./server/routes/loginRouter')(app)

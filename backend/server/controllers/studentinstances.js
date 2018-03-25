@@ -5,32 +5,24 @@ module.exports = {
   create(req, res) {
     const errors = []
     return (      
-      jwt.verify(req.token, process.env.SECRET, function (err, decoded) {
-        
-        if (err) {
-          errors.push( 'token verification failed' )
-          res.status(400).send(errors)
-        } else {
-          StudentInstance
-            .findOrCreate({
-              where: { userId: decoded.id, courseInstanceId: req.body.courseInstanceId },
-              defaults: {
-                github: req.body.github,
-                projectName: req.body.projectName,
-                userId: decoded.id,
-                courseInstanceId: req.body.courseInstanceId
-              }
-            })
-            .spread((si, created) => {
-              if(created) {
-                errors.push('You are not registered to course in WebOodi')
-                res.status(200).send(errors)
-              } 
-              res.status(200).send(si)
-            })
-            .catch(error => res.status(400).send(error))
-        }
-      })
+      StudentInstance
+        .findOrCreate({
+          where: { userId: req.decoded.id, courseInstanceId: req.body.courseInstanceId },
+          defaults: {
+            github: req.body.github,
+            projectName: req.body.projectName,
+            userId: req.decoded.id,
+            courseInstanceId: req.body.courseInstanceId
+          }
+        })
+        .spread((si, created) => {
+          if(created) {
+            errors.push('You are not registered to course in WebOodi')
+            res.status(200).send(errors)
+          } 
+          res.status(200).send(si)
+        })
+        .catch(error => res.status(400).send(error))
     )
   },
   list(req, res) {
