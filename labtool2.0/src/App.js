@@ -15,8 +15,7 @@ import LoginPage from './components/pages/LoginPage.js'
 import ModifyCourseInstancePage from './components/pages/ModifyCourseInstancePage'
 import ReviewStudent from './components/pages/ReviewStudent'
 import BrowseReviews from './components/pages/BrowseReviews'
-import MyPageStudent from './components/pages/MyPageStudent'
-import MyPageTeacher from './components/pages/MyPageTeacher'
+import MyPage from './components/pages/MyPage'
 
 class App extends Component {
     componentDidMount() {
@@ -66,8 +65,7 @@ const Main = () => {
                 <Route path={`${process.env.PUBLIC_URL}/registerPage`} component={RegisterPage} />
                 <Route path={`${process.env.PUBLIC_URL}/reviewstudent`} component={ReviewStudent} />
                 <Route path={`${process.env.PUBLIC_URL}/ModifyCourseInstancePage`} component={ModifyCourseInstancePage} />
-                <Route path={`${process.env.PUBLIC_URL}/myPageStudent`} component={MyPageStudent} />
-                <Route path={`${process.env.PUBLIC_URL}/myPageTeacher`} component={MyPageTeacher} />
+                <Route path={`${process.env.PUBLIC_URL}/myPage`} component={MyPage} />
 
 
                 {/* <Route path='/schedule' component={Schedule} /> */}

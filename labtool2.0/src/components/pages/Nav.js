@@ -38,7 +38,7 @@ class Nav extends Component {
             </Menu.Item>
 
             <Menu.Item link>
-              <Link to="/mypagestudent">My page</Link>
+              <Link to="/mypage">My page</Link>
             </Menu.Item>
 
             <Menu.Item link>
