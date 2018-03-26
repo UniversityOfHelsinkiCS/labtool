@@ -26,7 +26,7 @@ class MyPageStudent extends Component {
               <Table.Row>
                 <Table.Cell><Card.Description><Header size='small'>{user.studentnumber}</Header></Card.Description></Table.Cell>
                 <Table.Cell><Card.Description>{user.email}</Card.Description></Table.Cell>
-                <Table.Cell><Button color='yellow' ><Link to="/email" color='white'> <List.Item icon='edit' /></Link></Button></Table.Cell>
+                <Table.Cell><Button color='yellow' ><Link to="/email" > <List.Item icon='edit' /></Link></Button></Table.Cell>
               </Table.Row>
               <Table.Row>
                 <Table.Cell></Table.Cell>
