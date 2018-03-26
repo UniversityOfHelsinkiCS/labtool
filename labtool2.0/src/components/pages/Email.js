@@ -1,12 +1,25 @@
 import React, { Component } from 'react'
 import { Form, Grid } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
+import { updateUser } from '../../services/login'
+import { connect } from 'react-redux'
 
 /*
 take some elements from SetEmail.js, if user has already email in db
 text should be "Edit your email address" if email can be found from db
 */
+
+
 class Email extends Component {
+
+    handleSubmit = async (e) => {
+        e.preventDefault()
+        const content = {
+            email: e.target.email.value
+        }
+        await this.props.updateUser(content)
+    }
+
     render() {
         return (
             <div className="Email" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
@@ -21,7 +34,7 @@ class Email extends Component {
                     </Grid.Row>
 
                     <Grid.Row>
-                        <Form>
+                        <Form onSubmit={this.handleSubmit}>
                             <Form.Field>
                                 <Form.Input
                                     style={{ minWidth: "20em" }}
@@ -46,4 +59,4 @@ class Email extends Component {
     }
 }
 
-export default Email
+export default connect(null, { updateUser })(Email)

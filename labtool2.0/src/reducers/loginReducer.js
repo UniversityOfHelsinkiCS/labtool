@@ -8,6 +8,8 @@ const loginReducer = (state = {}, action) => {
             return action.user
         case 'LOGOUT_SUCCESS':
             return {}
+        case 'USER_UPDATE_SUCCESS':
+            return action.response
         default:
             return state
     }

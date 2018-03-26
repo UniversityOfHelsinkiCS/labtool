@@ -15,21 +15,6 @@ const extractToken = (request, response, next) => {
 }
 
 
-const authenticate = (request, response, next) => {
-  const excludedPaths = [ '/api/login', '/api' ]
-  console.log(request.path)
-  if ( !excludedPaths.includes(request.path) ) {
-    try {
-      let decoded = jwt.verify(request.token, process.env.SECRET)
-      request.decoded = decoded
-    } catch (e) {
-      response.status(400).send({error: 'token verification failed'})
-    }
-  }
-  next()
-}
-
-
 app.use(extractToken)
 app.use(bodyParser.json())
 
@@ -46,7 +31,6 @@ app.use(function (req, res, next) {
   next()
 })
 
-app.use(authenticate)
 
 
 

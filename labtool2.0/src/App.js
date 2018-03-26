@@ -4,7 +4,7 @@ import Courses from './components/pages/Courses'
 import { connect } from 'react-redux'
 import { tokenLogin } from './reducers/loginReducer'
 import { logout } from './reducers/loginReducer'
-import { courseInstanceInitialization } from './reducers/courseInstanceReducer'
+import { getAllCI } from './services/courseInstance'
 import { Container } from 'semantic-ui-react'
 import Nav from './components/pages/Nav'
 import Notification from './components/pages/Notification'
@@ -19,7 +19,7 @@ import MyPage from './components/pages/MyPage'
 
 class App extends Component {
   componentDidMount() {
-    this.props.courseInstanceInitialization()
+    this.props.getAllCI()
     try {
       const loggedUserJSON = window.localStorage.getItem('loggedLabtool')
       if (loggedUserJSON) {
@@ -49,7 +49,9 @@ class App extends Component {
         <Nav />
         <Notification />
         {this.props.user
-          ? <Main />
+          ? this.props.user.email
+            ? <Main />
+            : <Email />
           : <LoginPage />
         }
       </Container>
@@ -61,20 +63,19 @@ const Main = () => {
   return (
     <main>
       <Switch>
-        <Route exact path={`${process.env.PUBLIC_URL}/labtool/courses`} render={({ history }) =>
+        <Route exact path={`${process.env.PUBLIC_URL}/courses`} render={({ history }) =>
           <Courses history={history} />}
         />
-        <Route path={`${process.env.PUBLIC_URL}/labtool/courses/:id`} render={({ match, history }) =>
+        <Route path={`${process.env.PUBLIC_URL}/courses/:id`} render={({ match, history }) =>
           <RegisterPage history={history} courseinstance={(this.props.getCourseInstance(match.params.id))} />}
         />
-        <Route path={`${process.env.PUBLIC_URL}/courses`} component={Courses} />
         <Route path={`${process.env.PUBLIC_URL}/browsereviews`} component={BrowseReviews} />
         <Route path={`${process.env.PUBLIC_URL}/coursePage`} component={CoursePage} />
         <Route path={`${process.env.PUBLIC_URL}/email`} component={Email} />
         <Route path={`${process.env.PUBLIC_URL}/registerPage`} component={RegisterPage} />
         <Route path={`${process.env.PUBLIC_URL}/reviewstudent`} component={ReviewStudent} />
         <Route path={`${process.env.PUBLIC_URL}/ModifyCourseInstancePage`} component={ModifyCourseInstancePage} />
-        <Route path={`${process.env.PUBLIC_URL}/myPage`} component={MyPage} />
+        <Route path={`${process.env.PUBLIC_URL}/`} component={MyPage} />
 
 
         {/* <Route path='/schedule' component={Schedule} /> */}
@@ -97,5 +98,5 @@ const mapStateToProps = (state) => {
 
 export default withRouter(connect(
   mapStateToProps,
-  { courseInstanceInitialization, tokenLogin, logout }
+  { getAllCI, tokenLogin, logout }
 )(App))
