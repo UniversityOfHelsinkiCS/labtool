@@ -7,7 +7,7 @@ import axios from 'axios'
 }*/
 
 export const getAxios = () => {
-  const hostUrl = 'http://localhost:3001/'
+  const hostUrl = 'http://localhost:3001/api'
   const apiPath = 'api' //createApiUrl(window.location.pathname)
   return axios.create({
     baseURL: `${hostUrl}${apiPath}`

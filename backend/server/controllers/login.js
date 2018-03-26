@@ -45,6 +45,8 @@ module.exports = {
               )
             }
 
+            // ^ SIDENOTE HERE: There can be a situation where the user has not a studentnumber but later gets it.
+
             console.log(user.get({
               plain: true
             }))
@@ -54,7 +56,7 @@ module.exports = {
               email: user.email,
               firsts: user.firsts,
               lastname: user.lastname,
-              studentnumber: user.studentnumber,
+              studentNumber: user.studentnumber,
               username: user.username
             }
             res.status(200).send({

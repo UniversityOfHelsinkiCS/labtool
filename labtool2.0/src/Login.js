@@ -151,7 +151,6 @@ class Login extends Component {
 
   /*
   postLogin = (event) => {
-
       .then(response => {
 
         if (!response.data.error) {

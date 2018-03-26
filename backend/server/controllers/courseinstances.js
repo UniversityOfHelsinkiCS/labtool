@@ -1,54 +1,10 @@
+//import Course from '../../../labtool2.0/src/components/pages/Course';
+
 const CourseInstance = require('../models').CourseInstance
+const StudentInstance = require('../models').StudentInstance
+const User = require('../models').User
+const helper = require('../helpers/course_instance_helper')
 
-const CurrentTermAndYear = () => {
-  const date = new Date()
-  const month = date.getMonth() + 1
-  const currentTerm = getCurrentTerm(month)
-  var year = date.getFullYear()
-  console.log('month is: ', month)
-  console.log('date: ', date)
-  if (month >= 11) {
-    year = year + 1
-  }
-  const currentYear = year.toString()
-  var nextYear = getNextYear(currentTerm, year)
-  nextYear.toString()
-  const nextTerm = getNextTerm(currentTerm)
-  console.log('year: ', year)
-  return {currentYear, currentTerm, nextTerm, nextYear}
-}
-
-const getCurrentTerm = (month) => {
-  if (1 <= month <= 5) {
-    return 'K'
-  }
-  if (6 <= month <= 8) {
-    return 'V'
-  }
-  if (9 <= month <= 12) {
-    return 'S'
-  }
-}
-
-const getNextYear = (currentTerm, currentYear) => {
-  if (currentTerm === 'S') {
-    return currentYear + 1
-  } else {
-    return currentYear
-  }
-}
-
-const getNextTerm = (term) => {
-  if (term === 'K') {
-    return 'V'
-  }
-  if (term === 'V') {
-    return 'S'
-  }
-  if (term === 'S') {
-    return 'K'
-  }
-}
 
 module.exports = {
 
@@ -67,6 +23,108 @@ module.exports = {
       })
       .then(CourseInstance => res.status(201).send(CourseInstance))
       .catch(error => res.status(400).send(error))
+  },
+
+  //TODO: search courseInstance where it is connected to user either by studentIstance or teacherInstance
+  findByUser(req, res) {//token verification might not work..? and we don't knpw if search works
+    const errors = []
+    console.log('***REQ BODY***: ', req.body)
+
+    CourseInstance.findById(req.params.userId, {
+      include: [{
+        model: StudentInstance,
+        as: 'studentinstance'
+      }]
+    })
+      .then(courseInstance => {
+        if (!courseInstance) {
+          console.log('ERRORIA PUKKOO')
+          return res.status(404).send({
+            message: 'ERROR - COURSEINSTANCE NOT FOUND'
+          })
+        }
+        return res.status(200).send(courseInstance)
+      })
+      .catch(error => res.status(400).send(error))
+
+  },
+
+  registerToCourseInstance(req, res) {//register 
+    const errors = []
+    console.log('registeröidään...')
+    console.log(req.body)
+
+    console.log('verifikaatio meni läpi!')
+    CourseInstance.findOne({
+      where: {
+        ohid: req.params.ohid
+      }
+    })
+      .then(course => {
+        if (!course) {
+          return res.status(400).send({
+            message: 'course instance not found',
+          })
+        }
+        User.findById(req.decoded.id).then(user => {
+          if (!user) {
+            return res.status(400).send({
+              message: 'something went wrong (clear these specific error messages later): user not found',
+            })
+          }
+          let thisPromiseJustMakesThisCodeEvenMoreHorrible = new Promise((resolve, reject) => {
+            helper.checkWebOodi(req, res, user, resolve)
+
+            setTimeout(function () {
+              resolve('shitaintright') // Yay! everything went to hell.
+            }, 250)
+          })
+
+          thisPromiseJustMakesThisCodeEvenMoreHorrible.then((successMessageIfYouLikeToThinkThat) => {
+            console.log('Yay! ' + successMessageIfYouLikeToThinkThat)
+            console.log(req.body)
+
+            if (successMessageIfYouLikeToThinkThat === 'found') {
+              StudentInstance.findOrCreate({
+                where: {
+                  userId: user.id,
+                  courseInstanceId: course.dataValues.id
+                },
+                defaults: {
+                  userId: user.id,
+                  courseInstanceId: course.dataValues.id,
+                  github: req.body.github || '',                     // model would like to validate this to be an URL but seems like crap
+                  projectName: req.body.projectName || '',           // model would like to validate this to alphanumeric but seems like this needs specific nulls or empties or whatever
+                }
+              }).then(student => {
+                if (!student) {
+                  res.status(400).send({
+                    message: 'something went wrong: if somehow we could not find or create a record we see this'
+                  })
+                } else {
+                  res.status(200).send({
+                    message: 'something went right',
+                    whatever: student
+                  })
+                }
+
+              }).catch(function (error) {
+                res.status(400).send({
+                  message: error.errors
+                })
+              })
+
+            } else {
+
+              res.status(400).send({
+                message: 'something went wrong'
+              })
+
+            }
+          })
+
+        })
+      })
   },
 
   update(req, res) {
@@ -128,7 +186,11 @@ module.exports = {
   },
 
   retrieve(req, res) {
-    return CourseInstance
+    const errors = []
+
+
+
+    CourseInstance
       .findById(req.params.id, {})
       .then(courseInstance => {
         if (!courseInstance) {
@@ -139,18 +201,20 @@ module.exports = {
         return res.status(200).send(courseInstance)
       })
       .catch(error => res.status(400).send(error))
+
   },
+
 
   getNew(req, res) {
     console.log('update current...')
     const auth = process.env.TOKEN || 'notset' //You have to set TOKEN in .env file in order for this to work
     console.log('autentikaatio: ', auth)
-    const termAndYear = CurrentTermAndYear()
+    const termAndYear = helper.CurrentTermAndYear()
     console.log('term and year: ', termAndYear)
     if (auth === 'notset') {
       res.send('Please restart the backend with the correct TOKEN environment variable set')
     } else {
-      if (this.remoteAddress === '127.0.0.11111312') {
+      if (this.remoteAddress === '127.0.0.1') {
         res.send('gtfo')
 
       } else {
@@ -165,35 +229,39 @@ module.exports = {
           strictSSL: false
         }
         request(options, function (err, resp, body) {
-            const json = JSON.parse(body)
-            console.log(json)
-            json.forEach(instance => {
-              CourseInstance.findOrCreate({
-                where: {ohid: instance.id},
-                defaults: {
-                  name: instance.name,
-                  start: instance.starts,
-                  end: instance.ends,
-                  ohid: instance.id
-                }
-              })
+          const json = JSON.parse(body)
+          console.log('json palautta...')
+          console.log(json)
+          json.forEach(instance => {
+            CourseInstance.findOrCreate({
+              where: { ohid: instance.id },
+              defaults: {
+                name: instance.name,
+                start: instance.starts,
+                end: instance.ends,
+                ohid: instance.id
+              }
             })
-            res.status(204).send({'hello': 'hello'})
+          })
+          if (req.decoded) {
+            res.status(204).send({ 'hello': 'hello' }) // nodejs crashes if someone just posts here without valid token.
           }
+        }
         )
       }
     }
-  },
+  }
+  ,
 
   getNewer(req, res) {
     console.log('update next...')
     const auth = process.env.TOKEN || 'notset' //You have to set TOKEN in .env file in order for this to work
-    const termAndYear = CurrentTermAndYear()
+    const termAndYear = helper.CurrentTermAndYear()
     console.log('term and year: ', termAndYear)
     if (auth === 'notset') {
       res.send('Please restart the backend with the correct TOKEN environment variable set')
     } else {
-      if (this.remoteAddress === '127.0.0.1321321214') {
+      if (this.remoteAddress === '127.0.0.1') {
         res.send('gtfo')
 
       } else {
@@ -213,7 +281,7 @@ module.exports = {
           console.log(json)
           json.forEach(instance => {
             CourseInstance.findOrCreate({
-              where: {ohid: instance.id},
+              where: { ohid: instance.id },
               defaults: {
                 name: instance.name,
                 start: instance.starts,
@@ -222,7 +290,9 @@ module.exports = {
               }
             })
           })
-          res.status(204).send({'hello': 'hello'})
+          if (req.decoded) {
+            res.status(204).send({'hello': 'hello'})  // nodejs crashes if someone just posts here without valid token.
+          }
         })
       }
     }

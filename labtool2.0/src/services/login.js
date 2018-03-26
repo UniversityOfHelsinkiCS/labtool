@@ -1,6 +1,6 @@
 
 import { callController } from '../util/apiConnection'
-const baseUrl = process.env.REACT_APP_BACKEND_URL + '/login'
+const baseUrl = process.env.REACT_APP_BACKEND_URL + '/api/login'
 
 export const login = (loginInformation) => {
   const route = baseUrl

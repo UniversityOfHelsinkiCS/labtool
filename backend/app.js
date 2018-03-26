@@ -1,7 +1,7 @@
 let express = require('express')
 let app = express()
 let bodyParser = require('body-parser')
-const jwt = require('jsonwebtoken')
+let jwt = require('jsonwebtoken')
 
 require('dotenv').config()
 
@@ -14,13 +14,29 @@ const extractToken = (request, response, next) => {
   next()
 }
 
-app.use(extractToken)
 
+const authenticate = (request, response, next) => {
+  const excludedPaths = [ '/api/login', '/api' ]
+  console.log(request.path)
+  if ( !excludedPaths.includes(request.path) ) {
+    try {
+      let decoded = jwt.verify(request.token, process.env.SECRET)
+      request.decoded = decoded
+    } catch (e) {
+      response.status(400).send({error: 'token verification failed'})
+    }
+  }
+  next()
+}
+
+
+app.use(extractToken)
 app.use(bodyParser.json())
+
+
 // respond with "hello world" when a GET request is made to the homepage
 app.get('/', function (req, res) {
   res.send('hello world')
-
 })
 
 app.use(function (req, res, next) {
@@ -30,92 +46,22 @@ app.use(function (req, res, next) {
   next()
 })
 
-// login Oikea logini server/controllers/login ...
-/* app.post('/login', function (req, res) {
-  const request = require('request')
-  const options = {
-    method: 'post',
-    uri: 'https://opetushallinto.cs.helsinki.fi/login',
-    strictSSL: false,
-    json: {'username': req.body.username, 'password': req.body.password}
-  }
+app.use(authenticate)
 
-  const result = request(options, function (err, resp, body) {
-    if (err) {
-      console.log(err)
-    }
-    console.log(result.response.body.error)
 
-    if (result.response.body.error !== 'wrong credentials') {
-      User
-        .findOrCreate({
-          where: {username: body.username},
-          defaults: {
-            firsts: body.first_names,
-            lastname: body.last_name,
-            studentnumber: body.student_number,
-            email: ''
-          }
-        })
-        .spread((user, created) => {
 
-          if (!(user.firsts === body.first_names && user.lastname === body.last_name)) {
-            User.update(
-              { firsts: body.first_names, lastname: body.last_name },
-              { where: { id: user.id } }
-            )
-          }
 
-          console.log(user.get({
-            plain: true
-          }))
 
-          const token = jwt.sign({ username: user.username, id: user.id }, process.env.SECRET)
-          const returnedUser = {
-            email: user.email,
-            firsts: user.firsts,
-            lastname: user.lastname,
-            studentnumber: user.studentnumber,
-            username: user.username            
-          }
-          res.status(200).send({
-            returnedUser,
-            token,
-            created
-          })
-        })
-    
-    } else {
-      res.status(401).send({
-        body
-      })
-    }
-  })
-}) */
-
-const tokenVerify = ({ token }) => {
-  jwt.verify(token, process.env.SECRET, function (err, decoded) {
-    if (err) {
-      console.log(err)
-      return ( { error: 'token verification failed'})
-    } else {
-      console.log(decoded)
-      console.log(decoded.id)
-      console.log(decoded.username)
-      return decoded
-    }
-  })
-}
-
-// Sequelize reitti määrittelyt
+// express routet
+require('./server/routes/loginRouter')(app)
 require('./server/routes')(app)
 require('./server/routes/userRouter')(app)
 require('./server/routes/courseInstanceRouter')(app)
 require('./server/routes/courseRouter')(app)
-require('./server/routes/loginRouter')(app)
 require('./server/routes/studentInstanceRouter')(app)
 require('./server/routes/teacherInstanceRouter')(app)
 require('./server/routes/weekRouter')(app)
+
 app.get('*', (req, res) => res.status(404).send({
   message: 'Not found.',
 }))
