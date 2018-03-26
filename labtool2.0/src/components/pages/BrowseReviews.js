@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Form, Input, TextArea, Grid, Table, List } from 'semantic-ui-react'
+import { Button, Table, List } from 'semantic-ui-react'
 
 class BrowseReviews extends Component {
     render() {

@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import LoginPage from './components/pages/LoginPage'
-import MainPage from './components/pages/MainPage'
 import axios from 'axios'
-import SetEmail from './components/pages/SetEmail'
+import Email from './components/pages/Email'
 
 import studentinstancesService from './services/studentinstances'
 import courseInstancesService from './services/courseInstance'
@@ -152,16 +151,13 @@ class Login extends Component {
   /*
   postLogin = (event) => {
       .then(response => {
-
         if (!response.data.error) {
-
           this.setState({
             username: '',
             password: '',
             token: response.data.token,
             user: response.data.returnedUser
           })
-
   }
   */
 
@@ -169,7 +165,7 @@ class Login extends Component {
 
     const listingPage = (
       <div>
-        <MainPage logout={this.postLogout} handleFirstLoginTrue={this.handleFirstLoginTrue} />
+        <LoginPage logout={this.postLogout} handleFirstLoginTrue={this.handleFirstLoginTrue} />
         <p></p>
         <p></p>
       </div>
@@ -181,7 +177,7 @@ class Login extends Component {
     page = this.state.courseInstanceId ?
       <RegisterPage name={this.state.courseInstanceName} cancel={this.cancelRegister} onSubmit={this.postCourseinstanceRegisteration} handleFieldChange={this.handleFieldChange} github={this.state.github} projectname={this.state.projectname} /> :
       page = this.state.firstLogin ?
-        <SetEmail postEmail={this.postEmail} handleFieldChange={this.handleFieldChange} handleFirstLoginFalse={this.handleFirstLoginFalse} email={this.state.email} /> :
+        <Email postEmail={this.postEmail} handleFieldChange={this.handleFieldChange} handleFirstLoginFalse={this.handleFirstLoginFalse} email={this.state.email} /> :
         page = this.state.user ?
           listingPage :
 

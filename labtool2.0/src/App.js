@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Switch, Route, withRouter, Link } from 'react-router-dom'
+import { Switch, Route, withRouter } from 'react-router-dom'
 import Courses from './components/pages/Courses'
 import { connect } from 'react-redux'
 import { tokenLogin } from './reducers/loginReducer'
@@ -10,15 +10,15 @@ import Nav from './components/pages/Nav'
 import Notification from './components/pages/Notification'
 import RegisterPage from './components/pages/RegisterPage';
 import CoursePage from './components/pages/CoursePage'
+import Login from './Login.js'
 import Email from './components/pages/Email.js'
 import LoginPage from './components/pages/LoginPage.js'
 import ModifyCourseInstancePage from './components/pages/ModifyCourseInstancePage'
 import ReviewStudent from './components/pages/ReviewStudent'
 import BrowseReviews from './components/pages/BrowseReviews'
-import MyPageStudent from './components/pages/MyPageStudent'
-import MyPageTeacher from './components/pages/MyPageTeacher'
-import { Menu, Button } from 'semantic-ui-react'
+import MyPage from './components/pages/MyPage'
 
+<<<<<<< HEAD
 class App extends React.Component {
   constructor(props) {
     super(props)
@@ -39,9 +39,24 @@ class App extends React.Component {
       }
     } catch (exception) {
       console.log(exception)
+=======
+class App extends Component {
+    componentDidMount() {
+        this.props.courseInstanceInitialization()
+        try {
+            const loggedUserJSON = window.localStorage.getItem('loggedLabtool')
+            if (loggedUserJSON) {
+                const user = JSON.parse(loggedUserJSON)
+                this.props.tokenLogin(user)
+                this.props.logout()
+            }
+        } catch (exception) {
+            console.log('no user logged in')
+        }
+>>>>>>> 80a35f52476558f6abffacda87257f4a646dce3b
     }
-  }
 
+<<<<<<< HEAD
 
 
   render() {
@@ -90,12 +105,48 @@ const Main = () => {
         <Route path={`${process.env.PUBLIC_URL}/ModifyCourseInstancePage`} component={ModifyCourseInstancePage} />
         <Route path={`${process.env.PUBLIC_URL}/myPageStudent`} component={MyPageStudent} />
         <Route path={`${process.env.PUBLIC_URL}/myPageTeacher`} component={MyPageTeacher} />
+=======
+    render() {
+        return (
+            <Container>
+                <Nav />
+                <Notification />
+                <Main />
+            </Container>
+        )
+    }
+}
+
+const Main = () => {
+    return (
+        <main>
+            <Switch>
+                <Route exact path='/labtool/courses' render={({ history }) =>
+                    <Courses history={history} />}
+                />
+                <Route exact path='/labtool' render={({ history }) =>
+                    <LoginPage history={history} />}
+                />
+                <Route path="/labtool/courses/:id" render={({ match, history }) =>
+                    <RegisterPage history={history} courseinstance={(this.props.getCourseInstance(match.params.id))} />}
+                />
+                <Route exact path={`${process.env.PUBLIC_URL}/`} component={Login} />
+                <Route path={`${process.env.PUBLIC_URL}/courses`} component={Courses} />
+                <Route path={`${process.env.PUBLIC_URL}/browsereviews`} component={BrowseReviews} />
+                <Route path={`${process.env.PUBLIC_URL}/coursePage`} component={CoursePage} />
+                <Route path={`${process.env.PUBLIC_URL}/email`} component={Email} />
+                <Route path={`${process.env.PUBLIC_URL}/loginPage`} component={LoginPage} />
+                <Route path={`${process.env.PUBLIC_URL}/registerPage`} component={RegisterPage} />
+                <Route path={`${process.env.PUBLIC_URL}/reviewstudent`} component={ReviewStudent} />
+                <Route path={`${process.env.PUBLIC_URL}/ModifyCourseInstancePage`} component={ModifyCourseInstancePage} />
+                <Route path={`${process.env.PUBLIC_URL}/myPage`} component={MyPage} />
+>>>>>>> 80a35f52476558f6abffacda87257f4a646dce3b
 
 
-        {/* <Route path='/schedule' component={Schedule} /> */}
-      </Switch>
-    </main>
-  )
+                {/* <Route path='/schedule' component={Schedule} /> */}
+            </Switch>
+        </main>
+    )
 }
 
 
@@ -109,6 +160,11 @@ const mapStateToProps = (state) => {
 
 
 export default withRouter(connect(
+<<<<<<< HEAD
   mapStateToProps,
   { courseInstanceInitialization, tokenLogin, logout }
+=======
+    null,
+    { courseInstanceInitialization, tokenLogin, logout }
+>>>>>>> 80a35f52476558f6abffacda87257f4a646dce3b
 )(App))

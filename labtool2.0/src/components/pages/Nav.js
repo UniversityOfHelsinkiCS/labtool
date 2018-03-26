@@ -6,7 +6,7 @@ import { logout } from '../../reducers/loginReducer'
 import studentinstancesService from '../../services/studentinstances'
 
 
-class Nav extends React.Component {
+class Nav extends Component {
 
   handleLogout = async (e) => {
     e.preventDefault()
@@ -16,7 +16,7 @@ class Nav extends React.Component {
   }
 
   render() {
-    const user = { ... this.props.user.returnedUser }
+    const user = { ...this.props.user.returnedUser }
 
     return (
       <main>
@@ -34,11 +34,11 @@ class Nav extends React.Component {
           <Menu.Menu position='left'>
 
             <Menu.Item header>
-                            Labtool 2.0
+              Labtool 2.0
             </Menu.Item>
 
             <Menu.Item link>
-              <Link to="/mypagestudent">My page</Link>
+              <Link to="/mypage">My page</Link>
             </Menu.Item>
 
             <Menu.Item link>
@@ -50,12 +50,12 @@ class Nav extends React.Component {
 
           <Menu.Menu position='right'>
 
-            <Menu.Item text>
+            <Menu.Item>
               <em>{user.firsts} logged in</em>
             </Menu.Item>
 
             <Menu.Item link>
-              <Button color='white' onClick={this.handleLogout} ><Link to="/">Logout
+              <Button onClick={this.handleLogout} ><Link to="/">Logout
               </Link></Button>
             </Menu.Item>
 
@@ -75,4 +75,4 @@ const mapStateToProps = (state) => {
 }
 
 
-export default connect(mapStateToProps, {logout})(Nav)
+export default connect(mapStateToProps, { logout })(Nav)
