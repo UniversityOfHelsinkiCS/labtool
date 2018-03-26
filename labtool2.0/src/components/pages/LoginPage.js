@@ -27,7 +27,7 @@ class LoginPage extends React.Component {
   render() {
     return (
 
-      <div className='ui'>
+      <div className='LoginPage'>
         <Grid>
           <Grid.Row centered>
             <h3>Enter your University of Helsinki username and password.</h3>
