@@ -33,7 +33,7 @@ module.exports = {
     const errors = []
     console.log('***REQ BODY***: ', req.body)
     let token = helper.tokenVerify(req)
-    const id = parseInt(req.body.userId)
+    const id = parseInt(req.body.userId)//TODO: CHECK THAT THIS IS SANITICED ID
     console.log('TOKEN VERIFIED: ', token)
     console.log('req.params.UserId: ', parseInt(req.body.userId))
     if (token.verified) {
