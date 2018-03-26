@@ -66,15 +66,20 @@ exports[`<Register /> Register Component should render correctly 1`] = `
         </FormField>
         <FormField>
           <button
-            class="ui left floated blue button"
+            className="ui left floated blue button"
             type="submit"
           >
             Submit
           </button>
           <button
-            class="ui right floated red button"
+            className="ui right floated button"
           >
-            Cancel
+            <Link
+              replace={false}
+              to="/coursepage"
+            >
+              Cancel
+            </Link>
           </button>
         </FormField>
       </Form>
