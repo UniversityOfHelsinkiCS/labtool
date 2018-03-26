@@ -46,7 +46,9 @@ class Courses extends Component {
               <List.Item icon='plus' content='Create course' />
             </List>
           </div>
-        </Container> </div>
+        </Container> 
+        </div>
+         
     )
   }
 }

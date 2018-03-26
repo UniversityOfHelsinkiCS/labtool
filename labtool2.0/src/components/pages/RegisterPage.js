@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Form, Input, Grid } from 'semantic-ui-react'
+import { Link } from 'react-router-dom'
 
 class RegisterPage extends Component {
 
@@ -46,7 +47,7 @@ class RegisterPage extends Component {
 
               <Form.Field>
                 <button className="ui left floated blue button" type="submit">Submit</button>
-                <button className="ui right floated button">Cancel</button>
+                <button className="ui right floated button"><Link to = "/coursepage">Cancel</Link></button>
               </Form.Field>
 
             </Form>
