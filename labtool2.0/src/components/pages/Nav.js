@@ -2,10 +2,18 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import React, { Component } from 'react'
 import { Menu, Button } from 'semantic-ui-react'
-
+import { logout } from '../../reducers/loginReducer'
+import studentinstancesService from '../../services/studentinstances'
 
 
 class Nav extends React.Component {
+
+  handleLogout = async (e) => {
+    e.preventDefault()
+    window.localStorage.removeItem('loggedUser')
+    await this.props.logout()
+    studentinstancesService.setToken('')
+  }
 
   render() {
     const user = { ... this.props.user.returnedUser }
@@ -47,9 +55,8 @@ class Nav extends React.Component {
             </Menu.Item>
 
             <Menu.Item link>
-              <Button color='white' >
-                <Link to="/loginpage" color='white'>Logout</Link>
-              </Button>
+              <Button color='white' onClick={this.handleLogout} ><Link to="/">Logout
+              </Link></Button>
             </Menu.Item>
 
           </Menu.Menu>
@@ -68,4 +75,4 @@ const mapStateToProps = (state) => {
 }
 
 
-export default connect(mapStateToProps, {})(Nav)
+export default connect(mapStateToProps, {logout})(Nav)

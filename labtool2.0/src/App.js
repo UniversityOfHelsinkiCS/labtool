@@ -3,12 +3,12 @@ import { Switch, Route, withRouter, Link } from 'react-router-dom'
 import Courses from './components/pages/Courses'
 import { connect } from 'react-redux'
 import { tokenLogin } from './reducers/loginReducer'
+import { logout } from './reducers/loginReducer'
 import { courseInstanceInitialization } from './reducers/courseInstanceReducer'
 import { Container } from 'semantic-ui-react'
 import Nav from './components/pages/Nav'
 import Notification from './components/pages/Notification'
 import RegisterPage from './components/pages/RegisterPage';
-import Login from './Login'
 import CoursePage from './components/pages/CoursePage'
 import Email from './components/pages/Email.js'
 import LoginPage from './components/pages/LoginPage.js'
@@ -27,6 +27,7 @@ class App extends React.Component {
       if (loggedUserJSON) {
         const user = JSON.parse(loggedUserJSON)
         this.props.tokenLogin(user)
+        this.props.logout()
       }
     } catch (exception) {
       console.log('no user logged in')
@@ -57,7 +58,7 @@ const Main = () => {
         <Route path="/labtool/courses/:id" render={({ match, history }) =>
           <RegisterPage history={history} courseinstance={(this.props.getCourseInstance(match.params.id))} />}
         />
-        <Route exact path={`${process.env.PUBLIC_URL}/`} component={Login} />
+        <Route exact path={`${process.env.PUBLIC_URL}/`} component={LoginPage} />
         <Route path={`${process.env.PUBLIC_URL}/courses`} component={Courses} />
         <Route path={`${process.env.PUBLIC_URL}/browsereviews`} component={BrowseReviews} />
         <Route path={`${process.env.PUBLIC_URL}/coursePage`} component={CoursePage} />
@@ -79,5 +80,5 @@ const Main = () => {
 
 export default withRouter(connect(
   null,
-  { courseInstanceInitialization, tokenLogin }
+  { courseInstanceInitialization, tokenLogin, logout }
 )(App))

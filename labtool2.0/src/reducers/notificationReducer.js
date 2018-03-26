@@ -12,6 +12,11 @@ const notificationReducer = (state = {}, action) => {
         message: 'Wrong credentials!',
         error: true
       }
+      case 'LOGOUT_SUCCESS':
+      return {
+        message: 'You have logged out',
+        error: false
+      }
     default:
       return state
   }

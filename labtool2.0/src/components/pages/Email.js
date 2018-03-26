@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Form, Grid } from 'semantic-ui-react'
+import { Link } from 'react-router-dom'
 
 /*
 take some elements from SetEmail.js, if user has already email in db
@@ -32,7 +33,7 @@ class Email extends Component {
 
                             <Form.Field>
                                 <button className="ui left floated green button" type="submit">Save</button>
-                                <button className="ui right floated button">Cancel</button>
+                                <button className="ui right floated button"> <Link to="/MypageStudent">Cancel</Link></button>
                             </Form.Field>
                         </Form>
 
