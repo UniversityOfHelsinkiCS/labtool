@@ -34,7 +34,7 @@ module.exports = {
     console.log('req.params.UserId: ', parseInt(req.body.userId))
     CourseInstance.findAll({
       include: {
-        model: 'StudentInstances',
+        model: 'TeacherInstances',
         where: {
           userId: parseInt(req.params.userId),
           courseInstanceId: CourseInstance.id
@@ -62,7 +62,7 @@ module.exports = {
     console.log('req.params.UserId: ', parseInt(req.body.userId))
     CourseInstance.findAll({
       include: {
-        model: 'TeacherInstances',
+        model: 'StudentInstances',
         where: {
           userId: parseInt(req.params.userId),
           courseInstanceId: CourseInstance.id
