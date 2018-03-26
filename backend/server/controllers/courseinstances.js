@@ -1,10 +1,13 @@
 //import Course from '../../../labtool2.0/src/components/pages/Course';
-const kasa = require('../models').db
+
+//import Course from '../../../labtool2.0/src/components/pages/Course';
+const db = require('../models')
 const CourseInstance = require('../models').CourseInstance
 const StudentInstance = require('../models').StudentInstance
 const User = require('../models').User
 const helper = require('../helpers/course_instance_helper')
-
+const Sequelize = require('sequelize')
+const Op = Sequelize.Op
 
 module.exports = {
 
@@ -30,9 +33,10 @@ module.exports = {
     const errors = []
     console.log('***REQ BODY***: ', req.body)
     let token = helper.tokenVerify(req)
+    const id = parseInt(req.body.userId)
     console.log('TOKEN VERIFIED: ', token)
     console.log('req.params.UserId: ', parseInt(req.body.userId))
-    kasa.query('SELECT * FROM CourseInstances AS CI JOIN TeacherInstances AS TI ON CI.id = TI.id WHERE TI.userId = 1')
+    db.sequelize.query(`SELECT * FROM "CourseInstances" AS CI JOIN "TeacherInstances" AS TI ON CI.id = TI.id WHERE TI."userId" = ${id}`)
       .then(instance =>
         res.status(200).send(instance))
       .catch(error => res.status(400).send(error))
@@ -46,6 +50,7 @@ module.exports = {
   })
    */
   findByUserStudentInstance(req, res) {//token verification might not work..? and we don't knpw if search works
+    console.log('db: ', db)
     const errors = []
     console.log('searching by studentInstance...')
     console.log('***REQ BODY***: ', req.body)
@@ -53,7 +58,25 @@ module.exports = {
     console.log('TOKEN VERIFIED: ', token)
     const id = parseInt(req.body.userId)
     console.log('req.params.UserId: ', id)
-    kasa.query('SELECT * FROM CourseInstances AS CI JOIN StudentInstances AS SI ON CI.id = SI.id WHERE SI.userId = 1')
+    /*CourseInstance.findAll({
+      include:[{
+        model: StudentInstance,
+      }],
+      where: {userId: id},
+      logging: console.log
+    })*/
+    //	SELECT * FROM "CourseInstances" AS CI JOIN "StudentInstances" AS SI ON CI.id = SI.id WHERE SI."userId" = 1;
+    db.sequelize.query(`SELECT * FROM "CourseInstances" AS CI JOIN "StudentInstances" AS SI ON CI.id = SI.id WHERE SI."userId" = ${id}`)
+      // CourseInstance.findAll({
+      //   include: [{
+      //     model: StudentInstance,
+      //   }],
+      //   where: {
+      //     userid: {
+      //       [Op.eq]: id
+      //     }
+      //   }
+      // })
       .then(instance =>
         res.status(200).send(instance))
       .catch(error => res.status(400).send(error))
