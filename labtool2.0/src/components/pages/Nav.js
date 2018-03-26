@@ -10,7 +10,7 @@ class Nav extends React.Component {
 
   handleLogout = async (e) => {
     e.preventDefault()
-    window.localStorage.removeItem('loggedUser')
+    window.localStorage.removeItem('loggedLabtool')
     await this.props.logout()
     studentinstancesService.setToken('')
   }

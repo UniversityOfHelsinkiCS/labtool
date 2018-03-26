@@ -4,6 +4,9 @@ import React from 'react'
 import { Form, Input, Button, Grid } from 'semantic-ui-react'
 
 class LoginPage extends React.Component {
+  constructor(props) {
+    super(props)
+  }
 
   handleSubmit = async (e) => {
     e.preventDefault()
@@ -18,6 +21,7 @@ class LoginPage extends React.Component {
   componentWillReceiveProps(nProps) {
     // Kutsutaan kun kirjautuminen onnistuu -->
     window.localStorage.setItem('loggedLabtool', JSON.stringify(nProps.user))
+    console.log(this.props.renderAfter, 'LOGINPAGE FUNKTIO')
   }
 
   render() {
@@ -83,9 +87,10 @@ class LoginPage extends React.Component {
     )
   }
 }
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
   return {
-    user: state.user
+    user: state.user,
+    renderAfter: ownProps.renderAfter
   }
 }
 
