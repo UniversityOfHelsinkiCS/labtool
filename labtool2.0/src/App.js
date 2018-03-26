@@ -61,10 +61,10 @@ const Main = () => {
   return (
     <main>
       <Switch>
-        <Route exact path={`${process.env.PUBLIC_URL}/labtool/courses`} render={({ history }) =>
+        <Route exact path={`${process.env.PUBLIC_URL}/courses`} render={({ history }) =>
           <Courses history={history} />}
         />
-        <Route path={`${process.env.PUBLIC_URL}/labtool/courses/:id`} render={({ match, history }) =>
+        <Route path={`${process.env.PUBLIC_URL}/courses/:id`} render={({ match, history }) =>
           <RegisterPage history={history} courseinstance={(this.props.getCourseInstance(match.params.id))} />}
         />
         <Route path={`${process.env.PUBLIC_URL}/courses`} component={Courses} />
