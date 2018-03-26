@@ -26,15 +26,43 @@ module.exports = {
   },
 
   //TODO: search courseInstance where it is connected to user either by studentIstance or teacherInstance
-  findByUser(req, res) {//token verification might not work..? and we don't knpw if search works
+  findByUserTeacherInstance(req, res) {//token verification might not work..? and we don't knpw if search works
     const errors = []
     console.log('***REQ BODY***: ', req.body)
     let token = helper.tokenVerify(req)
     console.log('TOKEN VERIFIED: ', token)
     console.log('req.params.UserId: ', parseInt(req.body.userId))
     CourseInstance.findAll({
-      include:{
+      include: {
         model: 'StudentInstances',
+        where: {
+          userId: parseInt(req.params.userId),
+          courseInstanceId: CourseInstance.id
+        }
+      }
+    })
+      .then(courseInstance => {
+        if (!courseInstance) {
+          console.log('ERRORIA PUKKOO')
+          return res.status(404).send({
+            message: 'ERROR - COURSEINSTANCE NOT FOUND'
+          })
+        }
+        return res.status(200).send(courseInstance)
+      })
+      .catch(error => res.status(400).send(error))
+
+  },
+
+  findByUserStudentInstance(req, res) {//token verification might not work..? and we don't knpw if search works
+    const errors = []
+    console.log('***REQ BODY***: ', req.body)
+    let token = helper.tokenVerify(req)
+    console.log('TOKEN VERIFIED: ', token)
+    console.log('req.params.UserId: ', parseInt(req.body.userId))
+    CourseInstance.findAll({
+      include: {
+        model: 'TeacherInstances',
         where: {
           userId: parseInt(req.params.userId),
           courseInstanceId: CourseInstance.id
