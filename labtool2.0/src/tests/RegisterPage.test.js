@@ -22,11 +22,11 @@ describe.only('<Register />', () => {
     })
 
     it('renders a GitHub link input', () => {
-      expect(shallow(<Register />).find('.form-control1').length).toEqual(1)
+      expect(shallow(<Register />).find('.form-control2').length).toEqual(1)
     })
 
     it('renders project name input', () => {
-      expect(shallow(<Register />).find('.form-control2').length).toEqual(1)
+      expect(shallow(<Register />).find('.form-control1').length).toEqual(1)
     })
   })
 })
