@@ -22,7 +22,7 @@ class App extends Component {
     this.props.getAllCI()
     try {
       const loggedUserJSON = window.localStorage.getItem('loggedLabtool')
-      if (loggedUserJSON) {
+      if (loggedUserJSON && loggedUserJSON !== '{}') {
         const user = JSON.parse(loggedUserJSON)
         this.props.tokenLogin(user)
       }
