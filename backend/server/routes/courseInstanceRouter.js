@@ -5,8 +5,8 @@ module.exports = (app) => {
   app.post('/api/courseinstances/update', courseInstanceController.getNew) //For updating DB with data from opetushallitus
   app.post('/api/courseinstances/update/next', courseInstanceController.getNewer)
   app.post('/api/course/register/:ohid', courseInstanceController.registerToCourseInstance)
-  app.post('/api/course/testi/:studentid', courseInstanceController.findByUserStudentInstance)
-  app.post('/api/course/test/:studentid', courseInstanceController.findByUserTeacherInstance)
+  app.post('/api/course/student', courseInstanceController.findByUserStudentInstance)
+  app.post('/api/course/teacher', courseInstanceController.findByUserTeacherInstance)
   app.get('/api/courseinstances', courseInstanceController.list) // Skolen kurssit on julkista tietoa eli periaattessa ok.
   app.post('/api/courseinstances/', courseInstanceController.create) // Ei käy
   app.get('/api/courseinstances/:id', courseInstanceController.retrieve) // En tiedä joten ei käy
