@@ -16,7 +16,7 @@ class Nav extends Component {
   }
 
   render() {
-    const user = { ...this.props.user.returnedUser }
+    const user = { ...this.props.user.user }
 
     return (
       <main>

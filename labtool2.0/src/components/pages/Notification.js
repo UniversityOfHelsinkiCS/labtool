@@ -38,7 +38,6 @@ class Notification extends React.Component {
         <Message
           className='error'
           color='red'
-          error='true'
           size='large'>
           {message}
         </Message>
@@ -49,7 +48,6 @@ class Notification extends React.Component {
         <Message
           className='success'
           color='green'
-          success='true'
           size='large' >
           {message}
         </Message>
