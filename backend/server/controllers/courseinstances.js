@@ -1,5 +1,5 @@
 //import Course from '../../../labtool2.0/src/components/pages/Course';
-
+const kasa = require('../models').db
 const CourseInstance = require('../models').CourseInstance
 const StudentInstance = require('../models').StudentInstance
 const User = require('../models').User
@@ -32,52 +32,30 @@ module.exports = {
     let token = helper.tokenVerify(req)
     console.log('TOKEN VERIFIED: ', token)
     console.log('req.params.UserId: ', parseInt(req.body.userId))
-    CourseInstance.findAll({
-      include: {
-        model: 'TeacherInstances',
-        where: {
-          userId: parseInt(req.params.userId),
-          courseInstanceId: CourseInstance.id
-        }
-      }
-    })
-      .then(courseInstance => {
-        if (!courseInstance) {
-          console.log('ERRORIA PUKKOO')
-          return res.status(404).send({
-            message: 'ERROR - COURSEINSTANCE NOT FOUND'
-          })
-        }
-        return res.status(200).send(courseInstance)
-      })
+    kasa.query('SELECT * FROM CourseInstances AS CI JOIN TeacherInstances AS TI ON CI.id = TI.id WHERE TI.userId = 1')
+      .then(instance =>
+        res.status(200).send(instance))
       .catch(error => res.status(400).send(error))
 
   },
 
+  /**
+   * sequelize.query("SELECT * FROM 'property'", { type:Sequelize.QueryTypes.SELECT})
+   .then(function(properties) {
+      res.json(properties)
+  })
+   */
   findByUserStudentInstance(req, res) {//token verification might not work..? and we don't knpw if search works
     const errors = []
+    console.log('searching by studentInstance...')
     console.log('***REQ BODY***: ', req.body)
     let token = helper.tokenVerify(req)
     console.log('TOKEN VERIFIED: ', token)
-    console.log('req.params.UserId: ', parseInt(req.body.userId))
-    CourseInstance.findAll({
-      include: {
-        model: 'StudentInstances',
-        where: {
-          userId: parseInt(req.params.userId),
-          courseInstanceId: CourseInstance.id
-        }
-      }
-    })
-      .then(courseInstance => {
-        if (!courseInstance) {
-          console.log('ERRORIA PUKKOO')
-          return res.status(404).send({
-            message: 'ERROR - COURSEINSTANCE NOT FOUND'
-          })
-        }
-        return res.status(200).send(courseInstance)
-      })
+    const id = parseInt(req.body.userId)
+    console.log('req.params.UserId: ', id)
+    kasa.query('SELECT * FROM CourseInstances AS CI JOIN StudentInstances AS SI ON CI.id = SI.id WHERE SI.userId = 1')
+      .then(instance =>
+        res.status(200).send(instance))
       .catch(error => res.status(400).send(error))
 
   },
