@@ -1,6 +1,5 @@
-import { Table } from 'semantic-ui-react'
 import React, { Component } from 'react'
-import { Button, List } from 'semantic-ui-react'
+import { Button, Table } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 
 class CoursePage extends Component {

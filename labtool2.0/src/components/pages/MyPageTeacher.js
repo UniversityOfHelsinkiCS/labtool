@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Card, Button, Header, Table, Container, Message, List, Checkbox } from 'semantic-ui-react'
+import { Card, Button, Header, Table, Container, List, Checkbox } from 'semantic-ui-react'
 import './MyPage.css'
 
 class MyPageStudent extends Component {

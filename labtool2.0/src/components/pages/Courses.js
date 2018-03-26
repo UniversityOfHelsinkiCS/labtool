@@ -1,9 +1,6 @@
-import { Table } from 'semantic-ui-react'
 import React, { Component } from 'react'
-import { Button, List, Container, Header } from 'semantic-ui-react'
-import { Switch, Route } from 'react-router-dom'
-import AllCourses from './AllCourses'
-import Course from './Course'
+import { Button, List, Container, Header, Table } from 'semantic-ui-react'
+//import { Switch, Route } from 'react-router-dom'
 
 class Courses extends Component {
   render() {

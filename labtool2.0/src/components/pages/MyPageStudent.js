@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Card, Button, Checkbox, Header, Table, Container, Message, List } from 'semantic-ui-react'
+import { Card, Button, Checkbox, Header, Table, Container, List } from 'semantic-ui-react'
 import './MyPage.css'
 import { Link } from 'react-router-dom'
 
@@ -8,11 +8,11 @@ class MyPageStudent extends Component {
 
   editEmail = (event) => {
     event.preventDefault()
-    
+
   }
 
   render() {
-    const user = { ... this.props.user.returnedUser }
+    const user = { ...this.props.user.returnedUser }
     return (
       <div>
         <Card fluid color='yellow'>
