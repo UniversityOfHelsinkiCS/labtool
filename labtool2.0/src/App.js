@@ -10,6 +10,7 @@ import Nav from './components/pages/Nav'
 import Notification from './components/pages/Notification'
 import RegisterPage from './components/pages/RegisterPage';
 import CoursePage from './components/pages/CoursePage'
+import Login from './Login.js'
 import Email from './components/pages/Email.js'
 import LoginPage from './components/pages/LoginPage.js'
 import ModifyCourseInstancePage from './components/pages/ModifyCourseInstancePage'
@@ -56,7 +57,7 @@ const Main = () => {
                 <Route path="/labtool/courses/:id" render={({ match, history }) =>
                     <RegisterPage history={history} courseinstance={(this.props.getCourseInstance(match.params.id))} />}
                 />
-                <Route exact path={`${process.env.PUBLIC_URL}/`} component={LoginPage} />
+                <Route exact path={`${process.env.PUBLIC_URL}/`} component={Login} />
                 <Route path={`${process.env.PUBLIC_URL}/courses`} component={Courses} />
                 <Route path={`${process.env.PUBLIC_URL}/browsereviews`} component={BrowseReviews} />
                 <Route path={`${process.env.PUBLIC_URL}/coursePage`} component={CoursePage} />
