@@ -36,10 +36,15 @@ module.exports = {
     const id = parseInt(req.body.userId)
     console.log('TOKEN VERIFIED: ', token)
     console.log('req.params.UserId: ', parseInt(req.body.userId))
-    db.sequelize.query(`SELECT * FROM "CourseInstances" AS CI JOIN "TeacherInstances" AS TI ON CI.id = TI.id WHERE TI."userId" = ${id}`)
-      .then(instance =>
-        res.status(200).send(instance))
-      .catch(error => res.status(400).send(error))
+    if (token.verified) {
+      db.sequelize.query(`SELECT * FROM "CourseInstances" AS CI JOIN "TeacherInstances" AS TI ON CI.id = TI.id WHERE TI."userId" = ${id}`)
+        .then(instance =>
+          res.status(200).send(instance))
+        .catch(error => res.status(400).send(error))
+    } else {
+      errors.push('token verification failed')
+      res.status(400).send(errors)
+    }
 
   },
 
@@ -66,20 +71,29 @@ module.exports = {
       logging: console.log
     })*/
     //	SELECT * FROM "CourseInstances" AS CI JOIN "StudentInstances" AS SI ON CI.id = SI.id WHERE SI."userId" = 1;
-    db.sequelize.query(`SELECT * FROM "CourseInstances" AS CI JOIN "StudentInstances" AS SI ON CI.id = SI.id WHERE SI."userId" = ${id}`)
-      // CourseInstance.findAll({
-      //   include: [{
-      //     model: StudentInstance,
-      //   }],
-      //   where: {
-      //     userid: {
-      //       [Op.eq]: id
-      //     }
-      //   }
-      // })
-      .then(instance =>
-        res.status(200).send(instance))
-      .catch(error => res.status(400).send(error))
+    if (token.verified) {
+      db.sequelize.query(`SELECT * FROM "CourseInstances" AS CI JOIN "StudentInstances" AS SI ON CI.id = SI.id WHERE SI."userId" = ${id}`)
+        .then(instance =>
+          res.status(200).send(instance))
+        .catch(error => res.status(400).send(error))
+    } else {
+      errors.push('token verification failed')
+      res.status(400).send(errors)
+    }
+    // db.sequelize.query(`SELECT * FROM "CourseInstances" AS CI JOIN "StudentInstances" AS SI ON CI.id = SI.id WHERE SI."userId" = ${id}`)
+    //   // CourseInstance.findAll({
+    //   //   include: [{
+    //   //     model: StudentInstance,
+    //   //   }],
+    //   //   where: {
+    //   //     userid: {
+    //   //       [Op.eq]: id
+    //   //     }
+    //   //   }
+    //   // })
+    //   .then(instance =>
+    //     res.status(200).send(instance))
+    //   .catch(error => res.status(400).send(error))
 
   },
 
