@@ -1,7 +1,7 @@
-exports.tokenVerify = tokenVerify
+exports.tokenVerify = tokenVerify2
 
-
-function tokenVerify(req) {
+// This is not needed anymore
+function tokenVerify2(req) {
   var jwt = require('jsonwebtoken')
   return jwt.verify(req.headers['authorization'], process.env.SECRET, function (err, decoded) {
     if (err) {
