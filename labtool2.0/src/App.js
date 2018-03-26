@@ -3,6 +3,7 @@ import { Switch, Route, withRouter, Link } from 'react-router-dom'
 import Courses from './components/pages/Courses'
 import { connect } from 'react-redux'
 import { tokenLogin } from './reducers/loginReducer'
+import { logout } from './reducers/loginReducer'
 import { courseInstanceInitialization } from './reducers/courseInstanceReducer'
 import { Container } from 'semantic-ui-react'
 import Nav from './components/pages/Nav'
@@ -27,6 +28,7 @@ class App extends React.Component {
       if (loggedUserJSON) {
         const user = JSON.parse(loggedUserJSON)
         this.props.tokenLogin(user)
+        this.props.logout()
       }
     } catch (exception) {
       console.log('no user logged in')
@@ -79,5 +81,5 @@ const Main = () => {
 
 export default withRouter(connect(
   null,
-  { courseInstanceInitialization, tokenLogin }
+  { courseInstanceInitialization, tokenLogin, logout }
 )(App))
