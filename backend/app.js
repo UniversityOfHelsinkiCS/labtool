@@ -16,7 +16,7 @@ const extractToken = (request, response, next) => {
 
 
 const authenticate = (request, response, next) => {
-  const excludedPaths = [ '/api/login' ]
+  const excludedPaths = [ '/api/login', '/api' ]
   console.log(request.path)
   if ( !excludedPaths.includes(request.path) ) {
     try {
