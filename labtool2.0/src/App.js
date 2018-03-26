@@ -8,9 +8,8 @@ import { courseInstanceInitialization } from './reducers/courseInstanceReducer'
 import { Container } from 'semantic-ui-react'
 import Nav from './components/pages/Nav'
 import Notification from './components/pages/Notification'
-import RegisterPage from './components/pages/RegisterPage';
+import RegisterPage from './components/pages/RegisterPage'
 import CoursePage from './components/pages/CoursePage'
-import Login from './Login.js'
 import Email from './components/pages/Email.js'
 import LoginPage from './components/pages/LoginPage.js'
 import ModifyCourseInstancePage from './components/pages/ModifyCourseInstancePage'
@@ -32,6 +31,18 @@ class App extends Component {
     }
   }
 
+  componentWillReceiveProps(nProps) {
+    // Kutsutaan kun kirjautuminen onnistuu -->
+    const userAndToken = {
+      user: nProps.user,
+      token: nProps.token,
+      created: nProps.created
+    }
+    window.localStorage.setItem('loggedLabtool', JSON.stringify(userAndToken))
+    console.log(nProps)
+  }
+
+
   render() {
     return (
       <Container>
@@ -50,21 +61,16 @@ const Main = () => {
   return (
     <main>
       <Switch>
-        <Route exact path='/labtool/courses' render={({ history }) =>
+        <Route exact path={`${process.env.PUBLIC_URL}/labtool/courses`} render={({ history }) =>
           <Courses history={history} />}
         />
-        <Route exact path='/labtool' render={({ history }) =>
-          <LoginPage history={history} />}
-        />
-        <Route path="/labtool/courses/:id" render={({ match, history }) =>
+        <Route path={`${process.env.PUBLIC_URL}/labtool/courses/:id`} render={({ match, history }) =>
           <RegisterPage history={history} courseinstance={(this.props.getCourseInstance(match.params.id))} />}
         />
-        <Route exact path={`${process.env.PUBLIC_URL}/`} component={Login} />
         <Route path={`${process.env.PUBLIC_URL}/courses`} component={Courses} />
         <Route path={`${process.env.PUBLIC_URL}/browsereviews`} component={BrowseReviews} />
         <Route path={`${process.env.PUBLIC_URL}/coursePage`} component={CoursePage} />
         <Route path={`${process.env.PUBLIC_URL}/email`} component={Email} />
-        <Route path={`${process.env.PUBLIC_URL}/loginPage`} component={LoginPage} />
         <Route path={`${process.env.PUBLIC_URL}/registerPage`} component={RegisterPage} />
         <Route path={`${process.env.PUBLIC_URL}/reviewstudent`} component={ReviewStudent} />
         <Route path={`${process.env.PUBLIC_URL}/ModifyCourseInstancePage`} component={ModifyCourseInstancePage} />
@@ -81,7 +87,9 @@ const Main = () => {
 
 const mapStateToProps = (state) => {
   return {
-    user: state.user.returnedUser
+    user: state.user.user,
+    token: state.user.token,
+    created: state.user.created
   }
 }
 
