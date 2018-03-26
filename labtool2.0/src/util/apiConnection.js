@@ -7,7 +7,7 @@ import axios from 'axios'
 }*/
 
 export const getAxios = () => {
-  const hostUrl = 'http://localhost:3001/api'
+  const hostUrl = process.env.REACT_APP_BACKEND_URL
   const apiPath = 'api' //createApiUrl(window.location.pathname)
   return axios.create({
     baseURL: `${hostUrl}${apiPath}`
@@ -21,16 +21,16 @@ function callApi(url, method = 'get', data, prefix, token) {
     }
   }
   switch (method) {
-    case 'get':
-      return getAxios().get(url, options)
-    case 'post':
-      return getAxios().post(url, data, options)
-    case 'put':
-      return getAxios().put(url, data, options)
-    case 'delete':
-      return getAxios().delete(url, options)
-    default:
-      return Promise.reject(new Error('Invalid http method'))
+  case 'get':
+    return getAxios().get(url, options)
+  case 'post':
+    return getAxios().post(url, data, options)
+  case 'put':
+    return getAxios().put(url, data, options)
+  case 'delete':
+    return getAxios().delete(url, options)
+  default:
+    return Promise.reject(new Error('Invalid http method'))
   }
 }
 
