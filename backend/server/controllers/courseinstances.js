@@ -31,12 +31,15 @@ module.exports = {
     console.log('***REQ BODY***: ', req.body)
     let token = helper.tokenVerify(req)
     console.log('TOKEN VERIFIED: ', token)
-
-    CourseInstance.findById(req.params.userId, {
-      include: [{
-        model: StudentInstance,
-        as: 'studentinstance'
-      }]
+    console.log('req.params.UserId: ', parseInt(req.body.userId))
+    CourseInstance.findAll({
+      include:{
+        model: 'StudentInstances',
+        where: {
+          userId: parseInt(req.params.userId),
+          courseInstanceId: CourseInstance.id
+        }
+      }
     })
       .then(courseInstance => {
         if (!courseInstance) {
