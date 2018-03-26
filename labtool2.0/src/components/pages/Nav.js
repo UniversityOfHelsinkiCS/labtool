@@ -18,6 +18,7 @@ class Nav extends Component {
   render() {
     const user = { ...this.props.user.user }
 
+
     return (
       <main>
 
@@ -33,34 +34,39 @@ class Nav extends Component {
 
           <Menu.Menu position='left'>
 
+
+
             <Menu.Item header>
               Labtool 2.0
             </Menu.Item>
+            {this.props.user.user ?
+              <Menu.Item link>
+                <Link to="/mypage">My page</Link>
+              </Menu.Item>
 
-            <Menu.Item link>
-              <Link to="/mypage">My page</Link>
-            </Menu.Item>
+              : <p></p>}
+            {this.props.user.user ?
+              <Menu.Item link>
+                <Link to="/courses">Courses</Link>
+              </Menu.Item>
 
-            <Menu.Item link>
-              <Link to="/courses">Courses</Link>
-            </Menu.Item>
-
+              : <p></p>}
 
           </Menu.Menu>
+          {this.props.user.user ? <div>
+            <Menu.Menu position='right'>
+              <Menu.Item>
+                <em>{user.username} logged in</em>
+              </Menu.Item>
 
-          <Menu.Menu position='right'>
-
-            <Menu.Item>
-              <em>{user.username} logged in</em>
-            </Menu.Item>
-
-            <Menu.Item link>
-              <Button onClick={this.handleLogout} ><Link to="/">Logout
+              <Menu.Item link>
+                <Button onClick={this.handleLogout} ><Link to="/">Logout
               </Link></Button>
-            </Menu.Item>
+              </Menu.Item>
 
-          </Menu.Menu>
-
+            </Menu.Menu>
+          </div>
+            : <div></div>}
         </Menu>
 
       </main>
