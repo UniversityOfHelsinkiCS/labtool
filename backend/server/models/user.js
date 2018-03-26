@@ -7,7 +7,8 @@ module.exports = (sequelize, DataTypes) => {
     studentnumber: DataTypes.STRING,
     admin: {
       type: DataTypes.BOOLEAN,
-      default: false
+      allowNull: false,
+      defaultValue: false
     }
   }, {})
   User.associate = (models) => {
