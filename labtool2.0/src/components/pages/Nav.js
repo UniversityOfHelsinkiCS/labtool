@@ -51,7 +51,7 @@ class Nav extends Component {
           <Menu.Menu position='right'>
 
             <Menu.Item>
-              <em>{user.firsts} logged in</em>
+              <em>{user.username} logged in</em>
             </Menu.Item>
 
             <Menu.Item link>
