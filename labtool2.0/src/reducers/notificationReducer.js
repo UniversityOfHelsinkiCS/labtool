@@ -17,6 +17,16 @@ const notificationReducer = (state = {}, action) => {
         message: 'You have logged out',
         error: false
       }
+    case 'USER_UPDATE_SUCCESS':
+      return {
+        message: 'You have updated your email',
+        error: false
+      }
+    case 'USER_UPDATE_FAILURE':
+      return {
+        message: 'Give a valid email',
+        error: true
+      }
     default:
       return state
   }

@@ -7,11 +7,15 @@ import { handleRequest } from './util/apiConnection'
 import courseInstance from './reducers/courseInstanceReducer'
 import login from './reducers/loginReducer'
 import notification from './reducers/notificationReducer'
+import teacherInstance from './reducers/teacherInstanceReducer'
+import studentInstance from './reducers/studentInstanceReducer'
 
 const reducer = combineReducers({
   courseInstance: courseInstance,
   user: login,
-  notification: notification
+  notification: notification,
+  teacherInstance: teacherInstance,
+  studentInstance: studentInstance
 })
 
 const store = createStore(
