@@ -10,7 +10,7 @@ export const getAllCI = () => {
 }
 
 export const getOneCI = (id) => {
-  const route = baseUrl + '/courseInstances/${id}'
+  const route = baseUrl + `/courses/${id}`
   const prefix = 'CI_GET_ONE_'
   const method = 'get'
   return callController(route, prefix, null, method)
