@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import React, { Component } from 'react'
 import { Menu, Button } from 'semantic-ui-react'
 import { logout } from '../../reducers/loginReducer'
-import studentinstancesService from '../../services/studentinstances'
 
 
 class Nav extends Component {
@@ -12,7 +11,6 @@ class Nav extends Component {
     e.preventDefault()
     window.localStorage.removeItem('loggedLabtool')
     await this.props.logout()
-    studentinstancesService.setToken('')
   }
 
   render() {
