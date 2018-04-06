@@ -35,7 +35,7 @@ module.exports = {
                 User.findById(decoded.id)
                   .then(user => {
                     const returnedUser = {
-                      email: user.email,
+                      email: req.body.email,
                       firsts: user.firsts,
                       lastname: user.lastname,
                       studentnumber: user.studentnumber,
