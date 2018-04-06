@@ -175,7 +175,7 @@ class Login extends Component {
     event.preventDefault()
     let backend
     if (process.env.NODE_ENV === 'development') {
-      backend = 'http://localhost:3001/login'
+      backend = 'http://localhost:3001/api/login'
     } else {
       backend = '/labtool-backend/login'
     }
@@ -229,6 +229,13 @@ class Login extends Component {
         <MainPage logout={this.postLogout} handleFirstLoginTrue={this.handleFirstLoginTrue} />
         <p></p>
         <p></p>
+        {this.state.courseInstances.map(instance =>
+          <CourseInstance
+            handleFieldChange={this.handleFieldChange}
+            key={instance.id}
+            instance={instance}
+          />
+        )}
       </div>
     )
 

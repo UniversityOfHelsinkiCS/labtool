@@ -4,6 +4,7 @@ const baseUrl = process.env.REACT_APP_BACKEND_URL + '/api/courseInstances'
 let token = null
 
 export const getAll = () => {
+  console.log('********get all from: ', baseUrl)
   const request = axios.get(baseUrl)
   return request.then(response => response.data)
 }
