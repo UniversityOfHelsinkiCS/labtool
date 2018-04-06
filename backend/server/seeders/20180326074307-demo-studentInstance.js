@@ -5,7 +5,7 @@ module.exports = {
     return ('StudentInstances', [{
       userId: 1,
       courseInstanceId: 1,
-      github: 'githubbeli',
+      github: 'http://githubbeli.com/brojekti',
       projectName: 'rojekti'
 
     }])
