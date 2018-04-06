@@ -9,5 +9,13 @@ export const getAllStudentCourses = () => {
   return callController(route, prefix, null, method)
 }
 
+export const createStudentCourses = (data, ohid) => {
+  const route = baseUrl + `/course/register/${ohid}`
+  const prefix = 'STUDENT_COURSE_CREATE_ONE_'
+  const method = 'post'
+  return callController(route, prefix, data, method)
+}
+
+
 
 export default { getAllStudentCourses }

@@ -12,7 +12,6 @@ class Nav extends Component {
     e.preventDefault()
     window.localStorage.removeItem('loggedLabtool')
     await this.props.logout()
-    studentinstancesService.setToken('')
   }
 
   render() {

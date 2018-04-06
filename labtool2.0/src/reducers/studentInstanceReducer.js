@@ -10,3 +10,4 @@ const courseInstancereducer = (store = [], action) => {
 }
 
 export default courseInstancereducer
+
