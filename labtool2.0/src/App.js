@@ -42,16 +42,13 @@ class App extends Component {
     console.log(nProps)
   }
 
-
   render() {
     return (
       <Container>
         <Nav />
         <Notification />
         {this.props.user
-          ? this.props.user.email
-            ? <Main />
-            : <Email />
+          ? <Main />
           : <LoginPage />
         }
       </Container>
