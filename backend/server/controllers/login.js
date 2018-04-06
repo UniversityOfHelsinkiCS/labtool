@@ -32,7 +32,7 @@ module.exports = {
             defaults: {
               firsts: body.first_names,
               lastname: body.last_name,
-              studentnumber: body.student_number,
+              studentNumber: body.student_number,
               email: ''
             }
           })
