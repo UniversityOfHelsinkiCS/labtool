@@ -8,7 +8,7 @@ module.exports = {
         username: req.body.username,
         firsts: req.body.firsts,
         lastname: req.body.lastname,
-        studentnumber: req.body.studentnumber,
+        studentNumber: req.body.studentnumber,
         email: req.body.email,
         token: 'Might be done in the future currently using localStorage'
       })
@@ -38,7 +38,7 @@ module.exports = {
                       email: req.body.email,
                       firsts: user.firsts,
                       lastname: user.lastname,
-                      studentnumber: user.studentnumber,
+                      studentNumber: user.studentnumber,
                       username: user.username
                     }
                     res.status(201).send(returnedUser)
