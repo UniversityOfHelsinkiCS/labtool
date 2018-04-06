@@ -14,12 +14,11 @@ module.exports = {
   },
 
   retrieve(req, res) {
-    return Course
-      .findById(req.params.id, {
-        include: [{
-          model: CourseInstance,
-          as: 'courseInstances'
-        }],
+    return CourseInstance
+      .findAll({
+        where: {
+          ohid: req.params.ohid
+        },
       })
       .then(course => {
         if (!course) {
