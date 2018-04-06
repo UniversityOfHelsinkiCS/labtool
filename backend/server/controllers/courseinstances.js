@@ -1,10 +1,13 @@
 //import Course from '../../../labtool2.0/src/components/pages/Course';
 
+//import Course from '../../../labtool2.0/src/components/pages/Course';
+const db = require('../models')
 const CourseInstance = require('../models').CourseInstance
 const StudentInstance = require('../models').StudentInstance
 const User = require('../models').User
 const helper = require('../helpers/course_instance_helper')
-
+const Sequelize = require('sequelize')
+const Op = Sequelize.Op
 
 module.exports = {
 
@@ -26,26 +29,71 @@ module.exports = {
   },
 
   //TODO: search courseInstance where it is connected to user either by studentIstance or teacherInstance
-  findByUser(req, res) {//token verification might not work..? and we don't knpw if search works
+  findByUserTeacherInstance(req, res) {//token verification might not work..? and we don't knpw if search works
     const errors = []
     console.log('***REQ BODY***: ', req.body)
+    let token = helper.tokenVerify(req)
+    const id = parseInt(req.body.userId)//TODO: CHECK THAT THIS IS SANITICED ID
+    console.log('TOKEN VERIFIED: ', token)
+    console.log('req.params.UserId: ', parseInt(req.body.userId))
+    if (token.verified) {
+      db.sequelize.query(`SELECT * FROM "CourseInstances" AS CI JOIN "TeacherInstances" AS TI ON CI.id = TI.id WHERE TI."userId" = ${id}`)
+        .then(instance =>
+          res.status(200).send(instance[0]))
+        .catch(error => res.status(400).send(error))
+    } else {
+      errors.push('token verification failed')
+      res.status(400).send(errors)
+    }
 
-    CourseInstance.findById(req.params.userId, {
-      include: [{
+  },
+
+  /**
+   * sequelize.query("SELECT * FROM 'property'", { type:Sequelize.QueryTypes.SELECT})
+   .then(function(properties) {
+      res.json(properties)
+  })
+   */
+  findByUserStudentInstance(req, res) {//token verification might not work..? and we don't knpw if search works
+    console.log('db: ', db)
+    const errors = []
+    console.log('searching by studentInstance...')
+    console.log('***REQ BODY***: ', req.body)
+    let token = helper.tokenVerify(req)
+    console.log('TOKEN VERIFIED: ', token)
+    const id = parseInt(req.body.userId)
+    console.log('req.params.UserId: ', id)
+    /*CourseInstance.findAll({
+      include:[{
         model: StudentInstance,
-        as: 'studentinstance'
-      }]
-    })
-      .then(courseInstance => {
-        if (!courseInstance) {
-          console.log('ERRORIA PUKKOO')
-          return res.status(404).send({
-            message: 'ERROR - COURSEINSTANCE NOT FOUND'
-          })
-        }
-        return res.status(200).send(courseInstance)
-      })
-      .catch(error => res.status(400).send(error))
+      }],
+      where: {userId: id},
+      logging: console.log
+    })*/
+    //	SELECT * FROM "CourseInstances" AS CI JOIN "StudentInstances" AS SI ON CI.id = SI.id WHERE SI."userId" = 1;
+    if (token.verified) {
+      db.sequelize.query(`SELECT * FROM "CourseInstances" AS CI JOIN "StudentInstances" AS SI ON CI.id = SI.id WHERE SI."userId" = ${id}`)
+        .then(instance =>
+          res.status(200).send(instance[0]))
+        .catch(error => res.status(400).send(error))
+    } else {
+      errors.push('token verification failed')
+      res.status(400).send(errors)
+    }
+    // db.sequelize.query(`SELECT * FROM "CourseInstances" AS CI JOIN "StudentInstances" AS SI ON CI.id = SI.id WHERE SI."userId" = ${id}`)
+    //   // CourseInstance.findAll({
+    //   //   include: [{
+    //   //     model: StudentInstance,
+    //   //   }],
+    //   //   where: {
+    //   //     userid: {
+    //   //       [Op.eq]: id
+    //   //     }
+    //   //   }
+    //   // })
+    //   .then(instance =>
+    //     res.status(200).send(instance))
+    //   .catch(error => res.status(400).send(error))
 
   },
 
