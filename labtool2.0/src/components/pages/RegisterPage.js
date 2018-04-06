@@ -5,15 +5,17 @@ import { connect } from 'react-redux'
 import { createStudentCourses } from '../../services/studentinstances'
 
 class RegisterPage extends Component {
+  
 
   handleSubmit = async (e) => {
     e.preventDefault()
 
     const content = {
       projectName: e.target.projectName.value,
-      github: e.target.github.value
+      github: e.target.github.value,
+      ohid: this.props.courseinstance
     }
-    await this.props.createStudentCourses(content)
+    await this.props.createStudentCourses(content, this.props.courseinstance)
   }
 
   render() {

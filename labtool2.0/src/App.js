@@ -16,10 +16,16 @@ import ModifyCourseInstancePage from './components/pages/ModifyCourseInstancePag
 import ReviewStudent from './components/pages/ReviewStudent'
 import BrowseReviews from './components/pages/BrowseReviews'
 import MyPage from './components/pages/MyPage'
+import { getOneCI } from './reducers/courseInstanceReducer'
+import Main from './Main'
+
 
 class App extends Component {
-  componentDidMount() {
+  componentWillMount() {
     this.props.getAllCI()
+  }
+
+  componentDidMount() {    
     try {
       const loggedUserJSON = window.localStorage.getItem('loggedLabtool')
       if (loggedUserJSON && loggedUserJSON !== '{}') {
@@ -42,6 +48,8 @@ class App extends Component {
     console.log(nProps)
   }
 
+
+
   render() {
     return (
       <Container>
@@ -56,33 +64,6 @@ class App extends Component {
   }
 }
 
-const Main = () => {
-  return (
-    <main>
-      <Switch>
-        <Route exact path={`${process.env.PUBLIC_URL}/courses`} render={({ history }) =>
-          <Courses history={history} />}
-        />
-        <Route path={`${process.env.PUBLIC_URL}/courses/:id`} render={({ match, history }) =>
-          <RegisterPage history={history} courseinstance={(this.props.getCourseInstance(match.params.id))} />}
-        />
-        <Route path={`${process.env.PUBLIC_URL}/browsereviews`} component={BrowseReviews} />
-        <Route path={`${process.env.PUBLIC_URL}/coursePage`} component={CoursePage} />
-        <Route path={`${process.env.PUBLIC_URL}/email`} component={Email} />
-        <Route path={`${process.env.PUBLIC_URL}/registerPage`} component={RegisterPage} />
-        <Route path={`${process.env.PUBLIC_URL}/reviewstudent`} component={ReviewStudent} />
-        <Route path={`${process.env.PUBLIC_URL}/ModifyCourseInstancePage`} component={ModifyCourseInstancePage} />
-        <Route path={`${process.env.PUBLIC_URL}/`} component={MyPage} />
-
-
-        {/* <Route path='/schedule' component={Schedule} /> */}
-      </Switch>
-    </main>
-  )
-}
-
-
-
 const mapStateToProps = (state) => {
   return {
     user: state.user.user,
@@ -95,5 +76,5 @@ const mapStateToProps = (state) => {
 
 export default withRouter(connect(
   mapStateToProps,
-  { getAllCI, tokenLogin, logout }
+  { getAllCI, tokenLogin, logout, getOneCI }
 )(App))
