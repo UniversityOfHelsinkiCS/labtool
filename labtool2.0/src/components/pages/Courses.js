@@ -14,8 +14,7 @@ class Courses extends Component {
                 <Table.Cell>Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit (periodi IV)</Table.Cell>
                 <Table.Cell textAlign='right'><div>
                   <Button circular color="teal" size='tiny' icon="large black eye icon" />
-                  <Button circular color='orange' size="tiny" icon="large black edit icon">
-                  </Button>
+                  <Button circular color='orange' size="tiny" icon="large black edit icon" />
                 </div></Table.Cell>
               </Table.Row>
               <Table.Row>
