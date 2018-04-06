@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Button, List, Container, Header, Table } from 'semantic-ui-react'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 class Courses extends Component {
   render() {
@@ -14,7 +15,7 @@ class Courses extends Component {
                 <Table.Row>
                   <Table.Cell>{instance.name}</Table.Cell>
                   <Table.Cell textAlign='right'><div>
-                    <Button circular color="teal" size='tiny' icon="large black eye icon" />
+                  <Link to={`/courses/${instance.ohid}`}><Button circular color="teal" size='tiny' icon="large black eye icon"></Button></Link>
                     <Button circular color='orange' size="tiny" icon="large black edit icon" />
                   </div></Table.Cell>
                 </Table.Row>

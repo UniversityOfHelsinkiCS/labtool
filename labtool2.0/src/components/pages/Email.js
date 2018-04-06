@@ -20,11 +20,18 @@ class Email extends Component {
 
     handleSubmit = async (e) => {
       e.preventDefault()
-      const content = {
-        email: e.target.email.value
+      try {
+        const content = {
+          email: e.target.email.value
+        }
+        if (content.email !== '' && content.email !== null) {
+          await this.props.updateUser(content)
+          this.setState({ redirectToNewPage: true })
+        }
+      } catch (error) {
+        console.log(error)
       }
-      await this.props.updateUser(content)
-      this.setState({ redirectToNewPage: true })
+      
     }
 
     render() {
