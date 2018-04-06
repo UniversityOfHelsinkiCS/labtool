@@ -36,18 +36,18 @@ module.exports = {
               email: ''
             }
           })
-          .spread((user, created) => {
+          .spread((newuser, created) => {
 
-            if (!(user.firsts === body.first_names && user.lastname === body.last_name)) {
+            if (!(newuser.firsts === body.first_names && newuser.lastname === body.last_name)) {
               User.update(
                 { firsts: body.first_names, lastname: body.last_name },
-                { where: { id: user.id } }
+                { where: { id: newuser.id } }
               )
             }
 
             // ^ SIDENOTE HERE: There can be a situation where the user has not a studentnumber but later gets it.
 
-            console.log(user.get({
+            console.log(newuser.get({
               plain: true
             }))
 
@@ -61,7 +61,7 @@ module.exports = {
               username: user.username
             }
             res.status(200).send({
-              returnedUser,
+              user,
               token,
               created
             })

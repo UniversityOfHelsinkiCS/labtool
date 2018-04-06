@@ -1,32 +1,63 @@
-import React from 'react'
+import React, { Component } from 'react'
+import { Form, Input, Button, Grid } from 'semantic-ui-react'
 
-const ModifyCourseInstance = ({ onSubmit, handleFieldChange, weekamount, weekmaxpoints, currentweek, courseactive }) => {
+class ModyfyCourseInstancePage extends Component {
+  render() {
+    return (
+      <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
+        <Grid>
+          <Grid.Row centered>
+            <h2> Edit Tiralabra 2018 kevät </h2>
+          </Grid.Row>
+        </Grid>
+        <Grid>
+          <Grid.Row centered>
+            <Form>
+              <Form.Field inline>
+                <label>Week amount</label>
+                <Input
+                  type="text"
+                  className="form-control1"
+                  name="week amount"
+                  placeholder="WeekAmount"
+                  required />
+              </Form.Field>
+              <Form.Field inline>
+                <label>Weekly maxpoints</label>
+                <Input
+                  className="form-control2"
+                  name="weekly maxpoints"
+                  placeholder="WeeklyMaxpoints"
+                  required />
+              </Form.Field>
+              <Form.Field inline>
+                <label>Current week</label>
+                <Input
+                  className="form-control3"
+                  name="current week"
+                  placeholder="CurrentWeek"
+                  required />
+              </Form.Field>
 
-  return (
-    <div className="CourseInstance" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
-      <p>Modify course instance for this course</p>
+              <Form.Field inline>
+                <label>Course active</label>
+                <Input type='checkbox'
+                  className="form-control4"
+                  name="course active"
+                  placeholder="CourseActive"  />
+              </Form.Field>
 
-      <form onSubmit={onSubmit} >
-        <label>
-          Week amount: <br />
-          <input type="text" onChange={handleFieldChange} value={weekamount} className="form-control1" name="weekamount" required />
-        </label>
-        <label> <br />
-          Weekly maxpoints: <br />
-          <input type="text" onChange={handleFieldChange} value={weekmaxpoints} className="form-control2" name="maxpointsweek" required />
-        </label> <br />
-        <label>
-          Current week: <br />
-          <input type="text" onChange={handleFieldChange} value={currentweek} className="form-control3" name="currentweek" required />
-        </label> <br />
-        <label> <br />
-          Activate course
-          <input type="checkbox" onChange={handleFieldChange} value={courseactive} className="form-control4" name="courseactive" /> <br />
-        </label> <br />
-        <button type="submit">Sumbit</button>
-      </form>
-    </div>
-  )
+              <Form.Field>
+                <Button floated='left' color='green' type='submit'>Save</Button>
+                <Button floated='right' color='red'>Cancel</Button>
+              </Form.Field>
+              
+            </Form>
+          </Grid.Row>
+        </Grid>
+      </div>
+    )
+  }
 }
 
-export default ModifyCourseInstance
+export default ModyfyCourseInstancePage

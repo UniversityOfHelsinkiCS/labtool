@@ -1,30 +1,63 @@
-import React from 'react'
+import React, { Component } from 'react'
+import { Form, Input, Grid } from 'semantic-ui-react'
+import { Link } from 'react-router-dom'
 
+class RegisterPage extends Component {
 
-const RegisterPage = ({ onSubmit, handleFieldChange, projectname, github, cancel, name }) => {
+  render() {
+    return (
+      <div className="RegisterPage"
+        style={{
+          textAlignVertical: 'center',
+          textAlign: 'center',
+        }}>
 
-  return (
-    <div className="Register" style={{ textAlignVertical: 'center', textAlign: 'center', }} >
-      <h3>Register for {name}</h3>
+        <Grid>
+          <Grid.Row centered>
+            <h3>Register for *kurssin nimi*</h3>
+          </Grid.Row>
+        </Grid>
 
-      <form onSubmit={onSubmit} >
-        <label >
-          GitHub link: <br />
-          <input type="url" onChange={handleFieldChange} className="form-control1" name="github" required={true} value={github} />
-        </label>
-        <br />
-        <label>
+        <Grid>
+          <Grid.Row centered>
 
-          Project name:  <br />
-          <input type="text" onChange={handleFieldChange} className="form-control2" name="projectname" value={projectname} required />
-        </label> <br />
+            <Form>
 
-        <button type="submit">Submit</button>
-      </form>
-      <button onClick={cancel}>Cancel</button>
-    </div>
-  )
+              <Form.Field inline>
+                <label> Project name </label>
+                <Input
+                  style={{ minWidth: "20em" }}
+                  type="text"
+                  className="form-control1"
+                  name="project name"
+                  placeholder="MyProjectName"
+                  required />
+              </Form.Field>
+
+              <Form.Field inline>
+                <label> GitHub link </label>
+                <Input
+                  style={{ minWidth: "20em" }}
+                  type="url"
+                  className="form-control2"
+                  name="github"
+                  placeholder="https://github.com/myaccount/myrepo"
+                  required />
+              </Form.Field>
+
+              <Form.Field>
+                <button className="ui left floated blue button" type="submit">Submit</button>
+                <button className="ui right floated button"><Link to = "/coursepage">Cancel</Link></button>
+              </Form.Field>
+
+            </Form>
+          </Grid.Row>
+        </Grid>
+      </div >
+    )
+  }
 }
 
+// const RegisterPage = ({onSubmit, handleFieldChange, projectname, github, cancel, name }) => {
 
 export default RegisterPage

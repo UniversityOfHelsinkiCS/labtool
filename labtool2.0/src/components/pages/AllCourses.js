@@ -19,7 +19,6 @@ class AllCourses extends Component {
   render() {
     return (
       <div>
-        <p>holoo</p>
         <ul>
           {
             this.state.courses.map(c => (

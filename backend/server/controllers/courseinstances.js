@@ -99,87 +99,80 @@ module.exports = {
 
   registerToCourseInstance(req, res) {//register 
     const errors = []
-    let token = helper.tokenVerify(req)
     console.log('registeröidään...')
-    console.log(token)
     console.log(req.body)
 
-    if (token.verified) {
-      console.log('verifikaatio meni läpi!')
-      CourseInstance.findOne({
-        where: {
-          ohid: req.params.ohid
+    console.log('verifikaatio meni läpi!')
+    CourseInstance.findOne({
+      where: {
+        ohid: req.params.ohid
+      }
+    })
+      .then(course => {
+        if (!course) {
+          return res.status(400).send({
+            message: 'course instance not found',
+          })
         }
-      })
-        .then(course => {
-          if (!course) {
+        User.findById(req.decoded.id).then(user => {
+          if (!user) {
             return res.status(400).send({
-              message: 'course instance not found',
+              message: 'something went wrong (clear these specific error messages later): user not found',
             })
           }
-          User.findById(token.data.id).then(user => {
-            if (!user) {
-              return res.status(400).send({
-                message: 'something went wrong (clear these specific error messages later): user not found',
-              })
-            }
-            let thisPromiseJustMakesThisCodeEvenMoreHorrible = new Promise((resolve, reject) => {
-              helper.checkWebOodi(req, res, user, resolve)
+          let thisPromiseJustMakesThisCodeEvenMoreHorrible = new Promise((resolve, reject) => {
+            helper.checkWebOodi(req, res, user, resolve)
 
-              setTimeout(function () {
-                resolve('shitaintright') // Yay! everything went to hell.
-              }, 250)
-            })
-
-            thisPromiseJustMakesThisCodeEvenMoreHorrible.then((successMessageIfYouLikeToThinkThat) => {
-              console.log('Yay! ' + successMessageIfYouLikeToThinkThat)
-              console.log(req.body)
-
-              if (successMessageIfYouLikeToThinkThat === 'found') {
-                StudentInstance.findOrCreate({
-                  where: {
-                    userId: user.id,
-                    courseInstanceId: course.dataValues.id
-                  },
-                  defaults: {
-                    userId: user.id,
-                    courseInstanceId: course.dataValues.id,
-                    github: req.body.github || '',                     // model would like to validate this to be an URL but seems like crap
-                    projectName: req.body.projectName || '',           // model would like to validate this to alphanumeric but seems like this needs specific nulls or empties or whatever
-                  }
-                }).then(student => {
-                  if (!student) {
-                    res.status(400).send({
-                      message: 'something went wrong: if somehow we could not find or create a record we see this'
-                    })
-                  } else {
-                    res.status(200).send({
-                      message: 'something went right',
-                      whatever: student
-                    })
-                  }
-
-                }).catch(function (error) {
-                  res.status(400).send({
-                    message: error.errors
-                  })
-                })
-
-              } else {
-
-                res.status(400).send({
-                  message: 'something went wrong'
-                })
-
-              }
-            })
-
+            setTimeout(function () {
+              resolve('shitaintright') // Yay! everything went to hell.
+            }, 250)
           })
+
+          thisPromiseJustMakesThisCodeEvenMoreHorrible.then((successMessageIfYouLikeToThinkThat) => {
+            console.log('Yay! ' + successMessageIfYouLikeToThinkThat)
+            console.log(req.body)
+
+            if (successMessageIfYouLikeToThinkThat === 'found') {
+              StudentInstance.findOrCreate({
+                where: {
+                  userId: user.id,
+                  courseInstanceId: course.dataValues.id
+                },
+                defaults: {
+                  userId: user.id,
+                  courseInstanceId: course.dataValues.id,
+                  github: req.body.github || '',                     // model would like to validate this to be an URL but seems like crap
+                  projectName: req.body.projectName || '',           // model would like to validate this to alphanumeric but seems like this needs specific nulls or empties or whatever
+                }
+              }).then(student => {
+                if (!student) {
+                  res.status(400).send({
+                    message: 'something went wrong: if somehow we could not find or create a record we see this'
+                  })
+                } else {
+                  res.status(200).send({
+                    message: 'something went right',
+                    whatever: student
+                  })
+                }
+
+              }).catch(function (error) {
+                res.status(400).send({
+                  message: error.errors
+                })
+              })
+
+            } else {
+
+              res.status(400).send({
+                message: 'something went wrong'
+              })
+
+            }
+          })
+
         })
-    } else {
-      errors.push('token verification failed')
-      res.status(400).send(errors)
-    }
+      })
   },
 
   update(req, res) {
@@ -242,26 +235,20 @@ module.exports = {
 
   retrieve(req, res) {
     const errors = []
-    let token = helper.tokenVerify(req)
 
-    console.log(token)
 
-    if (token.verified) {
-      CourseInstance
-        .findById(req.params.id, {})
-        .then(courseInstance => {
-          if (!courseInstance) {
-            return res.status(404).send({
-              message: 'Course not Found',
-            })
-          }
-          return res.status(200).send(courseInstance)
-        })
-        .catch(error => res.status(400).send(error))
-    } else {
-      errors.push('token verification failed')
-      res.status(400).send(errors)
-    }
+
+    CourseInstance
+      .findById(req.params.id, {})
+      .then(courseInstance => {
+        if (!courseInstance) {
+          return res.status(404).send({
+            message: 'Course not Found',
+          })
+        }
+        return res.status(200).send(courseInstance)
+      })
+      .catch(error => res.status(400).send(error))
 
   },
 
@@ -304,7 +291,9 @@ module.exports = {
               }
             })
           })
-          res.status(204).send({ 'hello': 'hello' })
+          if (req.decoded) {
+            res.status(204).send({ 'hello': 'hello' }) // nodejs crashes if someone just posts here without valid token.
+          }
         }
         )
       }
@@ -349,7 +338,9 @@ module.exports = {
               }
             })
           })
-          res.status(204).send({ 'hello': 'hello' })
+          if (req.decoded) {
+            res.status(204).send({'hello': 'hello'})  // nodejs crashes if someone just posts here without valid token.
+          }
         })
       }
     }

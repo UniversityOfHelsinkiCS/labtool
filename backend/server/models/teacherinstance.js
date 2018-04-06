@@ -1,5 +1,10 @@
 module.exports = (sequelize, DataTypes) => {
-  const TeacherInstance = sequelize.define('TeacherInstance', {}, {})
+  const TeacherInstance = sequelize.define('TeacherInstance', {
+    admin: {
+      type: DataTypes.BOOLEAN,
+      default: false
+    }
+  }, {})
   TeacherInstance.associate = (models) => {
 
 
