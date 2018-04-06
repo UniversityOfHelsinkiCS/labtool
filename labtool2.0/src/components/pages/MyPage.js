@@ -21,7 +21,7 @@ class MyPageStudent extends Component {
       console.log('no user logged in')
     }
   }
-  
+
 
   editEmail = (event) => {
     event.preventDefault()
@@ -47,7 +47,7 @@ class MyPageStudent extends Component {
                 </Header>
               </Table.Header>
               <Table.Row>
-                <Table.Cell><Card.Description><Header size='small'>{user.studentnumber}</Header></Card.Description></Table.Cell>
+                <Table.Cell><Card.Description><Header size='small'>{user.studentNumber}</Header></Card.Description></Table.Cell>
                 <Table.Cell><Card.Description>{user.email}</Card.Description></Table.Cell>
                 <Table.Cell><Button color='yellow' ><Link to="/email" > <List.Item icon='edit' /></Link></Button></Table.Cell>
               </Table.Row>
@@ -64,24 +64,14 @@ class MyPageStudent extends Component {
           <Header as='h2' className='CoursesHeader'>My Courses  (Student) </Header>
           <Table singleline>
             <Table.Body>
-              <Table.Row>
-                <Table.Cell>Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit (periodi IV)</Table.Cell>
-                <Table.Cell textAlign='left'><div>
-                  <Button circular color='teal' size="tiny" icon="large black eye icon"></Button>
-                </div></Table.Cell>
-              </Table.Row>
-              <Table.Row>
-                <Table.Cell>Aineopintojen harjoitustyö: Tietokantasovellus (periodi IV)</Table.Cell>
-                <Table.Cell textAlign='left'><div>
-                  <Button circular color="teal" size="tiny" icon="large black eye icon"></Button>
-                </div></Table.Cell>
-              </Table.Row>
-              <Table.Row>
-                <Table.Cell>Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit (periodi III)</Table.Cell>
-                <Table.Cell textAlign='left'><div>
-                  <Button circular color='teal' size="tiny" icon="large black eye icon"></Button>
-                </div></Table.Cell>
-              </Table.Row>
+              {this.props.studentInstance.map(sinstance =>
+                <Table.Row>
+                  <Table.Cell>{sinstance.name}</Table.Cell>
+                  <Table.Cell textAlign='left'><div>
+                    <Button circular color='teal' size="tiny" icon="large black eye icon"></Button>
+                  </div></Table.Cell>
+                </Table.Row>
+              )}
             </Table.Body>
           </Table>
           <div className="Instructions">
@@ -91,29 +81,15 @@ class MyPageStudent extends Component {
               <Header as='h2' className='CoursesHeader'>My Courses  (Teacher)</Header>
               <Table singleline key='grey'>
                 <Table.Body>
-                  <Table.Row>
-                    <Table.Cell>Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit (periodi IV)</Table.Cell>
-                    <Table.Cell textAlign='right'><div>
-                      <Button circular color='orange' size="tiny" icon="large black edit icon" />
-                      <Button circular color='teal' size="tiny" icon="large black eye icon" />
-                    </div></Table.Cell>
-                  </Table.Row>
-                  <Table.Row>
-                    <Table.Cell>Aineopintojen harjoitustyö: Tietokantasovellus (periodi IV)</Table.Cell>
-                    <Table.Cell textAlign='right'><div>
-                      <Button circular color='orange' size="tiny" icon="large black edit icon" />
-                      <Button circular color = 'teal' size="tiny" icon="large black eye icon" />
-                    </div></Table.Cell>
-                    <Table.Cell textAlign='center'></Table.Cell>
-                  </Table.Row>
-                  <Table.Row>
-                    <Table.Cell>Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit (periodi III)</Table.Cell>
-                    <Table.Cell textAlign='right'><div>
-                      <Button circular color='orange' size="tiny" icon="large black edit icon" />
-                      <Button circular color='teal' size="tiny" icon="large black eye icon"></Button>
-                    </div></Table.Cell>
-                    <Table.Cell></Table.Cell>
-                  </Table.Row>
+                  {this.props.teacherInstance.map(tinstance =>
+                    <Table.Row>
+                      <Table.Cell>{tinstance.name}</Table.Cell>
+                      <Table.Cell textAlign='right'><div>
+                        <Button circular color='orange' size="tiny" icon="large black edit icon" />
+                        <Button circular color='teal' size="tiny" icon="large black eye icon" />
+                      </div></Table.Cell>
+                    </Table.Row>
+                  )}
                 </Table.Body>
               </Table>
             </Container>
@@ -127,6 +103,8 @@ class MyPageStudent extends Component {
 const mapStateToProps = (state) => {
   return {
     user: state.user,
+    studentInstance: state.studentInstance,
+    teacherInstance: state.teacherInstance
   }
 }
 
