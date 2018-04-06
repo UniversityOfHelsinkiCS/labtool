@@ -16,9 +16,7 @@ import ModifyCourseInstancePage from './components/pages/ModifyCourseInstancePag
 import ReviewStudent from './components/pages/ReviewStudent'
 import BrowseReviews from './components/pages/BrowseReviews'
 import MyPage from './components/pages/MyPage'
-import { getOneCI } from './reducers/courseInstanceReducer'
-import Main from './Main'
-
+import { getOneCI } from './services/courseInstance'
 
 class App extends Component {
   componentWillMount() {
@@ -47,10 +45,38 @@ class App extends Component {
     window.localStorage.setItem('loggedLabtool', JSON.stringify(userAndToken))
     console.log(nProps)
   }
+  
 
 
 
   render() {
+
+    const Main = () => {
+      return (
+        <main>
+          <Switch>
+            <Route exact path={`${process.env.PUBLIC_URL}/courses`} render={({ history }) =>
+              <Courses history={history} />}
+            />
+            <Route path={`${process.env.PUBLIC_URL}/courses/:id`} render={({ match, history }) =>
+              <RegisterPage history={history} courseinstance={(this.props.getOneCI(match.params.id))} />}
+            />
+            <Route path={`${process.env.PUBLIC_URL}/browsereviews`} component={BrowseReviews} />
+            <Route path={`${process.env.PUBLIC_URL}/coursePage`} component={CoursePage} />
+            <Route path={`${process.env.PUBLIC_URL}/email`} component={Email} />
+            <Route path={`${process.env.PUBLIC_URL}/registerPage`} component={RegisterPage} />
+            <Route path={`${process.env.PUBLIC_URL}/reviewstudent`} component={ReviewStudent} />
+            <Route path={`${process.env.PUBLIC_URL}/ModifyCourseInstancePage`} component={ModifyCourseInstancePage} />
+            <Route path={`${process.env.PUBLIC_URL}/`} component={MyPage} />
+
+
+            {/* <Route path='/schedule' component={Schedule} /> */}
+          </Switch>
+        </main>
+      )
+
+    }
+
     return (
       <Container>
         <Nav />
@@ -63,6 +89,8 @@ class App extends Component {
     )
   }
 }
+
+
 
 const mapStateToProps = (state) => {
   return {

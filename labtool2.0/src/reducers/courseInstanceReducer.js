@@ -13,6 +13,7 @@ const courseInstancereducer = (store = [], action) => {
 
 export default courseInstancereducer
 
+/* 
 export const getOneCI = (ohid) => {
   return async (dispatch) => {
     dispatch({
@@ -20,4 +21,4 @@ export const getOneCI = (ohid) => {
       response: ohid
     })
   }
-}
+} */
