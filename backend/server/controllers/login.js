@@ -53,6 +53,7 @@ module.exports = {
 
             const token = jwt.sign({ username: newuser.username, id: newuser.id }, process.env.SECRET)
             const user = {
+              id: newuser.id,
               email: newuser.email,
               firsts: newuser.firsts,
               lastname: newuser.lastname,
