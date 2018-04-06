@@ -5,7 +5,6 @@ import { connect } from 'react-redux'
 import { createStudentCourses } from '../../services/studentinstances'
 
 class RegisterPage extends Component {
-  
 
   handleSubmit = async (e) => {
     e.preventDefault()
@@ -13,22 +12,23 @@ class RegisterPage extends Component {
     const content = {
       projectName: e.target.projectName.value,
       github: e.target.github.value,
-      ohid: this.props.courseinstance
+      ohid: this.props.selectedInstance.ohid
     }
-    await this.props.createStudentCourses(content, this.props.courseinstance)
+    await this.props.createStudentCourses(content, this.props.selectedInstance.ohid)
   }
 
   render() {
     return (
+      
       <div className="RegisterPage"
         style={{
           textAlignVertical: 'center',
           textAlign: 'center',
         }}>
-
+        
         <Grid>
           <Grid.Row centered>
-            <h3>Register for *kurssin nimi*</h3>
+            <h3>Register for {this.props.selectedInstance.name}</h3>
           </Grid.Row>
         </Grid>
 
@@ -72,6 +72,11 @@ class RegisterPage extends Component {
   }
 }
 
-// const RegisterPage = ({onSubmit, handleFieldChange, projectname, github, cancel, name }) => {
+const mapStateToProps = (state, ownProps) => {
+  return {
+    selectedInstance: state.selectedInstance
+  }
+}
 
-export default connect(null, { createStudentCourses }) (RegisterPage)
+export default connect(mapStateToProps, { createStudentCourses }) (RegisterPage)
+
