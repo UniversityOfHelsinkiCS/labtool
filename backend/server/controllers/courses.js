@@ -15,7 +15,7 @@ module.exports = {
 
   retrieve(req, res) {
     return CourseInstance
-      .findAll({
+      .findOne({
         where: {
           ohid: req.params.ohid
         },
