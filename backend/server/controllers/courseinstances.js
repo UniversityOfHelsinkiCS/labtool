@@ -39,7 +39,7 @@ module.exports = {
     if (token.verified) {
       db.sequelize.query(`SELECT * FROM "CourseInstances" AS CI JOIN "TeacherInstances" AS TI ON CI.id = TI.id WHERE TI."userId" = ${id}`)
         .then(instance =>
-          res.status(200).send(instance))
+          res.status(200).send(instance[0]))
         .catch(error => res.status(400).send(error))
     } else {
       errors.push('token verification failed')
