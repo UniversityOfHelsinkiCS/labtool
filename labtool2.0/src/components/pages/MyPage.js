@@ -5,6 +5,7 @@ import './MyPage.css'
 import { Link } from 'react-router-dom'
 import { getAllStudentCourses } from '../../services/studentinstances'
 import { getAllTeacherCourses } from '../../services/teacherinstances'
+import { Redirect } from 'react-router'
 
 class MyPageStudent extends Component {
   componentDidMount() {
@@ -28,7 +29,13 @@ class MyPageStudent extends Component {
   }
 
   render() {
+    console.log(user)
     const user = { ...this.props.user.user }
+    if (user.email === '' || user.email === null) {
+      return (
+        <Redirect to='email' />
+      )
+    }
     return (
       <div>
         <Card fluid color='yellow'>
