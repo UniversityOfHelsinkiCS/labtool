@@ -1,15 +1,20 @@
-import axios from 'axios'
-const baseUrl = process.env.REACT_APP_BACKEND_URL + '/api/courseInstances'
+import { callController } from '../util/apiConnection'
+const baseUrl = process.env.REACT_APP_BACKEND_URL + '/api'
 
-export const getAll = () => {
-  console.log('********get all from: ', baseUrl)
-  const request = axios.get(baseUrl)
-  return request.then(response => response.data)
+
+export const getAllCI = () => {
+  const route = baseUrl + '/courseInstances'
+  const prefix = 'CI_GET_ALL_'
+  const method = 'get'
+  return callController(route, prefix, null, method)
 }
 
-export const getOne = async (id) => {
-  const response = await axios.get(`${baseUrl}/${id}`)
-  return response.data
+export const getOneCI = (id) => {
+  const route = baseUrl + '/courseInstances/${id}'
+  const prefix = 'CI_GET_ONE_'
+  const method = 'get'
+  return callController(route, prefix, null, method)
 }
 
-export default { getAll, getOne }
+
+export default { getAllCI }

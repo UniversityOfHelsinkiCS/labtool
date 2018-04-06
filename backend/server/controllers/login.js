@@ -51,14 +51,14 @@ module.exports = {
               plain: true
             }))
 
-            const token = jwt.sign({ username: user.username, id: user.id }, process.env.SECRET)
-            const returnedUser = {
-              id: user.id,
-              email: user.email,
-              firsts: user.firsts,
-              lastname: user.lastname,
-              studentNumber: user.studentnumber,
-              username: user.username
+            const token = jwt.sign({ username: newuser.username, id: newuser.id }, process.env.SECRET)
+            const user = {
+              id: newuser.id,
+              email: newuser.email,
+              firsts: newuser.firsts,
+              lastname: newuser.lastname,
+              studentNumber: newuser.studentnumber,
+              username: newuser.username
             }
             res.status(200).send({
               user,

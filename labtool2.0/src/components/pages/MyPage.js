@@ -3,8 +3,24 @@ import { connect } from 'react-redux'
 import { Card, Button, Checkbox, Header, Table, Container, List } from 'semantic-ui-react'
 import './MyPage.css'
 import { Link } from 'react-router-dom'
+import { getAllStudentCourses } from '../../services/studentinstances'
+import { getAllTeacherCourses } from '../../services/teacherinstances'
 
 class MyPageStudent extends Component {
+  componentDidMount() {
+    this.props.getAllStudentCourses()
+    this.props.getAllTeacherCourses()
+    try {
+      const loggedUserJSON = window.localStorage.getItem('loggedLabtool')
+      if (loggedUserJSON && loggedUserJSON !== '{}') {
+        const user = JSON.parse(loggedUserJSON)
+        this.props.tokenLogin(user)
+      }
+    } catch (exception) {
+      console.log('no user logged in')
+    }
+  }
+  
 
   editEmail = (event) => {
     event.preventDefault()
@@ -12,7 +28,7 @@ class MyPageStudent extends Component {
   }
 
   render() {
-    const user = { ...this.props.user.returnedUser }
+    const user = { ...this.props.user.user }
     return (
       <div>
         <Card fluid color='yellow'>
@@ -24,7 +40,7 @@ class MyPageStudent extends Component {
                 </Header>
               </Table.Header>
               <Table.Row>
-                <Table.Cell><Card.Description><Header size='small'>{user.studentnumber}</Header></Card.Description></Table.Cell>
+                <Table.Cell><Card.Description><Header size='small'>{user.studentNumber}</Header></Card.Description></Table.Cell>
                 <Table.Cell><Card.Description>{user.email}</Card.Description></Table.Cell>
                 <Table.Cell><Button color='yellow' ><Link to="/email" > <List.Item icon='edit' /></Link></Button></Table.Cell>
               </Table.Row>
@@ -108,4 +124,4 @@ const mapStateToProps = (state) => {
 }
 
 
-export default connect(mapStateToProps, {})(MyPageStudent)
+export default connect(mapStateToProps, { getAllStudentCourses, getAllTeacherCourses })(MyPageStudent)
