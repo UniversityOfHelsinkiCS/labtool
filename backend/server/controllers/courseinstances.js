@@ -102,6 +102,8 @@ module.exports = {
     console.log('registeröidään...')
     console.log(req.body)
 
+
+
     console.log('verifikaatio meni läpi!')
     CourseInstance.findOne({
       where: {
@@ -114,6 +116,7 @@ module.exports = {
             message: 'course instance not found',
           })
         }
+        console.log(token)
         User.findById(req.decoded.id).then(user => {
           if (!user) {
             return res.status(400).send({
