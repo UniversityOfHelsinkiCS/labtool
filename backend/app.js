@@ -27,7 +27,7 @@ app.get('/', function (req, res) {
 app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*')
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization')
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
   next()
 })
 
@@ -38,23 +38,20 @@ const authenticate = (request, response, next) => {
   if ( !excludedPaths.includes(request.path) ) {
     try {
       let decoded = jwt.verify(request.token, process.env.SECRET)
-      request.decoded = decoded
+      request.decoded = decoded,
+      request.authenticated = { success: true, error: ''}
     } catch (e) {
-      response.status(400).send({error: 'token verification failed'})
+      request.authenticated = { success: false, error: 'token verification failed'}
     }
   }
-  // this is according to javascript kiddies some "hack" or whatever to let options through x)
   console.log(request.method)
-  if (request.method == 'OPTIONS') {
-    response.sendStatus(204)
-    response.end
-  }
-  else {
-    next()
-  }
+  next()
 }
-
 app.use(authenticate)
+
+app.use(extractToken)
+
+
 
 
 
