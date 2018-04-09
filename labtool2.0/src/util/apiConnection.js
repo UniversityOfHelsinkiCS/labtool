@@ -20,7 +20,6 @@ function callApi(url, method = 'get', data, prefix, token) {
       Authorization: `bearer ${token}`
     }
   }
-  console.log(url, method, data, prefix, token, 'tässää tätä')
   switch (method) {
   case 'get':
     return axios.get(url, options)
