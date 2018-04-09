@@ -6,8 +6,15 @@ const createApiUrl = (path) => {
   return API_PATHS.includes(mode) ? `/${mode}/api` : ''
 }
 
+
+
 export const getAxios = () => {
-  const hostUrl = process.env.REACT_APP_BACKEND_URL
+  let hostUrl
+  if (process.env.NODE_ENV === 'development') {
+    hostUrl = 'http://localhost:3001/api'
+  } else {
+    hostUrl = '/labtool-backend/api'
+  } 
   const apiPath = createApiUrl(window.location.pathname)
   return axios.create({
     baseURL: `${hostUrl}${apiPath}`
