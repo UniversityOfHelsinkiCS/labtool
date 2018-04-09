@@ -66,7 +66,9 @@ class App extends Component {
             <Route path={`/labtool/email`} component={Email} />
             <Route path={`/labtool/registerPage`} component={RegisterPage} />
             <Route path={`/labtool/reviewstudent`} component={ReviewStudent} />
-            <Route path={`/labtool/ModifyCourseInstancePage`} component={ModifyCourseInstancePage} />
+            <Route path={`/labtool/ModifyCourseInstancePage/:id`} render={({ match }) =>
+              <ModifyCourseInstancePage courseinstance={(this.props.getOneCI(match.params.id))} />}
+            />
             <Route path={`/`} component={MyPage} />
 
 

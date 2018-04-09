@@ -1,24 +1,41 @@
 import React, { Component } from 'react'
 import { Form, Input, Button, Grid } from 'semantic-ui-react'
+import { modifyOneCI } from '../../services/courseInstance'
+import { connect } from 'react-redux'
 
-class ModyfyCourseInstancePage extends Component {
+class ModifyCourseInstancePage extends Component {
+
+
+  handleSubmit = async (e) => {
+    e.preventDefault()
+
+    const content = {
+      weekAmount: e.target.weekAmount.value,
+      weeklyMaxpoints: e.target.weeklyMaxpoints.value,
+      currentWeek: e.target.currentWeek.value,
+      courseActive: e.target.courseActive.value,
+      ohid: this.props.selectedInstance.ohid
+    }
+    await this.props.modifyOneCI(content, this.props.selectedInstance.ohid)
+  }
+
   render() {
     return (
       <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
         <Grid>
           <Grid.Row centered>
-            <h2> Edit Tiralabra 2018 kevät </h2>
+            <h2> Edit {this.props.selectedInstance.name} </h2>
           </Grid.Row>
         </Grid>
         <Grid>
           <Grid.Row centered>
-            <Form>
+            <Form onSubmit={this.handleSubmit}>
               <Form.Field inline>
                 <label>Week amount</label>
                 <Input
                   type="text"
                   className="form-control1"
-                  name="week amount"
+                  name="weekAmount"
                   placeholder="WeekAmount"
                   required />
               </Form.Field>
@@ -26,7 +43,7 @@ class ModyfyCourseInstancePage extends Component {
                 <label>Weekly maxpoints</label>
                 <Input
                   className="form-control2"
-                  name="weekly maxpoints"
+                  name="weeklyMaxpoints"
                   placeholder="WeeklyMaxpoints"
                   required />
               </Form.Field>
@@ -34,7 +51,7 @@ class ModyfyCourseInstancePage extends Component {
                 <label>Current week</label>
                 <Input
                   className="form-control3"
-                  name="current week"
+                  name="currentWeek"
                   placeholder="CurrentWeek"
                   required />
               </Form.Field>
@@ -43,7 +60,7 @@ class ModyfyCourseInstancePage extends Component {
                 <label>Course active</label>
                 <Input type='checkbox'
                   className="form-control4"
-                  name="course active"
+                  name="courseActive"
                   placeholder="CourseActive"  />
               </Form.Field>
 
@@ -60,4 +77,10 @@ class ModyfyCourseInstancePage extends Component {
   }
 }
 
-export default ModyfyCourseInstancePage
+const mapStateToProps = (state, ownProps) => {
+  return {
+    selectedInstance: state.selectedInstance
+  }
+}
+
+export default connect(mapStateToProps, { modifyOneCI }) (ModifyCourseInstancePage)
