@@ -20,10 +20,6 @@ function callApi(url, method = 'get', data, prefix, token) {
       Authorization: `bearer ${token}`
     }
   }
-  if (prefix.includes('DOWNLOAD')) {
-    options.responseType = 'arraybuffer'
-    return getAxios().get(url, options)
-  }
   switch (method) {
     case 'get':
       return getAxios().get(url, options)
