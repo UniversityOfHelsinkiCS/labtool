@@ -37,7 +37,7 @@ class Email extends Component {
     render() {
       if (this.state.redirectToNewPage) {
         return (
-          <Redirect to="/myPage"/>
+          <Redirect to="labtool/myPage"/>
         )
       } else {
         return (
@@ -65,7 +65,7 @@ class Email extends Component {
 
                   <Form.Field>
                     <button className="ui left floated green button" type="submit">Save</button>
-                    <button className="ui right floated button"> <Link to="/mypage">Cancel</Link></button>
+                    <button className="ui right floated button"> <Link to="/labtool/mypage">Cancel</Link></button>
                   </Form.Field>
                 </Form>
 

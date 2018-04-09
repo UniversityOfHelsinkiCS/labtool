@@ -23,7 +23,7 @@ class AllCourses extends Component {
           {
             this.state.courses.map(c => (
               <li key={c.id}>
-                <Link to={`/courses/${c.id}`}>{c.name}</Link>
+                <Link to={`/labtool/courses/${c.id}`}>{c.name}</Link>
               </li>
             ))
           }

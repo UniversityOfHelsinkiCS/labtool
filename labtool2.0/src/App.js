@@ -30,7 +30,7 @@ class App extends Component {
         const user = JSON.parse(loggedUserJSON)
         this.props.tokenLogin(user)
       }
-    } catch (exception) {
+    } catch (exception) { 
       console.log('no user logged in')
     }
   }
@@ -55,19 +55,19 @@ class App extends Component {
       return (
         <main>
           <Switch>
-            <Route exact path={`${process.env.PUBLIC_URL}/courses`} render={({ history }) =>
+            <Route exact path={`/labtool/courses`} render={({ history }) =>
               <Courses history={history} />}
             />
-            <Route path={`${process.env.PUBLIC_URL}/courses/:id`} render={({ match, history }) =>
+            <Route path={`/labtool/courses/:id`} render={({ match, history }) =>
               <RegisterPage history={history} courseinstance={(this.props.getOneCI(match.params.id))} />}
             />
-            <Route path={`${process.env.PUBLIC_URL}/browsereviews`} component={BrowseReviews} />
-            <Route path={`${process.env.PUBLIC_URL}/coursePage`} component={CoursePage} />
-            <Route path={`${process.env.PUBLIC_URL}/email`} component={Email} />
-            <Route path={`${process.env.PUBLIC_URL}/registerPage`} component={RegisterPage} />
-            <Route path={`${process.env.PUBLIC_URL}/reviewstudent`} component={ReviewStudent} />
-            <Route path={`${process.env.PUBLIC_URL}/ModifyCourseInstancePage`} component={ModifyCourseInstancePage} />
-            <Route path={`${process.env.PUBLIC_URL}/`} component={MyPage} />
+            <Route path={`/labtool/browsereviews`} component={BrowseReviews} />
+            <Route path={`/labtool/coursePage`} component={CoursePage} />
+            <Route path={`/labtool/email`} component={Email} />
+            <Route path={`/labtool/registerPage`} component={RegisterPage} />
+            <Route path={`/labtool/reviewstudent`} component={ReviewStudent} />
+            <Route path={`/labtool/ModifyCourseInstancePage`} component={ModifyCourseInstancePage} />
+            <Route path={`/`} component={MyPage} />
 
 
             {/* <Route path='/schedule' component={Schedule} /> */}
