@@ -38,7 +38,7 @@ module.exports = {
                       email: req.body.email,
                       firsts: user.firsts,
                       lastname: user.lastname,
-                      studentNumber: user.studentnumber,
+                      studentNumber: user.studentNumber,
                       username: user.username
                     }
                     res.status(201).send(returnedUser)
