@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Form, Input, Button, Grid } from 'semantic-ui-react'
 import { modifyOneCI } from '../../services/courseInstance'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 class ModifyCourseInstancePage extends Component {
 
@@ -66,7 +67,7 @@ class ModifyCourseInstancePage extends Component {
 
               <Form.Field>
                 <Button floated='left' color='green' type='submit'>Save</Button>
-                <Button floated='right' color='red'>Cancel</Button>
+                <button className="ui right floated button"> <Link to="/labtool/courses">Cancel</Link></button>
               </Form.Field>
               
             </Form>
