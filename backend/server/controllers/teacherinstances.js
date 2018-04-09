@@ -1,6 +1,7 @@
 const TeacherInstance = require('../models').TeacherInstance
 
 module.exports = {
+    // this seem
   create(req, res) {
     return TeacherInstance
       .create({

@@ -5,7 +5,7 @@ exports.getCurrentTerm = getCurrentTerm
 exports.getNextYear = getNextYear
 exports.getNextTerm = getNextTerm
 exports.checkWebOodi = checkWebOodi
-exports.tokenVerify = application_helpers.tokenVerify
+exports.tokenVerify = application_helpers.tokenVerify  // Should be removed in issue #127
 
 
 function CurrentTermAndYear() {
