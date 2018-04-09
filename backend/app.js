@@ -79,8 +79,6 @@ require('./server/routes')(app)
 require('./server/routes/userRouter')(app)
 require('./server/routes/courseInstanceRouter')(app)
 require('./server/routes/loginRouter')(app)
-require('./server/routes/studentInstanceRouter')(app)
-require('./server/routes/teacherInstanceRouter')(app)
 
 app.get('*', (req, res) => res.status(404).send({
   message: 'Not found.',
