@@ -1,10 +1,11 @@
 const StudentInstance = require('../models').StudentInstance
 const jwt = require('jsonwebtoken')
+const db = require('../models')
 
 module.exports = {
   create(req, res) {
     const errors = []
-    return (      
+    return (
       StudentInstance
         .findOrCreate({
           where: { userId: req.decoded.id, courseInstanceId: req.body.courseInstanceId },
@@ -16,10 +17,10 @@ module.exports = {
           }
         })
         .spread((si, created) => {
-          if(created) {
+          if (created) {
             errors.push('You are not registered to course in WebOodi')
             res.status(200).send(errors)
-          } 
+          }
           res.status(200).send(si)
         })
         .catch(error => res.status(400).send(error))
@@ -73,6 +74,18 @@ module.exports = {
           .then(() => res.status(204).send())
           .catch(error => res.status(400).send(error))
       })
+      .catch(error => res.status(400).send(error))
+  },
+
+  findByCourseInst(req, res) {
+    console.log('BEEB BOOP')
+    // console.log('ohid: ', req.params.ohid)
+    //return StudentInstance
+    db.sequelize.query(`SELECT * FROM "StudentInstances" AS SI 
+    JOIN "CourseInstances" AS CI ON SI.id = CI.id 
+    WHERE CI."ohid" = '${req.params.ohid}'`)
+      .then(studentInst =>
+        res.status(200).send(studentInst[0]))
       .catch(error => res.status(400).send(error))
   },
 

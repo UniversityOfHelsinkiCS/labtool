@@ -6,4 +6,5 @@ module.exports = (app) => {
   app.get('/api/studentinstances/:id', studentInstanceController.retrieve)
   app.put('/api/studentinstances/:id', studentInstanceController.update)
   app.delete('/api/studentinstances/:id', studentInstanceController.destroy)
+  app.get('/api/studentinstances/get/:ohid', studentInstanceController.findByCourseInst)
 }
