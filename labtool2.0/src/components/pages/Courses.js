@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Button, List, Container, Header, Table } from 'semantic-ui-react'
-//import { Switch, Route } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 class Courses extends Component {
   render() {
@@ -10,30 +11,15 @@ class Courses extends Component {
           <Header as='h2' className='CoursesHeader'>Courses</Header>
           <Table singleline key='grey'>
             <Table.Body>
-              <Table.Row>
-                <Table.Cell>Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit (periodi IV)</Table.Cell>
-                <Table.Cell textAlign='right'><div>
-                  <Button circular color="teal" size='tiny' icon="large black eye icon" />
-                  <Button circular color='orange' size="tiny" icon="large black edit icon">
-                  </Button>
-                </div></Table.Cell>
-              </Table.Row>
-              <Table.Row>
-                <Table.Cell>Aineopintojen harjoitustyö: Tietokantasovellus (periodi IV)</Table.Cell>
-                <Table.Cell textAlign='right'><div>
-                  <Button circular color="teal" size="tiny" icon="large black eye icon" />
-                  <Button circular color='orange' size="tiny" icon="large black edit icon" />
-                </div></Table.Cell>
-                <Table.Cell textAlign='center'></Table.Cell>
-              </Table.Row>
-              <Table.Row>
-                <Table.Cell>Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit (periodi III)</Table.Cell>
-                <Table.Cell textAlign='right'><div>
-                  <Button circular color="teal" size="tiny" icon="large black eye icon" />
-                  <Button circular color='orange' size="tiny" icon="large black edit icon"></Button>
-                </div></Table.Cell>
-                <Table.Cell></Table.Cell>
-              </Table.Row>
+              {this.props.courseInstance.map(instance => 
+                <Table.Row>
+                  <Table.Cell>{instance.name}</Table.Cell>
+                  <Table.Cell textAlign='right'><div>
+                  <Link to={`/courses/${instance.ohid}`}><Button circular color="teal" size='tiny' icon="large black eye icon"></Button></Link>
+                    <Button circular color='orange' size="tiny" icon="large black edit icon" />
+                  </div></Table.Cell>
+                </Table.Row>
+              )}
             </Table.Body>
           </Table>
           <div className="Instructions">
@@ -50,7 +36,13 @@ class Courses extends Component {
   }
 }
 
-export default Courses
+const mapStateToProps = (state, ownProps) => {
+  return {
+    courseInstance: state.courseInstance
+  }
+}
+
+export default connect(mapStateToProps, null )(Courses)
 
 
 

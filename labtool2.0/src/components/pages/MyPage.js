@@ -5,6 +5,7 @@ import './MyPage.css'
 import { Link } from 'react-router-dom'
 import { getAllStudentCourses } from '../../services/studentinstances'
 import { getAllTeacherCourses } from '../../services/teacherinstances'
+import { Redirect } from 'react-router'
 
 class MyPageStudent extends Component {
   componentDidMount() {
@@ -20,7 +21,7 @@ class MyPageStudent extends Component {
       console.log('no user logged in')
     }
   }
-  
+
 
   editEmail = (event) => {
     event.preventDefault()
@@ -28,7 +29,13 @@ class MyPageStudent extends Component {
   }
 
   render() {
+    console.log(user)
     const user = { ...this.props.user.user }
+    if (user.email === '' || user.email === null) {
+      return (
+        <Redirect to='email' />
+      )
+    }
     return (
       <div>
         <Card fluid color='yellow'>
@@ -57,24 +64,14 @@ class MyPageStudent extends Component {
           <Header as='h2' className='CoursesHeader'>My Courses  (Student) </Header>
           <Table singleline>
             <Table.Body>
-              <Table.Row>
-                <Table.Cell>Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit (periodi IV)</Table.Cell>
-                <Table.Cell textAlign='left'><div>
-                  <Button circular color='teal' size="tiny" icon="large black eye icon"></Button>
-                </div></Table.Cell>
-              </Table.Row>
-              <Table.Row>
-                <Table.Cell>Aineopintojen harjoitustyö: Tietokantasovellus (periodi IV)</Table.Cell>
-                <Table.Cell textAlign='left'><div>
-                  <Button circular color="teal" size="tiny" icon="large black eye icon"></Button>
-                </div></Table.Cell>
-              </Table.Row>
-              <Table.Row>
-                <Table.Cell>Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit (periodi III)</Table.Cell>
-                <Table.Cell textAlign='left'><div>
-                  <Button circular color='teal' size="tiny" icon="large black eye icon"></Button>
-                </div></Table.Cell>
-              </Table.Row>
+              {this.props.studentInstance.map(sinstance =>
+                <Table.Row>
+                  <Table.Cell>{sinstance.name}</Table.Cell>
+                  <Table.Cell textAlign='left'><div>
+                    <Button circular color='teal' size="tiny" icon="large black eye icon"></Button>
+                  </div></Table.Cell>
+                </Table.Row>
+              )}
             </Table.Body>
           </Table>
           <div className="Instructions">
@@ -84,29 +81,15 @@ class MyPageStudent extends Component {
               <Header as='h2' className='CoursesHeader'>My Courses  (Teacher)</Header>
               <Table singleline key='grey'>
                 <Table.Body>
-                  <Table.Row>
-                    <Table.Cell>Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit (periodi IV)</Table.Cell>
-                    <Table.Cell textAlign='right'><div>
-                      <Button circular color='orange' size="tiny" icon="large black edit icon" />
-                      <Button circular color='teal' size="tiny" icon="large black eye icon" />
-                    </div></Table.Cell>
-                  </Table.Row>
-                  <Table.Row>
-                    <Table.Cell>Aineopintojen harjoitustyö: Tietokantasovellus (periodi IV)</Table.Cell>
-                    <Table.Cell textAlign='right'><div>
-                      <Button circular color='orange' size="tiny" icon="large black edit icon" />
-                      <Button circular color = 'teal' size="tiny" icon="large black eye icon" />
-                    </div></Table.Cell>
-                    <Table.Cell textAlign='center'></Table.Cell>
-                  </Table.Row>
-                  <Table.Row>
-                    <Table.Cell>Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit (periodi III)</Table.Cell>
-                    <Table.Cell textAlign='right'><div>
-                      <Button circular color='orange' size="tiny" icon="large black edit icon" />
-                      <Button circular color='teal' size="tiny" icon="large black eye icon"></Button>
-                    </div></Table.Cell>
-                    <Table.Cell></Table.Cell>
-                  </Table.Row>
+                  {this.props.teacherInstance.map(tinstance =>
+                    <Table.Row>
+                      <Table.Cell>{tinstance.name}</Table.Cell>
+                      <Table.Cell textAlign='right'><div>
+                        <Button circular color='orange' size="tiny" icon="large black edit icon" />
+                        <Button circular color='teal' size="tiny" icon="large black eye icon" />
+                      </div></Table.Cell>
+                    </Table.Row>
+                  )}
                 </Table.Body>
               </Table>
             </Container>
@@ -120,6 +103,8 @@ class MyPageStudent extends Component {
 const mapStateToProps = (state) => {
   return {
     user: state.user,
+    studentInstance: state.studentInstance,
+    teacherInstance: state.teacherInstance
   }
 }
 

@@ -1,27 +1,41 @@
 import React, { Component } from 'react'
 import { Form, Input, Grid } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { createStudentCourses } from '../../services/studentinstances'
 
 class RegisterPage extends Component {
 
+  handleSubmit = async (e) => {
+    e.preventDefault()
+
+    const content = {
+      projectName: e.target.projectName.value,
+      github: e.target.github.value,
+      ohid: this.props.selectedInstance.ohid
+    }
+    await this.props.createStudentCourses(content, this.props.selectedInstance.ohid)
+  }
+
   render() {
     return (
+      
       <div className="RegisterPage"
         style={{
           textAlignVertical: 'center',
           textAlign: 'center',
         }}>
-
+        
         <Grid>
           <Grid.Row centered>
-            <h3>Register for *kurssin nimi*</h3>
+            <h3>Register for {this.props.selectedInstance.name}</h3>
           </Grid.Row>
         </Grid>
 
         <Grid>
           <Grid.Row centered>
 
-            <Form>
+            <Form onSubmit={this.handleSubmit}>
 
               <Form.Field inline>
                 <label> Project name </label>
@@ -29,7 +43,7 @@ class RegisterPage extends Component {
                   style={{ minWidth: "20em" }}
                   type="text"
                   className="form-control1"
-                  name="project name"
+                  name="projectName"
                   placeholder="MyProjectName"
                   required />
               </Form.Field>
@@ -58,6 +72,11 @@ class RegisterPage extends Component {
   }
 }
 
-// const RegisterPage = ({onSubmit, handleFieldChange, projectname, github, cancel, name }) => {
+const mapStateToProps = (state, ownProps) => {
+  return {
+    selectedInstance: state.selectedInstance
+  }
+}
 
-export default RegisterPage
+export default connect(mapStateToProps, { createStudentCourses }) (RegisterPage)
+
