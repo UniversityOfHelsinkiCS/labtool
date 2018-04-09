@@ -30,7 +30,7 @@ class App extends Component {
         const user = JSON.parse(loggedUserJSON)
         this.props.tokenLogin(user)
       }
-    } catch (exception) { 
+    } catch (exception) {
       console.log('no user logged in')
     }
   }
@@ -55,14 +55,14 @@ class App extends Component {
       return (
         <main>
           <Switch>
+            <Route path={`/labtool/courses/:id`} render={({ match, history }) =>
+              <CoursePage history={history} courseinstance={(this.props.getOneCI(match.params.id))} />}
+            />
             <Route exact path={`/labtool/courses`} render={({ history }) =>
               <Courses history={history} />}
             />
             <Route path={`/labtool/courseregistration/:id`} render={({ match, history }) =>
               <RegisterPage history={history} courseinstance={(this.props.getOneCI(match.params.id))} />}
-            />
-            <Route path={`labtool/courses/:id`} render={({ match, history }) =>
-              <CoursePage history={history} courseinstance={(this.props.getOneCI(match.params.id))} />}
             />
             <Route path={`/labtool/browsereviews`} component={BrowseReviews} />
             <Route path={`/labtool/coursePage`} component={CoursePage} />
@@ -70,7 +70,7 @@ class App extends Component {
             <Route path={`/labtool/registerPage`} component={RegisterPage} />
             <Route path={`/labtool/reviewstudent`} component={ReviewStudent} />
             <Route path={`/labtool/ModifyCourseInstancePage`} component={ModifyCourseInstancePage} />
-            <Route path={`/`} component={MyPage} />
+            <Route path={`/labtool`} component={MyPage} />
 
 
             {/* <Route path='/schedule' component={Schedule} /> */}
