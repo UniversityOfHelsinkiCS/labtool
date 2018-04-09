@@ -233,20 +233,18 @@ module.exports = {
       .catch(error => res.status(400).send(error))
   },
 
+  //db.sequelize.query(`SELECT * FROM "CourseInstances" AS CI JOIN "StudentInstances" AS SI ON CI.id = SI.id WHERE SI."userId" = ${token.data.id}`)
   retrieve(req, res) {
     const errors = []
-
-
-
     CourseInstance
-      .findById(req.params.id, {})
+    db.sequelize.query(`SELECT * FROM "CourseInstances" WHERE "ohid" = '${req.params.ohid}'`)
       .then(courseInstance => {
         if (!courseInstance) {
           return res.status(404).send({
             message: 'Course not Found',
           })
         }
-        return res.status(200).send(courseInstance)
+        return res.status(200).send(courseInstance[0])
       })
       .catch(error => res.status(400).send(error))
 
