@@ -27,7 +27,7 @@ class ReviewStudent extends Component {
                         <Form.Field>
                             <Button color='green' type='submit'>Save</Button>
                             <Button floated='right' color='red'>
-                                <Link to="/coursepage">Cancel</Link></Button>
+                                <Link to="/labtool/coursepage">Cancel</Link></Button>
                         </Form.Field>
                     </Form>
 
