@@ -72,10 +72,15 @@ module.exports = {
     })*/
     //	SELECT * FROM "CourseInstances" AS CI JOIN "StudentInstances" AS SI ON CI.id = SI.id WHERE SI."userId" = 1;
     if (token.verified) {
-      db.sequelize.query(`SELECT * FROM "CourseInstances" AS CI JOIN "StudentInstances" AS SI ON CI.id = SI.id WHERE SI."userId" = ${token.data.id}`)
-        .then(instance =>
-          res.status(200).send(instance[0]))
-        .catch(error => res.status(400).send(error))
+      if (Number.isInteger(token.data.id)) {
+        db.sequelize.query(`SELECT * FROM "CourseInstances" AS CI JOIN "StudentInstances" AS SI ON CI.id = SI.id WHERE SI."userId" = ${token.data.id}`)
+          .then(instance =>
+            res.status(200).send(instance[0]))
+          .catch(error => res.status(400).send(error))
+      } else {
+        errros.push('something went wrong')
+        res.status(400).send(errors)
+      }
     } else {
       errors.push('token verification failed')
       res.status(400).send(errors)
@@ -240,7 +245,7 @@ module.exports = {
         where: {
           ohid: req.params.ohid
         }
-      } , {})
+      }, {})
       .then(courseInstance => {
         if (!courseInstance) {
           return res.status(404).send({
@@ -340,7 +345,7 @@ module.exports = {
             })
           })
           if (req.decoded) {
-            res.status(204).send({'hello': 'hello'})  // nodejs crashes if someone just posts here without valid token.
+            res.status(204).send({ 'hello': 'hello' })  // nodejs crashes if someone just posts here without valid token.
           }
         })
       }
