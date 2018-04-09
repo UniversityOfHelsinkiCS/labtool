@@ -99,10 +99,11 @@ module.exports = {
 
   registerToCourseInstance(req, res) {//register 
     const errors = []
-    console.log('registeröidään...')
-    console.log(req.body)
+    if (req.authenticated.success == false) {
+      res.send(401)
+      res.end
+    }
 
-    console.log('verifikaatio meni läpi!')
     CourseInstance.findOne({
       where: {
         ohid: req.params.ohid
@@ -125,7 +126,7 @@ module.exports = {
 
             setTimeout(function () {
               resolve('shitaintright') // Yay! everything went to hell.
-            }, 250)
+            }, 5000)  // set a high timeout value since you really want to wait x)
           })
 
           thisPromiseJustMakesThisCodeEvenMoreHorrible.then((successMessageIfYouLikeToThinkThat) => {

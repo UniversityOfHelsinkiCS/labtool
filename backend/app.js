@@ -27,67 +27,33 @@ app.get('/', function (req, res) {
 app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*')
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization')
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
   next()
 })
 
 
-
-/*
-
-  const result = request(options, function (err, resp, body) {
-    if (err) {
-      console.log(err)
+const authenticate = (request, response, next) => {
+  const excludedPaths = [ '/api/login', '/api' ]
+  console.log(request.path)
+  if ( !excludedPaths.includes(request.path) ) {
+    try {
+      let decoded = jwt.verify(request.token, process.env.SECRET)
+      request.decoded = decoded,
+      request.authenticated = { success: true, error: ''}
+    } catch (e) {
+      request.authenticated = { success: false, error: 'token verification failed'}
     }
-    console.log(result.response.body.error)
+  }
+  console.log(request.method)
+  next()
+}
+app.use(authenticate)
 
-    if (result.response.body.error !== 'wrong credentials') {
-      User
-        .findOrCreate({
-          where: {username: body.username},
-          defaults: {
-            firsts: body.first_names,
-            lastname: body.last_name,
-            studentnumber: body.student_number,
-            email: ''
-          }
-        })
-        .spread((user, created) => {
+app.use(extractToken)
 
-          if (!(user.firsts === body.first_names && user.lastname === body.last_name)) {
-            User.update(
-              { firsts: body.first_names, lastname: body.last_name },
-              { where: { id: user.id } }
-            )
-          }
 
-          console.log(user.get({
-            plain: true
-          }))
 
-          const token = jwt.sign({ username: user.username, id: user.id }, process.env.SECRET)
-          const returnedUser = {
-            email: user.email,
-            firsts: user.firsts,
-            lastname: user.lastname,
-            studentnumber: user.studentnumber,
-            username: user.username            
-          }
-          res.status(200).send({
-            returnedUser,
-            token,
-            created
-          })
-        })
-    
-    } else {
-      res.status(401).send({
-        body
-      })
-    }
-  })
-}) 
-*/
+
 
 const tokenVerify = ({ token }) => {
   jwt.verify(token, process.env.SECRET, function (err, decoded) {
