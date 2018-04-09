@@ -23,7 +23,7 @@ class App extends Component {
     this.props.getAllCI()
   }
 
-  componentDidMount() {    
+  componentDidMount() {
     try {
       const loggedUserJSON = window.localStorage.getItem('loggedLabtool')
       if (loggedUserJSON && loggedUserJSON !== '{}') {
@@ -45,7 +45,7 @@ class App extends Component {
     window.localStorage.setItem('loggedLabtool', JSON.stringify(userAndToken))
     console.log(nProps)
   }
-  
+
 
 
 
@@ -58,8 +58,11 @@ class App extends Component {
             <Route exact path={`${process.env.PUBLIC_URL}/courses`} render={({ history }) =>
               <Courses history={history} />}
             />
-            <Route path={`${process.env.PUBLIC_URL}/courses/:id`} render={({ match, history }) =>
+            <Route path={`${process.env.PUBLIC_URL}/courseregistration/:id`} render={({ match, history }) =>
               <RegisterPage history={history} courseinstance={(this.props.getOneCI(match.params.id))} />}
+            />
+            <Route path={`${process.env.PUBLIC_URL}/courses/:id`} render={({ match, history }) =>
+              <CoursePage history={history} courseinstance={(this.props.getOneCI(match.params.id))} />}
             />
             <Route path={`${process.env.PUBLIC_URL}/browsereviews`} component={BrowseReviews} />
             <Route path={`${process.env.PUBLIC_URL}/coursePage`} component={CoursePage} />
