@@ -11,22 +11,6 @@ const Op = Sequelize.Op
 
 module.exports = {
 
-  create(req, res) {
-    console.log('REQ BODY: ', req.body)
-    return CourseInstance
-      .create({
-        name: req.body.name,
-        start: req.body.start,
-        end: req.body.end,
-        active: req.body.active,
-        weekAmount: req.body.weekAmount,
-        week_max_points: req.body.week_max_points,
-        current_week: req.body.current_week,
-        courseId: req.body.courseId
-      })
-      .then(CourseInstance => res.status(201).send(CourseInstance))
-      .catch(error => res.status(400).send(error))
-  },
 
   //TODO: search courseInstance where it is connected to user either by studentIstance or teacherInstance
   findByUserTeacherInstance(req, res) {//token verification might not work..? and we don't knpw if search works

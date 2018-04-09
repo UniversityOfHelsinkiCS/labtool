@@ -74,14 +74,14 @@ const tokenVerify = ({ token }) => {
   })
 }
 
-// Sequelize reitti määrittelyt
+// Exoress reitti määrittelyt
 require('./server/routes')(app)
 require('./server/routes/userRouter')(app)
 require('./server/routes/courseInstanceRouter')(app)
 require('./server/routes/loginRouter')(app)
 require('./server/routes/studentInstanceRouter')(app)
 require('./server/routes/teacherInstanceRouter')(app)
-require('./server/routes/weekRouter')(app)
+
 app.get('*', (req, res) => res.status(404).send({
   message: 'Not found.',
 }))
