@@ -32,25 +32,24 @@ class Nav extends Component {
 
           <Menu.Menu position='left'>
 
-
-
             <Menu.Item header>
               Labtool 2.0
             </Menu.Item>
-            {this.props.user.user ?
-              <Menu.Item link>
-                <Link to="/labtool/mypage">My page</Link>
-              </Menu.Item>
 
+            {this.props.user.user ?
+              <Menu.Item as={Link} to="/labtool/mypage">
+                My page
+              </Menu.Item>
               : <p></p>}
-            {this.props.user.user ?
-              <Menu.Item link>
-                <Link to="/labtool/courses">Courses</Link>
-              </Menu.Item>
 
+            {this.props.user.user ?
+              <Menu.Item as={Link} to="/labtool/courses">
+                Courses
+              </Menu.Item>
               : <p></p>}
 
           </Menu.Menu>
+
           {this.props.user.user ? <div>
             <Menu.Menu position='right'>
               <Menu.Item>
@@ -58,13 +57,16 @@ class Nav extends Component {
               </Menu.Item>
 
               <Menu.Item link>
-                <Button onClick={this.handleLogout} ><Link to="/labtool">Logout
-              </Link></Button>
+                <Button onClick={this.handleLogout} >
+                  <Link to="/labtool">Logout</Link>
+                </Button>
               </Menu.Item>
 
             </Menu.Menu>
+
           </div>
             : <div></div>}
+
         </Menu>
 
       </main>
