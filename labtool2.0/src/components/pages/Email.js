@@ -13,87 +13,70 @@ text should be "Edit your email address" if email can be found from db
 
 class Email extends Component {
 
-  state = {
-    redirectToNewPage: false
-  }
+    state = {
+      redirectToNewPage: false
+    }
+    
 
-
-  handleSubmit = async (e) => {
-    e.preventDefault()
-    try {
-      const content = {
-        email: e.target.email.value
+    handleSubmit = async (e) => {
+      e.preventDefault()
+      try {
+        const content = {
+          email: e.target.email.value
+        }
+        if (content.email !== '' && content.email !== null) {
+          await this.props.updateUser(content)
+          this.setState({ redirectToNewPage: true })
+        }
+      } catch (error) {
+        console.log(error)
       }
-      if (content.email !== '' && content.email !== null) {
-        await this.props.updateUser(content)
-        this.setState({ redirectToNewPage: true })
-      }
-    } catch (error) {
-      console.log(error)
+      
     }
 
-  }
+    render() {
+      if (this.state.redirectToNewPage) {
+        return (
+          <Redirect to="labtool/myPage"/>
+        )
+      } else {
+        return (
+          <div className="Email" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
 
-  render() {
-    if (this.state.redirectToNewPage) {
-      return (
-        <Redirect to="labtool/myPage" />
-      )
-    } else {
-      const user = { ...this.props.user.user }
-      return (
-        <div className="Email" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
+            <Grid centered>
 
-          <Grid centered>
+              <Grid.Row>
+                <h3>Please give your email address: </h3>
+              </Grid.Row>
+              <Grid.Row>
+                <p>Email is required because ...</p>
+              </Grid.Row>
 
-            {this.props.firstLogin ?
-              <div>
-                <Grid.Row>
-                  <h3>Please give your email address: </h3>
-                </Grid.Row>
-                <Grid.Row>
-                  <p>Email is required because ...</p>
-                </Grid.Row>
-              </div> :
-              <div>
-                <Grid.Row>
-                  <h3>Edit your email address: </h3>
-                </Grid.Row>
-              </div>
-            }
+              <Grid.Row>
+                <Form onSubmit={this.handleSubmit}>
+                  <Form.Field>
+                    <Form.Input
+                      style={{ minWidth: '20em' }}
+                      type="email"
+                      className="form-control"
+                      name="email"
+                      placeholder="my.email@helsinki.fi" />
+                  </Form.Field>
 
-            <Grid.Row>
-              <Form onSubmit={this.handleSubmit}>
-                <Form.Field>
-                  <Form.Input
-                    defaultValue={user.email}
-                    style={{ minWidth: '20em' }}
-                    type="email"
-                    className="form-control"
-                    name="email"
-                    placeholder="my.email@helsinki.fi" />
-                </Form.Field>
+                  <Form.Field>
+                    <button className="ui left floated green button" type="submit">Save</button>
+                    <button className="ui right floated button"> <Link to="/labtool/mypage">Cancel</Link></button>
+                  </Form.Field>
+                </Form>
 
-                <Form.Field>
-                  <button className="ui left floated green button" type="submit">Save</button>
-                 <Link to="/labtool/mypage"> <button className="ui right floated button" type="Cancel">  Cancel</button></Link>
-                </Form.Field>
-              </Form>
+              </Grid.Row>
 
-            </Grid.Row>
+            </Grid>
 
-          </Grid>
-
-        </div>
-      )
+          </div>
+        )
+      }
     }
-  }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    user: state.user
-  }
-}
-
-export default connect(mapStateToProps, { updateUser })(Email)
+export default connect(null, { updateUser })(Email)
