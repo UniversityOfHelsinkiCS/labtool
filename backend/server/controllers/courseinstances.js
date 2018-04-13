@@ -1,72 +1,168 @@
+//import Course from '../../../labtool2.0/src/components/pages/Course';
+
+//import Course from '../../../labtool2.0/src/components/pages/Course';
+const db = require('../models')
 const CourseInstance = require('../models').CourseInstance
-
-const CurrentTermAndYear = () => {
-  const date = new Date()
-  const month = date.getMonth() + 1
-  const currentTerm = getCurrentTerm(month)
-  var year = date.getFullYear()
-  console.log('month is: ', month)
-  console.log('date: ', date)
-  if (month >= 11) {
-    year = year + 1
-  }
-  const currentYear = year.toString()
-  var nextYear = getNextYear(currentTerm, year)
-  nextYear.toString()
-  const nextTerm = getNextTerm(currentTerm)
-  console.log('year: ', year)
-  return {currentYear, currentTerm, nextTerm, nextYear}
-}
-
-const getCurrentTerm = (month) => {
-  if (1 <= month <= 5) {
-    return 'K'
-  }
-  if (6 <= month <= 8) {
-    return 'V'
-  }
-  if (9 <= month <= 12) {
-    return 'S'
-  }
-}
-
-const getNextYear = (currentTerm, currentYear) => {
-  if (currentTerm === 'S') {
-    return currentYear + 1
-  } else {
-    return currentYear
-  }
-}
-
-const getNextTerm = (term) => {
-  if (term === 'K') {
-    return 'V'
-  }
-  if (term === 'V') {
-    return 'S'
-  }
-  if (term === 'S') {
-    return 'K'
-  }
-}
+const StudentInstance = require('../models').StudentInstance
+const User = require('../models').User
+const helper = require('../helpers/course_instance_helper')
+const Sequelize = require('sequelize')
+const Op = Sequelize.Op
 
 module.exports = {
 
-  create(req, res) {
-    console.log('REQ BODY: ', req.body)
-    return CourseInstance
-      .create({
-        name: req.body.name,
-        start: req.body.start,
-        end: req.body.end,
-        active: req.body.active,
-        weekAmount: req.body.weekAmount,
-        week_max_points: req.body.week_max_points,
-        current_week: req.body.current_week,
-        courseId: req.body.courseId
+
+  //TODO: search courseInstance where it is connected to user either by studentIstance or teacherInstance
+  findByUserTeacherInstance(req, res) {//token verification might not work..? and we don't knpw if search works
+    const errors = []
+    console.log('***REQ BODY***: ', req.body)
+    let token = helper.tokenVerify(req)
+    const id = parseInt(req.body.userId)//TODO: CHECK THAT THIS IS SANITICED ID
+    console.log('TOKEN VERIFIED: ', token)
+    console.log('req.params.UserId: ', parseInt(req.body.userId))
+    if (token.verified) {
+      db.sequelize.query(`SELECT * FROM "CourseInstances" AS CI JOIN "TeacherInstances" AS TI ON CI.id = TI.id WHERE TI."userId" = ${token.data.id}`)
+        .then(instance =>
+          res.status(200).send(instance[0]))
+        .catch(error => res.status(400).send(error))
+    } else {
+      errors.push('token verification failed')
+      res.status(400).send(errors)
+    }
+
+  },
+
+  /**
+   * sequelize.query("SELECT * FROM 'property'", { type:Sequelize.QueryTypes.SELECT})
+   .then(function(properties) {
+      res.json(properties)
+  })
+   */
+  findByUserStudentInstance(req, res) {//token verification might not work..? and we don't knpw if search works
+    console.log('db: ', db)
+    const errors = []
+    console.log('searching by studentInstance...')
+    console.log('***REQ BODY***: ', req.body)
+    let token = helper.tokenVerify(req)
+    console.log('TOKEN VERIFIED: ', token)
+    const id = parseInt(req.body.userId)
+    console.log('req.params.UserId: ', id)
+    /*CourseInstance.findAll({
+      include:[{
+        model: StudentInstance,
+      }],
+      where: {userId: id},
+      logging: console.log
+    })*/
+    //	SELECT * FROM "CourseInstances" AS CI JOIN "StudentInstances" AS SI ON CI.id = SI.id WHERE SI."userId" = 1;
+    if (token.verified) {
+      if (Number.isInteger(token.data.id)) {
+        db.sequelize.query(`SELECT * FROM "CourseInstances" AS CI JOIN "StudentInstances" AS SI ON CI.id = SI.id WHERE SI."userId" = ${token.data.id}`)
+          .then(instance =>
+            res.status(200).send(instance[0]))
+          .catch(error => res.status(400).send(error))
+      } else {
+        errros.push('something went wrong')
+        res.status(400).send(errors)
+      }
+    } else {
+      errors.push('token verification failed')
+      res.status(400).send(errors)
+    }
+    // db.sequelize.query(`SELECT * FROM "CourseInstances" AS CI JOIN "StudentInstances" AS SI ON CI.id = SI.id WHERE SI."userId" = ${id}`)
+    //   // CourseInstance.findAll({
+    //   //   include: [{
+    //   //     model: StudentInstance,
+    //   //   }],
+    //   //   where: {
+    //   //     userid: {
+    //   //       [Op.eq]: id
+    //   //     }
+    //   //   }
+    //   // })
+    //   .then(instance =>
+    //     res.status(200).send(instance))
+    //   .catch(error => res.status(400).send(error))
+
+  },
+
+  registerToCourseInstance(req, res) {
+    const errors = []
+    if (req.authenticated.success == false) {
+      res.send(401)
+      res.end
+    }
+
+    CourseInstance.findOne({
+      where: {
+        ohid: req.params.ohid
+      }
+    })
+      .then(course => {
+        if (!course) {
+          return res.status(400).send({
+            message: 'course instance not found',
+          })
+        }
+        User.findById(req.decoded.id).then(user => {
+          if (!user) {
+            return res.status(400).send({
+              message: 'something went wrong (clear these specific error messages later): user not found',
+            })
+          }
+          let thisPromiseJustMakesThisCodeEvenMoreHorrible = new Promise((resolve, reject) => {
+            helper.checkWebOodi(req, res, user, resolve)  // this does not work.
+
+            setTimeout(function () {
+              resolve('shitaintright') // Yay! everything went to hell.
+            }, 5000)  // set a high timeout value since you really want to wait x)
+          })
+
+          thisPromiseJustMakesThisCodeEvenMoreHorrible.then((successMessageIfYouLikeToThinkThat) => {
+            console.log('Yay! ' + successMessageIfYouLikeToThinkThat)
+            console.log(req.body)
+
+            if (successMessageIfYouLikeToThinkThat === 'found') {
+              StudentInstance.findOrCreate({
+                where: {
+                  userId: user.id,
+                  courseInstanceId: course.dataValues.id
+                },
+                defaults: {
+                  userId: user.id,
+                  courseInstanceId: course.dataValues.id,
+                  github: req.body.github || '',                     // model would like to validate this to be an URL but seems like crap
+                  projectName: req.body.projectName || '',           // model would like to validate this to alphanumeric but seems like this needs specific nulls or empties or whatever
+                }
+              }).then(student => {
+                if (!student) {
+                  res.status(400).send({
+                    message: 'something went wrong: if somehow we could not find or create a record we see this'
+                  })
+                } else {
+                  res.status(200).send({
+                    message: 'something went right',
+                    whatever: student
+                  })
+                }
+
+              }).catch(function (error) {
+                res.status(400).send({
+                  message: error.errors
+                })
+              })
+
+            } else {
+
+              res.status(400).send({
+                message: 'something went wrong'
+              })
+
+            }
+          })
+
+        })
       })
-      .then(CourseInstance => res.status(201).send(CourseInstance))
-      .catch(error => res.status(400).send(error))
   },
 
   update(req, res) {
@@ -106,30 +202,14 @@ module.exports = {
       .catch(error => res.status(400).send(error))
   },
 
-  destroy(req, res) {
-    return CourseInstance
+  retrieve(req, res) {
+    const errors = []
+    CourseInstance
       .find({
         where: {
-          id: req.params.id,
-        },
-      })
-      .then(courseInstance => {
-        if (!courseInstance) {
-          return res.status(400).send({
-            message: 'course instance not found',
-          })
+          ohid: req.params.ohid
         }
-        return courseInstance
-          .destroy()
-          .then(() => res.status(204).send())
-          .catch(error => res.status(400).send(error))
-      })
-      .catch(error => res.status(400).send(error))
-  },
-
-  retrieve(req, res) {
-    return CourseInstance
-      .findById(req.params.id, {})
+      }, {})
       .then(courseInstance => {
         if (!courseInstance) {
           return res.status(404).send({
@@ -139,18 +219,20 @@ module.exports = {
         return res.status(200).send(courseInstance)
       })
       .catch(error => res.status(400).send(error))
+
   },
+
 
   getNew(req, res) {
     console.log('update current...')
     const auth = process.env.TOKEN || 'notset' //You have to set TOKEN in .env file in order for this to work
     console.log('autentikaatio: ', auth)
-    const termAndYear = CurrentTermAndYear()
+    const termAndYear = helper.CurrentTermAndYear()
     console.log('term and year: ', termAndYear)
     if (auth === 'notset') {
       res.send('Please restart the backend with the correct TOKEN environment variable set')
     } else {
-      if (this.remoteAddress === '127.0.0.11111312') {
+      if (this.remoteAddress === '127.0.0.1') {
         res.send('gtfo')
 
       } else {
@@ -165,35 +247,39 @@ module.exports = {
           strictSSL: false
         }
         request(options, function (err, resp, body) {
-            const json = JSON.parse(body)
-            console.log(json)
-            json.forEach(instance => {
-              CourseInstance.findOrCreate({
-                where: {ohid: instance.id},
-                defaults: {
-                  name: instance.name,
-                  start: instance.starts,
-                  end: instance.ends,
-                  ohid: instance.id
-                }
-              })
+          const json = JSON.parse(body)
+          console.log('json palautta...')
+          console.log(json)
+          json.forEach(instance => {
+            CourseInstance.findOrCreate({
+              where: { ohid: instance.id },
+              defaults: {
+                name: instance.name,
+                start: instance.starts,
+                end: instance.ends,
+                ohid: instance.id
+              }
             })
-            res.status(204).send({'hello': 'hello'})
+          })
+          if (req.decoded) {
+            res.status(204).send({ 'hello': 'hello' }) // nodejs crashes if someone just posts here without valid token.
           }
+        }
         )
       }
     }
-  },
+  }
+  ,
 
   getNewer(req, res) {
     console.log('update next...')
     const auth = process.env.TOKEN || 'notset' //You have to set TOKEN in .env file in order for this to work
-    const termAndYear = CurrentTermAndYear()
+    const termAndYear = helper.CurrentTermAndYear()
     console.log('term and year: ', termAndYear)
     if (auth === 'notset') {
       res.send('Please restart the backend with the correct TOKEN environment variable set')
     } else {
-      if (this.remoteAddress === '127.0.0.1321321214') {
+      if (this.remoteAddress === '127.0.0.1') {
         res.send('gtfo')
 
       } else {
@@ -213,7 +299,7 @@ module.exports = {
           console.log(json)
           json.forEach(instance => {
             CourseInstance.findOrCreate({
-              where: {ohid: instance.id},
+              where: { ohid: instance.id },
               defaults: {
                 name: instance.name,
                 start: instance.starts,
@@ -222,9 +308,30 @@ module.exports = {
               }
             })
           })
-          res.status(204).send({'hello': 'hello'})
+          if (req.decoded) {
+            res.status(204).send({ 'hello': 'hello' })  // nodejs crashes if someone just posts here without valid token.
+          }
         })
       }
     }
-  }
+  },
+
+  retrieveCourseStuff(req, res) {
+    return CourseInstance
+      .findOne({
+        where: {
+          ohid: req.params.ohid
+        },
+      })
+      .then(course => {
+        if (!course) {
+          return res.status(404).send({
+            message: 'Course not Found',
+          })
+        }
+        return res.status(200).send(course)
+      })
+      .catch(error => res.status(400).send(error))
+  },
+
 }

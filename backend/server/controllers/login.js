@@ -32,33 +32,36 @@ module.exports = {
             defaults: {
               firsts: body.first_names,
               lastname: body.last_name,
-              studentnumber: body.student_number,
+              studentNumber: body.student_number,
               email: ''
             }
           })
-          .spread((user, created) => {
+          .spread((newuser, created) => {
 
-            if (!(user.firsts === body.first_names && user.lastname === body.last_name)) {
+            if (!(newuser.firsts === body.first_names && newuser.lastname === body.last_name)) {
               User.update(
                 { firsts: body.first_names, lastname: body.last_name },
-                { where: { id: user.id } }
+                { where: { id: newuser.id } }
               )
             }
 
-            console.log(user.get({
+            // ^ SIDENOTE HERE: There can be a situation where the user has not a studentnumber but later gets it.
+
+            console.log(newuser.get({
               plain: true
             }))
 
-            const token = jwt.sign({ username: user.username, id: user.id }, process.env.SECRET)
-            const returnedUser = {
-              email: user.email,
-              firsts: user.firsts,
-              lastname: user.lastname,
-              studentnumber: user.studentnumber,
-              username: user.username
+            const token = jwt.sign({ username: newuser.username, id: newuser.id }, process.env.SECRET)
+            const user = {
+              id: newuser.id,
+              email: newuser.email,
+              firsts: newuser.firsts,
+              lastname: newuser.lastname,
+              studentNumber: newuser.studentNumber,
+              username: newuser.username
             }
             res.status(200).send({
-              returnedUser,
+              user,
               token,
               created
             })

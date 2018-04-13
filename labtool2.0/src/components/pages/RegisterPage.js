@@ -1,30 +1,82 @@
-import React from 'react'
+import React, { Component } from 'react'
+import { Form, Input, Grid } from 'semantic-ui-react'
+import { Link } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { createStudentCourses } from '../../services/studentinstances'
 
+class RegisterPage extends Component {
 
-const RegisterPage = ({ onSubmit, handleFieldChange, projectname, github, cancel, name }) => {
+  handleSubmit = async (e) => {
+    e.preventDefault()
 
-  return (
-    <div className="Register" style={{ textAlignVertical: 'center', textAlign: 'center', }} >
-      <h3>Register for {name}</h3>
+    const content = {
+      projectName: e.target.projectName.value,
+      github: e.target.github.value,
+      ohid: this.props.selectedInstance.ohid
+    }
+    await this.props.createStudentCourses(content, this.props.selectedInstance.ohid)
+  }
 
-      <form onSubmit={onSubmit} >
-        <label >
-          GitHub link: <br />
-          <input type="url" onChange={handleFieldChange} className="form-control1" name="github" required={true} value={github} />
-        </label>
-        <br />
-        <label>
+  render() {
+    return (
+      
+      <div className="RegisterPage"
+        style={{
+          textAlignVertical: 'center',
+          textAlign: 'center',
+        }}>
+        
+        <Grid>
+          <Grid.Row centered>
+            <h3>Register for {this.props.selectedInstance.name}</h3>
+          </Grid.Row>
+        </Grid>
 
-          Project name:  <br />
-          <input type="text" onChange={handleFieldChange} className="form-control2" name="projectname" value={projectname} required />
-        </label> <br />
+        <Grid>
+          <Grid.Row centered>
 
-        <button type="submit">Submit</button>
-      </form>
-      <button onClick={cancel}>Cancel</button>
-    </div>
-  )
+            <Form onSubmit={this.handleSubmit}>
+
+              <Form.Field inline>
+                <label> Project name </label>
+                <Input
+                  style={{ minWidth: '20em' }}
+                  type="text"
+                  className="form-control1"
+                  name="projectName"
+                  placeholder="MyProjectName"
+                  required />
+              </Form.Field>
+
+              <Form.Field inline>
+                <label> GitHub link </label>
+                <Input
+                  style={{ minWidth: '20em' }}
+                  type="url"
+                  className="form-control2"
+                  name="github"
+                  placeholder="https://github.com/myaccount/myrepo"
+                  required />
+              </Form.Field>
+
+              <Form.Field>
+                <button className="ui left floated blue button" type="submit">Submit</button>
+                <button className="ui right floated button"><Link to= "/labtool/courses">Cancel</Link></button>
+              </Form.Field>
+
+            </Form>
+          </Grid.Row>
+        </Grid>
+      </div >
+    )
+  }
 }
 
+const mapStateToProps = (state, ownProps) => {
+  return {
+    selectedInstance: state.selectedInstance
+  }
+}
 
-export default RegisterPage
+export default connect(mapStateToProps, { createStudentCourses }) (RegisterPage)
+

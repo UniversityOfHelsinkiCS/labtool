@@ -1,11 +1,15 @@
-'use strict'
 module.exports = (sequelize, DataTypes) => {
-  var User = sequelize.define('User', {
+  const User = sequelize.define('User', {
     username: DataTypes.STRING,
     email: DataTypes.STRING,
     firsts: DataTypes.STRING,
     lastname: DataTypes.STRING,
-    token: DataTypes.STRING
+    studentNumber: DataTypes.STRING,
+    admin: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    }
   }, {})
   User.associate = (models) => {
     User.hasMany(models.StudentInstance, {

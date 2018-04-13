@@ -14,6 +14,7 @@ const extractToken = (request, response, next) => {
   next()
 }
 
+
 app.use(extractToken)
 
 app.use(bodyParser.json())
@@ -26,73 +27,39 @@ app.get('/', function (req, res) {
 app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*')
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization')
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
   next()
 })
 
-// login Oikea logini server/controllers/login ...
-/* app.post('/login', function (req, res) {
-  const request = require('request')
-  const options = {
-    method: 'post',
-    uri: 'https://opetushallinto.cs.helsinki.fi/login',
-    strictSSL: false,
-    json: {'username': req.body.username, 'password': req.body.password}
+/**
+ *
+ * @param request
+ * @param response
+ * @param next
+ */
+const authenticate = (request, response, next) => {
+  const excludedPaths = [ '/api/login', '/api' ]
+  console.log(request.path)
+  if ( !excludedPaths.includes(request.path) ) {
+    try {
+      let decoded = jwt.verify(request.token, process.env.SECRET)
+      request.decoded = decoded,
+      request.authenticated = { success: true, error: ''}
+    } catch (e) {
+      request.authenticated = { success: false, error: 'token verification failed'}
+    }
   }
+  console.log(request.method)
+  next()
+}
+app.use(authenticate)
 
-  const result = request(options, function (err, resp, body) {
-    if (err) {
-      console.log(err)
-    }
-    console.log(result.response.body.error)
+app.use(extractToken)
 
-    if (result.response.body.error !== 'wrong credentials') {
-      User
-        .findOrCreate({
-          where: {username: body.username},
-          defaults: {
-            firsts: body.first_names,
-            lastname: body.last_name,
-            studentnumber: body.student_number,
-            email: ''
-          }
-        })
-        .spread((user, created) => {
 
-          if (!(user.firsts === body.first_names && user.lastname === body.last_name)) {
-            User.update(
-              { firsts: body.first_names, lastname: body.last_name },
-              { where: { id: user.id } }
-            )
-          }
 
-          console.log(user.get({
-            plain: true
-          }))
 
-          const token = jwt.sign({ username: user.username, id: user.id }, process.env.SECRET)
-          const returnedUser = {
-            email: user.email,
-            firsts: user.firsts,
-            lastname: user.lastname,
-            studentnumber: user.studentnumber,
-            username: user.username            
-          }
-          res.status(200).send({
-            returnedUser,
-            token,
-            created
-          })
-        })
-    
-    } else {
-      res.status(401).send({
-        body
-      })
-    }
-  })
-}) */
-
+// old and should be cleaned if authenticate middleware is ok for the whole app in #127
 const tokenVerify = ({ token }) => {
   jwt.verify(token, process.env.SECRET, function (err, decoded) {
     if (err) {
@@ -107,15 +74,12 @@ const tokenVerify = ({ token }) => {
   })
 }
 
-// Sequelize reitti määrittelyt
+// Exoress reitti määrittelyt
 require('./server/routes')(app)
 require('./server/routes/userRouter')(app)
 require('./server/routes/courseInstanceRouter')(app)
-require('./server/routes/courseRouter')(app)
 require('./server/routes/loginRouter')(app)
-require('./server/routes/studentInstanceRouter')(app)
-require('./server/routes/teacherInstanceRouter')(app)
-require('./server/routes/weekRouter')(app)
+
 app.get('*', (req, res) => res.status(404).send({
   message: 'Not found.',
 }))

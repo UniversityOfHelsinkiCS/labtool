@@ -2,23 +2,10 @@ const User = require('../models').User
 const jwt = require('jsonwebtoken')
 
 module.exports = {
-  create(req, res) { // EI OK...
-    return User
-      .create({
-        username: req.body.username,
-        firsts: req.body.firsts,
-        lastname: req.body.lastname,
-        studentnumber: req.body.studentnumber,
-        email: req.body.email,
-        token: 'Might be done in the future currently using localStorage'
-      })
-      .then(user => res.status(201).send(user))
-      .catch(error => res.status(400).send(error))
-  },
 
   update(req, res) {
     return (
-      jwt.verify(req.token, process.env.SECRET, function (err, decoded) {  // OK
+      jwt.verify(req.token, process.env.SECRET, function (err, decoded) {  // # this should be fixed in issue #127
         if (err) {
           const error = ({ error: 'token verification failed' })
           res.status(400).send(error)
@@ -35,10 +22,10 @@ module.exports = {
                 User.findById(decoded.id)
                   .then(user => {
                     const returnedUser = {
-                      email: user.email,
+                      email: req.body.email,
                       firsts: user.firsts,
                       lastname: user.lastname,
-                      studentnumber: user.studentnumber,
+                      studentNumber: user.studentNumber,
                       username: user.username
                     }
                     res.status(201).send(returnedUser)
@@ -51,9 +38,4 @@ module.exports = {
     )
   },
 
-  list(req, res) {
-    return User.findAll()
-      .then(user => res.status(200).send(user))
-      .catch(error => res.status(400).send(error))
-  }
 }

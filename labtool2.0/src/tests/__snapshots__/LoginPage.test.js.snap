@@ -2,47 +2,75 @@
 
 exports[`<Login /> Login Component should render correctly 1`] = `
 <div
-  className="Login"
-  style={
-    Object {
-      "textAlign": "center",
-      "textAlignVertical": "center",
-    }
-  }
+  className="ui"
 >
-  <p>
-    Login page
-  </p>
-  <form>
-    <label>
-      Username: 
-      <br />
-      <input
-        className="form-control1"
-        name="username"
-        required={true}
-        type="text"
-      />
-    </label>
-    <label>
-       
-      <br />
-      Password: 
-      <br />
-      <input
-        className="form-control2"
-        name="password"
-        required={true}
-        type="password"
-      />
-    </label>
-     
-    <br />
-    <button
-      type="submit"
+  <Grid>
+    <GridRow
+      centered={true}
     >
-      Login
-    </button>
-  </form>
+      <h3>
+        Enter your University of Helsinki username and password.
+      </h3>
+    </GridRow>
+  </Grid>
+  <Grid>
+    <GridRow
+      centered={true}
+    >
+      <Form
+        as="form"
+      >
+        <FormGroup
+          inline={true}
+        >
+          <label>
+            Username
+          </label>
+          <Input
+            className="form-control1"
+            name="username"
+            placeholder="Your username"
+            required={true}
+            style={
+              Object {
+                "minWidth": "25em",
+              }
+            }
+            type="text"
+          />
+        </FormGroup>
+        <FormGroup
+          inline={true}
+        >
+          <label>
+            Password
+          </label>
+          <Input
+            className="form-control2"
+            name="password"
+            placeholder="Your password"
+            required={true}
+            style={
+              Object {
+                "minWidth": "25em",
+              }
+            }
+            type="password"
+          />
+        </FormGroup>
+        <FormGroup
+          inline={true}
+        >
+          <Button
+            as="button"
+            color="blue"
+            type="submit"
+          >
+            Login
+          </Button>
+        </FormGroup>
+      </Form>
+    </GridRow>
+  </Grid>
 </div>
 `;

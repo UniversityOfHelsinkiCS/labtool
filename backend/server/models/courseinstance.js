@@ -1,6 +1,5 @@
-'use strict'
 module.exports = (sequelize, DataTypes) => {
-  var CourseInstance = sequelize.define('CourseInstance', {
+  const CourseInstance = sequelize.define('CourseInstance', {
     name: DataTypes.STRING,
     start: DataTypes.DATE,
     end: DataTypes.DATE,
@@ -11,11 +10,6 @@ module.exports = (sequelize, DataTypes) => {
     ohid: DataTypes.STRING
   }, {})
   CourseInstance.associate = (models) => {
-    CourseInstance.belongsTo(models.Course, {
-      foreignKey: 'courseId',
-      onDelete: 'CASCADE',
-    })
-
     CourseInstance.hasMany(models.StudentInstance, {
       foreignKey: 'courseInstanceId',
       as: 'courseInstances'
