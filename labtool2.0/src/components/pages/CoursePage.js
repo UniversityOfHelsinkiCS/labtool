@@ -10,8 +10,7 @@ class CoursePage extends Component {
 
     render() {
         return (
-            //const CoursePage = ({ name, start, end, week_amount, week_max_points, current_week, handleFieldChange }) => {
-            <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
+             <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
                 <h2>{this.props.selectedInstance.name}</h2>
                 <Button> <Link to="/labtool/registerpage">Register</Link></Button>
                 <h3>Active: {this.props.selectedInstance.active} Week maxpoints:  {this.props.selectedInstance.weekMaxPoints} WeekAmount: {this.props.selectedInstance.weekAmount} WeekMaxPoints: {this.props.selectedInstance.weekMaxPoints} CurrentWeek: {this.props.selectedInstance.currentWeek} </h3>
