@@ -31,16 +31,16 @@ class ReviewStudent extends Component {
                         </Form.Field>
                     </Form>
 
-                </Grid>
-            </div>
-        )
-    }
+        </Grid>
+      </div>
+    )
+  }
 }
 
 const mapStateToProps = (state) => {
-    return {
-        user: state.user,
-    }
+  return {
+    user: state.user,
+  }
 }
 
 

@@ -4,7 +4,7 @@ const courseInstancereducer = (store = [], action) => {
   switch (action.type) {
   case 'CI_GET_ALL_SUCCESS':
     return action.response
-/*   case 'CI_GET_ONE_SUCCESS':
+    /*   case 'CI_GET_ONE_SUCCESS':
     return store.find(n => n.ohid === action.response) */ //This is possible solution.
   default:
     return store
