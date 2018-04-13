@@ -9,6 +9,6 @@ module.exports = (app) => {
   app.post('/api/course/teacher', courseInstanceController.findByUserTeacherInstance)
   app.get('/api/courseinstances', courseInstanceController.list) // Skolen kurssit on julkista tietoa eli periaattessa ok.
   app.get('/api/courseinstances/:ohid', courseInstanceController.retrieve) // En tiedä joten ei käy
-  app.put('/api/courseinstances/:id', courseInstanceController.update) // Not public stuff could relate to issue #109
+  app.put('/api/courseinstances/:ohid', courseInstanceController.update) // Not public stuff could relate to issue #109
   app.get('/api/courses/:ohid', courseInstanceController.retrieveCourseStuff) // apparently same as /api/course/iunstances/:ohid
 }
