@@ -14,7 +14,7 @@ class CoursePage extends Component {
             <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
                 <h2>{this.props.selectedInstance.name}</h2>
                 <Button> <Link to="/labtool/registerpage">Register</Link></Button>
-                <h3> Kurssin tietoja: Week maxpoints: 5, Current week: 5, Course active: Yes</h3>
+                <h3> {this.props.selectedInstance.start} </h3>
                 <h3> Students </h3>
                 <Table celled unstackable>
                     <Table.Header>

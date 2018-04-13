@@ -68,8 +68,8 @@ class MyPageStudent extends Component {
                 <Table.Row>
                   <Table.Cell>{sinstance.name}</Table.Cell>
                   <Table.Cell textAlign='left'><div>
-                    <Button circular color='teal' size="tiny" icon="large black eye icon"></Button>
-                  </div></Table.Cell>
+                  <Link to={`/labtool/courses/${sinstance.ohid}`}><Button circular color="teal" size='tiny' icon="large black eye icon"></Button></Link>
+                   </div></Table.Cell>
                 </Table.Row>
               )}
             </Table.Body>
