@@ -40,6 +40,7 @@ class Email extends Component {
           <Redirect to="labtool/myPage"/>
         )
       } else {
+        const user = { ...this.props.user.user }
         return (
           <div className="Email" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
 
@@ -56,6 +57,7 @@ class Email extends Component {
                 <Form onSubmit={this.handleSubmit}>
                   <Form.Field>
                     <Form.Input
+                      defaultValue={user.email}
                       style={{ minWidth: '20em' }}
                       type="email"
                       className="form-control"
@@ -79,4 +81,10 @@ class Email extends Component {
     }
 }
 
-export default connect(null, { updateUser })(Email)
+const mapStateToProps = (state) => {
+  return {
+    user: state.user
+  }
+}
+
+export default connect(mapStateToProps, { updateUser })(Email)
