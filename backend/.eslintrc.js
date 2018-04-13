@@ -4,6 +4,9 @@ module.exports = {
         "jest": true,
         "node": true
     },
+    "parserOptions": {
+        "ecmaVersion": 2017
+    },
     "extends": "eslint:recommended",
     "rules": {
         "no-console": 0,       
