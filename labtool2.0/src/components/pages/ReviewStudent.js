@@ -25,9 +25,10 @@ class ReviewStudent extends Component {
                             <Form.TextArea />
                         </Form.Group>
                         <Form.Field>
-                            <Button color='green' type='submit'>Save</Button>
-                            <Button floated='right' color='red'>
-                                <Link to="/labtool/coursepage"  type="Cancel">Cancel</Link></Button>
+                            <Button className="ui left floated green button" type='submit'>Save</Button>
+                            <Link to="/labtool/coursepage" type="Cancel">
+                            <Button className="ui right floated button" type="cancel">Cancel</Button>
+                            </Link>
                         </Form.Field>
                     </Form>
 
