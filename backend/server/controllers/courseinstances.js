@@ -4,6 +4,7 @@
 const db = require('../models')
 const CourseInstance = require('../models').CourseInstance
 const StudentInstance = require('../models').StudentInstance
+const TeacherInstance = require('../models').TeacherInstance
 const User = require('../models').User
 const helper = require('../helpers/course_instance_helper')
 const Sequelize = require('sequelize')
@@ -236,35 +237,58 @@ module.exports = {
       })
   },
 
-  update(req, res) {
+  async update(req, res) {
     console.log('REQ body: ', req.body)
     console.log('REQ params: ', req.params)
-    return CourseInstance
-      .find({
+    try {
+      let ci = await CourseInstance.find({
         where: {
-          id: req.params.id
+          ohid: req.params.ohid
         }
       })
-      .then(courseInstance => {
-        if (!courseInstance) {
-          return res.status(400).send({
-            message: 'course instance not found',
-          })
+
+      console.log('getting token')
+
+      let token = helper.tokenVerify(req)
+
+
+      console.log('got token')
+
+      const TI = await TeacherInstance.findOne({
+        where: {
+          courseInstanceId: ci.id,
+          userId: token.data.id
         }
-        return courseInstance
-          .update({
-            name: req.body.name || courseInstance.name,
-            start: req.body.start || courseInstance.start,
-            end: req.body.end || courseInstance.end,
-            active: req.body.active || courseInstance.active,
-            weekAmount: req.body.weekAmount || courseInstance.weekAmount,
-            weekMaxPoints: req.body.weekMaxPoints || courseInstance.weekMaxPoints,
-            currentWeek: req.body.currentWeek || courseInstance.currentWeek,
-          })
-          .then(updatedCourseInstance => res.status(200).send(updatedCourseInstance))
-          .catch(error => res.status(400).send(error))
       })
-      .catch(error => res.status(400).send(error))
+
+      console.log('got TI')
+
+      if (TI) {
+
+        console.log("Grats you are teacher")
+
+        const updated = await ci.update({
+          name: req.body.name || ci.name,
+          start: req.body.start || ci.start,
+          end: req.body.end || ci.end,
+          active: true,
+          weekAmount: req.body.weekAmount || ci.weekAmount,
+          weekMaxPoints: req.body.weekMaxpoints || ci.weekMaxPoints,
+          currentWeek: req.body.currentWeek || ci.currentWeek,
+        })
+
+        res.status(200).send(updated)
+      } else {
+        res.status(400).send('error')
+      }
+
+      
+
+
+    } catch (error) {
+      console.log('Always errors')
+      res.status(400).send(error)
+    }
   },
 
   list(req, res) {
