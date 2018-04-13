@@ -8,6 +8,10 @@ const User = require('../models').User
 const helper = require('../helpers/course_instance_helper')
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
+const StudentInstanceController = require('../controllers').studentInstances
+const TeacherInstance = require('../models').TeacherInstance
+const Week = require('../models').Week
+
 
 module.exports = {
 
@@ -37,7 +41,7 @@ module.exports = {
     console.log('TOKEN VERIFIED: ', token)
     console.log('req.params.UserId: ', parseInt(req.body.userId))
     if (token.verified) {
-      db.sequelize.query(`SELECT * FROM "CourseInstances" AS CI JOIN "TeacherInstances" AS TI ON CI.id = TI.courseInstanceId WHERE TI."userId" = ${token.data.id}`)
+      db.sequelize.queryeacherInstanceController(`SELECT * FROM "CourseInstances" AS CI JOIN "TeacherInstances" AS TI ON CI.id = TI.courseInstanceId WHERE TI."userId" = ${token.data.id}`)
         .then(instance =>
           res.status(200).send(instance[0]))
         .catch(error => res.status(400).send(error))
@@ -47,7 +51,74 @@ module.exports = {
     }
 
   },
+  /** */
+  async coursePage(req, res) {
 
+    const courseInst = req.body.course
+    const token = helper.tokenVerify(req)
+
+    const palautus = {
+      role: "Unregistered",
+      data: undefined
+    }
+
+    if (token.verified) {
+      const user = token.data.id
+      const teacher = await TeacherInstance.findAll({
+        where: {
+          userId: user,
+          courseInstanceId: courseInst
+        }
+      })
+
+      if (teacher[0] === undefined) {
+        console.log('TYHJÄ!')
+        const student = await StudentInstance.findAll({
+          where: {
+            userId: user,
+            courseInstanceId: courseInst
+          },
+          include: [{
+            model: Week, as: 'weeks'
+          }]
+        })
+        try {
+          palautus.data = student
+          palautus.role = "student"
+          res.status(200).send(palautus)
+        } catch (error) {
+          res.status(400).send(error)
+        }
+        res.status(200).send(student)
+      } else {
+        console.log('EI OLE TYHJÄ JEE')
+        const teacherPalautus = await StudentInstance.findAll({
+          where: {
+            courseInstanceId: courseInst
+          },
+          include: [{
+            model: Week, as: 'weeks'
+          }]
+        })
+        try {
+          palautus.data = teacherPalautus
+          palautus.role = "teacher"
+          res.status(200).send(palautus)
+        } catch (e) {
+          res.status(200).send(e)
+        }
+      }
+    } else {
+      res.status(400).send("something went wrong")
+    }
+
+
+
+
+    //console.log('teacher[0]: ', teacher[0])
+    /*     const teacher = TeacherInstanceController.retrieve(request, res)
+     */   // console.log('teacher: ', teacher)
+  },
   /**
    * sequelize.query("SELECT * FROM 'property'", { type:Sequelize.QueryTypes.SELECT})
    .then(function(properties) {

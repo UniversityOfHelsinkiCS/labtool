@@ -94,7 +94,12 @@ module.exports = {
     JOIN "CourseInstances" AS CI ON SI.id = CI.id 
     WHERE CI."ohid" = '${req.params.ohid}'`)
         .then(studentInst =>
-          res.status(200).send(studentInst[0]))
+          res.status(200).send(stu: 0,
+  _fulfillmentHandler0: undefined,
+  _rejectionHandler0: undefined,
+  _promise0: undefined,
+  _receiver0: undefined }
+dentInst[0]))
         .catch(error => res.status(400).send(error))
     } else {
       res.status(400).send('something went wrong')
