@@ -1,3 +1,5 @@
+const TeacherInstance = require('../models').TeacherInstance
+
 module.exports = (sequelize, DataTypes) => {
   const CourseInstance = sequelize.define('CourseInstance', {
     name: DataTypes.STRING,
@@ -18,27 +20,23 @@ module.exports = (sequelize, DataTypes) => {
   }
 
   // example of a prototype function 
-  CourseInstance.prototype.getUserInstance = async function (chid, uid) {
+  CourseInstance.prototype.isTeacher = async function (ciid, uid) {
     try {
-      const shite = await CourseInstance.findOne({
+      const TI = await TeacherInstance.findOne({
         where: {
-          ohid: chid
+          courseInstanceId: ciid,
+          userId: uid
         }
       })
-      let shit = []
-      const dog = await require('../models').TeacherInstance
-      const dwag = await new dog()
-      let ohshit = await dwag.getUserCourses(shite.dataValues.id, uid, shit)
-      await shit.push({course: Object.assign(shite.toJSON(), JSON.parse(JSON.stringify(ohshit)))})
-
-      await console.log(shit)
-      return shit
-
-    } catch (eeeeeeeeeeeeee) {
-      console.log(eeeeeeeeeeeeee)
+      if (TI) {
+        return true
+      } else {
+        return false
+      }
+    } catch (e) {
+      console.log(e)
+      return false
     }
   }
-}
-
   return CourseInstance
 }

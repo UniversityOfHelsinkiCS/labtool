@@ -4,6 +4,7 @@
 const db = require('../models')
 const CourseInstance = require('../models').CourseInstance
 const StudentInstance = require('../models').StudentInstance
+const TeacherInstance = require('../models').TeacherInstance
 const User = require('../models').User
 const helper = require('../helpers/course_instance_helper')
 const Sequelize = require('sequelize')
@@ -169,31 +170,52 @@ module.exports = {
     console.log('REQ body: ', req.body)
     console.log('REQ params: ', req.params)
     try {
+      let ci = await CourseInstance.find({
+        where: {
+          ohid: req.params.ohid
+        }
+      })
 
-      
+      console.log('getting token')
+
       let token = helper.tokenVerify(req)
-      //Need to check if teacher on the given course here
-      
-      const courseInstance = await CourseInstance
-        .find({
-          where: {
-            ohid: req.params.ohid
-          }
-        })
-      await courseInstance
-        .update({
-          name: req.body.name || courseInstance.name,
-          start: req.body.start || courseInstance.start,
-          end: req.body.end || courseInstance.end,
-          active: req.body.active || courseInstance.active,
-          weekAmount: req.body.weekAmount || courseInstance.weekAmount,
-          weekMaxPoints: req.body.weekMaxpoints || courseInstance.weekMaxPoints,
-          currentWeek: req.body.currentWeek || courseInstance.currentWeek,
+
+
+      console.log('got token')
+
+      const TI = await TeacherInstance.findOne({
+        where: {
+          courseInstanceId: ci.id,
+          userId: token.data.id
+        }
+      })
+
+      console.log('got TI')
+
+      if (TI) {
+
+        console.log("Grats you are teacher")
+
+        const updated = await ci.update({
+          name: req.body.name || ci.name,
+          start: req.body.start || ci.start,
+          end: req.body.end || ci.end,
+          active: true,
+          weekAmount: req.body.weekAmount || ci.weekAmount,
+          weekMaxPoints: req.body.weekMaxpoints || ci.weekMaxPoints,
+          currentWeek: req.body.currentWeek || ci.currentWeek,
         })
 
+        res.status(200).send(updated)
+      } else {
+        res.status(400).send('error')
+      }
+
+      
 
 
     } catch (error) {
+      console.log('Always errors')
       res.status(400).send(error)
     }
   },
