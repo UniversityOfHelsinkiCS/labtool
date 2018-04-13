@@ -23,14 +23,14 @@ class App extends Component {
     this.props.getAllCI()
   }
 
-  componentDidMount() {    
+  componentDidMount() {
     try {
       const loggedUserJSON = window.localStorage.getItem('loggedLabtool')
       if (loggedUserJSON && loggedUserJSON !== '{}') {
         const user = JSON.parse(loggedUserJSON)
         this.props.tokenLogin(user)
       }
-    } catch (exception) { 
+    } catch (exception) {
       console.log('no user logged in')
     }
   }
@@ -45,7 +45,7 @@ class App extends Component {
     window.localStorage.setItem('loggedLabtool', JSON.stringify(userAndToken))
     console.log(nProps)
   }
-  
+
 
 
 
@@ -79,12 +79,20 @@ class App extends Component {
 
     }
 
+    const EmailChecker = () => (
+      <div>
+        {this.props.user.email === ""
+          ? <Email />
+          : <Main />}
+      </div>
+    )
+
     return (
       <Container>
         <Nav />
         <Notification />
         {this.props.user
-          ? <Main />
+          ? EmailChecker()
           : <LoginPage />
         }
       </Container>
