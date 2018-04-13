@@ -60,7 +60,7 @@ class RegisterPage extends Component {
               </Form.Field>
 
               <Form.Field>
-              <Link to="/labtool/coursepage"><button className="ui left floated blue button" type="submit"> Submit</button> </Link>
+             <button className="ui left floated blue button" type="submit"> Submit</button> 
               <Link to="/labtool/coursepage"> <button className="ui right floated button" type="Cancel">Cancel</button></Link>
               </Form.Field>
 
