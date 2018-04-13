@@ -10,7 +10,6 @@ const helper = require('../helpers/course_instance_helper')
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
 const StudentInstanceController = require('../controllers').studentInstances
-const TeacherInstance = require('../models').TeacherInstance
 const Week = require('../models').Week
 
 
