@@ -82,7 +82,7 @@ class App extends Component {
     const EmailChecker = () => (
       <div>
         {this.props.user.email === ""
-          ? <Email />
+          ? <Email firstLogin="true" />
           : <Main />}
       </div>
     )
