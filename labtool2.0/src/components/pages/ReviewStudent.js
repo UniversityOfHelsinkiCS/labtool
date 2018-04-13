@@ -45,7 +45,6 @@ class ReviewStudent extends Component {
               <Button floated='right' color='red'>
                 <Link to="/labtool/coursepage">Cancel</Link></Button>
             </Form.Field>
-
           </Form>
 
         </Grid>

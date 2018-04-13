@@ -59,7 +59,7 @@ class Nav extends Component {
 
               <Menu.Item link>
                 <Button onClick={this.handleLogout} ><Link to="/labtool">Logout
-              </Link></Button>
+                </Link></Button>
               </Menu.Item>
 
             </Menu.Menu>
