@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom'
 import { updateUser } from '../../services/login'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router'
+import { getAllStudentCourses } from '../../services/studentinstances'
+import { getAllTeacherCourses } from '../../services/teacherinstances'
 
 /*
 take some elements from SetEmail.js, if user has already email in db
@@ -12,6 +14,11 @@ text should be "Edit your email address" if email can be found from db
 
 
 class Email extends Component {
+
+  componentDidMount() {
+    //this.props.getAllStudentCourses()
+    //this.props.getAllTeacherCourses()
+  }
 
   state = {
     redirectToNewPage: false
@@ -92,7 +99,9 @@ class Email extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    user: state.user
+    user: state.user,
+    studentInstance: state.studentInstance,
+    teacherInstance: state.teacherInstance
   }
 }
 

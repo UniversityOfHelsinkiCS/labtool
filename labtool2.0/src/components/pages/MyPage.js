@@ -8,8 +8,8 @@ import { getAllTeacherCourses } from '../../services/teacherinstances'
 
 class MyPageStudent extends Component {
   componentDidMount() {
-    this.props.getAllStudentCourses()
-    this.props.getAllTeacherCourses()
+    //this.props.getAllStudentCourses()
+    //this.props.getAllTeacherCourses()
     try {
 
       const loggedUserJSON = window.localStorage.getItem('loggedLabtool')
@@ -104,4 +104,4 @@ const mapStateToProps = (state) => {
 }
 
 
-export default connect(mapStateToProps, { getAllStudentCourses, getAllTeacherCourses })(MyPageStudent)
+export default connect(mapStateToProps, {})(MyPageStudent)
