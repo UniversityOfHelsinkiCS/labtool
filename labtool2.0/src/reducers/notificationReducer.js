@@ -35,7 +35,6 @@ const notificationReducer = (state = {}, action) => {
     default:
       return state
   }
-}
 
 export const clearNotifications = () => {
   return async (dispatch) => {
