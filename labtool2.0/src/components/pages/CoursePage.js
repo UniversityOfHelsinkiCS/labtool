@@ -63,34 +63,8 @@ class CoursePage extends Component {
                     </Table.Body>
 
                 </Table>
-                <h3> Your points </h3>
-                <Table celled size="small" unstackable>
-                    <Table.Header>
-                        <Table.Row>
-                            <Table.HeaderCell>Name </Table.HeaderCell>
-                            <Table.HeaderCell>Name and link </Table.HeaderCell>
-                            <Table.HeaderCell>Week 1</Table.HeaderCell>
-                            <Table.HeaderCell>Week 2</Table.HeaderCell>
-                            <Table.HeaderCell>Week 3</Table.HeaderCell>
-                            <Table.HeaderCell>Week 4</Table.HeaderCell>
-                            <Table.HeaderCell>Week 5</Table.HeaderCell>
-                            <Table.HeaderCell>Sum</Table.HeaderCell>
-                        </Table.Row>
-                    </Table.Header>
-                    <Table.Body>
-                        <Table.Row >
-                            <Table.Cell>Maija Meikäläinen  </Table.Cell>
-                            <Table.Cell> Name and link </Table.Cell>
-                            <Table.Cell>4</Table.Cell>
-                            <Table.Cell>2</Table.Cell>
-                            <Table.Cell>1</Table.Cell>
-                            <Table.Cell>0</Table.Cell>
-                            <Table.Cell>4</Table.Cell>
-                            <Table.Cell>11</Table.Cell>
-
-                        </Table.Row>
-                    </Table.Body>
-                </Table>
+                <h2> Your project </h2>
+              <h3> Project name and github link </h3>
                 <h3> Comments and feedback </h3>
                 <Table celled padded unstackable>
                     <Table.Header>
