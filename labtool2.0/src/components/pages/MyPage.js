@@ -33,7 +33,7 @@ class MyPageStudent extends Component {
     const user = { ...this.props.user.user }
     if (user.email === '' || user.email === null) {
       return (
-        <Redirect to='email' />
+        <Redirect to='labtool/email' />
       )
     }
     return (
@@ -49,7 +49,7 @@ class MyPageStudent extends Component {
               <Table.Row>
                 <Table.Cell><Card.Description><Header size='small'>{user.studentNumber}</Header></Card.Description></Table.Cell>
                 <Table.Cell><Card.Description>{user.email}</Card.Description></Table.Cell>
-                <Table.Cell><Button color='yellow' ><Link to="/email" > <List.Item icon='edit' /></Link></Button></Table.Cell>
+                <Table.Cell><Button color='yellow' ><Link to="/labtool/email" > <List.Item icon='edit' /></Link></Button></Table.Cell>
               </Table.Row>
               <Table.Row>
                 <Table.Cell></Table.Cell>

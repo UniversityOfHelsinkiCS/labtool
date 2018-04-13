@@ -10,11 +10,6 @@ module.exports = (sequelize, DataTypes) => {
     ohid: DataTypes.STRING
   }, {})
   CourseInstance.associate = (models) => {
-    CourseInstance.belongsTo(models.Course, {
-      foreignKey: 'courseId',
-      onDelete: 'CASCADE',
-    })
-
     CourseInstance.hasMany(models.StudentInstance, {
       foreignKey: 'courseInstanceId',
       as: 'courseInstances'

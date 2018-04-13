@@ -36,15 +36,6 @@ module.exports = {
       ohid: {
         type: Sequelize.STRING
       },
-      courseId: {
-        type: Sequelize.INTEGER,
-        onDelete: 'CASCADE',
-        references: {
-          model: 'Courses',
-          key: 'id',
-          as: 'courseId',
-        },
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

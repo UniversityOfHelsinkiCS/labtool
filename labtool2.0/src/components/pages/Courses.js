@@ -15,8 +15,8 @@ class Courses extends Component {
                 <Table.Row>
                   <Table.Cell>{instance.name}</Table.Cell>
                   <Table.Cell textAlign='right'><div>
-                  <Link to={`/courses/${instance.ohid}`}><Button circular color="teal" size='tiny' icon="large black eye icon"></Button></Link>
-                    <Button circular color='orange' size="tiny" icon="large black edit icon" />
+                    <Link to={`/labtool/courses/${instance.ohid}`}><Button circular color="teal" size='tiny' icon="large black eye icon"></Button></Link>
+                    <Link to={`/labtool/ModifyCourseInstancePage/${instance.ohid}`}><Button circular color='orange' size="tiny" icon="large black edit icon" /></Link>
                   </div></Table.Cell>
                 </Table.Row>
               )}

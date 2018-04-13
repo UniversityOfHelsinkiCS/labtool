@@ -15,22 +15,6 @@ const Week = require('../models').Week
 
 module.exports = {
 
-  create(req, res) {
-    console.log('REQ BODY: ', req.body)
-    return CourseInstance
-      .create({
-        name: req.body.name,
-        start: req.body.start,
-        end: req.body.end,
-        active: req.body.active,
-        weekAmount: req.body.weekAmount,
-        week_max_points: req.body.week_max_points,
-        current_week: req.body.current_week,
-        courseId: req.body.courseId
-      })
-      .then(CourseInstance => res.status(201).send(CourseInstance))
-      .catch(error => res.status(400).send(error))
-  },
 
   //TODO: search courseInstance where it is connected to user either by studentIstance or teacherInstance
   findByUserTeacherInstance(req, res) {//token verification might not work..? and we don't knpw if search works
@@ -173,7 +157,7 @@ module.exports = {
 
   },
 
-  registerToCourseInstance(req, res) {//register 
+  registerToCourseInstance(req, res) {
     const errors = []
     if (req.authenticated.success == false) {
       res.send(401)
@@ -198,7 +182,7 @@ module.exports = {
             })
           }
           let thisPromiseJustMakesThisCodeEvenMoreHorrible = new Promise((resolve, reject) => {
-            helper.checkWebOodi(req, res, user, resolve)
+            helper.checkWebOodi(req, res, user, resolve)  // this does not work.
 
             setTimeout(function () {
               resolve('shitaintright') // Yay! everything went to hell.
@@ -286,27 +270,6 @@ module.exports = {
   list(req, res) {
     return CourseInstance.findAll()
       .then(instance => res.status(200).send(instance))
-      .catch(error => res.status(400).send(error))
-  },
-
-  destroy(req, res) {
-    return CourseInstance
-      .find({
-        where: {
-          id: req.params.id,
-        },
-      })
-      .then(courseInstance => {
-        if (!courseInstance) {
-          return res.status(400).send({
-            message: 'course instance not found',
-          })
-        }
-        return courseInstance
-          .destroy()
-          .then(() => res.status(204).send())
-          .catch(error => res.status(400).send(error))
-      })
       .catch(error => res.status(400).send(error))
   },
 
@@ -421,5 +384,24 @@ module.exports = {
         })
       }
     }
-  }
+  },
+
+  retrieveCourseStuff(req, res) {
+    return CourseInstance
+      .findOne({
+        where: {
+          ohid: req.params.ohid
+        },
+      })
+      .then(course => {
+        if (!course) {
+          return res.status(404).send({
+            message: 'Course not Found',
+          })
+        }
+        return res.status(200).send(course)
+      })
+      .catch(error => res.status(400).send(error))
+  },
+
 }
