@@ -2,6 +2,7 @@ const StudentInstance = require('../models').StudentInstance
 const jwt = require('jsonwebtoken')
 const db = require('../models')
 const CourseInstanceController = require('../controllers').CourseInstanceController
+const CourseInstance = require('../models').CourseInstance
 //const list = require('../controllers').CourseInstanceController.list
 
 module.exports = {
@@ -87,7 +88,7 @@ module.exports = {
     const reg = new RegExp('^TKT[0-9]*.[0-9]*.(K|A|S).(K|A|S).[0-9]')
     //console.log('coursInsts: ', list)
     //validateOhid(req.params.ohid)
-    if (reg.test(req.params.ohid)) {
+    /*if (reg.test(req.params.ohid)) {
       db.sequelize.query(`SELECT * FROM "StudentInstances" AS SI 
     JOIN "CourseInstances" AS CI ON SI.id = CI.id 
     WHERE CI."ohid" = '${req.params.ohid}'`)
@@ -96,7 +97,19 @@ module.exports = {
         .catch(error => res.status(400).send(error))
     } else {
       res.status(400).send('something went wrong')
-    }
+    }*/
+    return StudentInstance
+      .findAll({
+        include: [{
+          model: CourseInstance,
+          where: {
+            ohid: req.params.ohid
+          }
+        }]
+      })
+      .then(studentInst =>
+        res.status(200).send(studentInst))
+      .catch(error => res.status(400).send(error))
   },
 
   retrieve(req, res) {
