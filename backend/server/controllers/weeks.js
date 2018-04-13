@@ -4,8 +4,10 @@ module.exports = {
   create(req, res) {
     return Week
       .create({
-        points: req.body.userId,
-        studentInstanceId: req.body.studentInstanceId
+        points: req.body.points,
+        studentInstanceId: req.body.studentInstanceId,
+        comment: req.body.comment,
+        weekNumber: req.body.weekNumber
       })
       .then(week => res.status(201).send(week))
       .catch(error => res.status(400).send(error))

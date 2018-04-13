@@ -18,16 +18,20 @@ module.exports = {
         type: Sequelize.DATE
       },
       active: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
       },
       weekAmount: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        defaultValue: 7
       },
       weekMaxPoints: {
-        type: Sequelize.INTEGER
+        type: Sequelize.DOUBLE,
+        defaultValue: 2
       },
       currentWeek: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        defaultValue: 1
       },
       ohid: {
         type: Sequelize.STRING

@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     end: DataTypes.DATE,
     active: DataTypes.BOOLEAN,
     weekAmount: DataTypes.INTEGER,
-    weekMaxPoints: DataTypes.INTEGER,
+    weekMaxPoints: DataTypes.DOUBLE,
     currentWeek: DataTypes.INTEGER,
     ohid: DataTypes.STRING
   }, {})

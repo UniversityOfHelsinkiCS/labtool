@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken')
 const db = require('../models')
 const CourseInstanceController = require('../controllers').CourseInstanceController
 const CourseInstance = require('../models').CourseInstance
+const Week = require('../models').Week
 //const list = require('../controllers').CourseInstanceController.list
 
 module.exports = {
@@ -101,15 +102,13 @@ module.exports = {
     return StudentInstance
       .findAll({
         include: [{
-          model: CourseInstance,
-          where: {
-            ohid: req.params.ohid
-          }
+          model: Week, as: 'weeks'
         }]
       })
       .then(studentInst =>
         res.status(200).send(studentInst))
-      .catch(error => res.status(400).send(error))
+      .then(console.log("testidiu", StudentInstance.id))
+      .catch(error => console.log(error))
   },
 
   retrieve(req, res) {
