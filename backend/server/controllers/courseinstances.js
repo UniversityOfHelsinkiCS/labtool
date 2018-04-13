@@ -19,9 +19,9 @@ module.exports = {
     let token = helper.tokenVerify(req)
     const id = parseInt(req.body.userId)//TODO: CHECK THAT THIS IS SANITICED ID
     console.log('TOKEN VERIFIED: ', token)
-    console.log('req.params.UserId: ', parseInt(req.body.userId))
+   console.log('token.data.id: ', token.data.id)
     if (token.verified) {
-      db.sequelize.query(`SELECT * FROM "CourseInstances" AS CI JOIN "TeacherInstances" AS TI ON CI.id = TI.id WHERE TI."userId" = ${token.data.id}`)
+      db.sequelize.query(`SELECT * FROM "CourseInstances" AS CI JOIN "TeacherInstances" AS TI ON CI.id = TI.courseInstanceId WHERE TI."userId" = ${token.data.id}`)
         .then(instance =>
           res.status(200).send(instance[0]))
         .catch(error => res.status(400).send(error))
@@ -57,7 +57,8 @@ module.exports = {
     //	SELECT * FROM "CourseInstances" AS CI JOIN "StudentInstances" AS SI ON CI.id = SI.id WHERE SI."userId" = 1;
     if (token.verified) {
       if (Number.isInteger(token.data.id)) {
-        db.sequelize.query(`SELECT * FROM "CourseInstances" AS CI JOIN "StudentInstances" AS SI ON CI.id = SI.id WHERE SI."userId" = ${token.data.id}`)
+        db.sequelize.query(`SELECT * FROM "CourseInstances" JOIN "StudentInstances"
+         ON "CourseInstances"."id" = "StudentInstances"."courseInstanceId" WHERE "StudentInstances"."userId" = ${token.data.id}`)
           .then(instance =>
             res.status(200).send(instance[0]))
           .catch(error => res.status(400).send(error))
