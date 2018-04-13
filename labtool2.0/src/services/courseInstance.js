@@ -16,4 +16,11 @@ export const getOneCI = (id) => {
 }
 
 
+export const modifyOneCI = (data, id) => {
+  const route = `/courseinstances/${id}`
+  const prefix = 'CI_MODIFY_ONE_'
+  const method = 'put'
+  return callController(route, prefix, data, method)  
+}
+
 export default { getAllCI }
