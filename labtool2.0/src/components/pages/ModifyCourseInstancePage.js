@@ -12,9 +12,9 @@ class ModifyCourseInstancePage extends Component {
 
     const content = {
       weekAmount: e.target.weekAmount.value,
-      weekMaxpoints: e.target.weekMaxpoints.value,
+      weeklyMaxpoints: e.target.weeklyMaxpoints.value,
       currentWeek: e.target.currentWeek.value,
-      active: e.target.active.value,
+      courseActive: e.target.courseActive.value,
       ohid: this.props.selectedInstance.ohid
     }
     await this.props.modifyOneCI(content, this.props.selectedInstance.ohid)
@@ -44,7 +44,7 @@ class ModifyCourseInstancePage extends Component {
                 <label>Weekly maxpoints</label>
                 <Input
                   className="form-control2"
-                  name="weekMaxpoints"
+                  name="weeklyMaxpoints"
                   placeholder="WeeklyMaxpoints"
                   required />
               </Form.Field>
@@ -61,8 +61,8 @@ class ModifyCourseInstancePage extends Component {
                 <label>Course active</label>
                 <Input type='checkbox'
                   className="form-control4"
-                  name="active"
-                  placeholder="active"  />
+                  name="courseActive"
+                  placeholder="CourseActive"  />
               </Form.Field>
 
               <Form.Field>
