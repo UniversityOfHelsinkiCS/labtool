@@ -43,7 +43,16 @@ class MyPageStudent extends Component {
               <Table.Row>
                 <Table.Cell><Card.Description><Header size='small'>{user.studentNumber}</Header></Card.Description></Table.Cell>
                 <Table.Cell><Card.Description>{user.email}</Card.Description></Table.Cell>
-                <Table.Cell><Button color='yellow' ><Link to="/labtool/email" > <List.Item icon='edit' /></Link></Button></Table.Cell>
+
+                <Table.Cell>
+                  <Link to="/labtool/email">
+                    <Button
+                      color='yellow'
+                      icon='edit'>
+                    </Button>
+                  </Link>
+                </Table.Cell>
+
               </Table.Row>
               <Table.Row>
                 <Table.Cell></Table.Cell>
