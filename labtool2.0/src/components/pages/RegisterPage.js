@@ -40,7 +40,7 @@ class RegisterPage extends Component {
               <Form.Field inline>
                 <label> Project name </label>
                 <Input
-                  style={{ minWidth: "20em" }}
+                  style={{ minWidth: '20em' }}
                   type="text"
                   className="form-control1"
                   name="projectName"
@@ -51,7 +51,7 @@ class RegisterPage extends Component {
               <Form.Field inline>
                 <label> GitHub link </label>
                 <Input
-                  style={{ minWidth: "20em" }}
+                  style={{ minWidth: '20em' }}
                   type="url"
                   className="form-control2"
                   name="github"
