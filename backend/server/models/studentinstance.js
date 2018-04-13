@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
 
     StudentInstance.hasMany(models.Week, {
       foreignKey: 'studentInstanceId',
-      as: 'studentInstances'
+      as: 'weeks'
     })
 
     StudentInstance.belongsTo(models.User, {
