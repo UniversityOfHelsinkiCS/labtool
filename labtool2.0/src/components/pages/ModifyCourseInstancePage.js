@@ -38,7 +38,7 @@ class ModifyCourseInstancePage extends Component {
                   type="text"
                   className="form-control1"
                   name="weekAmount"
-                  defaultValue={`${this.props.selectedInstance.weekAmount}`}
+                  placeholder={`${this.props.selectedInstance.weekAmount}`}
                   required
                 />
               </Form.Field>
@@ -47,7 +47,7 @@ class ModifyCourseInstancePage extends Component {
                 <Input
                   className="form-control2"
                   name="weeklyMaxpoints"
-                  defaultValue={`${this.props.selectedInstance.weekMaxPoints}`}
+                  placeholder={`${this.props.selectedInstance.weekMaxPoints}`}
                   required />
               </Form.Field>
               <Form.Field inline>
@@ -55,7 +55,7 @@ class ModifyCourseInstancePage extends Component {
                 <Input
                   className="form-control3"
                   name="currentWeek"
-                  defaultValue={`${this.props.selectedInstance.currentWeek}`}
+                  placeholder={`${this.props.selectedInstance.currentWeek}`}
                   required />
               </Form.Field>
 
@@ -64,8 +64,7 @@ class ModifyCourseInstancePage extends Component {
                 <Input type='checkbox'
                   className="form-control4"
                   name="courseActive"
-                  required
-                  defaultValue={`${this.props.selectedInstance.courseActive}`} />
+                /* checked={this.props.selectedInstance.courseActive} */ />
               </Form.Field>
               <Form.Field>
                 <Button floated='left' color='green' type='submit'>Save</Button>
