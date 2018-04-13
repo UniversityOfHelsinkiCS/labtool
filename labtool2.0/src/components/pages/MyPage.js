@@ -63,7 +63,7 @@ class MyPageStudent extends Component {
                 <Table.Row>
                   <Table.Cell>{sinstance.name}</Table.Cell>
                   <Table.Cell textAlign='left'><div>
-                    <Button circular color='teal' size="tiny" icon="large black eye icon"></Button>
+                    <Link to={`/labtool/courses/${sinstance.ohid}`}><Button circular color="teal" size='tiny' icon="large black eye icon"></Button></Link>
                   </div></Table.Cell>
                 </Table.Row>
               )}
@@ -81,7 +81,7 @@ class MyPageStudent extends Component {
                       <Table.Cell>{tinstance.name}</Table.Cell>
                       <Table.Cell textAlign='right'><div>
                         <Button circular color='orange' size="tiny" icon="large black edit icon" />
-                        <Button circular color='teal' size="tiny" icon="large black eye icon" />
+                        <Link to={`/labtool/courses/${tinstance.ohid}`}><Button circular color="teal" size='tiny' icon="large black eye icon"></Button></Link>
                       </div></Table.Cell>
                     </Table.Row>
                   )}
