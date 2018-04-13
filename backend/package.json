@@ -13,6 +13,7 @@
     "fs": "0.0.1-security",
     "jsonwebtoken": "^8.1.1",
     "morgan": "^1.9.0",
+    "nodemon": "^1.17.3",
     "path": "^0.12.7",
     "pg": "^7.4.1",
     "pg-hstore": "^2.3.2",
@@ -28,6 +29,7 @@
   },
   "scripts": {
     "start": "node app.js",
+    "watch": "nodemon app.js",
     "migrate": "node_modules/.bin/sequelize db:migrate",
     "debug": "node --inspect=0.0.0.0:9229 app.js",
     "createdb": "node_modules/.bin/sequelize db:create",
