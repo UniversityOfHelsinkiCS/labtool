@@ -75,8 +75,8 @@ class CoursePage extends Component {
 
                 </Table>
 
-                <h2> Your project </h2>
-                <h3> Project name and github link  </h3>
+                <h2> Your project {`${this.props.studentInstance.projectName}`} </h2>
+                <h3> {`${this.props.studentInstance.github}`} </h3>
                 <h3> Comments and feedback </h3>
                 <Table celled padded unstackable>
                     <Table.Header>
