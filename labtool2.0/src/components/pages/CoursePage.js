@@ -13,8 +13,19 @@ class CoursePage extends Component {
             //const CoursePage = ({ name, start, end, week_amount, week_max_points, current_week, handleFieldChange }) => {
             <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
                 <h2>{this.props.selectedInstance.name}</h2>
-                <Button> <Link to="/labtool/registerpage">Register</Link></Button>
-                <h3>Active: {this.props.selectedInstance.active} Week maxpoints:  {this.props.selectedInstance.weekMaxPoints} WeekAmount: {this.props.selectedInstance.weekAmount} WeekMaxPoints: {this.props.selectedInstance.weekMaxPoints} CurrentWeek: {this.props.selectedInstance.currentWeek} </h3>
+                <Link to="/labtool/registerpage"><Button>Register</Button></Link>
+
+                <Table celled >
+                    <Table.Header>
+                        <Table.Row>
+                            <Table.HeaderCell>Active: {this.props.selectedInstance.active}</Table.HeaderCell>
+                            <Table.HeaderCell>Week amount: {this.props.selectedInstance.weekAmount}</Table.HeaderCell>
+                            <Table.HeaderCell>Current week: {this.props.selectedInstance.currentWeek}</Table.HeaderCell>
+                            <Table.HeaderCell>Week maxpoints: {this.props.selectedInstance.weekMaxPoints}</Table.HeaderCell>
+                        </Table.Row>
+                    </Table.Header>
+                </Table>
+
                 <h3> Students </h3>
                 <Table celled unstackable>
                     <Table.Header>
@@ -63,8 +74,9 @@ class CoursePage extends Component {
                     </Table.Body>
 
                 </Table>
+
                 <h2> Your project </h2>
-              <h3> Project name and github link </h3>
+                <h3> Project name and github link </h3>
                 <h3> Comments and feedback </h3>
                 <Table celled padded unstackable>
                     <Table.Header>
