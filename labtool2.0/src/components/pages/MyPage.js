@@ -57,7 +57,7 @@ class MyPageStudent extends Component {
               <Table.Row>
                 <Table.Cell></Table.Cell>
                 <Table.Cell>I want to receive notifications for receiving feedback etc.</Table.Cell>
-                <Table.Cell><Checkbox /></Table.Cell>
+                <Table.Cell><Checkbox defaultChecked  /></Table.Cell>
               </Table.Row>
             </Table>
           </Card.Content>

@@ -4,9 +4,9 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 class CoursePage extends Component {
-  componentDidMount() {
+    componentDidMount() {
 
-  }
+    }
 
     render() {
         return (
@@ -76,7 +76,7 @@ class CoursePage extends Component {
                 </Table>
 
                 <h2> Your project </h2>
-                <h3> Project name and github link </h3>
+                <h3> Project name and github link  </h3>
                 <h3> Comments and feedback </h3>
                 <Table celled padded unstackable>
                     <Table.Header>
@@ -115,19 +115,19 @@ class CoursePage extends Component {
                     </Table.Body>
                 </Table>
 
-      </div >
+            </div >
 
-    )
-  }
+        )
+    }
 }
 
 const mapStateToProps = (state) => {
-  return {
-    user: state.user,
-    studentInstance: state.studentInstance,
-    teacherInstance: state.teacherInstance,
-    selectedInstance: state.selectedInstance
-  }
+    return {
+        user: state.user,
+        studentInstance: state.studentInstance,
+        teacherInstance: state.teacherInstance,
+        selectedInstance: state.selectedInstance
+    }
 }
 
 

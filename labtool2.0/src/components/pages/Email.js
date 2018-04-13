@@ -76,7 +76,7 @@ class Email extends Component {
 
                 <Form.Field>
                   <button className="ui left floated green button" type="submit">Save</button>
-                  <button className="ui right floated button"> <Link to="/labtool/mypage"  type="Cancel">Cancel</Link></button>
+                 <Link to="/labtool/mypage"> <button className="ui right floated button" type="Cancel">  Cancel</button></Link>
                 </Form.Field>
               </Form>
 
