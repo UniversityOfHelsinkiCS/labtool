@@ -55,10 +55,13 @@ class App extends Component {
       return (
         <main>
           <Switch>
+            <Route path={`/labtool/courses/:id`} render={({ match, history }) =>
+              <CoursePage history={history} courseinstance={(this.props.getOneCI(match.params.id))} />}
+            />
             <Route exact path={`/labtool/courses`} render={({ history }) =>
               <Courses history={history} />}
             />
-            <Route path={`/labtool/courses/:id`} render={({ match, history }) =>
+            <Route path={`/labtool/courseregistration/:id`} render={({ match, history }) =>
               <RegisterPage history={history} courseinstance={(this.props.getOneCI(match.params.id))} />}
             />
             <Route path={`/labtool/browsereviews`} component={BrowseReviews} />
