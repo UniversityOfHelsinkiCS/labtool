@@ -18,7 +18,7 @@ class CoursePage extends Component {
                 <Table celled >
                     <Table.Header>
                         <Table.Row>
-                            <Table.HeaderCell>Active: {this.props.selectedInstance.active}</Table.HeaderCell>
+                            <Table.HeaderCell>Active: {JSON.stringify(this.props.selectedInstance.active)}</Table.HeaderCell>
                             <Table.HeaderCell>Week amount: {this.props.selectedInstance.weekAmount}</Table.HeaderCell>
                             <Table.HeaderCell>Current week: {this.props.selectedInstance.currentWeek}</Table.HeaderCell>
                             <Table.HeaderCell>Week maxpoints: {this.props.selectedInstance.weekMaxPoints}</Table.HeaderCell>
