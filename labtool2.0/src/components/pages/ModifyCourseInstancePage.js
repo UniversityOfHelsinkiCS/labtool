@@ -67,7 +67,7 @@ class ModifyCourseInstancePage extends Component {
 
               <Form.Field>
                 <Button floated='left' color='green' type='submit'>Save</Button>
-                <button className="ui right floated button"> <Link to="/labtool/courses">Cancel</Link></button>
+                <Link to="/labtool/courses"><button className="ui right floated button"type="Cancel"> Cancel</button></Link>
               </Form.Field>
               
             </Form>
