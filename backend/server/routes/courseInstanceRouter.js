@@ -9,6 +9,10 @@ module.exports = (app) => {
   app.post('/api/course/teacher', courseInstanceController.findByUserTeacherInstance)
   app.get('/api/courseinstances', courseInstanceController.list) // Skolen kurssit on julkista tietoa eli periaattessa ok.
   app.get('/api/courseinstances/:ohid', courseInstanceController.retrieve) // En tiedä joten ei käy
-  app.put('/api/courseinstances/:ohid', courseInstanceController.update) // Not public stuff could relate to issue #109
+  app.put('/api/courseinstances/:id', courseInstanceController.update) // Sama.. en tiedä, mutta tätä ei julkisesti pitäisi pystyä tehdä ainakaan apilta saatujen oikeiden tietojen muuttamiseksi
+  app.delete('/api/courseinstances/:id', courseInstanceController.destroy) // EI... me ei tiedetä ja me ei haluta antaa mahdollisuutta.
+  app.post('/api/courseinstances/coursepage', courseInstanceController.coursePage) // Tämä kysely suoritetaan kun mennään coursepage komponenttiin frontendissä.
+
+  app.put('/api/courseinstances/:id', courseInstanceController.update) // Not public stuff could relate to issue #109
   app.get('/api/courses/:ohid', courseInstanceController.retrieveCourseStuff) // apparently same as /api/course/iunstances/:ohid
 }
