@@ -11,6 +11,7 @@ class MyPageStudent extends Component {
     this.props.getAllStudentCourses()
     this.props.getAllTeacherCourses()
     try {
+
       const loggedUserJSON = window.localStorage.getItem('loggedLabtool')
       if (loggedUserJSON && loggedUserJSON !== '{}') {
         const user = JSON.parse(loggedUserJSON)

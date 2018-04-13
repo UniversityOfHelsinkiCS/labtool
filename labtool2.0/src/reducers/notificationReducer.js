@@ -27,6 +27,11 @@ const notificationReducer = (state = {}, action) => {
         message: 'Give a valid email',
         error: true
       }
+    case 'STUDENT_COURSE_CREATE_ONE_SUCCESS':
+      return {
+        message: 'Course registration succesful!',
+        error: false
+      }  
     default:
       return state
   }
