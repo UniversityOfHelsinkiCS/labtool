@@ -102,18 +102,6 @@ module.exports = {
       res.status(400).send("something went wrong")
     }
   },
-  findNameForStudentInstance(req, res) {
-    console.log('req.body:', req.body)
-    let token = helper.tokenVerify(req)
-    if (token.verified) {
-      db.sequelize.query(`SELECT * FROM "Users" JOIN "StudentInstances" ON "Users"."id"="StudentInstances"."userId" WHERE "StudentInstances".id = ${req.body.id};`)
-        .then(user =>
-          res.status(200).send(user[0]))
-        .catch(error => res.status(400).send(error))
-    } else {
-      res.status(404).send('token verification failed')
-    }
-  },
   findByUserStudentInstance(req, res) {//token verification might not work..? and we don't knpw if search works
     console.log('db: ', db)
     const errors = []
