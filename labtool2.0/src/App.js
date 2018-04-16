@@ -17,14 +17,11 @@ import ReviewStudent from './components/pages/ReviewStudent'
 import BrowseReviews from './components/pages/BrowseReviews'
 import MyPage from './components/pages/MyPage'
 import { getOneCI } from './services/courseInstance'
-<<<<<<< HEAD
 import { coursePageInformation } from './services/courseInstance'
 
 
-=======
 import { getAllStudentCourses } from './services/studentinstances'
 import { getAllTeacherCourses } from './services/teacherinstances'
->>>>>>> 610228a1a6425d0fc36a47df28b087f895d29caf
 
 class App extends Component {
   componentWillMount() {
@@ -130,9 +127,5 @@ const mapStateToProps = (state) => {
 
 export default withRouter(connect(
   mapStateToProps,
-<<<<<<< HEAD
-  { getAllCI, tokenLogin, logout, getOneCI, coursePageInformation }
-=======
-  { getAllCI, tokenLogin, logout, getOneCI, getAllStudentCourses, getAllTeacherCourses }
->>>>>>> 610228a1a6425d0fc36a47df28b087f895d29caf
+  { getAllCI, tokenLogin, logout, getOneCI, coursePageInformation, getAllStudentCourses, getAllTeacherCourses }
 )(App))
