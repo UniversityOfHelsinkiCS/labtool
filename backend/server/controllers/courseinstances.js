@@ -42,7 +42,7 @@ module.exports = {
     const token = helper.tokenVerify(req)
 
     const palautus = {
-      role: "Unregistered",
+      role: 'Unregistered',
       data: undefined
     }
 
@@ -68,7 +68,7 @@ module.exports = {
         })
         try {
           palautus.data = student
-          palautus.role = "student"
+          palautus.role = 'student'
           res.status(200).send(palautus)
         } catch (error) {
           res.status(400).send(error)
@@ -86,14 +86,14 @@ module.exports = {
         })
         try {
           palautus.data = teacherPalautus
-          palautus.role = "teacher"
+          palautus.role = 'teacher'
           res.status(200).send(palautus)
         } catch (e) {
           res.status(200).send(e)
         }
       }
     } else {
-      res.status(400).send("something went wrong")
+      res.status(400).send('something went wrong')
     }
 
 
@@ -133,7 +133,7 @@ module.exports = {
             res.status(200).send(instance[0]))
           .catch(error => res.status(400).send(error))
       } else {
-        errros.push('something went wrong')
+        errors.push('something went wrong')
         res.status(400).send(errors)
       }
     } else {
