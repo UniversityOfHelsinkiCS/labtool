@@ -103,4 +103,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(null, { updateUser })(Email)
+export default connect(mapStateToProps, { updateUser })(Email)
