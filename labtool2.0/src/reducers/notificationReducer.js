@@ -12,7 +12,7 @@ const notificationReducer = (state = {}, action) => {
         message: 'Wrong credentials!',
         error: true
       }
-      case 'LOGOUT_SUCCESS':
+    case 'LOGOUT_SUCCESS':
       return {
         message: 'You have logged out',
         error: false
@@ -31,7 +31,12 @@ const notificationReducer = (state = {}, action) => {
       return {
         message: 'Course registration succesful!',
         error: false
-      }  
+      }
+    case 'CI_MODIFY_ONE_SUCCESS':
+      return {
+        message: 'Course instance updated successfully!',
+        error: false
+      }
     default:
       return state
   }

@@ -21,7 +21,7 @@ class RegisterPage extends Component {
         ohid: this.props.selectedInstance.ohid
       }
       await this.props.createStudentCourses(content, this.props.selectedInstance.ohid)
-      this.setState({redirectToNewPage: true })
+      this.setState({ redirectToNewPage: true })
     } catch (error) {
       console.log(error)
     }
@@ -34,13 +34,13 @@ class RegisterPage extends Component {
       )
     }
     return (
-      
+
       <div className="RegisterPage"
         style={{
           textAlignVertical: 'center',
           textAlign: 'center',
         }}>
-        
+
         <Grid>
           <Grid.Row centered>
             <h3>Register for {this.props.selectedInstance.name}</h3>
@@ -93,5 +93,5 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps, { createStudentCourses }) (RegisterPage)
+export default connect(mapStateToProps, { createStudentCourses })(RegisterPage)
 

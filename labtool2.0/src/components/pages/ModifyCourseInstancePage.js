@@ -1,26 +1,41 @@
 import React, { Component } from 'react'
 import { Form, Input, Button, Grid } from 'semantic-ui-react'
 import { modifyOneCI } from '../../services/courseInstance'
-import { connect } from 'react-redux'
+import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { Redirect } from 'react-router'
 
 class ModifyCourseInstancePage extends Component {
 
+  state = {
+    redirectToNewPage: false
+  }
 
   handleSubmit = async (e) => {
-    e.preventDefault()
+    try {
+      e.preventDefault()
 
-    const content = {
-      weekAmount: e.target.weekAmount.value,
-      weeklyMaxpoints: e.target.weeklyMaxpoints.value,
-      currentWeek: e.target.currentWeek.value,
-      courseActive: e.target.courseActive.value,
-      ohid: this.props.selectedInstance.ohid
+      const content = {
+        weekAmount: e.target.weekAmount.value,
+        weeklyMaxpoints: e.target.weeklyMaxpoints.value,
+        currentWeek: e.target.currentWeek.value,
+        courseActive: e.target.courseActive.value,
+        ohid: this.props.selectedInstance.ohid
+      }
+      await this.props.modifyOneCI(content, this.props.selectedInstance.ohid)
+      this.setState({ redirectToNewPage: true })
+    } catch (error) {
+      console.log(error)
     }
-    await this.props.modifyOneCI(content, this.props.selectedInstance.ohid)
+
   }
 
   render() {
+    if (this.state.redirectToNewPage) {
+      return (
+        <Redirect to={`/labtool/courses/${this.props.selectedInstance.ohid}`} />
+      )
+    }
     return (
       <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
         <Grid>
@@ -62,14 +77,14 @@ class ModifyCourseInstancePage extends Component {
                 <Input type='checkbox'
                   className="form-control4"
                   name="courseActive"
-                  placeholder="CourseActive"  />
+                  placeholder="CourseActive" />
               </Form.Field>
 
               <Form.Field>
                 <Button floated='left' color='green' type='submit'>Save</Button>
                 <button className="ui right floated button"> <Link to="/labtool/courses">Cancel</Link></button>
               </Form.Field>
-              
+
             </Form>
           </Grid.Row>
         </Grid>
@@ -84,4 +99,4 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps, { modifyOneCI }) (ModifyCourseInstancePage)
+export default connect(mapStateToProps, { modifyOneCI })(ModifyCourseInstancePage)
