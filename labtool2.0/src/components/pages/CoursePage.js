@@ -4,74 +4,52 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 class CoursePage extends Component {
+
+
+
   componentDidMount() {
-
+    console.log(this.props.selectedInstance.id, 'tässä id')
   }
-  render() {
-    let renderButton = false
-    let projectName
-    let githubLink
-    let instance = []
 
-    if (this.props.studentInstance) {
-      instance = this.props.studentInstance.filter(inst => (inst.courseInstanceId == this.props.selectedInstance.id))
-      console.log(instance)
+  render() {
+    let instance = []
+    if (this.props.coursePage !== [] && this.props.coursePage !== null) {
+      if (this.props.coursePage.data) {
+        instance = this.props.coursePage.data[0]
+      }
     }
     return (
+
       //const CoursePage = ({ name, start, end, week_amount, week_max_points, current_week, handleFieldChange }) => {
       <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
-
         <div class="ui grid">
           <div class="sixteen wide column">
             <h2>{this.props.selectedInstance.name}</h2>
-            <div class="sixteen wide column">
+            {instance !== [] && instance !== undefined && instance ?
+              instance.github ?
+                <div>
+                  <h2>{instance.projectName}</h2>
+                  <h3>{instance.github}</h3>
+                </div> :
+                <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>  <Button>Register</Button></Link> :
               <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>  <Button>Register</Button></Link>
-            </div>
+            }
           </div>
 
-          {this.props.coursePage.role === "student" ?
-
-            <div style={{ textAlignVertical: 'center', textAlign: 'center', }} class="sixteen wide column">
-              {instance.map(i =>
-                <div class="sixteen wide column">
-                  <div class="ui grid">
-                    <div class="sixteen wide column">
-                            
-                      <h3> Comments and feedback </h3>
-                      <Table celled padded unstackable>
-                        <Table.Header>
-                          <Table.Row>
-                            <Table.HeaderCell>Week</Table.HeaderCell>
-                            <Table.HeaderCell>Points</Table.HeaderCell>
-                            <Table.HeaderCell>Comment</Table.HeaderCell>
-                          </Table.Row>
-                        </Table.Header>
-                        <Table.Body>
-                          <Table.Row>
-                            <Table.Cell>1</Table.Cell>
-                            <Table.Cell>5</Table.Cell>
-                            <Table.Cell>Viesti</Table.Cell>
-                          </Table.Row>
-                          <Table.Row>
-                            <Table.Cell>2</Table.Cell>
-                            <Table.Cell>2</Table.Cell>
-                            <Table.Cell>Viesti</Table.Cell>
-                          </Table.Row>
-                        </Table.Body>
-                      </Table>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-
-            </div>
-            :
-            <div class="sixteen wide column" >
-
-
+          <Table celled >
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell>Active: {JSON.stringify(this.props.selectedInstance.active)}</Table.HeaderCell>
+                <Table.HeaderCell>Week amount: {this.props.selectedInstance.weekAmount}</Table.HeaderCell>
+                <Table.HeaderCell>Current week: {this.props.selectedInstance.currentWeek}</Table.HeaderCell>
+                <Table.HeaderCell>Week maxpoints: {this.props.selectedInstance.weekMaxPoints}</Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+          </Table>
+          {this.props.coursePage.role == "teacher" ?
+            <div  class="sixteen wide column">
               <h3> Students </h3>
-              <Table celled padded unstackable>
+              <Table celled unstackable>
                 <Table.Header>
                   <Table.Row>
                     <Table.HeaderCell>Name</Table.HeaderCell>
@@ -105,25 +83,61 @@ class CoursePage extends Component {
                     <Table.Cell>4.5</Table.Cell>
                     <Table.Cell><Button circular color='orange' size="tiny" icon="large black edit"></Button></Table.Cell>
                   </Table.Row>
+                  <Table.Row>
+                    <Table.Cell>Joonatan Järvinen </Table.Cell>
+                    <Table.Cell>Name and link</Table.Cell>
+                    <Table.Cell>4</Table.Cell>
+                    <Table.Cell>0</Table.Cell>
+                    <Table.Cell>4</Table.Cell>
+                    <Table.Cell>5 </Table.Cell>
+                    <Table.Cell>1.5</Table.Cell>
+                    <Table.Cell><Button circular color='orange' size="tiny" icon="edit black large" ></Button></Table.Cell>
+                  </Table.Row>
                 </Table.Body>
               </Table>
             </div>
+            :
+            <div>
+              <h3> Comments and feedback </h3>
+              <Table celled padded unstackable>
+                <Table.Header>
+                  <Table.Row>
+                    <Table.HeaderCell>Week</Table.HeaderCell>
+                    <Table.HeaderCell>Points</Table.HeaderCell>
+                    <Table.HeaderCell>Comment</Table.HeaderCell>
+                  </Table.Row>
+                </Table.Header>
+                <Table.Body>
+                  <Table.Row>
+                    <Table.Cell>1</Table.Cell>
+                    <Table.Cell>5</Table.Cell>
+                    <Table.Cell>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ut ultrices sapien. Aliquam neque diam, scelerisque nec metus sit amet, euismod interdum orci. Vivamus eu convallis ex. Etiam faucibus varius lorem in egestas. Pellentesque quis elementum magna, quis sagittis ex. Mauris a sem dignissim, fringilla elit ac, iaculis quam. Ut ut lacus sit amet massa blandit tincidunt. Mauris mattis tempor nibh, fermentum interdum massa placerat tempor.</Table.Cell>
+                  </Table.Row>
+                  <Table.Row>
+                    <Table.Cell>2</Table.Cell>
+                    <Table.Cell>2</Table.Cell>
+                    <Table.Cell>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ut ultrices sapien. Aliquam neque diam, scelerisque nec metus sit amet, euismod interdum orci. Vivamus eu convallis ex. Etiam faucibus varius lorem in egestas. Pellentesque quis elementum magna, quis sagittis ex. Mauris a sem dignissim, fringilla elit ac, iaculis quam. Ut ut lacus sit amet massa blandit tincidunt. Mauris mattis tempor nibh, fermentum interdum massa placerat tempor.</Table.Cell>
+                  </Table.Row>
+                  <Table.Row>
+                    <Table.Cell>3</Table.Cell>
+                    <Table.Cell>0</Table.Cell>
+                    <Table.Cell>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ut ultrices sapien. Aliquam neque diam, scelerisque nec metus sit amet, euismod interdum orci. Vivamus eu convallis ex. Etiam faucibus varius lorem in egestas. Pellentesque quis elementum magna, quis sagittis ex. Mauris a sem dignissim, fringilla elit ac, iaculis quam. Ut ut lacus sit amet massa blandit tincidunt. Mauris mattis tempor nibh, fermentum interdum massa placerat tempor.</Table.Cell>
+                  </Table.Row>
+                  <Table.Row>
+                    <Table.Cell>4</Table.Cell>
+                    <Table.Cell>4</Table.Cell>
+                    <Table.Cell>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ut ultrices sapien. Aliquam neque diam, scelerisque nec metus sit amet, euismod interdum orci. Vivamus eu convallis ex. Etiam faucibus varius lorem in egestas. Pellentesque quis elementum magna, quis sagittis ex. Mauris a sem dignissim, fringilla elit ac, iaculis quam. Ut ut lacus sit amet massa blandit tincidunt. Mauris mattis tempor nibh, fermentum interdum massa placerat tempor.</Table.Cell>
+                  </Table.Row>
+                  <Table.Row>
+                    <Table.Cell>5</Table.Cell>
+                    <Table.Cell>4.5</Table.Cell>
+                    <Table.Cell>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ut ultrices sapien. Aliquam neque diam, scelerisque nec metus sit amet, euismod interdum orci. Vivamus eu convallis ex. Etiam faucibus varius lorem in egestas. Pellentesque quis elementum magna, quis sagittis ex. Mauris a sem dignissim, fringilla elit ac, iaculis quam. Ut ut lacus sit amet massa blandit tincidunt. Mauris mattis tempor nibh, fermentum interdum massa placerat tempor.</Table.Cell>
+                  </Table.Row>
+                </Table.Body>
+              </Table> </div>
           }
-          <Table celled padded unstackable >
-            <Table.Header>
-              <Table.Row>
-                <Table.HeaderCell>Active: {JSON.stringify(this.props.selectedInstance.active)}</Table.HeaderCell>
-                <Table.HeaderCell>Week amount: {this.props.selectedInstance.weekAmount}</Table.HeaderCell>
-                <Table.HeaderCell>Current week: {this.props.selectedInstance.currentWeek}</Table.HeaderCell>
-                <Table.HeaderCell>Week maxpoints: {this.props.selectedInstance.weekMaxPoints}</Table.HeaderCell>
-              </Table.Row>
-            </Table.Header>
-          </Table>
-
         </div >
       </div>
-
-
     )
   }
 }
