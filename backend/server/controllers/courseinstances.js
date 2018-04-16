@@ -23,7 +23,7 @@ module.exports = {
     console.log('TOKEN VERIFIED: ', token)
    console.log('token.data.id: ', token.data.id)
     if (token.verified) {
-      db.sequelize.query(`SELECT * FROM "CourseInstances" AS CI JOIN "TeacherInstances" AS TI ON CI.id = TI.courseInstanceId WHERE TI."userId" = ${token.data.id}`)
+      db.sequelize.query(`SELECT * FROM "CourseInstances" JOIN "TeacherInstances" ON "CourseInstances"."id" = "TeacherInstances"."courseInstanceId" WHERE "TeacherInstances"."userId" = ${token.data.id}`)
         .then(instance =>
           res.status(200).send(instance[0]))
         .catch(error => res.status(400).send(error))
@@ -268,23 +268,6 @@ module.exports = {
       .catch(error => res.status(400).send(error))
 
   },
-  createWeek(req, res) {
-    let token = helper.tokenVerify(req)
-    if (token.verified) {
-      return Week
-        .create({
-          points: req.body.points,
-          studentInstanceId: req.body.studentInstanceId,
-          comment: req.body.comment,
-          weekNumber: req.body.weekNumber
-        })
-        .then(week => res.status(201).send(week))
-        .catch(error => res.status(400).send(error))
-    } else {
-      res.status(400).send('token verification failed')
-    }
-  },
-
   getNew(req, res) {
     console.log('update current...')
     const auth = process.env.TOKEN || 'notset' //You have to set TOKEN in .env file in order for this to work
