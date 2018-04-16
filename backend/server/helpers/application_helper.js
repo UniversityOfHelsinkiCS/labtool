@@ -166,13 +166,14 @@ async function createCourse(body) {
       return barf.data
     }
   )
-  const new_course = await CourseInstance.create({
+  const new_course = await CourseInstance.build({
     name: body.cname,
     start: body.starts,
     end: body.ends,
     ohid: body.hid,
 
-  })
+  }).save()
+
   if (result.teachers.length > 0 ) {
     for (i in result.teachers) {
       const user = await User.findOrCreate({
@@ -183,10 +184,10 @@ async function createCourse(body) {
           username: result.teachers[i]
         }
       })
-      TeacherInstance.create({
+      TeacherInstance.build({
         userId: user.id,
         courseInstanceId: new_course.id
-      })
+      }).save()
 
     }
   }
