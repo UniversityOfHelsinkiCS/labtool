@@ -155,16 +155,25 @@ async function getInactive(req, res) {
 }
 
 
-
-async function createCourse(hid) {
+async function createCourse(body) {
+  const CourseInstance = require('../models').CourseInstance
 
   const axios = require('axios')
-  const options = await axiosCourseBla(hid)
+  const options = await axiosCourseBla(body.hid)
   const result = await axios.create(options).get().then(barf => {
       return barf.data
     }
   )
-  console.log(result)
+  const new_course = await CourseInstance.create({
+    name: body.cname,
+    start: body.starts,
+    end: body.ends,
+    ohid: body.hid,
+
+  })
+
+
+  await console.log([body, new_course, result])
   return result
 
 

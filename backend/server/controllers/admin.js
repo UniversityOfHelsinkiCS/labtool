@@ -23,7 +23,7 @@ module.exports = {
    * @param res
    */
   process(req, res) {
-    helper.createCourse(req.body.hid)
+    helper.createCourse(req.body)
     res.redirect('/admin')
   },
 
