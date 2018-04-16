@@ -262,15 +262,20 @@ module.exports = {
 
   },
   createWeek(req, res) {
-    return Week
-      .create({
-        points: req.body.points,
-        studentInstanceId: req.body.studentInstanceId,
-        comment: req.body.comment,
-        weekNumber: req.body.weekNumber
-      })
-      .then(week => res.status(201).send(week))
-      .catch(error => res.status(400).send(error))
+    let token = helper.tokenVerify(req)
+    if (token.verified) {
+      return Week
+        .create({
+          points: req.body.points,
+          studentInstanceId: req.body.studentInstanceId,
+          comment: req.body.comment,
+          weekNumber: req.body.weekNumber
+        })
+        .then(week => res.status(201).send(week))
+        .catch(error => res.status(400).send(error))
+    } else {
+      res.status(400).send('token verification failed')
+    }
   },
 
   getNew(req, res) {
