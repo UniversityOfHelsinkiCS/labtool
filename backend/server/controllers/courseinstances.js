@@ -4,6 +4,7 @@
 const db = require('../models')
 const CourseInstance = require('../models').CourseInstance
 const StudentInstance = require('../models').StudentInstance
+const TeacherInstance = require('../models').TeacherInstance
 const User = require('../models').User
 const helper = require('../helpers/course_instance_helper')
 const Sequelize = require('sequelize')
