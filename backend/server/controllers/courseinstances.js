@@ -38,7 +38,7 @@ module.exports = {
   /** */
   async coursePage(req, res) {
 
-    const course = await CourseInstance.findAll({
+    const course = await CourseInstance.findOne({
       where: {
         ohid: req.body.course
       }
