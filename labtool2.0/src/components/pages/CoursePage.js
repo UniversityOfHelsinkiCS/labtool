@@ -12,14 +12,10 @@ class CoursePage extends Component {
     }
 
   render() {
-    let projectName
-    let githubLink
     let instance = []
-    console.log("kana")
     if (this.props.coursePage !== [] && this.props.coursePage !== null) {
       if (this.props.coursePage.data) {
         instance = this.props.coursePage.data[0]
-        console.log(instance)
       }
     }
 
