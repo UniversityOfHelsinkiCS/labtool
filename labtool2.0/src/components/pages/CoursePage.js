@@ -26,7 +26,7 @@ class CoursePage extends Component {
           <div class="sixteen wide column">
             <h2>{this.props.selectedInstance.name}</h2>
             {instance !== [] && instance !== undefined && instance ?
-              instance.github ?
+              instance.github && this.props.coursePage.role === "student" ?
                 <div>
                   <h2>{instance.projectName}</h2>
                   <h3>{instance.github}</h3>
@@ -47,7 +47,7 @@ class CoursePage extends Component {
             </Table.Header>
           </Table>
           {this.props.coursePage.role == "teacher" ?
-            <div  class="sixteen wide column">
+            <div class="sixteen wide column" >
               <h3> Students </h3>
               <Table celled unstackable>
                 <Table.Header>
@@ -97,7 +97,7 @@ class CoursePage extends Component {
               </Table>
             </div>
             :
-            <div>
+            <div class="sixteen wide column" >
               <h3> Comments and feedback </h3>
               <Table celled padded unstackable>
                 <Table.Header>
@@ -137,7 +137,7 @@ class CoursePage extends Component {
               </Table> </div>
           }
         </div >
-      </div>
+      </div >
     )
   }
 }
