@@ -14,8 +14,6 @@ const Week = require('../models').Week
 
 module.exports = {
 
-
-  //TODO: search courseInstance where it is connected to user either by studentIstance or teacherInstance
   findByUserTeacherInstance(req, res) {//token verification might not work..? and we don't knpw if search works
     const errors = []
     console.log('***REQ BODY***: ', req.body)
@@ -24,7 +22,7 @@ module.exports = {
     console.log('TOKEN VERIFIED: ', token)
     console.log('req.params.UserId: ', parseInt(req.body.userId))
     if (token.verified) {
-      db.sequelize.query(`SELECT * FROM "CourseInstances" AS CI JOIN "TeacherInstances" AS TI ON CI.id = TI.courseInstanceId WHERE TI."userId" = ${token.data.id}`)
+      db.sequelize.query(`SELECT * FROM "CourseInstances" JOIN "TeacherInstances" ON "CourseInstances"."id" = "TeacherInstances"."courseInstanceId" WHERE "TeacherInstances"."userId" = ${token.data.id}`)
         .then(instance =>
           res.status(200).send(instance[0]))
         .catch(error => res.status(400).send(error))
@@ -34,7 +32,6 @@ module.exports = {
     }
 
   },
-  /** */
   async coursePage(req, res) {
 
     const courseInst = req.body.course
@@ -94,20 +91,7 @@ module.exports = {
     } else {
       res.status(400).send('something went wrong')
     }
-
-
-
-
-    //console.log('teacher[0]: ', teacher[0])
-    /*     const teacher = TeacherInstanceController.retrieve(request, res)
-     */   // console.log('teacher: ', teacher)
   },
-  /**
-   * sequelize.query("SELECT * FROM 'property'", { type:Sequelize.QueryTypes.SELECT})
-   .then(function(properties) {
-      res.json(properties)
-  })
-   */
   findByUserStudentInstance(req, res) {//token verification might not work..? and we don't knpw if search works
     console.log('db: ', db)
     const errors = []
@@ -127,7 +111,7 @@ module.exports = {
     //	SELECT * FROM "CourseInstances" AS CI JOIN "StudentInstances" AS SI ON CI.id = SI.id WHERE SI."userId" = 1;
     if (token.verified) {
       if (Number.isInteger(token.data.id)) {
-        db.sequelize.query(`SELECT * FROM "CourseInstances" AS CI JOIN "StudentInstances" AS SI ON CI.id = SI.courseInstanceId WHERE SI."userId" = ${token.data.id}`)
+        db.sequelize.query(`SELECT * FROM "CourseInstances" JOIN "StudentInstances" ON "CourseInstances"."id" = "StudentInstances"."courseInstanceId" WHERE "StudentInstances"."userId" = ${token.data.id}`)
           .then(instance =>
             res.status(200).send(instance[0]))
           .catch(error => res.status(400).send(error))
@@ -139,20 +123,6 @@ module.exports = {
       errors.push('token verification failed')
       res.status(400).send(errors)
     }
-    // db.sequelize.query(`SELECT * FROM "CourseInstances" AS CI JOIN "StudentInstances" AS SI ON CI.id = SI.id WHERE SI."userId" = ${id}`)
-    //   // CourseInstance.findAll({
-    //   //   include: [{
-    //   //     model: StudentInstance,
-    //   //   }],
-    //   //   where: {
-    //   //     userid: {
-    //   //       [Op.eq]: id
-    //   //     }
-    //   //   }
-    //   // })
-    //   .then(instance =>
-    //     res.status(200).send(instance))
-    //   .catch(error => res.status(400).send(error))
 
   },
 
@@ -291,7 +261,6 @@ module.exports = {
       .catch(error => res.status(400).send(error))
 
   },
-
   getNew(req, res) {
     console.log('update current...')
     const auth = process.env.TOKEN || 'notset' //You have to set TOKEN in .env file in order for this to work
