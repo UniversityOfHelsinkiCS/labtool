@@ -22,7 +22,7 @@ module.exports = {
     let token = helper.tokenVerify(req)
     const id = parseInt(req.body.userId)//TODO: CHECK THAT THIS IS SANITICED ID
     console.log('TOKEN VERIFIED: ', token)
-    console.log('req.params.UserId: ', parseInt(req.body.userId))
+   console.log('token.data.id: ', token.data.id)
     if (token.verified) {
       db.sequelize.query(`SELECT * FROM "CourseInstances" AS CI JOIN "TeacherInstances" AS TI ON CI.id = TI.courseInstanceId WHERE TI."userId" = ${token.data.id}`)
         .then(instance =>

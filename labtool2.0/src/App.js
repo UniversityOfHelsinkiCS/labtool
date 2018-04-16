@@ -17,6 +17,8 @@ import ReviewStudent from './components/pages/ReviewStudent'
 import BrowseReviews from './components/pages/BrowseReviews'
 import MyPage from './components/pages/MyPage'
 import { getOneCI } from './services/courseInstance'
+import { getAllStudentCourses } from './services/studentinstances'
+import { getAllTeacherCourses } from './services/teacherinstances'
 
 class App extends Component {
   componentWillMount() {
@@ -29,6 +31,8 @@ class App extends Component {
       if (loggedUserJSON && loggedUserJSON !== '{}') {
         const user = JSON.parse(loggedUserJSON)
         this.props.tokenLogin(user)
+        this.props.getAllStudentCourses()
+        this.props.getAllTeacherCourses()
       }
     } catch (exception) {
       console.log('no user logged in')
@@ -109,7 +113,9 @@ const mapStateToProps = (state) => {
   return {
     user: state.user.user,
     token: state.user.token,
-    created: state.user.created
+    created: state.user.created,
+    studentInstance: state.studentInstance,
+    teacherInstance: state.teacherInstance
   }
 }
 
@@ -117,5 +123,5 @@ const mapStateToProps = (state) => {
 
 export default withRouter(connect(
   mapStateToProps,
-  { getAllCI, tokenLogin, logout, getOneCI }
+  { getAllCI, tokenLogin, logout, getOneCI, getAllStudentCourses, getAllTeacherCourses }
 )(App))

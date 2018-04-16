@@ -8,12 +8,34 @@ class CoursePage extends Component {
 
   }
 
-    render() {
-        return (
-            //const CoursePage = ({ name, start, end, week_amount, week_max_points, current_week, handleFieldChange }) => {
-            <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
-                <h2>{this.props.selectedInstance.name}</h2>
-                <Link to="/labtool/registerpage"><Button>Register</Button></Link>
+  render() {
+    let renderButton = false
+    let projectName
+    let githubLink
+    let instance = []
+    if (this.props.studentInstance) {
+      instance = this.props.studentInstance.filter(inst => (inst.courseInstanceId == this.props.selectedInstance.id))
+      console.log(instance)
+    }
+
+    return (
+      
+    //const CoursePage = ({ name, start, end, week_amount, week_max_points, current_week, handleFieldChange }) => {
+      <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
+      <div class="ui grid">
+      <div class="sixteen wide column">
+        <h2>{this.props.selectedInstance.name}</h2>
+        </div>
+        {instance.map(i => 
+        <div class="sixteen wide column">
+        <h3>Project name: {i.projectName}</h3>
+        <h3>Github link: <a href={`${i.github}`}>{i.github}</a></h3>
+        </div>
+        )}
+        <div class="sixteen wide column">
+        <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>  <Button>Register</Button></Link>
+        </div>
+        </div>
 
                 <Table celled >
                     <Table.Header>
@@ -74,9 +96,7 @@ class CoursePage extends Component {
                     </Table.Body>
 
                 </Table>
-
-                <h2> Your project {`${this.props.studentInstance.projectName}`} </h2>
-                <h3> {`${this.props.studentInstance.github}`} </h3>
+                
                 <h3> Comments and feedback </h3>
                 <Table celled padded unstackable>
                     <Table.Header>
