@@ -44,7 +44,7 @@ class Email extends Component {
   render() {
     if (this.state.redirectToNewPage) {
       return (
-        <Redirect to="labtool/myPage" />
+        <Redirect to="/labtool/myPage" />
       )
     } else {
       const user = { ...this.props.user.user }
