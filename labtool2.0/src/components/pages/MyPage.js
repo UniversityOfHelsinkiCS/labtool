@@ -7,10 +7,10 @@ import { getAllStudentCourses } from '../../services/studentinstances'
 import { getAllTeacherCourses } from '../../services/teacherinstances'
 import { Redirect } from 'react-router'
 
-class MyPageStudent extends Component {
+class MyPage extends Component {
   componentDidMount() {
-    this.props.getAllStudentCourses()
-    this.props.getAllTeacherCourses()
+    //this.props.getAllStudentCourses()
+    //this.props.getAllTeacherCourses()
     try {
       const loggedUserJSON = window.localStorage.getItem('loggedLabtool')
       if (loggedUserJSON && loggedUserJSON !== '{}') {
@@ -118,4 +118,4 @@ const mapStateToProps = (state) => {
 }
 
 
-export default connect(mapStateToProps, { getAllStudentCourses, getAllTeacherCourses })(MyPageStudent)
+export default connect(mapStateToProps, {})(MyPage)

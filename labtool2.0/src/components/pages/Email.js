@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom'
 import { updateUser } from '../../services/login'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router'
+import { getAllStudentCourses } from '../../services/studentinstances'
+import { getAllTeacherCourses } from '../../services/teacherinstances'
 
 /*
 take some elements from SetEmail.js, if user has already email in db
@@ -12,6 +14,9 @@ text should be "Edit your email address" if email can be found from db
 
 
 class Email extends Component {
+
+  componentDidMount() {
+  }
 
     state = {
       redirectToNewPage: false
@@ -34,49 +39,68 @@ class Email extends Component {
       
     }
 
-    render() {
-      if (this.state.redirectToNewPage) {
-        return (
-          <Redirect to="labtool/myPage"/>
-        )
-      } else {
-        return (
-          <div className="Email" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
+  render() {
+    if (this.state.redirectToNewPage) {
+      return (
+        <Redirect to="/labtool/myPage" />
+      )
+    } else {
+      const user = { ...this.props.user.user }
+      return (
+        <div className="Email" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
 
-            <Grid centered>
+          <Grid centered>
 
-              <Grid.Row>
-                <h3>Please give your email address: </h3>
-              </Grid.Row>
-              <Grid.Row>
-                <p>Email is required because ...</p>
-              </Grid.Row>
+            {this.props.firstLogin ?
+              <div>
+                <Grid.Row>
+                  <h3>Please give your email address: </h3>
+                </Grid.Row>
+                <Grid.Row>
+                  <p>Email is required because ...</p>
+                </Grid.Row>
+              </div> :
+              <div>
+                <Grid.Row>
+                  <h3>Edit your email address: </h3>
+                </Grid.Row>
+              </div>
+            }
 
-              <Grid.Row>
-                <Form onSubmit={this.handleSubmit}>
-                  <Form.Field>
-                    <Form.Input
-                      style={{ minWidth: '20em' }}
-                      type="email"
-                      className="form-control"
-                      name="email"
-                      placeholder="my.email@helsinki.fi" />
-                  </Form.Field>
+            <Grid.Row>
+              <Form onSubmit={this.handleSubmit}>
+                <Form.Field>
+                  <Form.Input
+                    defaultValue={user.email}
+                    style={{ minWidth: '20em' }}
+                    type="email"
+                    className="form-control"
+                    name="email"
+                    placeholder="my.email@helsinki.fi" />
+                </Form.Field>
 
-                  <Form.Field>
-                    <button className="ui left floated green button" type="submit">Save</button>
-                    <button className="ui right floated button"> <Link to="/labtool/mypage">Cancel</Link></button>
-                  </Form.Field>
-                </Form>
+                <Form.Field>
+                  <button className="ui left floated green button" type="submit">Save</button>
+                  <button className="ui right floated button"> <Link to="/labtool/mypage">Cancel</Link></button>
+                </Form.Field>
+              </Form>
 
-              </Grid.Row>
+            </Grid.Row>
 
-            </Grid>
+          </Grid>
 
-          </div>
-        )
-      }
+        </div>
+      )
     }
+  }
 }
 
-export default connect(null, { updateUser })(Email)
+const mapStateToProps = (state) => {
+  return {
+    user: state.user,
+    studentInstance: state.studentInstance,
+    teacherInstance: state.teacherInstance
+  }
+}
+
+export default connect(mapStateToProps, { updateUser })(Email)

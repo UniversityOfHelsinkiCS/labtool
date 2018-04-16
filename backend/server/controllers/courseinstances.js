@@ -4,6 +4,7 @@
 const db = require('../models')
 const CourseInstance = require('../models').CourseInstance
 const StudentInstance = require('../models').StudentInstance
+const TeacherInstance = require('../models').TeacherInstance
 const User = require('../models').User
 const helper = require('../helpers/course_instance_helper')
 const Sequelize = require('sequelize')
@@ -20,7 +21,7 @@ module.exports = {
     let token = helper.tokenVerify(req)
     const id = parseInt(req.body.userId)//TODO: CHECK THAT THIS IS SANITICED ID
     console.log('TOKEN VERIFIED: ', token)
-    console.log('req.params.UserId: ', parseInt(req.body.userId))
+   console.log('token.data.id: ', token.data.id)
     if (token.verified) {
       db.sequelize.query(`SELECT * FROM "CourseInstances" JOIN "TeacherInstances" ON "CourseInstances"."id" = "TeacherInstances"."courseInstanceId" WHERE "TeacherInstances"."userId" = ${token.data.id}`)
         .then(instance =>
@@ -34,7 +35,13 @@ module.exports = {
   },
   async coursePage(req, res) {
 
-    const courseInst = req.body.course
+    const course = await CourseInstance.findOne({
+      where: {
+        ohid: req.body.course
+      }
+    })
+    
+    const courseInst = course.id
     const token = helper.tokenVerify(req)
 
     const palautus = {
@@ -60,7 +67,11 @@ module.exports = {
           },
           include: [{
             model: Week, as: 'weeks'
-          }]
+          },
+          {
+            model: User
+          }
+          ]
         })
         try {
           palautus.data = student
@@ -78,6 +89,9 @@ module.exports = {
           },
           include: [{
             model: Week, as: 'weeks'
+          },
+          {
+            model: User
           }]
         })
         try {
@@ -101,14 +115,6 @@ module.exports = {
     console.log('TOKEN VERIFIED: ', token)
     const id = parseInt(req.body.userId)
     console.log('req.params.UserId: ', id)
-    /*CourseInstance.findAll({
-      include:[{
-        model: StudentInstance,
-      }],
-      where: {userId: id},
-      logging: console.log
-    })*/
-    //	SELECT * FROM "CourseInstances" AS CI JOIN "StudentInstances" AS SI ON CI.id = SI.id WHERE SI."userId" = 1;
     if (token.verified) {
       if (Number.isInteger(token.data.id)) {
         db.sequelize.query(`SELECT * FROM "CourseInstances" JOIN "StudentInstances" ON "CourseInstances"."id" = "StudentInstances"."courseInstanceId" WHERE "StudentInstances"."userId" = ${token.data.id}`)
@@ -170,6 +176,7 @@ module.exports = {
                 },
                 defaults: {
                   userId: user.id,
+                  name: user,
                   courseInstanceId: course.dataValues.id,
                   github: req.body.github || '',                     // model would like to validate this to be an URL but seems like crap
                   projectName: req.body.projectName || '',           // model would like to validate this to alphanumeric but seems like this needs specific nulls or empties or whatever
@@ -272,8 +279,7 @@ module.exports = {
     } else {
       if (this.remoteAddress === '127.0.0.1') {
         res.send('gtfo')
-
-      } else {
+      } else {q
         const request = require('request')
         const options = {
           method: 'get',
