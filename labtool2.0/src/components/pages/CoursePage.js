@@ -57,6 +57,7 @@ class CoursePage extends Component {
                         <Table.Row>
                             <Table.HeaderCell>Name</Table.HeaderCell>
                             <Table.HeaderCell> Github </Table.HeaderCell>
+                            {/* Maps Week n n++; */}
                             <Table.HeaderCell>Week 1</Table.HeaderCell>
                             <Table.HeaderCell>Week 2</Table.HeaderCell>
                             <Table.HeaderCell>Week 3</Table.HeaderCell>
