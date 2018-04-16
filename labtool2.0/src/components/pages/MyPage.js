@@ -7,10 +7,10 @@ import { getAllStudentCourses } from '../../services/studentinstances'
 import { getAllTeacherCourses } from '../../services/teacherinstances'
 import { Redirect } from 'react-router'
 
-class MyPageStudent extends Component {
+class MyPage extends Component {
   componentDidMount() {
-    this.props.getAllStudentCourses()
-    this.props.getAllTeacherCourses()
+    //this.props.getAllStudentCourses()
+    //this.props.getAllTeacherCourses()
     try {
       const loggedUserJSON = window.localStorage.getItem('loggedLabtool')
       if (loggedUserJSON && loggedUserJSON !== '{}') {
@@ -49,12 +49,21 @@ class MyPageStudent extends Component {
               <Table.Row>
                 <Table.Cell><Card.Description><Header size='small'>{user.studentNumber}</Header></Card.Description></Table.Cell>
                 <Table.Cell><Card.Description>{user.email}</Card.Description></Table.Cell>
-                <Table.Cell><Button color='yellow' ><Link to="/labtool/email" > <List.Item icon='edit' /></Link></Button></Table.Cell>
+
+                <Table.Cell>
+                  <Link to="/labtool/email">
+                    <Button
+                      color='yellow'
+                      icon='edit'>
+                    </Button>
+                  </Link>
+                </Table.Cell>
+
               </Table.Row>
               <Table.Row>
                 <Table.Cell></Table.Cell>
                 <Table.Cell>I want to receive notifications for receiving feedback etc.</Table.Cell>
-                <Table.Cell><Checkbox /></Table.Cell>
+                <Table.Cell><Checkbox   /></Table.Cell>
               </Table.Row>
             </Table>
           </Card.Content>
@@ -68,7 +77,7 @@ class MyPageStudent extends Component {
                 <Table.Row>
                   <Table.Cell>{sinstance.name}</Table.Cell>
                   <Table.Cell textAlign='left'><div>
-                    <Button circular color='teal' size="tiny" icon="large black eye icon"></Button>
+                    <Link to={`/labtool/courses/${sinstance.ohid}`}><Button circular color="teal" size='tiny' icon="large black eye icon"></Button></Link>
                   </div></Table.Cell>
                 </Table.Row>
               )}
@@ -85,8 +94,8 @@ class MyPageStudent extends Component {
                     <Table.Row>
                       <Table.Cell>{tinstance.name}</Table.Cell>
                       <Table.Cell textAlign='right'><div>
+                        <Link to={`/labtool/courses/${tinstance.ohid}`}><Button circular color="teal" size='tiny' icon="large black eye icon"></Button></Link>
                         <Button circular color='orange' size="tiny" icon="large black edit icon" />
-                        <Button circular color='teal' size="tiny" icon="large black eye icon" />
                       </div></Table.Cell>
                     </Table.Row>
                   )}
@@ -109,4 +118,4 @@ const mapStateToProps = (state) => {
 }
 
 
-export default connect(mapStateToProps, { getAllStudentCourses, getAllTeacherCourses })(MyPageStudent)
+export default connect(mapStateToProps, {})(MyPage)

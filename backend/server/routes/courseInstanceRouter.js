@@ -1,4 +1,5 @@
 const courseInstanceController = require('../controllers').courseInstances
+const weekController = require('../controllers').weeks
 
 module.exports = (app) => {
 
@@ -11,7 +12,8 @@ module.exports = (app) => {
   app.get('/api/courseinstances/:ohid', courseInstanceController.retrieve) // En tiedä joten ei käy
   app.put('/api/courseinstances/:id', courseInstanceController.update) // Sama.. en tiedä, mutta tätä ei julkisesti pitäisi pystyä tehdä ainakaan apilta saatujen oikeiden tietojen muuttamiseksi
   app.post('/api/courseinstances/coursepage', courseInstanceController.coursePage) // Tämä kysely suoritetaan kun mennään coursepage komponenttiin frontendissä.
-
   app.put('/api/courseinstances/:id', courseInstanceController.update) // Not public stuff could relate to issue #109
   app.get('/api/courses/:ohid', courseInstanceController.retrieveCourseStuff) // apparently same as /api/course/iunstances/:ohid
+  app.post('/api/weeks/create', weekController.create)
+
 }
