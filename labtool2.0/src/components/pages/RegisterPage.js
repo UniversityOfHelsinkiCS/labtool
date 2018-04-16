@@ -3,6 +3,7 @@ import { Form, Input, Grid } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createStudentCourses } from '../../services/studentinstances'
+import { Redirect } from 'react-router'
 
 class RegisterPage extends Component {
 
@@ -27,6 +28,13 @@ class RegisterPage extends Component {
   }
 
   render() {
+    if (this.state.redirectToNewPage) {
+      return (
+      <Redirect to={`/labtool/courses/${this.props.selectedInstance.ohid}`} />
+      )
+    }
+
+
     return (
 
       <div className="RegisterPage"
