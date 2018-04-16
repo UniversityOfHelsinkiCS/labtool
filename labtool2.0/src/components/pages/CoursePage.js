@@ -4,9 +4,12 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 class CoursePage extends Component {
-  componentDidMount() {
 
-  }
+    
+
+    componentDidMount(){
+        console.log(this.props.selectedInstance.id, 'tässä id')
+    }
 
   render() {
     let renderButton = false
@@ -135,19 +138,20 @@ class CoursePage extends Component {
                     </Table.Body>
                 </Table>
 
-      </div >
+            </div >
 
-    )
-  }
+        )
+    }
 }
 
 const mapStateToProps = (state) => {
-  return {
-    user: state.user,
-    studentInstance: state.studentInstance,
-    teacherInstance: state.teacherInstance,
-    selectedInstance: state.selectedInstance
-  }
+    return {
+        user: state.user,
+        studentInstance: state.studentInstance,
+        teacherInstance: state.teacherInstance,
+        selectedInstance: state.selectedInstance,
+        courseData: state.CoursePage
+    }
 }
 
 

@@ -36,7 +36,13 @@ module.exports = {
   },
   async coursePage(req, res) {
 
-    const courseInst = req.body.course
+    const course = await CourseInstance.findOne({
+      where: {
+        ohid: req.body.course
+      }
+    })
+    
+    const courseInst = course.id
     const token = helper.tokenVerify(req)
 
     const palautus = {
