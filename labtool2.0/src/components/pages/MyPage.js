@@ -7,7 +7,7 @@ import { getAllStudentCourses } from '../../services/studentinstances'
 import { getAllTeacherCourses } from '../../services/teacherinstances'
 import { Redirect } from 'react-router'
 
-class MyPageStudent extends Component {
+class MyPage extends Component {
   componentDidMount() {
     //this.props.getAllStudentCourses()
     //this.props.getAllTeacherCourses()
@@ -118,4 +118,4 @@ const mapStateToProps = (state) => {
 }
 
 
-export default connect(mapStateToProps, {})(MyPageStudent)
+export default connect(mapStateToProps, {})(MyPage)
