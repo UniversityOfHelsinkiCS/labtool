@@ -14,8 +14,6 @@ const Week = require('../models').Week
 
 module.exports = {
 
-
-  //TODO: search courseInstance where it is connected to user either by studentIstance or teacherInstance
   findByUserTeacherInstance(req, res) {//token verification might not work..? and we don't knpw if search works
     const errors = []
     console.log('***REQ BODY***: ', req.body)
@@ -268,6 +266,22 @@ module.exports = {
       })
       .catch(error => res.status(400).send(error))
 
+  },
+  createWeek(req, res) {
+    let token = helper.tokenVerify(req)
+    if (token.verified) {
+      return Week
+        .create({
+          points: req.body.points,
+          studentInstanceId: req.body.studentInstanceId,
+          comment: req.body.comment,
+          weekNumber: req.body.weekNumber
+        })
+        .then(week => res.status(201).send(week))
+        .catch(error => res.status(400).send(error))
+    } else {
+      res.status(400).send('token verification failed')
+    }
   },
 
   getNew(req, res) {
