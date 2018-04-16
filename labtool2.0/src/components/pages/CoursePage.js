@@ -33,7 +33,7 @@ class CoursePage extends Component {
         </div>
         )}
         <div class="sixteen wide column">
-        <Button> <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>Register</Link></Button>
+        <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>  <Button>Register</Button></Link>
         </div>
         </div>
 
