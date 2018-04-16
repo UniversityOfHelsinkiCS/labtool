@@ -93,7 +93,7 @@ function axiosBlaBla(year, term) {
 }
 
 /**
- * 
+ *
  * @param req
  * @param res
  * @returns {Promise<*>}

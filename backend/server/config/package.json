@@ -1,0 +1,86 @@
+{
+  "failing_login_request": {
+    "request": {
+      "action": "login",
+      "credentials": {
+        "username": "rkeskiva",
+        "password": "väärimmeni"
+      }
+    }
+  },
+  "login_failure": {
+    "response": {
+      "status": {
+        "failed": true,
+        "message": "something went wrong"
+      },
+      "data": {
+        "user": {
+          "username": "",
+          "firsts": "",
+          "lastname": "",
+          "student_number": "",
+          "email": "",
+          "token": "",
+          "first_login": false
+        }
+      }
+    }
+  },
+  "succeeding_first_login_request": {
+    "request": {
+      "action": "login",
+      "credentials": {
+        "username": "rkeskiva",
+        "password": "oikeasalasana"
+      }
+    }
+  },
+  "login_first_time_success": {
+    "response": {
+      "status": {
+        "failed": false,
+        "message": "someting went fine"
+      },
+      "data": {
+        "user": {
+          "username": "rkeskiva",
+          "firsts": "Raimo",
+          "lastname": "Keski-Vääntö",
+          "student_number": "0123456789",
+          "email": "",
+          "token": "secretthingsakdfjasdadslkjasdlkjsadlksajlsakjdlksajdlksajdlksaj",
+          "first_login": true
+        }
+      }
+    }
+  },
+  "succeeding_login_request": {
+    "request": {
+      "action": "login",
+      "credentials": {
+        "username": "rkeskiva",
+        "password": "oikeasalasana"
+      }
+    }
+  },
+  "login_success": {
+    "response": {
+      "status": {
+        "failed": false,
+        "message": "someting went fine"
+      },
+      "data": {
+        "user": {
+          "username": "rkeskiva",
+          "firsts": "Raimo",
+          "lastname": "Keski-Vääntö",
+          "student_number": "0123456789",
+          "email": "raimo.keski-vaanto@helsinki.fi",
+          "token": "secretthingsakdfjasdadslkjasdlkjsadlksajlsakjdlksajdlksajdlksaj",
+          "first_login": false
+        }
+      }
+    }
+  }
+}

@@ -10,7 +10,7 @@ module.exports = {
     try {
       const out = await helper.getInactive(req, res)
       console.log(out)
-      res.send(out)
+      res.render('index', { title: 'Activate course', message: 'Not activated courses', values: out})
     } catch (e) {
       console.log(e)
 
