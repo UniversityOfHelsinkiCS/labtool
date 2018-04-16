@@ -6,6 +6,7 @@ exports.getNextYear = getNextYear
 exports.getNextTerm = getCurrentTerm
 //exports.getOpts = getOpts
 exports.getCurrent = getCurrent
+exports.createCourse = createCourse
 
 // This is not needed anymore and should be fixed in issue #127
 function tokenVerify2(req) {
@@ -92,6 +93,22 @@ function axiosBlaBla(year, term) {
   }
 }
 
+function axiosCourseBla(hid) {
+  const https = require('https')
+  return {
+    method: 'get',
+    baseURL: `https://opetushallinto.cs.helsinki.fi/labtool/courses/${hid}`,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': process.env.TOKEN
+    },
+    httpsAgent: new https.Agent({
+      rejectUnauthorized: false // if you don't like this then please go ahead and do it yourself better.
+    })
+
+  }
+}
+
 /**
  *
  * @param req
@@ -137,6 +154,21 @@ async function getInactive(req, res) {
   }
 }
 
+
+
+async function createCourse(hid) {
+
+  const axios = require('axios')
+  const options = await axiosCourseBla(hid)
+  const result = await axios.create(options).get().then(barf => {
+      return barf.data
+    }
+  )
+  console.log(result)
+  return result
+
+
+}
 
 /**
  *
