@@ -279,7 +279,7 @@ module.exports = {
     } else {
       if (this.remoteAddress === '127.0.0.1') {
         res.send('gtfo')
-      } else {q
+      } else {
         const request = require('request')
         const options = {
           method: 'get',
