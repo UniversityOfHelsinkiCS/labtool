@@ -1,9 +1,10 @@
 exports.tokenVerify = tokenVerify2
 exports.CurrentTermAndYear = CurrentTermAndYear
 exports.getCurrentTerm = getCurrentTerm
+exports.getInactive = getInactive
 exports.getNextYear = getNextYear
 exports.getNextTerm = getCurrentTerm
-exports.getOpts = getOpts
+//exports.getOpts = getOpts
 exports.getCurrent = getCurrent
 
 // This is not needed anymore and should be fixed in issue #127
@@ -69,27 +70,75 @@ function getNextTerm(term) {
   }
 }
 
-
 /**
  *
  * @param year
  * @param term
- * @returns {{method: string, uri: string, headers: {'Content-Type': string, Authorization: *}, strictSSL: boolean}}
+ * @returns {{method: string, baseURL: string, headers: {'Content-Type': string, Authorization: string}, httpsAgent: "https".Agent}}
  */
-function getOpts(year, term) {
+function axiosBlaBla(year, term) {
+  const https = require('https')
   return {
     method: 'get',
-    uri: `https://opetushallinto.cs.helsinki.fi/labtool/courses?year=${year}&term=${term}`,
+    baseURL: `https://opetushallinto.cs.helsinki.fi/labtool/courses?year=${year}&term=${term}`,
     headers: {
       'Content-Type': 'application/json',
       'Authorization': process.env.TOKEN
     },
-    strictSSL: false
+    httpsAgent: new https.Agent({
+      rejectUnauthorized: false // if you don't like this then please go ahead and do it yourself better.
+    })
+
   }
 }
 
 /**
- * Javascript is just a stupid language.
+ * 
+ * @param req
+ * @param res
+ * @returns {Promise<*>}
+ */
+async function getInactive(req, res) {
+  try {
+    const cur = await getCurrent(req, res)
+    const nxt = await getNewer(req, res)
+    const newobj = await cur.concat(nxt)
+    const iarr = []
+    for (var blob in newobj) {
+      iarr.push(newobj[blob].id)
+    }
+    const Sequelize = require('sequelize')
+    const CourseInstance = require('../models').CourseInstance
+    const Op = Sequelize.Op
+
+    const ires = await CourseInstance.findAll({
+      where: {
+        ohid: {[Op.in]: iarr}
+      }
+    })
+    const notactivated = []
+
+
+    for (var i in newobj) {
+      var found = 0
+      for (var j in ires) {
+        if (newobj[i].id == ires[j].ohid) {
+          found = 1
+        }
+      }
+      if (found == 0) {
+        notactivated.push(newobj[i])
+      }
+    }
+
+    return notactivated
+  } catch (e) {
+    return e
+  }
+}
+
+
+/**
  *
  * @param req
  * @param res
@@ -97,79 +146,35 @@ function getOpts(year, term) {
  */
 async function getCurrent(req, res) {
   console.log('entered getCurrent')
-  try {
-    const timeMachine = CurrentTermAndYear()
-    const request = require('request')
-    const options = await getOpts(timeMachine.currentYear, timeMachine.currentTerm)
 
-    async function execRequest(callback) {
-      try {
-        await request(options, async function (err, res, body) {
-          try {
-            const json = await JSON.parse(body)
-            await callback(json)
-            /* json.forEach(instance => {
-              CourseInstance.findOrCreate({
-                where: {ohid: instance.id},
-                defaults: {
-                  name: instance.name,
-                  start: instance.starts,
-                  end: instance.ends,
-                  ohid: instance.id
-                }
-              })
-            }) */
-          } catch (e) {
-            return e
-          }
-        })
-      } catch (e) {
-        return e
-      }
+
+  const timeMachine = CurrentTermAndYear()
+  const axios = require('axios')
+  const options = await axiosBlaBla(timeMachine.currentYear, timeMachine.currentTerm)
+  const result = await axios.create(options).get().then(barf => {
+      return barf.data
     }
-
-    const somepromise = await execRequest(async function(json){
-      try {
-        const new_json =  json
-        return new_json
-      } catch (e) {
-        return "jep"
-      }
-    })
-
-
-    return somepromise
-
-  } catch (e) {
-    console.log('errored in getCurrent')
-    return e
-
-
-  }
+  )
+  return result
 }
+
 
 /**
  *
  * @param req
  * @param res
+ * @returns {Promise<*>}
  */
-function getNewer(req, res) {
-  const timeMachine = CurrentTermAndYear()
-  const request = require('request')
+async function getNewer(req, res) {
+  console.log('entered getCurrent')
 
-  request(getOpts(timeMachine.nextYear, timeMachine.nextTerm), function (err, resp, body) {
-    const json = JSON.parse(body)
-    console.log(json)
-    /* json.forEach(instance => {
-          CourseInstance.findOrCreate({
-            where: {ohid: instance.id},
-            defaults: {
-              name: instance.name,
-              start: instance.starts,
-              end: instance.ends,
-              ohid: instance.id
-            }
-          })
-        })*/
-  })
+
+  const timeMachine = CurrentTermAndYear()
+  const axios = require('axios')
+  const options = await axiosBlaBla(timeMachine.nextYear, timeMachine.nextTerm)
+  const result = await axios.create(options).get().then(barf => {
+      return barf.data
+    }
+  )
+  return result
 }

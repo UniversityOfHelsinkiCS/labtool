@@ -1,3 +1,3 @@
 const application_helpers = require('./application_helper')
 
-exports.getCurrent = application_helpers.getCurrent
+exports.getInactive = application_helpers.getInactive

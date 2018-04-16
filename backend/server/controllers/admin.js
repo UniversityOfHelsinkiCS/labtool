@@ -1,4 +1,4 @@
-const helper = require('../helpers/course_instance_helper')
+const helper = require('../helpers/admin_helper')
 
 module.exports = {
   /**
@@ -8,7 +8,7 @@ module.exports = {
    */
   async list(req, res) {
     try {
-      const out = await helper.getCurrent(req, res)
+      const out = await helper.getInactive(req, res)
       console.log(out)
       res.send(out)
     } catch (e) {
