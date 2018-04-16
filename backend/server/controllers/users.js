@@ -2,6 +2,7 @@ const User = require('../models').User
 const jwt = require('jsonwebtoken')
 const CourseInstance = require('../models').CourseInstance
 const TeacherInstance = require('../models').TeacherInstance
+const helper = require('../helpers/course_instance_helper')
 
 module.exports = {
 
@@ -41,32 +42,37 @@ module.exports = {
   },
 
   async createTeacherInstance(req, res) {
-    const courseInstance = await CourseInstance.findOne({
-      where: {
-        ohid: req.body.ohid
-      }
-    })
+    let token = helper.tokenVerify(req)
+    if (token.verified) {
+      const courseInstance = await CourseInstance.findOne({
+        where: {
+          ohid: req.body.ohid
+        }
+      })
 
-    const user = await User.findOne({
-      where: {
-        username: req.body.adTunnus
-      }
-    })
+      const user = await User.findOne({
+        where: {
+          username: req.body.adTunnus
+        }
+      })
 
-    if (courseInstance !== null && user !== null) {
-      return TeacherInstance
-        .create({
-          userId: user.id,
-          courseInstanceId: courseInstance.id,
-          admin: true
-        })
-        .then(teacher =>
-          res.status(200).send(teacher))
-        .catch(error => res.status(400).send(error))
+      if (courseInstance !== null && user !== null) {
+        return TeacherInstance
+          .create({
+            userId: user.id,
+            courseInstanceId: courseInstance.id,
+            admin: true
+          })
+          .then(teacher =>
+            res.status(200).send(teacher))
+          .catch(error => res.status(400).send(error))
+      } else {
+        res.status(404).send('not found')
+      }
     } else {
-      res.status(404).send('not found')
+      res.status(400).send('token verification failed')
     }
-    res.status(200).send(courseInstance)
+
   },
 
 }
