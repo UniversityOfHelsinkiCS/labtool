@@ -157,6 +157,8 @@ async function getInactive(req, res) {
 
 async function createCourse(body) {
   const CourseInstance = require('../models').CourseInstance
+  const TeacherInstance = require('../models').TeacherInstance
+  const User = require('../models').User
 
   const axios = require('axios')
   const options = await axiosCourseBla(body.hid)
@@ -171,9 +173,26 @@ async function createCourse(body) {
     ohid: body.hid,
 
   })
+  if (result.teachers.length > 0 ) {
+    for (i in result.teachers) {
+      const user = await User.findOrCreate({
+        where: {
+          username: result.teachers[i]
+        },
+        defaults: {
+          username: result.teachers[i]
+        }
+      })
+      TeacherInstance.create({
+        userId: user.id,
+        courseInstanceId: new_course.id
+      })
 
+    }
+  }
 
-  await console.log([body, new_course, result])
+  await console.log(result.teachers)
+
   return result
 
 
