@@ -20,9 +20,9 @@ class ReviewStudent extends Component {
 
       const content = {
         points: e.target.points.value,
-        studentInstanceId: 'Get from local state',
+        studentInstanceId: 1,
         comment: e.target.comment.value,
-        weekNumber: 'Get from local state'
+        weekNumber: 3
       }
       await this.props.createOneWeek(content)
     } catch (error) {
