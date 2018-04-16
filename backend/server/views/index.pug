@@ -6,7 +6,7 @@ html
         each val in values
             form(action="/admin", method="POST")
                 p= (val.name + " - " + val.id)
-                input(type="hidden" value=val.id)
+                input(name="hid" type="hidden" value=val.id)
                 input(type="submit", value="Activate")
         else
             p There are no courses to be activated.

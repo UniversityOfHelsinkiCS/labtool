@@ -2,9 +2,8 @@ let express = require('express')
 let app = express()
 let bodyParser = require('body-parser')
 const jwt = require('jsonwebtoken')
-
+let basicAuth = require('express-basic-auth')
 require('dotenv').config()
-
 
 /**
  *
@@ -115,7 +114,8 @@ require('./server/routes')(app)
 require('./server/routes/userRouter')(app)
 require('./server/routes/courseInstanceRouter')(app)
 require('./server/routes/loginRouter')(app)
-require('./server/routes/adminRoutes')(app.set('view engine', 'pug'))
+require('./server/routes/adminRoutes')(app.use(bodyParser.urlencoded({ extended: true})).set('view engine', 'pug').use(basicAuth({users: {'admin': process.env.ADMIN_PW}, challenge: true, realm: 'labtooladmin'})))
+
 
 
 app.get('*', (req, res) => res.status(404).send({

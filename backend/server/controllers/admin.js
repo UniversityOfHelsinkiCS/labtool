@@ -24,6 +24,7 @@ module.exports = {
    */
   process(req, res) {
 
+    res.send(req.body)
   },
 
 
