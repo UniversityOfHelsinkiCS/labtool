@@ -25,7 +25,7 @@ module.exports = {
     console.log('TOKEN VERIFIED: ', token)
     console.log('req.params.UserId: ', parseInt(req.body.userId))
     if (token.verified) {
-      db.sequelize.queryeacherInstanceController(`SELECT * FROM "CourseInstances" AS CI JOIN "TeacherInstances" AS TI ON CI.id = TI.courseInstanceId WHERE TI."userId" = ${token.data.id}`)
+      db.sequelize.query(`SELECT * FROM "CourseInstances" AS CI JOIN "TeacherInstances" AS TI ON CI.id = TI.courseInstanceId WHERE TI."userId" = ${token.data.id}`)
         .then(instance =>
           res.status(200).send(instance[0]))
         .catch(error => res.status(400).send(error))
