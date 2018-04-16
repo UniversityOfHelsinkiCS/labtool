@@ -128,7 +128,7 @@ module.exports = {
     //	SELECT * FROM "CourseInstances" AS CI JOIN "StudentInstances" AS SI ON CI.id = SI.id WHERE SI."userId" = 1;
     if (token.verified) {
       if (Number.isInteger(token.data.id)) {
-        db.sequelize.query(`SELECT * FROM "CourseInstances" AS CI JOIN "StudentInstances" AS SI ON CI.id = SI.courseInstanceId WHERE SI."userId" = ${token.data.id}`)
+        db.sequelize.query(`SELECT * FROM "CourseInstances" JOIN "StudentInstances" ON "CourseInstances"."id" = "StudentInstances"."courseInstanceId" WHERE "StudentInstances"."userId" = ${token.data.id}`)
           .then(instance =>
             res.status(200).send(instance[0]))
           .catch(error => res.status(400).send(error))
@@ -201,6 +201,7 @@ module.exports = {
                 },
                 defaults: {
                   userId: user.id,
+                  name: user,
                   courseInstanceId: course.dataValues.id,
                   github: req.body.github || '',                     // model would like to validate this to be an URL but seems like crap
                   projectName: req.body.projectName || '',           // model would like to validate this to alphanumeric but seems like this needs specific nulls or empties or whatever
