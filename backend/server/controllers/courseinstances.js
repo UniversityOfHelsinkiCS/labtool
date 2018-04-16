@@ -133,7 +133,7 @@ module.exports = {
             res.status(200).send(instance[0]))
           .catch(error => res.status(400).send(error))
       } else {
-        errros.push('something went wrong')
+        errors.push('something went wrong')
         res.status(400).send(errors)
       }
     } else {
