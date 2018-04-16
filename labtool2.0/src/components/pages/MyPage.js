@@ -5,13 +5,13 @@ import './MyPage.css'
 import { Link } from 'react-router-dom'
 import { getAllStudentCourses } from '../../services/studentinstances'
 import { getAllTeacherCourses } from '../../services/teacherinstances'
+import { Redirect } from 'react-router'
 
 class MyPageStudent extends Component {
   componentDidMount() {
     //this.props.getAllStudentCourses()
     //this.props.getAllTeacherCourses()
     try {
-
       const loggedUserJSON = window.localStorage.getItem('loggedLabtool')
       if (loggedUserJSON && loggedUserJSON !== '{}') {
         const user = JSON.parse(loggedUserJSON)
@@ -31,6 +31,11 @@ class MyPageStudent extends Component {
   render() {
     console.log(user)
     const user = { ...this.props.user.user }
+    if (user.email === '' || user.email === null) {
+      return (
+        <Redirect to='labtool/email' />
+      )
+    }
     return (
       <div>
         <Card fluid color='yellow'>
@@ -44,12 +49,21 @@ class MyPageStudent extends Component {
               <Table.Row>
                 <Table.Cell><Card.Description><Header size='small'>{user.studentNumber}</Header></Card.Description></Table.Cell>
                 <Table.Cell><Card.Description>{user.email}</Card.Description></Table.Cell>
-                <Table.Cell><Button color='yellow' ><Link to="/labtool/email" > <List.Item icon='edit' /></Link></Button></Table.Cell>
+
+                <Table.Cell>
+                  <Link to="/labtool/email">
+                    <Button
+                      color='yellow'
+                      icon='edit'>
+                    </Button>
+                  </Link>
+                </Table.Cell>
+
               </Table.Row>
               <Table.Row>
                 <Table.Cell></Table.Cell>
                 <Table.Cell>I want to receive notifications for receiving feedback etc.</Table.Cell>
-                <Table.Cell><Checkbox /></Table.Cell>
+                <Table.Cell><Checkbox   /></Table.Cell>
               </Table.Row>
             </Table>
           </Card.Content>
@@ -80,8 +94,8 @@ class MyPageStudent extends Component {
                     <Table.Row>
                       <Table.Cell>{tinstance.name}</Table.Cell>
                       <Table.Cell textAlign='right'><div>
-                        <Button circular color='orange' size="tiny" icon="large black edit icon" />
                         <Link to={`/labtool/courses/${tinstance.ohid}`}><Button circular color="teal" size='tiny' icon="large black eye icon"></Button></Link>
+                        <Button circular color='orange' size="tiny" icon="large black edit icon" />
                       </div></Table.Cell>
                     </Table.Row>
                   )}

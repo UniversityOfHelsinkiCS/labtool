@@ -16,30 +16,28 @@ text should be "Edit your email address" if email can be found from db
 class Email extends Component {
 
   componentDidMount() {
-    //this.props.getAllStudentCourses()
-    //this.props.getAllTeacherCourses()
   }
 
-  state = {
-    redirectToNewPage: false
-  }
-
-
-  handleSubmit = async (e) => {
-    e.preventDefault()
-    try {
-      const content = {
-        email: e.target.email.value
-      }
-      if (content.email !== '' && content.email !== null) {
-        await this.props.updateUser(content)
-        this.setState({ redirectToNewPage: true })
-      }
-    } catch (error) {
-      console.log(error)
+    state = {
+      redirectToNewPage: false
     }
+    
 
-  }
+    handleSubmit = async (e) => {
+      e.preventDefault()
+      try {
+        const content = {
+          email: e.target.email.value
+        }
+        if (content.email !== '' && content.email !== null) {
+          await this.props.updateUser(content)
+          this.setState({ redirectToNewPage: true })
+        }
+      } catch (error) {
+        console.log(error)
+      }
+      
+    }
 
   render() {
     if (this.state.redirectToNewPage) {
@@ -105,4 +103,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps, { updateUser })(Email)
+export default connect(null, { updateUser })(Email)

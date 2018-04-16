@@ -10,7 +10,6 @@ import notification from './reducers/notificationReducer'
 import teacherInstance from './reducers/teacherInstanceReducer'
 import studentInstance from './reducers/studentInstanceReducer'
 import selectedInstance from './reducers/selectedInstanceReducer'
-import coursePage from './reducers/coursePageReducer'
 
 const reducer = combineReducers({
   courseInstance: courseInstance,
@@ -18,8 +17,7 @@ const reducer = combineReducers({
   notification: notification,
   teacherInstance: teacherInstance,
   studentInstance: studentInstance,
-  selectedInstance: selectedInstance,
-  coursePage: coursePage
+  selectedInstance: selectedInstance
 })
 
 const store = createStore(

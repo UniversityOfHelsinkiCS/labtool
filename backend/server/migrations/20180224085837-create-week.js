@@ -11,6 +11,12 @@ module.exports = {
       points: {
         type: Sequelize.INTEGER
       },
+      comment: {
+        type: Sequelize.STRING
+      },
+      weekNumber: {
+        type: Sequelize.INTEGER
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
