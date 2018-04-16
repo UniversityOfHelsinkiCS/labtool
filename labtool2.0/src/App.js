@@ -17,6 +17,11 @@ import ReviewStudent from './components/pages/ReviewStudent'
 import BrowseReviews from './components/pages/BrowseReviews'
 import MyPage from './components/pages/MyPage'
 import { getOneCI } from './services/courseInstance'
+import { coursePageInformation } from './services/courseInstance'
+
+
+import { getAllStudentCourses } from './services/studentinstances'
+import { getAllTeacherCourses } from './services/teacherinstances'
 
 class App extends Component {
   componentWillMount() {
@@ -29,6 +34,8 @@ class App extends Component {
       if (loggedUserJSON && loggedUserJSON !== '{}') {
         const user = JSON.parse(loggedUserJSON)
         this.props.tokenLogin(user)
+        this.props.getAllStudentCourses()
+        this.props.getAllTeacherCourses()
       }
     } catch (exception) {
       console.log('no user logged in')
@@ -56,7 +63,9 @@ class App extends Component {
         <main>
           <Switch>
             <Route path={`/labtool/courses/:id`} render={({ match, history }) =>
-              <CoursePage history={history} courseinstance={(this.props.getOneCI(match.params.id))} />}
+              <CoursePage history={history} courseinstance={(this.props.getOneCI(match.params.id))}
+                pageData={(this.props.coursePageInformation(match.params.id))}
+              />}
             />
             <Route exact path={`/labtool/courses`} render={({ history }) =>
               <Courses history={history} />}
@@ -65,7 +74,6 @@ class App extends Component {
               <RegisterPage history={history} courseinstance={(this.props.getOneCI(match.params.id))} />}
             />
             <Route path={`/labtool/browsereviews`} component={BrowseReviews} />
-            <Route path={`/labtool/coursePage`} component={CoursePage} />
             <Route path={`/labtool/email`} component={Email} />
             <Route path={`/labtool/registerPage`} component={RegisterPage} />
             <Route path={`/labtool/reviewstudent`} component={ReviewStudent} />
@@ -109,7 +117,9 @@ const mapStateToProps = (state) => {
   return {
     user: state.user.user,
     token: state.user.token,
-    created: state.user.created
+    created: state.user.created,
+    studentInstance: state.studentInstance,
+    teacherInstance: state.teacherInstance
   }
 }
 
@@ -117,5 +127,5 @@ const mapStateToProps = (state) => {
 
 export default withRouter(connect(
   mapStateToProps,
-  { getAllCI, tokenLogin, logout, getOneCI }
+  { getAllCI, tokenLogin, logout, getOneCI, coursePageInformation, getAllStudentCourses, getAllTeacherCourses }
 )(App))
