@@ -34,7 +34,6 @@ module.exports = {
     }
 
   },
-  /** */
   async coursePage(req, res) {
 
     const courseInst = req.body.course
@@ -63,7 +62,11 @@ module.exports = {
           },
           include: [{
             model: Week, as: 'weeks'
-          }]
+          },
+          {
+            model: User
+          }
+          ]
         })
         try {
           palautus.data = student
@@ -81,6 +84,9 @@ module.exports = {
           },
           include: [{
             model: Week, as: 'weeks'
+          },
+          {
+            model: User
           }]
         })
         try {
@@ -94,20 +100,7 @@ module.exports = {
     } else {
       res.status(400).send('something went wrong')
     }
-
-
-
-
-    //console.log('teacher[0]: ', teacher[0])
-    /*     const teacher = TeacherInstanceController.retrieve(request, res)
-     */   // console.log('teacher: ', teacher)
   },
-  /**
-   * sequelize.query("SELECT * FROM 'property'", { type:Sequelize.QueryTypes.SELECT})
-   .then(function(properties) {
-      res.json(properties)
-  })
-   */
   findByUserStudentInstance(req, res) {//token verification might not work..? and we don't knpw if search works
     console.log('db: ', db)
     const errors = []
@@ -117,17 +110,9 @@ module.exports = {
     console.log('TOKEN VERIFIED: ', token)
     const id = parseInt(req.body.userId)
     console.log('req.params.UserId: ', id)
-    /*CourseInstance.findAll({
-      include:[{
-        model: StudentInstance,
-      }],
-      where: {userId: id},
-      logging: console.log
-    })*/
-    //	SELECT * FROM "CourseInstances" AS CI JOIN "StudentInstances" AS SI ON CI.id = SI.id WHERE SI."userId" = 1;
     if (token.verified) {
       if (Number.isInteger(token.data.id)) {
-        db.sequelize.query(`SELECT * FROM "CourseInstances" AS CI JOIN "StudentInstances" AS SI ON CI.id = SI.courseInstanceId WHERE SI."userId" = ${token.data.id}`)
+        db.sequelize.query(`SELECT * FROM "CourseInstances" JOIN "StudentInstances" ON "CourseInstances"."id" = "StudentInstances"."courseInstanceId" WHERE "StudentInstances"."userId" = ${token.data.id}`)
           .then(instance =>
             res.status(200).send(instance[0]))
           .catch(error => res.status(400).send(error))
@@ -139,20 +124,6 @@ module.exports = {
       errors.push('token verification failed')
       res.status(400).send(errors)
     }
-    // db.sequelize.query(`SELECT * FROM "CourseInstances" AS CI JOIN "StudentInstances" AS SI ON CI.id = SI.id WHERE SI."userId" = ${id}`)
-    //   // CourseInstance.findAll({
-    //   //   include: [{
-    //   //     model: StudentInstance,
-    //   //   }],
-    //   //   where: {
-    //   //     userid: {
-    //   //       [Op.eq]: id
-    //   //     }
-    //   //   }
-    //   // })
-    //   .then(instance =>
-    //     res.status(200).send(instance))
-    //   .catch(error => res.status(400).send(error))
 
   },
 
@@ -200,6 +171,7 @@ module.exports = {
                 },
                 defaults: {
                   userId: user.id,
+                  name: user,
                   courseInstanceId: course.dataValues.id,
                   github: req.body.github || '',                     // model would like to validate this to be an URL but seems like crap
                   projectName: req.body.projectName || '',           // model would like to validate this to alphanumeric but seems like this needs specific nulls or empties or whatever
@@ -303,7 +275,6 @@ module.exports = {
     } else {
       if (this.remoteAddress === '127.0.0.1') {
         res.send('gtfo')
-
       } else {
         const request = require('request')
         const options = {
