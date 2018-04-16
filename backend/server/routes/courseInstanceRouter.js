@@ -1,4 +1,5 @@
 const courseInstanceController = require('../controllers').courseInstances
+const weekController = require('../controllers').weeks
 
 module.exports = (app) => {
 
@@ -13,5 +14,5 @@ module.exports = (app) => {
   app.post('/api/courseinstances/coursepage', courseInstanceController.coursePage) // Tämä kysely suoritetaan kun mennään coursepage komponenttiin frontendissä.
   app.put('/api/courseinstances/:id', courseInstanceController.update) // Not public stuff could relate to issue #109
   app.get('/api/courses/:ohid', courseInstanceController.retrieveCourseStuff) // apparently same as /api/course/iunstances/:ohid
-  app.post('/api/courseinstances/createweek', courseInstanceController.createWeek)
+  app.post('/api/courseinstances/createweek', weekController.create)
 }
