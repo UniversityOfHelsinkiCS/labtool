@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Form, Input, Button, Grid } from 'semantic-ui-react'
 import { modifyOneCI } from '../../services/courseInstance'
-import { connect } from 'react-redux'
+import {  connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 class ModifyCourseInstancePage extends Component {
@@ -34,18 +34,20 @@ class ModifyCourseInstancePage extends Component {
               <Form.Field inline>
                 <label>Week amount</label>
                 <Input
+                  placeholder="weekAmount"
                   type="text"
                   className="form-control1"
                   name="weekAmount"
-                  placeholder="WeekAmount"
-                  required />
+                  placeholder={`${this.props.selectedInstance.weekAmount}`}
+                  required
+                />
               </Form.Field>
               <Form.Field inline>
                 <label>Weekly maxpoints</label>
                 <Input
                   className="form-control2"
                   name="weeklyMaxpoints"
-                  placeholder="WeeklyMaxpoints"
+                  placeholder={`${this.props.selectedInstance.weekMaxPoints}`}
                   required />
               </Form.Field>
               <Form.Field inline>
@@ -53,7 +55,7 @@ class ModifyCourseInstancePage extends Component {
                 <Input
                   className="form-control3"
                   name="currentWeek"
-                  placeholder="CurrentWeek"
+                  placeholder={`${this.props.selectedInstance.currentWeek}`}
                   required />
               </Form.Field>
 
@@ -62,14 +64,13 @@ class ModifyCourseInstancePage extends Component {
                 <Input type='checkbox'
                   className="form-control4"
                   name="courseActive"
-                  placeholder="CourseActive"  />
+                /* checked={this.props.selectedInstance.courseActive} */ />
               </Form.Field>
-
               <Form.Field>
                 <Button floated='left' color='green' type='submit'>Save</Button>
-                <button className="ui right floated button"> <Link to="/labtool/courses">Cancel</Link></button>
+                <Link to="/labtool/courses"><button className="ui right floated button" type="Cancel"> Cancel</button></Link>
               </Form.Field>
-              
+
             </Form>
           </Grid.Row>
         </Grid>
@@ -84,4 +85,4 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps, { modifyOneCI }) (ModifyCourseInstancePage)
+export default connect(mapStateToProps, { modifyOneCI })(ModifyCourseInstancePage)
