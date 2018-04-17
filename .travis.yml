@@ -15,6 +15,8 @@ before_install:
 - cd labtool2.0 && npm config set spin false && npm install -g npm && cd ../backend && npm config set spin false && cd ..
 install:
 - cd labtool2.0 && npm install && cd ../backend && npm install && cd ..
+after_install:
+- cd backend; npm run create_test_db; cd ..  
 jobs:
   include:
   - stage: backend
