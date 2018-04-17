@@ -22,8 +22,8 @@ after_script:
 jobs:
   include:
   - stage: tests
-    - env: BACKEND_TESTS=true
+    env: BACKEND_TESTS=true
     - script: cd backend && npm run test
   - stage: tests
-    - env: FRONTEND_TESTS=true
+    env: FRONTEND_TESTS=true
     - script: cd labtool2.0 && npm run test_ci
