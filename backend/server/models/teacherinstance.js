@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
   TeacherInstance.associate = (models) => {
 
 
-    TeacherInstance.hasOne(models.User, {
+    TeacherInstance.belongsTo(models.User, {
       foreignKey: 'userId',
       onDelete: 'CASCADE',
     })
