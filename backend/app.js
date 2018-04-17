@@ -74,6 +74,33 @@ const appSecretENV = (req, res, next) => {
 
 app.use(appSecretENV)
 
+
+/**
+ *
+ * @param req
+ * @param res We send a message if TOKEN environment variable is not set and end the request processing immediately.
+ * @param next
+ */
+const adminPwToken = (req, res, next) => {
+  console.log("Middleware: adminPwToken")
+
+  const auth = process.env.ADMIN_PW || 'notset'
+  if (auth === 'notset') {
+    console.log("  ADMIN_PW variable is not set")
+
+    res.send('Please restart the backend with a ADMIN_PW environment variable set')
+    res.end
+  } else {
+    console.log("  ADMIN_PW variable is set")
+
+    next()
+  }
+}
+
+app.use(adminPwToken)
+
+
+
 /**
  * Makes any request body easily accessible through making it to javascript kid friendly JSON.
  */
