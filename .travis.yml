@@ -24,4 +24,4 @@ jobs:
   - stage: tests
     script: cd backend && npm run test
   - stage: tests
-    script: cd labtool2.0 && npm test_ci
+    script: cd labtool2.0 && npm run test_ci

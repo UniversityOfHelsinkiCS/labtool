@@ -10,12 +10,13 @@ module.exports = {
     'operatorsAliases': 'false'
   },
   'test': {
-    'username': process.env.CI_DB_USERNAME,
-    'password': process.env.CI_DB_PASSWORD,
+    'username': 'postgres',
+    'password': process.env.DB_PASSWORD,
     'database': 'labtool_test',
-    'host': '127.0.0.1',
+    'host': '10.0.0.10',
     'dialect': 'postgres',
-    'operatorsAliases': 'false'
+    'operatorsAliases': false,
+    'logging': false
   },
   'production': {
     'username': process.env.DB_USERNAME,
