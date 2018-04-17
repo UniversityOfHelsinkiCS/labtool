@@ -9,7 +9,6 @@ describe('Admin page', function () {
     supertest = require('supertest')(server)
     nock = require('nock')
     nock.disableNetConnect = true
-    process.env.ADMIN_PW = 'test'
     nock('https://opetushallinto.cs.helsinki.fi').get('/labtool/courses?year=2018&term=K').reply(200,
       '[{"name":"Aineopintojen harjoitustyö: Tietokantasovellus (periodi IV)","starts":"2018-03-12 00:00:00 +0300","ends":"2018-03-12 00:00:00 +0300","id":"TKT20011.2018.K.A.1"}]'
     ).get('/labtool/courses?year=2018&term=V').reply(200,
@@ -19,7 +18,8 @@ describe('Admin page', function () {
 
   })
   afterEach(function () {
-
+    nock.cleanAll();
+    server.close();
   })
 
   it('should return 404 without basic authentication', function (done) {

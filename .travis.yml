@@ -1,5 +1,9 @@
 sudo: true
 dist: trusty
+cache:
+  directories:
+    - backend/node_modules
+    - labtool2.0/node_modules
 notifications:
   email: false
   slack:
@@ -8,32 +12,12 @@ language: node_js
 node_js:
 - '8'
 before_install:
-- cd labtool2.0
-- npm config set spin false
-- npm install -g npm
-- cd ../backend
-- npm config set spin false
-- cd ..
+- cd labtool2.0 && npm config set spin false && npm install -g npm && cd ../backend && npm config set spin false && cd ..
 install:
-- cd labtool2.0 
-- npm install
-- cd ../backend
-- npm install
-- cd ..
+- cd labtool2.0 && npm install && cd ../backend && npm install && cd ..
 jobs:
   include:
-  - stage: build feature
-    script: cd labtool2.0 && npm test && cd ../backend && npm run test
-    after_success:
-    - echo "onnistumisen jalkeen ei tehda konttia, mutta jotain muuta ehka?"
-    if: branch =~ ^[0-9]
-  - stage: development
-    script: cd labtool2.0 && npm test && cd ../backend && npm run test
-    after_success:
-    - echo "tehdaan development ymparistan kontti ja pushataan dockerhubiin"
-    if: branch = dev
-  - stage: master
-    script: cd labtool2.0 && npm test && cd ../backend && npm run test
-    after_success:
-    - echo "tehdaan master ympariston kontti ja pushataan dockerhubiin"
-    if: branch = master
+  - stage: backend
+    script: cd backend && npm run test
+  - stage: frontend
+    script: cd labtool2.0 && npm test_ci

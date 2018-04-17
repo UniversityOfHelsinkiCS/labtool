@@ -1,4 +1,3 @@
-
 describe('Login', function () {
   let User
   let server
@@ -20,7 +19,7 @@ describe('Login', function () {
     assert = require('assert')
   })
   afterEach(function () {
-
+    server.close()
   })
 
   it('respond to /api/login with correct credentials', function (done) {
@@ -46,19 +45,22 @@ describe('Login', function () {
   })
 
   it('respond to /login with correct credentials second time', function (done) {
-
-      supertest
-        .get("/admin")
-        .expect("Content-type",/json/)
-        .expect(200) // THis is HTTP response
-        .end(function(err,res){
-          res.status.should.equal(401);
-
-          done();
-        });
-
-
+    nock('https://opetushallinto.cs.helsinki.fi').post('/login').reply(200, {
+      error: 'wrong credentials'
     })
+
+    supertest
+      .get('/admin')
+      .expect('Content-type', /json/)
+      .expect(200) // THis is HTTP response
+      .end(function (err, res) {
+        res.status.should.equal(401)
+
+        done()
+      })
+
+
+  })
 
 })
 
