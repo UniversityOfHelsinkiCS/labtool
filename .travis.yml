@@ -5,10 +5,6 @@ cache:
     - backend/node_modules
     - labtool2.0/node_modules
 
-env:
-  matrix:
-    - BACKEND=true
-    - FRONTEND=true
 notifications:
   email: false
   slack:
