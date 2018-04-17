@@ -13,7 +13,7 @@ module.exports = {
     'username': 'postgres',
     'password': process.env.DB_PASSWORD,
     'database': 'labtool_test',
-    'host': '10.0.0.10',
+    'host': '127.0.0.1',
     'dialect': 'postgres',
     'operatorsAliases': false,
     'logging': false
