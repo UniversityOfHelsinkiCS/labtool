@@ -80,7 +80,6 @@ module.exports = {
         } catch (error) {
           res.status(400).send(error)
         }
-        res.status(200).send(student)
       } else {
         console.log('EI OLE TYHJÄ JEE')
         const teacherPalautus = await StudentInstance.findAll({

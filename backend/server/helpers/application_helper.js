@@ -26,8 +26,8 @@ function CurrentTermAndYear() {
   const month = date.getMonth() + 1
   const currentTerm = getCurrentTerm(month)
   var year = date.getFullYear()
-  console.log('month is: ', month)
-  console.log('date: ', date)
+  //console.log('month is: ', month)
+  //console.log('date: ', date)
   if (month >= 11) {
     year = year + 1
   }
@@ -35,7 +35,7 @@ function CurrentTermAndYear() {
   var nextYear = getNextYear(currentTerm, year)
   nextYear.toString()
   const nextTerm = getNextTerm(currentTerm)
-  console.log('year: ', year)
+  //console.log('year: ', year)
   return {currentYear, currentTerm, nextTerm, nextYear}
 }
 
@@ -192,7 +192,7 @@ async function createCourse(body) {
     }
   }
 
-  await console.log(result.teachers)
+  //await console.log(result.teachers)
 
   return result
 
@@ -206,8 +206,6 @@ async function createCourse(body) {
  * @returns {Promise<*>}
  */
 async function getCurrent(req, res) {
-  console.log('entered getCurrent')
-
 
   const timeMachine = CurrentTermAndYear()
   const axios = require('axios')
@@ -227,8 +225,6 @@ async function getCurrent(req, res) {
  * @returns {Promise<*>}
  */
 async function getNewer(req, res) {
-  console.log('entered getCurrent')
-
 
   const timeMachine = CurrentTermAndYear()
   const axios = require('axios')

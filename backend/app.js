@@ -11,14 +11,11 @@ require('dotenv').config()
  * @param next
  */
 const extractToken = (request, response, next) => {
-  console.log("Middleware: extractToken")
 
   const authorization = request.get('authorization')
   if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
-    console.log("  request token extracted")
     request.token = authorization.substring(7)
   } else {
-    console.log("  request token was not present")
   }
 
   next()
@@ -34,17 +31,11 @@ app.use(extractToken)
  * @param next
  */
 const upstreamToken = (req, res, next) => {
-  console.log("Middleware: upstreamToken")
-
   const auth = process.env.TOKEN || 'notset'
   if (auth === 'notset') {
-    console.log("  TOKEN variable is not set")
-
     res.send('Please restart the backend with the correct TOKEN environment variable set')
     res.end
   } else {
-    console.log("  TOKEN variable is set")
-
     // should check if the token is valid but maybe not this time
     next()
   }
@@ -60,14 +51,11 @@ app.use(upstreamToken)
  * @param next
  */
 const appSecretENV = (req, res, next) => {
-  console.log("Middleware: appSecretENV")
   const secret = process.env.SECRET || 'notset'
   if (secret === 'notset') {
-    console.log("  SECRET variable is not set")
     res.send('Please restart the backend having the SECRET environment variable set')
     res.end
   } else {
-    console.log("  SECRET variable is set")
     next()
   }
 }
@@ -82,23 +70,17 @@ app.use(appSecretENV)
  * @param next
  */
 const adminPwToken = (req, res, next) => {
-  console.log("Middleware: adminPwToken")
 
   const auth = process.env.ADMIN_PW || 'notset'
   if (auth === 'notset') {
-    console.log("  ADMIN_PW variable is not set")
-
     res.send('Please restart the backend with a ADMIN_PW environment variable set')
     res.end
   } else {
-    console.log("  ADMIN_PW variable is set")
-
     next()
   }
 }
 
 app.use(adminPwToken)
-
 
 
 /**
@@ -127,28 +109,23 @@ app.use(function (req, res, next) {
  * @param next
  */
 const authenticate = (request, response, next) => {
-  console.log('Middleware: authenticate')
   const excludedPaths = ['/api/login', '/api', '/admin']
-  console.log(request.path)
   if (!excludedPaths.includes(request.path)) {
     try {
       let decoded = jwt.verify(request.token, process.env.SECRET)
       request.decoded = decoded,
         request.authenticated = {success: true, error: ''}
-      console.log("  Authenticated: true")
+      console.log('  Authenticated: true')
     } catch (e) {
       request.authenticated = {success: false, error: 'token verification failed'}
-      console.log("  Authenticated: false")
+      console.log('  Authenticated: false')
     }
   } else {
-    console.log("  not invoked")
   }
-  console.log("  " + request.method)
 
   next()
 }
 app.use(authenticate)
-
 
 
 // Express reitti määrittelyt
