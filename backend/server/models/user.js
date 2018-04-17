@@ -13,12 +13,8 @@ module.exports = (sequelize, DataTypes) => {
   }, {})
   User.associate = (models) => {
     User.hasMany(models.StudentInstance, {
-      foreignKey: 'userId',
+      foreignKey: 'id',
       as: 'users'
-    })
-    User.hasMany(models.TeacherInstance, {
-      foreignKey: 'userId',
-      as: 'teachers'
     })
   }
   return User
