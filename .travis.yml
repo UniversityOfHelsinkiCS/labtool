@@ -28,3 +28,5 @@ jobs:
   - stage: tests
     script: cd labtool2.0 && npm run test_ci
     env: FRONTEND=true
+  - stage: integration tests
+    script: TRAVIS_ALLOW_FAILURE=true echo "Nothing yet"
