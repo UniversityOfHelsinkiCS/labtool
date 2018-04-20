@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Button, Table } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
+import { Card, Header, Grid } from 'semantic-ui-react'
 
 class CoursePage extends Component {
 
@@ -24,29 +25,44 @@ class CoursePage extends Component {
     //const CoursePage = ({ name, start, end, week_amount, week_max_points, current_week, handleFieldChange }) => {
       <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
       <div class="ui grid">
-      <div class="sixteen wide column">
-        <h2>{this.props.selectedInstance.name}</h2>
-        {instance !== [] && instance !== undefined && instance ?
+      <Grid centered stretched>
+      <Header as='h2' textAlign="center" attached="top" >{this.props.selectedInstance.name}</Header>
+      </Grid>
+          <Card centered raised fluid>
+            <Card.Content>
+              <Card.Meta>
+                  <Table basic='very' colums="8" >
+                        <Table.Row>
+                            <Table.Cell>Active</Table.Cell>
+                            <Table.Cell>{JSON.stringify(this.props.selectedInstance.active)}</Table.Cell>
+                            </Table.Row>
+                            <Table.Row>    
+                            <Table.Cell>Week amount</Table.Cell>
+                            <Table.Cell>{this.props.selectedInstance.weekAmount}</Table.Cell>
+                            </Table.Row>
+                            <Table.Row>
+                            <Table.Cell>Current week</Table.Cell>
+                            <Table.Cell>{this.props.selectedInstance.currentWeek}</Table.Cell>
+                            </Table.Row>
+                            <Table.Row>
+                            <Table.Cell>Week maxpoints</Table.Cell>
+                            <Table.Cell>{this.props.selectedInstance.weekMaxPoints}</Table.Cell>
+                        </Table.Row>
+                </Table>
+                </Card.Meta>
+                {instance !== [] && instance !== undefined && instance ?
           instance.github ?
           <div>
-           <h2>{instance.projectName}</h2> 
-           <h3>{instance.github}</h3>
-           </div> :
-          <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>  <Button>Register</Button></Link> : 
-          <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>  <Button>Register</Button></Link>
-        }
-        </div>
-
-                <Table celled >
-                    <Table.Header>
-                        <Table.Row>
-                            <Table.HeaderCell>Active: {JSON.stringify(this.props.selectedInstance.active)}</Table.HeaderCell>
-                            <Table.HeaderCell>Week amount: {this.props.selectedInstance.weekAmount}</Table.HeaderCell>
-                            <Table.HeaderCell>Current week: {this.props.selectedInstance.currentWeek}</Table.HeaderCell>
-                            <Table.HeaderCell>Week maxpoints: {this.props.selectedInstance.weekMaxPoints}</Table.HeaderCell>
-                        </Table.Row>
-                    </Table.Header>
-                </Table>
+              <Card.Header><h2>{instance.projectName}</h2></Card.Header>
+              <Card.Description><h3><a href={instance.github}>{instance.github}</a></h3></Card.Description></div>
+              :
+              <Card.Description>
+          <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>  <Button>Register</Button></Link> </Card.Description> :
+          <Card.Description> 
+          <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>  <Button>Register</Button></Link> </Card.Description>}
+            </Card.Content>
+          </Card>
+                
 
                 <h3> Students </h3>
                 <Table celled unstackable>
