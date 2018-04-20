@@ -5,6 +5,7 @@ exports.getCurrentTerm = application_helpers.getCurrentTerm
 exports.getNextYear = application_helpers.getNextYear
 exports.getNextTerm = application_helpers.getNextTerm
 exports.checkWebOodi = checkWebOodi
+exports.findByUserStudentInstance = findByUserStudentInstance
 exports.tokenVerify = application_helpers.tokenVerify  // Should be removed in issue #127
 exports.getCurrent = application_helpers.getCurrent
 
@@ -48,3 +49,37 @@ function checkWebOodi(req, res, user, resolve) {
 
   }
 }
+
+function findByUserStudentInstance(req, res) {//token verification might not work..? and we don't knpw if search works
+
+  const StudentInstanceController = require('../controllers').studentInstances
+  const db = require('../models')
+  const Sequelize = require('sequelize')
+  const Op = Sequelize.Op
+
+  console.log('db: ', db)
+  const errors = []
+  console.log('searching by studentInstance...')
+  console.log('***REQ BODY***: ', req.body)
+  let token = application_helpers.tokenVerify(req)
+  console.log('TOKEN VERIFIED: ', token)
+  const id = parseInt(req.body.userId)
+  console.log('req.params.UserId: ', id)
+  if (token.verified) {
+    if (Number.isInteger(token.data.id)) {
+      db.sequelize.query(`SELECT * FROM "CourseInstances" JOIN "StudentInstances" ON "CourseInstances"."id" = "StudentInstances"."courseInstanceId" WHERE "StudentInstances"."userId" = ${token.data.id}`)
+        .then(instance =>
+          res.status(200).send(instance[0]))
+        .catch(error => res.status(400).send(error))
+    } else {
+      errors.push('something went wrong')
+      res.status(400).send(errors)
+    }
+  } else {
+    errors.push('token verification failed')
+    res.status(400).send(errors)
+  }
+}
+
+
+
