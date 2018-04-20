@@ -10,6 +10,7 @@
     "dotenv": "^5.0.1",
     "eslint": "^4.19.1",
     "express": "^4.16.3",
+    "express-basic-auth": "^1.1.4",
     "fs": "0.0.1-security",
     "jsonwebtoken": "^8.2.1",
     "morgan": "^1.9.0",
@@ -17,9 +18,12 @@
     "path": "^0.12.7",
     "pg": "^7.4.1",
     "pg-hstore": "^2.3.2",
+    "pug": "^2.0.3",
     "request": "^2.85.0",
     "sequelize": "^4.37.6",
-    "sequelize-cli": "^4.0.0"
+    "sequelize-cli": "^4.0.0",
+    "should": "^13.2.1",
+    "tape": "^4.9.0"
   },
   "devDependencies": {
     "assert": "^1.4.1",
@@ -35,7 +39,10 @@
     "createdb": "node_modules/.bin/sequelize db:create",
     "dropdb": "node_modules/.bin/sequelize db:drop",
     "import_courses": "echo 'I expect to have backend running on localhost port 3001\n\n';curl -k -X POST -H 'Content-Type: application/json' http://localhost:3001/api/courseinstances/update",
-    "test": "./bin/test.sh test"
+    "test": "ADMIN_PW=test NODE_ENV=test ./node_modules/.bin/mocha --exit -R spec",
+    "create_test_db": "./node_modules/.bin/sequelize db:drop --env test; ./node_modules/.bin/sequelize db:create --env test; ./node_modules/.bin/sequelize db:migrate --env test;",
+    "drop_test_db": "./node_modules/.bin/sequelize db:drop --env test; "  
+      
   },
   "author": "",
   "license": "ISC"

@@ -26,6 +26,7 @@
     "debug": "react-scripts --inspect=0.0.0.0:9230 start .env.development.local",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
+    "test_ci": "CI=true node node_modules/.bin/jest -u",
     "eject": "react-scripts eject"
   },
   "devDependencies": {
