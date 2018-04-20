@@ -32,7 +32,7 @@ class CoursePage extends Component {
             <h2>{this.props.selectedInstance.name}</h2>
 
             {instance !== [] && instance !== undefined && instance ?
-              instance.github && this.props.coursePage.role === "student" ?
+              instance.github && this.props.coursePage.role === "teacher" ?
                 <div>
                   <h2>{instance.projectName}</h2>
                   <h3><a href={instance.github} >{instance.github}</a></h3>
@@ -52,9 +52,7 @@ class CoursePage extends Component {
                       </Table.Body>
                     </Table> </div>
                 </div> :
-              <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>  <Button>Register</Button></Link> :
-              <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>  <Button>Register</Button></Link>
-          
+             <p></p> : <p></p>
             }
           </div>
 
