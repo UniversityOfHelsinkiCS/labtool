@@ -281,7 +281,7 @@ module.exports = {
           console.log(json)
           json.forEach(instance => {
             CourseInstance.findOrCreate({
-              where: { ohid: instance.id },
+              where: {ohid: instance.id},
               defaults: {
                 name: instance.name,
                 start: instance.starts,
@@ -291,7 +291,7 @@ module.exports = {
             })
           })
           if (req.decoded) {
-            res.status(204).send({ 'hello': 'hello' }) // nodejs crashes if someone just posts here without valid token.
+            res.status(204).send({'hello': 'hello'}) // nodejs crashes if someone just posts here without valid token.
           }
         }
         )

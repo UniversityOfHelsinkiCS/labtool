@@ -114,7 +114,7 @@ const authenticate = (request, response, next) => {
     try {
       let decoded = jwt.verify(request.token, process.env.SECRET)
       request.decoded = decoded,
-        request.authenticated = {success: true, error: ''}
+      request.authenticated = {success: true, error: ''}
       console.log('  Authenticated: true')
     } catch (e) {
       request.authenticated = {success: false, error: 'token verification failed'}
