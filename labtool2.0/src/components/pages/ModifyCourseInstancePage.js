@@ -7,33 +7,19 @@ import { Redirect } from 'react-router'
 
 class ModifyCourseInstancePage extends Component {
 
-  componentDidMount() {
-    if (this.props.selectedInstance.active == true) {
-      this.setState({ active: true })
-    }
-    console.log(this.state.active)
-  }
-
   state = {
-    redirectToNewPage: false,
-    active: false
+    redirectToNewPage: false
   }
 
   handleSubmit = async (e) => {
     try {
       e.preventDefault()
-      let act
-      if (e.target.courseActive.checked) {
-        act = true
-      } else {
-        act = false
-      }
-      console.log(act)
+       
       const content = {
         weekAmount: e.target.weekAmount.value,
         weekMaxPoints: e.target.weeklyMaxpoints.value,
         currentWeek: e.target.currentWeek.value,
-        active: act,
+        active: e.target.courseActive.checked,
         ohid: this.props.selectedInstance.ohid
       }
       await this.props.modifyOneCI(content, this.props.selectedInstance.ohid)
@@ -92,7 +78,8 @@ class ModifyCourseInstancePage extends Component {
                 <Checkbox label='Course active'
                   className="form-control4"
                   name="courseActive"
-                  defaultChecked={this.state.active} />
+                  defaultChecked={this.props.selectedInstance.active}
+                />
               </Form.Field>
               <Form.Field>
                 <Button floated='left' color='green' type='submit'>Save</Button>
