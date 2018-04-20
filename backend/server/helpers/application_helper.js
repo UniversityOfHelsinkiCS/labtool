@@ -163,8 +163,8 @@ async function createCourse(body) {
   const axios = require('axios')
   const options = await axiosCourseBla(body.hid)
   const result = await axios.create(options).get().then(barf => {
-      return barf.data
-    }
+    return barf.data
+  }
   )
   const new_course = await CourseInstance.build({
     name: body.cname,
@@ -211,8 +211,8 @@ async function getCurrent(req, res) {
   const axios = require('axios')
   const options = await axiosBlaBla(timeMachine.currentYear, timeMachine.currentTerm)
   const result = await axios.create(options).get().then(barf => {
-      return barf.data
-    }
+    return barf.data
+  }
   )
   return result
 }
@@ -230,8 +230,8 @@ async function getNewer(req, res) {
   const axios = require('axios')
   const options = await axiosBlaBla(timeMachine.nextYear, timeMachine.nextTerm)
   const result = await axios.create(options).get().then(barf => {
-      return barf.data
-    }
+    return barf.data
+  }
   )
   return result
 }

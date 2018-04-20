@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        isAlphanumeric: {msg: 'projectName not accepted'}
+        is: ['^[a-zA-Z0-9_ ]*$']
       }
     }
   }, {})
