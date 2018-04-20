@@ -40,7 +40,7 @@ module.exports = {
         ohid: req.body.course
       }
     })
-    
+
     const courseInst = course.id
     const token = helper.tokenVerify(req)
 
@@ -68,9 +68,9 @@ module.exports = {
           include: [{
             model: Week, as: 'weeks'
           },
-          {
-            model: User
-          }
+            {
+              model: User
+            }
           ]
         })
         try {
@@ -80,7 +80,6 @@ module.exports = {
         } catch (error) {
           res.status(400).send(error)
         }
-        res.status(200).send(student)
       } else {
         console.log('EI OLE TYHJÄ JEE')
         const teacherPalautus = await StudentInstance.findAll({
@@ -90,9 +89,9 @@ module.exports = {
           include: [{
             model: Week, as: 'weeks'
           },
-          {
-            model: User
-          }]
+            {
+              model: User
+            }]
         })
         try {
           palautus.data = teacherPalautus
@@ -107,28 +106,7 @@ module.exports = {
     }
   },
   findByUserStudentInstance(req, res) {//token verification might not work..? and we don't knpw if search works
-    console.log('db: ', db)
-    const errors = []
-    console.log('searching by studentInstance...')
-    console.log('***REQ BODY***: ', req.body)
-    let token = helper.tokenVerify(req)
-    console.log('TOKEN VERIFIED: ', token)
-    const id = parseInt(req.body.userId)
-    console.log('req.params.UserId: ', id)
-    if (token.verified) {
-      if (Number.isInteger(token.data.id)) {
-        db.sequelize.query(`SELECT * FROM "CourseInstances" JOIN "StudentInstances" ON "CourseInstances"."id" = "StudentInstances"."courseInstanceId" WHERE "StudentInstances"."userId" = ${token.data.id}`)
-          .then(instance =>
-            res.status(200).send(instance[0]))
-          .catch(error => res.status(400).send(error))
-      } else {
-        errors.push('something went wrong')
-        res.status(400).send(errors)
-      }
-    } else {
-      errors.push('token verification failed')
-      res.status(400).send(errors)
-    }
+    helper.findByUserStudentInstance(req, res)
 
   },
 
@@ -187,10 +165,15 @@ module.exports = {
                     message: 'something went wrong: if somehow we could not find or create a record we see this'
                   })
                 } else {
-                  res.status(200).send({
-                    message: 'something went right',
-                    whatever: student
-                  })
+                  helper.findByUserStudentInstance(req, res)
+
+                  //      this.findByUserStudentInstance(req,res)
+//                  res.status(200).send({
+
+                  /*
+                  message: 'something went right',
+                  whatever: student
+                })*/
                 }
 
               }).catch(function (error) {
@@ -291,24 +274,24 @@ module.exports = {
           strictSSL: false
         }
         request(options, function (err, resp, body) {
-          const json = JSON.parse(body)
-          console.log('json palautta...')
-          console.log(json)
-          json.forEach(instance => {
-            CourseInstance.findOrCreate({
-              where: { ohid: instance.id },
-              defaults: {
-                name: instance.name,
-                start: instance.starts,
-                end: instance.ends,
-                ohid: instance.id
-              }
+            const json = JSON.parse(body)
+            console.log('json palautta...')
+            console.log(json)
+            json.forEach(instance => {
+              CourseInstance.findOrCreate({
+                where: {ohid: instance.id},
+                defaults: {
+                  name: instance.name,
+                  start: instance.starts,
+                  end: instance.ends,
+                  ohid: instance.id
+                }
+              })
             })
-          })
-          if (req.decoded) {
-            res.status(204).send({ 'hello': 'hello' }) // nodejs crashes if someone just posts here without valid token.
+            if (req.decoded) {
+              res.status(204).send({'hello': 'hello'}) // nodejs crashes if someone just posts here without valid token.
+            }
           }
-        }
         )
       }
     }
@@ -343,7 +326,7 @@ module.exports = {
           console.log(json)
           json.forEach(instance => {
             CourseInstance.findOrCreate({
-              where: { ohid: instance.id },
+              where: {ohid: instance.id},
               defaults: {
                 name: instance.name,
                 start: instance.starts,
@@ -353,7 +336,7 @@ module.exports = {
             })
           })
           if (req.decoded) {
-            res.status(204).send({ 'hello': 'hello' })  // nodejs crashes if someone just posts here without valid token.
+            res.status(204).send({'hello': 'hello'})  // nodejs crashes if someone just posts here without valid token.
           }
         })
       }

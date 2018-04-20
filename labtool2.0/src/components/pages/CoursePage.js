@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Table } from 'semantic-ui-react'
+import { Button, Table, Grid, Card, Header, Divider } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 
@@ -18,8 +18,8 @@ class CoursePage extends Component {
       }
     }
 
-    var weeks = []
-    var weeksTeacher = []
+    var weeks = [];
+    var weeksTeacher = [];
     for (var i = 1; i <= this.props.selectedInstance.weekAmount; i++) {
       weeks.push(<Table.Row> <Table.Cell>{i}</Table.Cell> <Table.Cell>0</Table.Cell> <Table.Cell>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</Table.Cell></Table.Row>)
       weeksTeacher.push(<Table.HeaderCell>Week {i}</Table.HeaderCell>)
@@ -63,7 +63,8 @@ class CoursePage extends Component {
 
           {this.props.coursePage.role == "teacher" ?
             <div class="sixteen wide column" >
-              <Table celled >
+
+             <Table celled >
                 <Table.Header>
                   <Table.Row>
                     <Table.HeaderCell>Active: {JSON.stringify(this.props.selectedInstance.active)}</Table.HeaderCell>
