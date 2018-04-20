@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Button, Table } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { Card, Header, Grid } from 'semantic-ui-react'
+import { Card, Header, Grid, Divider } from 'semantic-ui-react'
 
 class CoursePage extends Component {
 
@@ -25,12 +25,12 @@ class CoursePage extends Component {
       <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
         <div className="ui grid">
           <Grid centered stretched>
-            <Header as='h2' textAlign="center" attached="top" >{this.props.selectedInstance.name}</Header>
+            <Header as='h1' textAlign="center" attached="top" >{this.props.selectedInstance.name}</Header>
           </Grid>
           <Card centered raised fluid>
             <Card.Content>
               <Card.Meta>
-                <Table basic='very' colums="8" >
+                <Table small compact basic="very" >
                   <Table.Row>
                     <Table.Cell>Active</Table.Cell>
                     <Table.Cell>{JSON.stringify(this.props.selectedInstance.active)}</Table.Cell>
@@ -49,9 +49,10 @@ class CoursePage extends Component {
                   </Table.Row>
                 </Table>
               </Card.Meta>
+              <Divider section />
               {instance !== [] && instance !== undefined && instance ?
                 instance.github ?
-                  <div>
+                  <div> 
                     <Card.Header><h2>{instance.projectName}</h2></Card.Header>
                     <Card.Description><h3><a href={instance.github}>{instance.github}</a></h3></Card.Description></div>
                   :
@@ -151,7 +152,6 @@ class CoursePage extends Component {
                 </Table.Row>
               </Table.Body>
             </Table> </div>
-          }
         </div >
       </div >
     )
