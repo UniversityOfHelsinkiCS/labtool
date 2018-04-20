@@ -5,7 +5,7 @@ const request = require('request')
 module.exports = {
 
   login(req, res) {
-    console.log("entered login")
+    console.log('entered login')
     const options = {
       method: 'post',
       uri: 'https://opetushallinto.cs.helsinki.fi/login',
