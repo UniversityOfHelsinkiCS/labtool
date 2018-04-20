@@ -14,7 +14,7 @@ module.exports = {
     } catch (e) {
       console.log(e)
 
-      res.send("errored in controllers/admin/list")
+      res.send('errored in controllers/admin/list')
     }
   },
   /**
