@@ -68,9 +68,9 @@ module.exports = {
           include: [{
             model: Week, as: 'weeks'
           },
-            {
-              model: User
-            }
+          {
+            model: User
+          }
           ]
         })
         try {
@@ -89,9 +89,9 @@ module.exports = {
           include: [{
             model: Week, as: 'weeks'
           },
-            {
-              model: User
-            }]
+          {
+            model: User
+          }]
         })
         try {
           palautus.data = teacherPalautus
@@ -168,7 +168,7 @@ module.exports = {
                   helper.findByUserStudentInstance(req, res)
 
                   //      this.findByUserStudentInstance(req,res)
-//                  res.status(200).send({
+                  //                  res.status(200).send({
 
                   /*
                   message: 'something went right',
@@ -274,24 +274,24 @@ module.exports = {
           strictSSL: false
         }
         request(options, function (err, resp, body) {
-            const json = JSON.parse(body)
-            console.log('json palautta...')
-            console.log(json)
-            json.forEach(instance => {
-              CourseInstance.findOrCreate({
-                where: {ohid: instance.id},
-                defaults: {
-                  name: instance.name,
-                  start: instance.starts,
-                  end: instance.ends,
-                  ohid: instance.id
-                }
-              })
+          const json = JSON.parse(body)
+          console.log('json palautta...')
+          console.log(json)
+          json.forEach(instance => {
+            CourseInstance.findOrCreate({
+              where: {ohid: instance.id},
+              defaults: {
+                name: instance.name,
+                start: instance.starts,
+                end: instance.ends,
+                ohid: instance.id
+              }
             })
-            if (req.decoded) {
-              res.status(204).send({'hello': 'hello'}) // nodejs crashes if someone just posts here without valid token.
-            }
+          })
+          if (req.decoded) {
+            res.status(204).send({'hello': 'hello'}) // nodejs crashes if someone just posts here without valid token.
           }
+        }
         )
       }
     }

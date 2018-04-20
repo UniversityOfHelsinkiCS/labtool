@@ -26,10 +26,7 @@ class CoursePage extends Component {
     }
 
     return (
-
-
-      //const CoursePage = ({ name, start, end, week_amount, week_max_points, current_week, handleFieldChange }) => {
-      <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
+    <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
         <div class="ui grid">
           <div class="sixteen wide column">
             <h2>{this.props.selectedInstance.name}</h2>
@@ -55,8 +52,9 @@ class CoursePage extends Component {
                       </Table.Body>
                     </Table> </div>
                 </div> :
-                <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>  <Button>Register</Button></Link> :
+              <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>  <Button>Register</Button></Link> :
               <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>  <Button>Register</Button></Link>
+          
             }
           </div>
 
