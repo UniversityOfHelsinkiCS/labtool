@@ -34,22 +34,17 @@ module.exports = {
 
   },
   async coursePage(req, res) {
-    console.log('starting.....')
-    console.log('req.body.course: ', req.body.course)
     const course = await CourseInstance.findOne({
       where: {
         id: req.body.course
       }
     })
-    console.log('courseInst found...')
     const courseInst = course.id
     const token = await helper.tokenVerify(req)
-    console.log('courseInst: ', courseInst)
     const palautus = {
       role: 'Unregistered',
       data: undefined
     }
-    console.log('palautus vielä: ', palautus)
     if (token.verified) {
       const user = token.data.id
       const teacher = await TeacherInstance.findAll({
@@ -58,9 +53,7 @@ module.exports = {
           courseInstanceId: courseInst
         }
       })
-      console.log('checking if teacher..')
       if (teacher[0] === undefined) {
-        console.log('TYHJÄ!')
         const student = await StudentInstance.findAll({
           where: {
             userId: user,
@@ -82,7 +75,6 @@ module.exports = {
           res.status(400).send(error)
         }
       } else {
-        console.log('EI OLE TYHJÄ JEE')
         const teacherPalautus = await StudentInstance.findAll({
           where: {
             courseInstanceId: courseInst
