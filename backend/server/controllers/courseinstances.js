@@ -201,7 +201,7 @@ module.exports = {
     return CourseInstance
       .find({
         where: {
-          id: req.params.id
+          ohid: req.params.id
         }
       })
       .then(courseInstance => {
