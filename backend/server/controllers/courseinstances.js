@@ -34,21 +34,22 @@ module.exports = {
 
   },
   async coursePage(req, res) {
-
+    console.log('starting.....')
+    console.log('req.body.course: ', req.body.course)
     const course = await CourseInstance.findOne({
       where: {
-        ohid: req.body.course
+        id: req.body.course
       }
     })
-
+    console.log('courseInst found...')
     const courseInst = course.id
-    const token = helper.tokenVerify(req)
-
+    const token = await helper.tokenVerify(req)
+    console.log('courseInst: ', courseInst)
     const palautus = {
       role: 'Unregistered',
       data: undefined
     }
-
+    console.log('palautus vielä: ', palautus)
     if (token.verified) {
       const user = token.data.id
       const teacher = await TeacherInstance.findAll({
@@ -57,7 +58,7 @@ module.exports = {
           courseInstanceId: courseInst
         }
       })
-
+      console.log('checking if teacher..')
       if (teacher[0] === undefined) {
         console.log('TYHJÄ!')
         const student = await StudentInstance.findAll({
@@ -68,9 +69,9 @@ module.exports = {
           include: [{
             model: Week, as: 'weeks'
           },
-            {
-              model: User
-            }
+          {
+            model: User
+          }
           ]
         })
         try {
@@ -89,9 +90,9 @@ module.exports = {
           include: [{
             model: Week, as: 'weeks'
           },
-            {
-              model: User
-            }]
+          {
+            model: User
+          }]
         })
         try {
           palautus.data = teacherPalautus
@@ -105,6 +106,7 @@ module.exports = {
       res.status(400).send('something went wrong')
     }
   },
+
   findByUserStudentInstance(req, res) {//token verification might not work..? and we don't knpw if search works
     helper.findByUserStudentInstance(req, res)
 
@@ -168,7 +170,7 @@ module.exports = {
                   helper.findByUserStudentInstance(req, res)
 
                   //      this.findByUserStudentInstance(req,res)
-//                  res.status(200).send({
+                  //                  res.status(200).send({
 
                   /*
                   message: 'something went right',
@@ -201,7 +203,7 @@ module.exports = {
     return CourseInstance
       .find({
         where: {
-          id: req.params.id
+          ohid: req.params.id
         }
       })
       .then(courseInstance => {
@@ -274,24 +276,24 @@ module.exports = {
           strictSSL: false
         }
         request(options, function (err, resp, body) {
-            const json = JSON.parse(body)
-            console.log('json palautta...')
-            console.log(json)
-            json.forEach(instance => {
-              CourseInstance.findOrCreate({
-                where: {ohid: instance.id},
-                defaults: {
-                  name: instance.name,
-                  start: instance.starts,
-                  end: instance.ends,
-                  ohid: instance.id
-                }
-              })
+          const json = JSON.parse(body)
+          console.log('json palautta...')
+          console.log(json)
+          json.forEach(instance => {
+            CourseInstance.findOrCreate({
+              where: { ohid: instance.id },
+              defaults: {
+                name: instance.name,
+                start: instance.starts,
+                end: instance.ends,
+                ohid: instance.id
+              }
             })
-            if (req.decoded) {
-              res.status(204).send({'hello': 'hello'}) // nodejs crashes if someone just posts here without valid token.
-            }
+          })
+          if (req.decoded) {
+            res.status(204).send({ 'hello': 'hello' }) // nodejs crashes if someone just posts here without valid token.
           }
+        }
         )
       }
     }
@@ -326,7 +328,7 @@ module.exports = {
           console.log(json)
           json.forEach(instance => {
             CourseInstance.findOrCreate({
-              where: {ohid: instance.id},
+              where: { ohid: instance.id },
               defaults: {
                 name: instance.name,
                 start: instance.starts,
@@ -336,7 +338,7 @@ module.exports = {
             })
           })
           if (req.decoded) {
-            res.status(204).send({'hello': 'hello'})  // nodejs crashes if someone just posts here without valid token.
+            res.status(204).send({ 'hello': 'hello' })  // nodejs crashes if someone just posts here without valid token.
           }
         })
       }
