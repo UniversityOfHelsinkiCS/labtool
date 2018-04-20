@@ -40,7 +40,7 @@ module.exports = {
         ohid: req.body.course
       }
     })
-    
+
     const courseInst = course.id
     const token = helper.tokenVerify(req)
 
