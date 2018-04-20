@@ -36,7 +36,7 @@ class CoursePage extends Component {
               instance.github && this.props.coursePage.role === "student" ?
                 <div>
                   <h2>{instance.projectName}</h2>
-                  <h3>{instance.github}</h3>
+                  <h3><a href={instance.github} >{instance.github}</a></h3>
 
                   <div class="sixteen wide column" >
                     <h3> Comments and feedback </h3>
