@@ -7,8 +7,16 @@ import { Redirect } from 'react-router'
 
 class ModifyCourseInstancePage extends Component {
 
+  componentDidMount() {
+    if (this.props.selectedInstance.active == true) {
+      this.setState({ active: true })
+    }
+    console.log(this.state.active)
+  }
+
   state = {
-    redirectToNewPage: false
+    redirectToNewPage: false,
+    active: false
   }
 
   handleSubmit = async (e) => {
@@ -84,7 +92,7 @@ class ModifyCourseInstancePage extends Component {
                 <Checkbox label='Course active'
                   className="form-control4"
                   name="courseActive"
-                  defaultChecked={this.props.selectedInstance.active} />
+                  defaultChecked={this.state.active} />
               </Form.Field>
               <Form.Field>
                 <Button floated='left' color='green' type='submit'>Save</Button>
