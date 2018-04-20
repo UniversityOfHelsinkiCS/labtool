@@ -34,21 +34,17 @@ module.exports = {
 
   },
   async coursePage(req, res) {
-
     const course = await CourseInstance.findOne({
       where: {
-        ohid: req.body.course
+        id: req.body.course
       }
     })
-
     const courseInst = course.id
-    const token = helper.tokenVerify(req)
-
+    const token = await helper.tokenVerify(req)
     const palautus = {
       role: 'Unregistered',
       data: undefined
     }
-
     if (token.verified) {
       const user = token.data.id
       const teacher = await TeacherInstance.findAll({
@@ -57,9 +53,7 @@ module.exports = {
           courseInstanceId: courseInst
         }
       })
-
       if (teacher[0] === undefined) {
-        console.log('TYHJÄ!')
         const student = await StudentInstance.findAll({
           where: {
             userId: user,
@@ -81,7 +75,6 @@ module.exports = {
           res.status(400).send(error)
         }
       } else {
-        console.log('EI OLE TYHJÄ JEE')
         const teacherPalautus = await StudentInstance.findAll({
           where: {
             courseInstanceId: courseInst
@@ -105,6 +98,7 @@ module.exports = {
       res.status(400).send('something went wrong')
     }
   },
+
   findByUserStudentInstance(req, res) {//token verification might not work..? and we don't knpw if search works
     helper.findByUserStudentInstance(req, res)
 
@@ -326,7 +320,7 @@ module.exports = {
           console.log(json)
           json.forEach(instance => {
             CourseInstance.findOrCreate({
-              where: {ohid: instance.id},
+              where: { ohid: instance.id },
               defaults: {
                 name: instance.name,
                 start: instance.starts,
@@ -336,7 +330,7 @@ module.exports = {
             })
           })
           if (req.decoded) {
-            res.status(204).send({'hello': 'hello'})  // nodejs crashes if someone just posts here without valid token.
+            res.status(204).send({ 'hello': 'hello' })  // nodejs crashes if someone just posts here without valid token.
           }
         })
       }
