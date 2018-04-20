@@ -11,7 +11,7 @@ class RegisterPage extends Component {
     redirectToNewPage: false
   }
 
-   handleSubmit = async (e) => {
+  handleSubmit = async (e) => {
     try {
       e.preventDefault()
 
@@ -30,7 +30,7 @@ class RegisterPage extends Component {
   render() {
     if (this.state.redirectToNewPage) {
       return (
-      <Redirect to={`/labtool/courses/${this.props.selectedInstance.ohid}`} />
+        <Redirect to={`/labtool/courses/${this.props.selectedInstance.ohid}`} />
       )
     }
 
@@ -77,8 +77,8 @@ class RegisterPage extends Component {
               </Form.Field>
 
               <Form.Field>
-             <button className="ui left floated blue button" type="submit"> Submit</button> 
-              <Link to="/labtool/coursepage"> <button className="ui right floated button" type="Cancel">Cancel</button></Link>
+                <button className="ui left floated blue button" type="submit"> Submit</button>
+                <Link to={`/labtool/courses/${this.props.selectedInstance.ohid}`} > <button className="ui right floated button" type="Cancel">Cancel</button></Link>
               </Form.Field>
 
             </Form>
