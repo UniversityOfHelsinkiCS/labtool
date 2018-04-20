@@ -21,7 +21,7 @@ module.exports = {
     let token = helper.tokenVerify(req)
     const id = parseInt(req.body.userId)//TODO: CHECK THAT THIS IS SANITICED ID
     console.log('TOKEN VERIFIED: ', token)
-   console.log('token.data.id: ', token.data.id)
+    console.log('token.data.id: ', token.data.id)
     if (token.verified) {
       db.sequelize.query(`SELECT * FROM "CourseInstances" JOIN "TeacherInstances" ON "CourseInstances"."id" = "TeacherInstances"."courseInstanceId" WHERE "TeacherInstances"."userId" = ${token.data.id}`)
         .then(instance =>
@@ -40,7 +40,7 @@ module.exports = {
         ohid: req.body.course
       }
     })
-    
+
     const courseInst = course.id
     const token = helper.tokenVerify(req)
 
@@ -82,7 +82,6 @@ module.exports = {
         } catch (error) {
           res.status(400).send(error)
         }
-        res.status(200).send(student)
       } else {
         const teacherPalautus = await StudentInstance.findAll({
           where: {

@@ -3,10 +3,13 @@
 const courseInstances = require('./courseinstances')
 const users = require('./users')
 const login = require('./login')
-const weeks  = require('./weeks')
+const admin = require('./admin')
+const weeks = require('./weeks')
+
 module.exports = {
   courseInstances,
   users,
   login,
+  admin,
   weeks
 }
