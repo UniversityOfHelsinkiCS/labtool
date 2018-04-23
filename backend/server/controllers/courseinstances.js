@@ -11,6 +11,7 @@ const Sequelize = require('sequelize')
 const Op = Sequelize.Op
 const StudentInstanceController = require('../controllers').studentInstances
 const Week = require('../models').Week
+const Comment = require('../models').Comment
 
 
 module.exports = {
@@ -273,7 +274,7 @@ module.exports = {
           console.log(json)
           json.forEach(instance => {
             CourseInstance.findOrCreate({
-              where: {ohid: instance.id},
+              where: { ohid: instance.id },
               defaults: {
                 name: instance.name,
                 start: instance.starts,
@@ -283,7 +284,7 @@ module.exports = {
             })
           })
           if (req.decoded) {
-            res.status(204).send({'hello': 'hello'}) // nodejs crashes if someone just posts here without valid token.
+            res.status(204).send({ 'hello': 'hello' }) // nodejs crashes if someone just posts here without valid token.
           }
         }
         )
@@ -353,6 +354,50 @@ module.exports = {
         return res.status(200).send(course)
       })
       .catch(error => res.status(400).send(error))
+  },
+
+  addComment(req, res) {
+    let token = helper.tokenVerify(req)
+    const message = req.body
+    console.log('message: ', message.message)
+    console.log('from: ', message.from)
+    console.log('to: ', message.to)
+    console.log('week: ', message.week)
+    if (token.verified) {
+      return Comment
+        .create({
+          weekId: message.week,
+          message: message.message,
+          from: message.from,
+          to: message.to,
+        })
+        .then(comment => {
+          if (!comment) {
+            res.status(400).send('week not found')
+          } else {
+            res.status(200).send(comment)
+          }
+        })
+        .catch(error => res.status(400).send(error))
+    } else {
+      res.status(400).send('token verification failed')
+    }
+  },
+
+  getCommentsForWeek(req, res) {
+    let token = helper.tokenVerify(req)
+    if (token.verified) {
+      return Comment
+        .findAll({
+          where: {
+            weekId: req.body.week
+          }
+        })
+        .then(comment => res.status(200).send(comment))
+        .catch(error => res.status(400).send(error))
+    } else {
+      res.status(400).send('token verification failed')
+    }
   },
 
 }

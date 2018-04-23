@@ -11,6 +11,10 @@ module.exports = {
       message: {
         type: Sequelize.STRING
       },
+      weekId: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
       from: {
         type: Sequelize.STRING,
         allowNull: false
