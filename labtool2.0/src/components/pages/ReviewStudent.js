@@ -67,7 +67,8 @@ class ReviewStudent extends Component {
 const mapStateToProps = (state, ownProps) => {
 
   return {
-    ownProps
+    ownProps,
+    selectedInstance: state.selectedInstance
   }
 }
 
