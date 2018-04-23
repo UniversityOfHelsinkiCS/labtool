@@ -36,7 +36,7 @@ module.exports = {
   async coursePage(req, res) {
     const course = await CourseInstance.findOne({
       where: {
-        id: req.body.course
+        ohid: req.body.course
       }
     })
     const courseInst = course.id
