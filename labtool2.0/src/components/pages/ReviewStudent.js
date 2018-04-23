@@ -5,13 +5,17 @@ import { connect } from 'react-redux'
 
 class ReviewStudent extends Component {
 
+    componentDidMount() {
+        console.log(this.props)
+    }
+
 
     render() {
         const user = { ...this.props.user.returnedUser }
+        console.log(this.props)
         return (
             <div className='ReviewStudent' style={{ textAlignVertical: 'center', textAlign: 'center', }}>
-                <h2> Tiralabra 2018 Kevät</h2>
-                <h3> Maija Meikäläinen Week 2 </h3>
+                <h2>{this.props.selectedInstance.name}</h2>
                 <h3> </h3>
                 <Grid centered>
                     <Form >
@@ -42,6 +46,8 @@ class ReviewStudent extends Component {
 const mapStateToProps = (state) => {
   return {
     user: state.user,
+    selectedInstance: state.selectedInstance,
+    coursePage: state.coursePage
   }
 }
 
