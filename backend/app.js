@@ -1,23 +1,94 @@
 let express = require('express')
 let app = express()
-let bodyParser = require('body-parser')
 const jwt = require('jsonwebtoken')
-
+const bodyParser = require('body-parser')
 require('dotenv').config()
 
+/**
+ *
+ * @param request sets the token into easily accessible variable request.token
+ * @param response
+ * @param next
+ */
 const extractToken = (request, response, next) => {
+
   const authorization = request.get('authorization')
   if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
     request.token = authorization.substring(7)
+  } else {
   }
 
   next()
 }
 
-
 app.use(extractToken)
 
+
+/**
+ *
+ * @param req
+ * @param res We send a message if TOKEN environment variable is not set and end the request processing immediately.
+ * @param next
+ */
+const upstreamToken = (req, res, next) => {
+  const auth = process.env.TOKEN || 'notset'
+  if (auth === 'notset') {
+    res.send('Please restart the backend with the correct TOKEN environment variable set')
+    res.end
+  } else {
+    // should check if the token is valid but maybe not this time
+    next()
+  }
+}
+
+app.use(upstreamToken)
+
+
+/**
+ *
+ * @param req
+ * @param res We send a message if SECRET is not set and stop processing the request any further.
+ * @param next
+ */
+const appSecretENV = (req, res, next) => {
+  const secret = process.env.SECRET || 'notset'
+  if (secret === 'notset') {
+    res.send('Please restart the backend having the SECRET environment variable set')
+    res.end
+  } else {
+    next()
+  }
+}
+
+app.use(appSecretENV)
+
+
+/**
+ *
+ * @param req
+ * @param res We send a message if TOKEN environment variable is not set and end the request processing immediately.
+ * @param next
+ */
+const adminPwToken = (req, res, next) => {
+
+  const auth = process.env.ADMIN_PW || 'notset'
+  if (auth === 'notset') {
+    res.send('Please restart the backend with a ADMIN_PW environment variable set')
+    res.end
+  } else {
+    next()
+  }
+}
+
+app.use(adminPwToken)
+
+
+/**
+ * Makes any request body easily accessible through making it to javascript kid friendly JSON.
+ */
 app.use(bodyParser.json())
+
+
 // respond with "hello world" when a GET request is made to the homepage
 app.get('/', function (req, res) {
   res.send('hello world')
@@ -38,47 +109,31 @@ app.use(function (req, res, next) {
  * @param next
  */
 const authenticate = (request, response, next) => {
-  const excludedPaths = [ '/api/login', '/api' ]
-  console.log(request.path)
-  if ( !excludedPaths.includes(request.path) ) {
+  const excludedPaths = ['/api/login', '/api', '/admin']
+  if (!excludedPaths.includes(request.path)) {
     try {
       let decoded = jwt.verify(request.token, process.env.SECRET)
       request.decoded = decoded,
-      request.authenticated = { success: true, error: ''}
+      request.authenticated = {success: true, error: ''}
+      console.log('  Authenticated: true')
     } catch (e) {
-      request.authenticated = { success: false, error: 'token verification failed'}
+      request.authenticated = {success: false, error: 'token verification failed'}
+      console.log('  Authenticated: false')
     }
   }
-  console.log(request.method)
+
   next()
 }
 app.use(authenticate)
 
-app.use(extractToken)
 
-
-
-
-// old and should be cleaned if authenticate middleware is ok for the whole app in #127
-const tokenVerify = ({ token }) => {
-  jwt.verify(token, process.env.SECRET, function (err, decoded) {
-    if (err) {
-      console.log(err)
-      return ( { error: 'token verification failed'})
-    } else {
-      console.log(decoded)
-      console.log(decoded.id)
-      console.log(decoded.username)
-      return decoded
-    }
-  })
-}
-
-// Exoress reitti määrittelyt
+// Express reitti määrittelyt
 require('./server/routes')(app)
 require('./server/routes/userRouter')(app)
 require('./server/routes/courseInstanceRouter')(app)
 require('./server/routes/loginRouter')(app)
+require('./server/routes/adminRoutes')(app)
+
 
 app.get('*', (req, res) => res.status(404).send({
   message: 'Not found.',

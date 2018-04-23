@@ -11,6 +11,7 @@ const Sequelize = require('sequelize')
 const Op = Sequelize.Op
 const StudentInstanceController = require('../controllers').studentInstances
 const Week = require('../models').Week
+const Comment = require('../models').Comment
 
 
 module.exports = {
@@ -21,9 +22,9 @@ module.exports = {
     let token = helper.tokenVerify(req)
     const id = parseInt(req.body.userId)//TODO: CHECK THAT THIS IS SANITICED ID
     console.log('TOKEN VERIFIED: ', token)
-   console.log('token.data.id: ', token.data.id)
+    console.log('token.data.id: ', token.data.id)
     if (token.verified) {
-      db.sequelize.query(`SELECT * FROM "CourseInstances" AS CI JOIN "TeacherInstances" AS TI ON CI.id = TI.courseInstanceId WHERE TI."userId" = ${token.data.id}`)
+      db.sequelize.query(`SELECT * FROM "CourseInstances" JOIN "TeacherInstances" ON "CourseInstances"."id" = "TeacherInstances"."courseInstanceId" WHERE "TeacherInstances"."userId" = ${token.data.id}`)
         .then(instance =>
           res.status(200).send(instance[0]))
         .catch(error => res.status(400).send(error))
@@ -34,21 +35,17 @@ module.exports = {
 
   },
   async coursePage(req, res) {
-
     const course = await CourseInstance.findOne({
       where: {
         ohid: req.body.course
       }
     })
-    
     const courseInst = course.id
-    const token = helper.tokenVerify(req)
-
+    const token = await helper.tokenVerify(req)
     const palautus = {
       role: 'Unregistered',
       data: undefined
     }
-
     if (token.verified) {
       const user = token.data.id
       const teacher = await TeacherInstance.findAll({
@@ -57,10 +54,8 @@ module.exports = {
           courseInstanceId: courseInst
         }
       })
-
       if (teacher[0] === undefined) {
-        console.log('TYHJÄ!')
-        const student = await StudentInstance.findAll({
+        const student = await StudentInstance.findOne({
           where: {
             userId: user,
             courseInstanceId: courseInst
@@ -73,16 +68,16 @@ module.exports = {
           }
           ]
         })
+        
         try {
           palautus.data = student
+          console.log('TÄSSÄ ON STUDNETTII', student)
           palautus.role = 'student'
           res.status(200).send(palautus)
         } catch (error) {
           res.status(400).send(error)
         }
-        res.status(200).send(student)
       } else {
-        console.log('EI OLE TYHJÄ JEE')
         const teacherPalautus = await StudentInstance.findAll({
           where: {
             courseInstanceId: courseInst
@@ -106,29 +101,9 @@ module.exports = {
       res.status(400).send('something went wrong')
     }
   },
+
   findByUserStudentInstance(req, res) {//token verification might not work..? and we don't knpw if search works
-    console.log('db: ', db)
-    const errors = []
-    console.log('searching by studentInstance...')
-    console.log('***REQ BODY***: ', req.body)
-    let token = helper.tokenVerify(req)
-    console.log('TOKEN VERIFIED: ', token)
-    const id = parseInt(req.body.userId)
-    console.log('req.params.UserId: ', id)
-    if (token.verified) {
-      if (Number.isInteger(token.data.id)) {
-        db.sequelize.query(`SELECT * FROM "CourseInstances" JOIN "StudentInstances" ON "CourseInstances"."id" = "StudentInstances"."courseInstanceId" WHERE "StudentInstances"."userId" = ${token.data.id}`)
-          .then(instance =>
-            res.status(200).send(instance[0]))
-          .catch(error => res.status(400).send(error))
-      } else {
-        errors.push('something went wrong')
-        res.status(400).send(errors)
-      }
-    } else {
-      errors.push('token verification failed')
-      res.status(400).send(errors)
-    }
+    helper.findByUserStudentInstance(req, res)
 
   },
 
@@ -187,10 +162,15 @@ module.exports = {
                     message: 'something went wrong: if somehow we could not find or create a record we see this'
                   })
                 } else {
-                  res.status(200).send({
-                    message: 'something went right',
-                    whatever: student
-                  })
+                  helper.findByUserStudentInstance(req, res)
+
+                  //      this.findByUserStudentInstance(req,res)
+                  //                  res.status(200).send({
+
+                  /*
+                  message: 'something went right',
+                  whatever: student
+                })*/
                 }
 
               }).catch(function (error) {
@@ -218,12 +198,12 @@ module.exports = {
     return CourseInstance
       .find({
         where: {
-          id: req.params.id
+          ohid: req.params.id
         }
       })
       .then(courseInstance => {
         if (!courseInstance) {
-          return res.status(400).send({
+          res.status(400).send({
             message: 'course instance not found',
           })
         }
@@ -232,7 +212,7 @@ module.exports = {
             name: req.body.name || courseInstance.name,
             start: req.body.start || courseInstance.start,
             end: req.body.end || courseInstance.end,
-            active: req.body.active || courseInstance.active,
+            active: req.body.active,
             weekAmount: req.body.weekAmount || courseInstance.weekAmount,
             weekMaxPoints: req.body.weekMaxPoints || courseInstance.weekMaxPoints,
             currentWeek: req.body.currentWeek || courseInstance.currentWeek,
@@ -268,23 +248,6 @@ module.exports = {
       .catch(error => res.status(400).send(error))
 
   },
-  createWeek(req, res) {
-    let token = helper.tokenVerify(req)
-    if (token.verified) {
-      return Week
-        .create({
-          points: req.body.points,
-          studentInstanceId: req.body.studentInstanceId,
-          comment: req.body.comment,
-          weekNumber: req.body.weekNumber
-        })
-        .then(week => res.status(201).send(week))
-        .catch(error => res.status(400).send(error))
-    } else {
-      res.status(400).send('token verification failed')
-    }
-  },
-
   getNew(req, res) {
     console.log('update current...')
     const auth = process.env.TOKEN || 'notset' //You have to set TOKEN in .env file in order for this to work
@@ -393,6 +356,50 @@ module.exports = {
         return res.status(200).send(course)
       })
       .catch(error => res.status(400).send(error))
+  },
+
+  addComment(req, res) {
+    let token = helper.tokenVerify(req)
+    const message = req.body
+    console.log('message: ', message.message)
+    console.log('from: ', message.from)
+    console.log('to: ', message.to)
+    console.log('week: ', message.week)
+    if (token.verified) {
+      return Comment
+        .create({
+          weekId: message.week,
+          message: message.message,
+          from: message.from,
+          to: message.to,
+        })
+        .then(comment => {
+          if (!comment) {
+            res.status(400).send('week not found')
+          } else {
+            res.status(200).send(comment)
+          }
+        })
+        .catch(error => res.status(400).send(error))
+    } else {
+      res.status(400).send('token verification failed')
+    }
+  },
+
+  getCommentsForWeek(req, res) {
+    let token = helper.tokenVerify(req)
+    if (token.verified) {
+      return Comment
+        .findAll({
+          where: {
+            weekId: req.body.week
+          }
+        })
+        .then(comment => res.status(200).send(comment))
+        .catch(error => res.status(400).send(error))
+    } else {
+      res.status(400).send('token verification failed')
+    }
   },
 
 }
