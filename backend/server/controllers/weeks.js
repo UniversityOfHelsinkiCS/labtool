@@ -22,7 +22,7 @@ module.exports = {
           })
           res.status(200).send(week)
         } else {
-          await Week.create({
+          await  Week.create({
             points: req.body.points,
             studentInstanceId: req.body.studentInstanceId,
             comment: req.body.comment,

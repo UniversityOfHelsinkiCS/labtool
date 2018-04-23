@@ -6,10 +6,27 @@ import { createOneWeek } from '../../services/week'
 import { Redirect } from 'react-router'
 
 class ReviewStudent extends Component {
-
-  state = {
-    redirectToNewPage: false
+  constructor(props) {
+    super(props)
+    this.state = {
+      redirectToNewPage: false
+    }
   }
+
+  componentDidUpdate() {
+    if (!this.props.notification.error) {
+      this.setState({ redirectToNewPage: true })
+    }
+  }
+
+  shouldComponentUpdate(nextProps) {
+    if (this.props.notification === nextProps.notification) {
+      return false
+    }
+    return true
+  }
+
+
 
 
   handleSubmit = async (e) => {
@@ -24,9 +41,8 @@ class ReviewStudent extends Component {
       const taa = await this.props.createOneWeek(content)
       console.log(taa, 'TÄSSÄ HÄ Ä')
     } catch (error) {
+      console.log(error)
     }
-    this.setState({ redirectToNewPage: true })
-
   }
   render() {
     if (this.state.redirectToNewPage) {
@@ -68,7 +84,8 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     ownProps,
-    selectedInstance: state.selectedInstance
+    selectedInstance: state.selectedInstance,
+    notification: state.notification
   }
 }
 
