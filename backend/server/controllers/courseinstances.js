@@ -34,21 +34,17 @@ module.exports = {
 
   },
   async coursePage(req, res) {
-
     const course = await CourseInstance.findOne({
       where: {
-        ohid: req.body.course
+        id: req.body.course
       }
     })
-
     const courseInst = course.id
-    const token = helper.tokenVerify(req)
-
+    const token = await helper.tokenVerify(req)
     const palautus = {
       role: 'Unregistered',
       data: undefined
     }
-
     if (token.verified) {
       const user = token.data.id
       const teacher = await TeacherInstance.findAll({
@@ -57,9 +53,7 @@ module.exports = {
           courseInstanceId: courseInst
         }
       })
-
       if (teacher[0] === undefined) {
-        console.log('TYHJÄ!')
         const student = await StudentInstance.findOne({
           where: {
             userId: user,
@@ -106,29 +100,9 @@ module.exports = {
       res.status(400).send('something went wrong')
     }
   },
+
   findByUserStudentInstance(req, res) {//token verification might not work..? and we don't knpw if search works
-    console.log('db: ', db)
-    const errors = []
-    console.log('searching by studentInstance...')
-    console.log('***REQ BODY***: ', req.body)
-    let token = helper.tokenVerify(req)
-    console.log('TOKEN VERIFIED: ', token)
-    const id = parseInt(req.body.userId)
-    console.log('req.params.UserId: ', id)
-    if (token.verified) {
-      if (Number.isInteger(token.data.id)) {
-        db.sequelize.query(`SELECT * FROM "CourseInstances" JOIN "StudentInstances" ON "CourseInstances"."id" = "StudentInstances"."courseInstanceId" WHERE "StudentInstances"."userId" = ${token.data.id}`)
-          .then(instance =>
-            res.status(200).send(instance[0]))
-          .catch(error => res.status(400).send(error))
-      } else {
-        errors.push('something went wrong')
-        res.status(400).send(errors)
-      }
-    } else {
-      errors.push('token verification failed')
-      res.status(400).send(errors)
-    }
+    helper.findByUserStudentInstance(req, res)
 
   },
 
@@ -187,10 +161,15 @@ module.exports = {
                     message: 'something went wrong: if somehow we could not find or create a record we see this'
                   })
                 } else {
-                  res.status(200).send({
-                    message: 'something went right',
-                    whatever: student
-                  })
+                  helper.findByUserStudentInstance(req, res)
+
+                  //      this.findByUserStudentInstance(req,res)
+                  //                  res.status(200).send({
+
+                  /*
+                  message: 'something went right',
+                  whatever: student
+                })*/
                 }
 
               }).catch(function (error) {
@@ -218,7 +197,7 @@ module.exports = {
     return CourseInstance
       .find({
         where: {
-          id: req.params.id
+          ohid: req.params.id
         }
       })
       .then(courseInstance => {
@@ -232,7 +211,7 @@ module.exports = {
             name: req.body.name || courseInstance.name,
             start: req.body.start || courseInstance.start,
             end: req.body.end || courseInstance.end,
-            active: req.body.active || courseInstance.active,
+            active: req.body.active,
             weekAmount: req.body.weekAmount || courseInstance.weekAmount,
             weekMaxPoints: req.body.weekMaxPoints || courseInstance.weekMaxPoints,
             currentWeek: req.body.currentWeek || courseInstance.currentWeek,
@@ -296,7 +275,7 @@ module.exports = {
           console.log(json)
           json.forEach(instance => {
             CourseInstance.findOrCreate({
-              where: { ohid: instance.id },
+              where: {ohid: instance.id},
               defaults: {
                 name: instance.name,
                 start: instance.starts,
@@ -306,7 +285,7 @@ module.exports = {
             })
           })
           if (req.decoded) {
-            res.status(204).send({ 'hello': 'hello' }) // nodejs crashes if someone just posts here without valid token.
+            res.status(204).send({'hello': 'hello'}) // nodejs crashes if someone just posts here without valid token.
           }
         }
         )
