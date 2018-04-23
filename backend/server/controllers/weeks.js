@@ -2,40 +2,41 @@ const Week = require('../models').Week
 const helper = require('../helpers/course_instance_helper')
 
 module.exports = {
-  create(req, res) {
-    let token = helper.tokenVerify(req)
-    if (token.verified) {
-      Week
-        .findOne({
+  async create(req, res) {
+    try {
+      let token = helper.tokenVerify(req)
+      if (token.verified) {
+        let week = await Week.findOne({
           where: {
             weekNumber: req.body.weekNumber,
             studentInstanceId: req.body.studentInstanceId
           }
         })
-        .then(week => {
-          if (week) {
-            return week.update({
-              points: req.body.points,
-              studentInstanceId: req.body.studentInstanceId,
-              comment: req.body.comment,
-              weekNumber: req.body.weekNumber
-            })
-              .then(res.status(201).send(week))
-              .catch(error => res.status(400).send(error))
-          } else {
-            return Week.create({
-              points: req.body.points,
-              studentInstanceId: req.body.studentInstanceId,
-              comment: req.body.comment,
-              weekNumber: req.body.weekNumber
-            })
-              .then(res.status(201).send(week))
-              .catch(error => res.status(400).send(error))
-          }
-        })
-        .catch(error => res.status(400).send(error))
-    } else {
-      res.status(400).send('token verification failed')
+
+        if (week) {
+          await week.update({
+            points: req.body.points,
+            studentInstanceId: req.body.studentInstanceId,
+            comment: req.body.comment,
+            weekNumber: req.body.weekNumber
+          })
+          res.status(200).send(week)
+        } else {
+          await Week.create({
+            points: req.body.points,
+            studentInstanceId: req.body.studentInstanceId,
+            comment: req.body.comment,
+            weekNumber: req.body.weekNumber
+          })
+          res.status(200).send(week)  
+        }
+        res.status(200).send
+      } else {
+        res.status(400).send('token verific ation failed')
+      }
+
+    } catch (error) {
+      res.status(400).send(error)
     }
   },
   list(req, res) {
