@@ -3,8 +3,13 @@ import { Button, Form, Input, Grid } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createOneWeek } from '../../services/week'
+import { Redirect } from 'react-router'
 
 class ReviewStudent extends Component {
+
+  state = {
+    redirectToNewPage: false
+  }
 
 
   handleSubmit = async (e) => {
@@ -19,10 +24,16 @@ class ReviewStudent extends Component {
       const taa = await this.props.createOneWeek(content)
       console.log(taa, 'TÄSSÄ HÄ Ä')
     } catch (error) {
-      console.log('EI ONNANNU')
     }
+    this.setState({ redirectToNewPage: true })
+
   }
   render() {
+    if (this.state.redirectToNewPage) {
+      return (
+        <Redirect to={`/labtool/courses/${this.props.selectedInstance.ohid}`} />
+      )
+    }
     return (
       <div className='ReviewStudent' style={{ textAlignVertical: 'center', textAlign: 'center', }}>
         <h2> Tiralabra 2018 Kevät</h2>
@@ -56,7 +67,8 @@ class ReviewStudent extends Component {
 const mapStateToProps = (state, ownProps) => {
 
   return {
-    ownProps
+    ownProps,
+    selectedInstance: state.selectedInstance
   }
 }
 

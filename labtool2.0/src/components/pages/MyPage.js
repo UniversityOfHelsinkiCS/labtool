@@ -76,7 +76,7 @@ class MyPage extends Component {
               {this.props.studentInstance.map(sinstance =>
                 <Table.Row>
                   <Table.Cell>{sinstance.name}</Table.Cell>
-                  <Table.Cell textAlign='left'><div>
+                  <Table.Cell textAlign='right'><div>
                     <Link to={`/labtool/courses/${sinstance.ohid}`}><Button circular color="teal" size='tiny' icon="large black eye icon"></Button></Link>
                   </div></Table.Cell>
                 </Table.Row>
@@ -95,7 +95,7 @@ class MyPage extends Component {
                       <Table.Cell>{tinstance.name}</Table.Cell>
                       <Table.Cell textAlign='right'><div>
                         <Link to={`/labtool/courses/${tinstance.ohid}`}><Button circular color="teal" size='tiny' icon="large black eye icon"></Button></Link>
-                        <Button circular color='orange' size="tiny" icon="large black edit icon" />
+                        
                       </div></Table.Cell>
                     </Table.Row>
                   )}
