@@ -6,6 +6,7 @@ import { createOneWeek } from '../../services/week'
 
 class ReviewStudent extends Component {
 
+
   handleSubmit = async (e) => {
     try {
       e.preventDefault()
@@ -21,9 +22,7 @@ class ReviewStudent extends Component {
       console.log('EI ONNANNU')
     }
   }
-
   render() {
-
     return (
       <div className='ReviewStudent' style={{ textAlignVertical: 'center', textAlign: 'center', }}>
         <h2> Tiralabra 2018 Kevät</h2>
