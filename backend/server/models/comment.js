@@ -19,10 +19,6 @@ module.exports = (sequelize, DataTypes) => {
 
   }, {})
   Comment.associate = function (models) {
-    Comment.hasMany(models.Comment, {
-      foreignKey: 'commentId',
-      as: 'comments'
-    })
     Comment.belongsTo(models.Week, {
       foreignKey: 'weekId',
       onDelete: 'CASCADE',
