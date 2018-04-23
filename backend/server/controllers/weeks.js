@@ -8,7 +8,8 @@ module.exports = {
       Week
         .findOne({
           where: {
-            weekNumber: req.body.weekNumber
+            weekNumber: req.body.weekNumber,
+            studentInstanceId: req.body.studentInstanceId
           }
         })
         .then(week => {
@@ -19,8 +20,8 @@ module.exports = {
               comment: req.body.comment,
               weekNumber: req.body.weekNumber
             })
-              .then(res.status(201).send(week))   
-              .catch(error => res.status(400).send(error))         
+              .then(res.status(201).send(week))
+              .catch(error => res.status(400).send(error))
           } else {
             return Week.create({
               points: req.body.points,
@@ -29,14 +30,13 @@ module.exports = {
               weekNumber: req.body.weekNumber
             })
               .then(res.status(201).send(week))
-              .catch(error => res.status(400).send(error))  
-          }          
+              .catch(error => res.status(400).send(error))
+          }
         })
         .catch(error => res.status(400).send(error))
     } else {
       res.status(400).send('token verification failed')
     }
-    res.status(400).send('async die')
   },
   list(req, res) {
     return Week
