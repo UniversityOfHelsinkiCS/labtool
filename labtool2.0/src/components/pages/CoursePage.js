@@ -15,33 +15,44 @@ class CoursePage extends Component {
       instance = this.props.studentInstance.filter(inst => (inst.courseInstanceId == this.props.selectedInstance.id))
     }
 
-    console.log(this.props.courseData.data, 'coiurssafdsaf')
-
-
-
-
-    const headers = []
-
-    const createIndents = (data) => {
-      const indents = [];
+    const createIndents = (data, siId) => {
+      const indents = []
       for (var i = 0; i < this.props.selectedInstance.weekAmount; i++) {
-        if (data[i] !== undefined) {
-          const weeks = data.map(week => week.weekNumber === i)
-          weeks.forEach(element => {
-            indents.push(<Table.Cell><p> {element.points}</p></Table.Cell>)
-          })
+        let pushattava =
+          <Table.Cell>
+            <p>Not reviewed!</p>
+            <Link to={`/labtool/reviewstudent/${siId}/${i + 1}`}>
+              <Button circular color='orange' size="tiny" icon="edit black large" onClick={review()} ></Button>
+            </Link>
+          </Table.Cell>
 
+        for (var j = 0; j < data.length; j++) {
+          if ((i + 1) === data[j].weekNumber) {
+            pushattava = <Table.Cell>
+              <p>{data[j].points}</p>
+              <Link to={`/labtool/reviewstudent/${siId}/${i + 1}`}>
+                <Button circular color='orange' size="tiny" icon="edit black large" ></Button>
+              </Link>
+            </Table.Cell>
 
-
-        } else {
-          indents.push(<Table.Cell><p>moro</p></Table.Cell>)
-
+          }
         }
+        indents.push(pushattava)
       }
-      console.log(data, 'joskus jotian')
       return indents
     }
 
+    const createHeaders = () => {
+      const headers = []
+      for (var i = 0; i < this.props.selectedInstance.weekAmount; i++) {
+        headers.push(<Table.HeaderCell>Week {i + 1} </Table.HeaderCell>)
+      }
+      return headers
+    }
+
+    const review = () => {
+
+    }
 
 
     return (
@@ -51,7 +62,7 @@ class CoursePage extends Component {
         <div className="ui grid">
           <div className="sixteen wide column">
             <h2>{this.props.selectedInstance.name}</h2>
-          </div>I
+          </div>
           {this.props.courseData.data === null
             ?
             <div className="sixteen wide column">
@@ -80,13 +91,7 @@ class CoursePage extends Component {
                 <Table.Row>
                   <Table.HeaderCell>Name</Table.HeaderCell>
                   <Table.HeaderCell> Github </Table.HeaderCell>
-                  {/* Maps Week n n++; */}
-                  <Table.HeaderCell>Week 1</Table.HeaderCell>
-                  <Table.HeaderCell>Week 2</Table.HeaderCell>
-                  <Table.HeaderCell>Week 3</Table.HeaderCell>
-                  <Table.HeaderCell>Week 4</Table.HeaderCell>
-                  <Table.HeaderCell>Week 5</Table.HeaderCell>
-                  <Table.HeaderCell>Review</Table.HeaderCell>
+                  {createHeaders()}
                 </Table.Row>
               </Table.Header>
               <Table.Body>
@@ -95,43 +100,10 @@ class CoursePage extends Component {
                   <Table.Row>
                     <Table.Cell>{data.User.firsts} {data.User.lastname}</Table.Cell>
                     <Table.Cell><p>{data.projectName}</p><a>{data.github}</a></Table.Cell>
-                    {createIndents(data.weeks)}
+                    {createIndents(data.weeks, data.id)}
                   </Table.Row>
                 )}
               </Table.Body>
-              <Table.Body>
-                <Table.Row >
-                  <Table.Cell>Maija Meikäläinen  </Table.Cell>
-                  <Table.Cell>Name and link</Table.Cell>
-                  <Table.Cell>4</Table.Cell>
-                  <Table.Cell>2</Table.Cell>
-                  <Table.Cell>1</Table.Cell>
-                  <Table.Cell>0</Table.Cell>
-                  <Table.Cell>4</Table.Cell>
-                  <Table.Cell><Button circular color='orange' size="tiny" icon="large black edit"></Button></Table.Cell>
-                </Table.Row>
-                <Table.Row>
-                  <Table.Cell>Toivo Untonen </Table.Cell>
-                  <Table.Cell>Name and link</Table.Cell>
-                  <Table.Cell>1</Table.Cell>
-                  <Table.Cell>3</Table.Cell>
-                  <Table.Cell>2</Table.Cell>
-                  <Table.Cell>5</Table.Cell>
-                  <Table.Cell>4.5</Table.Cell>
-                  <Table.Cell><Button circular color='orange' size="tiny" icon="large black edit"></Button></Table.Cell>
-                </Table.Row>
-                <Table.Row>
-                  <Table.Cell>Joonatan Järvinen </Table.Cell>
-                  <Table.Cell>Name and link</Table.Cell>
-                  <Table.Cell>4</Table.Cell>
-                  <Table.Cell>0</Table.Cell>
-                  <Table.Cell>4</Table.Cell>
-                  <Table.Cell>5 </Table.Cell>
-                  <Table.Cell>1.5</Table.Cell>
-                  <Table.Cell><Button circular color='orange' size="tiny" icon="edit black large" ></Button></Table.Cell>
-                </Table.Row>
-              </Table.Body>
-
             </Table>
           </div>
           :

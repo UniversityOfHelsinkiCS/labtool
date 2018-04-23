@@ -202,7 +202,7 @@ module.exports = {
       })
       .then(courseInstance => {
         if (!courseInstance) {
-          return res.status(400).send({
+          res.status(400).send({
             message: 'course instance not found',
           })
         }
