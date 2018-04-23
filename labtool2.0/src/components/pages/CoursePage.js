@@ -10,7 +10,7 @@ class CoursePage extends Component {
     if (this.props.studentInstance) {
       instance = this.props.studentInstance.filter(inst => (inst.courseInstanceId == this.props.selectedInstance.id))
     }
-                      
+
 
     const createIndents = (data, siId) => {
       const indents = []
@@ -67,20 +67,23 @@ class CoursePage extends Component {
             : <p></p>
           }
         </div>
-        <Table celled >
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell>Active: {JSON.stringify(this.props.selectedInstance.active)}</Table.HeaderCell>
-              <Table.HeaderCell>Week amount: {this.props.selectedInstance.weekAmount}</Table.HeaderCell>
-              <Table.HeaderCell>Current week: {this.props.selectedInstance.currentWeek}</Table.HeaderCell>
-              <Table.HeaderCell>Week maxpoints: {this.props.selectedInstance.weekMaxPoints}</Table.HeaderCell>
-            </Table.Row>
-          </Table.Header>
-        </Table>
+
 
 
         {this.props.courseData.role === 'teacher' ?
           <div>
+
+            <Table celled >
+              <Table.Header>
+                <Table.Row>
+                  <Table.HeaderCell>Active: {JSON.stringify(this.props.selectedInstance.active)}</Table.HeaderCell>
+                  <Table.HeaderCell>Week amount: {this.props.selectedInstance.weekAmount}</Table.HeaderCell>
+                  <Table.HeaderCell>Current week: {this.props.selectedInstance.currentWeek}</Table.HeaderCell>
+                  <Table.HeaderCell>Week maxpoints: {this.props.selectedInstance.weekMaxPoints}</Table.HeaderCell>
+                </Table.Row>
+              </Table.Header>
+            </Table>
+
             <h3> Students </h3>
             <Table celled unstackable>
               <Table.Header>
