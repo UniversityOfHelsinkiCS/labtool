@@ -111,7 +111,17 @@ class CoursePage extends Component {
         {this.props.courseData.role === "student" && this.props.courseData.data !== null
           ? <div>
 
+            <h3> </h3>
+
+            <Card fluid color='yellow'>
+              <Card.Content>
+                <h3> {this.props.courseData.data.projectName} </h3>
+                <h3> <Link to={this.props.courseData.data.github}>{this.props.courseData.data.github}</Link> </h3>
+              </Card.Content>
+            </Card>
+           
             <h3> Comments and feedback </h3>
+
             <Table celled padded unstackable>
               <Table.Header>
                 <Table.Row>
