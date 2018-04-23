@@ -7,7 +7,6 @@ class CoursePage extends Component {
 
   render() {
     let instance = []
-Teacher.push(<Table.HeaderCell>Week {i}</Table.HeaderCell>)
     if (this.props.studentInstance) {
       instance = this.props.studentInstance.filter(inst => (inst.courseInstanceId == this.props.selectedInstance.id))
     }
