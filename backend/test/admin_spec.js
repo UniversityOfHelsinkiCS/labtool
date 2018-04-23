@@ -59,6 +59,7 @@ describe('Admin page', function () {
       .auth('admin', 'test')
       .expect(200)
       .expect('Tietokantasovellus (periodi IV)')
+
       .end(function (err, res) {
         res.text.should.eql('<html><head><title>Activate course</title></head><body><h1>Not activated courses</h1><form action="/admin" method="POST"><p>Aineopintojen harjoitustyö: Tietokantasovellus (periodi IV) - TKT20011.2018.K.A.1</p><input name="hid" type="hidden" value="TKT20011.2018.K.A.1"/><input name="cname" type="hidden" value="Aineopintojen harjoitustyö: Tietokantasovellus (periodi IV)"/><input name="starts" type="hidden" value="2018-03-12 00:00:00 +0300"/><input name="ends" type="hidden" value="2018-03-12 00:00:00 +0300"/><input type="submit" value="Activate"/></form></body></html>')
         done()

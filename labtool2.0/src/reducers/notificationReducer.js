@@ -37,6 +37,16 @@ const notificationReducer = (state = {}, action) => {
         message: 'Course instance updated successfully!',
         error: false
       }
+    case 'WEEKS_CREATE_ONESUCCESS':
+      return {
+        message: 'Week reviewed succesfully!',
+        error: false
+      }
+    case 'WEEKS_CREATE_ONEFAILURE':
+      return {
+        message: 'Oopsie doopsie, inputs are not valid!',
+        error: true
+      }
     default:
       return state
   }

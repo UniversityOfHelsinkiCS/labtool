@@ -5,104 +5,137 @@ import { connect } from 'react-redux'
 
 class CoursePage extends Component {
 
-  componentDidMount() {
-    console.log(this.props.selectedInstance.id, 'tässä id')
-  }
-
   render() {
     let instance = []
-    if (this.props.coursePage !== [] && this.props.coursePage !== null) {
-      if (this.props.coursePage.data) {
-        instance = this.props.coursePage.data[0]
-      }
-    }
-    console.log(instance)
-
-    var weeks = []
-    var weeksTeacher = []
-    for (var i = 1; i <= this.props.selectedInstance.weekAmount; i++) {
-      weeks.push(<Table.Row> <Table.Cell>{i}</Table.Cell> <Table.Cell>0</Table.Cell> <Table.Cell>  </Table.Cell></Table.Row>)
-      weeksTeacher.push(<Table.HeaderCell>Week {i}</Table.HeaderCell>)
+Teacher.push(<Table.HeaderCell>Week {i}</Table.HeaderCell>)
+    if (this.props.studentInstance) {
+      instance = this.props.studentInstance.filter(inst => (inst.courseInstanceId == this.props.selectedInstance.id))
     }
                       
 
+    const createIndents = (data, siId) => {
+      const indents = []
+      for (var i = 0; i < this.props.selectedInstance.weekAmount; i++) {
+        let pushattava =
+          <Table.Cell>
+            <p>Not reviewed!</p>
+            <Link to={`/labtool/reviewstudent/${siId}/${i + 1}`}>
+              <Button circular color='orange' size="tiny" icon="edit black large" onClick={review()} ></Button>
+            </Link>
+          </Table.Cell>
+
+        for (var j = 0; j < data.length; j++) {
+          if ((i + 1) === data[j].weekNumber) {
+            pushattava = <Table.Cell>
+              <p>{data[j].points}</p>
+              <Link to={`/labtool/reviewstudent/${siId}/${i + 1}`}>
+                <Button circular color='orange' size="tiny" icon="edit black large" ></Button>
+              </Link>
+            </Table.Cell>
+
+          }
+        }
+        indents.push(pushattava)
+      }
+      return indents
+    }
+
+    const createHeaders = () => {
+      const headers = []
+      for (var i = 0; i < this.props.selectedInstance.weekAmount; i++) {
+        headers.push(<Table.HeaderCell>Week {i + 1} </Table.HeaderCell>)
+      }
+      return headers
+    }
+
+    const review = () => {
+
+    }
+
+
     return (
+      //const CoursePage = ({ name, start, end, week_amount, week_max_points, current_week, handleFieldChange }) => {
       <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
         <div className="ui grid">
-          
-
-
-          {this.props.coursePage.role == 'teacher' ?
-            <div >
-
-              <Table celled >
-                <Table.Header>
-                  <Table.Row>
-                    <Table.HeaderCell>Active: {JSON.stringify(this.props.selectedInstance.active)}</Table.HeaderCell>
-                    <Table.HeaderCell>Week amount: {this.props.selectedInstance.weekAmount}</Table.HeaderCell>
-                    <Table.HeaderCell>Current week: {this.props.selectedInstance.currentWeek}</Table.HeaderCell>
-                    <Table.HeaderCell>Week maxpoints: {this.props.selectedInstance.weekMaxPoints}</Table.HeaderCell>
-                  </Table.Row>
-                </Table.Header>
-              </Table>
-              <h3> Students </h3>
-              <Table celled unstackable>
-                <Table.Header>
-                  <Table.Row>
-                    <Table.HeaderCell>Name</Table.HeaderCell>
-                    <Table.HeaderCell> Github </Table.HeaderCell>
-                    {weeksTeacher}
-                    <Table.HeaderCell>Review</Table.HeaderCell>
-                  </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                  {this.props.coursePage.data.map(instance => 
-                    <Table.Row textAlign="center" >
-                      <Table.Cell>{instance.User.firsts} {instance.User.lastname}</Table.Cell>
-                      <Table.Cell><a href={instance.github}>{instance.projectName}</a></Table.Cell>
-                      {weeksTeacher.map(w =>
-                        <Table.Cell>0</Table.Cell>
-                      )}
-                      <Table.Cell><Link to={`/labtool/courses/${this.props.selectedInstance.ohid}/reviewStudent/${instance.User.id}`}><Button circular color='orange' size="tiny" icon="large black edit" ></Button></Link></Table.Cell>
-                    </Table.Row>
-                  )}
-                </Table.Body>
-              </Table>
-            </div>
-            :
+          <div className="sixteen wide column">
+            <h2>{this.props.selectedInstance.name}</h2>
+          </div>
+          {this.props.courseData.data === null
+            ?
             <div className="sixteen wide column">
-              <h2>{this.props.selectedInstance.name}</h2>
-
-              {instance !== [] && instance !== undefined && instance ?
-                instance.github ?
-                  <div>
-                    <h2>{instance.projectName}</h2>
-                    <h3><a href={instance.github} >{instance.github}</a></h3>
-
-                    <div className="sixteen wide column" >
-                      <h3> Points and feedback </h3>
-                      <Table celled padded unstackable>
-                        <Table.Header>
-                          <Table.Row>
-                            <Table.HeaderCell>Week</Table.HeaderCell>
-                            <Table.HeaderCell>Points</Table.HeaderCell>
-                            <Table.HeaderCell>Comment</Table.HeaderCell>
-                          </Table.Row>
-                        </Table.Header>
-                        <Table.Body>
-                          {weeks}
-                        </Table.Body>
-                      </Table> </div>
-                  </div> :
-                  <div className="sixteen wide column">
-                    <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>  <Button>Register</Button></Link>
-                  </div> : <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>  <Button>Register</Button></Link>
-              }
+              <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>  <Button>Register</Button></Link>
             </div>
+            : <p></p>
           }
         </div>
-      </div>
-    )} 
+        <Table celled >
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell>Active: {JSON.stringify(this.props.selectedInstance.active)}</Table.HeaderCell>
+              <Table.HeaderCell>Week amount: {this.props.selectedInstance.weekAmount}</Table.HeaderCell>
+              <Table.HeaderCell>Current week: {this.props.selectedInstance.currentWeek}</Table.HeaderCell>
+              <Table.HeaderCell>Week maxpoints: {this.props.selectedInstance.weekMaxPoints}</Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+        </Table>
+
+
+        {this.props.courseData.role === 'teacher' ?
+          <div>
+            <h3> Students </h3>
+            <Table celled unstackable>
+              <Table.Header>
+                <Table.Row>
+                  <Table.HeaderCell>Name</Table.HeaderCell>
+                  <Table.HeaderCell> Github </Table.HeaderCell>
+                  {createHeaders()}
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
+                {this.props.courseData.data.map(data =>
+
+                  <Table.Row>
+                    <Table.Cell>{data.User.firsts} {data.User.lastname}</Table.Cell>
+                    <Table.Cell><p>{data.projectName}</p><a>{data.github}</a></Table.Cell>
+                    {createIndents(data.weeks, data.id)}
+                  </Table.Row>
+                )}
+              </Table.Body>
+            </Table>
+          </div>
+          :
+          <div></div>
+        }
+        {this.props.courseData.role === "student" && this.props.courseData.data !== null
+          ? <div>
+
+            <h3> Comments and feedback </h3>
+            <Table celled padded unstackable>
+              <Table.Header>
+                <Table.Row>
+                  <Table.HeaderCell>Week</Table.HeaderCell>
+                  <Table.HeaderCell>Points</Table.HeaderCell>
+                  <Table.HeaderCell>Comment</Table.HeaderCell>
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
+                {console.log(this.props.courseData.data.weeks)}
+                {this.props.courseData.data.weeks.map(week =>
+                  <Table.Row>
+                    <Table.Cell>{week.weekNumber}</Table.Cell>
+                    <Table.Cell>{week.points}</Table.Cell>
+                    <Table.Cell>{week.comment}</Table.Cell>
+                  </Table.Row>
+                )}
+              </Table.Body>
+            </Table>
+          </div>
+          : <div></div>}
+
+      </div >
+
+    )
+  }
 }
 
 const mapStateToProps = (state) => {
@@ -111,7 +144,7 @@ const mapStateToProps = (state) => {
     studentInstance: state.studentInstance,
     teacherInstance: state.teacherInstance,
     selectedInstance: state.selectedInstance,
-    coursePage: state.coursePage
+    courseData: state.coursePage
   }
 }
 
