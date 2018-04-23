@@ -84,7 +84,6 @@ class App extends Component {
             />
             <Route path={`/`} component={MyPage} />
 
-
             {/* <Route path='/schedule' component={Schedule} /> */}
           </Switch>
         </main>

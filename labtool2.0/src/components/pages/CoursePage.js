@@ -1,19 +1,17 @@
 import React, { Component } from 'react'
-import { Button, Table } from 'semantic-ui-react'
+import { Button, Table, Grid, Card, Header, Divider } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 class CoursePage extends Component {
 
-
   render() {
-    let renderButton = false
-    let projectName
-    let githubLink
     let instance = []
+Teacher.push(<Table.HeaderCell>Week {i}</Table.HeaderCell>)
     if (this.props.studentInstance) {
       instance = this.props.studentInstance.filter(inst => (inst.courseInstanceId == this.props.selectedInstance.id))
     }
+                      
 
     const createIndents = (data, siId) => {
       const indents = []
@@ -56,7 +54,6 @@ class CoursePage extends Component {
 
 
     return (
-
       //const CoursePage = ({ name, start, end, week_amount, week_max_points, current_week, handleFieldChange }) => {
       <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
         <div className="ui grid">
