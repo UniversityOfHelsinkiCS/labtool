@@ -54,7 +54,7 @@ module.exports = {
         }
       })
       if (teacher[0] === undefined) {
-        const student = await StudentInstance.findAll({
+        const student = await StudentInstance.findOne({
           where: {
             userId: user,
             courseInstanceId: courseInst
@@ -67,8 +67,10 @@ module.exports = {
           }
           ]
         })
+        
         try {
           palautus.data = student
+          console.log('TÄSSÄ ON STUDNETTII', student)
           palautus.role = 'student'
           res.status(200).send(palautus)
         } catch (error) {
