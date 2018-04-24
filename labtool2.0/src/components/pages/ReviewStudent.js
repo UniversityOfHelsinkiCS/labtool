@@ -38,8 +38,7 @@ class ReviewStudent extends Component {
         comment: e.target.comment.value,
         weekNumber: this.props.weekNumber
       }
-      const taa = await this.props.createOneWeek(content)
-      console.log(taa, 'TÄSSÄ HÄ Ä')
+      await this.props.createOneWeek(content)
     } catch (error) {
       console.log(error)
     }

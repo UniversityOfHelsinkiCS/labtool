@@ -6,9 +6,24 @@ import { Link } from 'react-router-dom'
 import { Redirect } from 'react-router'
 
 class ModifyCourseInstancePage extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      redirectToNewPage: false
+    }
+  }
 
-  state = {
-    redirectToNewPage: false
+  componentDidUpdate() {
+    if (!this.props.notification.error) {
+      this.setState({ redirectToNewPage: true })
+    }
+  }
+
+  shouldComponentUpdate(nextProps) {
+    if (this.props.notification === nextProps.notification) {
+      return false
+    }
+    return true
   }
 
   handleSubmit = async (e) => {
@@ -23,7 +38,6 @@ class ModifyCourseInstancePage extends Component {
         ohid: this.props.selectedInstance.ohid
       }
       await this.props.modifyOneCI(content, this.props.selectedInstance.ohid)
-      this.setState({ redirectToNewPage: true })
     } catch (error) {
       console.log(error)
     }
@@ -96,7 +110,8 @@ class ModifyCourseInstancePage extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    selectedInstance: state.selectedInstance
+    selectedInstance: state.selectedInstance,
+    notification: state.notification
   }
 }
 
