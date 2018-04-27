@@ -74,6 +74,8 @@ class Email extends Component {
                     defaultValue={user.email}
                     style={{ minWidth: '20em' }}
                     type="email"
+                    icon='mail'
+                    iconPosition='left'
                     className="form-control"
                     name="email"
                     placeholder="my.email@helsinki.fi" />
