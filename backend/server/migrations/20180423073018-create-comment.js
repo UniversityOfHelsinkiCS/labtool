@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('Comments', {
@@ -8,7 +8,13 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      message: {
+      feedback: {
+        type: Sequelize.STRING
+      },
+      comment: {
+        type: Sequelize.STRING
+      },
+      hiddenComment: {
         type: Sequelize.STRING
       },
       weekId: {
@@ -31,9 +37,9 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    });
+    })
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Comments');
+    return queryInterface.dropTable('Comments')
   }
-};
+}
