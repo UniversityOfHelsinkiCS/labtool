@@ -186,7 +186,8 @@ async function createCourse(body) {
       })
       TeacherInstance.build({
         userId: user[i].id,
-        courseInstanceId: new_course.id
+        courseInstanceId: new_course.id,
+        admin: 'true'
       }).save()
 
     }
