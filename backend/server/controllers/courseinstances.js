@@ -81,13 +81,43 @@ module.exports = {
         ]
       })
 
-      try {
-        palautus.data = student
-        console.log('TÄSSÄ ON STUDNETTII', student)
-        palautus.role = 'student'
-        res.status(200).send(palautus)
-      } catch (error) {
-        res.status(400).send(error)
+
+        try {
+          palautus.data = student
+          console.log('TÄSSÄ ON STUDNETTII', student)
+          palautus.role = 'student'
+          res.status(200).send(palautus)
+        } catch (error) {
+          res.status(400).send(error)
+        }
+      } else {
+        const teacherPalautus = await StudentInstance.findAll({
+          where: {
+            courseInstanceId: courseInst
+          },
+          include: [
+            {
+              model: Week,
+              as: 'weeks',
+              include: [
+                {
+                  model: Comment,
+                  as: 'comments'
+                }
+              ]
+            },
+            {
+              model: User
+            }
+          ]
+        })
+        try {
+          palautus.data = teacherPalautus
+          palautus.role = 'teacher'
+          res.status(200).send(palautus)
+        } catch (e) {
+          res.status(200).send(e)
+        }
       }
     } else {
       const teacherPalautus = await StudentInstance.findAll({
