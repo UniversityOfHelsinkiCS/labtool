@@ -10,6 +10,10 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'studentInstanceId',
       onDelete: 'CASCADE',
     })
+    Week.hasMany(models.Comment, {
+      foreignKey: 'weekId',
+      as: 'comments'
+    })
   }
   return Week
 }
