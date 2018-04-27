@@ -54,7 +54,6 @@ export const callController = (route, prefix, data, method = 'get') => (dispatch
 export const handleRequest = store => next => (action) => {
   next(action)
   const { payload } = action
-  console.log('this is payload    ', payload)
   if (payload) {
     callApi(payload.route, payload.method, payload.data, payload.prefix, store.getState().user.token)
       .then((res) => {

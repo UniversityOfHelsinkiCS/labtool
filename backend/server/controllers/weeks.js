@@ -2,22 +2,38 @@ const Week = require('../models').Week
 const helper = require('../helpers/weeks_controller_helper')
 
 module.exports = {
-  /**
-   *
-   * @param req
-   * @param res
-   * @returns {*|Promise<T>}
-   */
-  create(req, res) {
-    helper.controller_before_auth_check_action(req, res)
-
-    return Week.create({
-      points: req.body.points,
-      studentInstanceId: req.body.studentInstanceId,
-      weekNumber: req.body.weekNumber
-    })
-      .then(week => res.status(201).send(week))
-      .catch(error => res.status(400).send(error))
+  async create(req, res) {
+    try {
+      let token = helper.tokenVerify(req)
+      if (token.verified) {
+        const week = await Week
+          .findOne({
+            where: {
+              id: req.body.week
+            }
+          })
+        if (week) {
+          await week.update({
+            points: req.body.points,
+            studentInstanceId: req.body.studentInstanceId,
+            comment: req.body.comment,
+            weekNumber: req.body.weekNumber
+          })
+          res.status(200).send(week)
+        } else {
+          await Week.create({
+            points: req.body.points,
+            studentInstanceId: req.body.studentInstanceId,
+            comment: req.body.comment,
+            weekNumber: req.body.weekNumber
+          })
+          res.status(200).send(week)
+        }
+        res.status(200).send
+      } else {
+        res.status(400).send('token verific ation failed')
+      }
+    }
   },
   /**
    *
