@@ -2,7 +2,7 @@ const User = require('../models').User
 const jwt = require('jsonwebtoken')
 const CourseInstance = require('../models').CourseInstance
 const TeacherInstance = require('../models').TeacherInstance
-const helper = require('../helpers/course_instance_helper')
+const helper = require('../helpers/users_controller_helper')
 
 module.exports = {
 
@@ -13,12 +13,11 @@ module.exports = {
    * @returns {*}
    */
   update(req, res) {
+    helper.controller_before_auth_check_action()
+
     return (
       jwt.verify(req.token, process.env.SECRET, function (err, decoded) {  // # this should be fixed in issue #127
-        if (err) {
-          const error = ({ error: 'token verification failed' })
-          res.status(400).send(error)
-        } else {
+
           if (!req.body.email || req.body.email.length < 1) {
             const error = ({ error: 'Email was too short... Implementing valid email check can be done here' })
             res.status(400).send(error)
@@ -42,7 +41,6 @@ module.exports = {
                   .catch(error => res.status(400).send(error))
               )
           }
-        }
       })
     )
   },

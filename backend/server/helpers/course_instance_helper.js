@@ -6,9 +6,8 @@ exports.getNextYear = application_helpers.getNextYear
 exports.getNextTerm = application_helpers.getNextTerm
 exports.checkWebOodi = checkWebOodi
 exports.findByUserStudentInstance = findByUserStudentInstance
-exports.tokenVerify = application_helpers.tokenVerify  // Should be removed in issue #127
 exports.getCurrent = application_helpers.getCurrent
-
+exports.controller_before_auth_check_action = application_helpers.controller_before_auth_check_action
 
 /**
  * Only used in courseInstance controller so its place is here.

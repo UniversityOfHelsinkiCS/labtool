@@ -1,25 +1,22 @@
-exports.tokenVerify = tokenVerify2
 exports.CurrentTermAndYear = CurrentTermAndYear
 exports.getCurrentTerm = getCurrentTerm
 exports.getInactive = getInactive
 exports.getNextYear = getNextYear
 exports.getNextTerm = getCurrentTerm
-//exports.getOpts = getOpts
+exports.controller_before_auth_check_action = controller_before_auth_check_action
 exports.getCurrent = getCurrent
 exports.createCourse = createCourse
 
-// This is not needed anymore and should be fixed in issue #127
-function tokenVerify2(req) {
-  var jwt = require('jsonwebtoken')
-  return jwt.verify(req.token, process.env.SECRET, function (err, decoded) {
-    if (err) {
-      return {verified: false, data: null}
-    } else {
-      return {verified: true, data: decoded}
-    }
-  })
-
+/**
+ *
+ */
+function controller_before_auth_check_action() {
+  if (req.authenticated.success == false) {
+    res.send(401)
+    res.end
+  }
 }
+
 
 /**
  *
