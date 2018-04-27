@@ -4,10 +4,8 @@ import React, { Component } from 'react'
 import { Menu, Button } from 'semantic-ui-react'
 import { logout } from '../../reducers/loginReducer'
 
-
 class Nav extends Component {
-
-  handleLogout = async (e) => {
+  handleLogout = async e => {
     e.preventDefault()
     window.localStorage.removeItem('loggedLabtool')
     await this.props.logout()
@@ -16,69 +14,66 @@ class Nav extends Component {
   render() {
     const user = { ...this.props.user.user }
 
-
     return (
       <main>
-
         <Menu
           stackable
           inverted
           borderless
-          animation='overlay'
+          animation="overlay"
           style={{
             marginBottom: 25,
-            backgroundColor: '#e9af43',
-          }}>
+            backgroundColor: '#e9af43'
+          }}
+        >
+          <Menu.Menu position="left">
+            <Menu.Item header>Labtool 2.0</Menu.Item>
 
-          <Menu.Menu position='left'>
-
-            <Menu.Item header>
-              Labtool 2.0
-            </Menu.Item>
-
-            {this.props.user.user ?
+            {this.props.user.user ? (
               <Menu.Item as={Link} to="/labtool/mypage">
                 My page
               </Menu.Item>
-              : <p></p>}
+            ) : (
+              <p />
+            )}
 
-            {this.props.user.user ?
+            {this.props.user.user ? (
               <Menu.Item as={Link} to="/labtool/courses">
                 Courses
               </Menu.Item>
-              : <p></p>}
-
+            ) : (
+              <p />
+            )}
           </Menu.Menu>
 
-          {this.props.user.user ? <div>
-            <Menu.Menu position='right'>
-              <Menu.Item>
-                <em>{user.username} logged in</em>
-              </Menu.Item>
+          {this.props.user.user ? (
+            <div>
+              <Menu.Menu position="right">
+                <Menu.Item>
+                  <em>{user.username} logged in</em>
+                </Menu.Item>
 
-              <Menu.Item link>
-                <Link to="/labtool"> <Button onClick={this.handleLogout} >
-                  Logout
-                </Button></Link>
-              </Menu.Item>
-
-            </Menu.Menu>
-
-          </div>
-            : <div></div>}
-
+                <Menu.Item link>
+                  <Link to="/labtool">
+                    {' '}
+                    <Button onClick={this.handleLogout}>Logout</Button>
+                  </Link>
+                </Menu.Item>
+              </Menu.Menu>
+            </div>
+          ) : (
+            <div />
+          )}
         </Menu>
-
       </main>
     )
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
-    user: state.user,
+    user: state.user
   }
 }
-
 
 export default connect(mapStateToProps, { logout })(Nav)

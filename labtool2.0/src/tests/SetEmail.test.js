@@ -3,11 +3,8 @@
 //import Email from '../components/pages/Email'
 //import { shallowToJson } from 'enzyme-to-json'
 
-
 describe.only('<SetEmail/>', () => {
-
   describe('Testing setEmail Component', () => {
-
     it('is ok', () => {
       true
     })

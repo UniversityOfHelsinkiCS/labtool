@@ -4,16 +4,13 @@
 //import ModifyCourseInstancePage from '../components/pages/ModifyCourseInstancePage'
 //import { shallowToJson } from 'enzyme-to-json'
 
-
 describe.only('<ModifyCourseInstancePage />', () => {
-
   describe('Modyfy Instance Component', () => {
-
     it('is ok', () => {
       true
     })
 
-/*
+    /*
     it('should render without throwing an error', () => {
       expect(shallow(<ModifyCourseInstancePage />).exists(<form className='CourseInstance'></form>)).toBe(true)
     })

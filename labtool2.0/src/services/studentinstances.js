@@ -25,5 +25,4 @@ export const getOneSI = (id) => {
 
 */
 
-
 export default { getAllStudentCourses }
