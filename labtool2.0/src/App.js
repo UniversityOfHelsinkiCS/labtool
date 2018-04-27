@@ -50,6 +50,7 @@ class App extends Component {
       created: nProps.created
     }
     window.localStorage.setItem('loggedLabtool', JSON.stringify(userAndToken))
+    console.log(nProps)
   }
 
 
@@ -73,17 +74,13 @@ class App extends Component {
               <RegisterPage history={history} courseinstance={(this.props.getOneCI(match.params.id))} />}
             />
             <Route path={`/labtool/browsereviews`} component={BrowseReviews} />
-            <Route path={`/labtool/email`} render={({ history }) =>
-              <Email history={history} />}
+            <Route path={`/labtool/email`} component={Email} />
+            <Route path={`/labtool/registerPage`} component={RegisterPage} />
+            <Route path={`/labtool/reviewstudent/:si/:wk`} render={({ match }) =>
+              <ReviewStudent studentInstance={match.params.si} weekNumber={match.params.wk} />}
             />
-            <Route path={`/labtool/registerPage`} render={({ history }) =>
-              <RegisterPage history={history} />}
-            />
-            <Route path={`/labtool/reviewstudent/:id/:si/:wk`} render={({ history, match }) =>
-              <ReviewStudent courseinstance={(this.props.getOneCI(match.params.id))} history={history} studentInstance={match.params.si} weekNumber={match.params.wk} />}
-            />
-            <Route path={`/labtool/ModifyCourseInstancePage/:id`} render={({ match, history }) =>
-              <ModifyCourseInstancePage history={history} courseinstance={(this.props.getOneCI(match.params.id))} />}
+            <Route path={`/labtool/ModifyCourseInstancePage/:id`} render={({ match }) =>
+              <ModifyCourseInstancePage courseinstance={(this.props.getOneCI(match.params.id))} />}
             />
             <Route path={`/`} component={MyPage} />
 
@@ -96,7 +93,7 @@ class App extends Component {
 
     const EmailChecker = () => (
       <div>
-        {this.props.user.email === "" || this.props.user.email === null
+        {this.props.user.email === ""
           ? <Email />
           : <Main />}
       </div>
