@@ -6,6 +6,8 @@ const courseInstancereducer = (store = [], action) => {
     return action.response
     /*   case 'CI_GET_ONE_SUCCESS':
     return store.find(n => n.ohid === action.response) */ //This is possible solution.
+  case 'CI_MODIFY_ONE_SUCCESS':
+    return store
   default:
     return store
   }

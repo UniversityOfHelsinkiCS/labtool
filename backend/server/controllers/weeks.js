@@ -2,7 +2,7 @@ const Week = require('../models').Week
 const helper = require('../helpers/course_instance_helper')
 
 module.exports = {
-  create(req, res) {
+create(req, res) {
     let token = helper.tokenVerify(req)
     if (token.verified) {
       return Week

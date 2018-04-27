@@ -37,7 +37,7 @@ module.exports = {
   async coursePage(req, res) {
     const course = await CourseInstance.findOne({
       where: {
-        id: req.body.course
+        ohid: req.body.course
       }
     })
     const courseInst = course.id
@@ -55,7 +55,7 @@ module.exports = {
         }
       })
       if (teacher[0] === undefined) {
-        const student = await StudentInstance.findAll({
+        const student = await StudentInstance.findOne({
           where: {
             userId: user,
             courseInstanceId: courseInst
@@ -71,8 +71,10 @@ module.exports = {
           }
           ]
         })
+        
         try {
           palautus.data = student
+          console.log('TÄSSÄ ON STUDNETTII', student)
           palautus.role = 'student'
           res.status(200).send(palautus)
         } catch (error) {
@@ -207,7 +209,7 @@ module.exports = {
       })
       .then(courseInstance => {
         if (!courseInstance) {
-          return res.status(400).send({
+          res.status(400).send({
             message: 'course instance not found',
           })
         }

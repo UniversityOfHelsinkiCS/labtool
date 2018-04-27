@@ -18,26 +18,26 @@ class Email extends Component {
   componentDidMount() {
   }
 
-    state = {
-      redirectToNewPage: false
-    }
-    
+  state = {
+    redirectToNewPage: false
+  }
 
-    handleSubmit = async (e) => {
-      e.preventDefault()
-      try {
-        const content = {
-          email: e.target.email.value
-        }
-        if (content.email !== '' && content.email !== null) {
-          await this.props.updateUser(content)
-          this.setState({ redirectToNewPage: true })
-        }
-      } catch (error) {
-        console.log(error)
+
+  handleSubmit = async (e) => {
+    e.preventDefault()
+    try {
+      const content = {
+        email: e.target.email.value
       }
-      
+      if (content.email !== '' && content.email !== null) {
+        await this.props.updateUser(content)
+        this.setState({ redirectToNewPage: true })
+      }
+    } catch (error) {
+      console.log(error)
     }
+
+  }
 
   render() {
     if (this.state.redirectToNewPage) {
@@ -81,7 +81,7 @@ class Email extends Component {
 
                 <Form.Field>
                   <button className="ui left floated green button" type="submit">Save</button>
-                  <button className="ui right floated button"> <Link to="/labtool/mypage">Cancel</Link></button>
+                  <Link to="/labtool/mypage"> <button className="ui right floated button"> Cancel</button></Link>
                 </Form.Field>
               </Form>
 

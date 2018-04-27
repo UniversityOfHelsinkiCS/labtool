@@ -120,7 +120,6 @@ const authenticate = (request, response, next) => {
       request.authenticated = {success: false, error: 'token verification failed'}
       console.log('  Authenticated: false')
     }
-  } else {
   }
 
   next()
