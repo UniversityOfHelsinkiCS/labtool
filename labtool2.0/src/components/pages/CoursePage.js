@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Table, Grid, Card, Header, Divider } from 'semantic-ui-react'
+import { Button, Table, Grid, Card, Header, Divider, Transition } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 
@@ -54,97 +54,99 @@ class CoursePage extends Component {
 
     return (
       //const CoursePage = ({ name, start, end, week_amount, week_max_points, current_week, handleFieldChange }) => {
-      <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
-        <div className="ui grid">
-          <div className="sixteen wide column">
-            <h2>{this.props.selectedInstance.name}</h2>
-          </div>
-          {this.props.courseData.data === null
-            ?
+      <Transition transitionOnMount={true} >    
+        <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
+          <div className="ui grid">
             <div className="sixteen wide column">
-              <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>  <Button>Register</Button></Link>
+              <h2>{this.props.selectedInstance.name}</h2>
             </div>
-            : <p></p>
+            {this.props.courseData.data === null
+              ?
+              <div className="sixteen wide column">
+                <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>  <Button>Register</Button></Link>
+              </div>
+              : <p></p>
+            }
+          </div>
+
+
+
+          {this.props.courseData.role === 'teacher' ?
+            <div>
+
+              <Table celled >
+                <Table.Header>
+                  <Table.Row>
+                    <Table.HeaderCell>Active: {JSON.stringify(this.props.selectedInstance.active)}</Table.HeaderCell>
+                    <Table.HeaderCell>Week amount: {this.props.selectedInstance.weekAmount}</Table.HeaderCell>
+                    <Table.HeaderCell>Current week: {this.props.selectedInstance.currentWeek}</Table.HeaderCell>
+                    <Table.HeaderCell>Week maxpoints: {this.props.selectedInstance.weekMaxPoints}</Table.HeaderCell>
+                  </Table.Row>
+                </Table.Header>
+              </Table>
+
+              <h3> Students </h3>
+              <Table celled unstackable>
+                <Table.Header>
+                  <Table.Row>
+                    <Table.HeaderCell>Name</Table.HeaderCell>
+                    <Table.HeaderCell> Github </Table.HeaderCell>
+                    {createHeaders()}
+                  </Table.Row>
+                </Table.Header>
+                <Table.Body>
+                  {this.props.courseData.data.map(data =>
+
+                    <Table.Row>
+                      <Table.Cell>{data.User.firsts} {data.User.lastname}</Table.Cell>
+                      <Table.Cell><p>{data.projectName}</p><a>{data.github}</a></Table.Cell>
+                      {createIndents(data.weeks, data.id)}
+                    </Table.Row>
+                  )}
+                </Table.Body>
+              </Table>
+            </div>
+            :
+            <div></div>
           }
-        </div>
+          {this.props.courseData.role === 'student' && this.props.courseData.data !== null
+            ? <div>
 
+              <h3> </h3>
 
-
-        {this.props.courseData.role === 'teacher' ?
-          <div>
-
-            <Table celled >
-              <Table.Header>
-                <Table.Row>
-                  <Table.HeaderCell>Active: {JSON.stringify(this.props.selectedInstance.active)}</Table.HeaderCell>
-                  <Table.HeaderCell>Week amount: {this.props.selectedInstance.weekAmount}</Table.HeaderCell>
-                  <Table.HeaderCell>Current week: {this.props.selectedInstance.currentWeek}</Table.HeaderCell>
-                  <Table.HeaderCell>Week maxpoints: {this.props.selectedInstance.weekMaxPoints}</Table.HeaderCell>
-                </Table.Row>
-              </Table.Header>
-            </Table>
-
-            <h3> Students </h3>
-            <Table celled unstackable>
-              <Table.Header>
-                <Table.Row>
-                  <Table.HeaderCell>Name</Table.HeaderCell>
-                  <Table.HeaderCell> Github </Table.HeaderCell>
-                  {createHeaders()}
-                </Table.Row>
-              </Table.Header>
-              <Table.Body>
-                {this.props.courseData.data.map(data =>
-
-                  <Table.Row>
-                    <Table.Cell>{data.User.firsts} {data.User.lastname}</Table.Cell>
-                    <Table.Cell><p>{data.projectName}</p><a>{data.github}</a></Table.Cell>
-                    {createIndents(data.weeks, data.id)}
-                  </Table.Row>
-                )}
-              </Table.Body>
-            </Table>
-          </div>
-          :
-          <div></div>
-        }
-        {this.props.courseData.role === "student" && this.props.courseData.data !== null
-          ? <div>
-
-            <h3> </h3>
-
-            <Card fluid color='yellow'>
-              <Card.Content>
-                <h3> {this.props.courseData.data.projectName} </h3>
-                <h3> <Link to={this.props.courseData.data.github}>{this.props.courseData.data.github}</Link> </h3>
-              </Card.Content>
-            </Card>
+              <Card fluid color='yellow'>
+                <Card.Content>
+                  <h3> {this.props.courseData.data.projectName} </h3>
+                  <h3> <Link to={this.props.courseData.data.github}>{this.props.courseData.data.github}</Link> </h3>
+                </Card.Content>
+              </Card>
            
-            <h3> Comments and feedback </h3>
+              <h3> Comments and feedback </h3>
 
-            <Table celled padded unstackable>
-              <Table.Header>
-                <Table.Row>
-                  <Table.HeaderCell>Week</Table.HeaderCell>
-                  <Table.HeaderCell>Points</Table.HeaderCell>
-                  <Table.HeaderCell>Comment</Table.HeaderCell>
-                </Table.Row>
-              </Table.Header>
-              <Table.Body>
-                {console.log(this.props.courseData.data.weeks)}
-                {this.props.courseData.data.weeks.map(week =>
+              <Table celled padded unstackable>
+                <Table.Header>
                   <Table.Row>
-                    <Table.Cell>{week.weekNumber}</Table.Cell>
-                    <Table.Cell>{week.points}</Table.Cell>
-                    <Table.Cell>{week.comment}</Table.Cell>
+                    <Table.HeaderCell>Week</Table.HeaderCell>
+                    <Table.HeaderCell>Points</Table.HeaderCell>
+                    <Table.HeaderCell>Comment</Table.HeaderCell>
                   </Table.Row>
-                )}
-              </Table.Body>
-            </Table>
-          </div>
-          : <div></div>}
-
-      </div >
+                </Table.Header>
+                <Table.Body>
+                  {console.log(this.props.courseData.data.weeks)}
+                  {this.props.courseData.data.weeks.map(week =>
+                    <Table.Row>
+                      <Table.Cell>{week.weekNumber}</Table.Cell>
+                      <Table.Cell>{week.points}</Table.Cell>
+                      <Table.Cell>{week.comment}</Table.Cell>
+                    </Table.Row>
+                  )}
+                </Table.Body>
+              </Table>
+            </div>
+            : <div></div>}
+        
+        </div >
+      </Transition>
 
     )
   }
