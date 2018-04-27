@@ -55,7 +55,11 @@ class Nav extends Component {
 
           {this.props.user.user ? <div>
             <Menu.Menu position='right' >
-              <Menu.Item style={{ color: 'gray'}}>
+              <Menu.Item 
+              style={{ 
+                color: 'gray',
+                justifyContent: 'center'
+                }}>
                 <em>{user.username} logged in</em>
               </Menu.Item>
 
