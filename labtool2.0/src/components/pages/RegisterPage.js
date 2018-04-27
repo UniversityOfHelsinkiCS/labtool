@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Input, Grid } from 'semantic-ui-react'
+import { Form, Input, Grid, Loader } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createStudentCourses } from '../../services/studentinstances'
@@ -8,7 +8,8 @@ import { Redirect } from 'react-router'
 class RegisterPage extends Component {
 
   state = {
-    redirectToNewPage: false
+    redirectToNewPage: false,
+    loading: false
   }
 
   handleSubmit = async (e) => {
@@ -20,6 +21,7 @@ class RegisterPage extends Component {
         github: e.target.github.value,
         ohid: this.props.selectedInstance.ohid
       }
+      this.setState({ loading: true })
       await this.props.createStudentCourses(content, this.props.selectedInstance.ohid)
       this.setState({ redirectToNewPage: true })
     } catch (error) {
@@ -42,7 +44,7 @@ class RegisterPage extends Component {
           textAlignVertical: 'center',
           textAlign: 'center',
         }}>
-
+        <Loader active={this.state.loading} inline='centered' />
         <Grid>
           <Grid.Row centered>
             <h3>Register for {this.props.selectedInstance.name}</h3>
