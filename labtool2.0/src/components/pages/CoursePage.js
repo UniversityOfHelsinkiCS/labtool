@@ -123,13 +123,8 @@ class CoursePage extends Component {
                 <h3> <Link to={this.props.courseData.data.github}>{this.props.courseData.data.github}</Link> </h3>
               </Card.Content>
             </Card>
-<<<<<<< HEAD
            
             <h3> Points and feedback </h3>
-=======
-
-            <h3> Comments and feedback </h3>
->>>>>>> 583e71d24fec39a03f0425b599a547f68efe9ea2
 
             <Table celled padded unstackable>
               <Table.Header>
