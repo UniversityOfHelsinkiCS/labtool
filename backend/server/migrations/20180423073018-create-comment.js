@@ -8,7 +8,13 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      message: {
+      feedback: {
+        type: Sequelize.STRING
+      },
+      comment: {
+        type: Sequelize.STRING
+      },
+      hiddenComment: {
         type: Sequelize.STRING
       },
       weekId: {

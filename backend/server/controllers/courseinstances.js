@@ -61,7 +61,10 @@ module.exports = {
             courseInstanceId: courseInst
           },
           include: [{
-            model: Week, as: 'weeks'
+            model: Week, as: 'weeks',
+            include: [{
+              model: Comment, as: 'comments',
+            }]
           },
           {
             model: User
@@ -83,7 +86,10 @@ module.exports = {
             courseInstanceId: courseInst
           },
           include: [{
-            model: Week, as: 'weeks'
+            model: Week, as: 'weeks',
+            include: [{
+              model: Comment, as: 'commentes',
+            }]
           },
           {
             model: User
@@ -369,7 +375,9 @@ module.exports = {
       return Comment
         .create({
           weekId: message.week,
-          message: message.message,
+          feedback: message.feedback,
+          hiddenComment: message.hidden,
+          comment: message.comment,
           from: message.from,
           to: message.to,
         })

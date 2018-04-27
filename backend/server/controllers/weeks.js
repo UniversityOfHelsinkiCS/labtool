@@ -2,17 +2,15 @@ const Week = require('../models').Week
 const helper = require('../helpers/course_instance_helper')
 
 module.exports = {
-  async create(req, res) {
-    try {
-      let token = helper.tokenVerify(req)
-      if (token.verified) {
-        let week = await Week.findOne({
-          where: {
-            weekNumber: req.body.weekNumber,
-            studentInstanceId: req.body.studentInstanceId
-          }
+create(req, res) {
+    let token = helper.tokenVerify(req)
+    if (token.verified) {
+      return Week
+        .create({
+          points: req.body.points,
+          studentInstanceId: req.body.studentInstanceId,
+          weekNumber: req.body.weekNumber
         })
-
         if (week) {
           await week.update({
             points: req.body.points,

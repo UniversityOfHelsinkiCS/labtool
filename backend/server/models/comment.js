@@ -1,8 +1,14 @@
-module.exports = (sequelize, DataTypes) => {
+module.exports = (sequelize, DataTypes) => { /*feedback, hiddenComment, comment */
   const Comment = sequelize.define('Comment', {
-    message: {
+    feedback: {
       type: DataTypes.STRING,
       allowNull: false,
+    },
+    hiddenComment: {
+      type: DataTypes.STRING,
+    },
+    comment: {
+      type: DataTypes.STRING
     },
     weekId: {
       type: DataTypes.INTEGER,
