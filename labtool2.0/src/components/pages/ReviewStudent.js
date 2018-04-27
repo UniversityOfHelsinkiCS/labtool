@@ -6,10 +6,22 @@ import { createOneWeek } from '../../services/week'
 import { Redirect } from 'react-router'
 
 class ReviewStudent extends Component {
-
-  state = {
-    redirectToNewPage: false
+  componentDidUpdate() {
+    if (this.props.notification.error !== undefined) {
+      if (!this.props.notification.error) {
+        this.props.history.push(`/labtool/courses/${this.props.selectedInstance.ohid}`)
+      }
+    }
   }
+
+  shouldComponentUpdate(nextProps) {
+    if (this.props === nextProps) {
+      return false
+    }
+    return true
+  }
+
+
 
 
   handleSubmit = async (e) => {
@@ -21,29 +33,24 @@ class ReviewStudent extends Component {
         comment: e.target.comment.value,
         weekNumber: this.props.weekNumber
       }
-      const taa = await this.props.createOneWeek(content)
-      console.log(taa, 'TÄSSÄ HÄ Ä')
+      await this.props.createOneWeek(content)
     } catch (error) {
+      console.log(error)
     }
-    this.setState({ redirectToNewPage: true })
-
   }
   render() {
-    if (this.state.redirectToNewPage) {
-      return (
-        <Redirect to={`/labtool/courses/${this.props.selectedInstance.ohid}`} />
-      )
-    }
     return (
       <div className='ReviewStudent' style={{ textAlignVertical: 'center', textAlign: 'center', }}>
-        <h2> Tiralabra 2018 Kevät</h2>
+        <h2> {this.props.selectedInstance.name}</h2>
         <h3> Viikko {this.props.weekNumber} </h3>
-        <h3> </h3>
+        {console.log(this.props, "tämä on ownspropsi")}
+        <p>joku alla</p>
+        <h3> {this.props.joku} </h3>
         <Grid centered>
           <Form onSubmit={this.handleSubmit}>
             <Form.Group inline unstackable >
               <Form.Field  >
-                <label>Points 1-5</label>
+                <label>Points 0-{this.props.selectedInstance.weekMaxPoints}</label>
                 <Input name="points" />
               </Form.Field>
             </Form.Group>
@@ -68,7 +75,8 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     ownProps,
-    selectedInstance: state.selectedInstance
+    selectedInstance: state.selectedInstance,
+    notification: state.notification
   }
 }
 

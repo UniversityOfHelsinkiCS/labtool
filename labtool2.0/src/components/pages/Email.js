@@ -45,13 +45,12 @@ class Email extends Component {
         <Redirect to="/labtool/myPage" />
       )
     } else {
-      const user = { ...this.props.user.user }
       return (
         <div className="Email" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
 
           <Grid centered>
 
-            {this.props.firstLogin ?
+            {this.props.user.email === null || this.props.user.email === ''  ?
               <div>
                 <Grid.Row>
                   <h3>Please give your email address: </h3>
@@ -71,18 +70,22 @@ class Email extends Component {
               <Form onSubmit={this.handleSubmit}>
                 <Form.Field>
                   <Form.Input
-                    defaultValue={user.email}
+                    defaultValue={this.props.user.email}
                     style={{ minWidth: '20em' }}
                     type="email"
                     className="form-control"
                     name="email"
-                    placeholder="my.email@helsinki.fi" />
+                    placeholder={this.props.user.email} />
                 </Form.Field>
 
                 <Form.Field>
                   <button className="ui left floated green button" type="submit">Save</button>
-                  <Link to="/labtool/mypage"> <button className="ui right floated button"> Cancel</button></Link>
                 </Form.Field>
+                {this.props.user.email === null || this.props.user.email === ''
+                  ? <p></p>
+                  : <Link to="/labtool/mypage"> <button className="ui right floated button"> Cancel</button></Link>
+                }
+
               </Form>
 
             </Grid.Row>
@@ -97,7 +100,7 @@ class Email extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    user: state.user,
+    user: state.user.user,
     studentInstance: state.studentInstance,
     teacherInstance: state.teacherInstance
   }
