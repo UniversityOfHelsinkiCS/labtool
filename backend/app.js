@@ -11,7 +11,6 @@ require('dotenv').config()
  * @param next
  */
 const extractToken = (request, response, next) => {
-
   const authorization = request.get('authorization')
   if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
     request.token = authorization.substring(7)
@@ -22,7 +21,6 @@ const extractToken = (request, response, next) => {
 }
 
 app.use(extractToken)
-
 
 /**
  *
@@ -43,7 +41,6 @@ const upstreamToken = (req, res, next) => {
 
 app.use(upstreamToken)
 
-
 /**
  *
  * @param req
@@ -62,7 +59,6 @@ const appSecretENV = (req, res, next) => {
 
 app.use(appSecretENV)
 
-
 /**
  *
  * @param req
@@ -70,7 +66,6 @@ app.use(appSecretENV)
  * @param next
  */
 const adminPwToken = (req, res, next) => {
-
   const auth = process.env.ADMIN_PW || 'notset'
   if (auth === 'notset') {
     res.send('Please restart the backend with a ADMIN_PW environment variable set')
@@ -82,20 +77,17 @@ const adminPwToken = (req, res, next) => {
 
 app.use(adminPwToken)
 
-
 /**
  * Makes any request body easily accessible through making it to javascript kid friendly JSON.
  */
 app.use(bodyParser.json())
 
-
 // respond with "hello world" when a GET request is made to the homepage
-app.get('/', function (req, res) {
+app.get('/', function(req, res) {
   res.send('hello world')
-
 })
 
-app.use(function (req, res, next) {
+app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*')
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization')
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
@@ -113,11 +105,10 @@ const authenticate = (request, response, next) => {
   if (!excludedPaths.includes(request.path)) {
     try {
       let decoded = jwt.verify(request.token, process.env.SECRET)
-      request.decoded = decoded,
-      request.authenticated = {success: true, error: ''}
+      ;(request.decoded = decoded), (request.authenticated = { success: true, error: '' })
       console.log('  Authenticated: true')
     } catch (e) {
-      request.authenticated = {success: false, error: 'token verification failed'}
+      request.authenticated = { success: false, error: 'token verification failed' }
       console.log('  Authenticated: false')
     }
   }
@@ -126,7 +117,6 @@ const authenticate = (request, response, next) => {
 }
 app.use(authenticate)
 
-
 // Express reitti määrittelyt
 require('./server/routes')(app)
 require('./server/routes/userRouter')(app)
@@ -134,12 +124,13 @@ require('./server/routes/courseInstanceRouter')(app)
 require('./server/routes/loginRouter')(app)
 require('./server/routes/adminRoutes')(app)
 
+app.get('*', (req, res) =>
+  res.status(404).send({
+    message: 'Not found.'
+  })
+)
 
-app.get('*', (req, res) => res.status(404).send({
-  message: 'Not found.',
-}))
-
-let server = app.listen(3001, function () {
+let server = app.listen(3001, function() {
   let port = server.address().port
   console.log('Backend is listening on port %s', port)
 })

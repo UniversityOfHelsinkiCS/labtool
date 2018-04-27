@@ -1,5 +1,3 @@
-
-
 const courseInstances = require('./courseinstances')
 const users = require('./users')
 const login = require('./login')

@@ -97,5 +97,5 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps, { createStudentCourses })(RegisterPage)
+export default connect(mapStateToProps, { createStudentCourses, })(RegisterPage)
 

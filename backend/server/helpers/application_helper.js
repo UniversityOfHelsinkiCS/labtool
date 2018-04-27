@@ -1,26 +1,27 @@
-exports.tokenVerify = tokenVerify2
 exports.CurrentTermAndYear = CurrentTermAndYear
 exports.getCurrentTerm = getCurrentTerm
 exports.getInactive = getInactive
 exports.getNextYear = getNextYear
 exports.getNextTerm = getCurrentTerm
-//exports.getOpts = getOpts
+exports.controller_before_auth_check_action = controller_before_auth_check_action
 exports.getCurrent = getCurrent
 exports.createCourse = createCourse
 
-// This is not needed anymore and should be fixed in issue #127
-function tokenVerify2(req) {
-  var jwt = require('jsonwebtoken')
-  return jwt.verify(req.token, process.env.SECRET, function (err, decoded) {
-    if (err) {
-      return {verified: false, data: null}
-    } else {
-      return {verified: true, data: decoded}
-    }
-  })
-
+/**
+ *
+ */
+function controller_before_auth_check_action(req, res) {
+  if (req.authenticated.success == false) {
+    res.send(401)
+    res.end
+  }
 }
 
+/**
+ *
+ * @returns {{currentYear: string, currentTerm: string, nextTerm: string, nextYear: *}}
+ * @constructor
+ */
 function CurrentTermAndYear() {
   const date = new Date()
   const month = date.getMonth() + 1
@@ -36,9 +37,14 @@ function CurrentTermAndYear() {
   nextYear.toString()
   const nextTerm = getNextTerm(currentTerm)
   //console.log('year: ', year)
-  return {currentYear, currentTerm, nextTerm, nextYear}
+  return { currentYear, currentTerm, nextTerm, nextYear }
 }
 
+/**
+ *
+ * @param month
+ * @returns {string}
+ */
 function getCurrentTerm(month) {
   if (1 <= month <= 5) {
     return 'K'
@@ -51,6 +57,12 @@ function getCurrentTerm(month) {
   }
 }
 
+/**
+ *
+ * @param currentTerm
+ * @param currentYear
+ * @returns {*}
+ */
 function getNextYear(currentTerm, currentYear) {
   if (currentTerm === 'S') {
     return currentYear + 1
@@ -59,6 +71,11 @@ function getNextYear(currentTerm, currentYear) {
   }
 }
 
+/**
+ *
+ * @param term
+ * @returns {string}
+ */
 function getNextTerm(term) {
   if (term === 'K') {
     return 'V'
@@ -84,15 +101,19 @@ function axiosBlaBla(year, term) {
     baseURL: `https://opetushallinto.cs.helsinki.fi/labtool/courses?year=${year}&term=${term}`,
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': process.env.TOKEN
+      Authorization: process.env.TOKEN
     },
     httpsAgent: new https.Agent({
       rejectUnauthorized: false // if you don't like this then please go ahead and do it yourself better.
     })
-
   }
 }
 
+/**
+ *
+ * @param hid
+ * @returns {{method: string, baseURL: string, headers: {'Content-Type': string, Authorization: string}, httpsAgent: "https".Agent}}
+ */
 function axiosCourseBla(hid) {
   const https = require('https')
   return {
@@ -100,12 +121,11 @@ function axiosCourseBla(hid) {
     baseURL: `https://opetushallinto.cs.helsinki.fi/labtool/courses/${hid}`,
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': process.env.TOKEN
+      Authorization: process.env.TOKEN
     },
     httpsAgent: new https.Agent({
       rejectUnauthorized: false // if you don't like this then please go ahead and do it yourself better.
     })
-
   }
 }
 
@@ -130,11 +150,10 @@ async function getInactive(req, res) {
 
     const ires = await CourseInstance.findAll({
       where: {
-        ohid: {[Op.in]: iarr}
+        ohid: { [Op.in]: iarr }
       }
     })
     const notactivated = []
-
 
     for (var i in newobj) {
       var found = 0
@@ -154,7 +173,11 @@ async function getInactive(req, res) {
   }
 }
 
-
+/**
+ *
+ * @param body
+ * @returns {Promise<*>}
+ */
 async function createCourse(body) {
   const CourseInstance = require('../models').CourseInstance
   const TeacherInstance = require('../models').TeacherInstance
@@ -162,20 +185,21 @@ async function createCourse(body) {
 
   const axios = require('axios')
   const options = await axiosCourseBla(body.hid)
-  const result = await axios.create(options).get().then(barf => {
-    return barf.data
-  }
-  )
+  const result = await axios
+    .create(options)
+    .get()
+    .then(barf => {
+      return barf.data
+    })
   const new_course = await CourseInstance.build({
     name: body.cname,
     start: body.starts,
     end: body.ends,
-    ohid: body.hid,
-
+    ohid: body.hid
   }).save()
 
-  if (result.teachers.length > 0 ) {
-    for (i in result.teachers) {
+  if (result.teachers.length > 0) {
+    for (let i in result.teachers) {
       const user = await User.findOrCreate({
         where: {
           username: result.teachers[i]
@@ -186,17 +210,15 @@ async function createCourse(body) {
       })
       TeacherInstance.build({
         userId: user[i].id,
-        courseInstanceId: new_course.id
+        courseInstanceId: new_course.id,
+        admin: 'true'
       }).save()
-
     }
   }
 
   //await console.log(result.teachers)
 
   return result
-
-
 }
 
 /**
@@ -206,17 +228,17 @@ async function createCourse(body) {
  * @returns {Promise<*>}
  */
 async function getCurrent(req, res) {
-
   const timeMachine = CurrentTermAndYear()
   const axios = require('axios')
   const options = await axiosBlaBla(timeMachine.currentYear, timeMachine.currentTerm)
-  const result = await axios.create(options).get().then(barf => {
-    return barf.data
-  }
-  )
+  const result = await axios
+    .create(options)
+    .get()
+    .then(barf => {
+      return barf.data
+    })
   return result
 }
-
 
 /**
  *
@@ -225,13 +247,14 @@ async function getCurrent(req, res) {
  * @returns {Promise<*>}
  */
 async function getNewer(req, res) {
-
   const timeMachine = CurrentTermAndYear()
   const axios = require('axios')
   const options = await axiosBlaBla(timeMachine.nextYear, timeMachine.nextTerm)
-  const result = await axios.create(options).get().then(barf => {
-    return barf.data
-  }
-  )
+  const result = await axios
+    .create(options)
+    .get()
+    .then(barf => {
+      return barf.data
+    })
   return result
 }
