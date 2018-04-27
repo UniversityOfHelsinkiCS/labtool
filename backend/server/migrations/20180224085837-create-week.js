@@ -11,6 +11,9 @@ module.exports = {
       points: {
         type: Sequelize.INTEGER
       },
+      feedback: {
+        type: Sequelize.STRING
+      },
       weekNumber: {
         type: Sequelize.INTEGER
       },

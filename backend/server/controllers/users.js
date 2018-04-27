@@ -43,13 +43,14 @@ module.exports = {
           ohid: req.body.ohid
         }
       })
-
+      console.log('adtunnus: ', req.body.adTunnus)
       const user = await User.findOne({
         where: {
           username: req.body.adTunnus
         }
       })
-
+      console.log('user:' , user)
+      console.log('course:', courseInstance)
       if (courseInstance !== null && user !== null) {
         return TeacherInstance.create({
           userId: user.id,

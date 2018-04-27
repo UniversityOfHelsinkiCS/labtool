@@ -363,57 +363,32 @@ module.exports = {
       .catch(error => res.status(400).send(error))
   },
 
-  async addComment(req, res) {
+  async addComment(req, res) { //this can be reimplemented later
     try {
       let token = helper.tokenVerify(req)
       const message = req.body
-      console.log('message: ', message.feedback)
+      console.log('message: ', message.comment)
       console.log('from: ', message.from)
       console.log('to: ', message.to)
       console.log('week: ', message.week)
       if (token.verified) {
         const comment = await Comment
-          .findOne({
-            where: {
-              weekId: message.week
+          .create({
+            hidden: message.hidden,
+            comment: message.comment,
+            weekId: message.week,
+            from: message.from,
+          })
+          .then(comment => {
+            if (!comment) {
+              res.status(400).send('week not found')
+            } else {
+              res.status(200).send(comment)
             }
           })
-        if (comment) {
-          await comment.update({
-            feedback: message.feedback,
-            hiddenMessage: message.hiddenMessage,
-            comment: message.comment,
-            weekId: message.week,
-            from: message.from,
-            to: message.to,
-          })
-            .then(comment => {
-              if (!comment) {
-                res.status(400).send('week not found')
-              } else {
-                res.status(200).send(comment)
-              }
-            })
-            .catch(error => res.status(400).send(error))
-        } else {
-          await Comment.create({
-            feedback: message.feedback,
-            hiddenMessage: message.hiddenMessage,
-            comment: message.comment,
-            weekId: message.week,
-            from: message.from,
-            to: message.to,
-          })
-            .then(comment => {
-              if (!comment) {
-                res.status(400).send('week not found')
-              } else {
-                res.status(200).send(comment)
-              }
-            })
-            .catch(error => res.status(400).send(error))
-        }
-      } else {
+          .catch(error => res.status(400).send(error))
+      }
+      else {
         res.status(400).send('token verification failed')
       }
     } catch (error) {

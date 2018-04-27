@@ -16,8 +16,8 @@ module.exports = {
           await week.update({
             points: req.body.points,
             studentInstanceId: req.body.studentInstanceId,
-            comment: req.body.comment,
-            weekNumber: req.body.weekNumber
+            weekNumber: req.body.weekNumber,
+            feedback: week.feedback || req.body.feedback,
           })
           res.status(200).send(week)
         } else {
@@ -25,7 +25,8 @@ module.exports = {
             points: req.body.points,
             studentInstanceId: req.body.studentInstanceId,
             comment: req.body.comment,
-            weekNumber: req.body.weekNumber
+            weekNumber: req.body.weekNumber,
+            feedback: req.body.feedback,
           })
           res.status(200).send(week)
         }
