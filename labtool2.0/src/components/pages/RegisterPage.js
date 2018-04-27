@@ -6,16 +6,10 @@ import { createStudentCourses } from '../../services/studentinstances'
 import { Redirect } from 'react-router'
 
 class RegisterPage extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      redirectToNewPage: false
-    }
-  }
 
   componentDidUpdate() {
     if (!this.props.notification.error) {
-      this.setState({ redirectToNewPage: true })
+      this.props.history.push(`/labtool/courses/${this.props.selectedInstance.ohid}`)
     }
   }
 
@@ -42,13 +36,6 @@ class RegisterPage extends Component {
   }
 
   render() {
-    if (this.state.redirectToNewPage) {
-      return (
-        <Redirect to={`/labtool/courses/${this.props.selectedInstance.ohid}`} />
-      )
-    }
-
-
     return (
 
       <div className="RegisterPage"

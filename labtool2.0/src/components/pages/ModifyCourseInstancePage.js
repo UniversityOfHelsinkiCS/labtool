@@ -6,16 +6,10 @@ import { Link } from 'react-router-dom'
 import { Redirect } from 'react-router'
 
 class ModifyCourseInstancePage extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      redirectToNewPage: false
-    }
-  }
 
   componentDidUpdate() {
     if (!this.props.notification.error) {
-      this.setState({ redirectToNewPage: true })
+      this.props.history.push(`/labtool/courses/${this.props.selectedInstance.ohid}`)
     }
   }
 
@@ -45,11 +39,6 @@ class ModifyCourseInstancePage extends Component {
   }
 
   render() {
-    if (this.state.redirectToNewPage) {
-      return (
-        <Redirect to={`/labtool/courses/${this.props.selectedInstance.ohid}`} />
-      )
-    }
     return (
       <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
         <Grid>

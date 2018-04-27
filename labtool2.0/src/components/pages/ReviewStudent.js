@@ -6,16 +6,9 @@ import { createOneWeek } from '../../services/week'
 import { Redirect } from 'react-router'
 
 class ReviewStudent extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      redirectToNewPage: false
-    }
-  }
-
-  componentDidUpdate() {
+  componentDidUpdate() {    
     if (!this.props.notification.error) {
-      this.setState({ redirectToNewPage: true })
+      this.props.history.push(`/labtool/courses/${this.props.selectedInstance.ohid}`)
     }
   }
 
@@ -44,11 +37,6 @@ class ReviewStudent extends Component {
     }
   }
   render() {
-    if (this.state.redirectToNewPage) {
-      return (
-        <Redirect to={`/labtool/courses/${this.props.selectedInstance.ohid}`} />
-      )
-    }
     return (
       <div className='ReviewStudent' style={{ textAlignVertical: 'center', textAlign: 'center', }}>
         <h2> Tiralabra 2018 Kevät</h2>
