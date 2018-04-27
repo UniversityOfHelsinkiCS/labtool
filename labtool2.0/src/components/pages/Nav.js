@@ -7,6 +7,10 @@ import { logout } from '../../reducers/loginReducer'
 
 class Nav extends Component {
 
+  state = { activeItem: 'MyPage' }
+
+  handleItemClick = (e, { name }) => this.setState({ activeItem: name })
+
   handleLogout = async (e) => {
     e.preventDefault()
     window.localStorage.removeItem('loggedLabtool')
@@ -15,8 +19,8 @@ class Nav extends Component {
 
   render() {
     const user = { ...this.props.user.user }
-
-
+    const {activeItem} = this.state
+    
     return (
       <main>
 
@@ -38,14 +42,22 @@ class Nav extends Component {
             </Menu.Item>
 
             {this.props.user.user ?
-              <Menu.Item as={Link} to="/labtool/mypage">
+              <Menu.Item 
+                name='MyPage' 
+                as={Link} to="/labtool/mypage"
+                active={activeItem === 'MyPage'}
+                onClick={this.handleItemClick}>
                 <Icon name='home' />
-                My page
+                 My page
               </Menu.Item>
               : <p></p>}
 
             {this.props.user.user ?
-              <Menu.Item as={Link} to="/labtool/courses">
+              <Menu.Item 
+                name='Courses'
+                as={Link} to="/labtool/courses"
+                active={activeItem === 'Courses'}
+                onClick={this.handleItemClick}>
                 <Icon name='browser' />
                 Courses
               </Menu.Item>
