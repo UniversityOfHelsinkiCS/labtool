@@ -48,7 +48,7 @@ class CoursePage extends Component {
 
     return (
       //const CoursePage = ({ name, start, end, week_amount, week_max_points, current_week, handleFieldChange }) => {
-      <Transition transitionOnMount={true} >    
+      <Transition transitionOnMount={true} >
         <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
           <div className="ui grid">
             <div className="sixteen wide column">
@@ -57,7 +57,13 @@ class CoursePage extends Component {
             {this.props.courseData.data === null
               ?
               <div className="sixteen wide column">
-                <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>  <Button>Register</Button></Link>
+                <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>
+                  <Button
+                    size="huge"
+                    color='blue'>
+                    Register
+                  </Button>
+                </Link>
               </div>
               : <p></p>
             }
@@ -114,19 +120,19 @@ class CoursePage extends Component {
                   <h3> <Link to={this.props.courseData.data.github}>{this.props.courseData.data.github}</Link> </h3>
                 </Card.Content>
               </Card>
-           
-            <h3> Comments and feedback </h3>
 
-            <Table celled padded unstackable>
-              <Table.Header>
-                <Table.Row>
-                  <Table.HeaderCell>Week</Table.HeaderCell>
-                  <Table.HeaderCell>Points</Table.HeaderCell>
-                  <Table.HeaderCell>Comment</Table.HeaderCell>
-                </Table.Row>
-              </Table.Header>
-              <Table.Body>
-                {this.props.courseData.data.weeks.map(week =>
+              <h3> Comments and feedback </h3>
+
+              <Table celled padded unstackable>
+                <Table.Header>
+                  <Table.Row>
+                    <Table.HeaderCell>Week</Table.HeaderCell>
+                    <Table.HeaderCell>Points</Table.HeaderCell>
+                    <Table.HeaderCell>Comment</Table.HeaderCell>
+                  </Table.Row>
+                </Table.Header>
+                <Table.Body>
+                  {this.props.courseData.data.weeks.map(week =>
                     <Table.Row>
                       <Table.Cell>{week.weekNumber}</Table.Cell>
                       <Table.Cell>{week.points}</Table.Cell>
@@ -137,7 +143,7 @@ class CoursePage extends Component {
               </Table>
             </div>
             : <div></div>}
-        
+
         </div >
       </Transition>
 
