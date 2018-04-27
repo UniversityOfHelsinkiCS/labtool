@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Grid } from 'semantic-ui-react'
+import { Form, Grid, Loader } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { updateUser } from '../../services/login'
 import { connect } from 'react-redux'
@@ -17,6 +17,7 @@ class Email extends Component {
   }
 
   state = {
+    loading: false,
     redirectToNewPage: false
   }
 
@@ -28,6 +29,7 @@ class Email extends Component {
         email: e.target.email.value
       }
       if (content.email !== '' && content.email !== null) {
+        this.setState({ loading: true })
         await this.props.updateUser(content)
         this.setState({ redirectToNewPage: true })
       }
@@ -46,7 +48,7 @@ class Email extends Component {
       const user = { ...this.props.user.user }
       return (
         <div className="Email" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
-
+          <Loader active={this.state.loading} inline='centered' />
           <Grid centered>
 
             {this.props.firstLogin ?

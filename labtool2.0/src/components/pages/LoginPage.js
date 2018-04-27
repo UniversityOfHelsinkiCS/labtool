@@ -1,9 +1,13 @@
 import { connect } from 'react-redux'
 import { login } from '../../services/login'
 import React from 'react'
-import { Form, Input, Button, Grid } from 'semantic-ui-react'
+import { Form, Input, Button, Grid, Loader } from 'semantic-ui-react'
 
 class LoginPage extends React.Component {
+
+  state = {
+    loading: false
+  }
  
 
   handleSubmit = async (e) => {
@@ -13,6 +17,7 @@ class LoginPage extends React.Component {
       username: e.target.username.value,
       password: e.target.password.value
     }
+    this.setState({ loading: true })
     await this.props.login(content)
   }
 
@@ -21,6 +26,7 @@ class LoginPage extends React.Component {
     return (
 
       <div className='LoginPage'>
+        <Loader active={this.state.loading} inline='centered' />
         <Grid>
           <Grid.Row centered>
             <h3>Enter your University of Helsinki username and password.</h3>
