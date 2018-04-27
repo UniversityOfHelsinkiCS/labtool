@@ -1,5 +1,5 @@
 const Week = require('../models').Week
-const helper = require('../helpers/course_instance_helper')
+const helper = require('../helpers/weeks_controller_helper')
 
 module.exports = {
   async create(req, res) {
@@ -33,17 +33,30 @@ module.exports = {
       } else {
         res.status(400).send('token verific ation failed')
       }
-
-    } catch (error) {
-      res.status(400).send(error)
     }
   },
+  /**
+   *
+   * @param req
+   * @param res
+   * @returns {*|Promise<T>}
+   */
   list(req, res) {
+    helper.controller_before_auth_check_action(req, res)
+
     return Week.all()
       .then(ui => res.status(200).send(ui))
       .catch(error => res.status(400).send(error))
   },
+  /**
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<Model>}
+   */
   retrieve(req, res) {
+    helper.controller_before_auth_check_action(req, res)
+
     return Week.findById(req.params.id, {})
       .then(week => {
         if (!week) {

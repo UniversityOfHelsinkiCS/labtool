@@ -31,6 +31,11 @@ class MyPage extends Component {
   render() {
     console.log(user)
     const user = { ...this.props.user.user }
+    if (user.email === '' || user.email === null) {
+      return (
+        <Redirect to='labtool/email' />
+      )
+    }
     return (
       <div>
         <Card fluid color='yellow'>

@@ -1,25 +1,27 @@
-exports.tokenVerify = tokenVerify2
 exports.CurrentTermAndYear = CurrentTermAndYear
 exports.getCurrentTerm = getCurrentTerm
 exports.getInactive = getInactive
 exports.getNextYear = getNextYear
 exports.getNextTerm = getCurrentTerm
-//exports.getOpts = getOpts
+exports.controller_before_auth_check_action = controller_before_auth_check_action
 exports.getCurrent = getCurrent
 exports.createCourse = createCourse
 
-// This is not needed anymore and should be fixed in issue #127
-function tokenVerify2(req) {
-  var jwt = require('jsonwebtoken')
-  return jwt.verify(req.token, process.env.SECRET, function(err, decoded) {
-    if (err) {
-      return { verified: false, data: null }
-    } else {
-      return { verified: true, data: decoded }
-    }
-  })
+/**
+ *
+ */
+function controller_before_auth_check_action(req, res) {
+  if (req.authenticated.success == false) {
+    res.send(401)
+    res.end
+  }
 }
 
+/**
+ *
+ * @returns {{currentYear: string, currentTerm: string, nextTerm: string, nextYear: *}}
+ * @constructor
+ */
 function CurrentTermAndYear() {
   const date = new Date()
   const month = date.getMonth() + 1
@@ -38,6 +40,11 @@ function CurrentTermAndYear() {
   return { currentYear, currentTerm, nextTerm, nextYear }
 }
 
+/**
+ *
+ * @param month
+ * @returns {string}
+ */
 function getCurrentTerm(month) {
   if (1 <= month <= 5) {
     return 'K'
@@ -50,6 +57,12 @@ function getCurrentTerm(month) {
   }
 }
 
+/**
+ *
+ * @param currentTerm
+ * @param currentYear
+ * @returns {*}
+ */
 function getNextYear(currentTerm, currentYear) {
   if (currentTerm === 'S') {
     return currentYear + 1
@@ -58,6 +71,11 @@ function getNextYear(currentTerm, currentYear) {
   }
 }
 
+/**
+ *
+ * @param term
+ * @returns {string}
+ */
 function getNextTerm(term) {
   if (term === 'K') {
     return 'V'
@@ -91,6 +109,11 @@ function axiosBlaBla(year, term) {
   }
 }
 
+/**
+ *
+ * @param hid
+ * @returns {{method: string, baseURL: string, headers: {'Content-Type': string, Authorization: string}, httpsAgent: "https".Agent}}
+ */
 function axiosCourseBla(hid) {
   const https = require('https')
   return {
@@ -150,6 +173,11 @@ async function getInactive(req, res) {
   }
 }
 
+/**
+ *
+ * @param body
+ * @returns {Promise<*>}
+ */
 async function createCourse(body) {
   const CourseInstance = require('../models').CourseInstance
   const TeacherInstance = require('../models').TeacherInstance
@@ -182,7 +210,8 @@ async function createCourse(body) {
       })
       TeacherInstance.build({
         userId: user[i].id,
-        courseInstanceId: new_course.id
+        courseInstanceId: new_course.id,
+        admin: 'true'
       }).save()
     }
   }

@@ -7,6 +7,7 @@ import { Redirect } from 'react-router'
 import { clearNotifications } from '../../reducers/notificationReducer'
 import store from '../../store'
 class ReviewStudent extends Component {
+<<<<<<< HEAD
   componentWillMount() {
     this.props.clearNotifications()
   }
@@ -18,15 +19,12 @@ class ReviewStudent extends Component {
       }
     }
   }
+=======
+>>>>>>> cf6cd4f9be6b660ae0188f0bf43357af6ce95846
 
-  shouldComponentUpdate(nextProps) {
-    if (this.props === nextProps) {
-      return false
-    }
-    return true
+  state = {
+    redirectToNewPage: false
   }
-
-
 
 
   handleSubmit = async (e) => {
@@ -45,13 +43,19 @@ class ReviewStudent extends Component {
       }
 
     } catch (error) {
-      console.log(error)
     }
+    this.setState({ redirectToNewPage: true })
+
   }
   render() {
+    if (this.state.redirectToNewPage) {
+      return (
+        <Redirect to={`/labtool/courses/${this.props.selectedInstance.ohid}`} />
+      )
+    }
     return (
       <div className='ReviewStudent' style={{ textAlignVertical: 'center', textAlign: 'center', }}>
-        <h2> {this.props.selectedInstance.name}</h2>
+        <h2> Tiralabra 2018 Kevät</h2>
         <h3> Viikko {this.props.weekNumber} </h3>
         <Grid centered>
           <Form onSubmit={this.handleSubmit}>
@@ -82,8 +86,7 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     ownProps,
-    selectedInstance: state.selectedInstance,
-    notification: state.notification
+    selectedInstance: state.selectedInstance
   }
 }
 

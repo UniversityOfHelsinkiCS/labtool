@@ -19,12 +19,8 @@ class ModifyCourseInstancePage extends Component {
     }
   }
 
-
-  shouldComponentUpdate(nextProps) {
-    if (this.props === nextProps) {
-      return false
-    }
-    return true
+  state = {
+    redirectToNewPage: false
   }
 
   handleSubmit = async (e) => {
@@ -39,6 +35,7 @@ class ModifyCourseInstancePage extends Component {
         ohid: this.props.selectedInstance.ohid
       }
       await this.props.modifyOneCI(content, this.props.selectedInstance.ohid)
+      this.setState({ redirectToNewPage: true })
     } catch (error) {
       console.log(error)
     }
@@ -46,6 +43,11 @@ class ModifyCourseInstancePage extends Component {
   }
 
   render() {
+    if (this.state.redirectToNewPage) {
+      return (
+        <Redirect to={`/labtool/courses/${this.props.selectedInstance.ohid}`} />
+      )
+    }
     return (
       <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
         <Grid>
@@ -106,8 +108,7 @@ class ModifyCourseInstancePage extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    selectedInstance: state.selectedInstance,
-    notification: state.notification
+    selectedInstance: state.selectedInstance
   }
 }
 
