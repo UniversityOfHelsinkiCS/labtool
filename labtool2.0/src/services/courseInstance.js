@@ -20,7 +20,18 @@ export const modifyOneCI = (data, id) => {
   const route = `/courseinstances/${id}`
   const prefix = 'CI_MODIFY_ONE_'
   const method = 'put'
-  return callController(route, prefix, data, method)  
+  return callController(route, prefix, data, method)
+}
+
+export const coursePageInformation = (data) => {
+  console.log('TAPAHTUUKO TÄMÄ', data)
+  const send = {
+    course: data
+  }
+  const route = `/courseinstances/coursepage`
+  const prefix = 'CP_INFO_'
+  const method = 'post'
+  return callController(route, prefix, send, method)
 }
 
 export default { getAllCI }

@@ -14,6 +14,16 @@ export const createStudentCourses = (data, ohid) => {
   return callController(route, prefix, data, method)
 }
 
+/* Will probably need something like this to review students
+
+export const getOneSI = (id) => {
+  const route = `/students/${id}`
+  const prefix = 'SI_GET_ONE_'
+  const method = 'get'
+  return callController(route, prefix, null, method)
+}
+
+*/
 
 
 export default { getAllStudentCourses }

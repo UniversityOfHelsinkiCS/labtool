@@ -4,13 +4,8 @@ const request = require('request')
 
 module.exports = {
 
-  // This is a crucial part of the application. If any errors are here then everything else is compromised. As a mere
-  // commenting participant author I might be blind to errors.
-  //
-  // PLEASE CHECK THIS :)
-  //
   login(req, res) {
-    
+    console.log('entered login')
     const options = {
       method: 'post',
       uri: 'https://opetushallinto.cs.helsinki.fi/login',

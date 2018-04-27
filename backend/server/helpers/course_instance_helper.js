@@ -1,65 +1,22 @@
 const application_helpers = require('./application_helper')
 
-exports.CurrentTermAndYear = CurrentTermAndYear
-exports.getCurrentTerm = getCurrentTerm
-exports.getNextYear = getNextYear
-exports.getNextTerm = getNextTerm
+exports.CurrentTermAndYear = application_helpers.CurrentTermAndYear
+exports.getCurrentTerm = application_helpers.getCurrentTerm
+exports.getNextYear = application_helpers.getNextYear
+exports.getNextTerm = application_helpers.getNextTerm
 exports.checkWebOodi = checkWebOodi
+exports.findByUserStudentInstance = findByUserStudentInstance
 exports.tokenVerify = application_helpers.tokenVerify  // Should be removed in issue #127
+exports.getCurrent = application_helpers.getCurrent
 
 
-function CurrentTermAndYear() {
-  const date = new Date()
-  const month = date.getMonth() + 1
-  const currentTerm = getCurrentTerm(month)
-  var year = date.getFullYear()
-  console.log('month is: ', month)
-  console.log('date: ', date)
-  if (month >= 11) {
-    year = year + 1
-  }
-  const currentYear = year.toString()
-  var nextYear = getNextYear(currentTerm, year)
-  nextYear.toString()
-  const nextTerm = getNextTerm(currentTerm)
-  console.log('year: ', year)
-  return {currentYear, currentTerm, nextTerm, nextYear}
-}
-
-function getCurrentTerm(month) {
-  if (1 <= month <= 5) {
-    return 'K'
-  }
-  if (6 <= month <= 8) {
-    return 'V'
-  }
-  if (9 <= month <= 12) {
-    return 'S'
-  }
-}
-
-function getNextYear(currentTerm, currentYear) {
-  if (currentTerm === 'S') {
-    return currentYear + 1
-  } else {
-    return currentYear
-  }
-}
-
-function getNextTerm(term) {
-  if (term === 'K') {
-    return 'V'
-  }
-  if (term === 'V') {
-    return 'S'
-  }
-  if (term === 'S') {
-    return 'K'
-  }
-}
-
-
-
+/**
+ * Only used in courseInstance controller so its place is here.
+ * @param req
+ * @param res
+ * @param user
+ * @param resolve
+ */
 function checkWebOodi(req, res, user, resolve) {
 
   console.log('checking weboodi..')
@@ -92,3 +49,37 @@ function checkWebOodi(req, res, user, resolve) {
 
   }
 }
+
+function findByUserStudentInstance(req, res) {//token verification might not work..? and we don't knpw if search works
+
+  const StudentInstanceController = require('../controllers').studentInstances
+  const db = require('../models')
+  const Sequelize = require('sequelize')
+  const Op = Sequelize.Op
+
+  console.log('db: ', db)
+  const errors = []
+  console.log('searching by studentInstance...')
+  console.log('***REQ BODY***: ', req.body)
+  let token = application_helpers.tokenVerify(req)
+  console.log('TOKEN VERIFIED: ', token)
+  const id = parseInt(req.body.userId)
+  console.log('req.params.UserId: ', id)
+  if (token.verified) {
+    if (Number.isInteger(token.data.id)) {
+      db.sequelize.query(`SELECT * FROM "CourseInstances" JOIN "StudentInstances" ON "CourseInstances"."id" = "StudentInstances"."courseInstanceId" WHERE "StudentInstances"."userId" = ${token.data.id}`)
+        .then(instance =>
+          res.status(200).send(instance[0]))
+        .catch(error => res.status(400).send(error))
+    } else {
+      errors.push('something went wrong')
+      res.status(400).send(errors)
+    }
+  } else {
+    errors.push('token verification failed')
+    res.status(400).send(errors)
+  }
+}
+
+
+

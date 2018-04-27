@@ -4,24 +4,27 @@
 const db = require('../models')
 const CourseInstance = require('../models').CourseInstance
 const StudentInstance = require('../models').StudentInstance
+const TeacherInstance = require('../models').TeacherInstance
 const User = require('../models').User
 const helper = require('../helpers/course_instance_helper')
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
+const StudentInstanceController = require('../controllers').studentInstances
+const Week = require('../models').Week
+const Comment = require('../models').Comment
+
 
 module.exports = {
 
-
-  //TODO: search courseInstance where it is connected to user either by studentIstance or teacherInstance
   findByUserTeacherInstance(req, res) {//token verification might not work..? and we don't knpw if search works
     const errors = []
     console.log('***REQ BODY***: ', req.body)
     let token = helper.tokenVerify(req)
     const id = parseInt(req.body.userId)//TODO: CHECK THAT THIS IS SANITICED ID
     console.log('TOKEN VERIFIED: ', token)
-    console.log('req.params.UserId: ', parseInt(req.body.userId))
+    console.log('token.data.id: ', token.data.id)
     if (token.verified) {
-      db.sequelize.query(`SELECT * FROM "CourseInstances" AS CI JOIN "TeacherInstances" AS TI ON CI.id = TI.id WHERE TI."userId" = ${token.data.id}`)
+      db.sequelize.query(`SELECT * FROM "CourseInstances" JOIN "TeacherInstances" ON "CourseInstances"."id" = "TeacherInstances"."courseInstanceId" WHERE "TeacherInstances"."userId" = ${token.data.id}`)
         .then(instance =>
           res.status(200).send(instance[0]))
         .catch(error => res.status(400).send(error))
@@ -31,58 +34,82 @@ module.exports = {
     }
 
   },
-
-  /**
-   * sequelize.query("SELECT * FROM 'property'", { type:Sequelize.QueryTypes.SELECT})
-   .then(function(properties) {
-      res.json(properties)
-  })
-   */
-  findByUserStudentInstance(req, res) {//token verification might not work..? and we don't knpw if search works
-    console.log('db: ', db)
-    const errors = []
-    console.log('searching by studentInstance...')
-    console.log('***REQ BODY***: ', req.body)
-    let token = helper.tokenVerify(req)
-    console.log('TOKEN VERIFIED: ', token)
-    const id = parseInt(req.body.userId)
-    console.log('req.params.UserId: ', id)
-    /*CourseInstance.findAll({
-      include:[{
-        model: StudentInstance,
-      }],
-      where: {userId: id},
-      logging: console.log
-    })*/
-    //	SELECT * FROM "CourseInstances" AS CI JOIN "StudentInstances" AS SI ON CI.id = SI.id WHERE SI."userId" = 1;
+  async coursePage(req, res) {
+    const course = await CourseInstance.findOne({
+      where: {
+        ohid: req.body.course
+      }
+    })
+    const courseInst = course.id
+    const token = await helper.tokenVerify(req)
+    const palautus = {
+      role: 'Unregistered',
+      data: undefined
+    }
     if (token.verified) {
-      if (Number.isInteger(token.data.id)) {
-        db.sequelize.query(`SELECT * FROM "CourseInstances" AS CI JOIN "StudentInstances" AS SI ON CI.id = SI.id WHERE SI."userId" = ${token.data.id}`)
-          .then(instance =>
-            res.status(200).send(instance[0]))
-          .catch(error => res.status(400).send(error))
+      const user = token.data.id
+      const teacher = await TeacherInstance.findAll({
+        where: {
+          userId: user,
+          courseInstanceId: courseInst
+        }
+      })
+      if (teacher[0] === undefined) {
+        const student = await StudentInstance.findOne({
+          where: {
+            userId: user,
+            courseInstanceId: courseInst
+          },
+          include: [{
+            model: Week, as: 'weeks',
+            include: [{
+              model: Comment, as: 'comments',
+            }]
+          },
+          {
+            model: User
+          }
+          ]
+        })
+        
+        try {
+          palautus.data = student
+          console.log('TÄSSÄ ON STUDNETTII', student)
+          palautus.role = 'student'
+          res.status(200).send(palautus)
+        } catch (error) {
+          res.status(400).send(error)
+        }
       } else {
-        errros.push('something went wrong')
-        res.status(400).send(errors)
+        const teacherPalautus = await StudentInstance.findAll({
+          where: {
+            courseInstanceId: courseInst
+          },
+          include: [{
+            model: Week, as: 'weeks',
+            include: [{
+              model: Comment, as: 'commentes',
+            }]
+          },
+          {
+            model: User
+          }]
+        })
+        try {
+          palautus.data = teacherPalautus
+          palautus.role = 'teacher'
+          res.status(200).send(palautus)
+        } catch (e) {
+          res.status(200).send(e)
+        }
       }
     } else {
-      errors.push('token verification failed')
-      res.status(400).send(errors)
+      res.status(400).send('something went wrong')
     }
-    // db.sequelize.query(`SELECT * FROM "CourseInstances" AS CI JOIN "StudentInstances" AS SI ON CI.id = SI.id WHERE SI."userId" = ${id}`)
-    //   // CourseInstance.findAll({
-    //   //   include: [{
-    //   //     model: StudentInstance,
-    //   //   }],
-    //   //   where: {
-    //   //     userid: {
-    //   //       [Op.eq]: id
-    //   //     }
-    //   //   }
-    //   // })
-    //   .then(instance =>
-    //     res.status(200).send(instance))
-    //   .catch(error => res.status(400).send(error))
+  },
+
+  findByUserStudentInstance(req, res) {//token verification might not work..? and we don't knpw if search works
+    helper.findByUserStudentInstance(req, res)
 
   },
 
@@ -130,6 +157,7 @@ module.exports = {
                 },
                 defaults: {
                   userId: user.id,
+                  name: user,
                   courseInstanceId: course.dataValues.id,
                   github: req.body.github || '',                     // model would like to validate this to be an URL but seems like crap
                   projectName: req.body.projectName || '',           // model would like to validate this to alphanumeric but seems like this needs specific nulls or empties or whatever
@@ -140,10 +168,15 @@ module.exports = {
                     message: 'something went wrong: if somehow we could not find or create a record we see this'
                   })
                 } else {
-                  res.status(200).send({
-                    message: 'something went right',
-                    whatever: student
-                  })
+                  helper.findByUserStudentInstance(req, res)
+
+                  //      this.findByUserStudentInstance(req,res)
+                  //                  res.status(200).send({
+
+                  /*
+                  message: 'something went right',
+                  whatever: student
+                })*/
                 }
 
               }).catch(function (error) {
@@ -171,12 +204,12 @@ module.exports = {
     return CourseInstance
       .find({
         where: {
-          id: req.params.id
+          ohid: req.params.id
         }
       })
       .then(courseInstance => {
         if (!courseInstance) {
-          return res.status(400).send({
+          res.status(400).send({
             message: 'course instance not found',
           })
         }
@@ -185,7 +218,7 @@ module.exports = {
             name: req.body.name || courseInstance.name,
             start: req.body.start || courseInstance.start,
             end: req.body.end || courseInstance.end,
-            active: req.body.active || courseInstance.active,
+            active: req.body.active,
             weekAmount: req.body.weekAmount || courseInstance.weekAmount,
             weekMaxPoints: req.body.weekMaxPoints || courseInstance.weekMaxPoints,
             currentWeek: req.body.currentWeek || courseInstance.currentWeek,
@@ -221,8 +254,6 @@ module.exports = {
       .catch(error => res.status(400).send(error))
 
   },
-
-
   getNew(req, res) {
     console.log('update current...')
     const auth = process.env.TOKEN || 'notset' //You have to set TOKEN in .env file in order for this to work
@@ -234,7 +265,6 @@ module.exports = {
     } else {
       if (this.remoteAddress === '127.0.0.1') {
         res.send('gtfo')
-
       } else {
         const request = require('request')
         const options = {
@@ -332,6 +362,50 @@ module.exports = {
         return res.status(200).send(course)
       })
       .catch(error => res.status(400).send(error))
+  },
+
+  addComment(req, res) {
+    let token = helper.tokenVerify(req)
+    const message = req.body
+    console.log('message: ', message.message)
+    console.log('from: ', message.from)
+    console.log('to: ', message.to)
+    console.log('week: ', message.week)
+    if (token.verified) {
+      return Comment
+        .create({
+          weekId: message.week,
+          message: message.message,
+          from: message.from,
+          to: message.to,
+        })
+        .then(comment => {
+          if (!comment) {
+            res.status(400).send('week not found')
+          } else {
+            res.status(200).send(comment)
+          }
+        })
+        .catch(error => res.status(400).send(error))
+    } else {
+      res.status(400).send('token verification failed')
+    }
+  },
+
+  getCommentsForWeek(req, res) {
+    let token = helper.tokenVerify(req)
+    if (token.verified) {
+      return Comment
+        .findAll({
+          where: {
+            weekId: req.body.week
+          }
+        })
+        .then(comment => res.status(200).send(comment))
+        .catch(error => res.status(400).send(error))
+    } else {
+      res.status(400).send('token verification failed')
+    }
   },
 
 }
