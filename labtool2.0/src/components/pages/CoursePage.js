@@ -120,7 +120,7 @@ class CoursePage extends Component {
               </Card.Content>
             </Card>
            
-            <h3> Comments and feedback </h3>
+            <h3> Points and feedback </h3>
 
             <Table celled padded unstackable>
               <Table.Header>
