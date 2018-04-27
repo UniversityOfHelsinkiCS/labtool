@@ -4,7 +4,8 @@ const helper = require('../helpers/weeks_controller_helper')
 module.exports = {
   async create(req, res) {
     try {
-      let token = helper.tokenVerify(req)
+      await helper.controller_before_auth_check_action(req, res)
+
       if (token.verified) {
         const week = await Week
           .findOne({
@@ -33,6 +34,8 @@ module.exports = {
       } else {
         res.status(400).send('token verific ation failed')
       }
+    } catch (error) {
+      console.log(error)
     }
   },
   /**

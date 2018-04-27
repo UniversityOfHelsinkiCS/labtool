@@ -1,6 +1,3 @@
-//import Course from '../../../labtool2.0/src/components/pages/Course';
-
-//import Course from '../../../labtool2.0/src/components/pages/Course';
 const db = require('../models')
 const CourseInstance = require('../models').CourseInstance
 const StudentInstance = require('../models').StudentInstance
@@ -117,36 +114,7 @@ module.exports = {
           res.status(200).send(palautus)
         } catch (e) {
           res.status(200).send(e)
-        }
-      }
-    } else {
-      const teacherPalautus = await StudentInstance.findAll({
-        where: {
-          courseInstanceId: courseInst
-        },
-        include: [
-          {
-            model: Week,
-            as: 'weeks',
-            include: [
-              {
-                model: Comment,
-                as: 'commentes'
-              }
-            ]
-          },
-          {
-            model: User
-          }
-        ]
-      })
-      try {
-        palautus.data = teacherPalautus
-        palautus.role = 'teacher'
-        res.status(200).send(palautus)
-      } catch (e) {
-        res.status(200).send(e)
-      }
+        }    
     }
   },
 
