@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import React, { Component } from 'react'
-import { Menu, Button } from 'semantic-ui-react'
+import { Menu, Button, Icon } from 'semantic-ui-react'
 import { logout } from '../../reducers/loginReducer'
 
 
@@ -21,6 +21,7 @@ class Nav extends Component {
       <main>
 
         <Menu
+          icon='labeled'
           stackable
           inverted
           borderless
@@ -38,12 +39,14 @@ class Nav extends Component {
 
             {this.props.user.user ?
               <Menu.Item as={Link} to="/labtool/mypage">
+                <Icon name='home'/>
                 My page
               </Menu.Item>
               : <p></p>}
 
             {this.props.user.user ?
               <Menu.Item as={Link} to="/labtool/courses">
+                <Icon name='browser' />
                 Courses
               </Menu.Item>
               : <p></p>}
@@ -52,8 +55,7 @@ class Nav extends Component {
 
           {this.props.user.user ? <div>
             <Menu.Menu position='right' >
-              <Menu.Item style={{ color: 'gray' }}>
-              
+              <Menu.Item style={{ color: 'gray'}}>
                 <em>{user.username} logged in</em>
               </Menu.Item>
 
