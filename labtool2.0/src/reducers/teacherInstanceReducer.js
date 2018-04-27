@@ -1,5 +1,3 @@
-import courseInstanceService from '../services/courseInstance'
-
 const courseInstancereducer = (store = [], action) => {
   switch (action.type) {
   case 'TEACHER_COURSE_GET_ALL_SUCCESS':

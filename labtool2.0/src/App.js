@@ -38,7 +38,7 @@ class App extends Component {
         this.props.getAllTeacherCourses()
       }
     } catch (exception) {
-      console.log('no user logged in')
+      console.log(exception)
     }
   }
 
@@ -50,7 +50,6 @@ class App extends Component {
       created: nProps.created
     }
     window.localStorage.setItem('loggedLabtool', JSON.stringify(userAndToken))
-    console.log(nProps)
   }
 
 
@@ -76,8 +75,8 @@ class App extends Component {
             <Route path={`/labtool/browsereviews`} component={BrowseReviews} />
             <Route path={`/labtool/email`} component={Email} />
             <Route path={`/labtool/registerPage`} component={RegisterPage} />
-            <Route path={`/labtool/reviewstudent/:si/:wk`} render={({ match }) =>
-              <ReviewStudent studentInstance={match.params.si} weekNumber={match.params.wk} />}
+            <Route path={`/labtool/reviewstudent/:id/:si/:wk`} render={({ match }) =>
+              <ReviewStudent courseinstance={(this.props.getOneCI(match.params.id))} studentInstance={match.params.si} weekNumber={match.params.wk} />}
             />
             <Route path={`/labtool/ModifyCourseInstancePage/:id`} render={({ match }) =>
               <ModifyCourseInstancePage courseinstance={(this.props.getOneCI(match.params.id))} />}
@@ -93,7 +92,7 @@ class App extends Component {
 
     const EmailChecker = () => (
       <div>
-        {this.props.user.email === ""
+        {this.props.user.email === "" || this.props.user.email === null
           ? <Email />
           : <Main />}
       </div>

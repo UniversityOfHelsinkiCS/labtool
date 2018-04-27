@@ -4,8 +4,6 @@ import { Link } from 'react-router-dom'
 import { updateUser } from '../../services/login'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router'
-import { getAllStudentCourses } from '../../services/studentinstances'
-import { getAllTeacherCourses } from '../../services/teacherinstances'
 
 /*
 take some elements from SetEmail.js, if user has already email in db

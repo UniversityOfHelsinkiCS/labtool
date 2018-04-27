@@ -3,7 +3,6 @@ import { Button, Form, Input, Grid } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createOneWeek } from '../../services/week'
-import { Redirect } from 'react-router'
 import { clearNotifications } from '../../reducers/notificationReducer'
 import store from '../../store'
 class ReviewStudent extends Component {
@@ -41,7 +40,7 @@ class ReviewStudent extends Component {
   render() {
     return (
       <div className='ReviewStudent' style={{ textAlignVertical: 'center', textAlign: 'center', }}>
-        <h2> Tiralabra 2018 Kevät</h2>
+        <h2> {this.props.selectedInstance.name}</h2>
         <h3> Viikko {this.props.weekNumber} </h3>
         <Grid centered>
           <Form onSubmit={this.handleSubmit}>

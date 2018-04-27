@@ -24,7 +24,6 @@ export const modifyOneCI = (data, id) => {
 }
 
 export const coursePageInformation = (data) => {
-  console.log('TAPAHTUUKO TÄMÄ', data)
   const send = {
     course: data
   }
