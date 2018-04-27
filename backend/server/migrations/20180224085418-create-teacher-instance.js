@@ -22,8 +22,8 @@ module.exports = {
         references: {
           model: 'Users',
           key: 'id',
-          as: 'userId',
-        },
+          as: 'userId'
+        }
       },
       courseInstanceId: {
         type: Sequelize.INTEGER,
@@ -31,9 +31,9 @@ module.exports = {
         references: {
           model: 'CourseInstances',
           key: 'id',
-          as: 'courseInstanceId',
+          as: 'courseInstanceId'
         }
-      },
+      }
     })
   },
   down: (queryInterface, Sequelize) => {

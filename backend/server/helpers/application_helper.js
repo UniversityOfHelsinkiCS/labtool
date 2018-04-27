@@ -11,14 +11,13 @@ exports.createCourse = createCourse
 // This is not needed anymore and should be fixed in issue #127
 function tokenVerify2(req) {
   var jwt = require('jsonwebtoken')
-  return jwt.verify(req.token, process.env.SECRET, function (err, decoded) {
+  return jwt.verify(req.token, process.env.SECRET, function(err, decoded) {
     if (err) {
-      return {verified: false, data: null}
+      return { verified: false, data: null }
     } else {
-      return {verified: true, data: decoded}
+      return { verified: true, data: decoded }
     }
   })
-
 }
 
 function CurrentTermAndYear() {
@@ -36,7 +35,7 @@ function CurrentTermAndYear() {
   nextYear.toString()
   const nextTerm = getNextTerm(currentTerm)
   //console.log('year: ', year)
-  return {currentYear, currentTerm, nextTerm, nextYear}
+  return { currentYear, currentTerm, nextTerm, nextYear }
 }
 
 function getCurrentTerm(month) {
@@ -84,12 +83,11 @@ function axiosBlaBla(year, term) {
     baseURL: `https://opetushallinto.cs.helsinki.fi/labtool/courses?year=${year}&term=${term}`,
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': process.env.TOKEN
+      Authorization: process.env.TOKEN
     },
     httpsAgent: new https.Agent({
       rejectUnauthorized: false // if you don't like this then please go ahead and do it yourself better.
     })
-
   }
 }
 
@@ -100,12 +98,11 @@ function axiosCourseBla(hid) {
     baseURL: `https://opetushallinto.cs.helsinki.fi/labtool/courses/${hid}`,
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': process.env.TOKEN
+      Authorization: process.env.TOKEN
     },
     httpsAgent: new https.Agent({
       rejectUnauthorized: false // if you don't like this then please go ahead and do it yourself better.
     })
-
   }
 }
 
@@ -130,11 +127,10 @@ async function getInactive(req, res) {
 
     const ires = await CourseInstance.findAll({
       where: {
-        ohid: {[Op.in]: iarr}
+        ohid: { [Op.in]: iarr }
       }
     })
     const notactivated = []
-
 
     for (var i in newobj) {
       var found = 0
@@ -154,7 +150,6 @@ async function getInactive(req, res) {
   }
 }
 
-
 async function createCourse(body) {
   const CourseInstance = require('../models').CourseInstance
   const TeacherInstance = require('../models').TeacherInstance
@@ -162,19 +157,20 @@ async function createCourse(body) {
 
   const axios = require('axios')
   const options = await axiosCourseBla(body.hid)
-  const result = await axios.create(options).get().then(barf => {
-    return barf.data
-  }
-  )
+  const result = await axios
+    .create(options)
+    .get()
+    .then(barf => {
+      return barf.data
+    })
   const new_course = await CourseInstance.build({
     name: body.cname,
     start: body.starts,
     end: body.ends,
-    ohid: body.hid,
-
+    ohid: body.hid
   }).save()
 
-  if (result.teachers.length > 0 ) {
+  if (result.teachers.length > 0) {
     for (i in result.teachers) {
       const user = await User.findOrCreate({
         where: {
@@ -188,15 +184,12 @@ async function createCourse(body) {
         userId: user[i].id,
         courseInstanceId: new_course.id
       }).save()
-
     }
   }
 
   //await console.log(result.teachers)
 
   return result
-
-
 }
 
 /**
@@ -206,17 +199,17 @@ async function createCourse(body) {
  * @returns {Promise<*>}
  */
 async function getCurrent(req, res) {
-
   const timeMachine = CurrentTermAndYear()
   const axios = require('axios')
   const options = await axiosBlaBla(timeMachine.currentYear, timeMachine.currentTerm)
-  const result = await axios.create(options).get().then(barf => {
-    return barf.data
-  }
-  )
+  const result = await axios
+    .create(options)
+    .get()
+    .then(barf => {
+      return barf.data
+    })
   return result
 }
-
 
 /**
  *
@@ -225,13 +218,14 @@ async function getCurrent(req, res) {
  * @returns {Promise<*>}
  */
 async function getNewer(req, res) {
-
   const timeMachine = CurrentTermAndYear()
   const axios = require('axios')
   const options = await axiosBlaBla(timeMachine.nextYear, timeMachine.nextTerm)
-  const result = await axios.create(options).get().then(barf => {
-    return barf.data
-  }
-  )
+  const result = await axios
+    .create(options)
+    .get()
+    .then(barf => {
+      return barf.data
+    })
   return result
 }
