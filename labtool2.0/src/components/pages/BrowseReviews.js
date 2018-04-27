@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Button, Table, List, Accordion, Icon } from 'semantic-ui-react'
+import { connect } from 'react-redux'
 
 class BrowseReviews extends Component {
   state = { activeIndex: 0 }
@@ -57,4 +58,16 @@ class BrowseReviews extends Component {
     )
   }
 }
-export default BrowseReviews
+const mapStateToProps = (state) => {
+  return {
+    user: state.user,
+    studentInstance: state.studentInstance,
+    teacherInstance: state.teacherInstance,
+    selectedInstance: state.selectedInstance,
+    courseData: state.coursePage
+  }
+}
+
+
+
+export default connect(mapStateToProps, {})(BrowseReviews)
