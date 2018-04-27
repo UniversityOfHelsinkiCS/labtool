@@ -12,7 +12,7 @@ class CoursePage extends Component {
         let pushattava =
           <Table.Cell>
             <p>Not reviewed!</p>
-            <Link to={`/labtool/reviewstudent/${siId}/${i + 1}`}>
+            <Link to={`/labtool/reviewstudent/${this.props.selectedInstance.ohid}/${siId}/${i + 1}`}>
               <Button circular color='orange' size="tiny" icon="edit black large" onClick={review()} ></Button>
             </Link>
           </Table.Cell>
