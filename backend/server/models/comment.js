@@ -5,7 +5,6 @@ module.exports = (sequelize, DataTypes) => {
     {
       feedback: {
         type: DataTypes.STRING,
-        allowNull: false
       },
       hiddenComment: {
         type: DataTypes.STRING
