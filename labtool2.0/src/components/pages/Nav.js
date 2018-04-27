@@ -39,7 +39,7 @@ class Nav extends Component {
 
             {this.props.user.user ?
               <Menu.Item as={Link} to="/labtool/mypage">
-                <Icon name='home'/>
+                <Icon name='home' />
                 My page
               </Menu.Item>
               : <p></p>}
@@ -55,15 +55,15 @@ class Nav extends Component {
 
           {this.props.user.user ? <div>
             <Menu.Menu position='right' >
-              <Menu.Item 
-              style={{ 
-                color: 'gray',
-                justifyContent: 'center'
+              <Menu.Item
+                style={{
+                  color: 'gray',
+                  justifyContent: 'center'
                 }}>
                 <em>{user.username} logged in</em>
               </Menu.Item>
 
-              <Menu.Item link>
+              <Menu.Item>
                 <Link to="/labtool"> <Button onClick={this.handleLogout} >
                   Logout
                 </Button></Link>
