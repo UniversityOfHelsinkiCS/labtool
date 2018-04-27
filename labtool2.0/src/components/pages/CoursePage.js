@@ -100,6 +100,8 @@ class CoursePage extends Component {
                     <Table.Cell>{data.User.firsts} {data.User.lastname}</Table.Cell>
                     <Table.Cell><p>{data.projectName}</p><a>{data.github}</a></Table.Cell>
                     {createIndents(data.weeks, data.id)}
+                    <Table.Cell> Summa </Table.Cell>
+                    <Table.Cell> Ohjaaja </Table.Cell>
                     <Link to={`/labtool/browsereviews/`}>
                       <Button circular color='orange' size="tiny" icon="edit black large" onClick={review()} ></Button>
                     </Link>
@@ -123,7 +125,7 @@ class CoursePage extends Component {
                 <h3> <Link to={this.props.courseData.data.github}>{this.props.courseData.data.github}</Link> </h3>
               </Card.Content>
             </Card>
-           
+
             <h3> Points and feedback </h3>
 
             <Table celled padded unstackable>

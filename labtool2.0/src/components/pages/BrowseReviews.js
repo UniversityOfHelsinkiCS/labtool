@@ -1,56 +1,59 @@
 import React, { Component } from 'react'
-import { Button, Table, List } from 'semantic-ui-react'
+import { Button, Table, List, Accordion, Icon } from 'semantic-ui-react'
 
 class BrowseReviews extends Component {
+  state = { activeIndex: 0 }
+
+  handleClick = (e, titleProps) => {
+    const { index } = titleProps
+    const { activeIndex } = this.state
+    const newIndex = activeIndex === index ? -1 : index
+
+    this.setState({ activeIndex: newIndex })
+  }
+
   render() {
+    const { activeIndex } = this.state
+
     return (
-      <div>
-        <h2> Tiralabra 2018 Kevät </h2>
-        <h3> Maija Meikäläinen </h3>
-        <h2> Week 1 </h2>
-        <Table celled padded >
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell>Week</Table.HeaderCell>
-              <Table.HeaderCell>Points</Table.HeaderCell>
-              <Table.HeaderCell>Comment</Table.HeaderCell>
-              <Table.HeaderCell> Edit </Table.HeaderCell>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            <Table.Row>
-              <Table.Cell>1</Table.Cell>
-              <Table.Cell>5</Table.Cell>
-              <Table.Cell>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ut ultrices sapien. Aliquam neque diam, scelerisque nec metus sit amet, euismod interdum orci. Vivamus eu convallis ex. Etiam faucibus varius lorem in egestas. Pellentesque quis elementum magna, quis sagittis ex. Mauris a sem dignissim, fringilla elit ac, iaculis quam. Ut ut lacus sit amet massa blandit tincidunt. Mauris mattis tempor nibh, fermentum interdum massa placerat tempor.</Table.Cell>
-              <Table.Cell><Button color='blue' > <List.Item icon='edit' /></Button></Table.Cell>
-            </Table.Row>
-            <Table.Row>
-              <Table.Cell>2</Table.Cell>
-              <Table.Cell>2</Table.Cell>
-              <Table.Cell>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ut ultrices sapien. Aliquam neque diam, scelerisque nec metus sit amet, euismod interdum orci. Vivamus eu convallis ex. Etiam faucibus varius lorem in egestas. Pellentesque quis elementum magna, quis sagittis ex. Mauris a sem dignissim, fringilla elit ac, iaculis quam. Ut ut lacus sit amet massa blandit tincidunt. Mauris mattis tempor nibh, fermentum interdum massa placerat tempor.</Table.Cell>
-              <Table.Cell><Button color='blue' > <List.Item icon='edit' /></Button></Table.Cell>
-            </Table.Row>
-            <Table.Row>
-              <Table.Cell>3</Table.Cell>
-              <Table.Cell>0</Table.Cell>
-              <Table.Cell>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ut ultrices sapien. Aliquam neque diam, scelerisque nec metus sit amet, euismod interdum orci. Vivamus eu convallis ex. Etiam faucibus varius lorem in egestas. Pellentesque quis elementum magna, quis sagittis ex. Mauris a sem dignissim, fringilla elit ac, iaculis quam. Ut ut lacus sit amet massa blandit tincidunt. Mauris mattis tempor nibh, fermentum interdum massa placerat tempor.</Table.Cell>
-              <Table.Cell><Button color='blue' > <List.Item icon='edit' /></Button></Table.Cell>
-            </Table.Row>
-            <Table.Row>
-              <Table.Cell>4</Table.Cell>
-              <Table.Cell>4</Table.Cell>
-              <Table.Cell>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ut ultrices sapien. Aliquam neque diam, scelerisque nec metus sit amet, euismod interdum orci. Vivamus eu convallis ex. Etiam faucibus varius lorem in egestas. Pellentesque quis elementum magna, quis sagittis ex. Mauris a sem dignissim, fringilla elit ac, iaculis quam. Ut ut lacus sit amet massa blandit tincidunt. Mauris mattis tempor nibh, fermentum interdum massa placerat tempor.</Table.Cell>
-              <Table.Cell><Button color='blue' > <List.Item icon='edit' /></Button></Table.Cell>
-            </Table.Row>
-            <Table.Row>
-              <Table.Cell> null </Table.Cell>
-              <Table.Cell> null </Table.Cell>
-              <Table.Cell> null </Table.Cell>
-              <Table.Cell><Button color='blue' > <List.Item icon='edit' /></Button></Table.Cell>
-            </Table.Row>
-          </Table.Body>
-        </Table>
-      </div>
+      <Accordion fluid styled>
+        <Accordion.Title active={activeIndex === 0} index={0} onClick={this.handleClick}>
+          <Icon name='dropdown' />
+          What is a dog?
+        </Accordion.Title>
+        <Accordion.Content active={activeIndex === 0}>
+          <p>
+            A dog is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a
+            {' '}welcome guest in many households across the world.
+          </p>
+        </Accordion.Content>
+
+        <Accordion.Title active={activeIndex === 1} index={1} onClick={this.handleClick}>
+          <Icon name='dropdown' />
+          What kinds of dogs are there?
+        </Accordion.Title>
+        <Accordion.Content active={activeIndex === 1}>
+          <p>
+            There are many breeds of dogs. Each breed varies in size and temperament. Owners often select a breed of
+            {' '}dog that they find to be compatible with their own lifestyle and desires from a companion.
+          </p>
+        </Accordion.Content>
+
+        <Accordion.Title active={activeIndex === 2} index={2} onClick={this.handleClick}>
+          <Icon name='dropdown' />
+          How do you acquire a dog?
+        </Accordion.Title>
+        <Accordion.Content active={activeIndex === 2}>
+          <p>
+            Three common ways for a prospective owner to acquire a dog is from pet shops, private owners, or shelters.
+          </p>
+          <p>
+            A pet shop may be the most convenient way to buy a dog. Buying a dog from a private owner allows you to
+            {' '}assess the pedigree and upbringing of your dog before choosing to take it home. Lastly, finding your
+            {' '}dog from a shelter, helps give a good home to a dog who may not find one so readily.
+          </p>
+        </Accordion.Content>
+      </Accordion>
     )
   }
 }
