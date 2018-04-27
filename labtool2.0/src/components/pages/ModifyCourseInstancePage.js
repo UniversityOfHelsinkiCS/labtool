@@ -61,7 +61,6 @@ class ModifyCourseInstancePage extends Component {
               <Form.Field inline>
                 <label>Week amount</label>
                 <Input
-                  placeholder="weekAmount"
                   type="text"
                   className="form-control1"
                   name="weekAmount"
@@ -108,7 +107,8 @@ class ModifyCourseInstancePage extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    selectedInstance: state.selectedInstance
+    selectedInstance: state.selectedInstance,
+    notification: state.notification
   }
 }
 

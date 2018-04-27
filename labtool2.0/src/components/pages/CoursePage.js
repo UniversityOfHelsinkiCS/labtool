@@ -1,17 +1,11 @@
 import React, { Component } from 'react'
-import { Button, Table, Grid, Card, Header, Divider, Transition } from 'semantic-ui-react'
+import { Button, Table, Card } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 class CoursePage extends Component {
 
   render() {
-    let instance = []
-    if (this.props.studentInstance) {
-      instance = this.props.studentInstance.filter(inst => (inst.courseInstanceId == this.props.selectedInstance.id))
-    }
-
-
     const createIndents = (data, siId) => {
       const indents = []
       for (var i = 0; i < this.props.selectedInstance.weekAmount; i++) {
@@ -27,7 +21,7 @@ class CoursePage extends Component {
           if ((i + 1) === data[j].weekNumber) {
             pushattava = <Table.Cell>
               <p>{data[j].points}</p>
-              <Link to={`/labtool/reviewstudent/${siId}/${i + 1}`}>
+              <Link to={`/labtool/reviewstudent/${this.props.selectedInstance.ohid}/${siId}/${i + 1}`}>
                 <Button circular color='orange' size="tiny" icon="edit black large" ></Button>
               </Link>
             </Table.Cell>
@@ -121,19 +115,18 @@ class CoursePage extends Component {
                 </Card.Content>
               </Card>
            
-              <h3> Comments and feedback </h3>
+            <h3> Comments and feedback </h3>
 
-              <Table celled padded unstackable>
-                <Table.Header>
-                  <Table.Row>
-                    <Table.HeaderCell>Week</Table.HeaderCell>
-                    <Table.HeaderCell>Points</Table.HeaderCell>
-                    <Table.HeaderCell>Comment</Table.HeaderCell>
-                  </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                  {console.log(this.props.courseData.data.weeks)}
-                  {this.props.courseData.data.weeks.map(week =>
+            <Table celled padded unstackable>
+              <Table.Header>
+                <Table.Row>
+                  <Table.HeaderCell>Week</Table.HeaderCell>
+                  <Table.HeaderCell>Points</Table.HeaderCell>
+                  <Table.HeaderCell>Comment</Table.HeaderCell>
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
+                {this.props.courseData.data.weeks.map(week =>
                     <Table.Row>
                       <Table.Cell>{week.weekNumber}</Table.Cell>
                       <Table.Cell>{week.points}</Table.Cell>
