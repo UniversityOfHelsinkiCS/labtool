@@ -171,7 +171,7 @@ async function createCourse(body) {
   }).save()
 
   if (result.teachers.length > 0) {
-    for (i in result.teachers) {
+    for (let i in result.teachers) {
       const user = await User.findOrCreate({
         where: {
           username: result.teachers[i]

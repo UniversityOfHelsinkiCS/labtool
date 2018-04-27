@@ -1,6 +1,6 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    queryInterface.addColumn('Users', 'studentnumber', Sequelize.STRING, {
+    return queryInterface.addColumn('Users', 'studentnumber', Sequelize.STRING, {
       after: 'username'
     })
   },
@@ -8,7 +8,7 @@ module.exports = {
   down: (queryInterface, Sequelize) => {
     // should not need any returns ?
 
-    queryInterface.removeColumn('Users', 'studentnumber')
+    return queryInterface.removeColumn('Users', 'studentnumber')
 
     /*
       Add reverting commands here.
