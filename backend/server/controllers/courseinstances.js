@@ -373,7 +373,9 @@ module.exports = {
       return Comment
         .create({
           weekId: message.week,
-          message: message.message,
+          feedback: message.feedback,
+          hiddenComment: message.hidden,
+          comment: message.comment,
           from: message.from,
           to: message.to,
         })

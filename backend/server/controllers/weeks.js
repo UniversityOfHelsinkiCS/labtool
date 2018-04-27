@@ -9,7 +9,6 @@ module.exports = {
         .create({
           points: req.body.points,
           studentInstanceId: req.body.studentInstanceId,
-          comment: req.body.comment,
           weekNumber: req.body.weekNumber
         })
         .then(week => res.status(201).send(week))
