@@ -61,7 +61,10 @@ module.exports = {
             courseInstanceId: courseInst
           },
           include: [{
-            model: Week, as: 'weeks'
+            model: Week, as: 'weeks',
+            include: [{
+              model: Comment, as: 'comments',
+            }]
           },
           {
             model: User
@@ -81,7 +84,10 @@ module.exports = {
             courseInstanceId: courseInst
           },
           include: [{
-            model: Week, as: 'weeks'
+            model: Week, as: 'weeks',
+            include: [{
+              model: Comment, as: 'commentes',
+            }]
           },
           {
             model: User
