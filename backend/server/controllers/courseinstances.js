@@ -21,14 +21,14 @@ module.exports = {
    * @param res
    */
   findByUserTeacherInstance(req, res) {
-    helper.controller_before_auth_check_action()
+    helper.controller_before_auth_check_action(req, res)
     const errors = []
     console.log('***REQ BODY***: ', req.body)
 
     const id = parseInt(req.body.userId)//TODO: CHECK THAT THIS IS SANITICED ID
     console.log('TOKEN VERIFIED: ', req.authenticated)
-    console.log('token.data.id: ', req.token)
-    db.sequelize.query(`SELECT * FROM "CourseInstances" JOIN "TeacherInstances" ON "CourseInstances"."id" = "TeacherInstances"."courseInstanceId" WHERE "TeacherInstances"."userId" = ${token.data.id}`)
+    console.log('token.data.id: ', req.decoded.id)
+    db.sequelize.query(`SELECT * FROM "CourseInstances" JOIN "TeacherInstances" ON "CourseInstances"."id" = "TeacherInstances"."courseInstanceId" WHERE "TeacherInstances"."userId" = ${req.decoded.id}`)
       .then(instance =>
         res.status(200).send(instance[0]))
       .catch(error => res.status(400).send(error))
@@ -41,7 +41,7 @@ module.exports = {
    * @returns {Promise<void>}
    */
   async coursePage(req, res) {
-    helper.controller_before_auth_check_action()
+    helper.controller_before_auth_check_action(req, res)
 
     const course = await CourseInstance.findOne({
       where: {
@@ -53,7 +53,7 @@ module.exports = {
       role: 'Unregistered',
       data: undefined
     }
-    const user = token.data.id
+    const user = req.decoded.id
     const teacher = await TeacherInstance.findAll({
       where: {
         userId: user,
@@ -117,7 +117,7 @@ module.exports = {
    * @param res
    */
   findByUserStudentInstance(req, res) {
-    helper.controller_before_auth_check_action()
+    helper.controller_before_auth_check_action(req, res)
     helper.findByUserStudentInstance(req, res)
 
   },
@@ -128,7 +128,7 @@ module.exports = {
    * @param res
    */
   registerToCourseInstance(req, res) {
-    helper.controller_before_auth_check_action()
+    helper.controller_before_auth_check_action(req, res)
 
 
     CourseInstance.findOne({
@@ -216,7 +216,7 @@ module.exports = {
    * @returns {*|Promise<T>}
    */
   update(req, res) {
-    helper.controller_before_auth_check_action()
+    helper.controller_before_auth_check_action(req, res)
 
     console.log('REQ body: ', req.body)
     console.log('REQ params: ', req.params)
@@ -255,7 +255,6 @@ module.exports = {
    * @returns {Promise<Array<Model>>}
    */
   list(req, res) {
-    helper.controller_before_auth_check_action()
 
     return CourseInstance.findAll()
       .then(instance => res.status(200).send(instance))
@@ -268,7 +267,7 @@ module.exports = {
    * @param res
    */
   retrieve(req, res) {
-    helper.controller_before_auth_check_action()
+    helper.controller_before_auth_check_action(req, res)
 
     const errors = []
     CourseInstance
@@ -294,7 +293,7 @@ module.exports = {
    * @param res
    */
   getNew(req, res) {
-    helper.controller_before_auth_check_action()
+    helper.controller_before_auth_check_action(req, res)
 
     const termAndYear = helper.CurrentTermAndYear()
     console.log('term and year: ', termAndYear)
@@ -340,7 +339,7 @@ module.exports = {
    * @param res
    */
   getNewer(req, res) {
-    helper.controller_before_auth_check_action()
+    helper.controller_before_auth_check_action(req, res)
 
     console.log('update next...')
     const auth = process.env.TOKEN || 'notset' //You have to set TOKEN in .env file in order for this to work
@@ -393,7 +392,7 @@ module.exports = {
    * @returns {Promise<Model>}
    */
   retrieveCourseStuff(req, res) {
-    helper.controller_before_auth_check_action()
+    helper.controller_before_auth_check_action(req, res)
 
     return CourseInstance
       .findOne({
@@ -419,7 +418,7 @@ module.exports = {
    * @returns {*|Promise<T>}
    */
   addComment(req, res) {
-    helper.controller_before_auth_check_action()
+    helper.controller_before_auth_check_action(req, res)
 
     const message = req.body
     console.log('message: ', message.message)
@@ -452,7 +451,7 @@ module.exports = {
    * @returns {Promise<Array<Model>>}
    */
   getCommentsForWeek(req, res) {
-    helper.controller_before_auth_check_action()
+    helper.controller_before_auth_check_action(req, res)
 
     return Comment
       .findAll({

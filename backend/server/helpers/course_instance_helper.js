@@ -18,35 +18,29 @@ exports.controller_before_auth_check_action = application_helpers.controller_bef
  */
 function checkWebOodi(req, res, user, resolve) {
 
-  console.log('checking weboodi..')
-  const auth = process.env.TOKEN || 'notset'
-  if (auth == 'notset') {
-    res.send('Please restart the backend with the correct TOKEN environment variable set')
-  } else {
-    const request = require('request')
-    const options = {
-      method: 'get',
-      uri: `https://opetushallinto.cs.helsinki.fi/labtool/courses/${req.params.ohid}`,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': auth
-      },
-      strictSSL: false
-    }
-    request(options, function (req, res, body) {
-      const json = JSON.parse(body)
-      if (json['students'].toString().match(user.studentnumber) !== null) {  // stupid javascript.. even regex match is simpler than json array that has or not has a key of whatever.
-        console.log('found')
-        resolve('found')
-        return
-      } else {
-        console.log('notfound')
-        resolve('notfound')
-        return
-      }
-    })
-
+  const request = require('request')
+  const options = {
+    method: 'get',
+    uri: `https://opetushallinto.cs.helsinki.fi/labtool/courses/${req.params.ohid}`,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': process.env.TOKEN
+    },
+    strictSSL: false
   }
+  request(options, function (req, res, body) {
+    const json = JSON.parse(body)
+    if (json['students'].toString().match(user.studentnumber) !== null) {  // stupid javascript.. even regex match is simpler than json array that has or not has a key of whatever.
+      console.log('found')
+      resolve('found')
+      return
+    } else {
+      console.log('notfound')
+      resolve('notfound')
+      return
+    }
+  })
+
 }
 
 /**
@@ -61,26 +55,20 @@ function findByUserStudentInstance(req, res) {//token verification might not wor
   const Sequelize = require('sequelize')
   const Op = Sequelize.Op
 
+
   console.log('db: ', db)
   const errors = []
   console.log('searching by studentInstance...')
   console.log('***REQ BODY***: ', req.body)
-  let token = application_helpers.tokenVerify(req)
-  console.log('TOKEN VERIFIED: ', token)
-  const id = parseInt(req.body.userId)
-  console.log('req.params.UserId: ', id)
-  if (token.verified) {
-    if (Number.isInteger(token.data.id)) {
-      db.sequelize.query(`SELECT * FROM "CourseInstances" JOIN "StudentInstances" ON "CourseInstances"."id" = "StudentInstances"."courseInstanceId" WHERE "StudentInstances"."userId" = ${token.data.id}`)
-        .then(instance =>
-          res.status(200).send(instance[0]))
-        .catch(error => res.status(400).send(error))
-    } else {
-      errors.push('something went wrong')
-      res.status(400).send(errors)
-    }
+
+  application_helpers.controller_before_auth_check_action(req, res)
+  if (Number.isInteger(req.decoded.id)) {
+    db.sequelize.query(`SELECT * FROM "CourseInstances" JOIN "StudentInstances" ON "CourseInstances"."id" = "StudentInstances"."courseInstanceId" WHERE "StudentInstances"."userId" = ${req.decoded.id}`)
+      .then(instance =>
+        res.status(200).send(instance[0]))
+      .catch(error => res.status(400).send(error))
   } else {
-    errors.push('token verification failed')
+    errors.push('something went wrong')
     res.status(400).send(errors)
   }
 }

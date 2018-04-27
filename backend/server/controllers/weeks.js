@@ -9,7 +9,7 @@ module.exports = {
    * @returns {*|Promise<T>}
    */
   create(req, res) {
-    helper.controller_before_auth_check_action()
+    helper.controller_before_auth_check_action(req, res)
 
     return Week
       .create({
@@ -28,7 +28,7 @@ module.exports = {
    * @returns {*|Promise<T>}
    */
   list(req, res) {
-    helper.controller_before_auth_check_action()
+    helper.controller_before_auth_check_action(req, res)
 
     return Week
       .all()
@@ -42,7 +42,7 @@ module.exports = {
    * @returns {Promise<Model>}
    */
   retrieve(req, res) {
-    helper.controller_before_auth_check_action()
+    helper.controller_before_auth_check_action(req, res)
 
     return Week
       .findById(req.params.id, {})

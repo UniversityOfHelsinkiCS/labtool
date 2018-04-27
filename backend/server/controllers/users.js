@@ -13,7 +13,7 @@ module.exports = {
    * @returns {*}
    */
   update(req, res) {
-    helper.controller_before_auth_check_action()
+    helper.controller_before_auth_check_action(req)
 
 
     if (!req.body.email || req.body.email.length < 1) {
@@ -22,10 +22,10 @@ module.exports = {
     } else {
       User.update(
         {email: req.body.email},
-        {where: {id: decoded.id}}
+        {where: {id: req.decoded.id}}
       )
         .then(
-          User.findById(decoded.id)
+          User.findById(req.decoded.id)
             .then(user => {
               const returnedUser = {
                 email: req.body.email,
@@ -49,7 +49,7 @@ module.exports = {
    * @returns {Promise<*|Promise<T>>}
    */
   async createTeacherInstance(req, res) {
-    helper.controller_before_auth_check_action()
+    helper.controller_before_auth_check_action(req)
 
     const courseInstance = await CourseInstance.findOne({
       where: {

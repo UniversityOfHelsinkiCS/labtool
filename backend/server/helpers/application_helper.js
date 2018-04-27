@@ -10,7 +10,7 @@ exports.createCourse = createCourse
 /**
  *
  */
-function controller_before_auth_check_action() {
+function controller_before_auth_check_action(req, res) {
   if (req.authenticated.success == false) {
     res.send(401)
     res.end
