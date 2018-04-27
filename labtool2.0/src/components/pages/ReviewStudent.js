@@ -24,7 +24,7 @@ class ReviewStudent extends Component {
       const content = {
         points: e.target.points.value,
         studentInstanceId: this.props.studentInstance,
-        comment: e.target.comment.value,
+        feedback: e.target.comment.value,
         weekNumber: this.props.weekNumber
       }
       if (e.target.points.value < 0 || e.target.points.value > this.props.selectedInstance.weekMaxPoints) {
@@ -51,7 +51,7 @@ class ReviewStudent extends Component {
               </Form.Field>
             </Form.Group>
             <Form.Group inline unstackable>
-              <label> Comment </label>
+              <label> Feedback </label>
               <Form.TextArea name="comment" />
             </Form.Group>
             <Form.Field>
