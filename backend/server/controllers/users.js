@@ -13,7 +13,7 @@ module.exports = {
    * @returns {*}
    */
   update(req, res) {
-    helper.controller_before_auth_check_action(req)
+    helper.controller_before_auth_check_action(req, res)
 
 
     if (!req.body.email || req.body.email.length < 1) {
@@ -49,7 +49,7 @@ module.exports = {
    * @returns {Promise<*|Promise<T>>}
    */
   async createTeacherInstance(req, res) {
-    helper.controller_before_auth_check_action(req)
+    helper.controller_before_auth_check_action(req, res)
 
     const courseInstance = await CourseInstance.findOne({
       where: {
