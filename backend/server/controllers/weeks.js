@@ -6,13 +6,12 @@ module.exports = {
     try {
       let token = helper.tokenVerify(req)
       if (token.verified) {
-        let week = await Week.findOne({
-          where: {
-            weekNumber: req.body.weekNumber,
-            studentInstanceId: req.body.studentInstanceId
-          }
-        })
-
+        const week = await Week
+          .create({
+            points: req.body.points,
+            studentInstanceId: req.body.studentInstanceId,
+            weekNumber: req.body.weekNumber
+          })
         if (week) {
           await week.update({
             points: req.body.points,
@@ -22,13 +21,13 @@ module.exports = {
           })
           res.status(200).send(week)
         } else {
-          await  Week.create({
+          await Week.create({
             points: req.body.points,
             studentInstanceId: req.body.studentInstanceId,
             comment: req.body.comment,
             weekNumber: req.body.weekNumber
           })
-          res.status(200).send(week)  
+          res.status(200).send(week)
         }
         res.status(200).send
       } else {
