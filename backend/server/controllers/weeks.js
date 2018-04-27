@@ -11,10 +11,30 @@ create(req, res) {
           studentInstanceId: req.body.studentInstanceId,
           weekNumber: req.body.weekNumber
         })
-        .then(week => res.status(201).send(week))
-        .catch(error => res.status(400).send(error))
-    } else {
-      res.status(400).send('token verification failed')
+        if (week) {
+          await week.update({
+            points: req.body.points,
+            studentInstanceId: req.body.studentInstanceId,
+            comment: req.body.comment,
+            weekNumber: req.body.weekNumber
+          })
+          res.status(200).send(week)
+        } else {
+          await  Week.create({
+            points: req.body.points,
+            studentInstanceId: req.body.studentInstanceId,
+            comment: req.body.comment,
+            weekNumber: req.body.weekNumber
+          })
+          res.status(200).send(week)  
+        }
+        res.status(200).send
+      } else {
+        res.status(400).send('token verific ation failed')
+      }
+
+    } catch (error) {
+      res.status(400).send(error)
     }
   },
   list(req, res) {

@@ -1,3 +1,4 @@
+
 import React, { Component } from 'react'
 import { Form, Grid } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
@@ -81,8 +82,11 @@ class Email extends Component {
 
                 <Form.Field>
                   <button className="ui left floated green button" type="submit">Save</button>
-                  <Link to="/labtool/mypage"> <button className="ui right floated button"> Cancel</button></Link>
+
                 </Form.Field>
+                {this.props.firstLogin
+                  ? <Link to="/labtool/mypage"> <button className="ui right floated button"> Cancel</button></Link>
+                  : <p></p>}
               </Form>
 
             </Grid.Row>
