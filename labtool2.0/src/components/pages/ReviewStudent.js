@@ -14,7 +14,7 @@ class ReviewStudent extends Component {
   componentDidUpdate() {
     if (this.props.notification.error !== undefined) {
       if (!this.props.notification.error) {
-        this.props.history.push(`/labtool/courses/${this.props.selectedInstance.ohid}`)
+        this.props.history.push(<Link to={`/labtool/courses/${this.props.selectedInstance.ohid}`} > <button className="ui right floated button" type="Cancel">Cancel</button></Link>)
       }
     }
   }
@@ -39,11 +39,11 @@ class ReviewStudent extends Component {
         weekNumber: this.props.weekNumber
       }
       if (e.target.points.value < 0 || e.target.points.value > this.props.selectedInstance.weekMaxPoints) {
-        store.dispatch({ type: 'WEEKS_CREATE_ONEFAILURE'})
+        store.dispatch({ type: 'WEEKS_CREATE_ONEFAILURE' })
       } else {
         await this.props.createOneWeek(content)
       }
-      
+
     } catch (error) {
       console.log(error)
     }
@@ -67,7 +67,7 @@ class ReviewStudent extends Component {
             </Form.Group>
             <Form.Field>
               <Button className="ui left floated green button" type='submit'>Save</Button>
-              <Link to="/labtool/coursepage" type="Cancel">
+              <Link to={`/labtool/courses/${this.props.selectedInstance.ohid}`} type = "Cancel" >
                 <Button className="ui right floated button" type="cancel">Cancel</Button>
               </Link>
             </Form.Field>
