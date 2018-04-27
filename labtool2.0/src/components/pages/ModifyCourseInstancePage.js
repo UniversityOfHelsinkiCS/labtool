@@ -4,8 +4,13 @@ import { modifyOneCI } from '../../services/courseInstance'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Redirect } from 'react-router'
-
+import { clearNotifications } from '../../reducers/notificationReducer'
 class ModifyCourseInstancePage extends Component {
+
+  componentWillMount() {
+    this.props.clearNotifications()
+  }
+
   componentDidUpdate() {
     if (this.props.notification.error !== undefined) {
       if (!this.props.notification.error) {
@@ -106,4 +111,4 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps, { modifyOneCI })(ModifyCourseInstancePage)
+export default connect(mapStateToProps, { modifyOneCI, clearNotifications })(ModifyCourseInstancePage)

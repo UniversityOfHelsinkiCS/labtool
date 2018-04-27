@@ -4,8 +4,13 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createStudentCourses } from '../../services/studentinstances'
 import { Redirect } from 'react-router'
+import { clearNotifications } from '../../reducers/notificationReducer'
 
 class RegisterPage extends Component {
+
+  componentWillMount() {
+    this.props.clearNotifications()
+  }
 
   componentDidUpdate() {
     if (this.props.notification.error !== undefined) {
@@ -98,5 +103,5 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps, { createStudentCourses })(RegisterPage)
+export default connect(mapStateToProps, { createStudentCourses, clearNotifications })(RegisterPage)
 

@@ -88,7 +88,7 @@ module.exports = {
           include: [{
             model: Week, as: 'weeks',
             include: [{
-              model: Comment, as: 'commentes',
+              model: Comment, as: 'comments',
             }]
           },
           {
