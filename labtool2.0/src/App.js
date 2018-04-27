@@ -80,8 +80,8 @@ class App extends Component {
             <Route path={`/labtool/registerPage`} render={({ history }) =>
               <RegisterPage history={history} />}
             />
-            <Route path={`/labtool/reviewstudent/:si/:wk`} render={({ history, match }) =>
-              <ReviewStudent history={history} studentInstance={match.params.si} weekNumber={match.params.wk} />}
+            <Route path={`/labtool/reviewstudent/:id/:si/:wk`} render={({ history, match }) =>
+              <ReviewStudent courseinstance={(this.props.getOneCI(match.params.id))} history={history} studentInstance={match.params.si} weekNumber={match.params.wk} />}
             />
             <Route path={`/labtool/ModifyCourseInstancePage/:id`} render={({ match, history }) =>
               <ModifyCourseInstancePage history={history} courseinstance={(this.props.getOneCI(match.params.id))} />}
@@ -97,7 +97,7 @@ class App extends Component {
 
     const EmailChecker = () => (
       <div>
-        {this.props.user.email === ""
+        {this.props.user.email === "" || this.props.user.email === null
           ? <Email />
           : <Main />}
       </div>

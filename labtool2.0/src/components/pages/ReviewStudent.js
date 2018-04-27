@@ -6,14 +6,16 @@ import { createOneWeek } from '../../services/week'
 import { Redirect } from 'react-router'
 
 class ReviewStudent extends Component {
-  componentDidUpdate() {    
-    if (!this.props.notification.error) {
-      this.props.history.push(`/labtool/courses/${this.props.selectedInstance.ohid}`)
+  componentDidUpdate() {
+    if (this.props.notification.error !== undefined) {
+      if (!this.props.notification.error) {
+        this.props.history.push(`/labtool/courses/${this.props.selectedInstance.ohid}`)
+      }
     }
   }
 
   shouldComponentUpdate(nextProps) {
-    if (this.props.notification === nextProps.notification) {
+    if (this.props === nextProps) {
       return false
     }
     return true
@@ -39,14 +41,16 @@ class ReviewStudent extends Component {
   render() {
     return (
       <div className='ReviewStudent' style={{ textAlignVertical: 'center', textAlign: 'center', }}>
-        <h2> Tiralabra 2018 Kevät</h2>
+        <h2> {this.props.selectedInstance.name}</h2>
         <h3> Viikko {this.props.weekNumber} </h3>
-        <h3> </h3>
+        {console.log(this.props, "tämä on ownspropsi")}
+        <p>joku alla</p>
+        <h3> {this.props.joku} </h3>
         <Grid centered>
           <Form onSubmit={this.handleSubmit}>
             <Form.Group inline unstackable >
               <Form.Field  >
-                <label>Points 1-5</label>
+                <label>Points 0-{this.props.selectedInstance.weekMaxPoints}</label>
                 <Input name="points" />
               </Form.Field>
             </Form.Group>

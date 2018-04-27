@@ -6,15 +6,17 @@ import { Link } from 'react-router-dom'
 import { Redirect } from 'react-router'
 
 class ModifyCourseInstancePage extends Component {
-
   componentDidUpdate() {
-    if (!this.props.notification.error) {
-      this.props.history.push(`/labtool/courses/${this.props.selectedInstance.ohid}`)
+    if (this.props.notification.error !== undefined) {
+      if (!this.props.notification.error) {
+        this.props.history.push(`/labtool/courses/${this.props.selectedInstance.ohid}`)
+      }
     }
   }
 
+
   shouldComponentUpdate(nextProps) {
-    if (this.props.notification === nextProps.notification) {
+    if (this.props === nextProps) {
       return false
     }
     return true
