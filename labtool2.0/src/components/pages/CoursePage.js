@@ -27,7 +27,7 @@ class CoursePage extends Component {
           if ((i + 1) === data[j].weekNumber) {
             pushattava = <Table.Cell>
               <p>{data[j].points}</p>
-              <Link to={`/labtool/reviewstudent/${this.props.selectedInstance.ohid}/${siId}/${i + 1}`} joku={"teerenpeli"}>
+              <Link to={`/labtool/reviewstudent/${siId}/${i + 1}`}>
                 <Button circular color='orange' size="tiny" icon="edit black large" ></Button>
               </Link>
             </Table.Cell>

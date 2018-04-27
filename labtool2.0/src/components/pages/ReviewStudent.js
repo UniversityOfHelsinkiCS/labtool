@@ -4,24 +4,27 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createOneWeek } from '../../services/week'
 import { Redirect } from 'react-router'
-
+import { clearNotifications } from '../../reducers/notificationReducer'
+import store from '../../store'
 class ReviewStudent extends Component {
+<<<<<<< HEAD
+  componentWillMount() {
+    this.props.clearNotifications()
+  }
+
   componentDidUpdate() {
     if (this.props.notification.error !== undefined) {
       if (!this.props.notification.error) {
-        this.props.history.push(`/labtool/courses/${this.props.selectedInstance.ohid}`)
+        this.props.history.push(<Link to={`/labtool/courses/${this.props.selectedInstance.ohid}`} > <button className="ui right floated button" type="Cancel">Cancel</button></Link>)
       }
     }
   }
+=======
+>>>>>>> cf6cd4f9be6b660ae0188f0bf43357af6ce95846
 
-  shouldComponentUpdate(nextProps) {
-    if (this.props === nextProps) {
-      return false
-    }
-    return true
+  state = {
+    redirectToNewPage: false
   }
-
-
 
 
   handleSubmit = async (e) => {
@@ -33,23 +36,31 @@ class ReviewStudent extends Component {
         comment: e.target.comment.value,
         weekNumber: this.props.weekNumber
       }
-      await this.props.createOneWeek(content)
+      if (e.target.points.value < 0 || e.target.points.value > this.props.selectedInstance.weekMaxPoints) {
+        store.dispatch({ type: 'WEEKS_CREATE_ONEFAILURE' })
+      } else {
+        await this.props.createOneWeek(content)
+      }
+
     } catch (error) {
-      console.log(error)
     }
+    this.setState({ redirectToNewPage: true })
+
   }
   render() {
+    if (this.state.redirectToNewPage) {
+      return (
+        <Redirect to={`/labtool/courses/${this.props.selectedInstance.ohid}`} />
+      )
+    }
     return (
       <div className='ReviewStudent' style={{ textAlignVertical: 'center', textAlign: 'center', }}>
-        <h2> {this.props.selectedInstance.name}</h2>
+        <h2> Tiralabra 2018 Kevät</h2>
         <h3> Viikko {this.props.weekNumber} </h3>
-        {console.log(this.props, "tämä on ownspropsi")}
-        <p>joku alla</p>
-        <h3> {this.props.joku} </h3>
         <Grid centered>
           <Form onSubmit={this.handleSubmit}>
             <Form.Group inline unstackable >
-              <Form.Field  >
+              <Form.Field >
                 <label>Points 0-{this.props.selectedInstance.weekMaxPoints}</label>
                 <Input name="points" />
               </Form.Field>
@@ -60,7 +71,7 @@ class ReviewStudent extends Component {
             </Form.Group>
             <Form.Field>
               <Button className="ui left floated green button" type='submit'>Save</Button>
-              <Link to="/labtool/coursepage" type="Cancel">
+              <Link to={`/labtool/courses/${this.props.selectedInstance.ohid}`} type = "Cancel" >
                 <Button className="ui right floated button" type="cancel">Cancel</Button>
               </Link>
             </Form.Field>
@@ -75,10 +86,9 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     ownProps,
-    selectedInstance: state.selectedInstance,
-    notification: state.notification
+    selectedInstance: state.selectedInstance
   }
 }
 
-export default connect(mapStateToProps, { createOneWeek })(ReviewStudent)
+export default connect(mapStateToProps, { createOneWeek, clearNotifications })(ReviewStudent)
 

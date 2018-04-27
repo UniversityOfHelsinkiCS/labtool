@@ -7,18 +7,8 @@ import { Redirect } from 'react-router'
 
 class RegisterPage extends Component {
 
-  componentDidUpdate() {
-    if (this.props.notification.error !== undefined) {
-      if (!this.props.notification.error) {
-        this.props.history.push(`/labtool/courses/${this.props.selectedInstance.ohid}`)
-      }
-    }
-  }
-  shouldComponentUpdate(nextProps) {
-    if (this.props === nextProps) {
-      return false
-    }
-    return true
+  state = {
+    redirectToNewPage: false
   }
 
   handleSubmit = async (e) => {
@@ -31,12 +21,20 @@ class RegisterPage extends Component {
         ohid: this.props.selectedInstance.ohid
       }
       await this.props.createStudentCourses(content, this.props.selectedInstance.ohid)
+      this.setState({ redirectToNewPage: true })
     } catch (error) {
       console.log(error)
     }
   }
 
   render() {
+    if (this.state.redirectToNewPage) {
+      return (
+        <Redirect to={`/labtool/courses/${this.props.selectedInstance.ohid}`} />
+      )
+    }
+
+
     return (
 
       <div className="RegisterPage"
@@ -93,10 +91,9 @@ class RegisterPage extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    selectedInstance: state.selectedInstance,
-    notification: state.notification
+    selectedInstance: state.selectedInstance
   }
 }
 
-export default connect(mapStateToProps, { createStudentCourses })(RegisterPage)
+export default connect(mapStateToProps, { createStudentCourses, })(RegisterPage)
 

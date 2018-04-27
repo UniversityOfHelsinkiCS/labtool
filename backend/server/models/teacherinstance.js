@@ -3,8 +3,7 @@ module.exports = (sequelize, DataTypes) => {
     'TeacherInstance',
     {
       admin: {
-        type: DataTypes.BOOLEAN,
-        default: false
+        type: DataTypes.BOOLEAN
       }
     },
     {}
