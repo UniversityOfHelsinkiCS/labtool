@@ -75,8 +75,8 @@ class App extends Component {
             <Route path={`/labtool/browsereviews`} component={BrowseReviews} />
             <Route path={`/labtool/email`} component={Email} />
             <Route path={`/labtool/registerPage`} component={RegisterPage} />
-            <Route path={`/labtool/reviewstudent/:id/:si/:wk`} render={({ match }) =>
-              <ReviewStudent courseinstance={(this.props.getOneCI(match.params.id))} studentInstance={match.params.si} weekNumber={match.params.wk} />}
+            <Route path={`/labtool/reviewstudent/:id/:si/:wk`} render={({ match, history }) =>
+              <ReviewStudent history={history} courseinstance={(this.props.getOneCI(match.params.id))} studentInstance={match.params.si} weekNumber={match.params.wk} />}
             />
             <Route path={`/labtool/ModifyCourseInstancePage/:id`} render={({ match }) =>
               <ModifyCourseInstancePage courseinstance={(this.props.getOneCI(match.params.id))} />}

@@ -13,7 +13,7 @@ class ReviewStudent extends Component {
   componentDidUpdate() {
     if (this.props.notification.error !== undefined) {
       if (!this.props.notification.error) {
-        this.props.history.push(<Link to={`/labtool/courses/${this.props.selectedInstance.ohid}`} > <button className="ui right floated button" type="Cancel">Cancel</button></Link>)
+        this.props.history.push(`/labtool/courses/${this.props.selectedInstance.ohid}`)
       }
     }
   }
