@@ -1,11 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Card, Button, Checkbox, Header, Table, Container, List } from 'semantic-ui-react'
+import { Card, Button, Checkbox, Header, Table, Container } from 'semantic-ui-react'
 import './MyPage.css'
 import { Link } from 'react-router-dom'
-import { getAllStudentCourses } from '../../services/studentinstances'
-import { getAllTeacherCourses } from '../../services/teacherinstances'
-import { Redirect } from 'react-router'
 
 class MyPage extends Component {
   componentDidMount() {
@@ -18,7 +15,7 @@ class MyPage extends Component {
         this.props.tokenLogin(user)
       }
     } catch (exception) {
-      console.log('no user logged in')
+      console.log(exception)
     }
   }
 
@@ -29,13 +26,6 @@ class MyPage extends Component {
   }
 
   render() {
-    console.log(user)
-    const user = { ...this.props.user.user }
-    if (user.email === '' || user.email === null) {
-      return (
-        <Redirect to='labtool/email' />
-      )
-    }
     return (
       <div>
         <Card fluid color='yellow'>
@@ -43,12 +33,12 @@ class MyPage extends Component {
             <Table fixed basic='very'>
               <Table.Header>
                 <Header as='h3' block>
-                  {user.firsts} {user.lastname}
+                  {this.props.user.firsts} {this.props.user.lastname}
                 </Header>
               </Table.Header>
               <Table.Row>
-                <Table.Cell><Card.Description><Header size='small'>{user.studentNumber}</Header></Card.Description></Table.Cell>
-                <Table.Cell><Card.Description>{user.email}</Card.Description></Table.Cell>
+                <Table.Cell><Card.Description><Header size='small'>{this.props.user.studentNumber}</Header></Card.Description></Table.Cell>
+                <Table.Cell><Card.Description>{this.props.user.email}</Card.Description></Table.Cell>
 
                 <Table.Cell>
                   <Link to="/labtool/email">
@@ -111,7 +101,7 @@ class MyPage extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    user: state.user,
+    user: state.user.user,
     studentInstance: state.studentInstance,
     teacherInstance: state.teacherInstance
   }
