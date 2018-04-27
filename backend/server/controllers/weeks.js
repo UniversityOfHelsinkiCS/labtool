@@ -7,10 +7,10 @@ module.exports = {
       let token = helper.tokenVerify(req)
       if (token.verified) {
         const week = await Week
-          .create({
-            points: req.body.points,
-            studentInstanceId: req.body.studentInstanceId,
-            weekNumber: req.body.weekNumber
+          .findOne({
+            where: {
+              id: req.body.week
+            }
           })
         if (week) {
           await week.update({

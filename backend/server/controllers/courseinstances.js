@@ -357,33 +357,63 @@ module.exports = {
       .catch(error => res.status(400).send(error))
   },
 
-  addComment(req, res) {
-    let token = helper.tokenVerify(req)
-    const message = req.body
-    console.log('message: ', message.message)
-    console.log('from: ', message.from)
-    console.log('to: ', message.to)
-    console.log('week: ', message.week)
-    if (token.verified) {
-      return Comment.create({
-        weekId: message.week,
-        feedback: message.feedback,
-        hiddenComment: message.hidden,
-        comment: message.comment,
-        from: message.from,
-        to: message.to
-      })
-        .then(comment => {
-          if (!comment) {
-            res.status(400).send('week not found')
-          } else {
-            res.status(200).send(comment)
-          }
-        })
-        .catch(error => res.status(400).send(error))
-    } else {
-      res.status(400).send('token verification failed')
+  async addComment(req, res) {
+    try {
+      let token = helper.tokenVerify(req)
+      const message = req.body
+      console.log('message: ', message.feedback)
+      console.log('from: ', message.from)
+      console.log('to: ', message.to)
+      console.log('week: ', message.week)
+      if (token.verified) {
+        const comment = await Comment
+          .findOne({
+            where: {
+              weekId: message.week
+            }
+          })
+        if (comment) {
+          await comment.update({
+            feedback: message.feedback,
+            hiddenMessage: message.hiddenMessage,
+            comment: message.comment,
+            weekId: message.week,
+            from: message.from,
+            to: message.to,
+          })
+            .then(comment => {
+              if (!comment) {
+                res.status(400).send('week not found')
+              } else {
+                res.status(200).send(comment)
+              }
+            })
+            .catch(error => res.status(400).send(error))
+        } else {
+          await Comment.create({
+            feedback: message.feedback,
+            hiddenMessage: message.hiddenMessage,
+            comment: message.comment,
+            weekId: message.week,
+            from: message.from,
+            to: message.to,
+          })
+            .then(comment => {
+              if (!comment) {
+                res.status(400).send('week not found')
+              } else {
+                res.status(200).send(comment)
+              }
+            })
+            .catch(error => res.status(400).send(error))
+        }
+      } else {
+        res.status(400).send('token verification failed')
+      }
+    } catch (error) {
+      res.status(400).send(error)
     }
+
   },
 
   getCommentsForWeek(req, res) {
