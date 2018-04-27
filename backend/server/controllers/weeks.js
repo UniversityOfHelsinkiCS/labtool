@@ -6,7 +6,7 @@ module.exports = {
     try {
       await helper.controller_before_auth_check_action(req, res)
 
-      if (token.verified) {
+      if (req.authenticated.success) {
         const week = await Week
           .findOne({
             where: {
