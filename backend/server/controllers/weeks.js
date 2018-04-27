@@ -1,5 +1,5 @@
 const Week = require('../models').Week
-const helper = require('../helpers/course_instance_helper')
+const helper = require('../helpers/weeks_controller_helper')
 
 module.exports = {
   /**
@@ -9,19 +9,17 @@ module.exports = {
    * @returns {*|Promise<T>}
    */
   create(req, res) {
-    let token = helper.tokenVerify(req)
-    if (token.verified) {
-      return Week
-        .create({
-          points: req.body.points,
-          studentInstanceId: req.body.studentInstanceId,
-          weekNumber: req.body.weekNumber
-        })
-        .then(week => res.status(201).send(week))
-        .catch(error => res.status(400).send(error))
-    } else {
-      res.status(400).send('token verification failed')
-    }
+    helper.controller_before_auth_check_action()
+
+    return Week
+      .create({
+        points: req.body.points,
+        studentInstanceId: req.body.studentInstanceId,
+        weekNumber: req.body.weekNumber
+      })
+      .then(week => res.status(201).send(week))
+      .catch(error => res.status(400).send(error))
+
   },
   /**
    *
@@ -30,6 +28,8 @@ module.exports = {
    * @returns {*|Promise<T>}
    */
   list(req, res) {
+    helper.controller_before_auth_check_action()
+
     return Week
       .all()
       .then(ui => res.status(200).send(ui))
@@ -42,6 +42,8 @@ module.exports = {
    * @returns {Promise<Model>}
    */
   retrieve(req, res) {
+    helper.controller_before_auth_check_action()
+
     return Week
       .findById(req.params.id, {})
       .then(week => {
