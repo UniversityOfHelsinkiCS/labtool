@@ -2,15 +2,16 @@ const Week = require('../models').Week
 const helper = require('../helpers/course_instance_helper')
 
 module.exports = {
-create(req, res) {
-    let token = helper.tokenVerify(req)
-    if (token.verified) {
-      return Week
-        .create({
-          points: req.body.points,
-          studentInstanceId: req.body.studentInstanceId,
-          weekNumber: req.body.weekNumber
-        })
+  async create(req, res) {
+    try {
+      let token = helper.tokenVerify(req)
+      if (token.verified) {
+        const week = await Week
+          .create({
+            points: req.body.points,
+            studentInstanceId: req.body.studentInstanceId,
+            weekNumber: req.body.weekNumber
+          })
         if (week) {
           await week.update({
             points: req.body.points,
@@ -20,13 +21,13 @@ create(req, res) {
           })
           res.status(200).send(week)
         } else {
-          await  Week.create({
+          await Week.create({
             points: req.body.points,
             studentInstanceId: req.body.studentInstanceId,
             comment: req.body.comment,
             weekNumber: req.body.weekNumber
           })
-          res.status(200).send(week)  
+          res.status(200).send(week)
         }
         res.status(200).send
       } else {
