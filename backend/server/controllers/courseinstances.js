@@ -95,7 +95,7 @@ module.exports = {
               include: [
                 {
                   model: Comment,
-                  as: 'commentes'
+                  as: 'comments'
                 }
               ]
             },

@@ -18,9 +18,6 @@ class CoursePage extends Component {
         let pushattava =
           <Table.Cell>
             <p>Not reviewed!</p>
-            <Link to={`/labtool/reviewstudent/${siId}/${i + 1}`}>
-              <Button circular color='orange' size="tiny" icon="edit black large" onClick={review()} ></Button>
-            </Link>
           </Table.Cell>
 
         for (var j = 0; j < data.length; j++) {
@@ -91,6 +88,9 @@ class CoursePage extends Component {
                   <Table.HeaderCell>Name</Table.HeaderCell>
                   <Table.HeaderCell> Github </Table.HeaderCell>
                   {createHeaders()}
+                  <Table.HeaderCell> Maxpoints </Table.HeaderCell>
+                  <Table.HeaderCell> Instructor </Table.HeaderCell>
+                  <Table.HeaderCell> Review </Table.HeaderCell>
                 </Table.Row>
               </Table.Header>
               <Table.Body>
@@ -100,6 +100,10 @@ class CoursePage extends Component {
                     <Table.Cell>{data.User.firsts} {data.User.lastname}</Table.Cell>
                     <Table.Cell><p>{data.projectName}</p><a>{data.github}</a></Table.Cell>
                     {createIndents(data.weeks, data.id)}
+                    <Link to={`/labtool/browsereviews/`}>
+                      <Button circular color='orange' size="tiny" icon="edit black large" onClick={review()} ></Button>
+                    </Link>
+
                   </Table.Row>
                 )}
               </Table.Body>
@@ -119,8 +123,13 @@ class CoursePage extends Component {
                 <h3> <Link to={this.props.courseData.data.github}>{this.props.courseData.data.github}</Link> </h3>
               </Card.Content>
             </Card>
+<<<<<<< HEAD
            
             <h3> Points and feedback </h3>
+=======
+
+            <h3> Comments and feedback </h3>
+>>>>>>> 583e71d24fec39a03f0425b599a547f68efe9ea2
 
             <Table celled padded unstackable>
               <Table.Header>
