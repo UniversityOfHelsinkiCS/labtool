@@ -28,9 +28,9 @@ module.exports = {
         references: {
           model: 'StudentInstances',
           key: 'id',
-          as: 'studentInstanceId',
+          as: 'studentInstanceId'
         }
-      },
+      }
     })
   },
   down: (queryInterface, Sequelize) => {
