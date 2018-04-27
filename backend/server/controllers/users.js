@@ -6,6 +6,12 @@ const helper = require('../helpers/course_instance_helper')
 
 module.exports = {
 
+  /**
+   *
+   * @param req
+   * @param res
+   * @returns {*}
+   */
   update(req, res) {
     return (
       jwt.verify(req.token, process.env.SECRET, function (err, decoded) {  // # this should be fixed in issue #127
@@ -41,6 +47,12 @@ module.exports = {
     )
   },
 
+  /**
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<*|Promise<T>>}
+   */
   async createTeacherInstance(req, res) {
     let token = helper.tokenVerify(req)
     if (token.verified) {

@@ -21,6 +21,11 @@ function tokenVerify2(req) {
 
 }
 
+/**
+ *
+ * @returns {{currentYear: string, currentTerm: string, nextTerm: string, nextYear: *}}
+ * @constructor
+ */
 function CurrentTermAndYear() {
   const date = new Date()
   const month = date.getMonth() + 1
@@ -39,6 +44,11 @@ function CurrentTermAndYear() {
   return {currentYear, currentTerm, nextTerm, nextYear}
 }
 
+/**
+ *
+ * @param month
+ * @returns {string}
+ */
 function getCurrentTerm(month) {
   if (1 <= month <= 5) {
     return 'K'
@@ -51,6 +61,12 @@ function getCurrentTerm(month) {
   }
 }
 
+/**
+ *
+ * @param currentTerm
+ * @param currentYear
+ * @returns {*}
+ */
 function getNextYear(currentTerm, currentYear) {
   if (currentTerm === 'S') {
     return currentYear + 1
@@ -59,6 +75,11 @@ function getNextYear(currentTerm, currentYear) {
   }
 }
 
+/**
+ *
+ * @param term
+ * @returns {string}
+ */
 function getNextTerm(term) {
   if (term === 'K') {
     return 'V'
@@ -93,6 +114,11 @@ function axiosBlaBla(year, term) {
   }
 }
 
+/**
+ *
+ * @param hid
+ * @returns {{method: string, baseURL: string, headers: {'Content-Type': string, Authorization: string}, httpsAgent: "https".Agent}}
+ */
 function axiosCourseBla(hid) {
   const https = require('https')
   return {
@@ -154,7 +180,11 @@ async function getInactive(req, res) {
   }
 }
 
-
+/**
+ *
+ * @param body
+ * @returns {Promise<*>}
+ */
 async function createCourse(body) {
   const CourseInstance = require('../models').CourseInstance
   const TeacherInstance = require('../models').TeacherInstance

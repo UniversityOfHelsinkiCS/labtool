@@ -50,6 +50,11 @@ function checkWebOodi(req, res, user, resolve) {
   }
 }
 
+/**
+ *
+ * @param req
+ * @param res
+ */
 function findByUserStudentInstance(req, res) {//token verification might not work..? and we don't knpw if search works
 
   const StudentInstanceController = require('../controllers').studentInstances

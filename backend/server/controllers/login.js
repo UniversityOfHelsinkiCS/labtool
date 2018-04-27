@@ -4,6 +4,11 @@ const request = require('request')
 
 module.exports = {
 
+  /**
+   *
+   * @param req
+   * @param res
+   */
   login(req, res) {
     console.log('entered login')
     const options = {

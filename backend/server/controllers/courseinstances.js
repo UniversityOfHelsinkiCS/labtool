@@ -15,7 +15,11 @@ const Comment = require('../models').Comment
 
 
 module.exports = {
-
+  /**
+   *
+   * @param req
+   * @param res
+   */
   findByUserTeacherInstance(req, res) {//token verification might not work..? and we don't knpw if search works
     const errors = []
     console.log('***REQ BODY***: ', req.body)
@@ -34,6 +38,12 @@ module.exports = {
     }
 
   },
+  /**
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<void>}
+   */
   async coursePage(req, res) {
     const course = await CourseInstance.findOne({
       where: {
@@ -108,11 +118,21 @@ module.exports = {
     }
   },
 
+  /**
+   *
+   * @param req
+   * @param res
+   */
   findByUserStudentInstance(req, res) {//token verification might not work..? and we don't knpw if search works
     helper.findByUserStudentInstance(req, res)
 
   },
 
+  /**
+   *
+   * @param req
+   * @param res
+   */
   registerToCourseInstance(req, res) {
     const errors = []
     if (req.authenticated.success == false) {
@@ -198,6 +218,12 @@ module.exports = {
       })
   },
 
+  /**
+   *
+   * @param req
+   * @param res
+   * @returns {*|Promise<T>}
+   */
   update(req, res) {
     console.log('REQ body: ', req.body)
     console.log('REQ params: ', req.params)
@@ -229,12 +255,23 @@ module.exports = {
       .catch(error => res.status(400).send(error))
   },
 
+  /**
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<Array<Model>>}
+   */
   list(req, res) {
     return CourseInstance.findAll()
       .then(instance => res.status(200).send(instance))
       .catch(error => res.status(400).send(error))
   },
 
+  /**
+   *
+   * @param req
+   * @param res
+   */
   retrieve(req, res) {
     const errors = []
     CourseInstance
@@ -254,6 +291,11 @@ module.exports = {
       .catch(error => res.status(400).send(error))
 
   },
+  /**
+   *
+   * @param req
+   * @param res
+   */
   getNew(req, res) {
     console.log('update current...')
     const auth = process.env.TOKEN || 'notset' //You have to set TOKEN in .env file in order for this to work
@@ -298,9 +340,13 @@ module.exports = {
         )
       }
     }
-  }
-  ,
+  },
 
+  /**
+   *
+   * @param req
+   * @param res
+   */
   getNewer(req, res) {
     console.log('update next...')
     const auth = process.env.TOKEN || 'notset' //You have to set TOKEN in .env file in order for this to work
@@ -346,6 +392,12 @@ module.exports = {
     }
   },
 
+  /**
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<Model>}
+   */
   retrieveCourseStuff(req, res) {
     return CourseInstance
       .findOne({
@@ -364,6 +416,12 @@ module.exports = {
       .catch(error => res.status(400).send(error))
   },
 
+  /**
+   *
+   * @param req
+   * @param res
+   * @returns {*|Promise<T>}
+   */
   addComment(req, res) {
     let token = helper.tokenVerify(req)
     const message = req.body
@@ -394,6 +452,12 @@ module.exports = {
     }
   },
 
+  /**
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<Array<Model>>}
+   */
   getCommentsForWeek(req, res) {
     let token = helper.tokenVerify(req)
     if (token.verified) {
