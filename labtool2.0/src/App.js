@@ -50,7 +50,6 @@ class App extends Component {
       created: nProps.created
     }
     window.localStorage.setItem('loggedLabtool', JSON.stringify(userAndToken))
-    console.log(nProps)
   }
 
 
