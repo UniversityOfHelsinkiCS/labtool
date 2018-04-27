@@ -1,16 +1,18 @@
 module.exports = (sequelize, DataTypes) => {
-  const TeacherInstance = sequelize.define('TeacherInstance', {
-    admin: {
-      type: DataTypes.BOOLEAN,
-      default: false
-    }
-  }, {})
-  TeacherInstance.associate = (models) => {
-
-
+  const TeacherInstance = sequelize.define(
+    'TeacherInstance',
+    {
+      admin: {
+        type: DataTypes.BOOLEAN,
+        default: false
+      }
+    },
+    {}
+  )
+  TeacherInstance.associate = models => {
     TeacherInstance.belongsTo(models.User, {
       foreignKey: 'userId',
-      onDelete: 'CASCADE',
+      onDelete: 'CASCADE'
     })
 
     TeacherInstance.belongsTo(models.CourseInstance, {

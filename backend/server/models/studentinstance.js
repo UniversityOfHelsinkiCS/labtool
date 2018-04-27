@@ -1,22 +1,25 @@
 module.exports = (sequelize, DataTypes) => {
-  const StudentInstance = sequelize.define('StudentInstance', {
-    github: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        isUrl: {msg: 'not a valid url'}
+  const StudentInstance = sequelize.define(
+    'StudentInstance',
+    {
+      github: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          isUrl: { msg: 'not a valid url' }
+        }
+      },
+      projectName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          is: ['^[a-zA-Z0-9_ ]*$']
+        }
       }
     },
-    projectName: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        is: ['^[a-zA-Z0-9_ ]*$']
-      }
-    }
-  }, {})
-  StudentInstance.associate = (models) => {
-
+    {}
+  )
+  StudentInstance.associate = models => {
     StudentInstance.hasMany(models.Week, {
       foreignKey: 'studentInstanceId',
       as: 'weeks'
@@ -24,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
 
     StudentInstance.belongsTo(models.User, {
       foreignKey: 'userId',
-      onDelete: 'CASCADE',
+      onDelete: 'CASCADE'
     })
 
     StudentInstance.belongsTo(models.CourseInstance, {

@@ -1,11 +1,11 @@
 let request = require('supertest')
 
-describe('Express routes', function () {
+describe('Express routes', function() {
   let server
-  beforeEach(function () {
+  beforeEach(function() {
     server = require('../app')
   })
-  afterEach(function () {
+  afterEach(function() {
     server.close()
   })
   it('respond to /', function testSlash(done) {
@@ -14,16 +14,21 @@ describe('Express routes', function () {
       .expect(200, done())
   })
   it('respond to /api', function(done) {
-    request(server).get('/api').expect('{"message":"Welcome to the COURSES API!"}', done())
+    request(server)
+      .get('/api')
+      .expect('{"message":"Welcome to the COURSES API!"}', done())
   })
 
   it('respond to /api', function(done) {
-    request(server).get('/api').expect('{"message":"Welcome to the COURSES API!"}', done())
+    request(server)
+      .get('/api')
+      .expect('{"message":"Welcome to the COURSES API!"}', done())
   })
 
-
   it('renders / with "hello world"', function testHello(done) {
-    request(server).get('/').expect('hello world', done())
+    request(server)
+      .get('/')
+      .expect('hello world', done())
   })
 
   it('404 everything else', function testPath(done) {
@@ -31,5 +36,4 @@ describe('Express routes', function () {
       .get('/foo/bar')
       .expect(404, done())
   })
-
 })
