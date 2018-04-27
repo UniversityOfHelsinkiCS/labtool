@@ -13,37 +13,27 @@ class BrowseReviews extends Component {
     this.setState({ activeIndex: newIndex })
   }
 
+
   render() {
+    let instance = []
+    if (this.props.studentInstance) {
+      instance = this.props.studentInstance.filter(inst => (inst.courseInstanceId == this.props.selectedInstance.id))
+    }
+
+    const headers = []
+    const createHeaders = () => {
+      for (var i = 0; i < this.props.selectedInstance.weekAmount; i++) {
+        headers.push(<Accordion.Title active={activeIndex === i} index={i} onClick={this.handleClick}>  <Icon name='dropdown' /> Week {i + 1} </Accordion.Title>)
+      }
+      return headers
+    }
     const { activeIndex } = this.state
 
     return (
       <Accordion fluid styled>
-        <Accordion.Title active={activeIndex === 0} index={0} onClick={this.handleClick}>
-          <Icon name='dropdown' />
-          What is a dog?
-        </Accordion.Title>
-        <Accordion.Content active={activeIndex === 0}>
-          <p>
-            A dog is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a
-            {' '}welcome guest in many households across the world.
-          </p>
-        </Accordion.Content>
+        {createHeaders()}
+        {headers}
 
-        <Accordion.Title active={activeIndex === 1} index={1} onClick={this.handleClick}>
-          <Icon name='dropdown' />
-          What kinds of dogs are there?
-        </Accordion.Title>
-        <Accordion.Content active={activeIndex === 1}>
-          <p>
-            There are many breeds of dogs. Each breed varies in size and temperament. Owners often select a breed of
-            {' '}dog that they find to be compatible with their own lifestyle and desires from a companion.
-          </p>
-        </Accordion.Content>
-
-        <Accordion.Title active={activeIndex === 2} index={2} onClick={this.handleClick}>
-          <Icon name='dropdown' />
-          How do you acquire a dog?
-        </Accordion.Title>
         <Accordion.Content active={activeIndex === 2}>
           <p>
             Three common ways for a prospective owner to acquire a dog is from pet shops, private owners, or shelters.
