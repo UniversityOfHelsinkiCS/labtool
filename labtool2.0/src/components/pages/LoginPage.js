@@ -8,21 +8,21 @@ class LoginPage extends React.Component {
   state = {
     loading: false
   }
- 
+
 
   handleSubmit = async (e) => {
     e.preventDefault()
-    
+
     const content = {
       username: e.target.username.value,
       password: e.target.password.value
     }
     this.setState({ loading: true })
     setTimeout(() => {
-      this.setState({loading: false})
+      this.setState({ loading: false })
     }, 1000)
     await this.props.login(content)
-  
+
   }
 
 
@@ -30,10 +30,14 @@ class LoginPage extends React.Component {
     return (
 
       <div className='LoginPage'>
-        <Loader active={this.state.loading} inline='centered' />
+
+        <Loader
+          active={this.state.loading}
+          inline='centered' />
+
         <Grid>
           <Grid.Row centered>
-            <h3>Enter your University of Helsinki username and password.</h3>
+            <h3>Enter your University of Helsinki username and password</h3>
           </Grid.Row>
         </Grid>
 
@@ -42,38 +46,37 @@ class LoginPage extends React.Component {
             <Form onSubmit={this.handleSubmit}>
 
               <Form.Group inline>
-                <label>
+                <label
+                  style={{ width: '75px' }}>
                   Username
                 </label>
                 <Input
-                  style={{ minWidth: '25em' }}
                   type='text'
-                  className='form-control1'
-                  placeholder='Your username'
-                  //value={username}
                   name="username"
                   icon='user'
+                  required='true'
                   iconPosition='left'
-                  //onChange={handleFieldChange}
-                  required />
+                  style={{ minWidth: '25em' }}
+                  placeholder='Your AD-username'
+                  className='form-control1' />
               </Form.Group>
 
               <Form.Group inline>
-                <label>Password</label>
+                <label style={{ width: '75px' }}>
+                  Password
+                </label>
                 <Input
                   type='password'
+                  name='password'
+                  required='true'
                   icon='lock'
                   iconPosition='left'
-                  className='form-control2'
-                  placeholder='Your password'
-                  //value={password}
-                  name='password'
-                  //onChange={handleFieldChange}
                   style={{ minWidth: '25em' }}
-                  required />
+                  placeholder='Your password'
+                  className='form-control2' />
               </Form.Group>
 
-              <Form.Group inline>
+              <Form.Group>
                 <Button
                   type='submit'
                   color='blue'>
@@ -82,9 +85,9 @@ class LoginPage extends React.Component {
               </Form.Group>
 
             </Form>
-
           </Grid.Row>
         </Grid>
+
       </div>
 
     )
