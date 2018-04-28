@@ -33,6 +33,7 @@ class Email extends Component {
         await this.props.updateUser(content)
         this.setState({ redirectToNewPage: true })
       }
+      alert('You added this email address: ' + content.email)
     } catch (error) {
       console.log(error)
     }
