@@ -48,12 +48,16 @@ class ModifyCourseInstancePage extends Component {
         <Redirect to={`/labtool/courses/${this.props.selectedInstance.ohid}`} />
       )
     }
+    const selectedInstance = { ...this.props.selectedInstance }
+    console.log('SE ON: ', selectedInstance)
     return (
-      <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
+      <div 
+        className="CoursePage" 
+        style={{ textAlignVertical: 'center', textAlign: 'center', }}>
        
         <Grid>
           <Grid.Row centered>
-            <h2> Edit course: {this.props.selectedInstance.name} </h2>
+            <h2> Edit course: {selectedInstance.name} </h2>
           </Grid.Row>
         </Grid>
 
@@ -71,7 +75,7 @@ class ModifyCourseInstancePage extends Component {
                   required='true'
                   type="text"
                   style={{ maxWidth: '7em' }}
-                  placeholder={`${this.props.selectedInstance.weekAmount}`}
+                  defaultValue={JSON.stringify(selectedInstance.weekAmount)}
                   className="form-control1" />
               </Form.Group>
 
@@ -85,7 +89,7 @@ class ModifyCourseInstancePage extends Component {
                   required='true'
                   type="text"
                   style={{ maxWidth: '7em' }}
-                  placeholder={`${this.props.selectedInstance.weekMaxPoints}`}
+                  defaultValue={JSON.stringify(selectedInstance.weekMaxPoints)}
                   className="form-control2" />
               </Form.Group>
 
@@ -99,7 +103,7 @@ class ModifyCourseInstancePage extends Component {
                   required='true'
                   type="text"
                   style={{ maxWidth: '7em' }}
-                  placeholder={`${this.props.selectedInstance.currentWeek}`}
+                  defaultValue={JSON.stringify(selectedInstance.currentWeek)}
                   className="form-control3" />
               </Form.Group>
 
@@ -108,7 +112,7 @@ class ModifyCourseInstancePage extends Component {
                   label='Course active'
                   className="form-control4"
                   name="courseActive"
-                  defaultChecked={this.props.selectedInstance.active}
+                  defaultChecked={selectedInstance.active}
                   style={{ textAlign: 'left' }}
                 />
               </Form.Group>
