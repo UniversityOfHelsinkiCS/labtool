@@ -26,7 +26,7 @@ class ModifyCourseInstancePage extends Component {
   handleSubmit = async (e) => {
     try {
       e.preventDefault()
-       
+
       const content = {
         weekAmount: e.target.weekAmount.value,
         weekMaxPoints: e.target.weeklyMaxpoints.value,
@@ -50,56 +50,93 @@ class ModifyCourseInstancePage extends Component {
     }
     return (
       <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
+       
         <Grid>
           <Grid.Row centered>
-            <h2> Edit {this.props.selectedInstance.name} </h2>
+            <h2> Edit course: {this.props.selectedInstance.name} </h2>
           </Grid.Row>
         </Grid>
+
+
         <Grid>
           <Grid.Row centered>
-            <Form onSubmit={this.handleSubmit}>
-              <Form.Field inline>
-                <label>Week amount</label>
-                <Input
-                  type="text"
-                  className="form-control1"
-                  name="weekAmount"
-                  placeholder={`${this.props.selectedInstance.weekAmount}`}
-                  required
-                />
-              </Form.Field>
-              <Form.Field inline>
-                <label>Weekly maxpoints</label>
-                <Input
-                  className="form-control2"
-                  name="weeklyMaxpoints"
-                  placeholder={`${this.props.selectedInstance.weekMaxPoints}`}
-                  required />
-              </Form.Field>
-              <Form.Field inline>
-                <label>Current week</label>
-                <Input
-                  className="form-control3"
-                  name="currentWeek"
-                  placeholder={`${this.props.selectedInstance.currentWeek}`}
-                  required />
-              </Form.Field>
 
-              <Form.Field inline>
-                <Checkbox label='Course active'
+            <Form onSubmit={this.handleSubmit}>
+              <Form.Group inline>
+                <label style={{ width: '125px', textAlign: 'left' }}>
+                  Week amount
+                </label>
+                <Input
+                  name="weekAmount"
+                  required='true'
+                  type="text"
+                  style={{ maxWidth: '7em' }}
+                  placeholder={`${this.props.selectedInstance.weekAmount}`}
+                  className="form-control1" />
+              </Form.Group>
+
+              <Form.Group inline>
+                <label
+                  style={{ width: '125px', textAlign: 'left' }}>
+                  Weekly maxpoints
+                </label>
+                <Input
+                  name="weeklyMaxpoints"
+                  required='true'
+                  type="text"
+                  style={{ maxWidth: '7em' }}
+                  placeholder={`${this.props.selectedInstance.weekMaxPoints}`}
+                  className="form-control2" />
+              </Form.Group>
+
+              <Form.Group inline>
+                <label
+                  style={{ width: '125px', textAlign: 'left' }}>
+                  Current week
+                </label>
+                <Input
+                  name="currentWeek"
+                  required='true'
+                  type="text"
+                  style={{ maxWidth: '7em' }}
+                  placeholder={`${this.props.selectedInstance.currentWeek}`}
+                  className="form-control3" />
+              </Form.Group>
+
+              <Form.Group inline>
+                <Checkbox
+                  label='Course active'
                   className="form-control4"
                   name="courseActive"
                   defaultChecked={this.props.selectedInstance.active}
+                  style={{ textAlign: 'left' }}
                 />
-              </Form.Field>
+              </Form.Group>
+
               <Form.Field>
-                <Button floated='left' color='green' type='submit'>Save</Button>
-                <Link to="/labtool/courses"><button className="ui right floated button" type="Cancel"> Cancel</button></Link>
+
+                <Button
+                  type='Submit'
+                  floated='left'
+                  color='green' >
+                  Save
+                </Button>
+
+                <Link to="/labtool/courses">
+                  <Button
+                    type="Cancel"
+                    floated='right' >
+                    Cancel
+                  </Button>
+                </Link>
+
               </Form.Field>
 
             </Form>
+
           </Grid.Row>
         </Grid>
+        
       </div>
     )
   }
