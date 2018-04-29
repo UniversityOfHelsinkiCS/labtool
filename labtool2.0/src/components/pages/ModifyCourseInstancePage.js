@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Input, Button, Grid, Checkbox } from 'semantic-ui-react'
+import { Form, Input, Button, Grid, Radio } from 'semantic-ui-react'
 import { modifyOneCI } from '../../services/courseInstance'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
@@ -20,8 +20,11 @@ class ModifyCourseInstancePage extends Component {
   }
 
   state = {
-    redirectToNewPage: false
+    redirectToNewPage: false,
   }
+
+  handleChange = (e, { value }) => this.setState({ value })
+
 
   handleSubmit = async (e) => {
     try {
@@ -31,7 +34,7 @@ class ModifyCourseInstancePage extends Component {
         weekAmount: e.target.weekAmount.value,
         weekMaxPoints: e.target.weeklyMaxpoints.value,
         currentWeek: e.target.currentWeek.value,
-        active: e.target.courseActive.checked,
+        active: e.target.courseActive.value,
         ohid: this.props.selectedInstance.ohid
       }
       await this.props.modifyOneCI(content, this.props.selectedInstance.ohid)
@@ -49,23 +52,41 @@ class ModifyCourseInstancePage extends Component {
       )
     }
     const selectedInstance = { ...this.props.selectedInstance }
-    console.log('SE ON: ', selectedInstance)
     return (
-      <div 
-        className="CoursePage" 
+      <div
+        className="CoursePage"
         style={{ textAlignVertical: 'center', textAlign: 'center', }}>
-       
+
         <Grid>
           <Grid.Row centered>
             <h2> Edit course: {selectedInstance.name} </h2>
           </Grid.Row>
         </Grid>
 
+        <Grid>
+          <Grid.Row centered>
+            {selectedInstance.active === true ?
+              <div>
+                <Grid.Row>
+                  <h4 style={{ color: '#21ba45' }}>
+                    This course is currently activated.
+                  </h4>
+                </Grid.Row>
+              </div> :
+              <div>
+                <Grid.Row>
+                  <h4 style={{ color: 'red' }}>
+                    This course is currently passive.
+                  </h4>
+                </Grid.Row>
+              </div>}
+          </Grid.Row>
+        </Grid>
 
         <Grid>
           <Grid.Row centered>
-
             <Form onSubmit={this.handleSubmit}>
+
               <Form.Group inline>
                 <label style={{ width: '125px', textAlign: 'left' }}>
                   Week amount
@@ -107,18 +128,27 @@ class ModifyCourseInstancePage extends Component {
                   className="form-control3" />
               </Form.Group>
 
-              <Form.Group inline>
-                <Checkbox
-                  label='Course active'
-                  className="form-control4"
+              <Form.Field inline >
+                <Radio
                   name="courseActive"
-                  defaultChecked={selectedInstance.active}
-                  style={{ textAlign: 'left' }}
-                />
-              </Form.Group>
+                  label='Activate course'
+                  value='true'
+                  checked={this.state.value === 'true'}
+                  onChange={this.handleChange}
+                  style={{ width: '150px', textAlign: 'left' }} />
+              </Form.Field>
+
+              <Form.Field inline>
+                <Radio
+                  name="courseActive"
+                  label='Passivate course'
+                  value='false'
+                  checked={this.state.value === 'false'}
+                  onChange={this.handleChange}
+                  style={{ width: '150px', textAlign: 'left' }} />
+              </Form.Field>
 
               <Form.Field>
-
                 <Button
                   type='Submit'
                   floated='left'
@@ -133,15 +163,13 @@ class ModifyCourseInstancePage extends Component {
                     Cancel
                   </Button>
                 </Link>
-
               </Form.Field>
 
             </Form>
-
           </Grid.Row>
         </Grid>
-        
-      </div>
+
+      </div >
     )
   }
 }
