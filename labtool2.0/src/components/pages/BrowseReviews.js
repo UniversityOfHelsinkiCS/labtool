@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Button, Table, List, Accordion, Icon, Form, } from 'semantic-ui-react'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 class BrowseReviews extends Component {
   state = { activeIndex: 0 }
@@ -26,9 +27,13 @@ class BrowseReviews extends Component {
         <Icon name='dropdown' /> Week {i + 1} </Accordion.Title> 
         <Accordion.Content active={activeIndex === i}> 
         <p>
-          Opiskelijan nimi
-          Pisteet 
-          Kommentit
+          <h4> Opiskelijan nimi </h4>
+         <h4> Pisteet </h4>
+         <h4> Kommentit </h4>
+          <Link to={`/labtool/reviewstudent/`}>
+              <Button circular color="orange" size="tiny" icon="edit black large"  />
+         </Link>
+         
       </p>  
         </Accordion.Content>
         </Accordion>)
