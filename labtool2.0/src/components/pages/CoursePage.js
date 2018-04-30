@@ -10,7 +10,7 @@ class CoursePage extends Component {
     if (this.props.studentInstance) {
       instance = this.props.studentInstance.filter(inst => (inst.courseInstanceId == this.props.selectedInstance.id))
     }
-    const allPoints = [,]
+    let allPoints = 0
     const createIndents = (data, siId) => {
       const indents = []
 
@@ -22,7 +22,7 @@ class CoursePage extends Component {
 
         for (var j = 0; j < data.length; j++) {
           if ((i + 1) === data[j].weekNumber) {
-            allPoints.push(data[j].points)
+            allPoints += data[j].points
             pushattava = <Table.Cell>
               <p>{data[j].points}</p>
               {/*               <Link to={`/labtool/reviewstudent/${this.props.selectedInstance.ohid}/${siId}/${i + 1}`}>
