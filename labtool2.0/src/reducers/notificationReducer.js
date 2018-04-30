@@ -53,7 +53,7 @@ const notificationReducer = (state = {}, action) => {
 }
 
 export const clearNotifications = () => {
-  return async (dispatch) => {
+  return async dispatch => {
     dispatch({ type: 'NOTIFICATION_CLEAR' })
   }
 }

@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom'
 import { Redirect } from 'react-router'
 import { clearNotifications } from '../../reducers/notificationReducer'
 class ModifyCourseInstancePage extends Component {
-
   componentWillMount() {
     this.props.clearNotifications()
   }
@@ -42,14 +41,11 @@ class ModifyCourseInstancePage extends Component {
     } catch (error) {
       console.log(error)
     }
-
   }
 
   render() {
     if (this.state.redirectToNewPage) {
-      return (
-        <Redirect to={`/labtool/courses/${this.props.selectedInstance.ohid}`} />
-      )
+      return <Redirect to={`/labtool/courses/${this.props.selectedInstance.ohid}`} />
     }
     const selectedInstance = { ...this.props.selectedInstance }
     return (
@@ -164,7 +160,6 @@ class ModifyCourseInstancePage extends Component {
                   </Button>
                 </Link>
               </Form.Field>
-
             </Form>
           </Grid.Row>
         </Grid>

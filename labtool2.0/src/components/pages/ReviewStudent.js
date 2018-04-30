@@ -18,13 +18,13 @@ class ReviewStudent extends Component {
     }
   }
 
-  handleSubmit = async (e) => {
+  handleSubmit = async e => {
     try {
       e.preventDefault()
       const content = {
         points: e.target.points.value,
         studentInstanceId: this.props.studentInstance,
-        comment: e.target.comment.value,
+        feedback: e.target.comment.value,
         weekNumber: this.props.weekNumber
       }
       if (e.target.points.value < 0 || e.target.points.value > this.props.selectedInstance.weekMaxPoints) {
@@ -32,32 +32,35 @@ class ReviewStudent extends Component {
       } else {
         await this.props.createOneWeek(content)
       }
-
     } catch (error) {
       console.log(error)
     }
   }
   render() {
     return (
-      <div className='ReviewStudent' style={{ textAlignVertical: 'center', textAlign: 'center', }}>
+      <div className="ReviewStudent" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
         <h2> {this.props.selectedInstance.name}</h2>
         <h3> Viikko {this.props.weekNumber} </h3>
         <Grid centered>
           <Form onSubmit={this.handleSubmit}>
-            <Form.Group inline unstackable >
-              <Form.Field >
+            <Form.Group inline unstackable>
+              <Form.Field>
                 <label>Points 0-{this.props.selectedInstance.weekMaxPoints}</label>
                 <Input name="points" />
               </Form.Field>
             </Form.Group>
             <Form.Group inline unstackable>
-              <label> Comment </label>
+              <label> Feedback </label>
               <Form.TextArea name="comment" />
             </Form.Group>
             <Form.Field>
-              <Button className="ui left floated green button" type='submit'>Save</Button>
-              <Link to={`/labtool/courses/${this.props.selectedInstance.ohid}`} type = "Cancel" >
-                <Button className="ui right floated button" type="cancel">Cancel</Button>
+              <Button className="ui left floated green button" type="submit">
+                Save
+              </Button>
+              <Link to={`/labtool/courses/${this.props.selectedInstance.ohid}`} type="Cancel">
+                <Button className="ui right floated button" type="cancel">
+                  Cancel
+                </Button>
               </Link>
             </Form.Field>
           </Form>
@@ -68,7 +71,6 @@ class ReviewStudent extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-
   return {
     ownProps,
     selectedInstance: state.selectedInstance,
@@ -77,4 +79,3 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 export default connect(mapStateToProps, { createOneWeek, clearNotifications })(ReviewStudent)
-

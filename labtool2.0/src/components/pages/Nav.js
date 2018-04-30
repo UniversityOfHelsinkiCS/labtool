@@ -19,8 +19,8 @@ class Nav extends Component {
 
   render() {
     const user = { ...this.props.user.user }
-    const {activeItem} = this.state
-    
+    const { activeItem } = this.state
+
     return (
       <main>
 
@@ -42,18 +42,18 @@ class Nav extends Component {
             </Menu.Item>
 
             {this.props.user.user ?
-              <Menu.Item 
-                name='MyPage' 
+              <Menu.Item
+                name='MyPage'
                 as={Link} to="/labtool/mypage"
                 active={activeItem === 'MyPage'}
                 onClick={this.handleItemClick}>
                 <Icon name='home' />
-                 My page
+                My page
               </Menu.Item>
               : <p></p>}
 
             {this.props.user.user ?
-              <Menu.Item 
+              <Menu.Item
                 name='Courses'
                 as={Link} to="/labtool/courses"
                 active={activeItem === 'Courses'}

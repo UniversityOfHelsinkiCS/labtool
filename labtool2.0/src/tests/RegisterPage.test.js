@@ -4,16 +4,13 @@
 //import Register from '../components/pages/RegisterPage'
 //import { shallowToJson } from 'enzyme-to-json'
 
-
 describe.only('<Register />', () => {
-
   describe('Register Component', () => {
-
     it('is ok', () => {
       true
     })
 
-/*
+    /*
     it('should render without throwing an error', () => {
       expect(shallow(<Register />).exists(<form className='Register'></form>)).toBe(true)
     })

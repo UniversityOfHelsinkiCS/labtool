@@ -4,13 +4,11 @@ import React from 'react'
 import { Form, Input, Button, Grid, Loader } from 'semantic-ui-react'
 
 class LoginPage extends React.Component {
-
   state = {
     loading: false
   }
 
-
-  handleSubmit = async (e) => {
+  handleSubmit = async e => {
     e.preventDefault()
 
     const content = {
@@ -24,7 +22,6 @@ class LoginPage extends React.Component {
     await this.props.login(content)
 
   }
-
 
   render() {
     return (
@@ -44,7 +41,6 @@ class LoginPage extends React.Component {
         <Grid>
           <Grid.Row centered>
             <Form onSubmit={this.handleSubmit}>
-
               <Form.Group inline>
                 <label
                   style={{ width: '75px' }}>
@@ -83,13 +79,11 @@ class LoginPage extends React.Component {
                   Login
                 </Button>
               </Form.Group>
-
             </Form>
           </Grid.Row>
         </Grid>
 
       </div>
-
     )
   }
 }
@@ -99,6 +93,5 @@ const mapStateToProps = (state, ownProps) => {
     renderAfter: ownProps.renderAfter
   }
 }
-
 
 export default connect(mapStateToProps, { login })(LoginPage)
