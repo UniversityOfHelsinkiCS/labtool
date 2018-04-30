@@ -45,9 +45,8 @@ class BrowseReviews extends Component {
     return (
 
       <div>
-
-
         <h2> {this.props.selectedInstance.name}</h2>
+    
       </div>
     )
   }

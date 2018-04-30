@@ -67,7 +67,7 @@ class CoursePage extends Component {
 
         {this.props.courseData.role === 'teacher' ?
           <div>
-
+<br />
             <Table celled >
               <Table.Header>
                 <Table.Row>
@@ -79,7 +79,7 @@ class CoursePage extends Component {
               </Table.Header>
             </Table>
 
-            <h3> Students </h3>
+            <h2> Students </h2>
             <Table celled unstackable>
               <Table.Header>
                 <Table.Row>
