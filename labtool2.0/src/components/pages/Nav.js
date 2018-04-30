@@ -33,12 +33,12 @@ class Nav extends Component {
           }}
         >
           <Menu.Menu position="left">
-            <Menu.Item 
-            header
+            <Menu.Item
+              header
               style={{
                 bottom: '4px'
               }}
-              >
+            >
               <Image
                 size="mini"
                 src="/favicon.ico"
@@ -71,20 +71,12 @@ class Nav extends Component {
           {this.props.user.user ? (
             <div>
               <Menu.Menu position="right">
-                <Menu.Item
-                  style={{
-                    color: 'gray',
-                    justifyContent: 'center'
-                  }}
-                >
-                  <em>{user.username} logged in</em>
-                </Menu.Item>
-
-                <Menu.Item>
-                  <Link to="/labtool">
+                <Menu.Item name="Logout" as={Link} to="/labtool" onClick={this.handleLogout}>
+                  <Icon name="log out" />
+                  <p>
                     {' '}
-                    <Button onClick={this.handleLogout}>Logout</Button>
-                  </Link>
+                    Logout <em>{user.username} </em>
+                  </p>
                 </Menu.Item>
               </Menu.Menu>
             </div>
