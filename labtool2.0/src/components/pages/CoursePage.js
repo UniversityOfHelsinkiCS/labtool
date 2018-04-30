@@ -160,11 +160,10 @@ class CoursePage extends Component {
                 </Table.Body>
               </Table>
             </div>
-          ) : (
+          : (
             <div />
           )}
         </div>
-      </Transition>
     )
   }
 }
