@@ -15,17 +15,17 @@ module.exports = {
           })
         if (week) {
           await week.update({
-            points: req.body.points,
-            studentInstanceId: req.body.studentInstanceId,
-            comment: req.body.comment,
-            weekNumber: req.body.weekNumber
+            points: week.points || req.body.points,
+            studentInstanceId: week.studentInstanceId || req.body.studentInstanceId,
+            feedback: week.feedback || req.body.feedback,
+            weekNumber: week.weekNumber || req.body.weekNumber
           })
           res.status(200).send(week)
         } else {
           await Week.create({
             points: req.body.points,
             studentInstanceId: req.body.studentInstanceId,
-            comment: req.body.comment,
+            feedback: req.body.feedback,
             weekNumber: req.body.weekNumber
           })
           res.status(200).send(week)

@@ -122,23 +122,21 @@ class CoursePage extends Component {
                   </h3>
                 </Card.Content>
               </Card>
-
               <h3> Comments and feedback </h3>
-
-              <Table celled padded unstackable>
-                <Table.Header>
-                  <Table.Row>
-                    <Table.HeaderCell>Week</Table.HeaderCell>
-                    <Table.HeaderCell>Points</Table.HeaderCell>
-                    <Table.HeaderCell>Comment</Table.HeaderCell>
-                  </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                  {this.props.courseData.data.weeks.map(week => (
+            <Table celled padded unstackable>
+              <Table.Header>
+                <Table.Row>
+                  <Table.HeaderCell>Week</Table.HeaderCell>
+                  <Table.HeaderCell>Points</Table.HeaderCell>
+                  <Table.HeaderCell>Feedback</Table.HeaderCell>
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
+                {this.props.courseData.data.weeks.map(week =>
                     <Table.Row>
                       <Table.Cell>{week.weekNumber}</Table.Cell>
                       <Table.Cell>{week.points}</Table.Cell>
-                      <Table.Cell>{week.comment}</Table.Cell>
+                      <Table.Cell>{week.feedback}</Table.Cell>
                     </Table.Row>
                   ))}
                 </Table.Body>
