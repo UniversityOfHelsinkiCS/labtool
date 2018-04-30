@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import React, { Component } from 'react'
-import { Menu, Button, Icon } from 'semantic-ui-react'
+import { Menu, Button, Icon, Image } from 'semantic-ui-react'
 import { logout } from '../../reducers/loginReducer'
 
 class Nav extends Component {
@@ -33,7 +33,21 @@ class Nav extends Component {
           }}
         >
           <Menu.Menu position="left">
-            <Menu.Item header>Labtool 2.0</Menu.Item>
+            <Menu.Item 
+            header
+              style={{
+                bottom: '4px'
+              }}
+              >
+              <Image
+                size="mini"
+                src="/favicon.ico"
+                style={{
+                  bottom: '2px'
+                }}
+              />
+              Labtool 2.0
+            </Menu.Item>
 
             {this.props.user.user ? (
               <Menu.Item name="MyPage" as={Link} to="/labtool/mypage" active={activeItem === 'MyPage'} onClick={this.handleItemClick}>
