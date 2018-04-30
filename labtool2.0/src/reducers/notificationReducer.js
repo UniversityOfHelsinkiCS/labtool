@@ -9,7 +9,7 @@ const notificationReducer = (state = {}, action) => {
       return {}
     case 'LOGIN_FAILURE':
       return {
-        message: 'Wrong credentials!',
+        message: 'Wrong username or password',
         error: true
       }
     case 'LOGOUT_SUCCESS':
@@ -53,7 +53,7 @@ const notificationReducer = (state = {}, action) => {
 }
 
 export const clearNotifications = () => {
-  return async (dispatch) => {
+  return async dispatch => {
     dispatch({ type: 'NOTIFICATION_CLEAR' })
   }
 }

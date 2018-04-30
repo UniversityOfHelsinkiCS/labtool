@@ -3,12 +3,8 @@ module.exports = (sequelize, DataTypes) => {
   const Comment = sequelize.define(
     'Comment',
     {
-      feedback: {
-        type: DataTypes.STRING,
-        allowNull: false
-      },
-      hiddenComment: {
-        type: DataTypes.STRING
+      hidden: {
+        type: DataTypes.BOOLEAN
       },
       comment: {
         type: DataTypes.STRING
@@ -21,10 +17,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false
       },
-      to: {
-        type: DataTypes.STRING,
-        allowNull: false
-      }
     },
     {}
   )

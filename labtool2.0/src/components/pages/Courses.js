@@ -8,29 +8,36 @@ class Courses extends Component {
     return (
       <div>
         <Container>
-          <Header as='h2' className='CoursesHeader'>Courses</Header>
-          <Table singleline key='grey'>
+          <Header as="h2" className="CoursesHeader">
+            Courses
+          </Header>
+          <Table singleline key="grey">
             <Table.Body>
-              {this.props.courseInstance.map(instance => 
+              {this.props.courseInstance.map(instance => (
                 <Table.Row>
                   <Table.Cell>{instance.name}</Table.Cell>
-                  <Table.Cell textAlign='right'><div>
-                    <Link to={`/labtool/courses/${instance.ohid}`}><Button circular color="teal" size='tiny' icon="large black eye icon"></Button></Link>
-                    <Link to={`/labtool/ModifyCourseInstancePage/${instance.ohid}`}><Button circular color='orange' size="tiny" icon="large black edit icon" /></Link>
-                  </div></Table.Cell>
+                  <Table.Cell textAlign="right">
+                    <div>
+                      <Link to={`/labtool/courses/${instance.ohid}`}>
+                        <Button circular color="teal" size="tiny" icon="large black eye icon" />
+                      </Link>
+                      <Link to={`/labtool/ModifyCourseInstancePage/${instance.ohid}`}>
+                        <Button circular color="orange" size="tiny" icon="large black edit icon" />
+                      </Link>
+                    </div>
+                  </Table.Cell>
                 </Table.Row>
-              )}
+              ))}
             </Table.Body>
           </Table>
           <div className="Instructions">
             <List>
-              <List.Item icon='eye' content='Show course page' />
-              <List.Item icon='edit' content='Edit course' />
+              <List.Item icon="eye" content="Show course page" />
+              <List.Item icon="edit" content="Edit course" />
             </List>
           </div>
         </Container>
       </div>
-
     )
   }
 }
@@ -41,10 +48,7 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps, null )(Courses)
-
-
-
+export default connect(mapStateToProps, null)(Courses)
 
 /* import React, { Component } from 'react'
 import React from 'react'
