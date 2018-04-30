@@ -34,7 +34,7 @@ class BrowseReviews extends Component {
                       <h4> {student.User.firsts} {student.User.lastname} </h4>
                       <h4> {weekPoints.points} </h4>
                       <h4> Comments </h4>
-                      <Link to={`/labtool/reviewstudent/`}>
+                      <Link to={`/labtool/reviewstudent/${this.props.selectedInstance.ohid}/${studentInstance}/${i+1}`}>
                         <Button circular color="orange" size="tiny" icon="edit black large" />
                       </Link>
                     </p>
@@ -51,7 +51,7 @@ class BrowseReviews extends Component {
                       <h4> {student.User.firsts} {student.User.lastname} </h4>
                       <h4> Not Graded </h4>
                       <h4> No comments </h4>
-                      <Link to={`/labtool/reviewstudent/`}>
+                      <Link to={`/labtool/reviewstudent/${this.props.selectedInstance.ohid}/${studentInstance}/${i}`}>
                         <Button circular color="orange" size="tiny" icon="edit black large" />
                       </Link>
                     </p>
