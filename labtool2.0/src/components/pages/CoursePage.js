@@ -10,26 +10,24 @@ class CoursePage extends Component {
     if (this.props.studentInstance) {
       instance = this.props.studentInstance.filter(inst => (inst.courseInstanceId == this.props.selectedInstance.id))
     }
-
-
+    let allPoints = 0
     const createIndents = (data, siId) => {
       const indents = []
+
       for (var i = 0; i < this.props.selectedInstance.weekAmount; i++) {
         let pushattava =
           <Table.Cell>
             <p>Not reviewed!</p>
-            <Link to={`/labtool/reviewstudent/${siId}/${i + 1}`}>
-              <Button circular color='orange' size="tiny" icon="edit black large" onClick={review()} ></Button>
-            </Link>
           </Table.Cell>
 
         for (var j = 0; j < data.length; j++) {
           if ((i + 1) === data[j].weekNumber) {
+            allPoints += data[j].points
             pushattava = <Table.Cell>
               <p>{data[j].points}</p>
-              <Link to={`/labtool/reviewstudent/${siId}/${i + 1}`}>
+              {/*               <Link to={`/labtool/reviewstudent/${this.props.selectedInstance.ohid}/${siId}/${i + 1}`}>
                 <Button circular color='orange' size="tiny" icon="edit black large" ></Button>
-              </Link>
+              </Link> */}
             </Table.Cell>
 
           }
@@ -72,7 +70,7 @@ class CoursePage extends Component {
 
         {this.props.courseData.role === 'teacher' ?
           <div>
-
+<br />
             <Table celled >
               <Table.Header>
                 <Table.Row>
@@ -84,13 +82,16 @@ class CoursePage extends Component {
               </Table.Header>
             </Table>
 
-            <h3> Students </h3>
+            <h2> Students </h2>
             <Table celled unstackable>
               <Table.Header>
                 <Table.Row>
                   <Table.HeaderCell>Name</Table.HeaderCell>
                   <Table.HeaderCell> Github </Table.HeaderCell>
                   {createHeaders()}
+                  <Table.HeaderCell> Sum </Table.HeaderCell>
+                  <Table.HeaderCell> Instructor </Table.HeaderCell>
+                  <Table.HeaderCell> Review </Table.HeaderCell>
                 </Table.Row>
               </Table.Header>
               <Table.Body>
@@ -100,6 +101,16 @@ class CoursePage extends Component {
                     <Table.Cell>{data.User.firsts} {data.User.lastname}</Table.Cell>
                     <Table.Cell><p>{data.projectName}</p><a>{data.github}</a></Table.Cell>
                     {createIndents(data.weeks, data.id)}
+                    <Table.Cell>{allPoints}</Table.Cell>
+                    <Table.Cell> Ohjaaja </Table.Cell>
+
+                    <Table.Cell>
+
+                      <Link to={`/labtool/browsereviews/${this.props.selectedInstance.ohid}/${data.id}`}>
+                        <Button circular color='orange' size="tiny" icon="edit black large" onClick={review()} ></Button>
+
+                      </Link>
+                    </Table.Cell>
                   </Table.Row>
                 )}
               </Table.Body>
@@ -119,33 +130,40 @@ class CoursePage extends Component {
                 <h3> <Link to={this.props.courseData.data.github}>{this.props.courseData.data.github}</Link> </h3>
               </Card.Content>
             </Card>
-           
-            <h3> Comments and feedback </h3>
+
+            <h3> Points and feedback </h3>
 
             <Table celled padded unstackable>
               <Table.Header>
                 <Table.Row>
-                  <Table.HeaderCell>Week</Table.HeaderCell>
-                  <Table.HeaderCell>Points</Table.HeaderCell>
-                  <Table.HeaderCell>Comment</Table.HeaderCell>
-                </Table.Row>
-              </Table.Header>
-              <Table.Body>
-                {console.log(this.props.courseData.data.weeks)}
-                {this.props.courseData.data.weeks.map(week =>
-                  <Table.Row>
-                    <Table.Cell>{week.weekNumber}</Table.Cell>
-                    <Table.Cell>{week.points}</Table.Cell>
-                    <Table.Cell>{week.comment}</Table.Cell>
+                    <Table.HeaderCell>Week</Table.HeaderCell>
+                    <Table.HeaderCell>Points</Table.HeaderCell>
+                    <Table.HeaderCell>Feedback</Table.HeaderCell>
+                    <Table.HeaderCell>Comments</Table.HeaderCell>
                   </Table.Row>
-                )}
-              </Table.Body>
-            </Table>
-          </div>
-          : <div></div>}
-
-      </div >
-
+                </Table.Header>
+                <Table.Body>
+                  {this.props.courseData.data.weeks.map(week => (
+                    <Table.Row>
+                      <Table.Cell>{week.weekNumber}</Table.Cell>
+                      <Table.Cell>{week.points}</Table.Cell>
+                      <Table.Cell>{week.feedback}</Table.Cell>
+                      <Table.Cell>
+                        <ul>
+                        {week.comments.map(comment => (
+                          <li> {comment.comment} </li>
+                        ))}
+                        </ul>
+                      </Table.Cell>
+                    </Table.Row>
+                  ))}
+                </Table.Body>
+              </Table>
+            </div>
+          : (
+            <div />
+          )}
+        </div>
     )
   }
 }

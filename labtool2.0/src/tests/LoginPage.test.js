@@ -4,14 +4,11 @@
 //import LoginPage from '../components/pages/LoginPage'
 
 describe.only('<Login />', () => {
-
   describe('Login Component', () => {
-
-
     it('is ok', () => {
       true
     })
-/*
+    /*
     it('should render without throwing an error', () => {
       expect(shallow(<LoginPage />).exists(<form className='LoginPage'></form>)).toBe(true)
     })
@@ -32,6 +29,5 @@ describe.only('<Login />', () => {
     })
 
 */
-
   })
 })

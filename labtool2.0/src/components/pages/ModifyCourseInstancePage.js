@@ -1,25 +1,38 @@
 import React, { Component } from 'react'
-import { Form, Input, Button, Grid, Checkbox } from 'semantic-ui-react'
+import { Form, Input, Button, Grid, Radio } from 'semantic-ui-react'
 import { modifyOneCI } from '../../services/courseInstance'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Redirect } from 'react-router'
-
+import { clearNotifications } from '../../reducers/notificationReducer'
 class ModifyCourseInstancePage extends Component {
+  componentWillMount() {
+    this.props.clearNotifications()
+  }
+
+  componentDidUpdate() {
+    if (this.props.notification.error !== undefined) {
+      if (!this.props.notification.error) {
+        this.props.history.push(`/labtool/courses/${this.props.selectedInstance.ohid}`)
+      }
+    }
+  }
 
   state = {
     redirectToNewPage: false
   }
 
-  handleSubmit = async (e) => {
+  handleChange = (e, { value }) => this.setState({ value })
+
+  handleSubmit = async e => {
     try {
       e.preventDefault()
-       
+
       const content = {
         weekAmount: e.target.weekAmount.value,
         weekMaxPoints: e.target.weeklyMaxpoints.value,
         currentWeek: e.target.currentWeek.value,
-        active: e.target.courseActive.checked,
+        active: e.target.courseActive.value,
         ohid: this.props.selectedInstance.ohid
       }
       await this.props.modifyOneCI(content, this.props.selectedInstance.ohid)
@@ -27,65 +40,76 @@ class ModifyCourseInstancePage extends Component {
     } catch (error) {
       console.log(error)
     }
-
   }
 
   render() {
     if (this.state.redirectToNewPage) {
-      return (
-        <Redirect to={`/labtool/courses/${this.props.selectedInstance.ohid}`} />
-      )
+      return <Redirect to={`/labtool/courses/${this.props.selectedInstance.ohid}`} />
     }
+    const selectedInstance = { ...this.props.selectedInstance }
     return (
-      <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
+      <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
         <Grid>
           <Grid.Row centered>
-            <h2> Edit {this.props.selectedInstance.name} </h2>
+            <h2> Edit course: {selectedInstance.name} </h2>
           </Grid.Row>
         </Grid>
+
+        <Grid>
+          <Grid.Row centered>
+            {selectedInstance.active === true ? (
+              <div>
+                <Grid.Row>
+                  <h4 style={{ color: '#21ba45' }}>This course is currently activated.</h4>
+                </Grid.Row>
+              </div>
+            ) : (
+              <div>
+                <Grid.Row>
+                  <h4 style={{ color: 'red' }}>This course is currently inactive.</h4>
+                </Grid.Row>
+              </div>
+            )}
+          </Grid.Row>
+        </Grid>
+
         <Grid>
           <Grid.Row centered>
             <Form onSubmit={this.handleSubmit}>
+              <Form.Group inline>
+                <label style={{ width: '125px', textAlign: 'left' }}>Week amount</label>
+                <Input name="weekAmount" required="true" type="text" style={{ maxWidth: '7em' }} defaultValue={JSON.stringify(selectedInstance.weekAmount)} className="form-control1" />
+              </Form.Group>
+
+              <Form.Group inline>
+                <label style={{ width: '125px', textAlign: 'left' }}>Weekly maxpoints</label>
+                <Input name="weeklyMaxpoints" required="true" type="text" style={{ maxWidth: '7em' }} defaultValue={JSON.stringify(selectedInstance.weekMaxPoints)} className="form-control2" />
+              </Form.Group>
+
+              <Form.Group inline>
+                <label style={{ width: '125px', textAlign: 'left' }}>Current week</label>
+                <Input name="currentWeek" required="true" type="text" style={{ maxWidth: '7em' }} defaultValue={JSON.stringify(selectedInstance.currentWeek)} className="form-control3" />
+              </Form.Group>
+
               <Form.Field inline>
-                <label>Week amount</label>
-                <Input
-                  placeholder="weekAmount"
-                  type="text"
-                  className="form-control1"
-                  name="weekAmount"
-                  placeholder={`${this.props.selectedInstance.weekAmount}`}
-                  required
-                />
-              </Form.Field>
-              <Form.Field inline>
-                <label>Weekly maxpoints</label>
-                <Input
-                  className="form-control2"
-                  name="weeklyMaxpoints"
-                  placeholder={`${this.props.selectedInstance.weekMaxPoints}`}
-                  required />
-              </Form.Field>
-              <Form.Field inline>
-                <label>Current week</label>
-                <Input
-                  className="form-control3"
-                  name="currentWeek"
-                  placeholder={`${this.props.selectedInstance.currentWeek}`}
-                  required />
+                <Radio name="courseActive" label="Activate course" value="true" checked={this.state.value === 'true'} onChange={this.handleChange} style={{ width: '150px', textAlign: 'left' }} />
               </Form.Field>
 
               <Form.Field inline>
-                <Checkbox label='Course active'
-                  className="form-control4"
-                  name="courseActive"
-                  defaultChecked={this.props.selectedInstance.active}
-                />
+                <Radio name="courseActive" label="Deactivate course" value="false" checked={this.state.value === 'false'} onChange={this.handleChange} style={{ width: '150px', textAlign: 'left' }} />
               </Form.Field>
+
               <Form.Field>
-                <Button floated='left' color='green' type='submit'>Save</Button>
-                <Link to="/labtool/courses"><button className="ui right floated button" type="Cancel"> Cancel</button></Link>
-              </Form.Field>
+                <Button type="Submit" floated="left" color="green">
+                  Save
+                </Button>
 
+                <Link to="/labtool/courses">
+                  <Button type="Cancel" floated="right">
+                    Cancel
+                  </Button>
+                </Link>
+              </Form.Field>
             </Form>
           </Grid.Row>
         </Grid>
@@ -96,8 +120,9 @@ class ModifyCourseInstancePage extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    selectedInstance: state.selectedInstance
+    selectedInstance: state.selectedInstance,
+    notification: state.notification
   }
 }
 
-export default connect(mapStateToProps, { modifyOneCI })(ModifyCourseInstancePage)
+export default connect(mapStateToProps, { modifyOneCI, clearNotifications })(ModifyCourseInstancePage)

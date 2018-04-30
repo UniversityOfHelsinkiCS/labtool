@@ -1,9 +1,8 @@
 const courseInstanceController = require('../controllers').courseInstances
 const weekController = require('../controllers').weeks
 
-module.exports = (app) => {
-
-  app.post('/api/courseinstances/update', courseInstanceController.getNew)  // User story (issue) #106 will replace this
+module.exports = app => {
+  app.post('/api/courseinstances/update', courseInstanceController.getNew) // User story (issue) #106 will replace this
   app.post('/api/courseinstances/update/next', courseInstanceController.getNewer) // User story (issue) #106 will replace this
   app.post('/api/course/register/:ohid', courseInstanceController.registerToCourseInstance)
   app.post('/api/course/student', courseInstanceController.findByUserStudentInstance)
@@ -17,5 +16,4 @@ module.exports = (app) => {
   app.post('/api/weeks/create', weekController.create)
   app.post('/api/comment', courseInstanceController.addComment)
   app.post('/api/comments', courseInstanceController.getCommentsForWeek)
-
 }

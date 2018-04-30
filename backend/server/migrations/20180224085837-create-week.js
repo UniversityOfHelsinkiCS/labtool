@@ -11,11 +11,11 @@ module.exports = {
       points: {
         type: Sequelize.INTEGER
       },
-      comment: {
-        type: Sequelize.STRING
-      },
       weekNumber: {
         type: Sequelize.INTEGER
+      },
+      feedback: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
@@ -31,9 +31,9 @@ module.exports = {
         references: {
           model: 'StudentInstances',
           key: 'id',
-          as: 'studentInstanceId',
+          as: 'studentInstanceId'
         }
-      },
+      }
     })
   },
   down: (queryInterface, Sequelize) => {

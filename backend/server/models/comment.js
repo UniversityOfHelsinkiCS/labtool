@@ -1,27 +1,30 @@
 module.exports = (sequelize, DataTypes) => {
-  const Comment = sequelize.define('Comment', {
-    message: {
-      type: DataTypes.STRING,
-      allowNull: false,
+  /*feedback, hiddenComment, comment */
+  const Comment = sequelize.define(
+    'Comment',
+    {
+      hidden: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false
+      },
+      comment: {
+        type: DataTypes.STRING
+      },
+      weekId: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+      },
+      from: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
     },
-    weekId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    from: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    to: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-
-  }, {})
-  Comment.associate = function (models) {
+    {}
+  )
+  Comment.associate = function(models) {
     Comment.belongsTo(models.Week, {
       foreignKey: 'weekId',
-      onDelete: 'CASCADE',
+      onDelete: 'CASCADE'
     })
   }
   return Comment

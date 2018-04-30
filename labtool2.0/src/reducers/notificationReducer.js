@@ -9,7 +9,7 @@ const notificationReducer = (state = {}, action) => {
       return {}
     case 'LOGIN_FAILURE':
       return {
-        message: 'Wrong credentials!',
+        message: 'Wrong username or password',
         error: true
       }
     case 'LOGOUT_SUCCESS':
@@ -47,13 +47,23 @@ const notificationReducer = (state = {}, action) => {
         message: 'Oopsie doopsie, inputs are not valid!',
         error: true
       }
+    case 'COMMENT_CREATE_ONE_SUCCESS':
+      return {
+        message: 'Comment created succesfully!',
+        error: false
+      }
+    case 'COMMENT_CREATE_ONE_FAILURE':
+      return {
+        message: 'Creating comment failed!',
+        error: true
+      }    
     default:
       return state
   }
 }
 
 export const clearNotifications = () => {
-  return async (dispatch) => {
+  return async dispatch => {
     dispatch({ type: 'NOTIFICATION_CLEAR' })
   }
 }

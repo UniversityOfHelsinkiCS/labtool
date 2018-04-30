@@ -1,6 +1,3 @@
-//import Course from '../../../labtool2.0/src/components/pages/Course';
-
-//import Course from '../../../labtool2.0/src/components/pages/Course';
 const db = require('../models')
 const CourseInstance = require('../models').CourseInstance
 const StudentInstance = require('../models').StudentInstance
@@ -13,156 +10,177 @@ const StudentInstanceController = require('../controllers').studentInstances
 const Week = require('../models').Week
 const Comment = require('../models').Comment
 
-
 module.exports = {
-
-  findByUserTeacherInstance(req, res) {//token verification might not work..? and we don't knpw if search works
+  /**
+   *
+   * @param req
+   * @param res
+   */
+  findByUserTeacherInstance(req, res) {
+    helper.controller_before_auth_check_action(req, res)
     const errors = []
     console.log('***REQ BODY***: ', req.body)
-    let token = helper.tokenVerify(req)
-    const id = parseInt(req.body.userId)//TODO: CHECK THAT THIS IS SANITICED ID
-    console.log('TOKEN VERIFIED: ', token)
-    console.log('token.data.id: ', token.data.id)
-    if (token.verified) {
-      db.sequelize.query(`SELECT * FROM "CourseInstances" JOIN "TeacherInstances" ON "CourseInstances"."id" = "TeacherInstances"."courseInstanceId" WHERE "TeacherInstances"."userId" = ${token.data.id}`)
-        .then(instance =>
-          res.status(200).send(instance[0]))
-        .catch(error => res.status(400).send(error))
-    } else {
-      errors.push('token verification failed')
-      res.status(400).send(errors)
-    }
 
+    const id = parseInt(req.body.userId) //TODO: CHECK THAT THIS IS SANITICED ID
+    console.log('TOKEN VERIFIED: ', req.authenticated)
+    console.log('token.data.id: ', req.decoded.id)
+    db.sequelize
+      .query(`SELECT * FROM "CourseInstances" JOIN "TeacherInstances" ON "CourseInstances"."id" = "TeacherInstances"."courseInstanceId" WHERE "TeacherInstances"."userId" = ${req.decoded.id}`)
+      .then(instance => res.status(200).send(instance[0]))
+      .catch(error => res.status(400).send(error))
   },
+  /**
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<void>}
+   */
   async coursePage(req, res) {
+    helper.controller_before_auth_check_action(req, res)
+
     const course = await CourseInstance.findOne({
       where: {
         ohid: req.body.course
       }
     })
     const courseInst = course.id
-    const token = await helper.tokenVerify(req)
     const palautus = {
       role: 'Unregistered',
       data: undefined
     }
-    if (token.verified) {
-      const user = token.data.id
-      const teacher = await TeacherInstance.findAll({
+    const user = req.decoded.id
+    const teacher = await TeacherInstance.findAll({
+      where: {
+        userId: user,
+        courseInstanceId: courseInst
+      }
+    })
+    if (teacher[0] === undefined) {
+      const student = await StudentInstance.findOne({
         where: {
           userId: user,
           courseInstanceId: courseInst
-        }
-      })
-      if (teacher[0] === undefined) {
-        const student = await StudentInstance.findOne({
-          where: {
-            userId: user,
-            courseInstanceId: courseInst
-          },
-          include: [{
-            model: Week, as: 'weeks',
-            include: [{
-              model: Comment, as: 'comments',
-            }]
+        },
+        include: [
+          {
+            model: Week,
+            as: 'weeks',
+            include: [
+              {
+                model: Comment,
+                as: 'comments',
+                where: {
+                  hidden: false 
+                }
+              } 
+            ]
           },
           {
             model: User
           }
-          ]
-        })
-        
-        try {
-          palautus.data = student
-          console.log('TÄSSÄ ON STUDNETTII', student)
-          palautus.role = 'student'
-          res.status(200).send(palautus)
-        } catch (error) {
-          res.status(400).send(error)
-        }
-      } else {
-        const teacherPalautus = await StudentInstance.findAll({
-          where: {
-            courseInstanceId: courseInst
-          },
-          include: [{
-            model: Week, as: 'weeks',
-            include: [{
-              model: Comment, as: 'commentes',
-            }]
+        ]
+      })
+
+
+      try {
+        palautus.data = student
+        palautus.role = 'student'
+        res.status(200).send(palautus)
+      } catch (error) {
+        res.status(400).send(error)
+      }
+    } else {
+      const teacherPalautus = await StudentInstance.findAll({
+        where: {
+          courseInstanceId: courseInst,
+        },
+        include: [
+          {
+            model: Week,
+            as: 'weeks',
+            include: [
+              {
+                model: Comment,
+                as: 'comments'
+              }
+            ]
           },
           {
             model: User
-          }]
-        })
-        try {
-          palautus.data = teacherPalautus
-          palautus.role = 'teacher'
-          res.status(200).send(palautus)
-        } catch (e) {
-          res.status(200).send(e)
-        }
+          }
+        ]
+      })
+      try {
+        palautus.data = teacherPalautus
+        palautus.role = 'teacher'
+        res.status(200).send(palautus)
+      } catch (e) {
+        res.status(200).send(e)
       }
-    } else {
-      res.status(400).send('something went wrong')
     }
   },
 
-  findByUserStudentInstance(req, res) {//token verification might not work..? and we don't knpw if search works
+  /**
+   *
+   * @param req
+   * @param res
+   */
+  findByUserStudentInstance(req, res) {
+    helper.controller_before_auth_check_action(req, res)
     helper.findByUserStudentInstance(req, res)
-
   },
 
+  /**
+   *
+   * @param req
+   * @param res
+   */
   registerToCourseInstance(req, res) {
-    const errors = []
-    if (req.authenticated.success == false) {
-      res.send(401)
-      res.end
-    }
+    helper.controller_before_auth_check_action(req, res)
 
     CourseInstance.findOne({
       where: {
         ohid: req.params.ohid
       }
-    })
-      .then(course => {
-        if (!course) {
+    }).then(course => {
+      if (!course) {
+        return res.status(400).send({
+          message: 'course instance not found'
+        })
+      }
+      User.findById(req.decoded.id).then(user => {
+        if (!user) {
           return res.status(400).send({
-            message: 'course instance not found',
+            message: 'something went wrong (clear these specific error messages later): user not found'
           })
         }
-        User.findById(req.decoded.id).then(user => {
-          if (!user) {
-            return res.status(400).send({
-              message: 'something went wrong (clear these specific error messages later): user not found',
+        let promisingThatWeboodiStatusIsChecked = new Promise((resolve, reject) => {
+          helper.checkWebOodi(req, res, user, resolve) // this does not work.
+
+          setTimeout(function () {
+            resolve('shitaintright') // Yay! everything went to hell.
+          }, 5000) // set a high timeout value since you really want to wait x)
+        })
+
+        promisingThatWeboodiStatusIsChecked.then(barf => {
+          console.log('Yay! ' + barf)
+          console.log(req.body)
+
+          if (barf === 'found') {
+            StudentInstance.findOrCreate({
+              where: {
+                userId: user.id,
+                courseInstanceId: course.dataValues.id
+              },
+              defaults: {
+                userId: user.id,
+                name: user,
+                courseInstanceId: course.dataValues.id,
+                github: req.body.github || '', // model would like to validate this to be an URL but seems like crap
+                projectName: req.body.projectName || '' // model would like to validate this to alphanumeric but seems like this needs specific nulls or empties or whatever
+              }
             })
-          }
-          let thisPromiseJustMakesThisCodeEvenMoreHorrible = new Promise((resolve, reject) => {
-            helper.checkWebOodi(req, res, user, resolve)  // this does not work.
-
-            setTimeout(function () {
-              resolve('shitaintright') // Yay! everything went to hell.
-            }, 5000)  // set a high timeout value since you really want to wait x)
-          })
-
-          thisPromiseJustMakesThisCodeEvenMoreHorrible.then((successMessageIfYouLikeToThinkThat) => {
-            console.log('Yay! ' + successMessageIfYouLikeToThinkThat)
-            console.log(req.body)
-
-            if (successMessageIfYouLikeToThinkThat === 'found') {
-              StudentInstance.findOrCreate({
-                where: {
-                  userId: user.id,
-                  courseInstanceId: course.dataValues.id
-                },
-                defaults: {
-                  userId: user.id,
-                  name: user,
-                  courseInstanceId: course.dataValues.id,
-                  github: req.body.github || '',                     // model would like to validate this to be an URL but seems like crap
-                  projectName: req.body.projectName || '',           // model would like to validate this to alphanumeric but seems like this needs specific nulls or empties or whatever
-                }
-              }).then(student => {
+              .then(student => {
                 if (!student) {
                   res.status(400).send({
                     message: 'something went wrong: if somehow we could not find or create a record we see this'
@@ -178,39 +196,42 @@ module.exports = {
                   whatever: student
                 })*/
                 }
-
-              }).catch(function (error) {
+              })
+              .catch(function (error) {
                 res.status(400).send({
                   message: error.errors
                 })
               })
-
-            } else {
-
-              res.status(400).send({
-                message: 'something went wrong'
-              })
-
-            }
-          })
-
+          } else {
+            res.status(400).send({
+              message: 'something went wrong'
+            })
+          }
         })
       })
+    })
   },
 
+  /**
+   *
+   * @param req
+   * @param res
+   * @returns {*|Promise<T>}
+   */
   update(req, res) {
+    helper.controller_before_auth_check_action(req, res)
+
     console.log('REQ body: ', req.body)
     console.log('REQ params: ', req.params)
-    return CourseInstance
-      .find({
-        where: {
-          ohid: req.params.id
-        }
-      })
+    return CourseInstance.find({
+      where: {
+        ohid: req.params.id
+      }
+    })
       .then(courseInstance => {
         if (!courseInstance) {
           res.status(400).send({
-            message: 'course instance not found',
+            message: 'course instance not found'
           })
         }
         return courseInstance
@@ -221,7 +242,7 @@ module.exports = {
             active: req.body.active,
             weekAmount: req.body.weekAmount || courseInstance.weekAmount,
             weekMaxPoints: req.body.weekMaxPoints || courseInstance.weekMaxPoints,
-            currentWeek: req.body.currentWeek || courseInstance.currentWeek,
+            currentWeek: req.body.currentWeek || courseInstance.currentWeek
           })
           .then(updatedCourseInstance => res.status(200).send(updatedCourseInstance))
           .catch(error => res.status(400).send(error))
@@ -229,79 +250,98 @@ module.exports = {
       .catch(error => res.status(400).send(error))
   },
 
+  /**
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<Array<Model>>}
+   */
   list(req, res) {
     return CourseInstance.findAll()
       .then(instance => res.status(200).send(instance))
       .catch(error => res.status(400).send(error))
   },
 
+  /**
+   *
+   * @param req
+   * @param res
+   */
   retrieve(req, res) {
+    helper.controller_before_auth_check_action(req, res)
+
     const errors = []
-    CourseInstance
-      .find({
+    CourseInstance.find(
+      {
         where: {
           ohid: req.params.ohid
         }
-      }, {})
+      },
+      {}
+    )
       .then(courseInstance => {
         if (!courseInstance) {
           return res.status(404).send({
-            message: 'Course not Found',
+            message: 'Course not Found'
           })
         }
         return res.status(200).send(courseInstance)
       })
       .catch(error => res.status(400).send(error))
-
   },
+  /**
+   *
+   * @param req
+   * @param res
+   */
   getNew(req, res) {
-    console.log('update current...')
-    const auth = process.env.TOKEN || 'notset' //You have to set TOKEN in .env file in order for this to work
-    console.log('autentikaatio: ', auth)
+    helper.controller_before_auth_check_action(req, res)
+
     const termAndYear = helper.CurrentTermAndYear()
     console.log('term and year: ', termAndYear)
-    if (auth === 'notset') {
-      res.send('Please restart the backend with the correct TOKEN environment variable set')
+    if (this.remoteAddress === '127.0.0.1') {
+      res.send('gtfo')
     } else {
-      if (this.remoteAddress === '127.0.0.1') {
-        res.send('gtfo')
-      } else {
-        const request = require('request')
-        const options = {
-          method: 'get',
-          uri: `https://opetushallinto.cs.helsinki.fi/labtool/courses?year=${termAndYear.currentYear}&term=${termAndYear.currentTerm}`,
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': auth
-          },
-          strictSSL: false
-        }
-        request(options, function (err, resp, body) {
-          const json = JSON.parse(body)
-          console.log('json palautta...')
-          console.log(json)
-          json.forEach(instance => {
-            CourseInstance.findOrCreate({
-              where: { ohid: instance.id },
-              defaults: {
-                name: instance.name,
-                start: instance.starts,
-                end: instance.ends,
-                ohid: instance.id
-              }
-            })
-          })
-          if (req.decoded) {
-            res.status(204).send({ 'hello': 'hello' }) // nodejs crashes if someone just posts here without valid token.
-          }
-        }
-        )
+      const request = require('request')
+      const options = {
+        method: 'get',
+        uri: `https://opetushallinto.cs.helsinki.fi/labtool/courses?year=${termAndYear.currentYear}&term=${termAndYear.currentTerm}`,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: process.env.TOKEN
+        },
+        strictSSL: false
       }
+      request(options, function (err, resp, body) {
+        const json = JSON.parse(body)
+        console.log('json palautta...')
+        console.log(json)
+        json.forEach(instance => {
+          CourseInstance.findOrCreate({
+            where: { ohid: instance.id },
+            defaults: {
+              name: instance.name,
+              start: instance.starts,
+              end: instance.ends,
+              ohid: instance.id
+            }
+          })
+        })
+        if (req.decoded) {
+          res.status(204).send({ hello: 'hello' }) // nodejs crashes if someone just posts here without valid token.
+        }
+      })
     }
-  }
-  ,
+  },
 
+  /**
+   *
+   * @param req
+   * @param res
+   */
   getNewer(req, res) {
+    helper.controller_before_auth_check_action(req, res)
+
     console.log('update next...')
     const auth = process.env.TOKEN || 'notset' //You have to set TOKEN in .env file in order for this to work
     const termAndYear = helper.CurrentTermAndYear()
@@ -311,16 +351,14 @@ module.exports = {
     } else {
       if (this.remoteAddress === '127.0.0.1') {
         res.send('gtfo')
-
       } else {
-
         const request = require('request')
         const options = {
           method: 'get',
           uri: `https://opetushallinto.cs.helsinki.fi/labtool/courses?year=${termAndYear.nextYear}&term=${termAndYear.nextTerm}`,
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': auth
+            Authorization: process.env.TOKEN
           },
           strictSSL: false
         }
@@ -339,24 +377,31 @@ module.exports = {
             })
           })
           if (req.decoded) {
-            res.status(204).send({ 'hello': 'hello' })  // nodejs crashes if someone just posts here without valid token.
+            res.status(204).send({ hello: 'hello' }) // nodejs crashes if someone just posts here without valid token.
           }
         })
       }
     }
   },
 
+  /**
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<Model>}
+   */
   retrieveCourseStuff(req, res) {
-    return CourseInstance
-      .findOne({
-        where: {
-          ohid: req.params.ohid
-        },
-      })
+    helper.controller_before_auth_check_action(req, res)
+
+    return CourseInstance.findOne({
+      where: {
+        ohid: req.params.ohid
+      }
+    })
       .then(course => {
         if (!course) {
           return res.status(404).send({
-            message: 'Course not Found',
+            message: 'Course not Found'
           })
         }
         return res.status(200).send(course)
@@ -364,48 +409,47 @@ module.exports = {
       .catch(error => res.status(400).send(error))
   },
 
+  /**
+   *
+   * @param req
+   * @param res
+   * @returns {*|Promise<T>}
+   */
   addComment(req, res) {
-    let token = helper.tokenVerify(req)
+    helper.controller_before_auth_check_action(req, res)
+
     const message = req.body
-    console.log('message: ', message.message)
-    console.log('from: ', message.from)
-    console.log('to: ', message.to)
-    console.log('week: ', message.week)
-    if (token.verified) {
-      return Comment
-        .create({
-          weekId: message.week,
-          message: message.message,
-          from: message.from,
-          to: message.to,
-        })
-        .then(comment => {
-          if (!comment) {
-            res.status(400).send('week not found')
-          } else {
-            res.status(200).send(comment)
-          }
-        })
-        .catch(error => res.status(400).send(error))
-    } else {
-      res.status(400).send('token verification failed')
-    }
+    return Comment.create({
+      weekId: message.week,
+      hidden: message.hidden,
+      comment: message.comment,
+      from: message.from,
+    })
+      .then(comment => {
+        if (!comment) {
+          res.status(400).send('week not found')
+        } else {
+          res.status(200).send(comment)
+        }
+      })
+      .catch(error => res.status(400).send(error))
   },
 
+  /**
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<Array<Model>>}
+   */
   getCommentsForWeek(req, res) {
-    let token = helper.tokenVerify(req)
-    if (token.verified) {
-      return Comment
-        .findAll({
-          where: {
-            weekId: req.body.week
-          }
-        })
-        .then(comment => res.status(200).send(comment))
-        .catch(error => res.status(400).send(error))
-    } else {
-      res.status(400).send('token verification failed')
-    }
-  },
+    helper.controller_before_auth_check_action(req, res)
 
+    return Comment.findAll({
+      where: {
+        weekId: req.body.week
+      }
+    })
+      .then(comment => res.status(200).send(comment))
+      .catch(error => res.status(400).send(error))
+  }
 }

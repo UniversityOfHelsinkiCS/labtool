@@ -19,7 +19,6 @@ import MyPage from './components/pages/MyPage'
 import { getOneCI } from './services/courseInstance'
 import { coursePageInformation } from './services/courseInstance'
 
-
 import { getAllStudentCourses } from './services/studentinstances'
 import { getAllTeacherCourses } from './services/teacherinstances'
 
@@ -38,7 +37,7 @@ class App extends Component {
         this.props.getAllTeacherCourses()
       }
     } catch (exception) {
-      console.log('no user logged in')
+      console.log(exception)
     }
   }
 
@@ -50,71 +49,51 @@ class App extends Component {
       created: nProps.created
     }
     window.localStorage.setItem('loggedLabtool', JSON.stringify(userAndToken))
-    console.log(nProps)
   }
 
-
-
-
   render() {
-
     const Main = () => {
       return (
         <main>
           <Switch>
-            <Route path={`/labtool/courses/:id`} render={({ match, history }) =>
-              <CoursePage history={history} courseinstance={(this.props.getOneCI(match.params.id))}
-                pageData={(this.props.coursePageInformation(match.params.id))}
-              />}
+            <Route
+              path={`/labtool/courses/:id`}
+              render={({ match, history }) => <CoursePage history={history} courseinstance={this.props.getOneCI(match.params.id)} pageData={this.props.coursePageInformation(match.params.id)} />}
             />
-            <Route exact path={`/labtool/courses`} render={({ history }) =>
-              <Courses history={history} />}
+            <Route exact path={`/labtool/courses`} render={({ history }) => <Courses history={history} />} />
+            <Route path={`/labtool/courseregistration/:id`} render={({ match, history }) => <RegisterPage history={history} courseinstance={this.props.getOneCI(match.params.id)} />} />
+            <Route path={`/labtool/browsereviews/:id/:si/`} 
+              render={({ match, history }) => 
+              <BrowseReviews history={history} courseinstance={this.props.getOneCI(match.params.id)} pageData={this.props.coursePageInformation(match.params.id)} studentInstance={match.params.si} />}
             />
-            <Route path={`/labtool/courseregistration/:id`} render={({ match, history }) =>
-              <RegisterPage history={history} courseinstance={(this.props.getOneCI(match.params.id))} />}
-            />
-            <Route path={`/labtool/browsereviews`} component={BrowseReviews} />
             <Route path={`/labtool/email`} component={Email} />
             <Route path={`/labtool/registerPage`} component={RegisterPage} />
-            <Route path={`/labtool/reviewstudent/:si/:wk`} render={({ match }) =>
-              <ReviewStudent studentInstance={match.params.si} weekNumber={match.params.wk} />}
+            <Route
+              path={`/labtool/reviewstudent/:id/:si/:wk`}
+              render={({ match, history }) => <ReviewStudent history={history} courseinstance={this.props.getOneCI(match.params.id)} studentInstance={match.params.si} weekNumber={match.params.wk} />}
             />
-            <Route path={`/labtool/ModifyCourseInstancePage/:id`} render={({ match }) =>
-              <ModifyCourseInstancePage courseinstance={(this.props.getOneCI(match.params.id))} />}
-            />
+            <Route path={`/labtool/ModifyCourseInstancePage/:id`} render={({ match }) => <ModifyCourseInstancePage courseinstance={this.props.getOneCI(match.params.id)} />} />
             <Route path={`/`} component={MyPage} />
 
             {/* <Route path='/schedule' component={Schedule} /> */}
           </Switch>
         </main>
       )
-
     }
 
-    const EmailChecker = () => (
-      <div>
-        {this.props.user.email === ""
-          ? <Email />
-          : <Main />}
-      </div>
-    )
+    const EmailChecker = () => <div>{this.props.user.email === '' || this.props.user.email === null ? <Email /> : <Main />}</div>
 
     return (
       <Container>
         <Nav />
         <Notification />
-        {this.props.user
-          ? EmailChecker()
-          : <LoginPage />
-        }
+        {this.props.user ? EmailChecker() : <LoginPage />}
       </Container>
     )
   }
 }
 
-
-
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     user: state.user.user,
     token: state.user.token,
@@ -124,9 +103,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-
-
-export default withRouter(connect(
-  mapStateToProps,
-  { getAllCI, tokenLogin, logout, getOneCI, coursePageInformation, getAllStudentCourses, getAllTeacherCourses }
-)(App))
+export default withRouter(connect(mapStateToProps, { getAllCI, tokenLogin, logout, getOneCI, coursePageInformation, getAllStudentCourses, getAllTeacherCourses })(App))
