@@ -136,27 +136,35 @@ class CoursePage extends Component {
             <Table celled padded unstackable>
               <Table.Header>
                 <Table.Row>
-                  <Table.HeaderCell>Week</Table.HeaderCell>
-                  <Table.HeaderCell>Points</Table.HeaderCell>
-                  <Table.HeaderCell>Comment</Table.HeaderCell>
-                </Table.Row>
-              </Table.Header>
-              <Table.Body>
-                {console.log(this.props.courseData.data.weeks)}
-                {this.props.courseData.data.weeks.map(week =>
-                  <Table.Row>
-                    <Table.Cell>{week.weekNumber}</Table.Cell>
-                    <Table.Cell>{week.points}</Table.Cell>
-                    <Table.Cell>{week.comment}</Table.Cell>
+                    <Table.HeaderCell>Week</Table.HeaderCell>
+                    <Table.HeaderCell>Points</Table.HeaderCell>
+                    <Table.HeaderCell>Feedback</Table.HeaderCell>
+                    <Table.HeaderCell>Comments</Table.HeaderCell>
                   </Table.Row>
-                )}
-              </Table.Body>
-            </Table>
-          </div>
-          : <div></div>}
-
-      </div >
-
+                </Table.Header>
+                <Table.Body>
+                  {this.props.courseData.data.weeks.map(week => (
+                    <Table.Row>
+                      <Table.Cell>{week.weekNumber}</Table.Cell>
+                      <Table.Cell>{week.points}</Table.Cell>
+                      <Table.Cell>{week.feedback}</Table.Cell>
+                      <Table.Cell>
+                        <ul>
+                        {week.comments.map(comment => (
+                          <li> {comment.comment} </li>
+                        ))}
+                        </ul>
+                      </Table.Cell>
+                    </Table.Row>
+                  ))}
+                </Table.Body>
+              </Table>
+            </div>
+          ) : (
+            <div />
+          )}
+        </div>
+      </Transition>
     )
   }
 }
