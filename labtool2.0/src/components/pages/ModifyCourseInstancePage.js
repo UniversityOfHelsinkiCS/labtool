@@ -19,13 +19,12 @@ class ModifyCourseInstancePage extends Component {
   }
 
   state = {
-    redirectToNewPage: false,
+    redirectToNewPage: false
   }
 
   handleChange = (e, { value }) => this.setState({ value })
 
-
-  handleSubmit = async (e) => {
+  handleSubmit = async e => {
     try {
       e.preventDefault()
 
@@ -49,10 +48,7 @@ class ModifyCourseInstancePage extends Component {
     }
     const selectedInstance = { ...this.props.selectedInstance }
     return (
-      <div
-        className="CoursePage"
-        style={{ textAlignVertical: 'center', textAlign: 'center', }}>
-
+      <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
         <Grid>
           <Grid.Row centered>
             <h2> Edit course: {selectedInstance.name} </h2>
@@ -61,101 +57,55 @@ class ModifyCourseInstancePage extends Component {
 
         <Grid>
           <Grid.Row centered>
-            {selectedInstance.active === true ?
+            {selectedInstance.active === true ? (
               <div>
                 <Grid.Row>
-                  <h4 style={{ color: '#21ba45' }}>
-                    This course is currently activated.
-                  </h4>
+                  <h4 style={{ color: '#21ba45' }}>This course is currently activated.</h4>
                 </Grid.Row>
-              </div> :
+              </div>
+            ) : (
               <div>
                 <Grid.Row>
-                  <h4 style={{ color: 'red' }}>
-                    This course is currently passive.
-                  </h4>
+                  <h4 style={{ color: 'red' }}>This course is currently passive.</h4>
                 </Grid.Row>
-              </div>}
+              </div>
+            )}
           </Grid.Row>
         </Grid>
 
         <Grid>
           <Grid.Row centered>
             <Form onSubmit={this.handleSubmit}>
-
               <Form.Group inline>
-                <label style={{ width: '125px', textAlign: 'left' }}>
-                  Week amount
-                </label>
-                <Input
-                  name="weekAmount"
-                  required='true'
-                  type="text"
-                  style={{ maxWidth: '7em' }}
-                  defaultValue={JSON.stringify(selectedInstance.weekAmount)}
-                  className="form-control1" />
+                <label style={{ width: '125px', textAlign: 'left' }}>Week amount</label>
+                <Input name="weekAmount" required="true" type="text" style={{ maxWidth: '7em' }} defaultValue={JSON.stringify(selectedInstance.weekAmount)} className="form-control1" />
               </Form.Group>
 
               <Form.Group inline>
-                <label
-                  style={{ width: '125px', textAlign: 'left' }}>
-                  Weekly maxpoints
-                </label>
-                <Input
-                  name="weeklyMaxpoints"
-                  required='true'
-                  type="text"
-                  style={{ maxWidth: '7em' }}
-                  defaultValue={JSON.stringify(selectedInstance.weekMaxPoints)}
-                  className="form-control2" />
+                <label style={{ width: '125px', textAlign: 'left' }}>Weekly maxpoints</label>
+                <Input name="weeklyMaxpoints" required="true" type="text" style={{ maxWidth: '7em' }} defaultValue={JSON.stringify(selectedInstance.weekMaxPoints)} className="form-control2" />
               </Form.Group>
 
               <Form.Group inline>
-                <label
-                  style={{ width: '125px', textAlign: 'left' }}>
-                  Current week
-                </label>
-                <Input
-                  name="currentWeek"
-                  required='true'
-                  type="text"
-                  style={{ maxWidth: '7em' }}
-                  defaultValue={JSON.stringify(selectedInstance.currentWeek)}
-                  className="form-control3" />
+                <label style={{ width: '125px', textAlign: 'left' }}>Current week</label>
+                <Input name="currentWeek" required="true" type="text" style={{ maxWidth: '7em' }} defaultValue={JSON.stringify(selectedInstance.currentWeek)} className="form-control3" />
               </Form.Group>
 
-              <Form.Field inline >
-                <Radio
-                  name="courseActive"
-                  label='Activate course'
-                  value='true'
-                  checked={this.state.value === 'true'}
-                  onChange={this.handleChange}
-                  style={{ width: '150px', textAlign: 'left' }} />
+              <Form.Field inline>
+                <Radio name="courseActive" label="Activate course" value="true" checked={this.state.value === 'true'} onChange={this.handleChange} style={{ width: '150px', textAlign: 'left' }} />
               </Form.Field>
 
               <Form.Field inline>
-                <Radio
-                  name="courseActive"
-                  label='Passivate course'
-                  value='false'
-                  checked={this.state.value === 'false'}
-                  onChange={this.handleChange}
-                  style={{ width: '150px', textAlign: 'left' }} />
+                <Radio name="courseActive" label="Passivate course" value="false" checked={this.state.value === 'false'} onChange={this.handleChange} style={{ width: '150px', textAlign: 'left' }} />
               </Form.Field>
 
               <Form.Field>
-                <Button
-                  type='Submit'
-                  floated='left'
-                  color='green' >
+                <Button type="Submit" floated="left" color="green">
                   Save
                 </Button>
 
                 <Link to="/labtool/courses">
-                  <Button
-                    type="Cancel"
-                    floated='right' >
+                  <Button type="Cancel" floated="right">
                     Cancel
                   </Button>
                 </Link>
@@ -163,8 +113,7 @@ class ModifyCourseInstancePage extends Component {
             </Form>
           </Grid.Row>
         </Grid>
-
-      </div >
+      </div>
     )
   }
 }

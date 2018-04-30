@@ -20,17 +20,12 @@ class LoginPage extends React.Component {
       this.setState({ loading: false })
     }, 1000)
     await this.props.login(content)
-
   }
 
   render() {
     return (
-
-      <div className='LoginPage'>
-
-        <Loader
-          active={this.state.loading}
-          inline='centered' />
+      <div className="LoginPage">
+        <Loader active={this.state.loading} inline="centered" />
 
         <Grid>
           <Grid.Row centered>
@@ -42,47 +37,23 @@ class LoginPage extends React.Component {
           <Grid.Row centered>
             <Form onSubmit={this.handleSubmit}>
               <Form.Group inline>
-                <label
-                  style={{ width: '75px' }}>
-                  Username
-                </label>
-                <Input
-                  type='text'
-                  name="username"
-                  icon='user'
-                  required='true'
-                  iconPosition='left'
-                  style={{ minWidth: '25em' }}
-                  placeholder='Your AD-username'
-                  className='form-control1' />
+                <label style={{ width: '75px' }}>Username</label>
+                <Input type="text" name="username" icon="user" required="true" iconPosition="left" style={{ minWidth: '25em' }} placeholder="Your AD-username" className="form-control1" />
               </Form.Group>
 
               <Form.Group inline>
-                <label style={{ width: '75px' }}>
-                  Password
-                </label>
-                <Input
-                  type='password'
-                  name='password'
-                  required='true'
-                  icon='lock'
-                  iconPosition='left'
-                  style={{ minWidth: '25em' }}
-                  placeholder='Your password'
-                  className='form-control2' />
+                <label style={{ width: '75px' }}>Password</label>
+                <Input type="password" name="password" required="true" icon="lock" iconPosition="left" style={{ minWidth: '25em' }} placeholder="Your password" className="form-control2" />
               </Form.Group>
 
               <Form.Group>
-                <Button
-                  type='submit'
-                  color='blue'>
+                <Button type="submit" color="blue">
                   Login
                 </Button>
               </Form.Group>
             </Form>
           </Grid.Row>
         </Grid>
-
       </div>
     )
   }
