@@ -138,7 +138,7 @@ class CoursePage extends Component {
                       <Table.Cell>{week.points}</Table.Cell>
                       <Table.Cell>{week.feedback}</Table.Cell>
                     </Table.Row>
-                  ))}
+                  )}
                 </Table.Body>
               </Table>
             </div>
