@@ -127,6 +127,7 @@ class CoursePage extends Component {
                     <Table.HeaderCell>Week</Table.HeaderCell>
                     <Table.HeaderCell>Points</Table.HeaderCell>
                     <Table.HeaderCell>Feedback</Table.HeaderCell>
+                    <Table.HeaderCell>Comments</Table.HeaderCell>
                   </Table.Row>
                 </Table.Header>
                 <Table.Body>
@@ -135,6 +136,13 @@ class CoursePage extends Component {
                       <Table.Cell>{week.weekNumber}</Table.Cell>
                       <Table.Cell>{week.points}</Table.Cell>
                       <Table.Cell>{week.feedback}</Table.Cell>
+                      <Table.Cell>
+                        <ul>
+                        {week.comments.map(comment => (
+                          <li> {comment.comment} </li>
+                        ))}
+                        </ul>
+                      </Table.Cell>
                     </Table.Row>
                   ))}
                 </Table.Body>
