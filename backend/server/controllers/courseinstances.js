@@ -90,7 +90,6 @@ module.exports = {
         res.status(400).send(error)
       }
     } else {
-      console.log('student')
       const teacherPalautus = await StudentInstance.findAll({
         where: {
           courseInstanceId: courseInst,
