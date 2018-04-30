@@ -122,7 +122,7 @@ class CoursePage extends Component {
                 <Table.Row>
                   <Table.HeaderCell>Week</Table.HeaderCell>
                   <Table.HeaderCell>Points</Table.HeaderCell>
-                  <Table.HeaderCell>Comment</Table.HeaderCell>
+                  <Table.HeaderCell>Feedback</Table.HeaderCell>
                 </Table.Row>
               </Table.Header>
               <Table.Body>
@@ -130,7 +130,7 @@ class CoursePage extends Component {
                     <Table.Row>
                       <Table.Cell>{week.weekNumber}</Table.Cell>
                       <Table.Cell>{week.points}</Table.Cell>
-                      <Table.Cell>{week.comment}</Table.Cell>
+                      <Table.Cell>{week.feedback}</Table.Cell>
                     </Table.Row>
                   )}
                 </Table.Body>
