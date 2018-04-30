@@ -89,7 +89,7 @@ class CoursePage extends Component {
                   <Table.HeaderCell>Name</Table.HeaderCell>
                   <Table.HeaderCell> Github </Table.HeaderCell>
                   {createHeaders()}
-                  <Table.HeaderCell> All points </Table.HeaderCell>
+                  <Table.HeaderCell> Sum </Table.HeaderCell>
                   <Table.HeaderCell> Instructor </Table.HeaderCell>
                   <Table.HeaderCell> Review </Table.HeaderCell>
                 </Table.Row>
