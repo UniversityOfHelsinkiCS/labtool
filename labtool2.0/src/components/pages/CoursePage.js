@@ -13,7 +13,7 @@ class CoursePage extends Component {
 
     const createIndents = (data, siId) => {
       const indents = []
-     
+
       for (var i = 0; i < this.props.selectedInstance.weekAmount; i++) {
         let pushattava =
           <Table.Cell>
@@ -24,7 +24,9 @@ class CoursePage extends Component {
           if ((i + 1) === data[j].weekNumber) {
             pushattava = <Table.Cell>
               <p>{data[j].points}</p>
-         
+              {/*               <Link to={`/labtool/reviewstudent/${this.props.selectedInstance.ohid}/${siId}/${i + 1}`}>
+                <Button circular color='orange' size="tiny" icon="edit black large" ></Button>
+              </Link> */}
             </Table.Cell>
 
           }
@@ -102,11 +104,11 @@ class CoursePage extends Component {
                     <Table.Cell> Ohjaaja </Table.Cell>
 
                     <Table.Cell>
-            
-                    <Link to={`/labtool/browsereviews/${this.props.selectedInstance.ohid}/${data.id}`}>
-                      <Button circular color='orange' size="tiny" icon="edit black large" onClick={review()} ></Button>
 
-                    </Link>
+                      <Link to={`/labtool/browsereviews/${this.props.selectedInstance.ohid}/${data.id}`}>
+                        <Button circular color='orange' size="tiny" icon="edit black large" onClick={review()} ></Button>
+
+                      </Link>
                     </Table.Cell>
                   </Table.Row>
                 )}
