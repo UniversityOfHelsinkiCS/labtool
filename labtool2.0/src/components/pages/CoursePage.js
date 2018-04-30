@@ -100,9 +100,12 @@ class CoursePage extends Component {
                     {createIndents(data.weeks, data.id)}
                     <Table.Cell>0</Table.Cell>
                     <Table.Cell> Ohjaaja </Table.Cell>
+
                     <Table.Cell>
-                    <Link to={`/labtool/browsereviews/`}>
-                      <Button floated="right" circular color='orange' size="tiny" icon="edit black large" onClick={review()} ></Button>
+            
+                    <Link to={`/labtool/browsereviews/${this.props.selectedInstance.ohid}/${data.id}`}>
+                      <Button circular color='orange' size="tiny" icon="edit black large" onClick={review()} ></Button>
+
                     </Link>
                     </Table.Cell>
                   </Table.Row>
