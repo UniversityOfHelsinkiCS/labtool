@@ -8,24 +8,17 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      feedback: {
-        type: Sequelize.STRING
-      },
       comment: {
         type: Sequelize.STRING
       },
-      hiddenComment: {
-        type: Sequelize.STRING
+      hidden: {
+        type: Sequelize.BOOLEAN
       },
       weekId: {
         type: Sequelize.INTEGER,
         allowNull: false
       },
       from: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      to: {
         type: Sequelize.STRING,
         allowNull: false
       },

@@ -417,17 +417,11 @@ module.exports = {
     helper.controller_before_auth_check_action(req, res)
 
     const message = req.body
-    console.log('message: ', message.message)
-    console.log('from: ', message.from)
-    console.log('to: ', message.to)
-    console.log('week: ', message.week)
     return Comment.create({
       weekId: message.week,
-      feedback: message.feedback,
-      hiddenComment: message.hidden,
+      hidden: message.hidden,
       comment: message.comment,
       from: message.from,
-      to: message.to
     })
       .then(comment => {
         if (!comment) {
