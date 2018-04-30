@@ -10,13 +10,17 @@ class LoginPage extends React.Component {
 
   handleSubmit = async e => {
     e.preventDefault()
-
+    
     const content = {
       username: e.target.username.value,
       password: e.target.password.value
     }
     this.setState({ loading: true })
+    setTimeout(() => {
+      this.setState({loading: false})
+    }, 1000)
     await this.props.login(content)
+  
   }
 
   render() {
