@@ -4,7 +4,8 @@ module.exports = (sequelize, DataTypes) => {
     'Comment',
     {
       hidden: {
-        type: DataTypes.BOOLEAN
+        type: DataTypes.BOOLEAN,
+        allowNull: false
       },
       comment: {
         type: DataTypes.STRING
