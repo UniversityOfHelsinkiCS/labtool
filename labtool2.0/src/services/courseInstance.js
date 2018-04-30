@@ -1,6 +1,5 @@
 import { callController } from '../util/apiConnection'
 
-
 export const getAllCI = () => {
   const route = '/courseInstances'
   const prefix = 'CI_GET_ALL_'
@@ -8,13 +7,12 @@ export const getAllCI = () => {
   return callController(route, prefix, null, method)
 }
 
-export const getOneCI = (id) => {
+export const getOneCI = id => {
   const route = `/courses/${id}`
   const prefix = 'CI_GET_ONE_'
   const method = 'get'
   return callController(route, prefix, null, method)
 }
-
 
 export const modifyOneCI = (data, id) => {
   const route = `/courseinstances/${id}`
@@ -23,7 +21,7 @@ export const modifyOneCI = (data, id) => {
   return callController(route, prefix, data, method)
 }
 
-export const coursePageInformation = (data) => {
+export const coursePageInformation = data => {
   const send = {
     course: data
   }

@@ -1,7 +1,7 @@
 import { configure } from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
 
-configure({ adapter: new Adapter() }) 
+configure({ adapter: new Adapter() })
 
 const Enzyme = require('enzyme')
 
@@ -10,7 +10,7 @@ global.shallow = Enzyme.shallow
 global.render = Enzyme.render
 global.mount = Enzyme.mount
 
-// this is where we reference the adapter package we installed  
+// this is where we reference the adapter package we installed
 // earlier
 const EnzymeAdapter = require('enzyme-adapter-react-16')
 

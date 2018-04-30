@@ -4,13 +4,11 @@ import React from 'react'
 import { Form, Input, Button, Grid, Loader } from 'semantic-ui-react'
 
 class LoginPage extends React.Component {
-
   state = {
     loading: false
   }
- 
 
-  handleSubmit = async (e) => {
+  handleSubmit = async e => {
     e.preventDefault()
     
     const content = {
@@ -25,12 +23,10 @@ class LoginPage extends React.Component {
   
   }
 
-
   render() {
     return (
-
-      <div className='LoginPage'>
-        <Loader active={this.state.loading} inline='centered' />
+      <div className="LoginPage">
+        <Loader active={this.state.loading} inline="centered" />
         <Grid>
           <Grid.Row centered>
             <h3>Enter your University of Helsinki username and password.</h3>
@@ -40,53 +36,47 @@ class LoginPage extends React.Component {
         <Grid>
           <Grid.Row centered>
             <Form onSubmit={this.handleSubmit}>
-
               <Form.Group inline>
-                <label>
-                  Username
-                </label>
+                <label>Username</label>
                 <Input
                   style={{ minWidth: '25em' }}
-                  type='text'
-                  className='form-control1'
-                  placeholder='Your username'
+                  type="text"
+                  className="form-control1"
+                  placeholder="Your username"
                   //value={username}
                   name="username"
-                  icon='user'
-                  iconPosition='left'
+                  icon="user"
+                  iconPosition="left"
                   //onChange={handleFieldChange}
-                  required />
+                  required
+                />
               </Form.Group>
 
               <Form.Group inline>
                 <label>Password</label>
                 <Input
-                  type='password'
-                  icon='lock'
-                  iconPosition='left'
-                  className='form-control2'
-                  placeholder='Your password'
+                  type="password"
+                  icon="lock"
+                  iconPosition="left"
+                  className="form-control2"
+                  placeholder="Your password"
                   //value={password}
-                  name='password'
+                  name="password"
                   //onChange={handleFieldChange}
                   style={{ minWidth: '25em' }}
-                  required />
+                  required
+                />
               </Form.Group>
 
               <Form.Group inline>
-                <Button
-                  type='submit'
-                  color='blue'>
+                <Button type="submit" color="blue">
                   Login
                 </Button>
               </Form.Group>
-
             </Form>
-
           </Grid.Row>
         </Grid>
       </div>
-
     )
   }
 }
@@ -96,6 +86,5 @@ const mapStateToProps = (state, ownProps) => {
     renderAfter: ownProps.renderAfter
   }
 }
-
 
 export default connect(mapStateToProps, { login })(LoginPage)
