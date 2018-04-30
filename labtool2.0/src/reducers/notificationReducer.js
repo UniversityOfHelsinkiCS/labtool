@@ -9,7 +9,7 @@ const notificationReducer = (state = {}, action) => {
       return {}
     case 'LOGIN_FAILURE':
       return {
-        message: 'Wrong credentials!',
+        message: 'Wrong username or password',
         error: true
       }
     case 'LOGOUT_SUCCESS':

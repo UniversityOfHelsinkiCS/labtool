@@ -29,6 +29,7 @@ class Email extends Component {
         await this.props.updateUser(content)
         this.setState({ redirectToNewPage: true })
       }
+      alert('You added this email address: ' + content.email)
     } catch (error) {
       console.log(error)
     }
@@ -63,7 +64,16 @@ class Email extends Component {
             <Grid.Row>
               <Form onSubmit={this.handleSubmit}>
                 <Form.Field>
-                  <Form.Input defaultValue={user.email} style={{ minWidth: '20em' }} type="email" className="form-control" name="email" placeholder="my.email@helsinki.fi" />
+                  <Form.Input
+                    defaultValue={user.email}
+                    style={{ minWidth: '20em' }}
+                    type="email"
+                    icon="mail"
+                    iconPosition="left"
+                    className="form-control"
+                    name="email"
+                    placeholder="my.email@helsinki.fi"
+                  />
                 </Form.Field>
 
                 <Form.Field>

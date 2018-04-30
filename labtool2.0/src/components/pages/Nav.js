@@ -1,10 +1,14 @@
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import React, { Component } from 'react'
-import { Menu, Button } from 'semantic-ui-react'
+import { Menu, Button, Icon } from 'semantic-ui-react'
 import { logout } from '../../reducers/loginReducer'
 
 class Nav extends Component {
+  state = { activeItem: 'MyPage' }
+
+  handleItemClick = (e, { name }) => this.setState({ activeItem: name })
+
   handleLogout = async e => {
     e.preventDefault()
     window.localStorage.removeItem('loggedLabtool')
@@ -13,10 +17,12 @@ class Nav extends Component {
 
   render() {
     const user = { ...this.props.user.user }
+    const { activeItem } = this.state
 
     return (
       <main>
         <Menu
+          icon="labeled"
           stackable
           inverted
           borderless
@@ -30,7 +36,8 @@ class Nav extends Component {
             <Menu.Item header>Labtool 2.0</Menu.Item>
 
             {this.props.user.user ? (
-              <Menu.Item as={Link} to="/labtool/mypage">
+              <Menu.Item name="MyPage" as={Link} to="/labtool/mypage" active={activeItem === 'MyPage'} onClick={this.handleItemClick}>
+                <Icon name="home" />
                 My page
               </Menu.Item>
             ) : (
@@ -38,7 +45,8 @@ class Nav extends Component {
             )}
 
             {this.props.user.user ? (
-              <Menu.Item as={Link} to="/labtool/courses">
+              <Menu.Item name="Courses" as={Link} to="/labtool/courses" active={activeItem === 'Courses'} onClick={this.handleItemClick}>
+                <Icon name="browser" />
                 Courses
               </Menu.Item>
             ) : (
@@ -49,11 +57,16 @@ class Nav extends Component {
           {this.props.user.user ? (
             <div>
               <Menu.Menu position="right">
-                <Menu.Item>
+                <Menu.Item
+                  style={{
+                    color: 'gray',
+                    justifyContent: 'center'
+                  }}
+                >
                   <em>{user.username} logged in</em>
                 </Menu.Item>
 
-                <Menu.Item link>
+                <Menu.Item>
                   <Link to="/labtool">
                     {' '}
                     <Button onClick={this.handleLogout}>Logout</Button>

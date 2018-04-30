@@ -10,26 +10,26 @@ class LoginPage extends React.Component {
 
   handleSubmit = async e => {
     e.preventDefault()
-    
+
     const content = {
       username: e.target.username.value,
       password: e.target.password.value
     }
     this.setState({ loading: true })
     setTimeout(() => {
-      this.setState({loading: false})
+      this.setState({ loading: false })
     }, 1000)
     await this.props.login(content)
-  
   }
 
   render() {
     return (
       <div className="LoginPage">
         <Loader active={this.state.loading} inline="centered" />
+
         <Grid>
           <Grid.Row centered>
-            <h3>Enter your University of Helsinki username and password.</h3>
+            <h3>Enter your University of Helsinki username and password</h3>
           </Grid.Row>
         </Grid>
 
@@ -37,38 +37,16 @@ class LoginPage extends React.Component {
           <Grid.Row centered>
             <Form onSubmit={this.handleSubmit}>
               <Form.Group inline>
-                <label>Username</label>
-                <Input
-                  style={{ minWidth: '25em' }}
-                  type="text"
-                  className="form-control1"
-                  placeholder="Your username"
-                  //value={username}
-                  name="username"
-                  icon="user"
-                  iconPosition="left"
-                  //onChange={handleFieldChange}
-                  required
-                />
+                <label style={{ width: '75px' }}>Username</label>
+                <Input type="text" name="username" icon="user" required="true" iconPosition="left" style={{ minWidth: '25em' }} placeholder="Your AD-username" className="form-control1" />
               </Form.Group>
 
               <Form.Group inline>
-                <label>Password</label>
-                <Input
-                  type="password"
-                  icon="lock"
-                  iconPosition="left"
-                  className="form-control2"
-                  placeholder="Your password"
-                  //value={password}
-                  name="password"
-                  //onChange={handleFieldChange}
-                  style={{ minWidth: '25em' }}
-                  required
-                />
+                <label style={{ width: '75px' }}>Password</label>
+                <Input type="password" name="password" required="true" icon="lock" iconPosition="left" style={{ minWidth: '25em' }} placeholder="Your password" className="form-control2" />
               </Form.Group>
 
-              <Form.Group inline>
+              <Form.Group>
                 <Button type="submit" color="blue">
                   Login
                 </Button>

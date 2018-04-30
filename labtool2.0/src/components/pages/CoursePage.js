@@ -12,7 +12,7 @@ class CoursePage extends Component {
           <Table.Cell>
             <p>Not reviewed!</p>
             <Link to={`/labtool/reviewstudent/${this.props.selectedInstance.ohid}/${siId}/${i + 1}`}>
-              <Button circular color='orange' size="tiny" icon="edit black large" onClick={review()} ></Button>
+              <Button circular color="orange" size="tiny" icon="edit black large" onClick={review()} />
             </Link>
           </Table.Cell>
         )
@@ -56,7 +56,9 @@ class CoursePage extends Component {
               <div className="sixteen wide column">
                 <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>
                   {' '}
-                  <Button>Register</Button>
+                  <Button size="huge" color="blue">
+                    Register
+                  </Button>
                 </Link>
               </div>
             ) : (
@@ -119,16 +121,16 @@ class CoursePage extends Component {
                 </Card.Content>
               </Card>
               <h3> Comments and feedback </h3>
-            <Table celled padded unstackable>
-              <Table.Header>
-                <Table.Row>
-                  <Table.HeaderCell>Week</Table.HeaderCell>
-                  <Table.HeaderCell>Points</Table.HeaderCell>
-                  <Table.HeaderCell>Feedback</Table.HeaderCell>
-                </Table.Row>
-              </Table.Header>
-              <Table.Body>
-                {this.props.courseData.data.weeks.map(week =>
+              <Table celled padded unstackable>
+                <Table.Header>
+                  <Table.Row>
+                    <Table.HeaderCell>Week</Table.HeaderCell>
+                    <Table.HeaderCell>Points</Table.HeaderCell>
+                    <Table.HeaderCell>Feedback</Table.HeaderCell>
+                  </Table.Row>
+                </Table.Header>
+                <Table.Body>
+                  {this.props.courseData.data.weeks.map(week => (
                     <Table.Row>
                       <Table.Cell>{week.weekNumber}</Table.Cell>
                       <Table.Cell>{week.points}</Table.Cell>
