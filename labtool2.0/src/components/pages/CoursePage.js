@@ -11,9 +11,9 @@ class CoursePage extends Component {
       instance = this.props.studentInstance.filter(inst => (inst.courseInstanceId == this.props.selectedInstance.id))
     }
 
-
     const createIndents = (data, siId) => {
       const indents = []
+
       for (var i = 0; i < this.props.selectedInstance.weekAmount; i++) {
         let pushattava =
           <Table.Cell>
@@ -24,9 +24,9 @@ class CoursePage extends Component {
           if ((i + 1) === data[j].weekNumber) {
             pushattava = <Table.Cell>
               <p>{data[j].points}</p>
-              <Link to={`/labtool/reviewstudent/${this.props.selectedInstance.ohid}/${siId}/${i + 1}`}>
+              {/*               <Link to={`/labtool/reviewstudent/${this.props.selectedInstance.ohid}/${siId}/${i + 1}`}>
                 <Button circular color='orange' size="tiny" icon="edit black large" ></Button>
-              </Link>
+              </Link> */}
             </Table.Cell>
 
           }
@@ -88,7 +88,7 @@ class CoursePage extends Component {
                   <Table.HeaderCell>Name</Table.HeaderCell>
                   <Table.HeaderCell> Github </Table.HeaderCell>
                   {createHeaders()}
-                  <Table.HeaderCell> Maxpoints </Table.HeaderCell>
+                  <Table.HeaderCell> All points </Table.HeaderCell>
                   <Table.HeaderCell> Instructor </Table.HeaderCell>
                   <Table.HeaderCell> Review </Table.HeaderCell>
                 </Table.Row>
@@ -100,12 +100,16 @@ class CoursePage extends Component {
                     <Table.Cell>{data.User.firsts} {data.User.lastname}</Table.Cell>
                     <Table.Cell><p>{data.projectName}</p><a>{data.github}</a></Table.Cell>
                     {createIndents(data.weeks, data.id)}
-                    <Table.Cell> Summa </Table.Cell>
+                    <Table.Cell>0</Table.Cell>
                     <Table.Cell> Ohjaaja </Table.Cell>
-                    <Link to={`/labtool/browsereviews/${this.props.selectedInstance.ohid}/${data.id}`}>
-                      <Button circular color='orange' size="tiny" icon="edit black large" onClick={review()} ></Button>
-                    </Link>
 
+                    <Table.Cell>
+
+                      <Link to={`/labtool/browsereviews/${this.props.selectedInstance.ohid}/${data.id}`}>
+                        <Button circular color='orange' size="tiny" icon="edit black large" onClick={review()} ></Button>
+
+                      </Link>
+                    </Table.Cell>
                   </Table.Row>
                 )}
               </Table.Body>
