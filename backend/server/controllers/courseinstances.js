@@ -306,7 +306,7 @@ module.exports = {
         uri: `https://opetushallinto.cs.helsinki.fi/labtool/courses?year=${termAndYear.currentYear}&term=${termAndYear.currentTerm}`,
         headers: {
           'Content-Type': 'application/json',
-          Authorization: auth
+          Authorization: process.env.TOKEN
         },
         strictSSL: false
       }
@@ -356,7 +356,7 @@ module.exports = {
           uri: `https://opetushallinto.cs.helsinki.fi/labtool/courses?year=${termAndYear.nextYear}&term=${termAndYear.nextTerm}`,
           headers: {
             'Content-Type': 'application/json',
-            Authorization: auth
+            Authorization: process.env.TOKEN
           },
           strictSSL: false
         }
