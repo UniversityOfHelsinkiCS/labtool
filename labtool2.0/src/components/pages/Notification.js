@@ -3,8 +3,6 @@ import { connect } from 'react-redux'
 import { clearNotifications } from '../../reducers/notificationReducer'
 import { Message, Grid } from 'semantic-ui-react'
 
-
-
 let timeout
 
 class Notification extends React.Component {
@@ -17,55 +15,43 @@ class Notification extends React.Component {
       }, 5000)
     }
   }
-  
+
   render() {
     const message = this.props.notification.message
     const error = this.props.notification.error
-   
+
     if (message === undefined) {
       return (
         <Grid>
           <Grid.Row>
-            <br/>
+            <br />
             <br />
             <br />
           </Grid.Row>
-        </Grid> 
+        </Grid>
       )
-   
     } else if (error) {
       return (
-        <Message
-          className='error'
-          color='red'
-          size='large'>
+        <Message className="error" color="red" size="large">
           {message}
         </Message>
       )
-
     } else {
       return (
-        <Message
-          className='success'
-          color='green'
-          size='large' >
+        <Message className="success" color="green" size="large">
           {message}
         </Message>
-       
       )
     }
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     notification: state.notification
   }
 }
 
-const ConnectedNotification = connect(
-  mapStateToProps,
-  { clearNotifications }
-)(Notification)
+const ConnectedNotification = connect(mapStateToProps, { clearNotifications })(Notification)
 
 export default ConnectedNotification
