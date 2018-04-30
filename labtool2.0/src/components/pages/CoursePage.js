@@ -75,6 +75,11 @@ class CoursePage extends Component {
                     <Table.HeaderCell>Week amount: {this.props.selectedInstance.weekAmount}</Table.HeaderCell>
                     <Table.HeaderCell>Current week: {this.props.selectedInstance.currentWeek}</Table.HeaderCell>
                     <Table.HeaderCell>Week maxpoints: {this.props.selectedInstance.weekMaxPoints}</Table.HeaderCell>
+                    <Table.HeaderCell textAlign="center">
+                      <Link to={`/labtool/ModifyCourseInstancePage/${this.props.selectedInstance.ohid}`}>
+                        <Button circular color="orange" size="tiny" icon="large black edit icon" />
+                      </Link>
+                    </Table.HeaderCell>
                   </Table.Row>
                 </Table.Header>
               </Table>

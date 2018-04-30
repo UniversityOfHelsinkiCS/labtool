@@ -8,18 +8,33 @@ class Courses extends Component {
     return (
       <div>
         <Container>
-          <Header as="h2" className="CoursesHeader">
-            Courses
-          </Header>
-          <Table singleline key="grey">
+          <Header as="h2">Courses</Header>
+          <Table celled>
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell colSpan="1">Course id</Table.HeaderCell>
+                <Table.HeaderCell colSpan="1">Course name</Table.HeaderCell>
+                <Table.HeaderCell colSpan="1">Course start date</Table.HeaderCell>
+                <Table.HeaderCell colSpan="1">Course active</Table.HeaderCell>
+
+                <Table.HeaderCell colSpan="2">jotain</Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+
             <Table.Body>
               {this.props.courseInstance.map(instance => (
-                <Table.Row>
-                  <Table.Cell>{instance.name}</Table.Cell>
+                <Table.Row key={''}>
+                  <Table.Cell>{instance.ohid} </Table.Cell>
+                  <Table.Cell>
+                    <Link to="{`/labtool/ModifyCourseInstancePage/${instance.ohid}`}">{instance.name} </Link>
+                  </Table.Cell>
+                  <Table.Cell>{instance.start.substring(0, 10)} </Table.Cell>
+                  <Table.Cell>{JSON.stringify(instance.active)} </Table.Cell>
+
                   <Table.Cell textAlign="right">
                     <div>
                       <Link to={`/labtool/courses/${instance.ohid}`}>
-                        <Button circular color="teal" size="tiny" icon="large black eye icon" />
+                        <Button circular color="blue" size="tiny" icon="large black eye icon" />
                       </Link>
                       <Link to={`/labtool/ModifyCourseInstancePage/${instance.ohid}`}>
                         <Button circular color="orange" size="tiny" icon="large black edit icon" />
@@ -30,6 +45,7 @@ class Courses extends Component {
               ))}
             </Table.Body>
           </Table>
+
           <div className="Instructions">
             <List>
               <List.Item icon="eye" content="Show course page" />
@@ -49,29 +65,3 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 export default connect(mapStateToProps, null)(Courses)
-
-/* import React, { Component } from 'react'
-import React from 'react'
-import { Switch, Route } from 'react-router-dom'
-import AllCourses from './AllCourses'
-import Course from './Course'
-
-class Courses extends React.Component {
-    
-
-  render() {
-    return (
-      <div style={{ textAlignVertical: 'center', textAlign: 'center', }}>
-        <h2>Kursseja!</h2>
-        <Switch>
-          <Route exact path={`${process.env.PUBLIC_URL}/courses`} component={AllCourses} />
-          <Route path={`${process.env.PUBLIC_URL}/courses:number`} component={Course} />
-        </Switch>
-      </div >
-    )
-  }
-}
-
-
-export default Courses
-*/
