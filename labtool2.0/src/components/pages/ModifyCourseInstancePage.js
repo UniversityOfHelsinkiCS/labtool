@@ -66,7 +66,7 @@ class ModifyCourseInstancePage extends Component {
             ) : (
               <div>
                 <Grid.Row>
-                  <h4 style={{ color: 'red' }}>This course is currently passive.</h4>
+                  <h4 style={{ color: 'grey' }}>This course is currently passive.</h4>
                 </Grid.Row>
               </div>
             )}

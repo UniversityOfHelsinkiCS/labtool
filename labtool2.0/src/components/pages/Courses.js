@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, List, Container, Header, Table } from 'semantic-ui-react'
+import { Button, List, Container, Header, Table, Icon } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
@@ -9,7 +9,7 @@ class Courses extends Component {
       <div>
         <Container>
           <Header as="h2">Courses</Header>
-          <Table celled>
+          <Table celled singleLine>
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell colSpan="1">Course id</Table.HeaderCell>
@@ -17,7 +17,7 @@ class Courses extends Component {
                 <Table.HeaderCell colSpan="1">Course start date</Table.HeaderCell>
                 <Table.HeaderCell colSpan="1">Course active</Table.HeaderCell>
 
-                <Table.HeaderCell colSpan="2">jotain</Table.HeaderCell>
+                <Table.HeaderCell colSpan="2" />
               </Table.Row>
             </Table.Header>
 
@@ -25,20 +25,18 @@ class Courses extends Component {
               {this.props.courseInstance.map(instance => (
                 <Table.Row key={''}>
                   <Table.Cell>{instance.ohid} </Table.Cell>
-                  <Table.Cell>
-                    <Link to="{`/labtool/ModifyCourseInstancePage/${instance.ohid}`}">{instance.name} </Link>
+                  <Table.Cell selectable>  <a href='{`/courses/${instance.ohid}`}'>{instance.name}</a>
                   </Table.Cell>
                   <Table.Cell>{instance.start.substring(0, 10)} </Table.Cell>
                   <Table.Cell>{JSON.stringify(instance.active)} </Table.Cell>
 
-                  <Table.Cell textAlign="right">
+                  <Table.Cell textAlign="center">
                     <div>
-                      <Link to={`/labtool/courses/${instance.ohid}`}>
-                        <Button circular color="blue" size="tiny" icon="large black eye icon" />
-                      </Link>
-                      <Link to={`/labtool/ModifyCourseInstancePage/${instance.ohid}`}>
-                        <Button circular color="orange" size="tiny" icon="large black edit icon" />
-                      </Link>
+                      {instance.active === true ? (
+                        <Button circular size="tiny" icon="large black eye icon" as={Link} to={`/labtool/courses/${instance.ohid}`} style={{ backgroundColor: '#21ba45' }} />
+                    ) : (
+                        <Button circular size="tiny" icon="large black eye icon" as={Link} to={`/labtool/courses/${instance.ohid}`} />
+                      )}
                     </div>
                   </Table.Cell>
                 </Table.Row>
@@ -49,7 +47,6 @@ class Courses extends Component {
           <div className="Instructions">
             <List>
               <List.Item icon="eye" content="Show course page" />
-              <List.Item icon="edit" content="Edit course" />
             </List>
           </div>
         </Container>
