@@ -25,7 +25,7 @@ class Courses extends Component {
               {this.props.courseInstance.map(instance => (
                 <Table.Row key={''}>
                   <Table.Cell>{instance.ohid} </Table.Cell>
-                  <Table.Cell selectable>  <a href='{`/courses/${instance.ohid}`}'>{instance.name}</a>
+                  <Table.Cell selectable>  <a href={`/labtool/courses/${instance.ohid}`}>{instance.name}</a>
                   </Table.Cell>
                   <Table.Cell>{instance.start.substring(0, 10)} </Table.Cell>
                   <Table.Cell>{JSON.stringify(instance.active)} </Table.Cell>
