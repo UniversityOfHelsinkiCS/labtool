@@ -68,8 +68,11 @@ module.exports = {
             include: [
               {
                 model: Comment,
-                as: 'comments'
-              }
+                as: 'comments',
+                where: {
+                  hidden: false 
+                }
+              } 
             ]
           },
           {
@@ -79,42 +82,41 @@ module.exports = {
       })
 
 
-        try {
-          palautus.data = student
-          console.log('TÄSSÄ ON STUDNETTII', student)
-          palautus.role = 'student'
-          res.status(200).send(palautus)
-        } catch (error) {
-          res.status(400).send(error)
-        }
-      } else {
-        const teacherPalautus = await StudentInstance.findAll({
-          where: {
-            courseInstanceId: courseInst
+      try {
+        palautus.data = student
+        palautus.role = 'student'
+        res.status(200).send(palautus)
+      } catch (error) {
+        res.status(400).send(error)
+      }
+    } else {
+      const teacherPalautus = await StudentInstance.findAll({
+        where: {
+          courseInstanceId: courseInst,
+        },
+        include: [
+          {
+            model: Week,
+            as: 'weeks',
+            include: [
+              {
+                model: Comment,
+                as: 'comments'
+              }
+            ]
           },
-          include: [
-            {
-              model: Week,
-              as: 'weeks',
-              include: [
-                {
-                  model: Comment,
-                  as: 'comments'
-                }
-              ]
-            },
-            {
-              model: User
-            }
-          ]
-        })
-        try {
-          palautus.data = teacherPalautus
-          palautus.role = 'teacher'
-          res.status(200).send(palautus)
-        } catch (e) {
-          res.status(200).send(e)
-        }    
+          {
+            model: User
+          }
+        ]
+      })
+      try {
+        palautus.data = teacherPalautus
+        palautus.role = 'teacher'
+        res.status(200).send(palautus)
+      } catch (e) {
+        res.status(200).send(e)
+      }
     }
   },
 
@@ -310,7 +312,7 @@ module.exports = {
         },
         strictSSL: false
       }
-      request(options, function(err, resp, body) {
+      request(options, function (err, resp, body) {
         const json = JSON.parse(body)
         console.log('json palautta...')
         console.log(json)

@@ -47,6 +47,16 @@ const notificationReducer = (state = {}, action) => {
         message: 'Oopsie doopsie, inputs are not valid!',
         error: true
       }
+    case 'COMMENT_CREATE_ONE_SUCCESS':
+      return {
+        message: 'Comment created succesfully!',
+        error: false
+      }
+    case 'COMMENT_CREATE_ONE_FAILURE':
+      return {
+        message: 'Creating comment failed!',
+        error: true
+      }    
     default:
       return state
   }

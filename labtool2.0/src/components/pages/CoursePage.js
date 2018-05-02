@@ -1,32 +1,35 @@
 import React, { Component } from 'react'
-import { Button, Table, Card, Transition } from 'semantic-ui-react'
+import { Button, Table, Grid, Card, Header, Divider } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 class CoursePage extends Component {
+
   render() {
+    let instance = []
+    if (this.props.studentInstance) {
+      instance = this.props.studentInstance.filter(inst => (inst.courseInstanceId == this.props.selectedInstance.id))
+    }
+    let allPoints = 0
     const createIndents = (data, siId) => {
       const indents = []
+
       for (var i = 0; i < this.props.selectedInstance.weekAmount; i++) {
-        let pushattava = (
+        let pushattava =
           <Table.Cell>
             <p>Not reviewed!</p>
-            <Link to={`/labtool/reviewstudent/${this.props.selectedInstance.ohid}/${siId}/${i + 1}`}>
-              <Button circular color="orange" size="tiny" icon="edit black large" onClick={review()} />
-            </Link>
           </Table.Cell>
-        )
 
         for (var j = 0; j < data.length; j++) {
-          if (i + 1 === data[j].weekNumber) {
-            pushattava = (
-              <Table.Cell>
-                <p>{data[j].points}</p>
-                <Link to={`/labtool/reviewstudent/${this.props.selectedInstance.ohid}/${siId}/${i + 1}`}>
-                  <Button circular color="orange" size="tiny" icon="edit black large" />
-                </Link>
-              </Table.Cell>
-            )
+          if ((i + 1) === data[j].weekNumber) {
+            allPoints += data[j].points
+            pushattava = <Table.Cell>
+              <p>{data[j].points}</p>
+              {/*               <Link to={`/labtool/reviewstudent/${this.props.selectedInstance.ohid}/${siId}/${i + 1}`}>
+                <Button circular color='orange' size="tiny" icon="edit black large" ></Button>
+              </Link> */}
+            </Table.Cell>
+
           }
         }
         indents.push(pushattava)
@@ -42,96 +45,101 @@ class CoursePage extends Component {
       return headers
     }
 
-    const review = () => {}
+    const review = () => {
+
+    }
+
 
     return (
       //const CoursePage = ({ name, start, end, week_amount, week_max_points, current_week, handleFieldChange }) => {
-      <Transition transitionOnMount={true}>
-        <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
-          <div className="ui grid">
-            <div className="sixteen wide column">
-              <h2>{this.props.selectedInstance.name}</h2>
-            </div>
-            {this.props.courseData.data === null ? (
-              <div className="sixteen wide column">
-                <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>
-                  {' '}
-                  <Button size="huge" color="blue">
-                    Register
-                  </Button>
-                </Link>
-              </div>
-            ) : (
-              <p />
-            )}
+      <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
+        <div className="ui grid">
+          <div className="sixteen wide column">
+            <h2>{this.props.selectedInstance.name}</h2>
           </div>
-
-          {this.props.courseData.role === 'teacher' ? (
-            <div>
-              <Table celled>
-                <Table.Header>
-                  <Table.Row>
-                    <Table.HeaderCell>Active: {JSON.stringify(this.props.selectedInstance.active)}</Table.HeaderCell>
-                    <Table.HeaderCell>Week amount: {this.props.selectedInstance.weekAmount}</Table.HeaderCell>
-                    <Table.HeaderCell>Current week: {this.props.selectedInstance.currentWeek}</Table.HeaderCell>
-                    <Table.HeaderCell>Week maxpoints: {this.props.selectedInstance.weekMaxPoints}</Table.HeaderCell>
-                    <Table.HeaderCell textAlign="center">
-                      <Link to={`/labtool/ModifyCourseInstancePage/${this.props.selectedInstance.ohid}`}>
-                        <Button circular color="orange" size="tiny" icon="large black edit icon" />
-                      </Link>
-                    </Table.HeaderCell>
-                  </Table.Row>
-                </Table.Header>
-              </Table>
-
-              <h3> Students </h3>
-              <Table celled unstackable>
-                <Table.Header>
-                  <Table.Row>
-                    <Table.HeaderCell>Name</Table.HeaderCell>
-                    <Table.HeaderCell> Github </Table.HeaderCell>
-                    {createHeaders()}
-                  </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                  {this.props.courseData.data.map(data => (
-                    <Table.Row>
-                      <Table.Cell>
-                        {data.User.firsts} {data.User.lastname}
-                      </Table.Cell>
-                      <Table.Cell>
-                        <p>{data.projectName}</p>
-                        <a>{data.github}</a>
-                      </Table.Cell>
-                      {createIndents(data.weeks, data.id)}
-                    </Table.Row>
-                  ))}
-                </Table.Body>
-              </Table>
+          {this.props.courseData.data === null
+            ?
+            <div className="sixteen wide column">
+              <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>  <Button>Register</Button></Link>
             </div>
-          ) : (
-            <div />
-          )}
-          {this.props.courseData.role === 'student' && this.props.courseData.data !== null ? (
-            <div>
-              <h3> </h3>
+            : <p></p>
+          }
+        </div>
 
-              <Card fluid color="yellow">
-                <Card.Content>
-                  <h3> {this.props.courseData.data.projectName} </h3>
-                  <h3>
-                    {' '}
-                    <Link to={this.props.courseData.data.github}>{this.props.courseData.data.github}</Link>{' '}
-                  </h3>
-                </Card.Content>
-              </Card>
-              <h3> Comments and feedback </h3>
-              <Table celled padded unstackable>
-                <Table.Header>
+
+
+        {this.props.courseData.role === 'teacher' ?
+          <div>
+<br />
+            <Table celled >
+              <Table.Header>
+                <Table.Row>
+                  <Table.HeaderCell>Active: {JSON.stringify(this.props.selectedInstance.active)}</Table.HeaderCell>
+                  <Table.HeaderCell>Week amount: {this.props.selectedInstance.weekAmount}</Table.HeaderCell>
+                  <Table.HeaderCell>Current week: {this.props.selectedInstance.currentWeek}</Table.HeaderCell>
+                  <Table.HeaderCell>Week maxpoints: {this.props.selectedInstance.weekMaxPoints}</Table.HeaderCell>
+                </Table.Row>
+              </Table.Header>
+            </Table>
+
+            <h2> Students </h2>
+            <Table celled unstackable>
+              <Table.Header>
+                <Table.Row>
+                  <Table.HeaderCell>Name</Table.HeaderCell>
+                  <Table.HeaderCell> Github </Table.HeaderCell>
+                  {createHeaders()}
+                  <Table.HeaderCell> Sum </Table.HeaderCell>
+                  <Table.HeaderCell> Instructor </Table.HeaderCell>
+                  <Table.HeaderCell> Review </Table.HeaderCell>
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
+                {this.props.courseData.data.map(data =>
+
                   <Table.Row>
+                    <Table.Cell>{data.User.firsts} {data.User.lastname}</Table.Cell>
+                    <Table.Cell><p>{data.projectName}</p><a>{data.github}</a></Table.Cell>
+                    {createIndents(data.weeks, data.id)}
+                    <Table.Cell>{allPoints}</Table.Cell>
+                    <Table.Cell> Ohjaaja </Table.Cell>
+
+                    <Table.Cell>
+
+                      <Link to={`/labtool/browsereviews/${this.props.selectedInstance.ohid}/${data.id}`}>
+                        <Button circular color='orange' size="tiny" icon="edit black large" onClick={review()} ></Button>
+
+                      </Link>
+                    </Table.Cell>
+                  </Table.Row>
+                )}
+              </Table.Body>
+            </Table>
+          </div>
+          :
+          <div></div>
+        }
+        {this.props.courseData.role === "student" && this.props.courseData.data !== null
+          ? <div>
+
+            <h3> </h3>
+
+            <Card fluid color='yellow'>
+              <Card.Content>
+                <h3> {this.props.courseData.data.projectName} </h3>
+                <h3> <Link to={this.props.courseData.data.github}>{this.props.courseData.data.github}</Link> </h3>
+              </Card.Content>
+            </Card>
+
+            <h3> Points and feedback </h3>
+
+            <Table celled padded unstackable>
+              <Table.Header>
+                <Table.Row>
                     <Table.HeaderCell>Week</Table.HeaderCell>
                     <Table.HeaderCell>Points</Table.HeaderCell>
                     <Table.HeaderCell>Feedback</Table.HeaderCell>
+                    <Table.HeaderCell>Comments</Table.HeaderCell>
                   </Table.Row>
                 </Table.Header>
                 <Table.Body>
@@ -140,21 +148,27 @@ class CoursePage extends Component {
                       <Table.Cell>{week.weekNumber}</Table.Cell>
                       <Table.Cell>{week.points}</Table.Cell>
                       <Table.Cell>{week.feedback}</Table.Cell>
+                      <Table.Cell>
+                        <ul>
+                        {week.comments.map(comment => (
+                          <li> {comment.comment} </li>
+                        ))}
+                        </ul>
+                      </Table.Cell>
                     </Table.Row>
                   ))}
                 </Table.Body>
               </Table>
             </div>
-          ) : (
+          : (
             <div />
           )}
         </div>
-      </Transition>
     )
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     user: state.user,
     studentInstance: state.studentInstance,
@@ -163,5 +177,7 @@ const mapStateToProps = state => {
     courseData: state.coursePage
   }
 }
+
+
 
 export default connect(mapStateToProps, {})(CoursePage)

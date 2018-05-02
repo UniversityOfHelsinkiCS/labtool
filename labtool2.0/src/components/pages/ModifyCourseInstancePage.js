@@ -96,7 +96,7 @@ class ModifyCourseInstancePage extends Component {
               </Form.Field>
 
               <Form.Field inline>
-                <Radio name="courseActive" label="Passivate course" value="false" checked={this.state.value === 'false'} onChange={this.handleChange} style={{ width: '150px', textAlign: 'left' }} />
+                <Radio name="courseActive" label="Deactivate course" value="false" checked={this.state.value === 'false'} onChange={this.handleChange} style={{ width: '150px', textAlign: 'left' }} />
               </Form.Field>
 
               <Form.Field>
