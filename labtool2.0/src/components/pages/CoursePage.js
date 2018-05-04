@@ -171,9 +171,9 @@ class CoursePage extends Component {
                     <Table.Cell>{week.weekNumber}</Table.Cell>
                     <Table.Cell>{week.points}</Table.Cell>
                     <Table.Cell>{week.feedback}</Table.Cell>
-                    <Table.Cell>
+                    <Table.Cell>                           
                       <Comment.Group>
-                        {week.comments.map(comment => (
+                        {week.comments.filter(c => c.hidden !== true).map(comment => (
                           <Comment>
                             <Comment.Author>{comment.from}</Comment.Author>
                             <Comment.Text> {comment.comment} </Comment.Text>

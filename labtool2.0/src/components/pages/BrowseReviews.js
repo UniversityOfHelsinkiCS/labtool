@@ -22,7 +22,7 @@ class BrowseReviews extends Component {
   handleSubmit = async e => {
     e.preventDefault()
     const content = {
-      hidden: false,
+      hidden: e.target.hidden.checked,
       comment: e.target.content.value,
       week: parseInt(e.target.name),
       from: this.props.user.user.username
@@ -60,31 +60,42 @@ class BrowseReviews extends Component {
                   <Accordion.Title active={activeIndex === i} index={i} onClick={this.handleClick}>
                     <Icon name='dropdown' /> Week {i + 1} </Accordion.Title>
                   <Accordion.Content active={activeIndex === i}>
-                    <Card fluid color='yellow'>
+                      <Card fluid color='yellow'>
                       <Card.Content>
                         <h4> Points: {weekPoints.points} </h4>
                         <h4> Weekly feedback: {weekPoints.feedback} </h4>
                       </Card.Content>
                     </Card>
-                    <h4> Comments </h4>
-                    <Comment.Group>
-                      {this.props.courseData.data[0].weeks[i] ?
-                        this.props.courseData.data[0].weeks[i].comments.map(comment => (
-                          <Comment>
-                            <Comment.Author>{comment.from}</Comment.Author>
-                            <Comment.Text> {comment.comment} </Comment.Text>
-                          </Comment>
-                        )) : <h4> No comments </h4>}
-                    </Comment.Group>
-                    <Form reply onSubmit={this.handleSubmit} name={weekPoints.id} id={weekPoints.id} >
-                      <Form.TextArea name="content" placeholder='Your comment...' defaultValue="" />
-
-                      <Button content='Add Reply' labelPosition='left' icon='edit' primary />
-                    </Form>
-                    <h3>Review</h3>
-                    <Link to={`/labtool/reviewstudent/${this.props.selectedInstance.ohid}/${studentInstance}/${i + 1}`}>
-                      <Button circular color="orange" size="tiny" icon="edit black large" />
-                    </Link>
+                      <h4> Comments </h4>
+                      <Comment.Group>
+                      {this.props.courseData.data[0].weeks[i] ? 
+                      this.props.courseData.data[0].weeks[i].comments.map(comment => (
+                        comment.hidden ?
+                        <Comment disabled>
+                          <Comment.Content>
+                          <Comment.Metadata>
+                            <div>Hidden</div>
+                          </Comment.Metadata>
+                          <Comment.Author>{comment.from}</Comment.Author>
+                          <Comment.Text> {comment.comment} </Comment.Text>
+                          </Comment.Content>
+                        </Comment> :
+                        <Comment>
+                          <Comment.Author>{comment.from}</Comment.Author>
+                          <Comment.Text> {comment.comment} </Comment.Text>
+                      </Comment>
+                      )) : <h4> No comments </h4>}
+                      </Comment.Group>
+                      <Form reply onSubmit={this.handleSubmit} name={weekPoints.id} id={weekPoints.id} >
+                          <Form.TextArea name="content" placeholder='Your comment...' defaultValue="" />
+                          <Form.Checkbox label="Make this comment hidden from others" name="hidden" />
+                          <Button content='Add Reply' labelPosition='left' icon='edit' primary />
+                        </Form>
+                        <h3>Review</h3>
+                      <Link to={`/labtool/reviewstudent/${this.props.selectedInstance.ohid}/${studentInstance}/${i+1}`}>
+                        <Button circular color="orange" size="tiny" icon="edit black large" />
+                      </Link>
+                    
 
                   </Accordion.Content>
                 </Accordion>
