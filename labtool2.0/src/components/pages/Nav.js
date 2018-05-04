@@ -4,15 +4,10 @@ import React, { Component } from 'react'
 import { Menu, Icon, Image } from 'semantic-ui-react'
 import { logout } from '../../reducers/loginReducer'
 
-
 /**
  * Navigation bar component
  */
 class Nav extends Component {
-  state = { activeItem: 'MyPage' }
-
-  handleItemClick = (e, { name }) => this.setState({ activeItem: name })
-
   handleLogout = async e => {
     e.preventDefault()
     window.localStorage.removeItem('loggedLabtool')
@@ -21,7 +16,6 @@ class Nav extends Component {
 
   render() {
     const user = { ...this.props.user.user }
-    const { activeItem } = this.state
 
     return (
       <main>
@@ -54,7 +48,7 @@ class Nav extends Component {
             </Menu.Item>
 
             {this.props.user.user ? (
-              <Menu.Item name="MyPage" as={Link} to="/labtool/mypage" active={activeItem === 'MyPage'} onClick={this.handleItemClick}>
+              <Menu.Item name="MyPage" as={Link} to="/labtool/mypage">
                 <Icon name="home" />
                 My page
               </Menu.Item>
@@ -63,7 +57,7 @@ class Nav extends Component {
             )}
 
             {this.props.user.user ? (
-              <Menu.Item name="Courses" as={Link} to="/labtool/courses" active={activeItem === 'Courses'} onClick={this.handleItemClick}>
+              <Menu.Item name="Courses" as={Link} to="/labtool/courses">
                 <Icon name="browser" />
                 Courses
               </Menu.Item>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Table, Card, Transition, Form, Comment } from 'semantic-ui-react'
+import { Button, Table, Card, Form, Comment, List, Header, Label } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createOneComment } from '../../services/comment'
@@ -75,7 +75,7 @@ class CoursePage extends Component {
           {this.props.courseData.data === null
             ?
             <div className="sixteen wide column">
-              <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>  <Button>Register</Button></Link>
+              <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>  <Button color='blue' size='large'>Register</Button></Link>
             </div>
             : <p></p>
           }
@@ -86,19 +86,38 @@ class CoursePage extends Component {
         {this.props.courseData.role === 'teacher' ?
           <div>
             <br />
-            <Table celled >
+            <Table>
               <Table.Header>
                 <Table.Row>
-                  <Table.HeaderCell>Active: {JSON.stringify(this.props.selectedInstance.active)}</Table.HeaderCell>
-                  <Table.HeaderCell>Week amount: {this.props.selectedInstance.weekAmount}</Table.HeaderCell>
-                  <Table.HeaderCell>Current week: {this.props.selectedInstance.currentWeek}</Table.HeaderCell>
-                  <Table.HeaderCell>Week maxpoints: {this.props.selectedInstance.weekMaxPoints}</Table.HeaderCell>
+                  <Table.Cell>
+                    <div>
+                      {this.props.selectedInstance.active === true ? (
+                        <Label ribbon style={{ backgroundColor: '#21ba45' }}>
+                          Active
+                        </Label>
+                      ) : (
+                          ''
+                        )}
+                    </div>
+                  </Table.Cell>
+                  <Table.Cell>Week amount: {this.props.selectedInstance.weekAmount}</Table.Cell>
+                  <Table.Cell>Current week: {this.props.selectedInstance.currentWeek}</Table.Cell>
+                  <Table.Cell>Week maxpoints: {this.props.selectedInstance.weekMaxPoints}</Table.Cell>
+                  <Table.Cell textAlign='right'> <Link to={`/labtool/ModifyCourseInstancePage/${this.props.selectedInstance.ohid}`}>
+                    <Button circular size="tiny" icon="large orange edit icon" />
+                  </Link>
+                    </Table.Cell>
                 </Table.Row>
               </Table.Header>
             </Table>
+            <List style={{float: 'right'}}>
+              <List.Item  icon="orange edit" content="Edit course" />
+            </List>
 
-            <h2> Students </h2>
-            <Table celled unstackable>
+            <br/>
+            <Header as="h2">
+            Students </Header>
+            <Table celled>
               <Table.Header>
                 <Table.Row>
                   <Table.HeaderCell>Name</Table.HeaderCell>
@@ -119,10 +138,10 @@ class CoursePage extends Component {
                     <Table.Cell>{allPoints}</Table.Cell>
                     <Table.Cell> Ohjaaja </Table.Cell>
 
-                    <Table.Cell>
+                    <Table.Cell textAlign='right'>
 
                       <Link to={`/labtool/browsereviews/${this.props.selectedInstance.ohid}/${data.id}`}>
-                        <Button circular color='orange' size="tiny" icon="edit black large" ></Button>
+                        <Button circular size="tiny" icon="large star orange" ></Button>
 
                       </Link>
                     </Table.Cell>
@@ -130,6 +149,9 @@ class CoursePage extends Component {
                 )}
               </Table.Body>
             </Table>
+            <List style={{ float: 'right' }}>
+              <List.Item icon="orange star" content="Review student" />
+            </List>
           </div>
           :
           <div></div>

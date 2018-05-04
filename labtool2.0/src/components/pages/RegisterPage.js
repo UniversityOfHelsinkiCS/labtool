@@ -5,7 +5,6 @@ import { connect } from 'react-redux'
 import { createStudentCourses } from '../../services/studentinstances'
 import { Redirect } from 'react-router'
 
-
 /**
  * The page user uses to register to a course AS A STUDENT
  */
@@ -55,15 +54,15 @@ class RegisterPage extends Component {
         <Grid>
           <Grid.Row centered>
             <Form onSubmit={this.handleSubmit}>
-              <Form.Field inline>
-                <label> Project name </label>
-                <Input style={{ minWidth: '20em' }} type="text" className="form-control1" name="projectName" placeholder="MyProjectName" required />
-              </Form.Field>
+              <Form.Group inline>
+                <label style={{ width: '100px', textAlign: 'left' }}>Project name</label>
+                <Input icon="rocket" iconPosition="left" type="text" className="form-control1" name="projectName" placeholder="MyProjectName" required style={{ minWidth: '30em' }} />
+              </Form.Group>
 
-              <Form.Field inline>
-                <label> GitHub link </label>
-                <Input style={{ minWidth: '20em' }} type="url" className="form-control2" name="github" placeholder="https://github.com/myaccount/myrepo" required />
-              </Form.Field>
+              <Form.Group inline>
+                <label style={{ width: '100px', textAlign: 'left' }}>GitHub link</label>
+                <Input icon="github" iconPosition="left" type="url" className="form-control2" name="github" placeholder="https://github.com/myaccount/myrepo" required style={{ minWidth: '30em' }} />
+              </Form.Group>
 
               <Form.Field>
                 <button className="ui left floated blue button" type="submit">
