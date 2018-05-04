@@ -44,11 +44,15 @@ module.exports = {
       }
     })
     const courseInst = course.id
+    console.log('courseInstanceId: ', courseInst)
+    console.log('courseInstanceId type:', typeof (courseInst))
     const palautus = {
       role: 'Unregistered',
       data: undefined
     }
     const user = req.decoded.id
+    console.log('userId: ', user)
+    console.log('user type:', typeof (user))
     const teacher = await TeacherInstance.findAll({
       where: {
         userId: user,
@@ -65,13 +69,13 @@ module.exports = {
           {
             model: Week,
             as: 'weeks',
-            include: [{
-              model: Comment,
-              as: 'comments',
-              where: {
-                hidden: false
+            include: [
+              {
+                model: Comment,
+                as: 'comments',
+                
               }
-            }]
+            ]
           }
         ]
       })
