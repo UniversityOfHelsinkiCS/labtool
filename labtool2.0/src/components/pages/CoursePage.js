@@ -176,7 +176,7 @@ class CoursePage extends Component {
                           </Comment>
                         ))}
                         </Comment.Group>
-                        <Form reply onSubmit={this.handleSubmit} name={week.weekNumber}>
+                        <Form reply onSubmit={this.handleSubmit} name={week.id}>
                           <Form.TextArea name="content" />
                           
                           <Button content='Add Reply' labelPosition='left' icon='edit' primary />
