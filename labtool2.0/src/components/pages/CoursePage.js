@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createOneComment } from '../../services/comment'
 import { coursePageInformation } from '../../services/courseInstance'
+import ReactMarkdown from 'react-markdown'
 
 class CoursePage extends Component {
 
@@ -181,18 +182,18 @@ class CoursePage extends Component {
                   </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                  {this.props.courseData.data.weeks.map(week => (
+                {this.props.courseData.data.weeks.sort((a, b) => a.weekNumber - b.weekNumber).map(week => (
                     <Table.Row>
                       <Table.Cell>{week.weekNumber}</Table.Cell>
                       <Table.Cell>{week.points}</Table.Cell>
-                      <Table.Cell>{week.feedback}</Table.Cell>
+                    <Table.Cell><ReactMarkdown>{week.feedback}</ReactMarkdown></Table.Cell>
                       <Table.Cell>
                            
                         <Comment.Group>
-                        {week.comments.map(comment => (
+                        {week.comments.filter(c => c.hidden !== true).map(comment => (
                           <Comment>
                             <Comment.Author>{comment.from}</Comment.Author>
-                            <Comment.Text> {comment.comment} </Comment.Text>
+                            <Comment.Text> <ReactMarkdown>{comment.comment}</ReactMarkdown> </Comment.Text>
                           </Comment>
                         ))}
                         </Comment.Group>
