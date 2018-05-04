@@ -6,7 +6,7 @@ import axios from 'axios'
  * or success of the call. Axios is used.
  * 
  * The method that is used from here is 'callApi',
- * that you can give path, dara, what operation is done, 
+ * that you can give path, data, what operation is done, 
  * and also token. Path can be given from .env file,
  * and it can be configured to depend on the
  * enviroment.
