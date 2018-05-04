@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Table, List, Accordion, Icon, Form, Comment } from 'semantic-ui-react'
+import { Button, Card, Accordion, Icon, Form, Comment } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { createOneComment } from '../../services/comment'
@@ -40,6 +40,16 @@ class BrowseReviews extends Component {
       let headers = []
       studhead.data.map(student => {
         if (student.id == studentInstance) {
+          headers.push(
+            <Card fluid color='yellow'>
+              <Card.Content>
+                <h2>{student.User.firsts} {student.User.lastname}</h2>
+                <h3> {this.props.courseData.data[0].projectName} </h3>
+                <h3> <a href={this.props.courseData.data[0].github}>{this.props.courseData.data[0].github}</a> </h3>
+              </Card.Content>
+            </Card>
+            
+          )
           for (var i = 0; i < this.props.selectedInstance.weekAmount; i++) {
             const weekPoints = student.weeks.find(week => week.weekNumber == (i + 1))
             if (weekPoints) {
@@ -48,7 +58,6 @@ class BrowseReviews extends Component {
                   <Accordion.Title active={activeIndex === i} index={i} onClick={this.handleClick}>
                     <Icon name='dropdown' /> Week {i + 1} </Accordion.Title>
                   <Accordion.Content active={activeIndex === i}>
-                      <h4> {student.User.firsts} {student.User.lastname} </h4>
                       <h4> {weekPoints.points} </h4>
                       <h4> {weekPoints.feedback} </h4>
                       <h4> Comments </h4>
@@ -80,7 +89,6 @@ class BrowseReviews extends Component {
                   <Accordion.Title active={activeIndex === i} index={i} onClick={this.handleClick}>
                     <Icon name='dropdown' /> Week {i + 1} </Accordion.Title>
                   <Accordion.Content active={activeIndex === i}>
-                      <h4> {student.User.firsts} {student.User.lastname} </h4>
                       <h4> Not Graded </h4>
                       <h4> No comments </h4>
                       <Link to={`/labtool/reviewstudent/${this.props.selectedInstance.ohid}/${studentInstance}/${i+1}`}>
