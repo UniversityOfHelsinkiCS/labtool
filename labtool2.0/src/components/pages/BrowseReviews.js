@@ -50,7 +50,7 @@ class BrowseReviews extends Component {
                 <h3> <a href={this.props.courseData.data[0].github}>{this.props.courseData.data[0].github}</a> </h3>
               </Card.Content>
             </Card>
-            
+
           )
           for (var i = 0; i < this.props.selectedInstance.weekAmount; i++) {
             const weekPoints = student.weeks.find(week => week.weekNumber == (i + 1))
@@ -60,8 +60,12 @@ class BrowseReviews extends Component {
                   <Accordion.Title active={activeIndex === i} index={i} onClick={this.handleClick}>
                     <Icon name='dropdown' /> Week {i + 1} </Accordion.Title>
                   <Accordion.Content active={activeIndex === i}>
-                      <h4> {weekPoints.points} </h4>
-                      <h4> {weekPoints.feedback} </h4>
+                      <Card fluid color='yellow'>
+                      <Card.Content>
+                        <h4> Points: {weekPoints.points} </h4>
+                        <h4> Weekly feedback: {weekPoints.feedback} </h4>
+                      </Card.Content>
+                    </Card>
                       <h4> Comments </h4>
                       <Comment.Group>
                       {this.props.courseData.data[0].weeks[i] ? 
@@ -92,6 +96,7 @@ class BrowseReviews extends Component {
                         <Button circular color="orange" size="tiny" icon="edit black large" />
                       </Link>
                     
+
                   </Accordion.Content>
                 </Accordion>
               )
@@ -101,11 +106,11 @@ class BrowseReviews extends Component {
                   <Accordion.Title active={activeIndex === i} index={i} onClick={this.handleClick}>
                     <Icon name='dropdown' /> Week {i + 1} </Accordion.Title>
                   <Accordion.Content active={activeIndex === i}>
-                      <h4> Not Graded </h4>
-                      <h4> No comments </h4>
-                      <Link to={`/labtool/reviewstudent/${this.props.selectedInstance.ohid}/${studentInstance}/${i+1}`}>
-                        <Button circular color="orange" size="tiny" icon="edit black large" />
-                      </Link>
+                    <h4> Not Graded </h4>
+                    <h4> No comments </h4>
+                    <Link to={`/labtool/reviewstudent/${this.props.selectedInstance.ohid}/${studentInstance}/${i + 1}`}>
+                      <Button circular color="orange" size="tiny" icon="edit black large" />
+                    </Link>
                   </Accordion.Content>
                 </Accordion>
               )
