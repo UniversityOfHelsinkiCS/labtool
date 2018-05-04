@@ -33,8 +33,8 @@ class Courses extends Component {
                           Active
                         </Label>
                       ) : (
-                          ''
-                        )}
+                        ''
+                      )}
                     </div>
                   </Table.Cell>
                   <Table.Cell>{instance.ohid} </Table.Cell>

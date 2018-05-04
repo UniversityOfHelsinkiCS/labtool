@@ -44,60 +44,78 @@ class BrowseReviews extends Component {
       studhead.data.map(student => {
         if (student.id == studentInstance) {
           headers.push(
-            <Card fluid color='yellow'>
+            <Card fluid color="yellow">
               <Card.Content>
-                <h2>{student.User.firsts} {student.User.lastname}</h2>
+                <h2>
+                  {student.User.firsts} {student.User.lastname}
+                </h2>
                 <h3> {this.props.courseData.data[0].projectName} </h3>
-                <h3> <a href={this.props.courseData.data[0].github}>{this.props.courseData.data[0].github}</a> </h3>
+                <h3>
+                  {' '}
+                  <a href={this.props.courseData.data[0].github}>{this.props.courseData.data[0].github}</a>{' '}
+                </h3>
               </Card.Content>
             </Card>
-
           )
           for (var i = 0; i < this.props.selectedInstance.weekAmount; i++) {
-            const weeks = student.weeks.find(week => week.weekNumber == (i + 1))
+            const weeks = student.weeks.find(week => week.weekNumber == i + 1)
             if (weeks) {
               headers.push(
                 <Accordion key={i} fluid styled>
                   <Accordion.Title active={activeIndex === i} index={i} onClick={this.handleClick}>
-                    <Icon name='dropdown' /> Week {i + 1} </Accordion.Title>
+                    <Icon name="dropdown" /> Week {i + 1}{' '}
+                  </Accordion.Title>
                   <Accordion.Content active={activeIndex === i}>
-                      <Card fluid color='yellow'>
+                    <Card fluid color="yellow">
                       <Card.Content>
                         <h4> Points: {weeks.points} </h4>
-                        <h4> Weekly feedback: <ReactMarkdown>{weeks.feedback}</ReactMarkdown> </h4>
+                        <h4>
+                          {' '}
+                          Weekly feedback: <ReactMarkdown>{weeks.feedback}</ReactMarkdown>{' '}
+                        </h4>
                       </Card.Content>
                     </Card>
-                      <h4> Comments </h4>
-                      <Comment.Group>
-                      {weeks ? 
-                        weeks.comments.map(comment => (
-                        comment.hidden ?
-                        <Comment disabled>
-                          <Comment.Content>
-                          <Comment.Metadata>
-                            <div>Hidden</div>
-                          </Comment.Metadata>
-                          <Comment.Author>{comment.from}</Comment.Author>
-                                <Comment.Text> <ReactMarkdown>{comment.comment}</ReactMarkdown> </Comment.Text>
-                          </Comment.Content>
-                        </Comment> :
-                        <Comment>
-                          <Comment.Author>{comment.from}</Comment.Author>
-                                <Comment.Text> <ReactMarkdown>{comment.comment}</ReactMarkdown> </Comment.Text>
-                      </Comment>
-                      )) : <h4> No comments </h4>}
-                      </Comment.Group>
-                      <Form reply onSubmit={this.handleSubmit} name={weeks.id} id={weeks.id} >
-                          <Form.TextArea name="content" placeholder='Your comment...' defaultValue="" />
-                          <Form.Checkbox label="Make this comment hidden from others" name="hidden" />
-                          <Button content='Add Reply' labelPosition='left' icon='edit' primary />
-                        </Form>
-                        <h3>Review</h3>
-                      <Link to={`/labtool/reviewstudent/${this.props.selectedInstance.ohid}/${studentInstance}/${i+1}`}>
-                        <Button circular color="orange" size="tiny" icon="edit black large" />
-                      </Link>
-                    
-
+                    <h4> Comments </h4>
+                    <Comment.Group>
+                      {weeks ? (
+                        weeks.comments.map(
+                          comment =>
+                            comment.hidden ? (
+                              <Comment disabled>
+                                <Comment.Content>
+                                  <Comment.Metadata>
+                                    <div>Hidden</div>
+                                  </Comment.Metadata>
+                                  <Comment.Author>{comment.from}</Comment.Author>
+                                  <Comment.Text>
+                                    {' '}
+                                    <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
+                                  </Comment.Text>
+                                </Comment.Content>
+                              </Comment>
+                            ) : (
+                              <Comment>
+                                <Comment.Author>{comment.from}</Comment.Author>
+                                <Comment.Text>
+                                  {' '}
+                                  <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
+                                </Comment.Text>
+                              </Comment>
+                            )
+                        )
+                      ) : (
+                        <h4> No comments </h4>
+                      )}
+                    </Comment.Group>
+                    <Form reply onSubmit={this.handleSubmit} name={weeks.id} id={weeks.id}>
+                      <Form.TextArea name="content" placeholder="Your comment..." defaultValue="" />
+                      <Form.Checkbox label="Make this comment hidden from others" name="hidden" />
+                      <Button content="Add Reply" labelPosition="left" icon="edit" primary />
+                    </Form>
+                    <h3>Review</h3>
+                    <Link to={`/labtool/reviewstudent/${this.props.selectedInstance.ohid}/${studentInstance}/${i + 1}`}>
+                      <Button circular color="orange" size="tiny" icon="edit black large" />
+                    </Link>
                   </Accordion.Content>
                 </Accordion>
               )
@@ -105,7 +123,8 @@ class BrowseReviews extends Component {
               headers.push(
                 <Accordion key={i} fluid styled>
                   <Accordion.Title active={activeIndex === i} index={i} onClick={this.handleClick}>
-                    <Icon name='dropdown' /> Week {i + 1} </Accordion.Title>
+                    <Icon name="dropdown" /> Week {i + 1}{' '}
+                  </Accordion.Title>
                   <Accordion.Content active={activeIndex === i}>
                     <h4> Not Graded </h4>
                     <h4> No comments </h4>
@@ -126,12 +145,14 @@ class BrowseReviews extends Component {
 
     return (
       <div>
-        {this.props.courseData.role === 'teacher'
-          ? <div>
+        {this.props.courseData.role === 'teacher' ? (
+          <div>
             <h2> {this.props.selectedInstance.name}</h2>
             {createHeaders(this.props.courseData, this.props.studentInstance)}
           </div>
-          : <p></p>}
+        ) : (
+          <p />
+        )}
       </div>
     )
   }
@@ -144,7 +165,5 @@ const mapStateToProps = (state, ownProps) => {
     courseData: state.coursePage
   }
 }
-
-
 
 export default connect(mapStateToProps, { createOneComment, coursePageInformation })(BrowseReviews)

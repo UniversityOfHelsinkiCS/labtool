@@ -9,7 +9,6 @@ import { Link } from 'react-router-dom'
  */
 
 class MyPage extends Component {
-
   // Checks if a user is logged in.
   componentDidMount() {
     try {
@@ -64,7 +63,6 @@ class MyPage extends Component {
                     </Link>
                   </Table.Cell>
                 </Table.Row>
-
               </Table.Body>
             </Table>
           </Container>
@@ -83,7 +81,6 @@ class MyPage extends Component {
 
         <Segment padded>
           <Container>
-
             <Header as="h2" className="CoursesHeader">
               My Courses (Student){' '}
             </Header>

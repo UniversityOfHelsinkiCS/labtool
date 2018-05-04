@@ -24,7 +24,7 @@ export const getOneCI = id => {
 /**
  * modifies a single course instance, with json data
  * indicating the changes.
- * 
+ *
  * {
  *       weekAmount: {Integer}
  *       weekMaxPoints: {Double}
@@ -32,7 +32,7 @@ export const getOneCI = id => {
  *       active: {Boolean}
  *       ohid: {String}
  * }
- * 
+ *
  */
 export const modifyOneCI = (data, id) => {
   const route = `/courseinstances/${id}`

@@ -28,12 +28,11 @@ import { getAllTeacherCourses } from './services/teacherinstances'
 import { logout } from './reducers/loginReducer'
 import { tokenLogin } from './reducers/loginReducer'
 
-
 // The main component of the whole application.
 class App extends Component {
   /**
    * As the component mounts, it gets all the course instances
-   * from the backend to the store. 
+   * from the backend to the store.
    */
   componentWillMount() {
     this.props.getAllCI()
@@ -41,7 +40,7 @@ class App extends Component {
 
   /**
    * After mounting, it checks from the localstorage if user is logged in.
-   * If true, it parses the user from the storage and puts it and 
+   * If true, it parses the user from the storage and puts it and
    * the courses of the user, both student and teacher, to the store.
    */
 
@@ -62,7 +61,7 @@ class App extends Component {
   /**
    * @param {*} nProps nProps are the props the component will receive next,
    * in this case after succesfull login.
-   * 
+   *
    * It puts the users data the storage
    */
   componentWillReceiveProps(nProps) {
@@ -75,11 +74,10 @@ class App extends Component {
   }
 
   render() {
-
     /**
      *  The main component that shows the applications pages.
      * If the user isnt logged in or the user has not set an email, main
-     * wont be shown. 
+     * wont be shown.
      */
 
     const Main = () => {
@@ -92,9 +90,11 @@ class App extends Component {
             />
             <Route exact path={`/labtool/courses`} render={({ history }) => <Courses history={history} />} />
             <Route path={`/labtool/courseregistration/:id`} render={({ match, history }) => <RegisterPage history={history} courseinstance={this.props.getOneCI(match.params.id)} />} />
-            <Route path={`/labtool/browsereviews/:id/:si/`} 
-              render={({ match, history }) => 
-              <BrowseReviews history={history} courseinstance={this.props.getOneCI(match.params.id)} pageData={this.props.coursePageInformation(match.params.id)} studentInstance={match.params.si} />}
+            <Route
+              path={`/labtool/browsereviews/:id/:si/`}
+              render={({ match, history }) => (
+                <BrowseReviews history={history} courseinstance={this.props.getOneCI(match.params.id)} pageData={this.props.coursePageInformation(match.params.id)} studentInstance={match.params.si} />
+              )}
             />
             <Route path={`/labtool/email`} component={Email} />
             <Route path={`/labtool/registerPage`} component={RegisterPage} />
@@ -104,7 +104,6 @@ class App extends Component {
             />
             <Route path={`/labtool/ModifyCourseInstancePage/:id`} render={({ match }) => <ModifyCourseInstancePage courseinstance={this.props.getOneCI(match.params.id)} />} />
             <Route path={`/`} component={MyPage} />
-
           </Switch>
         </main>
       )
@@ -120,7 +119,7 @@ class App extends Component {
       /**
        * LoginPage is shown if store doesnt have a user,
        * as in user isnt logged in.
-       * 
+       *
        * Nav is the component for the navbar, that is always displayed.
        */
       <Container>
@@ -133,7 +132,7 @@ class App extends Component {
 }
 
 /**
- * The reducers that this component uses. 
+ * The reducers that this component uses.
  */
 const mapStateToProps = state => {
   return {
