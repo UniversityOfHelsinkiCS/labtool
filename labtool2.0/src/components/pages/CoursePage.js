@@ -1,9 +1,28 @@
 import React, { Component } from 'react'
-import { Button, Table, Card, Transition } from 'semantic-ui-react'
+import { Button, Table, Card, Transition, Form, Comment } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
+import { createOneComment } from '../../services/comment'
+import { coursePageInformation } from '../../services/courseInstance'
 
 class CoursePage extends Component {
+
+  handleSubmit = async e => {
+    e.preventDefault()
+    const content = {
+      hidden: false,
+      comment: e.target.content.value,
+      week: parseInt(e.target.name),
+      from: this.props.user.user.username
+    }
+    try {
+      await this.props.createOneComment(content)
+      await this.props.coursePageInformation(this.props.selectedInstance.ohid)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   render() {
     const createIndents = (data, siId) => {
       const indents = []
@@ -137,11 +156,21 @@ class CoursePage extends Component {
                       <Table.Cell>{week.points}</Table.Cell>
                       <Table.Cell>{week.feedback}</Table.Cell>
                       <Table.Cell>
-                        <ul>
+                           
+                        <Comment.Group>
                         {week.comments.map(comment => (
-                          <li> {comment.comment} </li>
+                          <Comment>
+                            <Comment.Author>{comment.from}</Comment.Author>
+                            <Comment.Text> {comment.comment} </Comment.Text>
+                          </Comment>
                         ))}
-                        </ul>
+                        </Comment.Group>
+                        <Form reply onSubmit={this.handleSubmit} name={week.weekNumber}>
+                          <Form.TextArea name="content" />
+                          
+                          <Button content='Add Reply' labelPosition='left' icon='edit' primary />
+                        </Form>
+                      
                       </Table.Cell>
                     </Table.Row>
                   ))}
@@ -167,4 +196,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, {})(CoursePage)
+export default connect(mapStateToProps, { createOneComment, coursePageInformation })(CoursePage)
