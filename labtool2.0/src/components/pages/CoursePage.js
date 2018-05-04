@@ -74,7 +74,7 @@ class CoursePage extends Component {
           {this.props.courseData.data === null
             ?
             <div className="sixteen wide column">
-              <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>  <Button>Register</Button></Link>
+              <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>  <Button color='blue' size='large'>Register</Button></Link>
             </div>
             : <p></p>
           }
