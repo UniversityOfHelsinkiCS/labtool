@@ -167,7 +167,7 @@ class CoursePage extends Component {
                       <Table.Cell>
                            
                         <Comment.Group>
-                        {week.comments.map(comment => (
+                        {week.comments.filter(c => c.hidden !== true).map(comment => (
                           <Comment>
                             <Comment.Author>{comment.from}</Comment.Author>
                             <Comment.Text> {comment.comment} </Comment.Text>

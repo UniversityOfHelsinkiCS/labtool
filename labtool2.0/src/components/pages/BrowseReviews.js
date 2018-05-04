@@ -22,7 +22,7 @@ class BrowseReviews extends Component {
   handleSubmit = async e => {
     e.preventDefault()
     const content = {
-      hidden: false,
+      hidden: e.target.hidden.checked,
       comment: e.target.content.value,
       week: parseInt(e.target.name),
       from: this.props.user.user.username
@@ -66,15 +66,25 @@ class BrowseReviews extends Component {
                       <Comment.Group>
                       {this.props.courseData.data[0].weeks[i] ? 
                       this.props.courseData.data[0].weeks[i].comments.map(comment => (
+                        comment.hidden ?
+                        <Comment disabled>
+                          <Comment.Content>
+                          <Comment.Metadata>
+                            <div>Hidden</div>
+                          </Comment.Metadata>
+                          <Comment.Author>{comment.from}</Comment.Author>
+                          <Comment.Text> {comment.comment} </Comment.Text>
+                          </Comment.Content>
+                        </Comment> :
                         <Comment>
-                        <Comment.Author>{comment.from}</Comment.Author>
-                        <Comment.Text> {comment.comment} </Comment.Text>
+                          <Comment.Author>{comment.from}</Comment.Author>
+                          <Comment.Text> {comment.comment} </Comment.Text>
                       </Comment>
                       )) : <h4> No comments </h4>}
                       </Comment.Group>
                       <Form reply onSubmit={this.handleSubmit} name={weekPoints.id} id={weekPoints.id} >
                           <Form.TextArea name="content" placeholder='Your comment...' defaultValue="" />
-                          
+                          <Form.Checkbox label="Make this comment hidden from others" name="hidden" />
                           <Button content='Add Reply' labelPosition='left' icon='edit' primary />
                         </Form>
                         <h3>Review</h3>
