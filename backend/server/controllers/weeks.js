@@ -7,18 +7,17 @@ module.exports = {
       await helper.controller_before_auth_check_action(req, res)
 
       if (req.authenticated.success) {
-        const week = await Week
-          .findOne({
-            where: {
-              id: req.body.week
-            }
-          })
+        const week = await Week.findOne({
+          where: {
+            id: req.body.week
+          }
+        })
         if (week) {
           await week.update({
-            points: week.points || req.body.points,
-            studentInstanceId: week.studentInstanceId || req.body.studentInstanceId,
-            feedback: week.feedback || req.body.feedback,
-            weekNumber: week.weekNumber || req.body.weekNumber
+            points: week.points || req.body.points,
+            studentInstanceId: week.studentInstanceId || req.body.studentInstanceId,
+            feedback: week.feedback || req.body.feedback,
+            weekNumber: week.weekNumber || req.body.weekNumber
           })
           res.status(200).send(week)
         } else {
