@@ -16,7 +16,7 @@ export const login = loginInformation => {
 }
 
 /**
- * Currently only used to modify the users email. 
+ * Currently only used to modify the users email.
  * Uses Json:
  * {
  *   email: {string}

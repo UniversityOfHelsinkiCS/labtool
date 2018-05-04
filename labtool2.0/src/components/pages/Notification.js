@@ -5,7 +5,6 @@ import { Message, Grid } from 'semantic-ui-react'
 
 let timeout
 
-
 /**
  *  Notification, that clears itself after a set of time.
  */

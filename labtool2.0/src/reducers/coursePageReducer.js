@@ -2,7 +2,7 @@
  * The reducer for displaying pretty much all that you want to see
  * on the course page.
  *  See detailed documentation of the content below.
- * 
+ *
  */
 
 const courseInstancereducer = (store = [], action) => {

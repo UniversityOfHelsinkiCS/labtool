@@ -7,7 +7,6 @@ import { coursePageInformation } from '../../services/courseInstance'
 import ReactMarkdown from 'react-markdown'
 
 class CoursePage extends Component {
-
   handleSubmit = async e => {
     e.preventDefault()
     const content = {
@@ -26,8 +25,8 @@ class CoursePage extends Component {
   }
 
   /**
-   * Shows all information related to a course from user, 
-   * with information shown depending on whether the user 
+   * Shows all information related to a course from user,
+   * with information shown depending on whether the user
    * is a teacher or student on a course.
    */
   render() {
@@ -36,21 +35,23 @@ class CoursePage extends Component {
       const indents = []
 
       for (var i = 0; i < this.props.selectedInstance.weekAmount; i++) {
-        let pushattava =
+        let pushattava = (
           <Table.Cell key={i}>
             <p>Not reviewed!</p>
           </Table.Cell>
+        )
 
         for (var j = 0; j < data.length; j++) {
-          if ((i + 1) === data[j].weekNumber) {
+          if (i + 1 === data[j].weekNumber) {
             allPoints += data[j].points
-            pushattava = <Table.Cell key={i}>
-              <p>{data[j].points}</p>
-              {/*               <Link to={`/labtool/reviewstudent/${this.props.selectedInstance.ohid}/${siId}/${i + 1}`}>
+            pushattava = (
+              <Table.Cell key={i}>
+                <p>{data[j].points}</p>
+                {/*               <Link to={`/labtool/reviewstudent/${this.props.selectedInstance.ohid}/${siId}/${i + 1}`}>
                 <Button circular color='orange' size="tiny" icon="edit black large" ></Button>
           </Link> */}
-            </Table.Cell>
-
+              </Table.Cell>
+            )
           }
         }
         indents.push(pushattava)
@@ -67,23 +68,27 @@ class CoursePage extends Component {
     }
 
     return (
-      <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
+      <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
         <div className="ui grid">
           <div className="sixteen wide column">
             <h2>{this.props.selectedInstance.name}</h2>
           </div>
-          {this.props.courseData.data === null
-            ?
+          {this.props.courseData.data === null ? (
             <div className="sixteen wide column">
-              <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>  <Button color='blue' size='large'>Register</Button></Link>
+              <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>
+                {' '}
+                <Button color="blue" size="large">
+                  Register
+                </Button>
+              </Link>
             </div>
-            : <p></p>
-          }
+          ) : (
+            <p />
+          )}
         </div>
 
-
         {/** Shown when the users role in this course is teacher.*/}
-        {this.props.courseData.role === 'teacher' ?
+        {this.props.courseData.role === 'teacher' ? (
           <div>
             <br />
             <Table>
@@ -96,27 +101,28 @@ class CoursePage extends Component {
                           Active
                         </Label>
                       ) : (
-                          ''
-                        )}
+                        ''
+                      )}
                     </div>
                   </Table.Cell>
                   <Table.Cell>Week amount: {this.props.selectedInstance.weekAmount}</Table.Cell>
                   <Table.Cell>Current week: {this.props.selectedInstance.currentWeek}</Table.Cell>
                   <Table.Cell>Week maxpoints: {this.props.selectedInstance.weekMaxPoints}</Table.Cell>
-                  <Table.Cell textAlign='right'> <Link to={`/labtool/ModifyCourseInstancePage/${this.props.selectedInstance.ohid}`}>
-                    <Button circular size="tiny" icon="large orange edit icon" />
-                  </Link>
-                    </Table.Cell>
+                  <Table.Cell textAlign="right">
+                    {' '}
+                    <Link to={`/labtool/ModifyCourseInstancePage/${this.props.selectedInstance.ohid}`}>
+                      <Button circular size="tiny" icon="large orange edit icon" />
+                    </Link>
+                  </Table.Cell>
                 </Table.Row>
               </Table.Header>
             </Table>
-            <List style={{float: 'right'}}>
-              <List.Item  icon="orange edit" content="Edit course" />
+            <List style={{ float: 'right' }}>
+              <List.Item icon="orange edit" content="Edit course" />
             </List>
 
-            <br/>
-            <Header as="h2">
-            Students </Header>
+            <br />
+            <Header as="h2">Students </Header>
             <Table celled>
               <Table.Header>
                 <Table.Row>
@@ -129,44 +135,48 @@ class CoursePage extends Component {
                 </Table.Row>
               </Table.Header>
               <Table.Body>
-                {this.props.courseData.data.map(data =>
-
+                {this.props.courseData.data.map(data => (
                   <Table.Row key={data.id}>
-                    <Table.Cell>{data.User.firsts} {data.User.lastname}</Table.Cell>
-                    <Table.Cell><p>{data.projectName}</p><a>{data.github}</a></Table.Cell>
+                    <Table.Cell>
+                      {data.User.firsts} {data.User.lastname}
+                    </Table.Cell>
+                    <Table.Cell>
+                      <p>{data.projectName}</p>
+                      <a>{data.github}</a>
+                    </Table.Cell>
                     {createIndents(data.weeks, data.id)}
                     <Table.Cell>{allPoints}</Table.Cell>
                     <Table.Cell> Ohjaaja </Table.Cell>
 
-                    <Table.Cell textAlign='right'>
-
+                    <Table.Cell textAlign="right">
                       <Link to={`/labtool/browsereviews/${this.props.selectedInstance.ohid}/${data.id}`}>
-                        <Button circular size="tiny" icon="large star orange" ></Button>
-
+                        <Button circular size="tiny" icon="large star orange" />
                       </Link>
                     </Table.Cell>
                   </Table.Row>
-                )}
+                ))}
               </Table.Body>
             </Table>
             <List style={{ float: 'right' }}>
               <List.Item icon="orange star" content="Review student" />
             </List>
           </div>
-          :
-          <div></div>
-        }
+        ) : (
+          <div />
+        )}
 
         {/** Shown when the users role in this course is student.*/}
-        {this.props.courseData.role === "student" && this.props.courseData.data !== null
-          ? <div>
-
+        {this.props.courseData.role === 'student' && this.props.courseData.data !== null ? (
+          <div>
             <h3> </h3>
 
-            <Card fluid color='yellow'>
+            <Card fluid color="yellow">
               <Card.Content>
                 <h3> {this.props.courseData.data.projectName} </h3>
-                <h3> <a href={this.props.courseData.data.github}>{this.props.courseData.data.github}</a> </h3>
+                <h3>
+                  {' '}
+                  <a href={this.props.courseData.data.github}>{this.props.courseData.data.github}</a>{' '}
+                </h3>
               </Card.Content>
             </Card>
 
@@ -175,49 +185,52 @@ class CoursePage extends Component {
             <Table celled padded unstackable>
               <Table.Header>
                 <Table.Row>
-                    <Table.HeaderCell>Week</Table.HeaderCell>
-                    <Table.HeaderCell>Points</Table.HeaderCell>
-                    <Table.HeaderCell>Feedback</Table.HeaderCell>
-                    <Table.HeaderCell>Comments</Table.HeaderCell>
-                  </Table.Row>
-                </Table.Header>
-                <Table.Body>
+                  <Table.HeaderCell>Week</Table.HeaderCell>
+                  <Table.HeaderCell>Points</Table.HeaderCell>
+                  <Table.HeaderCell>Feedback</Table.HeaderCell>
+                  <Table.HeaderCell>Comments</Table.HeaderCell>
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
                 {this.props.courseData.data.weeks.sort((a, b) => a.weekNumber - b.weekNumber).map(week => (
-                    <Table.Row>
-                      <Table.Cell>{week.weekNumber}</Table.Cell>
-                      <Table.Cell>{week.points}</Table.Cell>
-                    <Table.Cell><ReactMarkdown>{week.feedback}</ReactMarkdown></Table.Cell>
-                      <Table.Cell>
-                           
-                        <Comment.Group>
+                  <Table.Row>
+                    <Table.Cell>{week.weekNumber}</Table.Cell>
+                    <Table.Cell>{week.points}</Table.Cell>
+                    <Table.Cell>
+                      <ReactMarkdown>{week.feedback}</ReactMarkdown>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Comment.Group>
                         {week.comments.filter(c => c.hidden !== true).map(comment => (
                           <Comment>
                             <Comment.Author>{comment.from}</Comment.Author>
-                            <Comment.Text> <ReactMarkdown>{comment.comment}</ReactMarkdown> </Comment.Text>
+                            <Comment.Text>
+                              {' '}
+                              <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
+                            </Comment.Text>
                           </Comment>
                         ))}
-                        </Comment.Group>
-                        <Form reply onSubmit={this.handleSubmit} name={week.id} id='comment' >
-                          <Form.TextArea name="content" placeholder='Your comment...' />
-                          
-                          <Button content='Add Reply' labelPosition='left' icon='edit' primary />
-                        </Form>
-                      
-                      </Table.Cell>
-                    </Table.Row>
-                  ))}
-                </Table.Body>
-              </Table>
-            </div>
-          : (
-            <div />
-          )}
+                      </Comment.Group>
+                      <Form reply onSubmit={this.handleSubmit} name={week.id} id="comment">
+                        <Form.TextArea name="content" placeholder="Your comment..." />
+
+                        <Button content="Add Reply" labelPosition="left" icon="edit" primary />
+                      </Form>
+                    </Table.Cell>
+                  </Table.Row>
+                ))}
+              </Table.Body>
+            </Table>
+          </div>
+        ) : (
+          <div />
+        )}
       </div>
     )
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     user: state.user,
     studentInstance: state.studentInstance,

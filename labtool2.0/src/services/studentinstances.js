@@ -12,14 +12,14 @@ export const getAllStudentCourses = () => {
 
 /**
  * Registers user to a course.
- * 
- *  data: 
+ *
+ *  data:
  *  {
  *       projectName: {string}
  *       github: {string}
  *       ohid: {string}
  *  }
- *  
+ *
  * ohid is the courses opetushallitusid
  */
 export const createStudentCourses = (data, ohid) => {

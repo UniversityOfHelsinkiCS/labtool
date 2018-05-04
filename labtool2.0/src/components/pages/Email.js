@@ -13,7 +13,6 @@ Is used to modify users email.
 */
 
 class Email extends Component {
-
   state = {
     loading: false,
     redirectToNewPage: false
