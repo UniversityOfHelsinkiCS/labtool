@@ -1,9 +1,27 @@
 import React, { Component } from 'react'
-import { Button, Table, Card } from 'semantic-ui-react'
+import { Button, Table, Card, Transition, Form, Comment } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
+import { createOneComment } from '../../services/comment'
+import { coursePageInformation } from '../../services/courseInstance'
 
 class CoursePage extends Component {
+
+  handleSubmit = async e => {
+    e.preventDefault()
+    const content = {
+      hidden: false,
+      comment: e.target.content.value,
+      week: parseInt(e.target.name),
+      from: this.props.user.user.username
+    }
+    try {
+      await this.props.createOneComment(content)
+      await this.props.coursePageInformation(this.props.selectedInstance.ohid)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   /**
    * Shows all information related to a course from user, 
@@ -133,30 +151,40 @@ class CoursePage extends Component {
             <Table celled padded unstackable>
               <Table.Header>
                 <Table.Row>
-                  <Table.HeaderCell>Week</Table.HeaderCell>
-                  <Table.HeaderCell>Points</Table.HeaderCell>
-                  <Table.HeaderCell>Feedback</Table.HeaderCell>
-                  <Table.HeaderCell>Comments</Table.HeaderCell>
-                </Table.Row>
-              </Table.Header>
-              <Table.Body>
-                {this.props.courseData.data.weeks.map(week => (
-                  <Table.Row>
-                    <Table.Cell>{week.weekNumber}</Table.Cell>
-                    <Table.Cell>{week.points}</Table.Cell>
-                    <Table.Cell>{week.feedback}</Table.Cell>
-                    <Table.Cell>
-                      <ul>
-                        {week.comments.map(comment => (
-                          <li> {comment.comment} </li>
-                        ))}
-                      </ul>
-                    </Table.Cell>
+                    <Table.HeaderCell>Week</Table.HeaderCell>
+                    <Table.HeaderCell>Points</Table.HeaderCell>
+                    <Table.HeaderCell>Feedback</Table.HeaderCell>
+                    <Table.HeaderCell>Comments</Table.HeaderCell>
                   </Table.Row>
-                ))}
-              </Table.Body>
-            </Table>
-          </div>
+                </Table.Header>
+                <Table.Body>
+                  {this.props.courseData.data.weeks.map(week => (
+                    <Table.Row>
+                      <Table.Cell>{week.weekNumber}</Table.Cell>
+                      <Table.Cell>{week.points}</Table.Cell>
+                      <Table.Cell>{week.feedback}</Table.Cell>
+                      <Table.Cell>
+                           
+                        <Comment.Group>
+                        {week.comments.map(comment => (
+                          <Comment>
+                            <Comment.Author>{comment.from}</Comment.Author>
+                            <Comment.Text> {comment.comment} </Comment.Text>
+                          </Comment>
+                        ))}
+                        </Comment.Group>
+                        <Form reply onSubmit={this.handleSubmit} name={week.id}>
+                          <Form.TextArea name="content" />
+                          
+                          <Button content='Add Reply' labelPosition='left' icon='edit' primary />
+                        </Form>
+                      
+                      </Table.Cell>
+                    </Table.Row>
+                  ))}
+                </Table.Body>
+              </Table>
+            </div>
           : (
             <div />
           )}
@@ -175,6 +203,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-
-
-export default connect(mapStateToProps, {})(CoursePage)
+export default connect(mapStateToProps, { createOneComment, coursePageInformation })(CoursePage)

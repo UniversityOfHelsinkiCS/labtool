@@ -61,7 +61,7 @@ class ReviewStudent extends Component {
               <Button className="ui left floated green button" type="submit">
                 Save
               </Button>
-              <Link to={`/labtool/courses/${this.props.selectedInstance.ohid}`} type="Cancel">
+              <Link to={`/labtool/browsereviews/${this.props.selectedInstance.ohid}/${this.props.selectedInstance.id}`} type="Cancel">
                 <Button className="ui right floated button" type="cancel">
                   Cancel
                 </Button>
