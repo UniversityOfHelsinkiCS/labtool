@@ -69,8 +69,8 @@ class BrowseReviews extends Component {
                     </Card>
                       <h4> Comments </h4>
                       <Comment.Group>
-                      {this.props.courseData.data[0].weeks[i] ? 
-                      this.props.courseData.data[0].weeks[i].comments.map(comment => (
+                      {weekPoints ? 
+                        weekPoints.comments.map(comment => (
                         comment.hidden ?
                         <Comment disabled>
                           <Comment.Content>
