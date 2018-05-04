@@ -27,10 +27,11 @@ class BrowseReviews extends Component {
       week: parseInt(e.target.name),
       from: this.props.user.user.username
     }
+    document.getElementById(e.target.name).reset()
     try {
+      console.log(e.target)
       await this.props.createOneComment(content)
       await this.props.coursePageInformation(this.props.selectedInstance.ohid)
-      document.getElementById('comment').reset()
     } catch (error) {
       console.log(error)
     }
@@ -71,7 +72,7 @@ class BrowseReviews extends Component {
                       </Comment>
                       )) : <h4> No comments </h4>}
                       </Comment.Group>
-                      <Form reply onSubmit={this.handleSubmit} name={weekPoints.id} id='comment'>
+                      <Form reply onSubmit={this.handleSubmit} name={weekPoints.id} id={weekPoints.id} >
                           <Form.TextArea name="content" placeholder='Your comment...' defaultValue="" />
                           
                           <Button content='Add Reply' labelPosition='left' icon='edit' primary />
