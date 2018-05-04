@@ -95,6 +95,9 @@ module.exports = {
               }
             ]
           },
+          {
+            model: User
+          }
         ]
       })
       try {
