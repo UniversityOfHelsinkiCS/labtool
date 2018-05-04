@@ -56,7 +56,7 @@ module.exports = {
       }
     })
     if (teacher[0] === undefined) {
-      const student = await StudentInstance.findOne({
+      const student = await StudentInstance.find({
         where: {
           userId: user,
           courseInstanceId: courseInst
@@ -65,23 +65,16 @@ module.exports = {
           {
             model: Week,
             as: 'weeks',
-            include: [
-              {
-                model: Comment,
-                as: 'comments',
-                where: {
-                  hidden: false 
-                }
-              } 
-            ]
-          },
-          {
-            model: User
+            include: [{
+              model: Comment,
+              as: 'comments',
+              where: {
+                hidden: false
+              }
+            }]
           }
         ]
       })
-
-
       try {
         palautus.data = student
         palautus.role = 'student'
@@ -101,13 +94,10 @@ module.exports = {
             include: [
               {
                 model: Comment,
-                as: 'comments'
+                as: 'comments',
               }
             ]
           },
-          {
-            model: User
-          }
         ]
       })
       try {
