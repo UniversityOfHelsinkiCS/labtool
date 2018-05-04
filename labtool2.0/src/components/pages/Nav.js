@@ -4,6 +4,10 @@ import React, { Component } from 'react'
 import { Menu, Icon, Image } from 'semantic-ui-react'
 import { logout } from '../../reducers/loginReducer'
 
+
+/**
+ * Navigation bar component
+ */
 class Nav extends Component {
   state = { activeItem: 'MyPage' }
 

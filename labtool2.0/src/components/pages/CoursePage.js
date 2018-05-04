@@ -1,10 +1,33 @@
 import React, { Component } from 'react'
-import { Button, Table, Card, List, Header } from 'semantic-ui-react'
+import { Button, Table, Card, Form, Comment, List, Header, Label } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
+import { createOneComment } from '../../services/comment'
+import { coursePageInformation } from '../../services/courseInstance'
 
 class CoursePage extends Component {
 
+  handleSubmit = async e => {
+    e.preventDefault()
+    const content = {
+      hidden: false,
+      comment: e.target.content.value,
+      week: parseInt(e.target.name),
+      from: this.props.user.user.username
+    }
+    try {
+      await this.props.createOneComment(content)
+      await this.props.coursePageInformation(this.props.selectedInstance.ohid)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  /**
+   * Shows all information related to a course from user, 
+   * with information shown depending on whether the user 
+   * is a teacher or student on a course.
+   */
   render() {
     let allPoints = 0
     const createIndents = (data, siId) => {
@@ -41,11 +64,6 @@ class CoursePage extends Component {
       return headers
     }
 
-    const review = () => {
-
-    }
-
-
     return (
       <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
         <div className="ui grid">
@@ -62,26 +80,36 @@ class CoursePage extends Component {
         </div>
 
 
-
+        {/** Shown when the users role in this course is teacher.*/}
         {this.props.courseData.role === 'teacher' ?
           <div>
-<br />
+            <br />
             <Table>
               <Table.Header>
                 <Table.Row>
-                  <Table.HeaderCell>Active: {JSON.stringify(this.props.selectedInstance.active)}</Table.HeaderCell>
-                  <Table.HeaderCell>Week amount: {this.props.selectedInstance.weekAmount}</Table.HeaderCell>
-                  <Table.HeaderCell>Current week: {this.props.selectedInstance.currentWeek}</Table.HeaderCell>
-                  <Table.HeaderCell>Week maxpoints: {this.props.selectedInstance.weekMaxPoints}</Table.HeaderCell>
-                  <Table.HeaderCell textAlign='center'> <Link to={`/labtool/ModifyCourseInstancePage/${this.props.selectedInstance.ohid}`}>
-                    <Button circular size="tiny" icon="large yellow edit icon" />
+                  <Table.Cell>
+                    <div>
+                      {this.props.selectedInstance.active === true ? (
+                        <Label ribbon style={{ backgroundColor: '#21ba45' }}>
+                          Active
+                        </Label>
+                      ) : (
+                          ''
+                        )}
+                    </div>
+                  </Table.Cell>
+                  <Table.Cell>Week amount: {this.props.selectedInstance.weekAmount}</Table.Cell>
+                  <Table.Cell>Current week: {this.props.selectedInstance.currentWeek}</Table.Cell>
+                  <Table.Cell>Week maxpoints: {this.props.selectedInstance.weekMaxPoints}</Table.Cell>
+                  <Table.Cell textAlign='right'> <Link to={`/labtool/ModifyCourseInstancePage/${this.props.selectedInstance.ohid}`}>
+                    <Button circular size="tiny" icon="large orange edit icon" />
                   </Link>
-                    </Table.HeaderCell>
+                    </Table.Cell>
                 </Table.Row>
               </Table.Header>
             </Table>
             <List style={{float: 'right'}}>
-              <List.Item  icon="yellow edit" content="Edit course" />
+              <List.Item  icon="orange edit" content="Edit course" />
             </List>
 
             <br/>
@@ -108,10 +136,10 @@ class CoursePage extends Component {
                     <Table.Cell>{allPoints}</Table.Cell>
                     <Table.Cell> Ohjaaja </Table.Cell>
 
-                    <Table.Cell>
+                    <Table.Cell textAlign='right'>
 
                       <Link to={`/labtool/browsereviews/${this.props.selectedInstance.ohid}/${data.id}`}>
-                        <Button circular color='orange' size="tiny" icon="edit black large" onClick={review()} ></Button>
+                        <Button circular size="tiny" icon="large star orange" ></Button>
 
                       </Link>
                     </Table.Cell>
@@ -123,6 +151,8 @@ class CoursePage extends Component {
           :
           <div></div>
         }
+
+        {/** Shown when the users role in this course is student.*/}
         {this.props.courseData.role === "student" && this.props.courseData.data !== null
           ? <div>
 
@@ -153,11 +183,21 @@ class CoursePage extends Component {
                       <Table.Cell>{week.points}</Table.Cell>
                       <Table.Cell>{week.feedback}</Table.Cell>
                       <Table.Cell>
-                        <ul>
+                           
+                        <Comment.Group>
                         {week.comments.map(comment => (
-                          <li> {comment.comment} </li>
+                          <Comment>
+                            <Comment.Author>{comment.from}</Comment.Author>
+                            <Comment.Text> {comment.comment} </Comment.Text>
+                          </Comment>
                         ))}
-                        </ul>
+                        </Comment.Group>
+                        <Form reply onSubmit={this.handleSubmit} name={week.id}>
+                          <Form.TextArea name="content" />
+                          
+                          <Button content='Add Reply' labelPosition='left' icon='edit' primary />
+                        </Form>
+                      
                       </Table.Cell>
                     </Table.Row>
                   ))}
@@ -167,7 +207,7 @@ class CoursePage extends Component {
           : (
             <div />
           )}
-        </div>
+      </div>
     )
   }
 }
@@ -182,6 +222,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-
-
-export default connect(mapStateToProps, {})(CoursePage)
+export default connect(mapStateToProps, { createOneComment, coursePageInformation })(CoursePage)

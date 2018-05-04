@@ -3,6 +3,10 @@ import { login } from '../../services/login'
 import React from 'react'
 import { Form, Input, Button, Grid, Loader } from 'semantic-ui-react'
 
+/**
+ *  The page used to login
+ */
+
 class LoginPage extends React.Component {
   state = {
     loading: false

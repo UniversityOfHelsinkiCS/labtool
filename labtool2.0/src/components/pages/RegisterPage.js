@@ -5,6 +5,10 @@ import { connect } from 'react-redux'
 import { createStudentCourses } from '../../services/studentinstances'
 import { Redirect } from 'react-router'
 
+
+/**
+ * The page user uses to register to a course AS A STUDENT
+ */
 class RegisterPage extends Component {
   state = {
     redirectToNewPage: false,
