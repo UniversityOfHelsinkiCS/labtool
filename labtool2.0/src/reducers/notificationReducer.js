@@ -1,3 +1,11 @@
+/**
+ * Notification reducer is the largest, you can add context-sensitive
+ * notification messages that are related to the operation.
+ * 
+ * ex. Login is succesfull, a "You have logged in" message is put to the store
+ * With the "error" field being a boolean for the notification being
+ * green or red, with error false being green.
+ */
 const notificationReducer = (state = {}, action) => {
   switch (action.type) {
     case 'LOGIN_SUCCESS':

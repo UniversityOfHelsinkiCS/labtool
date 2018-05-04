@@ -1,5 +1,21 @@
 import axios from 'axios'
 
+/**
+ * This middleware forms all the requests to the api that is used,
+ * and also dispatchs store messages depending on the failure
+ * or success of the call. Axios is used.
+ * 
+ * The method that is used from here is 'callApi',
+ * that you can give path, dara, what operation is done, 
+ * and also token. Path can be given from .env file,
+ * and it can be configured to depend on the
+ * enviroment.
+ * 
+ * If the call is success, a dispatch of "{method}SUCCESS" is given,
+ * otherwise "{method}FAILURE" is dispatched, and all reducers listen
+ * to these dispatches, and can be made to react accordingly.
+ *  
+ */
 const createApiUrl = path => {
   const API_PATHS = ['staging', 'v2']
   const mode = path.split('/')[1]

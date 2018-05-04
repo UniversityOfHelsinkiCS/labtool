@@ -8,6 +8,10 @@ import { BrowserRouter } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import store from './store'
 
+/**
+ * Index takes the react router and also
+ * the store from redux.
+ */
 ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>

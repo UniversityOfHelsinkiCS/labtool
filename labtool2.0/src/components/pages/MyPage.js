@@ -7,10 +7,14 @@ import { getAllStudentCourses } from '../../services/studentinstances'
 import { getAllTeacherCourses } from '../../services/teacherinstances'
 import { Redirect } from 'react-router'
 
+/**
+ * The main page that is shown after user has logged in.
+ */
+
 class MyPage extends Component {
+
+  // Checks if a user is logged in.
   componentDidMount() {
-    //this.props.getAllStudentCourses()
-    //this.props.getAllTeacherCourses()
     try {
       const loggedUserJSON = window.localStorage.getItem('loggedLabtool')
       if (loggedUserJSON && loggedUserJSON !== '{}') {
@@ -27,7 +31,6 @@ class MyPage extends Component {
   }
 
   render() {
-    console.log(user)
     const user = { ...this.props.user.user }
     return (
       <div>
