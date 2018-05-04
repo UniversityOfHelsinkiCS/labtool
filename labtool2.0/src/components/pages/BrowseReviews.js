@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { createOneComment } from '../../services/comment'
 import { coursePageInformation } from '../../services/courseInstance'
+import ReactMarkdown from 'react-markdown'
 
 /**
  * Maps all comments from a single instance from coursePage reducer
@@ -53,8 +54,8 @@ class BrowseReviews extends Component {
 
           )
           for (var i = 0; i < this.props.selectedInstance.weekAmount; i++) {
-            const weekPoints = student.weeks.find(week => week.weekNumber == (i + 1))
-            if (weekPoints) {
+            const weeks = student.weeks.find(week => week.weekNumber == (i + 1))
+            if (weeks) {
               headers.push(
                 <Accordion key={i} fluid styled>
                   <Accordion.Title active={activeIndex === i} index={i} onClick={this.handleClick}>
@@ -62,14 +63,14 @@ class BrowseReviews extends Component {
                   <Accordion.Content active={activeIndex === i}>
                       <Card fluid color='yellow'>
                       <Card.Content>
-                        <h4> Points: {weekPoints.points} </h4>
-                        <h4> Weekly feedback: {weekPoints.feedback} </h4>
+                        <h4> Points: {weeks.points} </h4>
+                        <h4> Weekly feedback: <ReactMarkdown>{weeks.feedback}</ReactMarkdown> </h4>
                       </Card.Content>
                     </Card>
                       <h4> Comments </h4>
                       <Comment.Group>
-                      {this.props.courseData.data[0].weeks[i] ? 
-                      this.props.courseData.data[0].weeks[i].comments.map(comment => (
+                      {weeks ? 
+                        weeks.comments.map(comment => (
                         comment.hidden ?
                         <Comment disabled>
                           <Comment.Content>
@@ -77,16 +78,16 @@ class BrowseReviews extends Component {
                             <div>Hidden</div>
                           </Comment.Metadata>
                           <Comment.Author>{comment.from}</Comment.Author>
-                          <Comment.Text> {comment.comment} </Comment.Text>
+                                <Comment.Text> <ReactMarkdown>{comment.comment}</ReactMarkdown> </Comment.Text>
                           </Comment.Content>
                         </Comment> :
                         <Comment>
                           <Comment.Author>{comment.from}</Comment.Author>
-                          <Comment.Text> {comment.comment} </Comment.Text>
+                                <Comment.Text> <ReactMarkdown>{comment.comment}</ReactMarkdown> </Comment.Text>
                       </Comment>
                       )) : <h4> No comments </h4>}
                       </Comment.Group>
-                      <Form reply onSubmit={this.handleSubmit} name={weekPoints.id} id={weekPoints.id} >
+                      <Form reply onSubmit={this.handleSubmit} name={weeks.id} id={weeks.id} >
                           <Form.TextArea name="content" placeholder='Your comment...' defaultValue="" />
                           <Form.Checkbox label="Make this comment hidden from others" name="hidden" />
                           <Button content='Add Reply' labelPosition='left' icon='edit' primary />
