@@ -148,6 +148,9 @@ class CoursePage extends Component {
                 )}
               </Table.Body>
             </Table>
+            <List style={{ float: 'right' }}>
+              <List.Item icon="orange star" content="Review student" />
+            </List>
           </div>
           :
           <div></div>
