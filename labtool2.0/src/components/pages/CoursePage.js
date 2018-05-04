@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Table, Card } from 'semantic-ui-react'
+import { Button, Table, Card, List, Header } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 
@@ -66,19 +66,28 @@ class CoursePage extends Component {
         {this.props.courseData.role === 'teacher' ?
           <div>
 <br />
-            <Table celled >
+            <Table>
               <Table.Header>
                 <Table.Row>
                   <Table.HeaderCell>Active: {JSON.stringify(this.props.selectedInstance.active)}</Table.HeaderCell>
                   <Table.HeaderCell>Week amount: {this.props.selectedInstance.weekAmount}</Table.HeaderCell>
                   <Table.HeaderCell>Current week: {this.props.selectedInstance.currentWeek}</Table.HeaderCell>
                   <Table.HeaderCell>Week maxpoints: {this.props.selectedInstance.weekMaxPoints}</Table.HeaderCell>
+                  <Table.HeaderCell textAlign='center'> <Link to={`/labtool/ModifyCourseInstancePage/${this.props.selectedInstance.ohid}`}>
+                    <Button circular size="tiny" icon="large yellow edit icon" />
+                  </Link>
+                    </Table.HeaderCell>
                 </Table.Row>
               </Table.Header>
             </Table>
+            <List style={{float: 'right'}}>
+              <List.Item  icon="yellow edit" content="Edit course" />
+            </List>
 
-            <h2> Students </h2>
-            <Table celled unstackable>
+            <br/>
+            <Header as="h2">
+            Students </Header>
+            <Table celled>
               <Table.Header>
                 <Table.Row>
                   <Table.HeaderCell>Name</Table.HeaderCell>
