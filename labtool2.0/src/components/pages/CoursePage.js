@@ -1,33 +1,29 @@
 import React, { Component } from 'react'
-import { Button, Table, Grid, Card, Header, Divider } from 'semantic-ui-react'
+import { Button, Table, Card } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 class CoursePage extends Component {
 
   render() {
-    let instance = []
-    if (this.props.studentInstance) {
-      instance = this.props.studentInstance.filter(inst => (inst.courseInstanceId == this.props.selectedInstance.id))
-    }
     let allPoints = 0
     const createIndents = (data, siId) => {
       const indents = []
 
       for (var i = 0; i < this.props.selectedInstance.weekAmount; i++) {
         let pushattava =
-          <Table.Cell>
+          <Table.Cell key={i}>
             <p>Not reviewed!</p>
           </Table.Cell>
 
         for (var j = 0; j < data.length; j++) {
           if ((i + 1) === data[j].weekNumber) {
             allPoints += data[j].points
-            pushattava = <Table.Cell>
+            pushattava = <Table.Cell key={i}>
               <p>{data[j].points}</p>
               {/*               <Link to={`/labtool/reviewstudent/${this.props.selectedInstance.ohid}/${siId}/${i + 1}`}>
                 <Button circular color='orange' size="tiny" icon="edit black large" ></Button>
-              </Link> */}
+          </Link> */}
             </Table.Cell>
 
           }
@@ -40,7 +36,7 @@ class CoursePage extends Component {
     const createHeaders = () => {
       const headers = []
       for (var i = 0; i < this.props.selectedInstance.weekAmount; i++) {
-        headers.push(<Table.HeaderCell>Week {i + 1} </Table.HeaderCell>)
+        headers.push(<Table.HeaderCell key={i}>Week {i + 1} </Table.HeaderCell>)
       }
       return headers
     }
@@ -51,7 +47,6 @@ class CoursePage extends Component {
 
 
     return (
-      //const CoursePage = ({ name, start, end, week_amount, week_max_points, current_week, handleFieldChange }) => {
       <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
         <div className="ui grid">
           <div className="sixteen wide column">
@@ -97,7 +92,7 @@ class CoursePage extends Component {
               <Table.Body>
                 {this.props.courseData.data.map(data =>
 
-                  <Table.Row>
+                  <Table.Row key={data.id}>
                     <Table.Cell>{data.User.firsts} {data.User.lastname}</Table.Cell>
                     <Table.Cell><p>{data.projectName}</p><a>{data.github}</a></Table.Cell>
                     {createIndents(data.weeks, data.id)}
