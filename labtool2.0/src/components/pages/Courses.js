@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, List, Container, Header, Table } from 'semantic-ui-react'
+import { Button, List, Container, Header, Table, Label } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
@@ -8,32 +8,52 @@ class Courses extends Component {
     return (
       <div>
         <Container>
-          <Header as="h2" className="CoursesHeader">
-            Courses
-          </Header>
-          <Table singleline key="grey">
+          <Header as="h2">Courses</Header>
+          <Table singleLine color="yellow">
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell colSpan="1"> </Table.HeaderCell>
+                <Table.HeaderCell colSpan="1">Course id</Table.HeaderCell>
+                <Table.HeaderCell colSpan="1">Course name</Table.HeaderCell>
+                <Table.HeaderCell colSpan="1">Course start date</Table.HeaderCell>
+                <Table.HeaderCell colSpan="2"> </Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+
             <Table.Body>
               {this.props.courseInstance.map(instance => (
-                <Table.Row>
-                  <Table.Cell>{instance.name}</Table.Cell>
-                  <Table.Cell textAlign="right">
+                <Table.Row key={''}>
+                  <Table.Cell>
                     <div>
-                      <Link to={`/labtool/courses/${instance.ohid}`}>
-                        <Button circular color="teal" size="tiny" icon="large black eye icon" />
-                      </Link>
-                      <Link to={`/labtool/ModifyCourseInstancePage/${instance.ohid}`}>
-                        <Button circular color="orange" size="tiny" icon="large black edit icon" />
-                      </Link>
+                      {instance.active === true ? (
+                        <Label ribbon style={{ backgroundColor: '#21ba45' }}>
+                          Active
+                        </Label>
+                      ) : (
+                          ''
+                        )}
                     </div>
+                  </Table.Cell>
+                  <Table.Cell>{instance.ohid} </Table.Cell>
+                  <Table.Cell>
+                    <bold>
+                      <a href={`/labtool/courses/${instance.ohid}`}>{instance.name}</a>
+                    </bold>
+                  </Table.Cell>
+
+                  <Table.Cell>{instance.start.substring(0, 10)} </Table.Cell>
+                  <Table.Cell textAlign="center">
+                    <Button circular size="tiny" icon="large blue eye icon" as={Link} to={`/labtool/courses/${instance.ohid}`} />
                   </Table.Cell>
                 </Table.Row>
               ))}
             </Table.Body>
           </Table>
+
           <div className="Instructions">
             <List>
-              <List.Item icon="eye" content="Show course page" />
-              <List.Item icon="edit" content="Edit course" />
+              <List.Item icon="blue eye icon" content="Show course page" />
+              <List.Item icon="green square" content="Course is activated" />
             </List>
           </div>
         </Container>
@@ -49,29 +69,3 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 export default connect(mapStateToProps, null)(Courses)
-
-/* import React, { Component } from 'react'
-import React from 'react'
-import { Switch, Route } from 'react-router-dom'
-import AllCourses from './AllCourses'
-import Course from './Course'
-
-class Courses extends React.Component {
-    
-
-  render() {
-    return (
-      <div style={{ textAlignVertical: 'center', textAlign: 'center', }}>
-        <h2>Kursseja!</h2>
-        <Switch>
-          <Route exact path={`${process.env.PUBLIC_URL}/courses`} component={AllCourses} />
-          <Route path={`${process.env.PUBLIC_URL}/courses:number`} component={Course} />
-        </Switch>
-      </div >
-    )
-  }
-}
-
-
-export default Courses
-*/

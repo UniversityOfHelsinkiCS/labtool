@@ -1,98 +1,93 @@
 import React, { Component } from 'react'
-import { Button, Table, List } from 'semantic-ui-react'
+import { Button, Table, List, Accordion, Icon, Form, } from 'semantic-ui-react'
+import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 class BrowseReviews extends Component {
+  state = { activeIndex: 0 }
+
+  handleClick = (e, titleProps) => {
+    const { index } = titleProps
+    const { activeIndex } = this.state
+    const newIndex = activeIndex === index ? -1 : index
+
+    this.setState({ activeIndex: newIndex })
+  }
+
+
+
+
   render() {
+    const createHeaders = (studhead, studentInstance) => {
+      let headers = []
+      studhead.data.map(student => {
+        if (student.id == studentInstance) {
+          for (var i = 0; i < this.props.selectedInstance.weekAmount; i++) {
+            const weekPoints = student.weeks.find(week => week.weekNumber == (i + 1))
+            if (weekPoints) {
+              headers.push(
+                <Accordion fluid styled>
+                  <Accordion.Title active={activeIndex === i} index={i} onClick={this.handleClick}>
+                    <Icon name='dropdown' /> Week {i + 1} </Accordion.Title>
+                  <Accordion.Content active={activeIndex === i}>
+                    <p>
+                      <h4> {student.User.firsts} {student.User.lastname} </h4>
+                      <h4> {weekPoints.points} </h4>
+                      <h4> Comments </h4>
+                      <Link to={`/labtool/reviewstudent/${this.props.selectedInstance.ohid}/${studentInstance}/${i+1}`}>
+                        <Button circular color="orange" size="tiny" icon="edit black large" />
+                      </Link>
+                    </p>
+                  </Accordion.Content>
+                </Accordion>
+              )
+            } else {
+              headers.push(
+                <Accordion fluid styled>
+                  <Accordion.Title active={activeIndex === i} index={i} onClick={this.handleClick}>
+                    <Icon name='dropdown' /> Week {i + 1} </Accordion.Title>
+                  <Accordion.Content active={activeIndex === i}>
+                    <p>
+                      <h4> {student.User.firsts} {student.User.lastname} </h4>
+                      <h4> Not Graded </h4>
+                      <h4> No comments </h4>
+                      <Link to={`/labtool/reviewstudent/${this.props.selectedInstance.ohid}/${studentInstance}/${i}`}>
+                        <Button circular color="orange" size="tiny" icon="edit black large" />
+                      </Link>
+                    </p>
+                  </Accordion.Content>
+                </Accordion>
+              )
+            }
+          }
+        }
+      })
+      return headers
+    }
+
+    const { activeIndex } = this.state
+
     return (
       <div>
-        <h2> Tiralabra 2018 Kevät </h2>
-        <h3> Maija Meikäläinen </h3>
-        <h2> Week 1 </h2>
-        <Table celled padded>
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell>Week</Table.HeaderCell>
-              <Table.HeaderCell>Points</Table.HeaderCell>
-              <Table.HeaderCell>Comment</Table.HeaderCell>
-              <Table.HeaderCell> Edit </Table.HeaderCell>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            <Table.Row>
-              <Table.Cell>1</Table.Cell>
-              <Table.Cell>5</Table.Cell>
-              <Table.Cell>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ut ultrices sapien. Aliquam neque diam, scelerisque nec metus sit amet, euismod interdum orci. Vivamus eu
-                convallis ex. Etiam faucibus varius lorem in egestas. Pellentesque quis elementum magna, quis sagittis ex. Mauris a sem dignissim, fringilla elit ac, iaculis quam. Ut ut lacus sit amet
-                massa blandit tincidunt. Mauris mattis tempor nibh, fermentum interdum massa placerat tempor.
-              </Table.Cell>
-              <Table.Cell>
-                <Button color="blue">
-                  {' '}
-                  <List.Item icon="edit" />
-                </Button>
-              </Table.Cell>
-            </Table.Row>
-            <Table.Row>
-              <Table.Cell>2</Table.Cell>
-              <Table.Cell>2</Table.Cell>
-              <Table.Cell>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ut ultrices sapien. Aliquam neque diam, scelerisque nec metus sit amet, euismod interdum orci. Vivamus eu
-                convallis ex. Etiam faucibus varius lorem in egestas. Pellentesque quis elementum magna, quis sagittis ex. Mauris a sem dignissim, fringilla elit ac, iaculis quam. Ut ut lacus sit amet
-                massa blandit tincidunt. Mauris mattis tempor nibh, fermentum interdum massa placerat tempor.
-              </Table.Cell>
-              <Table.Cell>
-                <Button color="blue">
-                  {' '}
-                  <List.Item icon="edit" />
-                </Button>
-              </Table.Cell>
-            </Table.Row>
-            <Table.Row>
-              <Table.Cell>3</Table.Cell>
-              <Table.Cell>0</Table.Cell>
-              <Table.Cell>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ut ultrices sapien. Aliquam neque diam, scelerisque nec metus sit amet, euismod interdum orci. Vivamus eu
-                convallis ex. Etiam faucibus varius lorem in egestas. Pellentesque quis elementum magna, quis sagittis ex. Mauris a sem dignissim, fringilla elit ac, iaculis quam. Ut ut lacus sit amet
-                massa blandit tincidunt. Mauris mattis tempor nibh, fermentum interdum massa placerat tempor.
-              </Table.Cell>
-              <Table.Cell>
-                <Button color="blue">
-                  {' '}
-                  <List.Item icon="edit" />
-                </Button>
-              </Table.Cell>
-            </Table.Row>
-            <Table.Row>
-              <Table.Cell>4</Table.Cell>
-              <Table.Cell>4</Table.Cell>
-              <Table.Cell>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ut ultrices sapien. Aliquam neque diam, scelerisque nec metus sit amet, euismod interdum orci. Vivamus eu
-                convallis ex. Etiam faucibus varius lorem in egestas. Pellentesque quis elementum magna, quis sagittis ex. Mauris a sem dignissim, fringilla elit ac, iaculis quam. Ut ut lacus sit amet
-                massa blandit tincidunt. Mauris mattis tempor nibh, fermentum interdum massa placerat tempor.
-              </Table.Cell>
-              <Table.Cell>
-                <Button color="blue">
-                  {' '}
-                  <List.Item icon="edit" />
-                </Button>
-              </Table.Cell>
-            </Table.Row>
-            <Table.Row>
-              <Table.Cell> null </Table.Cell>
-              <Table.Cell> null </Table.Cell>
-              <Table.Cell> null </Table.Cell>
-              <Table.Cell>
-                <Button color="blue">
-                  {' '}
-                  <List.Item icon="edit" />
-                </Button>
-              </Table.Cell>
-            </Table.Row>
-          </Table.Body>
-        </Table>
+        {this.props.courseData.role === 'teacher'
+          ? <div>
+            <h2> {this.props.selectedInstance.name}</h2>
+            {createHeaders(this.props.courseData, this.props.studentInstance)}
+          </div>
+          : <p></p>}
       </div>
     )
   }
 }
-export default BrowseReviews
+const mapStateToProps = (state, ownProps) => {
+  return {
+    ownProps,
+    user: state.user,
+    selectedInstance: state.selectedInstance,
+    courseData: state.coursePage
+  }
+}
+
+
+
+export default connect(mapStateToProps, {})(BrowseReviews)
