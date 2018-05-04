@@ -30,6 +30,7 @@ class BrowseReviews extends Component {
     try {
       await this.props.createOneComment(content)
       await this.props.coursePageInformation(this.props.selectedInstance.ohid)
+      document.getElementById('comment').reset()
     } catch (error) {
       console.log(error)
     }
@@ -70,8 +71,8 @@ class BrowseReviews extends Component {
                       </Comment>
                       )) : <h4> No comments </h4>}
                       </Comment.Group>
-                      <Form reply onSubmit={this.handleSubmit} name={weekPoints.id}>
-                          <Form.TextArea name="content" />
+                      <Form reply onSubmit={this.handleSubmit} name={weekPoints.id} id='comment'>
+                          <Form.TextArea name="content" placeholder='Your comment...' defaultValue="" />
                           
                           <Button content='Add Reply' labelPosition='left' icon='edit' primary />
                         </Form>

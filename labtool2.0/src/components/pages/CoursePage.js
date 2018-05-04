@@ -18,6 +18,7 @@ class CoursePage extends Component {
     try {
       await this.props.createOneComment(content)
       await this.props.coursePageInformation(this.props.selectedInstance.ohid)
+      document.getElementById('comment').reset()
     } catch (error) {
       console.log(error)
     }
@@ -173,8 +174,8 @@ class CoursePage extends Component {
                           </Comment>
                         ))}
                         </Comment.Group>
-                        <Form reply onSubmit={this.handleSubmit} name={week.id}>
-                          <Form.TextArea name="content" />
+                        <Form reply onSubmit={this.handleSubmit} name={week.id} id='comment' >
+                          <Form.TextArea name="content" placeholder='Your comment...' />
                           
                           <Button content='Add Reply' labelPosition='left' icon='edit' primary />
                         </Form>
