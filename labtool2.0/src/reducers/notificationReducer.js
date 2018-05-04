@@ -1,5 +1,5 @@
 /**
- * Notification reducer is the largest, you can add context-sensitive
+ * Notification reducer. You can add context-sensitive
  * notification messages that are related to the operation.
  * 
  * ex. Login is succesfull, a "You have logged in" message is put to the store
