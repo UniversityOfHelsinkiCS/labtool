@@ -6,21 +6,14 @@ import { Link } from 'react-router-dom'
 
 class MyPage extends Component {
   componentDidMount() {
-    //this.props.getAllStudentCourses()
-    //this.props.getAllTeacherCourses()
     try {
       const loggedUserJSON = window.localStorage.getItem('loggedLabtool')
       if (loggedUserJSON && loggedUserJSON !== '{}') {
         const user = JSON.parse(loggedUserJSON)
-        this.props.tokenLogin(user)
       }
     } catch (exception) {
       console.log('no user logged in')
     }
-  }
-
-  editEmail = event => {
-    event.preventDefault()
   }
 
   render() {
@@ -90,7 +83,7 @@ class MyPage extends Component {
               My Courses (Student){' '}
             </Header>
 
-            <Table singleline key="grey" color="yellow">
+            <Table singleLine key="grey" color="yellow">
               <Table.Body>
                 {this.props.studentInstance.map(sinstance => (
                   <Table.Row>
@@ -117,7 +110,7 @@ class MyPage extends Component {
                 <Table singleline key="grey" color="yellow">
                   <Table.Body>
                     {this.props.teacherInstance.map(tinstance => (
-                      <Table.Row>
+                      <Table.Row key={tinstance.id}>
                         <Table.Cell>{tinstance.name}</Table.Cell>
                         <Table.Cell textAlign="right">
                           <Link to={`/labtool/courses/${tinstance.ohid}`}>
