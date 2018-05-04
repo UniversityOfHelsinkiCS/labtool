@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { createOneComment } from '../../services/comment'
 import { coursePageInformation } from '../../services/courseInstance'
+import ReactMarkdown from 'react-markdown'
 
 /**
  * Maps all comments from a single instance from coursePage reducer
@@ -63,7 +64,7 @@ class BrowseReviews extends Component {
                       <Card fluid color='yellow'>
                       <Card.Content>
                         <h4> Points: {weekPoints.points} </h4>
-                        <h4> Weekly feedback: {weekPoints.feedback} </h4>
+                        <h4> Weekly feedback: <ReactMarkdown>{weekPoints.feedback}</ReactMarkdown> </h4>
                       </Card.Content>
                     </Card>
                       <h4> Comments </h4>
@@ -77,12 +78,12 @@ class BrowseReviews extends Component {
                             <div>Hidden</div>
                           </Comment.Metadata>
                           <Comment.Author>{comment.from}</Comment.Author>
-                          <Comment.Text> {comment.comment} </Comment.Text>
+                                <Comment.Text> <ReactMarkdown>{comment.comment}</ReactMarkdown> </Comment.Text>
                           </Comment.Content>
                         </Comment> :
                         <Comment>
                           <Comment.Author>{comment.from}</Comment.Author>
-                          <Comment.Text> {comment.comment} </Comment.Text>
+                                <Comment.Text> <ReactMarkdown>{comment.comment}</ReactMarkdown> </Comment.Text>
                       </Comment>
                       )) : <h4> No comments </h4>}
                       </Comment.Group>
