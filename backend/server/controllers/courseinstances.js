@@ -67,10 +67,7 @@ module.exports = {
             as: 'weeks',
             include: [{
               model: Comment,
-              as: 'comments',
-              where: {
-                hidden: false
-              }
+              as: 'comments'
             }]
           }
         ]
@@ -98,6 +95,9 @@ module.exports = {
               }
             ]
           },
+          {
+            model: User
+          }
         ]
       })
       try {
