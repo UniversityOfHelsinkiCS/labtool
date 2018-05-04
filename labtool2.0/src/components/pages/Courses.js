@@ -22,7 +22,7 @@ class Courses extends Component {
 
             <Table.Body>
               {this.props.courseInstance.map(instance => (
-                <Table.Row key={''}>
+                <Table.Row key={instance.key}>
                   <Table.Cell>
                     <div>
                       {instance.active === true ? (

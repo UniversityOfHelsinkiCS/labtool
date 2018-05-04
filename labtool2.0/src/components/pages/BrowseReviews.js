@@ -41,11 +41,10 @@ class BrowseReviews extends Component {
             const weekPoints = student.weeks.find(week => week.weekNumber == (i + 1))
             if (weekPoints) {
               headers.push(
-                <Accordion fluid styled>
+                <Accordion key={i} fluid styled>
                   <Accordion.Title active={activeIndex === i} index={i} onClick={this.handleClick}>
                     <Icon name='dropdown' /> Week {i + 1} </Accordion.Title>
                   <Accordion.Content active={activeIndex === i}>
-                    <p>
                       <h4> {student.User.firsts} {student.User.lastname} </h4>
                       <h4> {weekPoints.points} </h4>
                       <h4> {weekPoints.feedback} </h4>
@@ -68,24 +67,22 @@ class BrowseReviews extends Component {
                       <Link to={`/labtool/reviewstudent/${this.props.selectedInstance.ohid}/${studentInstance}/${i+1}`}>
                         <Button circular color="orange" size="tiny" icon="edit black large" />
                       </Link>
-                    </p>
+                    
                   </Accordion.Content>
                 </Accordion>
               )
             } else {
               headers.push(
-                <Accordion fluid styled>
+                <Accordion key={i} fluid styled>
                   <Accordion.Title active={activeIndex === i} index={i} onClick={this.handleClick}>
                     <Icon name='dropdown' /> Week {i + 1} </Accordion.Title>
                   <Accordion.Content active={activeIndex === i}>
-                    <p>
                       <h4> {student.User.firsts} {student.User.lastname} </h4>
                       <h4> Not Graded </h4>
                       <h4> No comments </h4>
                       <Link to={`/labtool/reviewstudent/${this.props.selectedInstance.ohid}/${studentInstance}/${i+1}`}>
                         <Button circular color="orange" size="tiny" icon="edit black large" />
                       </Link>
-                    </p>
                   </Accordion.Content>
                 </Accordion>
               )

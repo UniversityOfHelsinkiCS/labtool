@@ -1,33 +1,28 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Card, Button, Header, Table, Container, List, Icon, Segment, Divider } from 'semantic-ui-react'
+import { Button, Header, Table, Container, List, Icon, Segment, Divider } from 'semantic-ui-react'
 import './MyPage.css'
 import { Link } from 'react-router-dom'
-import { getAllStudentCourses } from '../../services/studentinstances'
-import { getAllTeacherCourses } from '../../services/teacherinstances'
-import { Redirect } from 'react-router'
+
+/**
+ * The main page that is shown after user has logged in.
+ */
 
 class MyPage extends Component {
+
+  // Checks if a user is logged in.
   componentDidMount() {
-    //this.props.getAllStudentCourses()
-    //this.props.getAllTeacherCourses()
     try {
       const loggedUserJSON = window.localStorage.getItem('loggedLabtool')
       if (loggedUserJSON && loggedUserJSON !== '{}') {
         const user = JSON.parse(loggedUserJSON)
-        this.props.tokenLogin(user)
       }
     } catch (exception) {
       console.log('no user logged in')
     }
   }
 
-  editEmail = event => {
-    event.preventDefault()
-  }
-
   render() {
-    console.log(user)
     const user = { ...this.props.user.user }
     return (
       <div>
@@ -93,7 +88,7 @@ class MyPage extends Component {
               My Courses (Student){' '}
             </Header>
 
-            <Table singleline key="grey" color="yellow">
+            <Table singleLine key="grey" color="yellow">
               <Table.Body>
                 {this.props.studentInstance.map(sinstance => (
                   <Table.Row>
@@ -120,7 +115,7 @@ class MyPage extends Component {
                 <Table singleline key="grey" color="yellow">
                   <Table.Body>
                     {this.props.teacherInstance.map(tinstance => (
-                      <Table.Row>
+                      <Table.Row key={tinstance.id}>
                         <Table.Cell>{tinstance.name}</Table.Cell>
                         <Table.Cell textAlign="right">
                           <Link to={`/labtool/courses/${tinstance.ohid}`}>
