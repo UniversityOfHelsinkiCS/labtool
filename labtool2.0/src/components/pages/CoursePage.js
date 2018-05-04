@@ -160,7 +160,7 @@ class CoursePage extends Component {
                   </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                  {this.props.courseData.data.weeks.map(week => (
+                {this.props.courseData.data.weeks.sort((a, b) => a.weekNumber - b.weekNumber).map(week => (
                     <Table.Row>
                       <Table.Cell>{week.weekNumber}</Table.Cell>
                       <Table.Cell>{week.points}</Table.Cell>
