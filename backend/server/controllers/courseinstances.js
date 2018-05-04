@@ -49,7 +49,6 @@ module.exports = {
       data: undefined
     }
     const user = req.decoded.id
-    console.log('user.id: ', user)
     const teacher = await TeacherInstance.findAll({
       where: {
         userId: user,
@@ -66,19 +65,13 @@ module.exports = {
           {
             model: Week,
             as: 'weeks',
-            include: [
-              {
-                model: Comment,
-                as: 'comments',
-                where: {
-                  hidden: false
-                }
-              }
-            ]
+            include: [{
+              model: Comment,
+              as: 'comments'
+            }]
           }
         ]
       })
-
       try {
         palautus.data = student
         palautus.role = 'student'
@@ -99,6 +92,9 @@ module.exports = {
               {
                 model: Comment,
                 as: 'comments',
+                where: {
+                  hidden: false
+                }
               }
             ]
           },
