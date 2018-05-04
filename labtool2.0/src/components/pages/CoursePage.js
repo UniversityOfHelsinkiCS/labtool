@@ -122,7 +122,7 @@ class CoursePage extends Component {
             <Card fluid color='yellow'>
               <Card.Content>
                 <h3> {this.props.courseData.data.projectName} </h3>
-                <h3> <Link to={this.props.courseData.data.github}>{this.props.courseData.data.github}</Link> </h3>
+                <h3> <a href={this.props.courseData.data.github}>{this.props.courseData.data.github}</a> </h3>
               </Card.Content>
             </Card>
 
