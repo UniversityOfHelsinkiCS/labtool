@@ -67,7 +67,10 @@ module.exports = {
             as: 'weeks',
             include: [{
               model: Comment,
-              as: 'comments'
+              as: 'comments',
+              where: {
+                hidden: false
+              }
             }]
           }
         ]
@@ -92,9 +95,6 @@ module.exports = {
               {
                 model: Comment,
                 as: 'comments',
-                where: {
-                  hidden: false
-                }
               }
             ]
           },
