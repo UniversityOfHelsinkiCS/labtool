@@ -3,6 +3,9 @@ import { Button, List, Container, Header, Table, Label } from 'semantic-ui-react
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
+/**
+ *  Show all the courses in a single list.
+ */
 class Courses extends Component {
   render() {
     return (

@@ -5,6 +5,10 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Redirect } from 'react-router'
 import { clearNotifications } from '../../reducers/notificationReducer'
+
+/**
+ *  Page used to modify a courseinstances information. Can only be accessed by teachers.
+ */
 class ModifyCourseInstancePage extends Component {
   componentWillMount() {
     this.props.clearNotifications()

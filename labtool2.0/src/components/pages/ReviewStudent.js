@@ -5,6 +5,10 @@ import { connect } from 'react-redux'
 import { createOneWeek } from '../../services/week'
 import { clearNotifications } from '../../reducers/notificationReducer'
 import store from '../../store'
+
+/**
+ *  The page which is used by teacher to review submissions,.
+ */
 class ReviewStudent extends Component {
   componentWillMount() {
     this.props.clearNotifications()

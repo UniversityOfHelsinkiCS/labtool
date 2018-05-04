@@ -3,6 +3,9 @@ import { Button, Accordion, Icon } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
+/**
+ * Maps all comments from a single instance from coursePage reducer
+ */
 class BrowseReviews extends Component {
   state = { activeIndex: 0 }
 
