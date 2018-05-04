@@ -44,15 +44,12 @@ module.exports = {
       }
     })
     const courseInst = course.id
-    console.log('courseInstanceId: ', courseInst)
-    console.log('courseInstanceId type:', typeof (courseInst))
     const palautus = {
       role: 'Unregistered',
       data: undefined
     }
     const user = req.decoded.id
-    console.log('userId: ', user)
-    console.log('user type:', typeof (user))
+    console.log('user.id: ', user)
     const teacher = await TeacherInstance.findAll({
       where: {
         userId: user,
@@ -60,6 +57,9 @@ module.exports = {
       }
     })
     if (teacher[0] === undefined) {
+      console.log('studentti')
+      console.log('userId: ', user)
+      console.log('courseInstanceId:', courseInst)
       const student = await StudentInstance.find({
         where: {
           userId: user,
@@ -73,12 +73,20 @@ module.exports = {
               {
                 model: Comment,
                 as: 'comments',
-                
+                where: {
+                  hidden: false
+                },
+                required: false
               }
             ]
+          },
+          {
+            model: User
           }
         ]
       })
+      console.log('studentInst: ', student)
+
       try {
         palautus.data = student
         palautus.role = 'student'
@@ -98,10 +106,13 @@ module.exports = {
             include: [
               {
                 model: Comment,
-                as: 'comments',
+                as: 'comments'
               }
             ]
           },
+          {
+            model: User
+          }
         ]
       })
       try {
