@@ -5,6 +5,10 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Redirect } from 'react-router'
 import { clearNotifications } from '../../reducers/notificationReducer'
+
+/**
+ *  Page used to modify a courseinstances information. Can only be accessed by teachers.
+ */
 class ModifyCourseInstancePage extends Component {
   componentWillMount() {
     this.props.clearNotifications()
@@ -66,7 +70,7 @@ class ModifyCourseInstancePage extends Component {
             ) : (
               <div>
                 <Grid.Row>
-                  <h4 style={{ color: 'red' }}>This course is currently inactive.</h4>
+                  <h4 style={{ color: 'grey' }}>This course is currently passive.</h4>
                 </Grid.Row>
               </div>
             )}

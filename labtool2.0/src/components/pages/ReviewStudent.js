@@ -5,6 +5,10 @@ import { connect } from 'react-redux'
 import { createOneWeek } from '../../services/week'
 import { clearNotifications } from '../../reducers/notificationReducer'
 import store from '../../store'
+
+/**
+ *  The page which is used by teacher to review submissions,.
+ */
 class ReviewStudent extends Component {
   componentWillMount() {
     this.props.clearNotifications()
@@ -57,7 +61,7 @@ class ReviewStudent extends Component {
               <Button className="ui left floated green button" type="submit">
                 Save
               </Button>
-              <Link to={`/labtool/courses/${this.props.selectedInstance.ohid}`} type="Cancel">
+              <Link to={`/labtool/browsereviews/${this.props.selectedInstance.ohid}/${this.props.courseData.data[0].id}`} type="Cancel">
                 <Button className="ui right floated button" type="cancel">
                   Cancel
                 </Button>
@@ -74,7 +78,8 @@ const mapStateToProps = (state, ownProps) => {
   return {
     ownProps,
     selectedInstance: state.selectedInstance,
-    notification: state.notification
+    notification: state.notification,
+    courseData: state.coursePage
   }
 }
 

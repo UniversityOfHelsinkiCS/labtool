@@ -5,6 +5,9 @@ import { Message, Grid } from 'semantic-ui-react'
 
 let timeout
 
+/**
+ *  Notification, that clears itself after a set of time.
+ */
 class Notification extends React.Component {
   componentDidUpdate() {
     const message = this.props.notification.message

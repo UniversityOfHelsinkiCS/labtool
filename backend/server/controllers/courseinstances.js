@@ -49,6 +49,7 @@ module.exports = {
       data: undefined
     }
     const user = req.decoded.id
+    console.log('user.id: ', user)
     const teacher = await TeacherInstance.findAll({
       where: {
         userId: user,
@@ -56,7 +57,10 @@ module.exports = {
       }
     })
     if (teacher[0] === undefined) {
-      const student = await StudentInstance.findOne({
+      console.log('studentti')
+      console.log('userId: ', user)
+      console.log('courseInstanceId:', courseInst)
+      const student = await StudentInstance.find({
         where: {
           userId: user,
           courseInstanceId: courseInst
@@ -70,9 +74,10 @@ module.exports = {
                 model: Comment,
                 as: 'comments',
                 where: {
-                  hidden: false 
-                }
-              } 
+                  hidden: false
+                },
+                required: false
+              }
             ]
           },
           {
@@ -80,7 +85,7 @@ module.exports = {
           }
         ]
       })
-
+      console.log('studentInst: ', student)
 
       try {
         palautus.data = student
@@ -92,7 +97,7 @@ module.exports = {
     } else {
       const teacherPalautus = await StudentInstance.findAll({
         where: {
-          courseInstanceId: courseInst,
+          courseInstanceId: courseInst
         },
         include: [
           {
@@ -157,7 +162,7 @@ module.exports = {
         let promisingThatWeboodiStatusIsChecked = new Promise((resolve, reject) => {
           helper.checkWebOodi(req, res, user, resolve) // this does not work.
 
-          setTimeout(function () {
+          setTimeout(function() {
             resolve('shitaintright') // Yay! everything went to hell.
           }, 5000) // set a high timeout value since you really want to wait x)
         })
@@ -197,7 +202,7 @@ module.exports = {
                 })*/
                 }
               })
-              .catch(function (error) {
+              .catch(function(error) {
                 res.status(400).send({
                   message: error.errors
                 })
@@ -312,7 +317,7 @@ module.exports = {
         },
         strictSSL: false
       }
-      request(options, function (err, resp, body) {
+      request(options, function(err, resp, body) {
         const json = JSON.parse(body)
         console.log('json palautta...')
         console.log(json)
@@ -362,7 +367,7 @@ module.exports = {
           },
           strictSSL: false
         }
-        request(options, function (err, resp, body) {
+        request(options, function(err, resp, body) {
           const json = JSON.parse(body)
           console.log(json)
           json.forEach(instance => {
@@ -423,7 +428,7 @@ module.exports = {
       weekId: message.week,
       hidden: message.hidden,
       comment: message.comment,
-      from: message.from,
+      from: message.from
     })
       .then(comment => {
         if (!comment) {

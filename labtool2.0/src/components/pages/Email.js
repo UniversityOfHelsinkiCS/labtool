@@ -8,11 +8,11 @@ import { Redirect } from 'react-router'
 /*
 take some elements from SetEmail.js, if user has already email in db
 text should be "Edit your email address" if email can be found from db
+
+Is used to modify users email.
 */
 
 class Email extends Component {
-  componentDidMount() {}
-
   state = {
     loading: false,
     redirectToNewPage: false

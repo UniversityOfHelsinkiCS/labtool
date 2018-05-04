@@ -1,14 +1,13 @@
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import React, { Component } from 'react'
-import { Menu, Button, Icon } from 'semantic-ui-react'
+import { Menu, Icon, Image } from 'semantic-ui-react'
 import { logout } from '../../reducers/loginReducer'
 
+/**
+ * Navigation bar component
+ */
 class Nav extends Component {
-  state = { activeItem: 'MyPage' }
-
-  handleItemClick = (e, { name }) => this.setState({ activeItem: name })
-
   handleLogout = async e => {
     e.preventDefault()
     window.localStorage.removeItem('loggedLabtool')
@@ -17,7 +16,6 @@ class Nav extends Component {
 
   render() {
     const user = { ...this.props.user.user }
-    const { activeItem } = this.state
 
     return (
       <main>
@@ -33,10 +31,24 @@ class Nav extends Component {
           }}
         >
           <Menu.Menu position="left">
-            <Menu.Item header>Labtool 2.0</Menu.Item>
+            <Menu.Item
+              header
+              style={{
+                bottom: '4px'
+              }}
+            >
+              <Image
+                size="mini"
+                src="/favicon.ico"
+                style={{
+                  bottom: '2px'
+                }}
+              />
+              Labtool 2.0
+            </Menu.Item>
 
             {this.props.user.user ? (
-              <Menu.Item name="MyPage" as={Link} to="/labtool/mypage" active={activeItem === 'MyPage'} onClick={this.handleItemClick}>
+              <Menu.Item name="MyPage" as={Link} to="/labtool/mypage">
                 <Icon name="home" />
                 My page
               </Menu.Item>
@@ -45,7 +57,7 @@ class Nav extends Component {
             )}
 
             {this.props.user.user ? (
-              <Menu.Item name="Courses" as={Link} to="/labtool/courses" active={activeItem === 'Courses'} onClick={this.handleItemClick}>
+              <Menu.Item name="Courses" as={Link} to="/labtool/courses">
                 <Icon name="browser" />
                 Courses
               </Menu.Item>
@@ -57,20 +69,12 @@ class Nav extends Component {
           {this.props.user.user ? (
             <div>
               <Menu.Menu position="right">
-                <Menu.Item
-                  style={{
-                    color: 'gray',
-                    justifyContent: 'center'
-                  }}
-                >
-                  <em>{user.username} logged in</em>
-                </Menu.Item>
-
-                <Menu.Item>
-                  <Link to="/labtool">
+                <Menu.Item name="Logout" as={Link} to="/labtool" onClick={this.handleLogout}>
+                  <Icon name="log out" />
+                  <p>
                     {' '}
-                    <Button onClick={this.handleLogout}>Logout</Button>
-                  </Link>
+                    Logout <em>{user.username} </em>
+                  </p>
                 </Menu.Item>
               </Menu.Menu>
             </div>
