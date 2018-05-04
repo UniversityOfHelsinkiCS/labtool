@@ -5,6 +5,11 @@ import { connect } from 'react-redux'
 
 class CoursePage extends Component {
 
+  /**
+   * Shows all information related to a course from user, 
+   * with information shown depending on whether the user 
+   * is a teacher or student on a course.
+   */
   render() {
     let allPoints = 0
     const createIndents = (data, siId) => {
@@ -41,11 +46,6 @@ class CoursePage extends Component {
       return headers
     }
 
-    const review = () => {
-
-    }
-
-
     return (
       <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center', }}>
         <div className="ui grid">
@@ -62,10 +62,10 @@ class CoursePage extends Component {
         </div>
 
 
-
+        {/** Shown when the users role in this course is teacher.*/}
         {this.props.courseData.role === 'teacher' ?
           <div>
-<br />
+            <br />
             <Table celled >
               <Table.Header>
                 <Table.Row>
@@ -102,7 +102,7 @@ class CoursePage extends Component {
                     <Table.Cell>
 
                       <Link to={`/labtool/browsereviews/${this.props.selectedInstance.ohid}/${data.id}`}>
-                        <Button circular color='orange' size="tiny" icon="edit black large" onClick={review()} ></Button>
+                        <Button circular color='orange' size="tiny" icon="edit black large" ></Button>
 
                       </Link>
                     </Table.Cell>
@@ -114,6 +114,8 @@ class CoursePage extends Component {
           :
           <div></div>
         }
+
+        {/** Shown when the users role in this course is student.*/}
         {this.props.courseData.role === "student" && this.props.courseData.data !== null
           ? <div>
 
@@ -131,34 +133,34 @@ class CoursePage extends Component {
             <Table celled padded unstackable>
               <Table.Header>
                 <Table.Row>
-                    <Table.HeaderCell>Week</Table.HeaderCell>
-                    <Table.HeaderCell>Points</Table.HeaderCell>
-                    <Table.HeaderCell>Feedback</Table.HeaderCell>
-                    <Table.HeaderCell>Comments</Table.HeaderCell>
-                  </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                  {this.props.courseData.data.weeks.map(week => (
-                    <Table.Row>
-                      <Table.Cell>{week.weekNumber}</Table.Cell>
-                      <Table.Cell>{week.points}</Table.Cell>
-                      <Table.Cell>{week.feedback}</Table.Cell>
-                      <Table.Cell>
-                        <ul>
+                  <Table.HeaderCell>Week</Table.HeaderCell>
+                  <Table.HeaderCell>Points</Table.HeaderCell>
+                  <Table.HeaderCell>Feedback</Table.HeaderCell>
+                  <Table.HeaderCell>Comments</Table.HeaderCell>
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
+                {this.props.courseData.data.weeks.map(week => (
+                  <Table.Row>
+                    <Table.Cell>{week.weekNumber}</Table.Cell>
+                    <Table.Cell>{week.points}</Table.Cell>
+                    <Table.Cell>{week.feedback}</Table.Cell>
+                    <Table.Cell>
+                      <ul>
                         {week.comments.map(comment => (
                           <li> {comment.comment} </li>
                         ))}
-                        </ul>
-                      </Table.Cell>
-                    </Table.Row>
-                  ))}
-                </Table.Body>
-              </Table>
-            </div>
+                      </ul>
+                    </Table.Cell>
+                  </Table.Row>
+                ))}
+              </Table.Body>
+            </Table>
+          </div>
           : (
             <div />
           )}
-        </div>
+      </div>
     )
   }
 }
