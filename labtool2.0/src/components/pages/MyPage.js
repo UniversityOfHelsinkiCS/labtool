@@ -1,11 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Card, Button, Header, Table, Container, List, Icon, Segment, Divider } from 'semantic-ui-react'
+import { Button, Header, Table, Container, List, Icon, Segment, Divider } from 'semantic-ui-react'
 import './MyPage.css'
 import { Link } from 'react-router-dom'
-import { getAllStudentCourses } from '../../services/studentinstances'
-import { getAllTeacherCourses } from '../../services/teacherinstances'
-import { Redirect } from 'react-router'
 
 class MyPage extends Component {
   componentDidMount() {
