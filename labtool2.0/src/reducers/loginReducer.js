@@ -1,3 +1,20 @@
+/**
+ * Named "user" in state. 
+ * Has all the information regarding to a user who is logged in.
+ * 
+ * user: json which has the following fields: 
+ *    id(pin): -- integer, database id
+      email(pin): -- string, email of the user
+      firsts(pin): -- users first names
+      lastname(pin): -- users lastname
+      studentNumber(pin): -- users studentnumber
+      username(pin): -- users ad credentials
+  
+  token: users token
+  created: did the user exist in database before logging in?
+ * 
+ */
+
 const loginReducer = (state = {}, action) => {
   switch (action.type) {
     case 'LOGIN_SUCCESS':

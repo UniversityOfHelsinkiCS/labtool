@@ -5,6 +5,9 @@ import { Link } from 'react-router-dom'
 import { createOneComment } from '../../services/comment'
 import { coursePageInformation } from '../../services/courseInstance'
 
+/**
+ * Maps all comments from a single instance from coursePage reducer
+ */
 class BrowseReviews extends Component {
   state = { activeIndex: 0 }
 
