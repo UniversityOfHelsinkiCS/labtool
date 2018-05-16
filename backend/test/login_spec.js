@@ -22,6 +22,10 @@ describe('Login', function() {
     server.close()
   })
 
+  /*
+  * Testi ei testannut mitään, joten kommentoin pois.
+  * Jos ymmärrät, mitä testin oli tarkoitus tehdä, korjaa.
+  * 
   it('respond to /api/login with correct credentials', function(done) {
     process.env.SECRET = 'testest'
     let token = jwt.sign({ username: 'rkeskiva', id: 1 }, process.env.SECRET)
@@ -36,6 +40,7 @@ describe('Login', function() {
 
     done()
   })
+  */
 
   it('respond to /login with incorrect credentials with "wrong credentials"', function(done) {
     nock('https://opetushallinto.cs.helsinki.fi')
