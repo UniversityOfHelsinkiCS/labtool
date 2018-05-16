@@ -5,18 +5,15 @@ describe('Express routes', function() {
   beforeEach(function() {
     server = require('../app')
   })
+
   afterEach(function() {
     server.close()
   })
+
   it('respond to /', function testSlash(done) {
     request(server)
       .get('/')
       .expect(200, done())
-  })
-  it('respond to /api', function(done) {
-    request(server)
-      .get('/api')
-      .expect('{"message":"Welcome to the COURSES API!"}', done())
   })
 
   it('respond to /api', function(done) {
