@@ -2,17 +2,12 @@ import { connect } from 'react-redux'
 import { login } from '../../services/login'
 import React from 'react'
 import { Form, Input, Button, Grid, Loader } from 'semantic-ui-react'
-import PropTypes from 'prop-types'
 
 /**
  *  The page used to login
  */
 
 class LoginPage extends React.Component {
-  static propTypes = {
-    login: PropTypes.func
-  }
-
   state = {
     loading: false
   }
