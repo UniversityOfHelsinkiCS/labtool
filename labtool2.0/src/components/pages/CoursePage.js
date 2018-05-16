@@ -12,7 +12,7 @@ class CoursePage extends Component {
     const content = {
       hidden: false,
       comment: e.target.content.value,
-      week: parseInt(e.target.name),
+      week: parseInt(e.target.name, 10),
       from: this.props.user.user.username
     }
     try {

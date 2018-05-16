@@ -59,7 +59,7 @@ class MyPage extends Component {
                   </Table.Cell>
                   <Table.Cell textAlign="right" verticalAlign="bottom">
                     <Link to="/labtool/email">
-                      <Button circular size="tiny" icon="large blue edit icon" />
+                      <Button circular size="tiny" icon={{ name: 'edit', size: 'large', color: 'blue' }} />
                     </Link>
                   </Table.Cell>
                 </Table.Row>
@@ -70,7 +70,7 @@ class MyPage extends Component {
 
         <div className="Instructions">
           <List>
-            <List.Item icon="blue edit icon" content="Edit email address" />
+            <List.Item icon={{ name: 'edit', color: 'blue' }} content="Edit email address" />
           </List>
         </div>
 
@@ -88,11 +88,11 @@ class MyPage extends Component {
             <Table singleLine key="grey" color="yellow">
               <Table.Body>
                 {this.props.studentInstance.map(sinstance => (
-                  <Table.Row>
+                  <Table.Row key={sinstance.id}>
                     <Table.Cell>{sinstance.name}</Table.Cell>
                     <Table.Cell textAlign="right">
                       <Link to={`/labtool/courses/${sinstance.ohid}`}>
-                        <Button circular size="tiny" icon="large blue eye icon" />
+                        <Button circular size="tiny" icon={{ name: 'eye', size: 'large', color: 'blue' }} />
                       </Link>
                     </Table.Cell>
                   </Table.Row>
@@ -109,14 +109,14 @@ class MyPage extends Component {
                   My Courses (Teacher)
                 </Header>
 
-                <Table singleline key="grey" color="yellow">
+                <Table singleLine key="grey" color="yellow">
                   <Table.Body>
                     {this.props.teacherInstance.map(tinstance => (
                       <Table.Row key={tinstance.id}>
                         <Table.Cell>{tinstance.name}</Table.Cell>
                         <Table.Cell textAlign="right">
                           <Link to={`/labtool/courses/${tinstance.ohid}`}>
-                            <Button circular size="tiny" icon="large blue eye icon" />
+                            <Button circular size="tiny" icon={{ name: 'eye', size: 'large', color: 'blue' }} />
                           </Link>
                         </Table.Cell>
                       </Table.Row>
@@ -129,7 +129,7 @@ class MyPage extends Component {
         </Segment>
         <div className="Instructions">
           <List>
-            <List.Item icon="blue eye icon" content="Show course page" />
+            <List.Item icon={{ name: 'eye', color: 'blue' }} content="Show course page" />
           </List>
           <br />
           <br />
