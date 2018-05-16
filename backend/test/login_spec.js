@@ -23,8 +23,8 @@ describe('Login', function() {
   })
 
   /*
-  * Testi ei testannut mitään, joten kommentoin pois.
-  * Jos ymmärrät, mitä testin oli tarkoitus tehdä, korjaa.
+  * This test tests nothing, so I commented it out.
+  * If you know what it is supposed to test, fix it and uncomment.
   * 
   it('respond to /api/login with correct credentials', function(done) {
     process.env.SECRET = 'testest'
