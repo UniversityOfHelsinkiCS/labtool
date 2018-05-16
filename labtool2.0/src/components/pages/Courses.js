@@ -25,7 +25,7 @@ class Courses extends Component {
 
             <Table.Body>
               {this.props.courseInstance.map(instance => (
-                <Table.Row key={instance.key}>
+                <Table.Row key={instance.id}>
                   <Table.Cell>
                     <div>
                       {instance.active === true ? (
@@ -39,14 +39,14 @@ class Courses extends Component {
                   </Table.Cell>
                   <Table.Cell>{instance.ohid} </Table.Cell>
                   <Table.Cell>
-                    <bold>
+                    <strong>
                       <a href={`/labtool/courses/${instance.ohid}`}>{instance.name}</a>
-                    </bold>
+                    </strong>
                   </Table.Cell>
 
                   <Table.Cell>{instance.start.substring(0, 10)} </Table.Cell>
                   <Table.Cell textAlign="center">
-                    <Button circular size="tiny" icon="large blue eye icon" as={Link} to={`/labtool/courses/${instance.ohid}`} />
+                    <Button circular size="tiny" icon={{ name: 'eye', size: 'large', color: 'blue' }} as={Link} to={`/labtool/courses/${instance.ohid}`} />
                   </Table.Cell>
                 </Table.Row>
               ))}
@@ -55,8 +55,8 @@ class Courses extends Component {
 
           <div className="Instructions">
             <List>
-              <List.Item icon="blue eye icon" content="Show course page" />
-              <List.Item icon="green square" content="Course is activated" />
+              <List.Item icon={{ name: 'eye', color: 'blue' }} content="Show course page" />
+              <List.Item icon={{ name: 'square', color: 'green' }} content="Course is activated" />
             </List>
           </div>
         </Container>
