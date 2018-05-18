@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createStudentCourses } from '../../services/studentinstances'
 import { Redirect } from 'react-router'
+import { getOneCI } from '../../services/courseInstance'
 
 /**
  * The page user uses to register to a course AS A STUDENT
@@ -29,6 +30,10 @@ class RegisterPage extends Component {
     } catch (error) {
       console.log(error)
     }
+  }
+
+  componentWillMount() {
+    this.props.getOneCI(this.props.courseId)
   }
 
   render() {
@@ -86,8 +91,9 @@ class RegisterPage extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    selectedInstance: state.selectedInstance
+    selectedInstance: state.selectedInstance,
+    courseId: ownProps.courseId
   }
 }
 
-export default connect(mapStateToProps, { createStudentCourses })(RegisterPage)
+export default connect(mapStateToProps, { createStudentCourses, getOneCI })(RegisterPage)
