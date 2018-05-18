@@ -84,12 +84,9 @@ class App extends Component {
       return (
         <main>
           <Switch>
-            <Route
-              path={`/labtool/courses/:id`}
-              render={({ match, history }) => <CoursePage history={history} courseinstance={this.props.getOneCI(match.params.id)} pageData={this.props.coursePageInformation(match.params.id)} />}
-            />
+            <Route path={`/labtool/courses/:id`} render={({ match, history }) => <CoursePage history={history} courseId={match.params.id} />} />
             <Route exact path={`/labtool/courses`} render={({ history }) => <Courses history={history} />} />
-            <Route path={`/labtool/courseregistration/:id`} render={({ match, history }) => <RegisterPage history={history} courseinstance={this.props.getOneCI(match.params.id)} />} />
+            <Route path={`/labtool/courseregistration/:id`} render={({ match, history }) => <RegisterPage history={history} courseId={match.params.id} />} />
             <Route
               path={`/labtool/browsereviews/:id/:si/`}
               render={({ match, history }) => (
@@ -102,7 +99,7 @@ class App extends Component {
               path={`/labtool/reviewstudent/:id/:si/:wk`}
               render={({ match, history }) => <ReviewStudent history={history} courseinstance={this.props.getOneCI(match.params.id)} studentInstance={match.params.si} weekNumber={match.params.wk} />}
             />
-            <Route path={`/labtool/ModifyCourseInstancePage/:id`} render={({ match }) => <ModifyCourseInstancePage courseinstance={this.props.getOneCI(match.params.id)} />} />
+            <Route path={`/labtool/ModifyCourseInstancePage/:id`} render={({ match }) => <ModifyCourseInstancePage courseId={match.params.id} />} />
             <Route path={`/`} component={MyPage} />
           </Switch>
         </main>
