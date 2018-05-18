@@ -12,7 +12,7 @@ class CoursePage extends Component {
     const content = {
       hidden: false,
       comment: e.target.content.value,
-      week: parseInt(e.target.name),
+      week: parseInt(e.target.name, 10),
       from: this.props.user.user.username
     }
     try {
@@ -111,14 +111,14 @@ class CoursePage extends Component {
                   <Table.Cell textAlign="right">
                     {' '}
                     <Link to={`/labtool/ModifyCourseInstancePage/${this.props.selectedInstance.ohid}`}>
-                      <Button circular size="tiny" icon="large orange edit icon" />
+                      <Button circular size="tiny" icon={{ name: 'edit', size: 'large', color: 'orange' }} />
                     </Link>
                   </Table.Cell>
                 </Table.Row>
               </Table.Header>
             </Table>
             <List style={{ float: 'right' }}>
-              <List.Item icon="orange edit" content="Edit course" />
+              <List.Item icon={{ name: 'edit', color: 'orange' }} content="Edit course" />
             </List>
 
             <br />
@@ -150,7 +150,7 @@ class CoursePage extends Component {
 
                     <Table.Cell textAlign="right">
                       <Link to={`/labtool/browsereviews/${this.props.selectedInstance.ohid}/${data.id}`}>
-                        <Button circular size="tiny" icon="large star orange" />
+                        <Button circular size="tiny" icon={{ name: 'star', size: 'large', color: 'orange' }} />
                       </Link>
                     </Table.Cell>
                   </Table.Row>
@@ -158,7 +158,7 @@ class CoursePage extends Component {
               </Table.Body>
             </Table>
             <List style={{ float: 'right' }}>
-              <List.Item icon="orange star" content="Review student" />
+              <List.Item icon={{ name: 'star', color: 'orange' }} content="Review student" />
             </List>
           </div>
         ) : (
@@ -193,7 +193,7 @@ class CoursePage extends Component {
               </Table.Header>
               <Table.Body>
                 {this.props.courseData.data.weeks.sort((a, b) => a.weekNumber - b.weekNumber).map(week => (
-                  <Table.Row>
+                  <Table.Row key={week.weekNumber}>
                     <Table.Cell>{week.weekNumber}</Table.Cell>
                     <Table.Cell>{week.points}</Table.Cell>
                     <Table.Cell>
