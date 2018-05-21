@@ -1,5 +1,8 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const app = express();
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 app.get('/labtool/courses', (req, res) => {
   const responseJson = require('./responses/courses');
@@ -20,6 +23,7 @@ app.post('/login', (req, res) => {
     "first_names": "Jamppa Jari",
     "last_name": "Pyöveli"
   };
+  res.json(responseJson);
 })
 
 app.listen(3002, () => console.log('Fake Kurki listening on port 3002.'));
