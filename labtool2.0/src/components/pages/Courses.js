@@ -44,7 +44,9 @@ class Courses extends Component {
                     </strong>
                   </Table.Cell>
 
-                  <Table.Cell>{instance.start.substring(0, 10)} </Table.Cell>
+                  <Table.Cell>
+                    {instance.start.substring(8, 10)}.{instance.start.substring(5, 7)}.{instance.start.substring(0, 4)}{' '}
+                  </Table.Cell>
                   <Table.Cell textAlign="center">
                     <Button circular size="tiny" icon={{ name: 'eye', size: 'large', color: 'blue' }} as={Link} to={`/labtool/courses/${instance.ohid}`} />
                   </Table.Cell>
