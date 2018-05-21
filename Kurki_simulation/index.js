@@ -2,13 +2,15 @@ const express = require('express');
 const app = express();
 
 app.get('/labtool/courses', (req, res) => {
-  const responseJson = require('responses/courses');
-  res.json(responseJson);
+  const responseJson = require('./responses/courses');
+  res.json(responseJson.courses);
 })
 
 app.get('/labtool/courses/:id', (req, res) => {
-  const responseJson = require(`responses/$(req.params.id)`);
-  res.json(responseJson);
+  var address = './responses/';
+  address += req.params.id;
+  const responseJson = require(address);
+  res.json(responseJson.course);
 })
 
 app.post('/login', (req, res) => {
