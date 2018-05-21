@@ -310,7 +310,7 @@ module.exports = {
       const request = require('request')
       const options = {
         method: 'get',
-        uri: `https://opetushallinto.cs.helsinki.fi/labtool/courses?year=${termAndYear.currentYear}&term=${termAndYear.currentTerm}`,
+        uri: `${process.env.KURKI_URL}/labtool/courses?year=${termAndYear.currentYear}&term=${termAndYear.currentTerm}`,
         headers: {
           'Content-Type': 'application/json',
           Authorization: process.env.TOKEN
@@ -360,7 +360,7 @@ module.exports = {
         const request = require('request')
         const options = {
           method: 'get',
-          uri: `https://opetushallinto.cs.helsinki.fi/labtool/courses?year=${termAndYear.nextYear}&term=${termAndYear.nextTerm}`,
+          uri: `${process.env.KURKI_URL}/labtool/courses?year=${termAndYear.nextYear}&term=${termAndYear.nextTerm}`,
           headers: {
             'Content-Type': 'application/json',
             Authorization: process.env.TOKEN

@@ -12,7 +12,7 @@ module.exports = {
     console.log('entered login')
     const options = {
       method: 'post',
-      uri: 'https://opetushallinto.cs.helsinki.fi/login',
+      uri: `${process.env.KURKI_URL}/login`,
       strictSSL: false,
       json: { username: req.body.username, password: req.body.password }
     }

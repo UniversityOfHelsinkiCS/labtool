@@ -20,7 +20,7 @@ function checkWebOodi(req, res, user, resolve) {
   const request = require('request')
   const options = {
     method: 'get',
-    uri: `https://opetushallinto.cs.helsinki.fi/labtool/courses/${req.params.ohid}`,
+    uri: `${process.env.KURKI_URL}/labtool/courses/${req.params.ohid}`,
     headers: {
       'Content-Type': 'application/json',
       Authorization: process.env.TOKEN
