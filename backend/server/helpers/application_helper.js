@@ -98,7 +98,7 @@ function axiosBlaBla(year, term) {
   const https = require('https')
   return {
     method: 'get',
-    baseURL: `https://opetushallinto.cs.helsinki.fi/labtool/courses?year=${year}&term=${term}`,
+    baseURL: `${process.env.KURKI_URL}/labtool/courses?year=${year}&term=${term}`,
     headers: {
       'Content-Type': 'application/json',
       Authorization: process.env.TOKEN
@@ -118,7 +118,7 @@ function axiosCourseBla(hid) {
   const https = require('https')
   return {
     method: 'get',
-    baseURL: `https://opetushallinto.cs.helsinki.fi/labtool/courses/${hid}`,
+    baseURL: `${process.env.KURKI_URL}/labtool/courses/${hid}`,
     headers: {
       'Content-Type': 'application/json',
       Authorization: process.env.TOKEN
