@@ -1,0 +1,14 @@
+{
+  "name": "kurki_simulation",
+  "version": "1.0.0",
+  "description": "Simulates resopnses from the Kurki-system.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Chamion",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "express": "^4.16.3"
+  }
+}
