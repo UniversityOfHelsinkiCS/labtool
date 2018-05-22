@@ -17,27 +17,12 @@ import ReviewStudent from './components/pages/ReviewStudent'
 import BrowseReviews from './components/pages/BrowseReviews'
 import MyPage from './components/pages/MyPage'
 
-// Services (Backend & redux related) imports
-import { getOneCI } from './services/courseInstance'
-import { coursePageInformation } from './services/courseInstance'
-import { getAllCI } from './services/courseInstance'
-import { getAllStudentCourses } from './services/studentinstances'
-import { getAllTeacherCourses } from './services/teacherinstances'
-
 // Reducer imports
 import { logout } from './reducers/loginReducer'
 import { tokenLogin } from './reducers/loginReducer'
 
 // The main component of the whole application.
 class App extends Component {
-  /**
-   * As the component mounts, it gets all the course instances
-   * from the backend to the store.
-   */
-  componentWillMount() {
-    this.props.getAllCI()
-  }
-
   /**
    * After mounting, it checks from the localstorage if user is logged in.
    * If true, it parses the user from the storage and puts it and
@@ -50,8 +35,6 @@ class App extends Component {
       if (loggedUserJSON && loggedUserJSON !== '{}') {
         const user = JSON.parse(loggedUserJSON)
         this.props.tokenLogin(user)
-        this.props.getAllStudentCourses()
-        this.props.getAllTeacherCourses()
       }
     } catch (exception) {
       console.log(exception)
@@ -87,20 +70,15 @@ class App extends Component {
             <Route path={`/labtool/courses/:id`} render={({ match, history }) => <CoursePage history={history} courseId={match.params.id} />} />
             <Route exact path={`/labtool/courses`} render={({ history }) => <Courses history={history} />} />
             <Route path={`/labtool/courseregistration/:id`} render={({ match, history }) => <RegisterPage history={history} courseId={match.params.id} />} />
-            <Route
-              path={`/labtool/browsereviews/:id/:si/`}
-              render={({ match, history }) => (
-                <BrowseReviews history={history} courseinstance={this.props.getOneCI(match.params.id)} pageData={this.props.coursePageInformation(match.params.id)} studentInstance={match.params.si} />
-              )}
-            />
+            <Route path={`/labtool/browsereviews/:id/:si/`} render={({ match, history }) => <BrowseReviews history={history} courseId={match.params.id} studentInstance={match.params.si} />} />
             <Route path={`/labtool/email`} component={Email} />
             <Route path={`/labtool/registerPage`} component={RegisterPage} />
             <Route
               path={`/labtool/reviewstudent/:id/:si/:wk`}
-              render={({ match, history }) => <ReviewStudent history={history} courseinstance={this.props.getOneCI(match.params.id)} studentInstance={match.params.si} weekNumber={match.params.wk} />}
+              render={({ match, history }) => <ReviewStudent history={history} courseId={match.params.id} studentInstance={match.params.si} weekNumber={match.params.wk} />}
             />
             <Route path={`/labtool/ModifyCourseInstancePage/:id`} render={({ match }) => <ModifyCourseInstancePage courseId={match.params.id} />} />
-            <Route path={`/`} component={MyPage} />
+            <Route path={`/`} render={() => <MyPage />} />
           </Switch>
         </main>
       )
@@ -135,10 +113,8 @@ const mapStateToProps = state => {
   return {
     user: state.user.user,
     token: state.user.token,
-    created: state.user.created,
-    studentInstance: state.studentInstance,
-    teacherInstance: state.teacherInstance
+    created: state.user.created
   }
 }
 
-export default withRouter(connect(mapStateToProps, { getAllCI, tokenLogin, logout, getOneCI, coursePageInformation, getAllStudentCourses, getAllTeacherCourses })(App))
+export default withRouter(connect(mapStateToProps, { tokenLogin, logout })(App))
