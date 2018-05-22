@@ -1,6 +1,7 @@
 exports.CurrentTermAndYear = CurrentTermAndYear
 exports.getCurrentTerm = getCurrentTerm
 exports.getInactive = getInactive
+exports.getActive = getActive
 exports.getNextYear = getNextYear
 exports.getNextTerm = getCurrentTerm
 exports.controller_before_auth_check_action = controller_before_auth_check_action
@@ -126,6 +127,50 @@ function axiosCourseBla(hid) {
     httpsAgent: new https.Agent({
       rejectUnauthorized: false // if you don't like this then please go ahead and do it yourself better.
     })
+  }
+}
+
+/**
+ *
+ * @param req
+ * @param res
+ * @returns {Promise<*>}
+ */
+async function getActive(req, res) {
+  try {
+    const cur = await getCurrent(req, res)
+    const nxt = await getNewer(req, res)
+    const newobj = await cur.concat(nxt)
+    const iarr = []
+    for (var blob in newobj) {
+      iarr.push(newobj[blob].id)
+    }
+    const Sequelize = require('sequelize')
+    const CourseInstance = require('../models').CourseInstance
+    const Op = Sequelize.Op
+
+    const ires = await CourseInstance.findAll({
+      where: {
+        ohid: { [Op.in]: iarr }
+      }
+    })
+    const activated = []
+
+    for (var i in newobj) {
+      var found = 0
+      for (var j in ires) {
+        if (newobj[i].id == ires[j].ohid) {
+          found = 1
+        }
+      }
+      if (found == 0) {
+        activated.push(newobj[i])
+      }
+    }
+
+    return activated
+  } catch (e) {
+    return e
   }
 }
 
