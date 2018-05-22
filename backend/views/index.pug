@@ -1,15 +1,24 @@
 html
     head
         title= title
+        link(rel="stylesheet", href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.12/semantic.min.css")
+     
+
+
     body
-        h1= message
-        each val in values
+        
+        h1= message1
+        p= submessage1
+        each val in values1
             form(method="POST")
                 p= (val.name + " - " + val.id)
                 input(name="hid" type="hidden" value=val.id)
                 input(name="cname" type="hidden" value=val.name)
                 input(name="starts" type="hidden" value=val.starts)
                 input(name="ends" type="hidden" value=val.ends)
-                input(type="submit", value="Activate")
+                input(type="submit", value="Import", class="ui blue button")
         else
             p There are no courses to be activated.
+
+
+        

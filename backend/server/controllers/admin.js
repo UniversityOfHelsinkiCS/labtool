@@ -8,15 +8,24 @@ module.exports = {
    */
   async list(req, res) {
     try {
-      const out = await helper.getInactive(req, res)
-      console.log(out)
-      res.render('index', { title: 'Activate course', message: 'Not activated courses', values: out })
+      const nonActive = await helper.getInactive(req, res)
+      //const areActive = await helper.getActive(req, res)
+      //console.log('-------EI-AKTIIVISET--------')
+      console.log(nonActive)
+      res.render('index', { 
+        title: 'Import course to Labtool from Kurki', 
+        message1: 'Current and upcoming courses', 
+        submessage1: 'This page lists current and upcoming courses from Kurki which are not yet in Labtool database. Click Import to import course to Labtool.',
+        values1: nonActive
+      })
     } catch (e) {
       console.log(e)
 
       res.send('errored in controllers/admin/list')
     }
   },
+
+
   /**
    *
    * @param req
