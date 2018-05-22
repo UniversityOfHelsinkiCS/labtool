@@ -3,10 +3,16 @@ import { Button, List, Container, Header, Table, Label } from 'semantic-ui-react
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
+import { getAllCI } from '../../services/courseInstance'
+
 /**
  *  Show all the courses in a single list.
  */
 class Courses extends Component {
+  componentWillMount() {
+    this.props.getAllCI()
+  }
+
   render() {
     return (
       <div>
@@ -71,4 +77,4 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps, null)(Courses)
+export default connect(mapStateToProps, { getAllCI })(Courses)

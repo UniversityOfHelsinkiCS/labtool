@@ -3,7 +3,7 @@ import { Button, Card, Accordion, Icon, Form, Comment } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { createOneComment } from '../../services/comment'
-import { coursePageInformation } from '../../services/courseInstance'
+import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import ReactMarkdown from 'react-markdown'
 
 /**
@@ -11,6 +11,11 @@ import ReactMarkdown from 'react-markdown'
  */
 class BrowseReviews extends Component {
   state = { activeIndex: 0 }
+
+  componentWillMount() {
+    this.props.getOneCI(this.props.courseId)
+    this.props.coursePageInformation(this.props.courseId)
+  }
 
   handleClick = (e, titleProps) => {
     const { index } = titleProps
@@ -166,4 +171,4 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps, { createOneComment, coursePageInformation })(BrowseReviews)
+export default connect(mapStateToProps, { createOneComment, getOneCI, coursePageInformation })(BrowseReviews)
