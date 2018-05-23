@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken')
 const User = require('../models').User
 const request = require('request')
+const env = process.env.NODE_ENV || 'development'
+const config = require('./../config/config.js')[env]
 
 module.exports = {
   /**
@@ -12,7 +14,7 @@ module.exports = {
     console.log('entered login')
     const options = {
       method: 'post',
-      uri: 'https://opetushallinto.cs.helsinki.fi/login',
+      uri: `${config.kurki_url}/login`,
       strictSSL: false,
       json: { username: req.body.username, password: req.body.password }
     }

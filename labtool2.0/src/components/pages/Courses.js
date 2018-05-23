@@ -43,7 +43,7 @@ class Courses extends Component {
                       )}
                     </div>
                   </Table.Cell>
-                  <Table.Cell>{instance.ohid} </Table.Cell>
+                  <Table.Cell>{instance.ohid.split('.')[0]} </Table.Cell>
                   <Table.Cell>
                     <strong>
                       <a href={`/labtool/courses/${instance.ohid}`}>{instance.name}</a>
