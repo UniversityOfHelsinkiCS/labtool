@@ -3,6 +3,8 @@ import { connect } from 'react-redux'
 import { Button, Header, Table, Container, List, Icon, Segment, Divider } from 'semantic-ui-react'
 import './MyPage.css'
 import { Link } from 'react-router-dom'
+import { getAllStudentCourses } from '../../services/studentinstances'
+import { getAllTeacherCourses } from '../../services/teacherinstances'
 
 /**
  * The main page that is shown after user has logged in.
@@ -19,6 +21,11 @@ class MyPage extends Component {
     } catch (exception) {
       console.log('no user logged in')
     }
+  }
+
+  componentWillMount() {
+    this.props.getAllStudentCourses()
+    this.props.getAllTeacherCourses()
   }
 
   render() {
@@ -148,4 +155,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, {})(MyPage)
+export default connect(mapStateToProps, { getAllStudentCourses, getAllTeacherCourses })(MyPage)

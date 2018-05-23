@@ -1,3 +1,6 @@
+const env = process.env.NODE_ENV || 'development'
+const config = require('./../config/config.js')[env]
+
 describe('Login', function() {
   let User
   let server
@@ -29,7 +32,7 @@ describe('Login', function() {
   it('respond to /api/login with correct credentials', function(done) {
     process.env.SECRET = 'testest'
     let token = jwt.sign({ username: 'rkeskiva', id: 1 }, process.env.SECRET)
-    nock('https://opetushallinto.cs.helsinki.fi')
+    nock(`${config.kurki_url}`)
       .post('/api/login')
       .reply(200, {
         username: 'rkeskiva',
@@ -43,7 +46,7 @@ describe('Login', function() {
   */
 
   it('respond to /login with incorrect credentials with "wrong credentials"', function(done) {
-    nock('https://opetushallinto.cs.helsinki.fi')
+    nock(`${config.kurki_url}`)
       .post('/login')
       .reply(200, {
         error: 'wrong credentials'
@@ -52,7 +55,7 @@ describe('Login', function() {
   })
 
   it('respond to /login with correct credentials second time', function(done) {
-    nock('https://opetushallinto.cs.helsinki.fi')
+    nock(`${config.kurki_url}`)
       .post('/login')
       .reply(200, {
         error: 'wrong credentials'
