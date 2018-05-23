@@ -1,17 +1,21 @@
 const courses = [
+
 	{
-		"name": "Aineopintojen harjoitustyö: Tietokantasovellus (periodi IV)",
-		"starts": "2018-03-12 00:00:00 +0300",
-		"ends": "2018-03-12 00:00:00 +0300",
-		"id": "AA"
+		"id": "TIRA",
+		"name": "Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit (periodi III)",
+		"starts": "2018-01-16T21:00:00.000Z",
+		"ends": "2018-03-11T21:00:00.000Z"
 	},
+
 	{
-		"name": "Toinen kurssi",
-		"starts": "2018-03-12 00:00:00 +0300",
-		"ends": "2018-03-12 00:00:00 +0300",
-		"id": "BB"
+		"id": "OTM",
+		"name": "Ohjelmistotekniikan menetelmät",
+		"starts": "2018-03-11T21:00:00.000Z",
+		"ends": "2018-04-29T21:00:00.000Z"
 	}
-];
+]
+
+
 
 
 exports.courses = courses;

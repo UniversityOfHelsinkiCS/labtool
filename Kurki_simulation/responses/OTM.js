@@ -1,9 +1,9 @@
 exports.course = {
 	"students": [
-		"014822548",
-		"022789345"
+		"012719822",
+		"014276571"
 	],
 	"teachers": [
-		"opeope"
+		"paaope"
 	]
 }
