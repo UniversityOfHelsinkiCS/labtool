@@ -8,14 +8,6 @@ import { Link } from 'react-router-dom'
  */
 class Courses extends Component {
   render() {
-    const sortedCourses = this.props.courseInstance
-      .sort((a, b) => {
-        return new Date(a.start) - new Date(b.start)
-      })
-      .reverse()
-      .sort((a, b) => {
-        return b.active - a.active
-      })
     return (
       <div>
         <Container>
@@ -32,7 +24,7 @@ class Courses extends Component {
             </Table.Header>
 
             <Table.Body>
-              {sortedCourses.map(instance => (
+              {this.props.courseInstance.map(instance => (
                 <Table.Row key={instance.id}>
                   <Table.Cell>
                     <div>
