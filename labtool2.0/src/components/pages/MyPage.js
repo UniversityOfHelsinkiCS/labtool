@@ -30,22 +30,6 @@ class MyPage extends Component {
 
   render() {
     const user = { ...this.props.user.user }
-    const sortedStudent = this.props.studentInstance
-      .sort((a, b) => {
-        return new Date(a.start) - new Date(b.start)
-      })
-      .reverse()
-      .sort((a, b) => {
-        return b.active - a.active
-      })
-    const sortedTeacher = this.props.teacherInstance
-      .sort((a, b) => {
-        return new Date(a.start) - new Date(b.start)
-      })
-      .reverse()
-      .sort((a, b) => {
-        return b.active - a.active
-      })
     return (
       <div>
         <Segment padded>
@@ -110,7 +94,7 @@ class MyPage extends Component {
 
             <Table singleLine key="grey" color="yellow">
               <Table.Body>
-                {sortedStudent.map(sinstance => (
+                {this.props.studentInstance.map(sinstance => (
                   <Table.Row key={sinstance.id}>
                     <Table.Cell>{sinstance.name}</Table.Cell>
                     <Table.Cell textAlign="right">
@@ -134,7 +118,7 @@ class MyPage extends Component {
 
                 <Table singleLine key="grey" color="yellow">
                   <Table.Body>
-                    {sortedTeacher.map(tinstance => (
+                    {this.props.teacherInstance.map(tinstance => (
                       <Table.Row key={tinstance.id}>
                         <Table.Cell>{tinstance.name}</Table.Cell>
                         <Table.Cell textAlign="right">

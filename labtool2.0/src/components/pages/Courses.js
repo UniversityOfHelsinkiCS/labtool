@@ -14,14 +14,6 @@ class Courses extends Component {
   }
 
   render() {
-    const sortedCourses = this.props.courseInstance
-      .sort((a, b) => {
-        return new Date(a.start) - new Date(b.start)
-      })
-      .reverse()
-      .sort((a, b) => {
-        return b.active - a.active
-      })
     return (
       <div>
         <Container>
@@ -38,7 +30,7 @@ class Courses extends Component {
             </Table.Header>
 
             <Table.Body>
-              {sortedCourses.map(instance => (
+              {this.props.courseInstance.map(instance => (
                 <Table.Row key={instance.id}>
                   <Table.Cell>
                     <div>
@@ -51,7 +43,7 @@ class Courses extends Component {
                       )}
                     </div>
                   </Table.Cell>
-                  <Table.Cell>{instance.ohid.split('.')[0]} </Table.Cell>
+                  <Table.Cell>{instance.ohid} </Table.Cell>
                   <Table.Cell>
                     <strong>
                       <a href={`/labtool/courses/${instance.ohid}`}>{instance.name}</a>
