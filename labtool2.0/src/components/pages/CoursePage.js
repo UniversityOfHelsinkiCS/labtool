@@ -3,7 +3,7 @@ import { Button, Table, Card, Form, Comment, List, Header, Label } from 'semanti
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createOneComment } from '../../services/comment'
-import { coursePageInformation } from '../../services/courseInstance'
+import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import ReactMarkdown from 'react-markdown'
 
 class CoursePage extends Component {
@@ -22,6 +22,11 @@ class CoursePage extends Component {
     } catch (error) {
       console.log(error)
     }
+  }
+
+  componentWillMount() {
+    this.props.getOneCI(this.props.courseId)
+    this.props.coursePageInformation(this.props.courseId)
   }
 
   /**
@@ -230,14 +235,15 @@ class CoursePage extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
   return {
     user: state.user,
     studentInstance: state.studentInstance,
     teacherInstance: state.teacherInstance,
     selectedInstance: state.selectedInstance,
-    courseData: state.coursePage
+    courseData: state.coursePage,
+    courseId: ownProps.courseId
   }
 }
 
-export default connect(mapStateToProps, { createOneComment, coursePageInformation })(CoursePage)
+export default connect(mapStateToProps, { createOneComment, getOneCI, coursePageInformation })(CoursePage)
