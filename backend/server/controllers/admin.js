@@ -13,7 +13,7 @@ module.exports = {
       //console.log('-------EI-AKTIIVISET--------')
       console.log(nonActive)
       res.render('index', { 
-        title: 'Import course to Labtool from Kurki', 
+        title: 'Import courses to Labtool from Kurki', 
         message1: 'Current and upcoming courses', 
         submessage1: 'This page lists current and upcoming courses from Kurki which are not yet in Labtool database. Click Import to import course to Labtool.',
         values1: nonActive
