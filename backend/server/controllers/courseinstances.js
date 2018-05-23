@@ -9,6 +9,8 @@ const Op = Sequelize.Op
 const StudentInstanceController = require('../controllers').studentInstances
 const Week = require('../models').Week
 const Comment = require('../models').Comment
+const env = process.env.NODE_ENV || 'development'
+const config = require('./../config/config.js')[env]
 
 module.exports = {
   /**
@@ -310,7 +312,7 @@ module.exports = {
       const request = require('request')
       const options = {
         method: 'get',
-        uri: `${process.env.KURKI_URL}/labtool/courses?year=${termAndYear.currentYear}&term=${termAndYear.currentTerm}`,
+        uri: `${config.kurki_url}/labtool/courses?year=${termAndYear.currentYear}&term=${termAndYear.currentTerm}`,
         headers: {
           'Content-Type': 'application/json',
           Authorization: process.env.TOKEN
@@ -360,7 +362,7 @@ module.exports = {
         const request = require('request')
         const options = {
           method: 'get',
-          uri: `${process.env.KURKI_URL}/labtool/courses?year=${termAndYear.nextYear}&term=${termAndYear.nextTerm}`,
+          uri: `${config.kurki_url}/labtool/courses?year=${termAndYear.nextYear}&term=${termAndYear.nextTerm}`,
           headers: {
             'Content-Type': 'application/json',
             Authorization: process.env.TOKEN

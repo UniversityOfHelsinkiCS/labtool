@@ -1,4 +1,6 @@
 const application_helpers = require('./application_helper')
+const env = process.env.NODE_ENV || 'development'
+const config = require('./../config/config.js')[env]
 
 exports.CurrentTermAndYear = application_helpers.CurrentTermAndYear
 exports.getCurrentTerm = application_helpers.getCurrentTerm
@@ -20,7 +22,7 @@ function checkWebOodi(req, res, user, resolve) {
   const request = require('request')
   const options = {
     method: 'get',
-    uri: `${process.env.KURKI_URL}/labtool/courses/${req.params.ohid}`,
+    uri: `${config.kurki_url}/labtool/courses/${req.params.ohid}`,
     headers: {
       'Content-Type': 'application/json',
       Authorization: process.env.TOKEN
