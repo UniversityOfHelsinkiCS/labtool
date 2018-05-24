@@ -2,7 +2,7 @@ module.exports = (sequelize, DataTypes) => {
   const Week = sequelize.define(
     'Week',
     {
-      points: DataTypes.INTEGER,
+      points: DataTypes.DOUBLE,
       weekNumber: DataTypes.INTEGER,
       feedback: DataTypes.STRING
     },
