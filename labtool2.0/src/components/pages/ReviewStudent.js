@@ -50,7 +50,7 @@ class ReviewStudent extends Component {
             <Form.Group inline unstackable>
               <Form.Field>
                 <label>Points 0-{this.props.selectedInstance.weekMaxPoints}</label>
-                <Input name="points" />
+                <Input name="points" type="number" step="0.01" />
               </Form.Field>
             </Form.Group>
             <Form.Group inline unstackable>
