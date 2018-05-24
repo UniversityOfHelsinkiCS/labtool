@@ -6,6 +6,8 @@ exports.getNextTerm = getCurrentTerm
 exports.controller_before_auth_check_action = controller_before_auth_check_action
 exports.getCurrent = getCurrent
 exports.createCourse = createCourse
+const env = process.env.NODE_ENV || 'development'
+const config = require('./../config/config.js')[env]
 
 /**
  *
@@ -98,7 +100,7 @@ function axiosBlaBla(year, term) {
   const https = require('https')
   return {
     method: 'get',
-    baseURL: `https://opetushallinto.cs.helsinki.fi/labtool/courses?year=${year}&term=${term}`,
+    baseURL: `${config.kurki_url}/labtool/courses?year=${year}&term=${term}`,
     headers: {
       'Content-Type': 'application/json',
       Authorization: process.env.TOKEN
@@ -118,7 +120,7 @@ function axiosCourseBla(hid) {
   const https = require('https')
   return {
     method: 'get',
-    baseURL: `https://opetushallinto.cs.helsinki.fi/labtool/courses/${hid}`,
+    baseURL: `${config.kurki_url}/labtool/courses/${hid}`,
     headers: {
       'Content-Type': 'application/json',
       Authorization: process.env.TOKEN
@@ -138,7 +140,9 @@ function axiosCourseBla(hid) {
 async function getInactive(req, res) {
   try {
     const cur = await getCurrent(req, res)
+    console.log("cur: ", cur)
     const nxt = await getNewer(req, res)
+    console.log("nxt: ", nxt)
     const newobj = await cur.concat(nxt)
     const iarr = []
     for (var blob in newobj) {

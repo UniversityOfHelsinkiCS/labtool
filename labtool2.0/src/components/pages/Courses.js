@@ -3,10 +3,16 @@ import { Button, List, Container, Header, Table, Label } from 'semantic-ui-react
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
+import { getAllCI } from '../../services/courseInstance'
+
 /**
  *  Show all the courses in a single list.
  */
 class Courses extends Component {
+  componentWillMount() {
+    this.props.getAllCI()
+  }
+
   render() {
     return (
       <div>
@@ -33,18 +39,18 @@ class Courses extends Component {
                           Active
                         </Label>
                       ) : (
-                        ''
-                      )}
+                          ''
+                        )}
                     </div>
                   </Table.Cell>
-                  <Table.Cell>{instance.ohid} </Table.Cell>
+                  <Table.Cell>{instance.shorterId} </Table.Cell>
                   <Table.Cell>
                     <strong>
                       <a href={`/labtool/courses/${instance.ohid}`}>{instance.name}</a>
                     </strong>
                   </Table.Cell>
 
-                  <Table.Cell>{instance.start.substring(0, 10)} </Table.Cell>
+                  <Table.Cell> {instance.europeanStart} </Table.Cell>
                   <Table.Cell textAlign="center">
                     <Button circular size="tiny" icon={{ name: 'eye', size: 'large', color: 'blue' }} as={Link} to={`/labtool/courses/${instance.ohid}`} />
                   </Table.Cell>
@@ -71,4 +77,4 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps, null)(Courses)
+export default connect(mapStateToProps, { getAllCI })(Courses)
