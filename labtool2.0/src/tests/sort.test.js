@@ -1,4 +1,4 @@
-import { sortCourses } from '../util/sort'
+const sortCourses = require('../util/sort').sortCourses
 
 describe('sort.js', () => {
   it('sorts courses by start date and promotes active to the top', () => {
