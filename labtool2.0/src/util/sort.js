@@ -1,9 +1,8 @@
 export const sortCourses = courses => {
   return courses
     .sort((a, b) => {
-      return new Date(a.start) - new Date(b.start)
+      return new Date(b.start) - new Date(a.start)
     })
-    .reverse()
     .sort((a, b) => {
       return b.active - a.active
     })
