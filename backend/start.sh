@@ -1,7 +1,7 @@
 #!/bin/sh
-if [ -e setup.sh ]
+if [ -e data/scripts_labtool_2018k/setup.sh ]
 then
-./setup.sh
+data/scripts_labtool_2018k/setup.sh
 fi
 NPM=`which npm`
 # $NPM dropdb # not sure if ok since production server db data should persist.
