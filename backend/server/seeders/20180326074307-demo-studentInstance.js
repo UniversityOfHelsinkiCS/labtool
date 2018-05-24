@@ -6,10 +6,18 @@ module.exports = {
       'StudentInstances',
       [
         {
-          userId: 1,
-          courseInstanceId: 1,
-          github: 'http://githubbeli.com/brojekti',
-          projectName: 'rojekti'
+          id: 1,
+          github: 'http://github.com/tiralabra1',
+          projectName: 'Tiran labraprojekti',
+          userId: 11,
+          courseInstanceId: 1
+        },
+        {
+          id: 2,
+          github: 'http://github.com/tiralabra2',
+          projectName: 'Toinen tiran labraprojekti',
+          userId: 12,
+          courseInstanceId: 1
         }
       ]
     )
