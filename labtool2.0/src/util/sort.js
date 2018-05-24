@@ -1,4 +1,4 @@
-export const sortCourses = courses => {
+const sortCourses = courses => {
   return courses
     .sort((a, b) => {
       return new Date(b.start) - new Date(a.start)
@@ -7,3 +7,5 @@ export const sortCourses = courses => {
       return b.active - a.active
     })
 }
+
+export default sortCourses
