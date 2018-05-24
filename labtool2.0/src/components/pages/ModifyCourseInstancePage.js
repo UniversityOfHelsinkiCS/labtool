@@ -9,7 +9,7 @@ import { clearNotifications } from '../../reducers/notificationReducer'
 /**
  *  Page used to modify a courseinstances information. Can only be accessed by teachers.
  */
-class ModifyCourseInstancePage extends Component {
+export class ModifyCourseInstancePage extends Component {
   componentWillMount() {
     this.props.clearNotifications()
     this.props.getOneCI(this.props.courseId)
