@@ -1,4 +1,8 @@
 #!/bin/sh
+if [ -e setup.sh ]
+then
+./setup.sh
+fi
 NPM=`which npm`
 # $NPM dropdb # not sure if ok since production server db data should persist.
 $NPM run createdb # should fail if db already exists.
