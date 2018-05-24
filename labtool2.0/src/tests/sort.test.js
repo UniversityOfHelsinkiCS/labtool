@@ -1,4 +1,4 @@
-import sortCourses from '../util/sort'
+import { sortCourses } from '../util/sort'
 
 describe('sort.js', () => {
   it('sorts courses by start date and promotes active to the top', () => {

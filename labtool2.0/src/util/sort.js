@@ -1,4 +1,4 @@
-const sortCourses = courses => {
+export const sortCourses = courses => {
   return courses
     .sort((a, b) => {
       return new Date(b.start) - new Date(a.start)
