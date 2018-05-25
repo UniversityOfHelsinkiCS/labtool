@@ -138,8 +138,12 @@ function axiosCourseBla(hid) {
  */
 async function getActive(req, res) {
   try {
+    //const Sequelize = require('sequelize')
     const CourseInstance = require('../models').CourseInstance
-    const ires = await CourseInstance.findAll()
+    //const Op = Sequalize.Op
+    const ires = await CourseInstance.findAll({
+      order: [['createdAt', 'DESC']]
+    })
     return ires
   } catch (e) {
     return e

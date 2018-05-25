@@ -7,41 +7,43 @@ html
 
     body
         div(class='ui grid container')
-            br
-            h1= message1
-            p= submessage1
-            div(class='ui divided items')
-                each val in values1
-                    div(class='item')   
-                        form(method="POST")
-                            input(name="hid" type="hidden" value=val.id)
-                            input(name="cname" type="hidden" value=val.name)
-                            input(name="starts" type="hidden" value=val.starts)
-                            input(name="ends" type="hidden" value=val.ends)
-                            div(class='left floated content')
-                                input(type="submit", value="Import", class="ui blue button")
-                            div(class='middle aligned content')
-                                h3= val.name + " - " + val.id                 
-                else
-                    br
-                    p= elseMessage1
+            div
+                br
+                h1= message1
+                p= submessage1
+                div(class='ui divided items')
+                    each val in values1
+                        div(class='item')   
+                            form(method="POST")
+                                input(name="hid" type="hidden" value=val.id)
+                                input(name="cname" type="hidden" value=val.name)
+                                input(name="starts" type="hidden" value=val.starts)
+                                input(name="ends" type="hidden" value=val.ends)
+                                div(class='left floated content')
+                                    input(type="submit", value="Import", class="ui blue button")
+                                div(class='middle aligned content')
+                                    h3= val.name + " - " + val.id                 
+                    else
+                        br
+                        p= elseMessage1
 
-            br
-            h1= message2
-            div(class='ui divided items')
-                each val in values2
-                    div(class='item')   
-                        form(method="POST")
-                            input(name="hid" type="hidden" value=val.id)
-                            input(name="cname" type="hidden" value=val.name)
-                            input(name="starts" type="hidden" value=val.starts)
-                            input(name="ends" type="hidden" value=val.ends)
-                            div(class='left floated content')
-                                input(type="submit", value="Import", class="ui disabled blue button")
-                            div(class='middle aligned content')
-                                h3= val.name + " - " + val.id                 
-                else
-                    br
-                    p= elseMessage2
+            div
+                br
+                h1= message2
+                div(class='ui divided items')
+                    each val in values2
+                        div(class='item')   
+                            form(method="POST")
+                                input(name="hid" type="hidden" value=val.id)
+                                input(name="cname" type="hidden" value=val.name)
+                                input(name="starts" type="hidden" value=val.starts)
+                                input(name="ends" type="hidden" value=val.ends)
+                                div(class='left floated content')
+                                    input(type="submit", value="Import", class="ui disabled blue button")
+                                div(class='middle aligned content')
+                                    h3= val.name + " - " + val.ohid                
+                    else
+                        br
+                        p= elseMessage2
 
         
