@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Table, Card, Form, Comment, List, Header, Label } from 'semantic-ui-react'
+import { Button, Table, Card, Form, Comment, List, Header, Label, Message } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createOneComment } from '../../services/comment'
@@ -72,13 +72,15 @@ class CoursePage extends Component {
       return headers
     }
 
+    
+
     return (
       <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
         <div className="ui grid">
           <div className="sixteen wide column">
             <h2>{this.props.selectedInstance.name}</h2>
           </div>
-          {this.props.courseData.data === null ? (
+          {this.props.courseData.data === null && this.props.selectedInstance.active === true ? (
             <div className="sixteen wide column">
               <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>
                 {' '}
@@ -88,7 +90,11 @@ class CoursePage extends Component {
               </Link>
             </div>
           ) : (
-            <p />
+            <div className="sixteen wide column">
+              <Message compact>
+                <Message.Header>The teacher of the course has not activated the course yet.</Message.Header>
+              </Message>
+            </div>
           )}
         </div>
 
