@@ -72,27 +72,35 @@ class CoursePage extends Component {
       return headers
     }
 
-    
-
     return (
       <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
         <div className="ui grid">
           <div className="sixteen wide column">
             <h2>{this.props.selectedInstance.name}</h2>
           </div>
-          {this.props.courseData.data === null && this.props.selectedInstance.active === true ? (
+          {this.props.selectedInstance.active === true ? (
+            this.props.courseData.role === 'teacher' || this.props.courseData.data !== null ? (
+              <p />
+            ) : (
+              <div className="sixteen wide column">
+                <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>
+                  {' '}
+                  <Button color="blue" size="large">
+                    Register
+                  </Button>
+                </Link>
+              </div>
+            )
+          ) : this.props.courseData.role === 'teacher' ? (
             <div className="sixteen wide column">
-              <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>
-                {' '}
-                <Button color="blue" size="large">
-                  Register
-                </Button>
-              </Link>
+              <Message compact>
+                <Message.Header>You have not activated this course.</Message.Header>
+              </Message>
             </div>
           ) : (
             <div className="sixteen wide column">
               <Message compact>
-                <Message.Header>The teacher of the course has not activated the course yet.</Message.Header>
+                <Message.Header>This course has not been activated.</Message.Header>
               </Message>
             </div>
           )}
