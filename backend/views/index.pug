@@ -24,7 +24,24 @@ html
                                 h3= val.name + " - " + val.id                 
                 else
                     br
-                    p There are no courses to be imported.
+                    p= elseMessage1
 
+            br
+            h1= message2
+            div(class='ui divided items')
+                each val in values2
+                    div(class='item')   
+                        form(method="POST")
+                            input(name="hid" type="hidden" value=val.id)
+                            input(name="cname" type="hidden" value=val.name)
+                            input(name="starts" type="hidden" value=val.starts)
+                            input(name="ends" type="hidden" value=val.ends)
+                            div(class='left floated content')
+                                input(type="submit", value="Import", class="ui disabled blue button")
+                            div(class='middle aligned content')
+                                h3= val.name + " - " + val.id                 
+                else
+                    br
+                    p= elseMessage2
 
         
