@@ -162,6 +162,7 @@ module.exports = {
           })
         }
         let promisingThatWeboodiStatusIsChecked = new Promise((resolve, reject) => {
+          console.log('user.studentNumber', user.studentNumber)
           helper.checkWebOodi(req, res, user, resolve) // this does not work.
 
           setTimeout(function() {

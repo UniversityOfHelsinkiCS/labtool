@@ -140,9 +140,9 @@ function axiosCourseBla(hid) {
 async function getInactive(req, res) {
   try {
     const cur = await getCurrent(req, res)
-    console.log("cur: ", cur)
+    console.log("\ncur: ", cur)
     const nxt = await getNewer(req, res)
-    console.log("nxt: ", nxt)
+    console.log("\nnxt: ", nxt)
     const newobj = await cur.concat(nxt)
     const iarr = []
     for (var blob in newobj) {
@@ -203,6 +203,7 @@ async function createCourse(body) {
   }).save()
 
   if (result.teachers.length > 0) {
+    console.log('')
     for (let i in result.teachers) {
       const user = await User.findOrCreate({
         where: {

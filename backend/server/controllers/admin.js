@@ -9,10 +9,10 @@ module.exports = {
   async list(req, res) {
     try {
       const out = await helper.getInactive(req, res)
-      console.log(out)
+      console.log('\nadmin async list try: ', out, '\n')
       res.render('index', { title: 'Activate course', message: 'Not activated courses', values: out })
     } catch (e) {
-      console.log(e)
+      console.log('\nadmin, async list catch: ', e, '\n')
 
       res.send('errored in controllers/admin/list')
     }
