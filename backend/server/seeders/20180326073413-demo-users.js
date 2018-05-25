@@ -1,13 +1,3 @@
-// Student username format is {course}opiskelija{n} where course = {tira, otm} and n = {1, 2, 3, 4}
-// n = {1, 2, 3} from each course have registered to the course at WebOodi
-// n = {1, 2} have already registered on Labtool and n = {1} has points from weeks and comments
-// n = {3} has not registered on Labtool and has not set an email address
-// n = {4} has not registered to the course and should not be able to register on Labtool
-// Assistant teacher username format is {course}ohjaaja where course = {tira, otm}
-// User paaopettaja is admin and teacher for all courses
-// Course tsoha has been imported to Labtool but there are no registered students yet
-// Course tilpe has not been imported yet
-
 'use strict'
 
 module.exports = {
