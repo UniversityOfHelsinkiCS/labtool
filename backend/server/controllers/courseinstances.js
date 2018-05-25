@@ -154,6 +154,10 @@ module.exports = {
         return res.status(400).send({
           message: 'course instance not found'
         })
+      } else if (course.active === false) {
+        return res.status(400).send({
+          message: 'course is not active'
+        })
       }
       User.findById(req.decoded.id).then(user => {
         if (!user) {
