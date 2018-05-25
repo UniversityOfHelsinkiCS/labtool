@@ -12,6 +12,14 @@ html
                 h1= message1
                 p= submessage1
                 div(class='ui divided items')
+                    div(class='item')
+                        if(values2.length)
+                            form(method="POST")
+                                div(class='left floated content')
+                                    input(type="submit", value="Import", class="ui disabled blue button")
+                                div(class='middle aligned content')
+                                    h3(class='ui disabled header')= values2[0].name + " - " + values2[0].ohid    
+
                     each val in values1
                         div(class='item')   
                             form(method="POST")
@@ -22,7 +30,7 @@ html
                                 div(class='left floated content')
                                     input(type="submit", value="Import", class="ui blue button")
                                 div(class='middle aligned content')
-                                    h3= val.name + " - " + val.id                 
+                                    h3(class='ui header')= val.name + " - " + val.id                 
                     else
                         br
                         p= elseMessage1
@@ -41,7 +49,7 @@ html
                                 div(class='left floated content')
                                     input(type="submit", value="Import", class="ui disabled blue button")
                                 div(class='middle aligned content')
-                                    h3= val.name + " - " + val.ohid                
+                                    h3(class='ui disabled header')= val.name + " - " + val.ohid                
                     else
                         br
                         p= elseMessage2
