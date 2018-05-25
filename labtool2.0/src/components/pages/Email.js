@@ -13,25 +13,31 @@ Is used to modify users email.
 */
 
 class Email extends Component {
-  state = {
-    loading: false,
-    redirectToNewPage: false
+  constructor(props) {
+    super(props)
+    this.state = {
+      loading: false,
+      redirectToNewPage: false
+    }
   }
 
   handleSubmit = async e => {
     e.preventDefault()
-    try {
-      const content = {
-        email: e.target.email.value
-      }
-      if (content.email !== '' && content.email !== null) {
-        this.setState({ loading: true })
-        await this.props.updateUser(content)
-        this.setState({ redirectToNewPage: true })
-      }
-      alert('You added this email address: ' + content.email)
-    } catch (error) {
-      console.log(error)
+    const content = {
+      email: e.target.email.value
+    }
+    this.setState({
+      loading: true
+    })
+    await this.props.updateUser(content)
+  }
+
+  componentWillUpdate() {
+    // This is a dirty hack relying on the component being updated an extra time when the email actually changes.
+    if (this.state.loading) {
+      this.setState({
+        redirectToNewPage: true
+      })
     }
   }
 
@@ -40,11 +46,11 @@ class Email extends Component {
       return <Redirect to="/labtool/myPage" />
     } else {
       const user = { ...this.props.user.user }
+      const firstLogin = user.email === ''
       return (
         <div className="Email" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
-          <Loader active={this.state.loading} inline="centered" />
           <Grid centered>
-            {this.props.firstLogin ? (
+            {firstLogin ? (
               <div>
                 <Grid.Row>
                   <h3>Please give your email address: </h3>
@@ -80,10 +86,13 @@ class Email extends Component {
                   <button className="ui left floated green button" type="submit">
                     Save
                   </button>
-                  <Link to="/labtool/mypage">
-                    {' '}
-                    <button className="ui right floated button"> Cancel</button>
-                  </Link>
+                  {firstLogin ? (
+                    <div />
+                  ) : (
+                    <Link to="/labtool/mypage">
+                      <button className="ui right floated button">Cancel</button>
+                    </Link>
+                  )}
                 </Form.Field>
               </Form>
             </Grid.Row>
@@ -96,9 +105,7 @@ class Email extends Component {
 
 const mapStateToProps = state => {
   return {
-    user: state.user,
-    studentInstance: state.studentInstance,
-    teacherInstance: state.teacherInstance
+    user: state.user
   }
 }
 

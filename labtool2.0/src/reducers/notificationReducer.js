@@ -31,8 +31,9 @@ const notificationReducer = (state = {}, action) => {
         error: false
       }
     case 'USER_UPDATE_FAILURE':
+      // action.response.response.data refers to the json sent by backend
       return {
-        message: 'Give a valid email',
+        message: action.response.response.data.error,
         error: true
       }
     case 'STUDENT_COURSE_CREATE_ONE_SUCCESS':
