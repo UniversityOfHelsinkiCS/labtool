@@ -8,7 +8,7 @@ module.exports = {
         {
           id: 1,
           userId: 10,
-          courseInstanceId: 1,
+          courseInstanceId: 11,
           admin: true,
           createdAt: '2018-03-26',
           updatedAt: '2018-03-26'
@@ -16,7 +16,7 @@ module.exports = {
         {
           id: 2,
           userId: 10,
-          courseInstanceId: 2,
+          courseInstanceId: 12,
           admin: true,
           createdAt: '2018-03-26',
           updatedAt: '2018-03-26'
@@ -24,7 +24,7 @@ module.exports = {
         {
           id: 3,
           userId: 10,
-          courseInstanceId: 3,
+          courseInstanceId: 13,
           admin: true,
           createdAt: '2018-03-26',
           updatedAt: '2018-03-26'
@@ -32,7 +32,7 @@ module.exports = {
         {
           id: 11,
           userId: 15,
-          courseInstanceId: 1,
+          courseInstanceId: 11,
           admin: true,
           createdAt: '2018-03-26',
           updatedAt: '2018-03-26'
@@ -40,7 +40,7 @@ module.exports = {
         {
           id: 12,
           userId: 25,
-          courseInstanceId: 2,
+          courseInstanceId: 12,
           admin: true,
           createdAt: '2018-03-26',
           updatedAt: '2018-03-26'

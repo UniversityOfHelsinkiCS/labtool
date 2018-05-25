@@ -10,7 +10,7 @@ module.exports = {
           github: 'http://github.com/tiralabra1',
           projectName: 'Tiran labraprojekti',
           userId: 11,
-          courseInstanceId: 1,
+          courseInstanceId: 11,
           createdAt: '2018-03-26',
           updatedAt: '2018-03-26'
         },
@@ -19,7 +19,7 @@ module.exports = {
           github: 'http://github.com/tiralabra2',
           projectName: 'Tiran toinen labraprojekti',
           userId: 12,
-          courseInstanceId: 1,
+          courseInstanceId: 11,
           createdAt: '2018-03-26',
           updatedAt: '2018-03-26'
         },
@@ -28,7 +28,7 @@ module.exports = {
           github: 'http://github.com/otmprojekti1',
           projectName: 'OTM projekti',
           userId: 21,
-          courseInstanceId: 2,
+          courseInstanceId: 12,
           createdAt: '2018-03-26',
           updatedAt: '2018-03-26'
         },
@@ -37,7 +37,7 @@ module.exports = {
           github: 'http://github.com/otmprojekti1',
           projectName: 'Toinen OTM projekti',
           userId: 22,
-          courseInstanceId: 2,
+          courseInstanceId: 12,
           createdAt: '2018-03-26',
           updatedAt: '2018-03-26'
         }
