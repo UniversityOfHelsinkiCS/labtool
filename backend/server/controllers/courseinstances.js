@@ -155,6 +155,7 @@ module.exports = {
           message: 'course instance not found'
         })
       } else if (course.active === false) {
+        console.log('course is no active')
         return res.status(400).send({
           message: 'course is not active'
         })
