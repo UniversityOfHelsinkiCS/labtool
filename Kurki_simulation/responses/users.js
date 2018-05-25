@@ -95,6 +95,12 @@ const users = [
     "student_number": "014564859",
     "first_names": "Vilhemiina Ursula",
     "last_name": "Siekkinen"
+  },
+  {
+    "username": "tilpeohjaaja",
+    "student_number": "013554852",
+    "first_names": "Ville Jussi",
+    "last_name": "Toropainen"
   }
 ]
 
