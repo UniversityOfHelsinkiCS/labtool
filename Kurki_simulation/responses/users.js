@@ -85,19 +85,19 @@ const users = [
     "last_name": "Pöntinen"
   },
   {
-    "username": "tiliopiskelija1",
+    "username": "tilpeopiskelija1",
     "student_number": "014732546",
     "first_names": "Timo Heikki",
     "last_name": "Turunen"
   },
   {
-    "username": "tiliopiskelija2",
+    "username": "tilpeopiskelija2",
     "student_number": "014564859",
     "first_names": "Vilhemiina Ursula",
     "last_name": "Siekkinen"
   },
   {
-    "username": "tiliohjaaja",
+    "username": "tilpeohjaaja",
     "student_number": "013554852",
     "first_names": "Ville Jussi",
     "last_name": "Toropainen"

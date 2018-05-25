@@ -15,17 +15,16 @@ const courses = [
   },
   {
     "id": "TSOHA",
-		"name": "Aineopintojen harjoitustyö: Tietokantasovellus	",
+		"name": "Aineopintojen harjoitustyö: Tietokantasovellus",
 		"starts": "2018-03-11T21:00:00.000Z",
 		"ends": "2018-04-29T21:00:00.000Z"
   },
   {
     "id": "TILPE",
-		"name": "Aineopintojen harjoitustyö: Tietoliikenne	",
+		"name": "Aineopintojen harjoitustyö: Tietoliikenne",
 		"starts": "2018-01-16T21:00:00.000Z",
 		"ends": "2018-03-11T21:00:00.000Z"
-  }
-  
+  }  
 ]
 
 
