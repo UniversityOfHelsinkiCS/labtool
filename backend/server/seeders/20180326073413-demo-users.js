@@ -6,7 +6,7 @@ module.exports = {
       'Users',
       [
         {
-          id: 10,
+          id: 10010,
           username: 'paaopettaja',
           firsts: 'Pää',
           lastname: 'Opettaja',
@@ -17,7 +17,7 @@ module.exports = {
           admin: true
         },
         {
-          id: 11,
+          id: 10011,
           username: 'tiraopiskelija1',
           firsts: 'Maarit Mirja',
           lastname: 'Opiskelija',
@@ -28,7 +28,7 @@ module.exports = {
           admin: false
         },
         {
-          id: 12,
+          id: 10012,
           username: 'tiraopiskelija2',
           firsts: 'Johan Wilhelm',
           lastname: 'Studerande',
@@ -39,7 +39,7 @@ module.exports = {
           admin: false
         },
         {
-          id: 15,
+          id: 10015,
           username: 'tiraohjaaja',
           firsts: 'Ossi Ohjaaja',
           lastname: 'Mutikainen',
@@ -50,7 +50,7 @@ module.exports = {
           admin: false
         },
         {
-          id: 21,
+          id: 10021,
           username: 'otmopiskelija1',
           firsts: 'Sanna Sofia',
           lastname: 'Makkonen',
@@ -61,7 +61,7 @@ module.exports = {
           admin: false
         },
         {
-          id: 22,
+          id: 10022,
           username: 'otmopiskelija2',
           firsts: 'Jari Juhani',
           lastname: 'Jokinen',
@@ -71,7 +71,7 @@ module.exports = {
           admin: false
         },
         {
-          id: 25,
+          id: 10025,
           username: 'otmohjaaja',
           firsts: 'Paavo Matti',
           lastname: 'Pietarinen',

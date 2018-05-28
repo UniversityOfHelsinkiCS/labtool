@@ -6,28 +6,28 @@ module.exports = {
       'Comments',
       [
         {
-          id: 1,
+          id: 10001,
           comment: 'Joo, on ollu vähän kiireitä.',
           hidden: false,
-          weekId: 11,
+          weekId: 10011,
           from: 'Sanna Makkonen',
           createdAt: '2018-03-26',
           updatedAt: '2018-03-26'
         },
         {
-          id: 2,
+          id: 10002,
           comment: 'No, sellastahan se on.',
           hidden: false,
-          weekId: 11,
+          weekId: 10011,
           from: 'Paavo Pietarinen',
           createdAt: '2018-03-26',
           updatedAt: '2018-03-26'
         },
         {
-          id: 3,
+          id: 10003,
           comment: 'Joo joo, parhaani yritän.',
           hidden: false,
-          weekId: 12,
+          weekId: 10012,
           from: 'Sanna Makkonen',
           createdAt: '2018-03-26',
           updatedAt: '2018-03-26'

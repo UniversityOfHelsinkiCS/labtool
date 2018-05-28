@@ -1,24 +1,25 @@
 const courses = [
-  {
-    "id": "TIRA",
-		"name": "Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit (periodi III)",
+	{
+		"id": "TKT20010.2018.K.A.1",
+		"name": "Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit",
 		"starts": "2018-01-16T21:00:00.000Z",
 		"ends": "2018-03-11T21:00:00.000Z"
-  },
-  {
-    "id": "OTM",
+	},
+
+	{
+		"id": "TKT20002.2018.K.K.1",
 		"name": "Ohjelmistotekniikan menetelmät",
 		"starts": "2018-03-11T21:00:00.000Z",
 		"ends": "2018-04-29T21:00:00.000Z"
   },
   {
-    "id": "TSOHA",
+    "id": "TKT20011.2018.K.A.1",
 		"name": "Aineopintojen harjoitustyö: Tietokantasovellus",
 		"starts": "2018-03-11T21:00:00.000Z",
 		"ends": "2018-04-29T21:00:00.000Z"
   },
   {
-    "id": "TILPE",
+    "id": "TKT20012.2018.K.A.1",
 		"name": "Aineopintojen harjoitustyö: Tietoliikenne",
 		"starts": "2018-01-16T21:00:00.000Z",
 		"ends": "2018-03-11T21:00:00.000Z"
