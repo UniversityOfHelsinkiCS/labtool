@@ -43,6 +43,15 @@ class ReviewStudent extends Component {
     }
   }
   render() {
+    var pointsAndComment = JSON.parse(localStorage.getItem('points and comment'))
+    localStorage.removeItem('points and comment')
+    console.log('pointsAndComment Review student: ', pointsAndComment)
+    var points = null
+    var comment = null
+    if (pointsAndComment !== null) {
+      points = pointsAndComment.points
+      comment = pointsAndComment.comment
+    }
     return (
       <div className="ReviewStudent" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
         <h2> {this.props.selectedInstance.name}</h2>
@@ -52,12 +61,12 @@ class ReviewStudent extends Component {
             <Form.Group inline unstackable>
               <Form.Field>
                 <label>Points 0-{this.props.selectedInstance.weekMaxPoints}</label>
-                <Input name="points" type="number" step="0.01" />
+                <Input name="points" value={points} type="number" step="0.01" />
               </Form.Field>
             </Form.Group>
             <Form.Group inline unstackable>
               <label> Feedback </label>
-              <Form.TextArea name="comment" />
+              <Form.TextArea value={comment} name="comment" />
             </Form.Group>
             <Form.Field>
               <Button className="ui left floated green button" type="submit">
