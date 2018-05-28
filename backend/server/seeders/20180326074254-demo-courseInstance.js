@@ -6,7 +6,7 @@ module.exports = {
       'CourseInstances',
       [
         {
-          id: 11,
+          id: 10011,
           name: 'Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit',
           start: '2018-03-11T21:00:00.000Z',
           end: '2018-04-29T21:00:00.000Z',
@@ -19,7 +19,7 @@ module.exports = {
           updatedAt: '2018-03-26'
         },
         {
-          id: 12,
+          id: 10012,
           name: 'Ohjelmistotekniikan menetelmät',
           start: '2018-03-11T21:00:00.000Z',
           end: '2018-04-29T21:00:00.000Z',
@@ -32,7 +32,7 @@ module.exports = {
           updatedAt: '2018-03-26'
         },
         {
-          id: 13,
+          id: 10013,
           name: 'Aineopintojen harjoitustyö: Tietokantasovellus',
           start: '2018-01-16T21:00:00.000Z',
           end: '2018-03-10T21:00:00.000Z',
