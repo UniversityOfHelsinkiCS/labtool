@@ -1,4 +1,5 @@
 const Week = require('../models').Week
+const TeacherInstance = require('../models').TeacherInstance
 const helper = require('../helpers/weeks_controller_helper')
 
 module.exports = {
@@ -7,6 +8,15 @@ module.exports = {
       await helper.controller_before_auth_check_action(req, res)
 
       if (req.authenticated.success) {
+        const teacherInstance = await TeacherInstance.findOne({
+          where: {
+            userId: req.decoded.id
+          }
+        })
+        if (!teacherInstance) {
+          res.status(400).send('You must be a teacher to give points.')
+          return
+        }
         const week = await Week.findOne({
           where: {
             id: req.body.week
