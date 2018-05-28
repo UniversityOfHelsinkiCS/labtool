@@ -1,6 +1,7 @@
 exports.CurrentTermAndYear = CurrentTermAndYear
 exports.getCurrentTerm = getCurrentTerm
 exports.getInactive = getInactive
+exports.getActive = getActive
 exports.getNextYear = getNextYear
 exports.getNextTerm = getCurrentTerm
 exports.controller_before_auth_check_action = controller_before_auth_check_action
@@ -128,6 +129,26 @@ function axiosCourseBla(hid) {
     httpsAgent: new https.Agent({
       rejectUnauthorized: false // if you don't like this then please go ahead and do it yourself better.
     })
+  }
+}
+
+/**
+ *
+ * @param req
+ * @param res
+ * @returns {Promise<*>}
+ */
+async function getActive(req, res) {
+  try {
+    //const Sequelize = require('sequelize')
+    const CourseInstance = require('../models').CourseInstance
+    //const Op = Sequalize.Op
+    const ires = await CourseInstance.findAll({
+      order: [['createdAt', 'DESC']]
+    })
+    return ires
+  } catch (e) {
+    return e
   }
 }
 
