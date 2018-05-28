@@ -31,6 +31,7 @@ function checkWebOodi(req, res, user, resolve) {
   }
   request(options, function(req, res, body) {
     const json = JSON.parse(body)
+    console.log('\njson students to string', json['students'].toString())
     if (json['students'].toString().match(user.studentNumber) !== null) {
       // stupid javascript.. even regex match is simpler than json array that has or not has a key of whatever.
       console.log('found')
