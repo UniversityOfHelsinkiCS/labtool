@@ -33,11 +33,11 @@ function checkWebOodi(req, res, user, resolve) {
     const json = JSON.parse(body)
     if (json['students'].toString().match(user.studentNumber) !== null) {
       // stupid javascript.. even regex match is simpler than json array that has or not has a key of whatever.
-      console.log('found')
+      console.log('\ncourse_instance_helper found')
       resolve('found')
       return
     } else {
-      console.log('notfound')
+      console.log('\ncourse_intance_helper notfound')
       resolve('notfound')
       return
     }
@@ -57,10 +57,10 @@ function findByUserStudentInstance(req, res) {
   const Sequelize = require('sequelize')
   const Op = Sequelize.Op
 
-  console.log('db: ', db)
+  console.log('\ncourse_instance_helper db: ', db)
   const errors = []
-  console.log('searching by studentInstance...')
-  console.log('***REQ BODY***: ', req.body)
+  console.log('\ncourse_intance_helper, searching by studentInstance...')
+  console.log('\n***REQ BODY***: ', req.body)
 
   application_helpers.controller_before_auth_check_action(req, res)
   if (Number.isInteger(req.decoded.id)) {
@@ -69,7 +69,7 @@ function findByUserStudentInstance(req, res) {
       .then(instance => res.status(200).send(instance[0]))
       .catch(error => res.status(400).send(error))
   } else {
-    errors.push('something went wrong')
+    errors.push('\nsomething went wrong')
     res.status(400).send(errors)
   }
 }

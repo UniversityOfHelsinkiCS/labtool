@@ -22,7 +22,7 @@ module.exports = {
         values2: areActive
       })
     } catch (e) {
-      console.log(e)
+      console.log('\nadmin, async list catch: ', e, '\n')
 
       res.send('errored in controllers/admin/list')
     }
