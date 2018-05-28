@@ -144,6 +144,9 @@ module.exports = {
    */
   registerToCourseInstance(req, res) {
     helper.controller_before_auth_check_action(req, res)
+    console.log(`---------------------------------`);
+    console.log(req.decoded)
+    console.log(`---------------------------------`);
 
     CourseInstance.findOne({
       where: {
@@ -154,6 +157,11 @@ module.exports = {
         return res.status(400).send({
           message: 'course instance not found'
         })
+      } else if (course.active === false) {
+        console.log('course is no active')
+        return res.status(400).send({
+          message: 'course is not active'
+        })
       }
       User.findById(req.decoded.id).then(user => {
         if (!user) {
@@ -162,6 +170,7 @@ module.exports = {
           })
         }
         let promisingThatWeboodiStatusIsChecked = new Promise((resolve, reject) => {
+          console.log('user.studentNumber', user.studentNumber)
           helper.checkWebOodi(req, res, user, resolve) // this does not work.
 
           setTimeout(function() {

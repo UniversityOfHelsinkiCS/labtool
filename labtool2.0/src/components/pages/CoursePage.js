@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Table, Card, Form, Comment, List, Header, Label } from 'semantic-ui-react'
+import { Button, Table, Card, Form, Comment, List, Header, Label, Message } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createOneComment } from '../../services/comment'
@@ -78,17 +78,31 @@ class CoursePage extends Component {
           <div className="sixteen wide column">
             <h2>{this.props.selectedInstance.name}</h2>
           </div>
-          {this.props.courseData.data === null ? (
+          {this.props.selectedInstance.active === true ? (
+            this.props.courseData.role === 'teacher' || this.props.courseData.data !== null ? (
+              <p />
+            ) : (
+              <div className="sixteen wide column">
+                <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>
+                  {' '}
+                  <Button color="blue" size="large">
+                    Register
+                  </Button>
+                </Link>
+              </div>
+            )
+          ) : this.props.courseData.role === 'teacher' ? (
             <div className="sixteen wide column">
-              <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>
-                {' '}
-                <Button color="blue" size="large">
-                  Register
-                </Button>
-              </Link>
+              <Message compact>
+                <Message.Header>You have not activated this course.</Message.Header>
+              </Message>
             </div>
           ) : (
-            <p />
+            <div className="sixteen wide column">
+              <Message compact>
+                <Message.Header>This course has not been activated.</Message.Header>
+              </Message>
+            </div>
           )}
         </div>
 

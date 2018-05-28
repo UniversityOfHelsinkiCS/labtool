@@ -25,5 +25,4 @@ const courses = [
   }
 ]
 
-
 exports.courses = courses;
