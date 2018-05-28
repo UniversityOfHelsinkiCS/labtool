@@ -61,7 +61,7 @@ export const callController = (route, prefix, data, method = 'get') => dispatch 
     data,
     prefix
   }
-  dispatch({ type: `${prefix}ATTEMPT`, payload })
+  dispatch({ type: `${prefix}ATTEMPT`, payload }) //handleRequest will handle this, look below
 }
 
 // If you feel a sudden urge to call this. Don't.

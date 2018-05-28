@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Form, Input, Button, Grid, Radio } from 'semantic-ui-react'
-import { modifyOneCI } from '../../services/courseInstance'
+import { getOneCI, modifyOneCI } from '../../services/courseInstance'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Redirect } from 'react-router'
@@ -9,9 +9,10 @@ import { clearNotifications } from '../../reducers/notificationReducer'
 /**
  *  Page used to modify a courseinstances information. Can only be accessed by teachers.
  */
-class ModifyCourseInstancePage extends Component {
+export class ModifyCourseInstancePage extends Component {
   componentWillMount() {
     this.props.clearNotifications()
+    this.props.getOneCI(this.props.courseId)
   }
 
   componentDidUpdate() {
@@ -125,8 +126,9 @@ class ModifyCourseInstancePage extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     selectedInstance: state.selectedInstance,
-    notification: state.notification
+    notification: state.notification,
+    courseId: ownProps.courseId
   }
 }
 
-export default connect(mapStateToProps, { modifyOneCI, clearNotifications })(ModifyCourseInstancePage)
+export default connect(mapStateToProps, { getOneCI, modifyOneCI, clearNotifications })(ModifyCourseInstancePage)

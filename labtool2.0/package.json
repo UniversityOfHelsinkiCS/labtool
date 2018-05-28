@@ -29,10 +29,12 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "test_ci": "CI=true node node_modules/.bin/jest -u",
+    "tryTest": "npm run test a q",
     "eject": "react-scripts eject"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.3",
+    "deep-freeze": "0.0.1",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
     "enzyme-to-json": "^3.3.3",
