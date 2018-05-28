@@ -14,7 +14,7 @@ module.exports = {
           weekAmount: 7,
           weekMaxPoints: 3,
           currentWeek: 1,
-          ohid: 'TIRA',
+          ohid: 'TKT20010.2018.K.K.1',
           createdAt: '2018-03-26',
           updatedAt: '2018-03-26'
         },
@@ -27,7 +27,7 @@ module.exports = {
           weekAmount: 7,
           weekMaxPoints: 3,
           currentWeek: 1,
-          ohid: 'OTM',
+          ohid: 'TKT20002.2018.K.K.1',
           createdAt: '2018-03-26',
           updatedAt: '2018-03-26'
         },
@@ -40,7 +40,7 @@ module.exports = {
           weekAmount: 7,
           weekMaxPoints: 3,
           currentWeek: 1,
-          ohid: 'TSOHA',
+          ohid: 'TKT20011.2018.K.A.1',
           createdAt: '2018-03-26',
           updatedAt: '2018-03-26'
         },
