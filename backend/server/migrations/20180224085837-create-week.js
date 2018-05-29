@@ -9,7 +9,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       points: {
-        type: Sequelize.INTEGER
+        type: Sequelize.DOUBLE
       },
       weekNumber: {
         type: Sequelize.INTEGER

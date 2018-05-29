@@ -3,6 +3,8 @@ import { connect } from 'react-redux'
 import { Button, Header, Table, Container, List, Icon, Segment, Divider } from 'semantic-ui-react'
 import './MyPage.css'
 import { Link } from 'react-router-dom'
+import { getAllStudentCourses } from '../../services/studentinstances'
+import { getAllTeacherCourses } from '../../services/teacherinstances'
 
 /**
  * The main page that is shown after user has logged in.
@@ -19,6 +21,11 @@ class MyPage extends Component {
     } catch (exception) {
       console.log('no user logged in')
     }
+  }
+
+  componentWillMount() {
+    this.props.getAllStudentCourses()
+    this.props.getAllTeacherCourses()
   }
 
   render() {
@@ -59,7 +66,7 @@ class MyPage extends Component {
                   </Table.Cell>
                   <Table.Cell textAlign="right" verticalAlign="bottom">
                     <Link to="/labtool/email">
-                      <Button circular size="tiny" icon="large blue edit icon" />
+                      <Button circular size="tiny" icon={{ name: 'edit', size: 'large', color: 'blue' }} />
                     </Link>
                   </Table.Cell>
                 </Table.Row>
@@ -70,7 +77,7 @@ class MyPage extends Component {
 
         <div className="Instructions">
           <List>
-            <List.Item icon="blue edit icon" content="Edit email address" />
+            <List.Item icon={{ name: 'edit', color: 'blue' }} content="Edit email address" />
           </List>
         </div>
 
@@ -88,11 +95,13 @@ class MyPage extends Component {
             <Table singleLine key="grey" color="yellow">
               <Table.Body>
                 {this.props.studentInstance.map(sinstance => (
-                  <Table.Row>
-                    <Table.Cell>{sinstance.name}</Table.Cell>
+                  <Table.Row key={sinstance.id}>
+                    <Table.Cell>
+                      <Link to={`/labtool/courses/${sinstance.ohid}`}>{sinstance.name}</Link>
+                    </Table.Cell>
                     <Table.Cell textAlign="right">
                       <Link to={`/labtool/courses/${sinstance.ohid}`}>
-                        <Button circular size="tiny" icon="large blue eye icon" />
+                        <Button circular size="tiny" icon={{ name: 'eye', size: 'large', color: 'blue' }} />
                       </Link>
                     </Table.Cell>
                   </Table.Row>
@@ -109,14 +118,16 @@ class MyPage extends Component {
                   My Courses (Teacher)
                 </Header>
 
-                <Table singleline key="grey" color="yellow">
+                <Table singleLine key="grey" color="yellow">
                   <Table.Body>
                     {this.props.teacherInstance.map(tinstance => (
                       <Table.Row key={tinstance.id}>
-                        <Table.Cell>{tinstance.name}</Table.Cell>
+                        <Table.Cell>
+                          <Link to={`/labtool/courses/${tinstance.ohid}`}>{tinstance.name} </Link>
+                        </Table.Cell>
                         <Table.Cell textAlign="right">
                           <Link to={`/labtool/courses/${tinstance.ohid}`}>
-                            <Button circular size="tiny" icon="large blue eye icon" />
+                            <Button circular size="tiny" icon={{ name: 'eye', size: 'large', color: 'blue' }} />
                           </Link>
                         </Table.Cell>
                       </Table.Row>
@@ -129,7 +140,7 @@ class MyPage extends Component {
         </Segment>
         <div className="Instructions">
           <List>
-            <List.Item icon="blue eye icon" content="Show course page" />
+            <List.Item icon={{ name: 'eye', color: 'blue' }} content="Show course page" />
           </List>
           <br />
           <br />
@@ -148,4 +159,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, {})(MyPage)
+export default connect(mapStateToProps, { getAllStudentCourses, getAllTeacherCourses })(MyPage)

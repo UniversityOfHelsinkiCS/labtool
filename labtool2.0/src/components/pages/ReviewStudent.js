@@ -3,6 +3,7 @@ import { Button, Form, Input, Grid } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createOneWeek } from '../../services/week'
+import { getOneCI } from '../../services/courseInstance'
 import { clearNotifications } from '../../reducers/notificationReducer'
 import store from '../../store'
 
@@ -11,6 +12,7 @@ import store from '../../store'
  */
 class ReviewStudent extends Component {
   componentWillMount() {
+    this.props.getOneCI(this.props.courseId)
     this.props.clearNotifications()
   }
 
@@ -50,7 +52,7 @@ class ReviewStudent extends Component {
             <Form.Group inline unstackable>
               <Form.Field>
                 <label>Points 0-{this.props.selectedInstance.weekMaxPoints}</label>
-                <Input name="points" />
+                <Input name="points" type="number" step="0.01" />
               </Form.Field>
             </Form.Group>
             <Form.Group inline unstackable>
@@ -83,4 +85,4 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps, { createOneWeek, clearNotifications })(ReviewStudent)
+export default connect(mapStateToProps, { createOneWeek, getOneCI, clearNotifications })(ReviewStudent)

@@ -7,7 +7,8 @@ module.exports = {
     database: process.env.DB_NAME,
     host: '127.0.0.1',
     dialect: 'postgres',
-    operatorsAliases: 'false'
+    operatorsAliases: 'false',
+    kurki_url: process.env.KURKI_URL == null ? "https://opetushallinto.cs.helsinki.fi" : process.env.KURKI_URL
   },
   test: {
     username: 'postgres',
@@ -16,7 +17,8 @@ module.exports = {
     host: '127.0.0.1',
     dialect: 'postgres',
     operatorsAliases: false,
-    logging: false
+    logging: false,
+    kurki_url: "https://opetushallinto.cs.helsinki.fi"
   },
   production: {
     username: process.env.DB_USERNAME,
@@ -24,6 +26,7 @@ module.exports = {
     database: process.env.DB_NAME,
     host: process.env.DB_HOST,
     dialect: 'postgres',
-    operatorsAliases: 'false'
+    operatorsAliases: 'false',
+    kurki_url: "https://opetushallinto.cs.helsinki.fi"
   }
 }
