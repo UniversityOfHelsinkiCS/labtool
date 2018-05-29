@@ -1,4 +1,6 @@
 const Week = require('../models').Week
+const TeacherInstance = require('../models').TeacherInstance
+const StudentInstance = require('../models').StudentInstance
 const helper = require('../helpers/weeks_controller_helper')
 
 module.exports = {
@@ -7,6 +9,24 @@ module.exports = {
       await helper.controller_before_auth_check_action(req, res)
 
       if (req.authenticated.success) {
+        // Check that there is a TeacherInstance for this user and this course.
+        const studentInstance = await StudentInstance.findOne({
+          where: {
+            id: req.body.studentInstanceId
+          }
+        })
+        const teacherInstanceCount = await TeacherInstance.count({
+          where: {
+            userId: req.decoded.id,
+            courseInstanceId: studentInstance.courseInstanceId
+          }
+        })
+        // If there is no TeacherInstance, reject.
+        if (teacherInstanceCount === 0) {
+          res.status(400).send('You must be a teacher to give points.')
+          return
+        }
+
         const week = await Week.findOne({
           where: {
             id: req.body.week

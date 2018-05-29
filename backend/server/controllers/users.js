@@ -43,7 +43,6 @@ module.exports = {
    */
   async list(req, res) {
     helper.controller_before_auth_check_action(req, res)
-    console.log(req.user)
 
     try {
       const users = await User.findAll()
@@ -84,6 +83,49 @@ module.exports = {
         .catch(error => res.status(400).send(error))
     } else {
       res.status(404).send('not found')
+    }
+  },
+
+  /**
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<*|Promise<T>>}
+   */
+  async createTeacher(req, res) {
+    helper.controller_before_auth_check_action(req, res)
+
+    try {
+      // Make sure only teachers/assistants can add new teachers/assistants.
+      const teacherInstances = await TeacherInstance.count({
+        where: {
+          userId: req.decoded.id
+        }
+      })
+
+      if (!teacherInstances) {
+        return res.status(400).send('You must be a teacher to add assistants.')
+      }
+
+      const userToAssistant = await User.findById(req.body.id)
+      const courseToAssist = await CourseInstance.findOne({
+        where: {
+          ohid: req.body.ohid
+        }
+      })
+
+      if (!userToAssistant || !courseToAssist) {
+        return res.status(400).send('User or course not found')
+      }
+
+      const assistant = await TeacherInstance.create({
+        userId: userToAssistant.id,
+        courseInstanceId: courseToAssist.id,
+        admin: true
+      })
+      return res.status(200).send(assistant)
+    } catch (exception) {
+      return res.status(400).send(exception)
     }
   }
 }

@@ -80,6 +80,17 @@ module.exports = {
           createdAt: '2018-03-26',
           updatedAt: '2018-03-26',
           admin: false
+        },
+        {
+          id: 10031,
+          username: 'superopiskelija',
+          firsts: 'Teräs',
+          lastname: 'Henkilö',
+          email: 'teras.henkilo@helsinki.fi',
+          studentNumber: '014666666',
+          createdAt: '2018-03-26',
+          updatedAt: '2018-03-26',
+          admin: false
         }
       ],
       {}
