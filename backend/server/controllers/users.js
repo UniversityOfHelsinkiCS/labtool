@@ -39,6 +39,23 @@ module.exports = {
    *
    * @param req
    * @param res
+   * @returns {Promise<Array<Model>>}
+   */
+  async list(req, res) {
+    helper.controller_before_auth_check_action(req, res)
+
+    try {
+      const users = await User.findAll()
+      return res.status(200).send(users)
+    } catch (exception) {
+      return res.status(400).send(exception)
+    }
+  },
+
+  /**
+   *
+   * @param req
+   * @param res
    * @returns {Promise<*|Promise<T>>}
    */
   async createTeacherInstance(req, res) {
