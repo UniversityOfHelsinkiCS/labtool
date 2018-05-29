@@ -19,7 +19,7 @@ module.exports = {
       json: { username: req.body.username, password: req.body.password }
     }
 
-    const result = request(options, function(err, resp, body) {
+    const result = request(options, function (err, resp, body) {
       console.log('testitulostus: ', result.response.body)
       if (err) {
         console.log('\nlogin: ', err, 'n')
@@ -40,8 +40,9 @@ module.exports = {
           if (!(newuser.firsts === body.first_names && newuser.lastname === body.last_name)) {
             User.update({ firsts: body.first_names, lastname: body.last_name }, { where: { id: newuser.id } })
           }
-
-          // ^ SIDENOTE HERE: There can be a situation where the user has not a studentnumber but later gets it.
+          if (!newuser.studentNumber === body.student_number) {
+            User.update({ studentNumber: body.student_number }, { where: { id: newuser.id } })
+          }
 
           console.log(
             newuser.get({
