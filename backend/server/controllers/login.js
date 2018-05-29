@@ -37,9 +37,14 @@ module.exports = {
             email: ''
           }
         }).spread((newuser, created) => {
-          if (!(newuser.firsts === body.first_names && newuser.lastname === body.last_name)) {
-            console.log('päivitetään nimi')
-            User.update({ firsts: body.first_names, lastname: body.last_name }, { where: { id: newuser.id } })
+          if (newuser.firsts !== body.first_names) {
+            console.log('päivitetään etunimet')
+            User.update({ firsts: body.first_names }, { where: { id: newuser.id } })
+          }
+
+          if (newuser.lastname !== body.last_name) {
+            console.log('päivitetään sukunimi')
+            User.update({ lastname: body.last_name }, { where: { id: newuser.id } })
           }
 
           if (newuser.studentNumber === null) {
