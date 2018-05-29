@@ -65,6 +65,7 @@ module.exports = {
           username: 'otmopiskelija2',
           firsts: 'Jari Juhani',
           lastname: 'Jokinen',
+          email: 'jari.jokinen@helsinki.fi',
           studentNumber: '014872455',
           createdAt: '2018-03-26',
           updatedAt: '2018-03-26',
