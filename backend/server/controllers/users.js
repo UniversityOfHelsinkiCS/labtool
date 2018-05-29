@@ -92,14 +92,25 @@ module.exports = {
    * @param res
    * @returns {Promise<*|Promise<T>>}
    */
-  async addCourseAssistant(req, res) {
+  async createTeacher(req, res) {
     helper.controller_before_auth_check_action(req, res)
 
     try {
+      // Make sure only teachers/assistants can add new teachers/assistants.
+      const teacherInstances = await TeacherInstance.count({
+        where: {
+          userId: req.decoded.id
+        }
+      })
+
+      if (!teacherInstances) {
+        return res.status(400).send('You must be a teacher to add assistants.')
+      }
+
       const userToAssistant = await User.findById(req.body.id)
       const courseToAssist = await CourseInstance.findOne({
         where: {
-          ohid: req.params.ohid
+          ohid: req.body.ohid
         }
       })
 
