@@ -96,7 +96,9 @@ class MyPage extends Component {
               <Table.Body>
                 {this.props.studentInstance.map(sinstance => (
                   <Table.Row key={sinstance.id}>
-                    <Table.Cell>{sinstance.name}</Table.Cell>
+                    <Table.Cell>
+                      <Link to={`/labtool/courses/${sinstance.ohid}`}>{sinstance.name}</Link>
+                    </Table.Cell>
                     <Table.Cell textAlign="right">
                       <Link to={`/labtool/courses/${sinstance.ohid}`}>
                         <Button circular size="tiny" icon={{ name: 'eye', size: 'large', color: 'blue' }} />
@@ -120,7 +122,9 @@ class MyPage extends Component {
                   <Table.Body>
                     {this.props.teacherInstance.map(tinstance => (
                       <Table.Row key={tinstance.id}>
-                        <Table.Cell>{tinstance.name}</Table.Cell>
+                        <Table.Cell>
+                          <Link to={`/labtool/courses/${tinstance.ohid}`}>{tinstance.name} </Link>
+                        </Table.Cell>
                         <Table.Cell textAlign="right">
                           <Link to={`/labtool/courses/${tinstance.ohid}`}>
                             <Button circular size="tiny" icon={{ name: 'eye', size: 'large', color: 'blue' }} />
