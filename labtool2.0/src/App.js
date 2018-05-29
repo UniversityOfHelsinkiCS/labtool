@@ -79,6 +79,7 @@ class App extends Component {
               render={({ match, history }) => <ReviewStudent history={history} courseId={match.params.id} studentInstance={match.params.si} weekNumber={match.params.wk} />}
             />
             <Route path={`/labtool/ModifyCourseInstancePage/:id`} render={({ match }) => <ModifyCourseInstancePage courseId={match.params.id} />} />
+            <Route path={`/labtool/ModifyCourseInstanceStaff/:id`} component={ModifyCourseInstanceStaff} render={({ match }) => <ModifyCourseInstancePage courseId={match.params.id} />} />
             <Route path={`/labtool/ModifyCourseStaff/:id`} render={({ match, history }) => <ModifyCourseInstanceStaff courseId={match.params.id} />} />
             <Route path={`/`} render={() => <MyPage />} />
           </Switch>
