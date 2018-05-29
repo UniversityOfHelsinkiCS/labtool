@@ -43,6 +43,7 @@ module.exports = {
    */
   async list(req, res) {
     helper.controller_before_auth_check_action(req, res)
+    console.log(req.user)
 
     try {
       const users = await User.findAll()
