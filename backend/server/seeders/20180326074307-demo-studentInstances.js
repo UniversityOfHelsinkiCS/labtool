@@ -40,6 +40,33 @@ module.exports = {
           courseInstanceId: 10012,
           createdAt: '2018-03-26',
           updatedAt: '2018-03-26'
+        },
+        {
+          id: 10031,
+          github: 'http://github.com/superprojekti',
+          projectName: 'super projekti',
+          userId: 10031,
+          courseInstanceId: 10011,
+          createdAt: '2018-03-26',
+          updatedAt: '2018-03-26'
+        },
+        {
+          id: 10032,
+          github: 'http://github.com/superprojekti',
+          projectName: 'super projekti',
+          userId: 10031,
+          courseInstanceId: 10012,
+          createdAt: '2018-03-26',
+          updatedAt: '2018-03-26'
+        },
+        {
+          id: 10033,
+          github: 'http://github.com/superprojekti',
+          projectName: 'super projekti',
+          userId: 10031,
+          courseInstanceId: 10013,
+          createdAt: '2018-03-26',
+          updatedAt: '2018-03-26'
         }
       ],
       {}

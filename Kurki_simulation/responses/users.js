@@ -101,6 +101,12 @@ const users = [
     "student_number": "013554852",
     "first_names": "Ville Jussi",
     "last_name": "Toropainen"
+  },
+  {
+    "username": "superopiskelija",
+    "student_number": "014666666",
+    "first_names": "Teräs",
+    "last_name": "Henkilö"
   }
 ]
 
