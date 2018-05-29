@@ -4,3 +4,4 @@ This is the repository of the Software engineering project (TK20007) at the Univ
 
 - [Product backlog](https://github.com/labtool/labtool/projects/1) 
 - [Documentation](https://github.com/labtool/labtool/wiki)
+- [Project documents@Google Drive](https://drive.google.com/drive/folders/1CkmhZ3rhVPO3Qn_hrFSlWlRKFN-sV-Lw?usp=sharing)
