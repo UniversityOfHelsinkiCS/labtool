@@ -1,11 +1,14 @@
 exports.CurrentTermAndYear = CurrentTermAndYear
 exports.getCurrentTerm = getCurrentTerm
 exports.getInactive = getInactive
+exports.getActive = getActive
 exports.getNextYear = getNextYear
 exports.getNextTerm = getCurrentTerm
 exports.controller_before_auth_check_action = controller_before_auth_check_action
 exports.getCurrent = getCurrent
 exports.createCourse = createCourse
+const env = process.env.NODE_ENV || 'development'
+const config = require('./../config/config.js')[env]
 
 /**
  *
@@ -98,7 +101,7 @@ function axiosBlaBla(year, term) {
   const https = require('https')
   return {
     method: 'get',
-    baseURL: `https://opetushallinto.cs.helsinki.fi/labtool/courses?year=${year}&term=${term}`,
+    baseURL: `${config.kurki_url}/labtool/courses?year=${year}&term=${term}`,
     headers: {
       'Content-Type': 'application/json',
       Authorization: process.env.TOKEN
@@ -118,7 +121,7 @@ function axiosCourseBla(hid) {
   const https = require('https')
   return {
     method: 'get',
-    baseURL: `https://opetushallinto.cs.helsinki.fi/labtool/courses/${hid}`,
+    baseURL: `${config.kurki_url}/labtool/courses/${hid}`,
     headers: {
       'Content-Type': 'application/json',
       Authorization: process.env.TOKEN
@@ -135,10 +138,32 @@ function axiosCourseBla(hid) {
  * @param res
  * @returns {Promise<*>}
  */
+async function getActive(req, res) {
+  try {
+    //const Sequelize = require('sequelize')
+    const CourseInstance = require('../models').CourseInstance
+    //const Op = Sequalize.Op
+    const ires = await CourseInstance.findAll({
+      order: [['createdAt', 'DESC']]
+    })
+    return ires
+  } catch (e) {
+    return e
+  }
+}
+
+/**
+ *
+ * @param req
+ * @param res
+ * @returns {Promise<*>}
+ */
 async function getInactive(req, res) {
   try {
     const cur = await getCurrent(req, res)
+    console.log("\ncur: ", cur)
     const nxt = await getNewer(req, res)
+    console.log("\nnxt: ", nxt)
     const newobj = await cur.concat(nxt)
     const iarr = []
     for (var blob in newobj) {
@@ -199,6 +224,7 @@ async function createCourse(body) {
   }).save()
 
   if (result.teachers.length > 0) {
+    console.log('')
     for (let i in result.teachers) {
       const user = await User.findOrCreate({
         where: {

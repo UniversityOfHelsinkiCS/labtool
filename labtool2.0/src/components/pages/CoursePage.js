@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import { Button, Table, Card, Form, Comment, List, Header, Label } from 'semantic-ui-react'
+import { Button, Table, Card, Form, Comment, List, Header, Label, Message } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createOneComment } from '../../services/comment'
-import { coursePageInformation } from '../../services/courseInstance'
+import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import ReactMarkdown from 'react-markdown'
 
 class CoursePage extends Component {
@@ -12,7 +12,7 @@ class CoursePage extends Component {
     const content = {
       hidden: false,
       comment: e.target.content.value,
-      week: parseInt(e.target.name),
+      week: parseInt(e.target.name, 10),
       from: this.props.user.user.username
     }
     try {
@@ -22,6 +22,11 @@ class CoursePage extends Component {
     } catch (error) {
       console.log(error)
     }
+  }
+
+  componentWillMount() {
+    this.props.getOneCI(this.props.courseId)
+    this.props.coursePageInformation(this.props.courseId)
   }
 
   /**
@@ -73,17 +78,31 @@ class CoursePage extends Component {
           <div className="sixteen wide column">
             <h2>{this.props.selectedInstance.name}</h2>
           </div>
-          {this.props.courseData.data === null ? (
+          {this.props.selectedInstance.active === true ? (
+            this.props.courseData.role === 'teacher' || this.props.courseData.data !== null ? (
+              <p />
+            ) : (
+              <div className="sixteen wide column">
+                <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>
+                  {' '}
+                  <Button color="blue" size="large">
+                    Register
+                  </Button>
+                </Link>
+              </div>
+            )
+          ) : this.props.courseData.role === 'teacher' ? (
             <div className="sixteen wide column">
-              <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>
-                {' '}
-                <Button color="blue" size="large">
-                  Register
-                </Button>
-              </Link>
+              <Message compact>
+                <Message.Header>You have not activated this course.</Message.Header>
+              </Message>
             </div>
           ) : (
-            <p />
+            <div className="sixteen wide column">
+              <Message compact>
+                <Message.Header>This course has not been activated.</Message.Header>
+              </Message>
+            </div>
           )}
         </div>
 
@@ -111,14 +130,14 @@ class CoursePage extends Component {
                   <Table.Cell textAlign="right">
                     {' '}
                     <Link to={`/labtool/ModifyCourseInstancePage/${this.props.selectedInstance.ohid}`}>
-                      <Button circular size="tiny" icon="large orange edit icon" />
+                      <Button circular size="tiny" icon={{ name: 'edit', size: 'large', color: 'orange' }} />
                     </Link>
                   </Table.Cell>
                 </Table.Row>
               </Table.Header>
             </Table>
             <List style={{ float: 'right' }}>
-              <List.Item icon="orange edit" content="Edit course" />
+              <List.Item icon={{ name: 'edit', color: 'orange' }} content="Edit course" />
             </List>
 
             <br />
@@ -142,7 +161,7 @@ class CoursePage extends Component {
                     </Table.Cell>
                     <Table.Cell>
                       <p>{data.projectName}</p>
-                      <a>{data.github}</a>
+                      <a href={data.github}>{data.github}</a>
                     </Table.Cell>
                     {createIndents(data.weeks, data.id)}
                     <Table.Cell>{allPoints}</Table.Cell>
@@ -150,7 +169,7 @@ class CoursePage extends Component {
 
                     <Table.Cell textAlign="right">
                       <Link to={`/labtool/browsereviews/${this.props.selectedInstance.ohid}/${data.id}`}>
-                        <Button circular size="tiny" icon="large star orange" />
+                        <Button circular size="tiny" icon={{ name: 'star', size: 'large', color: 'orange' }} />
                       </Link>
                     </Table.Cell>
                   </Table.Row>
@@ -158,7 +177,7 @@ class CoursePage extends Component {
               </Table.Body>
             </Table>
             <List style={{ float: 'right' }}>
-              <List.Item icon="orange star" content="Review student" />
+              <List.Item icon={{ name: 'star', color: 'orange' }} content="Review student" />
             </List>
           </div>
         ) : (
@@ -193,7 +212,7 @@ class CoursePage extends Component {
               </Table.Header>
               <Table.Body>
                 {this.props.courseData.data.weeks.sort((a, b) => a.weekNumber - b.weekNumber).map(week => (
-                  <Table.Row>
+                  <Table.Row key={week.weekNumber}>
                     <Table.Cell>{week.weekNumber}</Table.Cell>
                     <Table.Cell>{week.points}</Table.Cell>
                     <Table.Cell>
@@ -230,14 +249,15 @@ class CoursePage extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
   return {
     user: state.user,
     studentInstance: state.studentInstance,
     teacherInstance: state.teacherInstance,
     selectedInstance: state.selectedInstance,
-    courseData: state.coursePage
+    courseData: state.coursePage,
+    courseId: ownProps.courseId
   }
 }
 
-export default connect(mapStateToProps, { createOneComment, coursePageInformation })(CoursePage)
+export default connect(mapStateToProps, { createOneComment, getOneCI, coursePageInformation })(CoursePage)

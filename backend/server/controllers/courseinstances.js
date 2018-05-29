@@ -9,6 +9,8 @@ const Op = Sequelize.Op
 const StudentInstanceController = require('../controllers').studentInstances
 const Week = require('../models').Week
 const Comment = require('../models').Comment
+const env = process.env.NODE_ENV || 'development'
+const config = require('./../config/config.js')[env]
 
 module.exports = {
   /**
@@ -142,6 +144,9 @@ module.exports = {
    */
   registerToCourseInstance(req, res) {
     helper.controller_before_auth_check_action(req, res)
+    console.log(`---------------------------------`);
+    console.log(req.decoded)
+    console.log(`---------------------------------`);
 
     CourseInstance.findOne({
       where: {
@@ -152,6 +157,11 @@ module.exports = {
         return res.status(400).send({
           message: 'course instance not found'
         })
+      } else if (course.active === false) {
+        console.log('course is no active')
+        return res.status(400).send({
+          message: 'course is not active'
+        })
       }
       User.findById(req.decoded.id).then(user => {
         if (!user) {
@@ -160,6 +170,7 @@ module.exports = {
           })
         }
         let promisingThatWeboodiStatusIsChecked = new Promise((resolve, reject) => {
+          console.log('user.studentNumber', user.studentNumber)
           helper.checkWebOodi(req, res, user, resolve) // this does not work.
 
           setTimeout(function() {
@@ -244,7 +255,7 @@ module.exports = {
             name: req.body.name || courseInstance.name,
             start: req.body.start || courseInstance.start,
             end: req.body.end || courseInstance.end,
-            active: req.body.active,
+            active: req.body.active || courseInstance.active,
             weekAmount: req.body.weekAmount || courseInstance.weekAmount,
             weekMaxPoints: req.body.weekMaxPoints || courseInstance.weekMaxPoints,
             currentWeek: req.body.currentWeek || courseInstance.currentWeek
@@ -310,7 +321,7 @@ module.exports = {
       const request = require('request')
       const options = {
         method: 'get',
-        uri: `https://opetushallinto.cs.helsinki.fi/labtool/courses?year=${termAndYear.currentYear}&term=${termAndYear.currentTerm}`,
+        uri: `${config.kurki_url}/labtool/courses?year=${termAndYear.currentYear}&term=${termAndYear.currentTerm}`,
         headers: {
           'Content-Type': 'application/json',
           Authorization: process.env.TOKEN
@@ -360,7 +371,7 @@ module.exports = {
         const request = require('request')
         const options = {
           method: 'get',
-          uri: `https://opetushallinto.cs.helsinki.fi/labtool/courses?year=${termAndYear.nextYear}&term=${termAndYear.nextTerm}`,
+          uri: `${config.kurki_url}/labtool/courses?year=${termAndYear.nextYear}&term=${termAndYear.nextTerm}`,
           headers: {
             'Content-Type': 'application/json',
             Authorization: process.env.TOKEN
