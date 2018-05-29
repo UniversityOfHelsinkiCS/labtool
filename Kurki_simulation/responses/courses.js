@@ -1,6 +1,5 @@
 const courses = [
 
-
 	{
 		"id": "TKT20010.2018.K.A.1",
 		"name": "Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit",
@@ -25,7 +24,7 @@ const courses = [
 		"name": "Aineopintojen harjoitustyö: Tietoliikenne",
 		"starts": "2018-01-16T21:00:00.000Z",
 		"ends": "2018-03-11T21:00:00.000Z"
-  }
+  }  
 ]
 
 

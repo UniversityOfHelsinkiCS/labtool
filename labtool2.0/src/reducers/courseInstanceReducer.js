@@ -30,7 +30,10 @@ const createShorterCourseid = ohid => {
 const courseInstancereducer = (store = [], action) => {
   switch (action.type) {
     case 'CI_GET_ALL_SUCCESS':
-      return sortCourses(action.response)
+      const sortedCourses = sortCourses(action.response)
+      return sortedCourses.map(m => {
+        return { ...m, europeanStart: createEuropeanDate(m.start), europeanEnd: createEuropeanDate(m.end), shorterId: createShorterCourseid(m.ohid) }
+      })
     case 'CI_MODIFY_ONE_SUCCESS':
       return store
     default:
