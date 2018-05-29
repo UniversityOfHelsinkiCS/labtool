@@ -21,17 +21,18 @@ html
                                 div(class='middle aligned content')
                                     h3(class='ui disabled header')= values2[0].name + " - " + values2[0].ohid    
 
-                    each val in values1
-                        div(class='item')   
-                            form(method="POST")
-                                input(name="hid" type="hidden" value=val.id)
-                                input(name="cname" type="hidden" value=val.name)
-                                input(name="starts" type="hidden" value=val.starts)
-                                input(name="ends" type="hidden" value=val.ends)
-                                div(class='left floated content')
-                                    input(type="submit", value="Import", class="ui blue button")
-                                div(class='middle aligned content')
-                                    h3(class='ui header')= val.name + " - " + val.id                 
+                    if(values1.length)
+                        each val in values1
+                            div(class='item')   
+                                form(method="POST")
+                                    input(name="hid" type="hidden" value=val.id)
+                                    input(name="cname" type="hidden" value=val.name)
+                                    input(name="starts" type="hidden" value=val.starts)
+                                    input(name="ends" type="hidden" value=val.ends)
+                                    div(class='left floated content')
+                                        input(type="submit", value="Import", class="ui blue button")
+                                    div(class='middle aligned content')
+                                        h3(class='ui header')= val.name + " - " + val.id                 
                     else
                         br
                         p= elseMessage1
