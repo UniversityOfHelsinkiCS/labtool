@@ -3,24 +3,27 @@ const helper = require('../helpers/weeks_controller_helper')
 
 module.exports = {
   async create(req, res) {
+    console.log('\n\n\nweeks.create req: ', req, '\n\n\n')
     try {
       await helper.controller_before_auth_check_action(req, res)
 
       if (req.authenticated.success) {
         const week = await Week.findOne({
           where: {
-            id: req.body.week
+            weekNumber: req.body.weekNumber,
+            studentInstanceId: req.body.studentInstanceId
           }
         })
+        console.log('\n\n\nweeks, week: ', week)
         if (week) {
+          console.log('\n\nupdating a week\n\n')
           await week.update({
-            points: week.points || req.body.points,
-            studentInstanceId: week.studentInstanceId || req.body.studentInstanceId,
-            feedback: week.feedback || req.body.feedback,
-            weekNumber: week.weekNumber || req.body.weekNumber
+            points: req.body.points || week.points,
+            feedback: req.body.feedback || week.feedback
           })
           res.status(200).send(week)
         } else {
+          console.log('\n\ncreating a new week\n\n')
           await Week.create({
             points: req.body.points,
             studentInstanceId: req.body.studentInstanceId,
