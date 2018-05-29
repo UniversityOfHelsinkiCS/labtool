@@ -6,7 +6,6 @@ exports.courses = [
     "starts": "2018-01-16T21:00:00.000Z",
     "ends": "2018-03-11T21:00:00.000Z"
   },
-
   {
     "id": "TKT20002.2018.K.K.1",
     "name": "Ohjelmistotekniikan menetelmät",
@@ -30,5 +29,6 @@ exports.courses = [
     "name": "Aineopintojen harjoituskurssi: Opettajalla ei opiskelijanumeroa",
     "starts": "2018-01-16T21:00:00.000Z",
     "ends": "2018-03-11T21:00:00.000Z"
+
   }  
 ]
