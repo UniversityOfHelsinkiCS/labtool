@@ -38,9 +38,12 @@ module.exports = {
           }
         }).spread((newuser, created) => {
           if (!(newuser.firsts === body.first_names && newuser.lastname === body.last_name)) {
+            console.log('päivitetään nimi')
             User.update({ firsts: body.first_names, lastname: body.last_name }, { where: { id: newuser.id } })
           }
-          if (!newuser.studentNumber === body.student_number) {
+
+          if (newuser.studentNumber === null) {
+            console.log('päivitetään opiskelijanumero')
             User.update({ studentNumber: body.student_number }, { where: { id: newuser.id } })
           }
 
