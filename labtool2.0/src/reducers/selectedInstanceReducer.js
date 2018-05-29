@@ -12,7 +12,7 @@
   ohid(pin): -- Opetushallitus id of the course, is often used instead of the database id
  * 
  */
-const selectedInstanceReducer = (store = '', action) => {
+const selectedInstanceReducer = (store = [], action) => {
   switch (action.type) {
     case 'CI_GET_ONE_SUCCESS':
       return action.response
