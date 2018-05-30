@@ -13,10 +13,10 @@ const config = require('./../config/config.js')[env]
 
 module.exports = {
   async create(req, res) {
+    await helper.controller_before_auth_check_action(req, res)
+
     try {
       console.log('req.body: ', req.body, '\n\n')
-      await helper.controller_before_auth_check_action(req, res)
-     
       const teacherInsId = req.body.teacherInstanceId
       const studentInsId = req.body.studentInstanceId
 
