@@ -25,7 +25,7 @@ module.exports = {
           studentInstanceId: studentInsId,
           teacherInstanceId: teacherInsId
         })
-        res.status(200).send
+        res.status(200).send('assistanceInstance created')
       }
     } catch (e) {
       console.log('\n\nassistantInstance creation failed\n\n')
