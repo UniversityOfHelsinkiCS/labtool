@@ -1,7 +1,7 @@
 'use strict'
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('AssitantInstances', {
+    return queryInterface.createTable('AssistantInstances', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -22,7 +22,7 @@ module.exports = {
         references: {
           model: 'TeacherInstances',
           key: 'id',
-          as: 'teacherId'
+          as: 'teacherInstanceId'
         }
       },
       studentInstanceId: {
@@ -31,7 +31,7 @@ module.exports = {
         references: {
           model: 'StudentInstances',
           key: 'id',
-          as: 'studentId'
+          as: 'studentInstanceId'
         }
       }
     })

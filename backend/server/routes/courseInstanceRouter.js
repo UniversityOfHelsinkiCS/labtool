@@ -8,7 +8,7 @@ module.exports = app => {
   app.post('/api/course/register/:ohid', courseInstanceController.registerToCourseInstance)
   app.post('/api/course/student', courseInstanceController.findByUserStudentInstance)
   app.post('/api/course/teacher', courseInstanceController.findByUserTeacherInstance)
-  app.get('/api/course/assistant', assistantController.findAssistantByStudentInstance)
+  app.get('/api/course/assistant/:id', assistantController.findAssistantByStudentInstance)
   app.get('/api/courseinstances', courseInstanceController.list) // Skolen kurssit on julkista tietoa eli periaattessa ok.
   app.get('/api/courseinstances/:ohid', courseInstanceController.retrieve) // En tiedä joten ei käy
   app.put('/api/courseinstances/:id', courseInstanceController.update) // Sama.. en tiedä, mutta tätä ei julkisesti pitäisi pystyä tehdä ainakaan apilta saatujen oikeiden tietojen muuttamiseksi

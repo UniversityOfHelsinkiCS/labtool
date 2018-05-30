@@ -13,48 +13,52 @@ const config = require('./../config/config.js')[env]
 
 module.exports = {
   async findAssistantByStudentInstance(req, res) {
-    //helper.controller_before_auth_check_action(req, res)
+    helper.controller_before_auth_check_action(req, res)
 
     const returnedAssistantInfo = {
       status: undefined,
       data: undefined
     }
-    const assistantInstance = await assistantInstance.findOne({
-      where: {
-        studentInstance: req.body.studentId
-      }
-    })
+    let studentInstanceId = undefined
+    try {
+      studentInstanceId = req.params.id
+    } catch (e) {
+      res.status(400).send(e)
+    }
 
-    if (assistantInstance) {
-      const assistantId = assistantInstance.teacherInstanceId
-      const assistantAsTeacher = await TeacherInstance.findOne({
+    try {
+      const assistantIns = await AssistantInstance.findOne({
         where: {
-          id: assistantId
+          studentInstanceId: req.params.id
         }
       })
-      const assistantAsUser = await User.findOne({
-        where: {
-          id: assistantAsTeacher.userId
-        }
-      })
-      returnedAssistantInfo.data = {
-        firsts: assistantAsUser.firsts,
-        lastname: assistantAsUser.lastname
-      }
-      returnedAssistantInfo.status = 'student has an assigned assistant'
 
-      try {
+      if (assistantIns) {
+        const assistantId = assistantIns.teacherInstanceId
+        const assistantAsTeacher = await TeacherInstance.findOne({
+          where: {
+            id: assistantId
+          }
+        })
+        const assistantAsUser = await User.findOne({
+          where: {
+            id: assistantAsTeacher.userId
+          }
+        })
+        returnedAssistantInfo.data = {
+          firsts: assistantAsUser.firsts,
+          lastname: assistantAsUser.lastname
+        }
+        returnedAssistantInfo.status = 'student has an assigned assistant'
+
         res.status(200).send(returnedAssistantInfo)
-      } catch (e) {
-        res.status(400).send(e)
-      }
-    } else {
-      try {
+      } else {
         returnedAssistantInfo.status = 'no assistant assigned to student'
         res.status(200).send(returnedAssistantInfo)
-      } catch (e) {
-        res.status(400).send(e)
       }
+    } catch (e) {
+      console.log('\n\nAAAA\n\n')
+      res.status(400).send(e)
     }
   }
 }
