@@ -42,13 +42,26 @@ module.exports = {
    * @returns {Promise<Array<Model>>}
    */
   async list(req, res) {
-    helper.controller_before_auth_check_action(req, res)
+    await helper.controller_before_auth_check_action(req, res)
 
-    try {
-      const users = await User.findAll()
-      return res.status(200).send(users)
-    } catch (exception) {
-      return res.status(400).send(exception)
+    if (req.authenticated.success) {
+      try {
+        // Make sure only teachers can get user list.
+        const teacherInstances = await TeacherInstance.count({
+          where: {
+            userId: req.decoded.id
+          }
+        })
+
+        if (!teacherInstances) {
+          return res.status(401).send('Unauthorized')
+        }
+
+        const users = await User.findAll()
+        res.status(200).send(users)
+      } catch (exception) {
+        res.status(400).send('Unable to send user list')
+      }
     }
   },
 
@@ -93,39 +106,41 @@ module.exports = {
    * @returns {Promise<*|Promise<T>>}
    */
   async createTeacher(req, res) {
-    helper.controller_before_auth_check_action(req, res)
+    await helper.controller_before_auth_check_action(req, res)
 
-    try {
-      // Make sure only teachers/assistants can add new teachers/assistants.
-      const teacherInstances = await TeacherInstance.count({
-        where: {
-          userId: req.decoded.id
+    if (req.authenticated.success) {
+      try {
+        // Make sure only teachers/assistants can add new teachers/assistants.
+        const teacherInstances = await TeacherInstance.count({
+          where: {
+            userId: req.decoded.id
+          }
+        })
+
+        if (!teacherInstances) {
+          return res.status(401).send('Unauthorized')
         }
-      })
 
-      if (!teacherInstances) {
-        return res.status(400).send('You must be a teacher to add assistants.')
-      }
+        const userToAssistant = await User.findById(req.body.id)
+        const courseToAssist = await CourseInstance.findOne({
+          where: {
+            ohid: req.body.ohid
+          }
+        })
 
-      const userToAssistant = await User.findById(req.body.id)
-      const courseToAssist = await CourseInstance.findOne({
-        where: {
-          ohid: req.body.ohid
+        if (!userToAssistant || !courseToAssist) {
+          return res.status(404).send('User or course not found')
         }
-      })
 
-      if (!userToAssistant || !courseToAssist) {
-        return res.status(400).send('User or course not found')
+        const assistant = await TeacherInstance.create({
+          userId: userToAssistant.id,
+          courseInstanceId: courseToAssist.id,
+          admin: true
+        })
+        res.status(200).send(assistant)
+      } catch (exception) {
+        res.status(400).send('Error in creating teacher/assistant')
       }
-
-      const assistant = await TeacherInstance.create({
-        userId: userToAssistant.id,
-        courseInstanceId: courseToAssist.id,
-        admin: true
-      })
-      return res.status(200).send(assistant)
-    } catch (exception) {
-      return res.status(400).send(exception)
     }
   }
 }
