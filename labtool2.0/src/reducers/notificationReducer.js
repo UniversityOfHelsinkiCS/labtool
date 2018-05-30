@@ -70,6 +70,11 @@ const notificationReducer = (state = {}, action) => {
         message: 'Creating comment failed!',
         error: true
       }
+    case 'TEACHER_CREATE_SUCCESS':
+      return {
+        message: 'Added a new admin succesfully!',
+        error: false
+      }
     default:
       return state
   }

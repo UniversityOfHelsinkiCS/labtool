@@ -65,7 +65,7 @@ export class ModifyCourseInstaceStaff extends React.Component {
                           Non-admin
                         </Label>
                         <Button onClick={this.handleSubmit(user.id)} size="tiny" color="green">
-                          a
+                          Add admin
                         </Button>
                       </div>
                     )}
