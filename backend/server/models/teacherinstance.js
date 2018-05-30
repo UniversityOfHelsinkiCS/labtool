@@ -18,6 +18,10 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'courseInstanceId',
       onDelete: 'CASCADE'
     })
+
+    TeacherInstance.hasMany(models.AssistantInstance, {
+      foreignKey: 'teacherInstanceId'
+    })
   }
 
   return TeacherInstance
