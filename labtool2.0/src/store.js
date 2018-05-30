@@ -5,6 +5,7 @@ import { handleRequest } from './util/apiConnection'
 
 import courseInstance from './reducers/courseInstanceReducer'
 import login from './reducers/loginReducer'
+import users from './reducers/userReducer'
 import notification from './reducers/notificationReducer'
 import teacherInstance from './reducers/teacherInstanceReducer'
 import studentInstance from './reducers/studentInstanceReducer'
@@ -25,7 +26,8 @@ const reducer = combineReducers({
   teacherInstance: teacherInstance,
   studentInstance: studentInstance,
   selectedInstance: selectedInstance,
-  coursePage: coursePage
+  coursePage: coursePage,
+  users: users
 })
 
 const store = createStore(reducer, composeWithDevTools(applyMiddleware(thunk, handleRequest)))
