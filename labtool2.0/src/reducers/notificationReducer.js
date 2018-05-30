@@ -75,6 +75,11 @@ const notificationReducer = (state = {}, action) => {
         message: 'Added a new admin succesfully!',
         error: false
       }
+    case 'TEACHER_CREATE_FAILURE':
+      return {
+        message: action.response.response.data,
+        error: true
+      }
     default:
       return state
   }
