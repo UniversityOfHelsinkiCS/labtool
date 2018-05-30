@@ -13,7 +13,7 @@ const config = require('./../config/config.js')[env]
 
 module.exports = {
   async findAssistantByStudentInstance(req, res) {
-    helper.controller_before_auth_check_action(req, res)
+    //helper.controller_before_auth_check_action(req, res)
 
     const returnedAssistantInfo = {
       status: undefined,
