@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import { getOneCI, modifyOneCI } from '../../services/courseInstance'
 import { getAllUsers } from '../../services/user'
+import { createOne } from '../../services/teacherinstances'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Redirect } from 'react-router'
 import { clearNotifications } from '../../reducers/notificationReducer'
-import { Table, Container, Header, Button, Label } from 'semantic-ui-react'
+import { Table, Container, Header, Button, Label, Form, Input } from 'semantic-ui-react'
 
 export class ModifyCourseInstaceStaff extends React.Component {
   componentWillMount() {
@@ -21,42 +22,59 @@ export class ModifyCourseInstaceStaff extends React.Component {
     return []
   }
 
+  handleSubmit = userId => async e => {
+    try {
+      e.preventDefault()
+      const teacherInformation = {
+        ohid: this.props.courseId,
+        id: userId
+      }
+      await this.props.createOne(teacherInformation)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   render() {
     return (
       <Container>
         <Header as="h2">Users</Header>
-        <Table singleLine color="yellow">
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell>Name</Table.HeaderCell>
-              <Table.HeaderCell>Status</Table.HeaderCell>
-              <Table.HeaderCell />
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {this.props.users.map(user => (
-              <Table.Row key={user.id}>
-                <Table.Cell>
-                  {user.firsts} {user.lastname}
-                </Table.Cell>
-                <Table.Cell>
-                  {this.getTeacherIds().includes(user.id) ? (
-                    <Label color="yellow" horizontal>
-                      Admin
-                    </Label>
-                  ) : (
-                    <div>
-                      <Label color="yellow" horizontal>
-                        Non-admin
-                      </Label>
-                      <Button size="tiny" color="green">Add to admins</Button>
-                    </div>
-                  )}
-                </Table.Cell>
+        <Form id="myForm" onSubmit={this.handleSubmit}>
+          <Table singleLine color="yellow">
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell>Name</Table.HeaderCell>
+                <Table.HeaderCell>Status</Table.HeaderCell>
+                <Table.HeaderCell />
               </Table.Row>
-            ))}
-          </Table.Body>
-        </Table>
+            </Table.Header>
+            <Table.Body>
+              {this.props.users.map(user => (
+                <Table.Row key={user.id}>
+                  <Table.Cell>
+                    {user.firsts} {user.lastname}
+                  </Table.Cell>
+                  <Table.Cell>
+                    {this.getTeacherIds().includes(user.id) ? (
+                      <Label color="yellow" horizontal>
+                        Admin
+                      </Label>
+                    ) : (
+                      <div>
+                        <Label color="yellow" horizontal>
+                          Non-admin
+                        </Label>
+                        <Button onClick={this.handleSubmit(user.id)} size="tiny" color="green">
+                          a
+                        </Button>
+                      </div>
+                    )}
+                  </Table.Cell>
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table>
+        </Form>
       </Container>
     )
   }
@@ -72,8 +90,9 @@ export class ModifyCourseInstaceStaff extends React.Component {
 //   return []
 // }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
   return {
+    courseId: ownProps.courseId,
     users: state.users,
     selectedInstance: state.selectedInstance
   }
@@ -82,7 +101,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = {
   getAllUsers,
   getOneCI,
-  clearNotifications
+  clearNotifications,
+  createOne
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ModifyCourseInstaceStaff)
