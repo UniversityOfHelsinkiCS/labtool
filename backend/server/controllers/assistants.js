@@ -57,7 +57,7 @@ module.exports = {
         res.status(404).send('Specified student instance could not be found.')
         return
       }
-      if (studentInstance.courseInstanceId === teachersCourseId) {
+      if (studentInstance.courseInstanceId !== teachersCourseId) {
         res.status(400).send('The teacher is not from the same course as this student.')
         return
       }
