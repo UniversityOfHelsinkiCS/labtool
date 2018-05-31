@@ -196,6 +196,16 @@ class CoursePage extends Component {
                   {' '}
                   <a href={this.props.courseData.data.github}>{this.props.courseData.data.github}</a>{' '}
                 </h3>
+                <h3>
+                  Assistant:
+                  {this.props.courseData
+                    ? this.props.courseData.data
+                      ? this.props.courseData.data.teacherInstanceId
+                        ? ' '.concat(this.props.courseData.data.teacherInstanceId)
+                        : ' not given1'
+                      : ' not given2'
+                    : ' not given3'}
+                </h3>
               </Card.Content>
             </Card>
 
