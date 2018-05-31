@@ -12,8 +12,28 @@ const env = process.env.NODE_ENV || 'development'
 const config = require('./../config/config.js')[env]
 
 module.exports = {
+  async create(req, res) {
+    await helper.controller_before_auth_check_action(req, res)
+
+    try {
+      console.log('req.body: ', req.body, '\n\n')
+      const teacherInsId = req.body.teacherInstanceId
+      const studentInsId = req.body.studentInstanceId
+
+      if (req.authenticated.success) {
+        await AssistantInstance.create({
+          studentInstanceId: studentInsId,
+          teacherInstanceId: teacherInsId
+        })
+        res.status(200).send('assistanceInstance created')
+      }
+    } catch (e) {
+      console.log('\n\nassistantInstance creation failed\n\n')
+    }
+  },
+
   async findAssistantByStudentInstance(req, res) {
-    helper.controller_before_auth_check_action(req, res)
+    await helper.controller_before_auth_check_action(req, res)
 
     const returnedAssistantInfo = {
       status: undefined,
@@ -121,4 +141,4 @@ module.exports = {
       res.status(400).send(e)
     }
   }
-}
+
