@@ -2,7 +2,6 @@ const db = require('../models')
 const CourseInstance = require('../models').CourseInstance
 const StudentInstance = require('../models').StudentInstance
 const TeacherInstance = require('../models').TeacherInstance
-const AssistantInstance = require('../models').AssistantInstance
 const User = require('../models').User
 const helper = require('../helpers/course_instance_helper')
 const Sequelize = require('sequelize')
@@ -21,10 +20,19 @@ module.exports = {
       const studentInsId = req.body.studentInstanceId
 
       if (req.authenticated.success) {
-        await AssistantInstance.create({
-          studentInstanceId: studentInsId,
-          teacherInstanceId: teacherInsId
+        // TODO check that user is a teacher on hte course
+        const studentInstance = await StudentInstance.findOne({
+          where: {
+            id: studentInsId
+          }
         })
+        if (studentInstance) {
+          studentInstance.updateAttributes({
+            teacherInstanceId: teacherInsId
+          })
+        } else {
+          res.status(404).send('Specified student instance could not be found.')
+        }
         res.status(200).send('assistanceInstance created')
       }
     } catch (e) {
@@ -48,14 +56,14 @@ module.exports = {
     }
 
     try {
-      const assistantIns = await AssistantInstance.findOne({
+      const studentInstance = await StudentInstance.findOne({
         where: {
-          studentInstanceId: req.params.id
+          id: studentInstanceId
         }
       })
 
-      if (assistantIns) {
-        const assistantId = assistantIns.teacherInstanceId
+      if (studentInstance) {
+        const assistantId = studentInstance.teacherInstanceId
         const assistantAsTeacher = await TeacherInstance.findOne({
           where: {
             id: assistantId

@@ -19,8 +19,9 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'CASCADE'
     })
 
-    TeacherInstance.hasMany(models.AssistantInstance, {
-      foreignKey: 'teacherInstanceId'
+    TeacherInstance.hasMany(models.StudentInstance, {
+      foreignKey: 'teacherInstanceId',
+      as: 'students'
     })
   }
 
