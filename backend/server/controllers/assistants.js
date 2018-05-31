@@ -20,6 +20,7 @@ module.exports = {
       data: undefined
     }
     let studentInstanceId = undefined
+
     try {
       studentInstanceId = req.params.id
     } catch (e) {
@@ -62,7 +63,62 @@ module.exports = {
     }
   },
 
-  async findStudentByTeacherIntance(req, res) {
-    
+  async findStudentsByTeacherInstance(req, res) {
+    helper.controller_before_auth_check_action(req, res)
+
+    const returnedStudentsInfo = {
+      status: undefined,
+      data: undefined
+    }
+    console.log('req.params.id: ', req.params.id)
+
+    try {
+      const assistantInstancesForTeacher = await AssistantInstance.findAll({
+        where: {
+          teacherInstanceId: req.params.id
+        }
+      })
+
+      console.log('', assistantInstancesForTeacher)
+
+      let studentInstanceList = null
+
+      if (assistantInstancesForTeacher) {
+        assistantInstancesForTeacher.forEach(assistantInstance => {
+          console.log('Assistentti-instanssi', assistantInstance)
+
+          const studentAsStudentInstance = StudentInstance.findOne({
+            where: {
+              id: assistantInstance.studentInstanceId
+            }
+          })
+          studentInstanceList.concat(studentAsStudentInstance)
+        })
+        console.log('studentinstancelist:', studentInstanceList)
+        
+        let studentList = null
+        studentInstanceList.forEach(studentInstance => {
+          console.log('Opiskelijainstanssi', studentInstance)
+
+          const studentAsUser = User.findOne({
+            where: {
+              id: studentInstance.userId
+            }
+          })
+          studentList.concat(studentAsUser)
+        })
+
+        returnedStudentsInfo.status = 'teacher has assigned students'
+        returnedStudentsInfo.data = studentList
+
+        res.status(200).send(returnedStudentsInfo)
+      } else {
+        returnedStudentsInfo.status = 'no students assigned for teacher'
+        res.status(200).send(returnedStudentsInfo)
+      }
+    } catch (e) {
+      console.log('\nVirhettä pukkaa\n\n')
+      res.status(400).send(e)
+    }
   }
 }
