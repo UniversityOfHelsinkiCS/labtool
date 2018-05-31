@@ -10,6 +10,7 @@
   weekMaxPoints(pin): -- double, how many points does week have
   currentWeek(pin): -- integer, what is the current week
   ohid(pin): -- Opetushallitus id of the course, is often used instead of the database id
+  teacherInstances: all the teacherinstances related to his course instance
  * 
  */
 const selectedInstanceReducer = (store = [], action) => {
