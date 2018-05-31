@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Table, Card, Form, Comment, List, Header, Label, Message } from 'semantic-ui-react'
+import { Button, Table, Card, Form, Comment, List, Header, Label, Message, Icon, Dropdown } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createOneComment } from '../../services/comment'
@@ -28,6 +28,23 @@ class CoursePage extends Component {
     this.props.getOneCI(this.props.courseId)
     this.props.coursePageInformation(this.props.courseId)
   }
+
+  createDropdownTeachers = (array) => {
+    if (this.props.selectedInstance.teacherInstances !== undefined) {
+      console.log('are we here')
+      this.props.selectedInstance.teacherInstances.map(m =>
+        array.push({
+          text: m.firsts + ' ' + m.lastname,
+          value: m.id
+        })
+      )
+      console.log(array)
+      return array
+    }
+    return null
+  }
+
+
 
   /**
    * Shows all information related to a course from user,
@@ -72,6 +89,9 @@ class CoursePage extends Component {
       return headers
     }
 
+    let dropDownTeachers = []
+    dropDownTeachers = this.createDropdownTeachers(dropDownTeachers)
+
     return (
       <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
         <div className="ui grid">
@@ -82,15 +102,15 @@ class CoursePage extends Component {
             this.props.courseData.role === 'teacher' || this.props.courseData.data !== null ? (
               <p />
             ) : (
-              <div className="sixteen wide column">
-                <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>
-                  {' '}
-                  <Button color="blue" size="large">
-                    Register
+                <div className="sixteen wide column">
+                  <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>
+                    {' '}
+                    <Button color="blue" size="large">
+                      Register
                   </Button>
-                </Link>
-              </div>
-            )
+                  </Link>
+                </div>
+              )
           ) : this.props.courseData.role === 'teacher' ? (
             <div className="sixteen wide column">
               <Message compact>
@@ -98,12 +118,12 @@ class CoursePage extends Component {
               </Message>
             </div>
           ) : (
-            <div className="sixteen wide column">
-              <Message compact>
-                <Message.Header>This course has not been activated.</Message.Header>
-              </Message>
-            </div>
-          )}
+                <div className="sixteen wide column">
+                  <Message compact>
+                    <Message.Header>This course has not been activated.</Message.Header>
+                  </Message>
+                </div>
+              )}
         </div>
 
         {/** Shown when the users role in this course is teacher.*/}
@@ -120,8 +140,8 @@ class CoursePage extends Component {
                           Active
                         </Label>
                       ) : (
-                        ''
-                      )}
+                          ''
+                        )}
                     </div>
                   </Table.Cell>
                   <Table.Cell>Week amount: {this.props.selectedInstance.weekAmount}</Table.Cell>
@@ -165,7 +185,11 @@ class CoursePage extends Component {
                     </Table.Cell>
                     {createIndents(data.weeks, data.id)}
                     <Table.Cell>{allPoints}</Table.Cell>
-                    <Table.Cell> Ohjaaja </Table.Cell>
+                    <Table.Cell><Icon name="pencil" size="small" />
+                      Ohjaaja
+                    <Dropdown placeholder="Select Teacher" fluid search selection options={dropDownTeachers} />
+
+                    </Table.Cell>
 
                     <Table.Cell textAlign="right">
                       <Link to={`/labtool/browsereviews/${this.props.selectedInstance.ohid}/${data.id}`}>
@@ -178,11 +202,12 @@ class CoursePage extends Component {
             </Table>
             <List style={{ float: 'right' }}>
               <List.Item icon={{ name: 'star', color: 'orange' }} content="Review student" />
+              <List.Item icon={{ name: 'pencil' }} content="Change student teacher" />
             </List>
           </div>
         ) : (
-          <div />
-        )}
+            <div />
+          )}
 
         {/** Shown when the users role in this course is student.*/}
         {this.props.courseData.role === 'student' && this.props.courseData.data !== null ? (
@@ -242,8 +267,8 @@ class CoursePage extends Component {
             </Table>
           </div>
         ) : (
-          <div />
-        )}
+            <div />
+          )}
       </div>
     )
   }
