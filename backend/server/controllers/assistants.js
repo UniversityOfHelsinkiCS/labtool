@@ -58,7 +58,7 @@ module.exports = {
         return
       }
       if (studentInstance.courseInstanceId === teachersCourseId) {
-        res.states(400).send('The teacher is not from the same course as this student.')
+        res.status(400).send('The teacher is not from the same course as this student.')
         return
       }
       console.log('\n\nCourses match')
