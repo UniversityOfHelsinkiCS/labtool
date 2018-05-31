@@ -20,7 +20,9 @@ module.exports = {
       const studentInsId = req.body.studentInstanceId
 
       if (req.authenticated.success) {
-        // TODO check that user is a teacher on hte course
+        // TODO check that user is a teacher on the course
+        // TODO check that given teacher and student are on the same course
+        const userAsTeacher = await TeacherInstance.findOne
         const studentInstance = await StudentInstance.findOne({
           where: {
             id: studentInsId
@@ -98,7 +100,7 @@ module.exports = {
       status: undefined,
       data: undefined
     }
-    console.log('req.params.id: ', req.params.id)
+    console.log('\n\nfindStudentsByTeacher req.params.id: ', req.params.id)
 
     try {
       const assistantInstancesForTeacher = await AssistantInstance.findAll({
@@ -107,7 +109,7 @@ module.exports = {
         }
       })
 
-      console.log('', assistantInstancesForTeacher)
+      console.log('\n\nAssistantInstancesForTeacher: ', assistantInstancesForTeacher)
 
       let studentInstanceList = null
 
@@ -149,4 +151,4 @@ module.exports = {
       res.status(400).send(e)
     }
   }
-
+}
