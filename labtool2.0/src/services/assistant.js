@@ -16,3 +16,5 @@ export const getStudentsAssistant = id => {
   const method = 'get'
   return callController(route, prefix, null, method)
 }
+
+export default { associateTeacherToStudent }
