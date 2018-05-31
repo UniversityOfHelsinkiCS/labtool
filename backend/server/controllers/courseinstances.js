@@ -422,11 +422,28 @@ module.exports = {
         })
       }
 
-      const teachers = await TeacherInstance.findAll({
+      let teachers = await TeacherInstance.findAll({
         where: {
           courseInstanceId: course.id
         }
       })
+
+      const names = {}
+      const users = await User.findAll()
+      users.forEach(user => {
+        names[user.id] = {
+          firsts: user.firsts,
+          lastname: user.lastname
+        }
+      })
+
+      teachers = teachers.map(teacher => {
+        teacher.dataValues.firsts = names[teacher.userId].firsts
+        teacher.dataValues.lastname = names[teacher.userId].lastname
+        return teacher
+      })
+
+      console.log(teachers)
 
       course.dataValues['teacherInstances'] = teachers
 
