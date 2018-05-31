@@ -65,6 +65,7 @@ module.exports = {
           username: 'otmopiskelija2',
           firsts: 'Jari Juhani',
           lastname: 'Jokinen',
+          email: 'jari.jokinen@helsinki.fi',
           studentNumber: '014872455',
           createdAt: '2018-03-26',
           updatedAt: '2018-03-26',
@@ -77,6 +78,17 @@ module.exports = {
           lastname: 'Pietarinen',
           email: 'paavo.pietarinen@helsinki.fi',
           studentNumber: '012441578',
+          createdAt: '2018-03-26',
+          updatedAt: '2018-03-26',
+          admin: false
+        },
+        {
+          id: 10031,
+          username: 'superopiskelija',
+          firsts: 'Teräs',
+          lastname: 'Henkilö',
+          email: 'teras.henkilo@helsinki.fi',
+          studentNumber: '014666666',
           createdAt: '2018-03-26',
           updatedAt: '2018-03-26',
           admin: false

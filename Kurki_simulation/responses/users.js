@@ -1,4 +1,4 @@
-const users = [
+exports.users = [
 
   {
     "username": "paaopettaja",
@@ -9,7 +9,7 @@ const users = [
   {
     "username": "tiraopiskelija1",
     "student_number": "014578343",
-    "first_names": "Pekka Matti",
+    "first_names": "Maarit Mirja",
     "last_name": "Opiskelija"
   },
   {
@@ -101,7 +101,19 @@ const users = [
     "student_number": "013554852",
     "first_names": "Ville Jussi",
     "last_name": "Toropainen"
+  },
+  {
+    "username": "superopiskelija",
+    "student_number": "014666666",
+    "first_names": "Teräs",
+    "last_name": "Henkilö"
+  },
+  {
+    "username": "opettajaeinumeroa",
+    "student_number": "012345678",
+    "first_names": "Pelkkä",
+    "last_name": "Opettaja"
   }
+
 ]
 
-exports.users = users

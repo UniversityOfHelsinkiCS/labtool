@@ -161,7 +161,7 @@ class CoursePage extends Component {
                     </Table.Cell>
                     <Table.Cell>
                       <p>{data.projectName}</p>
-                      <a>{data.github}</a>
+                      <a href={data.github}>{data.github}</a>
                     </Table.Cell>
                     {createIndents(data.weeks, data.id)}
                     <Table.Cell>{allPoints}</Table.Cell>

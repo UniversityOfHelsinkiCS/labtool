@@ -72,14 +72,6 @@ class BrowseReviews extends Component {
           for (var i = 0; i < this.props.selectedInstance.weekAmount; i++) {
             const weeks = student.weeks.find(week => week.weekNumber == i + 1)
             if (weeks) {
-              if (this.state.activeIndex === i) {
-                var pointsAndComment = {
-                  'points': weeks.points,
-                  'comment': weeks.feedback
-                }
-                console.log('pointsAndComment Browse reviews: ', JSON.stringify(pointsAndComment))
-                localStorage.setItem('points and comment', JSON.stringify(pointsAndComment))
-              }
               headers.push(
                 <Accordion key={i} fluid styled>
                   <Accordion.Title active={activeIndex === i} index={i} onClick={this.handleClick}>
