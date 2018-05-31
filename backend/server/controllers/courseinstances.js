@@ -406,23 +406,34 @@ module.exports = {
    * @param res
    * @returns {Promise<Model>}
    */
-  retrieveCourseStuff(req, res) {
+  async retrieveCourseStuff(req, res) {
     helper.controller_before_auth_check_action(req, res)
 
-    return CourseInstance.findOne({
-      where: {
-        ohid: req.params.ohid
-      }
-    })
-      .then(course => {
-        if (!course) {
-          return res.status(404).send({
-            message: 'Course not Found'
-          })
+    try {
+      const course = await CourseInstance.findOne({
+        where: {
+          ohid: req.params.ohid
         }
-        return res.status(200).send(course)
       })
-      .catch(error => res.status(400).send(error))
+
+      if (!course) {
+        return res.status(404).send({
+          message: 'Course not Found'
+        })
+      }
+
+      const teachers = await TeacherInstance.findAll({
+        where: {
+          courseInstanceId: course.id
+        }
+      })
+
+      course.dataValues['teacherInstances'] = teachers
+
+      return res.status(200).send(course)
+    } catch (exception) {
+      return res.status(400).send(exception)
+    }
   },
 
   /**
