@@ -42,11 +42,18 @@ class BrowseReviews extends Component {
       console.log(error)
     }
   }
-
+  
   render() {
+    const studentData = this.props.courseData.data.filter(dataArray => dataArray.userId == this.props.ownProps.studentInstance)
+    // After that studentData[0] contains the same as this.props.courseData.data[i], where i is index of
+    // ...data[i] array.
+    console.log('Tämän pitäisi sisältää taulukko this.props.courseData.data[i] ', studentData)
+    console.log('Tässä tulee etunimet', studentData[0].User.firsts)
+
     const createHeaders = (studhead, studentInstance) => {
       let headers = []
       studhead.data.map(student => {
+        // studentInstance is id of student. Type: String
         if (student.id == studentInstance) {
           headers.push(
             <Card fluid color="yellow">
@@ -54,10 +61,10 @@ class BrowseReviews extends Component {
                 <h2>
                   {student.User.firsts} {student.User.lastname}
                 </h2>
-                <h3> {this.props.courseData.data[0].projectName} </h3>
+                <h3> {studentData[0].projectName} </h3>
                 <h3>
                   {' '}
-                  <a href={this.props.courseData.data[0].github}>{this.props.courseData.data[0].github}</a>{' '}
+                  <a href={studentData[0].github}>{studentData[0].github}</a>{' '}
                 </h3>
               </Card.Content>
             </Card>
@@ -176,6 +183,8 @@ const mapStateToProps = (state, ownProps) => {
     user: state.user,
     selectedInstance: state.selectedInstance,
     courseData: state.coursePage
+
+
   }
 }
 
