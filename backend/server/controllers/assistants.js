@@ -84,6 +84,8 @@ module.exports = {
   },
 
   async findStudentsByTeacherInstance(req, res) {
+    console.log('Etsitään assarin oppilaat')
+
     helper.controller_before_auth_check_action(req, res)
 
     const returnedStudentsInfo = {
@@ -93,43 +95,33 @@ module.exports = {
     console.log('req.params.id: ', req.params.id)
 
     try {
-      const assistantInstancesForTeacher = await AssistantInstance.findAll({
+      AssistantInstance.findAll({
         where: {
           teacherInstanceId: req.params.id
         }
+      }).then(assistantInstances => {
+        assistantInstances.forEach(instance => {
+          StudentInstance.findOne({
+            where: {
+              id: instance.id
+            }
+          }).then(studentInstances => {
+            studentInstances.forEach(instance => {
+              User.findOne({
+                where: {
+                  id: instance.userId
+                }
+              })
+            })
+          })
+        })
       })
 
-      console.log('', assistantInstancesForTeacher)
+      console.log(typeof usersForTeacher)
 
-      let studentInstanceList = null
-
-      if (assistantInstancesForTeacher) {
-        assistantInstancesForTeacher.forEach(assistantInstance => {
-          console.log('Assistentti-instanssi', assistantInstance)
-
-          const studentAsStudentInstance = StudentInstance.findOne({
-            where: {
-              id: assistantInstance.studentInstanceId
-            }
-          })
-          studentInstanceList.concat(studentAsStudentInstance)
-        })
-        console.log('studentinstancelist:', studentInstanceList)
-        
-        let studentList = null
-        studentInstanceList.forEach(studentInstance => {
-          console.log('Opiskelijainstanssi', studentInstance)
-
-          const studentAsUser = User.findOne({
-            where: {
-              id: studentInstance.userId
-            }
-          })
-          studentList.concat(studentAsUser)
-        })
-
+      if (usersForTeacher) {
         returnedStudentsInfo.status = 'teacher has assigned students'
-        returnedStudentsInfo.data = studentList
+        returnedStudentsInfo.data = usersForTeacher
 
         res.status(200).send(returnedStudentsInfo)
       } else {
@@ -141,4 +133,4 @@ module.exports = {
       res.status(400).send(e)
     }
   }
-
+}
