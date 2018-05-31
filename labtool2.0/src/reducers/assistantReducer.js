@@ -1,4 +1,4 @@
-export const addAssistant = (store = [], action) => {
+export const addAssistantReducer = (store = [], action) => {
   switch (action.type) {
     case 'ASSOCIATE_TEACHER_AND_STUDENT_SUCCESS':
       return action.response
@@ -7,7 +7,7 @@ export const addAssistant = (store = [], action) => {
   }
 }
 
-export const addAssistant = (store = [], action) => {
+export const getAssistantForStudentRecuder = (store = [], action) => {
     switch (action.type) {
       case 'GET_ASSISTANT_FOR_STUDENT_SUCCESS':
         return action.response
