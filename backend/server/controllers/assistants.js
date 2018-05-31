@@ -19,25 +19,58 @@ module.exports = {
       const teacherInsId = req.body.teacherInstanceId
       const studentInsId = req.body.studentInstanceId
 
-      if (req.authenticated.success) {
-        // TODO check that user is a teacher on the course
-        // TODO check that given teacher and student are on the same course
-        const userAsTeacher = await TeacherInstance.findOne
-        const studentInstance = await StudentInstance.findOne({
-          where: {
-            id: studentInsId
-          }
-        })
-        if (studentInstance) {
-          console.log('\n\nFound the student instance')
-          studentInstance.updateAttributes({
-            teacherInstanceId: teacherInsId
-          })
-        } else {
-          res.status(404).send('Specified student instance could not be found.')
-        }
-        res.status(200).send('assistanceInstance created')
+      if (!req.authenticated.success) {
+        res.status(400).send('you have to be authenticated to do this')
       }
+
+      const requestMakerId = req.decoded.id
+      const requestMakerAsTeacher = await TeacherInstance.findOne({
+        where: {
+          userId: requestMakerId
+        }
+      })
+      // check that request maker is a teacher
+      if (!requestMakerAsTeacher) {
+        res.status(400).send('You have to be a teacher to give assistants to student.')
+      }
+
+      const requestMakersCoursesId = requestMakerAsTeacher.courseInstanceId
+      const givenTeachersTeacherInstance = await TeacherInstance.findOne({
+        where: {
+          id: teacherInsId
+        }
+      })
+      //check that there is a teacher with the given id
+      if (!givenTeachersTeacherInstance) {
+        res.status(404).send('There is no teacher with the given teacherInstanceId')
+      }
+
+      const teachersCourseId = givenTeachersTeacherInstance.courseInstanceId
+      // check that request maker is a teacher on the same course as the given teacher
+      if (teachersCourseId !== requestMakersCoursesId) {
+        res.status(400).send('You have to be an assistant or teacher in the same course as the teacher you are adding.')
+      }
+      const studentInstance = await StudentInstance.findOne({
+        where: {
+          id: studentInsId
+        }
+      })
+      // check that there is a student with the given id
+      if (!studentInstance) {
+        res.status(404).send('Specified student instance could not be found.')
+      }
+
+      console.log('\n\nFound the student instance')
+      // check that the given teacher's course matches given student's course
+      if (studentInstance.courseInstanceId === teachersCourseId) {
+        console.log('\n\nCourses do not match')
+        res.states(400).send('The teacher is not from the same course as this student.')
+      }
+      console.log('\n\nCourses match')
+      studentInstance.updateAttributes({
+        teacherInstanceId: teacherInsId
+      })
+      res.status(200).send('assistanceInstance created')
     } catch (e) {
       console.log('\n\nassistantInstance creation failed\n\n')
     }
