@@ -196,16 +196,32 @@ class CoursePage extends Component {
                   {' '}
                   <a href={this.props.courseData.data.github}>{this.props.courseData.data.github}</a>{' '}
                 </h3>
-                <h3>
-                  Assistant:
-                  {this.props.courseData
-                    ? this.props.courseData.data
-                      ? this.props.courseData.data.teacherInstanceId
-                        ? ' '.concat(this.props.courseData.data.teacherInstanceId)
-                        : ' not given1'
-                      : ' not given2'
-                    : ' not given3'}
-                </h3>
+
+                {this.props.courseData ? (
+                  this.props.courseData.data ? (
+                    this.props.courseData.data.teacherInstanceId ? (
+                      this.props.selectedInstance ? (
+                        this.props.selectedInstance.teacherInstances ? (
+                          this.props.selectedInstance.teacherInstances.filter(teacher => teacher.id === this.props.courseData.data.teacherInstanceId).map(teacher => (
+                            <h3>
+                              Assistant: {teacher.firsts} {teacher.lastname}
+                            </h3>
+                          ))
+                        ) : (
+                          <h3>Assistant: not given</h3>
+                        )
+                      ) : (
+                        <h3>Assistant: not given</h3>
+                      )
+                    ) : (
+                      <h3>Assistant: not given</h3>
+                    )
+                  ) : (
+                    <h3>Assistant: not given</h3>
+                  )
+                ) : (
+                  <h3>Assistant: not given</h3>
+                )}
               </Card.Content>
             </Card>
 
