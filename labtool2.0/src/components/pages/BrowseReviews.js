@@ -42,11 +42,13 @@ class BrowseReviews extends Component {
       console.log(error)
     }
   }
-
+  
   render() {
+
     const createHeaders = (studhead, studentInstance) => {
       let headers = []
       studhead.data.map(student => {
+        // studentInstance is id of student. Type: String
         if (student.id == studentInstance) {
           headers.push(
             <Card fluid color="yellow">
@@ -54,10 +56,10 @@ class BrowseReviews extends Component {
                 <h2>
                   {student.User.firsts} {student.User.lastname}
                 </h2>
-                <h3> {this.props.courseData.data[0].projectName} </h3>
+                <h3> {student.projectName} </h3>
                 <h3>
                   {' '}
-                  <a href={this.props.courseData.data[0].github}>{this.props.courseData.data[0].github}</a>{' '}
+                  <a href={student.github}>{student.github}{' '}</a>
                 </h3>
               </Card.Content>
             </Card>
@@ -168,6 +170,8 @@ const mapStateToProps = (state, ownProps) => {
     user: state.user,
     selectedInstance: state.selectedInstance,
     courseData: state.coursePage
+
+
   }
 }
 
