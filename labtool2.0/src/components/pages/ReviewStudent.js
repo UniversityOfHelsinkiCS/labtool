@@ -48,19 +48,18 @@ class ReviewStudent extends Component {
   render() {  
 
     const studentData = this.props.courseData.data.filter(dataArray => dataArray.userId == this.props.ownProps.studentInstance)
-    console.log('studentData[0]', studentData[0])
-    console.log('studentData[0].weeks', studentData[0].weeks)
-    console.log('studentData[0].weeks[2].weekNumber', studentData[0].weeks[2].weekNumber)
+    // console.log('studentData[0]', studentData[0])
+    // console.log('studentData[0].weeks', studentData[0].weeks)
     
-    console.log('this.props.weekNumber', this.props.weekNumber)
+    // console.log('this.props.weekNumber', this.props.weekNumber)
     const weekData = studentData[0].weeks.filter(theWeek => theWeek.weekNumber == this.props.weekNumber)
 
-    console.log('Tämä on weekData -olio:', weekData[0])
+    // console.log('Tämä on weekData -olio:', weekData[0])
     var pointsAndComment = JSON.parse(localStorage.getItem('points and comment'))
     localStorage.removeItem('points and comment')
 
-    console.log(this.props.selectedInstance)
-    console.log('coursePage instanssi on courseData täällä: ', this.props.courseData)
+    // console.log(this.props.selectedInstance)
+    // console.log('coursePage instanssi on courseData täällä: ', this.props.courseData)
     {/* const currentWeek = this.props.selectedInstance.currentWeek */}
 {/*}
     console.log('Viikko on this.props.weekNumber: ', this.props.weekNumber)
