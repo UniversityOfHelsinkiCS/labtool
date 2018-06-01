@@ -4,9 +4,17 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createOneComment } from '../../services/comment'
 import { getOneCI, coursePageInformation } from '../../services/courseInstance'
+import { associateTeacherToStudent } from '../../services/assistant'
 import ReactMarkdown from 'react-markdown'
 
-class CoursePage extends Component {
+class CoursePage extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      hidden: 'none',
+      selectedTeacher: ''
+    }
+  }
   handleSubmit = async e => {
     e.preventDefault()
     const content = {
@@ -29,22 +37,46 @@ class CoursePage extends Component {
     this.props.coursePageInformation(this.props.courseId)
   }
 
-  createDropdownTeachers = (array) => {
+  changeHidden = () => {
+    return () => {
+      this.setState({
+        hidden: this.state.hidden === 'none' ? '' : 'none'
+      })
+    }
+  }
+
+  changeSelectedTeacher = () => async e => {
+ 
+    this.setState({
+      selectedTeacher: parseInt(e.target.value, 10)
+    })
+  }
+
+  updateTeacher = (id) => async e => {
+    try {
+      e.preventDefault()
+      const data = {
+        studentInstanceId: id,
+        teacherInstanceId: this.state.selectedTeacher
+      }
+      await associateTeacherToStudent(data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  createDropdownTeachers = array => {
     if (this.props.selectedInstance.teacherInstances !== undefined) {
-      console.log('are we here')
       this.props.selectedInstance.teacherInstances.map(m =>
         array.push({
           text: m.firsts + ' ' + m.lastname,
           value: m.id
         })
       )
-      console.log(array)
       return array
     }
-    return null
+    return []
   }
-
-
 
   /**
    * Shows all information related to a course from user,
@@ -185,10 +217,34 @@ class CoursePage extends Component {
                     </Table.Cell>
                     {createIndents(data.weeks, data.id)}
                     <Table.Cell>{allPoints}</Table.Cell>
-                    <Table.Cell><Icon name="pencil" size="small" />
-                      Ohjaaja
-                    <Dropdown placeholder="Select Teacher" fluid search selection options={dropDownTeachers} />
-
+                    <Table.Cell>
+                      {this.props.courseData.data.teacherInstanceId && this.props.selectedInstance.teacherInstances ? (
+                        this.props.selectedInstance.teacherInstances.filter(teacher => teacher.id === this.props.courseData.data.teacherInstanceId).map(teacher => (
+                          <p key={data.id}>
+                            Assistant: {teacher.firsts} {teacher.lastname}
+                          </p>
+                        ))
+                      ) : (
+                          <p>Assistant: not given</p>
+                        )}
+                      <Icon onClick={this.changeHidden()} name="pencil" size="small" />
+                      {this.state.hidden === 'none' ? (
+                        <div>
+                          <select onChange={this.changeSelectedTeacher()}>
+                            {dropDownTeachers.map(m => (
+                              <option key={m.value} value={m.value}>
+                                {m.text}
+                              </option>
+                            ))}
+                          </select>
+                          {/* <Dropdown onChange={this.changeSelectedTeacher()} placeholder="Select Teacher" fluid search selection options={dropDownTeachers} /> */}
+                          <Button onClick={this.updateTeacher(data.id, data.teacherInstanceId)} size="small">
+                            Change instructor
+                          </Button>
+                        </div>
+                      ) : (
+                          <div>{data.id}</div>
+                        )}
                     </Table.Cell>
 
                     <Table.Cell textAlign="right">
@@ -229,8 +285,8 @@ class CoursePage extends Component {
                     </h3>
                   ))
                 ) : (
-                  <h3>Assistant: not given</h3>
-                )}
+                    <h3>Assistant: not given</h3>
+                  )}
               </Card.Content>
             </Card>
 
