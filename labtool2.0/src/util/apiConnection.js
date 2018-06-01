@@ -69,6 +69,7 @@ export const handleRequest = store => next => action => {
   next(action)
   const { payload } = action
   if (payload) {
+    console.log('WIPII')
     callApi(payload.route, payload.method, payload.data, payload.prefix, store.getState().user.token)
       .then(res => {
         store.dispatch({ type: `${payload.prefix}SUCCESS`, response: res.data })

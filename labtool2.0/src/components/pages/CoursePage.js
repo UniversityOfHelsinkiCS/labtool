@@ -46,20 +46,19 @@ class CoursePage extends React.Component {
   }
 
   changeSelectedTeacher = () => async e => {
- 
     this.setState({
       selectedTeacher: parseInt(e.target.value, 10)
     })
   }
 
-  updateTeacher = (id) => async e => {
+  updateTeacher = id => async e => {
     try {
       e.preventDefault()
       const data = {
         studentInstanceId: id,
         teacherInstanceId: this.state.selectedTeacher
       }
-      await associateTeacherToStudent(data)
+      await this.props.associateTeacherToStudent(data)
     } catch (error) {
       console.log(error)
     }
@@ -134,15 +133,15 @@ class CoursePage extends React.Component {
             this.props.courseData.role === 'teacher' || this.props.courseData.data !== null ? (
               <p />
             ) : (
-                <div className="sixteen wide column">
-                  <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>
-                    {' '}
-                    <Button color="blue" size="large">
-                      Register
+              <div className="sixteen wide column">
+                <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>
+                  {' '}
+                  <Button color="blue" size="large">
+                    Register
                   </Button>
-                  </Link>
-                </div>
-              )
+                </Link>
+              </div>
+            )
           ) : this.props.courseData.role === 'teacher' ? (
             <div className="sixteen wide column">
               <Message compact>
@@ -150,12 +149,12 @@ class CoursePage extends React.Component {
               </Message>
             </div>
           ) : (
-                <div className="sixteen wide column">
-                  <Message compact>
-                    <Message.Header>This course has not been activated.</Message.Header>
-                  </Message>
-                </div>
-              )}
+            <div className="sixteen wide column">
+              <Message compact>
+                <Message.Header>This course has not been activated.</Message.Header>
+              </Message>
+            </div>
+          )}
         </div>
 
         {/** Shown when the users role in this course is teacher.*/}
@@ -172,8 +171,8 @@ class CoursePage extends React.Component {
                           Active
                         </Label>
                       ) : (
-                          ''
-                        )}
+                        ''
+                      )}
                     </div>
                   </Table.Cell>
                   <Table.Cell>Week amount: {this.props.selectedInstance.weekAmount}</Table.Cell>
@@ -218,19 +217,20 @@ class CoursePage extends React.Component {
                     {createIndents(data.weeks, data.id)}
                     <Table.Cell>{allPoints}</Table.Cell>
                     <Table.Cell>
-                      {this.props.courseData.data.teacherInstanceId && this.props.selectedInstance.teacherInstances ? (
-                        this.props.selectedInstance.teacherInstances.filter(teacher => teacher.id === this.props.courseData.data.teacherInstanceId).map(teacher => (
+                      {data.teacherInstanceId && this.props.selectedInstance.teacherInstances ? (
+                        this.props.selectedInstance.teacherInstances.filter(teacher => teacher.id === data.teacherInstanceId).map(teacher => (
                           <p key={data.id}>
-                            Assistant: {teacher.firsts} {teacher.lastname}
+                            Assistant: {teacher.firsts} {teacher.lastname} 
                           </p>
                         ))
                       ) : (
-                          <p>Assistant: not given</p>
-                        )}
+                        <p>Assistant: not given</p>
+                      )}
                       <Icon onClick={this.changeHidden()} name="pencil" size="small" />
-                      {this.state.hidden === 'none' ? (
+                      {this.state.hidden === '' ? (
                         <div>
                           <select onChange={this.changeSelectedTeacher()}>
+                          <option value="" disabled selected>Select your option</option>
                             {dropDownTeachers.map(m => (
                               <option key={m.value} value={m.value}>
                                 {m.text}
@@ -243,8 +243,8 @@ class CoursePage extends React.Component {
                           </Button>
                         </div>
                       ) : (
-                          <div>{data.id}</div>
-                        )}
+                        <div></div>
+                      )}
                     </Table.Cell>
 
                     <Table.Cell textAlign="right">
@@ -262,8 +262,8 @@ class CoursePage extends React.Component {
             </List>
           </div>
         ) : (
-            <div />
-          )}
+          <div />
+        )}
 
         {/** Shown when the users role in this course is student.*/}
         {this.props.courseData.role === 'student' && this.props.courseData.data !== null ? (
@@ -285,8 +285,8 @@ class CoursePage extends React.Component {
                     </h3>
                   ))
                 ) : (
-                    <h3>Assistant: not given</h3>
-                  )}
+                  <h3>Assistant: not given</h3>
+                )}
               </Card.Content>
             </Card>
 
@@ -333,8 +333,8 @@ class CoursePage extends React.Component {
             </Table>
           </div>
         ) : (
-            <div />
-          )}
+          <div />
+        )}
       </div>
     )
   }
@@ -351,4 +351,4 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps, { createOneComment, getOneCI, coursePageInformation })(CoursePage)
+export default connect(mapStateToProps, { createOneComment, getOneCI, coursePageInformation, associateTeacherToStudent })(CoursePage)

@@ -1,7 +1,7 @@
 import { callController } from '../util/apiConnection'
 
 export const associateTeacherToStudent = data => {
-  console.log('ae re h we')
+  console.log(data)
   const route = `/course/assistant/create`
   const prefix = 'ASSOCIATE_TEACHER_AND_STUDENT_'
   const method = 'post'
