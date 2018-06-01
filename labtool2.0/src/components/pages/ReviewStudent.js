@@ -85,21 +85,23 @@ class ReviewStudent extends Component {
 
     {/* Here we try to find index of this.props.courseData.data[] */}
 
+    {/*}
     var i = this.props.courseData.data.length
     while (i > 0) {
       i--
       console.log('Käydään läpi data-arraytä indeksissä ', i)
       console.log('...data[', i, '].courseInstanceId = ', this.props.courseData.data[i].courseInstanceId)
-      console.log('...data[',i,'].userId = ', this.props.courseData.data[i].userId)
+      console.log('...data[',i,'].id = ', this.props.courseData.data[i].id)
       console.log('this.props.ownProps.studentInstance = ', this.props.ownProps.studentInstance)
       console.log('------------------')
       if (this.props.courseData.data[i].courseInstanceId === this.props.selectedInstance.id 
-        && this.props.courseData.data[i].userId == this.props.ownProps.studentInstance) {
+        && this.props.courseData.data[i].id == this.props.ownProps.studentInstance) {
           indexOfDataArray = i
           console.log('Asetettiin indexOfDataArrayn arvoksi ', indexOfDataArray)
           break
         }
     }
+  */}
     {/*}
     if (indexOfDataArray !== null) {
       theFirstNames = this.props.courseData.data[indexOfDataArray].User.firsts
@@ -107,15 +109,6 @@ class ReviewStudent extends Component {
       thePoints = this.props.courseData.data[indexOfDataArray].weeks[this.props.weekNumber - 1].points
       theFeedback = this.props.courseData.data[indexOfDataArray].weeks[this.props.weekNumber - 1].feedback
   */}
-    var thePoints = null
-    var theFeedback = ''
-    try {
-      var thePoints = this.props.courseData.data[indexOfDataArray].weeks[this.props.weekNumber - 1].points
-      var theFeedback = this.props.courseData.data[indexOfDataArray].weeks[this.props.weekNumber - 1].feedback
-    } catch (e) {
-      console.log(e)
-    }
-
     return (
       <div className="ReviewStudent" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
         <h2> {this.props.selectedInstance.name}</h2>
