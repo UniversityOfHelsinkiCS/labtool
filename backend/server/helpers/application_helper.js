@@ -126,6 +126,9 @@ function axiosCourseBla(hid) {
       'Content-Type': 'application/json',
       Authorization: process.env.TOKEN
     },
+    params: {
+      testing: process.env.INCLUDE_TESTERS //Set the environment variable if you want to include test users from Kurki.
+    },
     httpsAgent: new https.Agent({
       rejectUnauthorized: false // if you don't like this then please go ahead and do it yourself better.
     })
