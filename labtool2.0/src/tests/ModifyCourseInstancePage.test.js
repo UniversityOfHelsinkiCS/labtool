@@ -5,9 +5,9 @@ import { ModifyCourseInstancePage } from '../components/pages/ModifyCourseInstan
 import ConnectecModifyCourseInstancePage from '../components/pages/ModifyCourseInstancePage'
 import { shallowToJson } from 'enzyme-to-json'
 import { shallow } from 'enzyme'
-import { Form } from 'semantic-ui-react';
+import { Form } from 'semantic-ui-react'
 
-describe.only('<ModifyCourseInstancePage />', () => {
+describe('<ModifyCourseInstancePage />', () => {
   let wrapper
   let output = {
     id: 1,
@@ -23,7 +23,7 @@ describe.only('<ModifyCourseInstancePage />', () => {
   let mym = jest.fn()
 
   beforeEach(() => {
-    wrapper = shallow(<ModifyCourseInstancePage getOneCI={mym} clearNotifications={mym} output={output} />)
+    wrapper = shallow(<ModifyCourseInstancePage getOneCI={mym} clearNotifications={mym} output={output} selectedInstance={output.ohid} />)
   })
 
   describe('Modify Instance Component', () => {

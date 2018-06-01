@@ -1,5 +1,5 @@
 import courseInstanceReducer from '../reducers/courseInstanceReducer'
-import deepFreeze  from 'deep-freeze'
+import deepFreeze from 'deep-freeze'
 
 // Here we test that the mapping that I do in the reducer is pure (deepfreeze for that)
 // and that the fields that I added are in the new state, and that they contain the correct information

@@ -1,16 +1,17 @@
-import React from 'react'
+import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import App from '../App'
 import { CoursePage } from '../components/pages/CoursePage'
+import ConnectedCoursePage from '../components/pages/CoursePage'
+import { shallowToJson } from 'enzyme-to-json'
 import { shallow } from 'enzyme'
+import { Form } from 'semantic-ui-react'
 
-describe.only('<CoursePage />', () => {
+describe('<CoursePage />', () => {
   let wrapper
-  let course = {
+  let output = {
     id: 10011,
     name: 'Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit',
-    start: '2018-03-11T21:00:00.000Z',
-    end: '2018-04-29T21:00:00.000Z',
     active: true,
     weekAmount: 7,
     weekMaxPoints: 8,
@@ -45,8 +46,22 @@ describe.only('<CoursePage />', () => {
       userId: 10011,
       teacherInstanceId: 10011,
       weeks: [
-        { id: 10002, points: 2, weekNumber: 2, feedback: 'Melko hienoa työtä!', createdAt: '2018-03-26T00:00:00.000Z', updatedAt: '2018-03-26T00:00:00.000Z', studentInstanceId: 10011, comments: [] },
-        { id: 10001, points: 2, weekNumber: 1, feedback: 'yvä', createdAt: '2018-03-26T00:00:00.000Z', updatedAt: '2018-06-01T09:57:10.180Z', studentInstanceId: 10011, comments: [] },
+        {
+          id: 10002,
+          points: 2,
+          weekNumber: 2,
+          feedback: 'Melko hienoa työtä!',
+          studentInstanceId: 10011,
+          comments: []
+        },
+        {
+          id: 10001,
+          points: 2,
+          weekNumber: 1,
+          feedback: 'yvä',
+          studentInstanceId: 10011,
+          comments: []
+        },
         {
           id: 10003,
           points: 3,
@@ -55,7 +70,14 @@ describe.only('<CoursePage />', () => {
           studentInstanceId: 10011,
           comments: []
         },
-        { id: 10004, points: 3, weekNumber: 4, feedback: 'Hyvin menee!', createdAt: '2018-03-26T00:00:00.000Z', updatedAt: '2018-03-26T00:00:00.000Z', studentInstanceId: 10011, comments: [] }
+        {
+          id: 10004,
+          points: 3,
+          weekNumber: 4,
+          feedback: 'Hyvin menee!',
+          studentInstanceId: 10011,
+          comments: []
+        }
       ],
       User: {
         id: 10011,
@@ -68,4 +90,23 @@ describe.only('<CoursePage />', () => {
       }
     }
   }
+  let call = jest.fn()
+
+  // beforeEach(() => {
+  //   wrapper = shallow(<ConnectedCoursePage getOneCI={call} output={output} selectedInstance={output.ohid} />)
+  // })
+
+  beforeEach(() => {
+    wrapper = shallow(<CoursePage getOneCI={call} clearNotifications={call} output={output} selectedInstance={output.ohid} />)
+  })
+
+  describe('Course Page Component', () => {
+    it('is ok', () => {
+      true
+    })
+
+    it('should render without throwing an error', () => {
+      expect(wrapper.find('.CoursePage').exists()).toEqual(true)
+    })
+  })
 })
