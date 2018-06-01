@@ -35,7 +35,6 @@ class CoursePage extends Component {
    * is a teacher or student on a course.
    */
   render() {
-    let allPoints = 0
     const createIndents = (data, siId) => {
       const indents = []
 
@@ -48,7 +47,6 @@ class CoursePage extends Component {
 
         for (var j = 0; j < data.length; j++) {
           if (i + 1 === data[j].weekNumber) {
-            allPoints += data[j].points
             pushattava = (
               <Table.Cell key={i}>
                 <p>{data[j].points}</p>
@@ -164,7 +162,11 @@ class CoursePage extends Component {
                       <a href={data.github}>{data.github}</a>
                     </Table.Cell>
                     {createIndents(data.weeks, data.id)}
-                    <Table.Cell>{allPoints}</Table.Cell>
+                    <Table.Cell>
+                      {data.weeks.map(week => week.points).reduce((a, b) => {
+                        return a + b
+                      }, 0)}
+                    </Table.Cell>
                     <Table.Cell> Ohjaaja </Table.Cell>
 
                     <Table.Cell textAlign="right">
