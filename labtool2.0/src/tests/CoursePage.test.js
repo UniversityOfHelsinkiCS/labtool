@@ -1,11 +1,12 @@
-import React, { Component } from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom'
 import App from '../App'
-import { CoursePage } from '../components/pages/CoursePage'
+import CoursePage from '../components/pages/CoursePage'
 import ConnectedCoursePage from '../components/pages/CoursePage'
 import { shallowToJson } from 'enzyme-to-json'
 import { shallow } from 'enzyme'
 import { Form } from 'semantic-ui-react'
+import { getOneCI } from '../services/courseInstance';
 
 describe('<CoursePage />', () => {
   let wrapper
@@ -16,25 +17,7 @@ describe('<CoursePage />', () => {
     weekAmount: 7,
     weekMaxPoints: 8,
     currentWeek: 1,
-    ohid: 'TKT20010.2018.K.A.1',
-    teacherInstances: [
-      {
-        id: 10001,
-        admin: true,
-        userId: 10010,
-        courseInstanceId: 10011,
-        firsts: 'Pää',
-        lastname: 'Opettaja'
-      },
-      {
-        id: 10011,
-        admin: true,
-        userId: 10015,
-        courseInstanceId: 10011,
-        firsts: 'Ossi Ohjaaja',
-        lastname: 'Mutikainen'
-      }
-    ]
+    ohid: 'TKT20010.2018.K.A.1'
   }
   let student = {
     role: 'student',
@@ -92,12 +75,8 @@ describe('<CoursePage />', () => {
   }
   let call = jest.fn()
 
-  // beforeEach(() => {
-  //   wrapper = shallow(<ConnectedCoursePage getOneCI={call} output={output} selectedInstance={output.ohid} />)
-  // })
-
   beforeEach(() => {
-    wrapper = shallow(<CoursePage getOneCI={call} clearNotifications={call} output={output} selectedInstance={output.ohid} />)
+    wrapper = shallow(<CoursePage createOneComment={call} getOneCI={call} coursePageInformation={output.ohid} />)
   })
 
   describe('Course Page Component', () => {
