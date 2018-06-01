@@ -79,7 +79,7 @@ describe('<CoursePage />', () => {
     wrapper = shallow(<CoursePage createOneComment={call} getOneCI={call} coursePageInformation={output.ohid} />)
   })
 
-  describe('Course Page Component', () => {
+  describe.skip('Course Page Component', () => {
     it('is ok', () => {
       true
     })
