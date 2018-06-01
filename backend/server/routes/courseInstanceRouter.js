@@ -8,8 +8,8 @@ module.exports = app => {
   app.post('/api/course/register/:ohid', courseInstanceController.registerToCourseInstance)
   app.post('/api/course/student', courseInstanceController.findByUserStudentInstance)
   app.post('/api/course/teacher', courseInstanceController.findByUserTeacherInstance)
-  app.get('/api/course/assistant/student/:id', assistantController.findAssistantByStudentInstance)
-  app.get('/api/course/assistant/teacher/:id', assistantController.findStudentsByTeacherInstance)
+  app.get('/api/course/assistant/student/:id', assistantController.findAssistantByStudentInstance) // Get assistant for studentInstance
+  app.get('/api/course/assistant/teacher/:id', assistantController.findStudentsByTeacherInstance) // Get student for assistantInstance
   app.post('/api/course/assistant/create', assistantController.create)
   app.get('/api/courseinstances', courseInstanceController.list) // Skolen kurssit on julkista tietoa eli periaattessa ok.
   app.get('/api/courseinstances/:ohid', courseInstanceController.retrieve) // En tiedä joten ei käy

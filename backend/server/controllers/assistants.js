@@ -123,6 +123,8 @@ module.exports = {
   },
 
   async findStudentsByTeacherInstance(req, res) {
+    console.log('Etsitään assarin oppilaat')
+
     helper.controller_before_auth_check_action(req, res)
     try {
       const teacherInsId = req.params.id
