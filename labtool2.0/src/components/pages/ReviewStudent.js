@@ -47,7 +47,11 @@ class ReviewStudent extends Component {
 
   render() {  
 
-    const studentData = this.props.courseData.data.filter(dataArray => dataArray.userId == this.props.ownProps.studentInstance)
+    const studentData = this.props.courseData.data.filter(
+      dataArray => dataArray.id == this.props.ownProps.studentInstance)
+    console.log('studentData[0].id: ', studentData[0].id)
+    console.log('studentData[0].userId ', studentData[0].userId)
+    console.log('studentData[0].studentInstance ', studentData[0].studentInstance)
     // console.log('studentData[0]', studentData[0])
     // console.log('studentData[0].weeks', studentData[0].weeks)
     
