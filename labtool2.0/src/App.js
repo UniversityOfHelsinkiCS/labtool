@@ -13,6 +13,7 @@ import CoursePage from './components/pages/CoursePage'
 import Email from './components/pages/Email.js'
 import LoginPage from './components/pages/LoginPage.js'
 import ModifyCourseInstancePage from './components/pages/ModifyCourseInstancePage'
+import ModifyCourseInstanceStaff from './components/pages/ModifyCourseInstanceStaff'
 import ReviewStudent from './components/pages/ReviewStudent'
 import BrowseReviews from './components/pages/BrowseReviews'
 import MyPage from './components/pages/MyPage'
@@ -78,6 +79,7 @@ class App extends Component {
               render={({ match, history }) => <ReviewStudent history={history} courseId={match.params.id} studentInstance={match.params.si} weekNumber={match.params.wk} />}
             />
             <Route path={`/labtool/ModifyCourseInstancePage/:id`} render={({ match }) => <ModifyCourseInstancePage courseId={match.params.id} />} />
+            <Route path={`/labtool/ModifyCourseInstanceStaff/:id`} render={({ match }) => <ModifyCourseInstanceStaff courseId={match.params.id} />} />
             <Route path={`/`} render={() => <MyPage />} />
           </Switch>
         </main>

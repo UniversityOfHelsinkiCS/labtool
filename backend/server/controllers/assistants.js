@@ -15,28 +15,59 @@ module.exports = {
     await helper.controller_before_auth_check_action(req, res)
 
     try {
-      console.log('req.body: ', req.body, '\n\n')
       const teacherInsId = req.body.teacherInstanceId
       const studentInsId = req.body.studentInstanceId
 
-      if (req.authenticated.success) {
-        // TODO check that user is a teacher on hte course
-        const studentInstance = await StudentInstance.findOne({
-          where: {
-            id: studentInsId
-          }
-        })
-        if (studentInstance) {
-          studentInstance.updateAttributes({
-            teacherInstanceId: teacherInsId
-          })
-        } else {
-          res.status(404).send('Specified student instance could not be found.')
-        }
-        res.status(200).send('assistanceInstance created')
+      if (!req.authenticated.success) {
+        res.status(400).send('you have to be authenticated to do this')
+        return
       }
+      console.log('\n\nAuthentication succeeded')
+      const requestMakerId = req.decoded.id
+      const requestMakerAsTeacher = await TeacherInstance.findOne({
+        where: {
+          userId: requestMakerId
+        }
+      })
+      if (!requestMakerAsTeacher) {
+        res.status(400).send('You have to be a teacher to give assistants to student.')
+        return
+      }
+      const requestMakersCoursesId = requestMakerAsTeacher.courseInstanceId
+      const givenTeachersTeacherInstance = await TeacherInstance.findOne({
+        where: {
+          id: teacherInsId
+        }
+      })
+      if (!givenTeachersTeacherInstance) {
+        res.status(404).send('There is no teacher with the given teacherInstanceId')
+        return
+      }
+      const teachersCourseId = givenTeachersTeacherInstance.courseInstanceId
+      if (teachersCourseId !== requestMakersCoursesId) {
+        res.status(400).send('You have to be an assistant or teacher in the same course as the teacher you are adding.')
+        return
+      }
+      const studentInstance = await StudentInstance.findOne({
+        where: {
+          id: studentInsId
+        }
+      })
+      if (!studentInstance) {
+        res.status(404).send('Specified student instance could not be found.')
+        return
+      }
+      if (studentInstance.courseInstanceId !== teachersCourseId) {
+        res.status(400).send('The teacher is not from the same course as this student.')
+        return
+      }
+      console.log('\n\nCourses match')
+      studentInstance.updateAttributes({
+        teacherInstanceId: teacherInsId
+      })
+      res.status(200).send('assistanceInstance created')
     } catch (e) {
-      console.log('\n\nassistantInstance creation failed\n\n')
+      console.log('\n\nAssistantInstance creation failed.\n', e)
     }
   },
 
@@ -95,49 +126,18 @@ module.exports = {
     console.log('Etsitään assarin oppilaat')
 
     helper.controller_before_auth_check_action(req, res)
-
-    const returnedStudentsInfo = {
-      status: undefined,
-      data: undefined
-    }
-    console.log('req.params.id: ', req.params.id)
-
     try {
-      AssistantInstance.findAll({
+      const teacherInsId = req.params.id
+      console.log('\n\nteacherInsId: ', req.param.id)
+
+      const studentsForThisTeacherInstance = await StudentInstance.findAll({
         where: {
-          teacherInstanceId: req.params.id
+          teacherInstanceId: teacherInsId
         }
-      }).then(assistantInstances => {
-        assistantInstances.forEach(instance => {
-          StudentInstance.findOne({
-            where: {
-              id: instance.id
-            }
-          }).then(studentInstances => {
-            studentInstances.forEach(instance => {
-              User.findOne({
-                where: {
-                  id: instance.userId
-                }
-              })
-            })
-          })
-        })
       })
-
-      console.log(typeof usersForTeacher)
-
-      if (usersForTeacher) {
-        returnedStudentsInfo.status = 'teacher has assigned students'
-        returnedStudentsInfo.data = usersForTeacher
-
-        res.status(200).send(returnedStudentsInfo)
-      } else {
-        returnedStudentsInfo.status = 'no students assigned for teacher'
-        res.status(200).send(returnedStudentsInfo)
-      }
+      res.status(200).send(studentsForThisTeacherInstance)
     } catch (e) {
-      console.log('\nVirhettä pukkaa\n\n')
+      console.log('\nfindStudentsByTeacherInstance did not succeed\n\n')
       res.status(400).send(e)
     }
   }

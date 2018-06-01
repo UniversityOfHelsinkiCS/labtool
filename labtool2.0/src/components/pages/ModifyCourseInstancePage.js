@@ -42,6 +42,7 @@ export class ModifyCourseInstancePage extends Component {
       }
       await this.props.modifyOneCI(content, this.props.selectedInstance.ohid)
       this.setState({ redirectToNewPage: true })
+      this.forceUpdate()
     } catch (error) {
       console.log(error)
     }
@@ -118,6 +119,10 @@ export class ModifyCourseInstancePage extends Component {
             </Form>
           </Grid.Row>
         </Grid>
+
+        <Link to={`/labtool/ModifyCourseInstanceStaff/${this.props.selectedInstance.ohid}`}>
+          <Button floated="center">Add assistant teachers</Button>
+        </Link>
       </div>
     )
   }
@@ -127,7 +132,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     selectedInstance: state.selectedInstance,
     notification: state.notification,
-    courseId: ownProps.courseId
+    ownProps
   }
 }
 
