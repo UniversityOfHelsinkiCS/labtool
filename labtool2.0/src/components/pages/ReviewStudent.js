@@ -49,66 +49,9 @@ class ReviewStudent extends Component {
 
     const studentData = this.props.courseData.data.filter(
       dataArray => dataArray.id == this.props.ownProps.studentInstance)
-    console.log('studentData[0].id: ', studentData[0].id)
-    console.log('studentData[0].userId ', studentData[0].userId)
-    console.log('studentData[0].studentInstance ', studentData[0].studentInstance)
-    // console.log('studentData[0]', studentData[0])
-    // console.log('studentData[0].weeks', studentData[0].weeks)
-    
-    // console.log('this.props.weekNumber', this.props.weekNumber)
+
     const weekData = studentData[0].weeks.filter(theWeek => theWeek.weekNumber == this.props.weekNumber)
 
-    // console.log('Tämä on weekData -olio:', weekData[0])
-    var pointsAndComment = JSON.parse(localStorage.getItem('points and comment'))
-    localStorage.removeItem('points and comment')
-
-    // console.log(this.props.selectedInstance)
-    // console.log('coursePage instanssi on courseData täällä: ', this.props.courseData)
-    {/* const currentWeek = this.props.selectedInstance.currentWeek */}
-{/*}
-    console.log('Viikko on this.props.weekNumber: ', this.props.weekNumber)
-    console.log('Pisteet pitäisi näkyä tässä: ', this.props.courseData.data[0].weeks[0].points)
-    console.log('Feedback pitäisi olla tämä: ', this.props.courseData.data[0].weeks[0].feedback)
-    console.log('Opiskelijan nimi: ', this.props.courseData.data[0].User.firsts, this.props.courseData.data[0].User.lastname)
-    console.log('Yritetään katsoa mitä ownProps sisältää:', this.props.ownProps)
-    console.log('Onkohan tämä studentId??: ', this.props.ownProps.studentInstance)
-
-    var theFirstNames = ""
-    var theLastName = ""
-    var thePoints = null
-    var theFeedback = null
-    var theStudentId = this.props.ownProps.studentInstance
-    var theCourseInstanceId = this.props.selectedInstance.id
-    var indexOfDataArray = null
-  */}
-    var indexOfDataArray = null
-
-    {/* Here we try to find index of this.props.courseData.data[] */}
-
-    {/*}
-    var i = this.props.courseData.data.length
-    while (i > 0) {
-      i--
-      console.log('Käydään läpi data-arraytä indeksissä ', i)
-      console.log('...data[', i, '].courseInstanceId = ', this.props.courseData.data[i].courseInstanceId)
-      console.log('...data[',i,'].id = ', this.props.courseData.data[i].id)
-      console.log('this.props.ownProps.studentInstance = ', this.props.ownProps.studentInstance)
-      console.log('------------------')
-      if (this.props.courseData.data[i].courseInstanceId === this.props.selectedInstance.id 
-        && this.props.courseData.data[i].id == this.props.ownProps.studentInstance) {
-          indexOfDataArray = i
-          console.log('Asetettiin indexOfDataArrayn arvoksi ', indexOfDataArray)
-          break
-        }
-    }
-  */}
-    {/*}
-    if (indexOfDataArray !== null) {
-      theFirstNames = this.props.courseData.data[indexOfDataArray].User.firsts
-      theLastName = this.props.courseData.data[indexOfDataArray].User.lastname
-      thePoints = this.props.courseData.data[indexOfDataArray].weeks[this.props.weekNumber - 1].points
-      theFeedback = this.props.courseData.data[indexOfDataArray].weeks[this.props.weekNumber - 1].feedback
-  */}
     return (
       <div className="ReviewStudent" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
         <h2> {this.props.selectedInstance.name}</h2>
