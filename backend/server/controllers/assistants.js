@@ -65,7 +65,7 @@ module.exports = {
       studentInstance.updateAttributes({
         teacherInstanceId: teacherInsId
       })
-      res.status(200).send('assistanceInstance created')
+      res.status(200).send(studentInstance)
     } catch (e) {
       console.log('\n\nAssistantInstance creation failed.\n', e)
     }
