@@ -83,7 +83,6 @@ class CoursePage extends React.Component {
    * is a teacher or student on a course.
    */
   render() {
-    let allPoints = 0
     const createIndents = (data, siId) => {
       const indents = []
 
@@ -96,7 +95,6 @@ class CoursePage extends React.Component {
 
         for (var j = 0; j < data.length; j++) {
           if (i + 1 === data[j].weekNumber) {
-            allPoints += data[j].points
             pushattava = (
               <Table.Cell key={i}>
                 <p>{data[j].points}</p>
@@ -133,15 +131,15 @@ class CoursePage extends React.Component {
             this.props.courseData.role === 'teacher' || this.props.courseData.data !== null ? (
               <p />
             ) : (
-              <div className="sixteen wide column">
-                <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>
-                  {' '}
-                  <Button color="blue" size="large">
-                    Register
+                <div className="sixteen wide column">
+                  <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>
+                    {' '}
+                    <Button color="blue" size="large">
+                      Register
                   </Button>
-                </Link>
-              </div>
-            )
+                  </Link>
+                </div>
+              )
           ) : this.props.courseData.role === 'teacher' ? (
             <div className="sixteen wide column">
               <Message compact>
@@ -149,12 +147,12 @@ class CoursePage extends React.Component {
               </Message>
             </div>
           ) : (
-            <div className="sixteen wide column">
-              <Message compact>
-                <Message.Header>This course has not been activated.</Message.Header>
-              </Message>
-            </div>
-          )}
+                <div className="sixteen wide column">
+                  <Message compact>
+                    <Message.Header>This course has not been activated.</Message.Header>
+                  </Message>
+                </div>
+              )}
         </div>
 
         {/** Shown when the users role in this course is teacher.*/}
@@ -171,8 +169,8 @@ class CoursePage extends React.Component {
                           Active
                         </Label>
                       ) : (
-                        ''
-                      )}
+                          ''
+                        )}
                     </div>
                   </Table.Cell>
                   <Table.Cell>Week amount: {this.props.selectedInstance.weekAmount}</Table.Cell>
@@ -215,22 +213,26 @@ class CoursePage extends React.Component {
                       <a href={data.github}>{data.github}</a>
                     </Table.Cell>
                     {createIndents(data.weeks, data.id)}
-                    <Table.Cell>{allPoints}</Table.Cell>
+                    <Table.Cell>
+                      {data.weeks.map(week => week.points).reduce((a, b) => {
+                        return a + b
+                      }, 0)}
+                    </Table.Cell>
                     <Table.Cell>
                       {data.teacherInstanceId && this.props.selectedInstance.teacherInstances ? (
                         this.props.selectedInstance.teacherInstances.filter(teacher => teacher.id === data.teacherInstanceId).map(teacher => (
                           <p key={data.id}>
-                            Assistant: {teacher.firsts} {teacher.lastname} 
+                            Assistant: {teacher.firsts} {teacher.lastname}
                           </p>
                         ))
                       ) : (
-                        <p>Assistant: not given</p>
-                      )}
+                          <p>Assistant: not given</p>
+                        )}
                       <Icon onClick={this.changeHidden()} name="pencil" size="small" />
                       {this.state.hidden === '' ? (
                         <div>
                           <select onChange={this.changeSelectedTeacher()}>
-                          <option value="" disabled selected>Select your option</option>
+                            <option value="" disabled selected>Select your option</option>
                             {dropDownTeachers.map(m => (
                               <option key={m.value} value={m.value}>
                                 {m.text}
@@ -243,8 +245,8 @@ class CoursePage extends React.Component {
                           </Button>
                         </div>
                       ) : (
-                        <div></div>
-                      )}
+                          <div></div>
+                        )}
                     </Table.Cell>
 
                     <Table.Cell textAlign="right">
@@ -262,8 +264,8 @@ class CoursePage extends React.Component {
             </List>
           </div>
         ) : (
-          <div />
-        )}
+            <div />
+          )}
 
         {/** Shown when the users role in this course is student.*/}
         {this.props.courseData.role === 'student' && this.props.courseData.data !== null ? (
@@ -285,8 +287,8 @@ class CoursePage extends React.Component {
                     </h3>
                   ))
                 ) : (
-                  <h3>Assistant: not given</h3>
-                )}
+                    <h3>Assistant: not given</h3>
+                  )}
               </Card.Content>
             </Card>
 
@@ -333,8 +335,8 @@ class CoursePage extends React.Component {
             </Table>
           </div>
         ) : (
-          <div />
-        )}
+            <div />
+          )}
       </div>
     )
   }

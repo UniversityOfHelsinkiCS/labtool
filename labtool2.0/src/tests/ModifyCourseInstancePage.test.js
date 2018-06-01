@@ -23,7 +23,7 @@ describe('<ModifyCourseInstancePage />', () => {
   let mym = jest.fn()
 
   beforeEach(() => {
-    wrapper = shallow(<ModifyCourseInstancePage getOneCI={mym} clearNotifications={mym} output={output} selectedInstance={output.ohid} />)
+    wrapper = shallow(<ModifyCourseInstancePage getOneCI={mym} clearNotifications={mym} selectedInstance={output} />)
   })
 
   describe('Modify Instance Component', () => {
