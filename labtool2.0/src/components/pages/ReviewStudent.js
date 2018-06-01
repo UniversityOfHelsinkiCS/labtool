@@ -44,7 +44,6 @@ class ReviewStudent extends Component {
       console.log(error)
     }
   }
-<<<<<<< HEAD
 
   render() {  
 
@@ -114,9 +113,6 @@ class ReviewStudent extends Component {
       console.log(e)
     }
 
-=======
-  render() {
->>>>>>> eef596a8b6ead555f7c093f4e878d7e146f053e8
     return (
       <div className="ReviewStudent" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
         <h2> {this.props.selectedInstance.name}</h2>
@@ -130,23 +126,15 @@ class ReviewStudent extends Component {
             <Form.Group inline unstackable>
               <Form.Field>
                 <label>Points 0-{this.props.selectedInstance.weekMaxPoints}</label>
-<<<<<<< HEAD
 
                 <Input name="points" defaultValue={weekData[0] ? weekData[0].points : ''} type="number" step="0.01" />
 
-=======
-                <Input name="points" type="number" step="0.01" />
->>>>>>> eef596a8b6ead555f7c093f4e878d7e146f053e8
               </Form.Field>
             </Form.Group>
             <Form.Group inline unstackable>
               <label> Feedback </label>
-<<<<<<< HEAD
               <Form.TextArea defaultValue={weekData[0] ? weekData[0].feedback : ''} name="comment" />
 
-=======
-              <Form.TextArea name="comment" />
->>>>>>> eef596a8b6ead555f7c093f4e878d7e146f053e8
             </Form.Group>
             <Form.Field>
               <Button className="ui left floated green button" type="submit">
