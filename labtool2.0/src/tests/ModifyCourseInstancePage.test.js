@@ -5,9 +5,9 @@ import { ModifyCourseInstancePage } from '../components/pages/ModifyCourseInstan
 import ConnectecModifyCourseInstancePage from '../components/pages/ModifyCourseInstancePage'
 import { shallowToJson } from 'enzyme-to-json'
 import { shallow } from 'enzyme'
-import { Form } from 'semantic-ui-react';
+import { Form } from 'semantic-ui-react'
 
-describe.only('<ModifyCourseInstancePage />', () => {
+describe('<ModifyCourseInstancePage />', () => {
   let wrapper
   let output = {
     id: 1,

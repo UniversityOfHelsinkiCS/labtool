@@ -34,6 +34,10 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'courseInstanceId',
       onDelete: 'CASCADE'
     })
+
+    StudentInstance.belongsTo(models.TeacherInstance, {
+      foreignKey: 'teacherInstanceId'
+    })
   }
 
   return StudentInstance

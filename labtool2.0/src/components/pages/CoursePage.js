@@ -1,12 +1,20 @@
 import React, { Component } from 'react'
-import { Button, Table, Card, Form, Comment, List, Header, Label, Message } from 'semantic-ui-react'
+import { Button, Table, Card, Form, Comment, List, Header, Label, Message, Icon, Dropdown } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createOneComment } from '../../services/comment'
 import { getOneCI, coursePageInformation } from '../../services/courseInstance'
+import { associateTeacherToStudent } from '../../services/assistant'
 import ReactMarkdown from 'react-markdown'
 
-class CoursePage extends Component {
+class CoursePage extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      show: '',
+      selectedTeacher: ''
+    }
+  }
   handleSubmit = async e => {
     e.preventDefault()
     const content = {
@@ -27,6 +35,48 @@ class CoursePage extends Component {
   componentWillMount() {
     this.props.getOneCI(this.props.courseId)
     this.props.coursePageInformation(this.props.courseId)
+  }
+
+  changeHidden = (id) => {
+    return () => {
+      this.setState({
+        show: this.state.show === id ? '' : id
+      })
+    }
+  }
+
+  changeSelectedTeacher = () => {
+    return (e, data) => {
+      const { value } = data
+      this.setState({ selectedTeacher: value })
+    }
+  }
+
+  updateTeacher = id => async e => {
+    try {
+      e.preventDefault()
+      const data = {
+        studentInstanceId: id,
+        teacherInstanceId: this.state.selectedTeacher
+      }
+      await this.props.associateTeacherToStudent(data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  createDropdownTeachers = array => {
+    if (this.props.selectedInstance.teacherInstances !== undefined) {
+      this.props.selectedInstance.teacherInstances.map(m =>
+        array.push({
+          key: m.id,
+          text: m.firsts + ' ' + m.lastname,
+          value: m.id
+        })
+      )
+      return array
+    }
+    return []
   }
 
   /**
@@ -70,6 +120,9 @@ class CoursePage extends Component {
       return headers
     }
 
+    let dropDownTeachers = []
+    dropDownTeachers = this.createDropdownTeachers(dropDownTeachers)
+
     return (
       <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
         <div className="ui grid">
@@ -80,15 +133,15 @@ class CoursePage extends Component {
             this.props.courseData.role === 'teacher' || this.props.courseData.data !== null ? (
               <p />
             ) : (
-              <div className="sixteen wide column">
-                <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>
-                  {' '}
-                  <Button color="blue" size="large">
-                    Register
+                <div className="sixteen wide column">
+                  <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>
+                    {' '}
+                    <Button color="blue" size="large">
+                      Register
                   </Button>
-                </Link>
-              </div>
-            )
+                  </Link>
+                </div>
+              )
           ) : this.props.courseData.role === 'teacher' ? (
             <div className="sixteen wide column">
               <Message compact>
@@ -96,12 +149,12 @@ class CoursePage extends Component {
               </Message>
             </div>
           ) : (
-            <div className="sixteen wide column">
-              <Message compact>
-                <Message.Header>This course has not been activated.</Message.Header>
-              </Message>
-            </div>
-          )}
+                <div className="sixteen wide column">
+                  <Message compact>
+                    <Message.Header>This course has not been activated.</Message.Header>
+                  </Message>
+                </div>
+              )}
         </div>
 
         {/** Shown when the users role in this course is teacher.*/}
@@ -118,8 +171,8 @@ class CoursePage extends Component {
                           Active
                         </Label>
                       ) : (
-                        ''
-                      )}
+                          ''
+                        )}
                     </div>
                   </Table.Cell>
                   <Table.Cell>Week amount: {this.props.selectedInstance.weekAmount}</Table.Cell>
@@ -147,7 +200,7 @@ class CoursePage extends Component {
                   <Table.HeaderCell> Github </Table.HeaderCell>
                   {createHeaders()}
                   <Table.HeaderCell> Sum </Table.HeaderCell>
-                  <Table.HeaderCell> Instructor </Table.HeaderCell>
+                  <Table.HeaderCell width="six"> Instructor </Table.HeaderCell>
                   <Table.HeaderCell> Review </Table.HeaderCell>
                 </Table.Row>
               </Table.Header>
@@ -167,8 +220,37 @@ class CoursePage extends Component {
                         return a + b
                       }, 0)}
                     </Table.Cell>
-                    <Table.Cell> Ohjaaja </Table.Cell>
-
+                    <Table.Cell>
+                      {data.teacherInstanceId && this.props.selectedInstance.teacherInstances ? (
+                        this.props.selectedInstance.teacherInstances.filter(teacher => teacher.id === data.teacherInstanceId).map(teacher => (
+                          <p key={data.id}>
+                            Assistant: {teacher.firsts} {teacher.lastname}
+                          </p>
+                        ))
+                      ) : (
+                          <p>Assistant: not given</p>
+                        )}
+                      <Icon onClick={this.changeHidden(data.id)} name="pencil" size="medium" />
+                      {this.state.show === data.id ? (
+                        <div>
+                          <Dropdown options={dropDownTeachers} onChange={this.changeSelectedTeacher()} placeholder='Select Teacher' fluid selection />
+                          {/* <select style={{}}onChange={this.changeSelectedTeacher()}>
+                            <option value="" disabled selected>Select your option</option>
+                            {dropDownTeachers.map(m => (
+                              <option key={m.value} value={m.value}>
+                                {m.text}
+                              </option>
+                            ))}
+                          </select> */}
+                          {/* <Dropdown onChange={this.changeSelectedTeacher()} placeholder="Select Teacher" fluid search selection options={dropDownTeachers} /> */}
+                          <Button onClick={this.updateTeacher(data.id, data.teacherInstanceId)} size="small">
+                            Change instructor
+                          </Button>
+                        </div>
+                      ) : (
+                          <div></div>
+                        )}
+                    </Table.Cell>
                     <Table.Cell textAlign="right">
                       <Link to={`/labtool/browsereviews/${this.props.selectedInstance.ohid}/${data.id}`}>
                         <Button circular size="tiny" icon={{ name: 'star', size: 'large', color: 'orange' }} />
@@ -180,11 +262,12 @@ class CoursePage extends Component {
             </Table>
             <List style={{ float: 'right' }}>
               <List.Item icon={{ name: 'star', color: 'orange' }} content="Review student" />
+              <List.Item icon={{ name: 'pencil' }} content="Change student teacher" />
             </List>
           </div>
         ) : (
-          <div />
-        )}
+            <div />
+          )}
 
         {/** Shown when the users role in this course is student.*/}
         {this.props.courseData.role === 'student' && this.props.courseData.data !== null ? (
@@ -198,6 +281,16 @@ class CoursePage extends Component {
                   {' '}
                   <a href={this.props.courseData.data.github}>{this.props.courseData.data.github}</a>{' '}
                 </h3>
+
+                {this.props.courseData.data.teacherInstanceId && this.props.selectedInstance.teacherInstances ? (
+                  this.props.selectedInstance.teacherInstances.filter(teacher => teacher.id === this.props.courseData.data.teacherInstanceId).map(teacher => (
+                    <h3>
+                      Assistant: {teacher.firsts} {teacher.lastname}
+                    </h3>
+                  ))
+                ) : (
+                    <h3>Assistant: not given</h3>
+                  )}
               </Card.Content>
             </Card>
 
@@ -244,8 +337,8 @@ class CoursePage extends Component {
             </Table>
           </div>
         ) : (
-          <div />
-        )}
+            <div />
+          )}
       </div>
     )
   }
@@ -262,4 +355,4 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps, { createOneComment, getOneCI, coursePageInformation })(CoursePage)
+export default connect(mapStateToProps, { createOneComment, getOneCI, coursePageInformation, associateTeacherToStudent })(CoursePage)

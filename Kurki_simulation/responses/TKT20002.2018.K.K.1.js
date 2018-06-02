@@ -6,6 +6,6 @@ exports.course = {
     "014666666"
 	],
 	"teachers": [
-		"paaopettaja"
+		"opettajaeinumeroa"
 	]
 }

@@ -9,6 +9,14 @@ const courseInstancereducer = (store = [], action) => {
   switch (action.type) {
     case 'CP_INFO_SUCCESS':
       return action.response
+    case 'ASSOCIATE_TEACHER_AND_STUDENT_SUCCESS': {
+      console.log(store)
+      const id = action.response.id
+      const studentToChange = store.data.find(s => s.id === id)
+      const changedStudent = { ...studentToChange, teacherInstanceId: action.response.teacherInstanceId }
+      const mappedData = store.data.map(st => (st.id !== id ? st : changedStudent))
+      return { ...store, data: mappedData }
+    }
     default:
       return store
   }
