@@ -143,15 +143,15 @@ class CoursePage extends React.Component {
             this.props.courseData.role === 'teacher' || this.props.courseData.data !== null ? (
               <p />
             ) : (
-                <div className="sixteen wide column">
-                  <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>
-                    {' '}
-                    <Button color="blue" size="large">
-                      Register
+              <div className="sixteen wide column">
+                <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>
+                  {' '}
+                  <Button color="blue" size="large">
+                    Register
                   </Button>
-                  </Link>
-                </div>
-              )
+                </Link>
+              </div>
+            )
           ) : this.props.courseData.role === 'teacher' ? (
             <div className="sixteen wide column">
               <Message compact>
@@ -159,12 +159,12 @@ class CoursePage extends React.Component {
               </Message>
             </div>
           ) : (
-                <div className="sixteen wide column">
-                  <Message compact>
-                    <Message.Header>This course has not been activated.</Message.Header>
-                  </Message>
-                </div>
-              )}
+            <div className="sixteen wide column">
+              <Message compact>
+                <Message.Header>This course has not been activated.</Message.Header>
+              </Message>
+            </div>
+          )}
         </div>
 
         {/** Shown when the users role in this course is teacher.*/}
@@ -181,8 +181,8 @@ class CoursePage extends React.Component {
                           Active
                         </Label>
                       ) : (
-                          ''
-                        )}
+                        ''
+                      )}
                     </div>
                   </Table.Cell>
                   <Table.Cell>Week amount: {this.props.selectedInstance.weekAmount}</Table.Cell>
