@@ -9,8 +9,8 @@ export const addAssistantReducer = (store = [], action) => {
 
 export const getAssistantForStudentRecuder = (store = [], action) => {
   switch (action.type) {
-    case 'GET_ASSISTANT_FOR_STUDENT_SUCCESS':
-      return action.response
+    // case 'GET_ASSISTANT_FOR_STUDENT_SUCCESS':
+    //   return action.response
     default:
       return store
   }

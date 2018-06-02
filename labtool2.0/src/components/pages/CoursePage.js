@@ -11,7 +11,7 @@ class CoursePage extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      hidden: 'none',
+      show: '',
       selectedTeacher: ''
     }
   }
@@ -37,18 +37,19 @@ class CoursePage extends React.Component {
     this.props.coursePageInformation(this.props.courseId)
   }
 
-  changeHidden = () => {
+  changeHidden = (id) => {
     return () => {
       this.setState({
-        hidden: this.state.hidden === 'none' ? '' : 'none'
+        show: this.state.show === id ? '' : id
       })
     }
   }
 
-  changeSelectedTeacher = () => async e => {
-    this.setState({
-      selectedTeacher: parseInt(e.target.value, 10)
-    })
+  changeSelectedTeacher = () => {
+    return (e, data) => {
+      const { value } = data
+      this.setState({ selectedTeacher: value })
+    }
   }
 
   updateTeacher = id => async e => {
@@ -68,6 +69,7 @@ class CoursePage extends React.Component {
     if (this.props.selectedInstance.teacherInstances !== undefined) {
       this.props.selectedInstance.teacherInstances.map(m =>
         array.push({
+          key: m.id,
           text: m.firsts + ' ' + m.lastname,
           value: m.id
         })
@@ -198,7 +200,7 @@ class CoursePage extends React.Component {
                   <Table.HeaderCell> Github </Table.HeaderCell>
                   {createHeaders()}
                   <Table.HeaderCell> Sum </Table.HeaderCell>
-                  <Table.HeaderCell> Instructor </Table.HeaderCell>
+                  <Table.HeaderCell width="six"> Instructor </Table.HeaderCell>
                   <Table.HeaderCell> Review </Table.HeaderCell>
                 </Table.Row>
               </Table.Header>
@@ -228,17 +230,18 @@ class CoursePage extends React.Component {
                       ) : (
                           <p>Assistant: not given</p>
                         )}
-                      <Icon onClick={this.changeHidden()} name="pencil" size="small" />
-                      {this.state.hidden === '' ? (
+                      <Icon onClick={this.changeHidden(data.id)} name="pencil" size="medium" />
+                      {this.state.show === data.id ? (
                         <div>
-                          <select onChange={this.changeSelectedTeacher()}>
+                          <Dropdown options={dropDownTeachers} onChange={this.changeSelectedTeacher()} placeholder='Select Teacher' fluid selection />
+                          {/* <select style={{}}onChange={this.changeSelectedTeacher()}>
                             <option value="" disabled selected>Select your option</option>
                             {dropDownTeachers.map(m => (
                               <option key={m.value} value={m.value}>
                                 {m.text}
                               </option>
                             ))}
-                          </select>
+                          </select> */}
                           {/* <Dropdown onChange={this.changeSelectedTeacher()} placeholder="Select Teacher" fluid search selection options={dropDownTeachers} /> */}
                           <Button onClick={this.updateTeacher(data.id, data.teacherInstanceId)} size="small">
                             Change instructor
