@@ -36,10 +36,6 @@ module.exports = {
    */
   process(req, res) {
     helper.createCourse(req.body)
-    let redirectTo = req.get('Referer')
-    if (!redirectTo) {
-      redirectTo = '/'
-    }
-    res.redirect(redirectTo)
+    res.redirect('back') // Shorthand for req.get('referer')
   }
 }
