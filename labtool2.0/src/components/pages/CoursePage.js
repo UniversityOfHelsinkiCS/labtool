@@ -251,7 +251,6 @@ class CoursePage extends React.Component {
                           <div></div>
                         )}
                     </Table.Cell>
-
                     <Table.Cell textAlign="right">
                       <Link to={`/labtool/browsereviews/${this.props.selectedInstance.ohid}/${data.id}`}>
                         <Button circular size="tiny" icon={{ name: 'star', size: 'large', color: 'orange' }} />

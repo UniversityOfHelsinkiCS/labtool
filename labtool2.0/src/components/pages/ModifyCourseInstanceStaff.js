@@ -8,7 +8,7 @@ import { Redirect } from 'react-router'
 import { clearNotifications } from '../../reducers/notificationReducer'
 import { Table, Container, Header, Button, Label, Form, Input } from 'semantic-ui-react'
 
-export class ModifyCourseInstaceStaff extends React.Component {
+export class ModifyCourseInstanceStaff extends React.Component {
   componentWillMount() {
     this.props.clearNotifications()
     this.props.getOneCI(this.props.courseId)
@@ -105,4 +105,4 @@ const mapDispatchToProps = {
   createOne
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ModifyCourseInstaceStaff)
+export default connect(mapStateToProps, mapDispatchToProps)(ModifyCourseInstanceStaff)

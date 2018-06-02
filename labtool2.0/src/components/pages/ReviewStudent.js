@@ -16,6 +16,8 @@ class ReviewStudent extends Component {
     this.props.clearNotifications()
   }
 
+
+
   componentDidUpdate() {
     if (this.props.notification.error !== undefined) {
       if (!this.props.notification.error) {
@@ -42,28 +44,42 @@ class ReviewStudent extends Component {
       console.log(error)
     }
   }
-  render() {
+
+  render() {  
+
+    const studentData = this.props.courseData.data.filter(
+      dataArray => dataArray.id == this.props.ownProps.studentInstance)
+
+    const weekData = studentData[0].weeks.filter(theWeek => theWeek.weekNumber == this.props.weekNumber)
+
     return (
       <div className="ReviewStudent" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
         <h2> {this.props.selectedInstance.name}</h2>
+        {/*Tässä on opiskelijan nimen tulostus:
+        <h3> {this.props.courseData.data[indexOfDataArray].User.firsts} {this.props.courseData.data[indexOfDataArray].User.lastname} </h3>
+        */}
+        <h3> {studentData[0].User.firsts} {studentData[0].User.lastname} </h3>
         <h3> Viikko {this.props.weekNumber} </h3>
         <Grid centered>
           <Form onSubmit={this.handleSubmit}>
             <Form.Group inline unstackable>
               <Form.Field>
                 <label>Points 0-{this.props.selectedInstance.weekMaxPoints}</label>
-                <Input name="points" type="number" step="0.01" />
+
+                <Input name="points" defaultValue={weekData[0] ? weekData[0].points : ''} type="number" step="0.01" />
+
               </Form.Field>
             </Form.Group>
             <Form.Group inline unstackable>
               <label> Feedback </label>
-              <Form.TextArea name="comment" />
+              <Form.TextArea defaultValue={weekData[0] ? weekData[0].feedback : ''} name="comment" />
+
             </Form.Group>
             <Form.Field>
               <Button className="ui left floated green button" type="submit">
                 Save
               </Button>
-              <Link to={`/labtool/browsereviews/${this.props.selectedInstance.ohid}/${this.props.courseData.data[0].id}`} type="Cancel">
+              <Link to={`/labtool/browsereviews/${this.props.selectedInstance.ohid}/${studentData[0].id}`} type="Cancel">
                 <Button className="ui right floated button" type="cancel">
                   Cancel
                 </Button>

@@ -71,41 +71,6 @@ module.exports = {
    * @param res
    * @returns {Promise<*|Promise<T>>}
    */
-
-  async createTeacherInstance(req, res) {
-    helper.controller_before_auth_check_action(req, res)
-
-    const courseInstance = await CourseInstance.findOne({
-      where: {
-        ohid: req.body.ohid
-      }
-    })
-
-    const user = await User.findOne({
-      where: {
-        username: req.body.adTunnus
-      }
-    })
-
-    if (courseInstance !== null && user !== null) {
-      return TeacherInstance.create({
-        userId: user.id,
-        courseInstanceId: courseInstance.id,
-        admin: true
-      })
-        .then(teacher => res.status(200).send(teacher))
-        .catch(error => res.status(400).send(error))
-    } else {
-      res.status(404).send('not found')
-    }
-  },
-
-  /**
-   *
-   * @param req
-   * @param res
-   * @returns {Promise<*|Promise<T>>}
-   */
   async createTeacher(req, res) {
     await helper.controller_before_auth_check_action(req, res)
 
