@@ -29,6 +29,9 @@ function checkWebOodi(req, res, user, resolve) {
     },
     strictSSL: false
   }
+  if (process.env.INCLUDE_TESTERS) {
+    options.uri += '?testing=1'
+  }
   request(options, function(req, res, body) {
     const json = JSON.parse(body)
     console.log('\njson students to string', json['students'].toString())
