@@ -40,7 +40,7 @@ module.exports = {
         }
       })
       if (!requestMakerAsTeacher) {
-        res.status(400).send('You have to be an assistant or teacher in the same course as the teacher you are adding.')
+        res.status(400).send('You have to be an assistant or teacher in the same course as the student you are assigning a teacher to.')
         return
       }
       const requestMakersCoursesId = requestMakerAsTeacher.courseInstanceId
@@ -59,6 +59,7 @@ module.exports = {
         return
       }
       if (studentInstance.courseInstanceId !== teachersCourseId) {
+        // This might be an unenterable code block.
         res.status(400).send('The teacher is not from the same course as this student.')
         return
       }
