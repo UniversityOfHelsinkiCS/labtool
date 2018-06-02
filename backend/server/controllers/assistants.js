@@ -24,13 +24,23 @@ module.exports = {
       }
       console.log('\n\nAuthentication succeeded')
       const requestMakerId = req.decoded.id
+      const studentInstance = await StudentInstance.findOne({
+        where: {
+          id: studentInsId
+        }
+      })
+      if (!studentInstance) {
+        res.status(404).send('Specified student instance could not be found.')
+        return
+      }
       const requestMakerAsTeacher = await TeacherInstance.findOne({
         where: {
-          userId: requestMakerId
+          userId: requestMakerId,
+          courseInstanceId: studentInstance.courseInstanceId
         }
       })
       if (!requestMakerAsTeacher) {
-        res.status(400).send('You have to be a teacher to give assistants to student.')
+        res.status(400).send('You have to be an assistant or teacher in the same course as the teacher you are adding.')
         return
       }
       const requestMakersCoursesId = requestMakerAsTeacher.courseInstanceId
@@ -46,15 +56,6 @@ module.exports = {
       const teachersCourseId = givenTeachersTeacherInstance.courseInstanceId
       if (teachersCourseId !== requestMakersCoursesId) {
         res.status(400).send('You have to be an assistant or teacher in the same course as the teacher you are adding.')
-        return
-      }
-      const studentInstance = await StudentInstance.findOne({
-        where: {
-          id: studentInsId
-        }
-      })
-      if (!studentInstance) {
-        res.status(404).send('Specified student instance could not be found.')
         return
       }
       if (studentInstance.courseInstanceId !== teachersCourseId) {
