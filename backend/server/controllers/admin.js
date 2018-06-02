@@ -36,6 +36,10 @@ module.exports = {
    */
   process(req, res) {
     helper.createCourse(req.body)
-    res.redirect('/admin')
+    let redirectTo = req.get('Referer')
+    if (!redirectTo) {
+      redirectTo = '/'
+    }
+    res.redirect(redirectTo)
   }
 }
