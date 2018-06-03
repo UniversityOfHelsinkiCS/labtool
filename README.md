@@ -1,6 +1,7 @@
 # Labtool 2.0
 
-This is the repository of the software engineering project (TK20007) assigned to our team at the University of Helsinki in Spring semester 2018. The aim is to produce a new version of the already existing [labtool](http://tktl-labtool.herokuapp.com/) web application using agile methods (SCRUM ish). The topic description and overview of the requirements can be found [here](https://studies.cs.helsinki.fi/ohtuprojekti/topic_descriptions/203).
+This is the repository of the Software engineering project (TK20007) at the University of Helsinki for Early Summer semester 2018. The project was started by the Spring 2018 group and the aim is to continue the develompent of a new version of the [labtool](http://tktl-labtool.herokuapp.com/) web application using agile methods (SCRUM ish). The topic description and overview of the requirements can be found [here](https://studies.cs.helsinki.fi/ohtuprojekti/topic_descriptions/203).
 
-- Backlog [new](https://github.com/labtool/labtool/projects/1) [old](https://docs.google.com/spreadsheets/d/1wfYeFRiMauQRatbCnSYI_PLEFFzRq0rX9pKsR6tte3g/edit?usp=sharing)
+- [Product backlog](https://github.com/labtool/labtool/projects/1) 
 - [Documentation](https://github.com/labtool/labtool/wiki)
+- [Project documents@Google Drive](https://drive.google.com/drive/folders/1CkmhZ3rhVPO3Qn_hrFSlWlRKFN-sV-Lw?usp=sharing)

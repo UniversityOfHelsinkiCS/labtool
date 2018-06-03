@@ -41,6 +41,11 @@ const notificationReducer = (state = {}, action) => {
         message: 'Course registration succesful!',
         error: false
       }
+    case 'STUDENT_COURSE_CREATE_ONE_FAILURE':
+      return {
+        message: 'You have not yet registered to this course at WebOodi. If you have already registered at WebOodi, try again in two hours.',
+        error: true
+      }
     case 'CI_MODIFY_ONE_SUCCESS':
       return {
         message: 'Course instance updated successfully!',
@@ -64,6 +69,16 @@ const notificationReducer = (state = {}, action) => {
     case 'COMMENT_CREATE_ONE_FAILURE':
       return {
         message: 'Creating comment failed!',
+        error: true
+      }
+    case 'TEACHER_CREATE_SUCCESS':
+      return {
+        message: 'Added a new admin succesfully!',
+        error: false
+      }
+    case 'TEACHER_CREATE_FAILURE':
+      return {
+        message: action.response.response.data,
         error: true
       }
     default:

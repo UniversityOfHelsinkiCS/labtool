@@ -144,6 +144,9 @@ module.exports = {
    */
   registerToCourseInstance(req, res) {
     helper.controller_before_auth_check_action(req, res)
+    console.log(`---------------------------------`);
+    console.log(req.decoded)
+    console.log(`---------------------------------`);
 
     CourseInstance.findOne({
       where: {
@@ -154,6 +157,11 @@ module.exports = {
         return res.status(400).send({
           message: 'course instance not found'
         })
+      } else if (course.active === false) {
+        console.log('course is no active')
+        return res.status(400).send({
+          message: 'course is not active'
+        })
       }
       User.findById(req.decoded.id).then(user => {
         if (!user) {
@@ -162,6 +170,7 @@ module.exports = {
           })
         }
         let promisingThatWeboodiStatusIsChecked = new Promise((resolve, reject) => {
+          console.log('user.studentNumber', user.studentNumber)
           helper.checkWebOodi(req, res, user, resolve) // this does not work.
 
           setTimeout(function() {
@@ -246,7 +255,7 @@ module.exports = {
             name: req.body.name || courseInstance.name,
             start: req.body.start || courseInstance.start,
             end: req.body.end || courseInstance.end,
-            active: req.body.active,
+            active: req.body.active || courseInstance.active,
             weekAmount: req.body.weekAmount || courseInstance.weekAmount,
             weekMaxPoints: req.body.weekMaxPoints || courseInstance.weekMaxPoints,
             currentWeek: req.body.currentWeek || courseInstance.currentWeek
@@ -397,23 +406,51 @@ module.exports = {
    * @param res
    * @returns {Promise<Model>}
    */
-  retrieveCourseStuff(req, res) {
+  async retrieveCourseStuff(req, res) {
     helper.controller_before_auth_check_action(req, res)
 
-    return CourseInstance.findOne({
-      where: {
-        ohid: req.params.ohid
-      }
-    })
-      .then(course => {
-        if (!course) {
-          return res.status(404).send({
-            message: 'Course not Found'
-          })
+    try {
+      const course = await CourseInstance.findOne({
+        where: {
+          ohid: req.params.ohid
         }
-        return res.status(200).send(course)
       })
-      .catch(error => res.status(400).send(error))
+
+      if (!course) {
+        return res.status(404).send({
+          message: 'Course not Found'
+        })
+      }
+
+      let teachers = await TeacherInstance.findAll({
+        where: {
+          courseInstanceId: course.id
+        }
+      })
+
+      const names = {}
+      const users = await User.findAll()
+      users.forEach(user => {
+        names[user.id] = {
+          firsts: user.firsts,
+          lastname: user.lastname
+        }
+      })
+
+      teachers = teachers.map(teacher => {
+        teacher.dataValues.firsts = names[teacher.userId].firsts
+        teacher.dataValues.lastname = names[teacher.userId].lastname
+        return teacher
+      })
+
+      console.log(teachers)
+
+      course.dataValues['teacherInstances'] = teachers
+
+      return res.status(200).send(course)
+    } catch (exception) {
+      return res.status(400).send(exception)
+    }
   },
 
   /**

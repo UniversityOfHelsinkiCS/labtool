@@ -1,5 +1,6 @@
 const courseInstanceController = require('../controllers').courseInstances
 const weekController = require('../controllers').weeks
+const assistantController = require('../controllers').assistants
 
 module.exports = app => {
   app.post('/api/courseinstances/update', courseInstanceController.getNew) // User story (issue) #106 will replace this
@@ -7,6 +8,9 @@ module.exports = app => {
   app.post('/api/course/register/:ohid', courseInstanceController.registerToCourseInstance)
   app.post('/api/course/student', courseInstanceController.findByUserStudentInstance)
   app.post('/api/course/teacher', courseInstanceController.findByUserTeacherInstance)
+  app.get('/api/course/assistant/student/:id', assistantController.findAssistantByStudentInstance) // Get assistant for studentInstance
+  app.get('/api/course/assistant/teacher/:id', assistantController.findStudentsByTeacherInstance) // Get student for assistantInstance
+  app.post('/api/course/assistant/create', assistantController.create)
   app.get('/api/courseinstances', courseInstanceController.list) // Skolen kurssit on julkista tietoa eli periaattessa ok.
   app.get('/api/courseinstances/:ohid', courseInstanceController.retrieve) // En tiedä joten ei käy
   app.put('/api/courseinstances/:id', courseInstanceController.update) // Sama.. en tiedä, mutta tätä ei julkisesti pitäisi pystyä tehdä ainakaan apilta saatujen oikeiden tietojen muuttamiseksi

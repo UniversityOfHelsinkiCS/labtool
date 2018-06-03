@@ -32,6 +32,15 @@ module.exports = {
           as: 'courseInstanceId'
         }
       },
+      teacherInstanceId: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: 'TeacherInstances',
+          key: 'id',
+          as: 'teacherInstanceId'
+        }
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
