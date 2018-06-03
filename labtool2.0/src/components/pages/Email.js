@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { updateUser } from '../../services/login'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router'
+import { resetEmailPage } from '../../reducers/emailReducer'
 
 /*
 take some elements from SetEmail.js, if user has already email in db
@@ -13,42 +14,28 @@ Is used to modify users email.
 */
 
 class Email extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      loading: false,
-      redirectToNewPage: false
-    }
-  }
 
   handleSubmit = async e => {
     e.preventDefault()
     const content = {
       email: e.target.email.value
     }
-    this.setState({
-      loading: true
-    })
     await this.props.updateUser(content)
   }
 
-  componentWillUpdate() {
-    // This is a dirty hack relying on the component being updated an extra time when the email actually changes.
-    if (this.state.loading) {
-      this.setState({
-        redirectToNewPage: true
-      })
-    }
+  componentWillUnmount() {
+    this.props.resetEmailPage()
   }
 
   render() {
-    if (this.state.redirectToNewPage) {
+    if (this.props.emailPage.redirect) {
       return <Redirect to="/labtool/myPage" />
     } else {
       const user = { ...this.props.user.user }
       const firstLogin = user.email === ''
       return (
         <div className="Email" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
+          <Loader active={this.props.emailPage.loading} inline="centered" />
           <Grid centered>
             {firstLogin ? (
               <div>
@@ -105,8 +92,9 @@ class Email extends Component {
 
 const mapStateToProps = state => {
   return {
-    user: state.user
+    user: state.user,
+    emailPage: state.emailPage
   }
 }
 
-export default connect(mapStateToProps, { updateUser })(Email)
+export default connect(mapStateToProps, { updateUser, resetEmailPage })(Email)

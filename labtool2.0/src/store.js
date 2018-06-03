@@ -10,6 +10,7 @@ import teacherInstance from './reducers/teacherInstanceReducer'
 import studentInstance from './reducers/studentInstanceReducer'
 import selectedInstance from './reducers/selectedInstanceReducer'
 import coursePage from './reducers/coursePageReducer'
+import emailPage from './reducers/emailReducer'
 
 /**
  * The store, that takes all the redux reducers. Index imports it.
@@ -25,7 +26,8 @@ const reducer = combineReducers({
   teacherInstance: teacherInstance,
   studentInstance: studentInstance,
   selectedInstance: selectedInstance,
-  coursePage: coursePage
+  coursePage: coursePage,
+  emailPage: emailPage
 })
 
 const store = createStore(reducer, composeWithDevTools(applyMiddleware(thunk, handleRequest)))
