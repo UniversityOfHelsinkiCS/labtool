@@ -42,9 +42,6 @@ class Email extends Component {
                 <Grid.Row>
                   <h3>Please give your email address: </h3>
                 </Grid.Row>
-                <Grid.Row>
-                  <p>Email is required because ...</p>
-                </Grid.Row>
               </div>
             ) : (
               <div>
