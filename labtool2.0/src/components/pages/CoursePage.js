@@ -12,7 +12,8 @@ class CoursePage extends React.Component {
     super(props)
     this.state = {
       show: '',
-      selectedTeacher: ''
+      selectedTeacher: '',
+      filterByAssistant: 0
     }
   }
   handleSubmit = async e => {
@@ -49,6 +50,13 @@ class CoursePage extends React.Component {
     return (e, data) => {
       const { value } = data
       this.setState({ selectedTeacher: value })
+    }
+  }
+
+  changeFilterAssistant = () => {
+    return (e, data) => {
+      const { value } = data
+      this.setState({ filterByAssistant: value })
     }
   }
 
@@ -122,6 +130,8 @@ class CoursePage extends React.Component {
 
     let dropDownTeachers = []
     dropDownTeachers = this.createDropdownTeachers(dropDownTeachers)
+    let dropDownFilterTeachers = [{ key: 0, text: 'no filter', value: 0 }]
+    dropDownFilterTeachers = this.createDropdownTeachers(dropDownFilterTeachers)
 
     return (
       <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
@@ -133,15 +143,15 @@ class CoursePage extends React.Component {
             this.props.courseData.role === 'teacher' || this.props.courseData.data !== null ? (
               <p />
             ) : (
-                <div className="sixteen wide column">
-                  <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>
-                    {' '}
-                    <Button color="blue" size="large">
-                      Register
+              <div className="sixteen wide column">
+                <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>
+                  {' '}
+                  <Button color="blue" size="large">
+                    Register
                   </Button>
-                  </Link>
-                </div>
-              )
+                </Link>
+              </div>
+            )
           ) : this.props.courseData.role === 'teacher' ? (
             <div className="sixteen wide column">
               <Message compact>
@@ -149,12 +159,12 @@ class CoursePage extends React.Component {
               </Message>
             </div>
           ) : (
-                <div className="sixteen wide column">
-                  <Message compact>
-                    <Message.Header>This course has not been activated.</Message.Header>
-                  </Message>
-                </div>
-              )}
+            <div className="sixteen wide column">
+              <Message compact>
+                <Message.Header>This course has not been activated.</Message.Header>
+              </Message>
+            </div>
+          )}
         </div>
 
         {/** Shown when the users role in this course is teacher.*/}
@@ -171,8 +181,8 @@ class CoursePage extends React.Component {
                           Active
                         </Label>
                       ) : (
-                          ''
-                        )}
+                        ''
+                      )}
                     </div>
                   </Table.Cell>
                   <Table.Cell>Week amount: {this.props.selectedInstance.weekAmount}</Table.Cell>
@@ -193,6 +203,10 @@ class CoursePage extends React.Component {
 
             <br />
             <Header as="h2">Students </Header>
+            <div style={{ textAlign: 'left' }}>
+              <span>Filter by assigned teacher </span>
+              <Dropdown options={dropDownFilterTeachers} onChange={this.changeFilterAssistant()} placeholder="Select Teacher" fluid selection style={{ display: 'inline' }} />
+            </div>
             <Table celled>
               <Table.Header>
                 <Table.Row>
@@ -205,59 +219,63 @@ class CoursePage extends React.Component {
                 </Table.Row>
               </Table.Header>
               <Table.Body>
-                {this.props.courseData.data.map(data => (
-                  <Table.Row key={data.id}>
-                    <Table.Cell>
-                      {data.User.firsts} {data.User.lastname}
-                    </Table.Cell>
-                    <Table.Cell>
-                      <p>{data.projectName}</p>
-                      <a href={data.github}>{data.github}</a>
-                    </Table.Cell>
-                    {createIndents(data.weeks, data.id)}
-                    <Table.Cell>
-                      {data.weeks.map(week => week.points).reduce((a, b) => {
-                        return a + b
-                      }, 0)}
-                    </Table.Cell>
-                    <Table.Cell>
-                      {data.teacherInstanceId && this.props.selectedInstance.teacherInstances ? (
-                        this.props.selectedInstance.teacherInstances.filter(teacher => teacher.id === data.teacherInstanceId).map(teacher => (
-                          <p key={data.id}>
-                            Assistant: {teacher.firsts} {teacher.lastname}
-                          </p>
-                        ))
-                      ) : (
+                {this.props.courseData.data
+                  .filter(data => {
+                    return this.state.filterByAssistant === 0 || this.state.filterByAssistant === data.teacherInstanceId
+                  })
+                  .map(data => (
+                    <Table.Row key={data.id}>
+                      <Table.Cell>
+                        {data.User.firsts} {data.User.lastname}
+                      </Table.Cell>
+                      <Table.Cell>
+                        <p>{data.projectName}</p>
+                        <a href={data.github}>{data.github}</a>
+                      </Table.Cell>
+                      {createIndents(data.weeks, data.id)}
+                      <Table.Cell>
+                        {data.weeks.map(week => week.points).reduce((a, b) => {
+                          return a + b
+                        }, 0)}
+                      </Table.Cell>
+                      <Table.Cell>
+                        {data.teacherInstanceId && this.props.selectedInstance.teacherInstances ? (
+                          this.props.selectedInstance.teacherInstances.filter(teacher => teacher.id === data.teacherInstanceId).map(teacher => (
+                            <p key={data.id}>
+                              Assistant: {teacher.firsts} {teacher.lastname}
+                            </p>
+                          ))
+                        ) : (
                           <p>Assistant: not given</p>
                         )}
-                      <Icon onClick={this.changeHidden(data.id)} name="pencil" size="medium" />
-                      {this.state.show === data.id ? (
-                        <div>
-                          <Dropdown options={dropDownTeachers} onChange={this.changeSelectedTeacher()} placeholder='Select Teacher' fluid selection />
-                          {/* <select style={{}}onChange={this.changeSelectedTeacher()}>
-                            <option value="" disabled selected>Select your option</option>
-                            {dropDownTeachers.map(m => (
-                              <option key={m.value} value={m.value}>
-                                {m.text}
-                              </option>
-                            ))}
-                          </select> */}
-                          {/* <Dropdown onChange={this.changeSelectedTeacher()} placeholder="Select Teacher" fluid search selection options={dropDownTeachers} /> */}
-                          <Button onClick={this.updateTeacher(data.id, data.teacherInstanceId)} size="small">
-                            Change instructor
-                          </Button>
-                        </div>
-                      ) : (
-                          <div></div>
+                        <Icon onClick={this.changeHidden(data.id)} name="pencil" size="medium" />
+                        {this.state.show === data.id ? (
+                          <div>
+                            <Dropdown options={dropDownTeachers} onChange={this.changeSelectedTeacher()} placeholder='Select Teacher' fluid selection />
+                            {/* <select style={{}}onChange={this.changeSelectedTeacher()}>
+                              <option value="" disabled selected>Select your option</option>
+                              {dropDownTeachers.map(m => (
+                                <option key={m.value} value={m.value}>
+                                  {m.text}
+                                </option>
+                              ))}
+                            </select> */}
+                            {/* <Dropdown onChange={this.changeSelectedTeacher()} placeholder="Select Teacher" fluid search selection options={dropDownTeachers} /> */}
+                            <Button onClick={this.updateTeacher(data.id, data.teacherInstanceId)} size="small">
+                              Change instructor
+                            </Button>
+                          </div>
+                        ) : (
+                          <div />
                         )}
-                    </Table.Cell>
-                    <Table.Cell textAlign="right">
-                      <Link to={`/labtool/browsereviews/${this.props.selectedInstance.ohid}/${data.id}`}>
-                        <Button circular size="tiny" icon={{ name: 'star', size: 'large', color: 'orange' }} />
-                      </Link>
-                    </Table.Cell>
-                  </Table.Row>
-                ))}
+                      </Table.Cell>
+                      <Table.Cell textAlign="right">
+                        <Link to={`/labtool/browsereviews/${this.props.selectedInstance.ohid}/${data.id}`}>
+                          <Button circular size="tiny" icon={{ name: 'star', size: 'large', color: 'orange' }} />
+                        </Link>
+                      </Table.Cell>
+                    </Table.Row>
+                  ))}
               </Table.Body>
             </Table>
             <List style={{ float: 'right' }}>
@@ -266,8 +284,8 @@ class CoursePage extends React.Component {
             </List>
           </div>
         ) : (
-            <div />
-          )}
+          <div />
+        )}
 
         {/** Shown when the users role in this course is student.*/}
         {this.props.courseData.role === 'student' && this.props.courseData.data !== null ? (
