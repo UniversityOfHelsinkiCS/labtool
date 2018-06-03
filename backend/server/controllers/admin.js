@@ -36,6 +36,6 @@ module.exports = {
    */
   process(req, res) {
     helper.createCourse(req.body)
-    res.redirect('/admin')
+    res.redirect('back') // Shorthand for req.get('referer')
   }
 }
