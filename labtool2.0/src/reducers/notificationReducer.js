@@ -80,6 +80,11 @@ const notificationReducer = (state = {}, action) => {
         message: action.response.response.data,
         error: true
       }
+    case 'ASSOCIATE_TEACHER_AND_STUDENT_FAILURE':
+      return {
+        message: action.response.response.data,
+        error: true
+      }
     default:
       return state
   }

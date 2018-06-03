@@ -6,16 +6,9 @@ import { createOneComment } from '../../services/comment'
 import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import { associateTeacherToStudent } from '../../services/assistant'
 import ReactMarkdown from 'react-markdown'
+import { showDropdown, selectTeacher, filterByAssistant, coursePageReset } from '../../reducers/coursePageLogicReducer'
 
 class CoursePage extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      show: '',
-      selectedTeacher: '',
-      filterByAssistant: 0
-    }
-  }
   handleSubmit = async e => {
     e.preventDefault()
     const content = {
@@ -38,25 +31,27 @@ class CoursePage extends React.Component {
     this.props.coursePageInformation(this.props.courseId)
   }
 
+  componentWillUnmount() {
+    this.props.coursePageReset()
+  }
+
   changeHidden = (id) => {
     return () => {
-      this.setState({
-        show: this.state.show === id ? '' : id
-      })
+      this.props.showDropdown(this.props.coursePageLogic.showDropdown === id ? '' : id)
     }
   }
 
   changeSelectedTeacher = () => {
     return (e, data) => {
       const { value } = data
-      this.setState({ selectedTeacher: value })
+      this.props.selectTeacher(value)
     }
   }
 
   changeFilterAssistant = () => {
     return (e, data) => {
       const { value } = data
-      this.setState({ filterByAssistant: value })
+      this.props.filterByAssistant(value)
     }
   }
 
@@ -65,7 +60,7 @@ class CoursePage extends React.Component {
       e.preventDefault()
       const data = {
         studentInstanceId: id,
-        teacherInstanceId: this.state.selectedTeacher
+        teacherInstanceId: this.props.coursePageLogic.selectedTeacher
       }
       await this.props.associateTeacherToStudent(data)
     } catch (error) {
@@ -221,7 +216,7 @@ class CoursePage extends React.Component {
               <Table.Body>
                 {this.props.courseData.data
                   .filter(data => {
-                    return this.state.filterByAssistant === 0 || this.state.filterByAssistant === data.teacherInstanceId
+                    return this.props.coursePageLogic.filterByAssistant === 0 || this.props.coursePageLogic.filterByAssistant === data.teacherInstanceId
                   })
                   .map(data => (
                     <Table.Row key={data.id}>
@@ -249,7 +244,7 @@ class CoursePage extends React.Component {
                           <p>Assistant: not given</p>
                         )}
                         <Icon onClick={this.changeHidden(data.id)} name="pencil" size="medium" />
-                        {this.state.show === data.id ? (
+                        {this.props.coursePageLogic.showDropdown === data.id ? (
                           <div>
                             <Dropdown options={dropDownTeachers} onChange={this.changeSelectedTeacher()} placeholder='Select Teacher' fluid selection />
                             {/* <select style={{}}onChange={this.changeSelectedTeacher()}>
@@ -369,8 +364,9 @@ const mapStateToProps = (state, ownProps) => {
     teacherInstance: state.teacherInstance,
     selectedInstance: state.selectedInstance,
     courseData: state.coursePage,
+    coursePageLogic: state.coursePageLogic,
     courseId: ownProps.courseId
   }
 }
 
-export default connect(mapStateToProps, { createOneComment, getOneCI, coursePageInformation, associateTeacherToStudent })(CoursePage)
+export default connect(mapStateToProps, { createOneComment, getOneCI, coursePageInformation, associateTeacherToStudent, showDropdown, selectTeacher, filterByAssistant, coursePageReset })(CoursePage)
