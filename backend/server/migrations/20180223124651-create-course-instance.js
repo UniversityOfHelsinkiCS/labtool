@@ -33,6 +33,13 @@ module.exports = {
         type: Sequelize.INTEGER,
         defaultValue: 1
       },
+      currentCodeReview: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0
+      },
+      codeReviewActive: {
+        type: Sequelize.BOOLEAN
+      },
       ohid: {
         type: Sequelize.STRING
       },
