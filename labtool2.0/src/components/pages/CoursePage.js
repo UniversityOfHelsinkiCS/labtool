@@ -125,7 +125,18 @@ class CoursePage extends React.Component {
 
     let dropDownTeachers = []
     dropDownTeachers = this.createDropdownTeachers(dropDownTeachers)
-    let dropDownFilterTeachers = [{ key: 0, text: 'no filter', value: 0 }]
+    let dropDownFilterTeachers = [
+      {
+        key: 0,
+        text: 'no filter',
+        value: 0
+      },
+      {
+        key: null,
+        text: 'unassigned students',
+        value: null
+      }
+    ]
     dropDownFilterTeachers = this.createDropdownTeachers(dropDownFilterTeachers)
 
     return (
@@ -200,7 +211,15 @@ class CoursePage extends React.Component {
             <Header as="h2">Students </Header>
             <div style={{ textAlign: 'left' }}>
               <span>Filter by assigned teacher </span>
-              <Dropdown options={dropDownFilterTeachers} onChange={this.changeFilterAssistant()} placeholder="Select Teacher" fluid selection style={{ display: 'inline' }} />
+              <Dropdown
+                options={dropDownFilterTeachers}
+                onChange={this.changeFilterAssistant()}
+                placeholder="Select Teacher"
+                defaultValue={this.props.coursePageLogic.filterByAssiSstant}
+                fluid
+                selection
+                style={{ display: 'inline' }}
+              />
             </div>
             <Table celled>
               <Table.Header>

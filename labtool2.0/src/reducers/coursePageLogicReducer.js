@@ -21,10 +21,8 @@ const coursePageLogicReducer = (state = INITIAL_STATE, action) => {
     case 'COURSE_PAGE_FILTER_BY_ASSISTANT':
       return { ...state, filterByAssistant: action.assistant }
     case 'ASSOCIATE_TEACHER_AND_STUDENT_SUCCESS':
-      return { ...INITIAL_STATE, filterByAssistant: state.filterByAssistant }
+      return INITIAL_STATE
     case 'COURSE_PAGE_RESET':
-      return { ...INITIAL_STATE, filterByAssistant: state.filterByAssistant }
-    case 'LOGOUT_SUCCESS':
       return INITIAL_STATE
     default:
       return state
