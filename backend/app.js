@@ -123,6 +123,7 @@ require('./server/routes/userRouter')(app)
 require('./server/routes/courseInstanceRouter')(app)
 require('./server/routes/loginRouter')(app)
 require('./server/routes/adminRoutes')(app)
+require('./server/routes/codeReviewRoutes')(app)
 
 app.get('*', (req, res) =>
   res.status(404).send({

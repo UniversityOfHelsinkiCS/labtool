@@ -5,7 +5,18 @@ module.exports = (sequelize, DataTypes) => {
       points: DataTypes.DOUBLE,
       reviewNumber: DataTypes.INTEGER
     },
-    {}
+    {
+      hooks: {
+        beforeCreate: (newCodeReview, options) => {
+          CodeReview.destroy({
+            where: {
+              studentInstanceId: newCodeReview.studentInstanceId,
+              reviewNumber: newCodeReview.reviewNumber
+            }
+          })
+        }
+      }
+    }
   )
   CodeReview.associate = models => {
     CodeReview.belongsTo(models.StudentInstance, {
