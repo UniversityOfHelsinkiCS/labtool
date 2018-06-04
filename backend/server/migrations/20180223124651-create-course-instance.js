@@ -38,7 +38,8 @@ module.exports = {
         defaultValue: 0
       },
       codeReviewActive: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
       },
       ohid: {
         type: Sequelize.STRING
