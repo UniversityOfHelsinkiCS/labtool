@@ -25,6 +25,15 @@ module.exports = (sequelize, DataTypes) => {
       as: 'weeks'
     })
 
+    StudentInstance.hasMany(models.CodeReview, {
+      foreignKey: 'studentInstanceId',
+      as: 'codeReviews'
+    })
+
+    StudentInstance.hasMany(models.CodeReview, {
+      foreignKey: 'toReview'
+    })
+
     StudentInstance.belongsTo(models.User, {
       foreignKey: 'userId',
       onDelete: 'CASCADE'

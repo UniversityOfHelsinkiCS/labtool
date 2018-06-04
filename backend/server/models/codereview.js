@@ -13,8 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'CASCADE'
     })
     CodeReview.belongsTo(models.StudentInstance, {
-      foreignKey: 'toReview',
-      onDelete: 'CASCADE'
+      foreignKey: 'toReview'
     })
   }
   return CodeReview

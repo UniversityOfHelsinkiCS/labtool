@@ -33,7 +33,6 @@ module.exports = {
       },
       toReview: {
         type: Sequelize.INTEGER,
-        onDelete: 'CASCADE',
         references: {
           model: 'StudentInstances',
           key: 'id',
