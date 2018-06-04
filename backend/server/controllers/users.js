@@ -4,6 +4,10 @@ const CourseInstance = require('../models').CourseInstance
 const TeacherInstance = require('../models').TeacherInstance
 const helper = require('../helpers/users_controller_helper')
 
+function invalidInputResponse(res, error) {
+  res.status(400).send({ error })
+}
+
 module.exports = {
   /**
    *
@@ -15,8 +19,13 @@ module.exports = {
     helper.controller_before_auth_check_action(req, res)
 
     if (!req.body.email || req.body.email.length < 1) {
-      const error = { error: 'Email was too short... Implementing valid email check can be done here' }
-      res.status(400).send(error)
+      invalidInputResponse(res, 'Email was too short.')
+    } else if (req.body.email.length > 127) {
+      // 127 is an arbitrary limit, but there has to be some limit to avoid problems with the database.
+      invalidInputResponse(res, 'Email was too long.')
+    } else if (!req.body.email.includes('@')) {
+      // This doesn't actually check for email validity, but it's a start.
+      invalidInputResponse(res, 'Input was not a valid email address.')
     } else {
       User.update({ email: req.body.email }, { where: { id: req.decoded.id } }).then(
         User.findById(req.decoded.id)

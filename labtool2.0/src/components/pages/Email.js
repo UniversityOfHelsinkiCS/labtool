@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { updateUser } from '../../services/login'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router'
+import { resetEmailPage } from '../../reducers/emailReducer'
 
 /*
 take some elements from SetEmail.js, if user has already email in db
@@ -13,44 +14,33 @@ Is used to modify users email.
 */
 
 class Email extends Component {
-  state = {
-    loading: false,
-    redirectToNewPage: false
-  }
 
   handleSubmit = async e => {
     e.preventDefault()
-    try {
-      const content = {
-        email: e.target.email.value
-      }
-      if (content.email !== '' && content.email !== null) {
-        this.setState({ loading: true })
-        await this.props.updateUser(content)
-        this.setState({ redirectToNewPage: true })
-      }
-      alert('You added this email address: ' + content.email)
-    } catch (error) {
-      console.log(error)
+    const content = {
+      email: e.target.email.value
     }
+    await this.props.updateUser(content)
+  }
+
+  componentWillUnmount() {
+    this.props.resetEmailPage()
   }
 
   render() {
-    if (this.state.redirectToNewPage) {
+    if (this.props.emailPage.redirect) {
       return <Redirect to="/labtool/myPage" />
     } else {
       const user = { ...this.props.user.user }
+      const firstLogin = user.email === ''
       return (
         <div className="Email" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
-          <Loader active={this.state.loading} inline="centered" />
+          <Loader active={this.props.emailPage.loading} inline="centered" />
           <Grid centered>
-            {this.props.firstLogin ? (
+            {firstLogin ? (
               <div>
                 <Grid.Row>
                   <h3>Please give your email address: </h3>
-                </Grid.Row>
-                <Grid.Row>
-                  <p>Email is required because ...</p>
                 </Grid.Row>
               </div>
             ) : (
@@ -80,10 +70,13 @@ class Email extends Component {
                   <button className="ui left floated green button" type="submit">
                     Save
                   </button>
-                  <Link to="/labtool/mypage">
-                    {' '}
-                    <button className="ui right floated button"> Cancel</button>
-                  </Link>
+                  {firstLogin ? (
+                    <div />
+                  ) : (
+                    <Link to="/labtool/mypage">
+                      <button className="ui right floated button">Cancel</button>
+                    </Link>
+                  )}
                 </Form.Field>
               </Form>
             </Grid.Row>
@@ -97,9 +90,8 @@ class Email extends Component {
 const mapStateToProps = state => {
   return {
     user: state.user,
-    studentInstance: state.studentInstance,
-    teacherInstance: state.teacherInstance
+    emailPage: state.emailPage
   }
 }
 
-export default connect(mapStateToProps, { updateUser })(Email)
+export default connect(mapStateToProps, { updateUser, resetEmailPage })(Email)
