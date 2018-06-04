@@ -1,12 +1,12 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from '../App'
-import CoursePage from '../components/pages/CoursePage'
+import { CoursePage } from '../components/pages/CoursePage'
 import ConnectedCoursePage from '../components/pages/CoursePage'
 import { shallowToJson } from 'enzyme-to-json'
 import { shallow } from 'enzyme'
 import { Form } from 'semantic-ui-react'
-import { getOneCI } from '../services/courseInstance';
+import { getOneCI } from '../services/courseInstance'
 
 describe('<CoursePage />', () => {
   let wrapper
@@ -73,13 +73,13 @@ describe('<CoursePage />', () => {
       }
     }
   }
-  let call = jest.fn()
+  let mockFn = jest.fn()
 
   beforeEach(() => {
-    wrapper = shallow(<CoursePage createOneComment={call} getOneCI={call} coursePageInformation={output.ohid} />)
+    wrapper = shallow(<CoursePage createOneComment={mockFn} getOneCI={mockFn} coursePageInformation={mockFn} associateTeacherToStudent={mockFn} />)
   })
 
-  describe.skip('Course Page Component', () => {
+  describe('Course Page Component', () => {
     it('is ok', () => {
       true
     })

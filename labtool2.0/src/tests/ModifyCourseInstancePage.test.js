@@ -20,10 +20,10 @@ describe('<ModifyCourseInstancePage />', () => {
     currentWeek: 1,
     ohid: 'TKT20011.2018.K.A.1'
   }
-  let mym = jest.fn()
+  let mockFn = jest.fn()
 
   beforeEach(() => {
-    wrapper = shallow(<ModifyCourseInstancePage getOneCI={mym} clearNotifications={mym} selectedInstance={output} />)
+    wrapper = shallow(<ModifyCourseInstancePage getOneCI={mockFn} clearNotifications={mockFn} selectedInstance={output} />)
   })
 
   describe('Modify Instance Component', () => {

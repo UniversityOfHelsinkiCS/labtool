@@ -7,7 +7,7 @@ import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import { associateTeacherToStudent } from '../../services/assistant'
 import ReactMarkdown from 'react-markdown'
 
-class CoursePage extends React.Component {
+export class CoursePage extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
