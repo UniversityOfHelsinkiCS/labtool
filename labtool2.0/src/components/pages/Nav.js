@@ -46,7 +46,7 @@ class Nav extends Component {
             >
               <Image
                 size="mini"
-                src={LOGO}
+                src={`${process.env.PUBLIC_URL}/favicon.ico`}
                 style={{
                   bottom: '2px'
                 }}
