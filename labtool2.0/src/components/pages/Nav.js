@@ -39,7 +39,7 @@ class Nav extends Component {
             >
               <Image
                 size="mini"
-                src="/favicon.ico"
+                src="/doyouseeme.ico"
                 style={{
                   bottom: '2px'
                 }}
