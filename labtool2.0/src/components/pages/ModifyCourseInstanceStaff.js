@@ -38,6 +38,10 @@ export class ModifyCourseInstanceStaff extends React.Component {
   render() {
     return (
       <Container>
+        <div className="sixteen wide column" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
+          <h2>Add and remove assistants</h2>
+          <h2>{this.props.selectedInstance.name}</h2>
+        </div>
         <Header as="h2">Users</Header>
         <Form id="myForm" onSubmit={this.handleSubmit}>
           <Table singleLine color="yellow">

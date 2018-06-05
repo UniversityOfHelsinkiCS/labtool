@@ -9,6 +9,8 @@ module.exports = (sequelize, DataTypes) => {
       weekAmount: DataTypes.INTEGER,
       weekMaxPoints: DataTypes.DOUBLE,
       currentWeek: DataTypes.INTEGER,
+      currentCodeReview: DataTypes.INTEGER,
+      codeReviewActive: DataTypes.BOOLEAN,
       ohid: DataTypes.STRING
     },
     {}
