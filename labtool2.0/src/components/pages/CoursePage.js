@@ -38,7 +38,7 @@ export class CoursePage extends React.Component {
     this.props.coursePageInformation(this.props.courseId)
   }
 
-  changeHidden = (id) => {
+  changeHidden = id => {
     return () => {
       this.setState({
         show: this.state.show === id ? '' : id
@@ -251,7 +251,7 @@ export class CoursePage extends React.Component {
                         <Icon onClick={this.changeHidden(data.id)} name="pencil" size="medium" />
                         {this.state.show === data.id ? (
                           <div>
-                            <Dropdown options={dropDownTeachers} onChange={this.changeSelectedTeacher()} placeholder='Select Teacher' fluid selection />
+                            <Dropdown options={dropDownTeachers} onChange={this.changeSelectedTeacher()} placeholder="Select Teacher" fluid selection />
                             {/* <select style={{}}onChange={this.changeSelectedTeacher()}>
                               <option value="" disabled selected>Select your option</option>
                               {dropDownTeachers.map(m => (
@@ -302,13 +302,13 @@ export class CoursePage extends React.Component {
 
                 {this.props.courseData.data.teacherInstanceId && this.props.selectedInstance.teacherInstances ? (
                   this.props.selectedInstance.teacherInstances.filter(teacher => teacher.id === this.props.courseData.data.teacherInstanceId).map(teacher => (
-                    <h3>
+                    <h3 key={teacher.id}>
                       Assistant: {teacher.firsts} {teacher.lastname}
                     </h3>
                   ))
                 ) : (
-                    <h3>Assistant: not given</h3>
-                  )}
+                  <h3>Assistant: not given</h3>
+                )}
               </Card.Content>
             </Card>
 
@@ -355,8 +355,8 @@ export class CoursePage extends React.Component {
             </Table>
           </div>
         ) : (
-            <div />
-          )}
+          <div />
+        )}
       </div>
     )
   }
