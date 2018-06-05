@@ -334,7 +334,7 @@ export class CoursePage extends React.Component {
                     <Table.Cell>
                       <Comment.Group>
                         {week.comments.filter(c => c.hidden !== true).map(comment => (
-                          <Comment>
+                          <Comment key={comment.id}>
                             <Comment.Author>{comment.from}</Comment.Author>
                             <Comment.Text>
                               {' '}
