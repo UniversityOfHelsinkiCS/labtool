@@ -148,10 +148,18 @@ describe('<CoursePage /> as teacher', () => {
     ]
   }
 
+  const coursePageLogic = {
+    showDropdown: '',
+    selectedTeacher: '',
+    filterByAssistant: 0
+  }
+
   let mockFn = jest.fn()
 
   beforeEach(() => {
-    wrapper = shallow(<CoursePage courseData={courseData} getOneCI={mockFn} coursePageInformation={mockFn} associateTeacherToStudent={mockFn} selectedInstance={coursePage} />)
+    wrapper = shallow(
+      <CoursePage courseData={courseData} getOneCI={mockFn} coursePageInformation={mockFn} associateTeacherToStudent={mockFn} selectedInstance={coursePage} coursePageLogic={coursePageLogic} />
+    )
   })
 
   describe('CoursePage Component', () => {

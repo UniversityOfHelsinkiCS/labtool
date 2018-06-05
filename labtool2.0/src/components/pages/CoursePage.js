@@ -9,7 +9,7 @@ import ReactMarkdown from 'react-markdown'
 import { showDropdown, selectTeacher, filterByAssistant, coursePageReset } from '../../reducers/coursePageLogicReducer'
 
 export class CoursePage extends React.Component {
-   handleSubmit = async e => {
+  handleSubmit = async e => {
     e.preventDefault()
     const content = {
       hidden: false,
@@ -35,7 +35,7 @@ export class CoursePage extends React.Component {
     this.props.coursePageReset()
   }
 
-  changeHidden = (id) => 
+  changeHidden = id => {
     return () => {
       this.props.showDropdown(this.props.coursePageLogic.showDropdown === id ? '' : id)
     }
@@ -262,10 +262,10 @@ export class CoursePage extends React.Component {
                         ) : (
                           <p>Assistant: not given</p>
                         )}
-                        <Icon onClick={this.changeHidden(data.id)} name="pencil" size="medium" />
+                        <Icon onClick={this.changeHidden(data.id)} name="pencil" size="small" />
                         {this.props.coursePageLogic.showDropdown === data.id ? (
                           <div>
-                            <Dropdown options={dropDownTeachers} onChange={this.changeSelectedTeacher()} placeholder='Select Teacher' fluid selection />
+                            <Dropdown options={dropDownTeachers} onChange={this.changeSelectedTeacher()} placeholder="Select Teacher" fluid selection />
                             {/* <select style={{}}onChange={this.changeSelectedTeacher()}>
                               <option value="" disabled selected>Select your option</option>
                               {dropDownTeachers.map(m => (

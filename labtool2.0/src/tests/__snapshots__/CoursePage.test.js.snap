@@ -477,6 +477,11 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
               "value": 0,
             },
             Object {
+              "key": null,
+              "text": "unassigned students",
+              "value": null,
+            },
+            Object {
               "key": 10001,
               "text": "Pää Opettaja",
               "value": 10001,

@@ -2,6 +2,22 @@
 
 exports[`<ModifyCourseInstanceStaff /> Components renders correctly 1`] = `
 <Container>
+  <div
+    className="sixteen wide column"
+    style={
+      Object {
+        "textAlign": "center",
+        "textAlignVertical": "center",
+      }
+    }
+  >
+    <h2>
+      Add and remove assistants
+    </h2>
+    <h2>
+      Aineopintojen harjoitustyö: Tietokantasovellus
+    </h2>
+  </div>
   <Header
     as="h2"
   >

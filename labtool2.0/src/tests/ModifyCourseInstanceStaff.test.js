@@ -1,13 +1,11 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
 import { ModifyCourseInstanceStaff } from '../components/pages/ModifyCourseInstanceStaff'
 import { shallow } from 'enzyme'
 import { Container, Table, Label } from 'semantic-ui-react'
-import { clearNotifications } from '../reducers/notificationReducer'
 
 describe('<ModifyCourseInstanceStaff />', () => {
   let wrapper
-  let mym = jest.fn()
+  let mockFn = jest.fn()
   const selectedI = {
     id: 10013,
     name: 'Aineopintojen harjoitustyö: Tietokantasovellus',
@@ -57,7 +55,7 @@ describe('<ModifyCourseInstanceStaff />', () => {
   ]
 
   beforeEach(() => {
-    wrapper = shallow(<ModifyCourseInstanceStaff courseId={5} users={users} selectedInstance={selectedI} getAllUsers={mym} getOneCI={mym} createOne={mym} clearNotifications={mym} />)
+    wrapper = shallow(<ModifyCourseInstanceStaff courseId={5} users={users} selectedInstance={selectedI} getAllUsers={mockFn} getOneCI={mockFn} createOne={mockFn} clearNotifications={mockFn} />)
   })
 
   describe('Components', () => {
