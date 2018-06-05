@@ -148,6 +148,13 @@ class CoursePage extends React.Component {
           {this.props.selectedInstance.active === true ? (
             this.props.courseData.role === 'teacher' || this.props.courseData.data !== null ? (
               <p />
+            ) : this.props.selectedInstance.registrationAtWebOodi === 'notfound' ? (
+              <div className="sixteen wide column">
+                <Message compact>
+                  <Message.Header>No registration found at WebOodi.</Message.Header>
+                  <p>If you have just registered, please try again in two hours.</p>
+                </Message>
+              </div>
             ) : (
               <div className="sixteen wide column">
                 <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>
