@@ -1,0 +1,264 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<MyPage /> MyPage Component should render correctly 1`] = `
+<div
+  className="MyPage"
+>
+  <Segment
+    padded={true}
+  >
+    <Container>
+      <Header
+        as="h2"
+      >
+        Opiskelija
+        , 
+        Maarit Mirja
+      </Header>
+      <Table
+        as="table"
+        color="blue"
+        singleLine={true}
+        style={
+          Object {
+            "color": "grey",
+          }
+        }
+        textAlign="left"
+      >
+        <TableBody
+          as="tbody"
+        >
+          <TableRow
+            as="tr"
+            cellAs="td"
+          >
+            <TableCell
+              as="td"
+            >
+              <Icon
+                as="i"
+                name="user"
+                size="big"
+                style={
+                  Object {
+                    "marginRight": 20,
+                  }
+                }
+              />
+              <em
+                style={
+                  Object {
+                    "color": "grey",
+                  }
+                }
+              >
+                tiraopiskelija1
+                 
+              </em>
+              <br />
+            </TableCell>
+            <TableCell
+              as="td"
+            />
+          </TableRow>
+          <TableRow
+            as="tr"
+            cellAs="td"
+          >
+            <TableCell
+              as="td"
+            >
+              <Icon
+                as="i"
+                name="id card outline"
+                size="big"
+                style={
+                  Object {
+                    "marginRight": 20,
+                  }
+                }
+              />
+              014578343
+              <br />
+            </TableCell>
+            <TableCell
+              as="td"
+            />
+          </TableRow>
+          <TableRow
+            as="tr"
+            cellAs="td"
+          >
+            <TableCell
+              as="td"
+            >
+              <Icon
+                as="i"
+                name="mail"
+                size="big"
+                style={
+                  Object {
+                    "marginRight": 20,
+                  }
+                }
+                tooltip="Add users to your feed"
+              />
+              maarit.opiskelija@helsinki.fi
+              <br />
+            </TableCell>
+            <TableCell
+              as="td"
+              textAlign="right"
+              verticalAlign="bottom"
+            >
+              <Link
+                replace={false}
+                to="/labtool/email"
+              >
+                <Button
+                  as="button"
+                  circular={true}
+                  icon={
+                    Object {
+                      "color": "blue",
+                      "name": "edit",
+                      "size": "large",
+                    }
+                  }
+                  role="button"
+                  size="tiny"
+                />
+              </Link>
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    </Container>
+  </Segment>
+  <div
+    className="Instructions"
+  >
+    <List>
+      <ListItem
+        content="Edit email address"
+        icon={
+          Object {
+            "color": "blue",
+            "name": "edit",
+          }
+        }
+      />
+    </List>
+  </div>
+  <br />
+  <br />
+  <br />
+  <br />
+  <Segment
+    padded={true}
+  >
+    <Container>
+      <Header
+        as="h2"
+        className="CoursesHeader"
+      >
+        My Courses (Student)
+         
+      </Header>
+      <Table
+        as="table"
+        color="yellow"
+        key="grey"
+        singleLine={true}
+      >
+        <TableBody
+          as="tbody"
+        >
+          <TableRow
+            as="tr"
+            cellAs="td"
+            key="10011"
+          >
+            <TableCell
+              as="td"
+            >
+              <Link
+                replace={false}
+                to="/labtool/courses/TKT20010.2018.K.A.1"
+              >
+                Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit
+              </Link>
+            </TableCell>
+            <TableCell
+              as="td"
+              textAlign="right"
+            >
+              <Link
+                replace={false}
+                to="/labtool/courses/TKT20010.2018.K.A.1"
+              >
+                <Button
+                  as="button"
+                  circular={true}
+                  icon={
+                    Object {
+                      "color": "blue",
+                      "name": "eye",
+                      "size": "large",
+                    }
+                  }
+                  role="button"
+                  size="tiny"
+                />
+              </Link>
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+      <div>
+        <br />
+        <Divider
+          horizontal={true}
+        />
+        <Container>
+          <Header
+            as="h2"
+            className="CoursesHeader"
+          >
+            My Courses (Teacher)
+          </Header>
+          <Table
+            as="table"
+            color="yellow"
+            key="grey"
+            singleLine={true}
+          >
+            <TableBody
+              as="tbody"
+            />
+          </Table>
+        </Container>
+      </div>
+    </Container>
+  </Segment>
+  <div
+    className="Instructions"
+  >
+    <List>
+      <ListItem
+        content="Show course page"
+        icon={
+          Object {
+            "color": "blue",
+            "name": "eye",
+          }
+        }
+      />
+    </List>
+    <br />
+    <br />
+    <br />
+  </div>
+</div>
+`;
