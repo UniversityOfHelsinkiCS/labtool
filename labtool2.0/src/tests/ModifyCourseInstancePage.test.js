@@ -9,7 +9,8 @@ import { Form } from 'semantic-ui-react'
 
 describe('<ModifyCourseInstancePage />', () => {
   let wrapper
-  let output = {
+
+  const courseData = {
     id: 1,
     name: 'Aineopintojen harjoitustyö: Tietokantasovellus (periodi IV)',
     start: '2018-03-11T21:00:00.000Z',
@@ -23,7 +24,7 @@ describe('<ModifyCourseInstancePage />', () => {
   let mockFn = jest.fn()
 
   beforeEach(() => {
-    wrapper = shallow(<ModifyCourseInstancePage getOneCI={mockFn} clearNotifications={mockFn} selectedInstance={output} />)
+    wrapper = shallow(<ModifyCourseInstancePage getOneCI={mockFn} clearNotifications={mockFn} selectedInstance={courseData} />)
   })
 
   describe('Modify Instance Component', () => {
