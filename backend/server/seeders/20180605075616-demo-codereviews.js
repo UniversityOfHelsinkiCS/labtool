@@ -6,7 +6,7 @@ module.exports = {
       'CodeReviews',
       [
         {
-          id: 1,
+          id: 10001,
           points: null,
           reviewNumber: 1,
           createdAt: '2018-03-26',
@@ -15,7 +15,7 @@ module.exports = {
           toReview: 10012
         },
         {
-          id: 2,
+          id: 10002,
           points: null,
           reviewNumber: 1,
           createdAt: '2018-03-26',
@@ -24,7 +24,7 @@ module.exports = {
           toReview: 10011
         },
         {
-          id: 3,
+          id: 10003,
           points: null,
           reviewNumber: 1,
           createdAt: '2018-03-26',
@@ -33,7 +33,7 @@ module.exports = {
           toReview: 10022
         },
         {
-          id: 4,
+          id: 10004,
           points: null,
           reviewNumber: 1,
           createdAt: '2018-03-26',
@@ -42,7 +42,7 @@ module.exports = {
           toReview: 10021
         },
         {
-          id: 5,
+          id: 10005,
           points: null,
           reviewNumber: 2,
           createdAt: '2018-03-26',
@@ -51,7 +51,7 @@ module.exports = {
           toReview: 10031
         },
         {
-          id: 6,
+          id: 10006,
           points: null,
           reviewNumber: 2,
           createdAt: '2018-03-26',
