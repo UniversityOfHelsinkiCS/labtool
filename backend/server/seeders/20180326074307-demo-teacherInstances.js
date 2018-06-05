@@ -25,7 +25,7 @@ module.exports = {
           id: 10003,
           userId: 10010,
           courseInstanceId: 10013,
-          admin: false,
+          admin: true,
           createdAt: '2018-03-26',
           updatedAt: '2018-03-26'
         },
