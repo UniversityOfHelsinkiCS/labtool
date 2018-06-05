@@ -333,6 +333,30 @@ export class CoursePage extends React.Component {
               </Card.Content>
             </Card>
 
+            <Card fluid color="yellow">
+              <Card.Content>
+                {this.props.courseData.data.codeReviews ? (
+                  this.props.courseData.data.codeReviews.map(
+                    codeReview =>
+                      codeReview.reviewNumber ? (
+                        <div>
+                          <div>
+                            <h4>Number: {codeReview.reviewNumber}</h4>
+                          </div>
+                          <div>
+                            <h4>Target: {codeReview.toReview}</h4>
+                          </div>
+                        </div>
+                      ) : (
+                        <div />
+                      )
+                  )
+                ) : (
+                  <h3>Ei ollut code reviewsejä</h3>
+                )}
+              </Card.Content>
+            </Card>
+
             <h3> Points and feedback </h3>
 
             <Table celled padded unstackable>
