@@ -1,0 +1,115 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Register /> RegisterPage Component should render correctly 1`] = `
+<div
+  className="RegisterPage"
+  style={
+    Object {
+      "textAlign": "center",
+      "textAlignVertical": "center",
+    }
+  }
+>
+  <Loader
+    active={false}
+    inline="centered"
+  />
+  <Grid>
+    <GridRow
+      centered={true}
+    >
+      <h3>
+        Register for 
+      </h3>
+    </GridRow>
+  </Grid>
+  <Grid>
+    <GridRow
+      centered={true}
+    >
+      <Form
+        as="form"
+        onSubmit={[Function]}
+      >
+        <FormGroup
+          inline={true}
+        >
+          <label
+            style={
+              Object {
+                "textAlign": "left",
+                "width": "100px",
+              }
+            }
+          >
+            Project name
+          </label>
+          <Input
+            className="form-control1"
+            icon="rocket"
+            iconPosition="left"
+            name="projectName"
+            placeholder="MyProjectName"
+            required={true}
+            style={
+              Object {
+                "minWidth": "30em",
+              }
+            }
+            type="text"
+          />
+        </FormGroup>
+        <FormGroup
+          inline={true}
+        >
+          <label
+            style={
+              Object {
+                "textAlign": "left",
+                "width": "100px",
+              }
+            }
+          >
+            GitHub link
+          </label>
+          <Input
+            className="form-control2"
+            icon="github"
+            iconPosition="left"
+            name="github"
+            placeholder="https://github.com/myaccount/myrepo"
+            required={true}
+            style={
+              Object {
+                "minWidth": "30em",
+              }
+            }
+            type="url"
+          />
+        </FormGroup>
+        <FormField>
+          <button
+            className="ui left floated blue button"
+            type="submit"
+          >
+             
+            Submit
+          </button>
+          <Link
+            replace={false}
+            to="/labtool/courses/undefined"
+          >
+             
+            <button
+              className="ui right floated button"
+              type="Cancel"
+            >
+              Cancel
+            </button>
+          </Link>
+        </FormField>
+      </Form>
+    </GridRow>
+  </Grid>
+</div>
+`;

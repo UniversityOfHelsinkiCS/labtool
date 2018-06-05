@@ -1,9 +1,5 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
-import App from '../App'
 import { ModifyCourseInstancePage } from '../components/pages/ModifyCourseInstancePage'
-import ConnectecModifyCourseInstancePage from '../components/pages/ModifyCourseInstancePage'
-import { shallowToJson } from 'enzyme-to-json'
 import { shallow } from 'enzyme'
 import { Form } from 'semantic-ui-react'
 
@@ -37,7 +33,7 @@ describe('<ModifyCourseInstancePage />', () => {
     })
 
     it('should render correctly', () => {
-      expect(wrapper.length).toEqual(1)
+      expect(wrapper).toMatchSnapshot()
     })
 
     it('renders weekly amount', () => {

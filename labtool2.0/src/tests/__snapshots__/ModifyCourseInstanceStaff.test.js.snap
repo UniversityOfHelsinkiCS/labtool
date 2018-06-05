@@ -1,0 +1,106 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<ModifyCourseInstanceStaff /> Components renders correctly 1`] = `
+<Container>
+  <Header
+    as="h2"
+  >
+    Users
+  </Header>
+  <Form
+    as="form"
+    id="myForm"
+    onSubmit={[Function]}
+  >
+    <Table
+      as="table"
+      color="yellow"
+      singleLine={true}
+    >
+      <TableHeader
+        as="thead"
+      >
+        <TableRow
+          as="tr"
+          cellAs="td"
+        >
+          <TableHeaderCell
+            as="th"
+          >
+            Name
+          </TableHeaderCell>
+          <TableHeaderCell
+            as="th"
+          >
+            Status
+          </TableHeaderCell>
+          <TableHeaderCell
+            as="th"
+          />
+        </TableRow>
+      </TableHeader>
+      <TableBody
+        as="tbody"
+      >
+        <TableRow
+          as="tr"
+          cellAs="td"
+          key="10010"
+        >
+          <TableCell
+            as="td"
+          >
+            Pää
+             
+            Opettaja
+          </TableCell>
+          <TableCell
+            as="td"
+          >
+            <Label
+              color="yellow"
+              horizontal={true}
+            >
+              Admin
+            </Label>
+          </TableCell>
+        </TableRow>
+        <TableRow
+          as="tr"
+          cellAs="td"
+          key="10011"
+        >
+          <TableCell
+            as="td"
+          >
+            Sivu
+             
+            Opiskelija
+          </TableCell>
+          <TableCell
+            as="td"
+          >
+            <div>
+              <Label
+                color="yellow"
+                horizontal={true}
+              >
+                Non-admin
+              </Label>
+              <Button
+                as="button"
+                color="green"
+                onClick={[Function]}
+                role="button"
+                size="tiny"
+              >
+                Add admin
+              </Button>
+            </div>
+          </TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
+  </Form>
+</Container>
+`;

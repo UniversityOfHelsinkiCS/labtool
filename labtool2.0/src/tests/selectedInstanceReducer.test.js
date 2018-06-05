@@ -2,8 +2,11 @@ import selectedInstanceReducer from '../reducers/selectedInstanceReducer'
 import deepFreeze from 'deep-freeze'
 
 describe('selectedInstanceRedurer', () => {
-  it('a new teacherinstance is added to the selected courseinstance when TEACHER_CREATE_SUCCESS is called', () => {
-    const state = {
+  let state
+  let action
+
+  beforeEach(() => {
+    state = {
       teacherInstances: [
         {
           id: 1004,
@@ -15,7 +18,7 @@ describe('selectedInstanceRedurer', () => {
         }
       ]
     }
-    const action = {
+    action = {
       type: 'TEACHER_CREATE_SUCCESS',
       response: {
         id: 1003,
@@ -26,10 +29,17 @@ describe('selectedInstanceRedurer', () => {
         courseInstanceId: 10013
       }
     }
+  })
 
+  it('new teacherinstance is added to teacherInstances when TEACHER_CREATE_SUCCESS is called', () => {
     deepFreeze(state)
     const newState = selectedInstanceReducer(state, action)
     expect(newState.teacherInstances.length).toBe(2)
+  })
+
+  it('correct teacher is added to teacherInstances  when TEACHER_CREATE_SUCCESS is called', () => {
+    deepFreeze(state)
+    const newState = selectedInstanceReducer(state, action)
     expect(newState.teacherInstances[1].id).toEqual(1003)
   })
 })

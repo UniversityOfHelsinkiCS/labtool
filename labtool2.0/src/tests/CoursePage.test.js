@@ -1,12 +1,6 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
-import App from '../App'
 import { CoursePage } from '../components/pages/CoursePage'
-import ConnectedCoursePage from '../components/pages/CoursePage'
-import { shallowToJson } from 'enzyme-to-json'
 import { shallow } from 'enzyme'
-import { Form } from 'semantic-ui-react'
-import { getOneCI } from '../services/courseInstance'
 
 describe('<CoursePage /> as teacher', () => {
   let wrapper
@@ -170,7 +164,7 @@ describe('<CoursePage /> as teacher', () => {
     })
 
     it('should render correctly', () => {
-      expect(wrapper.length).toEqual(1)
+      expect(wrapper).toMatchSnapshot()
     })
 
     it('renders teachers view', () => {
@@ -273,7 +267,7 @@ describe('<CoursePage /> as student', () => {
     })
 
     it('should render correctly', () => {
-      expect(wrapper.length).toEqual(1)
+      expect(wrapper).toMatchSnapshot()
     })
 
     it('renders students view', () => {
