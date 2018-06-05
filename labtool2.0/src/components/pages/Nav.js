@@ -3,18 +3,25 @@ import { connect } from 'react-redux'
 import React, { Component } from 'react'
 import { Menu, Icon, Image } from 'semantic-ui-react'
 import { logout } from '../../reducers/loginReducer'
+import { LOGO } from './../../config/config'
+
 
 /**
  * Navigation bar component
  */
 class Nav extends Component {
+
+
+
   handleLogout = async e => {
+    
     e.preventDefault()
     window.localStorage.removeItem('loggedLabtool')
     await this.props.logout()
   }
 
   render() {
+    console.log('LOGO', LOGO)
     const user = { ...this.props.user.user }
 
     return (
@@ -39,7 +46,7 @@ class Nav extends Component {
             >
               <Image
                 size="mini"
-                src="/labtool/favicon.ico"
+                src={LOGO}
                 style={{
                   bottom: '2px'
                 }}
