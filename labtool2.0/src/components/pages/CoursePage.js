@@ -169,7 +169,7 @@ export class CoursePage extends React.Component {
 
         {/** Shown when the users role in this course is teacher.*/}
         {this.props.courseData.role === 'teacher' ? (
-          <div>
+          <div className="TeachersView">
             <br />
             <Table>
               <Table.Header>
@@ -248,9 +248,9 @@ export class CoursePage extends React.Component {
                         ) : (
                           <p>Assistant: not given</p>
                         )}
-                        <Icon onClick={this.changeHidden(data.id)} name="pencil" size="medium" />
+                        <Icon onClick={this.changeHidden(data.id)} name="pencil" size="small" />
                         {this.state.show === data.id ? (
-                          <div>
+                          <div className="AssistantDropdown">
                             <Dropdown options={dropDownTeachers} onChange={this.changeSelectedTeacher()} placeholder="Select Teacher" fluid selection />
                             {/* <select style={{}}onChange={this.changeSelectedTeacher()}>
                               <option value="" disabled selected>Select your option</option>
@@ -289,7 +289,7 @@ export class CoursePage extends React.Component {
 
         {/** Shown when the users role in this course is student.*/}
         {this.props.courseData.role === 'student' && this.props.courseData.data !== null ? (
-          <div>
+          <div className="StudentsView">
             <h3> </h3>
 
             <Card fluid color="yellow">
