@@ -4,6 +4,7 @@ const login = require('./login')
 const admin = require('./admin')
 const weeks = require('./weeks')
 const assistants = require('./assistants')
+const codeReviews = require('./codeReviews')
 
 module.exports = {
   courseInstances,
@@ -11,5 +12,6 @@ module.exports = {
   login,
   admin,
   weeks,
-  assistants
+  assistants,
+  codeReviews
 }

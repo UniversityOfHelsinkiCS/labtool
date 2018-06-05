@@ -8,6 +8,7 @@ const Sequelize = require('sequelize')
 const Op = Sequelize.Op
 const StudentInstanceController = require('../controllers').studentInstances
 const Week = require('../models').Week
+const CodeReview = require('../models').CodeReview
 const Comment = require('../models').Comment
 const env = process.env.NODE_ENV || 'development'
 const config = require('./../config/config.js')[env]
@@ -83,6 +84,16 @@ module.exports = {
             ]
           },
           {
+            model: CodeReview,
+            as: 'codeReviews',
+            where: {
+              reviewNumber: {
+                [Op.gte]: course.currentCodeReview
+              }
+            },
+            required: false
+          },
+          {
             model: User
           }
         ]
@@ -111,6 +122,10 @@ module.exports = {
                 as: 'comments'
               }
             ]
+          },
+          {
+            model: CodeReview,
+            as: 'codeReviews'
           },
           {
             model: User
