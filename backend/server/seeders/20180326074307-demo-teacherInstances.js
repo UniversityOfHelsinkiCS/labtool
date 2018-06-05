@@ -33,7 +33,7 @@ module.exports = {
           id: 10011,
           userId: 10015,
           courseInstanceId: 10011,
-          admin: true,
+          admin: false,
           createdAt: '2018-03-26',
           updatedAt: '2018-03-26'
         },
@@ -41,7 +41,7 @@ module.exports = {
           id: 10012,
           userId: 10025,
           courseInstanceId: 10012,
-          admin: true,
+          admin: false,
           createdAt: '2018-03-26',
           updatedAt: '2018-03-26'
         }
