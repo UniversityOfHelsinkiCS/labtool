@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Notification /> with error Notification Component should render correctly 1`] = `
+<Message
+  className="error"
+  color="red"
+  size="large"
+>
+  This is a test message, please ignore.
+</Message>
+`;
+
+exports[`<Notification /> without content Notification Component should render correctly 1`] = `
+<Grid>
+  <GridRow>
+    <br />
+    <br />
+    <br />
+  </GridRow>
+</Grid>
+`;
+
+exports[`<Notification /> without error Notification Component should render correctly 1`] = `
+<Message
+  className="success"
+  color="green"
+  size="large"
+>
+  This is a test message, please ignore.
+</Message>
+`;
