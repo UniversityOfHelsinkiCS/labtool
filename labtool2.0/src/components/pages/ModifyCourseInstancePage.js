@@ -121,7 +121,7 @@ export class ModifyCourseInstancePage extends Component {
         </Grid>
 
         <Link to={`/labtool/ModifyCourseInstanceStaff/${this.props.selectedInstance.ohid}`}>
-          <Button floated="center">Add assistant teachers</Button>
+          <Button block="true">Add assistant teachers</Button>
         </Link>
       </div>
     )
