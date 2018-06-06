@@ -7,11 +7,11 @@ import { Form, Input, Button, Grid, Loader } from 'semantic-ui-react'
  *  The page used to login
  */
 
-class LoginPage extends React.Component {
+export class LoginPage extends React.Component {
   state = {
     loading: false
   }
-  
+
   handleSubmit = async e => {
     e.preventDefault()
 
@@ -19,19 +19,18 @@ class LoginPage extends React.Component {
       username: e.target.username.value,
       password: e.target.password.value
     }
-    console.log("Setting state.loading to true")
+    console.log('Setting state.loading to true')
     this.setState({ loading: true })
     setTimeout(() => {
-      console.log("Setting state.loading to false")
+      console.log('Setting state.loading to false')
       this.setState({ loading: false })
     }, 1000)
-    console.log("Has set state.loading to false")
+    console.log('Has set state.loading to false')
     await this.props.login(content)
-    console.log("Function handleSubmit has reached its end")
+    console.log('Function handleSubmit has reached its end')
   }
 
   render() {
-    console.log("Rendering")
     return (
       <div className="LoginPage">
         <Loader active={this.state.loading} inline="centered" />

@@ -1,0 +1,91 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] = `
+<div
+  className="ReviewStudent"
+  style={
+    Object {
+      "textAlign": "center",
+      "textAlignVertical": "center",
+    }
+  }
+>
+  <h2>
+     
+  </h2>
+  <h3>
+     
+    Maarit Mirja
+     
+    Opiskelija
+     
+  </h3>
+  <h3>
+     Viikko 
+     
+  </h3>
+  <Grid
+    centered={true}
+  >
+    <Form
+      as="form"
+      onSubmit={[Function]}
+    >
+      <FormGroup
+        inline={true}
+        unstackable={true}
+      >
+        <FormField>
+          <label>
+            Points 0-
+          </label>
+          <Input
+            defaultValue=""
+            name="points"
+            step="0.01"
+            type="number"
+          />
+        </FormField>
+      </FormGroup>
+      <FormGroup
+        inline={true}
+        unstackable={true}
+      >
+        <label>
+           Feedback 
+        </label>
+        <FormTextArea
+          as={[Function]}
+          control={[Function]}
+          defaultValue=""
+          name="comment"
+        />
+      </FormGroup>
+      <FormField>
+        <Button
+          as="button"
+          className="ui left floated green button"
+          role="button"
+          type="submit"
+        >
+          Save
+        </Button>
+        <Link
+          replace={false}
+          to="/labtool/browsereviews/undefined/10011"
+          type="Cancel"
+        >
+          <Button
+            as="button"
+            className="ui right floated button"
+            role="button"
+            type="cancel"
+          >
+            Cancel
+          </Button>
+        </Link>
+      </FormField>
+    </Form>
+  </Grid>
+</div>
+`;

@@ -6,9 +6,12 @@ import deepFreeze from 'deep-freeze'
 // with the right format
 
 describe('courseInstanceReducer', () => {
-  it('returns the object with added european dates and shorter courseid', () => {
-    const state = []
-    const action = {
+  let state
+  let action
+
+  beforeEach(() => {
+    state = []
+    action = {
       type: 'CI_GET_ALL_SUCCESS',
       response: [
         {
@@ -24,17 +27,23 @@ describe('courseInstanceReducer', () => {
         }
       ]
     }
+  })
 
+  it('returns the object with european start date', () => {
     deepFreeze(state)
     const newState = courseInstanceReducer(state, action)
-
-    expect(newState.length).toBe(1)
-    expect(newState[0]).toHaveProperty('europeanStart')
-    expect(newState[0]).toHaveProperty('europeanEnd')
-    expect(newState[0]).toHaveProperty('shorterId')
-
     expect(newState[0]['europeanStart']).toMatch('11.03.2018')
+  })
+
+  it('return the object with european end date', () => {
+    deepFreeze(state)
+    const newState = courseInstanceReducer(state, action)
     expect(newState[0]['europeanEnd']).toMatch('11.03.2018')
+  })
+
+  it('returns the object with shorter course id', () => {
+    deepFreeze(state)
+    const newState = courseInstanceReducer(state, action)
     expect(newState[0]['shorterId']).toMatch('TKT20011')
   })
 })

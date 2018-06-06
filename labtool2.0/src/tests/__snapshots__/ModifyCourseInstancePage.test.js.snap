@@ -1,0 +1,205 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<ModifyCourseInstancePage /> Modify Instance Component should render correctly 1`] = `
+<div
+  className="CoursePage"
+  style={
+    Object {
+      "textAlign": "center",
+      "textAlignVertical": "center",
+    }
+  }
+>
+  <Grid>
+    <GridRow
+      centered={true}
+    >
+      <h2>
+         Edit course: 
+        Aineopintojen harjoitustyö: Tietokantasovellus (periodi IV)
+         
+      </h2>
+    </GridRow>
+  </Grid>
+  <Grid>
+    <GridRow
+      centered={true}
+    >
+      <div>
+        <GridRow>
+          <h4
+            style={
+              Object {
+                "color": "#21ba45",
+              }
+            }
+          >
+            This course is currently activated.
+          </h4>
+        </GridRow>
+      </div>
+    </GridRow>
+  </Grid>
+  <Grid>
+    <GridRow
+      centered={true}
+    >
+      <Form
+        as="form"
+        onSubmit={[Function]}
+      >
+        <FormGroup
+          inline={true}
+        >
+          <label
+            style={
+              Object {
+                "textAlign": "left",
+                "width": "125px",
+              }
+            }
+          >
+            Week amount
+          </label>
+          <Input
+            className="form-control1"
+            defaultValue="7"
+            name="weekAmount"
+            required="true"
+            style={
+              Object {
+                "maxWidth": "7em",
+              }
+            }
+            type="text"
+          />
+        </FormGroup>
+        <FormGroup
+          inline={true}
+        >
+          <label
+            style={
+              Object {
+                "textAlign": "left",
+                "width": "125px",
+              }
+            }
+          >
+            Weekly maxpoints
+          </label>
+          <Input
+            className="form-control2"
+            defaultValue="2"
+            name="weeklyMaxpoints"
+            required="true"
+            style={
+              Object {
+                "maxWidth": "7em",
+              }
+            }
+            type="text"
+          />
+        </FormGroup>
+        <FormGroup
+          inline={true}
+        >
+          <label
+            style={
+              Object {
+                "textAlign": "left",
+                "width": "125px",
+              }
+            }
+          >
+            Current week
+          </label>
+          <Input
+            className="form-control3"
+            defaultValue="1"
+            name="currentWeek"
+            required="true"
+            style={
+              Object {
+                "maxWidth": "7em",
+              }
+            }
+            type="text"
+          />
+        </FormGroup>
+        <FormField
+          inline={true}
+        >
+          <Radio
+            checked={false}
+            label="Activate course"
+            name="courseActive"
+            onChange={[Function]}
+            style={
+              Object {
+                "textAlign": "left",
+                "width": "150px",
+              }
+            }
+            type="radio"
+            value="true"
+          />
+        </FormField>
+        <FormField
+          inline={true}
+        >
+          <Radio
+            checked={false}
+            label="Deactivate course"
+            name="courseActive"
+            onChange={[Function]}
+            style={
+              Object {
+                "textAlign": "left",
+                "width": "150px",
+              }
+            }
+            type="radio"
+            value="false"
+          />
+        </FormField>
+        <FormField>
+          <Button
+            as="button"
+            color="green"
+            floated="left"
+            role="button"
+            type="Submit"
+          >
+            Save
+          </Button>
+          <Link
+            replace={false}
+            to="/labtool/courses"
+          >
+            <Button
+              as="button"
+              floated="right"
+              role="button"
+              type="Cancel"
+            >
+              Cancel
+            </Button>
+          </Link>
+        </FormField>
+      </Form>
+    </GridRow>
+  </Grid>
+  <Link
+    replace={false}
+    to="/labtool/ModifyCourseInstanceStaff/TKT20011.2018.K.A.1"
+  >
+    <Button
+      as="button"
+      block="true"
+      role="button"
+    >
+      Add assistant teachers
+    </Button>
+  </Link>
+</div>
+`;

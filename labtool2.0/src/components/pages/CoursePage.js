@@ -8,7 +8,7 @@ import { associateTeacherToStudent } from '../../services/assistant'
 import ReactMarkdown from 'react-markdown'
 import { showDropdown, selectTeacher, filterByAssistant, coursePageReset } from '../../reducers/coursePageLogicReducer'
 
-class CoursePage extends React.Component {
+export class CoursePage extends React.Component {
   handleSubmit = async e => {
     e.preventDefault()
     const content = {
@@ -35,7 +35,7 @@ class CoursePage extends React.Component {
     this.props.coursePageReset()
   }
 
-  changeHidden = (id) => {
+  changeHidden = id => {
     return () => {
       this.props.showDropdown(this.props.coursePageLogic.showDropdown === id ? '' : id)
     }
@@ -175,7 +175,7 @@ class CoursePage extends React.Component {
 
         {/** Shown when the users role in this course is teacher.*/}
         {this.props.courseData.role === 'teacher' ? (
-          <div>
+          <div className="TeachersView">
             <br />
             <Table>
               <Table.Header>
@@ -262,10 +262,10 @@ class CoursePage extends React.Component {
                         ) : (
                           <p>Assistant: not given</p>
                         )}
-                        <Icon onClick={this.changeHidden(data.id)} name="pencil" size="medium" />
+                        <Icon onClick={this.changeHidden(data.id)} name="pencil" size="small" />
                         {this.props.coursePageLogic.showDropdown === data.id ? (
                           <div>
-                            <Dropdown options={dropDownTeachers} onChange={this.changeSelectedTeacher()} placeholder='Select Teacher' fluid selection />
+                            <Dropdown options={dropDownTeachers} onChange={this.changeSelectedTeacher()} placeholder="Select Teacher" fluid selection />
                             {/* <select style={{}}onChange={this.changeSelectedTeacher()}>
                               <option value="" disabled selected>Select your option</option>
                               {dropDownTeachers.map(m => (
@@ -303,7 +303,7 @@ class CoursePage extends React.Component {
 
         {/** Shown when the users role in this course is student.*/}
         {this.props.courseData.role === 'student' && this.props.courseData.data !== null ? (
-          <div>
+          <div className="StudentsView">
             <h3> </h3>
 
             <Card fluid color="yellow">
@@ -316,13 +316,13 @@ class CoursePage extends React.Component {
 
                 {this.props.courseData.data.teacherInstanceId && this.props.selectedInstance.teacherInstances ? (
                   this.props.selectedInstance.teacherInstances.filter(teacher => teacher.id === this.props.courseData.data.teacherInstanceId).map(teacher => (
-                    <h3>
+                    <h3 key={teacher.id}>
                       Assistant: {teacher.firsts} {teacher.lastname}
                     </h3>
                   ))
                 ) : (
-                    <h3>Assistant: not given</h3>
-                  )}
+                  <h3>Assistant: not given</h3>
+                )}
               </Card.Content>
             </Card>
 
@@ -348,7 +348,7 @@ class CoursePage extends React.Component {
                     <Table.Cell>
                       <Comment.Group>
                         {week.comments.filter(c => c.hidden !== true).map(comment => (
-                          <Comment>
+                          <Comment key={comment.id}>
                             <Comment.Author>{comment.from}</Comment.Author>
                             <Comment.Text>
                               {' '}
@@ -369,8 +369,8 @@ class CoursePage extends React.Component {
             </Table>
           </div>
         ) : (
-            <div />
-          )}
+          <div />
+        )}
       </div>
     )
   }
