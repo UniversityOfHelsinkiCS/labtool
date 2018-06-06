@@ -32,9 +32,9 @@ export const createStudentCourses = (data, ohid) => {
 /**
  * data :
  * {
- *      id: {integer}
  *      projectname: {string}
  *      github: {string}
+ *      ohid: {string}
  * }
  */
 export const updateStudentProjectInfo = data => {
