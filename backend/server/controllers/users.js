@@ -66,7 +66,11 @@ module.exports = {
           return res.status(401).send('Unauthorized')
         }
 
-        const users = await User.findAll()
+        const users = await User.findAll({
+          attributes: {
+            exclude: ['createdAt', 'updatedAt']
+          }
+        })
         res.status(200).send(users)
       } catch (exception) {
         res.status(400).send('Unable to send user list')

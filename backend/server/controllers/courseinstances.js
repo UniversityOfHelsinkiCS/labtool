@@ -137,28 +137,35 @@ module.exports = {
       console.log('studentInst: ', student)
 
       try {
-        // Here we splice together the codeReviews field
-        palautus.data = student.dataValues
-        const reviewers = {}
-        palautus.data.toReviews.forEach(cr => {
-          reviewers[cr.dataValues.reviewNumber] = {
-            github: cr.dataValues.codeReviews.github,
-            projectName: cr.dataValues.codeReviews.projectName
-          }
-        })
-        palautus.data.codeReviews = palautus.data.codeReviews.map(cr => cr.dataValues)
-        palautus.data.codeReviews = palautus.data.codeReviews.map(cr => {
-          return {
-            toReview: cr.toReviews.github,
-            reviewNumber: cr.reviewNumber,
-            reviewer: reviewers[cr.reviewNumber]
-          }
-        })
-        delete palautus.data.toReviews
+        if (student) {
+          palautus.data = student.dataValues
 
-        // These prune away unnecessary fields that for some reason could not be filtered out in the query.
-        delete palautus.data.id
-        delete palautus.data.userId
+          // Here we splice together the codeReviews field
+          if (palautus.data.codeReviews) {
+            const reviewers = {}
+            palautus.data.toReviews.forEach(cr => {
+              reviewers[cr.dataValues.reviewNumber] = {
+                github: cr.dataValues.codeReviews.github,
+                projectName: cr.dataValues.codeReviews.projectName
+              }
+            })
+            palautus.data.codeReviews = palautus.data.codeReviews.map(cr => cr.dataValues)
+            palautus.data.codeReviews = palautus.data.codeReviews.map(cr => {
+              return {
+                toReview: cr.toReviews.github,
+                reviewNumber: cr.reviewNumber,
+                reviewer: reviewers[cr.reviewNumber]
+              }
+            })
+            delete palautus.data.toReviews
+          }
+
+          // These prune away unnecessary fields that could not be filtered out in the query (because they were still needed).
+          delete palautus.data.id
+          delete palautus.data.userId
+        } else {
+          palautus.data = null
+        }
 
         palautus.role = 'student'
         res.status(200).send(palautus)
@@ -167,26 +174,41 @@ module.exports = {
       }
     } else {
       const teacherPalautus = await StudentInstance.findAll({
+        attributes: {
+          exclude: ['createdAt', 'updatedAt']
+        },
         where: {
           courseInstanceId: courseInst
         },
         include: [
           {
             model: Week,
+            attributes: {
+              exclude: ['id', 'createdAt', 'updatedAt']
+            },
             as: 'weeks',
             include: [
               {
                 model: Comment,
+                attributes: {
+                  exclude: ['id', 'createdAt', 'updatedAt']
+                },
                 as: 'comments'
               }
             ]
           },
           {
             model: CodeReview,
+            attributes: {
+              exclude: ['id', 'createdAt', 'updatedAt']
+            },
             as: 'codeReviews'
           },
           {
-            model: User
+            model: User,
+            attributes: {
+              exclude: ['id', 'createdAt', 'updatedAt']
+            }
           }
         ]
       })
@@ -414,6 +436,9 @@ module.exports = {
         console.log(json)
         json.forEach(instance => {
           CourseInstance.findOrCreate({
+            attributes: {
+              exclude: ['id', 'createdAt', 'updatedAt']
+            },
             where: { ohid: instance.id },
             defaults: {
               name: instance.name,
@@ -463,6 +488,9 @@ module.exports = {
           console.log(json)
           json.forEach(instance => {
             CourseInstance.findOrCreate({
+              attributes: {
+                exclude: ['id', 'createdAt', 'updatedAt']
+              },
               where: { ohid: instance.id },
               defaults: {
                 name: instance.name,
@@ -491,6 +519,9 @@ module.exports = {
 
     try {
       const course = await CourseInstance.findOne({
+        attributes: {
+          exclude: ['id', 'createdAt', 'updatedAt']
+        },
         where: {
           ohid: req.params.ohid
         }
@@ -503,13 +534,18 @@ module.exports = {
       }
 
       let teachers = await TeacherInstance.findAll({
+        attributes: {
+          exclude: ['id', 'createdAt', 'updatedAt']
+        },
         where: {
           courseInstanceId: course.id
         }
       })
 
       const names = {}
-      const users = await User.findAll()
+      const users = await User.findAll({
+        attributes: ['id', 'firsts', 'lastname']
+      })
       users.forEach(user => {
         names[user.id] = {
           firsts: user.firsts,
@@ -569,6 +605,9 @@ module.exports = {
     helper.controller_before_auth_check_action(req, res)
 
     return Comment.findAll({
+      attributes: {
+        exclude: ['id', 'createdAt', 'updatedAt']
+      },
       where: {
         weekId: req.body.week
       }
