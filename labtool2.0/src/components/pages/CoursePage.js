@@ -333,30 +333,6 @@ export class CoursePage extends React.Component {
               </Card.Content>
             </Card>
 
-            <Card fluid color="yellow">
-              <Card.Content>
-                {this.props.courseData.data.codeReviews ? (
-                  this.props.courseData.data.codeReviews.map(
-                    codeReview =>
-                      codeReview.reviewNumber ? (
-                        <div>
-                          <div>
-                            <h4>Number: {codeReview.reviewNumber}</h4>
-                          </div>
-                          <div>
-                            <h4>Target: {codeReview.toReview}</h4>
-                          </div>
-                        </div>
-                      ) : (
-                        <div />
-                      )
-                  )
-                ) : (
-                  <h3>Ei ollut code reviewsejä</h3>
-                )}
-              </Card.Content>
-            </Card>
-
             <h3> Points and feedback </h3>
 
             <Table celled padded unstackable>
@@ -398,6 +374,43 @@ export class CoursePage extends React.Component {
                 ))}
               </Table.Body>
             </Table>
+
+            <Card fluid color="yellow">
+              <Card.Content>
+                {this.props.courseData.data.codeReviews ? (
+                  this.props.courseData.data.codeReviews.map(
+                    codeReview =>
+                      codeReview.reviewNumber ? (
+                        <Card fluid color="yellow">
+                          <Card.Content header={'Code review ' + codeReview.reviewNumber} />
+                          <Card.Content>
+                            <h4>Project to review</h4>
+                            <p>{codeReview.toReview.projectName}</p>
+                            <p>
+                              <a href={codeReview.toReview.github}>{codeReview.toReview.github}</a>
+                            </p>
+                          </Card.Content>
+                          {codeReview.reviewer ? (
+                            <Card.Content>
+                              <h4>Your reviewer</h4>
+                              <p>{codeReview.reviewer.projectName}</p>
+                              <p>
+                                <a href={codeReview.reviewer.github}>{codeReview.reviewer.github}</a>
+                              </p>
+                            </Card.Content>
+                          ) : (
+                            <div />
+                          )}
+                        </Card>
+                      ) : (
+                        <div />
+                      )
+                  )
+                ) : (
+                  <h3>Ei ollut code reviewsejä</h3>
+                )}
+              </Card.Content>
+            </Card>
           </div>
         ) : (
           <div />
