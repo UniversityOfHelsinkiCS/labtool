@@ -105,14 +105,14 @@ module.exports = {
             include: [
               {
                 model: StudentInstance,
-                attributes: ['github'],
+                attributes: ['github', 'projectName'],
                 as: 'toReviews'
               }
             ]
           },
           {
             model: CodeReview,
-            attributes: ['studentInstanceId'],
+            attributes: ['studentInstanceId', 'reviewNumber'],
             as: 'toReviews',
             where: {
               reviewNumber: {
@@ -155,7 +155,10 @@ module.exports = {
             palautus.data.codeReviews = palautus.data.codeReviews.map(cr => {
               // Replace the CodeReview rows from the database with a more user-friendly representation.
               return {
-                toReview: cr.toReviews.github,
+                toReview: {
+                  github: cr.toReviews.github,
+                  projectName: cr.toReviews.projectName
+                },
                 reviewNumber: cr.reviewNumber,
                 reviewer: reviewers[cr.reviewNumber]
               }
