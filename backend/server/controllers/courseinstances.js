@@ -514,57 +514,65 @@ module.exports = {
    * @returns {Promise<Model>}
    */
   async retrieveCourseStuff(req, res) {
-    helper.controller_before_auth_check_action(req, res)
+    await helper.controller_before_auth_check_action(req, res)
 
-    try {
-      const course = await CourseInstance.findOne({
-        attributes: {
-          exclude: ['createdAt', 'updatedAt']
-        },
-        where: {
-          ohid: req.params.ohid
+    if (req.authenticated.success) {
+      try {
+        const currentUser = await User.findById(req.decoded.id)
+
+        if (!currentUser) {
+          return res.status(404).send('User not found')
         }
-      })
 
-      if (!course) {
-        return res.status(404).send({
-          message: 'Course not Found'
+        let checkRegistrationStatus = new Promise((resolve, reject) => {
+          helper.checkWebOodi(req, res, currentUser, resolve)
+          setTimeout(function() {
+            resolve('failure')
+          }, 5000)
         })
+
+        const registrationAtWebOodi = await checkRegistrationStatus
+
+        const course = await CourseInstance.findOne({
+          where: {
+            ohid: req.params.ohid
+          }
+        })
+
+        if (!course) {
+          return res.status(404).send('Course not found')
+        }
+
+        let teachers = await TeacherInstance.findAll({
+          where: {
+            courseInstanceId: course.id
+          }
+        })
+
+        const names = {}
+        const users = await User.findAll()
+        users.forEach(user => {
+          names[user.id] = {
+            firsts: user.firsts,
+            lastname: user.lastname
+          }
+        })
+
+        teachers = teachers.map(teacher => {
+          teacher.dataValues.firsts = names[teacher.userId].firsts
+          teacher.dataValues.lastname = names[teacher.userId].lastname
+          return teacher
+        })
+
+        console.log(teachers)
+
+        course.dataValues['teacherInstances'] = teachers
+        course.dataValues['registrationAtWebOodi'] = registrationAtWebOodi
+
+        return res.status(200).send(course)
+      } catch (exception) {
+        return res.status(400).send(exception)
       }
-
-      let teachers = await TeacherInstance.findAll({
-        attributes: {
-          exclude: ['createdAt', 'updatedAt']
-        },
-        where: {
-          courseInstanceId: course.id
-        }
-      })
-
-      const names = {}
-      const users = await User.findAll({
-        attributes: ['id', 'firsts', 'lastname']
-      })
-      users.forEach(user => {
-        names[user.id] = {
-          firsts: user.firsts,
-          lastname: user.lastname
-        }
-      })
-
-      teachers = teachers.map(teacher => {
-        teacher.dataValues.firsts = names[teacher.userId].firsts
-        teacher.dataValues.lastname = names[teacher.userId].lastname
-        return teacher
-      })
-
-      console.log(teachers)
-
-      course.dataValues['teacherInstances'] = teachers
-
-      return res.status(200).send(course)
-    } catch (exception) {
-      return res.status(400).send(exception)
     }
   },
 
