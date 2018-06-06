@@ -269,10 +269,10 @@ export class CoursePage extends React.Component {
                         ) : (
                           <span>not assigned</span>
                         )}
-                        <Icon onClick={this.changeHidden(data.id)} name="pencil" size="small" />
+                        <Icon onClick={this.changeHidden(data.id)} name="pencil" size="small" style={{ float: 'right' }} />
                         {this.props.coursePageLogic.showDropdown === data.id ? (
                           <div>
-                            <Dropdown options={dropDownTeachers} onChange={this.changeSelectedTeacher()} placeholder="Select Teacher" fluid selection />
+                            <Dropdown options={dropDownTeachers} onChange={this.changeSelectedTeacher()} placeholder="Select teacher" fluid selection />
                             {/* <select style={{}}onChange={this.changeSelectedTeacher()}>
                               <option value="" disabled selected>Select your option</option>
                               {dropDownTeachers.map(m => (
