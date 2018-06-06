@@ -319,6 +319,9 @@ export class CoursePage extends React.Component {
                 <h3>
                   {' '}
                   <a href={this.props.courseData.data.github}>{this.props.courseData.data.github}</a>{' '}
+                  <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>
+                    <Button circular size="tiny" icon={{ name: 'edit', size: 'large', color: 'orange' }} />
+                  </Link>
                 </h3>
 
                 {this.props.courseData.data.teacherInstanceId && this.props.selectedInstance.teacherInstances ? (
@@ -330,6 +333,7 @@ export class CoursePage extends React.Component {
                 ) : (
                   <h3>Assistant: not given</h3>
                 )}
+
               </Card.Content>
             </Card>
 
