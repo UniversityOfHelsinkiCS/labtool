@@ -159,9 +159,9 @@ module.exports = {
    */
   registerToCourseInstance(req, res) {
     helper.controller_before_auth_check_action(req, res)
-    console.log(`---------------------------------`);
+    console.log(`---------------------------------`)
     console.log(req.decoded)
-    console.log(`---------------------------------`);
+    console.log(`---------------------------------`)
 
     CourseInstance.findOne({
       where: {
@@ -241,6 +241,38 @@ module.exports = {
         })
       })
     })
+  },
+
+  updateStudentInstance(req, res) {
+    helper.controller_before_auth_check_action(req, res)
+
+    if (req.authenticated.success) {
+      try {
+        StudentInstance.findById(req.body.id).then(targetStudent => {
+          if (!targetStudent) {
+            res.status(400).send('Student not found')
+            return
+          }
+          if (targetStudent.userId !== req.decoded.id) {
+            res.status(400).send('You can only edit your own info.')
+            return
+          }
+          StudentInstance.findById(req.body.id)
+            .then(studentInstance => {
+              return studentInstance
+                .update({
+                  github: req.body.github || studentInstance.github,
+                  projectName: req.body.projectname || studentInstance.projectName
+                })
+                .then(updatedStudentInstance => res.status(200).send(updatedStudentInstance))
+                .catch(error => res.status(400).send(error))
+            })
+            .catch(error => res.status(400).send(error))
+        })
+      } catch (e) {
+        res.status(400).send(e)
+      }
+    }
   },
 
   /**
