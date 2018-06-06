@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { getOneCI } from '../../services/courseInstance'
 import { coursePageInformation } from '../../services/courseInstance'
-import { codeReviewReducer } from '../../reducers/codeReviewReducer'
+import { codeReviewReducer, initOneReview } from '../../reducers/codeReviewReducer'
 import { clearNotifications } from '../../reducers/notificationReducer'
 import { Button, Table, Card, Form, Comment, List, Header, Label, Message, Icon, Dropdown } from 'semantic-ui-react'
 
@@ -10,6 +10,18 @@ export class ModifyCourseInstanceReview extends React.Component {
   componentDidMount() {
     this.props.getOneCI(this.props.courseId)
     this.props.coursePageInformation(this.props.courseId)
+  }
+
+  addCodeReview = (reviewRound, id) => {
+    return (e, data) => {
+      const crData = {
+        round: reviewRound,
+        reviewer: id,
+        toReview: data.value
+      }
+      this.props.initOneReview(crData)
+      console.log(this.props.codeReviewLogic)
+    }
   }
 
   render() {
@@ -21,6 +33,13 @@ export class ModifyCourseInstanceReview extends React.Component {
       return headers
     }
 
+    const getCurrentReviewer = (codeReviewRound, id) => {
+      let reviewer = this.props.courseData.data.find(studentId => studentId.id === id)
+      let reviewInstance = reviewer.codeReviews.find(cd => cd.reviewNumber === codeReviewRound && cd.studentInstanceId === id)
+      let reviewee = this.props.dropdownUsers.find(dropDownStudent => dropDownStudent.value === reviewInstance.toReview)
+      return reviewee.text
+    }
+
     return (
       <div style={{ textAlignVertical: 'center', textAlign: 'center' }}>
         <div className="ui grid">
@@ -30,14 +49,15 @@ export class ModifyCourseInstanceReview extends React.Component {
           <Table celled>
             <Table.Header>
               <Table.Row>
-                <Table.HeaderCell>Name</Table.HeaderCell>
-                <Table.HeaderCell> Github </Table.HeaderCell>
-                {createHeaders()}
+                <Table.HeaderCell>Reviewer</Table.HeaderCell>
+                <Table.HeaderCell> Project </Table.HeaderCell>
+                <Table.HeaderCell key={1}>Code Review 1 </Table.HeaderCell>
+                <Table.HeaderCell key={2}>Code Review 2 </Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {this.props.courseData.data !== undefined ? (
-                this.props.courseData.data.map(data => (
+              {this.props.courseData.data !== undefined
+                ? this.props.courseData.data.map(data => (
                   <Table.Row key={data.id}>
                     <Table.Cell>
                       {data.User.firsts} {data.User.lastname}
@@ -46,15 +66,32 @@ export class ModifyCourseInstanceReview extends React.Component {
                       <p>{data.projectName}</p>
                       <a href={data.github}>{data.github}</a>
                     </Table.Cell>
-                    <Dropdown placeholder='Select student' fluid search selection options={this.props.dropdownUsers} />
-                    <Table.Cell>moi</Table.Cell>
-                    <Table.Cell>moi</Table.Cell>
+                    <Table.Cell>
+                      <p>Current review: {getCurrentReviewer(1, data.id)}</p>
+                      <Dropdown placeholder="Select student" fluid search selection options={this.props.dropdownUsers.filter(u => u.value !== data.id)} onChange={this.addCodeReview(1, data.id)} />
+                    </Table.Cell>
+                    <Table.Cell>
+                      <p>Current review: {getCurrentReviewer(2, data.id)}</p>
+                      <Dropdown placeholder="Select student" fluid search selection options={this.props.dropdownUsers.filter(u => u.value !== data.id)} onChange={this.addCodeReview(2, data.id)} />
+                    </Table.Cell>
                   </Table.Row>
                 ))
-              ) : (
-                  <div />
-                )}
+                : null}
             </Table.Body>
+            <Table.Footer>
+              <Table.Row>
+                <Table.HeaderCell />
+                <Table.HeaderCell />
+                <Table.HeaderCell>
+                  <Button >Save</Button>
+                  <Button >Assign selected randomly</Button>
+                </Table.HeaderCell>
+                <Table.HeaderCell>
+                  <Button size="small" style={{ float: 'left' }}>Save</Button>
+                  <Button size="small" style={{ float: 'right' }}>Assign selected randomly</Button>
+                </Table.HeaderCell>
+              </Table.Row>
+            </Table.Footer>
           </Table>
         </div>
       </div>
@@ -88,7 +125,8 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = {
   getOneCI,
   clearNotifications,
-  coursePageInformation
+  coursePageInformation,
+  initOneReview
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ModifyCourseInstanceReview)
