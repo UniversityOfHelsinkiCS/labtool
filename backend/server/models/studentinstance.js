@@ -31,7 +31,8 @@ module.exports = (sequelize, DataTypes) => {
     })
 
     StudentInstance.hasMany(models.CodeReview, {
-      foreignKey: 'toReview'
+      foreignKey: 'toReview',
+      as: 'toReviews'
     })
 
     StudentInstance.belongsTo(models.User, {

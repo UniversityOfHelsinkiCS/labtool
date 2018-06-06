@@ -23,10 +23,12 @@ module.exports = (sequelize, DataTypes) => {
   CodeReview.associate = models => {
     CodeReview.belongsTo(models.StudentInstance, {
       foreignKey: 'studentInstanceId',
-      onDelete: 'CASCADE'
+      onDelete: 'CASCADE',
+      as: 'codeReviews'
     })
     CodeReview.belongsTo(models.StudentInstance, {
-      foreignKey: 'toReview'
+      foreignKey: 'toReview',
+      as: 'toReviews'
     })
   }
   return CodeReview

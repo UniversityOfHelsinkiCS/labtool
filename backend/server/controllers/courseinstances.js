@@ -63,7 +63,8 @@ module.exports = {
       console.log('studentti')
       console.log('userId: ', user)
       console.log('courseInstanceId:', courseInst)
-      const student = await StudentInstance.find({
+      const student = await StudentInstance.findOne({
+        attributes: ['id', 'github', 'projectName', 'userId'],
         where: {
           userId: user,
           courseInstanceId: courseInst
@@ -71,10 +72,16 @@ module.exports = {
         include: [
           {
             model: Week,
+            attributes: {
+              exclude: ['id', 'createdAt', 'updatedAt']
+            },
             as: 'weeks',
             include: [
               {
                 model: Comment,
+                attributes: {
+                  exclude: ['id', 'createdAt', 'updatedAt']
+                },
                 as: 'comments',
                 where: {
                   hidden: false
@@ -85,23 +92,74 @@ module.exports = {
           },
           {
             model: CodeReview,
+            attributes: ['toReview', 'reviewNumber'],
             as: 'codeReviews',
             where: {
               reviewNumber: {
                 [Op.gte]: course.currentCodeReview
               }
             },
-            required: false
+            required: false,
+            include: [
+              {
+                model: StudentInstance,
+                attributes: ['github'],
+                as: 'toReviews'
+              }
+            ]
           },
           {
-            model: User
+            model: CodeReview,
+            attributes: ['studentInstanceId'],
+            as: 'toReviews',
+            where: {
+              reviewNumber: {
+                [Op.gte]: course.currentCodeReview
+              }
+            },
+            required: false,
+            include: [
+              {
+                model: StudentInstance,
+                attributes: ['github', 'projectName'],
+                as: 'codeReviews'
+              }
+            ]
+          },
+          {
+            model: User,
+            attributes: {
+              exclude: ['id', 'createdAt', 'updatedAt']
+            }
           }
         ]
       })
       console.log('studentInst: ', student)
 
       try {
-        palautus.data = student
+        // Here we splice together the codeReviews field
+        palautus.data = student.dataValues
+        const reviewers = {}
+        palautus.data.toReviews.forEach(cr => {
+          reviewers[cr.dataValues.reviewNumber] = {
+            github: cr.dataValues.codeReviews.github,
+            projectName: cr.dataValues.codeReviews.projectName
+          }
+        })
+        palautus.data.codeReviews = palautus.data.codeReviews.map(cr => cr.dataValues)
+        palautus.data.codeReviews = palautus.data.codeReviews.map(cr => {
+          return {
+            toReview: cr.toReviews.github,
+            reviewNumber: cr.reviewNumber,
+            reviewer: reviewers[cr.reviewNumber]
+          }
+        })
+        delete palautus.data.toReviews
+
+        // These prune away unnecessary fields that for some reason could not be filtered out in the query.
+        delete palautus.data.id
+        delete palautus.data.userId
+
         palautus.role = 'student'
         res.status(200).send(palautus)
       } catch (error) {
@@ -288,7 +346,11 @@ module.exports = {
    * @returns {Promise<Array<Model>>}
    */
   list(req, res) {
-    return CourseInstance.findAll()
+    return CourseInstance.findAll({
+      attributes: {
+        exclude: ['id', 'createdAt', 'updatedAt']
+      }
+    })
       .then(instance => res.status(200).send(instance))
       .catch(error => res.status(400).send(error))
   },
@@ -304,6 +366,9 @@ module.exports = {
     const errors = []
     CourseInstance.find(
       {
+        attributes: {
+          exclude: ['id', 'createdAt', 'updatedAt']
+        },
         where: {
           ohid: req.params.ohid
         }
