@@ -252,6 +252,16 @@ module.exports = {
   update(req, res) {
     helper.controller_before_auth_check_action(req, res)
 
+    const userIsTeacher = await TeacherInstance.findOne({
+      where: {
+        userId: req.decoded.id
+      }
+    })
+    if (!userIsTeacher || !req.authenticated.success) {
+      res.status(400).send('You have to be a teacher to update course info')
+      return
+    }
+
     console.log('REQ body: ', req.body)
     console.log('REQ params: ', req.params)
     return CourseInstance.find({
