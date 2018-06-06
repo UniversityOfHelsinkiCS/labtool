@@ -3,7 +3,7 @@ import { Form, Input, Grid, Loader } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createStudentCourses } from '../../services/studentinstances'
-import { updateStudentCourseInfo } from '../../services/studentinstances'
+import { updateStudentProjectInfo } from '../../services/studentinstances'
 import { Redirect } from 'react-router'
 import { getOneCI } from '../../services/courseInstance'
 
@@ -21,15 +21,14 @@ export class RegisterPage extends Component {
     try {
       e.preventDefault()
 
-
       this.setState({ loading: true })
-      if (this.props.registeredAlready) {
+      if (this.props.selectedInstance.registrationAtWebOodi) {
         const data = {
-          projectName: e.target.projectName.value,
+          projectname: e.target.projectName.value,
           github: e.target.github.value,
-          id: this.props.coursePage.id //MUUTA
+          ohid: this.props.selectedInstance.ohid
         }
-        await this.props.updateStudentCourseInfo(data)
+        await this.props.updateStudentProjectInfo(data)
       } else {
         const content = {
           projectName: e.target.projectName.value,
@@ -64,7 +63,7 @@ export class RegisterPage extends Component {
         <Loader active={this.state.loading} inline="centered" />
         <Grid>
           <Grid.Row centered>
-            {this.props.registeredAlready ? (
+            {this.props.selectedInstance.registrationAtWebOodi ? (
               <div>
                 <h3>Update your info for {this.props.selectedInstance.name}</h3>
               </div>
@@ -116,4 +115,4 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps, { createStudentCourses, getOneCI })(RegisterPage)
+export default connect(mapStateToProps, { createStudentCourses, updateStudentProjectInfo, getOneCI })(RegisterPage)
