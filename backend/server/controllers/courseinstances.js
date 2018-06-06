@@ -144,7 +144,7 @@ module.exports = {
 
           // Here we splice together the codeReviews field
           if (palautus.data.codeReviews) {
-            const reviewers = {}
+            const reviewers = {} // Map reviewers here using the reviewNumber as a key.
             palautus.data.toReviews.forEach(cr => {
               reviewers[cr.dataValues.reviewNumber] = {
                 github: cr.dataValues.codeReviews.github,
@@ -153,13 +153,14 @@ module.exports = {
             })
             palautus.data.codeReviews = palautus.data.codeReviews.map(cr => cr.dataValues)
             palautus.data.codeReviews = palautus.data.codeReviews.map(cr => {
+              // Replace the CodeReview rows from the database with a more user-friendly representation.
               return {
                 toReview: cr.toReviews.github,
                 reviewNumber: cr.reviewNumber,
                 reviewer: reviewers[cr.reviewNumber]
               }
             })
-            delete palautus.data.toReviews
+            delete palautus.data.toReviews // This was only ever included to be spliced into the codeReviews filed above.
           }
         } else {
           palautus.data = null

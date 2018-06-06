@@ -21,6 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   )
   CodeReview.associate = models => {
+    // Alias names are the same as their reverses for consistency's sake.
     CodeReview.belongsTo(models.StudentInstance, {
       foreignKey: 'studentInstanceId',
       onDelete: 'CASCADE',
