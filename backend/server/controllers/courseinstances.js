@@ -73,14 +73,14 @@ module.exports = {
           {
             model: Week,
             attributes: {
-              exclude: ['id', 'createdAt', 'updatedAt']
+              exclude: ['createdAt', 'updatedAt']
             },
             as: 'weeks',
             include: [
               {
                 model: Comment,
                 attributes: {
-                  exclude: ['id', 'createdAt', 'updatedAt']
+                  exclude: ['createdAt', 'updatedAt']
                 },
                 as: 'comments',
                 where: {
@@ -129,7 +129,7 @@ module.exports = {
           {
             model: User,
             attributes: {
-              exclude: ['id', 'createdAt', 'updatedAt']
+              exclude: ['createdAt', 'updatedAt']
             }
           }
         ]
@@ -184,14 +184,14 @@ module.exports = {
           {
             model: Week,
             attributes: {
-              exclude: ['id', 'createdAt', 'updatedAt']
+              exclude: ['createdAt', 'updatedAt']
             },
             as: 'weeks',
             include: [
               {
                 model: Comment,
                 attributes: {
-                  exclude: ['id', 'createdAt', 'updatedAt']
+                  exclude: ['createdAt', 'updatedAt']
                 },
                 as: 'comments'
               }
@@ -200,14 +200,14 @@ module.exports = {
           {
             model: CodeReview,
             attributes: {
-              exclude: ['id', 'createdAt', 'updatedAt']
+              exclude: ['createdAt', 'updatedAt']
             },
             as: 'codeReviews'
           },
           {
             model: User,
             attributes: {
-              exclude: ['id', 'createdAt', 'updatedAt']
+              exclude: ['createdAt', 'updatedAt']
             }
           }
         ]
@@ -370,7 +370,7 @@ module.exports = {
   list(req, res) {
     return CourseInstance.findAll({
       attributes: {
-        exclude: ['id', 'createdAt', 'updatedAt']
+        exclude: ['createdAt', 'updatedAt']
       }
     })
       .then(instance => res.status(200).send(instance))
@@ -389,7 +389,7 @@ module.exports = {
     CourseInstance.find(
       {
         attributes: {
-          exclude: ['id', 'createdAt', 'updatedAt']
+          exclude: ['createdAt', 'updatedAt']
         },
         where: {
           ohid: req.params.ohid
@@ -437,7 +437,7 @@ module.exports = {
         json.forEach(instance => {
           CourseInstance.findOrCreate({
             attributes: {
-              exclude: ['id', 'createdAt', 'updatedAt']
+              exclude: ['createdAt', 'updatedAt']
             },
             where: { ohid: instance.id },
             defaults: {
@@ -489,7 +489,7 @@ module.exports = {
           json.forEach(instance => {
             CourseInstance.findOrCreate({
               attributes: {
-                exclude: ['id', 'createdAt', 'updatedAt']
+                exclude: ['createdAt', 'updatedAt']
               },
               where: { ohid: instance.id },
               defaults: {
@@ -520,7 +520,7 @@ module.exports = {
     try {
       const course = await CourseInstance.findOne({
         attributes: {
-          exclude: ['id', 'createdAt', 'updatedAt']
+          exclude: ['createdAt', 'updatedAt']
         },
         where: {
           ohid: req.params.ohid
@@ -535,7 +535,7 @@ module.exports = {
 
       let teachers = await TeacherInstance.findAll({
         attributes: {
-          exclude: ['id', 'createdAt', 'updatedAt']
+          exclude: ['createdAt', 'updatedAt']
         },
         where: {
           courseInstanceId: course.id
@@ -606,7 +606,7 @@ module.exports = {
 
     return Comment.findAll({
       attributes: {
-        exclude: ['id', 'createdAt', 'updatedAt']
+        exclude: ['createdAt', 'updatedAt']
       },
       where: {
         weekId: req.body.week
