@@ -64,7 +64,9 @@ module.exports = {
       console.log('userId: ', user)
       console.log('courseInstanceId:', courseInst)
       const student = await StudentInstance.findOne({
-        attributes: ['id', 'github', 'projectName', 'userId'],
+        attributes: {
+          exclude: ['createdAt', 'updatedAt']
+        },
         where: {
           userId: user,
           courseInstanceId: courseInst
@@ -159,10 +161,6 @@ module.exports = {
             })
             delete palautus.data.toReviews
           }
-
-          // These prune away unnecessary fields that could not be filtered out in the query (because they were still needed).
-          delete palautus.data.id
-          delete palautus.data.userId
         } else {
           palautus.data = null
         }
