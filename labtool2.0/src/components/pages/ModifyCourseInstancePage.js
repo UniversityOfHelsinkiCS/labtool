@@ -121,7 +121,14 @@ export class ModifyCourseInstancePage extends Component {
         </Grid>
 
         <Link to={`/labtool/ModifyCourseInstanceStaff/${this.props.selectedInstance.ohid}`}>
-          <Button floated="center">Add assistant teachers</Button>
+          <Button style={{ marginTop: '10px' }} floated="center">
+            Add assistant teachers
+          </Button>
+        </Link>
+        <Link to={`/labtool/ModifyCourseInstanceCodeReviews/${this.props.selectedInstance.ohid}`}>
+          <Button style={{ marginTop: '10px' }} floated="center">
+            Add or modify codereviews
+          </Button>
         </Link>
       </div>
     )
