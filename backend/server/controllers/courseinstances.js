@@ -63,7 +63,10 @@ module.exports = {
       console.log('studentti')
       console.log('userId: ', user)
       console.log('courseInstanceId:', courseInst)
-      const student = await StudentInstance.find({
+      const student = await StudentInstance.findOne({
+        attributes: {
+          exclude: ['createdAt', 'updatedAt']
+        },
         where: {
           userId: user,
           courseInstanceId: courseInst
@@ -71,10 +74,16 @@ module.exports = {
         include: [
           {
             model: Week,
+            attributes: {
+              exclude: ['createdAt', 'updatedAt']
+            },
             as: 'weeks',
             include: [
               {
                 model: Comment,
+                attributes: {
+                  exclude: ['createdAt', 'updatedAt']
+                },
                 as: 'comments',
                 where: {
                   hidden: false
@@ -85,23 +94,81 @@ module.exports = {
           },
           {
             model: CodeReview,
+            attributes: ['toReview', 'reviewNumber'],
             as: 'codeReviews',
             where: {
               reviewNumber: {
                 [Op.gte]: course.currentCodeReview
               }
             },
-            required: false
+            required: false,
+            include: [
+              {
+                model: StudentInstance,
+                attributes: ['github', 'projectName'],
+                as: 'toReviews'
+              }
+            ]
           },
           {
-            model: User
+            model: CodeReview,
+            attributes: ['studentInstanceId', 'reviewNumber'],
+            as: 'toReviews',
+            where: {
+              reviewNumber: {
+                [Op.gte]: course.currentCodeReview
+              }
+            },
+            required: false,
+            include: [
+              {
+                model: StudentInstance,
+                attributes: ['github', 'projectName'],
+                as: 'codeReviews'
+              }
+            ]
+          },
+          {
+            model: User,
+            attributes: {
+              exclude: ['createdAt', 'updatedAt']
+            }
           }
         ]
       })
       console.log('studentInst: ', student)
 
       try {
-        palautus.data = student
+        if (student) {
+          palautus.data = student.dataValues
+
+          // Here we splice together the codeReviews field
+          if (palautus.data.codeReviews) {
+            const reviewers = {} // Map reviewers here using the reviewNumber as a key.
+            palautus.data.toReviews.forEach(cr => {
+              reviewers[cr.dataValues.reviewNumber] = {
+                github: cr.dataValues.codeReviews.github,
+                projectName: cr.dataValues.codeReviews.projectName
+              }
+            })
+            palautus.data.codeReviews = palautus.data.codeReviews.map(cr => cr.dataValues)
+            palautus.data.codeReviews = palautus.data.codeReviews.map(cr => {
+              // Replace the CodeReview rows from the database with a more user-friendly representation.
+              return {
+                toReview: {
+                  github: cr.toReviews.github,
+                  projectName: cr.toReviews.projectName
+                },
+                reviewNumber: cr.reviewNumber,
+                reviewer: reviewers[cr.reviewNumber]
+              }
+            })
+            delete palautus.data.toReviews // This was only ever included to be spliced into the codeReviews filed above.
+          }
+        } else {
+          palautus.data = null
+        }
+
         palautus.role = 'student'
         res.status(200).send(palautus)
       } catch (error) {
@@ -109,26 +176,41 @@ module.exports = {
       }
     } else {
       const teacherPalautus = await StudentInstance.findAll({
+        attributes: {
+          exclude: ['createdAt', 'updatedAt']
+        },
         where: {
           courseInstanceId: courseInst
         },
         include: [
           {
             model: Week,
+            attributes: {
+              exclude: ['createdAt', 'updatedAt']
+            },
             as: 'weeks',
             include: [
               {
                 model: Comment,
+                attributes: {
+                  exclude: ['createdAt', 'updatedAt']
+                },
                 as: 'comments'
               }
             ]
           },
           {
             model: CodeReview,
+            attributes: {
+              exclude: ['createdAt', 'updatedAt']
+            },
             as: 'codeReviews'
           },
           {
-            model: User
+            model: User,
+            attributes: {
+              exclude: ['createdAt', 'updatedAt']
+            }
           }
         ]
       })
@@ -288,7 +370,11 @@ module.exports = {
    * @returns {Promise<Array<Model>>}
    */
   list(req, res) {
-    return CourseInstance.findAll()
+    return CourseInstance.findAll({
+      attributes: {
+        exclude: ['createdAt', 'updatedAt']
+      }
+    })
       .then(instance => res.status(200).send(instance))
       .catch(error => res.status(400).send(error))
   },
@@ -304,6 +390,9 @@ module.exports = {
     const errors = []
     CourseInstance.find(
       {
+        attributes: {
+          exclude: ['createdAt', 'updatedAt']
+        },
         where: {
           ohid: req.params.ohid
         }
@@ -349,6 +438,9 @@ module.exports = {
         console.log(json)
         json.forEach(instance => {
           CourseInstance.findOrCreate({
+            attributes: {
+              exclude: ['createdAt', 'updatedAt']
+            },
             where: { ohid: instance.id },
             defaults: {
               name: instance.name,
@@ -398,6 +490,9 @@ module.exports = {
           console.log(json)
           json.forEach(instance => {
             CourseInstance.findOrCreate({
+              attributes: {
+                exclude: ['createdAt', 'updatedAt']
+              },
               where: { ohid: instance.id },
               defaults: {
                 name: instance.name,
@@ -520,6 +615,9 @@ module.exports = {
     helper.controller_before_auth_check_action(req, res)
 
     return Comment.findAll({
+      attributes: {
+        exclude: ['createdAt', 'updatedAt']
+      },
       where: {
         weekId: req.body.week
       }
