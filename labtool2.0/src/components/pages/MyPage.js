@@ -10,7 +10,7 @@ import { getAllTeacherCourses } from '../../services/teacherinstances'
  * The main page that is shown after user has logged in.
  */
 
-class MyPage extends Component {
+export class MyPage extends Component {
   // Checks if a user is logged in.
   componentDidMount() {
     try {
@@ -31,7 +31,7 @@ class MyPage extends Component {
   render() {
     const user = { ...this.props.user.user }
     return (
-      <div>
+      <div className="MyPage">
         <Segment padded>
           <Container>
             <Header as="h2">

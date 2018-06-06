@@ -10,13 +10,11 @@ import store from '../../store'
 /**
  *  The page which is used by teacher to review submissions,.
  */
-class ReviewStudent extends Component {
+export class ReviewStudent extends Component {
   componentWillMount() {
     this.props.getOneCI(this.props.courseId)
     this.props.clearNotifications()
   }
-
-
 
   componentDidUpdate() {
     if (this.props.notification.error !== undefined) {
@@ -45,10 +43,8 @@ class ReviewStudent extends Component {
     }
   }
 
-  render() {  
-
-    const studentData = this.props.courseData.data.filter(
-      dataArray => dataArray.id == this.props.ownProps.studentInstance)
+  render() {
+    const studentData = this.props.courseData.data.filter(dataArray => dataArray.id == this.props.ownProps.studentInstance)
 
     const weekData = studentData[0].weeks.filter(theWeek => theWeek.weekNumber == this.props.weekNumber)
 
@@ -58,7 +54,10 @@ class ReviewStudent extends Component {
         {/*Tässä on opiskelijan nimen tulostus:
         <h3> {this.props.courseData.data[indexOfDataArray].User.firsts} {this.props.courseData.data[indexOfDataArray].User.lastname} </h3>
         */}
-        <h3> {studentData[0].User.firsts} {studentData[0].User.lastname} </h3>
+        <h3>
+          {' '}
+          {studentData[0].User.firsts} {studentData[0].User.lastname}{' '}
+        </h3>
         <h3> Viikko {this.props.weekNumber} </h3>
         <Grid centered>
           <Form onSubmit={this.handleSubmit}>
@@ -67,13 +66,11 @@ class ReviewStudent extends Component {
                 <label>Points 0-{this.props.selectedInstance.weekMaxPoints}</label>
 
                 <Input name="points" defaultValue={weekData[0] ? weekData[0].points : ''} type="number" step="0.01" />
-
               </Form.Field>
             </Form.Group>
             <Form.Group inline unstackable>
               <label> Feedback </label>
               <Form.TextArea defaultValue={weekData[0] ? weekData[0].feedback : ''} name="comment" />
-
             </Form.Group>
             <Form.Field>
               <Button className="ui left floated green button" type="submit">

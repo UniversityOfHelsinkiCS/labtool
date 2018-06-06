@@ -9,7 +9,7 @@ import { getOneCI } from '../../services/courseInstance'
 /**
  * The page user uses to register to a course AS A STUDENT
  */
-class RegisterPage extends Component {
+export class RegisterPage extends Component {
   state = {
     redirectToNewPage: false,
     loading: false

@@ -48,6 +48,7 @@ describe('sort.js', () => {
     expect(response[1].id).toBe(3)
     expect(response[2].id).toBe(1)
   })
+  
   it('Sorts by time of day', () => {
     var response = [
       {

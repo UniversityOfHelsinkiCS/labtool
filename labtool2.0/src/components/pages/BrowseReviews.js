@@ -9,7 +9,7 @@ import ReactMarkdown from 'react-markdown'
 /**
  * Maps all comments from a single instance from coursePage reducer
  */
-class BrowseReviews extends Component {
+export class BrowseReviews extends Component {
   state = { activeIndex: 0 }
 
   componentWillMount() {
@@ -151,7 +151,7 @@ class BrowseReviews extends Component {
     const { activeIndex } = this.state
 
     return (
-      <div>
+      <div className="BrowseReviews">
         {this.props.courseData.role === 'teacher' ? (
           <div>
             <h2> {this.props.selectedInstance.name}</h2>
