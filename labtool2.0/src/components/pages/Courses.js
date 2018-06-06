@@ -8,14 +8,14 @@ import { getAllCI } from '../../services/courseInstance'
 /**
  *  Show all the courses in a single list.
  */
-class Courses extends Component {
+export class Courses extends Component {
   componentWillMount() {
     this.props.getAllCI()
   }
 
   render() {
     return (
-      <div>
+      <div className="Courses">
         <Container>
           <Header as="h2">Courses</Header>
           <Table singleLine color="yellow">

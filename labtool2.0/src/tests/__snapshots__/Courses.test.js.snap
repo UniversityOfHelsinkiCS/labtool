@@ -1,0 +1,272 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Courses /> Courses Component should render correctly 1`] = `
+<div
+  className="Courses"
+>
+  <Container>
+    <Header
+      as="h2"
+    >
+      Courses
+    </Header>
+    <Table
+      as="table"
+      color="yellow"
+      singleLine={true}
+    >
+      <TableHeader
+        as="thead"
+      >
+        <TableRow
+          as="tr"
+          cellAs="td"
+        >
+          <TableHeaderCell
+            as="th"
+            colSpan="1"
+          >
+             
+          </TableHeaderCell>
+          <TableHeaderCell
+            as="th"
+            colSpan="1"
+          >
+            Course id
+          </TableHeaderCell>
+          <TableHeaderCell
+            as="th"
+            colSpan="1"
+          >
+            Course name
+          </TableHeaderCell>
+          <TableHeaderCell
+            as="th"
+            colSpan="1"
+          >
+            Course start date
+          </TableHeaderCell>
+          <TableHeaderCell
+            as="th"
+            colSpan="2"
+          >
+             
+          </TableHeaderCell>
+        </TableRow>
+      </TableHeader>
+      <TableBody
+        as="tbody"
+      >
+        <TableRow
+          as="tr"
+          cellAs="td"
+          key="10011"
+        >
+          <TableCell
+            as="td"
+          >
+            <div>
+              <Label
+                ribbon={true}
+                style={
+                  Object {
+                    "backgroundColor": "#21ba45",
+                  }
+                }
+              >
+                Active
+              </Label>
+            </div>
+          </TableCell>
+          <TableCell
+            as="td"
+          >
+            TKT20010
+             
+          </TableCell>
+          <TableCell
+            as="td"
+          >
+            <strong>
+              <a
+                href="/labtool/courses/TKT20010.2018.K.A.1"
+              >
+                Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit
+              </a>
+            </strong>
+          </TableCell>
+          <TableCell
+            as="td"
+          >
+             
+            11.03.2018
+             
+          </TableCell>
+          <TableCell
+            as="td"
+            textAlign="center"
+          >
+            <Button
+              as={[Function]}
+              circular={true}
+              icon={
+                Object {
+                  "color": "blue",
+                  "name": "eye",
+                  "size": "large",
+                }
+              }
+              role="button"
+              size="tiny"
+              to="/labtool/courses/TKT20010.2018.K.A.1"
+            />
+          </TableCell>
+        </TableRow>
+        <TableRow
+          as="tr"
+          cellAs="td"
+          key="10012"
+        >
+          <TableCell
+            as="td"
+          >
+            <div>
+              <Label
+                ribbon={true}
+                style={
+                  Object {
+                    "backgroundColor": "#21ba45",
+                  }
+                }
+              >
+                Active
+              </Label>
+            </div>
+          </TableCell>
+          <TableCell
+            as="td"
+          >
+            TKT20002
+             
+          </TableCell>
+          <TableCell
+            as="td"
+          >
+            <strong>
+              <a
+                href="/labtool/courses/TKT20002.2018.K.K.1"
+              >
+                Ohjelmistotekniikan menetelmät
+              </a>
+            </strong>
+          </TableCell>
+          <TableCell
+            as="td"
+          >
+             
+            11.03.2018
+             
+          </TableCell>
+          <TableCell
+            as="td"
+            textAlign="center"
+          >
+            <Button
+              as={[Function]}
+              circular={true}
+              icon={
+                Object {
+                  "color": "blue",
+                  "name": "eye",
+                  "size": "large",
+                }
+              }
+              role="button"
+              size="tiny"
+              to="/labtool/courses/TKT20002.2018.K.K.1"
+            />
+          </TableCell>
+        </TableRow>
+        <TableRow
+          as="tr"
+          cellAs="td"
+          key="10013"
+        >
+          <TableCell
+            as="td"
+          >
+            <div />
+          </TableCell>
+          <TableCell
+            as="td"
+          >
+            TKT20011
+             
+          </TableCell>
+          <TableCell
+            as="td"
+          >
+            <strong>
+              <a
+                href="/labtool/courses/TKT20011.2018.K.A.1"
+              >
+                Aineopintojen harjoitustyö: Tietokantasovellus
+              </a>
+            </strong>
+          </TableCell>
+          <TableCell
+            as="td"
+          >
+             
+            16.01.2018
+             
+          </TableCell>
+          <TableCell
+            as="td"
+            textAlign="center"
+          >
+            <Button
+              as={[Function]}
+              circular={true}
+              icon={
+                Object {
+                  "color": "blue",
+                  "name": "eye",
+                  "size": "large",
+                }
+              }
+              role="button"
+              size="tiny"
+              to="/labtool/courses/TKT20011.2018.K.A.1"
+            />
+          </TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
+    <div
+      className="Instructions"
+    >
+      <List>
+        <ListItem
+          content="Show course page"
+          icon={
+            Object {
+              "color": "blue",
+              "name": "eye",
+            }
+          }
+        />
+        <ListItem
+          content="Course is activated"
+          icon={
+            Object {
+              "color": "green",
+              "name": "square",
+            }
+          }
+        />
+      </List>
+    </div>
+  </Container>
+</div>
+`;

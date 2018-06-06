@@ -1,14 +1,12 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
 import { ModifyCourseInstanceStaff } from '../components/pages/ModifyCourseInstanceStaff'
 import { shallow } from 'enzyme'
 import { Container, Table, Label } from 'semantic-ui-react'
-import { clearNotifications } from '../reducers/notificationReducer'
 
-describe.only('<ModifyCourseInstanceStaff />', () => {
+describe('<ModifyCourseInstanceStaff />', () => {
   let wrapper
-  let mym = jest.fn()
-  let selectedI = {
+  let mockFn = jest.fn()
+  const selectedI = {
     id: 10013,
     name: 'Aineopintojen harjoitustyö: Tietokantasovellus',
     start: '2018-01-16T21:00:00.000Z',
@@ -57,12 +55,12 @@ describe.only('<ModifyCourseInstanceStaff />', () => {
   ]
 
   beforeEach(() => {
-    wrapper = shallow(<ModifyCourseInstanceStaff courseId={5} users={users} selectedInstance={selectedI} getAllUsers={mym} getOneCI={mym} createOne={mym} clearNotifications={mym} />)
+    wrapper = shallow(<ModifyCourseInstanceStaff courseId={5} users={users} selectedInstance={selectedI} getAllUsers={mockFn} getOneCI={mockFn} createOne={mockFn} clearNotifications={mockFn} />)
   })
 
   describe('Components', () => {
     it('renders correctly', () => {
-      expect(wrapper.length).toEqual(1)
+      expect(wrapper).toMatchSnapshot()
     })
 
     it('shows correct amount of users', () => {
@@ -73,6 +71,7 @@ describe.only('<ModifyCourseInstanceStaff />', () => {
     it('shows the correct amount of labels', () => {
       expect(wrapper.find(Label).length).toEqual(2)
     })
+
     it('shows the correct name and label for teacher of the course', () => {
       const name = wrapper.find(Table.Cell).at(0)
       const status = wrapper.find(Label).at(0)

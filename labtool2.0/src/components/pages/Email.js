@@ -13,8 +13,7 @@ text should be "Edit your email address" if email can be found from db
 Is used to modify users email.
 */
 
-class Email extends Component {
-
+export class Email extends Component {
   handleSubmit = async e => {
     e.preventDefault()
     const content = {
