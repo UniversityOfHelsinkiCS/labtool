@@ -705,6 +705,11 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
               name="pencil"
               onClick={[Function]}
               size="small"
+              style={
+                Object {
+                  "float": "right",
+                }
+              }
             />
             <div />
           </TableCell>
@@ -832,6 +837,11 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
               name="pencil"
               onClick={[Function]}
               size="small"
+              style={
+                Object {
+                  "float": "right",
+                }
+              }
             />
             <div />
           </TableCell>
@@ -959,6 +969,11 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
               name="pencil"
               onClick={[Function]}
               size="small"
+              style={
+                Object {
+                  "float": "right",
+                }
+              }
             />
             <div />
           </TableCell>
