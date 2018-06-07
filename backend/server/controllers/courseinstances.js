@@ -597,7 +597,7 @@ module.exports = {
             res.status(400).send('you are not an user in the system')
             return
           } else {
-            const name = user.firsts.concat(' ').concat(user.last)
+            const name = user.firsts.concat(' ').concat(user.lastname)
             return Comment.create({
               weekId: message.week,
               hidden: message.hidden,
