@@ -22,7 +22,7 @@ export class RegisterPage extends Component {
       e.preventDefault()
 
       this.setState({ loading: true })
-      if (this.props.selectedInstance.registrationAtWebOodi) {
+      if (this.props.coursePage && this.props.coursePage.data !== null) {
         const data = {
           projectname: e.target.projectName.value,
           github: e.target.github.value,
@@ -63,7 +63,7 @@ export class RegisterPage extends Component {
         <Loader active={this.state.loading} inline="centered" />
         <Grid>
           <Grid.Row centered>
-            {this.props.selectedInstance.registrationAtWebOodi ? (
+            {this.props.coursePage && this.props.coursePage.data !== null ? (
               <div>
                 <h3>Update your info for {this.props.selectedInstance.name}</h3>
               </div>
@@ -110,6 +110,7 @@ export class RegisterPage extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
+    coursePage: state.coursePage,
     selectedInstance: state.selectedInstance,
     courseId: ownProps.courseId
   }
