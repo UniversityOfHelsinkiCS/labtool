@@ -15,9 +15,11 @@ const INITIAL_STATE = {
 const codeReviewReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case 'INIT_REVIEW': {
+      console.log(INITIAL_STATE.codeReviewStates)
       const oldReviews = state.codeReviewStates[action.data.round]
-      let updatedReviews = null
+      let updatedReviews = {}
       let toUpdate = oldReviews.find(f => f.reviewer === action.data.reviewer)
+
       if (toUpdate) {
         toUpdate.reviewer = action.data.reviewer
         toUpdate.toReview = action.data.toReview
@@ -29,6 +31,12 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
       codeReviewRoundsToUpdate[action.data.round] = updatedReviews
       return { ...state, codeReviewStates: codeReviewRoundsToUpdate }
     }
+    case 'INIT_REVIEWER_CHECKBOX':
+      return state
+    case 'ASSIGN_CODE_REVIEWS_SUCCESS':
+      return { ...state, codeReviewStates: INITIAL_STATE.codeReviewStates }
+    case 'ASSIGN_CODE_REVIEWS_RANDOMLY_SUCCESS':
+      return { ...state, randomizedCodeReview: INITIAL_STATE.randomizedCodeReview }
     default:
       return INITIAL_STATE
   }
