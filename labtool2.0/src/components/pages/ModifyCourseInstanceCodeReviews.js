@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { getOneCI } from '../../services/courseInstance'
 import { insertCodeReviews } from '../../services/codeReview'
 import { coursePageInformation } from '../../services/courseInstance'
+import { bulkinsertCodeReviews } from '../../services/codeReview'
 import { codeReviewReducer, initOneReview, initOrRemoveRandom, initCheckbox, initAllCheckboxes } from '../../reducers/codeReviewReducer'
 import { clearNotifications } from '../../reducers/notificationReducer'
 import { Button, Table, Card, Form, Comment, List, Header, Label, Message, Icon, Dropdown, Checkbox } from 'semantic-ui-react'
@@ -13,17 +14,21 @@ export class ModifyCourseInstanceReview extends React.Component {
     this.props.coursePageInformation(this.props.courseId)
   }
 
-  assignCodeReviews = round => {
-    return () => {
+  handleSubmit = reviewNumber => async e => {
+    try {
+      e.preventDefault()
+      const codeReviews = this.props.codeReviewLogic.codeReviewStates[reviewNumber]
       const data = {
-        reviewNumber: round,
-        codeReviews: this.props.codeReviewLogic.codeReviewStates[round]
+        codeReviews,
+        reviewNumber
       }
-      console.log(data)
+      await this.props.bulkinsertCodeReviews(data)
+    } catch (error) {
+      console.log(error)
     }
   }
 
-  initOneCodeReview = (reviewRound, id) => {
+  addCodeReview = (reviewRound, id) => {
     return (e, data) => {
       const crData = {
         round: reviewRound,
@@ -134,7 +139,11 @@ export class ModifyCourseInstanceReview extends React.Component {
                 <Table.HeaderCell />
                 <Table.HeaderCell />
                 <Table.HeaderCell>
+<<<<<<< HEAD
                   <Button onClick={this.assignCodeReviews(1)} size="small" style={{ float: 'left' }}>
+=======
+                  <Button onClick={this.handleSubmit(1)} size="small" style={{ float: 'left' }}>
+>>>>>>> 14aec50734946e9ebe539fa2951f89e667389186
                     Save
                   </Button>
                   <Button size="small" style={{ float: 'right' }}>
@@ -142,7 +151,11 @@ export class ModifyCourseInstanceReview extends React.Component {
                   </Button>
                 </Table.HeaderCell>
                 <Table.HeaderCell>
+<<<<<<< HEAD
                   <Button onClick={this.assignCodeReviews(2)} size="small" style={{ float: 'left' }}>
+=======
+                  <Button onClick={this.handleSubmit(2)} size="small" style={{ float: 'left' }}>
+>>>>>>> 14aec50734946e9ebe539fa2951f89e667389186
                     Save
                   </Button>
                   <Button size="small" style={{ float: 'right' }}>
@@ -193,7 +206,11 @@ const mapDispatchToProps = {
   initOrRemoveRandom,
   initCheckbox,
   initAllCheckboxes,
+<<<<<<< HEAD
   insertCodeReviews
+=======
+  bulkinsertCodeReviews
+>>>>>>> 14aec50734946e9ebe539fa2951f89e667389186
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ModifyCourseInstanceReview)

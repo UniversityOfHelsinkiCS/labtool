@@ -9,9 +9,9 @@ import { callController } from '../util/apiConnection'
  * ]
  */
 
-export const insertCodeReviews = courseReviews => {
-  const route = '/codereviews/bulkinsert'
-  const prefix = 'CODE_REVIEWS_CREATE_'
+export const bulkinsertCodeReviews = data => {
+  const route = `/codereviews/bulkinsert`
+  const prefix = 'CODE_REVIEW_BULKINSERT_'
   const method = 'put'
-  return callController(route.prefix, courseReviews, method)
+  return callController(route, prefix, data, method)
 }
