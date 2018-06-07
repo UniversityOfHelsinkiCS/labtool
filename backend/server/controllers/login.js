@@ -20,7 +20,11 @@ module.exports = {
     }
 
     const result = request(options, function (err, resp, body) {
-      console.log('testitulostus: ', result.response.body)
+      if (result.response){
+        console.log('testitulostus: ', result.response.body)
+      } else {
+        console.log('testitulostus: result.response.body is undefined')
+      }
       if (err) {
         console.log('\nlogin: ', err, 'n')
       }
