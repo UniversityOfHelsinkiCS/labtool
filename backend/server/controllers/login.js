@@ -19,7 +19,7 @@ module.exports = {
       json: { username: req.body.username, password: req.body.password }
     }
 
-    const result = request(options, function (err, resp, body) {
+    const result = request(options, function(err, resp, body) {
       if (err) {
         console.log('\nlogin: ', err, 'n')
       }
