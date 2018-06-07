@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { getOneCI } from '../../services/courseInstance'
+import { insertCodeReviews } from '../../services/codeReview'
 import { coursePageInformation } from '../../services/courseInstance'
 import { codeReviewReducer, initOneReview, initOrRemoveRandom, initCheckbox, initAllCheckboxes } from '../../reducers/codeReviewReducer'
 import { clearNotifications } from '../../reducers/notificationReducer'
@@ -12,7 +13,17 @@ export class ModifyCourseInstanceReview extends React.Component {
     this.props.coursePageInformation(this.props.courseId)
   }
 
-  addCodeReview = (reviewRound, id) => {
+  assignCodeReviews = round => {
+    return () => {
+      const data = {
+        reviewNumber: round,
+        codeReviews: this.props.codeReviewLogic.codeReviewStates[round]
+      }
+      console.log(data)
+    }
+  }
+
+  initOneCodeReview = (reviewRound, id) => {
     return (e, data) => {
       const crData = {
         round: reviewRound,
@@ -24,7 +35,7 @@ export class ModifyCourseInstanceReview extends React.Component {
     }
   }
 
-  initOrRemoveRandom = (id) => {
+  initOrRemoveRandom = id => {
     return async () => {
       await this.props.initCheckbox(id)
       this.props.initOrRemoveRandom(id)
@@ -34,12 +45,9 @@ export class ModifyCourseInstanceReview extends React.Component {
   selectAllCheckboxes = () => {
     return () => {
       let allCb = {}
-      this.props.courseData.data.forEach(student =>
-        allCb[student.id] = true
-      )
-      let randoms = this.props.courseData.data.map(student =>
-        student.id)
-      this.props.initAllCheckboxes({data: allCb, ids: randoms})
+      this.props.courseData.data.forEach(student => (allCb[student.id] = true))
+      let randoms = this.props.courseData.data.map(student => student.id)
+      this.props.initAllCheckboxes({ data: allCb, ids: randoms })
     }
   }
   render() {
@@ -67,7 +75,7 @@ export class ModifyCourseInstanceReview extends React.Component {
           <Table celled>
             <Table.Header>
               <Table.Row>
-                <Table.HeaderCell></Table.HeaderCell>
+                <Table.HeaderCell />
                 <Table.HeaderCell>Reviewer</Table.HeaderCell>
                 <Table.HeaderCell> Project </Table.HeaderCell>
                 <Table.HeaderCell key={1}>Code Review 1 </Table.HeaderCell>
@@ -79,11 +87,11 @@ export class ModifyCourseInstanceReview extends React.Component {
                 ? this.props.courseData.data.map(data => (
                   <Table.Row key={data.id}>
                     <Table.Cell>
-                      {this.props.codeReviewLogic.checkBoxStates[data.id] === true ?
+                      {this.props.codeReviewLogic.checkBoxStates[data.id] === true ? (
                         <Checkbox checked onChange={this.initOrRemoveRandom(data.id)} />
-                        :
-                        <Checkbox onChange={this.initOrRemoveRandom(data.id)} />
-                      }
+                      ) : (
+                          <Checkbox onChange={this.initOrRemoveRandom(data.id)} />
+                        )}
                     </Table.Cell>
                     <Table.Cell>
                       {data.User.firsts} {data.User.lastname}
@@ -94,11 +102,25 @@ export class ModifyCourseInstanceReview extends React.Component {
                     </Table.Cell>
                     <Table.Cell>
                       <p>Current review: {getCurrentReviewer(1, data.id)}</p>
-                      <Dropdown placeholder="Select student" fluid search selection options={this.props.dropdownUsers.filter(u => u.value !== data.id)} onChange={this.addCodeReview(1, data.id)} />
+                      <Dropdown
+                        placeholder="Select student"
+                        fluid
+                        search
+                        selection
+                        options={this.props.dropdownUsers.filter(u => u.value !== data.id)}
+                        onChange={this.initOneCodeReview(1, data.id)}
+                      />
                     </Table.Cell>
                     <Table.Cell>
                       <p>Current review: {getCurrentReviewer(2, data.id)}</p>
-                      <Dropdown placeholder="Select student" fluid search selection options={this.props.dropdownUsers.filter(u => u.value !== data.id)} onChange={this.addCodeReview(2, data.id)} />
+                      <Dropdown
+                        placeholder="Select student"
+                        fluid
+                        search
+                        selection
+                        options={this.props.dropdownUsers.filter(u => u.value !== data.id)}
+                        onChange={this.initOneCodeReview(2, data.id)}
+                      />
                     </Table.Cell>
                   </Table.Row>
                 ))
@@ -106,11 +128,13 @@ export class ModifyCourseInstanceReview extends React.Component {
             </Table.Body>
             <Table.Footer>
               <Table.Row>
-                <Table.HeaderCell><Button onClick={this.selectAllCheckboxes()}>ALL</Button></Table.HeaderCell>
+                <Table.HeaderCell>
+                  <Button onClick={this.selectAllCheckboxes()}>ALL</Button>
+                </Table.HeaderCell>
                 <Table.HeaderCell />
                 <Table.HeaderCell />
                 <Table.HeaderCell>
-                  <Button size="small" style={{ float: 'left' }}>
+                  <Button onClick={this.assignCodeReviews(1)} size="small" style={{ float: 'left' }}>
                     Save
                   </Button>
                   <Button size="small" style={{ float: 'right' }}>
@@ -118,7 +142,7 @@ export class ModifyCourseInstanceReview extends React.Component {
                   </Button>
                 </Table.HeaderCell>
                 <Table.HeaderCell>
-                  <Button size="small" style={{ float: 'left' }}>
+                  <Button onClick={this.assignCodeReviews(2)} size="small" style={{ float: 'left' }}>
                     Save
                   </Button>
                   <Button size="small" style={{ float: 'right' }}>
@@ -129,7 +153,7 @@ export class ModifyCourseInstanceReview extends React.Component {
             </Table.Footer>
           </Table>
         </div>
-      </div >
+      </div>
     )
   }
 }
@@ -137,6 +161,10 @@ export class ModifyCourseInstanceReview extends React.Component {
 const userHelper = data => {
   let users = []
   if (data) {
+    users.push({
+      value: null,
+      text: 'None'
+    })
     data.map(d =>
       users.push({
         value: d.User.id,
@@ -164,7 +192,8 @@ const mapDispatchToProps = {
   initOneReview,
   initOrRemoveRandom,
   initCheckbox,
-  initAllCheckboxes
+  initAllCheckboxes,
+  insertCodeReviews
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ModifyCourseInstanceReview)

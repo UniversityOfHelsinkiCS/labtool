@@ -16,11 +16,16 @@ const INITIAL_STATE = {
 const codeReviewReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case 'INIT_REVIEW': {
-      console.log(INITIAL_STATE.codeReviewStates)
       const oldReviews = state.codeReviewStates[action.data.round]
       let updatedReviews = {}
-      let toUpdate = oldReviews.find(f => f.reviewer === action.data.reviewer)
+      let codeReviewRoundsToUpdate = state.codeReviewStates
 
+      if (!action.data.toReview) {
+        updatedReviews = oldReviews.filter(cr => cr.reviewer !== action.data.reviewer)
+        codeReviewRoundsToUpdate[action.data.round] = updatedReviews
+        return { ...state, codeReviewStates: codeReviewRoundsToUpdate }
+      }
+      let toUpdate = oldReviews.find(f => f.reviewer === action.data.reviewer)
       if (toUpdate) {
         toUpdate.reviewer = action.data.reviewer
         toUpdate.toReview = action.data.toReview
@@ -28,7 +33,6 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
       } else {
         updatedReviews = [...oldReviews, { reviewer: action.data.reviewer, toReview: action.data.toReview }]
       }
-      let codeReviewRoundsToUpdate = state.codeReviewStates
       codeReviewRoundsToUpdate[action.data.round] = updatedReviews
       return { ...state, codeReviewStates: codeReviewRoundsToUpdate }
     }
