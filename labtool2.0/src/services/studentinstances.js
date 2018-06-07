@@ -29,6 +29,21 @@ export const createStudentCourses = (data, ohid) => {
   return callController(route, prefix, data, method)
 }
 
+/**
+ * data :
+ * {
+ *      projectname: {string}
+ *      github: {string}
+ *      ohid: {string}
+ * }
+ */
+export const updateStudentProjectInfo = data => {
+  const route = `/studentinstance/update`
+  const prefix = 'STUDENT_PROJECT_INFO_UPDATE_'
+  const method = 'post'
+  return callController(route, prefix, data, method)
+}
+
 /* Will probably need something like this to review students
 
 export const getOneSI = (id) => {

@@ -29,7 +29,7 @@ module.exports = {
         console.log('\nlogin: ', err, 'n')
       }
 
-      if (result.response.body.username && result.response.body.error !== 'wrong credentials') {
+      if (result.response && result.response.body && result.response.body.username && result.response.body.error !== 'wrong credentials') {
         console.log('\n\n\nbody: ', body, '\n\n\n')
         console.log('type of studen_number: ', typeof body.student_number)
         User.findOrCreate({
