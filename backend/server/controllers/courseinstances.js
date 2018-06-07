@@ -94,7 +94,7 @@ module.exports = {
           },
           {
             model: CodeReview,
-            attributes: ['toReview', 'reviewNumber'],
+            attributes: ['toReview', 'reviewNumber', 'points'],
             as: 'codeReviews',
             where: {
               reviewNumber: {
@@ -160,6 +160,7 @@ module.exports = {
                   projectName: cr.toReviews.projectName
                 },
                 reviewNumber: cr.reviewNumber,
+                points: cr.points,
                 reviewer: reviewers[cr.reviewNumber]
               }
             })
