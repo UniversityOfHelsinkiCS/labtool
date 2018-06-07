@@ -83,8 +83,12 @@ export class ModifyCourseInstanceReview extends React.Component {
                 <Table.HeaderCell />
                 <Table.HeaderCell />
                 <Table.HeaderCell>
-                  <Button>Save</Button>
-                  <Button>Assign selected randomly</Button>
+                  <Button size="small" style={{ float: 'left' }}>
+                    Save
+                  </Button>
+                  <Button size="small" style={{ float: 'right' }}>
+                    Assign selected randomly
+                  </Button>
                 </Table.HeaderCell>
                 <Table.HeaderCell>
                   <Button size="small" style={{ float: 'left' }}>
