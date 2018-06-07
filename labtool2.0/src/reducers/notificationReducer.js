@@ -38,7 +38,7 @@ const notificationReducer = (state = {}, action) => {
       }
     case 'STUDENT_COURSE_CREATE_ONE_SUCCESS':
       return {
-        message: 'Course registration succesful!',
+        message: 'Course registration successful!',
         error: false
       }
     case 'STUDENT_COURSE_CREATE_ONE_FAILURE':
@@ -53,7 +53,7 @@ const notificationReducer = (state = {}, action) => {
       }
     case 'WEEKS_CREATE_ONESUCCESS':
       return {
-        message: 'Week reviewed succesfully!',
+        message: 'Week reviewed successfully!',
         error: false
       }
     case 'WEEKS_CREATE_ONEFAILURE':
@@ -63,7 +63,7 @@ const notificationReducer = (state = {}, action) => {
       }
     case 'COMMENT_CREATE_ONE_SUCCESS':
       return {
-        message: 'Comment created succesfully!',
+        message: 'Comment created successfully!',
         error: false
       }
     case 'COMMENT_CREATE_ONE_FAILURE':
@@ -73,12 +73,22 @@ const notificationReducer = (state = {}, action) => {
       }
     case 'TEACHER_CREATE_SUCCESS':
       return {
-        message: 'Added a new admin succesfully!',
+        message: 'Added a new assistant successfully!',
         error: false
       }
     case 'TEACHER_CREATE_FAILURE':
       return {
         message: action.response.response.data,
+        error: true
+      }
+    case 'TEACHER_REMOVE_SUCCESS':
+      return {
+        message: 'Removed an assistant successfully!',
+        error: false
+      }
+    case 'TEACHER_REMOVE_FAILURE':
+      return {
+        message: 'Removing assistant failed',
         error: true
       }
     case 'ASSOCIATE_TEACHER_AND_STUDENT_FAILURE':

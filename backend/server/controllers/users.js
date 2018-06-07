@@ -121,11 +121,68 @@ module.exports = {
         const assistant = await TeacherInstance.create({
           userId: userToAssistant.id,
           courseInstanceId: courseToAssist.id,
-          admin: true
+          admin: false
         })
         res.status(200).send(assistant)
       } catch (exception) {
         res.status(400).send('Error in creating teacher/assistant')
+      }
+    }
+  },
+
+  /**
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<*|Promise<T>>}
+   */
+  async removeTeacher(req, res) {
+    await helper.controller_before_auth_check_action(req, res)
+
+    if (req.authenticated.success) {
+      try {
+        const teacherToRemove = await User.findById(req.body.id)
+        const courseInstance = await CourseInstance.findOne({
+          where: {
+            ohid: req.body.ohid
+          }
+        })
+
+        if (!teacherToRemove || !courseInstance) {
+          return res.status(404).send('User or course not found')
+        }
+
+        // Make sure only teachers/assistants can remove assistants.
+        const teacherInstances = await TeacherInstance.count({
+          where: {
+            userId: req.decoded.id,
+            courseInstanceId: courseInstance.id
+          }
+        })
+        if (!teacherInstances) {
+          return res.status(400).send('You must teach or assist on the course to remove assistants.')
+        }
+
+        // Make sure teachers responsible for the course cannot be removed.
+        if (teacherToRemove.admin) {
+          return res.status(400).send('Only assistants can be removed.')
+        }
+
+        const teacherInstanceToRemove = await TeacherInstance.findOne({
+          where: {
+            userId: teacherToRemove.id,
+            courseInstanceId: courseInstance.id
+          }
+        })
+        if (!teacherInstanceToRemove) {
+          return res.status(400).send('This user is not a teacher.')
+        }
+
+        teacherInstanceToRemove.destroy()
+
+        res.status(200).send(teacherInstanceToRemove)
+      } catch (exception) {
+        res.status(400).send('Error removing assistant.')
       }
     }
   }

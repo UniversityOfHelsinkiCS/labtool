@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { getOneCI, modifyOneCI } from '../../services/courseInstance'
 import { getAllUsers } from '../../services/user'
-import { createOne } from '../../services/teacherinstances'
+import { createOne, removeOne } from '../../services/teacherinstances'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Redirect } from 'react-router'
@@ -35,6 +35,19 @@ export class ModifyCourseInstanceStaff extends React.Component {
     }
   }
 
+  handleRemoval = userId => async e => {
+    try {
+      e.preventDefault()
+      const teacherInformation = {
+        ohid: this.props.courseId,
+        id: userId
+      }
+      await this.props.removeOne(teacherInformation)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   render() {
     return (
       <Container>
@@ -44,12 +57,11 @@ export class ModifyCourseInstanceStaff extends React.Component {
         </div>
         <Header as="h2">Users</Header>
         <Form id="myForm" onSubmit={this.handleSubmit}>
-          <Table singleLine color="yellow">
+          <Table singleLine color="yellow" fixed>
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell>Name</Table.HeaderCell>
                 <Table.HeaderCell>Status</Table.HeaderCell>
-                <Table.HeaderCell />
               </Table.Row>
             </Table.Header>
             <Table.Body>
@@ -60,16 +72,29 @@ export class ModifyCourseInstanceStaff extends React.Component {
                   </Table.Cell>
                   <Table.Cell>
                     {this.getTeacherIds().includes(user.id) ? (
-                      <Label color="yellow" horizontal>
-                        Admin
-                      </Label>
+                      user.admin === true ? (
+                        <div>
+                          <Label color="orange" horizontal>
+                            Teacher
+                          </Label>
+                        </div>
+                      ) : (
+                        <div>
+                          <Label color="orange" horizontal>
+                            Assistant
+                          </Label>
+                          <Button onClick={this.handleRemoval(user.id)} size="tiny" color="green">
+                            Remove assistant
+                          </Button>
+                        </div>
+                      )
                     ) : (
                       <div>
                         <Label color="yellow" horizontal>
-                          Non-admin
+                          Student
                         </Label>
                         <Button onClick={this.handleSubmit(user.id)} size="tiny" color="green">
-                          Add admin
+                          Add assistant
                         </Button>
                       </div>
                     )}
@@ -106,7 +131,8 @@ const mapDispatchToProps = {
   getAllUsers,
   getOneCI,
   clearNotifications,
-  createOne
+  createOne,
+  removeOne
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ModifyCourseInstanceStaff)
