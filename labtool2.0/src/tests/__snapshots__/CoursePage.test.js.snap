@@ -324,6 +324,16 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
         </TableRow>
       </TableBody>
     </Table>
+    <Card
+      color="yellow"
+      fluid={true}
+    >
+      <CardContent>
+        <h3>
+          Ei ollut code reviewsejä
+        </h3>
+      </CardContent>
+    </Card>
   </div>
 </div>
 `;
