@@ -16,9 +16,11 @@ const INITIAL_STATE = {
 const codeReviewReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case 'INIT_REVIEW': {
+      console.log(INITIAL_STATE.codeReviewStates)
       const oldReviews = state.codeReviewStates[action.data.round]
-      let updatedReviews = null
+      let updatedReviews = {}
       let toUpdate = oldReviews.find(f => f.reviewer === action.data.reviewer)
+
       if (toUpdate) {
         toUpdate.reviewer = action.data.reviewer
         toUpdate.toReview = action.data.toReview
@@ -30,14 +32,13 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
       codeReviewRoundsToUpdate[action.data.round] = updatedReviews
       return { ...state, codeReviewStates: codeReviewRoundsToUpdate }
     }
+
     case 'INIT_ALL_CHECKBOXES':
       return { ...state, checkBoxStates: action.data }
     case 'INIT_CHECKBOX':
       let cb = state.checkBoxStates
-      let ca
       if (cb[action.data]) {
         cb[action.data] = !cb[action.data]
-        ca = false
       } else {
         cb[action.data] = true
       }
@@ -53,6 +54,7 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
       }
       rndCr = rndCr.filter(rnd => rnd !== action.data)
       return { ...state, randomizedCodeReview: rndCr }
+
     default:
       return INITIAL_STATE
   }
