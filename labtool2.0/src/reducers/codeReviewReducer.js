@@ -1,11 +1,11 @@
 /**
  * Code review reducer
  *
- * currentCodeReviews: object which includes all code reviews, mapped as arrays by their code review number
- * toupdateCodereviews: Code review number and all the modified code reviews which are added to the state to be changed when the user clicks assign
- * currentlyActiveCodeReview: '' for making it look different from the rest
- * allUserIdsToName: ''
- */
+   INITIAL_STATE contains 
+    - randomizedCodeReview: all the students who are assigned to random code review round
+    - codeReviewStates: all individually selected students for code review. There are separate arrays for CRs 1 & 2
+    - checkBoxStates: to see which students have an cb selected to be assigned for random CR
+ *  */
 
 const INITIAL_STATE = {
   randomizedCodeReview: [],
