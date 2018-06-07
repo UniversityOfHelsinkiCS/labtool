@@ -9,7 +9,8 @@
 const INITIAL_STATE = {
   showDropdown: '',
   selectedTeacher: '',
-  filterByAssistant: 0
+  filterByAssistant: 0,
+  showCodeReviews: []
 }
 
 const coursePageLogicReducer = (state = INITIAL_STATE, action) => {
@@ -24,6 +25,27 @@ const coursePageLogicReducer = (state = INITIAL_STATE, action) => {
       return INITIAL_STATE
     case 'COURSE_PAGE_RESET':
       return INITIAL_STATE
+    case 'CP_INFO_SUCCESS':
+      if (action.response.role === 'student') {
+        try {
+          // This line sets showCodeReviews to be equal to the reviewNumbers whose points are 0.
+          return { ...state, showCodeReviews: action.response.data.codeReviews.filter(cr => cr.points === null).map(cr => cr.reviewNumber) }
+        } catch (e) {
+          console.log('ERROR: Setting initial values for shown codeReviews failed.')
+          return state
+        }
+      } else {
+        return state
+      }
+    case 'COURSE_PAGE_TOGGLE_CODE_REVIEW':
+      var index = state.showCodeReviews.indexOf(action.reviewNumber)
+      if (index === -1) {
+        return { ...state, showCodeReviews: [...state.showCodeReviews, action.reviewNumber] }
+      } else {
+        var newValue = state.showCodeReviews
+        newValue.splice(index, 1)
+        return { ...state, showCodeReviews: newValue }
+      }
     default:
       return state
   }
@@ -60,6 +82,15 @@ export const coursePageReset = () => {
   return async dispatch => {
     dispatch({
       type: 'COURSE_PAGE_RESET'
+    })
+  }
+}
+
+export const toggleCodeReview = reviewNumber => {
+  return async dispatch => {
+    dispatch({
+      type: 'COURSE_PAGE_TOGGLE_CODE_REVIEW',
+      reviewNumber
     })
   }
 }

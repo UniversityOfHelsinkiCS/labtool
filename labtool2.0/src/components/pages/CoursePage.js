@@ -6,7 +6,7 @@ import { createOneComment } from '../../services/comment'
 import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import { associateTeacherToStudent } from '../../services/assistant'
 import ReactMarkdown from 'react-markdown'
-import { showDropdown, selectTeacher, filterByAssistant, coursePageReset } from '../../reducers/coursePageLogicReducer'
+import { showDropdown, selectTeacher, filterByAssistant, coursePageReset, toggleCodeReview } from '../../reducers/coursePageLogicReducer'
 
 export class CoursePage extends React.Component {
   handleSubmit = async e => {
@@ -382,25 +382,28 @@ export class CoursePage extends React.Component {
                     codeReview =>
                       codeReview.reviewNumber ? (
                         <Card fluid color="yellow">
-                          <Card.Content header={'Code review ' + codeReview.reviewNumber} />
-                          <Card.Content>
-                            <h4>Project to review</h4>
-                            <p>{codeReview.toReview.projectName}</p>
-                            <p>
-                              <a href={codeReview.toReview.github}>{codeReview.toReview.github}</a>
-                            </p>
-                          </Card.Content>
-                          {codeReview.reviewer ? (
+                          <Card.Content header={'Code review ' + codeReview.reviewNumber} onClick={() => this.props.toggleCodeReview(codeReview.reviewNumber)} style={{ cursor: 'pointer' }} />
+                          <Card.Content style={{ display: this.props.coursePageLogic.showCodeReviews.indexOf(codeReview.reviewNumber) === -1 && codeReview.points === null ? 'none' : 'block' }}>{codeReview.points === null ? '' : codeReview.points + ' points'}</Card.Content>
+                          <div style={{ display: this.props.coursePageLogic.showCodeReviews.indexOf(codeReview.reviewNumber) === -1 ? 'none' : 'block' }}>
                             <Card.Content>
-                              <h4>Your reviewer</h4>
-                              <p>{codeReview.reviewer.projectName}</p>
+                              <h4>Project to review</h4>
+                              <p>{codeReview.toReview.projectName}</p>
                               <p>
-                                <a href={codeReview.reviewer.github}>{codeReview.reviewer.github}</a>
+                                <a href={codeReview.toReview.github}>{codeReview.toReview.github}</a>
                               </p>
                             </Card.Content>
-                          ) : (
-                            <div />
-                          )}
+                            {codeReview.reviewer ? (
+                              <Card.Content>
+                                <h4>Your reviewer</h4>
+                                <p>{codeReview.reviewer.projectName}</p>
+                                <p>
+                                  <a href={codeReview.reviewer.github}>{codeReview.reviewer.github}</a>
+                                </p>
+                              </Card.Content>
+                            ) : (
+                              <div />
+                            )}
+                          </div>
                         </Card>
                       ) : (
                         <div />
@@ -432,4 +435,16 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps, { createOneComment, getOneCI, coursePageInformation, associateTeacherToStudent, showDropdown, selectTeacher, filterByAssistant, coursePageReset })(CoursePage)
+const mapDispatchToProps = {
+  createOneComment,
+  getOneCI,
+  coursePageInformation,
+  associateTeacherToStudent,
+  showDropdown,
+  selectTeacher,
+  filterByAssistant,
+  coursePageReset,
+  toggleCodeReview
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CoursePage)
