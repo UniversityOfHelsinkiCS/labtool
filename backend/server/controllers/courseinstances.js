@@ -241,9 +241,9 @@ module.exports = {
    */
   registerToCourseInstance(req, res) {
     helper.controller_before_auth_check_action(req, res)
-    console.log(`---------------------------------`);
+    console.log(`---------------------------------`)
     console.log(req.decoded)
-    console.log(`---------------------------------`);
+    console.log(`---------------------------------`)
 
     CourseInstance.findOne({
       where: {
@@ -334,30 +334,42 @@ module.exports = {
   update(req, res) {
     helper.controller_before_auth_check_action(req, res)
 
-    console.log('REQ body: ', req.body)
-    console.log('REQ params: ', req.params)
-    return CourseInstance.find({
+    TeacherInstance.findOne({
       where: {
-        ohid: req.params.id
+        userId: req.decoded.id
       }
     })
-      .then(courseInstance => {
-        if (!courseInstance) {
-          res.status(400).send({
-            message: 'course instance not found'
-          })
+      .then(teacher => {
+        if (!teacher || !req.authenticated.success) {
+          res.status(400).send('You have to be a teacher to update course info')
+          return
         }
-        return courseInstance
-          .update({
-            name: req.body.name || courseInstance.name,
-            start: req.body.start || courseInstance.start,
-            end: req.body.end || courseInstance.end,
-            active: req.body.active || courseInstance.active,
-            weekAmount: req.body.weekAmount || courseInstance.weekAmount,
-            weekMaxPoints: req.body.weekMaxPoints || courseInstance.weekMaxPoints,
-            currentWeek: req.body.currentWeek || courseInstance.currentWeek
+        console.log('REQ body: ', req.body)
+        console.log('REQ params: ', req.params)
+        return CourseInstance.find({
+          where: {
+            ohid: req.params.id
+          }
+        })
+          .then(courseInstance => {
+            if (!courseInstance) {
+              res.status(400).send({
+                message: 'course instance not found'
+              })
+            }
+            return courseInstance
+              .update({
+                name: req.body.name || courseInstance.name,
+                start: req.body.start || courseInstance.start,
+                end: req.body.end || courseInstance.end,
+                active: req.body.active || courseInstance.active,
+                weekAmount: req.body.weekAmount || courseInstance.weekAmount,
+                weekMaxPoints: req.body.weekMaxPoints || courseInstance.weekMaxPoints,
+                currentWeek: req.body.currentWeek || courseInstance.currentWeek
+              })
+              .then(updatedCourseInstance => res.status(200).send(updatedCourseInstance))
+              .catch(error => res.status(400).send(error))
           })
-          .then(updatedCourseInstance => res.status(200).send(updatedCourseInstance))
           .catch(error => res.status(400).send(error))
       })
       .catch(error => res.status(400).send(error))
