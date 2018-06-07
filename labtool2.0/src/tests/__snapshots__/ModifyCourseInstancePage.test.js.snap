@@ -195,7 +195,6 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
   >
     <Button
       as="button"
-      floated="left"
       role="button"
       style={
         Object {
@@ -212,7 +211,6 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
   >
     <Button
       as="button"
-      floated="right"
       role="button"
       style={
         Object {
