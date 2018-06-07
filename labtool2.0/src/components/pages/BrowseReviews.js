@@ -70,7 +70,7 @@ export class BrowseReviews extends Component {
               headers.push(
                 <Accordion key={i} fluid styled>
                   <Accordion.Title active={activeIndex === i} index={i} onClick={this.handleClick}>
-                    <Icon name="dropdown" /> Week {i + 1}{' '}
+                    <Icon name="dropdown" /> Week {i + 1}, points {weeks.points}
                   </Accordion.Title>
                   <Accordion.Content active={activeIndex === i}>
                     <Card fluid color="yellow">
@@ -116,7 +116,7 @@ export class BrowseReviews extends Component {
                     </Comment.Group>
                     <Form reply onSubmit={this.handleSubmit} name={weeks.id} id={weeks.id}>
                       <Form.TextArea name="content" placeholder="Your comment..." defaultValue="" />
-                      <Form.Checkbox label="Make this comment hidden from others" name="hidden" />
+                      <Form.Checkbox label="Add comment for instructors only" name="hidden" />
                       <Button content="Add Reply" labelPosition="left" icon="edit" primary />
                     </Form>
                     <h3>Review</h3>

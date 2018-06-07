@@ -94,7 +94,7 @@ export class CoursePage extends React.Component {
       for (var i = 0; i < this.props.selectedInstance.weekAmount; i++) {
         let pushattava = (
           <Table.Cell key={i}>
-            <p>Not reviewed!</p>
+            <p>-</p>
           </Table.Cell>
         )
 
@@ -217,7 +217,7 @@ export class CoursePage extends React.Component {
             <br />
             <Header as="h2">Students </Header>
             <div style={{ textAlign: 'left' }}>
-              <span>Filter by assigned teacher </span>
+              <span>Filter by instructor </span>
               <Dropdown
                 options={dropDownFilterTeachers}
                 onChange={this.changeFilterAssistant()}
@@ -262,17 +262,17 @@ export class CoursePage extends React.Component {
                       <Table.Cell>
                         {data.teacherInstanceId && this.props.selectedInstance.teacherInstances ? (
                           this.props.selectedInstance.teacherInstances.filter(teacher => teacher.id === data.teacherInstanceId).map(teacher => (
-                            <p key={data.id}>
-                              Assistant: {teacher.firsts} {teacher.lastname}
-                            </p>
+                            <span key={data.id}>
+                              {teacher.firsts} {teacher.lastname}
+                            </span>
                           ))
                         ) : (
-                          <p>Assistant: not given</p>
+                          <span>not assigned</span>
                         )}
-                        <Icon onClick={this.changeHidden(data.id)} name="pencil" size="small" />
+                        <Icon onClick={this.changeHidden(data.id)} name="pencil" size="small" style={{ float: 'right' }} />
                         {this.props.coursePageLogic.showDropdown === data.id ? (
                           <div>
-                            <Dropdown options={dropDownTeachers} onChange={this.changeSelectedTeacher()} placeholder="Select Teacher" fluid selection />
+                            <Dropdown options={dropDownTeachers} onChange={this.changeSelectedTeacher()} placeholder="Select teacher" fluid selection />
                             {/* <select style={{}}onChange={this.changeSelectedTeacher()}>
                               <option value="" disabled selected>Select your option</option>
                               {dropDownTeachers.map(m => (
