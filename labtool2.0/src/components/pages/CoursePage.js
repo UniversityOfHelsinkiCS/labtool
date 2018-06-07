@@ -381,29 +381,33 @@ export class CoursePage extends React.Component {
                   this.props.courseData.data.codeReviews.map(
                     codeReview =>
                       codeReview.reviewNumber ? (
-                        <Card fluid color="yellow">
+                        <Card fluid color="yellow" key={codeReview.reviewNumber} className="codeReview">
                           <Card.Content header={'Code review ' + codeReview.reviewNumber} onClick={() => this.props.toggleCodeReview(codeReview.reviewNumber)} style={{ cursor: 'pointer' }} />
-                          <Card.Content style={{ display: this.props.coursePageLogic.showCodeReviews.indexOf(codeReview.reviewNumber) === -1 && codeReview.points === null ? 'none' : 'block' }}>{codeReview.points === null ? '' : codeReview.points + ' points'}</Card.Content>
-                          <div style={{ display: this.props.coursePageLogic.showCodeReviews.indexOf(codeReview.reviewNumber) === -1 ? 'none' : 'block' }}>
-                            <Card.Content>
-                              <h4>Project to review</h4>
-                              <p>{codeReview.toReview.projectName}</p>
-                              <p>
-                                <a href={codeReview.toReview.github}>{codeReview.toReview.github}</a>
-                              </p>
-                            </Card.Content>
-                            {codeReview.reviewer ? (
+                          {codeReview.points !== null ? <Card.Content className="codeReviewPoints">{codeReview.points + ' points'}</Card.Content> : <div />}
+                          {this.props.coursePageLogic.showCodeReviews.indexOf(codeReview.reviewNumber) !== -1 ? (
+                            <div className="codeReviewExpanded">
                               <Card.Content>
-                                <h4>Your reviewer</h4>
-                                <p>{codeReview.reviewer.projectName}</p>
+                                <h4>Project to review</h4>
+                                <p>{codeReview.toReview.projectName}</p>
                                 <p>
-                                  <a href={codeReview.reviewer.github}>{codeReview.reviewer.github}</a>
+                                  <a href={codeReview.toReview.github}>{codeReview.toReview.github}</a>
                                 </p>
                               </Card.Content>
-                            ) : (
-                              <div />
-                            )}
-                          </div>
+                              {codeReview.reviewer ? (
+                                <Card.Content>
+                                  <h4>Your reviewer</h4>
+                                  <p>{codeReview.reviewer.projectName}</p>
+                                  <p>
+                                    <a href={codeReview.reviewer.github}>{codeReview.reviewer.github}</a>
+                                  </p>
+                                </Card.Content>
+                              ) : (
+                                <div />
+                              )}
+                            </div>
+                          ) : (
+                            <div />
+                          )}
                         </Card>
                       ) : (
                         <div />
