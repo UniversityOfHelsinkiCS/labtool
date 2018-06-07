@@ -1,9 +1,10 @@
 /**
  * Named coursePageLogic in state.
  *
- * showDropdown: studentInstance, who the user is assigning a teacher to.
- * selectedTeacher: teacherInstance, who the user is assigning to a student.
- * filterByAssistant: teacherInstance, whose students are the only ones to be shown.
+ * showDropdown: studentInstance, who the user is assigning a teacher to. Teacher side.
+ * selectedTeacher: teacherInstance, who the user is assigning to a student. Teacher side.
+ * filterByAssistant: teacherInstance, whose students are the only ones to be shown. Teacher side.
+ * showCodeReviews: array of codeReviews to be shown uncollapsed. Student side.
  */
 
 const INITIAL_STATE = {
@@ -28,7 +29,7 @@ const coursePageLogicReducer = (state = INITIAL_STATE, action) => {
     case 'CP_INFO_SUCCESS':
       if (action.response.role === 'student') {
         try {
-          // This line sets showCodeReviews to be equal to the reviewNumbers whose points are 0.
+          // The line below sets showCodeReviews to be equal to the reviewNumbers whose points are 0.
           return { ...state, showCodeReviews: action.response.data.codeReviews.filter(cr => cr.points === null).map(cr => cr.reviewNumber) }
         } catch (e) {
           console.log('ERROR: Setting initial values for shown codeReviews failed.')

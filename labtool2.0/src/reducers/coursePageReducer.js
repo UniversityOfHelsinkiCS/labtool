@@ -51,6 +51,20 @@ export default courseInstancereducer
                   }
               ]
           }
+      ],
+      "codeReviews": [
+          {
+              "reviewer": {
+                  "github": string, github link for reviewer
+                  "projectName": string, title for reviewer's project
+              }
+              "toReview": {
+                  "github": string, github link to repository user should review
+                  "projectName": string, title for project user should review
+              }
+              "reviewNumber": integer, indicates which round of code reviews this is.
+              "points": number or null, Points awarded for this code review. Null if not reviewed.
+          }
       ]
   }
 }
