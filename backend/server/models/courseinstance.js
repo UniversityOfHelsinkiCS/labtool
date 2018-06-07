@@ -11,7 +11,8 @@ module.exports = (sequelize, DataTypes) => {
       currentWeek: DataTypes.INTEGER,
       currentCodeReview: DataTypes.INTEGER,
       codeReviewActive: DataTypes.BOOLEAN,
-      ohid: DataTypes.STRING
+      ohid: DataTypes.STRING,
+      amountOfCodeReviews: DataTypes.INTEGER
     },
     {}
   )

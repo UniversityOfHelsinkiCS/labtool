@@ -16,7 +16,8 @@ module.exports = {
           currentWeek: 1,
           ohid: 'TKT20010.2018.K.A.1',
           createdAt: '2018-03-26',
-          updatedAt: '2018-03-26'
+          updatedAt: '2018-03-26',
+          amountOfCodeReviews: 2
         },
         {
           id: 10012,
@@ -29,7 +30,8 @@ module.exports = {
           currentWeek: 1,
           ohid: 'TKT20002.2018.K.K.1',
           createdAt: '2018-03-26',
-          updatedAt: '2018-03-26'
+          updatedAt: '2018-03-26',
+          amountOfCodeReviews: 2
         },
         {
           id: 10013,
@@ -42,8 +44,9 @@ module.exports = {
           currentWeek: 1,
           ohid: 'TKT20011.2018.K.A.1',
           createdAt: '2018-03-26',
-          updatedAt: '2018-03-26'
-        },
+          updatedAt: '2018-03-26',
+          amountOfCodeReviews: 2
+        }
       ],
       {}
     )

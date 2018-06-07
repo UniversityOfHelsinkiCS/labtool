@@ -51,6 +51,11 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
+      },
+      amountOfCodeReviews: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        defaultValue: 2
       }
     })
   },
