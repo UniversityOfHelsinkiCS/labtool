@@ -43,12 +43,22 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
             defaultValue=""
             name="points"
             step="0.01"
+            style={
+              Object {
+                "width": "500px",
+              }
+            }
             type="number"
           />
         </FormField>
       </FormGroup>
       <FormGroup
         inline={true}
+        style={
+          Object {
+            "textAlignVertical": "top",
+          }
+        }
         unstackable={true}
       >
         <label>
@@ -59,12 +69,18 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
           control={[Function]}
           defaultValue=""
           name="comment"
+          style={
+            Object {
+              "height": "250px",
+              "width": "500px",
+            }
+          }
         />
       </FormGroup>
       <FormField>
         <Button
           as="button"
-          className="ui left floated green button"
+          className="ui center floated green button"
           role="button"
           type="submit"
         >
@@ -77,7 +93,7 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
         >
           <Button
             as="button"
-            className="ui right floated button"
+            className="ui center floated button"
             role="button"
             type="cancel"
           >
