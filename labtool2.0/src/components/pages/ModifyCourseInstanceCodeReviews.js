@@ -2,9 +2,9 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { getOneCI } from '../../services/courseInstance'
 import { coursePageInformation } from '../../services/courseInstance'
-import { codeReviewReducer, initOneReview } from '../../reducers/codeReviewReducer'
+import { codeReviewReducer, initOneReview, initOrRemoveRandom, initCheckbox, initAllCheckboxes } from '../../reducers/codeReviewReducer'
 import { clearNotifications } from '../../reducers/notificationReducer'
-import { Button, Table, Card, Form, Comment, List, Header, Label, Message, Icon, Dropdown } from 'semantic-ui-react'
+import { Button, Table, Card, Form, Comment, List, Header, Label, Message, Icon, Dropdown, Checkbox } from 'semantic-ui-react'
 
 export class ModifyCourseInstanceReview extends React.Component {
   componentDidMount() {
@@ -24,6 +24,22 @@ export class ModifyCourseInstanceReview extends React.Component {
     }
   }
 
+  initOrRemoveRandom = (id) => {
+    return async () => {
+      await this.props.initCheckbox(id)
+      this.props.initOrRemoveRandom(id)
+    }
+  }
+
+  selectAllCheckboxes = () => {
+    return () => {
+      let allCb = {}
+      this.props.courseData.data.forEach(student =>
+        allCb[student.id] = true
+      )
+      this.props.initAllCheckboxes(allCb)
+    }
+  }
   render() {
     const createHeaders = () => {
       const headers = []
@@ -49,6 +65,7 @@ export class ModifyCourseInstanceReview extends React.Component {
           <Table celled>
             <Table.Header>
               <Table.Row>
+                <Table.HeaderCell></Table.HeaderCell>
                 <Table.HeaderCell>Reviewer</Table.HeaderCell>
                 <Table.HeaderCell> Project </Table.HeaderCell>
                 <Table.HeaderCell key={1}>Code Review 1 </Table.HeaderCell>
@@ -59,6 +76,13 @@ export class ModifyCourseInstanceReview extends React.Component {
               {this.props.courseData.data !== undefined
                 ? this.props.courseData.data.map(data => (
                   <Table.Row key={data.id}>
+                    <Table.Cell>
+                      {this.props.codeReviewLogic.checkBoxStates[data.id] === true ?
+                        <Checkbox checked onChange={this.initOrRemoveRandom(data.id)} />
+                        :
+                        <Checkbox onChange={this.initOrRemoveRandom(data.id)} />
+                      }
+                    </Table.Cell>
                     <Table.Cell>
                       {data.User.firsts} {data.User.lastname}
                     </Table.Cell>
@@ -80,6 +104,7 @@ export class ModifyCourseInstanceReview extends React.Component {
             </Table.Body>
             <Table.Footer>
               <Table.Row>
+                <Table.HeaderCell><Button onClick={this.selectAllCheckboxes()}>ALL</Button></Table.HeaderCell>
                 <Table.HeaderCell />
                 <Table.HeaderCell />
                 <Table.HeaderCell>
@@ -94,7 +119,7 @@ export class ModifyCourseInstanceReview extends React.Component {
             </Table.Footer>
           </Table>
         </div>
-      </div>
+      </div >
     )
   }
 }
@@ -126,7 +151,10 @@ const mapDispatchToProps = {
   getOneCI,
   clearNotifications,
   coursePageInformation,
-  initOneReview
+  initOneReview,
+  initOrRemoveRandom,
+  initCheckbox,
+  initAllCheckboxes
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ModifyCourseInstanceReview)
