@@ -241,9 +241,9 @@ module.exports = {
    */
   registerToCourseInstance(req, res) {
     helper.controller_before_auth_check_action(req, res)
-    console.log(`---------------------------------`)
+    console.log(`----------------------------------`)
     console.log(req.decoded)
-    console.log(`---------------------------------`)
+    console.log(`----------------------------------`)
 
     CourseInstance.findOne({
       where: {
