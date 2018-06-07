@@ -90,45 +90,31 @@ export class ModifyCourseInstanceReview extends React.Component {
             <Table.Body>
               {this.props.courseData.data !== undefined
                 ? this.props.courseData.data.map(data => (
-                  <Table.Row key={data.id}>
-                    <Table.Cell>
-                      {this.props.codeReviewLogic.checkBoxStates[data.id] === true ? (
-                        <Checkbox checked onChange={this.initOrRemoveRandom(data.id)} />
-                      ) : (
+                    <Table.Row key={data.id}>
+                      <Table.Cell>
+                        {this.props.codeReviewLogic.checkBoxStates[data.id] === true ? (
+                          <Checkbox checked onChange={this.initOrRemoveRandom(data.id)} />
+                        ) : (
                           <Checkbox onChange={this.initOrRemoveRandom(data.id)} />
                         )}
-                    </Table.Cell>
-                    <Table.Cell>
-                      {data.User.firsts} {data.User.lastname}
-                    </Table.Cell>
-                    <Table.Cell>
-                      <p>{data.projectName}</p>
-                      <a href={data.github}>{data.github}</a>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <p>Current review: {getCurrentReviewer(1, data.id)}</p>
-                      <Dropdown
-                        placeholder="Select student"
-                        fluid
-                        search
-                        selection
-                        options={this.props.dropdownUsers.filter(u => u.value !== data.id)}
-                        onChange={this.initOneCodeReview(1, data.id)}
-                      />
-                    </Table.Cell>
-                    <Table.Cell>
-                      <p>Current review: {getCurrentReviewer(2, data.id)}</p>
-                      <Dropdown
-                        placeholder="Select student"
-                        fluid
-                        search
-                        selection
-                        options={this.props.dropdownUsers.filter(u => u.value !== data.id)}
-                        onChange={this.initOneCodeReview(2, data.id)}
-                      />
-                    </Table.Cell>
-                  </Table.Row>
-                ))
+                      </Table.Cell>
+                      <Table.Cell>
+                        {data.User.firsts} {data.User.lastname}
+                      </Table.Cell>
+                      <Table.Cell>
+                        <p>{data.projectName}</p>
+                        <a href={data.github}>{data.github}</a>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <p>Current review: {getCurrentReviewer(1, data.id)}</p>
+                        <Dropdown placeholder="Select student" fluid search selection options={this.props.dropdownUsers.filter(u => u.value !== data.id)} onChange={this.addCodeReview(1, data.id)} />
+                      </Table.Cell>
+                      <Table.Cell>
+                        <p>Current review: {getCurrentReviewer(2, data.id)}</p>
+                        <Dropdown placeholder="Select student" fluid search selection options={this.props.dropdownUsers.filter(u => u.value !== data.id)} onChange={this.addCodeReview(2, data.id)} />
+                      </Table.Cell>
+                    </Table.Row>
+                  ))
                 : null}
             </Table.Body>
             <Table.Footer>
@@ -139,11 +125,7 @@ export class ModifyCourseInstanceReview extends React.Component {
                 <Table.HeaderCell />
                 <Table.HeaderCell />
                 <Table.HeaderCell>
-<<<<<<< HEAD
-                  <Button onClick={this.assignCodeReviews(1)} size="small" style={{ float: 'left' }}>
-=======
                   <Button onClick={this.handleSubmit(1)} size="small" style={{ float: 'left' }}>
->>>>>>> 14aec50734946e9ebe539fa2951f89e667389186
                     Save
                   </Button>
                   <Button size="small" style={{ float: 'right' }}>
@@ -151,11 +133,7 @@ export class ModifyCourseInstanceReview extends React.Component {
                   </Button>
                 </Table.HeaderCell>
                 <Table.HeaderCell>
-<<<<<<< HEAD
-                  <Button onClick={this.assignCodeReviews(2)} size="small" style={{ float: 'left' }}>
-=======
                   <Button onClick={this.handleSubmit(2)} size="small" style={{ float: 'left' }}>
->>>>>>> 14aec50734946e9ebe539fa2951f89e667389186
                     Save
                   </Button>
                   <Button size="small" style={{ float: 'right' }}>
@@ -206,11 +184,7 @@ const mapDispatchToProps = {
   initOrRemoveRandom,
   initCheckbox,
   initAllCheckboxes,
-<<<<<<< HEAD
-  insertCodeReviews
-=======
   bulkinsertCodeReviews
->>>>>>> 14aec50734946e9ebe539fa2951f89e667389186
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ModifyCourseInstanceReview)
