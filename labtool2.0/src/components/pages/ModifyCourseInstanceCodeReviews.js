@@ -37,7 +37,9 @@ export class ModifyCourseInstanceReview extends React.Component {
       this.props.courseData.data.forEach(student =>
         allCb[student.id] = true
       )
-      this.props.initAllCheckboxes(allCb)
+      let randoms = this.props.courseData.data.map(student =>
+        student.id)
+      this.props.initAllCheckboxes({data: allCb, ids: randoms})
     }
   }
   render() {

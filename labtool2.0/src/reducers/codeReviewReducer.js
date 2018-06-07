@@ -34,7 +34,7 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
     }
 
     case 'INIT_ALL_CHECKBOXES':
-      return { ...state, checkBoxStates: action.data }
+      return { ...state, checkBoxStates: action.data.data, randomizedCodeReview: action.data.ids }
     case 'INIT_CHECKBOX':
       let cb = state.checkBoxStates
       if (cb[action.data]) {
