@@ -36,7 +36,7 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
     case 'INIT_ALL_CHECKBOXES':
       return { ...state, checkBoxStates: action.data.data, randomizedCodeReview: action.data.ids }
     case 'INIT_CHECKBOX':
-      let cb = state.checkBoxStates
+      var cb = state.checkBoxStates
       if (cb[action.data]) {
         cb[action.data] = !cb[action.data]
       } else {
@@ -44,17 +44,20 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
       }
       return { ...state, checkBoxStates: cb }
     case 'INIT_OR_REMOVE_RANDOM':
-      let cbState = state.checkBoxStates
-      let rndCr = state.randomizedCodeReview
-      let idToCheck = rndCr.find(cr => cr === action.data)
+      var cbState = state.checkBoxStates
+      var rndCr = state.randomizedCodeReview
+      var idToCheck = rndCr.find(cr => cr === action.data)
 
       if (cbState[action.data]) {
-        (idToCheck !== undefined ? rndCr : rndCr = [...rndCr, action.data])
+        idToCheck !== undefined ? rndCr : (rndCr = [...rndCr, action.data])
         return { ...state, randomizedCodeReview: rndCr }
       }
       rndCr = rndCr.filter(rnd => rnd !== action.data)
       return { ...state, randomizedCodeReview: rndCr }
-
+    case 'CODE_REVIEW_BULKINSERT_SUCCESS':
+      var codeReviewRoundsToUpdate = state.codeReviewStates
+      codeReviewRoundsToUpdate[action.response.data.reviewNumber] = []
+      return { ...state, codeReviewStates: codeReviewRoundsToUpdate }
     default:
       return INITIAL_STATE
   }

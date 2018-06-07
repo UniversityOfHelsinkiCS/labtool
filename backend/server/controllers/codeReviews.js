@@ -58,7 +58,10 @@ module.exports = {
         return
       }
       await CodeReview.bulkCreate(values, { individualHooks: true }) // This is where the magic happens.
-      res.status(201).send('All code reviews inserted.')
+      res.status(201).send({
+        message: 'All code reviews inserted.',
+        data: req.body
+      })
     } catch (e) {
       console.log('CodeReview bulk insert failed.\n', e)
       res.status(500).send('Unexpected error.')

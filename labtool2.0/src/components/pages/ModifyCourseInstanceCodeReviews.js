@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { getOneCI } from '../../services/courseInstance'
 import { coursePageInformation } from '../../services/courseInstance'
+import { bulkinsertCodeReviews } from '../../services/codeReview'
 import { codeReviewReducer, initOneReview, initOrRemoveRandom, initCheckbox, initAllCheckboxes } from '../../reducers/codeReviewReducer'
 import { clearNotifications } from '../../reducers/notificationReducer'
 import { Button, Table, Card, Form, Comment, List, Header, Label, Message, Icon, Dropdown, Checkbox } from 'semantic-ui-react'
@@ -10,6 +11,20 @@ export class ModifyCourseInstanceReview extends React.Component {
   componentDidMount() {
     this.props.getOneCI(this.props.courseId)
     this.props.coursePageInformation(this.props.courseId)
+  }
+
+  handleSubmit = reviewNumber => async e => {
+    try {
+      e.preventDefault()
+      const codeReviews = this.props.codeReviewLogic.codeReviewStates[reviewNumber]
+      const data = {
+        codeReviews,
+        reviewNumber
+      }
+      await this.props.bulkinsertCodeReviews(data)
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   addCodeReview = (reviewRound, id) => {
@@ -110,7 +125,7 @@ export class ModifyCourseInstanceReview extends React.Component {
                 <Table.HeaderCell />
                 <Table.HeaderCell />
                 <Table.HeaderCell>
-                  <Button size="small" style={{ float: 'left' }}>
+                  <Button onClick={this.handleSubmit(1)} size="small" style={{ float: 'left' }}>
                     Save
                   </Button>
                   <Button size="small" style={{ float: 'right' }}>
@@ -118,7 +133,7 @@ export class ModifyCourseInstanceReview extends React.Component {
                   </Button>
                 </Table.HeaderCell>
                 <Table.HeaderCell>
-                  <Button size="small" style={{ float: 'left' }}>
+                  <Button onClick={this.handleSubmit(2)} size="small" style={{ float: 'left' }}>
                     Save
                   </Button>
                   <Button size="small" style={{ float: 'right' }}>
@@ -164,7 +179,8 @@ const mapDispatchToProps = {
   initOneReview,
   initOrRemoveRandom,
   initCheckbox,
-  initAllCheckboxes
+  initAllCheckboxes,
+  bulkinsertCodeReviews
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ModifyCourseInstanceReview)
