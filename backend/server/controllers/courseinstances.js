@@ -326,6 +326,65 @@ module.exports = {
   },
 
   /**
+   * req.body:
+   *    {
+   *      github,
+   *      projectname
+   *    }
+   */
+  updateStudentInstance(req, res) {
+    helper.controller_before_auth_check_action(req, res)
+
+    try {
+      if (req.authenticated.success) {
+        console.log('\nauth success\n')
+        CourseInstance.findOne({
+          where: {
+            ohid: req.body.ohid
+          }
+        })
+          .then(course => {
+            if (!course) {
+              console.log('\nkurssia ei löytynyt\n')
+              res.status(404).send('course not found')
+              return
+            }
+            console.log('\nkurssi löytyi\n')
+            StudentInstance.find({
+              where: {
+                userId: req.decoded.id,
+                courseInstanceId: course.id
+              }
+            }).then(targetStudent => {
+              if (!targetStudent) {
+                console.log('\nopiskelijaa ei löytynyt\n')
+                res.status(404).send('Student not found')
+                return
+              }
+              console.log('\nopiskelija löytyi\n')
+              return targetStudent
+                .update({
+                  github: req.body.github || targetStudent.github,
+                  projectName: req.body.projectname || targetStudent.projectName
+                })
+                .then(updatedStudentInstance => {
+                  console.log('\nUpdated student project info succesfully\n')
+                  res.status(200).send(updatedStudentInstance)
+                })
+                .catch(error => {
+                  console.log('\nerror happened\n')
+                  res.status(400).send('update failed')
+                })
+            })
+          })
+          .catch(error => res.status(400).send('\n\n\n\ntuli joku error: ', error))
+      }
+    } catch (e) {
+      res.status(400).send(e)
+    }
+  },
+
+  /**
    *
    * @param req
    * @param res
