@@ -46,8 +46,8 @@ export class ReviewStudent extends Component {
   render() {
     //this.props.ownProps.studentInstance on String sen takia ==. Korjaisin, jos keksisin mistä tuo ownProps tulee.
     const studentData = this.props.courseData.data.filter(dataArray => dataArray.id == this.props.ownProps.studentInstance)
-
-    const weekData = studentData[0].weeks.filter(theWeek => theWeek.weekNumber === this.props.weekNumber)
+    //this.props.weekNumber on String, siksi ==.
+    const weekData = studentData[0].weeks.filter(theWeek => theWeek.weekNumber == this.props.weekNumber)
 
     return (
       <div className="ReviewStudent" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
