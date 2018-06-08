@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Button, Table, Card, Form, Comment, List, Header, Label, Message, Icon, Dropdown } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
@@ -103,9 +103,6 @@ export class CoursePage extends React.Component {
             pushattava = (
               <Table.Cell key={i}>
                 <p>{data[j].points}</p>
-                {/*               <Link to={`/labtool/reviewstudent/${this.props.selectedInstance.ohid}/${siId}/${i + 1}`}>
-                <Button circular color='orange' size="tiny" icon="edit black large" ></Button>
-          </Link> */}
               </Table.Cell>
             )
           }
@@ -333,7 +330,6 @@ export class CoursePage extends React.Component {
                 ) : (
                   <h3>Assistant: not given</h3>
                 )}
-
               </Card.Content>
             </Card>
 

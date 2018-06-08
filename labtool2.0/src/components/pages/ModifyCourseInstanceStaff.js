@@ -1,12 +1,10 @@
-import React, { Component } from 'react'
-import { getOneCI, modifyOneCI } from '../../services/courseInstance'
+import React from 'react'
+import { getOneCI } from '../../services/courseInstance'
 import { getAllUsers } from '../../services/user'
 import { createOne } from '../../services/teacherinstances'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
-import { Redirect } from 'react-router'
 import { clearNotifications } from '../../reducers/notificationReducer'
-import { Table, Container, Header, Button, Label, Form, Input } from 'semantic-ui-react'
+import { Table, Container, Header, Button, Label, Form } from 'semantic-ui-react'
 
 export class ModifyCourseInstanceStaff extends React.Component {
   componentWillMount() {
