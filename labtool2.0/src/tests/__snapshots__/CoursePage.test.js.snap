@@ -55,6 +55,25 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
             http://github.com/tiralabra1
           </a>
            
+          <Link
+            replace={false}
+            to="/labtool/courseregistration/undefined"
+          >
+            <Button
+              as="button"
+              circular={true}
+              floated="right"
+              icon={
+                Object {
+                  "color": "orange",
+                  "name": "edit",
+                  "size": "large",
+                }
+              }
+              role="button"
+              size="large"
+            />
+          </Link>
         </h3>
         <h3>
           Assistant: not given
