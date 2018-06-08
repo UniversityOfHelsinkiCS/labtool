@@ -17,4 +17,11 @@ export const createOne = teacherInformation => {
   return callController(route, prefix, teacherInformation, method)
 }
 
+export const removeOne = teacherId => {
+  const route = '/users/teacher/remove'
+  const prefix = 'TEACHER_REMOVE_'
+  const method = 'post'
+  return callController(route, prefix, teacherId, method)
+}
+
 export default { getAllTeacherCourses }

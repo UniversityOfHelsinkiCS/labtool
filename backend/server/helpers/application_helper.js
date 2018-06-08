@@ -234,13 +234,14 @@ async function createCourse(body) {
           username: result.teachers[i]
         },
         defaults: {
-          username: result.teachers[i]
+          username: result.teachers[i],
+          admin: true
         }
       })
       TeacherInstance.build({
         userId: user[i].id,
         courseInstanceId: new_course.id,
-        admin: 'true'
+        admin: true
       }).save()
     }
   }

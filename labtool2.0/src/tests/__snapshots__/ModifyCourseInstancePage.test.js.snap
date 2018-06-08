@@ -195,6 +195,7 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
   >
     <Button
       as="button"
+      block="true"
       role="button"
       style={
         Object {
@@ -202,7 +203,7 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
         }
       }
     >
-      Add assistant teachers
+      Add or remove assistant teachers
     </Button>
   </Link>
   <Link
@@ -211,6 +212,7 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
   >
     <Button
       as="button"
+      block="true"
       role="button"
       style={
         Object {
