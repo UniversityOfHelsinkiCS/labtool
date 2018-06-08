@@ -17,6 +17,7 @@ export class MyPage extends Component {
       const loggedUserJSON = window.localStorage.getItem('loggedLabtool')
       if (loggedUserJSON && loggedUserJSON !== '{}') {
         const user = JSON.parse(loggedUserJSON)
+        console.log('Kirjautunut käyttäjä', user)
       }
     } catch (exception) {
       console.log('no user logged in')
