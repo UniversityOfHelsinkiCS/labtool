@@ -67,6 +67,9 @@ export class ModifyCourseInstanceReview extends React.Component {
     const getCurrentReviewer = (codeReviewRound, id) => {
       let reviewer = this.props.courseData.data.find(studentId => studentId.id === id)
       let reviewInstance = reviewer.codeReviews.find(cd => cd.reviewNumber === codeReviewRound && cd.studentInstanceId === id)
+      if (!reviewInstance) {
+        return 'None'
+      }
       let reviewee = this.props.dropdownUsers.find(dropDownStudent => dropDownStudent.value === reviewInstance.toReview)
       return reviewee.text
     }
