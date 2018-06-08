@@ -31,6 +31,7 @@ exports[`<ModifyCourseInstanceStaff /> Components renders correctly 1`] = `
     <Table
       as="table"
       color="yellow"
+      fixed={true}
       singleLine={true}
     >
       <TableHeader
@@ -50,9 +51,6 @@ exports[`<ModifyCourseInstanceStaff /> Components renders correctly 1`] = `
           >
             Status
           </TableHeaderCell>
-          <TableHeaderCell
-            as="th"
-          />
         </TableRow>
       </TableHeader>
       <TableBody
@@ -73,12 +71,14 @@ exports[`<ModifyCourseInstanceStaff /> Components renders correctly 1`] = `
           <TableCell
             as="td"
           >
-            <Label
-              color="yellow"
-              horizontal={true}
-            >
-              Admin
-            </Label>
+            <div>
+              <Label
+                color="orange"
+                horizontal={true}
+              >
+                Teacher
+              </Label>
+            </div>
           </TableCell>
         </TableRow>
         <TableRow
@@ -101,7 +101,7 @@ exports[`<ModifyCourseInstanceStaff /> Components renders correctly 1`] = `
                 color="yellow"
                 horizontal={true}
               >
-                Non-admin
+                Student
               </Label>
               <Button
                 as="button"
@@ -110,7 +110,41 @@ exports[`<ModifyCourseInstanceStaff /> Components renders correctly 1`] = `
                 role="button"
                 size="tiny"
               >
-                Add admin
+                Add assistant
+              </Button>
+            </div>
+          </TableCell>
+        </TableRow>
+        <TableRow
+          as="tr"
+          cellAs="td"
+          key="10012"
+        >
+          <TableCell
+            as="td"
+          >
+            Aimo
+             
+            Assistentti
+          </TableCell>
+          <TableCell
+            as="td"
+          >
+            <div>
+              <Label
+                color="orange"
+                horizontal={true}
+              >
+                Assistant
+              </Label>
+              <Button
+                as="button"
+                color="green"
+                onClick={[Function]}
+                role="button"
+                size="tiny"
+              >
+                Remove assistant
               </Button>
             </div>
           </TableCell>

@@ -19,6 +19,8 @@ const selectedInstanceReducer = (store = [], action) => {
       return action.response
     case 'TEACHER_CREATE_SUCCESS':
       return { ...store, teacherInstances: [...store.teacherInstances, action.response] }
+    case 'TEACHER_REMOVE_SUCCESS':
+      return { ...store, teacherInstances: store.teacherInstances.filter(teacher => teacher.id !== action.response.id) }
     default:
       return store
   }
