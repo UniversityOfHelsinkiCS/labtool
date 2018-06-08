@@ -42,6 +42,17 @@ const courseInstancereducer = (store = [], action) => {
         return student
       })
       return { ...store, data: newData }
+    case 'CODE_REVIEW_GRADE_SUCCESS': {
+      const newData = store.data.map(student => {
+        if (student.id !== action.response.data.studentInstanceId) {
+          return student
+        }
+        const index = student.codeReviews.map(cr => cr.reviewNumber).indexOf(action.response.data.reviewNumber)
+        student.codeReviews[index] = { ...student.codeReviews[index], points: action.response.data.points }
+        return student
+      })
+      return { ...store, data: newData }
+    }
     default:
       return store
   }

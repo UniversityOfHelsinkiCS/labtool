@@ -88,34 +88,53 @@ export class CoursePage extends React.Component {
    * is a teacher or student on a course.
    */
   render() {
-    const createIndents = (data, siId) => {
-      const indents = []
+    const numberOfCodeReviews = Array.isArray(this.props.courseData.data) ? Math.max(...this.props.courseData.data.map(student => student.codeReviews.length)) : 0
 
-      for (var i = 0; i < this.props.selectedInstance.weekAmount; i++) {
+    const createIndents = (weeks, codeReviews, siId) => {
+      const indents = []
+      let i = 0
+      for (; i < this.props.selectedInstance.weekAmount; i++) {
         let pushattava = (
           <Table.Cell key={i}>
             <p>-</p>
           </Table.Cell>
         )
 
-        for (var j = 0; j < data.length; j++) {
-          if (i + 1 === data[j].weekNumber) {
+        for (var j = 0; j < weeks.length; j++) {
+          if (i + 1 === weeks[j].weekNumber) {
             pushattava = (
               <Table.Cell key={i}>
-                <p>{data[j].points}</p>
+                <p>{weeks[j].points}</p>
               </Table.Cell>
             )
           }
         }
         indents.push(pushattava)
       }
+      let ii = 0;
+      codeReviews.forEach(cr => {
+        indents.push(<Table.Cell key={i + ii}>
+            {cr.points !== null ? (<p>{cr.points}</p>) : (<p>-</p>)}
+          </Table.Cell>)
+        ii++
+      })
+      while (ii < numberOfCodeReviews) {
+        indents.push(<Table.Cell key={i+ii}>
+            <p>-</p>
+          </Table.Cell>)
+        ii++
+      }
       return indents
     }
 
     const createHeaders = () => {
       const headers = []
-      for (var i = 0; i < this.props.selectedInstance.weekAmount; i++) {
+      let i = 0
+      for (; i < this.props.selectedInstance.weekAmount; i++) {
         headers.push(<Table.HeaderCell key={i}>Week {i + 1} </Table.HeaderCell>)
+      }
+      for (var ii = 1; ii <= numberOfCodeReviews; ii++) {
+        headers.push(<Table.HeaderCell key={i + ii}>Code Review {ii} </Table.HeaderCell>)
       }
       return headers
     }
@@ -250,9 +269,11 @@ export class CoursePage extends React.Component {
                         <p>{data.projectName}</p>
                         <a href={data.github}>{data.github}</a>
                       </Table.Cell>
-                      {createIndents(data.weeks, data.id)}
+                      {createIndents(data.weeks, data.codeReviews, data.id)}
                       <Table.Cell>
                         {data.weeks.map(week => week.points).reduce((a, b) => {
+                          return a + b
+                        }, 0) + data.codeReviews.map(cr => cr.points).reduce((a, b) => {
                           return a + b
                         }, 0)}
                       </Table.Cell>

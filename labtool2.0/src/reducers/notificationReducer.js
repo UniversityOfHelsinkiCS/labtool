@@ -106,6 +106,16 @@ const notificationReducer = (state = {}, action) => {
         message: action.response.response.data,
         error: true
       }
+    case 'CODE_REVIEW_GRADE_SUCCESS':
+      return {
+        message: 'Code review graded successfully',
+        error: false
+      }
+    case 'CODE_REVIEW_GRADE_FAILURE':
+      return {
+        message: action.response.response.data,
+        error: true
+      }
     default:
       return state
   }
