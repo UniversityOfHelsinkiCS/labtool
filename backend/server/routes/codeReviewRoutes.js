@@ -9,4 +9,11 @@ module.exports = app => {
    *   toReview: will become the toReview to insert
    */
   app.put('/api/codereviews/bulkinsert', codeReviewController.bulkInsert)
+  /**
+   * Expects the following fields in the body:
+   * reviewNumber: reviewNumber of codeReview to update.
+   * studentInstanceId: studentInstance whose codeReview to update.
+   * points: value to which points should be updated.
+   */
+  app.put('/api/codereviews/grade', codeReviewController.grade)
 }

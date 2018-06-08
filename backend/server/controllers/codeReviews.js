@@ -70,5 +70,63 @@ module.exports = {
       console.log('CodeReview bulk insert failed.\n', e)
       res.status(500).send('Unexpected error.')
     }
+  },
+  async grade(req, res) {
+    helper.controller_before_auth_check_action(req, res)
+    try {
+      if (!req.authenticated.success) {
+        res.status(403).send('you have to be authenticated to do this')
+        return
+      }
+      if (typeof req.body.studentInstanceId !== 'number' || typeof req.body.reviewNumber !== 'number' || typeof req.body.points !== 'number') {
+        res.status(400).send('Missing or malformed inputs.')
+        return
+      }
+      const studentInstance = await StudentInstance.findOne({
+        attributes: {
+          exclude: ['createdAt', 'updatedAt']
+        },
+        where: {
+          id: req.body.studentInstanceId
+        }
+      })
+      if (!studentInstance) {
+        res.status(404).send('No student instance matched given id.')
+        return
+      }
+      const courseId = studentInstance.courseInstanceId
+      const requestMakerAsTeacher = await TeacherInstance.findOne({
+        where: {
+          userId: req.decoded.id,
+          courseInstanceId: courseId
+        }
+      })
+      if (!requestMakerAsTeacher) {
+        // If the request maker is not a teacher on the course, reject.
+        res.status(403).send('You must be a teacher of the course to perform this action.')
+        return
+      }
+      const modifiedRows = await CodeReview.update(
+        {
+          points: req.body.points
+        },
+        {
+          where: {
+            studentInstanceId: req.body.studentInstanceId,
+            reviewNumber: req.body.reviewNumber
+          }
+        }
+      )
+      if (modifiedRows === 0) {
+        res.status(404).send('No code review matched the given studentInstanceId and reviewNumber.')
+      }
+      res.status(200).send({
+        message: 'Code review points updated successfully',
+        data: req.body
+      })
+      return
+    } catch (e) {
+      res.status(500).send('Unexpected error.')
+    }
   }
 }
