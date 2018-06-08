@@ -26,7 +26,7 @@ jobs:
     script: cd backend && npm run test
     env: BACKEND=true
   - stage: tests
-    script: cd labtool2.0 && npm run test a
+    script: cd labtool2.0 && CI=true npm test
     env: FRONTEND=true
   - stage: integration tests
     script: TRAVIS_ALLOW_FAILURE=true echo "Nothing yet"
