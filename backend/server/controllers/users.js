@@ -145,14 +145,14 @@ module.exports = {
 
     if (req.authenticated.success) {
       try {
-        const teacherToRemove = await User.findById(req.body.id)
+        const teacherToRemoveAsUser = await User.findById(req.body.id)
         const courseInstance = await CourseInstance.findOne({
           where: {
             ohid: req.body.ohid
           }
         })
 
-        if (!teacherToRemove || !courseInstance) {
+        if (!teacherToRemoveAsUser || !courseInstance) {
           return res.status(404).send('User or course not found')
         }
 
@@ -167,14 +167,9 @@ module.exports = {
           return res.status(400).send('You must teach or assist on the course to remove assistants.')
         }
 
-        // Make sure teachers responsible for the course cannot be removed.
-        if (teacherToRemove.admin) {
-          return res.status(400).send('Only assistants can be removed.')
-        }
-
         const teacherInstanceToRemove = await TeacherInstance.findOne({
           where: {
-            userId: teacherToRemove.id,
+            userId: teacherToRemoveAsUser.id,
             courseInstanceId: courseInstance.id
           }
         })
@@ -182,7 +177,12 @@ module.exports = {
           return res.status(400).send('This user is not a teacher.')
         }
 
-        teacherInstanceToRemove.destroy()
+        // Make sure teachers responsible for the course cannot be removed.
+        if (teacherInstanceToRemove.admin) {
+          return res.status(400).send('Only assistants can be removed.')
+        }
+
+        await teacherInstanceToRemove.destroy()
 
         res.status(200).send(teacherInstanceToRemove)
       } catch (exception) {
