@@ -14,6 +14,7 @@ import Email from './components/pages/Email.js'
 import LoginPage from './components/pages/LoginPage.js'
 import ModifyCourseInstancePage from './components/pages/ModifyCourseInstancePage'
 import ModifyCourseInstanceStaff from './components/pages/ModifyCourseInstanceStaff'
+import ModifyCourseInstanceCodeReviews from './components/pages/ModifyCourseInstanceCodeReviews'
 import ReviewStudent from './components/pages/ReviewStudent'
 import BrowseReviews from './components/pages/BrowseReviews'
 import MyPage from './components/pages/MyPage'
@@ -80,6 +81,7 @@ class App extends Component {
             />
             <Route path={`/labtool/ModifyCourseInstancePage/:id`} render={({ match }) => <ModifyCourseInstancePage courseId={match.params.id} />} />
             <Route path={`/labtool/ModifyCourseInstanceStaff/:id`} render={({ match }) => <ModifyCourseInstanceStaff courseId={match.params.id} />} />
+            <Route path={'/labtool/ModifyCourseInstanceCodeReviews/:id'} render={({ match }) => <ModifyCourseInstanceCodeReviews courseId={match.params.id} />} />
             <Route path={`/`} render={() => <MyPage />} />
           </Switch>
         </main>

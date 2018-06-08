@@ -197,8 +197,30 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
       as="button"
       block="true"
       role="button"
+      style={
+        Object {
+          "marginTop": "10px",
+        }
+      }
     >
-      Add assistant teachers
+      Add or remove assistant teachers
+    </Button>
+  </Link>
+  <Link
+    replace={false}
+    to="/labtool/ModifyCourseInstanceCodeReviews/TKT20011.2018.K.A.1"
+  >
+    <Button
+      as="button"
+      block="true"
+      role="button"
+      style={
+        Object {
+          "marginTop": "10px",
+        }
+      }
+    >
+      Add or modify codereviews
     </Button>
   </Link>
 </div>

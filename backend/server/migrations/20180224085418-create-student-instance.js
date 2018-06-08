@@ -34,6 +34,7 @@ module.exports = {
       },
       teacherInstanceId: {
         type: Sequelize.INTEGER,
+        onDelete: 'SET NULL',
         allowNull: true,
         references: {
           model: 'TeacherInstances',

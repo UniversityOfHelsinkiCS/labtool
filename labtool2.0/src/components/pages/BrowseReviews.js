@@ -41,13 +41,13 @@ export class BrowseReviews extends Component {
       console.log(error)
     }
   }
-  
-  render() {
 
+  render() {
     const createHeaders = (studhead, studentInstance) => {
       let headers = []
       studhead.data.map(student => {
         // studentInstance is id of student. Type: String
+        // Tämä pitää myös korjata.
         if (student.id == studentInstance) {
           headers.push(
             <Card fluid color="yellow">
@@ -58,13 +58,13 @@ export class BrowseReviews extends Component {
                 <h3> {student.projectName} </h3>
                 <h3>
                   {' '}
-                  <a href={student.github}>{student.github}{' '}</a>
+                  <a href={student.github}>{student.github} </a>
                 </h3>
               </Card.Content>
             </Card>
           )
           for (var i = 0; i < this.props.selectedInstance.weekAmount; i++) {
-            const weeks = student.weeks.find(week => week.weekNumber == i + 1)
+            const weeks = student.weeks.find(week => week.weekNumber === i + 1)
             if (weeks) {
               headers.push(
                 <Accordion key={i} fluid styled>
@@ -143,6 +143,7 @@ export class BrowseReviews extends Component {
             }
           }
         }
+        return student
       })
       return headers
     }
@@ -169,8 +170,6 @@ const mapStateToProps = (state, ownProps) => {
     user: state.user,
     selectedInstance: state.selectedInstance,
     courseData: state.coursePage
-
-
   }
 }
 

@@ -17,6 +17,31 @@ const courseInstancereducer = (store = [], action) => {
       const mappedData = store.data.map(st => (st.id !== id ? st : changedStudent))
       return { ...store, data: mappedData }
     }
+    case 'CODE_REVIEW_BULKINSERT_SUCCESS':
+      var assignedReviews = {}
+      var reviewNumber = action.response.data.reviewNumber
+      action.response.data.codeReviews.forEach(cr => {
+        assignedReviews[cr.reviewer] = cr.toReview
+      })
+      var newData = store.data.map(student => {
+        const sId = assignedReviews[student.id]
+        if (!sId) {
+          return student
+        }
+        const index = student.codeReviews.map(cr => cr.reviewNumber).indexOf(reviewNumber)
+        if (index === -1) {
+          student.codeReviews.push({
+            points: null,
+            reviewNumber: reviewNumber,
+            studentInstanceId: student.id,
+            toReview: sId
+          })
+        } else {
+          student.codeReviews[index].toReview = sId
+        }
+        return student
+      })
+      return { ...store, data: newData }
     default:
       return store
   }
@@ -50,6 +75,20 @@ export default courseInstancereducer
                       "from": String, the user who commented this.
                   }
               ]
+          }
+      ],
+      "codeReviews": [
+          {
+              "reviewer": {
+                  "github": string, github link for reviewer
+                  "projectName": string, title for reviewer's project
+              }
+              "toReview": {
+                  "github": string, github link to repository user should review
+                  "projectName": string, title for project user should review
+              }
+              "reviewNumber": integer, indicates which round of code reviews this is.
+              "points": number or null, Points awarded for this code review. Null if not reviewed.
           }
       ]
   }
