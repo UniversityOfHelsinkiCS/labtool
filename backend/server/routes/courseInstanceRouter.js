@@ -20,4 +20,5 @@ module.exports = app => {
   app.post('/api/weeks/create', weekController.create)
   app.post('/api/comment', courseInstanceController.addComment)
   app.post('/api/comments', courseInstanceController.getCommentsForWeek)
+  app.post('/api/studentinstance/update', courseInstanceController.updateStudentInstance)
 }

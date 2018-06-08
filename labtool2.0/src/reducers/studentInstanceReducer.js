@@ -19,6 +19,8 @@ const studentInstancereducer = (store = [], action) => {
       return sortCourses(action.response)
     case 'STUDENT_COURSE_CREATE_ONE_SUCCESS':
       return action.response
+    case 'STUDENT_PROJECT_INFO_UPDATE_SUCCESS':
+      return action.response
     default:
       return store
   }
