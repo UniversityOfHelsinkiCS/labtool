@@ -30,8 +30,7 @@ export class BrowseReviews extends Component {
     const content = {
       hidden: e.target.hidden.checked,
       comment: e.target.content.value,
-      week: parseInt(e.target.name, 10),
-      from: this.props.user.user.username
+      week: parseInt(e.target.name, 10)
     }
     document.getElementById(e.target.name).reset()
     try {
