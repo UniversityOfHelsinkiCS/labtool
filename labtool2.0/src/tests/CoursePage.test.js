@@ -171,7 +171,7 @@ describe('<CoursePage /> as teacher', () => {
     })
 
     it('should render without throwing an error', () => {
-      expect(wrapper.find('.CoursePage').exists()).toEqual(true)
+      expect(wrapper.find('.CoursePage').exists()).toEqual(false)
     })
 
     it('should render correctly', () => {

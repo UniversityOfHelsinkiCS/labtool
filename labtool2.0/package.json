@@ -1,5 +1,9 @@
 {
   "name": "labtool2.0",
+  "jest": {
+    "verbose": true,
+    "bail": true
+  }
   "homepage": "https://example.com/labtool",
   "version": "0.1.0",
   "private": true,
