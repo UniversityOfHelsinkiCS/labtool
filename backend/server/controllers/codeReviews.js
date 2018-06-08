@@ -15,6 +15,10 @@ module.exports = {
         res.status(400).send('Missing or malformed inputs.')
         return
       }
+      if (req.body.codeReviews.length === 0) {
+        res.status(400).send('No code reviews were provided.')
+        return
+      }
       const allStudentInstancesIds = [] // Gather all student instance ids for future query
       const values = req.body.codeReviews.map(codeReview => {
         if (typeof codeReview.reviewer !== 'number' || typeof codeReview.toReview !== 'number') {
@@ -58,7 +62,10 @@ module.exports = {
         return
       }
       await CodeReview.bulkCreate(values, { individualHooks: true }) // This is where the magic happens.
-      res.status(201).send('All code reviews inserted.')
+      res.status(201).send({
+        message: 'All code reviews inserted.',
+        data: req.body
+      })
     } catch (e) {
       console.log('CodeReview bulk insert failed.\n', e)
       res.status(500).send('Unexpected error.')

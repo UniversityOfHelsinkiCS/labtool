@@ -222,7 +222,7 @@ export class CoursePage extends React.Component {
                 options={dropDownFilterTeachers}
                 onChange={this.changeFilterAssistant()}
                 placeholder="Select Teacher"
-                defaultValue={this.props.coursePageLogic.filterByAssiSstant}
+                defaultValue={this.props.coursePageLogic.filterByAssistant}
                 fluid
                 selection
                 style={{ display: 'inline' }}
