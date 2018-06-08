@@ -15,6 +15,10 @@ module.exports = {
         res.status(400).send('Missing or malformed inputs.')
         return
       }
+      if (req.body.codeReviews.length === 0) {
+        res.status(400).send('No code reviews were provided.')
+        return
+      }
       const allStudentInstancesIds = [] // Gather all student instance ids for future query
       const values = req.body.codeReviews.map(codeReview => {
         if (typeof codeReview.reviewer !== 'number' || typeof codeReview.toReview !== 'number') {
