@@ -660,21 +660,37 @@ module.exports = {
   addComment(req, res) {
     helper.controller_before_auth_check_action(req, res)
 
-    const message = req.body
-    return Comment.create({
-      weekId: message.week,
-      hidden: message.hidden,
-      comment: message.comment,
-      from: message.from
-    })
-      .then(comment => {
-        if (!comment) {
-          res.status(400).send('week not found')
-        } else {
-          res.status(200).send(comment)
-        }
-      })
-      .catch(error => res.status(400).send(error))
+    if (req.authenticated.success) {
+      try {
+        const message = req.body
+
+        User.findById(req.decoded.id).then(user => {
+          if (!user) {
+            res.status(400).send('you are not an user in the system')
+            return
+          } else {
+            const name = user.firsts.concat(' ').concat(user.lastname)
+            return Comment.create({
+              weekId: message.week,
+              hidden: message.hidden,
+              comment: message.comment,
+              from: name
+            })
+              .then(comment => {
+                if (!comment) {
+                  res.status(400).send('week not found')
+                } else {
+                  res.status(200).send(comment)
+                }
+              })
+              .catch(error => res.status(400).send(error))
+          }
+        })
+      } catch (e) {
+        res.status(400).send(e)
+      }
+    }
+    
   },
 
   /**
