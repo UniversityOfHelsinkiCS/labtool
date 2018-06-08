@@ -86,6 +86,16 @@ const notificationReducer = (state = {}, action) => {
         message: action.response.response.data,
         error: true
       }
+    case 'CODE_REVIEW_BULKINSERT_SUCCESS':
+      return {
+        message: 'Code reviews saved successfully',
+        error: false
+      }
+    case 'CODE_REVIEW_BULKINSERT_FAILURE':
+      return {
+        message: action.response.response.data,
+        error: true
+      }
     default:
       return state
   }
