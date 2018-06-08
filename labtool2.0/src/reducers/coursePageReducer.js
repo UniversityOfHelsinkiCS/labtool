@@ -17,6 +17,31 @@ const courseInstancereducer = (store = [], action) => {
       const mappedData = store.data.map(st => (st.id !== id ? st : changedStudent))
       return { ...store, data: mappedData }
     }
+    case 'CODE_REVIEW_BULKINSERT_SUCCESS':
+      var assignedReviews = {}
+      var reviewNumber = action.response.data.reviewNumber
+      action.response.data.codeReviews.forEach(cr => {
+        assignedReviews[cr.reviewer] = cr.toReview
+      })
+      var newData = store.data.map(student => {
+        const sId = assignedReviews[student.id]
+        if (!sId) {
+          return student
+        }
+        const index = student.codeReviews.map(cr => cr.reviewNumber).indexOf(reviewNumber)
+        if (index === -1) {
+          student.codeReviews.push({
+            points: null,
+            reviewNumber: reviewNumber,
+            studentInstanceId: student.id,
+            toReview: sId
+          })
+        } else {
+          student.codeReviews[index].toReview = sId
+        }
+        return student
+      })
+      return { ...store, data: newData }
     default:
       return store
   }

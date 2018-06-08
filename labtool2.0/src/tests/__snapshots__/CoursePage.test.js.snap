@@ -565,6 +565,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
         additionPosition="top"
         closeOnBlur={true}
         deburr={false}
+        defaultValue={0}
         fluid={true}
         icon="dropdown"
         minCharacters={1}
