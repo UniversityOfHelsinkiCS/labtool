@@ -161,7 +161,7 @@ const userHelper = data => {
     })
     data.map(d =>
       users.push({
-        value: d.User.id,
+        value: d.id,
         text: d.User.firsts + ' ' + d.User.lastname
       })
     )
