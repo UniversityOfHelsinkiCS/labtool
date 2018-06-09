@@ -68,7 +68,6 @@ function findByUserStudentInstance(req, res) {
   const Sequelize = require('sequelize')
   const Op = Sequelize.Op
 
-  console.log('\ncourse_instance_helper db: ', db)
   const errors = []
   console.log('\ncourse_intance_helper, searching by studentInstance...')
   console.log('\n***REQ BODY***: ', req.body)
