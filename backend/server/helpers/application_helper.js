@@ -164,9 +164,7 @@ async function getActive(req, res) {
 async function getInactive(req, res) {
   try {
     const cur = await getCurrent(req, res)
-    console.log("\ncur: ", cur)
     const nxt = await getNewer(req, res)
-    console.log("\nnxt: ", nxt)
     const newobj = await cur.concat(nxt)
     const iarr = []
     for (var blob in newobj) {
@@ -239,7 +237,7 @@ async function createCourse(body) {
         }
       })
       TeacherInstance.build({
-        userId: user[i].id,
+        userId: user[0].id,
         courseInstanceId: new_course.id,
         admin: true
       }).save()
