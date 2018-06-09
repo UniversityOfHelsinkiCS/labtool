@@ -15,3 +15,10 @@ export const bulkinsertCodeReviews = data => {
   const method = 'put'
   return callController(route, prefix, data, method)
 }
+
+export const gradeCodeReview = data => {
+  const route = `/codereviews/grade`
+  const prefix = `CODE_REVIEW_GRADE_`
+  const method = 'put'
+  return callController(route, prefix, data, method)
+}
