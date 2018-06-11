@@ -396,7 +396,7 @@ module.exports = {
 
     console.log('REQ body: ', req.body)
     console.log('REQ params: ', req.params)
-    CourseInstance.find({
+    CourseInstance.findOne({
       where: {
         ohid: req.params.id
       }
