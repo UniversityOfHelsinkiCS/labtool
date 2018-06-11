@@ -4,7 +4,7 @@ import { getOneCI } from '../../services/courseInstance'
 import { insertCodeReviews } from '../../services/codeReview'
 import { coursePageInformation } from '../../services/courseInstance'
 import { bulkinsertCodeReviews } from '../../services/codeReview'
-import { codeReviewReducer, initOneReview, initOrRemoveRandom, initCheckbox, initAllCheckboxes } from '../../reducers/codeReviewReducer'
+import { codeReviewReducer, initOneReview, initOrRemoveRandom, initCheckbox, initAllCheckboxes, randomAssign, codeReviewReset } from '../../reducers/codeReviewReducer'
 import { clearNotifications } from '../../reducers/notificationReducer'
 import { Button, Table, Card, Form, Comment, List, Header, Label, Message, Icon, Dropdown, Checkbox } from 'semantic-ui-react'
 
@@ -12,6 +12,10 @@ export class ModifyCourseInstanceReview extends React.Component {
   componentDidMount() {
     this.props.getOneCI(this.props.courseId)
     this.props.coursePageInformation(this.props.courseId)
+  }
+
+  componentWillUnmount() {
+    this.props.codeReviewReset()
   }
 
   handleSubmit = reviewNumber => async e => {
@@ -110,11 +114,27 @@ export class ModifyCourseInstanceReview extends React.Component {
                       </Table.Cell>
                       <Table.Cell>
                         <p>Current review: {getCurrentReviewer(1, data.id)}</p>
-                        <Dropdown placeholder="Select student" fluid search selection options={this.props.dropdownUsers.filter(u => u.value !== data.id)} onChange={this.addCodeReview(1, data.id)} />
+                        <Dropdown
+                          placeholder="Select student"
+                          fluid
+                          search
+                          selection
+                          options={this.props.dropdownUsers.filter(u => u.value !== data.id)}
+                          onChange={this.addCodeReview(1, data.id)}
+                          value={this.props.codeReviewLogic.currentSelections[1][data.id]}
+                        />
                       </Table.Cell>
                       <Table.Cell>
                         <p>Current review: {getCurrentReviewer(2, data.id)}</p>
-                        <Dropdown placeholder="Select student" fluid search selection options={this.props.dropdownUsers.filter(u => u.value !== data.id)} onChange={this.addCodeReview(2, data.id)} />
+                        <Dropdown
+                          placeholder="Select student"
+                          fluid
+                          search
+                          selection
+                          options={this.props.dropdownUsers.filter(u => u.value !== data.id)}
+                          onChange={this.addCodeReview(2, data.id)}
+                          value={this.props.codeReviewLogic.currentSelections[2][data.id]}
+                        />
                       </Table.Cell>
                     </Table.Row>
                   ))
@@ -131,7 +151,7 @@ export class ModifyCourseInstanceReview extends React.Component {
                   <Button onClick={this.handleSubmit(1)} size="small" style={{ float: 'left' }}>
                     Save
                   </Button>
-                  <Button size="small" style={{ float: 'right' }}>
+                  <Button size="small" style={{ float: 'right' }} onClick={() => this.props.randomAssign({ reviewNumber: 1 })}>
                     Assign selected randomly
                   </Button>
                 </Table.HeaderCell>
@@ -139,7 +159,7 @@ export class ModifyCourseInstanceReview extends React.Component {
                   <Button onClick={this.handleSubmit(2)} size="small" style={{ float: 'left' }}>
                     Save
                   </Button>
-                  <Button size="small" style={{ float: 'right' }}>
+                  <Button size="small" style={{ float: 'right' }} onClick={() => this.props.randomAssign({ reviewNumber: 2 })}>
                     Assign selected randomly
                   </Button>
                 </Table.HeaderCell>
@@ -187,7 +207,9 @@ const mapDispatchToProps = {
   initOrRemoveRandom,
   initCheckbox,
   initAllCheckboxes,
-  bulkinsertCodeReviews
+  bulkinsertCodeReviews,
+  randomAssign,
+  codeReviewReset
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ModifyCourseInstanceReview)
