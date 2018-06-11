@@ -406,31 +406,30 @@ module.exports = {
           res.status(400).send({
             message: 'course instance not found'
           })
+          return
         }
-        return courseInstance
-          .update({
-            name: req.body.name || courseInstance.name,
-            start: req.body.start || courseInstance.start,
-            end: req.body.end || courseInstance.end,
-            active: req.body.active || courseInstance.active,
-            weekAmount: req.body.weekAmount || courseInstance.weekAmount,
-            weekMaxPoints: req.body.weekMaxPoints || courseInstance.weekMaxPoints,
-            currentWeek: req.body.currentWeek || courseInstance.currentWeek
-          })
-          .then(updatedCourseInstance => {
-            TeacherInstance.findOne({
-              where: {
-                userId: req.decoded.id,
-                courseInstanceId: courseInstance.id
-              }
-            })
-              .then(teacher => {
-                if (!teacher || !req.authenticated.success) {
-                  res.status(400).send('You have to be a teacher to update course info')
-                  return
-                }
-                res.status(200).send(updatedCourseInstance)
+        TeacherInstance.findOne({
+          where: {
+            userId: req.decoded.id,
+            courseInstanceId: courseInstance.id
+          }
+        })
+          .then(teacher => {
+            if (!teacher || !req.authenticated.success) {
+              res.status(400).send('You have to be a teacher to update course info')
+              return
+            }
+            courseInstance
+              .update({
+                name: req.body.name || courseInstance.name,
+                start: req.body.start || courseInstance.start,
+                end: req.body.end || courseInstance.end,
+                active: req.body.active || courseInstance.active,
+                weekAmount: req.body.weekAmount || courseInstance.weekAmount,
+                weekMaxPoints: req.body.weekMaxPoints || courseInstance.weekMaxPoints,
+                currentWeek: req.body.currentWeek || courseInstance.currentWeek
               })
+              .then(updatedCourseInstance => res.status(200).send(updatedCourseInstance))
               .catch(error => res.status(400).send(error))
           })
           .catch(error => res.status(400).send(error))
