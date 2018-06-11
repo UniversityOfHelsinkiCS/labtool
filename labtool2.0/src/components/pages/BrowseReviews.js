@@ -185,7 +185,8 @@ export class BrowseReviews extends Component {
     const { activeIndex } = this.state
 
     return (
-      <div className="BrowseReviews">
+      <div className="BrowseReviews" style={{ overflowX: 'scroll' }}>
+      >
         {this.props.courseData.role === 'teacher' ? (
           <div>
             <h2> {this.props.selectedInstance.name}</h2>
