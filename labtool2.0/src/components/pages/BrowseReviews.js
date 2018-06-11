@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
-import { Button, Card, Accordion, Icon, Form, Comment } from 'semantic-ui-react'
+import { Button, Card, Accordion, Icon, Form, Comment, Input } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { createOneComment } from '../../services/comment'
 import { getOneCI, coursePageInformation } from '../../services/courseInstance'
+import { gradeCodeReview } from '../../services/codeReview'
 import ReactMarkdown from 'react-markdown'
 
 /**
@@ -30,8 +31,7 @@ export class BrowseReviews extends Component {
     const content = {
       hidden: e.target.hidden.checked,
       comment: e.target.content.value,
-      week: parseInt(e.target.name, 10),
-      from: this.props.user.user.username
+      week: parseInt(e.target.name, 10)
     }
     document.getElementById(e.target.name).reset()
     try {
@@ -41,6 +41,16 @@ export class BrowseReviews extends Component {
     } catch (error) {
       console.log(error)
     }
+  }
+
+  gradeCodeReview = (reviewNumber, studentInstanceId) => async e => {
+    e.preventDefault()
+    const data = {
+      reviewNumber,
+      studentInstanceId: Number(studentInstanceId),
+      points: Number(e.target.points.value)
+    }
+    this.props.gradeCodeReview(data)
   }
 
   render() {
@@ -64,7 +74,8 @@ export class BrowseReviews extends Component {
               </Card.Content>
             </Card>
           )
-          for (var i = 0; i < this.props.selectedInstance.weekAmount; i++) {
+          let i = 0
+          for (; i < this.props.selectedInstance.weekAmount; i++) {
             const weeks = student.weeks.find(week => week.weekNumber === i + 1)
             if (weeks) {
               headers.push(
@@ -143,6 +154,28 @@ export class BrowseReviews extends Component {
               )
             }
           }
+          student.codeReviews
+            .sort((a, b) => {
+              return a.reviewNumber - b.reviewNumber
+            })
+            .forEach(cr => {
+              headers.push(
+                <Accordion key={i} fluid styled>
+                  <Accordion.Title active={activeIndex === i} index={i} onClick={this.handleClick}>
+                    <Icon name="dropdown" /> Code Review {cr.reviewNumber}{' '}
+                  </Accordion.Title>
+                  <Accordion.Content active={activeIndex === i}>
+                    {cr.points !== null ? <h4>{cr.points} points</h4> : <h4>Not Graded</h4>}
+                    <Form onSubmit={this.gradeCodeReview(cr.reviewNumber, studentInstance)}>
+                      <label>Points </label>
+                      <Input name="points" defaultValue={cr.points ? cr.points : ''} type="number" step="0.01" style={{ width: '100px' }} />
+                      <Input type="submit" value="Grade" />
+                    </Form>
+                  </Accordion.Content>
+                </Accordion>
+              )
+              i++
+           })
         }
         return student
       })
@@ -174,4 +207,4 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps, { createOneComment, getOneCI, coursePageInformation })(BrowseReviews)
+export default connect(mapStateToProps, { createOneComment, getOneCI, coursePageInformation, gradeCodeReview })(BrowseReviews)
