@@ -156,7 +156,7 @@ export class CoursePage extends React.Component {
     dropDownFilterTeachers = this.createDropdownTeachers(dropDownFilterTeachers)
 
     return (
-      <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
+      <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center', overflowX: 'scroll' }}>
         <div className="ui grid">
           <div className="sixteen wide column">
             <h2>{this.props.selectedInstance.name}</h2>
