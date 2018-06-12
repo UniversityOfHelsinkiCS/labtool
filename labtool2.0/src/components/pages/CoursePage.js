@@ -198,7 +198,7 @@ export class CoursePage extends React.Component {
 
         {/** Shown when the users role in this course is teacher.*/}
         {this.props.courseData.role === 'teacher' ? (
-          <div className="TeachersView">
+          <div className="TeachersView" style={{ overflowX: 'auto' }}>
             <br />
             <Table>
               <Table.Header>
@@ -328,7 +328,7 @@ export class CoursePage extends React.Component {
 
         {/** Shown when the users role in this course is student.*/}
         {this.props.courseData.role === 'student' && this.props.courseData.data !== null ? (
-          <div className="StudentsView">
+          <div className="StudentsView" style={{ overflowX: 'auto' }}>
             <h3> </h3>
 
             <Card fluid color="yellow">

@@ -394,30 +394,32 @@ module.exports = {
   update(req, res) {
     helper.controller_before_auth_check_action(req, res)
 
-    TeacherInstance.findOne({
+    console.log('REQ body: ', req.body)
+    console.log('REQ params: ', req.params)
+    CourseInstance.findOne({
       where: {
-        userId: req.decoded.id
+        ohid: req.params.id
       }
     })
-      .then(teacher => {
-        if (!teacher || !req.authenticated.success) {
-          res.status(400).send('You have to be a teacher to update course info')
+      .then(courseInstance => {
+        if (!courseInstance) {
+          res.status(400).send({
+            message: 'course instance not found'
+          })
           return
         }
-        console.log('REQ body: ', req.body)
-        console.log('REQ params: ', req.params)
-        return CourseInstance.find({
+        TeacherInstance.findOne({
           where: {
-            ohid: req.params.id
+            userId: req.decoded.id,
+            courseInstanceId: courseInstance.id
           }
         })
-          .then(courseInstance => {
-            if (!courseInstance) {
-              res.status(400).send({
-                message: 'course instance not found'
-              })
+          .then(teacher => {
+            if (!teacher || !req.authenticated.success) {
+              res.status(400).send('You have to be a teacher to update course info')
+              return
             }
-            return courseInstance
+            courseInstance
               .update({
                 name: req.body.name || courseInstance.name,
                 start: req.body.start || courseInstance.start,
