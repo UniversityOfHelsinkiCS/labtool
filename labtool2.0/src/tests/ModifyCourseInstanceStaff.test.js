@@ -88,7 +88,7 @@ describe('<ModifyCourseInstanceStaff />', () => {
     })
 
     it('shows the correct amount of labels', () => {
-      expect(wrapper.find(Label).length).toEqual(3)
+      expect(wrapper.find(Label).length).toEqual(2)
     })
 
     it('shows the correct name and label for teacher of the course', () => {
@@ -100,14 +100,12 @@ describe('<ModifyCourseInstanceStaff />', () => {
 
     it('shows the correct name and label for student of the course', () => {
       const name = wrapper.find(Table.Cell).at(2)
-      const status = wrapper.find(Label).at(1)
       expect(name.props().children[0] + ' ' + name.props().children[2]).toEqual('Sivu Opiskelija')
-      expect(status.props().children).toEqual('Student')
     })
 
     it('shows the correct name and label for assistant of the course', () => {
       const name = wrapper.find(Table.Cell).at(4)
-      const status = wrapper.find(Label).at(2)
+      const status = wrapper.find(Label).at(1)
       expect(name.props().children[0] + ' ' + name.props().children[2]).toEqual('Aimo Assistentti')
       expect(status.props().children).toEqual('Assistant')
     })
