@@ -33,6 +33,11 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
   <div />
   <div
     className="StudentsView"
+    style={
+      Object {
+        "overflowX": "auto",
+      }
+    }
   >
     <h3>
        
@@ -489,6 +494,11 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
   </div>
   <div
     className="TeachersView"
+    style={
+      Object {
+        "overflowX": "auto",
+      }
+    }
   >
     <br />
     <Table
