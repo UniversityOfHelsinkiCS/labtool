@@ -54,12 +54,11 @@ module.exports = {
       }
       const checklist = await Checklist.findOne({
         attributes: {
-          exclude: ['createdAt', 'updatedAt']
+          exclude: ['createdAt', 'updatedAt', 'checklistId']
         },
         where: {
           courseInstanceId: req.body.courseInstanceId,
-          week: req.body.week,
-          master: false
+          week: req.body.week
         }
       })
       if (checklist) {
@@ -68,7 +67,8 @@ module.exports = {
         res.status(404).send('No matching checklist found.')
       }
     } catch (e) {
-      res.status(500).send('Unexpected error')
+      res.status(500).send(e)
+      console.log(e)
     }
   }
 }
