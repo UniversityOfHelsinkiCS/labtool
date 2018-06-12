@@ -123,6 +123,11 @@ const notificationReducer = (state = {}, action) => {
         message: action.response.message,
         error: false
       }
+    case 'CODE_REVIEW_RANDOMIZE':
+      return {
+        message: 'Code reviews randomized. Click save to change',
+        error: false
+      }
     default:
       return state
   }

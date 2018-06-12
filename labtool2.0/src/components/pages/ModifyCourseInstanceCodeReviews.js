@@ -97,49 +97,49 @@ export class ModifyCourseInstanceReview extends React.Component {
             <Table.Body>
               {this.props.courseData.data !== undefined
                 ? this.props.courseData.data.map(data => (
-                    <Table.Row key={data.id}>
-                      <Table.Cell>
-                        {this.props.codeReviewLogic.checkBoxStates[data.id] === true ? (
-                          <Checkbox checked onChange={this.initOrRemoveRandom(data.id)} />
-                        ) : (
+                  <Table.Row key={data.id}>
+                    <Table.Cell>
+                      {this.props.codeReviewLogic.checkBoxStates[data.id] === true ? (
+                        <Checkbox checked onChange={this.initOrRemoveRandom(data.id)} />
+                      ) : (
                           <Checkbox onChange={this.initOrRemoveRandom(data.id)} />
                         )}
-                      </Table.Cell>
-                      <Table.Cell>
-                        {data.User.firsts} {data.User.lastname}
-                      </Table.Cell>
-                      <Table.Cell>
-                        <p>{data.projectName}</p>
-                        <a href={data.github}>{data.github}</a>
-                      </Table.Cell>
-                      <Table.Cell>
-                        <p>Current review: {getCurrentReviewer(1, data.id)}</p>
-                        <Dropdown
-                          className="toReviewDropdown"
-                          placeholder="Select student"
-                          fluid
-                          search
-                          selection
-                          options={this.props.dropdownUsers.filter(u => u.value !== data.id)}
-                          onChange={this.addCodeReview(1, data.id)}
-                          value={this.props.codeReviewLogic.currentSelections[1][data.id]}
-                        />
-                      </Table.Cell>
-                      <Table.Cell>
-                        <p>Current review: {getCurrentReviewer(2, data.id)}</p>
-                        <Dropdown
-                          className="toReviewDropdown"
-                          placeholder="Select student"
-                          fluid
-                          search
-                          selection
-                          options={this.props.dropdownUsers.filter(u => u.value !== data.id)}
-                          onChange={this.addCodeReview(2, data.id)}
-                          value={this.props.codeReviewLogic.currentSelections[2][data.id]}
-                        />
-                      </Table.Cell>
-                    </Table.Row>
-                  ))
+                    </Table.Cell>
+                    <Table.Cell>
+                      {data.User.firsts} {data.User.lastname}
+                    </Table.Cell>
+                    <Table.Cell>
+                      <p>{data.projectName}</p>
+                      <a href={data.github}>{data.github}</a>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <p>Current review: {getCurrentReviewer(1, data.id)}</p>
+                      <Dropdown
+                        className="toReviewDropdown"
+                        placeholder="Select student"
+                        fluid
+                        search
+                        selection
+                        options={this.props.dropdownUsers.filter(u => u.value !== data.id)}
+                        onChange={this.addCodeReview(1, data.id)}
+                        value={this.props.codeReviewLogic.currentSelections[1][data.id]}
+                      />
+                    </Table.Cell>
+                    <Table.Cell>
+                      <p>Current review: {getCurrentReviewer(2, data.id)}</p>
+                      <Dropdown
+                        className="toReviewDropdown"
+                        placeholder="Select student"
+                        fluid
+                        search
+                        selection
+                        options={this.props.dropdownUsers.filter(u => u.value !== data.id)}
+                        onChange={this.addCodeReview(2, data.id)}
+                        value={this.props.codeReviewLogic.currentSelections[2][data.id]}
+                      />
+                    </Table.Cell>
+                  </Table.Row>
+                ))
                 : null}
             </Table.Body>
             <Table.Footer>
@@ -150,19 +150,19 @@ export class ModifyCourseInstanceReview extends React.Component {
                 <Table.HeaderCell />
                 <Table.HeaderCell />
                 <Table.HeaderCell>
-                  <Button onClick={this.handleSubmit(1)} size="small" style={{ float: 'left' }}>
-                    Save
-                  </Button>
-                  <Button size="small" style={{ float: 'right' }} onClick={() => this.props.randomAssign({ reviewNumber: 1 })}>
+                  <Button onClick={() => this.props.randomAssign({ reviewNumber: 1 })} size="small" style={{ float: 'left' }}>
                     Assign selected randomly
+                  </Button>
+                  <Button size="small" style={{ float: 'right' }} onClick={this.handleSubmit(1)} >
+                    Save
                   </Button>
                 </Table.HeaderCell>
                 <Table.HeaderCell>
-                  <Button onClick={this.handleSubmit(2)} size="small" style={{ float: 'left' }}>
-                    Save
-                  </Button>
-                  <Button size="small" style={{ float: 'right' }} onClick={() => this.props.randomAssign({ reviewNumber: 2 })}>
+                  <Button onClick={() => this.props.randomAssign({ reviewNumber: 2 })} size="small" style={{ float: 'left' }}>
                     Assign selected randomly
+                  </Button>
+                  <Button size="small" style={{ float: 'right' }} onClick={this.handleSubmit(2)} >
+                    Save
                   </Button>
                 </Table.HeaderCell>
               </Table.Row>
