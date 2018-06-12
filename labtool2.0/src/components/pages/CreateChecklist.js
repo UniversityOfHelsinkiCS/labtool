@@ -12,7 +12,8 @@ export class CreateChecklist extends Component {
 
   handleSubmit = async e => {
     e.preventDefault()
-    if (e.target.week.value <= 0 || e.target.week.value > this.props.selectedInstance.weekAmount) {
+    const week = Number(e.target.week.value)
+    if (e.target.week.value <= 0 || week > this.props.selectedInstance.weekAmount) {
       this.props.showNotification({
         message: 'Invalid week.',
         error: true
@@ -23,7 +24,7 @@ export class CreateChecklist extends Component {
       const json = JSON.parse(e.target.json.value)
       this.props.createChecklist({
         courseInstanceId: this.props.selectedInstance.id,
-        week: e.target.week.value,
+        week,
         checklist: json
       })
     } catch (e) {
