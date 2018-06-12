@@ -16,6 +16,7 @@ export class BrowseReviews extends Component {
   componentWillMount() {
     this.props.getOneCI(this.props.courseId)
     this.props.coursePageInformation(this.props.courseId)
+    this.setState({ activeIndex: this.props.selectedInstance.currentWeek - 1 })
   }
 
   handleClick = (e, titleProps) => {
