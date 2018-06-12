@@ -24,6 +24,14 @@ describe('<ModifyCourseInstanceStaff />', () => {
         updatedAt: '2018-01-16T21:00:00.000Z',
         userId: 10010,
         courseInstanceId: 10013
+      },
+      {
+        id: 1004,
+        admin: 'false',
+        createdAt: '2018-01-16T21:00:00.000Z',
+        updatedAt: '2018-01-16T21:00:00.000Z',
+        userId: 10012,
+        courseInstanceId: 10013
       }
     ],
     createdAt: '2018-03-26T00:00:00.000Z',
@@ -51,6 +59,17 @@ describe('<ModifyCourseInstanceStaff />', () => {
       admin: false,
       createdAt: '2018-03-26T00:00:00.000Z',
       updatedAt: '2018-03-26T00:00:00.000Z'
+    },
+    {
+      id: 10012,
+      username: 'aimoassis',
+      email: 'aimo.assistentti@helsinki.fi',
+      firsts: 'Aimo',
+      lastname: 'Assistentti',
+      studentNumber: '014666666',
+      admin: false,
+      createdAt: '2018-06-08T11:22:00.000Z',
+      updatedAt: '2018-06-08T11:22:00.000Z'
     }
   ]
 
@@ -64,26 +83,33 @@ describe('<ModifyCourseInstanceStaff />', () => {
     })
 
     it('shows correct amount of users', () => {
-      // Two users and the table header which is also rendered as a row
-      expect(wrapper.find(Table.Row).length).toEqual(3)
+      // Three users and the table header which is also rendered as a row
+      expect(wrapper.find(Table.Row).length).toEqual(4)
     })
 
     it('shows the correct amount of labels', () => {
-      expect(wrapper.find(Label).length).toEqual(2)
+      expect(wrapper.find(Label).length).toEqual(3)
     })
 
     it('shows the correct name and label for teacher of the course', () => {
       const name = wrapper.find(Table.Cell).at(0)
       const status = wrapper.find(Label).at(0)
       expect(name.props().children[0] + ' ' + name.props().children[2]).toEqual('Pää Opettaja')
-      expect(status.props().children).toEqual('Admin')
+      expect(status.props().children).toEqual('Teacher')
     })
 
     it('shows the correct name and label for student of the course', () => {
       const name = wrapper.find(Table.Cell).at(2)
       const status = wrapper.find(Label).at(1)
       expect(name.props().children[0] + ' ' + name.props().children[2]).toEqual('Sivu Opiskelija')
-      expect(status.props().children).toEqual('Non-admin')
+      expect(status.props().children).toEqual('Student')
+    })
+
+    it('shows the correct name and label for assistant of the course', () => {
+      const name = wrapper.find(Table.Cell).at(4)
+      const status = wrapper.find(Label).at(2)
+      expect(name.props().children[0] + ' ' + name.props().children[2]).toEqual('Aimo Assistentti')
+      expect(status.props().children).toEqual('Assistant')
     })
   })
 })

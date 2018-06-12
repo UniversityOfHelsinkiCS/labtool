@@ -63,7 +63,10 @@ module.exports = {
       console.log('studentti')
       console.log('userId: ', user)
       console.log('courseInstanceId:', courseInst)
-      const student = await StudentInstance.find({
+      const student = await StudentInstance.findOne({
+        attributes: {
+          exclude: ['createdAt', 'updatedAt']
+        },
         where: {
           userId: user,
           courseInstanceId: courseInst
@@ -71,10 +74,16 @@ module.exports = {
         include: [
           {
             model: Week,
+            attributes: {
+              exclude: ['createdAt', 'updatedAt']
+            },
             as: 'weeks',
             include: [
               {
                 model: Comment,
+                attributes: {
+                  exclude: ['createdAt', 'updatedAt']
+                },
                 as: 'comments',
                 where: {
                   hidden: false
@@ -85,23 +94,82 @@ module.exports = {
           },
           {
             model: CodeReview,
+            attributes: ['toReview', 'reviewNumber', 'points'],
             as: 'codeReviews',
             where: {
               reviewNumber: {
                 [Op.gte]: course.currentCodeReview
               }
             },
-            required: false
+            required: false,
+            include: [
+              {
+                model: StudentInstance,
+                attributes: ['github', 'projectName'],
+                as: 'toReviews'
+              }
+            ]
           },
           {
-            model: User
+            model: CodeReview,
+            attributes: ['studentInstanceId', 'reviewNumber'],
+            as: 'toReviews',
+            where: {
+              reviewNumber: {
+                [Op.gte]: course.currentCodeReview
+              }
+            },
+            required: false,
+            include: [
+              {
+                model: StudentInstance,
+                attributes: ['github', 'projectName'],
+                as: 'codeReviews'
+              }
+            ]
+          },
+          {
+            model: User,
+            attributes: {
+              exclude: ['createdAt', 'updatedAt']
+            }
           }
         ]
       })
       console.log('studentInst: ', student)
 
       try {
-        palautus.data = student
+        if (student) {
+          palautus.data = student.dataValues
+
+          // Here we splice together the codeReviews field
+          if (palautus.data.codeReviews) {
+            const reviewers = {} // Map reviewers here using the reviewNumber as a key.
+            palautus.data.toReviews.forEach(cr => {
+              reviewers[cr.dataValues.reviewNumber] = {
+                github: cr.dataValues.codeReviews.github,
+                projectName: cr.dataValues.codeReviews.projectName
+              }
+            })
+            palautus.data.codeReviews = palautus.data.codeReviews.map(cr => cr.dataValues)
+            palautus.data.codeReviews = palautus.data.codeReviews.map(cr => {
+              // Replace the CodeReview rows from the database with a more user-friendly representation.
+              return {
+                toReview: {
+                  github: cr.toReviews.github,
+                  projectName: cr.toReviews.projectName
+                },
+                reviewNumber: cr.reviewNumber,
+                points: cr.points,
+                reviewer: reviewers[cr.reviewNumber]
+              }
+            })
+            delete palautus.data.toReviews // This was only ever included to be spliced into the codeReviews filed above.
+          }
+        } else {
+          palautus.data = null
+        }
+
         palautus.role = 'student'
         res.status(200).send(palautus)
       } catch (error) {
@@ -109,26 +177,41 @@ module.exports = {
       }
     } else {
       const teacherPalautus = await StudentInstance.findAll({
+        attributes: {
+          exclude: ['createdAt', 'updatedAt']
+        },
         where: {
           courseInstanceId: courseInst
         },
         include: [
           {
             model: Week,
+            attributes: {
+              exclude: ['createdAt', 'updatedAt']
+            },
             as: 'weeks',
             include: [
               {
                 model: Comment,
+                attributes: {
+                  exclude: ['createdAt', 'updatedAt']
+                },
                 as: 'comments'
               }
             ]
           },
           {
             model: CodeReview,
+            attributes: {
+              exclude: ['createdAt', 'updatedAt']
+            },
             as: 'codeReviews'
           },
           {
-            model: User
+            model: User,
+            attributes: {
+              exclude: ['createdAt', 'updatedAt']
+            }
           }
         ]
       })
@@ -159,9 +242,9 @@ module.exports = {
    */
   registerToCourseInstance(req, res) {
     helper.controller_before_auth_check_action(req, res)
-    console.log(`---------------------------------`);
+    console.log(`----------------------------------`)
     console.log(req.decoded)
-    console.log(`---------------------------------`);
+    console.log(`----------------------------------`)
 
     CourseInstance.findOne({
       where: {
@@ -244,6 +327,65 @@ module.exports = {
   },
 
   /**
+   * req.body:
+   *    {
+   *      github,
+   *      projectname
+   *    }
+   */
+  updateStudentInstance(req, res) {
+    helper.controller_before_auth_check_action(req, res)
+
+    try {
+      if (req.authenticated.success) {
+        console.log('\nauth success\n')
+        CourseInstance.findOne({
+          where: {
+            ohid: req.body.ohid
+          }
+        })
+          .then(course => {
+            if (!course) {
+              console.log('\nkurssia ei löytynyt\n')
+              res.status(404).send('course not found')
+              return
+            }
+            console.log('\nkurssi löytyi\n')
+            StudentInstance.find({
+              where: {
+                userId: req.decoded.id,
+                courseInstanceId: course.id
+              }
+            }).then(targetStudent => {
+              if (!targetStudent) {
+                console.log('\nopiskelijaa ei löytynyt\n')
+                res.status(404).send('Student not found')
+                return
+              }
+              console.log('\nopiskelija löytyi\n')
+              return targetStudent
+                .update({
+                  github: req.body.github || targetStudent.github,
+                  projectName: req.body.projectname || targetStudent.projectName
+                })
+                .then(updatedStudentInstance => {
+                  console.log('\nUpdated student project info succesfully\n')
+                  res.status(200).send(updatedStudentInstance)
+                })
+                .catch(error => {
+                  console.log('\nerror happened\n')
+                  res.status(400).send('update failed')
+                })
+            })
+          })
+          .catch(error => res.status(400).send('\n\n\n\ntuli joku error: ', error))
+      }
+    } catch (e) {
+      res.status(400).send(e)
+    }
+  },
+
+  /**
    *
    * @param req
    * @param res
@@ -254,7 +396,7 @@ module.exports = {
 
     console.log('REQ body: ', req.body)
     console.log('REQ params: ', req.params)
-    return CourseInstance.find({
+    CourseInstance.findOne({
       where: {
         ohid: req.params.id
       }
@@ -264,18 +406,32 @@ module.exports = {
           res.status(400).send({
             message: 'course instance not found'
           })
+          return
         }
-        return courseInstance
-          .update({
-            name: req.body.name || courseInstance.name,
-            start: req.body.start || courseInstance.start,
-            end: req.body.end || courseInstance.end,
-            active: req.body.active || courseInstance.active,
-            weekAmount: req.body.weekAmount || courseInstance.weekAmount,
-            weekMaxPoints: req.body.weekMaxPoints || courseInstance.weekMaxPoints,
-            currentWeek: req.body.currentWeek || courseInstance.currentWeek
+        TeacherInstance.findOne({
+          where: {
+            userId: req.decoded.id,
+            courseInstanceId: courseInstance.id
+          }
+        })
+          .then(teacher => {
+            if (!teacher || !req.authenticated.success) {
+              res.status(400).send('You have to be a teacher to update course info')
+              return
+            }
+            courseInstance
+              .update({
+                name: req.body.name || courseInstance.name,
+                start: req.body.start || courseInstance.start,
+                end: req.body.end || courseInstance.end,
+                active: req.body.active || courseInstance.active,
+                weekAmount: req.body.weekAmount || courseInstance.weekAmount,
+                weekMaxPoints: req.body.weekMaxPoints || courseInstance.weekMaxPoints,
+                currentWeek: req.body.currentWeek || courseInstance.currentWeek
+              })
+              .then(updatedCourseInstance => res.status(200).send(updatedCourseInstance))
+              .catch(error => res.status(400).send(error))
           })
-          .then(updatedCourseInstance => res.status(200).send(updatedCourseInstance))
           .catch(error => res.status(400).send(error))
       })
       .catch(error => res.status(400).send(error))
@@ -288,7 +444,11 @@ module.exports = {
    * @returns {Promise<Array<Model>>}
    */
   list(req, res) {
-    return CourseInstance.findAll()
+    return CourseInstance.findAll({
+      attributes: {
+        exclude: ['createdAt', 'updatedAt']
+      }
+    })
       .then(instance => res.status(200).send(instance))
       .catch(error => res.status(400).send(error))
   },
@@ -304,6 +464,9 @@ module.exports = {
     const errors = []
     CourseInstance.find(
       {
+        attributes: {
+          exclude: ['createdAt', 'updatedAt']
+        },
         where: {
           ohid: req.params.ohid
         }
@@ -349,6 +512,9 @@ module.exports = {
         console.log(json)
         json.forEach(instance => {
           CourseInstance.findOrCreate({
+            attributes: {
+              exclude: ['createdAt', 'updatedAt']
+            },
             where: { ohid: instance.id },
             defaults: {
               name: instance.name,
@@ -398,6 +564,9 @@ module.exports = {
           console.log(json)
           json.forEach(instance => {
             CourseInstance.findOrCreate({
+              attributes: {
+                exclude: ['createdAt', 'updatedAt']
+              },
               where: { ohid: instance.id },
               defaults: {
                 name: instance.name,
@@ -493,21 +662,37 @@ module.exports = {
   addComment(req, res) {
     helper.controller_before_auth_check_action(req, res)
 
-    const message = req.body
-    return Comment.create({
-      weekId: message.week,
-      hidden: message.hidden,
-      comment: message.comment,
-      from: message.from
-    })
-      .then(comment => {
-        if (!comment) {
-          res.status(400).send('week not found')
-        } else {
-          res.status(200).send(comment)
-        }
-      })
-      .catch(error => res.status(400).send(error))
+    if (req.authenticated.success) {
+      try {
+        const message = req.body
+
+        User.findById(req.decoded.id).then(user => {
+          if (!user) {
+            res.status(400).send('you are not an user in the system')
+            return
+          } else {
+            const name = user.firsts.concat(' ').concat(user.lastname)
+            return Comment.create({
+              weekId: message.week,
+              hidden: message.hidden,
+              comment: message.comment,
+              from: name
+            })
+              .then(comment => {
+                if (!comment) {
+                  res.status(400).send('week not found')
+                } else {
+                  res.status(200).send(comment)
+                }
+              })
+              .catch(error => res.status(400).send(error))
+          }
+        })
+      } catch (e) {
+        res.status(400).send(e)
+      }
+    }
+    
   },
 
   /**
@@ -520,6 +705,9 @@ module.exports = {
     helper.controller_before_auth_check_action(req, res)
 
     return Comment.findAll({
+      attributes: {
+        exclude: ['createdAt', 'updatedAt']
+      },
       where: {
         weekId: req.body.week
       }

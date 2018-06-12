@@ -48,6 +48,7 @@ describe('<CoursePage /> as teacher', () => {
         userId: 10012,
         teacherInstanceId: 10011,
         weeks: [],
+        codeReviews: [],
         User: {
           id: 10012,
           username: 'tiraopiskelija2',
@@ -70,6 +71,7 @@ describe('<CoursePage /> as teacher', () => {
         userId: 10031,
         teacherInstanceId: 10011,
         weeks: [],
+        codeReviews: [],
         User: {
           id: 10031,
           username: 'superopiskelija',
@@ -133,6 +135,7 @@ describe('<CoursePage /> as teacher', () => {
             comments: []
           }
         ],
+        codeReviews: [],
         User: {
           id: 10011,
           username: 'tiraopiskelija1',
@@ -245,6 +248,44 @@ describe('<CoursePage /> as student', () => {
           comments: []
         }
       ],
+      codeReviews: [
+        {
+          toReview: {
+            github: 'http://github.com/tiralabra2',
+            projectName: 'Tiran toinen labraprojekti'
+          },
+          reviewer: {
+            github: 'http://github.com/superprojekti',
+            projectName: 'Tira super projekti'
+          },
+          reviewNumber: 1,
+          points: 2.0
+        },
+        {
+          toReview: {
+            github: 'http://github.com/superprojekti',
+            projectName: 'Tira super projekti'
+          },
+          reviewer: {
+            github: 'http://github.com/tiralabra2',
+            projectName: 'Tiran toinen labraprojekti'
+          },
+          reviewNumber: 2,
+          points: 1.0
+        },
+        {
+          toReview: {
+            github: 'http://github.com/superprojekti',
+            projectName: 'Tira super projekti'
+          },
+          reviewer: {
+            github: 'http://github.com/tiralabra2',
+            projectName: 'Tiran toinen labraprojekti'
+          },
+          reviewNumber: 3,
+          points: null
+        }
+      ],
       User: {
         id: 10011,
         username: 'tiraopiskelija1',
@@ -259,10 +300,27 @@ describe('<CoursePage /> as student', () => {
     }
   }
 
+  const coursePageLogic = {
+    showDropdown: '',
+    selectedTeacher: '',
+    filterByAssistant: 0,
+    showCodeReviews: [2]
+  }
+
   let mockFn = jest.fn()
 
   beforeEach(() => {
-    wrapper = shallow(<CoursePage coursePage={coursePage} courseData={coursePage} getOneCI={mockFn} coursePageInformation={mockFn} associateTeacherToStudent={mockFn} selectedInstance={coursePage} />)
+    wrapper = shallow(
+      <CoursePage
+        coursePage={coursePage}
+        courseData={coursePage}
+        getOneCI={mockFn}
+        coursePageInformation={mockFn}
+        associateTeacherToStudent={mockFn}
+        selectedInstance={coursePage}
+        coursePageLogic={coursePageLogic}
+      />
+    )
   })
 
   describe('CoursePage Component', () => {
@@ -284,6 +342,18 @@ describe('<CoursePage /> as student', () => {
 
     it('doesnt render teachers view when role is student', () => {
       expect(wrapper.find('.TeachersView').length).toEqual(0)
+    })
+
+    it('renders code review cards', () => {
+      expect(wrapper.find('.codeReview').length).toEqual(coursePage.data.codeReviews.length)
+    })
+
+    it('collapses code review cards that are not shown', () => {
+      expect(wrapper.find('.codeReviewExpanded').length).toEqual(coursePageLogic.showCodeReviews.length)
+    })
+
+    it('renders collapsed code review points only if not null', () => {
+      expect(wrapper.find('.codeReviewPoints').length).toEqual(coursePage.data.codeReviews.filter(cr => cr.points !== null).length)
     })
   })
 })

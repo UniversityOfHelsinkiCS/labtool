@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Button, Table, Card, Form, Comment, List, Header, Label, Message, Icon, Dropdown } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
@@ -6,7 +6,7 @@ import { createOneComment } from '../../services/comment'
 import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import { associateTeacherToStudent } from '../../services/assistant'
 import ReactMarkdown from 'react-markdown'
-import { showDropdown, selectTeacher, filterByAssistant, coursePageReset } from '../../reducers/coursePageLogicReducer'
+import { showDropdown, selectTeacher, filterByAssistant, coursePageReset, toggleCodeReview } from '../../reducers/coursePageLogicReducer'
 
 export class CoursePage extends React.Component {
   handleSubmit = async e => {
@@ -88,37 +88,53 @@ export class CoursePage extends React.Component {
    * is a teacher or student on a course.
    */
   render() {
-    const createIndents = (data, siId) => {
-      const indents = []
+    const numberOfCodeReviews = Array.isArray(this.props.courseData.data) ? Math.max(...this.props.courseData.data.map(student => student.codeReviews.length)) : 0
 
-      for (var i = 0; i < this.props.selectedInstance.weekAmount; i++) {
+    const createIndents = (weeks, codeReviews, siId) => {
+      const indents = []
+      let i = 0
+      for (; i < this.props.selectedInstance.weekAmount; i++) {
         let pushattava = (
           <Table.Cell key={i}>
-            <p>Not reviewed!</p>
+            <p>-</p>
           </Table.Cell>
         )
 
-        for (var j = 0; j < data.length; j++) {
-          if (i + 1 === data[j].weekNumber) {
+        for (var j = 0; j < weeks.length; j++) {
+          if (i + 1 === weeks[j].weekNumber) {
             pushattava = (
               <Table.Cell key={i}>
-                <p>{data[j].points}</p>
-                {/*               <Link to={`/labtool/reviewstudent/${this.props.selectedInstance.ohid}/${siId}/${i + 1}`}>
-                <Button circular color='orange' size="tiny" icon="edit black large" ></Button>
-          </Link> */}
+                <p>{weeks[j].points}</p>
               </Table.Cell>
             )
           }
         }
         indents.push(pushattava)
       }
+      let ii = 0;
+      codeReviews.forEach(cr => {
+        indents.push(<Table.Cell key={i + ii}>
+            {cr.points !== null ? (<p>{cr.points}</p>) : (<p>-</p>)}
+          </Table.Cell>)
+        ii++
+      })
+      while (ii < numberOfCodeReviews) {
+        indents.push(<Table.Cell key={i+ii}>
+            <p>-</p>
+          </Table.Cell>)
+        ii++
+      }
       return indents
     }
 
     const createHeaders = () => {
       const headers = []
-      for (var i = 0; i < this.props.selectedInstance.weekAmount; i++) {
+      let i = 0
+      for (; i < this.props.selectedInstance.weekAmount; i++) {
         headers.push(<Table.HeaderCell key={i}>Week {i + 1} </Table.HeaderCell>)
+      }
+      for (var ii = 1; ii <= numberOfCodeReviews; ii++) {
+        headers.push(<Table.HeaderCell key={i + ii}>Code Review {ii} </Table.HeaderCell>)
       }
       return headers
     }
@@ -182,7 +198,7 @@ export class CoursePage extends React.Component {
 
         {/** Shown when the users role in this course is teacher.*/}
         {this.props.courseData.role === 'teacher' ? (
-          <div className="TeachersView">
+          <div className="TeachersView" style={{ overflowX: 'auto' }}>
             <br />
             <Table>
               <Table.Header>
@@ -217,7 +233,7 @@ export class CoursePage extends React.Component {
             <br />
             <Header as="h2">Students </Header>
             <div style={{ textAlign: 'left' }}>
-              <span>Filter by assigned teacher </span>
+              <span>Filter by instructor </span>
               <Dropdown
                 options={dropDownFilterTeachers}
                 onChange={this.changeFilterAssistant()}
@@ -253,26 +269,28 @@ export class CoursePage extends React.Component {
                         <p>{data.projectName}</p>
                         <a href={data.github}>{data.github}</a>
                       </Table.Cell>
-                      {createIndents(data.weeks, data.id)}
+                      {createIndents(data.weeks, data.codeReviews, data.id)}
                       <Table.Cell>
                         {data.weeks.map(week => week.points).reduce((a, b) => {
+                          return a + b
+                        }, 0) + data.codeReviews.map(cr => cr.points).reduce((a, b) => {
                           return a + b
                         }, 0)}
                       </Table.Cell>
                       <Table.Cell>
                         {data.teacherInstanceId && this.props.selectedInstance.teacherInstances ? (
                           this.props.selectedInstance.teacherInstances.filter(teacher => teacher.id === data.teacherInstanceId).map(teacher => (
-                            <p key={data.id}>
-                              Assistant: {teacher.firsts} {teacher.lastname}
-                            </p>
+                            <span key={data.id}>
+                              {teacher.firsts} {teacher.lastname}
+                            </span>
                           ))
                         ) : (
-                          <p>Assistant: not given</p>
+                          <span>not assigned</span>
                         )}
-                        <Icon onClick={this.changeHidden(data.id)} name="pencil" size="small" />
+                        <Icon onClick={this.changeHidden(data.id)} name="pencil" size="small" style={{ float: 'right' }} />
                         {this.props.coursePageLogic.showDropdown === data.id ? (
                           <div>
-                            <Dropdown options={dropDownTeachers} onChange={this.changeSelectedTeacher()} placeholder="Select Teacher" fluid selection />
+                            <Dropdown options={dropDownTeachers} onChange={this.changeSelectedTeacher()} placeholder="Select teacher" fluid selection />
                             {/* <select style={{}}onChange={this.changeSelectedTeacher()}>
                               <option value="" disabled selected>Select your option</option>
                               {dropDownTeachers.map(m => (
@@ -310,7 +328,7 @@ export class CoursePage extends React.Component {
 
         {/** Shown when the users role in this course is student.*/}
         {this.props.courseData.role === 'student' && this.props.courseData.data !== null ? (
-          <div className="StudentsView">
+          <div className="StudentsView" style={{ overflowX: 'auto' }}>
             <h3> </h3>
 
             <Card fluid color="yellow">
@@ -319,6 +337,9 @@ export class CoursePage extends React.Component {
                 <h3>
                   {' '}
                   <a href={this.props.courseData.data.github}>{this.props.courseData.data.github}</a>{' '}
+                  <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>
+                    <Button circular floated="right" size="large" icon={{ name: 'edit', color: 'orange', size: 'large' }} />
+                  </Link>
                 </h3>
 
                 {this.props.courseData.data.teacherInstanceId && this.props.selectedInstance.teacherInstances ? (
@@ -374,6 +395,50 @@ export class CoursePage extends React.Component {
                 ))}
               </Table.Body>
             </Table>
+
+            <Card fluid color="yellow">
+              <Card.Content>
+                {this.props.courseData.data.codeReviews ? (
+                  this.props.courseData.data.codeReviews.map(
+                    codeReview =>
+                      codeReview.reviewNumber ? (
+                        <Card fluid color="yellow" key={codeReview.reviewNumber} className="codeReview">
+                          <Card.Content header={'Code review ' + codeReview.reviewNumber} onClick={() => this.props.toggleCodeReview(codeReview.reviewNumber)} style={{ cursor: 'pointer' }} />
+                          {codeReview.points !== null ? <Card.Content className="codeReviewPoints">{codeReview.points + ' points'}</Card.Content> : <div />}
+                          {this.props.coursePageLogic.showCodeReviews.indexOf(codeReview.reviewNumber) !== -1 ? (
+                            <div className="codeReviewExpanded">
+                              <Card.Content>
+                                <h4>Project to review</h4>
+                                <p>{codeReview.toReview.projectName}</p>
+                                <p>
+                                  <a href={codeReview.toReview.github}>{codeReview.toReview.github}</a>
+                                </p>
+                              </Card.Content>
+                              {codeReview.reviewer ? (
+                                <Card.Content>
+                                  <h4>Your reviewer</h4>
+                                  <p>{codeReview.reviewer.projectName}</p>
+                                  <p>
+                                    <a href={codeReview.reviewer.github}>{codeReview.reviewer.github}</a>
+                                  </p>
+                                </Card.Content>
+                              ) : (
+                                <div />
+                              )}
+                            </div>
+                          ) : (
+                            <div />
+                          )}
+                        </Card>
+                      ) : (
+                        <div />
+                      )
+                  )
+                ) : (
+                  <h3>Ei ollut code reviewsejä</h3>
+                )}
+              </Card.Content>
+            </Card>
           </div>
         ) : (
           <div />
@@ -395,4 +460,16 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps, { createOneComment, getOneCI, coursePageInformation, associateTeacherToStudent, showDropdown, selectTeacher, filterByAssistant, coursePageReset })(CoursePage)
+const mapDispatchToProps = {
+  createOneComment,
+  getOneCI,
+  coursePageInformation,
+  associateTeacherToStudent,
+  showDropdown,
+  selectTeacher,
+  filterByAssistant,
+  coursePageReset,
+  toggleCodeReview
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CoursePage)

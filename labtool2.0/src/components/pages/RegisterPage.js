@@ -3,12 +3,14 @@ import { Form, Input, Grid, Loader } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createStudentCourses } from '../../services/studentinstances'
+import { updateStudentProjectInfo } from '../../services/studentinstances'
 import { Redirect } from 'react-router'
 import { getOneCI } from '../../services/courseInstance'
 
 /**
  * The page user uses to register to a course AS A STUDENT
  */
+
 export class RegisterPage extends Component {
   state = {
     redirectToNewPage: false,
@@ -19,13 +21,22 @@ export class RegisterPage extends Component {
     try {
       e.preventDefault()
 
-      const content = {
-        projectName: e.target.projectName.value,
-        github: e.target.github.value,
-        ohid: this.props.selectedInstance.ohid
-      }
       this.setState({ loading: true })
-      await this.props.createStudentCourses(content, this.props.selectedInstance.ohid)
+      if (this.props.coursePage && this.props.coursePage.data !== null) {
+        const data = {
+          projectname: e.target.projectName.value,
+          github: e.target.github.value,
+          ohid: this.props.selectedInstance.ohid
+        }
+        await this.props.updateStudentProjectInfo(data)
+      } else {
+        const content = {
+          projectName: e.target.projectName.value,
+          github: e.target.github.value,
+          ohid: this.props.selectedInstance.ohid
+        }
+        await this.props.createStudentCourses(content, this.props.selectedInstance.ohid)
+      }
       this.setState({ redirectToNewPage: true })
     } catch (error) {
       console.log(error)
@@ -52,7 +63,15 @@ export class RegisterPage extends Component {
         <Loader active={this.state.loading} inline="centered" />
         <Grid>
           <Grid.Row centered>
-            <h3>Register for {this.props.selectedInstance.name}</h3>
+            {this.props.coursePage && this.props.coursePage.data !== null ? (
+              <div>
+                <h3>Update your info for {this.props.selectedInstance.name}</h3>
+              </div>
+            ) : (
+              <div>
+                <h3>Register for {this.props.selectedInstance.name}</h3>
+              </div>
+            )}
           </Grid.Row>
         </Grid>
 
@@ -91,9 +110,10 @@ export class RegisterPage extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
+    coursePage: state.coursePage,
     selectedInstance: state.selectedInstance,
     courseId: ownProps.courseId
   }
 }
 
-export default connect(mapStateToProps, { createStudentCourses, getOneCI })(RegisterPage)
+export default connect(mapStateToProps, { createStudentCourses, updateStudentProjectInfo, getOneCI })(RegisterPage)

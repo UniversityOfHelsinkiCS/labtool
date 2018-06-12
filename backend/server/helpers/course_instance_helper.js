@@ -33,7 +33,14 @@ function checkWebOodi(req, res, user, resolve) {
     options.uri += '?testing=1'
   }
   request(options, function(req, res, body) {
-    const json = JSON.parse(body)
+    let json = null
+    try {
+      json = JSON.parse(body)
+    } catch (e) {
+      console.log('\n\ncheckWebOodi received this body: ', body, '\n\n\n')
+      resolve('notfound')
+      return
+    }
     console.log('\njson students to string', json['students'].toString())
     if (json['students'].toString().match(user.studentNumber) !== null) {
       // stupid javascript.. even regex match is simpler than json array that has or not has a key of whatever.
@@ -61,7 +68,6 @@ function findByUserStudentInstance(req, res) {
   const Sequelize = require('sequelize')
   const Op = Sequelize.Op
 
-  console.log('\ncourse_instance_helper db: ', db)
   const errors = []
   console.log('\ncourse_intance_helper, searching by studentInstance...')
   console.log('\n***REQ BODY***: ', req.body)

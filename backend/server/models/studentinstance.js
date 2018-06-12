@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          is: ['^[a-zA-Z0-9_ ]*$']
+          is: ["^[a-zåäöA-ZÅÄÖ'0-9_ ]*$"]
         }
       }
     },
@@ -31,7 +31,8 @@ module.exports = (sequelize, DataTypes) => {
     })
 
     StudentInstance.hasMany(models.CodeReview, {
-      foreignKey: 'toReview'
+      foreignKey: 'toReview',
+      as: 'toReviews'
     })
 
     StudentInstance.belongsTo(models.User, {

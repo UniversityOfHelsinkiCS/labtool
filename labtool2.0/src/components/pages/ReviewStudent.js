@@ -44,16 +44,14 @@ export class ReviewStudent extends Component {
   }
 
   render() {
-    const studentData = this.props.courseData.data.filter(dataArray => dataArray.id == this.props.ownProps.studentInstance)
-
-    const weekData = studentData[0].weeks.filter(theWeek => theWeek.weekNumber == this.props.weekNumber)
+    //this.props.ownProps.studentInstance is a string, therefore casting to number.
+    const studentData = this.props.courseData.data.filter(dataArray => dataArray.id === Number(this.props.ownProps.studentInstance))
+    //this.props.weekNumber is a string, therefore casting to number.
+    const weekData = studentData[0].weeks.filter(theWeek => theWeek.weekNumber === Number(this.props.weekNumber))
 
     return (
       <div className="ReviewStudent" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
         <h2> {this.props.selectedInstance.name}</h2>
-        {/*Tässä on opiskelijan nimen tulostus:
-        <h3> {this.props.courseData.data[indexOfDataArray].User.firsts} {this.props.courseData.data[indexOfDataArray].User.lastname} </h3>
-        */}
         <h3>
           {' '}
           {studentData[0].User.firsts} {studentData[0].User.lastname}{' '}
@@ -65,19 +63,19 @@ export class ReviewStudent extends Component {
               <Form.Field>
                 <label>Points 0-{this.props.selectedInstance.weekMaxPoints}</label>
 
-                <Input name="points" defaultValue={weekData[0] ? weekData[0].points : ''} type="number" step="0.01" />
+                <Input name="points" defaultValue={weekData[0] ? weekData[0].points : ''} type="number" step="0.01" style={{ width: '500px' }} />
               </Form.Field>
             </Form.Group>
-            <Form.Group inline unstackable>
+            <Form.Group inline unstackable style={{ textAlignVertical: 'top' }}>
               <label> Feedback </label>
-              <Form.TextArea defaultValue={weekData[0] ? weekData[0].feedback : ''} name="comment" />
+              <Form.TextArea defaultValue={weekData[0] ? weekData[0].feedback : ''} name="comment" style={{ width: '500px', height: '250px'}} />
             </Form.Group>
             <Form.Field>
-              <Button className="ui left floated green button" type="submit">
+              <Button className="ui center floated green button" type="submit">
                 Save
               </Button>
               <Link to={`/labtool/browsereviews/${this.props.selectedInstance.ohid}/${studentData[0].id}`} type="Cancel">
-                <Button className="ui right floated button" type="cancel">
+                <Button className="ui center floated button" type="cancel">
                   Cancel
                 </Button>
               </Link>

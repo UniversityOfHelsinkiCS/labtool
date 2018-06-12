@@ -18,9 +18,11 @@ exports[`<Register /> RegisterPage Component should render correctly 1`] = `
     <GridRow
       centered={true}
     >
-      <h3>
-        Register for 
-      </h3>
+      <div>
+        <h3>
+          Register for 
+        </h3>
+      </div>
     </GridRow>
   </Grid>
   <Grid>

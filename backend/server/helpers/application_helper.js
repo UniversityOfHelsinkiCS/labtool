@@ -164,9 +164,7 @@ async function getActive(req, res) {
 async function getInactive(req, res) {
   try {
     const cur = await getCurrent(req, res)
-    console.log("\ncur: ", cur)
     const nxt = await getNewer(req, res)
-    console.log("\nnxt: ", nxt)
     const newobj = await cur.concat(nxt)
     const iarr = []
     for (var blob in newobj) {
@@ -213,41 +211,44 @@ async function createCourse(body) {
 
   const axios = require('axios')
   const options = await axiosCourseBla(body.hid)
-  const result = await axios
-    .create(options)
-    .get()
-    .then(barf => {
-      return barf.data
-    })
-  const new_course = await CourseInstance.build({
-    name: body.cname,
-    start: body.starts,
-    end: body.ends,
-    ohid: body.hid
-  }).save()
-
-  if (result.teachers.length > 0) {
-    console.log('')
-    for (let i in result.teachers) {
-      const user = await User.findOrCreate({
-        where: {
-          username: result.teachers[i]
-        },
-        defaults: {
-          username: result.teachers[i]
-        }
+  try {
+    const result = await axios
+      .create(options)
+      .get()
+      .then(barf => {
+        return barf.data
       })
-      TeacherInstance.build({
-        userId: user[i].id,
-        courseInstanceId: new_course.id,
-        admin: 'true'
-      }).save()
+    const new_course = await CourseInstance.build({
+      name: body.cname,
+      start: body.starts,
+      end: body.ends,
+      ohid: body.hid
+    }).save()
+
+    if (result.teachers.length > 0) {
+      console.log('')
+      for (let i in result.teachers) {
+        const user = await User.findOrCreate({
+          where: {
+            username: result.teachers[i]
+          },
+          defaults: {
+            username: result.teachers[i],
+            admin: true
+          }
+        })
+        TeacherInstance.build({
+          userId: user[0].id,
+          courseInstanceId: new_course.id,
+          admin: true
+        }).save()
+      }
     }
+    return result
+  } catch (error) {
+    console.log(error)
   }
-
   //await console.log(result.teachers)
-
-  return result
 }
 
 /**
@@ -260,13 +261,17 @@ async function getCurrent(req, res) {
   const timeMachine = CurrentTermAndYear()
   const axios = require('axios')
   const options = await axiosBlaBla(timeMachine.currentYear, timeMachine.currentTerm)
-  const result = await axios
-    .create(options)
-    .get()
-    .then(barf => {
-      return barf.data
-    })
-  return result
+  try {
+    const result = await axios
+      .create(options)
+      .get()
+      .then(barf => {
+        return barf.data
+      })
+    return result
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 /**
@@ -279,11 +284,15 @@ async function getNewer(req, res) {
   const timeMachine = CurrentTermAndYear()
   const axios = require('axios')
   const options = await axiosBlaBla(timeMachine.nextYear, timeMachine.nextTerm)
-  const result = await axios
-    .create(options)
-    .get()
-    .then(barf => {
-      return barf.data
-    })
-  return result
+  try {
+    const result = await axios
+      .create(options)
+      .get()
+      .then(barf => {
+        return barf.data
+      })
+    return result
+  } catch (error) {
+    console.log(error)
+  }
 }

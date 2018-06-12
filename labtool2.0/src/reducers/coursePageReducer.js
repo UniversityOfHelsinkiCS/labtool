@@ -42,6 +42,17 @@ const courseInstancereducer = (store = [], action) => {
         return student
       })
       return { ...store, data: newData }
+    case 'CODE_REVIEW_GRADE_SUCCESS': {
+      const newData = store.data.map(student => {
+        if (student.id !== action.response.data.studentInstanceId) {
+          return student
+        }
+        const index = student.codeReviews.map(cr => cr.reviewNumber).indexOf(action.response.data.reviewNumber)
+        student.codeReviews[index] = { ...student.codeReviews[index], points: action.response.data.points }
+        return student
+      })
+      return { ...store, data: newData }
+    }
     default:
       return store
   }
@@ -75,6 +86,20 @@ export default courseInstancereducer
                       "from": String, the user who commented this.
                   }
               ]
+          }
+      ],
+      "codeReviews": [
+          {
+              "reviewer": {
+                  "github": string, github link for reviewer
+                  "projectName": string, title for reviewer's project
+              }
+              "toReview": {
+                  "github": string, github link to repository user should review
+                  "projectName": string, title for project user should review
+              }
+              "reviewNumber": integer, indicates which round of code reviews this is.
+              "points": number or null, Points awarded for this code review. Null if not reviewed.
           }
       ]
   }

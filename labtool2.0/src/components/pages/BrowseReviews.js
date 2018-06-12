@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
-import { Button, Card, Accordion, Icon, Form, Comment } from 'semantic-ui-react'
+import { Button, Card, Accordion, Icon, Form, Comment, Input } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { createOneComment } from '../../services/comment'
 import { getOneCI, coursePageInformation } from '../../services/courseInstance'
+import { gradeCodeReview } from '../../services/codeReview'
 import ReactMarkdown from 'react-markdown'
 
 /**
@@ -30,8 +31,7 @@ export class BrowseReviews extends Component {
     const content = {
       hidden: e.target.hidden.checked,
       comment: e.target.content.value,
-      week: parseInt(e.target.name, 10),
-      from: this.props.user.user.username
+      week: parseInt(e.target.name, 10)
     }
     document.getElementById(e.target.name).reset()
     try {
@@ -42,13 +42,23 @@ export class BrowseReviews extends Component {
       console.log(error)
     }
   }
-  
-  render() {
 
+  gradeCodeReview = (reviewNumber, studentInstanceId) => async e => {
+    e.preventDefault()
+    const data = {
+      reviewNumber,
+      studentInstanceId: Number(studentInstanceId),
+      points: Number(e.target.points.value)
+    }
+    this.props.gradeCodeReview(data)
+  }
+
+  render() {
     const createHeaders = (studhead, studentInstance) => {
       let headers = []
       studhead.data.map(student => {
         // studentInstance is id of student. Type: String
+        // Tämä pitää myös korjata.
         if (student.id == studentInstance) {
           headers.push(
             <Card fluid color="yellow">
@@ -59,18 +69,19 @@ export class BrowseReviews extends Component {
                 <h3> {student.projectName} </h3>
                 <h3>
                   {' '}
-                  <a href={student.github}>{student.github}{' '}</a>
+                  <a href={student.github}>{student.github} </a>
                 </h3>
               </Card.Content>
             </Card>
           )
-          for (var i = 0; i < this.props.selectedInstance.weekAmount; i++) {
-            const weeks = student.weeks.find(week => week.weekNumber == i + 1)
+          let i = 0
+          for (; i < this.props.selectedInstance.weekAmount; i++) {
+            const weeks = student.weeks.find(week => week.weekNumber === i + 1)
             if (weeks) {
               headers.push(
                 <Accordion key={i} fluid styled>
                   <Accordion.Title active={activeIndex === i} index={i} onClick={this.handleClick}>
-                    <Icon name="dropdown" /> Week {i + 1}{' '}
+                    <Icon name="dropdown" /> Week {i + 1}, points {weeks.points}
                   </Accordion.Title>
                   <Accordion.Content active={activeIndex === i}>
                     <Card fluid color="yellow">
@@ -116,7 +127,7 @@ export class BrowseReviews extends Component {
                     </Comment.Group>
                     <Form reply onSubmit={this.handleSubmit} name={weeks.id} id={weeks.id}>
                       <Form.TextArea name="content" placeholder="Your comment..." defaultValue="" />
-                      <Form.Checkbox label="Make this comment hidden from others" name="hidden" />
+                      <Form.Checkbox label="Add comment for instructors only" name="hidden" />
                       <Button content="Add Reply" labelPosition="left" icon="edit" primary />
                     </Form>
                     <h3>Review</h3>
@@ -143,7 +154,30 @@ export class BrowseReviews extends Component {
               )
             }
           }
+          student.codeReviews
+            .sort((a, b) => {
+              return a.reviewNumber - b.reviewNumber
+            })
+            .forEach(cr => {
+              headers.push(
+                <Accordion key={i} fluid styled>
+                  <Accordion.Title active={activeIndex === i} index={i} onClick={this.handleClick}>
+                    <Icon name="dropdown" /> Code Review {cr.reviewNumber}{' '}
+                  </Accordion.Title>
+                  <Accordion.Content active={activeIndex === i}>
+                    {cr.points !== null ? <h4>{cr.points} points</h4> : <h4>Not Graded</h4>}
+                    <Form onSubmit={this.gradeCodeReview(cr.reviewNumber, studentInstance)}>
+                      <label>Points </label>
+                      <Input name="points" defaultValue={cr.points ? cr.points : ''} type="number" step="0.01" style={{ width: '100px' }} />
+                      <Input type="submit" value="Grade" />
+                    </Form>
+                  </Accordion.Content>
+                </Accordion>
+              )
+              i++
+           })
         }
+        return student
       })
       return headers
     }
@@ -151,7 +185,7 @@ export class BrowseReviews extends Component {
     const { activeIndex } = this.state
 
     return (
-      <div className="BrowseReviews">
+      <div className="BrowseReviews" style={{ overflowX: 'scroll' }}>
         {this.props.courseData.role === 'teacher' ? (
           <div>
             <h2> {this.props.selectedInstance.name}</h2>
@@ -170,9 +204,7 @@ const mapStateToProps = (state, ownProps) => {
     user: state.user,
     selectedInstance: state.selectedInstance,
     courseData: state.coursePage
-
-
   }
 }
 
-export default connect(mapStateToProps, { createOneComment, getOneCI, coursePageInformation })(BrowseReviews)
+export default connect(mapStateToProps, { createOneComment, getOneCI, coursePageInformation, gradeCodeReview })(BrowseReviews)

@@ -55,6 +55,25 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
             http://github.com/tiralabra1
           </a>
            
+          <Link
+            replace={false}
+            to="/labtool/courseregistration/undefined"
+          >
+            <Button
+              as="button"
+              circular={true}
+              floated="right"
+              icon={
+                Object {
+                  "color": "orange",
+                  "name": "edit",
+                  "size": "large",
+                }
+              }
+              role="button"
+              size="large"
+            />
+          </Link>
         </h3>
         <h3>
           Assistant: not given
@@ -340,6 +359,108 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
         </TableRow>
       </TableBody>
     </Table>
+    <Card
+      color="yellow"
+      fluid={true}
+    >
+      <CardContent>
+        <Card
+          className="codeReview"
+          color="yellow"
+          fluid={true}
+          key="1"
+        >
+          <CardContent
+            header="Code review 1"
+            onClick={[Function]}
+            style={
+              Object {
+                "cursor": "pointer",
+              }
+            }
+          />
+          <CardContent
+            className="codeReviewPoints"
+          >
+            2 points
+          </CardContent>
+          <div />
+        </Card>
+        <Card
+          className="codeReview"
+          color="yellow"
+          fluid={true}
+          key="2"
+        >
+          <CardContent
+            header="Code review 2"
+            onClick={[Function]}
+            style={
+              Object {
+                "cursor": "pointer",
+              }
+            }
+          />
+          <CardContent
+            className="codeReviewPoints"
+          >
+            1 points
+          </CardContent>
+          <div
+            className="codeReviewExpanded"
+          >
+            <CardContent>
+              <h4>
+                Project to review
+              </h4>
+              <p>
+                Tira super projekti
+              </p>
+              <p>
+                <a
+                  href="http://github.com/superprojekti"
+                >
+                  http://github.com/superprojekti
+                </a>
+              </p>
+            </CardContent>
+            <CardContent>
+              <h4>
+                Your reviewer
+              </h4>
+              <p>
+                Tiran toinen labraprojekti
+              </p>
+              <p>
+                <a
+                  href="http://github.com/tiralabra2"
+                >
+                  http://github.com/tiralabra2
+                </a>
+              </p>
+            </CardContent>
+          </div>
+        </Card>
+        <Card
+          className="codeReview"
+          color="yellow"
+          fluid={true}
+          key="3"
+        >
+          <CardContent
+            header="Code review 3"
+            onClick={[Function]}
+            style={
+              Object {
+                "cursor": "pointer",
+              }
+            }
+          />
+          <div />
+          <div />
+        </Card>
+      </CardContent>
+    </Card>
   </div>
 </div>
 `;
@@ -472,7 +593,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
       }
     >
       <span>
-        Filter by assigned teacher 
+        Filter by instructor 
       </span>
       <Dropdown
         additionLabel="Add "
@@ -651,7 +772,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             key="0"
           >
             <p>
-              Not reviewed!
+              -
             </p>
           </TableCell>
           <TableCell
@@ -659,7 +780,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             key="1"
           >
             <p>
-              Not reviewed!
+              -
             </p>
           </TableCell>
           <TableCell
@@ -667,7 +788,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             key="2"
           >
             <p>
-              Not reviewed!
+              -
             </p>
           </TableCell>
           <TableCell
@@ -675,7 +796,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             key="3"
           >
             <p>
-              Not reviewed!
+              -
             </p>
           </TableCell>
           <TableCell
@@ -683,7 +804,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             key="4"
           >
             <p>
-              Not reviewed!
+              -
             </p>
           </TableCell>
           <TableCell
@@ -691,7 +812,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             key="5"
           >
             <p>
-              Not reviewed!
+              -
             </p>
           </TableCell>
           <TableCell
@@ -699,7 +820,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             key="6"
           >
             <p>
-              Not reviewed!
+              -
             </p>
           </TableCell>
           <TableCell
@@ -710,19 +831,23 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           <TableCell
             as="td"
           >
-            <p
+            <span
               key="10012"
             >
-              Assistant: 
               Ossi Ohjaaja
                
               Mutikainen
-            </p>
+            </span>
             <Icon
               as="i"
               name="pencil"
               onClick={[Function]}
               size="small"
+              style={
+                Object {
+                  "float": "right",
+                }
+              }
             />
             <div />
           </TableCell>
@@ -779,7 +904,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             key="0"
           >
             <p>
-              Not reviewed!
+              -
             </p>
           </TableCell>
           <TableCell
@@ -787,7 +912,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             key="1"
           >
             <p>
-              Not reviewed!
+              -
             </p>
           </TableCell>
           <TableCell
@@ -795,7 +920,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             key="2"
           >
             <p>
-              Not reviewed!
+              -
             </p>
           </TableCell>
           <TableCell
@@ -803,7 +928,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             key="3"
           >
             <p>
-              Not reviewed!
+              -
             </p>
           </TableCell>
           <TableCell
@@ -811,7 +936,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             key="4"
           >
             <p>
-              Not reviewed!
+              -
             </p>
           </TableCell>
           <TableCell
@@ -819,7 +944,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             key="5"
           >
             <p>
-              Not reviewed!
+              -
             </p>
           </TableCell>
           <TableCell
@@ -827,7 +952,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             key="6"
           >
             <p>
-              Not reviewed!
+              -
             </p>
           </TableCell>
           <TableCell
@@ -838,19 +963,23 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           <TableCell
             as="td"
           >
-            <p
+            <span
               key="10031"
             >
-              Assistant: 
               Ossi Ohjaaja
                
               Mutikainen
-            </p>
+            </span>
             <Icon
               as="i"
               name="pencil"
               onClick={[Function]}
               size="small"
+              style={
+                Object {
+                  "float": "right",
+                }
+              }
             />
             <div />
           </TableCell>
@@ -939,7 +1068,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             key="4"
           >
             <p>
-              Not reviewed!
+              -
             </p>
           </TableCell>
           <TableCell
@@ -947,7 +1076,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             key="5"
           >
             <p>
-              Not reviewed!
+              -
             </p>
           </TableCell>
           <TableCell
@@ -955,7 +1084,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             key="6"
           >
             <p>
-              Not reviewed!
+              -
             </p>
           </TableCell>
           <TableCell
@@ -966,19 +1095,23 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           <TableCell
             as="td"
           >
-            <p
+            <span
               key="10011"
             >
-              Assistant: 
               Ossi Ohjaaja
                
               Mutikainen
-            </p>
+            </span>
             <Icon
               as="i"
               name="pencil"
               onClick={[Function]}
               size="small"
+              style={
+                Object {
+                  "float": "right",
+                }
+              }
             />
             <div />
           </TableCell>
