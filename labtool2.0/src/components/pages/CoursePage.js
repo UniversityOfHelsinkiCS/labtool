@@ -156,7 +156,7 @@ export class CoursePage extends React.Component {
     dropDownFilterTeachers = this.createDropdownTeachers(dropDownFilterTeachers)
 
     return (
-      <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center', overflowX: 'scroll' }}>
+      <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
         <div className="ui grid">
           <div className="sixteen wide column">
             <h2>{this.props.selectedInstance.name}</h2>
@@ -198,7 +198,7 @@ export class CoursePage extends React.Component {
 
         {/** Shown when the users role in this course is teacher.*/}
         {this.props.courseData.role === 'teacher' ? (
-          <div className="TeachersView">
+          <div className="TeachersView" style={{ overflowX: 'auto' }}>
             <br />
             <Table>
               <Table.Header>
@@ -328,7 +328,7 @@ export class CoursePage extends React.Component {
 
         {/** Shown when the users role in this course is student.*/}
         {this.props.courseData.role === 'student' && this.props.courseData.data !== null ? (
-          <div className="StudentsView">
+          <div className="StudentsView" style={{ overflowX: 'auto' }}>
             <h3> </h3>
 
             <Card fluid color="yellow">
