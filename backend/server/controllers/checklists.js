@@ -42,8 +42,33 @@ module.exports = {
         data: req.body
       })
     } catch (e) {
-      res.status(500).send(e)
+      res.status(500).send('Unexpected error')
       console.log(e)
+    }
+  },
+  async getOne(req, res) {
+    try {
+      if (typeof req.body.week !== 'number' || typeof req.body.courseInstanceId !== 'number') {
+        res.status(400).send('Missing or malformed inputs.')
+        return
+      }
+      const checklist = await Checklist.findOne({
+        attributes: {
+          exclude: ['createdAt', 'updatedAt']
+        },
+        where: {
+          courseInstanceId: req.body.courseInstanceId,
+          week: req.body.week,
+          master: false
+        }
+      })
+      if (checklist) {
+        res.status(200).send(checklist)
+      } else {
+        res.status(404).send('No matching checklist found.')
+      }
+    } catch (e) {
+      res.status(500).send('Unexpected error')
     }
   }
 }
