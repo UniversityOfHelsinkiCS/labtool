@@ -8,6 +8,8 @@
  */
 const notificationReducer = (state = {}, action) => {
   switch (action.type) {
+    case 'NOTIFICATION_SHOW':
+      return action.notification
     case 'LOGIN_SUCCESS':
       return {
         message: 'You have logged in',
@@ -116,8 +118,22 @@ const notificationReducer = (state = {}, action) => {
         message: action.response.response.data,
         error: true
       }
+    case 'CHECKLIST_CREATE_SUCCESS':
+      return {
+        message: action.response.message,
+        error: false
+      }
     default:
       return state
+  }
+}
+
+export const showNotification = notification => {
+  return async dispatch => {
+    dispatch({
+      type: 'NOTIFICATION_SHOW',
+      notification
+    })
   }
 }
 
