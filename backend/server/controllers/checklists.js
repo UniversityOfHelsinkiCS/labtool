@@ -1,5 +1,6 @@
 const helper = require('../helpers/checklist_helper')
 const TeacherInstance = require('../models').TeacherInstance
+const Checklist = require('../models').Checklist
 
 module.exports = {
   async create(req, res) {
@@ -13,9 +14,8 @@ module.exports = {
         res.status(400).send('Missing or malformed inputs.')
         return
       }
-      let checklistAsJSON
       try {
-        checklistAsJSON = JSON.parse(req.body.checklist)
+        // TODO validate integrity of provided JSON.
       } catch (e) {
         res.status(400).send('Cannot parse checklist JSON.')
         return
@@ -30,13 +30,19 @@ module.exports = {
         res.status(403).send('You must be a teacher of the course to perform this action.')
         return
       }
-      // TODO create checklist.
+      const result = await Checklist.create({
+        week: req.body.week,
+        courseName: 'doot',
+        list: req.body.checklist,
+        courseInstanceId: req.body.courseInstanceId
+      })
       res.status(200).send({
         message: 'checklist created succesfully.',
+        result,
         data: req.body
       })
     } catch (e) {
-      res.status(500).send('Unexpected error')
+      res.status(500).send(e)
       console.log(e)
     }
   }
