@@ -37,11 +37,11 @@ export class CreateChecklist extends Component {
   render() {
     return (
       <div className="CreateChecklist">
-        <Header>Create new checklist</Header>
+        <Header>{this.props.selectedInstance.name}</Header>
         <Form onSubmit={this.handleSubmit}>
           <Form.Field>
             <Label>Week </Label>
-            <Input type="number" name="week" step="1" style={{ width: '50px' }} />
+            <Input type="number" name="week" step="1" style={{ width: '100px' }} />
           </Form.Field>
           <Form.Field>
             <Label>Checklist as JSON</Label>
