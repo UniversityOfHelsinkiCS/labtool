@@ -188,7 +188,9 @@ export class BrowseReviews extends Component {
       <div className="BrowseReviews" style={{ overflowX: 'scroll' }}>
         {this.props.courseData.role === 'teacher' ? (
           <div>
-            <h2> {this.props.selectedInstance.name}</h2>
+            <Link to={`/labtool/courses/${this.props.selectedInstance.ohid}`}>
+               <h2> {this.props.selectedInstance.name} </h2>
+             </Link>
             {createHeaders(this.props.courseData, this.props.studentInstance)}
           </div>
         ) : (
