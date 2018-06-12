@@ -79,7 +79,7 @@ export class ModifyCourseInstanceReview extends React.Component {
     }
 
     return (
-      <div style={{ textAlignVertical: 'center', textAlign: 'center' }}>
+      <div className="ModifyCourseInstanceCodeReviews" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
         <div className="ui grid">
           <div className="sixteen wide column">
             <h2>{this.props.selectedInstance.name}</h2>
@@ -115,6 +115,7 @@ export class ModifyCourseInstanceReview extends React.Component {
                       <Table.Cell>
                         <p>Current review: {getCurrentReviewer(1, data.id)}</p>
                         <Dropdown
+                          className="toReviewDropdown"
                           placeholder="Select student"
                           fluid
                           search
@@ -127,6 +128,7 @@ export class ModifyCourseInstanceReview extends React.Component {
                       <Table.Cell>
                         <p>Current review: {getCurrentReviewer(2, data.id)}</p>
                         <Dropdown
+                          className="toReviewDropdown"
                           placeholder="Select student"
                           fluid
                           search
@@ -172,7 +174,7 @@ export class ModifyCourseInstanceReview extends React.Component {
   }
 }
 
-const userHelper = data => {
+export const userHelper = data => {
   let users = []
   if (data) {
     users.push({
