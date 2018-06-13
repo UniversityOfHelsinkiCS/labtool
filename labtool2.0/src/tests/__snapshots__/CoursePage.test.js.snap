@@ -1013,7 +1013,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             key="0"
           >
             <p>
-              3
+              -
             </p>
           </TableCell>
           <TableCell
@@ -1021,7 +1021,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             key="1"
           >
             <p>
-              2
+              -
             </p>
           </TableCell>
           <TableCell
@@ -1029,7 +1029,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             key="2"
           >
             <p>
-              3
+              -
             </p>
           </TableCell>
           <TableCell
@@ -1037,7 +1037,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             key="3"
           >
             <p>
-              3
+              -
             </p>
           </TableCell>
           <TableCell
@@ -1067,7 +1067,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           <TableCell
             as="td"
           >
-            11
+            0
           </TableCell>
           <TableCell
             as="td"
