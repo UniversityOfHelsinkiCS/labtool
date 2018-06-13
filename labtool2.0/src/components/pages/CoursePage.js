@@ -9,7 +9,7 @@ import ReactMarkdown from 'react-markdown'
 import { showDropdown, selectTeacher, filterByAssistant, coursePageReset, toggleCodeReview } from '../../reducers/coursePageLogicReducer'
 
 export class CoursePage extends React.Component {
-  state = { activeIndex: 0 }
+  state = { activeIndex: 0, lastReviewedIndex: null }
 
   handleClick = (e, titleProps) => {
     const { index } = titleProps
@@ -42,7 +42,19 @@ export class CoursePage extends React.Component {
     this.props.coursePageInformation(this.props.courseId)
   }
 
+  openLastReviewedWeek() {
+    if (this.state.lastReviewedIndex === null) {
+      let lastIndexOfWeeks = this.props.courseData.data.weeks.length - 1
+      console.log('lastIndexOfWeeks, pitäisi olla 3: ', lastIndexOfWeeks)
+      let lastReviewedWeek = this.props.courseData.data.weeks[lastIndexOfWeeks].weekNumber
+      console.log('lastReviewedWeek, pitäisi olla 4', lastReviewedWeek)
+      this.setState({ activeIndex: lastReviewedWeek - 1,
+                      lastReviewedIndex: lastReviewedWeek - 1 })
+    }
+  }
+
   componentWillUnmount() {
+    this.setState({ lastReviewedIndex: null})
     this.props.coursePageReset()
   }
 
@@ -191,6 +203,9 @@ export class CoursePage extends React.Component {
             return week.weekNumber === i + 1
           })
           if (weeks) {
+            // Sets last reviewed week open.
+            this.openLastReviewedWeek()
+
             console.log('\n\nFound a week, i=', i, '\n\n')
             headers.push(
               <Accordion key={i} fluid styled>
@@ -260,6 +275,7 @@ export class CoursePage extends React.Component {
             )
           }
         }
+
         this.props.courseData.data.codeReviews
           .sort((a, b) => {
             return a.reviewNumber - b.reviewNumber
