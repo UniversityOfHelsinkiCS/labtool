@@ -243,30 +243,6 @@ exports[`<Courses /> Courses Component should render correctly 1`] = `
         </TableRow>
       </TableBody>
     </Table>
-    <div
-      className="Instructions"
-    >
-      <List>
-        <ListItem
-          content="Show course page"
-          icon={
-            Object {
-              "color": "blue",
-              "name": "eye",
-            }
-          }
-        />
-        <ListItem
-          content="Course is activated"
-          icon={
-            Object {
-              "color": "green",
-              "name": "square",
-            }
-          }
-        />
-      </List>
-    </div>
   </Container>
 </div>
 `;
