@@ -145,15 +145,11 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
             as="td"
           >
             <ReactMarkdown
-               astPlugins={Array []}
-               escapeHtml={true}
--              plugins={Array []}
--              rawSourcePos={false}
-               renderers={Object {}}
-               skipHtml={false}
--              sourcePos={false}
-               transformLinkUri={[Function]}
-             >
+              escapeHtml={true}
+              renderers={Object {}}
+              skipHtml={false}
+              transformLinkUri={[Function]}
+            >
               Hienoa työtä!
             </ReactMarkdown>
           </TableCell>
@@ -204,15 +200,11 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
             as="td"
           >
             <ReactMarkdown
-              astPlugins={Array []}
               escapeHtml={true}
-              plugins={Array []}
-              rawSourcePos={false}
               renderers={Object {}}
               skipHtml={false}
-              sourcePos={false}
               transformLinkUri={[Function]}
-             >
+            >
               Melko hienoa työtä!
             </ReactMarkdown>
           </TableCell>
@@ -263,15 +255,11 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
             as="td"
           >
             <ReactMarkdown
-              astPlugins={Array []}
               escapeHtml={true}
-              plugins={Array []}
-              rawSourcePos={false}
               renderers={Object {}}
               skipHtml={false}
-              sourcePos={false}
               transformLinkUri={[Function]}
-             >
+            >
               Erittäin hienoa työtä!
             </ReactMarkdown>
           </TableCell>
@@ -322,15 +310,11 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
             as="td"
           >
             <ReactMarkdown
-              astPlugins={Array []}
               escapeHtml={true}
-              plugins={Array []}
-              rawSourcePos={false}
               renderers={Object {}}
               skipHtml={false}
-              sourcePos={false}
               transformLinkUri={[Function]}
-             >
+            >
               Hyvin menee!
             </ReactMarkdown>
           </TableCell>
