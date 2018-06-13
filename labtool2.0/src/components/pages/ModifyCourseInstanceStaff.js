@@ -88,9 +88,6 @@ export class ModifyCourseInstanceStaff extends React.Component {
                       )
                     ) : (
                       <div>
-                        <Label color="yellow" horizontal>
-                          Student
-                        </Label>
                         <Button onClick={this.handleSubmit(user.id)} size="tiny" color="green">
                           Add assistant
                         </Button>
