@@ -5,6 +5,13 @@ import { shallow } from 'enzyme'
 describe('<ReviewStudent />', () => {
   let wrapper
 
+  const ownProps = {
+    courseId: 'TKT20010.2018.K.A.1',
+    studentInstance: '10011',
+    weekNumber: '1'
+  }
+
+
   const props = {
     selectedInstance: {
       id: 10011,
@@ -16,6 +23,18 @@ describe('<ReviewStudent />', () => {
       weekMaxPoints: 3,
       currentWeek: 1,
       ohid: 'TKT20010.2018.K.A.1',
+      checklists: [
+        {
+          id: 10002,
+          week: 1,
+          list: {},
+          courseName: 'Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit',
+          master: false,
+          createdAt: '2018-03-26T00:00:00.000Z',
+          updatedAt: '2018-03-26T00:00:00.000Z',
+          courseInstanceId: 10011
+        }
+      ],
       createdAt: '2018-03-26T00:00:00.000Z',
       updatedAt: '2018-03-26T00:00:00.000Z',
       teacherInstances: [
@@ -159,7 +178,7 @@ describe('<ReviewStudent />', () => {
   let mockFn = jest.fn()
 
   beforeEach(() => {
-    wrapper = shallow(<ReviewStudent getOneCI={mockFn} clearNotifications={mockFn} courseData={props.coursePage} ownProps={props} selectedInstance={props} />)
+    wrapper = shallow(<ReviewStudent getOneCI={mockFn} clearNotifications={mockFn} courseData={props.coursePage} ownProps={ownProps} selectedInstance={props.selectedInstance} />)
   })
 
   describe('ReviewStudent Component', () => {

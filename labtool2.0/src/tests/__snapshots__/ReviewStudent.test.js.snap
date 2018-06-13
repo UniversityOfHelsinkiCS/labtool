@@ -12,6 +12,7 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
 >
   <h2>
      
+    Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit
   </h2>
   <h3>
      
@@ -24,84 +25,98 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
      Viikko 
      
   </h3>
-  <Grid
-    centered={true}
-  >
-    <Form
-      as="form"
-      onSubmit={[Function]}
+  <Grid>
+    <GridRow
+      columns={2}
     >
-      <FormGroup
-        inline={true}
-        unstackable={true}
-      >
-        <FormField>
+      <GridColumn>
+        <h2>
+          Feedback
+        </h2>
+        <Form
+          as="form"
+          onSubmit={[Function]}
+        >
+          <FormGroup
+            inline={true}
+            unstackable={true}
+          >
+            <FormField>
+              <label>
+                Points 0-
+                3
+              </label>
+              <Input
+                defaultValue=""
+                name="points"
+                step="0.01"
+                style={
+                  Object {
+                    "align": "center",
+                    "width": "150px",
+                  }
+                }
+                type="number"
+              />
+            </FormField>
+          </FormGroup>
           <label>
-            Points 0-
+             Feedback 
           </label>
-          <Input
-            defaultValue=""
-            name="points"
-            step="0.01"
+          <FormGroup
+            inline={true}
             style={
               Object {
-                "width": "500px",
+                "textAlignVertical": "top",
               }
             }
-            type="number"
-          />
-        </FormField>
-      </FormGroup>
-      <FormGroup
-        inline={true}
-        style={
-          Object {
-            "textAlignVertical": "top",
-          }
-        }
-        unstackable={true}
-      >
-        <label>
-           Feedback 
-        </label>
-        <FormTextArea
-          as={[Function]}
-          control={[Function]}
-          defaultValue=""
-          name="comment"
-          style={
-            Object {
-              "height": "250px",
-              "width": "500px",
-            }
-          }
-        />
-      </FormGroup>
-      <FormField>
-        <Button
-          as="button"
-          className="ui center floated green button"
-          role="button"
-          type="submit"
-        >
-          Save
-        </Button>
-        <Link
-          replace={false}
-          to="/labtool/browsereviews/undefined/10011"
-          type="Cancel"
-        >
-          <Button
-            as="button"
-            className="ui center floated button"
-            role="button"
-            type="cancel"
+            unstackable={true}
           >
-            Cancel
-          </Button>
-        </Link>
-      </FormField>
-    </Form>
+            <FormTextArea
+              as={[Function]}
+              control={[Function]}
+              defaultValue=""
+              name="comment"
+              style={
+                Object {
+                  "height": "250px",
+                  "width": "500px",
+                }
+              }
+            />
+          </FormGroup>
+          <FormField>
+            <Button
+              as="button"
+              className="ui center floated green button"
+              role="button"
+              type="submit"
+            >
+              Save
+            </Button>
+            <Link
+              replace={false}
+              to="/labtool/browsereviews/TKT20010.2018.K.A.1/10011"
+              type="Cancel"
+            >
+              <Button
+                as="button"
+                className="ui center floated button"
+                role="button"
+                type="cancel"
+              >
+                Cancel
+              </Button>
+            </Link>
+          </FormField>
+        </Form>
+      </GridColumn>
+      <GridColumn>
+        <h2>
+          Checklist
+        </h2>
+      </GridColumn>
+    </GridRow>
   </Grid>
 </div>
 `;
