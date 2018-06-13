@@ -19,6 +19,7 @@ export class CreateChecklist extends Component {
     this.props.getOneCI(this.props.courseId)
   }
 
+  // Make api call to save checklist to database.
   handleSubmit = async e => {
     console.log(e.target.submit.value)
     e.preventDefault()
@@ -50,6 +51,7 @@ export class CreateChecklist extends Component {
     })
   }
 
+  // Make api call to receive checklist from database.
   loadChecklist = async e => {
     this.props.getOneChecklist({
       week: this.state.week,

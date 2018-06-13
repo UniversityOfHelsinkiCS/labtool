@@ -1,3 +1,10 @@
+/**
+ * Named checklist in store.
+ *
+ * string: string representation of data.list
+ * data: object representing a checklist received from backend.
+ */
+
 const INITIAL_STATE = {
   string: '',
   data: {}
