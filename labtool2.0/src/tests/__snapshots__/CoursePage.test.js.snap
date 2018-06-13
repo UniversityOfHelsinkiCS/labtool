@@ -125,244 +125,7 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
       </TableHeader>
       <TableBody
         as="tbody"
-      >
-        <TableRow
-          as="tr"
-          cellAs="td"
-          key="1"
-        >
-          <TableCell
-            as="td"
-          >
-            1
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            3
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            <ReactMarkdown
-              astPlugins={Array []}
-              escapeHtml={true}
-              plugins={Array []}
-              rawSourcePos={false}
-              renderers={Object {}}
-              skipHtml={false}
-              sourcePos={false}
-              transformLinkUri={[Function]}
-            >
-              Hienoa työtä!
-            </ReactMarkdown>
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            <CommentGroup />
-            <Form
-              as="form"
-              id="comment"
-              name={10001}
-              onSubmit={[Function]}
-              reply={true}
-            >
-              <FormTextArea
-                as={[Function]}
-                control={[Function]}
-                name="content"
-                placeholder="Your comment..."
-              />
-              <Button
-                as="button"
-                content="Add Reply"
-                icon="edit"
-                labelPosition="left"
-                primary={true}
-                role="button"
-              />
-            </Form>
-          </TableCell>
-        </TableRow>
-        <TableRow
-          as="tr"
-          cellAs="td"
-          key="2"
-        >
-          <TableCell
-            as="td"
-          >
-            2
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            2
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            <ReactMarkdown
-              astPlugins={Array []}
-              escapeHtml={true}
-              plugins={Array []}
-              rawSourcePos={false}
-              renderers={Object {}}
-              skipHtml={false}
-              sourcePos={false}
-              transformLinkUri={[Function]}
-            >
-              Melko hienoa työtä!
-            </ReactMarkdown>
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            <CommentGroup />
-            <Form
-              as="form"
-              id="comment"
-              name={10002}
-              onSubmit={[Function]}
-              reply={true}
-            >
-              <FormTextArea
-                as={[Function]}
-                control={[Function]}
-                name="content"
-                placeholder="Your comment..."
-              />
-              <Button
-                as="button"
-                content="Add Reply"
-                icon="edit"
-                labelPosition="left"
-                primary={true}
-                role="button"
-              />
-            </Form>
-          </TableCell>
-        </TableRow>
-        <TableRow
-          as="tr"
-          cellAs="td"
-          key="3"
-        >
-          <TableCell
-            as="td"
-          >
-            3
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            3
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            <ReactMarkdown
-              astPlugins={Array []}
-              escapeHtml={true}
-              plugins={Array []}
-              rawSourcePos={false}
-              renderers={Object {}}
-              skipHtml={false}
-              sourcePos={false}
-              transformLinkUri={[Function]}
-            >
-              Erittäin hienoa työtä!
-            </ReactMarkdown>
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            <CommentGroup />
-            <Form
-              as="form"
-              id="comment"
-              name={10003}
-              onSubmit={[Function]}
-              reply={true}
-            >
-              <FormTextArea
-                as={[Function]}
-                control={[Function]}
-                name="content"
-                placeholder="Your comment..."
-              />
-              <Button
-                as="button"
-                content="Add Reply"
-                icon="edit"
-                labelPosition="left"
-                primary={true}
-                role="button"
-              />
-            </Form>
-          </TableCell>
-        </TableRow>
-        <TableRow
-          as="tr"
-          cellAs="td"
-          key="4"
-        >
-          <TableCell
-            as="td"
-          >
-            4
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            3
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            <ReactMarkdown
-              astPlugins={Array []}
-              escapeHtml={true}
-              plugins={Array []}
-              rawSourcePos={false}
-              renderers={Object {}}
-              skipHtml={false}
-              sourcePos={false}
-              transformLinkUri={[Function]}
-            >
-              Hyvin menee!
-            </ReactMarkdown>
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            <CommentGroup />
-            <Form
-              as="form"
-              id="comment"
-              name={10004}
-              onSubmit={[Function]}
-              reply={true}
-            >
-              <FormTextArea
-                as={[Function]}
-                control={[Function]}
-                name="content"
-                placeholder="Your comment..."
-              />
-              <Button
-                as="button"
-                content="Add Reply"
-                icon="edit"
-                labelPosition="left"
-                primary={true}
-                role="button"
-              />
-            </Form>
-          </TableCell>
-        </TableRow>
-      </TableBody>
+      />
     </Table>
     <Card
       color="yellow"
@@ -1029,7 +792,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             key="0"
           >
             <p>
-              3
+              -
             </p>
           </TableCell>
           <TableCell
@@ -1037,7 +800,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             key="1"
           >
             <p>
-              2
+              -
             </p>
           </TableCell>
           <TableCell
@@ -1045,7 +808,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             key="2"
           >
             <p>
-              3
+              -
             </p>
           </TableCell>
           <TableCell
@@ -1053,7 +816,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             key="3"
           >
             <p>
-              3
+              -
             </p>
           </TableCell>
           <TableCell
@@ -1083,7 +846,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           <TableCell
             as="td"
           >
-            11
+            0
           </TableCell>
           <TableCell
             as="td"
