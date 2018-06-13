@@ -205,13 +205,13 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
           >
             <ReactMarkdown
               astPlugins={Array []}
-               escapeHtml={true}
--              plugins={Array []}
--              rawSourcePos={false}
-               renderers={Object {}}
-               skipHtml={false}
--              sourcePos={false}
-               transformLinkUri={[Function]}
+              escapeHtml={true}
+              plugins={Array []}
+              rawSourcePos={false}
+              renderers={Object {}}
+              skipHtml={false}
+              sourcePos={false}
+              transformLinkUri={[Function]}
              >
               Melko hienoa työtä!
             </ReactMarkdown>
@@ -264,13 +264,13 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
           >
             <ReactMarkdown
               astPlugins={Array []}
-               escapeHtml={true}
--              plugins={Array []}
--              rawSourcePos={false}
-               renderers={Object {}}
-               skipHtml={false}
--              sourcePos={false}
-               transformLinkUri={[Function]}
+              escapeHtml={true}
+              plugins={Array []}
+              rawSourcePos={false}
+              renderers={Object {}}
+              skipHtml={false}
+              sourcePos={false}
+              transformLinkUri={[Function]}
              >
               Erittäin hienoa työtä!
             </ReactMarkdown>
@@ -323,13 +323,13 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
           >
             <ReactMarkdown
               astPlugins={Array []}
-               escapeHtml={true}
--              plugins={Array []}
--              rawSourcePos={false}
-               renderers={Object {}}
-               skipHtml={false}
--              sourcePos={false}
-               transformLinkUri={[Function]}
+              escapeHtml={true}
+              plugins={Array []}
+              rawSourcePos={false}
+              renderers={Object {}}
+              skipHtml={false}
+              sourcePos={false}
+              transformLinkUri={[Function]}
              >
               Hyvin menee!
             </ReactMarkdown>
