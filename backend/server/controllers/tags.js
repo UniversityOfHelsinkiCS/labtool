@@ -27,23 +27,28 @@ module.exports = {
             name: req.body.text
           }
         }).then(tag => {
-          Tag.update({ color: req.body.color }, { where: { id: tag[0].id } })
+          Tag.update(
+            { color: req.body.color },
+            {
+              where: {
+                id: tag[0].id
+              },
+              returning: true,
+              plain: true
+            }
+          )
             .then(tag => {
-              if (req.body.newText) {
-                Tag.update({ text: req.body.newText }, { where: { id: tag[0].id } })
-              }
-              res.status(200).send(tag)
+              console.log('\n\ntag: ', tag[1])
+              res.status(200).send(tag[1])
               return
             })
             .catch(error => {
-              console.log('\n\n!!!!!!!\n\n')
-              res.status(400).send('new text did not update')
+              res.status(400).send('color did not update')
               return
             })
         })
       })
     } catch (e) {
-      console.log('\n\n???????\n\n')
       res.status(400).send(e)
     }
   },
