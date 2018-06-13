@@ -14,7 +14,6 @@ export class ReviewStudent extends Component {
   componentWillMount() {
     this.props.getOneCI(this.props.courseId)
     this.props.clearNotifications()
-    console.log(this.props)
   }
 
   componentDidUpdate() {
@@ -48,7 +47,7 @@ export class ReviewStudent extends Component {
     //this.props.ownProps.studentInstance is a string, therefore casting to number.
     const studentData = this.props.courseData.data.filter(dataArray => dataArray.id === Number(this.props.ownProps.studentInstance))
     //this.props.weekNumber is a string, therefore casting to number.
-    const weekData = studentData[0].weeks.filter(theWeek => theWeek.weekNumber === Number(this.props.weekNumber))
+    const weekData = studentData[0].weeks.filter(theWeek => theWeek.weekNumber === Number(this.props.ownProps.weekNumber))
     const checkList = this.props.selectedInstance.checklists.find(checkl => checkl.week == weekData[0].weekNumber)
 
     return (

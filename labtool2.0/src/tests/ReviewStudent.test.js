@@ -11,7 +11,6 @@ describe('<ReviewStudent />', () => {
     weekNumber: '1'
   }
 
-
   const props = {
     selectedInstance: {
       id: 10011,
