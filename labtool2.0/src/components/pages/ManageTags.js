@@ -10,14 +10,16 @@ export class ManageTags extends React.Component {
 
   componentWillMount() {
     console.log('mounting')
+    console.log('this.props: ', this.props)
     console.log('this.props.getAllTags: ', this.props.getAllTags)
-    console.log('tis.props.createTag: ', this.props.createTag)
+    console.log('this.props.createTag: ', this.props.createTag)
     if (this.props.getAllTags) {
       this.props.getAllTags()
     }
   }
 
   handleSubmit = async e => {
+    console.log('olen täällä')
     try {
       e.preventDefault()
 
@@ -76,10 +78,9 @@ export class ManageTags extends React.Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = state => {
   return {
-    tags: state.tags,
-    ownProps
+    tags: state.tags
   }
 }
 

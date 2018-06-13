@@ -19,3 +19,5 @@ export const getAllTags = () => {
   const method = 'post'
   return callController(route, prefix, null, method)
 }
+
+export default { createTag }
