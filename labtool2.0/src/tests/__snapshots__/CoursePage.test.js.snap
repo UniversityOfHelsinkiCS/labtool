@@ -33,6 +33,11 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
   <div />
   <div
     className="StudentsView"
+    style={
+      Object {
+        "overflowX": "auto",
+      }
+    }
   >
     <h3>
        
@@ -140,9 +145,13 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
             as="td"
           >
             <ReactMarkdown
+              astPlugins={Array []}
               escapeHtml={true}
+              plugins={Array []}
+              rawSourcePos={false}
               renderers={Object {}}
               skipHtml={false}
+              sourcePos={false}
               transformLinkUri={[Function]}
             >
               Hienoa työtä!
@@ -195,9 +204,13 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
             as="td"
           >
             <ReactMarkdown
+              astPlugins={Array []}
               escapeHtml={true}
+              plugins={Array []}
+              rawSourcePos={false}
               renderers={Object {}}
               skipHtml={false}
+              sourcePos={false}
               transformLinkUri={[Function]}
             >
               Melko hienoa työtä!
@@ -250,9 +263,13 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
             as="td"
           >
             <ReactMarkdown
+              astPlugins={Array []}
               escapeHtml={true}
+              plugins={Array []}
+              rawSourcePos={false}
               renderers={Object {}}
               skipHtml={false}
+              sourcePos={false}
               transformLinkUri={[Function]}
             >
               Erittäin hienoa työtä!
@@ -305,9 +322,13 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
             as="td"
           >
             <ReactMarkdown
+              astPlugins={Array []}
               escapeHtml={true}
+              plugins={Array []}
+              rawSourcePos={false}
               renderers={Object {}}
               skipHtml={false}
+              sourcePos={false}
               transformLinkUri={[Function]}
             >
               Hyvin menee!
@@ -473,6 +494,11 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
   </div>
   <div
     className="TeachersView"
+    style={
+      Object {
+        "overflowX": "auto",
+      }
+    }
   >
     <br />
     <Table

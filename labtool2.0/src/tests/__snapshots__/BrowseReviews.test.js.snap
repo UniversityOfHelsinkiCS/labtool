@@ -3,6 +3,11 @@
 exports[`<BrowseReviews /> BrowseReviews Component should render correctly 1`] = `
 <div
   className="BrowseReviews"
+  style={
+    Object {
+      "overflowX": "scroll",
+    }
+  }
 >
   <div>
     <h2>
