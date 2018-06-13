@@ -35,6 +35,11 @@ module.exports = (sequelize, DataTypes) => {
       as: 'toReviews'
     })
 
+    StudentInstance.belongsToMany(models.Tag, {
+      through: 'StudentTag',
+      foreignKey: 'studentInstanceId'
+    })
+
     StudentInstance.belongsTo(models.User, {
       foreignKey: 'userId',
       onDelete: 'CASCADE'
