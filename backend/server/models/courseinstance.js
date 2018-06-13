@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
       as: 'courseInstances'
     })
     CourseInstance.hasMany(models.Checklist, {
-      foreignKey: 'checklistId',
+      foreignKey: 'courseInstanceId',
       as: 'checklists'
     })
   }
