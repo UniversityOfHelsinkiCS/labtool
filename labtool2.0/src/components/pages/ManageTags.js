@@ -1,15 +1,21 @@
 import React, { Component } from 'react'
 import { Form, Input, Grid, Loader, Container, Header, Button, Label } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { createTag } from '../../services/tags'
+import { createTag, getAllTags } from '../../services/tags'
 
 export class ManageTags extends React.Component {
   state = {
     loading: false
   }
 
-  componentWillMount() {}
+  componentWillMount() {
+    console.log('mounting')
+    console.log('this.props.getAllTags: ', this.props.getAllTags)
+    console.log('tis.props.createTag: ', this.props.createTag)
+    if (this.props.getAllTags) {
+      this.props.getAllTags()
+    }
+  }
 
   handleSubmit = async e => {
     try {
@@ -28,6 +34,7 @@ export class ManageTags extends React.Component {
   }
 
   render() {
+    console.log('\ntags: ', this.props.tags)
     return (
       <Container>
         <div className="sixteen wide column" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
@@ -71,14 +78,14 @@ export class ManageTags extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    courseId: ownProps.courseId,
-    users: state.users,
-    selectedInstance: state.selectedInstance
+    tags: state.tags,
+    ownProps
   }
 }
 
 const mapDispatchToProps = {
-  createTag
+  createTag,
+  getAllTags
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ManageTags)

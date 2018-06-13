@@ -41,5 +41,16 @@ module.exports = {
     } catch (e) {
       res.status(400).send(e)
     }
+  },
+
+  async getAll(req, res) {
+    helper.controller_before_auth_check_action(req, res)
+
+    try {
+      const tags = await Tag.findAll()
+      res.status(200).send(tags)
+    } catch (e) {
+      res.status(400).send('Unable to send all tags')
+    }
   }
 }
