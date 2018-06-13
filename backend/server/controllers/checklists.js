@@ -23,6 +23,7 @@ module.exports = {
       const teacherInstance = await TeacherInstance.findOne({
         attributes: ['id'],
         where: {
+          userId: req.decoded.id,
           courseInstanceId: req.body.courseInstanceId
         }
       })
@@ -30,6 +31,8 @@ module.exports = {
         res.status(403).send('You must be a teacher of the course to perform this action.')
         return
       }
+      // No validation is done to prevent creating a checklist for a week that doesn't exist.
+      // Arguably, this is a feature, since the number of weeks can change.
       const result = await Checklist.create({
         week: req.body.week,
         courseName: 'doot',
