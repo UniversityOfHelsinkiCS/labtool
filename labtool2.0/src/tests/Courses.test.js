@@ -76,9 +76,5 @@ describe('<Courses />', () => {
     it('should render correctly', () => {
       expect(wrapper).toMatchSnapshot()
     })
-
-    it('renders instructions', () => {
-      expect(wrapper.find('.Instructions').exists()).toEqual(true)
-    })
   })
 })
