@@ -36,12 +36,14 @@ module.exports = {
               return
             })
             .catch(error => {
+              console.log('\n\n!!!!!!!\n\n')
               res.status(400).send('new text did not update')
               return
             })
         })
       })
     } catch (e) {
+      console.log('\n\n???????\n\n')
       res.status(400).send(e)
     }
   },

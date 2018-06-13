@@ -9,13 +9,7 @@ export class ManageTags extends React.Component {
   }
 
   componentWillMount() {
-    console.log('mounting')
-    console.log('this.props: ', this.props)
-    console.log('this.props.getAllTags: ', this.props.getAllTags)
-    console.log('this.props.createTag: ', this.props.createTag)
-    if (this.props.getAllTags) {
-      this.props.getAllTags()
-    }
+    this.props.getAllTags()
   }
 
   handleSubmit = async e => {
