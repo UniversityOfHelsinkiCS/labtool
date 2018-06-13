@@ -97,12 +97,6 @@ exports[`<ModifyCourseInstanceStaff /> Components renders correctly 1`] = `
             as="td"
           >
             <div>
-              <Label
-                color="yellow"
-                horizontal={true}
-              >
-                Student
-              </Label>
               <Button
                 as="button"
                 color="green"
