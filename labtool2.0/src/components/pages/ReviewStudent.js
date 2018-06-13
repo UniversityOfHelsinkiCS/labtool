@@ -14,6 +14,7 @@ export class ReviewStudent extends Component {
   componentWillMount() {
     this.props.getOneCI(this.props.courseId)
     this.props.clearNotifications()
+    console.log(this.props)
   }
 
   componentDidUpdate() {
@@ -48,7 +49,8 @@ export class ReviewStudent extends Component {
     const studentData = this.props.courseData.data.filter(dataArray => dataArray.id === Number(this.props.ownProps.studentInstance))
     //this.props.weekNumber is a string, therefore casting to number.
     const weekData = studentData[0].weeks.filter(theWeek => theWeek.weekNumber === Number(this.props.weekNumber))
-    // const checkList = this.props.selectedInstance.checklists.find(checkl => checkl.week == weekData[0].weekNumber)
+    const checkList = this.props.selectedInstance.checklists.find(checkl => checkl.week == weekData[0].weekNumber)
+
     return (
       <div className="ReviewStudent" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
         <h2> {this.props.selectedInstance.name}</h2>
@@ -87,7 +89,7 @@ export class ReviewStudent extends Component {
             </Grid.Column>
             <Grid.Column>
               <h2>Checklist</h2>
-              {/* {checkList ? Object.keys(checkList.list).map(cl => <p>{cl}</p>) : <p>nada</p>} */}
+              {checkList ? Object.keys(checkList.list).map(cl => <p>{cl}</p>) : <p>nada</p>}
             </Grid.Column>
           </Grid.Row>
         </Grid>
