@@ -133,6 +133,11 @@ const notificationReducer = (state = {}, action) => {
         message: "That week doesn't have a checklist.",
         error: true
       }
+    case 'CODE_REVIEW_RANDOMIZE':
+      return {
+        message: 'Code reviews randomized. Click save to change',
+        error: false
+      }
     default:
       return state
   }

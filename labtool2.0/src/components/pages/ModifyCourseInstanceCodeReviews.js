@@ -4,7 +4,7 @@ import { getOneCI } from '../../services/courseInstance'
 import { insertCodeReviews } from '../../services/codeReview'
 import { coursePageInformation } from '../../services/courseInstance'
 import { bulkinsertCodeReviews } from '../../services/codeReview'
-import { codeReviewReducer, initOneReview, initOrRemoveRandom, initCheckbox, initAllCheckboxes } from '../../reducers/codeReviewReducer'
+import { codeReviewReducer, initOneReview, initOrRemoveRandom, initCheckbox, initAllCheckboxes, randomAssign, codeReviewReset } from '../../reducers/codeReviewReducer'
 import { clearNotifications } from '../../reducers/notificationReducer'
 import { Button, Table, Card, Form, Comment, List, Header, Label, Message, Icon, Dropdown, Checkbox } from 'semantic-ui-react'
 
@@ -12,6 +12,10 @@ export class ModifyCourseInstanceReview extends React.Component {
   componentDidMount() {
     this.props.getOneCI(this.props.courseId)
     this.props.coursePageInformation(this.props.courseId)
+  }
+
+  componentWillUnmount() {
+    this.props.codeReviewReset()
   }
 
   handleSubmit = reviewNumber => async e => {
@@ -75,7 +79,7 @@ export class ModifyCourseInstanceReview extends React.Component {
     }
 
     return (
-      <div style={{ textAlignVertical: 'center', textAlign: 'center' }}>
+      <div className="ModifyCourseInstanceCodeReviews" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
         <div className="ui grid">
           <div className="sixteen wide column">
             <h2>{this.props.selectedInstance.name}</h2>
@@ -93,31 +97,49 @@ export class ModifyCourseInstanceReview extends React.Component {
             <Table.Body>
               {this.props.courseData.data !== undefined
                 ? this.props.courseData.data.map(data => (
-                    <Table.Row key={data.id}>
-                      <Table.Cell>
-                        {this.props.codeReviewLogic.checkBoxStates[data.id] === true ? (
-                          <Checkbox checked onChange={this.initOrRemoveRandom(data.id)} />
-                        ) : (
+                  <Table.Row key={data.id}>
+                    <Table.Cell>
+                      {this.props.codeReviewLogic.checkBoxStates[data.id] === true ? (
+                        <Checkbox checked onChange={this.initOrRemoveRandom(data.id)} />
+                      ) : (
                           <Checkbox onChange={this.initOrRemoveRandom(data.id)} />
                         )}
-                      </Table.Cell>
-                      <Table.Cell>
-                        {data.User.firsts} {data.User.lastname}
-                      </Table.Cell>
-                      <Table.Cell>
-                        <p>{data.projectName}</p>
-                        <a href={data.github}>{data.github}</a>
-                      </Table.Cell>
-                      <Table.Cell>
-                        <p>Current review: {getCurrentReviewer(1, data.id)}</p>
-                        <Dropdown placeholder="Select student" fluid search selection options={this.props.dropdownUsers.filter(u => u.value !== data.id)} onChange={this.addCodeReview(1, data.id)} />
-                      </Table.Cell>
-                      <Table.Cell>
-                        <p>Current review: {getCurrentReviewer(2, data.id)}</p>
-                        <Dropdown placeholder="Select student" fluid search selection options={this.props.dropdownUsers.filter(u => u.value !== data.id)} onChange={this.addCodeReview(2, data.id)} />
-                      </Table.Cell>
-                    </Table.Row>
-                  ))
+                    </Table.Cell>
+                    <Table.Cell>
+                      {data.User.firsts} {data.User.lastname}
+                    </Table.Cell>
+                    <Table.Cell>
+                      <p>{data.projectName}</p>
+                      <a href={data.github}>{data.github}</a>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <p>Current review: {getCurrentReviewer(1, data.id)}</p>
+                      <Dropdown
+                        className="toReviewDropdown"
+                        placeholder="Select student"
+                        fluid
+                        search
+                        selection
+                        options={this.props.dropdownUsers.filter(u => u.value !== data.id)}
+                        onChange={this.addCodeReview(1, data.id)}
+                        value={this.props.codeReviewLogic.currentSelections[1][data.id]}
+                      />
+                    </Table.Cell>
+                    <Table.Cell>
+                      <p>Current review: {getCurrentReviewer(2, data.id)}</p>
+                      <Dropdown
+                        className="toReviewDropdown"
+                        placeholder="Select student"
+                        fluid
+                        search
+                        selection
+                        options={this.props.dropdownUsers.filter(u => u.value !== data.id)}
+                        onChange={this.addCodeReview(2, data.id)}
+                        value={this.props.codeReviewLogic.currentSelections[2][data.id]}
+                      />
+                    </Table.Cell>
+                  </Table.Row>
+                ))
                 : null}
             </Table.Body>
             <Table.Footer>
@@ -128,19 +150,19 @@ export class ModifyCourseInstanceReview extends React.Component {
                 <Table.HeaderCell />
                 <Table.HeaderCell />
                 <Table.HeaderCell>
-                  <Button onClick={this.handleSubmit(1)} size="small" style={{ float: 'left' }}>
-                    Save
-                  </Button>
-                  <Button size="small" style={{ float: 'right' }}>
+                  <Button onClick={() => this.props.randomAssign({ reviewNumber: 1 })} size="small" style={{ float: 'left' }}>
                     Assign selected randomly
+                  </Button>
+                  <Button size="small" style={{ float: 'right' }} onClick={this.handleSubmit(1)} >
+                    Save
                   </Button>
                 </Table.HeaderCell>
                 <Table.HeaderCell>
-                  <Button onClick={this.handleSubmit(2)} size="small" style={{ float: 'left' }}>
-                    Save
-                  </Button>
-                  <Button size="small" style={{ float: 'right' }}>
+                  <Button onClick={() => this.props.randomAssign({ reviewNumber: 2 })} size="small" style={{ float: 'left' }}>
                     Assign selected randomly
+                  </Button>
+                  <Button size="small" style={{ float: 'right' }} onClick={this.handleSubmit(2)} >
+                    Save
                   </Button>
                 </Table.HeaderCell>
               </Table.Row>
@@ -152,7 +174,7 @@ export class ModifyCourseInstanceReview extends React.Component {
   }
 }
 
-const userHelper = data => {
+export const userHelper = data => {
   let users = []
   if (data) {
     users.push({
@@ -187,7 +209,9 @@ const mapDispatchToProps = {
   initOrRemoveRandom,
   initCheckbox,
   initAllCheckboxes,
-  bulkinsertCodeReviews
+  bulkinsertCodeReviews,
+  randomAssign,
+  codeReviewReset
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ModifyCourseInstanceReview)
