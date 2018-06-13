@@ -104,7 +104,7 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
       return { ...state, codeReviewStates: newCodeReviewStates, currentSelections: newCurrentSelections }
     }
     case 'CP_INFO_SUCCESS': {
-      if (state.initialized) {
+      if (action.role !== 'teacher' || state.initialized) {
         return state
       }
       const newCurrentSelections = state.currentSelections
