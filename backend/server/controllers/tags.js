@@ -14,28 +14,31 @@ module.exports = {
     try {
       TeacherInstance.findOne({
         where: {
-          userID: req.decoded.id
+          userId: req.decoded.id
         }
       }).then(teacher => {
         if (!teacher) {
           res.status(400).send('You need to be a teacher to do this.')
+          return
         }
+        console.log('\n\nreq.body: ', req.body, '\n\n')
         Tag.findOrCreate({
           where: {
             name: req.body.text
           }
         }).then(tag => {
-          tag.updateAttributes({
-            color: req.body.color
-          })
-
-          if (req.body.newText) {
-            tag.updateAttributes({
-              text: req.body.newText
+          Tag.update({ color: req.body.color }, { where: { id: tag[0].id } })
+            .then(tag => {
+              if (req.body.newText) {
+                Tag.update({ text: req.body.newText }, { where: { id: tag[0].id } })
+              }
+              res.status(200).send(tag)
+              return
             })
-          }
-
-          res.status(200).send(tag)
+            .catch(error => {
+              res.status(400).send('new text did not update')
+              return
+            })
         })
       })
     } catch (e) {
@@ -43,14 +46,16 @@ module.exports = {
     }
   },
 
-  async getAll(req, res) {
+  getAll(req, res) {
     helper.controller_before_auth_check_action(req, res)
 
     try {
-      const tags = await Tag.findAll()
-      res.status(200).send(tags)
+      return Tag.findAll()
+        .then(tag => res.status(200).send(tag))
+        .catch(error => res.status(400).send('et ny saa niitä tageja'))
     } catch (e) {
-      res.status(400).send('Unable to send all tags')
+      res.status(400).send('nymmeni jokin pieleen')
+      return
     }
   }
 }

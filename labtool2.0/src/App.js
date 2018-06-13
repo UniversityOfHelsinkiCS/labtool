@@ -18,11 +18,11 @@ import ModifyCourseInstanceCodeReviews from './components/pages/ModifyCourseInst
 import ReviewStudent from './components/pages/ReviewStudent'
 import BrowseReviews from './components/pages/BrowseReviews'
 import MyPage from './components/pages/MyPage'
+import ManageTags from './components/pages/ManageTags'
 
 // Reducer imports
 import { logout } from './reducers/loginReducer'
 import { tokenLogin } from './reducers/loginReducer'
-import { ManageTags } from './components/pages/ManageTags'
 
 // The main component of the whole application.
 class App extends Component {
