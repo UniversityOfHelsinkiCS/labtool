@@ -54,7 +54,7 @@ module.exports = {
       }
       const checklist = await Checklist.findOne({
         attributes: {
-          exclude: ['createdAt', 'updatedAt', 'checklistId']
+          exclude: ['createdAt', 'updatedAt']
         },
         where: {
           courseInstanceId: req.body.courseInstanceId,
