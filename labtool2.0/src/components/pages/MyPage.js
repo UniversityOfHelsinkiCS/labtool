@@ -76,12 +76,6 @@ export class MyPage extends Component {
           </Container>
         </Segment>
 
-        <div className="Instructions">
-          <List>
-            <List.Item icon={{ name: 'edit', color: 'blue' }} content="Edit email address" />
-          </List>
-        </div>
-
         <br />
         <br />
         <br />
@@ -139,14 +133,6 @@ export class MyPage extends Component {
             </div>
           </Container>
         </Segment>
-        <div className="Instructions">
-          <List>
-            <List.Item icon={{ name: 'eye', color: 'blue' }} content="Show course page" />
-          </List>
-          <br />
-          <br />
-          <br />
-        </div>
       </div>
     )
   }

@@ -58,13 +58,6 @@ export class Courses extends Component {
               ))}
             </Table.Body>
           </Table>
-
-          <div className="Instructions">
-            <List>
-              <List.Item icon={{ name: 'eye', color: 'blue' }} content="Show course page" />
-              <List.Item icon={{ name: 'square', color: 'green' }} content="Course is activated" />
-            </List>
-          </div>
         </Container>
       </div>
     )

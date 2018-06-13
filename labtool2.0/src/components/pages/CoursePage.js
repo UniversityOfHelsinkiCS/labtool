@@ -226,10 +226,6 @@ export class CoursePage extends React.Component {
                 </Table.Row>
               </Table.Header>
             </Table>
-            <List style={{ float: 'right' }}>
-              <List.Item icon={{ name: 'edit', color: 'orange' }} content="Edit course" />
-            </List>
-
             <br />
             <Header as="h2">Students </Header>
             <div style={{ textAlign: 'left' }}>
@@ -317,10 +313,6 @@ export class CoursePage extends React.Component {
                   ))}
               </Table.Body>
             </Table>
-            <List style={{ float: 'right' }}>
-              <List.Item icon={{ name: 'star', color: 'orange' }} content="Review student" />
-              <List.Item icon={{ name: 'pencil' }} content="Change student teacher" />
-            </List>
           </div>
         ) : (
           <div />
