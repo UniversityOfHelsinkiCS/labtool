@@ -136,21 +136,6 @@ exports[`<MyPage /> MyPage Component should render correctly 1`] = `
       </Table>
     </Container>
   </Segment>
-  <div
-    className="Instructions"
-  >
-    <List>
-      <ListItem
-        content="Edit email address"
-        icon={
-          Object {
-            "color": "blue",
-            "name": "edit",
-          }
-        }
-      />
-    </List>
-  </div>
   <br />
   <br />
   <br />
@@ -242,23 +227,5 @@ exports[`<MyPage /> MyPage Component should render correctly 1`] = `
       </div>
     </Container>
   </Segment>
-  <div
-    className="Instructions"
-  >
-    <List>
-      <ListItem
-        content="Show course page"
-        icon={
-          Object {
-            "color": "blue",
-            "name": "eye",
-          }
-        }
-      />
-    </List>
-    <br />
-    <br />
-    <br />
-  </div>
 </div>
 `;
