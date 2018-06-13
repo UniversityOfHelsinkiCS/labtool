@@ -22,8 +22,7 @@ export class CreateChecklist extends Component {
   handleSubmit = async e => {
     console.log(e.target.submit.value)
     e.preventDefault()
-    const week = Number(e.target.week.value)
-    if (e.target.week.value <= 0 || week > this.props.selectedInstance.weekAmount) {
+    if (this.state.week <= 0 || this.state.week > this.props.selectedInstance.weekAmount) {
       this.props.showNotification({
         message: 'Invalid week.',
         error: true
@@ -34,7 +33,7 @@ export class CreateChecklist extends Component {
       const json = JSON.parse(e.target.json.value)
       this.props.createChecklist({
         courseInstanceId: this.props.selectedInstance.id,
-        week,
+        week: this.state.week,
         checklist: json
       })
     } catch (e) {
@@ -69,14 +68,16 @@ export class CreateChecklist extends Component {
         <Form onSubmit={this.handleSubmit}>
           <Form.Field>
             <Label>Week </Label>
-            <Input type="number" name="week" step="1" value={this.state.week} onChange={this.changeWeek} style={{ width: '100px' }} />
-            <Button type="button" onClick={this.loadChecklist}>Load checklist</Button>
+            <Input type="number" name="week" step="1" value={this.state.week} onChange={this.changeWeek} style={{ width: '100px', marginRight: '10px' }} />
+            <Button type="button" onClick={this.loadChecklist}>
+              Load checklist
+            </Button>
           </Form.Field>
           <Form.Field>
             <Label>Checklist as JSON</Label>
             <TextArea name="json" rows="20" value={this.props.checklist.string} onChange={this.changeTextArea} />
           </Form.Field>
-          <Input type="submit" name="submit" value="Create new checklist" />
+          <Button type="submit">Save</Button>
         </Form>
       </div>
     )

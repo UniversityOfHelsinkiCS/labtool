@@ -6,7 +6,7 @@ const INITIAL_STATE = {
 const checklistReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case 'CHECKLIST_GET_ONE_SUCCESS':
-      return { data: action.response, string: JSON.stringify(action.response.list) }
+      return { data: action.response, string: JSON.stringify(action.response.list, null, 2) }
     case 'CHECKLIST_CHANGE_STRING':
       return { ...state, string: action.string }
     case 'CHECKLIST_RESET':

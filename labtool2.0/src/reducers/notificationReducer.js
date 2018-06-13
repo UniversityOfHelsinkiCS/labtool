@@ -123,6 +123,16 @@ const notificationReducer = (state = {}, action) => {
         message: action.response.message,
         error: false
       }
+    case 'CHECKLIST_CREATE_FAILURE':
+      return {
+        message: action.response.response.data,
+        error: true
+      }
+    case 'CHECKLIST_GET_ONE_FAILURE':
+      return {
+        message: "That week doesn't have a checklist.",
+        error: true
+      }
     default:
       return state
   }

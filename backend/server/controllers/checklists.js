@@ -37,7 +37,7 @@ module.exports = {
         courseInstanceId: req.body.courseInstanceId
       })
       res.status(200).send({
-        message: 'checklist created succesfully.',
+        message: `checklist saved succesfully for week ${req.body.week}.`,
         result,
         data: req.body
       })
@@ -47,6 +47,7 @@ module.exports = {
     }
   },
   async getOne(req, res) {
+    // There is no validation, since checklists are not secret/sensitive.
     try {
       if (typeof req.body.week !== 'number' || typeof req.body.courseInstanceId !== 'number') {
         res.status(400).send('Missing or malformed inputs.')
