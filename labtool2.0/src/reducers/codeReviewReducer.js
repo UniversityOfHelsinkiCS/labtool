@@ -103,18 +103,18 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
       }
       return { ...state, codeReviewStates: newCodeReviewStates, currentSelections: newCurrentSelections }
     }
-    case 'CP_INFO_SUCCESS': {
-      if (state.initialized) {
-        return state
-      }
-      const newCurrentSelections = state.currentSelections
-      action.response.data.forEach(student => {
-        student.codeReviews.forEach(cr => {
-          newCurrentSelections[cr.reviewNumber][student.id] = cr.toReview
-        })
-      })
-      return { ...state, currentSelections: newCurrentSelections, initialized: true }
-    }
+    // case 'CP_INFO_SUCCESS': {
+    //   if (state.initialized) {
+    //     return state
+    //   }
+    //   const newCurrentSelections = state.currentSelections
+    //   action.response.data.forEach(student => {
+    //     student.codeReviews.forEach(cr => {
+    //       newCurrentSelections[cr.reviewNumber][student.id] = cr.toReview
+    //     })
+    //   })
+    //   return { ...state, currentSelections: newCurrentSelections, initialized: true }
+    // }
     case 'CODE_REVIEW_RESET':
       return INITIAL_STATE
     default:
