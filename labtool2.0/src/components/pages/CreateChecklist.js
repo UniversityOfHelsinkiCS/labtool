@@ -21,7 +21,6 @@ export class CreateChecklist extends Component {
 
   // Make api call to save checklist to database.
   handleSubmit = async e => {
-    console.log(e.target.submit.value)
     e.preventDefault()
     if (this.state.week <= 0 || this.state.week > this.props.selectedInstance.weekAmount) {
       this.props.showNotification({
@@ -71,15 +70,15 @@ export class CreateChecklist extends Component {
           <Form.Field>
             <Label>Week </Label>
             <Input type="number" name="week" step="1" value={this.state.week} onChange={this.changeWeek} style={{ width: '100px', marginRight: '10px' }} />
-            <Button type="button" onClick={this.loadChecklist}>
+            <Button className="loadButton" type="button" onClick={this.loadChecklist}>
               Load checklist
             </Button>
           </Form.Field>
           <Form.Field>
             <Label>Checklist as JSON</Label>
-            <TextArea name="json" rows="20" value={this.props.checklist.string} onChange={this.changeTextArea} />
+            <TextArea className="checklistJSONInput" name="json" rows="20" value={this.props.checklist.string} onChange={this.changeTextArea} />
           </Form.Field>
-          <Button type="submit">Save</Button>
+          <Button className="saveButton" type="submit">Save</Button>
         </Form>
       </div>
     )
