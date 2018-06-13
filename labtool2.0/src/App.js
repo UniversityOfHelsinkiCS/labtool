@@ -22,6 +22,7 @@ import MyPage from './components/pages/MyPage'
 // Reducer imports
 import { logout } from './reducers/loginReducer'
 import { tokenLogin } from './reducers/loginReducer'
+import { ManageTags } from './components/pages/ManageTags'
 
 // The main component of the whole application.
 class App extends Component {
@@ -82,6 +83,7 @@ class App extends Component {
             <Route path={`/labtool/ModifyCourseInstancePage/:id`} render={({ match }) => <ModifyCourseInstancePage courseId={match.params.id} />} />
             <Route path={`/labtool/ModifyCourseInstanceStaff/:id`} render={({ match }) => <ModifyCourseInstanceStaff courseId={match.params.id} />} />
             <Route path={'/labtool/ModifyCourseInstanceCodeReviews/:id'} render={({ match }) => <ModifyCourseInstanceCodeReviews courseId={match.params.id} />} />
+            <Route path={'/labtool/ManageTags'} component={ManageTags} />
             <Route path={`/`} render={() => <MyPage />} />
           </Switch>
         </main>
