@@ -116,6 +116,12 @@ const notificationReducer = (state = {}, action) => {
         message: action.response.response.data,
         error: true
       }
+
+    case 'CODE_REVIEW_RANDOMIZE':
+      return {
+        message: 'Code reviews randomized. Click save to change',
+        error: false
+      }
     default:
       return state
   }

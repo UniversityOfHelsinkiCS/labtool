@@ -3,12 +3,23 @@
 exports[`<BrowseReviews /> BrowseReviews Component should render correctly 1`] = `
 <div
   className="BrowseReviews"
+  style={
+    Object {
+      "overflowX": "scroll",
+    }
+  }
 >
   <div>
-    <h2>
-       
-      Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit
-    </h2>
+    <Link
+      replace={false}
+      to="/labtool/courses/TKT20010.2018.K.A.1"
+    >
+      <h2>
+         
+        Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit
+         
+      </h2>
+    </Link>
   </div>
 </div>
 `;
