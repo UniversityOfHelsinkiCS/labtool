@@ -44,6 +44,7 @@ export class RegisterPage extends Component {
   }
 
   componentWillMount() {
+    console.log('this.props.getOneCI: ', this.props.getOneCI)
     this.props.getOneCI(this.props.courseId)
   }
 

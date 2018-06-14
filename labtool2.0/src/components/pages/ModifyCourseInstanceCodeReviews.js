@@ -106,6 +106,13 @@ export class ModifyCourseInstanceReview extends React.Component {
                           <Checkbox onChange={this.initOrRemoveRandom(data.id)} />
                         )}
                       </Table.Cell>
+                      <Table.Cell textAlign="center">
+                        {data.Tags.map(tag => (
+                          <p key={tag.id}>
+                            <button className={`mini ui ${tag.color} button`}>{tag.name}</button>
+                          </p>
+                        ))}
+                      </Table.Cell>
                       <Table.Cell>
                         {data.Tags.map(tag => (
                           <p key={tag.id}>
