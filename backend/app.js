@@ -124,11 +124,8 @@ require('./server/routes/courseInstanceRouter')(app)
 require('./server/routes/loginRouter')(app)
 require('./server/routes/adminRoutes')(app)
 require('./server/routes/codeReviewRoutes')(app)
-<<<<<<< HEAD
 require('./server/routes/tagRoutes')(app)
-=======
 require('./server/routes/checklistRoutes')(app)
->>>>>>> origin/dev
 
 app.get('*', (req, res) =>
   res.status(404).send({
