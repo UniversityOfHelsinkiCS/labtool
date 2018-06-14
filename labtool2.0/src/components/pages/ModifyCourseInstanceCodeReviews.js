@@ -7,6 +7,7 @@ import { bulkinsertCodeReviews } from '../../services/codeReview'
 import { codeReviewReducer, initOneReview, initOrRemoveRandom, initCheckbox, initAllCheckboxes, randomAssign, codeReviewReset } from '../../reducers/codeReviewReducer'
 import { clearNotifications } from '../../reducers/notificationReducer'
 import { Button, Table, Card, Form, Comment, List, Header, Label, Message, Icon, Dropdown, Checkbox } from 'semantic-ui-react'
+import Notification from '../../components/pages/Notification'
 
 export class ModifyCourseInstanceReview extends React.Component {
   componentDidMount() {
@@ -22,6 +23,7 @@ export class ModifyCourseInstanceReview extends React.Component {
     try {
       e.preventDefault()
       const codeReviews = this.props.codeReviewLogic.codeReviewStates[reviewNumber]
+      console.log(codeReviews)
       const data = {
         codeReviews,
         reviewNumber
@@ -33,14 +35,14 @@ export class ModifyCourseInstanceReview extends React.Component {
   }
 
   addCodeReview = (reviewRound, id) => {
-    return (e, data) => {
+    return e => {
+      const toReviewId = parseInt(e.target.value)
       const crData = {
         round: reviewRound,
         reviewer: id,
-        toReview: data.value
+        toReview: toReviewId
       }
       this.props.initOneReview(crData)
-      console.log(this.props.codeReviewLogic)
     }
   }
 
@@ -75,6 +77,7 @@ export class ModifyCourseInstanceReview extends React.Component {
         return 'None'
       }
       let reviewee = this.props.dropdownUsers.find(dropDownStudent => dropDownStudent.value === reviewInstance.toReview)
+      console.log(reviewee)
       return reviewee.text
     }
 
@@ -106,15 +109,7 @@ export class ModifyCourseInstanceReview extends React.Component {
                           <Checkbox onChange={this.initOrRemoveRandom(data.id)} />
                         )}
                       </Table.Cell>
-                      <Table.Cell>
-                        {data.Tags.map(tag => (
-                          <p key={tag.id}>
-                            <Button compact className={`mini ui ${tag.color} button`}>
-                              {tag.name}
-                            </Button>
-                          </p>
-                        ))}
-                      </Table.Cell>
+                      <Table.Cell />
                       <Table.Cell>
                         {data.User.firsts} {data.User.lastname}
                       </Table.Cell>
@@ -124,29 +119,46 @@ export class ModifyCourseInstanceReview extends React.Component {
                       </Table.Cell>
                       <Table.Cell>
                         <p>Current review: {getCurrentReviewer(1, data.id)}</p>
-                        <Dropdown
-                          className="toReviewDropdown"
-                          placeholder="Select student"
-                          fluid
-                          search
-                          selection
-                          options={this.props.dropdownUsers.filter(u => u.value !== data.id)}
-                          onChange={this.addCodeReview(1, data.id)}
-                          value={this.props.codeReviewLogic.currentSelections[1][data.id]}
-                        />
+                        <select className="toReviewDropdown" onChange={this.addCodeReview(1, data.id)}>
+                          {this.props.dropdownUsers.map(d => (
+                            <option key={d.value} value={d.value}>
+                              {d.text}
+                            </option>
+                          ))}
+                        </select>
+                        {/*
+                         Semantic ui dropdown works very slow so we replaced them with html select
+                        }
+                        {/* <Dropdown
+                        className="toReviewDropdown"
+                        placeholder="Select student"
+                        fluid
+                        search
+                        selection
+                        // options={this.props.dropdownUsers}
+                        onChange={this.addCodeReview(1, data.id)}
+                        value={this.props.codeReviewLogic.currentSelections[1][data.id]}
+                      /> */}
                       </Table.Cell>
                       <Table.Cell>
                         <p>Current review: {getCurrentReviewer(2, data.id)}</p>
-                        <Dropdown
-                          className="toReviewDropdown"
-                          placeholder="Select student"
-                          fluid
-                          search
-                          selection
-                          options={this.props.dropdownUsers.filter(u => u.value !== data.id)}
-                          onChange={this.addCodeReview(2, data.id)}
-                          value={this.props.codeReviewLogic.currentSelections[2][data.id]}
-                        />
+                        {/* <Dropdown
+                        className="toReviewDropdown"
+                        placeholder="Select student"
+                        fluid
+                        search
+                        selection
+                        // options={this.props.dropdownUsers}
+                        onChange={this.addCodeReview(2, data.id)}
+                        value={this.props.codeReviewLogic.currentSelections[2][data.id]}
+                      /> */}
+                        <select className="toReviewDropdown" onChange={this.addCodeReview(2, data.id)}>
+                          {this.props.dropdownUsers.map(d => (
+                            <option key={d.value} value={d.value}>
+                              {d.text}
+                            </option>
+                          ))}
+                        </select>
                       </Table.Cell>
                     </Table.Row>
                   ))
@@ -155,7 +167,9 @@ export class ModifyCourseInstanceReview extends React.Component {
             <Table.Footer>
               <Table.Row>
                 <Table.HeaderCell>
-                  <Button compact onClick={this.selectAllCheckboxes()}>ALL</Button>
+                  <Button compact onClick={this.selectAllCheckboxes()}>
+                    ALL
+                  </Button>
                 </Table.HeaderCell>
                 <Table.HeaderCell />
                 <Table.HeaderCell />
@@ -180,6 +194,7 @@ export class ModifyCourseInstanceReview extends React.Component {
             </Table.Footer>
           </Table>
         </div>
+        <Notification />
       </div>
     )
   }
@@ -190,7 +205,7 @@ export const userHelper = data => {
   if (data) {
     users.push({
       value: null,
-      text: 'None'
+      text: ''
     })
     data.map(d =>
       users.push({
@@ -199,6 +214,7 @@ export const userHelper = data => {
       })
     )
   }
+
   return users
 }
 
@@ -225,4 +241,7 @@ const mapDispatchToProps = {
   codeReviewReset
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ModifyCourseInstanceReview)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ModifyCourseInstanceReview)
