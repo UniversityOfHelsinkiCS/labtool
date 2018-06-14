@@ -6,7 +6,7 @@ import { createOneComment } from '../../services/comment'
 import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import { associateTeacherToStudent } from '../../services/assistant'
 import ReactMarkdown from 'react-markdown'
-import { showDropdown, selectTeacher, filterByAssistant, coursePageReset, toggleCodeReview } from '../../reducers/coursePageLogicReducer'
+import { showDropdown, selectTeacher, filterByAssistant, filterByTag, coursePageReset, toggleCodeReview } from '../../reducers/coursePageLogicReducer'
 
 export class CoursePage extends React.Component {
   handleSubmit = async e => {
@@ -55,6 +55,24 @@ export class CoursePage extends React.Component {
     return (e, data) => {
       const { value } = data
       this.props.filterByAssistant(value)
+    }
+  }
+
+  changeFilterTag = id => {
+    return () => {
+      if (this.props.coursePageLogic.filterByTag === id) {
+        this.props.filterByTag(0)
+      } else {
+        this.props.filterByTag(id)
+      }
+    }
+  }
+
+  hasFilteredTag = (data, id) => {
+    for (let i = 0; i < data.Tags.length; i++) {
+      if (data.Tags[i].id === id) {
+        return data
+      }
     }
   }
 
@@ -247,7 +265,7 @@ export class CoursePage extends React.Component {
               <Table.Header>
                 <Table.Row>
                   <Table.HeaderCell>Name</Table.HeaderCell>
-                  <Table.HeaderCell> Github </Table.HeaderCell>
+                  <Table.HeaderCell>Project Information</Table.HeaderCell>
                   {createHeaders()}
                   <Table.HeaderCell> Sum </Table.HeaderCell>
                   <Table.HeaderCell width="six"> Instructor </Table.HeaderCell>
@@ -259,22 +277,36 @@ export class CoursePage extends React.Component {
                   .filter(data => {
                     return this.props.coursePageLogic.filterByAssistant === 0 || this.props.coursePageLogic.filterByAssistant === data.teacherInstanceId
                   })
+                  .filter(data => {
+                    return this.props.coursePageLogic.filterByTag === 0 || this.hasFilteredTag(data, this.props.coursePageLogic.filterByTag)
+                  })
                   .map(data => (
                     <Table.Row key={data.id}>
                       <Table.Cell>
                         {data.User.firsts} {data.User.lastname}
                       </Table.Cell>
                       <Table.Cell>
-                        <p>{data.projectName}</p>
-                        <a href={data.github}>{data.github}</a>
+                        <p>
+                          {data.projectName}
+                          <br />
+                          <a href={data.github}>{data.github}</a>
+                        </p>
+                        {data.Tags.map(tag => (
+                          <div key={tag.id}>
+                            <Button compact floated="left" className={`mini ui ${tag.color} button`} onClick={this.changeFilterTag(tag.id)}>
+                              {tag.name}
+                            </Button>
+                          </div>
+                        ))}
                       </Table.Cell>
                       {createIndents(data.weeks, data.codeReviews, data.id)}
                       <Table.Cell>
                         {data.weeks.map(week => week.points).reduce((a, b) => {
                           return a + b
-                        }, 0) + data.codeReviews.map(cr => cr.points).reduce((a, b) => {
-                          return a + b
-                        }, 0)}
+                        }, 0) +
+                          data.codeReviews.map(cr => cr.points).reduce((a, b) => {
+                            return a + b
+                          }, 0)}
                       </Table.Cell>
                       <Table.Cell>
                         {data.teacherInstanceId && this.props.selectedInstance.teacherInstances ? (
@@ -463,6 +495,7 @@ const mapDispatchToProps = {
   showDropdown,
   selectTeacher,
   filterByAssistant,
+  filterByTag,
   coursePageReset,
   toggleCodeReview
 }

@@ -16,6 +16,7 @@ import emailPage from './reducers/emailReducer'
 import assistant from './reducers/assistantReducer'
 import coursePageLogic from './reducers/coursePageLogicReducer'
 import codeReviewLogic from './reducers/codeReviewReducer'
+import tagsReducer from './reducers/tagReducer'
 import checklist from './reducers/checklistReducer'
 /**
  * The store, that takes all the redux reducers. Index imports it.
@@ -38,7 +39,8 @@ const reducer = combineReducers({
   coursePageLogic: coursePageLogic,
   codeReviewLogic: codeReviewLogic,
   checklist: checklist,
-  redirect: redirect
+  redirect: redirect,
+  tags: tagsReducer
 })
 
 const store = createStore(reducer, composeWithDevTools(applyMiddleware(thunk, handleRequest)))
