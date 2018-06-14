@@ -64,19 +64,27 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
             replace={false}
             to="/labtool/courseregistration/undefined"
           >
-            <Button
-              as="button"
-              circular={true}
-              floated="right"
-              icon={
-                Object {
-                  "color": "orange",
-                  "name": "edit",
-                  "size": "large",
-                }
+            <Popup
+              content="Edit project details"
+              keepInViewPort={true}
+              on="hover"
+              position="top left"
+              trigger={
+                <Button
+                  as="button"
+                  circular={true}
+                  floated="right"
+                  icon={
+                    Object {
+                      "color": "orange",
+                      "name": "edit",
+                      "size": "large",
+                    }
+                  }
+                  role="button"
+                  size="large"
+                />
               }
-              role="button"
-              size="large"
             />
           </Link>
         </h3>
@@ -125,228 +133,7 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
       </TableHeader>
       <TableBody
         as="tbody"
-      >
-        <TableRow
-          as="tr"
-          cellAs="td"
-          key="1"
-        >
-          <TableCell
-            as="td"
-          >
-            1
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            3
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            <ReactMarkdown
-              escapeHtml={true}
-              renderers={Object {}}
-              skipHtml={false}
-              transformLinkUri={[Function]}
-            >
-              Hienoa työtä!
-            </ReactMarkdown>
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            <CommentGroup />
-            <Form
-              as="form"
-              id="comment"
-              name={10001}
-              onSubmit={[Function]}
-              reply={true}
-            >
-              <FormTextArea
-                as={[Function]}
-                control={[Function]}
-                name="content"
-                placeholder="Your comment..."
-              />
-              <Button
-                as="button"
-                content="Add Reply"
-                icon="edit"
-                labelPosition="left"
-                primary={true}
-                role="button"
-              />
-            </Form>
-          </TableCell>
-        </TableRow>
-        <TableRow
-          as="tr"
-          cellAs="td"
-          key="2"
-        >
-          <TableCell
-            as="td"
-          >
-            2
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            2
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            <ReactMarkdown
-              escapeHtml={true}
-              renderers={Object {}}
-              skipHtml={false}
-              transformLinkUri={[Function]}
-            >
-              Melko hienoa työtä!
-            </ReactMarkdown>
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            <CommentGroup />
-            <Form
-              as="form"
-              id="comment"
-              name={10002}
-              onSubmit={[Function]}
-              reply={true}
-            >
-              <FormTextArea
-                as={[Function]}
-                control={[Function]}
-                name="content"
-                placeholder="Your comment..."
-              />
-              <Button
-                as="button"
-                content="Add Reply"
-                icon="edit"
-                labelPosition="left"
-                primary={true}
-                role="button"
-              />
-            </Form>
-          </TableCell>
-        </TableRow>
-        <TableRow
-          as="tr"
-          cellAs="td"
-          key="3"
-        >
-          <TableCell
-            as="td"
-          >
-            3
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            3
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            <ReactMarkdown
-              escapeHtml={true}
-              renderers={Object {}}
-              skipHtml={false}
-              transformLinkUri={[Function]}
-            >
-              Erittäin hienoa työtä!
-            </ReactMarkdown>
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            <CommentGroup />
-            <Form
-              as="form"
-              id="comment"
-              name={10003}
-              onSubmit={[Function]}
-              reply={true}
-            >
-              <FormTextArea
-                as={[Function]}
-                control={[Function]}
-                name="content"
-                placeholder="Your comment..."
-              />
-              <Button
-                as="button"
-                content="Add Reply"
-                icon="edit"
-                labelPosition="left"
-                primary={true}
-                role="button"
-              />
-            </Form>
-          </TableCell>
-        </TableRow>
-        <TableRow
-          as="tr"
-          cellAs="td"
-          key="4"
-        >
-          <TableCell
-            as="td"
-          >
-            4
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            3
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            <ReactMarkdown
-              escapeHtml={true}
-              renderers={Object {}}
-              skipHtml={false}
-              transformLinkUri={[Function]}
-            >
-              Hyvin menee!
-            </ReactMarkdown>
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            <CommentGroup />
-            <Form
-              as="form"
-              id="comment"
-              name={10004}
-              onSubmit={[Function]}
-              reply={true}
-            >
-              <FormTextArea
-                as={[Function]}
-                control={[Function]}
-                name="content"
-                placeholder="Your comment..."
-              />
-              <Button
-                as="button"
-                content="Add Reply"
-                icon="edit"
-                labelPosition="left"
-                primary={true}
-                role="button"
-              />
-            </Form>
-          </TableCell>
-        </TableRow>
-      </TableBody>
+      />
     </Table>
     <Card
       color="yellow"
@@ -538,41 +325,32 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
               replace={false}
               to="/labtool/ModifyCourseInstancePage/TKT20010.2018.K.A.1"
             >
-              <Button
-                as="button"
-                circular={true}
-                icon={
-                  Object {
-                    "color": "orange",
-                    "name": "edit",
-                    "size": "large",
-                  }
+              <Popup
+                content="Edit course"
+                keepInViewPort={true}
+                on="hover"
+                position="top left"
+                trigger={
+                  <Button
+                    as="button"
+                    circular={true}
+                    icon={
+                      Object {
+                        "color": "orange",
+                        "name": "edit",
+                        "size": "large",
+                      }
+                    }
+                    role="button"
+                    size="tiny"
+                  />
                 }
-                role="button"
-                size="tiny"
               />
             </Link>
           </TableCell>
         </TableRow>
       </TableHeader>
     </Table>
-    <List
-      style={
-        Object {
-          "float": "right",
-        }
-      }
-    >
-      <ListItem
-        content="Edit course"
-        icon={
-          Object {
-            "color": "orange",
-            "name": "edit",
-          }
-        }
-      />
-    </List>
     <br />
     <Header
       as="h2"
@@ -738,31 +516,6 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
         as="tbody"
       />
     </Table>
-    <List
-      style={
-        Object {
-          "float": "right",
-        }
-      }
-    >
-      <ListItem
-        content="Review student"
-        icon={
-          Object {
-            "color": "orange",
-            "name": "star",
-          }
-        }
-      />
-      <ListItem
-        content="Change student teacher"
-        icon={
-          Object {
-            "name": "pencil",
-          }
-        }
-      />
-    </List>
   </div>
   <div />
 </div>
