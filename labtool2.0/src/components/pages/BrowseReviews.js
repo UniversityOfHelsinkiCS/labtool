@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Card, Accordion, Icon, Form, Comment, Input } from 'semantic-ui-react'
+import { Button, Card, Accordion, Icon, Form, Comment, Input, Popup } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { createOneComment } from '../../services/comment'
@@ -133,7 +133,7 @@ export class BrowseReviews extends Component {
                     </Form>
                     <h3>Review</h3>
                     <Link to={`/labtool/reviewstudent/${this.props.selectedInstance.ohid}/${studentInstance}/${i + 1}`}>
-                      <Button circular color="orange" size="tiny" icon="edit black large" />
+                    <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'edit', color: 'black', size: 'large' }} />} content="Edit review" />
                     </Link>
                   </Accordion.Content>
                 </Accordion>
@@ -148,7 +148,7 @@ export class BrowseReviews extends Component {
                     <h4> Not Graded </h4>
                     <h4> No comments </h4>
                     <Link to={`/labtool/reviewstudent/${this.props.selectedInstance.ohid}/${studentInstance}/${i + 1}`}>
-                      <Button circular color="orange" size="tiny" icon="edit black large" />
+                      <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'edit', color: 'black', size: 'large' }} />} content="Review week" />
                     </Link>
                   </Accordion.Content>
                 </Accordion>

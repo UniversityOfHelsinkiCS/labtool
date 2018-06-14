@@ -86,328 +86,8 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
   >
     <AccordionTitle
       active={true}
-      index={0}
-      onClick={[Function]}
-    >
-      <Icon
-        as="i"
-        name="dropdown"
-      />
-       Week 
-      1
-      , points 
-      3
-    </AccordionTitle>
-    <AccordionContent
-      active={true}
-    >
-      <Card
-        color="yellow"
-        fluid={true}
-      >
-        <CardContent>
-          <h4>
-             Points: 
-            3
-             
-          </h4>
-          <h4>
-             
-            Weekly feedback: 
-            <ReactMarkdown
-              astPlugins={Array []}
-              escapeHtml={true}
-              plugins={Array []}
-              rawSourcePos={false}
-              renderers={Object {}}
-              skipHtml={false}
-              sourcePos={false}
-              transformLinkUri={[Function]}
-            >
-              Hienoa työtä!
-            </ReactMarkdown>
-             
-          </h4>
-        </CardContent>
-      </Card>
-      <h4>
-         Comments 
-      </h4>
-      <CommentGroup />
-      <Form
-        as="form"
-        id={10001}
-        name={10001}
-        onSubmit={[Function]}
-        reply={true}
-      >
-        <FormTextArea
-          as={[Function]}
-          control={[Function]}
-          defaultValue=""
-          name="content"
-          placeholder="Your comment..."
-        />
-        <Button
-          as="button"
-          content="Add Reply"
-          icon="edit"
-          labelPosition="left"
-          primary={true}
-          role="button"
-        />
-      </Form>
-    </AccordionContent>
-  </Accordion>
-  <Accordion
-    fluid={true}
-    key="1"
-    styled={true}
-  >
-    <AccordionTitle
-      active={false}
-      index={1}
-      onClick={[Function]}
-    >
-      <Icon
-        as="i"
-        name="dropdown"
-      />
-       Week 
-      2
-      , points 
-      2
-    </AccordionTitle>
-    <AccordionContent
-      active={false}
-    >
-      <Card
-        color="yellow"
-        fluid={true}
-      >
-        <CardContent>
-          <h4>
-             Points: 
-            2
-             
-          </h4>
-          <h4>
-             
-            Weekly feedback: 
-            <ReactMarkdown
-              astPlugins={Array []}
-              escapeHtml={true}
-              plugins={Array []}
-              rawSourcePos={false}
-              renderers={Object {}}
-              skipHtml={false}
-              sourcePos={false}
-              transformLinkUri={[Function]}
-            >
-              Melko hienoa työtä!
-            </ReactMarkdown>
-             
-          </h4>
-        </CardContent>
-      </Card>
-      <h4>
-         Comments 
-      </h4>
-      <CommentGroup />
-      <Form
-        as="form"
-        id={10002}
-        name={10002}
-        onSubmit={[Function]}
-        reply={true}
-      >
-        <FormTextArea
-          as={[Function]}
-          control={[Function]}
-          defaultValue=""
-          name="content"
-          placeholder="Your comment..."
-        />
-        <Button
-          as="button"
-          content="Add Reply"
-          icon="edit"
-          labelPosition="left"
-          primary={true}
-          role="button"
-        />
-      </Form>
-    </AccordionContent>
-  </Accordion>
-  <Accordion
-    fluid={true}
-    key="2"
-    styled={true}
-  >
-    <AccordionTitle
-      active={false}
-      index={2}
-      onClick={[Function]}
-    >
-      <Icon
-        as="i"
-        name="dropdown"
-      />
-       Week 
-      3
-      , points 
-      3
-    </AccordionTitle>
-    <AccordionContent
-      active={false}
-    >
-      <Card
-        color="yellow"
-        fluid={true}
-      >
-        <CardContent>
-          <h4>
-             Points: 
-            3
-             
-          </h4>
-          <h4>
-             
-            Weekly feedback: 
-            <ReactMarkdown
-              astPlugins={Array []}
-              escapeHtml={true}
-              plugins={Array []}
-              rawSourcePos={false}
-              renderers={Object {}}
-              skipHtml={false}
-              sourcePos={false}
-              transformLinkUri={[Function]}
-            >
-              Erittäin hienoa työtä!
-            </ReactMarkdown>
-             
-          </h4>
-        </CardContent>
-      </Card>
-      <h4>
-         Comments 
-      </h4>
-      <CommentGroup />
-      <Form
-        as="form"
-        id={10003}
-        name={10003}
-        onSubmit={[Function]}
-        reply={true}
-      >
-        <FormTextArea
-          as={[Function]}
-          control={[Function]}
-          defaultValue=""
-          name="content"
-          placeholder="Your comment..."
-        />
-        <Button
-          as="button"
-          content="Add Reply"
-          icon="edit"
-          labelPosition="left"
-          primary={true}
-          role="button"
-        />
-      </Form>
-    </AccordionContent>
-  </Accordion>
-  <Accordion
-    fluid={true}
-    key="3"
-    styled={true}
-  >
-    <AccordionTitle
-      active={false}
-      index={3}
-      onClick={[Function]}
-    >
-      <Icon
-        as="i"
-        name="dropdown"
-      />
-       Week 
-      4
-      , points 
-      3
-    </AccordionTitle>
-    <AccordionContent
-      active={false}
-    >
-      <Card
-        color="yellow"
-        fluid={true}
-      >
-        <CardContent>
-          <h4>
-             Points: 
-            3
-             
-          </h4>
-          <h4>
-             
-            Weekly feedback: 
-            <ReactMarkdown
-              astPlugins={Array []}
-              escapeHtml={true}
-              plugins={Array []}
-              rawSourcePos={false}
-              renderers={Object {}}
-              skipHtml={false}
-              sourcePos={false}
-              transformLinkUri={[Function]}
-            >
-              Hyvin menee!
-            </ReactMarkdown>
-             
-          </h4>
-        </CardContent>
-      </Card>
-      <h4>
-         Comments 
-      </h4>
-      <CommentGroup />
-      <Form
-        as="form"
-        id={10004}
-        name={10004}
-        onSubmit={[Function]}
-        reply={true}
-      >
-        <FormTextArea
-          as={[Function]}
-          control={[Function]}
-          defaultValue=""
-          name="content"
-          placeholder="Your comment..."
-        />
-        <Button
-          as="button"
-          content="Add Reply"
-          icon="edit"
-          labelPosition="left"
-          primary={true}
-          role="button"
-        />
-      </Form>
-    </AccordionContent>
-  </Accordion>
-  <Accordion
-    fluid={true}
-    key="4"
-    styled={true}
-  >
-    <AccordionTitle
-      active={false}
       className="codeReview"
-      index={4}
+      index={0}
       onClick={[Function]}
     >
       <Icon
@@ -419,7 +99,7 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
        
     </AccordionTitle>
     <AccordionContent
-      active={false}
+      active={true}
     >
       <h4
         className="codeReviewPoints"
@@ -431,13 +111,13 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
   </Accordion>
   <Accordion
     fluid={true}
-    key="5"
+    key="1"
     styled={true}
   >
     <AccordionTitle
       active={false}
       className="codeReview"
-      index={5}
+      index={1}
       onClick={[Function]}
     >
       <Icon
@@ -461,13 +141,13 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
   </Accordion>
   <Accordion
     fluid={true}
-    key="6"
+    key="2"
     styled={true}
   >
     <AccordionTitle
       active={false}
       className="codeReview"
-      index={6}
+      index={2}
       onClick={[Function]}
     >
       <Icon
@@ -566,18 +246,26 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
                 replace={false}
                 to="/labtool/ModifyCourseInstancePage/TKT20010.2018.K.A.1"
               >
-                <Button
-                  as="button"
-                  circular={true}
-                  icon={
-                    Object {
-                      "color": "orange",
-                      "name": "edit",
-                      "size": "large",
-                    }
+                <Popup
+                  content="Edit course"
+                  keepInViewPort={true}
+                  on="hover"
+                  position="top left"
+                  trigger={
+                    <Button
+                      as="button"
+                      circular={true}
+                      icon={
+                        Object {
+                          "color": "orange",
+                          "name": "edit",
+                          "size": "large",
+                        }
+                      }
+                      role="button"
+                      size="tiny"
+                    />
                   }
-                  role="button"
-                  size="tiny"
                 />
               </Link>
             </TableCell>
@@ -864,15 +552,29 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
                
               Mutikainen
             </span>
-            <Icon
-              as="i"
-              name="pencil"
-              onClick={[Function]}
-              size="small"
-              style={
-                Object {
-                  "float": "right",
-                }
+            <Popup
+              content="Assign instructor"
+              keepInViewPort={true}
+              on="hover"
+              position="top left"
+              trigger={
+                <Button
+                  as="button"
+                  circular={true}
+                  icon={
+                    Object {
+                      "name": "pencil",
+                      "size": "medium",
+                    }
+                  }
+                  onClick={[Function]}
+                  role="button"
+                  style={
+                    Object {
+                      "float": "right",
+                    }
+                  }
+                />
               }
             />
             <div />
@@ -885,18 +587,26 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
               replace={false}
               to="/labtool/browsereviews/TKT20010.2018.K.A.1/10012"
             >
-              <Button
-                as="button"
-                circular={true}
-                icon={
-                  Object {
-                    "color": "orange",
-                    "name": "star",
-                    "size": "large",
-                  }
+              <Popup
+                content="Review student"
+                keepInViewPort={true}
+                on="hover"
+                position="top left"
+                trigger={
+                  <Button
+                    as="button"
+                    circular={true}
+                    icon={
+                      Object {
+                        "color": "orange",
+                        "name": "star",
+                        "size": "large",
+                      }
+                    }
+                    role="button"
+                    size="tiny"
+                  />
                 }
-                role="button"
-                size="tiny"
               />
             </Link>
           </TableCell>
@@ -996,15 +706,29 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
                
               Mutikainen
             </span>
-            <Icon
-              as="i"
-              name="pencil"
-              onClick={[Function]}
-              size="small"
-              style={
-                Object {
-                  "float": "right",
-                }
+            <Popup
+              content="Assign instructor"
+              keepInViewPort={true}
+              on="hover"
+              position="top left"
+              trigger={
+                <Button
+                  as="button"
+                  circular={true}
+                  icon={
+                    Object {
+                      "name": "pencil",
+                      "size": "medium",
+                    }
+                  }
+                  onClick={[Function]}
+                  role="button"
+                  style={
+                    Object {
+                      "float": "right",
+                    }
+                  }
+                />
               }
             />
             <div />
@@ -1017,18 +741,26 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
               replace={false}
               to="/labtool/browsereviews/TKT20010.2018.K.A.1/10031"
             >
-              <Button
-                as="button"
-                circular={true}
-                icon={
-                  Object {
-                    "color": "orange",
-                    "name": "star",
-                    "size": "large",
-                  }
+              <Popup
+                content="Review student"
+                keepInViewPort={true}
+                on="hover"
+                position="top left"
+                trigger={
+                  <Button
+                    as="button"
+                    circular={true}
+                    icon={
+                      Object {
+                        "color": "orange",
+                        "name": "star",
+                        "size": "large",
+                      }
+                    }
+                    role="button"
+                    size="tiny"
+                  />
                 }
-                role="button"
-                size="tiny"
               />
             </Link>
           </TableCell>
@@ -1062,7 +794,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             key="0"
           >
             <p>
-              3
+              -
             </p>
           </TableCell>
           <TableCell
@@ -1070,7 +802,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             key="1"
           >
             <p>
-              2
+              -
             </p>
           </TableCell>
           <TableCell
@@ -1078,7 +810,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             key="2"
           >
             <p>
-              3
+              -
             </p>
           </TableCell>
           <TableCell
@@ -1086,7 +818,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             key="3"
           >
             <p>
-              3
+              -
             </p>
           </TableCell>
           <TableCell
@@ -1116,7 +848,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           <TableCell
             as="td"
           >
-            11
+            0
           </TableCell>
           <TableCell
             as="td"
@@ -1128,15 +860,29 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
                
               Mutikainen
             </span>
-            <Icon
-              as="i"
-              name="pencil"
-              onClick={[Function]}
-              size="small"
-              style={
-                Object {
-                  "float": "right",
-                }
+            <Popup
+              content="Assign instructor"
+              keepInViewPort={true}
+              on="hover"
+              position="top left"
+              trigger={
+                <Button
+                  as="button"
+                  circular={true}
+                  icon={
+                    Object {
+                      "name": "pencil",
+                      "size": "medium",
+                    }
+                  }
+                  onClick={[Function]}
+                  role="button"
+                  style={
+                    Object {
+                      "float": "right",
+                    }
+                  }
+                />
               }
             />
             <div />
@@ -1149,49 +895,32 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
               replace={false}
               to="/labtool/browsereviews/TKT20010.2018.K.A.1/10011"
             >
-              <Button
-                as="button"
-                circular={true}
-                icon={
-                  Object {
-                    "color": "orange",
-                    "name": "star",
-                    "size": "large",
-                  }
+              <Popup
+                content="Review student"
+                keepInViewPort={true}
+                on="hover"
+                position="top left"
+                trigger={
+                  <Button
+                    as="button"
+                    circular={true}
+                    icon={
+                      Object {
+                        "color": "orange",
+                        "name": "star",
+                        "size": "large",
+                      }
+                    }
+                    role="button"
+                    size="tiny"
+                  />
                 }
-                role="button"
-                size="tiny"
               />
             </Link>
           </TableCell>
         </TableRow>
       </TableBody>
     </Table>
-    <List
-      style={
-        Object {
-          "float": "right",
-        }
-      }
-    >
-      <ListItem
-        content="Review student"
-        icon={
-          Object {
-            "color": "orange",
-            "name": "star",
-          }
-        }
-      />
-      <ListItem
-        content="Change student teacher"
-        icon={
-          Object {
-            "name": "pencil",
-          }
-        }
-      />
-    </List>
   </div>
 </div>
 `;

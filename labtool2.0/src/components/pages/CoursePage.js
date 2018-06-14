@@ -1,5 +1,5 @@
 import React from 'react'
-import { Accordion, Button, Table, Card, Form, Comment, List, Header, Label, Message, Icon, Dropdown } from 'semantic-ui-react'
+import { Accordion, Button, Table, Card, Form, Comment, List, Header, Label, Message, Icon, Dropdown, Popup } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createOneComment } from '../../services/comment'
@@ -48,13 +48,15 @@ export class CoursePage extends React.Component {
       console.log('lastIndexOfWeeks, pitäisi olla 3: ', lastIndexOfWeeks)
       let lastReviewedWeek = this.props.courseData.data.weeks[lastIndexOfWeeks].weekNumber
       console.log('lastReviewedWeek, pitäisi olla 4', lastReviewedWeek)
-      this.setState({ activeIndex: lastReviewedWeek - 1,
-                      lastReviewedIndex: lastReviewedWeek - 1 })
+      this.setState({
+        activeIndex: lastReviewedWeek - 1,
+        lastReviewedIndex: lastReviewedWeek - 1
+      })
     }
   }
 
   componentWillUnmount() {
-    this.setState({ lastReviewedIndex: null})
+    this.setState({ lastReviewedIndex: null })
     this.props.coursePageReset()
   }
 
@@ -131,7 +133,7 @@ export class CoursePage extends React.Component {
       }
       let ii = 0
       codeReviews.forEach(cr => {
-        indents.push(<Table.Cell key={i + ii}>{cr.points !== null ? <p class="codeReviewPoints">{cr.points}</p> : <p>-</p>}</Table.Cell>)
+        indents.push(<Table.Cell key={i + ii}>{cr.points !== null ? <p className="codeReviewPoints">{cr.points}</p> : <p>-</p>}</Table.Cell>)
         ii++
       })
       while (ii < numberOfCodeReviews) {
@@ -357,7 +359,7 @@ export class CoursePage extends React.Component {
                   <Table.Cell textAlign="right">
                     {' '}
                     <Link to={`/labtool/ModifyCourseInstancePage/${this.props.selectedInstance.ohid}`}>
-                      <Button circular size="tiny" icon={{ name: 'edit', size: 'large', color: 'orange' }} />
+                      <Popup trigger={<Button circular size="tiny" icon={{ name: 'edit', size: 'large', color: 'orange' }} />} content="Edit course" />
                     </Link>
                   </Table.Cell>
                 </Table.Row>
@@ -390,6 +392,7 @@ export class CoursePage extends React.Component {
               style={{ display: 'inline' }}
             />
           </div>
+
           <Table celled>
             <Table.Header>
               <Table.Row>
@@ -435,7 +438,7 @@ export class CoursePage extends React.Component {
                         ) : (
                           <span>not assigned</span>
                         )}
-                        <Icon onClick={this.changeHidden(data.id)} name="pencil" size="small" style={{ float: 'right' }} />
+                        <Popup trigger={<Button circular onClick={this.changeHidden(data.id)} icon={{ name: 'pencil', size: 'medium' }} style={{ float: 'right' }} />} content="Assign instructor" />
                         {this.props.coursePageLogic.showDropdown === data.id ? (
                           <div>
                             <Dropdown options={dropDownTeachers} onChange={this.changeSelectedTeacher()} placeholder="Select teacher" fluid selection />
@@ -449,7 +452,7 @@ export class CoursePage extends React.Component {
                       </Table.Cell>
                       <Table.Cell textAlign="right">
                         <Link to={`/labtool/browsereviews/${this.props.selectedInstance.ohid}/${data.id}`}>
-                          <Button circular size="tiny" icon={{ name: 'star', size: 'large', color: 'orange' }} />
+                          <Popup trigger={<Button circular size="tiny" icon={{ name: 'star', size: 'large', color: 'orange' }} />} content="Review student" />
                         </Link>
                       </Table.Cell>
                     </Table.Row>
@@ -459,10 +462,6 @@ export class CoursePage extends React.Component {
               )}
             </Table.Body>
           </Table>
-          <List style={{ float: 'right' }}>
-            <List.Item icon={{ name: 'star', color: 'orange' }} content="Review student" />
-            <List.Item icon={{ name: 'pencil' }} content="Change student teacher" />
-          </List>
         </div>
       )
     }
@@ -494,6 +493,7 @@ export class CoursePage extends React.Component {
                     <Button color="blue" size="large">
                       Register
                     </Button>
+                    <Popup trigger={<Button circular floated="right" size="large" icon={{ name: 'edit', color: 'orange', size: 'large' }} />} content="Edit project details" />
                   </Link>
                 </div>
               )

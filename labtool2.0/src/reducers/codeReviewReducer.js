@@ -105,7 +105,7 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
     }
     /* This breaks going to coursePage. So it is commented out.
     case 'CP_INFO_SUCCESS': {
-      if (state.initialized) {
+      if (action.role !== 'teacher' || state.initialized) {
         return state
       }
       const newCurrentSelections = state.currentSelections
