@@ -30,8 +30,8 @@ export class ManageTags extends React.Component {
       e.preventDefault()
 
       console.log('text: ', document.getElementById('tagText'))
-      document.getElementById('tagText').placeholder = text
-      document.getElementById('tagColor').placeholder = color
+      document.getElementById('tagText').value = text
+      document.getElementById('tagColor').value = color
     } catch (error) {
       console.log(error)
     }
