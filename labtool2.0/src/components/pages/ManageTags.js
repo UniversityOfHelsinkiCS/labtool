@@ -58,11 +58,11 @@ export class ManageTags extends React.Component {
                 {' '}
                 <Form.Group inline>
                   <label style={{ width: '100px', textAlign: 'left' }}>Text</label>
-                  <Input type="text" id="tagText" className="form-control1" name="text" placeholder='tag name' required style={{ minWidth: '30em' }} />
+                  <Input type="text" id="tagText" className="form-control1" name="text" placeholder="tag name" required style={{ minWidth: '30em' }} />
                 </Form.Group>
                 <Form.Group inline>
                   <label style={{ width: '100px', textAlign: 'left' }}>Color</label>
-                  <Input type="text" id="tagColor" className="form-control2" name="color" placeholder='tag color' required style={{ minWidth: '30em' }} />
+                  <Input type="text" id="tagColor" className="form-control2" name="color" placeholder="tag color" required style={{ minWidth: '30em' }} />
                 </Form.Group>
                 <Form.Field>
                   <button className="ui left floated blue button" type="submit">
