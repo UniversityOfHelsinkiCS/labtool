@@ -6,7 +6,7 @@ import { createOneComment } from '../../services/comment'
 import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import { associateTeacherToStudent } from '../../services/assistant'
 import ReactMarkdown from 'react-markdown'
-import { showDropdown, selectTeacher, filterByAssistant, coursePageReset, toggleCodeReview } from '../../reducers/coursePageLogicReducer'
+import { showDropdown, selectTeacher, filterByAssistant, filterByTag, coursePageReset, toggleCodeReview } from '../../reducers/coursePageLogicReducer'
 
 export class CoursePage extends React.Component {
   handleSubmit = async e => {
@@ -52,6 +52,24 @@ export class CoursePage extends React.Component {
     return (e, data) => {
       const { value } = data
       this.props.filterByAssistant(value)
+    }
+  }
+
+  changeFilterTag = id => {
+    return () => {
+      if (this.props.coursePageLogic.filterByTag === id) {
+        this.props.filterByTag(0)
+      } else {
+        this.props.filterByTag(id)
+      }
+    }
+  }
+
+  hasFilteredTag = (data, id) => {
+    for (let i = 0; i < data.Tags.length; i++) {
+      if (data.Tags[i].id === id) {
+        return data
+      }
     }
   }
 
@@ -260,6 +278,9 @@ export class CoursePage extends React.Component {
                   .filter(data => {
                     return this.props.coursePageLogic.filterByAssistant === 0 || this.props.coursePageLogic.filterByAssistant === data.teacherInstanceId
                   })
+                  .filter(data => {
+                    return this.props.coursePageLogic.filterByTag === 0 || this.hasFilteredTag(data, this.props.coursePageLogic.filterByTag)
+                  })
                   .map(data => (
                     <Table.Row key={data.id}>
                       <Table.Cell>
@@ -273,7 +294,7 @@ export class CoursePage extends React.Component {
                         </p>
                         {data.Tags.map(tag => (
                           <div key={tag.id}>
-                            <Button compact floated="left" className={`mini ui ${tag.color} button`}>
+                            <Button compact floated="left" className={`mini ui ${tag.color} button`} onClick={this.changeFilterTag(tag.id)}>
                               {tag.name}
                             </Button>
                           </div>
@@ -479,6 +500,7 @@ const mapDispatchToProps = {
   showDropdown,
   selectTeacher,
   filterByAssistant,
+  filterByTag,
   coursePageReset,
   toggleCodeReview
 }
