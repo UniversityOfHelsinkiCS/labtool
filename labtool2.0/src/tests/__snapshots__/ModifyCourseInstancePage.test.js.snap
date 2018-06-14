@@ -223,5 +223,22 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
       Add or modify codereviews
     </Button>
   </Link>
+  <Link
+    replace={false}
+    to="/labtool/checklist/TKT20011.2018.K.A.1/create"
+  >
+    <Button
+      as="button"
+      block="true"
+      role="button"
+      style={
+        Object {
+          "marginTop": "10px",
+        }
+      }
+    >
+      Create new checklist
+    </Button>
+  </Link>
 </div>
 `;
