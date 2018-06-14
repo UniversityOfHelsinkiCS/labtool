@@ -1,7 +1,7 @@
 const Tag = require('../models').Tag
 const StudentTag = require('../models').StudentTag
 const TeacherInstance = require('../models').TeacherInstance
-const StudentInstance = requite('../models').StudentInstance
+const StudentInstance = require('../models').StudentInstance
 const helper = require('../helpers/course_instance_helper')
 
 module.exports = {
@@ -107,7 +107,7 @@ module.exports = {
                 studentInstanceId: req.body.studentId
               }
             }).then(studentTag => {
-              res.status(200).send(studentTag) //halutaan kenties lähettää jotain muuta
+              res.status(200).send() //halutaan kenties lähettää jotain muuta
             })
           })
         })

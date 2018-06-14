@@ -8,6 +8,7 @@
  */
 
 const INITIAL_STATE = {
+  tags: {},
   showAssistantDropdown: '',
   showTagDropdown: '',
   selectedTeacher: '',

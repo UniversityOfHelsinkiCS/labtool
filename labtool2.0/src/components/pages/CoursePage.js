@@ -74,7 +74,7 @@ export class CoursePage extends React.Component {
     }
   }
 
-  addTag = id => {
+  addTag = id => async e => {
     try {
       e.preventDefault()
       const data = {
@@ -610,6 +610,7 @@ const mapDispatchToProps = {
   showAssistantDropdown,
   showTagDropdown,
   selectTeacher,
+  selectTag,
   filterByAssistant,
   coursePageReset,
   toggleCodeReview,

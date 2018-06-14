@@ -7,7 +7,7 @@ const tagsReducer = (store = INITIAL_STATE, action) => {
     case 'TAGS_GET_ALL_SUCCESS':
       return { ...store, tags: action.response }
     case 'TAG_STUDENT_SUCCESS':
-      return action.reponse
+      return store
     default:
       return store
   }
