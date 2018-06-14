@@ -12,6 +12,12 @@ import store from '../../store'
  *  The page which is used by teacher to review submissions,.
  */
 export class ReviewStudent extends Component {
+  constructor(props) {
+    super(props)
+    this.reviewPointsRef = React.createRef()
+    this.reviewTextRef = React.createRef()
+  }
+
   componentWillMount() {
     this.props.getOneCI(this.props.courseId)
     this.props.clearNotifications()
@@ -48,6 +54,15 @@ export class ReviewStudent extends Component {
     this.props.toggleCheck(name)
   }
 
+  copyChecklistOutput = async e => {
+    e.preventDefault()
+    this.reviewPointsRef.current.inputRef.value = e.target.points.value
+    /* The below line is as hacky as it is because functional elements cannot directly have refs.
+    * This abomination somehow accesses a textarea that is a child of a div that holds the ref.
+    */
+    this.reviewTextRef.current.children[0].children.comment.value = e.target.text.value
+  }
+
   render() {
     //this.props.ownProps.studentInstance is a string, therefore casting to number.
     const studentData = this.props.courseData.data.filter(dataArray => dataArray.id === Number(this.props.ownProps.studentInstance))
@@ -59,7 +74,7 @@ export class ReviewStudent extends Component {
     Object.keys(checkList.list).forEach(cl => {
       checkList.list[cl].forEach(row => {
         const addition = this.props.weekReview.checks[row.name] ? row.textWhenOn : row.textWhenOff
-        if (addition) checklistOutput += addition + '\n'
+        if (addition) checklistOutput += addition + '\n\n'
         if (this.props.weekReview.checks[row.name]) {
           checklistPoints += row.points
         }
@@ -88,12 +103,15 @@ export class ReviewStudent extends Component {
                   <Form.Field>
                     <label>Points 0-{this.props.selectedInstance.weekMaxPoints}</label>
 
-                    <Input name="points" defaultValue={weekData[0] ? weekData[0].points : ''} type="number" step="0.01" style={{ width: '150px', align: 'center' }} />
+                    <Input ref={this.reviewPointsRef} name="points" defaultValue={weekData[0] ? weekData[0].points : ''} type="number" step="0.01" style={{ width: '150px', align: 'center' }} />
                   </Form.Field>
                 </Form.Group>
                 <label> Feedback </label>
                 <Form.Group inline unstackable style={{ textAlignVertical: 'top' }}>
-                  <Form.TextArea defaultValue={weekData[0] ? weekData[0].feedback : ''} name="comment" style={{ width: '500px', height: '250px' }} />
+                  <div ref={this.reviewTextRef}>
+                    {/*Do not add anything else to this div. If you do, you'll break this.copyChecklistOutput.*/}
+                    <Form.TextArea defaultValue={weekData[0] ? weekData[0].feedback : ''} name="comment" style={{ width: '500px', height: '250px' }} />
+                  </div>
                 </Form.Group>
                 <Form.Field>
                   <Button className="ui center floated green button" type="submit">
@@ -126,8 +144,12 @@ export class ReviewStudent extends Component {
                     </Card>
                   ))}
                   <div>
-                    <TextArea value={checklistOutput} />
-                    <p>points: {checklistPoints}</p>
+                    <Form onSubmit={this.copyChecklistOutput}>
+                      <Form.TextArea name="text" value={checklistOutput} style={{ width: '100%', height: '250px' }} />
+                      <p>points: {checklistPoints}</p>
+                      <input type="hidden" name="points" value={checklistPoints} />
+                      <Button type="submit">Copy to review fields</Button>
+                    </Form>
                   </div>
                 </div>
               ) : (
