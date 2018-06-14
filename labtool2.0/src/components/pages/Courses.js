@@ -39,14 +39,14 @@ export class Courses extends Component {
                           Active
                         </Label>
                       ) : (
-                          ''
-                        )}
+                        ''
+                      )}
                     </div>
                   </Table.Cell>
                   <Table.Cell>{instance.shorterId} </Table.Cell>
                   <Table.Cell>
                     <strong>
-                      <a href={`/labtool/courses/${instance.ohid}`}>{instance.name}</a>
+                      <Link to={`/labtool/courses/${instance.ohid}`}>{instance.name}</Link>
                     </strong>
                   </Table.Cell>
 
@@ -70,4 +70,7 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps, { getAllCI })(Courses)
+export default connect(
+  mapStateToProps,
+  { getAllCI }
+)(Courses)
