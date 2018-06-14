@@ -59,7 +59,14 @@ describe('<CoursePage /> as teacher', () => {
           admin: false,
           createdAt: '2018-03-26T00:00:00.000Z',
           updatedAt: '2018-03-26T00:00:00.000Z'
-        }
+        },
+        Tags: [
+          {
+            id: 20001,
+            name: 'Javascript',
+            color: 'red'
+          }
+        ]
       },
       {
         id: 10031,
@@ -82,7 +89,14 @@ describe('<CoursePage /> as teacher', () => {
           admin: false,
           createdAt: '2018-03-26T00:00:00.000Z',
           updatedAt: '2018-03-26T00:00:00.000Z'
-        }
+        },
+        Tags: [
+          {
+            id: 20002,
+            name: 'HTML',
+            color: 'yellow'
+          }
+        ]
       },
       {
         id: 10011,
@@ -146,7 +160,14 @@ describe('<CoursePage /> as teacher', () => {
           admin: false,
           createdAt: '2018-03-26T00:00:00.000Z',
           updatedAt: '2018-03-26T00:00:00.000Z'
-        }
+        },
+        Tags: [
+          {
+            id: 20005,
+            name: 'Node.js',
+            color: 'blue'
+          }
+        ]
       }
     ]
   }

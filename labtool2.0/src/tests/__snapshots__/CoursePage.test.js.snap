@@ -145,13 +145,9 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
             as="td"
           >
             <ReactMarkdown
-              astPlugins={Array []}
               escapeHtml={true}
-              plugins={Array []}
-              rawSourcePos={false}
               renderers={Object {}}
               skipHtml={false}
-              sourcePos={false}
               transformLinkUri={[Function]}
             >
               Hienoa työtä!
@@ -204,13 +200,9 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
             as="td"
           >
             <ReactMarkdown
-              astPlugins={Array []}
               escapeHtml={true}
-              plugins={Array []}
-              rawSourcePos={false}
               renderers={Object {}}
               skipHtml={false}
-              sourcePos={false}
               transformLinkUri={[Function]}
             >
               Melko hienoa työtä!
@@ -263,13 +255,9 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
             as="td"
           >
             <ReactMarkdown
-              astPlugins={Array []}
               escapeHtml={true}
-              plugins={Array []}
-              rawSourcePos={false}
               renderers={Object {}}
               skipHtml={false}
-              sourcePos={false}
               transformLinkUri={[Function]}
             >
               Erittäin hienoa työtä!
@@ -322,13 +310,9 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
             as="td"
           >
             <ReactMarkdown
-              astPlugins={Array []}
               escapeHtml={true}
-              plugins={Array []}
-              rawSourcePos={false}
               renderers={Object {}}
               skipHtml={false}
-              sourcePos={false}
               transformLinkUri={[Function]}
             >
               Hyvin menee!
@@ -674,7 +658,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           <TableHeaderCell
             as="th"
           >
-             Github 
+            Project Information
           </TableHeaderCell>
           <TableHeaderCell
             as="th"
@@ -752,404 +736,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
       </TableHeader>
       <TableBody
         as="tbody"
-      >
-        <TableRow
-          as="tr"
-          cellAs="td"
-          key="10012"
-        >
-          <TableCell
-            as="td"
-          >
-            Johan Wilhelm
-             
-            Studerande
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            <p>
-              Tiran toinen labraprojekti
-            </p>
-            <a
-              href="http://github.com/tiralabra2"
-            >
-              http://github.com/tiralabra2
-            </a>
-          </TableCell>
-          <TableCell
-            as="td"
-            key="0"
-          >
-            <p>
-              -
-            </p>
-          </TableCell>
-          <TableCell
-            as="td"
-            key="1"
-          >
-            <p>
-              -
-            </p>
-          </TableCell>
-          <TableCell
-            as="td"
-            key="2"
-          >
-            <p>
-              -
-            </p>
-          </TableCell>
-          <TableCell
-            as="td"
-            key="3"
-          >
-            <p>
-              -
-            </p>
-          </TableCell>
-          <TableCell
-            as="td"
-            key="4"
-          >
-            <p>
-              -
-            </p>
-          </TableCell>
-          <TableCell
-            as="td"
-            key="5"
-          >
-            <p>
-              -
-            </p>
-          </TableCell>
-          <TableCell
-            as="td"
-            key="6"
-          >
-            <p>
-              -
-            </p>
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            0
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            <span
-              key="10012"
-            >
-              Ossi Ohjaaja
-               
-              Mutikainen
-            </span>
-            <Icon
-              as="i"
-              name="pencil"
-              onClick={[Function]}
-              size="small"
-              style={
-                Object {
-                  "float": "right",
-                }
-              }
-            />
-            <div />
-          </TableCell>
-          <TableCell
-            as="td"
-            textAlign="right"
-          >
-            <Link
-              replace={false}
-              to="/labtool/browsereviews/TKT20010.2018.K.A.1/10012"
-            >
-              <Button
-                as="button"
-                circular={true}
-                icon={
-                  Object {
-                    "color": "orange",
-                    "name": "star",
-                    "size": "large",
-                  }
-                }
-                role="button"
-                size="tiny"
-              />
-            </Link>
-          </TableCell>
-        </TableRow>
-        <TableRow
-          as="tr"
-          cellAs="td"
-          key="10031"
-        >
-          <TableCell
-            as="td"
-          >
-            Teräs
-             
-            Henkilö
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            <p>
-              Tira super projekti
-            </p>
-            <a
-              href="http://github.com/superprojekti"
-            >
-              http://github.com/superprojekti
-            </a>
-          </TableCell>
-          <TableCell
-            as="td"
-            key="0"
-          >
-            <p>
-              -
-            </p>
-          </TableCell>
-          <TableCell
-            as="td"
-            key="1"
-          >
-            <p>
-              -
-            </p>
-          </TableCell>
-          <TableCell
-            as="td"
-            key="2"
-          >
-            <p>
-              -
-            </p>
-          </TableCell>
-          <TableCell
-            as="td"
-            key="3"
-          >
-            <p>
-              -
-            </p>
-          </TableCell>
-          <TableCell
-            as="td"
-            key="4"
-          >
-            <p>
-              -
-            </p>
-          </TableCell>
-          <TableCell
-            as="td"
-            key="5"
-          >
-            <p>
-              -
-            </p>
-          </TableCell>
-          <TableCell
-            as="td"
-            key="6"
-          >
-            <p>
-              -
-            </p>
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            0
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            <span
-              key="10031"
-            >
-              Ossi Ohjaaja
-               
-              Mutikainen
-            </span>
-            <Icon
-              as="i"
-              name="pencil"
-              onClick={[Function]}
-              size="small"
-              style={
-                Object {
-                  "float": "right",
-                }
-              }
-            />
-            <div />
-          </TableCell>
-          <TableCell
-            as="td"
-            textAlign="right"
-          >
-            <Link
-              replace={false}
-              to="/labtool/browsereviews/TKT20010.2018.K.A.1/10031"
-            >
-              <Button
-                as="button"
-                circular={true}
-                icon={
-                  Object {
-                    "color": "orange",
-                    "name": "star",
-                    "size": "large",
-                  }
-                }
-                role="button"
-                size="tiny"
-              />
-            </Link>
-          </TableCell>
-        </TableRow>
-        <TableRow
-          as="tr"
-          cellAs="td"
-          key="10011"
-        >
-          <TableCell
-            as="td"
-          >
-            Maarit Mirja
-             
-            Opiskelija
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            <p>
-              Tiran labraprojekti
-            </p>
-            <a
-              href="http://github.com/tiralabra1"
-            >
-              http://github.com/tiralabra1
-            </a>
-          </TableCell>
-          <TableCell
-            as="td"
-            key="0"
-          >
-            <p>
-              3
-            </p>
-          </TableCell>
-          <TableCell
-            as="td"
-            key="1"
-          >
-            <p>
-              2
-            </p>
-          </TableCell>
-          <TableCell
-            as="td"
-            key="2"
-          >
-            <p>
-              3
-            </p>
-          </TableCell>
-          <TableCell
-            as="td"
-            key="3"
-          >
-            <p>
-              3
-            </p>
-          </TableCell>
-          <TableCell
-            as="td"
-            key="4"
-          >
-            <p>
-              -
-            </p>
-          </TableCell>
-          <TableCell
-            as="td"
-            key="5"
-          >
-            <p>
-              -
-            </p>
-          </TableCell>
-          <TableCell
-            as="td"
-            key="6"
-          >
-            <p>
-              -
-            </p>
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            11
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            <span
-              key="10011"
-            >
-              Ossi Ohjaaja
-               
-              Mutikainen
-            </span>
-            <Icon
-              as="i"
-              name="pencil"
-              onClick={[Function]}
-              size="small"
-              style={
-                Object {
-                  "float": "right",
-                }
-              }
-            />
-            <div />
-          </TableCell>
-          <TableCell
-            as="td"
-            textAlign="right"
-          >
-            <Link
-              replace={false}
-              to="/labtool/browsereviews/TKT20010.2018.K.A.1/10011"
-            >
-              <Button
-                as="button"
-                circular={true}
-                icon={
-                  Object {
-                    "color": "orange",
-                    "name": "star",
-                    "size": "large",
-                  }
-                }
-                role="button"
-                size="tiny"
-              />
-            </Link>
-          </TableCell>
-        </TableRow>
-      </TableBody>
+      />
     </Table>
     <List
       style={
