@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
-import { Button, Form, Input, Grid } from 'semantic-ui-react'
+import { Button, Form, Input, Grid, Card, TextArea } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createOneWeek } from '../../services/week'
 import { getOneCI } from '../../services/courseInstance'
 import { clearNotifications } from '../../reducers/notificationReducer'
+import { toggleCheck } from '../../reducers/weekReviewReducer'
 import store from '../../store'
 
 /**
@@ -43,12 +44,32 @@ export class ReviewStudent extends Component {
     }
   }
 
+  toggleCheckbox = name => async e => {
+    this.props.toggleCheck(name)
+  }
+
   render() {
     //this.props.ownProps.studentInstance is a string, therefore casting to number.
     const studentData = this.props.courseData.data.filter(dataArray => dataArray.id === Number(this.props.ownProps.studentInstance))
     //this.props.weekNumber is a string, therefore casting to number.
     const weekData = studentData[0].weeks.filter(theWeek => theWeek.weekNumber === Number(this.props.ownProps.weekNumber))
     const checkList = this.props.selectedInstance.checklists.find(checkl => checkl.week == this.props.ownProps.weekNumber)
+    let checklistOutput = ''
+    let checklistPoints = 0
+    Object.keys(checkList.list).forEach(cl => {
+      checkList.list[cl].forEach(row => {
+        const addition = this.props.weekReview.checks[row.name] ? row.textWhenOn : row.textWhenOff
+        if (addition) checklistOutput += addition + '\n'
+        if (this.props.weekReview.checks[row.name]) {
+          checklistPoints += row.points
+        }
+      })
+    })
+    if (checklistPoints < 0) {
+      checklistPoints = 0
+    } else if (checklistPoints > this.props.selectedInstance.weekMaxPoints) {
+      checklistPoints = this.props.selectedInstance.weekMaxPoints
+    }
 
     return (
       <div className="ReviewStudent" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
@@ -88,7 +109,30 @@ export class ReviewStudent extends Component {
             </Grid.Column>
             <Grid.Column>
               <h2 className="checklist">Checklist</h2>
-              {checkList ? Object.keys(checkList.list).map(cl => <p>{cl}</p>) : <p>nada</p>}
+              {checkList ? (
+                <div>
+                  {Object.keys(checkList.list).map(cl => (
+                    <Card fluid color="red" key={cl}>
+                      <Card.Content header={cl} />
+                      {checkList.list[cl].map(row => (
+                        <Card.Content key={row.name}>
+                          <Form.Field>
+                            <label>{row.name} </label>
+                            <Input type="checkbox" onChange={this.toggleCheckbox(row.name)} />
+                            <label> {row.points} p</label>
+                          </Form.Field>
+                        </Card.Content>
+                      ))}
+                    </Card>
+                  ))}
+                  <div>
+                    <TextArea value={checklistOutput} />
+                    <p>points: {checklistPoints}</p>
+                  </div>
+                </div>
+              ) : (
+                <p>nada</p>
+              )}
             </Grid.Column>
           </Grid.Row>
         </Grid>
@@ -102,11 +146,12 @@ const mapStateToProps = (state, ownProps) => {
     ownProps,
     selectedInstance: state.selectedInstance,
     notification: state.notification,
-    courseData: state.coursePage
+    courseData: state.coursePage,
+    weekReview: state.weekReview
   }
 }
 
 export default connect(
   mapStateToProps,
-  { createOneWeek, getOneCI, clearNotifications }
+  { createOneWeek, getOneCI, clearNotifications, toggleCheck }
 )(ReviewStudent)
