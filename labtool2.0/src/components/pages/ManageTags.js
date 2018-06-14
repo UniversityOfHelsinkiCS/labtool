@@ -4,10 +4,6 @@ import { connect } from 'react-redux'
 import { createTag, getAllTags } from '../../services/tags'
 
 export class ManageTags extends React.Component {
-  state = {
-    loading: false
-  }
-
   componentWillMount() {
     this.props.getAllTags()
   }
@@ -24,6 +20,18 @@ export class ManageTags extends React.Component {
         color: e.target.color.value
       }
       await this.props.createTag(tag)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  modifyTag = (text, color) => async e => {
+    try {
+      e.preventDefault()
+
+      console.log('text: ', document.getElementById('tagText'))
+      document.getElementById('tagText').placeholder = text
+      document.getElementById('tagColor').placeholder = color
     } catch (error) {
       console.log(error)
     }
@@ -46,17 +54,16 @@ export class ManageTags extends React.Component {
         >
           <Grid>
             <Grid.Row centered>
-              <Form onSubmit={this.handleSubmit}>
+              <Form key="createOrModify" onSubmit={this.handleSubmit}>
+                {' '}
                 <Form.Group inline>
                   <label style={{ width: '100px', textAlign: 'left' }}>Text</label>
-                  <Input type="text" className="form-control1" name="text" placeholder="text" required style={{ minWidth: '30em' }} />
+                  <Input type="text" id="tagText" className="form-control1" name="text" placeholder='tag name' required style={{ minWidth: '30em' }} />
                 </Form.Group>
-
                 <Form.Group inline>
                   <label style={{ width: '100px', textAlign: 'left' }}>Color</label>
-                  <Input type="text" className="form-control2" name="color" placeholder="color" required style={{ minWidth: '30em' }} />
+                  <Input type="text" id="tagColor" className="form-control2" name="color" placeholder='tag color' required style={{ minWidth: '30em' }} />
                 </Form.Group>
-
                 <Form.Field>
                   <button className="ui left floated blue button" type="submit">
                     {' '}
@@ -66,14 +73,27 @@ export class ManageTags extends React.Component {
               </Form>
             </Grid.Row>
           </Grid>
+          <br />
+          {this.props.tags && this.props.tags.tags ? (
+            this.props.tags.tags.map(tag => (
+              <button key={tag.id} className={`mini ui ${tag.color} button`} onClick={this.modifyTag(tag.name, tag.color)}>
+                {tag.name}
+              </button>
+            ))
+          ) : (
+            <div />
+          )}
+          <br />
+          <br />
         </div>
       </Container>
     )
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
   return {
+    ownProps,
     tags: state.tags
   }
 }

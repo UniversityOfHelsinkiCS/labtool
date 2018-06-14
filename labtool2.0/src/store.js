@@ -36,7 +36,7 @@ const reducer = combineReducers({
   assistant: assistant,
   coursePageLogic: coursePageLogic,
   codeReviewLogic: codeReviewLogic,
-  tagsReducer: tagsReducer
+  tags: tagsReducer
 })
 
 const store = createStore(reducer, composeWithDevTools(applyMiddleware(thunk, handleRequest)))

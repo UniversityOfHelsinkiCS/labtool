@@ -58,7 +58,10 @@ module.exports = {
 
     try {
       return Tag.findAll()
-        .then(tag => res.status(200).send(tag))
+        .then(tag => {
+          console.log('\n\ntag: ', tag)
+          return res.status(200).send(tag)
+        })
         .catch(error => res.status(400).send('et ny saa niitä tageja'))
     } catch (e) {
       res.status(400).send('nymmeni jokin pieleen')
