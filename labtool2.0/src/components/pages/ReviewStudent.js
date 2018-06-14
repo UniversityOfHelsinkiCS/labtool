@@ -71,19 +71,21 @@ export class ReviewStudent extends Component {
     const checkList = this.props.selectedInstance.checklists.find(checkl => checkl.week == this.props.ownProps.weekNumber)
     let checklistOutput = ''
     let checklistPoints = 0
-    Object.keys(checkList.list).forEach(cl => {
-      checkList.list[cl].forEach(row => {
-        const addition = this.props.weekReview.checks[row.name] ? row.textWhenOn : row.textWhenOff
-        if (addition) checklistOutput += addition + '\n\n'
-        if (this.props.weekReview.checks[row.name]) {
-          checklistPoints += row.points
-        }
+    if (checkList) {
+      Object.keys(checkList.list).forEach(cl => {
+        checkList.list[cl].forEach(row => {
+          const addition = this.props.weekReview.checks[row.name] ? row.textWhenOn : row.textWhenOff
+          if (addition) checklistOutput += addition + '\n\n'
+          if (this.props.weekReview.checks[row.name]) {
+            checklistPoints += row.points
+          }
+        })
       })
-    })
-    if (checklistPoints < 0) {
-      checklistPoints = 0
-    } else if (checklistPoints > this.props.selectedInstance.weekMaxPoints) {
-      checklistPoints = this.props.selectedInstance.weekMaxPoints
+      if (checklistPoints < 0) {
+        checklistPoints = 0
+      } else if (checklistPoints > this.props.selectedInstance.weekMaxPoints) {
+        checklistPoints = this.props.selectedInstance.weekMaxPoints
+      }
     }
 
     return (
