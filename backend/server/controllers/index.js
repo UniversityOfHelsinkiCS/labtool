@@ -5,6 +5,7 @@ const admin = require('./admin')
 const weeks = require('./weeks')
 const assistants = require('./assistants')
 const codeReviews = require('./codeReviews')
+const tags = require('./tags')
 
 module.exports = {
   courseInstances,
@@ -13,5 +14,6 @@ module.exports = {
   admin,
   weeks,
   assistants,
-  codeReviews
+  codeReviews,
+  tags
 }

@@ -10,6 +10,7 @@ const StudentInstanceController = require('../controllers').studentInstances
 const Week = require('../models').Week
 const CodeReview = require('../models').CodeReview
 const Comment = require('../models').Comment
+const Tag = require('../models').Tag
 const Checklist = require('../models').Checklist
 const env = process.env.NODE_ENV || 'development'
 const config = require('./../config/config.js')[env]
@@ -213,6 +214,10 @@ module.exports = {
             attributes: {
               exclude: ['createdAt', 'updatedAt']
             }
+          },
+          {
+            model: Tag,
+            attributes: ['id', 'name', 'color']
           }
         ]
       })

@@ -88,6 +88,7 @@ export class ModifyCourseInstanceReview extends React.Component {
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell />
+                <Table.HeaderCell>Tags</Table.HeaderCell>
                 <Table.HeaderCell>Reviewer</Table.HeaderCell>
                 <Table.HeaderCell> Project </Table.HeaderCell>
                 <Table.HeaderCell key={1}>Code Review 1 </Table.HeaderCell>
@@ -97,71 +98,81 @@ export class ModifyCourseInstanceReview extends React.Component {
             <Table.Body>
               {this.props.courseData.data !== undefined
                 ? this.props.courseData.data.map(data => (
-                  <Table.Row key={data.id}>
-                    <Table.Cell>
-                      {this.props.codeReviewLogic.checkBoxStates[data.id] === true ? (
-                        <Checkbox checked onChange={this.initOrRemoveRandom(data.id)} />
-                      ) : (
+                    <Table.Row key={data.id}>
+                      <Table.Cell>
+                        {this.props.codeReviewLogic.checkBoxStates[data.id] === true ? (
+                          <Checkbox checked onChange={this.initOrRemoveRandom(data.id)} />
+                        ) : (
                           <Checkbox onChange={this.initOrRemoveRandom(data.id)} />
                         )}
-                    </Table.Cell>
-                    <Table.Cell>
-                      {data.User.firsts} {data.User.lastname}
-                    </Table.Cell>
-                    <Table.Cell>
-                      <p>{data.projectName}</p>
-                      <a href={data.github}>{data.github}</a>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <p>Current review: {getCurrentReviewer(1, data.id)}</p>
-                      <Dropdown
-                        className="toReviewDropdown"
-                        placeholder="Select student"
-                        fluid
-                        search
-                        selection
-                        options={this.props.dropdownUsers.filter(u => u.value !== data.id)}
-                        onChange={this.addCodeReview(1, data.id)}
-                        value={this.props.codeReviewLogic.currentSelections[1][data.id]}
-                      />
-                    </Table.Cell>
-                    <Table.Cell>
-                      <p>Current review: {getCurrentReviewer(2, data.id)}</p>
-                      <Dropdown
-                        className="toReviewDropdown"
-                        placeholder="Select student"
-                        fluid
-                        search
-                        selection
-                        options={this.props.dropdownUsers.filter(u => u.value !== data.id)}
-                        onChange={this.addCodeReview(2, data.id)}
-                        value={this.props.codeReviewLogic.currentSelections[2][data.id]}
-                      />
-                    </Table.Cell>
-                  </Table.Row>
-                ))
+                      </Table.Cell>
+                      <Table.Cell>
+                        {data.Tags.map(tag => (
+                          <p key={tag.id}>
+                            <Button compact className={`mini ui ${tag.color} button`}>
+                              {tag.name}
+                            </Button>
+                          </p>
+                        ))}
+                      </Table.Cell>
+                      <Table.Cell>
+                        {data.User.firsts} {data.User.lastname}
+                      </Table.Cell>
+                      <Table.Cell>
+                        <p>{data.projectName}</p>
+                        <a href={data.github}>{data.github}</a>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <p>Current review: {getCurrentReviewer(1, data.id)}</p>
+                        <Dropdown
+                          className="toReviewDropdown"
+                          placeholder="Select student"
+                          fluid
+                          search
+                          selection
+                          options={this.props.dropdownUsers.filter(u => u.value !== data.id)}
+                          onChange={this.addCodeReview(1, data.id)}
+                          value={this.props.codeReviewLogic.currentSelections[1][data.id]}
+                        />
+                      </Table.Cell>
+                      <Table.Cell>
+                        <p>Current review: {getCurrentReviewer(2, data.id)}</p>
+                        <Dropdown
+                          className="toReviewDropdown"
+                          placeholder="Select student"
+                          fluid
+                          search
+                          selection
+                          options={this.props.dropdownUsers.filter(u => u.value !== data.id)}
+                          onChange={this.addCodeReview(2, data.id)}
+                          value={this.props.codeReviewLogic.currentSelections[2][data.id]}
+                        />
+                      </Table.Cell>
+                    </Table.Row>
+                  ))
                 : null}
             </Table.Body>
             <Table.Footer>
               <Table.Row>
                 <Table.HeaderCell>
-                  <Button onClick={this.selectAllCheckboxes()}>ALL</Button>
+                  <Button compact onClick={this.selectAllCheckboxes()}>ALL</Button>
                 </Table.HeaderCell>
                 <Table.HeaderCell />
                 <Table.HeaderCell />
+                <Table.HeaderCell />
                 <Table.HeaderCell>
-                  <Button onClick={() => this.props.randomAssign({ reviewNumber: 1 })} size="small" style={{ float: 'left' }}>
+                  <Button compact onClick={() => this.props.randomAssign({ reviewNumber: 1 })} size="small" style={{ float: 'left' }}>
                     Assign selected randomly
                   </Button>
-                  <Button size="small" style={{ float: 'right' }} onClick={this.handleSubmit(1)} >
+                  <Button compact size="small" style={{ float: 'right' }} onClick={this.handleSubmit(1)}>
                     Save
                   </Button>
                 </Table.HeaderCell>
                 <Table.HeaderCell>
-                  <Button onClick={() => this.props.randomAssign({ reviewNumber: 2 })} size="small" style={{ float: 'left' }}>
+                  <Button compact onClick={() => this.props.randomAssign({ reviewNumber: 2 })} size="small" style={{ float: 'left' }}>
                     Assign selected randomly
                   </Button>
-                  <Button size="small" style={{ float: 'right' }} onClick={this.handleSubmit(2)} >
+                  <Button compact size="small" style={{ float: 'right' }} onClick={this.handleSubmit(2)}>
                     Save
                   </Button>
                 </Table.HeaderCell>

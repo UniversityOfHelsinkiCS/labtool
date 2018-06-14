@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Button, Header, Table, Container, List, Icon, Segment, Divider } from 'semantic-ui-react'
+import { Button, Header, Table, Container, List, Icon, Segment, Divider, Popup } from 'semantic-ui-react'
 import './MyPage.css'
 import { Link } from 'react-router-dom'
 import { getAllStudentCourses } from '../../services/studentinstances'
@@ -67,7 +67,7 @@ export class MyPage extends Component {
                   </Table.Cell>
                   <Table.Cell textAlign="right" verticalAlign="bottom">
                     <Link to="/labtool/email">
-                      <Button circular size="tiny" icon={{ name: 'edit', size: 'large', color: 'blue' }} />
+                      <Popup trigger={<Button circular size="tiny" icon={{ name: 'edit', size: 'large', color: 'blue' }} />} content="Edit email address" />
                     </Link>
                   </Table.Cell>
                 </Table.Row>
@@ -75,12 +75,6 @@ export class MyPage extends Component {
             </Table>
           </Container>
         </Segment>
-
-        <div className="Instructions">
-          <List>
-            <List.Item icon={{ name: 'edit', color: 'blue' }} content="Edit email address" />
-          </List>
-        </div>
 
         <br />
         <br />
@@ -102,7 +96,7 @@ export class MyPage extends Component {
                     </Table.Cell>
                     <Table.Cell textAlign="right">
                       <Link to={`/labtool/courses/${sinstance.ohid}`}>
-                        <Button circular size="tiny" icon={{ name: 'eye', size: 'large', color: 'blue' }} />
+                        <Popup trigger={<Button circular size="tiny" icon={{ name: 'eye', size: 'large', color: 'blue' }} />} content="View course" />
                       </Link>
                     </Table.Cell>
                   </Table.Row>
@@ -128,7 +122,7 @@ export class MyPage extends Component {
                         </Table.Cell>
                         <Table.Cell textAlign="right">
                           <Link to={`/labtool/courses/${tinstance.ohid}`}>
-                            <Button circular size="tiny" icon={{ name: 'eye', size: 'large', color: 'blue' }} />
+                            <Popup trigger={<Button circular size="tiny" icon={{ name: 'eye', size: 'large', color: 'blue' }} />} content="View course" />
                           </Link>
                         </Table.Cell>
                       </Table.Row>
@@ -139,14 +133,6 @@ export class MyPage extends Component {
             </div>
           </Container>
         </Segment>
-        <div className="Instructions">
-          <List>
-            <List.Item icon={{ name: 'eye', color: 'blue' }} content="Show course page" />
-          </List>
-          <br />
-          <br />
-          <br />
-        </div>
       </div>
     )
   }
