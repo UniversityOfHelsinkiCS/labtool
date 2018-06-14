@@ -48,8 +48,7 @@ export class ReviewStudent extends Component {
     const studentData = this.props.courseData.data.filter(dataArray => dataArray.id === Number(this.props.ownProps.studentInstance))
     //this.props.weekNumber is a string, therefore casting to number.
     const weekData = studentData[0].weeks.filter(theWeek => theWeek.weekNumber === Number(this.props.ownProps.weekNumber))
-    let checkList
-    weekData.length > 0 ? (checkList = this.props.selectedInstance.checklists.find(checkl => checkl.week == weekData[0].weekNumber)) : (checkList = undefined)
+    const checkList = this.props.selectedInstance.checklists.find(checkl => checkl.week == this.props.ownProps.weekNumber)
 
     return (
       <div className="ReviewStudent" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
@@ -88,7 +87,7 @@ export class ReviewStudent extends Component {
               </Form>
             </Grid.Column>
             <Grid.Column>
-              <h2>Checklist</h2>
+              <h2 className="checklist">Checklist</h2>
               {checkList ? Object.keys(checkList.list).map(cl => <p>{cl}</p>) : <p>nada</p>}
             </Grid.Column>
           </Grid.Row>

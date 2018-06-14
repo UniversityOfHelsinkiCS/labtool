@@ -112,7 +112,9 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
         </Form>
       </GridColumn>
       <GridColumn>
-        <h2>
+        <h2
+          className="checklist"
+        >
           Checklist
         </h2>
       </GridColumn>
