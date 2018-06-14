@@ -15,7 +15,45 @@ module.exports = {
         return
       }
       try {
-        // TODO validate integrity of provided JSON.
+        Object.keys(req.body.checklist).forEach(cl => {
+          if (!Array.isArray(req.body.checklist[cl])) {
+            res.status(400).send('Supplied JSON should be an object with strings as keys and arrays as values.')
+            return
+          }
+          req.body.checklist[cl].forEach(row => {
+            if (typeof row.name !== 'string') {
+              res.status(400).send('All objects in array must have field "name" with string value.')
+              return
+            }
+            if (typeof row.points !== 'number') {
+              res.status(400).send('All objects in array must have field "points" with number value.')
+              return
+            }
+            Object.keys(row).forEach(key => {
+              switch (key) {
+                case 'name':
+                  break
+                case 'points':
+                  break
+                case 'textWhenOn':
+                  if (typeof row[key] !== 'string') {
+                    res.status(400).send('textWhenOn must have a string value or be undefined.')
+                    return
+                  }
+                  break
+                case 'textWhenOff':
+                  if (typeof row[key] !== 'string') {
+                    res.status(400).send('textWhenOff must have a string value or be undefined.')
+                    return
+                  }
+                  break
+                default:
+                  res.status(400).send(`FOund unexpected key: ${key}`)
+                  return
+              }
+            })
+          })
+        })
       } catch (e) {
         res.status(400).send('Cannot parse checklist JSON.')
         return
