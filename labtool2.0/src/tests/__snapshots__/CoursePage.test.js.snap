@@ -64,19 +64,27 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
             replace={false}
             to="/labtool/courseregistration/undefined"
           >
-            <Button
-              as="button"
-              circular={true}
-              floated="right"
-              icon={
-                Object {
-                  "color": "orange",
-                  "name": "edit",
-                  "size": "large",
-                }
+            <Popup
+              content="Edit project details"
+              keepInViewPort={true}
+              on="hover"
+              position="top left"
+              trigger={
+                <Button
+                  as="button"
+                  circular={true}
+                  floated="right"
+                  icon={
+                    Object {
+                      "color": "orange",
+                      "name": "edit",
+                      "size": "large",
+                    }
+                  }
+                  role="button"
+                  size="large"
+                />
               }
-              role="button"
-              size="large"
             />
           </Link>
         </h3>
@@ -317,18 +325,26 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
               replace={false}
               to="/labtool/ModifyCourseInstancePage/TKT20010.2018.K.A.1"
             >
-              <Button
-                as="button"
-                circular={true}
-                icon={
-                  Object {
-                    "color": "orange",
-                    "name": "edit",
-                    "size": "large",
-                  }
+              <Popup
+                content="Edit course"
+                keepInViewPort={true}
+                on="hover"
+                position="top left"
+                trigger={
+                  <Button
+                    as="button"
+                    circular={true}
+                    icon={
+                      Object {
+                        "color": "orange",
+                        "name": "edit",
+                        "size": "large",
+                      }
+                    }
+                    role="button"
+                    size="tiny"
+                  />
                 }
-                role="button"
-                size="tiny"
               />
             </Link>
           </TableCell>
@@ -594,15 +610,29 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
                
               Mutikainen
             </span>
-            <Icon
-              as="i"
-              name="pencil"
-              onClick={[Function]}
-              size="small"
-              style={
-                Object {
-                  "float": "right",
-                }
+            <Popup
+              content="Assign instructor"
+              keepInViewPort={true}
+              on="hover"
+              position="top left"
+              trigger={
+                <Button
+                  as="button"
+                  circular={true}
+                  icon={
+                    Object {
+                      "name": "pencil",
+                      "size": "medium",
+                    }
+                  }
+                  onClick={[Function]}
+                  role="button"
+                  style={
+                    Object {
+                      "float": "right",
+                    }
+                  }
+                />
               }
             />
             <div />
@@ -615,18 +645,26 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
               replace={false}
               to="/labtool/browsereviews/TKT20010.2018.K.A.1/10012"
             >
-              <Button
-                as="button"
-                circular={true}
-                icon={
-                  Object {
-                    "color": "orange",
-                    "name": "star",
-                    "size": "large",
-                  }
+              <Popup
+                content="Review student"
+                keepInViewPort={true}
+                on="hover"
+                position="top left"
+                trigger={
+                  <Button
+                    as="button"
+                    circular={true}
+                    icon={
+                      Object {
+                        "color": "orange",
+                        "name": "star",
+                        "size": "large",
+                      }
+                    }
+                    role="button"
+                    size="tiny"
+                  />
                 }
-                role="button"
-                size="tiny"
               />
             </Link>
           </TableCell>
@@ -726,15 +764,29 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
                
               Mutikainen
             </span>
-            <Icon
-              as="i"
-              name="pencil"
-              onClick={[Function]}
-              size="small"
-              style={
-                Object {
-                  "float": "right",
-                }
+            <Popup
+              content="Assign instructor"
+              keepInViewPort={true}
+              on="hover"
+              position="top left"
+              trigger={
+                <Button
+                  as="button"
+                  circular={true}
+                  icon={
+                    Object {
+                      "name": "pencil",
+                      "size": "medium",
+                    }
+                  }
+                  onClick={[Function]}
+                  role="button"
+                  style={
+                    Object {
+                      "float": "right",
+                    }
+                  }
+                />
               }
             />
             <div />
@@ -747,18 +799,26 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
               replace={false}
               to="/labtool/browsereviews/TKT20010.2018.K.A.1/10031"
             >
-              <Button
-                as="button"
-                circular={true}
-                icon={
-                  Object {
-                    "color": "orange",
-                    "name": "star",
-                    "size": "large",
-                  }
+              <Popup
+                content="Review student"
+                keepInViewPort={true}
+                on="hover"
+                position="top left"
+                trigger={
+                  <Button
+                    as="button"
+                    circular={true}
+                    icon={
+                      Object {
+                        "color": "orange",
+                        "name": "star",
+                        "size": "large",
+                      }
+                    }
+                    role="button"
+                    size="tiny"
+                  />
                 }
-                role="button"
-                size="tiny"
               />
             </Link>
           </TableCell>
@@ -858,15 +918,29 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
                
               Mutikainen
             </span>
-            <Icon
-              as="i"
-              name="pencil"
-              onClick={[Function]}
-              size="small"
-              style={
-                Object {
-                  "float": "right",
-                }
+            <Popup
+              content="Assign instructor"
+              keepInViewPort={true}
+              on="hover"
+              position="top left"
+              trigger={
+                <Button
+                  as="button"
+                  circular={true}
+                  icon={
+                    Object {
+                      "name": "pencil",
+                      "size": "medium",
+                    }
+                  }
+                  onClick={[Function]}
+                  role="button"
+                  style={
+                    Object {
+                      "float": "right",
+                    }
+                  }
+                />
               }
             />
             <div />
@@ -879,18 +953,26 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
               replace={false}
               to="/labtool/browsereviews/TKT20010.2018.K.A.1/10011"
             >
-              <Button
-                as="button"
-                circular={true}
-                icon={
-                  Object {
-                    "color": "orange",
-                    "name": "star",
-                    "size": "large",
-                  }
+              <Popup
+                content="Review student"
+                keepInViewPort={true}
+                on="hover"
+                position="top left"
+                trigger={
+                  <Button
+                    as="button"
+                    circular={true}
+                    icon={
+                      Object {
+                        "color": "orange",
+                        "name": "star",
+                        "size": "large",
+                      }
+                    }
+                    role="button"
+                    size="tiny"
+                  />
                 }
-                role="button"
-                size="tiny"
               />
             </Link>
           </TableCell>

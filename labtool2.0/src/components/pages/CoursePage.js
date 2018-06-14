@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Table, Card, Form, Comment, List, Header, Label, Message, Icon, Dropdown } from 'semantic-ui-react'
+import { Button, Table, Card, Form, Comment, List, Header, Label, Message, Icon, Dropdown, Popup } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createOneComment } from '../../services/comment'
@@ -220,7 +220,7 @@ export class CoursePage extends React.Component {
                   <Table.Cell textAlign="right">
                     {' '}
                     <Link to={`/labtool/ModifyCourseInstancePage/${this.props.selectedInstance.ohid}`}>
-                      <Button circular size="tiny" icon={{ name: 'edit', size: 'large', color: 'orange' }} />
+                      <Popup trigger={<Button circular size="tiny" icon={{ name: 'edit', size: 'large', color: 'orange' }} />} content="Edit course" />
                     </Link>
                   </Table.Cell>
                 </Table.Row>
@@ -283,7 +283,7 @@ export class CoursePage extends React.Component {
                         ) : (
                           <span>not assigned</span>
                         )}
-                        <Icon onClick={this.changeHidden(data.id)} name="pencil" size="small" style={{ float: 'right' }} />
+                        <Popup trigger={<Button circular onClick={this.changeHidden(data.id)} icon={{ name: 'pencil', size: 'medium' }} style={{ float: 'right' }} />} content="Assign instructor" />
                         {this.props.coursePageLogic.showDropdown === data.id ? (
                           <div>
                             <Dropdown options={dropDownTeachers} onChange={this.changeSelectedTeacher()} placeholder="Select teacher" fluid selection />
@@ -306,7 +306,7 @@ export class CoursePage extends React.Component {
                       </Table.Cell>
                       <Table.Cell textAlign="right">
                         <Link to={`/labtool/browsereviews/${this.props.selectedInstance.ohid}/${data.id}`}>
-                          <Button circular size="tiny" icon={{ name: 'star', size: 'large', color: 'orange' }} />
+                          <Popup trigger={<Button circular size="tiny" icon={{ name: 'star', size: 'large', color: 'orange' }} />} content="Review student" />
                         </Link>
                       </Table.Cell>
                     </Table.Row>
@@ -330,7 +330,7 @@ export class CoursePage extends React.Component {
                   {' '}
                   <a href={this.props.courseData.data.github}>{this.props.courseData.data.github}</a>{' '}
                   <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>
-                    <Button circular floated="right" size="large" icon={{ name: 'edit', color: 'orange', size: 'large' }} />
+                    <Popup trigger={<Button circular floated="right" size="large" icon={{ name: 'edit', color: 'orange', size: 'large' }} />} content="Edit project details" />
                   </Link>
                 </h3>
 

@@ -106,19 +106,27 @@ exports[`<Courses /> Courses Component should render correctly 1`] = `
             as="td"
             textAlign="center"
           >
-            <Button
-              as={[Function]}
-              circular={true}
-              icon={
-                Object {
-                  "color": "blue",
-                  "name": "eye",
-                  "size": "large",
-                }
+            <Popup
+              content="View course"
+              keepInViewPort={true}
+              on="hover"
+              position="top left"
+              trigger={
+                <Button
+                  as={[Function]}
+                  circular={true}
+                  icon={
+                    Object {
+                      "color": "blue",
+                      "name": "eye",
+                      "size": "large",
+                    }
+                  }
+                  role="button"
+                  size="tiny"
+                  to="/labtool/courses/TKT20010.2018.K.A.1"
+                />
               }
-              role="button"
-              size="tiny"
-              to="/labtool/courses/TKT20010.2018.K.A.1"
             />
           </TableCell>
         </TableRow>
@@ -171,19 +179,27 @@ exports[`<Courses /> Courses Component should render correctly 1`] = `
             as="td"
             textAlign="center"
           >
-            <Button
-              as={[Function]}
-              circular={true}
-              icon={
-                Object {
-                  "color": "blue",
-                  "name": "eye",
-                  "size": "large",
-                }
+            <Popup
+              content="View course"
+              keepInViewPort={true}
+              on="hover"
+              position="top left"
+              trigger={
+                <Button
+                  as={[Function]}
+                  circular={true}
+                  icon={
+                    Object {
+                      "color": "blue",
+                      "name": "eye",
+                      "size": "large",
+                    }
+                  }
+                  role="button"
+                  size="tiny"
+                  to="/labtool/courses/TKT20002.2018.K.K.1"
+                />
               }
-              role="button"
-              size="tiny"
-              to="/labtool/courses/TKT20002.2018.K.K.1"
             />
           </TableCell>
         </TableRow>
@@ -225,19 +241,27 @@ exports[`<Courses /> Courses Component should render correctly 1`] = `
             as="td"
             textAlign="center"
           >
-            <Button
-              as={[Function]}
-              circular={true}
-              icon={
-                Object {
-                  "color": "blue",
-                  "name": "eye",
-                  "size": "large",
-                }
+            <Popup
+              content="View course"
+              keepInViewPort={true}
+              on="hover"
+              position="top left"
+              trigger={
+                <Button
+                  as={[Function]}
+                  circular={true}
+                  icon={
+                    Object {
+                      "color": "blue",
+                      "name": "eye",
+                      "size": "large",
+                    }
+                  }
+                  role="button"
+                  size="tiny"
+                  to="/labtool/courses/TKT20011.2018.K.A.1"
+                />
               }
-              role="button"
-              size="tiny"
-              to="/labtool/courses/TKT20011.2018.K.A.1"
             />
           </TableCell>
         </TableRow>
