@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, List, Container, Header, Table, Label } from 'semantic-ui-react'
+import { Button, List, Container, Header, Table, Label, Popup } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
@@ -52,19 +52,12 @@ export class Courses extends Component {
 
                   <Table.Cell> {instance.europeanStart} </Table.Cell>
                   <Table.Cell textAlign="center">
-                    <Button circular size="tiny" icon={{ name: 'eye', size: 'large', color: 'blue' }} as={Link} to={`/labtool/courses/${instance.ohid}`} />
+                    <Popup trigger={<Button circular size="tiny" icon={{ name: 'eye', size: 'large', color: 'blue' }} as={Link} to={`/labtool/courses/${instance.ohid}`} />} content="View course" />
                   </Table.Cell>
                 </Table.Row>
               ))}
             </Table.Body>
           </Table>
-
-          <div className="Instructions">
-            <List>
-              <List.Item icon={{ name: 'eye', color: 'blue' }} content="Show course page" />
-              <List.Item icon={{ name: 'square', color: 'green' }} content="Course is activated" />
-            </List>
-          </div>
         </Container>
       </div>
     )

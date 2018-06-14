@@ -116,18 +116,26 @@ exports[`<MyPage /> MyPage Component should render correctly 1`] = `
                 replace={false}
                 to="/labtool/email"
               >
-                <Button
-                  as="button"
-                  circular={true}
-                  icon={
-                    Object {
-                      "color": "blue",
-                      "name": "edit",
-                      "size": "large",
-                    }
+                <Popup
+                  content="Edit email address"
+                  keepInViewPort={true}
+                  on="hover"
+                  position="top left"
+                  trigger={
+                    <Button
+                      as="button"
+                      circular={true}
+                      icon={
+                        Object {
+                          "color": "blue",
+                          "name": "edit",
+                          "size": "large",
+                        }
+                      }
+                      role="button"
+                      size="tiny"
+                    />
                   }
-                  role="button"
-                  size="tiny"
                 />
               </Link>
             </TableCell>
@@ -136,21 +144,6 @@ exports[`<MyPage /> MyPage Component should render correctly 1`] = `
       </Table>
     </Container>
   </Segment>
-  <div
-    className="Instructions"
-  >
-    <List>
-      <ListItem
-        content="Edit email address"
-        icon={
-          Object {
-            "color": "blue",
-            "name": "edit",
-          }
-        }
-      />
-    </List>
-  </div>
   <br />
   <br />
   <br />
@@ -198,18 +191,26 @@ exports[`<MyPage /> MyPage Component should render correctly 1`] = `
                 replace={false}
                 to="/labtool/courses/TKT20010.2018.K.A.1"
               >
-                <Button
-                  as="button"
-                  circular={true}
-                  icon={
-                    Object {
-                      "color": "blue",
-                      "name": "eye",
-                      "size": "large",
-                    }
+                <Popup
+                  content="View course"
+                  keepInViewPort={true}
+                  on="hover"
+                  position="top left"
+                  trigger={
+                    <Button
+                      as="button"
+                      circular={true}
+                      icon={
+                        Object {
+                          "color": "blue",
+                          "name": "eye",
+                          "size": "large",
+                        }
+                      }
+                      role="button"
+                      size="tiny"
+                    />
                   }
-                  role="button"
-                  size="tiny"
                 />
               </Link>
             </TableCell>
@@ -242,23 +243,5 @@ exports[`<MyPage /> MyPage Component should render correctly 1`] = `
       </div>
     </Container>
   </Segment>
-  <div
-    className="Instructions"
-  >
-    <List>
-      <ListItem
-        content="Show course page"
-        icon={
-          Object {
-            "color": "blue",
-            "name": "eye",
-          }
-        }
-      />
-    </List>
-    <br />
-    <br />
-    <br />
-  </div>
 </div>
 `;

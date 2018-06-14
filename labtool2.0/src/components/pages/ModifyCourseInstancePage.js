@@ -130,6 +130,11 @@ export class ModifyCourseInstancePage extends Component {
             Add or modify codereviews
           </Button>
         </Link>
+        <Link to={`/labtool/checklist/${this.props.selectedInstance.ohid}/create`}>
+          <Button style={{ marginTop: '10px' }} block="true">
+            Create new checklist
+          </Button>
+        </Link>
       </div>
     )
   }

@@ -106,10 +106,12 @@ export class ModifyCourseInstanceReview extends React.Component {
                           <Checkbox onChange={this.initOrRemoveRandom(data.id)} />
                         )}
                       </Table.Cell>
-                      <Table.Cell textAlign="center">
+                      <Table.Cell>
                         {data.Tags.map(tag => (
                           <p key={tag.id}>
-                            <button className={`mini ui ${tag.color} button`}>{tag.name}</button>
+                            <Button compact className={`mini ui ${tag.color} button`}>
+                              {tag.name}
+                            </Button>
                           </p>
                         ))}
                       </Table.Cell>
@@ -153,24 +155,24 @@ export class ModifyCourseInstanceReview extends React.Component {
             <Table.Footer>
               <Table.Row>
                 <Table.HeaderCell>
-                  <Button onClick={this.selectAllCheckboxes()}>ALL</Button>
+                  <Button compact onClick={this.selectAllCheckboxes()}>ALL</Button>
                 </Table.HeaderCell>
                 <Table.HeaderCell />
                 <Table.HeaderCell />
                 <Table.HeaderCell />
                 <Table.HeaderCell>
-                  <Button onClick={() => this.props.randomAssign({ reviewNumber: 1 })} size="small" style={{ float: 'left' }}>
+                  <Button compact onClick={() => this.props.randomAssign({ reviewNumber: 1 })} size="small" style={{ float: 'left' }}>
                     Assign selected randomly
                   </Button>
-                  <Button size="small" style={{ float: 'right' }} onClick={this.handleSubmit(1)} >
+                  <Button compact size="small" style={{ float: 'right' }} onClick={this.handleSubmit(1)}>
                     Save
                   </Button>
                 </Table.HeaderCell>
                 <Table.HeaderCell>
-                  <Button onClick={() => this.props.randomAssign({ reviewNumber: 2 })} size="small" style={{ float: 'left' }}>
+                  <Button compact onClick={() => this.props.randomAssign({ reviewNumber: 2 })} size="small" style={{ float: 'left' }}>
                     Assign selected randomly
                   </Button>
-                  <Button size="small" style={{ float: 'right' }} onClick={this.handleSubmit(2)} >
+                  <Button compact size="small" style={{ float: 'right' }} onClick={this.handleSubmit(2)}>
                     Save
                   </Button>
                 </Table.HeaderCell>
