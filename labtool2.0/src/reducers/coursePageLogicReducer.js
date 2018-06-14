@@ -11,6 +11,7 @@ const INITIAL_STATE = {
   showAssistantDropdown: '',
   showTagDropdown: '',
   selectedTeacher: '',
+  selectedTag: '',
   filterByAssistant: 0,
   showCodeReviews: []
 }
@@ -23,6 +24,8 @@ const coursePageLogicReducer = (state = INITIAL_STATE, action) => {
       return { ...state, showTagDropdown: action.show }
     case 'COURSE_PAGE_SELECT_TEACHER':
       return { ...state, selectedTeacher: action.selection }
+    case 'COURSE_PAGE_SELECT_TAG':
+      return { ...state, selectedTag: action.selection }
     case 'COURSE_PAGE_FILTER_BY_ASSISTANT':
       return { ...state, filterByAssistant: action.assistant }
     case 'ASSOCIATE_TEACHER_AND_STUDENT_SUCCESS':
@@ -77,6 +80,15 @@ export const selectTeacher = selection => {
   return async dispatch => {
     dispatch({
       type: 'COURSE_PAGE_SELECT_TEACHER',
+      selection
+    })
+  }
+}
+
+export const selectTag = selection => {
+  return async dispatch => {
+    dispatch({
+      type: 'COURSE_PAGE_SELECT_TAG',
       selection
     })
   }

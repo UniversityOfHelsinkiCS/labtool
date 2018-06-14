@@ -6,8 +6,8 @@ import { createOneComment } from '../../services/comment'
 import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import { associateTeacherToStudent } from '../../services/assistant'
 import ReactMarkdown from 'react-markdown'
-import { getAllTags } from '../../services/tags'
-import { showAssistantDropdown, showTagDropdown, selectTeacher, filterByAssistant, coursePageReset, toggleCodeReview } from '../../reducers/coursePageLogicReducer'
+import { getAllTags, tagStudent } from '../../services/tags'
+import { showAssistantDropdown, showTagDropdown, selectTeacher, selectTag, filterByAssistant, coursePageReset, toggleCodeReview } from '../../reducers/coursePageLogicReducer'
 
 export class CoursePage extends React.Component {
   state = { activeIndex: 0 }
@@ -68,11 +68,23 @@ export class CoursePage extends React.Component {
   }
 
   changeSelectedTag = () => {
-    return (e, data) => {}
+    return (e, data) => {
+      const { value } = data
+      this.props.selectTag(value)
+    }
   }
 
-  addTag = () => {
-    return () => {}
+  addTag = id => {
+    try {
+      e.preventDefault()
+      const data = {
+        studentId: id,
+        tagId: this.props.coursePageLogic.selectedTag
+      }
+      await this.props.tagStudent(data)
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   changeFilterAssistant = () => {
@@ -452,7 +464,7 @@ export class CoursePage extends React.Component {
                           {this.props.coursePageLogic.showTagDropdown === data.id ? (
                             <div>
                               <Dropdown id="tagDropdown" options={dropDownTags} onChange={this.changeSelectedTag()} placeholder="Add tag" fluid selection />
-                              <Button onClick={this.addTag(data.id, data.teacherInstanceId)} size="small">
+                              <Button onClick={this.addTag(data.id)} size="small">
                                 Add tag
                               </Button>
                             </div>
@@ -601,7 +613,8 @@ const mapDispatchToProps = {
   filterByAssistant,
   coursePageReset,
   toggleCodeReview,
-  getAllTags
+  getAllTags,
+  tagStudent
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CoursePage)
