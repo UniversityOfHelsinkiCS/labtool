@@ -7,7 +7,7 @@ module.exports = {
       [
         {
           id: 10011,
-          github: 'http://github.com/tiralabra1',
+          github: 'http://github.com/tiraopi1/tiralabra1',
           projectName: 'Tiran labraprojekti',
           userId: 10011,
           courseInstanceId: 10011,
@@ -17,7 +17,7 @@ module.exports = {
         },
         {
           id: 10012,
-          github: 'http://github.com/tiralabra2',
+          github: 'http://github.com/tiraopi2/tiralabra2',
           projectName: 'Tiran toinen labraprojekti',
           userId: 10012,
           courseInstanceId: 10011,
