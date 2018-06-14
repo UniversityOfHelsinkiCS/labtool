@@ -128,14 +128,14 @@ export class ReviewStudent extends Component {
               </Form>
             </Grid.Column>
             <Grid.Column>
-              <h2 className="checklist">Checklist</h2>
+              <h2>Checklist</h2>
               {checkList ? (
-                <div>
+                <div className="checklist">
                   {Object.keys(checkList.list).map(cl => (
-                    <Card fluid color="red" key={cl}>
+                    <Card className="checklistCard" fluid color="red" key={cl}>
                       <Card.Content header={cl} />
                       {checkList.list[cl].map(row => (
-                        <Card.Content key={row.name}>
+                        <Card.Content className="checklistCardRow" key={row.name}>
                           <Form.Field>
                             <label>{row.name} </label>
                             <Input type="checkbox" onChange={this.toggleCheckbox(row.name)} />
@@ -146,16 +146,16 @@ export class ReviewStudent extends Component {
                     </Card>
                   ))}
                   <div>
-                    <Form onSubmit={this.copyChecklistOutput}>
-                      <Form.TextArea name="text" value={checklistOutput} style={{ width: '100%', height: '250px' }} />
-                      <p>points: {checklistPoints}</p>
+                    <Form className="checklistOutput" onSubmit={this.copyChecklistOutput}>
+                      <Form.TextArea className="checklistOutputText" name="text" value={checklistOutput} style={{ width: '100%', height: '250px' }} />
+                      <p className="checklistOutputPoints">points: {checklistPoints}</p>
                       <input type="hidden" name="points" value={checklistPoints} />
                       <Button type="submit">Copy to review fields</Button>
                     </Form>
                   </div>
                 </div>
               ) : (
-                <p>nada</p>
+                <p>There is no checklist for this week.</p>
               )}
             </Grid.Column>
           </Grid.Row>
