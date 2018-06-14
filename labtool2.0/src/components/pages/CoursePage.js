@@ -248,7 +248,7 @@ export class CoursePage extends React.Component {
               <Table.Header>
                 <Table.Row>
                   <Table.HeaderCell>Name</Table.HeaderCell>
-                  <Table.HeaderCell> Github </Table.HeaderCell>
+                  <Table.HeaderCell>Project Information</Table.HeaderCell>
                   {createHeaders()}
                   <Table.HeaderCell> Sum </Table.HeaderCell>
                   <Table.HeaderCell width="six"> Instructor </Table.HeaderCell>
@@ -266,16 +266,27 @@ export class CoursePage extends React.Component {
                         {data.User.firsts} {data.User.lastname}
                       </Table.Cell>
                       <Table.Cell>
-                        <p>{data.projectName}</p>
-                        <a href={data.github}>{data.github}</a>
+                        <p>
+                          {data.projectName}
+                          <br />
+                          <a href={data.github}>{data.github}</a>
+                        </p>
+                        {data.Tags.map(tag => (
+                          <div key={tag.id}>
+                            <Button compact floated="left" className={`mini ui ${tag.color} button`}>
+                              {tag.name}
+                            </Button>
+                          </div>
+                        ))}
                       </Table.Cell>
                       {createIndents(data.weeks, data.codeReviews, data.id)}
                       <Table.Cell>
                         {data.weeks.map(week => week.points).reduce((a, b) => {
                           return a + b
-                        }, 0) + data.codeReviews.map(cr => cr.points).reduce((a, b) => {
-                          return a + b
-                        }, 0)}
+                        }, 0) +
+                          data.codeReviews.map(cr => cr.points).reduce((a, b) => {
+                            return a + b
+                          }, 0)}
                       </Table.Cell>
                       <Table.Cell>
                         {data.teacherInstanceId && this.props.selectedInstance.teacherInstances ? (
