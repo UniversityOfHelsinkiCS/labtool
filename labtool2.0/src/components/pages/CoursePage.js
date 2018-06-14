@@ -131,7 +131,7 @@ export class CoursePage extends React.Component {
       }
       let ii = 0
       codeReviews.forEach(cr => {
-        indents.push(<Table.Cell key={i + ii}>{cr.points !== null ? <p>{cr.points}</p> : <p>-</p>}</Table.Cell>)
+        indents.push(<Table.Cell key={i + ii}>{cr.points !== null ? <p class="codeReviewPoints">{cr.points}</p> : <p>-</p>}</Table.Cell>)
         ii++
       })
       while (ii < numberOfCodeReviews) {
@@ -283,10 +283,10 @@ export class CoursePage extends React.Component {
           .forEach(cr => {
             headers.push(
               <Accordion key={i} fluid styled>
-                <Accordion.Title active={activeIndex === i} index={i} onClick={this.handleClick}>
+                <Accordion.Title className="codeReview" active={activeIndex === i} index={i} onClick={this.handleClick}>
                   <Icon name="dropdown" /> Code Review {cr.reviewNumber}{' '}
                 </Accordion.Title>
-                <Accordion.Content active={activeIndex === i}>{cr.points !== null ? <h4>{cr.points} points</h4> : <h4>Not Graded</h4>}</Accordion.Content>
+                <Accordion.Content active={activeIndex === i}>{cr.points !== null ? <h4 className="codeReviewPoints">{cr.points} points</h4> : <h4>Not Graded</h4>}</Accordion.Content>
               </Accordion>
             )
             i++
@@ -317,7 +317,7 @@ export class CoursePage extends React.Component {
      */
     let renderTeacherTopPart = () => {
       return (
-        <div className="TeachersView" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
+        <div className="TeachersTopView" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
           <div className="ui grid">
             <div className="sixteen wide column">
               <h2>{this.props.selectedInstance.name}</h2>
@@ -376,7 +376,7 @@ export class CoursePage extends React.Component {
      */
     let renderTeacherBottomPart = () => {
       return (
-        <div>
+        <div className="TeachersBottomView">
           <Header as="h2">Students </Header>
           <div style={{ textAlign: 'left' }}>
             <span>Filter by instructor </span>
@@ -472,7 +472,7 @@ export class CoursePage extends React.Component {
      */
     let renderStudentTopPart = () => {
       return (
-        <div style={{ textAlignVertical: 'center', textAlign: 'center' }}>
+        <div className="StudentsView" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
           <div className="ui grid">
             <div className="sixteen wide column">
               <h2>{this.props.selectedInstance.name}</h2>
