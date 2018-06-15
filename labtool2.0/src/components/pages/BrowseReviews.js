@@ -133,7 +133,7 @@ export class BrowseReviews extends Component {
                     </Form>
                     <h3>Review</h3>
                     <Link to={`/labtool/reviewstudent/${this.props.selectedInstance.ohid}/${studentInstance}/${i + 1}`}>
-                    <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'edit', color: 'black', size: 'large' }} />} content="Edit review" />
+                      <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'edit', color: 'black', size: 'large' }} />} content="Edit review" />
                     </Link>
                   </Accordion.Content>
                 </Accordion>
@@ -166,6 +166,10 @@ export class BrowseReviews extends Component {
                     <Icon name="dropdown" /> Code Review {cr.reviewNumber}{' '}
                   </Accordion.Title>
                   <Accordion.Content active={activeIndex === i}>
+                    <p>Project: {this.props.courseData.data.find(data => data.id === cr.toReview).projectName}</p>
+                    <p>
+                      GitHub: <a href={this.props.courseData.data.find(data => data.id === cr.toReview).github}>{this.props.courseData.data.find(data => data.id === cr.toReview).github}</a>
+                    </p>
                     {cr.points !== null ? <h4>{cr.points} points</h4> : <h4>Not Graded</h4>}
                     <Form onSubmit={this.gradeCodeReview(cr.reviewNumber, studentInstance)}>
                       <label>Points </label>
@@ -176,7 +180,7 @@ export class BrowseReviews extends Component {
                 </Accordion>
               )
               i++
-           })
+            })
         }
         return student
       })
@@ -190,8 +194,8 @@ export class BrowseReviews extends Component {
         {this.props.courseData.role === 'teacher' ? (
           <div>
             <Link to={`/labtool/courses/${this.props.selectedInstance.ohid}`}>
-               <h2> {this.props.selectedInstance.name} </h2>
-             </Link>
+              <h2> {this.props.selectedInstance.name} </h2>
+            </Link>
             {createHeaders(this.props.courseData, this.props.studentInstance)}
           </div>
         ) : (
@@ -210,4 +214,7 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps, { createOneComment, getOneCI, coursePageInformation, gradeCodeReview })(BrowseReviews)
+export default connect(
+  mapStateToProps,
+  { createOneComment, getOneCI, coursePageInformation, gradeCodeReview }
+)(BrowseReviews)
