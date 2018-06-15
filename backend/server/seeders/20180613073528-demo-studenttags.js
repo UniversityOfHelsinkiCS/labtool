@@ -29,7 +29,7 @@ module.exports = {
         {
           id: 30004,
           studentInstanceId: 10012,
-          tagId: 20006,
+          tagId: 20001,
           createdAt: '2018-06-13',
           updatedAt: '2018-06-13'
         },
@@ -44,6 +44,13 @@ module.exports = {
           id: 30006,
           studentInstanceId: 10021,
           tagId: 20004,
+          createdAt: '2018-06-13',
+          updatedAt: '2018-06-13'
+        },
+        {
+          id: 30007,
+          studentInstanceId: 10031,
+          tagId: 20007,
           createdAt: '2018-06-13',
           updatedAt: '2018-06-13'
         }

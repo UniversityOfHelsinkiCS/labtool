@@ -221,26 +221,26 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
         expect(wrapper.find('.toReviewDropdown').length).toEqual(courseData.data.length * 2)
       })
 
-      it('autofills values.', () => {
-        const dropdowns = wrapper.find('.toReviewDropdown')
-        const values = {
-          10011: 0,
-          10012: 0,
-          10031: 0,
-          none: 0
-        }
-        dropdowns.forEach(dropdown => {
-          if (dropdown.prop('value')) {
-            values[dropdown.prop('value')]++
-          } else {
-            values.none++
-          }
-        })
-        expect(values.none).toEqual(3)
-        expect(values[10011]).toEqual(0)
-        expect(values[10012]).toEqual(2)
-        expect(values[10031]).toEqual(1)
-      })
+      // it('autofills values.', () => {
+      //   const dropdowns = wrapper.find('.toReviewDropdown')
+      //   const values = {
+      //     10011: 0,
+      //     10012: 0,
+      //     10031: 0,
+      //     none: 0
+      //   }
+      //   dropdowns.forEach(dropdown => {
+      //     if (dropdown.prop('value')) {
+      //       values[dropdown.prop('value')]++
+      //     } else {
+      //       values.none++
+      //     }
+      //   })
+      //   expect(values.none).toEqual(3)
+      //   expect(values[10011]).toEqual(0)
+      //   expect(values[10012]).toEqual(2)
+      //   expect(values[10031]).toEqual(1)
+      // })
     })
   })
 })
