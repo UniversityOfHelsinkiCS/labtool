@@ -38,7 +38,6 @@ export class ModifyCourseInstanceReview extends React.Component {
     try {
       e.preventDefault()
       const codeReviews = this.props.codeReviewLogic.codeReviewStates[reviewNumber]
-      console.log(codeReviews)
       const data = {
         codeReviews,
         reviewNumber
@@ -49,7 +48,7 @@ export class ModifyCourseInstanceReview extends React.Component {
 
   addCodeReview = (reviewRound, id) => {
     return e => {
-      const toReviewId = e.target.value
+      const toReviewId = parseInt(e.target.value)
       const crData = {
         round: reviewRound,
         reviewer: id,
@@ -161,7 +160,7 @@ export class ModifyCourseInstanceReview extends React.Component {
                       {this.props.codeReviewLogic.selectedDropdown ? (
                         <div>
                           <p>Current review: {this.getCurrentReviewer(1, data.id)}</p>
-                          <select className="toReviewDropdown" onChange={this.addCodeReview(1, data.id)}>
+                          <select className="toReviewDropdown" onChange={this.addCodeReview(this.props.codeReviewLogic.selectedDropdown, data.id)}>
                             {this.props.dropdownUsers.map(
                               d =>
                                 this.props.codeReviewLogic.currentSelections[this.props.codeReviewLogic.selectedDropdown][data.id] == d.value ? (
@@ -257,7 +256,7 @@ export class ModifyCourseInstanceReview extends React.Component {
                   <Button compact onClick={() => this.props.randomAssign({ reviewNumber: 'create' })} size="small" style={{ float: 'left' }}>
                     Assign selected randomly
                   </Button>
-                  <Button compact size="small" style={{ float: 'right' }} onClick={this.handleSubmit(2)}>
+                  <Button compact size="small" style={{ float: 'right' }} onClick={this.handleSubmit('create')}>
                     Create
                   </Button>
                 </Table.HeaderCell>
