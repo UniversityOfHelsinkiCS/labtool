@@ -97,7 +97,6 @@ export class ModifyCourseInstanceReview extends React.Component {
         return 'None'
       }
       let reviewee = this.props.dropdownUsers.find(dropDownStudent => dropDownStudent.value === reviewInstance.toReview)
-      console.log(reviewee)
       return reviewee.text
     }
 
