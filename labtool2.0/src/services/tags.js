@@ -51,4 +51,17 @@ export const tagStudent = data => {
   return callController(route, prefix, data, method)
 }
 
+/** Un-tags a student
+ * data: {
+ *  studentId
+ *  tagId
+ * }
+ */
+export const unTagStudent = data => {
+  const route = '/tags/untagStudent'
+  const prefix = 'UNTAG_STUDENT_'
+  const method = 'post'
+  return callController(route, prefix, data, method)
+}
+
 export default { createTag }

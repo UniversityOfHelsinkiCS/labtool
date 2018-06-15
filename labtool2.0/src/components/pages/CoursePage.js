@@ -6,7 +6,7 @@ import { createOneComment } from '../../services/comment'
 import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import { associateTeacherToStudent } from '../../services/assistant'
 import ReactMarkdown from 'react-markdown'
-import { getAllTags, tagStudent } from '../../services/tags'
+import { getAllTags, tagStudent, unTagStudent } from '../../services/tags'
 import { showAssistantDropdown, showTagDropdown, selectTeacher, selectTag, filterByAssistant, coursePageReset, toggleCodeReview } from '../../reducers/coursePageLogicReducer'
 
 export class CoursePage extends React.Component {
@@ -82,6 +82,19 @@ export class CoursePage extends React.Component {
         tagId: this.props.coursePageLogic.selectedTag
       }
       await this.props.tagStudent(data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  removeTag = id => async e => {
+    try {
+      e.preventDefault()
+      const data = {
+        studentId: id,
+        tagId: this.props.coursePageLogic.selectedTag
+      }
+      await this.props.unTagStudent(data)
     } catch (error) {
       console.log(error)
     }
@@ -465,7 +478,10 @@ export class CoursePage extends React.Component {
                             <div>
                               <Dropdown id="tagDropdown" options={dropDownTags} onChange={this.changeSelectedTag()} placeholder="Add tag" fluid selection />
                               <Button onClick={this.addTag(data.id)} size="small">
-                                Add tag
+                                Add
+                              </Button>
+                              <Button onClick={this.removeTag(data.id)} size="small">
+                                Remove
                               </Button>
                             </div>
                           ) : (
@@ -615,7 +631,8 @@ const mapDispatchToProps = {
   coursePageReset,
   toggleCodeReview,
   getAllTags,
-  tagStudent
+  tagStudent,
+  unTagStudent
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CoursePage)
