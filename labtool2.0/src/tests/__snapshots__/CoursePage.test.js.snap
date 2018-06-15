@@ -2,148 +2,117 @@
 
 exports[`<CoursePage /> as student CoursePage Component should render correctly 1`] = `
 <div
-  className="CoursePage"
-  style={
-    Object {
-      "textAlign": "center",
-      "textAlignVertical": "center",
-    }
-  }
+  key="true"
 >
   <div
-    className="ui grid"
-  >
-    <div
-      className="sixteen wide column"
-    >
-      <h2 />
-    </div>
-    <div
-      className="sixteen wide column"
-    >
-      <Message
-        compact={true}
-      >
-        <MessageHeader>
-          This course has not been activated.
-        </MessageHeader>
-      </Message>
-    </div>
-  </div>
-  <div />
-  <div
-    className="StudentsView"
     style={
       Object {
-        "overflowX": "auto",
+        "textAlign": "center",
+        "textAlignVertical": "center",
       }
     }
   >
-    <h3>
-       
-    </h3>
-    <Card
-      color="yellow"
-      fluid={true}
+    <div
+      className="ui grid"
     >
-      <CardContent>
-        <h3>
-           
-          Tiran labraprojekti
-           
-        </h3>
-        <h3>
-           
-          <a
-            href="http://github.com/tiralabra1"
-          >
-            http://github.com/tiralabra1
-          </a>
-           
-          <Link
-            replace={false}
-            to="/labtool/courseregistration/undefined"
-          >
-            <Button
-              as="button"
-              circular={true}
-              floated="right"
-              icon={
-                Object {
-                  "color": "orange",
-                  "name": "edit",
-                  "size": "large",
-                }
+      <div
+        className="sixteen wide column"
+      >
+        <h2 />
+      </div>
+      <div
+        className="sixteen wide column"
+      >
+        <Message
+          compact={true}
+        >
+          <MessageHeader>
+            This course has not been activated.
+          </MessageHeader>
+        </Message>
+      </div>
+    </div>
+  </div>
+  <Card
+    color="yellow"
+    fluid={true}
+    key="card"
+  >
+    <CardContent>
+      <h2>
+        Maarit Mirja
+         
+        Opiskelija
+      </h2>
+      <h3>
+         
+        Tiran labraprojekti
+         
+      </h3>
+      <h3>
+        <a
+          href="http://github.com/tiralabra1"
+        >
+          http://github.com/tiralabra1
+        </a>
+         
+        <Link
+          replace={false}
+          to="/labtool/courseregistration/undefined"
+        >
+          <Button
+            as="button"
+            circular={true}
+            floated="right"
+            icon={
+              Object {
+                "color": "orange",
+                "name": "edit",
+                "size": "large",
               }
-              role="button"
-              size="large"
-            />
-          </Link>
-        </h3>
-        <h3>
-          Assistant: not given
-        </h3>
-      </CardContent>
-    </Card>
-    <h3>
-       Points and feedback 
-    </h3>
-    <Table
-      as="table"
-      celled={true}
-      padded={true}
-      unstackable={true}
+            }
+            role="button"
+            size="large"
+          />
+        </Link>
+      </h3>
+    </CardContent>
+  </Card>
+  <Accordion
+    fluid={true}
+    key="0"
+    styled={true}
+  >
+    <AccordionTitle
+      active={true}
+      index={0}
+      onClick={[Function]}
     >
-      <TableHeader
-        as="thead"
+      <Icon
+        as="i"
+        name="dropdown"
+      />
+       Week 
+      1
+      , points 
+      3
+    </AccordionTitle>
+    <AccordionContent
+      active={true}
+    >
+      <Card
+        color="yellow"
+        fluid={true}
       >
-        <TableRow
-          as="tr"
-          cellAs="td"
-        >
-          <TableHeaderCell
-            as="th"
-          >
-            Week
-          </TableHeaderCell>
-          <TableHeaderCell
-            as="th"
-          >
-            Points
-          </TableHeaderCell>
-          <TableHeaderCell
-            as="th"
-          >
-            Feedback
-          </TableHeaderCell>
-          <TableHeaderCell
-            as="th"
-          >
-            Comments
-          </TableHeaderCell>
-        </TableRow>
-      </TableHeader>
-      <TableBody
-        as="tbody"
-      >
-        <TableRow
-          as="tr"
-          cellAs="td"
-          key="1"
-        >
-          <TableCell
-            as="td"
-          >
-            1
-          </TableCell>
-          <TableCell
-            as="td"
-          >
+        <CardContent>
+          <h4>
+             Points: 
             3
-          </TableCell>
-          <TableCell
-            as="td"
-          >
+             
+          </h4>
+          <h4>
+             
+            Weekly feedback: 
             <ReactMarkdown
               astPlugins={Array []}
               escapeHtml={true}
@@ -156,53 +125,74 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
             >
               Hienoa työtä!
             </ReactMarkdown>
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            <CommentGroup />
-            <Form
-              as="form"
-              id="comment"
-              name={10001}
-              onSubmit={[Function]}
-              reply={true}
-            >
-              <FormTextArea
-                as={[Function]}
-                control={[Function]}
-                name="content"
-                placeholder="Your comment..."
-              />
-              <Button
-                as="button"
-                content="Add Reply"
-                icon="edit"
-                labelPosition="left"
-                primary={true}
-                role="button"
-              />
-            </Form>
-          </TableCell>
-        </TableRow>
-        <TableRow
-          as="tr"
-          cellAs="td"
-          key="2"
-        >
-          <TableCell
-            as="td"
-          >
+             
+          </h4>
+        </CardContent>
+      </Card>
+      <h4>
+         Comments 
+      </h4>
+      <CommentGroup />
+      <Form
+        as="form"
+        id={10001}
+        name={10001}
+        onSubmit={[Function]}
+        reply={true}
+      >
+        <FormTextArea
+          as={[Function]}
+          control={[Function]}
+          defaultValue=""
+          name="content"
+          placeholder="Your comment..."
+        />
+        <Button
+          as="button"
+          content="Add Reply"
+          icon="edit"
+          labelPosition="left"
+          primary={true}
+          role="button"
+        />
+      </Form>
+    </AccordionContent>
+  </Accordion>
+  <Accordion
+    fluid={true}
+    key="1"
+    styled={true}
+  >
+    <AccordionTitle
+      active={false}
+      index={1}
+      onClick={[Function]}
+    >
+      <Icon
+        as="i"
+        name="dropdown"
+      />
+       Week 
+      2
+      , points 
+      2
+    </AccordionTitle>
+    <AccordionContent
+      active={false}
+    >
+      <Card
+        color="yellow"
+        fluid={true}
+      >
+        <CardContent>
+          <h4>
+             Points: 
             2
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            2
-          </TableCell>
-          <TableCell
-            as="td"
-          >
+             
+          </h4>
+          <h4>
+             
+            Weekly feedback: 
             <ReactMarkdown
               astPlugins={Array []}
               escapeHtml={true}
@@ -215,53 +205,74 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
             >
               Melko hienoa työtä!
             </ReactMarkdown>
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            <CommentGroup />
-            <Form
-              as="form"
-              id="comment"
-              name={10002}
-              onSubmit={[Function]}
-              reply={true}
-            >
-              <FormTextArea
-                as={[Function]}
-                control={[Function]}
-                name="content"
-                placeholder="Your comment..."
-              />
-              <Button
-                as="button"
-                content="Add Reply"
-                icon="edit"
-                labelPosition="left"
-                primary={true}
-                role="button"
-              />
-            </Form>
-          </TableCell>
-        </TableRow>
-        <TableRow
-          as="tr"
-          cellAs="td"
-          key="3"
-        >
-          <TableCell
-            as="td"
-          >
+             
+          </h4>
+        </CardContent>
+      </Card>
+      <h4>
+         Comments 
+      </h4>
+      <CommentGroup />
+      <Form
+        as="form"
+        id={10002}
+        name={10002}
+        onSubmit={[Function]}
+        reply={true}
+      >
+        <FormTextArea
+          as={[Function]}
+          control={[Function]}
+          defaultValue=""
+          name="content"
+          placeholder="Your comment..."
+        />
+        <Button
+          as="button"
+          content="Add Reply"
+          icon="edit"
+          labelPosition="left"
+          primary={true}
+          role="button"
+        />
+      </Form>
+    </AccordionContent>
+  </Accordion>
+  <Accordion
+    fluid={true}
+    key="2"
+    styled={true}
+  >
+    <AccordionTitle
+      active={false}
+      index={2}
+      onClick={[Function]}
+    >
+      <Icon
+        as="i"
+        name="dropdown"
+      />
+       Week 
+      3
+      , points 
+      3
+    </AccordionTitle>
+    <AccordionContent
+      active={false}
+    >
+      <Card
+        color="yellow"
+        fluid={true}
+      >
+        <CardContent>
+          <h4>
+             Points: 
             3
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            3
-          </TableCell>
-          <TableCell
-            as="td"
-          >
+             
+          </h4>
+          <h4>
+             
+            Weekly feedback: 
             <ReactMarkdown
               astPlugins={Array []}
               escapeHtml={true}
@@ -274,53 +285,74 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
             >
               Erittäin hienoa työtä!
             </ReactMarkdown>
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            <CommentGroup />
-            <Form
-              as="form"
-              id="comment"
-              name={10003}
-              onSubmit={[Function]}
-              reply={true}
-            >
-              <FormTextArea
-                as={[Function]}
-                control={[Function]}
-                name="content"
-                placeholder="Your comment..."
-              />
-              <Button
-                as="button"
-                content="Add Reply"
-                icon="edit"
-                labelPosition="left"
-                primary={true}
-                role="button"
-              />
-            </Form>
-          </TableCell>
-        </TableRow>
-        <TableRow
-          as="tr"
-          cellAs="td"
-          key="4"
-        >
-          <TableCell
-            as="td"
-          >
-            4
-          </TableCell>
-          <TableCell
-            as="td"
-          >
+             
+          </h4>
+        </CardContent>
+      </Card>
+      <h4>
+         Comments 
+      </h4>
+      <CommentGroup />
+      <Form
+        as="form"
+        id={10003}
+        name={10003}
+        onSubmit={[Function]}
+        reply={true}
+      >
+        <FormTextArea
+          as={[Function]}
+          control={[Function]}
+          defaultValue=""
+          name="content"
+          placeholder="Your comment..."
+        />
+        <Button
+          as="button"
+          content="Add Reply"
+          icon="edit"
+          labelPosition="left"
+          primary={true}
+          role="button"
+        />
+      </Form>
+    </AccordionContent>
+  </Accordion>
+  <Accordion
+    fluid={true}
+    key="3"
+    styled={true}
+  >
+    <AccordionTitle
+      active={false}
+      index={3}
+      onClick={[Function]}
+    >
+      <Icon
+        as="i"
+        name="dropdown"
+      />
+       Week 
+      4
+      , points 
+      3
+    </AccordionTitle>
+    <AccordionContent
+      active={false}
+    >
+      <Card
+        color="yellow"
+        fluid={true}
+      >
+        <CardContent>
+          <h4>
+             Points: 
             3
-          </TableCell>
-          <TableCell
-            as="td"
-          >
+             
+          </h4>
+          <h4>
+             
+            Weekly feedback: 
             <ReactMarkdown
               astPlugins={Array []}
               escapeHtml={true}
@@ -333,263 +365,237 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
             >
               Hyvin menee!
             </ReactMarkdown>
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            <CommentGroup />
-            <Form
-              as="form"
-              id="comment"
-              name={10004}
-              onSubmit={[Function]}
-              reply={true}
-            >
-              <FormTextArea
-                as={[Function]}
-                control={[Function]}
-                name="content"
-                placeholder="Your comment..."
-              />
-              <Button
-                as="button"
-                content="Add Reply"
-                icon="edit"
-                labelPosition="left"
-                primary={true}
-                role="button"
-              />
-            </Form>
-          </TableCell>
-        </TableRow>
-      </TableBody>
-    </Table>
-    <Card
-      color="yellow"
-      fluid={true}
+             
+          </h4>
+        </CardContent>
+      </Card>
+      <h4>
+         Comments 
+      </h4>
+      <CommentGroup />
+      <Form
+        as="form"
+        id={10004}
+        name={10004}
+        onSubmit={[Function]}
+        reply={true}
+      >
+        <FormTextArea
+          as={[Function]}
+          control={[Function]}
+          defaultValue=""
+          name="content"
+          placeholder="Your comment..."
+        />
+        <Button
+          as="button"
+          content="Add Reply"
+          icon="edit"
+          labelPosition="left"
+          primary={true}
+          role="button"
+        />
+      </Form>
+    </AccordionContent>
+  </Accordion>
+  <Accordion
+    fluid={true}
+    key="4"
+    styled={true}
+  >
+    <AccordionTitle
+      active={false}
+      index={4}
+      onClick={[Function]}
     >
-      <CardContent>
-        <Card
-          className="codeReview"
-          color="yellow"
-          fluid={true}
-          key="1"
-        >
-          <CardContent
-            header="Code review 1"
-            onClick={[Function]}
-            style={
-              Object {
-                "cursor": "pointer",
-              }
-            }
-          />
-          <CardContent
-            className="codeReviewPoints"
-          >
-            2 points
-          </CardContent>
-          <div />
-        </Card>
-        <Card
-          className="codeReview"
-          color="yellow"
-          fluid={true}
-          key="2"
-        >
-          <CardContent
-            header="Code review 2"
-            onClick={[Function]}
-            style={
-              Object {
-                "cursor": "pointer",
-              }
-            }
-          />
-          <CardContent
-            className="codeReviewPoints"
-          >
-            1 points
-          </CardContent>
-          <div
-            className="codeReviewExpanded"
-          >
-            <CardContent>
-              <h4>
-                Project to review
-              </h4>
-              <p>
-                Tira super projekti
-              </p>
-              <p>
-                <a
-                  href="http://github.com/superprojekti"
-                >
-                  http://github.com/superprojekti
-                </a>
-              </p>
-            </CardContent>
-            <CardContent>
-              <h4>
-                Your reviewer
-              </h4>
-              <p>
-                Tiran toinen labraprojekti
-              </p>
-              <p>
-                <a
-                  href="http://github.com/tiralabra2"
-                >
-                  http://github.com/tiralabra2
-                </a>
-              </p>
-            </CardContent>
-          </div>
-        </Card>
-        <Card
-          className="codeReview"
-          color="yellow"
-          fluid={true}
-          key="3"
-        >
-          <CardContent
-            header="Code review 3"
-            onClick={[Function]}
-            style={
-              Object {
-                "cursor": "pointer",
-              }
-            }
-          />
-          <div />
-          <div />
-        </Card>
-      </CardContent>
-    </Card>
-  </div>
+      <Icon
+        as="i"
+        name="dropdown"
+      />
+       Code Review 
+      1
+       
+    </AccordionTitle>
+    <AccordionContent
+      active={false}
+    >
+      <h4>
+        2
+         points
+      </h4>
+    </AccordionContent>
+  </Accordion>
+  <Accordion
+    fluid={true}
+    key="5"
+    styled={true}
+  >
+    <AccordionTitle
+      active={false}
+      index={5}
+      onClick={[Function]}
+    >
+      <Icon
+        as="i"
+        name="dropdown"
+      />
+       Code Review 
+      2
+       
+    </AccordionTitle>
+    <AccordionContent
+      active={false}
+    >
+      <h4>
+        1
+         points
+      </h4>
+    </AccordionContent>
+  </Accordion>
+  <Accordion
+    fluid={true}
+    key="6"
+    styled={true}
+  >
+    <AccordionTitle
+      active={false}
+      index={6}
+      onClick={[Function]}
+    >
+      <Icon
+        as="i"
+        name="dropdown"
+      />
+       Code Review 
+      3
+       
+    </AccordionTitle>
+    <AccordionContent
+      active={false}
+    >
+      <h4>
+        Not Graded
+      </h4>
+    </AccordionContent>
+  </Accordion>
 </div>
 `;
 
 exports[`<CoursePage /> as teacher CoursePage Component should render correctly 1`] = `
-<div
-  className="CoursePage"
-  style={
-    Object {
-      "textAlign": "center",
-      "textAlignVertical": "center",
-    }
-  }
->
-  <div
-    className="ui grid"
-  >
-    <div
-      className="sixteen wide column"
-    >
-      <h2>
-        Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit
-      </h2>
-    </div>
-    <p />
-  </div>
+<div>
   <div
     className="TeachersView"
     style={
       Object {
-        "overflowX": "auto",
+        "textAlign": "center",
+        "textAlignVertical": "center",
       }
     }
   >
-    <br />
-    <Table
-      as="table"
+    <div
+      className="ui grid"
     >
-      <TableHeader
-        as="thead"
+      <div
+        className="sixteen wide column"
       >
-        <TableRow
-          as="tr"
-          cellAs="td"
+        <h2>
+          Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit
+        </h2>
+      </div>
+      <p />
+    </div>
+    <div>
+      <Table
+        as="table"
+      >
+        <TableHeader
+          as="thead"
         >
-          <TableCell
-            as="td"
+          <TableRow
+            as="tr"
+            cellAs="td"
           >
-            <div>
-              <Label
-                ribbon={true}
-                style={
-                  Object {
-                    "backgroundColor": "#21ba45",
-                  }
-                }
-              >
-                Active
-              </Label>
-            </div>
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            Week amount: 
-            7
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            Current week: 
-            1
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            Week maxpoints: 
-            3
-          </TableCell>
-          <TableCell
-            as="td"
-            textAlign="right"
-          >
-             
-            <Link
-              replace={false}
-              to="/labtool/ModifyCourseInstancePage/TKT20010.2018.K.A.1"
+            <TableCell
+              as="td"
             >
-              <Button
-                as="button"
-                circular={true}
-                icon={
-                  Object {
-                    "color": "orange",
-                    "name": "edit",
-                    "size": "large",
+              <div>
+                <Label
+                  ribbon={true}
+                  style={
+                    Object {
+                      "backgroundColor": "#21ba45",
+                    }
                   }
-                }
-                role="button"
-                size="tiny"
-              />
-            </Link>
-          </TableCell>
-        </TableRow>
-      </TableHeader>
-    </Table>
-    <List
-      style={
-        Object {
-          "float": "right",
-        }
-      }
-    >
-      <ListItem
-        content="Edit course"
-        icon={
+                >
+                  Active
+                </Label>
+              </div>
+            </TableCell>
+            <TableCell
+              as="td"
+            >
+              Week amount: 
+              7
+            </TableCell>
+            <TableCell
+              as="td"
+            >
+              Current week: 
+              1
+            </TableCell>
+            <TableCell
+              as="td"
+            >
+              Week maxpoints: 
+              3
+            </TableCell>
+            <TableCell
+              as="td"
+              textAlign="right"
+            >
+               
+              <Link
+                replace={false}
+                to="/labtool/ModifyCourseInstancePage/TKT20010.2018.K.A.1"
+              >
+                <Button
+                  as="button"
+                  circular={true}
+                  icon={
+                    Object {
+                      "color": "orange",
+                      "name": "edit",
+                      "size": "large",
+                    }
+                  }
+                  role="button"
+                  size="tiny"
+                />
+              </Link>
+            </TableCell>
+          </TableRow>
+        </TableHeader>
+      </Table>
+      <List
+        style={
           Object {
-            "color": "orange",
-            "name": "edit",
+            "float": "right",
           }
         }
-      />
-    </List>
-    <br />
+      >
+        <ListItem
+          content="Edit course"
+          icon={
+            Object {
+              "color": "orange",
+              "name": "edit",
+            }
+          }
+        />
+      </List>
+    </div>
+  </div>
+  <div>
     <Header
       as="h2"
     >
@@ -768,14 +774,37 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           <TableCell
             as="td"
           >
-            <p>
-              Tiran toinen labraprojekti
-            </p>
-            <a
-              href="http://github.com/tiralabra2"
+            <TableCell
+              as="td"
             >
-              http://github.com/tiralabra2
-            </a>
+              <p>
+                Tiran toinen labraprojekti
+                <br />
+                <a
+                  href="http://github.com/tiralabra2"
+                >
+                  http://github.com/tiralabra2
+                </a>
+              </p>
+            </TableCell>
+            <TableCell
+              as="td"
+            >
+              <br />
+              <Icon
+                as="i"
+                id="tag"
+                name="pencil"
+                onClick={[Function]}
+                size="small"
+                style={
+                  Object {
+                    "float": "top",
+                  }
+                }
+              />
+              <div />
+            </TableCell>
           </TableCell>
           <TableCell
             as="td"
@@ -850,6 +879,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             </span>
             <Icon
               as="i"
+              id="assistant"
               name="pencil"
               onClick={[Function]}
               size="small"
@@ -900,14 +930,37 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           <TableCell
             as="td"
           >
-            <p>
-              Tira super projekti
-            </p>
-            <a
-              href="http://github.com/superprojekti"
+            <TableCell
+              as="td"
             >
-              http://github.com/superprojekti
-            </a>
+              <p>
+                Tira super projekti
+                <br />
+                <a
+                  href="http://github.com/superprojekti"
+                >
+                  http://github.com/superprojekti
+                </a>
+              </p>
+            </TableCell>
+            <TableCell
+              as="td"
+            >
+              <br />
+              <Icon
+                as="i"
+                id="tag"
+                name="pencil"
+                onClick={[Function]}
+                size="small"
+                style={
+                  Object {
+                    "float": "top",
+                  }
+                }
+              />
+              <div />
+            </TableCell>
           </TableCell>
           <TableCell
             as="td"
@@ -982,6 +1035,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             </span>
             <Icon
               as="i"
+              id="assistant"
               name="pencil"
               onClick={[Function]}
               size="small"
@@ -1032,14 +1086,37 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           <TableCell
             as="td"
           >
-            <p>
-              Tiran labraprojekti
-            </p>
-            <a
-              href="http://github.com/tiralabra1"
+            <TableCell
+              as="td"
             >
-              http://github.com/tiralabra1
-            </a>
+              <p>
+                Tiran labraprojekti
+                <br />
+                <a
+                  href="http://github.com/tiralabra1"
+                >
+                  http://github.com/tiralabra1
+                </a>
+              </p>
+            </TableCell>
+            <TableCell
+              as="td"
+            >
+              <br />
+              <Icon
+                as="i"
+                id="tag"
+                name="pencil"
+                onClick={[Function]}
+                size="small"
+                style={
+                  Object {
+                    "float": "top",
+                  }
+                }
+              />
+              <div />
+            </TableCell>
           </TableCell>
           <TableCell
             as="td"
@@ -1114,6 +1191,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             </span>
             <Icon
               as="i"
+              id="assistant"
               name="pencil"
               onClick={[Function]}
               size="small"
@@ -1177,6 +1255,1263 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
       />
     </List>
   </div>
-  <div />
+</div>
+`;
+
+exports[`<CoursePage/> as student courseData Component should render correctly 1`] = `
+<div
+  key="true"
+>
+  <div
+    style={
+      Object {
+        "textAlign": "center",
+        "textAlignVertical": "center",
+      }
+    }
+  >
+    <div
+      className="ui grid"
+    >
+      <div
+        className="sixteen wide column"
+      >
+        <h2 />
+      </div>
+      <div
+        className="sixteen wide column"
+      >
+        <Message
+          compact={true}
+        >
+          <MessageHeader>
+            This course has not been activated.
+          </MessageHeader>
+        </Message>
+      </div>
+    </div>
+  </div>
+  <Card
+    color="yellow"
+    fluid={true}
+    key="card"
+  >
+    <CardContent>
+      <h2>
+        Maarit Mirja
+         
+        Opiskelija
+      </h2>
+      <h3>
+         
+        Tiran labraprojekti
+         
+      </h3>
+      <h3>
+        <a
+          href="http://github.com/tiralabra1"
+        >
+          http://github.com/tiralabra1
+        </a>
+         
+        <Link
+          replace={false}
+          to="/labtool/courseregistration/undefined"
+        >
+          <Button
+            as="button"
+            circular={true}
+            floated="right"
+            icon={
+              Object {
+                "color": "orange",
+                "name": "edit",
+                "size": "large",
+              }
+            }
+            role="button"
+            size="large"
+          />
+        </Link>
+      </h3>
+    </CardContent>
+  </Card>
+  <Accordion
+    fluid={true}
+    key="0"
+    styled={true}
+  >
+    <AccordionTitle
+      active={true}
+      index={0}
+      onClick={[Function]}
+    >
+      <Icon
+        as="i"
+        name="dropdown"
+      />
+       Week 
+      1
+      , points 
+      3
+    </AccordionTitle>
+    <AccordionContent
+      active={true}
+    >
+      <Card
+        color="yellow"
+        fluid={true}
+      >
+        <CardContent>
+          <h4>
+             Points: 
+            3
+             
+          </h4>
+          <h4>
+             
+            Weekly feedback: 
+            <ReactMarkdown
+              astPlugins={Array []}
+              escapeHtml={true}
+              plugins={Array []}
+              rawSourcePos={false}
+              renderers={Object {}}
+              skipHtml={false}
+              sourcePos={false}
+              transformLinkUri={[Function]}
+            >
+              Hienoa työtä!
+            </ReactMarkdown>
+             
+          </h4>
+        </CardContent>
+      </Card>
+      <h4>
+         Comments 
+      </h4>
+      <CommentGroup />
+      <Form
+        as="form"
+        id={10001}
+        name={10001}
+        onSubmit={[Function]}
+        reply={true}
+      >
+        <FormTextArea
+          as={[Function]}
+          control={[Function]}
+          defaultValue=""
+          name="content"
+          placeholder="Your comment..."
+        />
+        <Button
+          as="button"
+          content="Add Reply"
+          icon="edit"
+          labelPosition="left"
+          primary={true}
+          role="button"
+        />
+      </Form>
+    </AccordionContent>
+  </Accordion>
+  <Accordion
+    fluid={true}
+    key="1"
+    styled={true}
+  >
+    <AccordionTitle
+      active={false}
+      index={1}
+      onClick={[Function]}
+    >
+      <Icon
+        as="i"
+        name="dropdown"
+      />
+       Week 
+      2
+      , points 
+      2
+    </AccordionTitle>
+    <AccordionContent
+      active={false}
+    >
+      <Card
+        color="yellow"
+        fluid={true}
+      >
+        <CardContent>
+          <h4>
+             Points: 
+            2
+             
+          </h4>
+          <h4>
+             
+            Weekly feedback: 
+            <ReactMarkdown
+              astPlugins={Array []}
+              escapeHtml={true}
+              plugins={Array []}
+              rawSourcePos={false}
+              renderers={Object {}}
+              skipHtml={false}
+              sourcePos={false}
+              transformLinkUri={[Function]}
+            >
+              Melko hienoa työtä!
+            </ReactMarkdown>
+             
+          </h4>
+        </CardContent>
+      </Card>
+      <h4>
+         Comments 
+      </h4>
+      <CommentGroup />
+      <Form
+        as="form"
+        id={10002}
+        name={10002}
+        onSubmit={[Function]}
+        reply={true}
+      >
+        <FormTextArea
+          as={[Function]}
+          control={[Function]}
+          defaultValue=""
+          name="content"
+          placeholder="Your comment..."
+        />
+        <Button
+          as="button"
+          content="Add Reply"
+          icon="edit"
+          labelPosition="left"
+          primary={true}
+          role="button"
+        />
+      </Form>
+    </AccordionContent>
+  </Accordion>
+  <Accordion
+    fluid={true}
+    key="2"
+    styled={true}
+  >
+    <AccordionTitle
+      active={false}
+      index={2}
+      onClick={[Function]}
+    >
+      <Icon
+        as="i"
+        name="dropdown"
+      />
+       Week 
+      3
+      , points 
+      3
+    </AccordionTitle>
+    <AccordionContent
+      active={false}
+    >
+      <Card
+        color="yellow"
+        fluid={true}
+      >
+        <CardContent>
+          <h4>
+             Points: 
+            3
+             
+          </h4>
+          <h4>
+             
+            Weekly feedback: 
+            <ReactMarkdown
+              astPlugins={Array []}
+              escapeHtml={true}
+              plugins={Array []}
+              rawSourcePos={false}
+              renderers={Object {}}
+              skipHtml={false}
+              sourcePos={false}
+              transformLinkUri={[Function]}
+            >
+              Erittäin hienoa työtä!
+            </ReactMarkdown>
+             
+          </h4>
+        </CardContent>
+      </Card>
+      <h4>
+         Comments 
+      </h4>
+      <CommentGroup />
+      <Form
+        as="form"
+        id={10003}
+        name={10003}
+        onSubmit={[Function]}
+        reply={true}
+      >
+        <FormTextArea
+          as={[Function]}
+          control={[Function]}
+          defaultValue=""
+          name="content"
+          placeholder="Your comment..."
+        />
+        <Button
+          as="button"
+          content="Add Reply"
+          icon="edit"
+          labelPosition="left"
+          primary={true}
+          role="button"
+        />
+      </Form>
+    </AccordionContent>
+  </Accordion>
+  <Accordion
+    fluid={true}
+    key="3"
+    styled={true}
+  >
+    <AccordionTitle
+      active={false}
+      index={3}
+      onClick={[Function]}
+    >
+      <Icon
+        as="i"
+        name="dropdown"
+      />
+       Week 
+      4
+      , points 
+      3
+    </AccordionTitle>
+    <AccordionContent
+      active={false}
+    >
+      <Card
+        color="yellow"
+        fluid={true}
+      >
+        <CardContent>
+          <h4>
+             Points: 
+            3
+             
+          </h4>
+          <h4>
+             
+            Weekly feedback: 
+            <ReactMarkdown
+              astPlugins={Array []}
+              escapeHtml={true}
+              plugins={Array []}
+              rawSourcePos={false}
+              renderers={Object {}}
+              skipHtml={false}
+              sourcePos={false}
+              transformLinkUri={[Function]}
+            >
+              Hyvin menee!
+            </ReactMarkdown>
+             
+          </h4>
+        </CardContent>
+      </Card>
+      <h4>
+         Comments 
+      </h4>
+      <CommentGroup />
+      <Form
+        as="form"
+        id={10004}
+        name={10004}
+        onSubmit={[Function]}
+        reply={true}
+      >
+        <FormTextArea
+          as={[Function]}
+          control={[Function]}
+          defaultValue=""
+          name="content"
+          placeholder="Your comment..."
+        />
+        <Button
+          as="button"
+          content="Add Reply"
+          icon="edit"
+          labelPosition="left"
+          primary={true}
+          role="button"
+        />
+      </Form>
+    </AccordionContent>
+  </Accordion>
+  <Accordion
+    fluid={true}
+    key="4"
+    styled={true}
+  >
+    <AccordionTitle
+      active={false}
+      index={4}
+      onClick={[Function]}
+    >
+      <Icon
+        as="i"
+        name="dropdown"
+      />
+       Code Review 
+      1
+       
+    </AccordionTitle>
+    <AccordionContent
+      active={false}
+    >
+      <h4>
+        2
+         points
+      </h4>
+    </AccordionContent>
+  </Accordion>
+  <Accordion
+    fluid={true}
+    key="5"
+    styled={true}
+  >
+    <AccordionTitle
+      active={false}
+      index={5}
+      onClick={[Function]}
+    >
+      <Icon
+        as="i"
+        name="dropdown"
+      />
+       Code Review 
+      2
+       
+    </AccordionTitle>
+    <AccordionContent
+      active={false}
+    >
+      <h4>
+        1
+         points
+      </h4>
+    </AccordionContent>
+  </Accordion>
+  <Accordion
+    fluid={true}
+    key="6"
+    styled={true}
+  >
+    <AccordionTitle
+      active={false}
+      index={6}
+      onClick={[Function]}
+    >
+      <Icon
+        as="i"
+        name="dropdown"
+      />
+       Code Review 
+      3
+       
+    </AccordionTitle>
+    <AccordionContent
+      active={false}
+    >
+      <h4>
+        Not Graded
+      </h4>
+    </AccordionContent>
+  </Accordion>
+</div>
+`;
+
+exports[`<CoursePage/> as teacher courseData Component should render correctly 1`] = `
+<div>
+  <div
+    className="TeachersView"
+    style={
+      Object {
+        "textAlign": "center",
+        "textAlignVertical": "center",
+      }
+    }
+  >
+    <div
+      className="ui grid"
+    >
+      <div
+        className="sixteen wide column"
+      >
+        <h2>
+          Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit
+        </h2>
+      </div>
+      <p />
+    </div>
+    <div>
+      <Table
+        as="table"
+      >
+        <TableHeader
+          as="thead"
+        >
+          <TableRow
+            as="tr"
+            cellAs="td"
+          >
+            <TableCell
+              as="td"
+            >
+              <div>
+                <Label
+                  ribbon={true}
+                  style={
+                    Object {
+                      "backgroundColor": "#21ba45",
+                    }
+                  }
+                >
+                  Active
+                </Label>
+              </div>
+            </TableCell>
+            <TableCell
+              as="td"
+            >
+              Week amount: 
+              7
+            </TableCell>
+            <TableCell
+              as="td"
+            >
+              Current week: 
+              1
+            </TableCell>
+            <TableCell
+              as="td"
+            >
+              Week maxpoints: 
+              3
+            </TableCell>
+            <TableCell
+              as="td"
+              textAlign="right"
+            >
+               
+              <Link
+                replace={false}
+                to="/labtool/ModifyCourseInstancePage/TKT20010.2018.K.A.1"
+              >
+                <Button
+                  as="button"
+                  circular={true}
+                  icon={
+                    Object {
+                      "color": "orange",
+                      "name": "edit",
+                      "size": "large",
+                    }
+                  }
+                  role="button"
+                  size="tiny"
+                />
+              </Link>
+            </TableCell>
+          </TableRow>
+        </TableHeader>
+      </Table>
+      <List
+        style={
+          Object {
+            "float": "right",
+          }
+        }
+      >
+        <ListItem
+          content="Edit course"
+          icon={
+            Object {
+              "color": "orange",
+              "name": "edit",
+            }
+          }
+        />
+      </List>
+    </div>
+  </div>
+  <div>
+    <Header
+      as="h2"
+    >
+      Students 
+    </Header>
+    <div
+      style={
+        Object {
+          "textAlign": "left",
+        }
+      }
+    >
+      <span>
+        Filter by instructor 
+      </span>
+      <Dropdown
+        additionLabel="Add "
+        additionPosition="top"
+        closeOnBlur={true}
+        deburr={false}
+        defaultValue={0}
+        fluid={true}
+        icon="dropdown"
+        minCharacters={1}
+        noResultsMessage="No results found."
+        onChange={[Function]}
+        openOnFocus={true}
+        options={
+          Array [
+            Object {
+              "key": 0,
+              "text": "no filter",
+              "value": 0,
+            },
+            Object {
+              "key": null,
+              "text": "unassigned students",
+              "value": null,
+            },
+            Object {
+              "key": 10001,
+              "text": "Pää Opettaja",
+              "value": 10001,
+            },
+            Object {
+              "key": 10011,
+              "text": "Ossi Ohjaaja Mutikainen",
+              "value": 10011,
+            },
+          ]
+        }
+        placeholder="Select Teacher"
+        renderLabel={[Function]}
+        searchInput="text"
+        selectOnBlur={true}
+        selectOnNavigation={true}
+        selection={true}
+        style={
+          Object {
+            "display": "inline",
+          }
+        }
+        wrapSelection={true}
+      />
+    </div>
+    <Table
+      as="table"
+      celled={true}
+    >
+      <TableHeader
+        as="thead"
+      >
+        <TableRow
+          as="tr"
+          cellAs="td"
+        >
+          <TableHeaderCell
+            as="th"
+          >
+            Name
+          </TableHeaderCell>
+          <TableHeaderCell
+            as="th"
+          >
+             Github 
+          </TableHeaderCell>
+          <TableHeaderCell
+            as="th"
+            key="0"
+          >
+            Week 
+            1
+             
+          </TableHeaderCell>
+          <TableHeaderCell
+            as="th"
+            key="1"
+          >
+            Week 
+            2
+             
+          </TableHeaderCell>
+          <TableHeaderCell
+            as="th"
+            key="2"
+          >
+            Week 
+            3
+             
+          </TableHeaderCell>
+          <TableHeaderCell
+            as="th"
+            key="3"
+          >
+            Week 
+            4
+             
+          </TableHeaderCell>
+          <TableHeaderCell
+            as="th"
+            key="4"
+          >
+            Week 
+            5
+             
+          </TableHeaderCell>
+          <TableHeaderCell
+            as="th"
+            key="5"
+          >
+            Week 
+            6
+             
+          </TableHeaderCell>
+          <TableHeaderCell
+            as="th"
+            key="6"
+          >
+            Week 
+            7
+             
+          </TableHeaderCell>
+          <TableHeaderCell
+            as="th"
+          >
+             Sum 
+          </TableHeaderCell>
+          <TableHeaderCell
+            as="th"
+            width="six"
+          >
+             Instructor 
+          </TableHeaderCell>
+          <TableHeaderCell
+            as="th"
+          >
+             Review 
+          </TableHeaderCell>
+        </TableRow>
+      </TableHeader>
+      <TableBody
+        as="tbody"
+      >
+        <TableRow
+          as="tr"
+          cellAs="td"
+          key="10012"
+        >
+          <TableCell
+            as="td"
+          >
+            Johan Wilhelm
+             
+            Studerande
+          </TableCell>
+          <TableCell
+            as="td"
+          >
+            <TableCell
+              as="td"
+            >
+              <p>
+                Tiran toinen labraprojekti
+                <br />
+                <a
+                  href="http://github.com/tiralabra2"
+                >
+                  http://github.com/tiralabra2
+                </a>
+              </p>
+            </TableCell>
+            <TableCell
+              as="td"
+            >
+              <br />
+              <Icon
+                as="i"
+                id="tag"
+                name="pencil"
+                onClick={[Function]}
+                size="small"
+                style={
+                  Object {
+                    "float": "top",
+                  }
+                }
+              />
+              <div />
+            </TableCell>
+          </TableCell>
+          <TableCell
+            as="td"
+            key="0"
+          >
+            <p>
+              -
+            </p>
+          </TableCell>
+          <TableCell
+            as="td"
+            key="1"
+          >
+            <p>
+              -
+            </p>
+          </TableCell>
+          <TableCell
+            as="td"
+            key="2"
+          >
+            <p>
+              -
+            </p>
+          </TableCell>
+          <TableCell
+            as="td"
+            key="3"
+          >
+            <p>
+              -
+            </p>
+          </TableCell>
+          <TableCell
+            as="td"
+            key="4"
+          >
+            <p>
+              -
+            </p>
+          </TableCell>
+          <TableCell
+            as="td"
+            key="5"
+          >
+            <p>
+              -
+            </p>
+          </TableCell>
+          <TableCell
+            as="td"
+            key="6"
+          >
+            <p>
+              -
+            </p>
+          </TableCell>
+          <TableCell
+            as="td"
+          >
+            0
+          </TableCell>
+          <TableCell
+            as="td"
+          >
+            <span
+              key="10012"
+            >
+              Ossi Ohjaaja
+               
+              Mutikainen
+            </span>
+            <Icon
+              as="i"
+              id="assistant"
+              name="pencil"
+              onClick={[Function]}
+              size="small"
+              style={
+                Object {
+                  "float": "right",
+                }
+              }
+            />
+            <div />
+          </TableCell>
+          <TableCell
+            as="td"
+            textAlign="right"
+          >
+            <Link
+              replace={false}
+              to="/labtool/browsereviews/TKT20010.2018.K.A.1/10012"
+            >
+              <Button
+                as="button"
+                circular={true}
+                icon={
+                  Object {
+                    "color": "orange",
+                    "name": "star",
+                    "size": "large",
+                  }
+                }
+                role="button"
+                size="tiny"
+              />
+            </Link>
+          </TableCell>
+        </TableRow>
+        <TableRow
+          as="tr"
+          cellAs="td"
+          key="10031"
+        >
+          <TableCell
+            as="td"
+          >
+            Teräs
+             
+            Henkilö
+          </TableCell>
+          <TableCell
+            as="td"
+          >
+            <TableCell
+              as="td"
+            >
+              <p>
+                Tira super projekti
+                <br />
+                <a
+                  href="http://github.com/superprojekti"
+                >
+                  http://github.com/superprojekti
+                </a>
+              </p>
+            </TableCell>
+            <TableCell
+              as="td"
+            >
+              <br />
+              <Icon
+                as="i"
+                id="tag"
+                name="pencil"
+                onClick={[Function]}
+                size="small"
+                style={
+                  Object {
+                    "float": "top",
+                  }
+                }
+              />
+              <div />
+            </TableCell>
+          </TableCell>
+          <TableCell
+            as="td"
+            key="0"
+          >
+            <p>
+              -
+            </p>
+          </TableCell>
+          <TableCell
+            as="td"
+            key="1"
+          >
+            <p>
+              -
+            </p>
+          </TableCell>
+          <TableCell
+            as="td"
+            key="2"
+          >
+            <p>
+              -
+            </p>
+          </TableCell>
+          <TableCell
+            as="td"
+            key="3"
+          >
+            <p>
+              -
+            </p>
+          </TableCell>
+          <TableCell
+            as="td"
+            key="4"
+          >
+            <p>
+              -
+            </p>
+          </TableCell>
+          <TableCell
+            as="td"
+            key="5"
+          >
+            <p>
+              -
+            </p>
+          </TableCell>
+          <TableCell
+            as="td"
+            key="6"
+          >
+            <p>
+              -
+            </p>
+          </TableCell>
+          <TableCell
+            as="td"
+          >
+            0
+          </TableCell>
+          <TableCell
+            as="td"
+          >
+            <span
+              key="10031"
+            >
+              Ossi Ohjaaja
+               
+              Mutikainen
+            </span>
+            <Icon
+              as="i"
+              id="assistant"
+              name="pencil"
+              onClick={[Function]}
+              size="small"
+              style={
+                Object {
+                  "float": "right",
+                }
+              }
+            />
+            <div />
+          </TableCell>
+          <TableCell
+            as="td"
+            textAlign="right"
+          >
+            <Link
+              replace={false}
+              to="/labtool/browsereviews/TKT20010.2018.K.A.1/10031"
+            >
+              <Button
+                as="button"
+                circular={true}
+                icon={
+                  Object {
+                    "color": "orange",
+                    "name": "star",
+                    "size": "large",
+                  }
+                }
+                role="button"
+                size="tiny"
+              />
+            </Link>
+          </TableCell>
+        </TableRow>
+        <TableRow
+          as="tr"
+          cellAs="td"
+          key="10011"
+        >
+          <TableCell
+            as="td"
+          >
+            Maarit Mirja
+             
+            Opiskelija
+          </TableCell>
+          <TableCell
+            as="td"
+          >
+            <TableCell
+              as="td"
+            >
+              <p>
+                Tiran labraprojekti
+                <br />
+                <a
+                  href="http://github.com/tiralabra1"
+                >
+                  http://github.com/tiralabra1
+                </a>
+              </p>
+            </TableCell>
+            <TableCell
+              as="td"
+            >
+              <br />
+              <Icon
+                as="i"
+                id="tag"
+                name="pencil"
+                onClick={[Function]}
+                size="small"
+                style={
+                  Object {
+                    "float": "top",
+                  }
+                }
+              />
+              <div />
+            </TableCell>
+          </TableCell>
+          <TableCell
+            as="td"
+            key="0"
+          >
+            <p>
+              3
+            </p>
+          </TableCell>
+          <TableCell
+            as="td"
+            key="1"
+          >
+            <p>
+              2
+            </p>
+          </TableCell>
+          <TableCell
+            as="td"
+            key="2"
+          >
+            <p>
+              3
+            </p>
+          </TableCell>
+          <TableCell
+            as="td"
+            key="3"
+          >
+            <p>
+              3
+            </p>
+          </TableCell>
+          <TableCell
+            as="td"
+            key="4"
+          >
+            <p>
+              -
+            </p>
+          </TableCell>
+          <TableCell
+            as="td"
+            key="5"
+          >
+            <p>
+              -
+            </p>
+          </TableCell>
+          <TableCell
+            as="td"
+            key="6"
+          >
+            <p>
+              -
+            </p>
+          </TableCell>
+          <TableCell
+            as="td"
+          >
+            11
+          </TableCell>
+          <TableCell
+            as="td"
+          >
+            <span
+              key="10011"
+            >
+              Ossi Ohjaaja
+               
+              Mutikainen
+            </span>
+            <Icon
+              as="i"
+              id="assistant"
+              name="pencil"
+              onClick={[Function]}
+              size="small"
+              style={
+                Object {
+                  "float": "right",
+                }
+              }
+            />
+            <div />
+          </TableCell>
+          <TableCell
+            as="td"
+            textAlign="right"
+          >
+            <Link
+              replace={false}
+              to="/labtool/browsereviews/TKT20010.2018.K.A.1/10011"
+            >
+              <Button
+                as="button"
+                circular={true}
+                icon={
+                  Object {
+                    "color": "orange",
+                    "name": "star",
+                    "size": "large",
+                  }
+                }
+                role="button"
+                size="tiny"
+              />
+            </Link>
+          </TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
+    <List
+      style={
+        Object {
+          "float": "right",
+        }
+      }
+    >
+      <ListItem
+        content="Review student"
+        icon={
+          Object {
+            "color": "orange",
+            "name": "star",
+          }
+        }
+      />
+      <ListItem
+        content="Change student teacher"
+        icon={
+          Object {
+            "name": "pencil",
+          }
+        }
+      />
+    </List>
+  </div>
 </div>
 `;
