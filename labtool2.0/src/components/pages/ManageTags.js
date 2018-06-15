@@ -98,6 +98,7 @@ export class ManageTags extends React.Component {
               </Form>
             </Grid.Row>
           </Grid>
+          <h2>Current tags (click us)</h2>
           <br />
           {this.props.tags && this.props.tags.tags ? (
             this.props.tags.tags.map(tag => (
