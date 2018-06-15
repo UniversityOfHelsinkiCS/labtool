@@ -17,8 +17,26 @@ export class ManageTags extends React.Component {
 
       const tag = {
         text: e.target.text.value,
-        newText: e.target.newText.value,
+        newText: e.target.newText.value || '',
         color: e.target.color.value
+      }
+      await this.props.createTag(tag)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  addTag = async e => {
+    console.log('olen täällä')
+    try {
+      e.preventDefault()
+
+      this.setState({ loading: true })
+
+      const tag = {
+        text: document.getElementById('tagText').value,
+        newText: document.getElementById('tagText').value,
+        color: document.getElementById('tagColor').value
       }
       await this.props.createTag(tag)
     } catch (error) {
@@ -29,6 +47,11 @@ export class ManageTags extends React.Component {
   removeTag = async e => {
     console.log('removing tag')
     try {
+      var txt
+      if (!window.confirm('Are you sure?')) {
+        return
+      }
+
       e.preventDefault()
 
       this.setState({ loading: true })
@@ -37,6 +60,8 @@ export class ManageTags extends React.Component {
         text: document.getElementById('tagText').value
       }
       await this.props.removeTag(tag)
+      document.getElementById('tagText').value = ''
+      document.getElementById('tagColor').value = ''
     } catch (error) {
       console.log(error)
     }
@@ -46,8 +71,8 @@ export class ManageTags extends React.Component {
     try {
       e.preventDefault()
 
-      console.log('text: ', document.getElementById('tagText'))
       document.getElementById('tagText').value = text
+      document.getElementById('tagTextNew').value = text
       document.getElementById('tagColor').value = color
     } catch (error) {
       console.log(error)
@@ -79,16 +104,20 @@ export class ManageTags extends React.Component {
                 </Form.Field>
                 <Form.Field inline>
                   <label style={{ width: '100px', textAlign: 'left' }}>New text</label>
-                  <Input required="false" type="text" id="tagTextNew" className="form-control2" name="newText" defaultValue="" placeholder="(optional)" required style={{ minWidth: '30em' }} />
+                  <Input type="text" id="tagTextNew" className="form-control2" name="newText" defaultValue="" placeholder="(optional)" required style={{ minWidth: '30em' }} />
                 </Form.Field>
                 <Form.Field inline>
                   <label style={{ width: '100px', textAlign: 'left' }}>Color</label>
                   <Input type="text" id="tagColor" className="form-control3" name="color" placeholder="tag color" required style={{ minWidth: '30em' }} />
                 </Form.Field>
                 <Form.Field>
+                  <Button className="ui left floated blue button" onClick={this.addTag}>
+                    {' '}
+                    Add
+                  </Button>
                   <Button className="ui left floated blue button" type="submit">
                     {' '}
-                    Add or modify
+                    Modify
                   </Button>
                   <Button className="ui left floated blue button" onClick={this.removeTag}>
                     {' '}

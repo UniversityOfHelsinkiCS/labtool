@@ -133,9 +133,14 @@ const notificationReducer = (state = {}, action) => {
         message: 'Student tag removed successfully',
         error: false
       }
+    case 'TAG_CREATE_SUCCESS':
+      return {
+        message: 'Tag created succesfully',
+        error: false
+      }
     case 'TAG_REMOVE_SUCCESS':
       return {
-        message: 'Tag removed from the system succesfully',
+        message: 'Tag removed succesfully',
         error: false
       }
     case 'CODE_REVIEW_RANDOMIZE':
