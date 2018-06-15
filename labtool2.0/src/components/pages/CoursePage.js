@@ -143,7 +143,6 @@ export class CoursePage extends React.Component {
           value: tag.id
         })
       )
-      console.log('tags: ', array)
       return array
     }
     console.log('ei tageja')
@@ -208,11 +207,9 @@ export class CoursePage extends React.Component {
     const { activeIndex } = this.state
 
     const renderStudentBottomPart = () => {
-      console.log('\n\ncreating headers\n\n')
       let headers = []
       // studentInstance is id of student. Type: String
       // Tämä pitää myös korjata.
-      console.log('\nthis.props.courseData.data.user: ', this.props.courseData.data.user)
       headers.push(
         <Card key="card" fluid color="yellow">
           <Card.Content>
@@ -237,18 +234,14 @@ export class CoursePage extends React.Component {
           </Card.Content>
         </Card>
       )
-      console.log('\nthis.props.courseData: ', this.props.courseData)
       if (this.props.courseData && this.props.courseData.data && this.props.courseData.data.weeks) {
-        console.log('\n\nI am here\n\n')
         let weeks = null
         let i = 0
         for (; i < this.props.courseData.data.weeks.length; i++) {
-          console.log('\ni: ', i)
           weeks = this.props.courseData.data.weeks.find(function(week) {
             return week.weekNumber === i + 1
           })
           if (weeks) {
-            console.log('\n\nFound a week, i=', i, '\n\n')
             headers.push(
               <Accordion key={i} fluid styled>
                 <Accordion.Title active={activeIndex === i} index={i} onClick={this.handleClick}>

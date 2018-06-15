@@ -10,7 +10,6 @@ import { getAllCI } from '../../services/courseInstance'
  */
 export class Courses extends Component {
   componentWillMount() {
-    console.log('this.props: ', this.props)
     this.props.getAllCI()
   }
 
