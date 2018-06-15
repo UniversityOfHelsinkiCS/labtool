@@ -17,7 +17,7 @@ export class ManageTags extends React.Component {
 
       const tag = {
         text: e.target.text.value,
-        newText: e.target.newText.value,
+        newText: e.target.newText.value || '',
         color: e.target.color.value
       }
       await this.props.createTag(tag)
@@ -29,6 +29,11 @@ export class ManageTags extends React.Component {
   removeTag = async e => {
     console.log('removing tag')
     try {
+      var txt
+      if (!window.confirm('Are you sure?')) {
+        return
+      }
+
       e.preventDefault()
 
       this.setState({ loading: true })
@@ -37,6 +42,8 @@ export class ManageTags extends React.Component {
         text: document.getElementById('tagText').value
       }
       await this.props.removeTag(tag)
+      document.getElementById('tagText').value = ''
+      document.getElementById('tagColor').value = ''
     } catch (error) {
       console.log(error)
     }
@@ -79,7 +86,7 @@ export class ManageTags extends React.Component {
                 </Form.Field>
                 <Form.Field inline>
                   <label style={{ width: '100px', textAlign: 'left' }}>New text</label>
-                  <Input required="false" type="text" id="tagTextNew" className="form-control2" name="newText" defaultValue="" placeholder="(optional)" required style={{ minWidth: '30em' }} />
+                  <Input type="text" id="tagTextNew" className="form-control2" name="newText" defaultValue="" placeholder="(optional)" required style={{ minWidth: '30em' }} />
                 </Form.Field>
                 <Form.Field inline>
                   <label style={{ width: '100px', textAlign: 'left' }}>Color</label>
