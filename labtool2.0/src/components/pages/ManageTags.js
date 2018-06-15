@@ -26,6 +26,24 @@ export class ManageTags extends React.Component {
     }
   }
 
+  addTag = async e => {
+    console.log('olen täällä')
+    try {
+      e.preventDefault()
+
+      this.setState({ loading: true })
+
+      const tag = {
+        text: document.getElementById('tagText').value,
+        newText: document.getElementById('tagText').value,
+        color: document.getElementById('tagColor').value
+      }
+      await this.props.createTag(tag)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   removeTag = async e => {
     console.log('removing tag')
     try {
@@ -53,8 +71,8 @@ export class ManageTags extends React.Component {
     try {
       e.preventDefault()
 
-      console.log('text: ', document.getElementById('tagText'))
       document.getElementById('tagText').value = text
+      document.getElementById('tagTextNew').value = text
       document.getElementById('tagColor').value = color
     } catch (error) {
       console.log(error)
@@ -93,9 +111,13 @@ export class ManageTags extends React.Component {
                   <Input type="text" id="tagColor" className="form-control3" name="color" placeholder="tag color" required style={{ minWidth: '30em' }} />
                 </Form.Field>
                 <Form.Field>
+                  <Button className="ui left floated blue button" onClick={this.addTag}>
+                    {' '}
+                    Add
+                  </Button>
                   <Button className="ui left floated blue button" type="submit">
                     {' '}
-                    Add or modify
+                    Modify
                   </Button>
                   <Button className="ui left floated blue button" onClick={this.removeTag}>
                     {' '}

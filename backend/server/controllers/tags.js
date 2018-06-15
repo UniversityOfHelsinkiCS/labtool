@@ -29,10 +29,11 @@ module.exports = {
             name: req.body.text
           }
         }).then(tag => {
+          const text = req.body.newText ? req.body.newText : tag[0].text
           Tag.update(
             {
               color: req.body.color || 'gray',
-              name: req.body.newText || tag[0].text
+              name: text
             },
             {
               where: {

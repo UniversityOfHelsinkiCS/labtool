@@ -1,14 +1,23 @@
-const INITIAL_STATE = {}
+const INITIAL_STATE = {
+
+}
 
 const tagsReducer = (store = INITIAL_STATE, action) => {
   switch (action.type) {
     case 'TAG_CREATE_SUCCESS': {
+      console.log('tag created succesfully')
       const id = action.response.id
-      const changedTag = store.tags.find(tag => tag.id === id)
-      if (changedTag) {
-        const newTagList = store.tags.map(tag => (tag.id !== id ? tag : changedTag))
+      console.log('id: ', id)
+      console.log('store: ', store)
+      console.log('action.response: ', action.response)
+      const changedTag = store.tags.filter(tag => tag.id === id)
+      console.log('changedTag: ', changedTag)
+      if (changedTag.length !== 0) {
+        const newTagList = store.tags.map(tag => (tag.id !== id ? tag : action.response))
+        console.log('if')
         return { ...store, tags: newTagList }
       } else {
+        console.log('else')
         return { ...store, tags: [...store.tags, action.response] }
       }
     }
