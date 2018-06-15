@@ -6,14 +6,15 @@
  */
 
 const INITIAL_STATE = {
-  string: '',
   data: {}
 }
 
 const checklistReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case 'CHECKLIST_GET_ONE_SUCCESS':
-      return { data: action.response.list, string: JSON.stringify(action.response.list, null, 2) }
+      return { data: action.response.list }
+    case 'CHECKLIST_GET_ONE_FAILURE':
+      return { data: {} }
     case 'CHECKLIST_CHANGE_FIELD': {
       const newData = state.data
       newData[action.data.key].find(row => row.name === action.data.name)[action.data.field] = action.data.value
@@ -34,8 +35,6 @@ const checklistReducer = (state = INITIAL_STATE, action) => {
       })
       return { ...state, data: newData }
     }
-    case 'CHECKLIST_CHANGE_STRING':
-      return { ...state, string: action.string }
     case 'CHECKLIST_RESET':
       return INITIAL_STATE
     default:
