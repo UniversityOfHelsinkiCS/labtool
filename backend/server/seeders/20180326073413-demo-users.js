@@ -93,6 +93,116 @@ module.exports = {
           updatedAt: '2018-03-26',
           admin: false
         },
+        {
+          id: 10101,
+          username: 'otmohjaaja1',
+          firsts: 'Teräs',
+          lastname: 'Henkilö',
+          email: 'teras.henkilo@helsinki.fi',
+          studentNumber: '014666666',
+          createdAt: '2018-03-26',
+          updatedAt: '2018-03-26',
+          admin: false
+        },
+        {
+          id: 10102,
+          username: 'otmohjaaja2',
+          firsts: 'Teräs',
+          lastname: 'Henkilö',
+          email: 'teras.henkilo@helsinki.fi',
+          studentNumber: '014666666',
+          createdAt: '2018-03-26',
+          updatedAt: '2018-03-26',
+          admin: false
+        },
+        {
+          id: 10103,
+          username: 'otmohjaaja3',
+          firsts: 'Teräs',
+          lastname: 'Henkilö',
+          email: 'teras.henkilo@helsinki.fi',
+          studentNumber: '014666666',
+          createdAt: '2018-03-26',
+          updatedAt: '2018-03-26',
+          admin: false
+        },
+        {
+          id: 10104,
+          username: 'otmohjaaja4',
+          firsts: 'Teräs',
+          lastname: 'Henkilö',
+          email: 'teras.henkilo@helsinki.fi',
+          studentNumber: '014666666',
+          createdAt: '2018-03-26',
+          updatedAt: '2018-03-26',
+          admin: false
+        },
+        {
+          id: 10105,
+          username: 'otmohjaaja5',
+          firsts: 'Teräs',
+          lastname: 'Henkilö',
+          email: 'teras.henkilo@helsinki.fi',
+          studentNumber: '014666666',
+          createdAt: '2018-03-26',
+          updatedAt: '2018-03-26',
+          admin: false
+        },
+        {
+          id: 10106,
+          username: 'otmohjaaja6',
+          firsts: 'Teräs',
+          lastname: 'Henkilö',
+          email: 'teras.henkilo@helsinki.fi',
+          studentNumber: '014666666',
+          createdAt: '2018-03-26',
+          updatedAt: '2018-03-26',
+          admin: false
+        },
+        {
+          id: 10107,
+          username: 'otmohjaaja7',
+          firsts: 'Teräs',
+          lastname: 'Henkilö',
+          email: 'teras.henkilo@helsinki.fi',
+          studentNumber: '014666666',
+          createdAt: '2018-03-26',
+          updatedAt: '2018-03-26',
+          admin: false
+        },
+        {
+          id: 10108,
+          username: 'otmohjaaja8',
+          firsts: 'Teräs',
+          lastname: 'Henkilö',
+          email: 'teras.henkilo@helsinki.fi',
+          studentNumber: '014666666',
+          createdAt: '2018-03-26',
+          updatedAt: '2018-03-26',
+          admin: false
+        },
+        {
+          id: 10109,
+          username: 'otmohjaaja9',
+          firsts: 'Teräs',
+          lastname: 'Henkilö',
+          email: 'teras.henkilo@helsinki.fi',
+          studentNumber: '014666666',
+          createdAt: '2018-03-26',
+          updatedAt: '2018-03-26',
+          admin: false
+        },
+        {
+          id: 10110,
+          username: 'otmohjaaja10',
+          firsts: 'Teräs',
+          lastname: 'Henkilö',
+          email: 'teras.henkilo@helsinki.fi',
+          studentNumber: '014666666',
+          createdAt: '2018-03-26',
+          updatedAt: '2018-03-26',
+          admin: false
+        },
         // tästä alkavat otm random käyttäjät
         {
           id: 20001,
