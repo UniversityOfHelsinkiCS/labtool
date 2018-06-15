@@ -44,6 +44,86 @@ module.exports = {
           admin: false,
           createdAt: '2018-03-26',
           updatedAt: '2018-03-26'
+        },
+        {
+          id: 10101,
+          userId: 10101,
+          courseInstanceId: 10012,
+          admin: false,
+          createdAt: '1970-01-01',
+          updatedAt: '1970-01-01'
+        },
+        {
+          id: 10102,
+          userId: 10102,
+          courseInstanceId: 10012,
+          admin: false,
+          createdAt: '1970-01-01',
+          updatedAt: '1970-01-01'
+        },
+        {
+          id: 10103,
+          userId: 10103,
+          courseInstanceId: 10012,
+          admin: false,
+          createdAt: '1970-01-01',
+          updatedAt: '1970-01-01'
+        },
+        {
+          id: 10104,
+          userId: 10104,
+          courseInstanceId: 10012,
+          admin: false,
+          createdAt: '1970-01-01',
+          updatedAt: '1970-01-01'
+        },
+        {
+          id: 10105,
+          userId: 10105,
+          courseInstanceId: 10012,
+          admin: false,
+          createdAt: '1970-01-01',
+          updatedAt: '1970-01-01'
+        },
+        {
+          id: 10106,
+          userId: 10106,
+          courseInstanceId: 10012,
+          admin: false,
+          createdAt: '1970-01-01',
+          updatedAt: '1970-01-01'
+        },
+        {
+          id: 10107,
+          userId: 10107,
+          courseInstanceId: 10012,
+          admin: false,
+          createdAt: '1970-01-01',
+          updatedAt: '1970-01-01'
+        },
+        {
+          id: 10108,
+          userId: 10108,
+          courseInstanceId: 10012,
+          admin: false,
+          createdAt: '1970-01-01',
+          updatedAt: '1970-01-01'
+        },
+        {
+          id: 10109,
+          userId: 10109,
+          courseInstanceId: 10012,
+          admin: false,
+          createdAt: '1970-01-01',
+          updatedAt: '1970-01-01'
+        },
+        {
+          id: 10110,
+          userId: 10110,
+          courseInstanceId: 10012,
+          admin: false,
+          createdAt: '1970-01-01',
+          updatedAt: '1970-01-01'
         }
       ],
       {}
