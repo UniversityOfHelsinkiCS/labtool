@@ -9,10 +9,13 @@
 
 const INITIAL_STATE = {
   randomizedCodeReview: [],
-  codeReviewStates: { 1: [], 2: [] },
-  currentSelections: { 1: {}, 2: {} },
+  codeReviewStates: {},
+  currentSelections: {},
+  selectedDropdown: '',
   checkBoxStates: {},
-  initialized: false
+  statesCreated: false,
+  initialized: false,
+  showCreate: false
 }
 
 function shuffleArray(array) {
@@ -36,6 +39,19 @@ function purgeCodeReviews(codeReviewStateArray, toPurgeArray) {
 
 const codeReviewReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
+    case 'CREATE_STATES_FOR_CODE_REVIEWS': {
+      let i = 1
+      let codeReviewStates = {}
+      let currentSelections = {}
+      while (i <= action.data) {
+        codeReviewStates[i] = []
+        currentSelections[i] = {}
+        i++
+      }
+      codeReviewStates['create'] = []
+      currentSelections['create'] = {}
+      return { ...state, codeReviewStates: codeReviewStates, currentSelections: currentSelections, statesCreated: true }
+    }
     case 'INIT_REVIEW': {
       const oldReviews = state.codeReviewStates[action.data.round]
       let updatedReviews = {}
@@ -60,7 +76,10 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
       newCurrentSelections[action.data.round][action.data.reviewer] = action.data.toReview
       return { ...state, codeReviewStates: codeReviewRoundsToUpdate, currentSelections: newCurrentSelections }
     }
-
+    case 'TOGGLE_CREATE':
+      return { ...state, showCreate: !state.showCreate }
+    case 'SELECT_DROPDOWN':
+      return { ...state, selectedDropdown: action.data }
     case 'INIT_ALL_CHECKBOXES':
       return { ...state, checkBoxStates: action.data.data, randomizedCodeReview: action.data.ids }
     case 'INIT_CHECKBOX':
@@ -88,6 +107,7 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
       return { ...state, codeReviewStates: codeReviewRoundsToUpdate }
     case 'CODE_REVIEW_RANDOMIZE': {
       const newCodeReviewStates = state.codeReviewStates
+      console.log(action.data.reviewNumber)
       purgeCodeReviews(newCodeReviewStates[action.data.reviewNumber], state.randomizedCodeReview)
       const randomizedOrder = Array(state.randomizedCodeReview.length)
       let i = state.randomizedCodeReview.length
@@ -160,6 +180,7 @@ export const initAllCheckboxes = data => {
 
 export const randomAssign = data => {
   return async dispatch => {
+    console.log(data)
     dispatch({
       type: 'CODE_REVIEW_RANDOMIZE',
       data: data
@@ -171,6 +192,32 @@ export const codeReviewReset = () => {
   return async dispatch => {
     dispatch({
       type: 'CODE_REVIEW_RESET'
+    })
+  }
+}
+
+export const selectDropdown = data => {
+  return async dispatch => {
+    dispatch({
+      type: 'SELECT_DROPDOWN',
+      data: data
+    })
+  }
+}
+
+export const toggleCreate = () => {
+  return async dispatch => {
+    dispatch({
+      type: 'TOGGLE_CREATE'
+    })
+  }
+}
+
+export const createStates = data => {
+  return async dispatch => {
+    dispatch({
+      type: 'CREATE_STATES_FOR_CODE_REVIEWS',
+      data: data
     })
   }
 }

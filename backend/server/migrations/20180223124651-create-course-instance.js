@@ -37,6 +37,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         defaultValue: 0
       },
+      amountOfCodeReviews: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0
+      },
       codeReviewActive: {
         type: Sequelize.BOOLEAN,
         defaultValue: false
