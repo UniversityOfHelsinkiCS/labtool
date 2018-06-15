@@ -1,11 +1,29 @@
 import { callController } from '../util/apiConnection'
 
 /**
- * Creates a new tag
+ * Creates or modifies a tag
+ * data: {
+ *   text
+ *   newText (optional)
+ *   color
+ * }
  */
 export const createTag = data => {
   const route = '/tags/create'
   const prefix = 'TAG_CREATE_'
+  const method = 'post'
+  return callController(route, prefix, data, method)
+}
+
+/**
+ * Removes a tag from the system
+ * data: {
+ *   text
+ * }
+ */
+export const removeTag = data => {
+  const route = '/tags/remove'
+  const prefix = 'TAG_REMOVE_'
   const method = 'post'
   return callController(route, prefix, data, method)
 }
@@ -21,7 +39,7 @@ export const getAllTags = () => {
 }
 
 /** Tags a student
- * body: {
+ * data: {
  *  studentId
  *  tagId
  * }

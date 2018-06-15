@@ -31,7 +31,7 @@ module.exports = {
         }).then(tag => {
           Tag.update(
             {
-              color: req.body.color,
+              color: req.body.color || 'gray',
               name: req.body.newText || tag[0].text
             },
             {

@@ -8,6 +8,8 @@ const tagsReducer = (store = INITIAL_STATE, action) => {
       return { ...store, tags: action.response }
     case 'TAG_STUDENT_SUCCESS':
       return store
+    case 'TAG_REMOVE_SUCCESS':
+      return store
     default:
       return store
   }
