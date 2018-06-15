@@ -79,8 +79,11 @@ module.exports = {
           if (!tag) {
             return res.status(404).send('there is no tag with that name')
           }
+          const id = tag.id
+          console.log('\n\ntag: ', tag, '\n\n')
+          console.log('\n\nid: ', id, '\n\n')
           tag.destroy()
-          res.status(200).send('tag removed from the system')
+          return res.status(200).send(id.toString())
         })
       })
     } catch (e) {

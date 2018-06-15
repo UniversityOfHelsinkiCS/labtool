@@ -133,11 +133,6 @@ const notificationReducer = (state = {}, action) => {
         message: 'Student tag removed successfully',
         error: false
       }
-    case 'TAG_REMOVE_SUCCESS':
-      return {
-        message: 'Tag removed from the system succesfully',
-        error: false
-      }
     case 'CODE_REVIEW_RANDOMIZE':
       return {
         message: 'Code reviews randomized. Click save to change',
