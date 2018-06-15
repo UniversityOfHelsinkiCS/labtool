@@ -186,7 +186,7 @@ export class BrowseReviews extends Component {
     const { activeIndex } = this.state
 
     return (
-      <div className="BrowseReviews" style={{ overflowX: 'scroll' }}>
+      <div className="BrowseReviews" style={{ overflowX: 'auto' }}>
         {this.props.courseData.role === 'teacher' ? (
           <div>
             <Link to={`/labtool/courses/${this.props.selectedInstance.ohid}`}>
