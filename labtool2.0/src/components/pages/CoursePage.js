@@ -288,7 +288,32 @@ export class CoursePage extends React.Component {
                 <Accordion.Title className="codeReview" active={activeIndex === i} index={i} onClick={this.handleClick}>
                   <Icon name="dropdown" /> Code Review {cr.reviewNumber}{' '}
                 </Accordion.Title>
-                <Accordion.Content active={activeIndex === i}>{cr.points !== null ? <h4 className="codeReviewPoints">{cr.points} points</h4> : <h4>Not Graded</h4>}</Accordion.Content>
+                <Accordion.Content active={activeIndex === i}>
+                  <div className="codeReviewExpanded">
+                    {cr.points !== null ? 
+                      <div>
+                        <h4 className="codeReviewPoints">{cr.points} points</h4>
+                      </div>
+                    : (
+                      <div>
+                        <p>Not Graded</p>
+                      </div>
+                    )}
+                    
+                  {this.props.coursePageLogic.showCodeReviews.indexOf(cr.reviewNumber) !== -1 ? (
+                      <div>  
+                        <h4>Project to review</h4>
+                        <p>{cr.toReview.projectName}</p>
+                        <p>
+                          <a href={cr.toReview.github}>{cr.toReview.github}</a>
+                        </p>
+                      </div>
+                      ) : (
+                        <div></div>
+                      )
+                  }
+                  </div>
+                </Accordion.Content>
               </Accordion>
             )
             i++

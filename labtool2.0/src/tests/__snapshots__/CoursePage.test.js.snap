@@ -101,12 +101,19 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
     <AccordionContent
       active={true}
     >
-      <h4
-        className="codeReviewPoints"
+      <div
+        className="codeReviewExpanded"
       >
-        2
-         points
-      </h4>
+        <div>
+          <h4
+            className="codeReviewPoints"
+          >
+            2
+             points
+          </h4>
+        </div>
+        <div />
+      </div>
     </AccordionContent>
   </Accordion>
   <Accordion
@@ -131,12 +138,33 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
     <AccordionContent
       active={false}
     >
-      <h4
-        className="codeReviewPoints"
+      <div
+        className="codeReviewExpanded"
       >
-        1
-         points
-      </h4>
+        <div>
+          <h4
+            className="codeReviewPoints"
+          >
+            1
+             points
+          </h4>
+        </div>
+        <div>
+          <h4>
+            Project to review
+          </h4>
+          <p>
+            Tira super projekti
+          </p>
+          <p>
+            <a
+              href="http://github.com/superprojekti"
+            >
+              http://github.com/superprojekti
+            </a>
+          </p>
+        </div>
+      </div>
     </AccordionContent>
   </Accordion>
   <Accordion
@@ -161,9 +189,16 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
     <AccordionContent
       active={false}
     >
-      <h4>
-        Not Graded
-      </h4>
+      <div
+        className="codeReviewExpanded"
+      >
+        <div>
+          <p>
+            Not Graded
+          </p>
+        </div>
+        <div />
+      </div>
     </AccordionContent>
   </Accordion>
 </div>
