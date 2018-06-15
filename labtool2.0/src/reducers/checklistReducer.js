@@ -35,6 +35,17 @@ const checklistReducer = (state = INITIAL_STATE, action) => {
       })
       return { ...state, data: newData }
     }
+    case 'CHECKLIST_REMOVE_TOPIC': {
+      const newData = state.data
+      delete newData[action.data.key]
+      return { ...state, data: newData }
+    }
+    case 'CHECKLIST_REMOVE_ROW': {
+      const newData = state.data
+      const index = newData[action.data.key].indexOf(action.data.name)
+      newData.splice(index, 1)
+      return { ...state, data: newData }
+    }
     case 'CHECKLIST_RESET':
       return INITIAL_STATE
     default:
@@ -46,15 +57,6 @@ export const resetChecklist = () => {
   return async dispatch => {
     dispatch({
       type: 'CHECKLIST_RESET'
-    })
-  }
-}
-
-export const changeString = string => {
-  return async dispatch => {
-    dispatch({
-      type: 'CHECKLIST_CHANGE_STRING',
-      string
     })
   }
 }
@@ -81,6 +83,24 @@ export const addRow = data => {
   return async dispatch => {
     dispatch({
       type: 'CHECKLIST_ADD_ROW',
+      data
+    })
+  }
+}
+
+export const removeTopic = data => {
+  return async dispatch => {
+    dispatch({
+      type: 'CHECKLIST_REMOVE_TOPIC',
+      data
+    })
+  }
+}
+
+export const removeRow = data => {
+  return async dispatch => {
+    dispatch({
+      type: 'CHECKLIST_REMOVE_ROW',
       data
     })
   }

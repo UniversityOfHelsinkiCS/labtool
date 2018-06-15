@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Form, TextArea, Header, Input, Label, Button, Popup, Card } from 'semantic-ui-react'
+import { Form, Header, Input, Label, Button, Popup, Card } from 'semantic-ui-react'
 import { showNotification } from '../../reducers/notificationReducer'
 import { createChecklist, getOneChecklist } from '../../services/checklist'
 import { getOneCI } from '../../services/courseInstance'
-import { resetChecklist, changeString, changeField, addTopic, addRow } from '../../reducers/checklistReducer'
+import { resetChecklist, changeField, addTopic, addRow, removeTopic, removeRow } from '../../reducers/checklistReducer'
 
 export class CreateChecklist extends Component {
   constructor(props) {
@@ -131,6 +131,19 @@ export class CreateChecklist extends Component {
     })
   }
 
+  removeTopic = key => async e => {
+    this.props.removeTopic({
+      key
+    })
+  }
+
+  removeRow = (key, name) => async e => {
+    this.props.removeRow({
+      key,
+      name
+    })
+  }
+
   render() {
     return (
       <div className="CreateChecklist">
@@ -146,10 +159,18 @@ export class CreateChecklist extends Component {
           <div>
             {Object.keys(this.props.checklist.data).map(key => (
               <Card fluid color="red" key={key}>
-                <Card.Content header={key} />
+                <Card.Content>
+                  <span>{key}</span>
+                  <Button type="button" onClick={this.removeTopic(key)}>
+                    Delete
+                  </Button>
+                </Card.Content>
                 {this.props.checklist.data[key].map(row => (
                   <Card.Content key={row.name}>
                     <Header>{row.name}</Header>
+                    <Button type="button" onClick={this.removeRow(key, row.name)}>
+                      Delete
+                    </Button>
                     <Form.Field>
                       <Label>Points</Label>
                       <Input type="number" step="0.25" value={row.points} onChange={this.changeField(key, row.name, 'points')} />
@@ -171,7 +192,9 @@ export class CreateChecklist extends Component {
             <Popup trigger={<Button type="button" onClick={this.newTopic} circular icon={{ name: 'add', size: 'large' }} />} content="Add new topic" />
             {this.state.openAdd === 'newTopic' ? <Input type="text" value={this.state.topicName} onChange={this.changeTopicName} /> : <div />}
           </div>
-          <Button className="saveButton" type="submit" onCLick={this.handleSubmit}>Save</Button>
+          <Button className="saveButton" type="submit" onCLick={this.handleSubmit}>
+            Save
+          </Button>
         </div>
       </div>
     )
@@ -192,10 +215,11 @@ const mapDispatchToProps = {
   getOneCI,
   getOneChecklist,
   resetChecklist,
-  changeString,
   changeField,
   addTopic,
-  addRow
+  addRow,
+  removeTopic,
+  removeRow
 }
 
 export default connect(
