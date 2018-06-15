@@ -21,6 +21,9 @@ export class ManageTags extends React.Component {
         color: e.target.color.value
       }
       await this.props.createTag(tag)
+      document.getElementById('tagText').value = ''
+      document.getElementById('tagTextNew').value = ''
+      document.getElementById('tagColor').value = ''
     } catch (error) {
       console.log(error)
     }
@@ -61,6 +64,7 @@ export class ManageTags extends React.Component {
       }
       await this.props.removeTag(tag)
       document.getElementById('tagText').value = ''
+      document.getElementById('tagTextNew').value = ''
       document.getElementById('tagColor').value = ''
     } catch (error) {
       console.log(error)
