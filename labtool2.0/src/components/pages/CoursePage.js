@@ -265,7 +265,16 @@ export class CoursePage extends React.Component {
               <Table.Header>
                 <Table.Row>
                   <Table.HeaderCell>Name</Table.HeaderCell>
-                  <Table.HeaderCell>Project Information</Table.HeaderCell>
+                  <Table.HeaderCell>
+                    Project Info
+                    {this.props.coursePageLogic.filterByTag !== 0 ? (
+                      <Button compact className="mini ui yellow button" floated="right" onClick={this.changeFilterTag(0)}>
+                        Clear tag filter
+                      </Button>
+                    ) : (
+                      <p />
+                    )}
+                  </Table.HeaderCell>
                   {createHeaders()}
                   <Table.HeaderCell> Sum </Table.HeaderCell>
                   <Table.HeaderCell width="six"> Instructor </Table.HeaderCell>
