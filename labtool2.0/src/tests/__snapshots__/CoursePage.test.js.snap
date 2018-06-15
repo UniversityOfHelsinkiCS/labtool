@@ -200,21 +200,6 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
                 </a>
               </p>
             </CardContent>
-            <CardContent>
-              <h4>
-                Your reviewer
-              </h4>
-              <p>
-                Tiran toinen labraprojekti
-              </p>
-              <p>
-                <a
-                  href="http://github.com/tiralabra2"
-                >
-                  http://github.com/tiralabra2
-                </a>
-              </p>
-            </CardContent>
           </div>
         </Card>
         <Card
