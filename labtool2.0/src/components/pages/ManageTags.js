@@ -17,9 +17,26 @@ export class ManageTags extends React.Component {
 
       const tag = {
         text: e.target.text.value,
+        newText: e.target.newText.value,
         color: e.target.color.value
       }
       await this.props.createTag(tag)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  removeTag = async e => {
+    console.log('removing tag')
+    try {
+      e.preventDefault()
+
+      this.setState({ loading: true })
+
+      const tag = {
+        text: e.target.text.value
+      }
+      await this.props.removeTag(tag)
     } catch (error) {
       console.log(error)
     }
@@ -42,7 +59,7 @@ export class ManageTags extends React.Component {
     return (
       <Container>
         <div className="sixteen wide column" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
-          <h2>Add tags</h2>
+          <h2>Add, modify or remove tags</h2>
           <p />
         </div>
         <div
@@ -61,13 +78,21 @@ export class ManageTags extends React.Component {
                   <Input type="text" id="tagText" className="form-control1" name="text" placeholder="tag name" required style={{ minWidth: '30em' }} />
                 </Form.Group>
                 <Form.Group inline>
+                  <label style={{ width: '100px', textAlign: 'left' }}>New text</label>
+                  <Input type="text" id="tagTextNew" className="form-control2" name="newText" placeholder="(optional)" required style={{ minWidth: '30em' }} />
+                </Form.Group>
+                <Form.Group inline>
                   <label style={{ width: '100px', textAlign: 'left' }}>Color</label>
-                  <Input type="text" id="tagColor" className="form-control2" name="color" placeholder="tag color" required style={{ minWidth: '30em' }} />
+                  <Input type="text" id="tagColor" className="form-control3" name="color" placeholder="tag color" required style={{ minWidth: '30em' }} />
                 </Form.Group>
                 <Form.Field>
                   <button className="ui left floated blue button" type="submit">
                     {' '}
-                    Add
+                    Add or modify
+                  </button>
+                  <button className="ui left floated blue button" onClick={this.removeTag}>
+                    {' '}
+                    Remove
                   </button>
                 </Form.Field>
               </Form>

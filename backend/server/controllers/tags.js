@@ -30,7 +30,10 @@ module.exports = {
           }
         }).then(tag => {
           Tag.update(
-            { color: req.body.color },
+            {
+              color: req.body.color,
+              name: req.body.newText || tag[0].text
+            },
             {
               where: {
                 id: tag[0].id
@@ -52,6 +55,36 @@ module.exports = {
       })
     } catch (e) {
       res.status(400).send(e)
+    }
+  },
+
+  remove(req, res) {
+    helper.controller_before_auth_check_action(req, res)
+
+    try {
+      TeacherInstance.findOne({
+        where: {
+          userId: req.decoded.id,
+          admin: true
+        }
+      }).then(found => {
+        if (!found) {
+          return res.status(400).send('you have to be a course teacher to do this')
+        }
+        Tag.findOne({
+          where: {
+            name: req.body.text
+          }
+        }).then(tag => {
+          if (!tag) {
+            return res.status(404).send('there is no tag with that name')
+          }
+          tag.destroy()
+          res.status(200).send('tag removed from the system')
+        })
+      })
+    } catch (e) {
+      return res.status(400).send(e)
     }
   },
 
