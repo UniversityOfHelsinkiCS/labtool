@@ -27,7 +27,7 @@ exports.users = [
   {
     "username": "tiraopiskelija4",
     "student_number": "014623598",
-    "first_names": "Hans Peter Börje",
+    "first_names": "Hans Peter *Börje",
     "last_name": "Backlund"
   },
   {
