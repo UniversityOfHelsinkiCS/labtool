@@ -20,7 +20,6 @@ import BrowseReviews from './components/pages/BrowseReviews'
 import MyPage from './components/pages/MyPage'
 import CreateChecklist from './components/pages/CreateChecklist'
 import ManageTags from './components/pages/ManageTags'
-import CreateChecklist from './components/pages/CreateChecklist'
 
 // Reducer imports
 import { logout } from './reducers/loginReducer'

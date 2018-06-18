@@ -18,7 +18,6 @@ import coursePageLogic from './reducers/coursePageLogicReducer'
 import codeReviewLogic from './reducers/codeReviewReducer'
 import checklist from './reducers/checklistReducer'
 import tagsReducer from './reducers/tagReducer'
-import checklist from './reducers/checklistReducer'
 import weekReview from './reducers/weekReviewReducer'
 
 /**
