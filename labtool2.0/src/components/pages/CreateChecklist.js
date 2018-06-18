@@ -14,7 +14,8 @@ export class CreateChecklist extends Component {
       week: 1,
       topicName: '',
       rowName: '',
-      openAdd: ''
+      openAdd: '',
+      dullLoadButton: 0
     }
   }
 
@@ -48,8 +49,15 @@ export class CreateChecklist extends Component {
   }
 
   changeWeek = async e => {
+    const week = Number(e.target.value)
+    if (week <= 0 || week > this.props.selectedInstance.weekAmount) {
+      this.props.showNotification({
+        message: 'Invalid week.',
+        error: true
+      })
+    }
     this.setState({
-      week: Number(e.target.value)
+      week
     })
   }
 
@@ -58,20 +66,19 @@ export class CreateChecklist extends Component {
       key,
       name,
       field,
-      value: e.target.value
+      value: field === 'points' ? Number(e.target.value) : e.target.value
     })
   }
 
   // Make api call to receive checklist from database.
   loadChecklist = async e => {
+    this.setState({
+      dullLoadButton: this.state.week
+    })
     this.props.getOneChecklist({
       week: this.state.week,
       courseInstanceId: this.props.selectedInstance.id
     })
-  }
-
-  changeTextArea = async e => {
-    this.props.changeString(e.target.value)
   }
 
   newTopic = async e => {
@@ -159,44 +166,48 @@ export class CreateChecklist extends Component {
       <div className="CreateChecklist">
         <Header>{this.props.selectedInstance.name}</Header>
         <div className="editForm">
-          <Form.Field>
+          <div className="topOptions">
             <Label>Week </Label>
             <Input type="number" name="week" step="1" value={this.state.week} onChange={this.changeWeek} style={{ width: '100px', marginRight: '10px' }} />
-            <Button className="loadButton" type="button" onClick={this.loadChecklist}>
+            <Button className="loadButton" type="button" onClick={this.loadChecklist} color={this.state.dullLoadButton === this.state.week ? undefined : 'green'}>
               Load checklist
             </Button>
-          </Form.Field>
+          </div>
           <div>
             {Object.keys(this.props.checklist.data).map(key => (
               <Card fluid color="red" key={key}>
                 <Card.Content>
-                  <Header classname="topicHeader">{key}</Header>
-                  <Button className="deleteButton" type="button" color="red" onClick={this.removeTopic(key)}>
-                    Delete
-                  </Button>
+                  <Header>
+                    {key}{' '}
+                    <Button className="deleteButton" type="button" color="red" size="tiny" onClick={this.removeTopic(key)}>
+                      <div className="deleteButtonText">Delete topic</div>
+                    </Button>
+                  </Header>
                 </Card.Content>
                 {this.props.checklist.data[key].map(row => (
                   <Card.Content key={row.name}>
-                    <Header>{row.name}</Header>
-                    <Button className="deleteButton" type="button" onClick={this.removeRow(key, row.name)}>
-                      Delete
-                    </Button>
-                    <Form.Field>
+                    <Header>
+                      {row.name}{' '}
+                      <Button className="deleteButton" type="button" color="red" size="tiny" onClick={this.removeRow(key, row.name)}>
+                        <div className="deleteButtonText">Delete checkbox</div>
+                      </Button>
+                    </Header>
+                    <div className="formField">
                       <Label>Points</Label>
-                      <Input type="number" step="0.25" value={row.points} onChange={this.changeField(key, row.name, 'points')} />
-                    </Form.Field>
-                    <Form.Field>
+                      <Input className="numberField" type="number" step="0.25" value={row.points} onChange={this.changeField(key, row.name, 'points')} />
+                    </div>
+                    <div className="formField">
                       <Label>Text when checked</Label>
-                      <Input type="text" value={row.textWhenOn} onChange={this.changeField(key, row.name, 'textWhenOn')} />
-                    </Form.Field>
-                    <Form.Field>
+                      <Input className="textField" type="text" value={row.textWhenOn} onChange={this.changeField(key, row.name, 'textWhenOn')} />
+                    </div>
+                    <div className="formField">
                       <Label>Text when unchecked</Label>
-                      <Input type="text" value={row.textWhenOff} onChange={this.changeField(key, row.name, 'textWhenOff')} />
-                    </Form.Field>
+                      <Input className="textField" type="text" value={row.textWhenOff} onChange={this.changeField(key, row.name, 'textWhenOff')} />
+                    </div>
                   </Card.Content>
                 ))}
-                <form onSubmit={this.newRow(key)}>
-                  <Popup trigger={<Button type="submit" circular icon={{ name: 'add', size: 'large' }} />} content="Add new checkbox" />
+                <form className="addForm" onSubmit={this.newRow(key)}>
+                  <Popup trigger={<Button type="submit" circular icon={{ name: 'add', size: 'medium' }} />} content="Add new checkbox" />
                   {this.state.openAdd === key ? (
                     <div>
                       <Label>Name</Label>
@@ -211,7 +222,7 @@ export class CreateChecklist extends Component {
                 </form>
               </Card>
             ))}
-            <form onSubmit={this.newTopic}>
+            <form className="addForm" onSubmit={this.newTopic}>
               <Popup trigger={<Button type="submit" circular icon={{ name: 'add', size: 'large' }} />} content="Add new topic" />
               {this.state.openAdd === 'newTopic' ? (
                 <div>
@@ -227,8 +238,8 @@ export class CreateChecklist extends Component {
             </form>
           </div>
           <form onSubmit={this.handleSubmit}>
-            <Button className="saveButton" type="submit">
-              Save
+            <Button className="saveButton" type="submit" color="green" size="large">
+              <div className="saveButtonText">Save</div>
             </Button>
           </form>
         </div>
