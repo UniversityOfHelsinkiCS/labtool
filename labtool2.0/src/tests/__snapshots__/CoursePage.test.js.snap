@@ -223,9 +223,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
       <div
         className="sixteen wide column"
       >
-        <h2>
-          Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit
-        </h2>
+        <h2 />
       </div>
       <p />
     </div>
@@ -244,35 +242,23 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
               as="td"
             >
               <div>
-                <Label
-                  ribbon={true}
-                  style={
-                    Object {
-                      "backgroundColor": "#21ba45",
-                    }
-                  }
-                >
-                  Active
-                </Label>
+                <div />
               </div>
             </TableCell>
             <TableCell
               as="td"
             >
               Week amount: 
-              7
             </TableCell>
             <TableCell
               as="td"
             >
               Current week: 
-              1
             </TableCell>
             <TableCell
               as="td"
             >
               Week maxpoints: 
-              3
             </TableCell>
             <TableCell
               as="td"
@@ -281,7 +267,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
                
               <Link
                 replace={false}
-                to="/labtool/ModifyCourseInstancePage/TKT20010.2018.K.A.1"
+                to="/labtool/ModifyCourseInstancePage/undefined"
               >
                 <Popup
                   content="Edit course"
@@ -358,30 +344,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
         noResultsMessage="No results found."
         onChange={[Function]}
         openOnFocus={true}
-        options={
-          Array [
-            Object {
-              "key": 0,
-              "text": "no filter",
-              "value": 0,
-            },
-            Object {
-              "key": null,
-              "text": "unassigned students",
-              "value": null,
-            },
-            Object {
-              "key": 10001,
-              "text": "Pää Opettaja",
-              "value": 10001,
-            },
-            Object {
-              "key": 10011,
-              "text": "Ossi Ohjaaja Mutikainen",
-              "value": 10011,
-            },
-          ]
-        }
+        options={Array []}
         placeholder="Select Teacher"
         renderLabel={[Function]}
         searchInput="text"
@@ -416,62 +379,6 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             as="th"
           >
              Github 
-          </TableHeaderCell>
-          <TableHeaderCell
-            as="th"
-            key="0"
-          >
-            Week 
-            1
-             
-          </TableHeaderCell>
-          <TableHeaderCell
-            as="th"
-            key="1"
-          >
-            Week 
-            2
-             
-          </TableHeaderCell>
-          <TableHeaderCell
-            as="th"
-            key="2"
-          >
-            Week 
-            3
-             
-          </TableHeaderCell>
-          <TableHeaderCell
-            as="th"
-            key="3"
-          >
-            Week 
-            4
-             
-          </TableHeaderCell>
-          <TableHeaderCell
-            as="th"
-            key="4"
-          >
-            Week 
-            5
-             
-          </TableHeaderCell>
-          <TableHeaderCell
-            as="th"
-            key="5"
-          >
-            Week 
-            6
-             
-          </TableHeaderCell>
-          <TableHeaderCell
-            as="th"
-            key="6"
-          >
-            Week 
-            7
-             
           </TableHeaderCell>
           <TableHeaderCell
             as="th"

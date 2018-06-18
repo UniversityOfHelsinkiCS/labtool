@@ -173,7 +173,6 @@ export class CoursePage extends React.Component {
           value: tag.id
         })
       )
-      console.log('tags: ', array)
       return array
     }
     console.log('ei tageja')
@@ -353,33 +352,31 @@ export class CoursePage extends React.Component {
             headers.push(
               <Accordion key={i} fluid styled>
                 <Accordion.Title className="codeReview" active={activeIndex === i || cr.points === null} index={i} onClick={this.handleClick}>
-                  <Icon name="dropdown" /> Code Review {cr.reviewNumber} {cr.points !== null ? (", points " + cr.points) : ''}
-                  
+                  <Icon name="dropdown" /> Code Review {cr.reviewNumber} {cr.points !== null ? ', points ' + cr.points : ''}
                 </Accordion.Title>
                 <Accordion.Content active={activeIndex === i || cr.points === null}>
                   <div className="codeReviewExpanded">
-                    {cr.points !== null ? 
+                    {cr.points !== null ? (
                       <div>
                         <h4 className="codeReviewPoints">Points: {cr.points}</h4>
                       </div>
-                    : (
+                    ) : (
                       <div>
                         <p>Not Graded</p>
                       </div>
                     )}
-                    
-                  {this.props.coursePageLogic.showCodeReviews.indexOf(cr.reviewNumber) !== -1 ? (
-                      <div>  
+
+                    {this.props.coursePageLogic.showCodeReviews.indexOf(cr.reviewNumber) !== -1 ? (
+                      <div>
                         <h4>Project to review</h4>
                         <p>{cr.toReview.projectName}</p>
                         <p>
                           <a href={cr.toReview.github}>{cr.toReview.github}</a>
                         </p>
                       </div>
-                      ) : (
-                        <div></div>
-                      )
-                  }
+                    ) : (
+                      <div />
+                    )}
                   </div>
                 </Accordion.Content>
               </Accordion>
@@ -566,7 +563,10 @@ export class CoursePage extends React.Component {
                         ) : (
                           <span>not assigned</span>
                         )}
-                        <Popup trigger={<Button circular onClick={this.changeHiddenAssistantDropdown(data.id)} icon={{ name: 'pencil', size: 'medium' }} style={{ float: 'right' }} />} content="Assign instructor" />
+                        <Popup
+                          trigger={<Button circular onClick={this.changeHiddenAssistantDropdown(data.id)} icon={{ name: 'pencil', size: 'medium' }} style={{ float: 'right' }} />}
+                          content="Assign instructor"
+                        />
                         {this.props.coursePageLogic.showAssistantDropdown === data.id ? (
                           <div>
                             <Dropdown id="assistantDropdown" options={dropDownTeachers} onChange={this.changeSelectedTeacher()} placeholder="Select teacher" fluid selection />
