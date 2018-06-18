@@ -6,7 +6,7 @@ import { createOneComment } from '../../services/comment'
 import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import { associateTeacherToStudent } from '../../services/assistant'
 import ReactMarkdown from 'react-markdown'
-import { showDropdown, selectTeacher, filterByAssistant, coursePageReset, toggleCodeReview } from '../../reducers/coursePageLogicReducer'
+import { showDropdown, selectTeacher, filterByAssistant, filterByTag, coursePageReset, toggleCodeReview } from '../../reducers/coursePageLogicReducer'
 
 export class CoursePage extends React.Component {
   state = { activeIndex: 0, lastReviewedIndex: null }
@@ -75,6 +75,24 @@ export class CoursePage extends React.Component {
     return (e, data) => {
       const { value } = data
       this.props.filterByAssistant(value)
+    }
+  }
+
+  changeFilterTag = id => {
+    return () => {
+      if (this.props.coursePageLogic.filterByTag === id) {
+        this.props.filterByTag(0)
+      } else {
+        this.props.filterByTag(id)
+      }
+    }
+  }
+
+  hasFilteredTag = (data, id) => {
+    for (let i = 0; i < data.Tags.length; i++) {
+      if (data.Tags[i].id === id) {
+        return data
+      }
     }
   }
 
@@ -191,11 +209,9 @@ export class CoursePage extends React.Component {
         </Card>
       )
       if (this.props.courseData && this.props.courseData.data && this.props.courseData.data.weeks) {
-        console.log('\n\nI am here\n\n')
         let weeks = null
         let i = 0
         for (; i < this.props.courseData.data.weeks.length; i++) {
-          console.log('\ni: ', i)
           weeks = this.props.courseData.data.weeks.find(function(week) {
             return week.weekNumber === i + 1
           })
@@ -203,7 +219,6 @@ export class CoursePage extends React.Component {
             // Sets last reviewed week open.
             this.openLastReviewedWeek()
 
-            console.log('\n\nFound a week, i=', i, '\n\n')
             headers.push(
               <Accordion key={i} fluid styled>
                 <Accordion.Title active={activeIndex === i} index={i} onClick={this.handleClick}>
@@ -281,13 +296,14 @@ export class CoursePage extends React.Component {
             headers.push(
               <Accordion key={i} fluid styled>
                 <Accordion.Title className="codeReview" active={activeIndex === i || cr.points === null} index={i} onClick={this.handleClick}>
-                  <Icon name="dropdown" /> Code Review {cr.reviewNumber}{' '}
+                  <Icon name="dropdown" /> Code Review {cr.reviewNumber} {cr.points !== null ? (", points " + cr.points) : ''}
+                  
                 </Accordion.Title>
                 <Accordion.Content active={activeIndex === i || cr.points === null}>
                   <div className="codeReviewExpanded">
                     {cr.points !== null ? 
                       <div>
-                        <h4 className="codeReviewPoints">{cr.points} points</h4>
+                        <h4 className="codeReviewPoints">Points: {cr.points}</h4>
                       </div>
                     : (
                       <div>
@@ -430,14 +446,27 @@ export class CoursePage extends React.Component {
                   .filter(data => {
                     return this.props.coursePageLogic.filterByAssistant === 0 || this.props.coursePageLogic.filterByAssistant === data.teacherInstanceId
                   })
+                  .filter(data => {
+                    return this.props.coursePageLogic.filterByTag === 0 || this.hasFilteredTag(data, this.props.coursePageLogic.filterByTag)
+                  })
                   .map(data => (
                     <Table.Row key={data.id}>
                       <Table.Cell>
                         {data.User.firsts} {data.User.lastname}
                       </Table.Cell>
                       <Table.Cell>
-                        <p>{data.projectName}</p>
-                        <a href={data.github}>{data.github}</a>
+                        <p>
+                          {data.projectName}
+                          <br />
+                          <a href={data.github}>{data.github}</a>
+                        </p>
+                        {data.Tags.map(tag => (
+                          <div key={tag.id}>
+                            <Button compact floated="left" className={`mini ui ${tag.color} button`} onClick={this.changeFilterTag(tag.id)}>
+                              {tag.name}
+                            </Button>
+                          </div>
+                        ))}
                       </Table.Cell>
                       {createIndents(data.weeks, data.codeReviews, data.id)}
                       <Table.Cell>
@@ -572,6 +601,7 @@ const mapDispatchToProps = {
   showDropdown,
   selectTeacher,
   filterByAssistant,
+  filterByTag,
   coursePageReset,
   toggleCodeReview
 }
