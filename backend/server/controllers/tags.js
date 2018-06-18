@@ -1,5 +1,7 @@
 const Tag = require('../models').Tag
+const StudentTag = require('../models').StudentTag
 const TeacherInstance = require('../models').TeacherInstance
+const StudentInstance = require('../models').StudentInstance
 const helper = require('../helpers/course_instance_helper')
 
 module.exports = {
@@ -27,8 +29,12 @@ module.exports = {
             name: req.body.text
           }
         }).then(tag => {
+          const text = req.body.newText ? req.body.newText : tag[0].text
           Tag.update(
-            { color: req.body.color },
+            {
+              color: req.body.color || 'gray',
+              name: text
+            },
             {
               where: {
                 id: tag[0].id
@@ -53,6 +59,39 @@ module.exports = {
     }
   },
 
+  remove(req, res) {
+    helper.controller_before_auth_check_action(req, res)
+
+    try {
+      TeacherInstance.findOne({
+        where: {
+          userId: req.decoded.id,
+          admin: true
+        }
+      }).then(found => {
+        if (!found) {
+          return res.status(400).send('you have to be a course teacher to do this')
+        }
+        Tag.findOne({
+          where: {
+            name: req.body.text
+          }
+        }).then(tag => {
+          if (!tag) {
+            return res.status(404).send('there is no tag with that name')
+          }
+          const id = tag.id
+          console.log('\n\ntag: ', tag, '\n\n')
+          console.log('\n\nid: ', id, '\n\n')
+          tag.destroy()
+          return res.status(200).send(id.toString())
+        })
+      })
+    } catch (e) {
+      return res.status(400).send(e)
+    }
+  },
+
   getAll(req, res) {
     helper.controller_before_auth_check_action(req, res)
 
@@ -66,6 +105,83 @@ module.exports = {
     } catch (e) {
       res.status(400).send('nymmeni jokin pieleen')
       return
+    }
+  },
+
+  addTagToStudentInstance(req, res) {
+    helper.controller_before_auth_check_action(req, res)
+
+    try {
+      TeacherInstance.findOne({
+        where: {
+          userId: req.decoded.id
+        }
+      }).then(found => {
+        if (!found) {
+          res.status(400).send('you have to be a teacher to do this')
+          return
+        }
+        StudentInstance.findOne({
+          where: {
+            id: req.body.studentId
+          }
+        }).then(student => {
+          if (!student) {
+            res.status(404).send('did not found student with that id')
+            return
+          }
+          Tag.findOne({
+            where: {
+              id: req.body.tagId
+            }
+          }).then(found => {
+            if (!found) {
+              res.status(404).send('did not find a tag with that id')
+            }
+            StudentTag.findOrCreate({
+              where: {
+                tagId: req.body.tagId,
+                studentInstanceId: req.body.studentId
+              }
+            }).then(studentTag => {
+              res.status(200).send() //halutaan kenties lähettää jotain muuta
+            })
+          })
+        })
+      })
+    } catch (e) {
+      res.status(400).send('ei onnistu')
+    }
+  },
+
+  removeTagFromStudentInstance(req, res) {
+    helper.controller_before_auth_check_action(req, res)
+
+    try {
+      TeacherInstance.findOne({
+        where: {
+          userId: req.decoded.id
+        }
+      }).then(found => {
+        if (!found) {
+          res.status(400).send('you have to be a teacher to do this')
+          return
+        }
+        StudentTag.findOne({
+          where: {
+            studentInstanceId: req.body.studentId,
+            tagId: req.body.tagId
+          }
+        }).then(studentTag => {
+          if (!studentTag) {
+            res.status(404).send('did not find the given student tag')
+          }
+          studentTag.destroy()
+          res.status(200).send('student tag removed succesfully')
+        })
+      })
+    } catch (e) {
+      res.status(400).send('ei onnistu')
     }
   }
 }

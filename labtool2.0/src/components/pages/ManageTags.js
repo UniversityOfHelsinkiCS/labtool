@@ -1,7 +1,7 @@
 import React from 'react'
-import { Form, Input, Grid, Container } from 'semantic-ui-react'
+import { Form, Input, Grid, Container, Button } from 'semantic-ui-react'
 import { connect } from 'react-redux'
-import { createTag, getAllTags } from '../../services/tags'
+import { createTag, getAllTags, removeTag } from '../../services/tags'
 
 export class ManageTags extends React.Component {
   componentWillMount() {
@@ -16,9 +16,55 @@ export class ManageTags extends React.Component {
 
       const tag = {
         text: e.target.text.value,
+        newText: e.target.newText.value || '',
         color: e.target.color.value
       }
       await this.props.createTag(tag)
+      document.getElementById('tagText').value = ''
+      document.getElementById('tagTextNew').value = ''
+      document.getElementById('tagColor').value = ''
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  addTag = async e => {
+    console.log('olen täällä')
+    try {
+      e.preventDefault()
+
+      this.setState({ loading: true })
+
+      const tag = {
+        text: document.getElementById('tagText').value,
+        newText: document.getElementById('tagText').value,
+        color: document.getElementById('tagColor').value
+      }
+      await this.props.createTag(tag)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  removeTag = async e => {
+    console.log('removing tag')
+    try {
+      var txt
+      if (!window.confirm('Are you sure?')) {
+        return
+      }
+
+      e.preventDefault()
+
+      this.setState({ loading: true })
+
+      const tag = {
+        text: document.getElementById('tagText').value
+      }
+      await this.props.removeTag(tag)
+      document.getElementById('tagText').value = ''
+      document.getElementById('tagTextNew').value = ''
+      document.getElementById('tagColor').value = ''
     } catch (error) {
       console.log(error)
     }
@@ -27,7 +73,9 @@ export class ManageTags extends React.Component {
   modifyTag = (text, color) => async e => {
     try {
       e.preventDefault()
+
       document.getElementById('tagText').value = text
+      document.getElementById('tagTextNew').value = text
       document.getElementById('tagColor').value = color
     } catch (error) {
       console.log(error)
@@ -38,7 +86,7 @@ export class ManageTags extends React.Component {
     return (
       <Container>
         <div className="sixteen wide column" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
-          <h2>Add tags</h2>
+          <h2>Add, modify or remove tags</h2>
           <p />
         </div>
         <div
@@ -52,23 +100,36 @@ export class ManageTags extends React.Component {
             <Grid.Row centered>
               <Form key="createOrModify" onSubmit={this.handleSubmit}>
                 {' '}
-                <Form.Group inline>
+                <Form.Field required inline>
                   <label style={{ width: '100px', textAlign: 'left' }}>Text</label>
                   <Input type="text" id="tagText" className="form-control1" name="text" placeholder="tag name" required style={{ minWidth: '30em' }} />
-                </Form.Group>
-                <Form.Group inline>
+                </Form.Field>
+                <Form.Field inline>
+                  <label style={{ width: '100px', textAlign: 'left' }}>New text</label>
+                  <Input type="text" id="tagTextNew" className="form-control2" name="newText" defaultValue="" placeholder="(optional)" required style={{ minWidth: '30em' }} />
+                </Form.Field>
+                <Form.Field inline>
                   <label style={{ width: '100px', textAlign: 'left' }}>Color</label>
-                  <Input type="text" id="tagColor" className="form-control2" name="color" placeholder="tag color" required style={{ minWidth: '30em' }} />
-                </Form.Group>
+                  <Input type="text" id="tagColor" className="form-control3" name="color" placeholder="tag color" required style={{ minWidth: '30em' }} />
+                </Form.Field>
                 <Form.Field>
-                  <button className="ui left floated blue button" type="submit">
+                  <Button className="ui left floated blue button" onClick={this.addTag}>
                     {' '}
                     Add
-                  </button>
+                  </Button>
+                  <Button className="ui left floated blue button" type="submit">
+                    {' '}
+                    Modify
+                  </Button>
+                  <Button className="ui left floated blue button" onClick={this.removeTag}>
+                    {' '}
+                    Remove
+                  </Button>
                 </Form.Field>
               </Form>
             </Grid.Row>
           </Grid>
+          <h2>Current tags (click us)</h2>
           <br />
           {this.props.tags && this.props.tags.tags ? (
             this.props.tags.tags.map(tag => (
@@ -96,6 +157,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = {
   createTag,
+  removeTag,
   getAllTags
 }
 
