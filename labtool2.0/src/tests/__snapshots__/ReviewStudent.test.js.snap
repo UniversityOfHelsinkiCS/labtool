@@ -71,54 +71,6 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
               }
             }
             unstackable={true}
-<<<<<<< HEAD
-          >
-            <FormTextArea
-              as={[Function]}
-              control={[Function]}
-              defaultValue="Hienoa työtä!"
-              name="comment"
-              style={
-                Object {
-                  "height": "250px",
-                  "width": "500px",
-                }
-              }
-            />
-          </FormGroup>
-          <FormField>
-            <Button
-              as="button"
-              className="ui center floated green button"
-              role="button"
-              type="submit"
-            >
-              Save
-            </Button>
-            <Link
-              replace={false}
-              to="/labtool/browsereviews/TKT20010.2018.K.A.1/10011"
-              type="Cancel"
-            >
-              <Button
-                as="button"
-                className="ui center floated button"
-                role="button"
-                type="cancel"
-              >
-                Cancel
-              </Button>
-            </Link>
-          </FormField>
-        </Form>
-      </GridColumn>
-      <GridColumn>
-        <h2
-          className="checklist"
-        >
-          Checklist
-        </h2>
-=======
           >
             <div>
               <FormTextArea
@@ -348,7 +300,6 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
             </Form>
           </div>
         </div>
->>>>>>> efb2cf2f269e1b8407b7b589755d596cb95c6887
       </GridColumn>
     </GridRow>
   </Grid>

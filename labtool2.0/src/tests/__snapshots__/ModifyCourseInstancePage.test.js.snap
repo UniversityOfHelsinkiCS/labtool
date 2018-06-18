@@ -240,21 +240,15 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
       role="button"
       style={
         Object {
-<<<<<<< HEAD
-          "marginTop": "10px",
-=======
           "marginLeft": "5px",
           "marginRight": "5px",
           "marginTop": "20px",
->>>>>>> efb2cf2f269e1b8407b7b589755d596cb95c6887
         }
       }
     >
       Create new checklist
     </Button>
   </Link>
-<<<<<<< HEAD
-=======
   <Link
     replace={false}
     to="/labtool/managetags"
@@ -274,6 +268,5 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
       Edit tags
     </Button>
   </Link>
->>>>>>> efb2cf2f269e1b8407b7b589755d596cb95c6887
 </div>
 `;
