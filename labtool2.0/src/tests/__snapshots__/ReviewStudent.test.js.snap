@@ -268,16 +268,16 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
                   }
                 }
                 value="Koodin laadussa parantamisen varaa
-              
-              Algoritmin runko puuttuu
-              
-              Tietorakenteita ei ole luotu
-              
-              README puuttuu
-              
-              Tuntikirjanpito puuttuu
-              
-              "
+
+Algoritmin runko puuttuu
+
+Tietorakenteita ei ole luotu
+
+README puuttuu
+
+Tuntikirjanpito puuttuu
+
+"
               />
               <p
                 className="checklistOutputPoints"
