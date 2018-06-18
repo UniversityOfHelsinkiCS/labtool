@@ -106,12 +106,12 @@ export class ModifyCourseInstancePage extends Component {
               </Form.Field>
 
               <Form.Field>
-                <Button type="Submit" floated="left" color="green">
+                <Button type="Submit" floated="left" color="green" size="huge">
                   Save
                 </Button>
 
                 <Link to="/labtool/courses">
-                  <Button type="Cancel" floated="right">
+                  <Button type="Cancel" floated="right" color="red" size="huge">
                     Cancel
                   </Button>
                 </Link>
@@ -121,13 +121,23 @@ export class ModifyCourseInstancePage extends Component {
         </Grid>
 
         <Link to={`/labtool/ModifyCourseInstanceStaff/${this.props.selectedInstance.ohid}`}>
-          <Button style={{ marginTop: '10px' }} block="true">
+          <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px' }} block="true">
             Add or remove assistant teachers
           </Button>
         </Link>
         <Link to={`/labtool/ModifyCourseInstanceCodeReviews/${this.props.selectedInstance.ohid}`}>
-          <Button style={{ marginTop: '10px' }} block="true">
+          <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px'  }} block="true">
             Add or modify codereviews
+          </Button>
+        </Link>
+        <Link to={`/labtool/checklist/${this.props.selectedInstance.ohid}/create`}>
+          <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px'  }} block="true">
+            Create new checklist
+          </Button>
+        </Link>
+        <Link to={`/labtool/managetags`}>
+          <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px'  }} block="true">
+            Edit tags
           </Button>
         </Link>
       </div>

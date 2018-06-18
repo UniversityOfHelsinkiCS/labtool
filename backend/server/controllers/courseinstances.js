@@ -10,6 +10,8 @@ const StudentInstanceController = require('../controllers').studentInstances
 const Week = require('../models').Week
 const CodeReview = require('../models').CodeReview
 const Comment = require('../models').Comment
+const Tag = require('../models').Tag
+const Checklist = require('../models').Checklist
 const env = process.env.NODE_ENV || 'development'
 const config = require('./../config/config.js')[env]
 
@@ -40,7 +42,6 @@ module.exports = {
    */
   async coursePage(req, res) {
     helper.controller_before_auth_check_action(req, res)
-
     const course = await CourseInstance.findOne({
       where: {
         ohid: req.body.course
@@ -52,6 +53,7 @@ module.exports = {
       data: undefined
     }
     const user = req.decoded.id
+    console.log(req.decoded)
     console.log('user.id: ', user)
     const teacher = await TeacherInstance.findAll({
       where: {
@@ -212,6 +214,10 @@ module.exports = {
             attributes: {
               exclude: ['createdAt', 'updatedAt']
             }
+          },
+          {
+            model: Tag,
+            attributes: ['id', 'name', 'color']
           }
         ]
       })
@@ -271,7 +277,7 @@ module.exports = {
           console.log('user.studentNumber', user.studentNumber)
           helper.checkWebOodi(req, res, user, resolve) // this does not work.
 
-          setTimeout(function() {
+          setTimeout(function () {
             resolve('shitaintright') // Yay! everything went to hell.
           }, 5000) // set a high timeout value since you really want to wait x)
         })
@@ -311,7 +317,7 @@ module.exports = {
                 })*/
                 }
               })
-              .catch(function(error) {
+              .catch(function (error) {
                 res.status(400).send({
                   message: error.errors
                 })
@@ -506,7 +512,7 @@ module.exports = {
         },
         strictSSL: false
       }
-      request(options, function(err, resp, body) {
+      request(options, function (err, resp, body) {
         const json = JSON.parse(body)
         console.log('json palautta...')
         console.log(json)
@@ -559,7 +565,7 @@ module.exports = {
           },
           strictSSL: false
         }
-        request(options, function(err, resp, body) {
+        request(options, function (err, resp, body) {
           const json = JSON.parse(body)
           console.log(json)
           json.forEach(instance => {
@@ -603,7 +609,7 @@ module.exports = {
 
         let checkRegistrationStatus = new Promise((resolve, reject) => {
           helper.checkWebOodi(req, res, currentUser, resolve)
-          setTimeout(function() {
+          setTimeout(function () {
             resolve('failure')
           }, 5000)
         })
@@ -641,10 +647,15 @@ module.exports = {
           return teacher
         })
 
-        console.log(teachers)
+        let checklists = await Checklist.findAll({
+          where: {
+            courseInstanceId: course.id
+          }
+        })
 
         course.dataValues['teacherInstances'] = teachers
         course.dataValues['registrationAtWebOodi'] = registrationAtWebOodi
+        course.dataValues['checklists'] = checklists
 
         return res.status(200).send(course)
       } catch (exception) {
@@ -692,7 +703,7 @@ module.exports = {
         res.status(400).send(e)
       }
     }
-    
+
   },
 
   /**

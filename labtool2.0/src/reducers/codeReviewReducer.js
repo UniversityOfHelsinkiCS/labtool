@@ -10,7 +10,28 @@
 const INITIAL_STATE = {
   randomizedCodeReview: [],
   codeReviewStates: { 1: [], 2: [] },
-  checkBoxStates: {}
+  currentSelections: { 1: {}, 2: {} },
+  checkBoxStates: {},
+  initialized: false
+}
+
+function shuffleArray(array) {
+  for (let i = 0; i < array.length - 1; i++) {
+    const j = i + 1 + Math.floor(Math.random() * (array.length - i - 1))
+    const temp = array[i]
+    array[i] = array[j]
+    array[j] = temp
+  }
+}
+
+function purgeCodeReviews(codeReviewStateArray, toPurgeArray) {
+  const codeReviewStateReviewerArray = codeReviewStateArray.map(cr => cr.reviewer)
+  let i = codeReviewStateArray.length
+  while (i--) {
+    if (toPurgeArray.indexOf(codeReviewStateReviewerArray[i]) !== -1) {
+      codeReviewStateArray.splice(i, 1)
+    }
+  }
 }
 
 const codeReviewReducer = (state = INITIAL_STATE, action) => {
@@ -34,7 +55,10 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
         updatedReviews = [...oldReviews, { reviewer: action.data.reviewer, toReview: action.data.toReview }]
       }
       codeReviewRoundsToUpdate[action.data.round] = updatedReviews
-      return { ...state, codeReviewStates: codeReviewRoundsToUpdate }
+
+      const newCurrentSelections = state.currentSelections
+      newCurrentSelections[action.data.round][action.data.reviewer] = action.data.toReview
+      return { ...state, codeReviewStates: codeReviewRoundsToUpdate, currentSelections: newCurrentSelections }
     }
 
     case 'INIT_ALL_CHECKBOXES':
@@ -62,8 +86,39 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
       var codeReviewRoundsToUpdate = state.codeReviewStates
       codeReviewRoundsToUpdate[action.response.data.reviewNumber] = []
       return { ...state, codeReviewStates: codeReviewRoundsToUpdate }
-    default:
+    case 'CODE_REVIEW_RANDOMIZE': {
+      const newCodeReviewStates = state.codeReviewStates
+      purgeCodeReviews(newCodeReviewStates[action.data.reviewNumber], state.randomizedCodeReview)
+      const randomizedOrder = Array(state.randomizedCodeReview.length)
+      let i = state.randomizedCodeReview.length
+      while (i--) randomizedOrder[i] = state.randomizedCodeReview[i]
+      shuffleArray(randomizedOrder)
+      const newCurrentSelections = state.currentSelections
+      for (let i = 0; i < randomizedOrder.length; i++) {
+        newCodeReviewStates[action.data.reviewNumber].push({
+          reviewer: randomizedOrder[i],
+          toReview: state.randomizedCodeReview[i]
+        })
+        newCurrentSelections[action.data.reviewNumber][randomizedOrder[i]] = state.randomizedCodeReview[i]
+      }
+      return { ...state, codeReviewStates: newCodeReviewStates, currentSelections: newCurrentSelections }
+    }
+    case 'CP_INFO_SUCCESS': {
+      if (action.role !== 'teacher' || state.initialized) {
+        return state
+      }
+      const newCurrentSelections = state.currentSelections
+      action.response.data.forEach(student => {
+        student.codeReviews.forEach(cr => {
+          newCurrentSelections[cr.reviewNumber][student.id] = cr.toReview
+        })
+      })
+      return { ...state, currentSelections: newCurrentSelections, initialized: true }
+    }
+    case 'CODE_REVIEW_RESET':
       return INITIAL_STATE
+    default:
+      return state
   }
 }
 
@@ -99,6 +154,23 @@ export const initAllCheckboxes = data => {
     dispatch({
       type: 'INIT_ALL_CHECKBOXES',
       data: data
+    })
+  }
+}
+
+export const randomAssign = data => {
+  return async dispatch => {
+    dispatch({
+      type: 'CODE_REVIEW_RANDOMIZE',
+      data: data
+    })
+  }
+}
+
+export const codeReviewReset = () => {
+  return async dispatch => {
+    dispatch({
+      type: 'CODE_REVIEW_RESET'
     })
   }
 }

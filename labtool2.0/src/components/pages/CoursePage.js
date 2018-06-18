@@ -6,7 +6,7 @@ import { createOneComment } from '../../services/comment'
 import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import { associateTeacherToStudent } from '../../services/assistant'
 import ReactMarkdown from 'react-markdown'
-import { showAssistantDropdown, selectTeacher, filterByAssistant, coursePageReset, toggleCodeReview } from '../../reducers/coursePageLogicReducer'
+import { showAssistantDropdown, selectTeacher, filterByAssistant, filterByTag, coursePageReset, toggleCodeReview } from '../../reducers/coursePageLogicReducer'
 
 export class CoursePage extends React.Component {
   state = { activeIndex: 0, lastReviewedIndex: null }
@@ -78,6 +78,24 @@ export class CoursePage extends React.Component {
     }
   }
 
+  changeFilterTag = id => {
+    return () => {
+      if (this.props.coursePageLogic.filterByTag === id) {
+        this.props.filterByTag(0)
+      } else {
+        this.props.filterByTag(id)
+      }
+    }
+  }
+
+  hasFilteredTag = (data, id) => {
+    for (let i = 0; i < data.Tags.length; i++) {
+      if (data.Tags[i].id === id) {
+        return data
+      }
+    }
+  }
+
   updateTeacher = id => async e => {
     try {
       e.preventDefault()
@@ -131,7 +149,7 @@ export class CoursePage extends React.Component {
       }
       let ii = 0
       codeReviews.forEach(cr => {
-        indents.push(<Table.Cell key={i + ii}>{cr.points !== null ? <p className="codeReviewPoints">{cr.points}</p> : <p>-</p>}</Table.Cell>)
+        indents.push(<Table.Cell key={i + ii}>{cr.points !== null ? <p>{cr.points}</p> : <p>-</p>}</Table.Cell>)
         ii++
       })
       while (ii < numberOfCodeReviews) {
@@ -414,8 +432,16 @@ export class CoursePage extends React.Component {
           <Table celled>
             <Table.Header>
               <Table.Row>
-                <Table.HeaderCell>Name</Table.HeaderCell>
-                <Table.HeaderCell> Github </Table.HeaderCell>
+              <Table.HeaderCell>
+                    Project Info
+                    {this.props.coursePageLogic.filterByTag !== 0 ? (
+                      <Button compact className="mini ui yellow button" floated="right" onClick={this.changeFilterTag(0)}>
+                        Clear tag filter
+                      </Button>
+                    ) : (
+                      <p />
+                    )}
+                </Table.HeaderCell>
                 {createHeadersTeacher()}
                 <Table.HeaderCell> Sum </Table.HeaderCell>
                 <Table.HeaderCell width="six"> Instructor </Table.HeaderCell>
@@ -428,19 +454,27 @@ export class CoursePage extends React.Component {
                   .filter(data => {
                     return this.props.coursePageLogic.filterByAssistant === 0 || this.props.coursePageLogic.filterByAssistant === data.teacherInstanceId
                   })
+                  .filter(data => {
+                    return this.props.coursePageLogic.filterByTag === 0 || this.hasFilteredTag(data, this.props.coursePageLogic.filterByTag)
+                  })
                   .map(data => (
                     <Table.Row key={data.id}>
                       <Table.Cell>
                         {data.User.firsts} {data.User.lastname}
                       </Table.Cell>
                       <Table.Cell>
-                        <Table.Cell>
-                          <p>
-                            {data.projectName}
-                            <br />
-                            <a href={data.github}>{data.github}</a>
-                          </p>
-                        </Table.Cell>
+                        <p>
+                          {data.projectName}
+                          <br />
+                          <a href={data.github}>{data.github}</a>
+                        </p>
+                        {data.Tags.map(tag => (
+                          <div key={tag.id}>
+                            <Button compact floated="left" className={`mini ui ${tag.color} button`} onClick={this.changeFilterTag(tag.id)}>
+                              {tag.name}
+                            </Button>
+                          </div>
+                        ))}
                       </Table.Cell>
                       {createIndents(data.weeks, data.codeReviews, data.id)}
                       <Table.Cell>
@@ -575,6 +609,7 @@ const mapDispatchToProps = {
   showAssistantDropdown,
   selectTeacher,
   filterByAssistant,
+  filterByTag,
   coursePageReset,
   toggleCodeReview
 }

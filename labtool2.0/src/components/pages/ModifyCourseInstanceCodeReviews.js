@@ -4,9 +4,11 @@ import { getOneCI } from '../../services/courseInstance'
 import { insertCodeReviews } from '../../services/codeReview'
 import { coursePageInformation } from '../../services/courseInstance'
 import { bulkinsertCodeReviews } from '../../services/codeReview'
-import { codeReviewReducer, initOneReview, initOrRemoveRandom, initCheckbox, initAllCheckboxes } from '../../reducers/codeReviewReducer'
+import { codeReviewReducer, initOneReview, initOrRemoveRandom, initCheckbox, initAllCheckboxes, randomAssign, codeReviewReset } from '../../reducers/codeReviewReducer'
+import { filterByTag } from '../../reducers/coursePageLogicReducer'
 import { clearNotifications } from '../../reducers/notificationReducer'
 import { Button, Table, Card, Form, Comment, List, Header, Label, Message, Icon, Dropdown, Checkbox } from 'semantic-ui-react'
+import Notification from '../../components/pages/Notification'
 
 export class ModifyCourseInstanceReview extends React.Component {
   componentDidMount() {
@@ -14,10 +16,15 @@ export class ModifyCourseInstanceReview extends React.Component {
     this.props.coursePageInformation(this.props.courseId)
   }
 
+  componentWillUnmount() {
+    this.props.codeReviewReset()
+  }
+
   handleSubmit = reviewNumber => async e => {
     try {
       e.preventDefault()
       const codeReviews = this.props.codeReviewLogic.codeReviewStates[reviewNumber]
+      console.log(codeReviews)
       const data = {
         codeReviews,
         reviewNumber
@@ -29,14 +36,14 @@ export class ModifyCourseInstanceReview extends React.Component {
   }
 
   addCodeReview = (reviewRound, id) => {
-    return (e, data) => {
+    return e => {
+      const toReviewId = parseInt(e.target.value)
       const crData = {
         round: reviewRound,
         reviewer: id,
-        toReview: data.value
+        toReview: toReviewId
       }
       this.props.initOneReview(crData)
-      console.log(this.props.codeReviewLogic)
     }
   }
 
@@ -55,6 +62,25 @@ export class ModifyCourseInstanceReview extends React.Component {
       this.props.initAllCheckboxes({ data: allCb, ids: randoms })
     }
   }
+
+  changeFilterTag = id => {
+    return () => {
+      if (this.props.coursePageLogic.filterByTag === id) {
+        this.props.filterByTag(0)
+      } else {
+        this.props.filterByTag(id)
+      }
+    }
+  }
+
+  hasFilteredTag = (data, id) => {
+    for (let i = 0; i < data.Tags.length; i++) {
+      if (data.Tags[i].id === id) {
+        return data
+      }
+    }
+  }
+
   render() {
     const createHeaders = () => {
       const headers = []
@@ -75,7 +101,7 @@ export class ModifyCourseInstanceReview extends React.Component {
     }
 
     return (
-      <div style={{ textAlignVertical: 'center', textAlign: 'center' }}>
+      <div className="ModifyCourseInstanceCodeReviews" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
         <div className="ui grid">
           <div className="sixteen wide column">
             <h2>{this.props.selectedInstance.name}</h2>
@@ -85,79 +111,140 @@ export class ModifyCourseInstanceReview extends React.Component {
               <Table.Row>
                 <Table.HeaderCell />
                 <Table.HeaderCell>Reviewer</Table.HeaderCell>
-                <Table.HeaderCell> Project </Table.HeaderCell>
+                <Table.HeaderCell>
+                  Project Info
+                  {this.props.coursePageLogic.filterByTag !== 0 ? (
+                    <Button compact className="mini ui yellow button" floated="right" onClick={this.changeFilterTag(0)}>
+                      Clear tag filter
+                    </Button>
+                  ) : (
+                    <p />
+                  )}
+                </Table.HeaderCell>
                 <Table.HeaderCell key={1}>Code Review 1 </Table.HeaderCell>
                 <Table.HeaderCell key={2}>Code Review 2 </Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>
               {this.props.courseData.data !== undefined
-                ? this.props.courseData.data.map(data => (
-                    <Table.Row key={data.id}>
-                      <Table.Cell>
-                        {this.props.codeReviewLogic.checkBoxStates[data.id] === true ? (
-                          <Checkbox checked onChange={this.initOrRemoveRandom(data.id)} />
-                        ) : (
-                          <Checkbox onChange={this.initOrRemoveRandom(data.id)} />
-                        )}
-                      </Table.Cell>
-                      <Table.Cell>
-                        {data.User.firsts} {data.User.lastname}
-                      </Table.Cell>
-                      <Table.Cell>
-                        <p>{data.projectName}</p>
-                        <a href={data.github}>{data.github}</a>
-                      </Table.Cell>
-                      <Table.Cell>
-                        <p>Current review: {getCurrentReviewer(1, data.id)}</p>
-                        <Dropdown placeholder="Select student" fluid search selection options={this.props.dropdownUsers.filter(u => u.value !== data.id)} onChange={this.addCodeReview(1, data.id)} />
-                      </Table.Cell>
-                      <Table.Cell>
-                        <p>Current review: {getCurrentReviewer(2, data.id)}</p>
-                        <Dropdown placeholder="Select student" fluid search selection options={this.props.dropdownUsers.filter(u => u.value !== data.id)} onChange={this.addCodeReview(2, data.id)} />
-                      </Table.Cell>
-                    </Table.Row>
-                  ))
+                ? this.props.courseData.data
+                    .filter(data => {
+                      return this.props.coursePageLogic.filterByTag === 0 || this.hasFilteredTag(data, this.props.coursePageLogic.filterByTag)
+                    })
+                    .map(data => (
+                      <Table.Row key={data.id}>
+                        <Table.Cell>
+                          {this.props.codeReviewLogic.checkBoxStates[data.id] === true ? (
+                            <Checkbox checked onChange={this.initOrRemoveRandom(data.id)} />
+                          ) : (
+                            <Checkbox onChange={this.initOrRemoveRandom(data.id)} />
+                          )}
+                        </Table.Cell>
+                        <Table.Cell>
+                          {data.User.firsts} {data.User.lastname}
+                        </Table.Cell>
+                        <Table.Cell>
+                          <p>
+                            {data.projectName}
+                            <br />
+                            <a href={data.github}>{data.github}</a>
+                          </p>
+                          {data.Tags.map(tag => (
+                            <div key={tag.id}>
+                              <Button compact floated="left" className={`mini ui ${tag.color} button`} onClick={this.changeFilterTag(tag.id)}>
+                                {tag.name}
+                              </Button>
+                            </div>
+                          ))}
+                        </Table.Cell>
+                        <Table.Cell>
+                          <p>Current review: {getCurrentReviewer(1, data.id)}</p>
+                          <select className="toReviewDropdown" onChange={this.addCodeReview(1, data.id)}>
+                            {this.props.dropdownUsers.map(d => (
+                              <option key={d.value} value={d.value}>
+                                {d.text}
+                              </option>
+                            ))}
+                          </select>
+                          {/*
+                         Semantic ui dropdown works very slow so we replaced them with html select
+                        }
+                        {/* <Dropdown
+                        className="toReviewDropdown"
+                        placeholder="Select student"
+                        fluid
+                        search
+                        selection
+                        // options={this.props.dropdownUsers}
+                        onChange={this.addCodeReview(1, data.id)}
+                        value={this.props.codeReviewLogic.currentSelections[1][data.id]}
+                      /> */}
+                        </Table.Cell>
+                        <Table.Cell>
+                          <p>Current review: {getCurrentReviewer(2, data.id)}</p>
+                          {/* <Dropdown
+                        className="toReviewDropdown"
+                        placeholder="Select student"
+                        fluid
+                        search
+                        selection
+                        // options={this.props.dropdownUsers}
+                        onChange={this.addCodeReview(2, data.id)}
+                        value={this.props.codeReviewLogic.currentSelections[2][data.id]}
+                      /> */}
+                          <select className="toReviewDropdown" onChange={this.addCodeReview(2, data.id)}>
+                            {this.props.dropdownUsers.map(d => (
+                              <option key={d.value} value={d.value}>
+                                {d.text}
+                              </option>
+                            ))}
+                          </select>
+                        </Table.Cell>
+                      </Table.Row>
+                    ))
                 : null}
             </Table.Body>
             <Table.Footer>
               <Table.Row>
                 <Table.HeaderCell>
-                  <Button onClick={this.selectAllCheckboxes()}>ALL</Button>
+                  <Button compact onClick={this.selectAllCheckboxes()}>
+                    ALL
+                  </Button>
                 </Table.HeaderCell>
                 <Table.HeaderCell />
                 <Table.HeaderCell />
                 <Table.HeaderCell>
-                  <Button onClick={this.handleSubmit(1)} size="small" style={{ float: 'left' }}>
-                    Save
-                  </Button>
-                  <Button size="small" style={{ float: 'right' }}>
+                  <Button compact onClick={() => this.props.randomAssign({ reviewNumber: 1 })} size="small" style={{ float: 'left' }}>
                     Assign selected randomly
+                  </Button>
+                  <Button compact size="small" style={{ float: 'right' }} onClick={this.handleSubmit(1)}>
+                    Save
                   </Button>
                 </Table.HeaderCell>
                 <Table.HeaderCell>
-                  <Button onClick={this.handleSubmit(2)} size="small" style={{ float: 'left' }}>
-                    Save
-                  </Button>
-                  <Button size="small" style={{ float: 'right' }}>
+                  <Button compact onClick={() => this.props.randomAssign({ reviewNumber: 2 })} size="small" style={{ float: 'left' }}>
                     Assign selected randomly
+                  </Button>
+                  <Button compact size="small" style={{ float: 'right' }} onClick={this.handleSubmit(2)}>
+                    Save
                   </Button>
                 </Table.HeaderCell>
               </Table.Row>
             </Table.Footer>
           </Table>
         </div>
+        <Notification />
       </div>
     )
   }
 }
 
-const userHelper = data => {
+export const userHelper = data => {
   let users = []
   if (data) {
     users.push({
       value: null,
-      text: 'None'
+      text: ''
     })
     data.map(d =>
       users.push({
@@ -166,6 +253,7 @@ const userHelper = data => {
       })
     )
   }
+
   return users
 }
 
@@ -175,6 +263,7 @@ const mapStateToProps = (state, ownProps) => {
     courseData: state.coursePage,
     selectedInstance: state.selectedInstance,
     codeReviewLogic: state.codeReviewLogic,
+    coursePageLogic: state.coursePageLogic,
     dropdownUsers: userHelper(state.coursePage.data)
   }
 }
@@ -187,7 +276,10 @@ const mapDispatchToProps = {
   initOrRemoveRandom,
   initCheckbox,
   initAllCheckboxes,
-  bulkinsertCodeReviews
+  bulkinsertCodeReviews,
+  randomAssign,
+  codeReviewReset,
+  filterByTag
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ModifyCourseInstanceReview)
