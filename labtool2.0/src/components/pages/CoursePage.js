@@ -477,12 +477,15 @@ export class CoursePage extends React.Component {
                           {this.props.coursePageLogic.showTagDropdown === data.id ? (
                             <div>
                               <Dropdown id="tagDropdown" options={dropDownTags} onChange={this.changeSelectedTag()} placeholder="Add tag" fluid selection />
-                              <Button onClick={this.addTag(data.id)} size="small">
-                                Add
-                              </Button>
-                              <Button onClick={this.removeTag(data.id)} size="small">
-                                Remove
-                              </Button>
+                              <div class="ui buttons">
+                                <button class="ui icon positive button" onClick={this.addTag(data.id)} size="mini">
+                                  <i class="plus icon"></i>
+                                </button>
+                                <div class="or"></div>
+                                <button class="ui icon button" onClick={this.removeTag(data.id)} size="mini">
+                                  <i class="trash icon"></i>
+                                </button>
+                              </div>
                             </div>
                           ) : (
                             <div />
@@ -635,4 +638,7 @@ const mapDispatchToProps = {
   unTagStudent
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CoursePage)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CoursePage)
