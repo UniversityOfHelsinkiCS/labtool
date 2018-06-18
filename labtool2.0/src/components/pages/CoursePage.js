@@ -447,17 +447,6 @@ export class CoursePage extends React.Component {
                                   <a href={codeReview.toReview.github}>{codeReview.toReview.github}</a>
                                 </p>
                               </Card.Content>
-                              {codeReview.reviewer ? (
-                                <Card.Content>
-                                  <h4>Your reviewer</h4>
-                                  <p>{codeReview.reviewer.projectName}</p>
-                                  <p>
-                                    <a href={codeReview.reviewer.github}>{codeReview.reviewer.github}</a>
-                                  </p>
-                                </Card.Content>
-                              ) : (
-                                <div />
-                              )}
                             </div>
                           ) : (
                             <div />
