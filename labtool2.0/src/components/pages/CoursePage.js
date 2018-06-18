@@ -10,7 +10,7 @@ import { getAllTags, tagStudent, unTagStudent } from '../../services/tags'
 import { showAssistantDropdown, showTagDropdown, selectTeacher, selectTag, filterByAssistant, coursePageReset, toggleCodeReview } from '../../reducers/coursePageLogicReducer'
 
 export class CoursePage extends React.Component {
-  state = { activeIndex: 0 }
+  state = { activeIndex: 0, lastReviewedIndex: null }
 
   handleClick = (e, titleProps) => {
     const { index } = titleProps
@@ -44,7 +44,19 @@ export class CoursePage extends React.Component {
     this.props.getAllTags()
   }
 
+  openLastReviewedWeek() {
+    if (this.state.lastReviewedIndex === null) {
+      let lastIndexOfWeeks = this.props.courseData.data.weeks.length - 1
+      let lastReviewedWeek = this.props.courseData.data.weeks[lastIndexOfWeeks].weekNumber
+      this.setState({
+        activeIndex: lastReviewedWeek - 1,
+        lastReviewedIndex: lastReviewedWeek - 1
+      })
+    }
+  }
+
   componentWillUnmount() {
+    this.setState({ lastReviewedIndex: null })
     this.props.coursePageReset()
   }
 
@@ -194,7 +206,7 @@ export class CoursePage extends React.Component {
       }
       let ii = 0
       codeReviews.forEach(cr => {
-        indents.push(<Table.Cell key={i + ii}>{cr.points !== null ? <p>{cr.points}</p> : <p>-</p>}</Table.Cell>)
+        indents.push(<Table.Cell key={i + ii}>{cr.points !== null ? <p className="codeReviewPoints">{cr.points}</p> : <p>-</p>}</Table.Cell>)
         ii++
       })
       while (ii < numberOfCodeReviews) {
@@ -226,11 +238,9 @@ export class CoursePage extends React.Component {
     const { activeIndex } = this.state
 
     const renderStudentBottomPart = () => {
-      console.log('\n\ncreating headers\n\n')
       let headers = []
       // studentInstance is id of student. Type: String
       // Tämä pitää myös korjata.
-      console.log('\nthis.props.courseData.data.user: ', this.props.courseData.data.user)
       headers.push(
         <Card key="card" fluid color="yellow">
           <Card.Content>
@@ -255,18 +265,17 @@ export class CoursePage extends React.Component {
           </Card.Content>
         </Card>
       )
-      console.log('\nthis.props.courseData: ', this.props.courseData)
       if (this.props.courseData && this.props.courseData.data && this.props.courseData.data.weeks) {
-        console.log('\n\nI am here\n\n')
         let weeks = null
         let i = 0
         for (; i < this.props.courseData.data.weeks.length; i++) {
-          console.log('\ni: ', i)
           weeks = this.props.courseData.data.weeks.find(function(week) {
             return week.weekNumber === i + 1
           })
           if (weeks) {
-            console.log('\n\nFound a week, i=', i, '\n\n')
+            // Sets last reviewed week open.
+            this.openLastReviewedWeek()
+
             headers.push(
               <Accordion key={i} fluid styled>
                 <Accordion.Title active={activeIndex === i} index={i} onClick={this.handleClick}>
@@ -335,6 +344,7 @@ export class CoursePage extends React.Component {
             )
           }
         }
+
         this.props.courseData.data.codeReviews
           .sort((a, b) => {
             return a.reviewNumber - b.reviewNumber
@@ -342,10 +352,36 @@ export class CoursePage extends React.Component {
           .forEach(cr => {
             headers.push(
               <Accordion key={i} fluid styled>
-                <Accordion.Title active={activeIndex === i} index={i} onClick={this.handleClick}>
-                  <Icon name="dropdown" /> Code Review {cr.reviewNumber}{' '}
+                <Accordion.Title className="codeReview" active={activeIndex === i || cr.points === null} index={i} onClick={this.handleClick}>
+                  <Icon name="dropdown" /> Code Review {cr.reviewNumber} {cr.points !== null ? (", points " + cr.points) : ''}
+                  
                 </Accordion.Title>
-                <Accordion.Content active={activeIndex === i}>{cr.points !== null ? <h4>{cr.points} points</h4> : <h4>Not Graded</h4>}</Accordion.Content>
+                <Accordion.Content active={activeIndex === i || cr.points === null}>
+                  <div className="codeReviewExpanded">
+                    {cr.points !== null ? 
+                      <div>
+                        <h4 className="codeReviewPoints">Points: {cr.points}</h4>
+                      </div>
+                    : (
+                      <div>
+                        <p>Not Graded</p>
+                      </div>
+                    )}
+                    
+                  {this.props.coursePageLogic.showCodeReviews.indexOf(cr.reviewNumber) !== -1 ? (
+                      <div>  
+                        <h4>Project to review</h4>
+                        <p>{cr.toReview.projectName}</p>
+                        <p>
+                          <a href={cr.toReview.github}>{cr.toReview.github}</a>
+                        </p>
+                      </div>
+                      ) : (
+                        <div></div>
+                      )
+                  }
+                  </div>
+                </Accordion.Content>
               </Accordion>
             )
             i++
@@ -379,7 +415,7 @@ export class CoursePage extends React.Component {
      */
     let renderTeacherTopPart = () => {
       return (
-        <div className="TeachersView" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
+        <div className="TeachersTopView" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
           <div className="ui grid">
             <div className="sixteen wide column">
               <h2>{this.props.selectedInstance.name}</h2>
@@ -438,7 +474,7 @@ export class CoursePage extends React.Component {
      */
     let renderTeacherBottomPart = () => {
       return (
-        <div>
+        <div className="TeachersBottomView">
           <Header as="h2">Students </Header>
           <div style={{ textAlign: 'left' }}>
             <span>Filter by instructor </span>
@@ -452,6 +488,7 @@ export class CoursePage extends React.Component {
               style={{ display: 'inline' }}
             />
           </div>
+
           <Table celled>
             <Table.Header>
               <Table.Row>
@@ -553,10 +590,6 @@ export class CoursePage extends React.Component {
               )}
             </Table.Body>
           </Table>
-          <List style={{ float: 'right' }}>
-            <List.Item icon={{ name: 'star', color: 'orange' }} content="Review student" />
-            <List.Item icon={{ name: 'pencil' }} content="Change student teacher" />
-          </List>
         </div>
       )
     }
@@ -566,7 +599,7 @@ export class CoursePage extends React.Component {
      */
     let renderStudentTopPart = () => {
       return (
-        <div style={{ textAlignVertical: 'center', textAlign: 'center' }}>
+        <div className="StudentsView" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
           <div className="ui grid">
             <div className="sixteen wide column">
               <h2>{this.props.selectedInstance.name}</h2>
@@ -588,6 +621,7 @@ export class CoursePage extends React.Component {
                     <Button color="blue" size="large">
                       Register
                     </Button>
+                    <Popup trigger={<Button circular floated="right" size="large" icon={{ name: 'edit', color: 'orange', size: 'large' }} />} content="Edit project details" />
                   </Link>
                 </div>
               )

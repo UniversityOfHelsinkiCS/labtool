@@ -22,7 +22,7 @@ export class LoginPage extends React.Component {
     console.log('Setting state.loading to true')
     this.setState({ loading: true })
     setTimeout(() => {
-      console.log('Setting state.loading to false')
+      console.log('Setting state.loading to false AND there is 1000 ms timeout!')
       this.setState({ loading: false })
     }, 1000)
     console.log('Has set state.loading to false')
