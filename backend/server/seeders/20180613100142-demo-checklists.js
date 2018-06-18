@@ -46,7 +46,7 @@ module.exports = {
           Koodi: [
             {
               name: 'Koodin laatu',
-              texWhenOn: 'Koodi tehty laadukkaasti ja sisältää kommentteja',
+              textWhenOn: 'Koodi tehty laadukkaasti ja sisältää kommentteja',
               textWhenOff: 'Koodin laadussa parantamisen varaa',
               points: 2
             }
@@ -93,7 +93,7 @@ module.exports = {
           Koodi: [
             {
               name: 'Koodin laatu',
-              texWhenOn: 'Koodi tehty laadukkaasti ja sisältää kommentteja',
+              textWhenOn: 'Koodi tehty laadukkaasti ja sisältää kommentteja',
               textWhenOff: 'Koodin laadussa parantamisen varaa',
               points: 2
             }
