@@ -266,10 +266,6 @@ describe('<CoursePage /> as student', () => {
       expect(wrapper.find('.codeReview').length).toEqual(coursePage.data.codeReviews.length)
     })
 
-    it('collapses code review cards that are not shown', () => {
-      expect(wrapper.find('.codeReviewExpanded').length).toEqual(coursePageLogic.showCodeReviews.length)
-    })
-
     it('renders collapsed code review points only if not null', () => {
       expect(wrapper.find('.codeReviewPoints').length).toEqual(coursePage.data.codeReviews.filter(cr => cr.points !== null).length)
     })
