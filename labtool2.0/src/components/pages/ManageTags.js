@@ -9,7 +9,6 @@ export class ManageTags extends React.Component {
   }
 
   handleSubmit = async e => {
-    console.log('olen täällä')
     try {
       e.preventDefault()
 
@@ -84,7 +83,6 @@ export class ManageTags extends React.Component {
   }
 
   render() {
-    console.log('\ntags: ', this.props.tags)
     return (
       <Container>
         <div className="sixteen wide column" style={{ textAlignVertical: 'center', textAlign: 'center' }}>

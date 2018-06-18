@@ -88,11 +88,12 @@ exports[`<Courses /> Courses Component should render correctly 1`] = `
             as="td"
           >
             <strong>
-              <a
-                href="/labtool/courses/TKT20010.2018.K.A.1"
+              <Link
+                replace={false}
+                to="/labtool/courses/TKT20010.2018.K.A.1"
               >
                 Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit
-              </a>
+              </Link>
             </strong>
           </TableCell>
           <TableCell
@@ -106,19 +107,27 @@ exports[`<Courses /> Courses Component should render correctly 1`] = `
             as="td"
             textAlign="center"
           >
-            <Button
-              as={[Function]}
-              circular={true}
-              icon={
-                Object {
-                  "color": "blue",
-                  "name": "eye",
-                  "size": "large",
-                }
+            <Popup
+              content="View course"
+              keepInViewPort={true}
+              on="hover"
+              position="top left"
+              trigger={
+                <Button
+                  as={[Function]}
+                  circular={true}
+                  icon={
+                    Object {
+                      "color": "blue",
+                      "name": "eye",
+                      "size": "large",
+                    }
+                  }
+                  role="button"
+                  size="tiny"
+                  to="/labtool/courses/TKT20010.2018.K.A.1"
+                />
               }
-              role="button"
-              size="tiny"
-              to="/labtool/courses/TKT20010.2018.K.A.1"
             />
           </TableCell>
         </TableRow>
@@ -153,11 +162,12 @@ exports[`<Courses /> Courses Component should render correctly 1`] = `
             as="td"
           >
             <strong>
-              <a
-                href="/labtool/courses/TKT20002.2018.K.K.1"
+              <Link
+                replace={false}
+                to="/labtool/courses/TKT20002.2018.K.K.1"
               >
                 Ohjelmistotekniikan menetelmät
-              </a>
+              </Link>
             </strong>
           </TableCell>
           <TableCell
@@ -171,19 +181,27 @@ exports[`<Courses /> Courses Component should render correctly 1`] = `
             as="td"
             textAlign="center"
           >
-            <Button
-              as={[Function]}
-              circular={true}
-              icon={
-                Object {
-                  "color": "blue",
-                  "name": "eye",
-                  "size": "large",
-                }
+            <Popup
+              content="View course"
+              keepInViewPort={true}
+              on="hover"
+              position="top left"
+              trigger={
+                <Button
+                  as={[Function]}
+                  circular={true}
+                  icon={
+                    Object {
+                      "color": "blue",
+                      "name": "eye",
+                      "size": "large",
+                    }
+                  }
+                  role="button"
+                  size="tiny"
+                  to="/labtool/courses/TKT20002.2018.K.K.1"
+                />
               }
-              role="button"
-              size="tiny"
-              to="/labtool/courses/TKT20002.2018.K.K.1"
             />
           </TableCell>
         </TableRow>
@@ -207,11 +225,12 @@ exports[`<Courses /> Courses Component should render correctly 1`] = `
             as="td"
           >
             <strong>
-              <a
-                href="/labtool/courses/TKT20011.2018.K.A.1"
+              <Link
+                replace={false}
+                to="/labtool/courses/TKT20011.2018.K.A.1"
               >
                 Aineopintojen harjoitustyö: Tietokantasovellus
-              </a>
+              </Link>
             </strong>
           </TableCell>
           <TableCell
@@ -225,48 +244,32 @@ exports[`<Courses /> Courses Component should render correctly 1`] = `
             as="td"
             textAlign="center"
           >
-            <Button
-              as={[Function]}
-              circular={true}
-              icon={
-                Object {
-                  "color": "blue",
-                  "name": "eye",
-                  "size": "large",
-                }
+            <Popup
+              content="View course"
+              keepInViewPort={true}
+              on="hover"
+              position="top left"
+              trigger={
+                <Button
+                  as={[Function]}
+                  circular={true}
+                  icon={
+                    Object {
+                      "color": "blue",
+                      "name": "eye",
+                      "size": "large",
+                    }
+                  }
+                  role="button"
+                  size="tiny"
+                  to="/labtool/courses/TKT20011.2018.K.A.1"
+                />
               }
-              role="button"
-              size="tiny"
-              to="/labtool/courses/TKT20011.2018.K.A.1"
             />
           </TableCell>
         </TableRow>
       </TableBody>
     </Table>
-    <div
-      className="Instructions"
-    >
-      <List>
-        <ListItem
-          content="Show course page"
-          icon={
-            Object {
-              "color": "blue",
-              "name": "eye",
-            }
-          }
-        />
-        <ListItem
-          content="Course is activated"
-          icon={
-            Object {
-              "color": "green",
-              "name": "square",
-            }
-          }
-        />
-      </List>
-    </div>
   </Container>
 </div>
 `;

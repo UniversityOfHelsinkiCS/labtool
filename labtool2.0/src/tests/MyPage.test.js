@@ -70,10 +70,6 @@ describe('<MyPage />', () => {
       expect(wrapper).toMatchSnapshot()
     })
 
-    it('renders instructions', () => {
-      expect(wrapper.find('.Instructions').length).toEqual(2)
-    })
-
     it('renders courses header', () => {
       expect(wrapper.find('.CoursesHeader').length).toEqual(2)
     })
