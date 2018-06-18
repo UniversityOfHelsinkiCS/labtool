@@ -21,13 +21,13 @@ exports.users = [
   {
     "username": "tiraopiskelija3",
     "student_number": "014623598",
-    "first_names": "Hanna Julia",
+    "first_names": "Hanna *Julia",
     "last_name": "Studerande"
   },
   {
     "username": "tiraopiskelija4",
     "student_number": "014623598",
-    "first_names": "Hans Peter",
+    "first_names": "Hans Peter Börje",
     "last_name": "Backlund"
   },
   {
