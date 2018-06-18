@@ -40,19 +40,20 @@ export class CoursePage extends React.Component {
   componentWillMount() {
     this.props.getOneCI(this.props.courseId)
     this.props.coursePageInformation(this.props.courseId)
-    if (this.props.courseData && this.props.courseData.data && this.props.courseData.data.weeks) {
-      this.openLastReviewedWeek()
-    }
+    this.openLastReviewedWeek()
   }
 
   openLastReviewedWeek() {
-    if (this.state.lastReviewedIndex === null) {
-      let lastIndexOfWeeks = this.props.courseData.data.weeks.length - 1
-      let lastReviewedWeek = this.props.courseData.data.weeks[lastIndexOfWeeks].weekNumber
-      this.setState({
-        activeIndex: lastReviewedWeek - 1,
-        lastReviewedIndex: lastReviewedWeek - 1
-      })
+    if (this.props.courseData && this.props.courseData.data && this.props.courseData.data.weeks !== undefined
+      && this.props.courseData.data.weeks.length > 0) {
+      if (this.state.lastReviewedIndex === null) {
+        let lastIndexOfWeeks = this.props.courseData.data.weeks.length - 1
+        let lastReviewedWeek = this.props.courseData.data.weeks[lastIndexOfWeeks].weekNumber
+        this.setState({
+          activeIndex: lastReviewedWeek - 1,
+          lastReviewedIndex: lastReviewedWeek - 1
+        })
+      }
     }
   }
 
