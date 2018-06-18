@@ -35,6 +35,17 @@ describe('<CoursePage /> as teacher', () => {
     ]
   }
 
+  const tags = {
+    tags: [
+      { id: 20003, text: 'game', value: 20003 },
+      { id: 20002, text: 'HTML', value: 20002 },
+      { id: 20006, text: 'Java', value: 20006 },
+      { id: 20001, text: 'Javascript', value: 20001 },
+      { id: 20005, text: 'Node.js', value: 20005 },
+      { id: 20004, text: 'React', value: 20004 }
+    ]
+  }
+
   const courseData = {
     role: 'teacher',
     data: [
@@ -141,7 +152,16 @@ describe('<CoursePage /> as teacher', () => {
 
   beforeEach(() => {
     wrapper = shallow(
-      <CoursePage courseData={courseData} getOneCI={mockFn} coursePageInformation={mockFn} associateTeacherToStudent={mockFn} selectedInstance={coursePage} coursePageLogic={coursePageLogic} />
+      <CoursePage
+        courseData={courseData}
+        getOneCI={mockFn}
+        coursePageInformation={mockFn}
+        associateTeacherToStudent={mockFn}
+        selectedInstance={coursePage}
+        coursePageLogic={coursePageLogic}
+        getAllTags={mockFn}
+        tags={tags}
+      />
     )
   })
 
@@ -157,10 +177,10 @@ describe('<CoursePage /> as teacher', () => {
     it('renders teachers top view', () => {
       expect(wrapper.find('.TeachersTopView').length).toEqual(1)
     })
- 
+
     it('renders teachers bottom view', () => {
       expect(wrapper.find('.TeachersBottomView').length).toEqual(1)
-    })    
+    })
 
     it('doesnt render students top view when role is teacher', () => {
       expect(wrapper.find('.StudentsView').length).toEqual(0)
@@ -239,6 +259,17 @@ describe('<CoursePage /> as student', () => {
     }
   }
 
+  const tags = {
+    tags: [
+      { id: 20003, text: 'game', value: 20003 },
+      { id: 20002, text: 'HTML', value: 20002 },
+      { id: 20006, text: 'Java', value: 20006 },
+      { id: 20001, text: 'Javascript', value: 20001 },
+      { id: 20005, text: 'Node.js', value: 20005 },
+      { id: 20004, text: 'React', value: 20004 }
+    ]
+  }
+
   const coursePageLogic = {
     showDropdown: '',
     selectedTeacher: '',
@@ -258,6 +289,9 @@ describe('<CoursePage /> as student', () => {
         associateTeacherToStudent={mockFn}
         selectedInstance={coursePage}
         coursePageLogic={coursePageLogic}
+        filterByTag={mockFn}
+        getAllTags={mockFn}
+        tags={tags}
       />
     )
   })
@@ -281,7 +315,7 @@ describe('<CoursePage /> as student', () => {
 
     it('doesnt render teachers bottom view when role is student', () => {
       expect(wrapper.find('.TeachersBottomView').length).toEqual(0)
-    })  
+    })
 
     it('renders code review cards', () => {
       expect(wrapper.find('.codeReview').length).toEqual(coursePage.data.codeReviews.length)
