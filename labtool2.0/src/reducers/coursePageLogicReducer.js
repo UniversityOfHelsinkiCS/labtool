@@ -8,8 +8,11 @@
  */
 
 const INITIAL_STATE = {
-  showDropdown: '',
+  tags: {},
+  showAssistantDropdown: '',
+  showTagDropdown: '',
   selectedTeacher: '',
+  selectedTag: '',
   filterByAssistant: 0,
   filterByTag: 0,
   showCodeReviews: []
@@ -17,10 +20,14 @@ const INITIAL_STATE = {
 
 const coursePageLogicReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case 'COURSE_PAGE_SHOW_DROPDOWN':
-      return { ...state, showDropdown: action.show }
+    case 'COURSE_PAGE_SHOW_ASSISTANT_DROPDOWN':
+      return { ...state, showAssistantDropdown: action.show }
+    case 'COURSE_PAGE_SHOW_TAG_DROPDOWN':
+      return { ...state, showTagDropdown: action.show }
     case 'COURSE_PAGE_SELECT_TEACHER':
       return { ...state, selectedTeacher: action.selection }
+    case 'COURSE_PAGE_SELECT_TAG':
+      return { ...state, selectedTag: action.selection }
     case 'COURSE_PAGE_FILTER_BY_ASSISTANT':
       return { ...state, filterByAssistant: action.assistant }
     case 'COURSE_PAGE_FILTER_BY_TAG':
@@ -55,10 +62,19 @@ const coursePageLogicReducer = (state = INITIAL_STATE, action) => {
   }
 }
 
-export const showDropdown = show => {
+export const showAssistantDropdown = show => {
   return async dispatch => {
     dispatch({
-      type: 'COURSE_PAGE_SHOW_DROPDOWN',
+      type: 'COURSE_PAGE_SHOW_ASSISTANT_DROPDOWN',
+      show
+    })
+  }
+}
+
+export const showTagDropdown = show => {
+  return async dispatch => {
+    dispatch({
+      type: 'COURSE_PAGE_SHOW_TAG_DROPDOWN',
       show
     })
   }
@@ -68,6 +84,15 @@ export const selectTeacher = selection => {
   return async dispatch => {
     dispatch({
       type: 'COURSE_PAGE_SELECT_TEACHER',
+      selection
+    })
+  }
+}
+
+export const selectTag = selection => {
+  return async dispatch => {
+    dispatch({
+      type: 'COURSE_PAGE_SELECT_TAG',
       selection
     })
   }

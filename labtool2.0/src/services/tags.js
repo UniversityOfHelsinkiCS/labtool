@@ -20,4 +20,17 @@ export const getAllTags = () => {
   return callController(route, prefix, null, method)
 }
 
+/** Tags a student
+ * body: {
+ *  studentId
+ *  tagId
+ * }
+ */
+export const tagStudent = data => {
+  const route = '/tags/tagStudent'
+  const prefix = 'TAG_STUDENT_'
+  const method = 'post'
+  return callController(route, prefix, data, method)
+}
+
 export default { createTag }
