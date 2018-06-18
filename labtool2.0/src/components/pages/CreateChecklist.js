@@ -67,7 +67,7 @@ export class CreateChecklist extends Component {
       key,
       name,
       field,
-      value: field === 'points' ? Number(e.target.value) : e.target.value
+      value: e.target.value
     })
   }
 
