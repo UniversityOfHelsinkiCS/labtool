@@ -138,6 +138,11 @@ const notificationReducer = (state = {}, action) => {
         message: 'Code reviews randomized. Click save to change',
         error: false
       }
+    case 'STUDENT_PROJECT_INFO_UPDATE_SUCCESS':
+      return {
+        message: 'Project info updated succesfully!',
+        error: false
+      }
     default:
       return state
   }
