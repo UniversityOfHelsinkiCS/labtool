@@ -55,6 +55,17 @@ export class CoursePage extends React.Component {
     }
   }
 
+  openLastReviewedWeek() {
+    if (this.state.lastReviewedIndex === null) {
+      let lastIndexOfWeeks = this.props.courseData.data.weeks.length - 1
+      let lastReviewedWeek = this.props.courseData.data.weeks[lastIndexOfWeeks].weekNumber
+      this.setState({
+        activeIndex: lastReviewedWeek - 1,
+        lastReviewedIndex: lastReviewedWeek - 1
+      })
+    }
+  }
+
   componentWillUnmount() {
     this.setState({ lastReviewedIndex: null })
     this.props.coursePageReset()
@@ -352,31 +363,34 @@ export class CoursePage extends React.Component {
             headers.push(
               <Accordion key={i} fluid styled>
                 <Accordion.Title className="codeReview" active={activeIndex === i || cr.points === null} index={i} onClick={this.handleClick}>
-                  <Icon name="dropdown" /> Code Review {cr.reviewNumber} {cr.points !== null ? ', points ' + cr.points : ''}
+
+                  <Icon name="dropdown" /> Code Review {cr.reviewNumber} {cr.points !== null ? (", points " + cr.points) : ''}
+                  
                 </Accordion.Title>
                 <Accordion.Content active={activeIndex === i || cr.points === null}>
                   <div className="codeReviewExpanded">
-                    {cr.points !== null ? (
+                    {cr.points !== null ? 
                       <div>
                         <h4 className="codeReviewPoints">Points: {cr.points}</h4>
                       </div>
-                    ) : (
+                    : (
                       <div>
                         <p>Not Graded</p>
                       </div>
                     )}
-
-                    {this.props.coursePageLogic.showCodeReviews.indexOf(cr.reviewNumber) !== -1 ? (
-                      <div>
+                    
+                  {this.props.coursePageLogic.showCodeReviews.indexOf(cr.reviewNumber) !== -1 ? (
+                      <div>  
                         <h4>Project to review</h4>
                         <p>{cr.toReview.projectName}</p>
                         <p>
                           <a href={cr.toReview.github}>{cr.toReview.github}</a>
                         </p>
                       </div>
-                    ) : (
-                      <div />
-                    )}
+                      ) : (
+                        <div></div>
+                      )
+                  }
                   </div>
                 </Accordion.Content>
               </Accordion>
@@ -489,8 +503,16 @@ export class CoursePage extends React.Component {
           <Table celled>
             <Table.Header>
               <Table.Row>
-                <Table.HeaderCell>Name</Table.HeaderCell>
-                <Table.HeaderCell> Github </Table.HeaderCell>
+              <Table.HeaderCell>
+                    Project Info
+                    {this.props.coursePageLogic.filterByTag !== 0 ? (
+                      <Button compact className="mini ui yellow button" floated="right" onClick={this.changeFilterTag(0)}>
+                        Clear tag filter
+                      </Button>
+                    ) : (
+                      <p />
+                    )}
+                </Table.HeaderCell>
                 {createHeadersTeacher()}
                 <Table.HeaderCell> Sum </Table.HeaderCell>
                 <Table.HeaderCell width="six"> Instructor </Table.HeaderCell>
@@ -563,10 +585,8 @@ export class CoursePage extends React.Component {
                         ) : (
                           <span>not assigned</span>
                         )}
-                        <Popup
-                          trigger={<Button circular onClick={this.changeHiddenAssistantDropdown(data.id)} icon={{ name: 'pencil', size: 'medium' }} style={{ float: 'right' }} />}
-                          content="Assign instructor"
-                        />
+
+                        <Popup trigger={<Button circular onClick={this.changeHiddenAssistantDropdown(data.id)} icon={{ name: 'pencil', size: 'medium' }} style={{ float: 'right' }} />} content="Assign instructor" />
                         {this.props.coursePageLogic.showAssistantDropdown === data.id ? (
                           <div>
                             <Dropdown id="assistantDropdown" options={dropDownTeachers} onChange={this.changeSelectedTeacher()} placeholder="Select teacher" fluid selection />
