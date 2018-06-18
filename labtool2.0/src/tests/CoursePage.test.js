@@ -35,7 +35,7 @@ describe('<CoursePage /> as teacher', () => {
     ]
   }
 
-  const courseData = {
+  const coursePage = {
     role: 'teacher',
     data: [
       {
@@ -190,7 +190,7 @@ describe('<CoursePage /> as teacher', () => {
   beforeEach(() => {
     wrapper = shallow(
       <CoursePage
-        courseData={courseData}
+        courseData={coursePage}
         getOneCI={mockFn}
         coursePageInformation={mockFn}
         associateTeacherToStudent={mockFn}
