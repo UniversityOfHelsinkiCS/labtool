@@ -269,13 +269,13 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
                 }
                 value="Koodin laadussa parantamisen varaa
 
-Algoritmin runko puuttuu
+              Algoritmin runko puuttuu
 
-Tietorakenteita ei ole luotu
+              Tietorakenteita ei ole luotu
 
-README puuttuu
+              README puuttuu
 
-Tuntikirjanpito puuttuu
+              Tuntikirjanpito puuttuu
 
 "
               />
