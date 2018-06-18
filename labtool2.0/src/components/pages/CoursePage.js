@@ -40,6 +40,9 @@ export class CoursePage extends React.Component {
   componentWillMount() {
     this.props.getOneCI(this.props.courseId)
     this.props.coursePageInformation(this.props.courseId)
+    if (this.props.courseData && this.props.courseData.data && this.props.courseData.data.weeks) {
+      this.openLastReviewedWeek()
+    }
   }
 
   openLastReviewedWeek() {
@@ -217,7 +220,7 @@ export class CoursePage extends React.Component {
           })
           if (weeks) {
             // Sets last reviewed week open.
-            this.openLastReviewedWeek()
+            // this.openLastReviewedWeek()
 
             headers.push(
               <Accordion key={i} fluid styled>
