@@ -33,18 +33,25 @@ module.exports = {
         if (result.response && result.response.body && result.response.body.username && result.response.body.error !== 'wrong credentials') {
           console.log('\n\n\nbody: ', body, '\n\n\n')
           console.log('type of studen_number: ', typeof body.student_number)
+          let first
+          // If first_names from Kurki contains *, use the name after that, otherwise use first name
+          if (body.first_names.includes('*')) {
+            first = result.response.body.first_names.split('*')[1].split(' ')[0]
+          } else {
+            first = result.response.body.first_names.split(' ')[0]
+          }
           User.findOrCreate({
             where: { username: body.username },
             defaults: {
-              firsts: body.first_names,
+              firsts: first,
               lastname: body.last_name,
               studentNumber: body.student_number,
               email: ''
             }
           }).spread((newuser, created) => {
-            if (newuser.firsts !== body.first_names) {
-              console.log('päivitetään etunimet')
-              User.update({ firsts: body.first_names }, { where: { id: newuser.id } })
+            if (newuser.firsts !== first) {
+              console.log('päivitetään kutsumanimi')
+              User.update({ firsts: first }, { where: { id: newuser.id } })
             }
 
             if (newuser.lastname !== body.last_name) {

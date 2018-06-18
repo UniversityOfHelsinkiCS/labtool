@@ -111,7 +111,7 @@ export class CoursePage extends React.Component {
       console.log(error)
     }
   }
-
+  
   changeFilterAssistant = () => {
     return (e, data) => {
       const { value } = data
@@ -492,8 +492,16 @@ export class CoursePage extends React.Component {
           <Table celled>
             <Table.Header>
               <Table.Row>
-                <Table.HeaderCell>Name</Table.HeaderCell>
-                <Table.HeaderCell> Github </Table.HeaderCell>
+              <Table.HeaderCell>
+                    Project Info
+                    {this.props.coursePageLogic.filterByTag !== 0 ? (
+                      <Button compact className="mini ui yellow button" floated="right" onClick={this.changeFilterTag(0)}>
+                        Clear tag filter
+                      </Button>
+                    ) : (
+                      <p />
+                    )}
+                </Table.HeaderCell>
                 {createHeadersTeacher()}
                 <Table.HeaderCell> Sum </Table.HeaderCell>
                 <Table.HeaderCell width="six"> Instructor </Table.HeaderCell>
