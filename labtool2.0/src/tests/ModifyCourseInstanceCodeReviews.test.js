@@ -191,7 +191,7 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
     showDropdown: '',
     selectedTeacher: '',
     filterByAssistant: 0,
-    filterByTag: 0,
+    filterByTag: [],
     showCodeReviews: []
   }
 
