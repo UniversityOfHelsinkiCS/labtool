@@ -5,6 +5,7 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
   key="true"
 >
   <div
+    className="StudentsView"
     style={
       Object {
         "textAlign": "center",
@@ -85,6 +86,7 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
   >
     <AccordionTitle
       active={true}
+      className="codeReview"
       index={0}
       onClick={[Function]}
     >
@@ -95,14 +97,24 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
        Code Review 
       1
        
+      , points 2
     </AccordionTitle>
     <AccordionContent
       active={true}
     >
-      <h4>
-        2
-         points
-      </h4>
+      <div
+        className="codeReviewExpanded"
+      >
+        <div>
+          <h4
+            className="codeReviewPoints"
+          >
+            Points: 
+            2
+          </h4>
+        </div>
+        <div />
+      </div>
     </AccordionContent>
   </Accordion>
   <Accordion
@@ -112,6 +124,7 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
   >
     <AccordionTitle
       active={false}
+      className="codeReview"
       index={1}
       onClick={[Function]}
     >
@@ -122,14 +135,38 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
        Code Review 
       2
        
+      , points 1
     </AccordionTitle>
     <AccordionContent
       active={false}
     >
-      <h4>
-        1
-         points
-      </h4>
+      <div
+        className="codeReviewExpanded"
+      >
+        <div>
+          <h4
+            className="codeReviewPoints"
+          >
+            Points: 
+            1
+          </h4>
+        </div>
+        <div>
+          <h4>
+            Project to review
+          </h4>
+          <p>
+            Tira super projekti
+          </p>
+          <p>
+            <a
+              href="http://github.com/superprojekti"
+            >
+              http://github.com/superprojekti
+            </a>
+          </p>
+        </div>
+      </div>
     </AccordionContent>
   </Accordion>
   <Accordion
@@ -138,7 +175,8 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
     styled={true}
   >
     <AccordionTitle
-      active={false}
+      active={true}
+      className="codeReview"
       index={2}
       onClick={[Function]}
     >
@@ -151,11 +189,18 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
        
     </AccordionTitle>
     <AccordionContent
-      active={false}
+      active={true}
     >
-      <h4>
-        Not Graded
-      </h4>
+      <div
+        className="codeReviewExpanded"
+      >
+        <div>
+          <p>
+            Not Graded
+          </p>
+        </div>
+        <div />
+      </div>
     </AccordionContent>
   </Accordion>
 </div>
@@ -164,7 +209,7 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
 exports[`<CoursePage /> as teacher CoursePage Component should render correctly 1`] = `
 <div>
   <div
-    className="TeachersView"
+    className="TeachersTopView"
     style={
       Object {
         "textAlign": "center",
@@ -283,7 +328,9 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
       </List>
     </div>
   </div>
-  <div>
+  <div
+    className="TeachersBottomView"
+  >
     <Header
       as="h2"
     >
@@ -448,31 +495,6 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
         as="tbody"
       />
     </Table>
-    <List
-      style={
-        Object {
-          "float": "right",
-        }
-      }
-    >
-      <ListItem
-        content="Review student"
-        icon={
-          Object {
-            "color": "orange",
-            "name": "star",
-          }
-        }
-      />
-      <ListItem
-        content="Change student teacher"
-        icon={
-          Object {
-            "name": "pencil",
-          }
-        }
-      />
-    </List>
   </div>
 </div>
 `;
