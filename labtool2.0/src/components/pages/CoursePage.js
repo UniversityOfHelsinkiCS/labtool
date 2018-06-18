@@ -606,4 +606,7 @@ const mapDispatchToProps = {
   toggleCodeReview
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CoursePage)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CoursePage)
