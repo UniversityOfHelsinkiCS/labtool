@@ -258,13 +258,21 @@ export class CoursePage extends React.Component {
                 style={{ display: 'inline' }}
               />
               <span> Tag filters: </span>
-              {this.props.coursePageLogic.filterByTag.map(tag => (
-                <span key={tag.id}>
-                  <Button compact className={`mini ui ${tag.color} button`} onClick={this.addFilterTag(tag)}>
-                    {tag.name}
-                  </Button>
+              {this.props.coursePageLogic.filterByTag.length === 0 ? (
+                <span>
+                  <Label>none</Label>
                 </span>
-              ))}
+              ) : (
+                <span>
+                  {this.props.coursePageLogic.filterByTag.map(tag => (
+                    <span key={tag.id}>
+                      <Button compact className={`mini ui ${tag.color} button`} onClick={this.addFilterTag(tag)}>
+                        {tag.name}
+                      </Button>
+                    </span>
+                  ))}
+                </span>
+              )}
             </div>
             <Table celled>
               <Table.Header>

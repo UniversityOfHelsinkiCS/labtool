@@ -120,10 +120,7 @@ export class ModifyCourseInstanceReview extends React.Component {
             </div>
           ) : (
             <div>
-              Tag filters:{' '}
-              <Button compact className={`mini ui grey button`}>
-                none
-              </Button>
+              Tag filters: <Label>none</Label>
             </div>
           )}
           <Table celled>
