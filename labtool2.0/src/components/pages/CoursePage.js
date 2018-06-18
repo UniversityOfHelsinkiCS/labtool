@@ -1,14 +1,24 @@
 import React from 'react'
-import { Button, Table, Card, Form, Comment, List, Header, Label, Message, Icon, Dropdown, Popup } from 'semantic-ui-react'
+import { Accordion, Button, Table, Card, Form, Comment, List, Header, Label, Message, Icon, Dropdown, Popup } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createOneComment } from '../../services/comment'
 import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import { associateTeacherToStudent } from '../../services/assistant'
 import ReactMarkdown from 'react-markdown'
-import { showDropdown, selectTeacher, filterByAssistant, filterByTag, coursePageReset, toggleCodeReview } from '../../reducers/coursePageLogicReducer'
+import { showAssistantDropdown, selectTeacher, filterByAssistant, filterByTag, coursePageReset, toggleCodeReview } from '../../reducers/coursePageLogicReducer'
 
 export class CoursePage extends React.Component {
+  state = { activeIndex: 0, lastReviewedIndex: null }
+
+  handleClick = (e, titleProps) => {
+    const { index } = titleProps
+    const { activeIndex } = this.state
+    const newIndex = activeIndex === index ? -1 : index
+
+    this.setState({ activeIndex: newIndex })
+  }
+
   handleSubmit = async e => {
     e.preventDefault()
     const content = {
@@ -17,6 +27,7 @@ export class CoursePage extends React.Component {
       week: parseInt(e.target.name, 10),
       from: this.props.user.user.username
     }
+    document.getElementById(e.target.name).reset()
     try {
       await this.props.createOneComment(content)
       await this.props.coursePageInformation(this.props.selectedInstance.ohid)
@@ -31,13 +42,25 @@ export class CoursePage extends React.Component {
     this.props.coursePageInformation(this.props.courseId)
   }
 
+  openLastReviewedWeek() {
+    if (this.state.lastReviewedIndex === null) {
+      let lastIndexOfWeeks = this.props.courseData.data.weeks.length - 1
+      let lastReviewedWeek = this.props.courseData.data.weeks[lastIndexOfWeeks].weekNumber
+      this.setState({
+        activeIndex: lastReviewedWeek - 1,
+        lastReviewedIndex: lastReviewedWeek - 1
+      })
+    }
+  }
+
   componentWillUnmount() {
+    this.setState({ lastReviewedIndex: null })
     this.props.coursePageReset()
   }
 
-  changeHidden = id => {
+  changeHiddenAssistantDropdown = id => {
     return () => {
-      this.props.showDropdown(this.props.coursePageLogic.showDropdown === id ? '' : id)
+      this.props.showAssistantDropdown(this.props.coursePageLogic.showAssistantDropdown === id ? '' : id)
     }
   }
 
@@ -100,11 +123,6 @@ export class CoursePage extends React.Component {
     return []
   }
 
-  /**
-   * Shows all information related to a course from user,
-   * with information shown depending on whether the user
-   * is a teacher or student on a course.
-   */
   render() {
     const numberOfCodeReviews = Array.isArray(this.props.courseData.data) ? Math.max(...this.props.courseData.data.map(student => student.codeReviews.length)) : 0
 
@@ -145,7 +163,10 @@ export class CoursePage extends React.Component {
       return indents
     }
 
-    const createHeaders = () => {
+    /**
+     * Helper function for renderTeacherBottom
+     */
+    const createHeadersTeacher = () => {
       const headers = []
       let i = 0
       for (; i < this.props.selectedInstance.weekAmount; i++) {
@@ -154,6 +175,162 @@ export class CoursePage extends React.Component {
       for (var ii = 1; ii <= numberOfCodeReviews; ii++) {
         headers.push(<Table.HeaderCell key={i + ii}>Code Review {ii} </Table.HeaderCell>)
       }
+      return headers
+    }
+
+    const { activeIndex } = this.state
+
+    const renderStudentBottomPart = () => {
+      let headers = []
+      // studentInstance is id of student. Type: String
+      // Tämä pitää myös korjata.
+      headers.push(
+        <Card key="card" fluid color="yellow">
+          <Card.Content>
+            {this.props.courseData && this.props.courseData.data && this.props.courseData.data.User ? (
+              <h2>
+                {this.props.courseData.data.User.firsts} {this.props.courseData.data.User.lastname}
+              </h2>
+            ) : (
+              <div />
+            )}
+            {this.props.courseData && this.props.courseData.data ? <h3> {this.props.courseData.data.projectName} </h3> : <div />}
+            {this.props.courseData && this.props.courseData.data ? (
+              <h3>
+                <a href={this.props.courseData.data.github}>{this.props.courseData.data.github}</a>{' '}
+                <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>
+                  <Button circular floated="right" size="large" icon={{ name: 'edit', color: 'orange', size: 'large' }} />
+                </Link>
+              </h3>
+            ) : (
+              <div />
+            )}
+          </Card.Content>
+        </Card>
+      )
+      if (this.props.courseData && this.props.courseData.data && this.props.courseData.data.weeks) {
+        let weeks = null
+        let i = 0
+        for (; i < this.props.courseData.data.weeks.length; i++) {
+          weeks = this.props.courseData.data.weeks.find(function(week) {
+            return week.weekNumber === i + 1
+          })
+          if (weeks) {
+            // Sets last reviewed week open.
+            this.openLastReviewedWeek()
+
+            headers.push(
+              <Accordion key={i} fluid styled>
+                <Accordion.Title active={activeIndex === i} index={i} onClick={this.handleClick}>
+                  <Icon name="dropdown" /> Week {i + 1}, points {weeks.points}
+                </Accordion.Title>
+                <Accordion.Content active={activeIndex === i}>
+                  <Card fluid color="yellow">
+                    <Card.Content>
+                      <h4> Points: {weeks.points} </h4>
+                      <h4>
+                        {' '}
+                        Weekly feedback: <ReactMarkdown>{weeks.feedback}</ReactMarkdown>{' '}
+                      </h4>
+                    </Card.Content>
+                  </Card>
+                  <h4> Comments </h4>
+                  <Comment.Group>
+                    {weeks ? (
+                      weeks.comments.map(
+                        comment =>
+                          comment.hidden ? (
+                            <Comment disabled>
+                              <Comment.Content>
+                                <Comment.Metadata>
+                                  <div>Hidden</div>
+                                </Comment.Metadata>
+                                <Comment.Author>{comment.from}</Comment.Author>
+                                <Comment.Text>
+                                  {' '}
+                                  <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
+                                </Comment.Text>
+                              </Comment.Content>
+                            </Comment>
+                          ) : (
+                            <Comment>
+                              <Comment.Author>{comment.from}</Comment.Author>
+                              <Comment.Text>
+                                {' '}
+                                <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
+                              </Comment.Text>
+                            </Comment>
+                          )
+                      )
+                    ) : (
+                      <h4> No comments </h4>
+                    )}
+                  </Comment.Group>
+                  <Form reply onSubmit={this.handleSubmit} name={weeks.id} id={weeks.id}>
+                    <Form.TextArea name="content" placeholder="Your comment..." defaultValue="" />
+                    <Button content="Add Reply" labelPosition="left" icon="edit" primary />
+                  </Form>
+                </Accordion.Content>
+              </Accordion>
+            )
+          } else {
+            headers.push(
+              <Accordion key={i} fluid styled>
+                <Accordion.Title active={activeIndex === i} index={i} onClick={this.handleClick}>
+                  <Icon name="dropdown" /> Week {i + 1}{' '}
+                </Accordion.Title>
+                <Accordion.Content active={activeIndex === i}>
+                  <h4> Not Graded </h4>
+                  <h4> No comments </h4>
+                </Accordion.Content>
+              </Accordion>
+            )
+          }
+        }
+
+        this.props.courseData.data.codeReviews
+          .sort((a, b) => {
+            return a.reviewNumber - b.reviewNumber
+          })
+          .forEach(cr => {
+            headers.push(
+              <Accordion key={i} fluid styled>
+                <Accordion.Title className="codeReview" active={activeIndex === i || cr.points === null} index={i} onClick={this.handleClick}>
+                  <Icon name="dropdown" /> Code Review {cr.reviewNumber} {cr.points !== null ? (", points " + cr.points) : ''}
+                  
+                </Accordion.Title>
+                <Accordion.Content active={activeIndex === i || cr.points === null}>
+                  <div className="codeReviewExpanded">
+                    {cr.points !== null ? 
+                      <div>
+                        <h4 className="codeReviewPoints">Points: {cr.points}</h4>
+                      </div>
+                    : (
+                      <div>
+                        <p>Not Graded</p>
+                      </div>
+                    )}
+                    
+                  {this.props.coursePageLogic.showCodeReviews.indexOf(cr.reviewNumber) !== -1 ? (
+                      <div>  
+                        <h4>Project to review</h4>
+                        <p>{cr.toReview.projectName}</p>
+                        <p>
+                          <a href={cr.toReview.github}>{cr.toReview.github}</a>
+                        </p>
+                      </div>
+                      ) : (
+                        <div></div>
+                      )
+                  }
+                  </div>
+                </Accordion.Content>
+              </Accordion>
+            )
+            i++
+          })
+      }
+
       return headers
     }
 
@@ -173,51 +350,31 @@ export class CoursePage extends React.Component {
     ]
     dropDownFilterTeachers = this.createDropdownTeachers(dropDownFilterTeachers)
 
-    return (
-      <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
-        <div className="ui grid">
-          <div className="sixteen wide column">
-            <h2>{this.props.selectedInstance.name}</h2>
-          </div>
-          {this.props.selectedInstance.active === true ? (
-            this.props.courseData.role === 'teacher' || this.props.courseData.data !== null ? (
-              <p />
-            ) : this.props.selectedInstance.registrationAtWebOodi === 'notfound' ? (
-              <div className="sixteen wide column">
-                <Message compact>
-                  <Message.Header>No registration found at WebOodi.</Message.Header>
-                  <p>If you have just registered, please try again in two hours.</p>
-                </Message>
-              </div>
+    /**
+     * Returns what teachers should see at the top of this page
+     */
+    let renderTeacherTopPart = () => {
+      return (
+        <div className="TeachersTopView" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
+          <div className="ui grid">
+            <div className="sixteen wide column">
+              <h2>{this.props.selectedInstance.name}</h2>
+            </div>
+            {this.props.selectedInstance.active === true ? (
+              this.props.courseData.data !== null ? (
+                <p />
+              ) : (
+                <div className="sixteen wide column">
+                  <Message compact>
+                    <Message.Header>You have not activated this course.</Message.Header>
+                  </Message>
+                </div>
+              )
             ) : (
-              <div className="sixteen wide column">
-                <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>
-                  {' '}
-                  <Button color="blue" size="large">
-                    Register
-                  </Button>
-                </Link>
-              </div>
-            )
-          ) : this.props.courseData.role === 'teacher' ? (
-            <div className="sixteen wide column">
-              <Message compact>
-                <Message.Header>You have not activated this course.</Message.Header>
-              </Message>
-            </div>
-          ) : (
-            <div className="sixteen wide column">
-              <Message compact>
-                <Message.Header>This course has not been activated.</Message.Header>
-              </Message>
-            </div>
-          )}
-        </div>
-
-        {/** Shown when the users role in this course is teacher.*/}
-        {this.props.courseData.role === 'teacher' ? (
-          <div className="TeachersView" style={{ overflowX: 'auto' }}>
-            <br />
+              <p />
+            )}
+          </div>
+          <div>
             <Table>
               <Table.Header>
                 <Table.Row>
@@ -228,7 +385,7 @@ export class CoursePage extends React.Component {
                           Active
                         </Label>
                       ) : (
-                        ''
+                        <div />
                       )}
                     </div>
                   </Table.Cell>
@@ -244,25 +401,38 @@ export class CoursePage extends React.Component {
                 </Table.Row>
               </Table.Header>
             </Table>
-            <br />
-            <Header as="h2">Students </Header>
-            <div style={{ textAlign: 'left' }}>
-              <span>Filter by instructor </span>
-              <Dropdown
-                options={dropDownFilterTeachers}
-                onChange={this.changeFilterAssistant()}
-                placeholder="Select Teacher"
-                defaultValue={this.props.coursePageLogic.filterByAssistant}
-                fluid
-                selection
-                style={{ display: 'inline' }}
-              />
-            </div>
-            <Table celled>
-              <Table.Header>
-                <Table.Row>
-                  <Table.HeaderCell>Name</Table.HeaderCell>
-                  <Table.HeaderCell>
+            <List style={{ float: 'right' }}>
+              <List.Item icon={{ name: 'edit', color: 'orange' }} content="Edit course" />
+            </List>
+          </div>
+        </div>
+      )
+    }
+
+    /**
+     * Function that returns what teachers should see at the bottom of this page
+     */
+    let renderTeacherBottomPart = () => {
+      return (
+        <div className="TeachersBottomView">
+          <Header as="h2">Students </Header>
+          <div style={{ textAlign: 'left' }}>
+            <span>Filter by instructor </span>
+            <Dropdown
+              options={dropDownFilterTeachers}
+              onChange={this.changeFilterAssistant()}
+              placeholder="Select Teacher"
+              defaultValue={this.props.coursePageLogic.filterByAssistant}
+              fluid
+              selection
+              style={{ display: 'inline' }}
+            />
+          </div>
+
+          <Table celled>
+            <Table.Header>
+              <Table.Row>
+              <Table.HeaderCell>
                     Project Info
                     {this.props.coursePageLogic.filterByTag !== 0 ? (
                       <Button compact className="mini ui yellow button" floated="right" onClick={this.changeFilterTag(0)}>
@@ -271,15 +441,16 @@ export class CoursePage extends React.Component {
                     ) : (
                       <p />
                     )}
-                  </Table.HeaderCell>
-                  {createHeaders()}
-                  <Table.HeaderCell> Sum </Table.HeaderCell>
-                  <Table.HeaderCell width="six"> Instructor </Table.HeaderCell>
-                  <Table.HeaderCell> Review </Table.HeaderCell>
-                </Table.Row>
-              </Table.Header>
-              <Table.Body>
-                {this.props.courseData.data
+                </Table.HeaderCell>
+                {createHeadersTeacher()}
+                <Table.HeaderCell> Sum </Table.HeaderCell>
+                <Table.HeaderCell width="six"> Instructor </Table.HeaderCell>
+                <Table.HeaderCell> Review </Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {this.props.courseData && this.props.courseData.data ? (
+                this.props.courseData.data
                   .filter(data => {
                     return this.props.coursePageLogic.filterByAssistant === 0 || this.props.coursePageLogic.filterByAssistant === data.teacherInstanceId
                   })
@@ -324,19 +495,10 @@ export class CoursePage extends React.Component {
                         ) : (
                           <span>not assigned</span>
                         )}
-                        <Popup trigger={<Button circular onClick={this.changeHidden(data.id)} icon={{ name: 'pencil', size: 'medium' }} style={{ float: 'right' }} />} content="Assign instructor" />
-                        {this.props.coursePageLogic.showDropdown === data.id ? (
+                        <Popup trigger={<Button circular onClick={this.changeHiddenAssistantDropdown(data.id)} icon={{ name: 'pencil', size: 'medium' }} style={{ float: 'right' }} />} content="Assign instructor" />
+                        {this.props.coursePageLogic.showAssistantDropdown === data.id ? (
                           <div>
-                            <Dropdown options={dropDownTeachers} onChange={this.changeSelectedTeacher()} placeholder="Select teacher" fluid selection />
-                            {/* <select style={{}}onChange={this.changeSelectedTeacher()}>
-                              <option value="" disabled selected>Select your option</option>
-                              {dropDownTeachers.map(m => (
-                                <option key={m.value} value={m.value}>
-                                  {m.text}
-                                </option>
-                              ))}
-                            </select> */}
-                            {/* <Dropdown onChange={this.changeSelectedTeacher()} placeholder="Select Teacher" fluid search selection options={dropDownTeachers} /> */}
+                            <Dropdown id="assistantDropdown" options={dropDownTeachers} onChange={this.changeSelectedTeacher()} placeholder="Select teacher" fluid selection />
                             <Button onClick={this.updateTeacher(data.id, data.teacherInstanceId)} size="small">
                               Change instructor
                             </Button>
@@ -351,122 +513,79 @@ export class CoursePage extends React.Component {
                         </Link>
                       </Table.Cell>
                     </Table.Row>
-                  ))}
-              </Table.Body>
-            </Table>
-          </div>
-        ) : (
-          <div />
-        )}
+                  ))
+              ) : (
+                <p />
+              )}
+            </Table.Body>
+          </Table>
+        </div>
+      )
+    }
 
-        {/** Shown when the users role in this course is student.*/}
-        {this.props.courseData.role === 'student' && this.props.courseData.data !== null ? (
-          <div className="StudentsView" style={{ overflowX: 'auto' }}>
-            <h3> </h3>
-
-            <Card fluid color="yellow">
-              <Card.Content>
-                <h3> {this.props.courseData.data.projectName} </h3>
-                <h3>
-                  {' '}
-                  <a href={this.props.courseData.data.github}>{this.props.courseData.data.github}</a>{' '}
+    /**
+     * Function that returns what students should see at the top of this page
+     */
+    let renderStudentTopPart = () => {
+      return (
+        <div className="StudentsView" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
+          <div className="ui grid">
+            <div className="sixteen wide column">
+              <h2>{this.props.selectedInstance.name}</h2>
+            </div>
+            {this.props.selectedInstance.active === true ? (
+              this.props.courseData.data !== null ? (
+                <p />
+              ) : this.props.selectedInstance.registrationAtWebOodi === 'notfound' ? (
+                <div className="sixteen wide column">
+                  <Message compact>
+                    <Message.Header>No registration found at WebOodi.</Message.Header>
+                    <p>If you have just registered, please try again in two hours.</p>
+                  </Message>
+                </div>
+              ) : (
+                <div className="sixteen wide column">
                   <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>
+                    {' '}
+                    <Button color="blue" size="large">
+                      Register
+                    </Button>
                     <Popup trigger={<Button circular floated="right" size="large" icon={{ name: 'edit', color: 'orange', size: 'large' }} />} content="Edit project details" />
                   </Link>
-                </h3>
-
-                {this.props.courseData.data.teacherInstanceId && this.props.selectedInstance.teacherInstances ? (
-                  this.props.selectedInstance.teacherInstances.filter(teacher => teacher.id === this.props.courseData.data.teacherInstanceId).map(teacher => (
-                    <h3 key={teacher.id}>
-                      Assistant: {teacher.firsts} {teacher.lastname}
-                    </h3>
-                  ))
-                ) : (
-                  <h3>Assistant: not given</h3>
-                )}
-              </Card.Content>
-            </Card>
-
-            <h3> Points and feedback </h3>
-
-            <Table celled padded unstackable>
-              <Table.Header>
-                <Table.Row>
-                  <Table.HeaderCell>Week</Table.HeaderCell>
-                  <Table.HeaderCell>Points</Table.HeaderCell>
-                  <Table.HeaderCell>Feedback</Table.HeaderCell>
-                  <Table.HeaderCell>Comments</Table.HeaderCell>
-                </Table.Row>
-              </Table.Header>
-              <Table.Body>
-                {this.props.courseData.data.weeks.sort((a, b) => a.weekNumber - b.weekNumber).map(week => (
-                  <Table.Row key={week.weekNumber}>
-                    <Table.Cell>{week.weekNumber}</Table.Cell>
-                    <Table.Cell>{week.points}</Table.Cell>
-                    <Table.Cell>
-                      <ReactMarkdown>{week.feedback}</ReactMarkdown>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <Comment.Group>
-                        {week.comments.filter(c => c.hidden !== true).map(comment => (
-                          <Comment key={comment.id}>
-                            <Comment.Author>{comment.from}</Comment.Author>
-                            <Comment.Text>
-                              {' '}
-                              <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
-                            </Comment.Text>
-                          </Comment>
-                        ))}
-                      </Comment.Group>
-                      <Form reply onSubmit={this.handleSubmit} name={week.id} id="comment">
-                        <Form.TextArea name="content" placeholder="Your comment..." />
-
-                        <Button content="Add Reply" labelPosition="left" icon="edit" primary />
-                      </Form>
-                    </Table.Cell>
-                  </Table.Row>
-                ))}
-              </Table.Body>
-            </Table>
-
-            <Card fluid color="yellow">
-              <Card.Content>
-                {this.props.courseData.data.codeReviews ? (
-                  this.props.courseData.data.codeReviews.map(
-                    codeReview =>
-                      codeReview.reviewNumber ? (
-                        <Card fluid color="yellow" key={codeReview.reviewNumber} className="codeReview">
-                          <Card.Content header={'Code review ' + codeReview.reviewNumber} onClick={() => this.props.toggleCodeReview(codeReview.reviewNumber)} style={{ cursor: 'pointer' }} />
-                          {codeReview.points !== null ? <Card.Content className="codeReviewPoints">{codeReview.points + ' points'}</Card.Content> : <div />}
-                          {this.props.coursePageLogic.showCodeReviews.indexOf(codeReview.reviewNumber) !== -1 ? (
-                            <div className="codeReviewExpanded">
-                              <Card.Content>
-                                <h4>Project to review</h4>
-                                <p>{codeReview.toReview.projectName}</p>
-                                <p>
-                                  <a href={codeReview.toReview.github}>{codeReview.toReview.github}</a>
-                                </p>
-                              </Card.Content>
-                            </div>
-                          ) : (
-                            <div />
-                          )}
-                        </Card>
-                      ) : (
-                        <div />
-                      )
-                  )
-                ) : (
-                  <h3>Ei ollut code reviewsejä</h3>
-                )}
-              </Card.Content>
-            </Card>
+                </div>
+              )
+            ) : (
+              <div className="sixteen wide column">
+                <Message compact>
+                  <Message.Header>This course has not been activated.</Message.Header>
+                </Message>
+              </div>
+            )}
           </div>
-        ) : (
-          <div />
-        )}
-      </div>
-    )
+        </div>
+      )
+    }
+
+    /**
+     * This part actually tells what to show to the user
+     */
+    if (this.props.courseData.role === 'student') {
+      return (
+        <div key>
+          {renderStudentTopPart()}
+          {renderStudentBottomPart()}
+        </div>
+      )
+    } else if (this.props.courseData.role === 'teacher') {
+      return (
+        <div>
+          {renderTeacherTopPart()}
+          {renderTeacherBottomPart()}
+        </div>
+      )
+    } else {
+      return <div />
+    }
   }
 }
 
@@ -478,7 +597,7 @@ const mapStateToProps = (state, ownProps) => {
     selectedInstance: state.selectedInstance,
     courseData: state.coursePage,
     coursePageLogic: state.coursePageLogic,
-    courseId: ownProps.courseId
+    courseId: ownProps.courseId,
   }
 }
 
@@ -487,7 +606,7 @@ const mapDispatchToProps = {
   getOneCI,
   coursePageInformation,
   associateTeacherToStudent,
-  showDropdown,
+  showAssistantDropdown,
   selectTeacher,
   filterByAssistant,
   filterByTag,
