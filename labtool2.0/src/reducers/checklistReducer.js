@@ -42,8 +42,8 @@ const checklistReducer = (state = INITIAL_STATE, action) => {
     }
     case 'CHECKLIST_REMOVE_ROW': {
       const newData = state.data
-      const index = newData[action.data.key].indexOf(action.data.name)
-      newData.splice(index, 1)
+      const index = newData[action.data.key].map(row => row.name).indexOf(action.data.name)
+      newData[action.data.key].splice(index, 1)
       return { ...state, data: newData }
     }
     case 'CHECKLIST_CAST_POINTS': {
