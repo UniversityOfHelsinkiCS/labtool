@@ -6,7 +6,7 @@ import { createOneComment } from '../../services/comment'
 import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import { associateTeacherToStudent } from '../../services/assistant'
 import ReactMarkdown from 'react-markdown'
-import { showDropdown, selectTeacher, filterByAssistant, filterByTag, coursePageReset, toggleCodeReview } from '../../reducers/coursePageLogicReducer'
+import { showAssistantDropdown, selectTeacher, filterByAssistant, filterByTag, coursePageReset, toggleCodeReview } from '../../reducers/coursePageLogicReducer'
 
 export class CoursePage extends React.Component {
   state = { activeIndex: 0, lastReviewedIndex: null }
@@ -44,8 +44,7 @@ export class CoursePage extends React.Component {
   }
 
   openLastReviewedWeek() {
-    if (this.props.courseData && this.props.courseData.data && this.props.courseData.data.weeks !== undefined
-      && this.props.courseData.data.weeks.length > 0) {
+    if (this.props.courseData && this.props.courseData.data && this.props.courseData.data.weeks !== undefined && this.props.courseData.data.weeks.length > 0) {
       if (this.state.lastReviewedIndex === null) {
         let lastIndexOfWeeks = this.props.courseData.data.weeks.length - 1
         let lastReviewedWeek = this.props.courseData.data.weeks[lastIndexOfWeeks].weekNumber
@@ -62,9 +61,9 @@ export class CoursePage extends React.Component {
     this.props.coursePageReset()
   }
 
-  changeHidden = id => {
+  changeHiddenAssistantDropdown = id => {
     return () => {
-      this.props.showDropdown(this.props.coursePageLogic.showDropdown === id ? '' : id)
+      this.props.showAssistantDropdown(this.props.coursePageLogic.showAssistantDropdown === id ? '' : id)
     }
   }
 
@@ -221,7 +220,7 @@ export class CoursePage extends React.Component {
           })
           if (weeks) {
             // Sets last reviewed week open.
-            // this.openLastReviewedWeek()
+            this.openLastReviewedWeek()
 
             headers.push(
               <Accordion key={i} fluid styled>
@@ -300,33 +299,31 @@ export class CoursePage extends React.Component {
             headers.push(
               <Accordion key={i} fluid styled>
                 <Accordion.Title className="codeReview" active={activeIndex === i || cr.points === null} index={i} onClick={this.handleClick}>
-                  <Icon name="dropdown" /> Code Review {cr.reviewNumber} {cr.points !== null ? (", points " + cr.points) : ''}
-                  
+                  <Icon name="dropdown" /> Code Review {cr.reviewNumber} {cr.points !== null ? ', points ' + cr.points : ''}
                 </Accordion.Title>
                 <Accordion.Content active={activeIndex === i || cr.points === null}>
                   <div className="codeReviewExpanded">
-                    {cr.points !== null ? 
+                    {cr.points !== null ? (
                       <div>
                         <h4 className="codeReviewPoints">Points: {cr.points}</h4>
                       </div>
-                    : (
+                    ) : (
                       <div>
                         <p>Not Graded</p>
                       </div>
                     )}
-                    
-                  {this.props.coursePageLogic.showCodeReviews.indexOf(cr.reviewNumber) !== -1 ? (
-                      <div>  
+
+                    {this.props.coursePageLogic.showCodeReviews.indexOf(cr.reviewNumber) !== -1 ? (
+                      <div>
                         <h4>Project to review</h4>
                         <p>{cr.toReview.projectName}</p>
                         <p>
                           <a href={cr.toReview.github}>{cr.toReview.github}</a>
                         </p>
                       </div>
-                      ) : (
-                        <div></div>
-                      )
-                  }
+                    ) : (
+                      <div />
+                    )}
                   </div>
                 </Accordion.Content>
               </Accordion>
@@ -436,8 +433,16 @@ export class CoursePage extends React.Component {
           <Table celled>
             <Table.Header>
               <Table.Row>
-                <Table.HeaderCell>Name</Table.HeaderCell>
-                <Table.HeaderCell> Github </Table.HeaderCell>
+                <Table.HeaderCell>
+                  Project Info
+                  {this.props.coursePageLogic.filterByTag !== 0 ? (
+                    <Button compact className="mini ui yellow button" floated="right" onClick={this.changeFilterTag(0)}>
+                      Clear tag filter
+                    </Button>
+                  ) : (
+                    <p />
+                  )}
+                </Table.HeaderCell>
                 {createHeadersTeacher()}
                 <Table.HeaderCell> Sum </Table.HeaderCell>
                 <Table.HeaderCell width="six"> Instructor </Table.HeaderCell>
@@ -491,10 +496,13 @@ export class CoursePage extends React.Component {
                         ) : (
                           <span>not assigned</span>
                         )}
-                        <Popup trigger={<Button circular onClick={this.changeHidden(data.id)} icon={{ name: 'pencil', size: 'medium' }} style={{ float: 'right' }} />} content="Assign instructor" />
-                        {this.props.coursePageLogic.showDropdown === data.id ? (
+                        <Popup
+                          trigger={<Button circular onClick={this.changeHiddenAssistantDropdown(data.id)} icon={{ name: 'pencil', size: 'medium' }} style={{ float: 'right' }} />}
+                          content="Assign instructor"
+                        />
+                        {this.props.coursePageLogic.showAssistantDropdown === data.id ? (
                           <div>
-                            <Dropdown options={dropDownTeachers} onChange={this.changeSelectedTeacher()} placeholder="Select teacher" fluid selection />
+                            <Dropdown id="assistantDropdown" options={dropDownTeachers} onChange={this.changeSelectedTeacher()} placeholder="Select teacher" fluid selection />
                             <Button onClick={this.updateTeacher(data.id, data.teacherInstanceId)} size="small">
                               Change instructor
                             </Button>
@@ -602,7 +610,7 @@ const mapDispatchToProps = {
   getOneCI,
   coursePageInformation,
   associateTeacherToStudent,
-  showDropdown,
+  showAssistantDropdown,
   selectTeacher,
   filterByAssistant,
   filterByTag,
