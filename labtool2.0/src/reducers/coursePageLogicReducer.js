@@ -11,7 +11,7 @@ const INITIAL_STATE = {
   showDropdown: '',
   selectedTeacher: '',
   filterByAssistant: 0,
-  filterByTag: 0,
+  filterByTag: [],
   showCodeReviews: []
 }
 
@@ -24,7 +24,13 @@ const coursePageLogicReducer = (state = INITIAL_STATE, action) => {
     case 'COURSE_PAGE_FILTER_BY_ASSISTANT':
       return { ...state, filterByAssistant: action.assistant }
     case 'COURSE_PAGE_FILTER_BY_TAG':
-      return { ...state, filterByTag: action.tag }
+      if (action.tag === 0) {
+        return { ...state, filterByTag: [] }
+      } else if (state.filterByTag.map(tag => tag.id).includes(action.tag.id)) {
+        return { ...state, filterByTag: state.filterByTag.filter(tag => tag.id !== action.tag.id) }
+      } else {
+        return { ...state, filterByTag: [...state.filterByTag, action.tag] }
+      }
     case 'ASSOCIATE_TEACHER_AND_STUDENT_SUCCESS':
       return INITIAL_STATE
     case 'COURSE_PAGE_RESET':

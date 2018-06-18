@@ -134,7 +134,8 @@ describe('<CoursePage /> as teacher', () => {
   const coursePageLogic = {
     showDropdown: '',
     selectedTeacher: '',
-    filterByAssistant: 0
+    filterByAssistant: 0,
+    filterByTag: []
   }
 
   let mockFn = jest.fn()
@@ -243,6 +244,7 @@ describe('<CoursePage /> as student', () => {
     showDropdown: '',
     selectedTeacher: '',
     filterByAssistant: 0,
+    filterByTag: [],
     showCodeReviews: [2]
   }
 
