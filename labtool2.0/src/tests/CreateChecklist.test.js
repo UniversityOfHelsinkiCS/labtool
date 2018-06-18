@@ -4,7 +4,6 @@ import { shallow } from 'enzyme'
 
 describe('<CreateChecklist /> component', () => {
   let wrapper
-  let fnCalls
 
   const coursePage = {
     id: 10011,

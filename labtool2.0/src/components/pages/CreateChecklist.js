@@ -11,11 +11,11 @@ export class CreateChecklist extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      week: 1,
-      topicName: '',
-      rowName: '',
-      openAdd: '',
-      dullLoadButton: 0
+      week: 1, // tracks value of input labeled week
+      topicName: '', // tracks value inputted into topic creation dialog box.
+      rowName: '', // tracks value inputted into row creation dialog box.
+      openAdd: '', // which addForm is currently open. '' denotes no open addForms. Only one addForm can be open at one time.
+      dullLoadButton: 0 // Tracks which week was loaded last.
     }
   }
 
@@ -55,6 +55,7 @@ export class CreateChecklist extends Component {
         message: 'Invalid week.',
         error: true
       })
+      // Allow week to be changed into an invalid value to avoid confusing users.
     }
     this.setState({
       week
@@ -81,6 +82,10 @@ export class CreateChecklist extends Component {
     })
   }
 
+  /**
+   * First call opens a dialog box.
+   * Subsequent call actually adds the new topic.
+   */
   newTopic = async e => {
     e.preventDefault()
     if (this.state.openAdd !== 'newTopic') {
@@ -105,6 +110,10 @@ export class CreateChecklist extends Component {
     })
   }
 
+  /**
+   * First call opens a dialog box.
+   * Subsequent call actually adds the new row.
+   */
   newRow = key => async e => {
     e.preventDefault()
     if (this.state.openAdd !== key) {
@@ -207,6 +216,8 @@ export class CreateChecklist extends Component {
                   </Card.Content>
                 ))}
                 <form className="addForm" onSubmit={this.newRow(key)}>
+                  {/*This, like all other addForms is here to funnel both the button press 
+                    as well as a user pressing enter into the same function.*/}
                   <Popup trigger={<Button type="submit" circular icon={{ name: 'add', size: 'medium' }} />} content="Add new checkbox" />
                   {this.state.openAdd === key ? (
                     <div>
@@ -238,6 +249,8 @@ export class CreateChecklist extends Component {
             </form>
           </div>
           <form onSubmit={this.handleSubmit}>
+            {/*This is a form with a single button instead of just a button because it doesn't work 
+              (doesn't call the function) as just a button with onClick.*/}
             <Button className="saveButton" type="submit" color="green" size="large">
               <div className="saveButtonText">Save</div>
             </Button>
