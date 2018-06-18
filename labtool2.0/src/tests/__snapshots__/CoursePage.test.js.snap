@@ -1,6 +1,165 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<CoursePage /> as student CoursePage Component should render correctly 1`] = `undefined`;
+exports[`<CoursePage /> as student CoursePage Component should render correctly 1`] = `
+<div
+  key="true"
+>
+  <div
+    style={
+      Object {
+        "textAlign": "center",
+        "textAlignVertical": "center",
+      }
+    }
+  >
+    <div
+      className="ui grid"
+    >
+      <div
+        className="sixteen wide column"
+      >
+        <h2 />
+      </div>
+      <div
+        className="sixteen wide column"
+      >
+        <Message
+          compact={true}
+        >
+          <MessageHeader>
+            This course has not been activated.
+          </MessageHeader>
+        </Message>
+      </div>
+    </div>
+  </div>
+  <Card
+    color="yellow"
+    fluid={true}
+    key="card"
+  >
+    <CardContent>
+      <h2>
+        Maarit Mirja
+         
+        Opiskelija
+      </h2>
+      <h3>
+         
+        Tiran labraprojekti
+         
+      </h3>
+      <h3>
+        <a
+          href="http://github.com/tiralabra1"
+        >
+          http://github.com/tiralabra1
+        </a>
+         
+        <Link
+          replace={false}
+          to="/labtool/courseregistration/undefined"
+        >
+          <Button
+            as="button"
+            circular={true}
+            floated="right"
+            icon={
+              Object {
+                "color": "orange",
+                "name": "edit",
+                "size": "large",
+              }
+            }
+            role="button"
+            size="large"
+          />
+        </Link>
+      </h3>
+    </CardContent>
+  </Card>
+  <Accordion
+    fluid={true}
+    key="0"
+    styled={true}
+  >
+    <AccordionTitle
+      active={true}
+      index={0}
+      onClick={[Function]}
+    >
+      <Icon
+        as="i"
+        name="dropdown"
+      />
+       Code Review 
+      1
+       
+    </AccordionTitle>
+    <AccordionContent
+      active={true}
+    >
+      <h4>
+        2
+         points
+      </h4>
+    </AccordionContent>
+  </Accordion>
+  <Accordion
+    fluid={true}
+    key="1"
+    styled={true}
+  >
+    <AccordionTitle
+      active={false}
+      index={1}
+      onClick={[Function]}
+    >
+      <Icon
+        as="i"
+        name="dropdown"
+      />
+       Code Review 
+      2
+       
+    </AccordionTitle>
+    <AccordionContent
+      active={false}
+    >
+      <h4>
+        1
+         points
+      </h4>
+    </AccordionContent>
+  </Accordion>
+  <Accordion
+    fluid={true}
+    key="2"
+    styled={true}
+  >
+    <AccordionTitle
+      active={false}
+      index={2}
+      onClick={[Function]}
+    >
+      <Icon
+        as="i"
+        name="dropdown"
+      />
+       Code Review 
+      3
+       
+    </AccordionTitle>
+    <AccordionContent
+      active={false}
+    >
+      <h4>
+        Not Graded
+      </h4>
+    </AccordionContent>
+  </Accordion>
+</div>
+`;
 
 exports[`<CoursePage /> as teacher CoursePage Component should render correctly 1`] = `
 <div>
