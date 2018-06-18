@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, List, Container, Header, Table, Label } from 'semantic-ui-react'
+import { Button, List, Container, Header, Table, Label, Popup } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
@@ -10,7 +10,6 @@ import { getAllCI } from '../../services/courseInstance'
  */
 export class Courses extends Component {
   componentWillMount() {
-    console.log('this.props: ', this.props)
     this.props.getAllCI()
   }
 
@@ -40,32 +39,25 @@ export class Courses extends Component {
                           Active
                         </Label>
                       ) : (
-                          ''
-                        )}
+                        ''
+                      )}
                     </div>
                   </Table.Cell>
                   <Table.Cell>{instance.shorterId} </Table.Cell>
                   <Table.Cell>
                     <strong>
-                      <a href={`/labtool/courses/${instance.ohid}`}>{instance.name}</a>
+                      <Link to={`/labtool/courses/${instance.ohid}`}>{instance.name}</Link>
                     </strong>
                   </Table.Cell>
 
                   <Table.Cell> {instance.europeanStart} </Table.Cell>
                   <Table.Cell textAlign="center">
-                    <Button circular size="tiny" icon={{ name: 'eye', size: 'large', color: 'blue' }} as={Link} to={`/labtool/courses/${instance.ohid}`} />
+                    <Popup trigger={<Button circular size="tiny" icon={{ name: 'eye', size: 'large', color: 'blue' }} as={Link} to={`/labtool/courses/${instance.ohid}`} />} content="View course" />
                   </Table.Cell>
                 </Table.Row>
               ))}
             </Table.Body>
           </Table>
-
-          <div className="Instructions">
-            <List>
-              <List.Item icon={{ name: 'eye', color: 'blue' }} content="Show course page" />
-              <List.Item icon={{ name: 'square', color: 'green' }} content="Course is activated" />
-            </List>
-          </div>
         </Container>
       </div>
     )
@@ -78,4 +70,7 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps, { getAllCI })(Courses)
+export default connect(
+  mapStateToProps,
+  { getAllCI }
+)(Courses)

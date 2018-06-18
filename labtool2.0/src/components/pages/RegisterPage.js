@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createStudentCourses } from '../../services/studentinstances'
 import { updateStudentProjectInfo } from '../../services/studentinstances'
+import { resetRegister } from '../../reducers/redirectReducer'
 import { Redirect } from 'react-router'
 import { getOneCI } from '../../services/courseInstance'
 
@@ -37,19 +38,20 @@ export class RegisterPage extends Component {
         }
         await this.props.createStudentCourses(content, this.props.selectedInstance.ohid)
       }
-      this.setState({ redirectToNewPage: true })
     } catch (error) {
       console.log(error)
     }
   }
 
   componentWillMount() {
-    console.log('this.props.getOneCI: ', this.props.getOneCI)
     this.props.getOneCI(this.props.courseId)
+  }
+  componentWillUnmount() {
+    this.props.resetRegister()
   }
 
   render() {
-    if (this.state.redirectToNewPage) {
+    if (this.props.register.redirect) {
       return <Redirect to={`/labtool/courses/${this.props.selectedInstance.ohid}`} />
     }
 
@@ -113,8 +115,12 @@ const mapStateToProps = (state, ownProps) => {
   return {
     coursePage: state.coursePage,
     selectedInstance: state.selectedInstance,
-    courseId: ownProps.courseId
+    courseId: ownProps.courseId,
+    register: state.redirect
   }
 }
 
-export default connect(mapStateToProps, { createStudentCourses, updateStudentProjectInfo, getOneCI })(RegisterPage)
+export default connect(
+  mapStateToProps,
+  { createStudentCourses, updateStudentProjectInfo, getOneCI, resetRegister }
+)(RegisterPage)

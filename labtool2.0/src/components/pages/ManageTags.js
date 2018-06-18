@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { Form, Input, Grid, Loader, Container, Header, Button, Label } from 'semantic-ui-react'
+import React from 'react'
+import { Form, Input, Grid, Container } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { createTag, getAllTags } from '../../services/tags'
 
@@ -9,7 +9,6 @@ export class ManageTags extends React.Component {
   }
 
   handleSubmit = async e => {
-    console.log('olen täällä')
     try {
       e.preventDefault()
 
@@ -28,17 +27,14 @@ export class ManageTags extends React.Component {
   modifyTag = (text, color) => async e => {
     try {
       e.preventDefault()
-
-      console.log('text: ', document.getElementById('tagText'))
-      document.getElementById('tagText').placeholder = text
-      document.getElementById('tagColor').placeholder = color
+      document.getElementById('tagText').value = text
+      document.getElementById('tagColor').value = color
     } catch (error) {
       console.log(error)
     }
   }
 
   render() {
-    console.log('\ntags: ', this.props.tags)
     return (
       <Container>
         <div className="sixteen wide column" style={{ textAlignVertical: 'center', textAlign: 'center' }}>

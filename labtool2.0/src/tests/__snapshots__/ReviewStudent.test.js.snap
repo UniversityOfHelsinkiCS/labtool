@@ -71,6 +71,7 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
               }
             }
             unstackable={true}
+<<<<<<< HEAD
           >
             <FormTextArea
               as={[Function]}
@@ -117,6 +118,237 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
         >
           Checklist
         </h2>
+=======
+          >
+            <div>
+              <FormTextArea
+                as={[Function]}
+                control={[Function]}
+                defaultValue="Hienoa työtä!"
+                name="comment"
+                style={
+                  Object {
+                    "height": "250px",
+                    "width": "500px",
+                  }
+                }
+              />
+            </div>
+          </FormGroup>
+          <FormField>
+            <Button
+              as="button"
+              className="ui center floated green button"
+              role="button"
+              type="submit"
+            >
+              Save
+            </Button>
+            <Link
+              replace={false}
+              to="/labtool/browsereviews/TKT20010.2018.K.A.1/10011"
+              type="Cancel"
+            >
+              <Button
+                as="button"
+                className="ui center floated button"
+                role="button"
+                type="cancel"
+              >
+                Cancel
+              </Button>
+            </Link>
+          </FormField>
+        </Form>
+      </GridColumn>
+      <GridColumn>
+        <h2>
+          Checklist
+        </h2>
+        <div
+          className="checklist"
+        >
+          <Card
+            className="checklistCard"
+            color="red"
+            fluid={true}
+            key="Koodi"
+          >
+            <CardContent
+              header="Koodi"
+            />
+            <CardContent
+              className="checklistCardRow"
+              key="Koodin laatu"
+            >
+              <FormField>
+                <label>
+                  Koodin laatu
+                   
+                </label>
+                <Input
+                  onChange={[Function]}
+                  type="checkbox"
+                />
+                <label>
+                   
+                  2
+                   p
+                </label>
+              </FormField>
+            </CardContent>
+          </Card>
+          <Card
+            className="checklistCard"
+            color="red"
+            fluid={true}
+            key="Algoritmit"
+          >
+            <CardContent
+              header="Algoritmit"
+            />
+            <CardContent
+              className="checklistCardRow"
+              key="Algoritmin runko"
+            >
+              <FormField>
+                <label>
+                  Algoritmin runko
+                   
+                </label>
+                <Input
+                  onChange={[Function]}
+                  type="checkbox"
+                />
+                <label>
+                   
+                  2
+                   p
+                </label>
+              </FormField>
+            </CardContent>
+            <CardContent
+              className="checklistCardRow"
+              key="Tietorakenteita luotu"
+            >
+              <FormField>
+                <label>
+                  Tietorakenteita luotu
+                   
+                </label>
+                <Input
+                  onChange={[Function]}
+                  type="checkbox"
+                />
+                <label>
+                   
+                  2
+                   p
+                </label>
+              </FormField>
+            </CardContent>
+          </Card>
+          <Card
+            className="checklistCard"
+            color="red"
+            fluid={true}
+            key="Dokumentaatio"
+          >
+            <CardContent
+              header="Dokumentaatio"
+            />
+            <CardContent
+              className="checklistCardRow"
+              key="Readme"
+            >
+              <FormField>
+                <label>
+                  Readme
+                   
+                </label>
+                <Input
+                  onChange={[Function]}
+                  type="checkbox"
+                />
+                <label>
+                   
+                  1
+                   p
+                </label>
+              </FormField>
+            </CardContent>
+            <CardContent
+              className="checklistCardRow"
+              key="Tuntikirjanpito"
+            >
+              <FormField>
+                <label>
+                  Tuntikirjanpito
+                   
+                </label>
+                <Input
+                  onChange={[Function]}
+                  type="checkbox"
+                />
+                <label>
+                   
+                  1
+                   p
+                </label>
+              </FormField>
+            </CardContent>
+          </Card>
+          <div>
+            <Form
+              as="form"
+              className="checklistOutput"
+              onSubmit={[Function]}
+            >
+              <FormTextArea
+                as={[Function]}
+                className="checklistOutputText"
+                control={[Function]}
+                name="text"
+                style={
+                  Object {
+                    "height": "250px",
+                    "width": "100%",
+                  }
+                }
+                value="Koodin laadussa parantamisen varaa
+              
+              Algoritmin runko puuttuu
+              
+              Tietorakenteita ei ole luotu
+              
+              README puuttuu
+              
+              Tuntikirjanpito puuttuu
+              
+              "
+              />
+              <p
+                className="checklistOutputPoints"
+              >
+                points: 
+                0
+              </p>
+              <input
+                name="points"
+                type="hidden"
+                value={0}
+              />
+              <Button
+                as="button"
+                role="button"
+                type="submit"
+              >
+                Copy to review fields
+              </Button>
+            </Form>
+          </div>
+        </div>
+>>>>>>> ae0ef6419a30bb49d0c3d58681243df79e8b376e
       </GridColumn>
     </GridRow>
   </Grid>

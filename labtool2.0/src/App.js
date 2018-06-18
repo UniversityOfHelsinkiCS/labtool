@@ -20,6 +20,7 @@ import BrowseReviews from './components/pages/BrowseReviews'
 import MyPage from './components/pages/MyPage'
 import CreateChecklist from './components/pages/CreateChecklist'
 import ManageTags from './components/pages/ManageTags'
+import CreateChecklist from './components/pages/CreateChecklist'
 
 // Reducer imports
 import { logout } from './reducers/loginReducer'
@@ -86,6 +87,7 @@ class App extends Component {
             <Route path={'/labtool/ModifyCourseInstanceCodeReviews/:id'} render={({ match }) => <ModifyCourseInstanceCodeReviews courseId={match.params.id} />} />
             <Route path={'/labtool/checklist/:id/create'} render={({ match }) => <CreateChecklist courseId={match.params.id} />} />
             <Route path={'/labtool/ManageTags'} component={ManageTags} />
+            <Route path={'/labtool/checklist/:id/create'} render={({ match }) => <CreateChecklist courseId={match.params.id} />} />
             <Route path={`/`} render={() => <MyPage />} />
           </Switch>
         </main>

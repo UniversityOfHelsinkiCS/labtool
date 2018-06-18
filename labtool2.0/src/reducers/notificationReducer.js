@@ -123,11 +123,6 @@ const notificationReducer = (state = {}, action) => {
         message: action.response.message,
         error: false
       }
-    case 'CODE_REVIEW_RANDOMIZE':
-      return {
-        message: 'Code reviews randomized. Click save to change',
-        error: false
-      }
     case 'CHECKLIST_CREATE_FAILURE':
       return {
         message: action.response.response.data,
@@ -137,6 +132,16 @@ const notificationReducer = (state = {}, action) => {
       return {
         message: "That week doesn't have a checklist.",
         error: true
+      }
+    case 'CODE_REVIEW_RANDOMIZE':
+      return {
+        message: 'Code reviews randomized. Click save to change',
+        error: false
+      }
+    case 'STUDENT_PROJECT_INFO_UPDATE_SUCCESS':
+      return {
+        message: 'Project info updated succesfully!',
+        error: false
       }
     default:
       return state
