@@ -45,9 +45,7 @@ export class CoursePage extends React.Component {
   openLastReviewedWeek() {
     if (this.state.lastReviewedIndex === null) {
       let lastIndexOfWeeks = this.props.courseData.data.weeks.length - 1
-      console.log('lastIndexOfWeeks, pitäisi olla 3: ', lastIndexOfWeeks)
       let lastReviewedWeek = this.props.courseData.data.weeks[lastIndexOfWeeks].weekNumber
-      console.log('lastReviewedWeek, pitäisi olla 4', lastReviewedWeek)
       this.setState({
         activeIndex: lastReviewedWeek - 1,
         lastReviewedIndex: lastReviewedWeek - 1
@@ -165,11 +163,9 @@ export class CoursePage extends React.Component {
     const { activeIndex } = this.state
 
     const renderStudentBottomPart = () => {
-      console.log('\n\ncreating headers\n\n')
       let headers = []
       // studentInstance is id of student. Type: String
       // Tämä pitää myös korjata.
-      console.log('\nthis.props.courseData.data.user: ', this.props.courseData.data.user)
       headers.push(
         <Card key="card" fluid color="yellow">
           <Card.Content>
@@ -194,7 +190,6 @@ export class CoursePage extends React.Component {
           </Card.Content>
         </Card>
       )
-      console.log('\nthis.props.courseData: ', this.props.courseData)
       if (this.props.courseData && this.props.courseData.data && this.props.courseData.data.weeks) {
         console.log('\n\nI am here\n\n')
         let weeks = null
@@ -285,10 +280,10 @@ export class CoursePage extends React.Component {
           .forEach(cr => {
             headers.push(
               <Accordion key={i} fluid styled>
-                <Accordion.Title className="codeReview" active={activeIndex === i} index={i} onClick={this.handleClick}>
+                <Accordion.Title className="codeReview" active={activeIndex === i || cr.points === null} index={i} onClick={this.handleClick}>
                   <Icon name="dropdown" /> Code Review {cr.reviewNumber}{' '}
                 </Accordion.Title>
-                <Accordion.Content active={activeIndex === i}>
+                <Accordion.Content active={activeIndex === i || cr.points === null}>
                   <div className="codeReviewExpanded">
                     {cr.points !== null ? 
                       <div>
