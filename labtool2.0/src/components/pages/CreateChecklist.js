@@ -184,7 +184,7 @@ export class CreateChecklist extends Component {
         <div className="editForm">
           <div className="topOptions">
             <Label>Week </Label>
-            <Input type="number" name="week" step="1" value={this.state.week} onChange={this.changeWeek} style={{ width: '100px', marginRight: '10px' }} onBlur={this.castPointsToNumber()} />
+            <Input type="number" name="week" step="1" value={this.state.week} onChange={this.changeWeek} style={{ width: '100px', marginRight: '10px' }} />
             <Button className="loadButton" type="button" onClick={this.loadChecklist} color={this.state.dullLoadButton === this.state.week ? undefined : 'green'}>
               Load checklist
             </Button>

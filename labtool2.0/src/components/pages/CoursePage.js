@@ -122,7 +122,7 @@ export class CoursePage extends React.Component {
       console.log(error)
     }
   }
-
+  
   changeFilterAssistant = () => {
     return (e, data) => {
       const { value } = data
@@ -184,6 +184,7 @@ export class CoursePage extends React.Component {
           value: tag.id
         })
       )
+
       return array
     }
     console.log('ei tageja')
