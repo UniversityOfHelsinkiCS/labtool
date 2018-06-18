@@ -46,6 +46,11 @@ const checklistReducer = (state = INITIAL_STATE, action) => {
       newData.splice(index, 1)
       return { ...state, data: newData }
     }
+    case 'CHECKLIST_CAST_POINTS': {
+      const newData = state.data
+      newData[action.data.key].find(row => row.name === action.data.name).points = Number(newData[action.data.key].find(row => row.name === action.data.name).points)
+      return { ...state, data: newData }
+    }
     case 'CHECKLIST_RESET':
       return INITIAL_STATE
     default:
@@ -101,6 +106,15 @@ export const removeRow = data => {
   return async dispatch => {
     dispatch({
       type: 'CHECKLIST_REMOVE_ROW',
+      data
+    })
+  }
+}
+
+export const castPointsToNumber = data => {
+  return async dispatch => {
+    dispatch({
+      type: 'CHECKLIST_CAST_POINTS',
       data
     })
   }

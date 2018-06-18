@@ -4,7 +4,7 @@ import { Form, Header, Input, Label, Button, Popup, Card } from 'semantic-ui-rea
 import { showNotification } from '../../reducers/notificationReducer'
 import { createChecklist, getOneChecklist } from '../../services/checklist'
 import { getOneCI } from '../../services/courseInstance'
-import { resetChecklist, changeField, addTopic, addRow, removeTopic, removeRow } from '../../reducers/checklistReducer'
+import { resetChecklist, changeField, addTopic, addRow, removeTopic, removeRow, castPointsToNumber } from '../../reducers/checklistReducer'
 import './CreateChecklist.css'
 
 export class CreateChecklist extends Component {
@@ -170,6 +170,13 @@ export class CreateChecklist extends Component {
     })
   }
 
+  castPointsToNumber = (key, name) => async e => {
+    this.props.castPointsToNumber({
+      key,
+      name
+    })
+  }
+
   render() {
     return (
       <div className="CreateChecklist">
@@ -177,7 +184,7 @@ export class CreateChecklist extends Component {
         <div className="editForm">
           <div className="topOptions">
             <Label>Week </Label>
-            <Input type="number" name="week" step="1" value={this.state.week} onChange={this.changeWeek} style={{ width: '100px', marginRight: '10px' }} />
+            <Input type="number" name="week" step="1" value={this.state.week} onChange={this.changeWeek} style={{ width: '100px', marginRight: '10px' }} onBlur={this.castPointsToNumber()} />
             <Button className="loadButton" type="button" onClick={this.loadChecklist} color={this.state.dullLoadButton === this.state.week ? undefined : 'green'}>
               Load checklist
             </Button>
@@ -203,7 +210,14 @@ export class CreateChecklist extends Component {
                     </Header>
                     <div className="formField">
                       <Label>Points</Label>
-                      <Input className="numberField" type="number" step="0.25" value={row.points} onChange={this.changeField(key, row.name, 'points')} />
+                      <Input
+                        className="numberField"
+                        type="number"
+                        step="0.25"
+                        value={row.points}
+                        onChange={this.changeField(key, row.name, 'points')}
+                        onBlur={this.castPointsToNumber(key, row.name)}
+                      />
                     </div>
                     <div className="formField">
                       <Label>Text when checked</Label>
@@ -279,7 +293,8 @@ const mapDispatchToProps = {
   addTopic,
   addRow,
   removeTopic,
-  removeRow
+  removeRow,
+  castPointsToNumber
 }
 
 export default connect(
