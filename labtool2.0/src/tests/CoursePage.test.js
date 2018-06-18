@@ -35,6 +35,17 @@ describe('<CoursePage /> as teacher', () => {
     ]
   }
 
+  const tags = {
+    tags: [
+      { id: 20003, text: 'game', value: 20003 },
+      { id: 20002, text: 'HTML', value: 20002 },
+      { id: 20006, text: 'Java', value: 20006 },
+      { id: 20001, text: 'Javascript', value: 20001 },
+      { id: 20005, text: 'Node.js', value: 20005 },
+      { id: 20004, text: 'React', value: 20004 }
+    ]
+  }
+
   const courseData = {
     role: 'teacher',
     data: [
@@ -59,7 +70,8 @@ describe('<CoursePage /> as teacher', () => {
           admin: false,
           createdAt: '2018-03-26T00:00:00.000Z',
           updatedAt: '2018-03-26T00:00:00.000Z'
-        }
+        },
+        Tags: {}
       },
       {
         id: 10031,
@@ -82,7 +94,8 @@ describe('<CoursePage /> as teacher', () => {
           admin: false,
           createdAt: '2018-03-26T00:00:00.000Z',
           updatedAt: '2018-03-26T00:00:00.000Z'
-        }
+        },
+        Tags: {}
       },
       {
         id: 10011,
@@ -146,7 +159,8 @@ describe('<CoursePage /> as teacher', () => {
           admin: false,
           createdAt: '2018-03-26T00:00:00.000Z',
           updatedAt: '2018-03-26T00:00:00.000Z'
-        }
+        },
+        Tags: {}
       }
     ]
   }
@@ -169,6 +183,7 @@ describe('<CoursePage /> as teacher', () => {
         selectedInstance={coursePage}
         coursePageLogic={coursePageLogic}
         getAllTags={mockFn}
+        tags={tags}
       />
     )
   })
