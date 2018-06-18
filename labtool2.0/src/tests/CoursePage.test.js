@@ -161,7 +161,15 @@ describe('<CoursePage /> as teacher', () => {
 
   beforeEach(() => {
     wrapper = shallow(
-      <CoursePage courseData={courseData} getOneCI={mockFn} coursePageInformation={mockFn} associateTeacherToStudent={mockFn} selectedInstance={coursePage} coursePageLogic={coursePageLogic} />
+      <CoursePage
+        courseData={courseData}
+        getOneCI={mockFn}
+        coursePageInformation={mockFn}
+        associateTeacherToStudent={mockFn}
+        selectedInstance={coursePage}
+        coursePageLogic={coursePageLogic}
+        getAllTags={mockFn}
+      />
     )
   })
 
@@ -319,6 +327,7 @@ describe('<CoursePage /> as student', () => {
         associateTeacherToStudent={mockFn}
         selectedInstance={coursePage}
         coursePageLogic={coursePageLogic}
+        getAllTags={mockFn}
       />
     )
   })
