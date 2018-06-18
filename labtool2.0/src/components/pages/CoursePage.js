@@ -129,17 +129,17 @@ export class CoursePage extends React.Component {
         }
         indents.push(pushattava)
       }
-      let ii = 0;
+      let ii = 0
       codeReviews.forEach(cr => {
-        indents.push(<Table.Cell key={i + ii}>
-            {cr.points !== null ? (<p>{cr.points}</p>) : (<p>-</p>)}
-          </Table.Cell>)
+        indents.push(<Table.Cell key={i + ii}>{cr.points !== null ? <p>{cr.points}</p> : <p>-</p>}</Table.Cell>)
         ii++
       })
       while (ii < numberOfCodeReviews) {
-        indents.push(<Table.Cell key={i+ii}>
+        indents.push(
+          <Table.Cell key={i + ii}>
             <p>-</p>
-          </Table.Cell>)
+          </Table.Cell>
+        )
         ii++
       }
       return indents
@@ -495,4 +495,7 @@ const mapDispatchToProps = {
   toggleCodeReview
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CoursePage)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CoursePage)

@@ -40,13 +40,17 @@ describe('<Register />', () => {
           lastname: 'Mutikainen'
         }
       ]
+    },
+    register: {
+      redirect: false,
+      loading: false
     }
   }
 
   let mockFn = jest.fn()
 
   beforeEach(() => {
-    wrapper = shallow(<RegisterPage getOneCI={mockFn} selectedInstance={props} />)
+    wrapper = shallow(<RegisterPage getOneCI={mockFn} selectedInstance={props} register={props.register} />)
   })
 
   describe('RegisterPage Component', () => {
