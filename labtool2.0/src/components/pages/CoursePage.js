@@ -1,5 +1,5 @@
 import React from 'react'
-import { Accordion, Button, Table, Card, Form, Comment, List, Header, Label, Message, Icon, Dropdown } from 'semantic-ui-react'
+import { Accordion, Button, Table, Card, Form, Comment, List, Header, Label, Message, Icon, Dropdown, Popup } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createOneComment } from '../../services/comment'
@@ -7,7 +7,7 @@ import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import { associateTeacherToStudent } from '../../services/assistant'
 import ReactMarkdown from 'react-markdown'
 import { getAllTags, tagStudent, unTagStudent } from '../../services/tags'
-import { showAssistantDropdown, showTagDropdown, selectTeacher, selectTag, filterByAssistant, coursePageReset, toggleCodeReview } from '../../reducers/coursePageLogicReducer'
+import { showAssistantDropdown, showTagDropdown, selectTeacher, selectTag, filterByAssistant, filterByTag, coursePageReset, toggleCodeReview } from '../../reducers/coursePageLogicReducer'
 
 export class CoursePage extends React.Component {
   state = { activeIndex: 0 }
@@ -104,6 +104,24 @@ export class CoursePage extends React.Component {
     return (e, data) => {
       const { value } = data
       this.props.filterByAssistant(value)
+    }
+  }
+
+  changeFilterTag = id => {
+    return () => {
+      if (this.props.coursePageLogic.filterByTag === id) {
+        this.props.filterByTag(0)
+      } else {
+        this.props.filterByTag(id)
+      }
+    }
+  }
+
+  hasFilteredTag = (data, id) => {
+    for (let i = 0; i < data.Tags.length; i++) {
+      if (data.Tags[i].id === id) {
+        return data
+      }
     }
   }
 
@@ -401,7 +419,7 @@ export class CoursePage extends React.Component {
                   <Table.Cell textAlign="right">
                     {' '}
                     <Link to={`/labtool/ModifyCourseInstancePage/${this.props.selectedInstance.ohid}`}>
-                      <Button circular size="tiny" icon={{ name: 'edit', size: 'large', color: 'orange' }} />
+                      <Popup trigger={<Button circular size="tiny" icon={{ name: 'edit', size: 'large', color: 'orange' }} />} content="Edit course" />
                     </Link>
                   </Table.Cell>
                 </Table.Row>
@@ -450,6 +468,9 @@ export class CoursePage extends React.Component {
                 this.props.courseData.data
                   .filter(data => {
                     return this.props.coursePageLogic.filterByAssistant === 0 || this.props.coursePageLogic.filterByAssistant === data.teacherInstanceId
+                  })
+                  .filter(data => {
+                    return this.props.coursePageLogic.filterByTag === 0 || this.hasFilteredTag(data, this.props.coursePageLogic.filterByTag)
                   })
                   .map(data => (
                     <Table.Row key={data.id}>
@@ -511,7 +532,7 @@ export class CoursePage extends React.Component {
                         ) : (
                           <span>not assigned</span>
                         )}
-                        <Icon id="assistant" onClick={this.changeHiddenAssistantDropdown(data.id)} name="pencil" size="small" style={{ float: 'right' }} />
+                        <Popup trigger={<Button circular onClick={this.changeHiddenAssistantDropdown(data.id)} icon={{ name: 'pencil', size: 'medium' }} style={{ float: 'right' }} />} content="Assign instructor" />
                         {this.props.coursePageLogic.showAssistantDropdown === data.id ? (
                           <div>
                             <Dropdown id="assistantDropdown" options={dropDownTeachers} onChange={this.changeSelectedTeacher()} placeholder="Select teacher" fluid selection />
@@ -525,7 +546,7 @@ export class CoursePage extends React.Component {
                       </Table.Cell>
                       <Table.Cell textAlign="right">
                         <Link to={`/labtool/browsereviews/${this.props.selectedInstance.ohid}/${data.id}`}>
-                          <Button circular size="tiny" icon={{ name: 'star', size: 'large', color: 'orange' }} />
+                          <Popup trigger={<Button circular size="tiny" icon={{ name: 'star', size: 'large', color: 'orange' }} />} content="Review student" />
                         </Link>
                       </Table.Cell>
                     </Table.Row>
@@ -631,6 +652,7 @@ const mapDispatchToProps = {
   selectTeacher,
   selectTag,
   filterByAssistant,
+  filterByTag,
   coursePageReset,
   toggleCodeReview,
   getAllTags,

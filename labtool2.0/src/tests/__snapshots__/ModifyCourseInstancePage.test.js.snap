@@ -168,6 +168,7 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
             color="green"
             floated="left"
             role="button"
+            size="huge"
             type="Submit"
           >
             Save
@@ -178,8 +179,10 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
           >
             <Button
               as="button"
+              color="red"
               floated="right"
               role="button"
+              size="huge"
               type="Cancel"
             >
               Cancel
@@ -199,7 +202,9 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
       role="button"
       style={
         Object {
-          "marginTop": "10px",
+          "marginLeft": "5px",
+          "marginRight": "5px",
+          "marginTop": "20px",
         }
       }
     >
@@ -216,7 +221,9 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
       role="button"
       style={
         Object {
-          "marginTop": "10px",
+          "marginLeft": "5px",
+          "marginRight": "5px",
+          "marginTop": "20px",
         }
       }
     >
@@ -233,12 +240,40 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
       role="button"
       style={
         Object {
+<<<<<<< HEAD
           "marginTop": "10px",
+=======
+          "marginLeft": "5px",
+          "marginRight": "5px",
+          "marginTop": "20px",
+>>>>>>> efb2cf2f269e1b8407b7b589755d596cb95c6887
         }
       }
     >
       Create new checklist
     </Button>
   </Link>
+<<<<<<< HEAD
+=======
+  <Link
+    replace={false}
+    to="/labtool/managetags"
+  >
+    <Button
+      as="button"
+      block="true"
+      role="button"
+      style={
+        Object {
+          "marginLeft": "5px",
+          "marginRight": "5px",
+          "marginTop": "20px",
+        }
+      }
+    >
+      Edit tags
+    </Button>
+  </Link>
+>>>>>>> efb2cf2f269e1b8407b7b589755d596cb95c6887
 </div>
 `;

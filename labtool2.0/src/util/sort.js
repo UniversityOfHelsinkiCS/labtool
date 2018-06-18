@@ -20,4 +20,14 @@ export const sortTags = tags => {
   })
 }
 
+export const sortUsers = users => {
+  return users.sort((a, b) => {
+    if (a.admin === b.admin) {
+      return a.firsts < b.firsts ? -1 : 1
+    } else {
+      return b.admin - a.admin
+    }
+  })
+}
+
 export default sortCourses

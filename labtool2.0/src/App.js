@@ -86,6 +86,7 @@ class App extends Component {
             <Route path={'/labtool/ModifyCourseInstanceCodeReviews/:id'} render={({ match }) => <ModifyCourseInstanceCodeReviews courseId={match.params.id} />} />
             <Route path={'/labtool/checklist/:id/create'} render={({ match }) => <CreateChecklist courseId={match.params.id} />} />
             <Route path={'/labtool/ManageTags'} component={ManageTags} />
+            <Route path={'/labtool/checklist/:id/create'} render={({ match }) => <CreateChecklist courseId={match.params.id} />} />
             <Route path={`/`} render={() => <MyPage />} />
           </Switch>
         </main>

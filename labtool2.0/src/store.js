@@ -17,6 +17,8 @@ import coursePageLogic from './reducers/coursePageLogicReducer'
 import codeReviewLogic from './reducers/codeReviewReducer'
 import checklist from './reducers/checklistReducer'
 import tagsReducer from './reducers/tagReducer'
+import weekReview from './reducers/weekReviewReducer'
+
 /**
  * The store, that takes all the redux reducers. Index imports it.
  * It also uses middlewares, the most important being apiConnection, named
@@ -38,7 +40,8 @@ const reducer = combineReducers({
   coursePageLogic: coursePageLogic,
   codeReviewLogic: codeReviewLogic,
   checklist: checklist,
-  tags: tagsReducer
+  tags: tagsReducer,
+  weekReview: weekReview
 })
 
 const store = createStore(reducer, composeWithDevTools(applyMiddleware(thunk, handleRequest)))
