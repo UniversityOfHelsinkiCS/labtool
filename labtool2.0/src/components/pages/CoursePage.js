@@ -7,7 +7,7 @@ import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import { associateTeacherToStudent } from '../../services/assistant'
 import ReactMarkdown from 'react-markdown'
 import { getAllTags, tagStudent } from '../../services/tags'
-import { showAssistantDropdown, showTagDropdown, selectTeacher, selectTag, filterByAssistant, filterByTag, coursePageReset, toggleCodeReview } from '../../reducers/coursePageLogicReducer'
+import { showAssistantDropdown, showTagDropdown, selectTeacher, seleTag, coursePageReset, toggleCodeReview } from '../../reducers/coursePageLogicReducectTag, filterByAssistant, filterByr'
 
 export class CoursePage extends React.Component {
   state = { activeIndex: 0, lastReviewedIndex: null }
@@ -42,6 +42,17 @@ export class CoursePage extends React.Component {
     this.props.getOneCI(this.props.courseId)
     this.props.coursePageInformation(this.props.courseId)
     this.props.getAllTags()
+  }
+
+  openLastReviewedWeek() {
+    if (this.state.lastReviewedIndex === null) {
+      let lastIndexOfWeeks = this.props.courseData.data.weeks.length - 1
+      let lastReviewedWeek = this.props.courseData.data.weeks[lastIndexOfWeeks].weekNumber
+      this.setState({
+        activeIndex: lastReviewedWeek - 1,
+        lastReviewedIndex: lastReviewedWeek - 1
+      })
+    }
   }
 
   openLastReviewedWeek() {
@@ -479,8 +490,16 @@ export class CoursePage extends React.Component {
           <Table celled>
             <Table.Header>
               <Table.Row>
-                <Table.HeaderCell>Name</Table.HeaderCell>
-                <Table.HeaderCell> Github </Table.HeaderCell>
+              <Table.HeaderCell>
+                    Project Info
+                    {this.props.coursePageLogic.filterByTag !== 0 ? (
+                      <Button compact className="mini ui yellow button" floated="right" onClick={this.changeFilterTag(0)}>
+                        Clear tag filter
+                      </Button>
+                    ) : (
+                      <p />
+                    )}
+                </Table.HeaderCell>
                 {createHeadersTeacher()}
                 <Table.HeaderCell> Sum </Table.HeaderCell>
                 <Table.HeaderCell width="six"> Instructor </Table.HeaderCell>

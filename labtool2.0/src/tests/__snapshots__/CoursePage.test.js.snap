@@ -373,12 +373,17 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           <TableHeaderCell
             as="th"
           >
-            Name
-          </TableHeaderCell>
-          <TableHeaderCell
-            as="th"
-          >
-             Github 
+            Project Info
+            <Button
+              as="button"
+              className="mini ui yellow button"
+              compact={true}
+              floated="right"
+              onClick={[Function]}
+              role="button"
+            >
+              Clear tag filter
+            </Button>
           </TableHeaderCell>
           <TableHeaderCell
             as="th"

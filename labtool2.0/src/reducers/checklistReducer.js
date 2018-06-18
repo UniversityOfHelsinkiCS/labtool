@@ -6,16 +6,51 @@
  */
 
 const INITIAL_STATE = {
-  string: '',
   data: {}
 }
 
 const checklistReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case 'CHECKLIST_GET_ONE_SUCCESS':
-      return { data: action.response, string: JSON.stringify(action.response.list, null, 2) }
-    case 'CHECKLIST_CHANGE_STRING':
-      return { ...state, string: action.string }
+      return { data: action.response.list }
+    case 'CHECKLIST_GET_ONE_FAILURE':
+      return { data: {} }
+    case 'CHECKLIST_CHANGE_FIELD': {
+      const newData = state.data
+      newData[action.data.key].find(row => row.name === action.data.name)[action.data.field] = action.data.value
+      return { ...state, data: newData }
+    }
+    case 'CHECKLIST_ADD_TOPIC': {
+      const newData = state.data
+      newData[action.data.key] = []
+      return { ...state, data: newData }
+    }
+    case 'CHECKLIST_ADD_ROW': {
+      const newData = state.data
+      newData[action.data.key].push({
+        name: action.data.name,
+        points: 0,
+        textWhenOn: '',
+        textWhenOff: ''
+      })
+      return { ...state, data: newData }
+    }
+    case 'CHECKLIST_REMOVE_TOPIC': {
+      const newData = state.data
+      delete newData[action.data.key]
+      return { ...state, data: newData }
+    }
+    case 'CHECKLIST_REMOVE_ROW': {
+      const newData = state.data
+      const index = newData[action.data.key].indexOf(action.data.name)
+      newData.splice(index, 1)
+      return { ...state, data: newData }
+    }
+    case 'CHECKLIST_CAST_POINTS': {
+      const newData = state.data
+      newData[action.data.key].find(row => row.name === action.data.name).points = Number(newData[action.data.key].find(row => row.name === action.data.name).points)
+      return { ...state, data: newData }
+    }
     case 'CHECKLIST_RESET':
       return INITIAL_STATE
     default:
@@ -31,11 +66,56 @@ export const resetChecklist = () => {
   }
 }
 
-export const changeString = string => {
+export const changeField = data => {
   return async dispatch => {
     dispatch({
-      type: 'CHECKLIST_CHANGE_STRING',
-      string
+      type: 'CHECKLIST_CHANGE_FIELD',
+      data
+    })
+  }
+}
+
+export const addTopic = data => {
+  return async dispatch => {
+    dispatch({
+      type: 'CHECKLIST_ADD_TOPIC',
+      data
+    })
+  }
+}
+
+export const addRow = data => {
+  return async dispatch => {
+    dispatch({
+      type: 'CHECKLIST_ADD_ROW',
+      data
+    })
+  }
+}
+
+export const removeTopic = data => {
+  return async dispatch => {
+    dispatch({
+      type: 'CHECKLIST_REMOVE_TOPIC',
+      data
+    })
+  }
+}
+
+export const removeRow = data => {
+  return async dispatch => {
+    dispatch({
+      type: 'CHECKLIST_REMOVE_ROW',
+      data
+    })
+  }
+}
+
+export const castPointsToNumber = data => {
+  return async dispatch => {
+    dispatch({
+      type: 'CHECKLIST_CAST_POINTS',
+      data
     })
   }
 }
