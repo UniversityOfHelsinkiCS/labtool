@@ -477,7 +477,7 @@ export class CoursePage extends React.Component {
                           {this.props.coursePageLogic.showTagDropdown === data.id ? (
                             <div>
                               <Dropdown id="tagDropdown" options={dropDownTags} onChange={this.changeSelectedTag()} placeholder="Add tag" fluid selection />
-                              <div class="ui buttons">
+                              <div class="two ui buttons">
                                 <button class="ui icon positive button" onClick={this.addTag(data.id)} size="mini">
                                   <i class="plus icon"></i>
                                 </button>
