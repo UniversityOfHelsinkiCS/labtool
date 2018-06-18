@@ -7,7 +7,7 @@ import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import { associateTeacherToStudent } from '../../services/assistant'
 import ReactMarkdown from 'react-markdown'
 import { getAllTags, tagStudent } from '../../services/tags'
-import { showAssistantDropdown, showTagDropdown, selectTeacher, seleTag, coursePageReset, toggleCodeReview } from '../../reducers/coursePageLogicReducectTag, filterByAssistant, filterByr'
+import { showAssistantDropdown, showTagDropdown, selectTeacher, seleTag, coursePageReset, toggleCodeReview } from '../../reducers/coursePageLogicReducer'
 
 export class CoursePage extends React.Component {
   state = { activeIndex: 0, lastReviewedIndex: null }
