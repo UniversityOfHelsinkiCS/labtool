@@ -224,6 +224,10 @@ describe('<CoursePage /> as teacher', () => {
       expect(wrapper.find('.TeachersBottomView').length).toEqual(1)
     })
 
+    it('renders teachers bottom view', () => {
+      expect(wrapper.find('.TeachersBottomView').length).toEqual(1)
+    })
+
     it('doesnt render students top view when role is teacher', () => {
       expect(wrapper.find('.StudentsView').length).toEqual(0)
     })
@@ -403,9 +407,18 @@ describe('<CoursePage /> as student', () => {
       expect(wrapper.find('.TeachersTopView').length).toEqual(0)
     })
 
+    it('doesnt render teachers top view when role is student', () => {
+      expect(wrapper.find('.TeachersTopView').length).toEqual(0)
+
+    })
+    
     it('doesnt render teachers bottom view when role is student', () => {
       expect(wrapper.find('.TeachersBottomView').length).toEqual(0)
     })
+
+    it('doesnt render teachers bottom view when role is student', () => {
+      expect(wrapper.find('.TeachersBottomView').length).toEqual(0)
+    })  
 
     it('renders code review cards', () => {
       expect(wrapper.find('.codeReview').length).toEqual(coursePage.data.codeReviews.length)

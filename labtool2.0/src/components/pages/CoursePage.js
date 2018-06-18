@@ -40,16 +40,19 @@ export class CoursePage extends React.Component {
   componentWillMount() {
     this.props.getOneCI(this.props.courseId)
     this.props.coursePageInformation(this.props.courseId)
+    this.openLastReviewedWeek()
   }
 
   openLastReviewedWeek() {
-    if (this.state.lastReviewedIndex === null) {
-      let lastIndexOfWeeks = this.props.courseData.data.weeks.length - 1
-      let lastReviewedWeek = this.props.courseData.data.weeks[lastIndexOfWeeks].weekNumber
-      this.setState({
-        activeIndex: lastReviewedWeek - 1,
-        lastReviewedIndex: lastReviewedWeek - 1
-      })
+    if (this.props.courseData && this.props.courseData.data && this.props.courseData.data.weeks !== undefined && this.props.courseData.data.weeks.length > 0) {
+      if (this.state.lastReviewedIndex === null) {
+        let lastIndexOfWeeks = this.props.courseData.data.weeks.length - 1
+        let lastReviewedWeek = this.props.courseData.data.weeks[lastIndexOfWeeks].weekNumber
+        this.setState({
+          activeIndex: lastReviewedWeek - 1,
+          lastReviewedIndex: lastReviewedWeek - 1
+        })
+      }
     }
   }
 
@@ -149,7 +152,7 @@ export class CoursePage extends React.Component {
       }
       let ii = 0
       codeReviews.forEach(cr => {
-        indents.push(<Table.Cell key={i + ii}>{cr.points !== null ? <p>{cr.points}</p> : <p>-</p>}</Table.Cell>)
+        indents.push(<Table.Cell key={i + ii}>{cr.points !== null ? <p className="codeReviewPoints">{cr.points}</p> : <p>-</p>}</Table.Cell>)
         ii++
       })
       while (ii < numberOfCodeReviews) {
@@ -296,33 +299,31 @@ export class CoursePage extends React.Component {
             headers.push(
               <Accordion key={i} fluid styled>
                 <Accordion.Title className="codeReview" active={activeIndex === i || cr.points === null} index={i} onClick={this.handleClick}>
-                  <Icon name="dropdown" /> Code Review {cr.reviewNumber} {cr.points !== null ? (", points " + cr.points) : ''}
-                  
+                  <Icon name="dropdown" /> Code Review {cr.reviewNumber} {cr.points !== null ? ', points ' + cr.points : ''}
                 </Accordion.Title>
                 <Accordion.Content active={activeIndex === i || cr.points === null}>
                   <div className="codeReviewExpanded">
-                    {cr.points !== null ? 
+                    {cr.points !== null ? (
                       <div>
                         <h4 className="codeReviewPoints">Points: {cr.points}</h4>
                       </div>
-                    : (
+                    ) : (
                       <div>
                         <p>Not Graded</p>
                       </div>
                     )}
-                    
-                  {this.props.coursePageLogic.showCodeReviews.indexOf(cr.reviewNumber) !== -1 ? (
-                      <div>  
+
+                    {this.props.coursePageLogic.showCodeReviews.indexOf(cr.reviewNumber) !== -1 ? (
+                      <div>
                         <h4>Project to review</h4>
                         <p>{cr.toReview.projectName}</p>
                         <p>
                           <a href={cr.toReview.github}>{cr.toReview.github}</a>
                         </p>
                       </div>
-                      ) : (
-                        <div></div>
-                      )
-                  }
+                    ) : (
+                      <div />
+                    )}
                   </div>
                 </Accordion.Content>
               </Accordion>
@@ -432,15 +433,15 @@ export class CoursePage extends React.Component {
           <Table celled>
             <Table.Header>
               <Table.Row>
-              <Table.HeaderCell>
-                    Project Info
-                    {this.props.coursePageLogic.filterByTag !== 0 ? (
-                      <Button compact className="mini ui yellow button" floated="right" onClick={this.changeFilterTag(0)}>
-                        Clear tag filter
-                      </Button>
-                    ) : (
-                      <p />
-                    )}
+                <Table.HeaderCell>
+                  Project Info
+                  {this.props.coursePageLogic.filterByTag !== 0 ? (
+                    <Button compact className="mini ui yellow button" floated="right" onClick={this.changeFilterTag(0)}>
+                      Clear tag filter
+                    </Button>
+                  ) : (
+                    <p />
+                  )}
                 </Table.HeaderCell>
                 {createHeadersTeacher()}
                 <Table.HeaderCell> Sum </Table.HeaderCell>
@@ -495,7 +496,10 @@ export class CoursePage extends React.Component {
                         ) : (
                           <span>not assigned</span>
                         )}
-                        <Popup trigger={<Button circular onClick={this.changeHiddenAssistantDropdown(data.id)} icon={{ name: 'pencil', size: 'medium' }} style={{ float: 'right' }} />} content="Assign instructor" />
+                        <Popup
+                          trigger={<Button circular onClick={this.changeHiddenAssistantDropdown(data.id)} icon={{ name: 'pencil', size: 'medium' }} style={{ float: 'right' }} />}
+                          content="Assign instructor"
+                        />
                         {this.props.coursePageLogic.showAssistantDropdown === data.id ? (
                           <div>
                             <Dropdown id="assistantDropdown" options={dropDownTeachers} onChange={this.changeSelectedTeacher()} placeholder="Select teacher" fluid selection />
@@ -597,7 +601,7 @@ const mapStateToProps = (state, ownProps) => {
     selectedInstance: state.selectedInstance,
     courseData: state.coursePage,
     coursePageLogic: state.coursePageLogic,
-    courseId: ownProps.courseId,
+    courseId: ownProps.courseId
   }
 }
 
