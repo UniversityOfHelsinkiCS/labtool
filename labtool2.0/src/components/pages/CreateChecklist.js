@@ -211,7 +211,7 @@ export class CreateChecklist extends Component {
                   {this.state.openAdd === key ? (
                     <div>
                       <Label>Name</Label>
-                      <Input type="text" value={this.state.rowName} onChange={this.changeRowName} />
+                      <Input className="newRowNameInput" type="text" value={this.state.rowName} onChange={this.changeRowName} />
                       <Button type="button" onClick={this.cancelAdd}>
                         Cancel
                       </Button>
@@ -227,7 +227,7 @@ export class CreateChecklist extends Component {
               {this.state.openAdd === 'newTopic' ? (
                 <div>
                   <Label>Name</Label>
-                  <Input type="text" value={this.state.topicName} onChange={this.changeTopicName} />
+                  <Input className="newTopicNameInput" type="text" value={this.state.topicName} onChange={this.changeTopicName} />
                   <Button type="button" onClick={this.cancelAdd}>
                     Cancel
                   </Button>

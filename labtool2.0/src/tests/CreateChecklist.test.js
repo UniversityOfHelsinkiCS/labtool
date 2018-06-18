@@ -36,17 +36,21 @@ describe('<CreateChecklist /> component', () => {
     ]
   }
   const checklist = {
-    string: '{}',
-    data: {}
+    data: {
+      Koodi: [
+        {
+          name: 'Koodin laatu',
+          points: 2,
+          textWhenOn: 'Koodin laatu kiitettävää',
+          textWhenOff: 'Koodin laadussa parantamisen varaa'
+        }
+      ]
+    }
   }
 
   let mockFn = jest.fn()
 
   beforeEach(() => {
-    fnCalls = {
-      submit: 0,
-      load: 0
-    }
     wrapper = shallow(
       <CreateChecklist
         courseId={coursePage.ohid}
@@ -57,7 +61,11 @@ describe('<CreateChecklist /> component', () => {
         getOneCI={mockFn}
         getOneChecklist={mockFn}
         resetChecklist={mockFn}
-        changeString={mockFn}
+        changeField={mockFn}
+        addTopic={mockFn}
+        addRow={mockFn}
+        removeTopic={mockFn}
+        removeRow={mockFn}
       />
     )
   })
@@ -66,10 +74,40 @@ describe('<CreateChecklist /> component', () => {
     expect(wrapper.find('.CreateChecklist').exists()).toEqual(true)
   })
 
-  describe('Text area', () => {
-    it('autofills text area', () => {
-      const textArea = wrapper.find('.checklistJSONInput')
-      expect(textArea.prop('value')).toEqual(checklist.string)
+  describe('Editing form', () => {
+    it('autofills text areas', () => {
+      const textInputs = wrapper.find('.textField')
+      Object.keys(checklist.data).forEach(key => {
+        checklist.data[key].forEach(row => {
+          let textWhenOnMatch = undefined
+          let textWhenOffMatch = undefined
+          textInputs.forEach(ti => {
+            if (ti.prop('value') === row.textWhenOn) {
+              textWhenOnMatch = ti
+            }
+            if (ti.prop('value') === row.textWhenOff) {
+              textWhenOffMatch = ti
+            }
+          })
+          expect(textWhenOnMatch).not.toBe(undefined)
+          expect(textWhenOffMatch).not.toBe(undefined)
+        })
+      })
+    })
+
+    it('autofills point values', () => {
+      const pointInputs = wrapper.find('.numberField')
+      Object.keys(checklist.data).forEach(key => {
+        checklist.data[key].forEach(row => {
+          let pointsMatch = undefined
+          pointInputs.forEach(ti => {
+            if (Number(ti.prop('value')) === row.points) {
+              pointsMatch = ti
+            }
+          })
+          expect(pointsMatch).not.toBe(undefined)
+        })
+      })
     })
   })
 
