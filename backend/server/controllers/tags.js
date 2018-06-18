@@ -2,6 +2,10 @@ const Tag = require('../models').Tag
 const StudentTag = require('../models').StudentTag
 const TeacherInstance = require('../models').TeacherInstance
 const StudentInstance = require('../models').StudentInstance
+const Week = require('../models').Week
+const User = require('../models').User
+const Comment = require('../models').Comment
+const CodeReview = require('../models').CodeReview
 const helper = require('../helpers/course_instance_helper')
 
 module.exports = {
@@ -144,7 +148,55 @@ module.exports = {
                 studentInstanceId: req.body.studentId
               }
             }).then(studentTag => {
-              res.status(200).send() //halutaan kenties lähettää jotain muuta
+              if (!studentTag) {
+                return res.status(400).send('tagging did not succeed')
+              }
+
+              StudentInstance.findOne({
+                where: {
+                  id: req.body.studentId
+                },
+                attributes: {
+                  exclude: ['createdAt', 'updatedAt']
+                },
+                include: [
+                  {
+                    model: Week,
+                    attributes: {
+                      exclude: ['createdAt', 'updatedAt']
+                    },
+                    as: 'weeks',
+                    include: [
+                      {
+                        model: Comment,
+                        attributes: {
+                          exclude: ['createdAt', 'updatedAt']
+                        },
+                        as: 'comments'
+                      }
+                    ]
+                  },
+                  {
+                    model: CodeReview,
+                    attributes: {
+                      exclude: ['createdAt', 'updatedAt']
+                    },
+                    as: 'codeReviews'
+                  },
+                  {
+                    model: User,
+                    attributes: {
+                      exclude: ['createdAt', 'updatedAt']
+                    }
+                  },
+                  {
+                    model: Tag,
+                    attributes: ['id', 'name', 'color']
+                  }
+                ]
+              }).then(student => {
+                return res.status(200).send(student)
+              })
             })
           })
         })
@@ -176,8 +228,56 @@ module.exports = {
           if (!studentTag) {
             res.status(404).send('did not find the given student tag')
           }
-          studentTag.destroy()
-          res.status(200).send('student tag removed succesfully')
+          studentTag.destroy().then(removedTag => {
+            if (!removedTag) {
+              return res.status(400).send('removing student tag failed')
+            }
+            StudentInstance.findOne({
+              where: {
+                id: req.body.studentId
+              },
+              attributes: {
+                exclude: ['createdAt', 'updatedAt']
+              },
+              include: [
+                {
+                  model: Week,
+                  attributes: {
+                    exclude: ['createdAt', 'updatedAt']
+                  },
+                  as: 'weeks',
+                  include: [
+                    {
+                      model: Comment,
+                      attributes: {
+                        exclude: ['createdAt', 'updatedAt']
+                      },
+                      as: 'comments'
+                    }
+                  ]
+                },
+                {
+                  model: CodeReview,
+                  attributes: {
+                    exclude: ['createdAt', 'updatedAt']
+                  },
+                  as: 'codeReviews'
+                },
+                {
+                  model: User,
+                  attributes: {
+                    exclude: ['createdAt', 'updatedAt']
+                  }
+                },
+                {
+                  model: Tag,
+                  attributes: ['id', 'name', 'color']
+                }
+              ]
+            }).then(student => {
+              return res.status(200).send(student)
+            })
+          })
         })
       })
     } catch (e) {

@@ -1,3 +1,5 @@
+import { sortTags } from '../util/sort'
+
 const INITIAL_STATE = {
 
 }
@@ -27,9 +29,10 @@ const tagsReducer = (store = INITIAL_STATE, action) => {
       return { ...store, tags: newTagList }
     }
     case 'TAGS_GET_ALL_SUCCESS':
-      return { ...store, tags: action.response }
-    case 'TAG_STUDENT_SUCCESS':
+      return { ...store, tags: sortTags(action.response) }
+    case 'TAG_STUDENT_SUCCESS': {
       return store
+    }
     case 'UNTAG_STUDENT_SUCCESS':
       return store
     default:
