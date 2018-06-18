@@ -5,6 +5,7 @@ import { showNotification } from '../../reducers/notificationReducer'
 import { createChecklist, getOneChecklist } from '../../services/checklist'
 import { getOneCI } from '../../services/courseInstance'
 import { resetChecklist, changeField, addTopic, addRow, removeTopic, removeRow } from '../../reducers/checklistReducer'
+import './CreateChecklist.css'
 
 export class CreateChecklist extends Component {
   constructor(props) {
@@ -24,6 +25,7 @@ export class CreateChecklist extends Component {
 
   // Make api call to save checklist to database.
   handleSubmit = async e => {
+    e.preventDefault()
     if (this.state.week <= 0 || this.state.week > this.props.selectedInstance.weekAmount) {
       this.props.showNotification({
         message: 'Invalid week.',
@@ -73,6 +75,7 @@ export class CreateChecklist extends Component {
   }
 
   newTopic = async e => {
+    e.preventDefault()
     if (this.state.openAdd !== 'newTopic') {
       this.setState({
         openAdd: 'newTopic'
@@ -96,6 +99,7 @@ export class CreateChecklist extends Component {
   }
 
   newRow = key => async e => {
+    e.preventDefault()
     if (this.state.openAdd !== key) {
       this.setState({
         openAdd: key
@@ -144,6 +148,12 @@ export class CreateChecklist extends Component {
     })
   }
 
+  cancelAdd = async e => {
+    this.setState({
+      openAdd: ''
+    })
+  }
+
   render() {
     return (
       <div className="CreateChecklist">
@@ -160,15 +170,15 @@ export class CreateChecklist extends Component {
             {Object.keys(this.props.checklist.data).map(key => (
               <Card fluid color="red" key={key}>
                 <Card.Content>
-                  <span>{key}</span>
-                  <Button type="button" onClick={this.removeTopic(key)}>
+                  <Header classname="topicHeader">{key}</Header>
+                  <Button className="deleteButton" type="button" color="red" onClick={this.removeTopic(key)}>
                     Delete
                   </Button>
                 </Card.Content>
                 {this.props.checklist.data[key].map(row => (
                   <Card.Content key={row.name}>
                     <Header>{row.name}</Header>
-                    <Button type="button" onClick={this.removeRow(key, row.name)}>
+                    <Button className="deleteButton" type="button" onClick={this.removeRow(key, row.name)}>
                       Delete
                     </Button>
                     <Form.Field>
@@ -185,16 +195,42 @@ export class CreateChecklist extends Component {
                     </Form.Field>
                   </Card.Content>
                 ))}
-                <Popup trigger={<Button type="button" onClick={this.newRow(key)} circular icon={{ name: 'add', size: 'large' }} />} content="Add new checkbox" />
-                {this.state.openAdd === key ? <Input type="text" value={this.state.rowName} onChange={this.changeRowName} /> : <div />}
+                <form onSubmit={this.newRow(key)}>
+                  <Popup trigger={<Button type="submit" circular icon={{ name: 'add', size: 'large' }} />} content="Add new checkbox" />
+                  {this.state.openAdd === key ? (
+                    <div>
+                      <Label>Name</Label>
+                      <Input type="text" value={this.state.rowName} onChange={this.changeRowName} />
+                      <Button type="button" onClick={this.cancelAdd}>
+                        Cancel
+                      </Button>
+                    </div>
+                  ) : (
+                    <div />
+                  )}
+                </form>
               </Card>
             ))}
-            <Popup trigger={<Button type="button" onClick={this.newTopic} circular icon={{ name: 'add', size: 'large' }} />} content="Add new topic" />
-            {this.state.openAdd === 'newTopic' ? <Input type="text" value={this.state.topicName} onChange={this.changeTopicName} /> : <div />}
+            <form onSubmit={this.newTopic}>
+              <Popup trigger={<Button type="submit" circular icon={{ name: 'add', size: 'large' }} />} content="Add new topic" />
+              {this.state.openAdd === 'newTopic' ? (
+                <div>
+                  <Label>Name</Label>
+                  <Input type="text" value={this.state.topicName} onChange={this.changeTopicName} />
+                  <Button type="button" onClick={this.cancelAdd}>
+                    Cancel
+                  </Button>
+                </div>
+              ) : (
+                <div />
+              )}
+            </form>
           </div>
-          <Button className="saveButton" type="submit" onCLick={this.handleSubmit}>
-            Save
-          </Button>
+          <form onSubmit={this.handleSubmit}>
+            <Button className="saveButton" type="submit">
+              Save
+            </Button>
+          </form>
         </div>
       </div>
     )
