@@ -6,8 +6,7 @@ import { createOneComment } from '../../services/comment'
 import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import { associateTeacherToStudent } from '../../services/assistant'
 import ReactMarkdown from 'react-markdown'
-import { getAllTags, tagStudent } from '../../services/tags'
-import { showAssistantDropdown, showTagDropdown, selectTeacher, selectTag, filterByAssistant, filterByTag, coursePageReset, toggleCodeReview } from '../../reducers/coursePageLogicReducer'
+import { showAssistantDropdown, selectTeacher, filterByAssistant, coursePageReset, toggleCodeReview } from '../../reducers/coursePageLogicReducer'
 
 export class CoursePage extends React.Component {
   state = { activeIndex: 0, lastReviewedIndex: null }
@@ -41,7 +40,6 @@ export class CoursePage extends React.Component {
   componentWillMount() {
     this.props.getOneCI(this.props.courseId)
     this.props.coursePageInformation(this.props.courseId)
-    this.props.getAllTags()
   }
 
   openLastReviewedWeek() {
@@ -66,12 +64,6 @@ export class CoursePage extends React.Component {
     }
   }
 
-  changeHiddenTagDropdown = id => {
-    return () => {
-      this.props.showTagDropdown(this.props.coursePageLogic.showTagDropdown === id ? '' : id)
-    }
-  }
-
   changeSelectedTeacher = () => {
     return (e, data) => {
       const { value } = data
@@ -79,48 +71,10 @@ export class CoursePage extends React.Component {
     }
   }
 
-  changeSelectedTag = () => {
-    return (e, data) => {
-      const { value } = data
-      this.props.selectTag(value)
-    }
-  }
-
-  addTag = id => async e => {
-    try {
-      e.preventDefault()
-      const data = {
-        studentId: id,
-        tagId: this.props.coursePageLogic.selectedTag
-      }
-      await this.props.tagStudent(data)
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
   changeFilterAssistant = () => {
     return (e, data) => {
       const { value } = data
       this.props.filterByAssistant(value)
-    }
-  }
-
-  changeFilterTag = id => {
-    return () => {
-      if (this.props.coursePageLogic.filterByTag === id) {
-        this.props.filterByTag(0)
-      } else {
-        this.props.filterByTag(id)
-      }
-    }
-  }
-
-  hasFilteredTag = (data, id) => {
-    for (let i = 0; i < data.Tags.length; i++) {
-      if (data.Tags[i].id === id) {
-        return data
-      }
     }
   }
 
@@ -148,22 +102,6 @@ export class CoursePage extends React.Component {
       )
       return array
     }
-    return []
-  }
-
-  createDropdownTags = array => {
-    if (this.props.tags.tags != undefined) {
-      this.props.tags.tags.map(tag =>
-        array.push({
-          key: tag.id,
-          text: tag.name,
-          value: tag.id
-        })
-      )
-      console.log('tags: ', array)
-      return array
-    }
-    console.log('ei tageja')
     return []
   }
 
@@ -394,9 +332,6 @@ export class CoursePage extends React.Component {
     ]
     dropDownFilterTeachers = this.createDropdownTeachers(dropDownFilterTeachers)
 
-    let dropDownTags = []
-    dropDownTags = this.createDropdownTags(dropDownTags)
-
     /**
      * Returns what teachers should see at the top of this page
      */
@@ -493,9 +428,6 @@ export class CoursePage extends React.Component {
                   .filter(data => {
                     return this.props.coursePageLogic.filterByAssistant === 0 || this.props.coursePageLogic.filterByAssistant === data.teacherInstanceId
                   })
-                  .filter(data => {
-                    return this.props.coursePageLogic.filterByTag === 0 || this.hasFilteredTag(data, this.props.coursePageLogic.filterByTag)
-                  })
                   .map(data => (
                     <Table.Row key={data.id}>
                       <Table.Cell>
@@ -508,27 +440,6 @@ export class CoursePage extends React.Component {
                             <br />
                             <a href={data.github}>{data.github}</a>
                           </p>
-                          {data.Tags.map(tag => (
-                            <div key={tag.id}>
-                              <Button compact floated="left" className={`mini ui ${tag.color} button`}>
-                                {tag.name}
-                              </Button>
-                            </div>
-                          ))}
-                        </Table.Cell>
-                        <Table.Cell>
-                          <br />
-                          <Icon id="tag" onClick={this.changeHiddenTagDropdown(data.id)} name="pencil" size="small" style={{ float: 'top' }} />
-                          {this.props.coursePageLogic.showTagDropdown === data.id ? (
-                            <div>
-                              <Dropdown id="tagDropdown" options={dropDownTags} onChange={this.changeSelectedTag()} placeholder="Add tag" fluid selection />
-                              <Button onClick={this.addTag(data.id)} size="small">
-                                Add tag
-                              </Button>
-                            </div>
-                          ) : (
-                            <div />
-                          )}
                         </Table.Cell>
                       </Table.Cell>
                       {createIndents(data.weeks, data.codeReviews, data.id)}
@@ -653,7 +564,6 @@ const mapStateToProps = (state, ownProps) => {
     courseData: state.coursePage,
     coursePageLogic: state.coursePageLogic,
     courseId: ownProps.courseId,
-    tags: state.tags
   }
 }
 
@@ -663,15 +573,10 @@ const mapDispatchToProps = {
   coursePageInformation,
   associateTeacherToStudent,
   showAssistantDropdown,
-  showTagDropdown,
   selectTeacher,
-  selectTag,
   filterByAssistant,
-  filterByTag,
   coursePageReset,
-  toggleCodeReview,
-  getAllTags,
-  tagStudent
+  toggleCodeReview
 }
 
 export default connect(

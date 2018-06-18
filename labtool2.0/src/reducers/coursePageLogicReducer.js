@@ -52,7 +52,7 @@ const coursePageLogicReducer = (state = INITIAL_STATE, action) => {
   }
 }
 
-export const showDropdown = show => {
+export const showAssistantDropdown = show => {
   return async dispatch => {
     dispatch({
       type: 'COURSE_PAGE_SHOW_DROPDOWN',
