@@ -30,7 +30,6 @@ export class MyPage extends Component {
   }
 
   render() {
-    console.log(this.props.studentInstance)
     const user = { ...this.props.user.user }
     return (
       <div className="MyPage">

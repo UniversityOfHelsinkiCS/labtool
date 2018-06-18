@@ -29,10 +29,7 @@ export class CoursePage extends React.Component {
   componentWillMount() {
     this.props.getOneCI(this.props.courseId)
     this.props.coursePageInformation(this.props.courseId)
-
   }
-
-
 
   componentWillUnmount() {
     this.props.coursePageReset()
@@ -132,17 +129,17 @@ export class CoursePage extends React.Component {
         }
         indents.push(pushattava)
       }
-      let ii = 0;
+      let ii = 0
       codeReviews.forEach(cr => {
-        indents.push(<Table.Cell key={i + ii}>
-          {cr.points !== null ? (<p>{cr.points}</p>) : (<p>-</p>)}
-        </Table.Cell>)
+        indents.push(<Table.Cell key={i + ii}>{cr.points !== null ? <p>{cr.points}</p> : <p>-</p>}</Table.Cell>)
         ii++
       })
       while (ii < numberOfCodeReviews) {
-        indents.push(<Table.Cell key={i + ii}>
-          <p>-</p>
-        </Table.Cell>)
+        indents.push(
+          <Table.Cell key={i + ii}>
+            <p>-</p>
+          </Table.Cell>
+        )
         ii++
       }
       return indents
@@ -193,15 +190,15 @@ export class CoursePage extends React.Component {
                 </Message>
               </div>
             ) : (
-                  <div className="sixteen wide column">
-                    <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>
-                      {' '}
-                      <Button color="blue" size="large">
-                        Register
+              <div className="sixteen wide column">
+                <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>
+                  {' '}
+                  <Button color="blue" size="large">
+                    Register
                   </Button>
-                    </Link>
-                  </div>
-                )
+                </Link>
+              </div>
+            )
           ) : this.props.courseData.role === 'teacher' ? (
             <div className="sixteen wide column">
               <Message compact>
@@ -209,12 +206,12 @@ export class CoursePage extends React.Component {
               </Message>
             </div>
           ) : (
-                <div className="sixteen wide column">
-                  <Message compact>
-                    <Message.Header>This course has not been activated.</Message.Header>
-                  </Message>
-                </div>
-              )}
+            <div className="sixteen wide column">
+              <Message compact>
+                <Message.Header>This course has not been activated.</Message.Header>
+              </Message>
+            </div>
+          )}
         </div>
 
         {/** Shown when the users role in this course is teacher.*/}
@@ -231,8 +228,8 @@ export class CoursePage extends React.Component {
                           Active
                         </Label>
                       ) : (
-                          ''
-                        )}
+                        ''
+                      )}
                     </div>
                   </Table.Cell>
                   <Table.Cell>Week amount: {this.props.selectedInstance.weekAmount}</Table.Cell>
@@ -325,8 +322,8 @@ export class CoursePage extends React.Component {
                             </span>
                           ))
                         ) : (
-                            <span>not assigned</span>
-                          )}
+                          <span>not assigned</span>
+                        )}
                         <Popup trigger={<Button circular onClick={this.changeHidden(data.id)} icon={{ name: 'pencil', size: 'medium' }} style={{ float: 'right' }} />} content="Assign instructor" />
                         {this.props.coursePageLogic.showDropdown === data.id ? (
                           <div>
@@ -345,8 +342,8 @@ export class CoursePage extends React.Component {
                             </Button>
                           </div>
                         ) : (
-                            <div />
-                          )}
+                          <div />
+                        )}
                       </Table.Cell>
                       <Table.Cell textAlign="right">
                         <Link to={`/labtool/browsereviews/${this.props.selectedInstance.ohid}/${data.id}`}>
@@ -359,8 +356,8 @@ export class CoursePage extends React.Component {
             </Table>
           </div>
         ) : (
-            <div />
-          )}
+          <div />
+        )}
 
         {/** Shown when the users role in this course is student.*/}
         {this.props.courseData.role === 'student' && this.props.courseData.data !== null ? (
@@ -385,8 +382,8 @@ export class CoursePage extends React.Component {
                     </h3>
                   ))
                 ) : (
-                    <h3>Assistant: not given</h3>
-                  )}
+                  <h3>Assistant: not given</h3>
+                )}
               </Card.Content>
             </Card>
 
@@ -459,26 +456,26 @@ export class CoursePage extends React.Component {
                                   </p>
                                 </Card.Content>
                               ) : (
-                                  <div />
-                                )}
+                                <div />
+                              )}
                             </div>
                           ) : (
-                              <div />
-                            )}
+                            <div />
+                          )}
                         </Card>
                       ) : (
-                          <div />
-                        )
+                        <div />
+                      )
                   )
                 ) : (
-                    <h3>Ei ollut code reviewsejä</h3>
-                  )}
+                  <h3>Ei ollut code reviewsejä</h3>
+                )}
               </Card.Content>
             </Card>
           </div>
         ) : (
-            <div />
-          )}
+          <div />
+        )}
       </div>
     )
   }
@@ -509,4 +506,7 @@ const mapDispatchToProps = {
   toggleCodeReview
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CoursePage)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CoursePage)

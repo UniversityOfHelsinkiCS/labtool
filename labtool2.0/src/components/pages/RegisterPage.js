@@ -71,10 +71,10 @@ export class RegisterPage extends Component {
                 <h3>Update your info for {this.props.selectedInstance.name}</h3>
               </div>
             ) : (
-                <div>
-                  <h3>Register for {this.props.selectedInstance.name}</h3>
-                </div>
-              )}
+              <div>
+                <h3>Register for {this.props.selectedInstance.name}</h3>
+              </div>
+            )}
           </Grid.Row>
         </Grid>
 
@@ -120,4 +120,7 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps, { createStudentCourses, updateStudentProjectInfo, getOneCI, resetRegister })(RegisterPage)
+export default connect(
+  mapStateToProps,
+  { createStudentCourses, updateStudentProjectInfo, getOneCI, resetRegister }
+)(RegisterPage)
