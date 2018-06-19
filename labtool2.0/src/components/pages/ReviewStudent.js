@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
-import { Button, Form, Input, Grid, Card } from 'semantic-ui-react'
+import { Button, Form, Input, Grid, Card, Loader } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createOneWeek } from '../../services/week'
 import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import { clearNotifications } from '../../reducers/notificationReducer'
 import { toggleCheck, resetChecklist } from '../../reducers/weekReviewReducer'
+import { resetLoading } from '../../reducers/loadingReducer'
 import store from '../../store'
 
 /**
@@ -34,6 +35,7 @@ export class ReviewStudent extends Component {
 
   componentWillUnmount() {
     this.props.resetChecklist()
+    this.props.resetLoading()
   }
 
   handleSubmit = async e => {
@@ -70,7 +72,7 @@ export class ReviewStudent extends Component {
 
   render() {
     if (this.props.loading.loading) {
-      return <p>Loading</p>
+      return <Loader active />
     }
     //this.props.ownProps.studentInstance is a string, therefore casting to number.
     const studentData = this.props.courseData.data.filter(dataArray => dataArray.id === Number(this.props.ownProps.studentInstance))
@@ -186,5 +188,5 @@ const mapStateToProps = (state, ownProps) => {
 
 export default connect(
   mapStateToProps,
-  { createOneWeek, getOneCI, clearNotifications, toggleCheck, resetChecklist, coursePageInformation }
+  { createOneWeek, getOneCI, clearNotifications, toggleCheck, resetChecklist, coursePageInformation, resetLoading }
 )(ReviewStudent)

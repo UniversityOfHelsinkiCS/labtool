@@ -38,23 +38,19 @@ const handleResponse = (state, hook) => {
 }
 
 const loadingReducer = (state = INITITAL_STATE, action) => {
+  if (action.type.includes('ATTEMPT')) {
+    const prefix = action.type.split('ATTEMPT')[0]
+    return { ...state, loading: true, loadingHooks: [...state.loadingHooks, prefix] }
+  } else if (action.type.includes('SUCCESS')) {
+    const prefix = action.type.split('SUCCESS')[0]
+    return handleResponse(state, prefix)
+  } else if (action.type.includes('FAILURE')) {
+    const prefix = action.type.split('FAILURE')[0]
+    return handleResponse(state, prefix)
+  }
   switch (action.type) {
     case 'LOADING_RESET':
       return INITITAL_STATE
-    case 'CP_INFO_ATTEMPT':
-      return { ...state, loading: true, loadingHooks: [...state.loadingHooks, 'CP_INFO'] }
-    case 'CP_INFO_SUCCESS':
-      return handleResponse(state, 'CP_INFO')
-    case 'CP_INFO_FAILURE':
-      return handleResponse(state, 'CP_INFO')
-    case 'CI_GET_ONE_ATTEMPT':
-      return { ...state, loading: true, loadingHooks: [...state.loadingHooks, 'CI_GET_ONE'] }
-    case 'CI_GET_ONE_SUCCESS':
-      return handleResponse(state, 'CI_GET_ONE')
-    case 'CI_GET_ONE_FAILURE':
-      return handleResponse(state, 'CI_GET_ONE')
-    case 'LOADING_ADD_REDIRECT_HOOK':
-      return { ...state, redirectHooks: [...state.redirectHooks, action.data.hook] }
     default:
       return state
   }
