@@ -64,12 +64,13 @@ export class CoursePage extends React.Component {
   hasFilteringTags = (studentTagsData, filteringTags) => {
     let studentInstanceTagIds = studentTagsData.map(tag => tag.id)
     let filteringTagIds = filteringTags.map(tag => tag.id)
+    let hasRequiredTags = true
     for (let i = 0; i < filteringTagIds.length; i++) {
-      if (studentInstanceTagIds.includes(filteringTagIds[i])) {
-        return true
+      if (!studentInstanceTagIds.includes(filteringTagIds[i])) {
+        hasRequiredTags = false
       }
     }
-    return false
+    return hasRequiredTags
   }
 
   updateTeacher = id => async e => {
@@ -256,7 +257,7 @@ export class CoursePage extends React.Component {
                 selection
                 style={{ display: 'inline' }}
               />
-              <span> Tags chosen: </span>
+              <span> Tag filters: </span>
               {this.props.coursePageLogic.filterByTag.length === 0 ? (
                 <span>
                   <Label>none</Label>
