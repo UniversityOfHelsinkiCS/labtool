@@ -21,8 +21,19 @@ const selectedInstanceReducer = (store = [], action) => {
       return { ...store, teacherInstances: [...store.teacherInstances, action.response] }
     case 'TEACHER_REMOVE_SUCCESS':
       return { ...store, teacherInstances: store.teacherInstances.filter(teacher => teacher.id !== action.response.id) }
+    case 'SI_CHANGE_FIELD':
+      return { ...store, [action.data.field]: action.data.value }
     default:
       return store
+  }
+}
+
+export const changeCourseField = data => {
+  return async dispatch => {
+    dispatch({
+      type: 'SI_CHANGE_FIELD',
+      data
+    })
   }
 }
 

@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
-import { Form, Input, Button, Grid, Radio } from 'semantic-ui-react'
+import { Form, Input, Button, Grid, Checkbox } from 'semantic-ui-react'
 import { getOneCI, modifyOneCI } from '../../services/courseInstance'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Redirect } from 'react-router'
 import { clearNotifications } from '../../reducers/notificationReducer'
+import { changeCourseField } from '../../reducers/selectedInstanceReducer'
 
 /**
  *  Page used to modify a courseinstances information. Can only be accessed by teachers.
@@ -15,41 +16,39 @@ export class ModifyCourseInstancePage extends Component {
     this.props.getOneCI(this.props.courseId)
   }
 
-  componentDidUpdate() {
-    if (this.props.notification.error !== undefined) {
-      if (!this.props.notification.error) {
-        this.props.history.push(`/labtool/courses/${this.props.selectedInstance.ohid}`)
-      }
-    }
+  changeField = async e => {
+    this.props.changeCourseField({
+      field: e.target.name,
+      value: e.target.value
+    })
   }
 
-  state = {
-    redirectToNewPage: false
+  handleChange = async e => {
+    this.props.changeCourseField({
+      field: 'active',
+      value: !this.props.selectedInstance.active
+    })
   }
-
-  handleChange = (e, { value }) => this.setState({ value })
 
   handleSubmit = async e => {
     try {
       e.preventDefault()
-
+      const { weekAmount, weekMaxPoints, currentWeek, active, ohid } = this.props.selectedInstance
       const content = {
-        weekAmount: e.target.weekAmount.value,
-        weekMaxPoints: e.target.weeklyMaxpoints.value,
-        currentWeek: e.target.currentWeek.value,
-        active: e.target.courseActive.value,
-        ohid: this.props.selectedInstance.ohid
+        weekAmount,
+        weekMaxPoints,
+        currentWeek,
+        active,
+        ohid
       }
       await this.props.modifyOneCI(content, this.props.selectedInstance.ohid)
-      this.setState({ redirectToNewPage: true })
-      this.forceUpdate()
     } catch (error) {
       console.log(error)
     }
   }
 
   render() {
-    if (this.state.redirectToNewPage) {
+    if (false) {
       return <Redirect to={`/labtool/courses/${this.props.selectedInstance.ohid}`} />
     }
     const selectedInstance = { ...this.props.selectedInstance }
@@ -84,25 +83,21 @@ export class ModifyCourseInstancePage extends Component {
             <Form onSubmit={this.handleSubmit}>
               <Form.Group inline>
                 <label style={{ width: '125px', textAlign: 'left' }}>Week amount</label>
-                <Input name="weekAmount" required="true" type="text" style={{ maxWidth: '7em' }} defaultValue={JSON.stringify(selectedInstance.weekAmount)} className="form-control1" />
+                <Input name="weekAmount" required="true" type="text" style={{ maxWidth: '7em' }} value={selectedInstance.weekAmount} className="form-control1" onChange={this.changeField} />
               </Form.Group>
 
               <Form.Group inline>
                 <label style={{ width: '125px', textAlign: 'left' }}>Weekly maxpoints</label>
-                <Input name="weeklyMaxpoints" required="true" type="text" style={{ maxWidth: '7em' }} defaultValue={JSON.stringify(selectedInstance.weekMaxPoints)} className="form-control2" />
+                <Input name="weekMaxPoints" required="true" type="text" style={{ maxWidth: '7em' }} value={selectedInstance.weekMaxPoints} className="form-control2" onChange={this.changeField} />
               </Form.Group>
 
               <Form.Group inline>
                 <label style={{ width: '125px', textAlign: 'left' }}>Current week</label>
-                <Input name="currentWeek" required="true" type="text" style={{ maxWidth: '7em' }} defaultValue={JSON.stringify(selectedInstance.currentWeek)} className="form-control3" />
+                <Input name="currentWeek" required="true" type="text" style={{ maxWidth: '7em' }} value={selectedInstance.currentWeek} className="form-control3" onChange={this.changeField} />
               </Form.Group>
 
               <Form.Field inline>
-                <Radio name="courseActive" label="Activate course" value="true" checked={this.state.value === 'true'} onChange={this.handleChange} style={{ width: '150px', textAlign: 'left' }} />
-              </Form.Field>
-
-              <Form.Field inline>
-                <Radio name="courseActive" label="Deactivate course" value="false" checked={this.state.value === 'false'} onChange={this.handleChange} style={{ width: '150px', textAlign: 'left' }} />
+                <Checkbox name="courseActive" label="Activate course" checked={selectedInstance.active} onChange={this.handleChange} style={{ width: '150px', textAlign: 'left' }} />
               </Form.Field>
 
               <Form.Field>
@@ -153,4 +148,14 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps, { getOneCI, modifyOneCI, clearNotifications })(ModifyCourseInstancePage)
+const mapDispatchToProps = {
+  getOneCI,
+  modifyOneCI,
+  clearNotifications,
+  changeCourseField
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ModifyCourseInstancePage)
