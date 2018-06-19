@@ -85,7 +85,7 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
     styled={true}
   >
     <AccordionTitle
-      active={true}
+      active={false}
       className="codeReview"
       index={0}
       onClick={[Function]}
@@ -100,7 +100,7 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
       , points 2
     </AccordionTitle>
     <AccordionContent
-      active={true}
+      active={false}
     >
       <div
         className="codeReviewExpanded"

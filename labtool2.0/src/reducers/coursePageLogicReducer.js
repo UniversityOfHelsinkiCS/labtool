@@ -15,7 +15,10 @@ const INITIAL_STATE = {
   selectedTag: '',
   filterByAssistant: 0,
   filterByTag: 0,
-  showCodeReviews: []
+  showCodeReviews: [],
+  activeIndex: 0,
+  lastReviewedWeek: 1,
+  lastReviewedIsShownAlready: false
 }
 
 const coursePageLogicReducer = (state = INITIAL_STATE, action) => {
@@ -39,8 +42,19 @@ const coursePageLogicReducer = (state = INITIAL_STATE, action) => {
     case 'CP_INFO_SUCCESS':
       if (action.response.role === 'student') {
         try {
-          // The line below sets showCodeReviews to be equal to the reviewNumbers whose points are 0.
-          return { ...state, showCodeReviews: action.response.data.codeReviews.filter(cr => cr.points === null).map(cr => cr.reviewNumber) }
+          const newestReviewWeek = action.response.data.weeks[action.response.data.weeks.length - 1].weekNumber
+          console.log('newestReviewWeek: ', action.response.data.weeks[action.response.data.weeks.length - 1].weekNumber )
+          // The showCodeReviews -line below sets showCodeReviews to be equal to the reviewNumbers whose points are 0.
+          const activeIndexBasedOnWhetherWeHaveToShowNewestReviewOrExplicitlyOpenedReview = 
+            state.lastReviewedIsShownAlready ? state.activeIndex : newestReviewWeek - 1
+          
+          console.log('indeksi joka asetetaan activeIndexiksi: ', activeIndexBasedOnWhetherWeHaveToShowNewestReviewOrExplicitlyOpenedReview)
+          return { 
+            ...state, 
+            lastReviewedWeek: newestReviewWeek,
+            activeIndex: activeIndexBasedOnWhetherWeHaveToShowNewestReviewOrExplicitlyOpenedReview,
+            showCodeReviews: action.response.data.codeReviews.filter(cr => cr.points === null).map(cr => cr.reviewNumber)
+          }
         } catch (e) {
           console.log('ERROR: Setting initial values for shown codeReviews failed.')
           return state
@@ -57,6 +71,22 @@ const coursePageLogicReducer = (state = INITIAL_STATE, action) => {
         newValue.splice(index, 1)
         return { ...state, showCodeReviews: newValue }
       }
+    case 'COURSE_PAGE_UPDATE_ACTIVE_INDEX':
+      console.log('course_page_update_active_index: action on ', action)
+      console.log('course_page_update_active_index: action.theNewIndex on ', action.theNewIndex)
+
+      try {
+        return {
+          ...state,
+          lastReviewedIsShownAlready: true,
+          activeIndex: action.theNewIndex
+          // showCodeReviews: action.response.data.codeReviews.filter(cr => cr.points === null).map(cr => cr.reviewNumber)
+        }
+      } catch (e) {
+        console.log('ERROR: Updating activeIndex in coursePage failed.')
+        return state
+      }
+
     default:
       return state
   }
@@ -120,6 +150,15 @@ export const coursePageReset = () => {
   return async dispatch => {
     dispatch({
       type: 'COURSE_PAGE_RESET'
+    })
+  }
+}
+
+export const updateActiveIndex = theNewIndex => {
+  return async dispatch => {
+    dispatch({
+      type: 'COURSE_PAGE_UPDATE_ACTIVE_INDEX',
+      theNewIndex
     })
   }
 }
