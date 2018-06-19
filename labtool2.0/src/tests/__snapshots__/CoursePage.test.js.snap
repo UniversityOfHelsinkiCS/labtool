@@ -372,6 +372,12 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
         >
           <TableHeaderCell
             as="th"
+            key="-1"
+          >
+            Student
+          </TableHeaderCell>
+          <TableHeaderCell
+            as="th"
           >
             Project Info
             <Button
