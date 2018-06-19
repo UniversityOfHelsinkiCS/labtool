@@ -128,7 +128,7 @@ export class ModifyCourseInstanceReview extends React.Component {
                   {this.props.codeReviewLogic.showCreate ? (
                     <div>
                       Create new code review ( {this.props.selectedInstance.amountOfCodeReviews + 1} )
-                      <Button size="tiny" style={{float:"right"}} onClick={() => this.toggleCreate()} compact>
+                      <Button size="tiny" style={{ float: 'right' }} onClick={() => this.toggleCreate()} compact>
                         Hide
                       </Button>
                     </div>
@@ -166,15 +166,17 @@ export class ModifyCourseInstanceReview extends React.Component {
                             <select className="toReviewDropdown" onChange={this.addCodeReview(this.props.codeReviewLogic.selectedDropdown, data.id)}>
                               {this.props.dropdownUsers.map(
                                 d =>
-                                  this.props.codeReviewLogic.currentSelections[this.props.codeReviewLogic.selectedDropdown][data.id] == d.value ? (
-                                    <option selected="selected" key={d.value} value={d.value}>
-                                      {d.text}
-                                    </option>
-                                  ) : (
-                                    <option key={d.value} value={d.value}>
-                                      {d.text}
-                                    </option>
-                                  )
+                                  d.value !== data.id ? (
+                                    this.props.codeReviewLogic.currentSelections[this.props.codeReviewLogic.selectedDropdown][data.id] == d.value ? (
+                                      <option selected="selected" key={d.value} value={d.value}>
+                                        {d.text}
+                                      </option>
+                                    ) : (
+                                      <option key={d.value} value={d.value}>
+                                        {d.text}
+                                      </option>
+                                    )
+                                  ) : null
                               )}
                             </select>
                           </div>
@@ -278,7 +280,7 @@ export const userHelper = data => {
   if (data) {
     users.push({
       value: null,
-      text: ''
+      text: 'Select student'
     })
     data.map(d =>
       users.push({

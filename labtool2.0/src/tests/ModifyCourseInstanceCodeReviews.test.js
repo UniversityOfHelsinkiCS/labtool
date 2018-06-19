@@ -232,8 +232,10 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
         }
         dropdowns.forEach(dropdown => {
           dropdown.props().children.forEach(child => {
-            if (child.props['selected']) {
-              values[child['key']]++
+            if (child) {
+              if (child.props['selected']) {
+                values[child['key']]++
+              }
             }
           })
         })
