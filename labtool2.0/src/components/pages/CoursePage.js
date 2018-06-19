@@ -1,5 +1,5 @@
 import React from 'react'
-import { Accordion, Button, Table, Card, Form, Comment, List, Header, Label, Message, Icon, Dropdown, Popup } from 'semantic-ui-react'
+import { Accordion, Button, Table, Card, Form, Comment, List, Header, Label, Message, Icon, Dropdown, Popup, Loader } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createOneComment } from '../../services/comment'
@@ -8,6 +8,7 @@ import { associateTeacherToStudent } from '../../services/assistant'
 import ReactMarkdown from 'react-markdown'
 import { getAllTags, tagStudent, unTagStudent } from '../../services/tags'
 import { showAssistantDropdown, showTagDropdown, selectTeacher, selectTag, filterByAssistant, filterByTag, coursePageReset, toggleCodeReview } from '../../reducers/coursePageLogicReducer'
+import { resetLoading } from '../../reducers/loadingReducer'
 
 export class CoursePage extends React.Component {
   state = { activeIndex: 0, lastReviewedIndex: null }
@@ -58,6 +59,7 @@ export class CoursePage extends React.Component {
   componentWillUnmount() {
     this.setState({ lastReviewedIndex: null })
     this.props.coursePageReset()
+    this.props.resetLoading()
   }
 
   changeHiddenAssistantDropdown = id => {
@@ -179,6 +181,9 @@ export class CoursePage extends React.Component {
   }
 
   render() {
+    if (this.props.loading.loading) {
+      return <Loader active />
+    }
     const numberOfCodeReviews = Array.isArray(this.props.courseData.data) ? Math.max(...this.props.courseData.data.map(student => student.codeReviews.length)) : 0
 
     const createIndents = (weeks, codeReviews, siId) => {
@@ -678,7 +683,8 @@ const mapStateToProps = (state, ownProps) => {
     courseData: state.coursePage,
     coursePageLogic: state.coursePageLogic,
     courseId: ownProps.courseId,
-    tags: state.tags
+    tags: state.tags,
+    loading: state.loading
   }
 }
 
@@ -697,7 +703,8 @@ const mapDispatchToProps = {
   toggleCodeReview,
   getAllTags,
   tagStudent,
-  unTagStudent
+  unTagStudent,
+  resetLoading
 }
 
 export default connect(
