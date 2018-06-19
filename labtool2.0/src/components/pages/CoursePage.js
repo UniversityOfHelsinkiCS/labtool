@@ -413,7 +413,7 @@ export class CoursePage extends React.Component {
             <div className="sixteen wide column">
               <h2>{this.props.selectedInstance.name}</h2>
             </div>
-            {this.props.courseInstance.active === true ? (
+            {this.props.courseInstance && this.props.courseInstance.active === true ? (
               this.props.courseData.data !== null ? (
                 <p />
               ) : (
