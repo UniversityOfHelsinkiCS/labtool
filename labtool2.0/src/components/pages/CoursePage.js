@@ -6,8 +6,8 @@ import { createOneComment } from '../../services/comment'
 import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import { associateTeacherToStudent } from '../../services/assistant'
 import ReactMarkdown from 'react-markdown'
-import { getAllTags, tagStudent } from '../../services/tags'
-import { showAssistantDropdown, showTagDropdown, filterByTag, filterByAssistant, selectTeacher, selectTag, coursePageReset, toggleCodeReview } from '../../reducers/coursePageLogicReducer'
+import { getAllTags, tagStudent, unTagStudent } from '../../services/tags'
+import { showAssistantDropdown, showTagDropdown, selectTeacher, selectTag, filterByAssistant, filterByTag, coursePageReset, toggleCodeReview } from '../../reducers/coursePageLogicReducer'
 
 export class CoursePage extends React.Component {
   state = { activeIndex: 0, lastReviewedIndex: null }
@@ -42,17 +42,6 @@ export class CoursePage extends React.Component {
     this.props.getOneCI(this.props.courseId)
     this.props.coursePageInformation(this.props.courseId)
     this.props.getAllTags()
-  }
-
-  openLastReviewedWeek() {
-    if (this.state.lastReviewedIndex === null) {
-      let lastIndexOfWeeks = this.props.courseData.data.weeks.length - 1
-      let lastReviewedWeek = this.props.courseData.data.weeks[lastIndexOfWeeks].weekNumber
-      this.setState({
-        activeIndex: lastReviewedWeek - 1,
-        lastReviewedIndex: lastReviewedWeek - 1
-      })
-    }
   }
 
   openLastReviewedWeek() {
@@ -110,6 +99,19 @@ export class CoursePage extends React.Component {
     }
   }
 
+  removeTag = id => async e => {
+    try {
+      e.preventDefault()
+      const data = {
+        studentId: id,
+        tagId: this.props.coursePageLogic.selectedTag
+      }
+      await this.props.unTagStudent(data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  
   changeFilterAssistant = () => {
     return (e, data) => {
       const { value } = data
@@ -171,10 +173,8 @@ export class CoursePage extends React.Component {
           value: tag.id
         })
       )
-      console.log('tags: ', array)
       return array
     }
-    console.log('ei tageja')
     return []
   }
 
@@ -540,10 +540,16 @@ export class CoursePage extends React.Component {
                           <Icon id="tag" onClick={this.changeHiddenTagDropdown(data.id)} name="pencil" size="small" style={{ float: 'top' }} />
                           {this.props.coursePageLogic.showTagDropdown === data.id ? (
                             <div>
-                              <Dropdown id="tagDropdown" options={dropDownTags} onChange={this.changeSelectedTag()} placeholder="Add tag" fluid selection />
-                              <Button onClick={this.addTag(data.id)} size="small">
-                                Add tag
-                              </Button>
+                              <Dropdown id="tagDropdown" options={dropDownTags} onChange={this.changeSelectedTag()} placeholder="Choose tag" fluid selection />
+                              <div class="two ui buttons">
+                                <button class="ui icon positive button" onClick={this.addTag(data.id)} size="mini">
+                                  <i class="plus icon"></i>
+                                </button>
+                                <div class="or"></div>
+                                <button class="ui icon button" onClick={this.removeTag(data.id)} size="mini">
+                                  <i class="trash icon"></i>
+                                </button>
+                              </div>
                             </div>
                           ) : (
                             <div />
@@ -690,7 +696,8 @@ const mapDispatchToProps = {
   coursePageReset,
   toggleCodeReview,
   getAllTags,
-  tagStudent
+  tagStudent,
+  unTagStudent
 }
 
 export default connect(

@@ -8,6 +8,18 @@ export const sortCourses = courses => {
     })
 }
 
+export const sortTags = tags => {
+  return tags.sort((a, b) => {
+    if (a.name.toLowerCase() < b.name.toLowerCase()) {
+      return -1
+    } else if (a.name.toLowerCase() > b.name.toLowerCase()) {
+      return 1
+    } else {
+      return 0
+    }
+  })
+}
+
 export const sortUsers = users => {
   return users.sort((a, b) => {
     if (a.admin === b.admin) {
@@ -17,3 +29,5 @@ export const sortUsers = users => {
     }
   })
 }
+
+export default sortCourses
