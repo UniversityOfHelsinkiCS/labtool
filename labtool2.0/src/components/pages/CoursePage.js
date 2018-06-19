@@ -39,8 +39,8 @@ export class CoursePage extends React.Component {
     }
   }
 
-  componentWillMount() {
-    this.props.resetLoading()
+  componentWillMount = async () => {
+    await this.props.resetLoading()
     this.props.getOneCI(this.props.courseId)
     this.props.coursePageInformation(this.props.courseId)
     this.props.getAllTags()

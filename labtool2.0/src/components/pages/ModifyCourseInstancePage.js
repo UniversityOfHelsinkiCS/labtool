@@ -6,14 +6,14 @@ import { Link } from 'react-router-dom'
 import { Redirect } from 'react-router'
 import { clearNotifications } from '../../reducers/notificationReducer'
 import { changeCourseField } from '../../reducers/selectedInstanceReducer'
-import { resetLoading, addRedirectHook, forceSetLoading } from '../../reducers/loadingReducer'
+import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 
 /**
  *  Page used to modify a courseinstances information. Can only be accessed by teachers.
  */
 export class ModifyCourseInstancePage extends Component {
-  componentWillMount() {
-    this.props.resetLoading()
+  componentWillMount = async () => {
+    await this.props.resetLoading()
     this.props.clearNotifications()
     this.props.getOneCI(this.props.courseId)
   }
@@ -161,8 +161,7 @@ const mapDispatchToProps = {
   clearNotifications,
   changeCourseField,
   resetLoading,
-  addRedirectHook,
-  forceSetLoading
+  addRedirectHook
 }
 
 export default connect(

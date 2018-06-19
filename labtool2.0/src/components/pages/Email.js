@@ -25,8 +25,8 @@ export class Email extends Component {
     await this.props.updateUser(content)
   }
 
-  componentWillMount() {
-    this.props.resetLoading()
+  componentWillMount = async () => {
+    await this.props.resetLoading()
     this.props.forceSetLoading({
       value: false
     })
