@@ -363,8 +363,9 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
         >
           <TableHeaderCell
             as="th"
+            key="-1"
           >
-            Name
+            Student
           </TableHeaderCell>
           <TableHeaderCell
             as="th"
@@ -407,18 +408,14 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           <TableCell
             as="td"
           >
-            <TableCell
-              as="td"
-            >
-              <p>
-                Tiran toinen labraprojekti
-                <br />
-                <a
-                  href="http://github.com/tiralabra2"
-                >
-                  http://github.com/tiralabra2
-                </a>
-              </p>
+            <span>
+              Tiran toinen labraprojekti
+              <br />
+              <a
+                href="http://github.com/tiralabra2"
+              >
+                http://github.com/tiralabra2
+              </a>
               <div
                 key="20001"
               >
@@ -433,25 +430,31 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
                   Javascript
                 </Button>
               </div>
-            </TableCell>
-            <TableCell
-              as="td"
-            >
-              <br />
-              <Icon
-                as="i"
-                id="tag"
-                name="pencil"
-                onClick={[Function]}
-                size="small"
-                style={
-                  Object {
-                    "float": "top",
-                  }
+            </span>
+            <span>
+              <Popup
+                content="Add tag"
+                keepInViewPort={true}
+                on="hover"
+                position="top left"
+                trigger={
+                  <Icon
+                    as="i"
+                    color="green"
+                    id="tag"
+                    name="plus circle"
+                    onClick={[Function]}
+                    size="large"
+                    style={
+                      Object {
+                        "float": "right",
+                      }
+                    }
+                  />
                 }
               />
               <div />
-            </TableCell>
+            </span>
           </TableCell>
           <TableCell
             as="td"
@@ -538,18 +541,14 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           <TableCell
             as="td"
           >
-            <TableCell
-              as="td"
-            >
-              <p>
-                Tira super projekti
-                <br />
-                <a
-                  href="http://github.com/superprojekti"
-                >
-                  http://github.com/superprojekti
-                </a>
-              </p>
+            <span>
+              Tira super projekti
+              <br />
+              <a
+                href="http://github.com/superprojekti"
+              >
+                http://github.com/superprojekti
+              </a>
               <div
                 key="20002"
               >
@@ -564,25 +563,31 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
                   HTML
                 </Button>
               </div>
-            </TableCell>
-            <TableCell
-              as="td"
-            >
-              <br />
-              <Icon
-                as="i"
-                id="tag"
-                name="pencil"
-                onClick={[Function]}
-                size="small"
-                style={
-                  Object {
-                    "float": "top",
-                  }
+            </span>
+            <span>
+              <Popup
+                content="Add tag"
+                keepInViewPort={true}
+                on="hover"
+                position="top left"
+                trigger={
+                  <Icon
+                    as="i"
+                    color="green"
+                    id="tag"
+                    name="plus circle"
+                    onClick={[Function]}
+                    size="large"
+                    style={
+                      Object {
+                        "float": "right",
+                      }
+                    }
+                  />
                 }
               />
               <div />
-            </TableCell>
+            </span>
           </TableCell>
           <TableCell
             as="td"
@@ -669,37 +674,39 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           <TableCell
             as="td"
           >
-            <TableCell
-              as="td"
-            >
-              <p>
-                Tiran labraprojekti
-                <br />
-                <a
-                  href="http://github.com/tiralabra1"
-                >
-                  http://github.com/tiralabra1
-                </a>
-              </p>
-            </TableCell>
-            <TableCell
-              as="td"
-            >
+            <span>
+              Tiran labraprojekti
               <br />
-              <Icon
-                as="i"
-                id="tag"
-                name="pencil"
-                onClick={[Function]}
-                size="small"
-                style={
-                  Object {
-                    "float": "top",
-                  }
+              <a
+                href="http://github.com/tiralabra1"
+              >
+                http://github.com/tiralabra1
+              </a>
+            </span>
+            <span>
+              <Popup
+                content="Add tag"
+                keepInViewPort={true}
+                on="hover"
+                position="top left"
+                trigger={
+                  <Icon
+                    as="i"
+                    color="green"
+                    id="tag"
+                    name="plus circle"
+                    onClick={[Function]}
+                    size="large"
+                    style={
+                      Object {
+                        "float": "right",
+                      }
+                    }
+                  />
                 }
               />
               <div />
-            </TableCell>
+            </span>
           </TableCell>
           <TableCell
             as="td"

@@ -271,9 +271,6 @@ export class CoursePage extends React.Component {
             return week.weekNumber === i + 1
           })
           if (weeks) {
-            // Sets last reviewed week open.
-            this.openLastReviewedWeek()
-
             headers.push(
               <Accordion key={i} fluid styled>
                 <Accordion.Title active={activeIndex === i} index={i} onClick={this.handleClick}>
@@ -351,34 +348,31 @@ export class CoursePage extends React.Component {
             headers.push(
               <Accordion key={i} fluid styled>
                 <Accordion.Title className="codeReview" active={activeIndex === i || cr.points === null} index={i} onClick={this.handleClick}>
-
-                  <Icon name="dropdown" /> Code Review {cr.reviewNumber} {cr.points !== null ? (", points " + cr.points) : ''}
-                  
+                  <Icon name="dropdown" /> Code Review {cr.reviewNumber} {cr.points !== null ? ', points ' + cr.points : ''}
                 </Accordion.Title>
                 <Accordion.Content active={activeIndex === i || cr.points === null}>
                   <div className="codeReviewExpanded">
-                    {cr.points !== null ? 
+                    {cr.points !== null ? (
                       <div>
                         <h4 className="codeReviewPoints">Points: {cr.points}</h4>
                       </div>
-                    : (
+                    ) : (
                       <div>
                         <p>Not Graded</p>
                       </div>
                     )}
-                    
-                  {this.props.coursePageLogic.showCodeReviews.indexOf(cr.reviewNumber) !== -1 ? (
-                      <div>  
+
+                    {this.props.coursePageLogic.showCodeReviews.indexOf(cr.reviewNumber) !== -1 ? (
+                      <div>
                         <h4>Project to review</h4>
                         <p>{cr.toReview.projectName}</p>
                         <p>
                           <a href={cr.toReview.github}>{cr.toReview.github}</a>
                         </p>
                       </div>
-                      ) : (
-                        <div></div>
-                      )
-                  }
+                    ) : (
+                      <div />
+                    )}
                   </div>
                 </Accordion.Content>
               </Accordion>
@@ -504,7 +498,7 @@ export class CoursePage extends React.Component {
           <Table celled>
             <Table.Header>
               <Table.Row>
-                <Table.HeaderCell>Name</Table.HeaderCell>
+                <Table.HeaderCell key={-1}>Student</Table.HeaderCell>
                 <Table.HeaderCell>Project Info</Table.HeaderCell>
                 {createHeadersTeacher()}
                 <Table.HeaderCell> Sum </Table.HeaderCell>
@@ -527,12 +521,10 @@ export class CoursePage extends React.Component {
                         {data.User.firsts} {data.User.lastname}
                       </Table.Cell>
                       <Table.Cell>
-                        <Table.Cell>
-                          <p>
-                            {data.projectName}
-                            <br />
-                            <a href={data.github}>{data.github}</a>
-                          </p>
+                        <span>
+                          {data.projectName}
+                          <br />
+                          <a href={data.github}>{data.github}</a>
                           {data.Tags.map(tag => (
                             <div key={tag.id}>
                               <Button compact floated="left" className={`mini ui ${tag.color} button`} onClick={this.addFilterTag(tag)}>
@@ -540,11 +532,13 @@ export class CoursePage extends React.Component {
                               </Button>
                             </div>
                           ))}
-                        </Table.Cell>
-                        <Table.Cell>
-                          <br />
+                        </span>
+                        <span>
+                          <Popup
+                            trigger={<Icon id="tag" onClick={this.changeHiddenTagDropdown(data.id)} name="plus circle" size="large" color="green" style={{ float: 'right' }} />}
+                            content="Add tag"
+                          />
 
-                          <Icon id="tag" onClick={this.changeHiddenTagDropdown(data.id)} name="pencil" size="small" style={{ float: 'top' }} />
                           {this.props.coursePageLogic.showTagDropdown === data.id ? (
                             <div>
                               <Dropdown id="tagDropdown" options={dropDownTags} onChange={this.changeSelectedTag()} placeholder="Choose tag" fluid selection />
@@ -561,7 +555,7 @@ export class CoursePage extends React.Component {
                           ) : (
                             <div />
                           )}
-                        </Table.Cell>
+                        </span>
                       </Table.Cell>
                       {createIndents(data.weeks, data.codeReviews, data.id)}
                       <Table.Cell>
@@ -583,8 +577,10 @@ export class CoursePage extends React.Component {
                         ) : (
                           <span>not assigned</span>
                         )}
-
-                        <Popup trigger={<Button circular onClick={this.changeHiddenAssistantDropdown(data.id)} icon={{ name: 'pencil', size: 'medium' }} style={{ float: 'right' }} />} content="Assign instructor" />
+                        <Popup
+                          trigger={<Button circular onClick={this.changeHiddenAssistantDropdown(data.id)} icon={{ name: 'pencil', size: 'medium' }} style={{ float: 'right' }} />}
+                          content="Assign instructor"
+                        />
                         {this.props.coursePageLogic.showAssistantDropdown === data.id ? (
                           <div>
                             <Dropdown id="assistantDropdown" options={dropDownTeachers} onChange={this.changeSelectedTeacher()} placeholder="Select teacher" fluid selection />
