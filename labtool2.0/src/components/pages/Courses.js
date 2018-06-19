@@ -9,8 +9,8 @@ import { resetLoading } from '../../reducers/loadingReducer'
  *  Show all the courses in a single list.
  */
 export class Courses extends Component {
-  componentWillMount() {
-    this.props.resetLoading()
+  componentWillMount = async () => {
+    await this.props.resetLoading()
     this.props.getAllCI()
   }
 
