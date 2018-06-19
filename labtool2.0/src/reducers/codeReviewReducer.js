@@ -28,11 +28,13 @@ function shuffleArray(array) {
 }
 
 function purgeCodeReviews(codeReviewStateArray, toPurgeArray) {
-  const codeReviewStateReviewerArray = codeReviewStateArray.map(cr => cr.reviewer)
-  let i = codeReviewStateArray.length
-  while (i--) {
-    if (toPurgeArray.indexOf(codeReviewStateReviewerArray[i]) !== -1) {
-      codeReviewStateArray.splice(i, 1)
+  if (codeReviewStateArray) {
+    const codeReviewStateReviewerArray = codeReviewStateArray.map(cr => cr.reviewer)
+    let i = codeReviewStateArray.length
+    while (i--) {
+      if (toPurgeArray.indexOf(codeReviewStateReviewerArray[i]) !== -1) {
+        codeReviewStateArray.splice(i, 1)
+      }
     }
   }
 }
@@ -108,8 +110,8 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
       var codeReviewRoundsToUpdate = state.codeReviewStates
       var currentSelectionsToUpdate = state.currentSelections
       var newRound = action.response.data.reviewNumber
-      newRound > (Object.keys(state.codeReviewStates).length - 1) ? (codeReviewRoundsToUpdate = { ...codeReviewRoundsToUpdate, [newRound]: [] }) : codeReviewRoundsToUpdate
-      newRound > (Object.keys(state.currentSelections).length - 1) ? (currentSelectionsToUpdate = { ...currentSelectionsToUpdate, [newRound]: {} }) : currentSelectionsToUpdate
+      newRound > Object.keys(state.codeReviewStates).length - 1 ? (codeReviewRoundsToUpdate = { ...codeReviewRoundsToUpdate, [newRound]: [] }) : codeReviewRoundsToUpdate
+      newRound > Object.keys(state.currentSelections).length - 1 ? (currentSelectionsToUpdate = { ...currentSelectionsToUpdate, [newRound]: {} }) : currentSelectionsToUpdate
       //This is double clear but if the ternary is not true we'll have to clear the array anyway
       codeReviewRoundsToUpdate[action.response.data.reviewNumber] = []
       return { ...state, codeReviewStates: codeReviewRoundsToUpdate, currentSelections: currentSelectionsToUpdate }
