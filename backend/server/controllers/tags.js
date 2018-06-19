@@ -27,7 +27,6 @@ module.exports = {
           res.status(400).send('You need to be a teacher to do this.')
           return
         }
-        console.log('\n\nreq.body: ', req.body, '\n\n')
         Tag.findOrCreate({
           where: {
             name: req.body.text
@@ -48,7 +47,6 @@ module.exports = {
             }
           )
             .then(tag => {
-              console.log('\n\ntag: ', tag[1])
               res.status(200).send(tag[1])
               return
             })
@@ -85,8 +83,6 @@ module.exports = {
             return res.status(404).send('there is no tag with that name')
           }
           const id = tag.id
-          console.log('\n\ntag: ', tag, '\n\n')
-          console.log('\n\nid: ', id, '\n\n')
           tag.destroy()
           return res.status(200).send(id.toString())
         })
@@ -102,7 +98,6 @@ module.exports = {
     try {
       return Tag.findAll()
         .then(tag => {
-          console.log('\n\ntag: ', tag)
           return res.status(200).send(tag)
         })
         .catch(error => res.status(400).send('et ny saa niitä tageja'))

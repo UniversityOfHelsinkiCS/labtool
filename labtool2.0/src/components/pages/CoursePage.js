@@ -173,10 +173,8 @@ export class CoursePage extends React.Component {
           value: tag.id
         })
       )
-      console.log('tags: ', array)
       return array
     }
-    console.log('ei tageja')
     return []
   }
 
