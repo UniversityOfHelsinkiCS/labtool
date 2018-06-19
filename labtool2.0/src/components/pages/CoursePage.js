@@ -540,7 +540,7 @@ export class CoursePage extends React.Component {
                           <Icon id="tag" onClick={this.changeHiddenTagDropdown(data.id)} name="pencil" size="small" style={{ float: 'top' }} />
                           {this.props.coursePageLogic.showTagDropdown === data.id ? (
                             <div>
-                              <Dropdown id="tagDropdown" options={dropDownTags} onChange={this.changeSelectedTag()} placeholder="Add tag" fluid selection />
+                              <Dropdown id="tagDropdown" options={dropDownTags} onChange={this.changeSelectedTag()} placeholder="Choose tag" fluid selection />
                               <div class="two ui buttons">
                                 <button class="ui icon positive button" onClick={this.addTag(data.id)} size="mini">
                                   <i class="plus icon"></i>
