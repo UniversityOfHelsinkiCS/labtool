@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import { Button, List, Container, Header, Table, Label, Popup } from 'semantic-ui-react'
+import { Button, Container, Header, Table, Label, Popup, Loader } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
-
 import { getAllCI } from '../../services/courseInstance'
+import { resetLoading } from '../../reducers/loadingReducer'
 
 /**
  *  Show all the courses in a single list.
@@ -11,6 +11,10 @@ import { getAllCI } from '../../services/courseInstance'
 export class Courses extends Component {
   componentWillMount() {
     this.props.getAllCI()
+  }
+
+  componentWillUnmount() {
+    this.props.resetLoading()
   }
 
   render() {
@@ -30,32 +34,36 @@ export class Courses extends Component {
             </Table.Header>
 
             <Table.Body>
-              {this.props.courseInstance.map(instance => (
-                <Table.Row key={instance.id}>
-                  <Table.Cell>
-                    <div>
-                      {instance.active === true ? (
-                        <Label ribbon style={{ backgroundColor: '#21ba45' }}>
-                          Active
-                        </Label>
-                      ) : (
-                        ''
-                      )}
-                    </div>
-                  </Table.Cell>
-                  <Table.Cell>{instance.shorterId} </Table.Cell>
-                  <Table.Cell>
-                    <strong>
-                      <Link to={`/labtool/courses/${instance.ohid}`}>{instance.name}</Link>
-                    </strong>
-                  </Table.Cell>
+              {this.props.loading.loading ? (
+                <Loader active />
+              ) : (
+                this.props.courseInstance.map(instance => (
+                  <Table.Row key={instance.id}>
+                    <Table.Cell>
+                      <div>
+                        {instance.active === true ? (
+                          <Label ribbon style={{ backgroundColor: '#21ba45' }}>
+                            Active
+                          </Label>
+                        ) : (
+                          ''
+                        )}
+                      </div>
+                    </Table.Cell>
+                    <Table.Cell>{instance.shorterId} </Table.Cell>
+                    <Table.Cell>
+                      <strong>
+                        <Link to={`/labtool/courses/${instance.ohid}`}>{instance.name}</Link>
+                      </strong>
+                    </Table.Cell>
 
-                  <Table.Cell> {instance.europeanStart} </Table.Cell>
-                  <Table.Cell textAlign="center">
-                    <Popup trigger={<Button circular size="tiny" icon={{ name: 'eye', size: 'large', color: 'blue' }} as={Link} to={`/labtool/courses/${instance.ohid}`} />} content="View course" />
-                  </Table.Cell>
-                </Table.Row>
-              ))}
+                    <Table.Cell> {instance.europeanStart} </Table.Cell>
+                    <Table.Cell textAlign="center">
+                      <Popup trigger={<Button circular size="tiny" icon={{ name: 'eye', size: 'large', color: 'blue' }} as={Link} to={`/labtool/courses/${instance.ohid}`} />} content="View course" />
+                    </Table.Cell>
+                  </Table.Row>
+                ))
+              )}
             </Table.Body>
           </Table>
         </Container>
@@ -66,11 +74,12 @@ export class Courses extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    courseInstance: state.courseInstance
+    courseInstance: state.courseInstance,
+    loading: state.loading
   }
 }
 
 export default connect(
   mapStateToProps,
-  { getAllCI }
+  { getAllCI, resetLoading }
 )(Courses)
