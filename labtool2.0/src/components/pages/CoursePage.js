@@ -459,9 +459,6 @@ export class CoursePage extends React.Component {
                 </Table.Row>
               </Table.Header>
             </Table>
-            <List style={{ float: 'right' }}>
-              <List.Item icon={{ name: 'edit', color: 'orange' }} content="Edit course" />
-            </List>
           </div>
         </div>
       )
