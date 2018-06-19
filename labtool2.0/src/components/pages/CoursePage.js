@@ -506,12 +506,10 @@ export class CoursePage extends React.Component {
                         {data.User.firsts} {data.User.lastname}
                       </Table.Cell>
                       <Table.Cell>
-                        <Table.Cell>
-                          <p>
-                            {data.projectName}
-                            <br />
-                            <a href={data.github}>{data.github}</a>
-                          </p>
+                        <span>
+                          {data.projectName}
+                          <br />
+                          <a href={data.github}>{data.github}</a>
                           {data.Tags.map(tag => (
                             <div key={tag.id}>
                               <Button compact floated="left" className={`mini ui ${tag.color} button`}>
@@ -519,10 +517,13 @@ export class CoursePage extends React.Component {
                               </Button>
                             </div>
                           ))}
-                        </Table.Cell>
-                        <Table.Cell>
-                          <br />
-                          <Icon id="tag" onClick={this.changeHiddenTagDropdown(data.id)} name="pencil" size="small" style={{ float: 'top' }} />
+                        </span>
+                        <span>
+                          <Popup
+                            trigger={<Icon id="tag" onClick={this.changeHiddenTagDropdown(data.id)} name="plus circle" size="large" color="green" style={{ float: 'right' }} />}
+                            content="Add tag"
+                          />
+
                           {this.props.coursePageLogic.showTagDropdown === data.id ? (
                             <div>
                               <Dropdown id="tagDropdown" options={dropDownTags} onChange={this.changeSelectedTag()} placeholder="Add tag" fluid selection />
@@ -533,7 +534,7 @@ export class CoursePage extends React.Component {
                           ) : (
                             <div />
                           )}
-                        </Table.Cell>
+                        </span>
                       </Table.Cell>
                       {createIndents(data.weeks, data.codeReviews, data.id)}
                       <Table.Cell>
