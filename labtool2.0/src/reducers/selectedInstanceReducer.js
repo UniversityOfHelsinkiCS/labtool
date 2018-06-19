@@ -25,12 +25,9 @@ const selectedInstanceReducer = (store = [], action) => {
     case 'TEACHER_REMOVE_SUCCESS':
       return { ...store, teacherInstances: store.teacherInstances.filter(teacher => teacher.id !== action.response.id) }
     case 'CODE_REVIEW_BULKINSERT_SUCCESS':
-      console.log(store)
-      console.log(action.response.data)
       var amountOfCw = action.response.data.reviewNumber
       var newStore
       (amountOfCw > store.amountOfCodeReviews) ? newStore = { ...store, amountOfCodeReviews: amountOfCw } : newStore = store
-      console.log(newStore)
       return newStore
     default:
       return store

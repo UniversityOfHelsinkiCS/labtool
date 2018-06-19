@@ -42,9 +42,6 @@ function purgeCodeReviews(codeReviewStateArray, toPurgeArray) {
 const codeReviewReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case 'CREATE_STATES_FOR_CODE_REVIEWS': {
-      console.log('are we here')
-      console.log(action.data)
-
       let i = 1
       let codeReviewStates = {}
       let currentSelections = {}
@@ -117,7 +114,6 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
       return { ...state, codeReviewStates: codeReviewRoundsToUpdate, currentSelections: currentSelectionsToUpdate }
     case 'CODE_REVIEW_RANDOMIZE': {
       const newCodeReviewStates = state.codeReviewStates
-      console.log(action.data.reviewNumber)
       purgeCodeReviews(newCodeReviewStates[action.data.reviewNumber], state.randomizedCodeReview)
       const randomizedOrder = Array(state.randomizedCodeReview.length)
       let i = state.randomizedCodeReview.length
@@ -192,7 +188,6 @@ export const initAllCheckboxes = data => {
 
 export const randomAssign = data => {
   return async dispatch => {
-    console.log(data)
     dispatch({
       type: 'CODE_REVIEW_RANDOMIZE',
       data: data
