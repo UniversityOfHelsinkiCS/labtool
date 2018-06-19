@@ -159,7 +159,7 @@ export class CoursePage extends React.Component {
   }
 
   createDropdownTags = array => {
-    if (this.props.tags.tags != undefined) {
+    if (this.props.tags.tags !== undefined) {
       this.props.tags.tags.map(tag =>
         array.push({
           key: tag.id,
