@@ -123,6 +123,26 @@ const notificationReducer = (state = {}, action) => {
         message: action.response.message,
         error: false
       }
+    case 'TAG_STUDENT_SUCCESS':
+      return {
+        message: 'Student tagged succesfully',
+        error: false
+      }
+    case 'UNTAG_STUDENT_SUCCESS':
+      return {
+        message: 'Student tag removed successfully',
+        error: false
+      }
+    case 'TAG_CREATE_SUCCESS':
+      return {
+        message: 'Tag created succesfully',
+        error: false
+      }
+    case 'TAG_REMOVE_SUCCESS':
+      return {
+        message: 'Tag removed succesfully',
+        error: false
+      }
     case 'CHECKLIST_CREATE_FAILURE':
       return {
         message: action.response.response.data,
@@ -136,6 +156,11 @@ const notificationReducer = (state = {}, action) => {
     case 'CODE_REVIEW_RANDOMIZE':
       return {
         message: 'Code reviews randomized. Click save to change',
+        error: false
+      }
+    case 'STUDENT_PROJECT_INFO_UPDATE_SUCCESS':
+      return {
+        message: 'Project info updated succesfully!',
         error: false
       }
     default:

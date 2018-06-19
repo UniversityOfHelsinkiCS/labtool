@@ -53,6 +53,27 @@ module.exports = {
           color: 'pink',
           createdAt: '2018-06-13',
           updatedAt: '2018-06-13'
+        },
+        {
+          id: 20008,
+          name: 'C++',
+          color: 'olive',
+          createdAt: '2018-06-13',
+          updatedAt: '2018-06-13'
+        },
+        {
+          id: 20009,
+          name: 'Python',
+          color: 'teal',
+          createdAt: '2018-06-13',
+          updatedAt: '2018-06-13'
+        },
+        {
+          id: 20010,
+          name: 'Unity',
+          color: 'purple',
+          createdAt: '2018-06-13',
+          updatedAt: '2018-06-13'
         }
       ],
       {}

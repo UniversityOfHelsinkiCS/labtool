@@ -16,6 +16,7 @@ import {
   toggleCreate,
   createStates
 } from '../../reducers/codeReviewReducer'
+import { filterByTag } from '../../reducers/coursePageLogicReducer'
 import { clearNotifications } from '../../reducers/notificationReducer'
 import { Button, Table, Card, Form, Comment, List, Header, Label, Message, Icon, Dropdown, Checkbox } from 'semantic-ui-react'
 import Notification from '../../components/pages/Notification'
@@ -98,6 +99,24 @@ export class ModifyCourseInstanceReview extends React.Component {
     let reviewee = this.props.dropdownUsers.find(dropDownStudent => dropDownStudent.value === reviewInstance.toReview)
     return reviewee.text
   }
+  changeFilterTag = id => {
+    return () => {
+      if (this.props.coursePageLogic.filterByTag === id) {
+        this.props.filterByTag(0)
+      } else {
+        this.props.filterByTag(id)
+      }
+    }
+  }
+
+  hasFilteredTag = (data, id) => {
+    for (let i = 0; i < data.Tags.length; i++) {
+      if (data.Tags[i].id === id) {
+        return data
+      }
+    }
+  }
+
   render() {
     const createHeaders = () => {
       const headers = []
@@ -105,6 +124,16 @@ export class ModifyCourseInstanceReview extends React.Component {
         headers.push(<Table.HeaderCell key={i}>Code Review {i + 1} </Table.HeaderCell>)
       }
       return headers
+    }
+
+    const getCurrentReviewer = (codeReviewRound, id) => {
+      let reviewer = this.props.courseData.data.find(studentId => studentId.id === id)
+      let reviewInstance = reviewer.codeReviews.find(cd => cd.reviewNumber === codeReviewRound && cd.studentInstanceId === id)
+      if (!reviewInstance) {
+        return 'None'
+      }
+      let reviewee = this.props.dropdownUsers.find(dropDownStudent => dropDownStudent.value === reviewInstance.toReview)
+      return reviewee.text
     }
 
     return (
@@ -117,9 +146,17 @@ export class ModifyCourseInstanceReview extends React.Component {
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell />
-                <Table.HeaderCell>Tags</Table.HeaderCell>
                 <Table.HeaderCell>Reviewer</Table.HeaderCell>
-                <Table.HeaderCell> Project </Table.HeaderCell>
+                <Table.HeaderCell>
+                  Project Info
+                  {this.props.coursePageLogic.filterByTag !== 0 ? (
+                    <Button compact className="mini ui yellow button" floated="right" onClick={this.changeFilterTag(0)}>
+                      Clear tag filter
+                    </Button>
+                  ) : (
+                    <p />
+                  )}
+                </Table.HeaderCell>
                 <Table.HeaderCell key={1}>
                   {' '}
                   <Dropdown onChange={this.createDropdown()} placeholder="Select code review" fluid options={this.props.dropdownCodeReviews} />
@@ -142,48 +179,61 @@ export class ModifyCourseInstanceReview extends React.Component {
             </Table.Header>
             <Table.Body>
               {this.props.courseData.data !== undefined
-                ? this.props.courseData.data.map(data => (
-                    <Table.Row key={data.id}>
-                      <Table.Cell>
-                        {this.props.codeReviewLogic.checkBoxStates[data.id] === true ? (
-                          <Checkbox checked onChange={this.initOrRemoveRandom(data.id)} />
-                        ) : (
-                          <Checkbox onChange={this.initOrRemoveRandom(data.id)} />
-                        )}
-                      </Table.Cell>
-                      <Table.Cell />
-                      <Table.Cell>
-                        {data.User.firsts} {data.User.lastname}
-                      </Table.Cell>
-                      <Table.Cell>
-                        <p>{data.projectName}</p>
-                        <a href={data.github}>{data.github}</a>
-                      </Table.Cell>
-                      <Table.Cell>
-                        {this.props.codeReviewLogic.selectedDropdown ? (
-                          <div>
-                            <p>Current review: {this.getCurrentReviewer(this.props.codeReviewLogic.selectedDropdown, data.id)}</p>
-                            <select className="toReviewDropdown" onChange={this.addCodeReview(this.props.codeReviewLogic.selectedDropdown, data.id)}>
-                              {this.props.dropdownUsers.map(
-                                d =>
-                                  d.value !== data.id ? (
-                                    this.props.codeReviewLogic.currentSelections[this.props.codeReviewLogic.selectedDropdown][data.id] == d.value ? (
-                                      <option selected="selected" key={d.value} value={d.value}>
-                                        {d.text}
-                                      </option>
-                                    ) : (
-                                      <option key={d.value} value={d.value}>
-                                        {d.text}
-                                      </option>
-                                    )
-                                  ) : null
-                              )}
-                            </select>
-                          </div>
-                        ) : null}
-                        {/* // onChange={this.addCodeReview(1, data.id)}
+                ? this.props.courseData.data
+                    .filter(data => {
+                      return this.props.coursePageLogic.filterByTag === 0 || this.hasFilteredTag(data, this.props.coursePageLogic.filterByTag)
+                    })
+                    .map(data => (
+                      <Table.Row key={data.id}>
+                        <Table.Cell>
+                          {this.props.codeReviewLogic.checkBoxStates[data.id] === true ? (
+                            <Checkbox checked onChange={this.initOrRemoveRandom(data.id)} />
+                          ) : (
+                            <Checkbox onChange={this.initOrRemoveRandom(data.id)} />
+                          )}
+                        </Table.Cell>
+                        <Table.Cell>
+                          {data.User.firsts} {data.User.lastname}
+                        </Table.Cell>
+                        <Table.Cell>
+                          <p>
+                            {data.projectName}
+                            <br />
+                            <a href={data.github}>{data.github}</a>
+                          </p>
+                          {data.Tags.map(tag => (
+                            <div key={tag.id}>
+                              <Button compact floated="left" className={`mini ui ${tag.color} button`} onClick={this.changeFilterTag(tag.id)}>
+                                {tag.name}
+                              </Button>
+                            </div>
+                          ))}
+                        </Table.Cell>
+                        <Table.Cell>
+                          {this.props.codeReviewLogic.selectedDropdown ? (
+                            <div>
+                              <p>Current review: {this.getCurrentReviewer(this.props.codeReviewLogic.selectedDropdown, data.id)}</p>
+                              <select className="toReviewDropdown" onChange={this.addCodeReview(this.props.codeReviewLogic.selectedDropdown, data.id)}>
+                                {this.props.dropdownUsers.map(
+                                  d =>
+                                    d.value !== data.id ? (
+                                      this.props.codeReviewLogic.currentSelections[this.props.codeReviewLogic.selectedDropdown][data.id] == d.value ? (
+                                        <option selected="selected" key={d.value} value={d.value}>
+                                          {d.text}
+                                        </option>
+                                      ) : (
+                                        <option key={d.value} value={d.value}>
+                                          {d.text}
+                                        </option>
+                                      )
+                                    ) : null
+                                )}
+                              </select>
+                            </div>
+                          ) : null}
+                          {/* // onChange={this.addCodeReview(1, data.id)}
                         // value={this.props.codeReviewLogic.currentSelections[1][data.id]} */}
-                        {/* <p>Current review: {getCurrentReviewer(1, data.id)}</p>
+                          {/* <p>Current review: {getCurrentReviewer(1, data.id)}</p>
                         <select className="toReviewDropdown" onChange={this.addCodeReview(1, data.id)}>
                           {this.props.dropdownUsers.map(d => (
                             <option key={d.value} value={d.value}>
@@ -191,7 +241,7 @@ export class ModifyCourseInstanceReview extends React.Component {
                             </option>
                           ))}
                         </select> */}
-                        {/*
+                          {/*
                          Semantic ui dropdown works very slow so we replaced them with html select
                         }
                         {/* <Dropdown
@@ -204,27 +254,27 @@ export class ModifyCourseInstanceReview extends React.Component {
                         onChange={this.addCodeReview(1, data.id)}
                         value={this.props.codeReviewLogic.currentSelections[1][data.id]}
                       /> */}
-                      </Table.Cell>
-                      <Table.Cell>
-                        {this.props.codeReviewLogic.showCreate ? (
-                          <select className="toReviewDropdown" onChange={this.addCodeReview('create', data.id)}>
-                            {this.props.dropdownUsers.map(
-                              d =>
-                                this.props.codeReviewLogic.currentSelections['create'][data.id] == d.value ? (
-                                  <option selected="selected" key={d.value} value={d.value}>
-                                    {d.text}
-                                  </option>
-                                ) : (
-                                  <option key={d.value} value={d.value}>
-                                    {d.text}
-                                  </option>
-                                )
-                            )}
-                            ))
-                          </select>
-                        ) : null}
+                        </Table.Cell>
+                        <Table.Cell>
+                          {this.props.codeReviewLogic.showCreate ? (
+                            <select className="toReviewDropdown" onChange={this.addCodeReview('create', data.id)}>
+                              {this.props.dropdownUsers.map(
+                                d =>
+                                  this.props.codeReviewLogic.currentSelections['create'][data.id] == d.value ? (
+                                    <option selected="selected" key={d.value} value={d.value}>
+                                      {d.text}
+                                    </option>
+                                  ) : (
+                                    <option key={d.value} value={d.value}>
+                                      {d.text}
+                                    </option>
+                                  )
+                              )}
+                              ))
+                            </select>
+                          ) : null}
 
-                        {/* <Dropdown
+                          {/* <Dropdown
                         className="toReviewDropdown"
                         placeholder="Select student"
                         fluid
@@ -234,9 +284,9 @@ export class ModifyCourseInstanceReview extends React.Component {
                         onChange={this.addCodeReview(2, data.id)}
                         value={this.props.codeReviewLogic.currentSelections[2][data.id]}
                       /> */}
-                      </Table.Cell>
-                    </Table.Row>
-                  ))
+                        </Table.Cell>
+                      </Table.Row>
+                    ))
                 : null}
             </Table.Body>
             <Table.Footer>
@@ -246,7 +296,6 @@ export class ModifyCourseInstanceReview extends React.Component {
                     ALL
                   </Button>
                 </Table.HeaderCell>
-                <Table.HeaderCell />
                 <Table.HeaderCell />
                 <Table.HeaderCell />
                 <Table.HeaderCell>
@@ -313,7 +362,9 @@ const mapStateToProps = (state, ownProps) => {
     selectedInstance: state.selectedInstance,
     codeReviewLogic: state.codeReviewLogic,
     dropdownUsers: userHelper(state.coursePage.data),
-    dropdownCodeReviews: codeReviewHelper(state.selectedInstance.amountOfCodeReviews)
+    dropdownCodeReviews: codeReviewHelper(state.selectedInstance.amountOfCodeReviews),
+    coursePageLogic: state.coursePageLogic,
+    dropdownUsers: userHelper(state.coursePage.data)
   }
 }
 
@@ -330,7 +381,8 @@ const mapDispatchToProps = {
   codeReviewReset,
   selectDropdown,
   toggleCreate,
-  createStates
+  createStates,
+  filterByTag
 }
 
 export default connect(

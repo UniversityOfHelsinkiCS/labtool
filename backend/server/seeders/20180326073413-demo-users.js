@@ -93,6 +93,116 @@ module.exports = {
           updatedAt: '2018-03-26',
           admin: false
         },
+        {
+          id: 10101,
+          username: 'otmohjaaja1',
+          firsts: 'Simo Pekka',
+          lastname: 'Salminen',
+          email: 'simo.salminen@helsinki.fi',
+          studentNumber: '014666666',
+          createdAt: '2018-03-26',
+          updatedAt: '2018-03-26',
+          admin: false
+        },
+        {
+          id: 10102,
+          username: 'otmohjaaja2',
+          firsts: 'Jonna Maria',
+          lastname: 'Palmunen',
+          email: 'jonna.palmunen@helsinki.fi',
+          studentNumber: '014666666',
+          createdAt: '2018-03-26',
+          updatedAt: '2018-03-26',
+          admin: false
+        },
+        {
+          id: 10103,
+          username: 'otmohjaaja3',
+          firsts: 'Annikki Mielikki Elisabeth',
+          lastname: 'Honkanen',
+          email: 'annikki.honkanen@helsinki.fi',
+          studentNumber: '014666666',
+          createdAt: '2018-03-26',
+          updatedAt: '2018-03-26',
+          admin: false
+        },
+        {
+          id: 10104,
+          username: 'otmohjaaja4',
+          firsts: 'Ville Markus',
+          lastname: 'Virtanen',
+          email: 'ville.virtanen@helsinki.fi',
+          studentNumber: '014666666',
+          createdAt: '2018-03-26',
+          updatedAt: '2018-03-26',
+          admin: false
+        },
+        {
+          id: 10105,
+          username: 'otmohjaaja5',
+          firsts: 'Erik August',
+          lastname: 'Miettinen',
+          email: 'erik.miettinen@helsinki.fi',
+          studentNumber: '014666666',
+          createdAt: '2018-03-26',
+          updatedAt: '2018-03-26',
+          admin: false
+        },
+        {
+          id: 10106,
+          username: 'otmohjaaja6',
+          firsts: 'Maija Kaisa',
+          lastname: 'Tapaninen',
+          email: 'maija.tapaninen@helsinki.fi',
+          studentNumber: '014666666',
+          createdAt: '2018-03-26',
+          updatedAt: '2018-03-26',
+          admin: false
+        },
+        {
+          id: 10107,
+          username: 'otmohjaaja7',
+          firsts: 'Joel Antti',
+          lastname: 'Vuori',
+          email: 'joel.vuori@helsinki.fi',
+          studentNumber: '014666666',
+          createdAt: '2018-03-26',
+          updatedAt: '2018-03-26',
+          admin: false
+        },
+        {
+          id: 10108,
+          username: 'otmohjaaja8',
+          firsts: 'Heimo Matti',
+          lastname: 'Huovila',
+          email: 'heimo.huovila@helsinki.fi',
+          studentNumber: '014666666',
+          createdAt: '2018-03-26',
+          updatedAt: '2018-03-26',
+          admin: false
+        },
+        {
+          id: 10109,
+          username: 'otmohjaaja9',
+          firsts: 'Annikki Maarikki',
+          lastname: 'Perälä',
+          email: 'annikki.perälä@helsinki.fi',
+          studentNumber: '014666666',
+          createdAt: '2018-03-26',
+          updatedAt: '2018-03-26',
+          admin: false
+        },
+        {
+          id: 10110,
+          username: 'otmohjaaja10',
+          firsts: 'Petteri Vilhelmi',
+          lastname: 'Jorvas',
+          email: 'patteri.jorvas@helsinki.fi',
+          studentNumber: '014666666',
+          createdAt: '2018-03-26',
+          updatedAt: '2018-03-26',
+          admin: false
+        },
         // tästä alkavat otm random käyttäjät
         {
           id: 20001,

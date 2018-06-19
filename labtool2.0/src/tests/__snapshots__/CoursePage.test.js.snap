@@ -2,356 +2,304 @@
 
 exports[`<CoursePage /> as student CoursePage Component should render correctly 1`] = `
 <div
-  className="CoursePage"
-  style={
-    Object {
-      "textAlign": "center",
-      "textAlignVertical": "center",
-    }
-  }
+  key="true"
 >
-  <div
-    className="ui grid"
-  >
-    <div
-      className="sixteen wide column"
-    >
-      <h2 />
-    </div>
-    <div
-      className="sixteen wide column"
-    >
-      <Message
-        compact={true}
-      >
-        <MessageHeader>
-          This course has not been activated.
-        </MessageHeader>
-      </Message>
-    </div>
-  </div>
-  <div />
   <div
     className="StudentsView"
     style={
       Object {
-        "overflowX": "auto",
+        "textAlign": "center",
+        "textAlignVertical": "center",
       }
     }
   >
-    <h3>
-       
-    </h3>
-    <Card
-      color="yellow"
-      fluid={true}
+    <div
+      className="ui grid"
     >
-      <CardContent>
-        <h3>
-           
-          Tiran labraprojekti
-           
-        </h3>
-        <h3>
-           
-          <a
-            href="http://github.com/tiralabra1"
-          >
-            http://github.com/tiralabra1
-          </a>
-           
-          <Link
-            replace={false}
-            to="/labtool/courseregistration/undefined"
-          >
-            <Popup
-              content="Edit project details"
-              keepInViewPort={true}
-              on="hover"
-              position="top left"
-              trigger={
-                <Button
-                  as="button"
-                  circular={true}
-                  floated="right"
-                  icon={
-                    Object {
-                      "color": "orange",
-                      "name": "edit",
-                      "size": "large",
-                    }
-                  }
-                  role="button"
-                  size="large"
-                />
-              }
-            />
-          </Link>
-        </h3>
-        <h3>
-          Assistant: not given
-        </h3>
-      </CardContent>
-    </Card>
-    <h3>
-       Points and feedback 
-    </h3>
-    <Table
-      as="table"
-      celled={true}
-      padded={true}
-      unstackable={true}
-    >
-      <TableHeader
-        as="thead"
+      <div
+        className="sixteen wide column"
       >
-        <TableRow
-          as="tr"
-          cellAs="td"
+        <h2 />
+      </div>
+      <div
+        className="sixteen wide column"
+      >
+        <Message
+          compact={true}
         >
-          <TableHeaderCell
-            as="th"
-          >
-            Week
-          </TableHeaderCell>
-          <TableHeaderCell
-            as="th"
-          >
-            Points
-          </TableHeaderCell>
-          <TableHeaderCell
-            as="th"
-          >
-            Feedback
-          </TableHeaderCell>
-          <TableHeaderCell
-            as="th"
-          >
-            Comments
-          </TableHeaderCell>
-        </TableRow>
-      </TableHeader>
-      <TableBody
-        as="tbody"
-      />
-    </Table>
-    <Card
-      color="yellow"
-      fluid={true}
-    >
-      <CardContent>
-        <Card
-          className="codeReview"
-          color="yellow"
-          fluid={true}
-          key="1"
-        >
-          <CardContent
-            header="Code review 1"
-            onClick={[Function]}
-            style={
-              Object {
-                "cursor": "pointer",
-              }
-            }
-          />
-          <CardContent
-            className="codeReviewPoints"
-          >
-            2 points
-          </CardContent>
-          <div />
-        </Card>
-        <Card
-          className="codeReview"
-          color="yellow"
-          fluid={true}
-          key="2"
-        >
-          <CardContent
-            header="Code review 2"
-            onClick={[Function]}
-            style={
-              Object {
-                "cursor": "pointer",
-              }
-            }
-          />
-          <CardContent
-            className="codeReviewPoints"
-          >
-            1 points
-          </CardContent>
-          <div
-            className="codeReviewExpanded"
-          >
-            <CardContent>
-              <h4>
-                Project to review
-              </h4>
-              <p>
-                Tira super projekti
-              </p>
-              <p>
-                <a
-                  href="http://github.com/superprojekti"
-                >
-                  http://github.com/superprojekti
-                </a>
-              </p>
-            </CardContent>
-            <CardContent>
-              <h4>
-                Your reviewer
-              </h4>
-              <p>
-                Tiran toinen labraprojekti
-              </p>
-              <p>
-                <a
-                  href="http://github.com/tiralabra2"
-                >
-                  http://github.com/tiralabra2
-                </a>
-              </p>
-            </CardContent>
-          </div>
-        </Card>
-        <Card
-          className="codeReview"
-          color="yellow"
-          fluid={true}
-          key="3"
-        >
-          <CardContent
-            header="Code review 3"
-            onClick={[Function]}
-            style={
-              Object {
-                "cursor": "pointer",
-              }
-            }
-          />
-          <div />
-          <div />
-        </Card>
-      </CardContent>
-    </Card>
+          <MessageHeader>
+            This course has not been activated.
+          </MessageHeader>
+        </Message>
+      </div>
+    </div>
   </div>
+  <Card
+    color="yellow"
+    fluid={true}
+    key="card"
+  >
+    <CardContent>
+      <h2>
+        Maarit Mirja
+         
+        Opiskelija
+      </h2>
+      <h3>
+         
+        Tiran labraprojekti
+         
+      </h3>
+      <h3>
+        <a
+          href="http://github.com/tiralabra1"
+        >
+          http://github.com/tiralabra1
+        </a>
+         
+        <Link
+          replace={false}
+          to="/labtool/courseregistration/undefined"
+        >
+          <Button
+            as="button"
+            circular={true}
+            floated="right"
+            icon={
+              Object {
+                "color": "orange",
+                "name": "edit",
+                "size": "large",
+              }
+            }
+            role="button"
+            size="large"
+          />
+        </Link>
+      </h3>
+    </CardContent>
+  </Card>
+  <Accordion
+    fluid={true}
+    key="0"
+    styled={true}
+  >
+    <AccordionTitle
+      active={true}
+      className="codeReview"
+      index={0}
+      onClick={[Function]}
+    >
+      <Icon
+        as="i"
+        name="dropdown"
+      />
+       Code Review 
+      1
+       
+      , points 2
+    </AccordionTitle>
+    <AccordionContent
+      active={true}
+    >
+      <div
+        className="codeReviewExpanded"
+      >
+        <div>
+          <h4
+            className="codeReviewPoints"
+          >
+            Points: 
+            2
+          </h4>
+        </div>
+        <div />
+      </div>
+    </AccordionContent>
+  </Accordion>
+  <Accordion
+    fluid={true}
+    key="1"
+    styled={true}
+  >
+    <AccordionTitle
+      active={false}
+      className="codeReview"
+      index={1}
+      onClick={[Function]}
+    >
+      <Icon
+        as="i"
+        name="dropdown"
+      />
+       Code Review 
+      2
+       
+      , points 1
+    </AccordionTitle>
+    <AccordionContent
+      active={false}
+    >
+      <div
+        className="codeReviewExpanded"
+      >
+        <div>
+          <h4
+            className="codeReviewPoints"
+          >
+            Points: 
+            1
+          </h4>
+        </div>
+        <div>
+          <h4>
+            Project to review
+          </h4>
+          <p>
+            Tira super projekti
+          </p>
+          <p>
+            <a
+              href="http://github.com/superprojekti"
+            >
+              http://github.com/superprojekti
+            </a>
+          </p>
+        </div>
+      </div>
+    </AccordionContent>
+  </Accordion>
+  <Accordion
+    fluid={true}
+    key="2"
+    styled={true}
+  >
+    <AccordionTitle
+      active={true}
+      className="codeReview"
+      index={2}
+      onClick={[Function]}
+    >
+      <Icon
+        as="i"
+        name="dropdown"
+      />
+       Code Review 
+      3
+       
+    </AccordionTitle>
+    <AccordionContent
+      active={true}
+    >
+      <div
+        className="codeReviewExpanded"
+      >
+        <div>
+          <p>
+            Not Graded
+          </p>
+        </div>
+        <div />
+      </div>
+    </AccordionContent>
+  </Accordion>
 </div>
 `;
 
 exports[`<CoursePage /> as teacher CoursePage Component should render correctly 1`] = `
-<div
-  className="CoursePage"
-  style={
-    Object {
-      "textAlign": "center",
-      "textAlignVertical": "center",
-    }
-  }
->
+<div>
   <div
-    className="ui grid"
-  >
-    <div
-      className="sixteen wide column"
-    >
-      <h2>
-        Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit
-      </h2>
-    </div>
-    <p />
-  </div>
-  <div
-    className="TeachersView"
+    className="TeachersTopView"
     style={
       Object {
-        "overflowX": "auto",
+        "textAlign": "center",
+        "textAlignVertical": "center",
       }
     }
   >
-    <br />
-    <Table
-      as="table"
+    <div
+      className="ui grid"
     >
-      <TableHeader
-        as="thead"
+      <div
+        className="sixteen wide column"
       >
-        <TableRow
-          as="tr"
-          cellAs="td"
+        <h2 />
+      </div>
+      <p />
+    </div>
+    <div>
+      <Table
+        as="table"
+      >
+        <TableHeader
+          as="thead"
         >
-          <TableCell
-            as="td"
+          <TableRow
+            as="tr"
+            cellAs="td"
           >
-            <div>
-              <Label
-                ribbon={true}
-                style={
-                  Object {
-                    "backgroundColor": "#21ba45",
-                  }
-                }
-              >
-                Active
-              </Label>
-            </div>
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            Week amount: 
-            7
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            Current week: 
-            1
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            Week maxpoints: 
-            3
-          </TableCell>
-          <TableCell
-            as="td"
-            textAlign="right"
-          >
-             
-            <Link
-              replace={false}
-              to="/labtool/ModifyCourseInstancePage/TKT20010.2018.K.A.1"
+            <TableCell
+              as="td"
             >
-              <Popup
-                content="Edit course"
-                keepInViewPort={true}
-                on="hover"
-                position="top left"
-                trigger={
-                  <Button
-                    as="button"
-                    circular={true}
-                    icon={
-                      Object {
-                        "color": "orange",
-                        "name": "edit",
-                        "size": "large",
+              <div>
+                <div />
+              </div>
+            </TableCell>
+            <TableCell
+              as="td"
+            >
+              Week amount: 
+            </TableCell>
+            <TableCell
+              as="td"
+            >
+              Current week: 
+            </TableCell>
+            <TableCell
+              as="td"
+            >
+              Week maxpoints: 
+            </TableCell>
+            <TableCell
+              as="td"
+              textAlign="right"
+            >
+               
+              <Link
+                replace={false}
+                to="/labtool/ModifyCourseInstancePage/undefined"
+              >
+                <Popup
+                  content="Edit course"
+                  keepInViewPort={true}
+                  on="hover"
+                  position="top left"
+                  trigger={
+                    <Button
+                      as="button"
+                      circular={true}
+                      icon={
+                        Object {
+                          "color": "orange",
+                          "name": "edit",
+                          "size": "large",
+                        }
                       }
-                    }
-                    role="button"
-                    size="tiny"
-                  />
-                }
-              />
-            </Link>
-          </TableCell>
-        </TableRow>
-      </TableHeader>
-    </Table>
-    <br />
+                      role="button"
+                      size="tiny"
+                    />
+                  }
+                />
+              </Link>
+            </TableCell>
+          </TableRow>
+        </TableHeader>
+      </Table>
+    </div>
+  </div>
+  <div
+    className="TeachersBottomView"
+  >
     <Header
       as="h2"
     >
@@ -379,30 +327,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
         noResultsMessage="No results found."
         onChange={[Function]}
         openOnFocus={true}
-        options={
-          Array [
-            Object {
-              "key": 0,
-              "text": "no filter",
-              "value": 0,
-            },
-            Object {
-              "key": null,
-              "text": "unassigned students",
-              "value": null,
-            },
-            Object {
-              "key": 10001,
-              "text": "Pää Opettaja",
-              "value": 10001,
-            },
-            Object {
-              "key": 10011,
-              "text": "Ossi Ohjaaja Mutikainen",
-              "value": 10011,
-            },
-          ]
-        }
+        options={Array []}
         placeholder="Select Teacher"
         renderLabel={[Function]}
         searchInput="text"
@@ -431,68 +356,17 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           <TableHeaderCell
             as="th"
           >
-            Name
-          </TableHeaderCell>
-          <TableHeaderCell
-            as="th"
-          >
-            Project Information
-          </TableHeaderCell>
-          <TableHeaderCell
-            as="th"
-            key="0"
-          >
-            Week 
-            1
-             
-          </TableHeaderCell>
-          <TableHeaderCell
-            as="th"
-            key="1"
-          >
-            Week 
-            2
-             
-          </TableHeaderCell>
-          <TableHeaderCell
-            as="th"
-            key="2"
-          >
-            Week 
-            3
-             
-          </TableHeaderCell>
-          <TableHeaderCell
-            as="th"
-            key="3"
-          >
-            Week 
-            4
-             
-          </TableHeaderCell>
-          <TableHeaderCell
-            as="th"
-            key="4"
-          >
-            Week 
-            5
-             
-          </TableHeaderCell>
-          <TableHeaderCell
-            as="th"
-            key="5"
-          >
-            Week 
-            6
-             
-          </TableHeaderCell>
-          <TableHeaderCell
-            as="th"
-            key="6"
-          >
-            Week 
-            7
-             
+            Project Info
+            <Button
+              as="button"
+              className="mini ui yellow button"
+              compact={true}
+              floated="right"
+              onClick={[Function]}
+              role="button"
+            >
+              Clear tag filter
+            </Button>
           </TableHeaderCell>
           <TableHeaderCell
             as="th"
@@ -517,6 +391,5 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
       />
     </Table>
   </div>
-  <div />
 </div>
 `;

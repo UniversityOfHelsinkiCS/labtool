@@ -11,12 +11,13 @@ import teacherInstance from './reducers/teacherInstanceReducer'
 import studentInstance from './reducers/studentInstanceReducer'
 import selectedInstance from './reducers/selectedInstanceReducer'
 import coursePage from './reducers/coursePageReducer'
+import redirect from './reducers/redirectReducer'
 import emailPage from './reducers/emailReducer'
 import assistant from './reducers/assistantReducer'
 import coursePageLogic from './reducers/coursePageLogicReducer'
 import codeReviewLogic from './reducers/codeReviewReducer'
-import tagsReducer from './reducers/tagReducer'
 import checklist from './reducers/checklistReducer'
+import tagsReducer from './reducers/tagReducer'
 import weekReview from './reducers/weekReviewReducer'
 
 /**
@@ -39,8 +40,9 @@ const reducer = combineReducers({
   assistant: assistant,
   coursePageLogic: coursePageLogic,
   codeReviewLogic: codeReviewLogic,
-  tags: tagsReducer,
   checklist: checklist,
+  redirect: redirect,
+  tags: tagsReducer,
   weekReview: weekReview
 })
 

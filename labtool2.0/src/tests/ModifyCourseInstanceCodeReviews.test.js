@@ -188,6 +188,14 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
     initialized: false
   }
 
+  const coursePageLogic = {
+    showDropdown: '',
+    selectedTeacher: '',
+    filterByAssistant: 0,
+    filterByTag: 0,
+    showCodeReviews: []
+  }
+
   let mockFn = jest.fn()
 
   beforeEach(() => {
@@ -197,6 +205,7 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
         courseData={courseData}
         selectedInstance={coursePage}
         codeReviewLogic={codeReviewLogic}
+        coursePageLogic={coursePageLogic}
         dropdownUsers={userHelper(courseData.data)}
         clearNotifications={mockFn}
         getOneCI={mockFn}
@@ -209,6 +218,7 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
         randomAssign={mockFn}
         codeReviewReset={mockFn}
         statesCreated={true}
+        filterByTag={mockFn}
       />
     )
   })

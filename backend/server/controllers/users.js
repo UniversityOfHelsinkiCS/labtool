@@ -68,7 +68,7 @@ module.exports = {
 
         const users = await User.findAll({
           attributes: {
-            exclude: ['createdAt', 'updatedAt']
+            exclude: ['createdAt', 'updatedAt', 'studentNumber', 'email']
           }
         })
         res.status(200).send(users)

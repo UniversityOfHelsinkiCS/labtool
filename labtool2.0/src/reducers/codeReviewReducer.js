@@ -131,6 +131,7 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
       }
       return { ...state, codeReviewStates: newCodeReviewStates, currentSelections: newCurrentSelections }
     }
+    /* This breaks going to coursePage. So it is commented out.
     case 'CP_INFO_SUCCESS': {
       if (action.role !== 'teacher' || state.initialized) {
         return state
@@ -143,6 +144,7 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
       })
       return { ...state, currentSelections: newCurrentSelections, initialized: true }
     }
+    */
     case 'CODE_REVIEW_RESET':
       return INITIAL_STATE
     default:
