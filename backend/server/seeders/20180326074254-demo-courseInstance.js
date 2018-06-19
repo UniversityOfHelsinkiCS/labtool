@@ -15,6 +15,7 @@ module.exports = {
           weekMaxPoints: 3,
           finalReview: true,
           currentWeek: 1,
+          amountOfCodeReviews: 2,
           ohid: 'TKT20010.2018.K.A.1',
           createdAt: '2018-03-26',
           updatedAt: '2018-03-26'
@@ -29,6 +30,7 @@ module.exports = {
           weekMaxPoints: 3,
           finalReview: false,
           currentWeek: 1,
+          amountOfCodeReviews: 2,
           ohid: 'TKT20002.2018.K.K.1',
           createdAt: '2018-03-26',
           updatedAt: '2018-03-26'
@@ -43,6 +45,7 @@ module.exports = {
           weekMaxPoints: 3,
           finalReview: true,
           currentWeek: 1,
+          amountOfCodeReviews: 2,
           ohid: 'TKT20011.2018.K.A.1',
           createdAt: '2018-03-26',
           updatedAt: '2018-03-26'

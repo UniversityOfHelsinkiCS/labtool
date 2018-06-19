@@ -1,6 +1,7 @@
 const CodeReview = require('../models').CodeReview
 const StudentInstance = require('../models').StudentInstance
 const TeacherInstance = require('../models').TeacherInstance
+const CourseInstance = require('../models').CourseInstance
 const helper = require('../helpers/code_review_helper')
 
 module.exports = {
@@ -62,6 +63,12 @@ module.exports = {
         return
       }
       await CodeReview.bulkCreate(values, { individualHooks: true }) // This is where the magic happens.
+      const courseToUpdate = await CourseInstance.findOne({
+        where: { id: req.body.courseId }
+      })
+      courseToUpdate.update({
+        amountOfCodeReviews: courseToUpdate.amountOfCodeReviews + 1
+      })
       res.status(201).send({
         message: 'All code reviews inserted.',
         data: req.body

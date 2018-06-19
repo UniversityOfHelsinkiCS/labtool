@@ -11,7 +11,10 @@
   currentWeek(pin): -- integer, what is the current week
   ohid(pin): -- Opetushallitus id of the course, is often used instead of the database id
   teacherInstances: all the teacherinstances related to his course instance
- * 
+  amountOfCodeReviews: the amount of code reviews on this course
+  codeReviewActive: if the code reviews are active
+  currentCodeReview: array that contains all the current code reviews
+  * 
  */
 const selectedInstanceReducer = (store = [], action) => {
   switch (action.type) {
@@ -25,6 +28,11 @@ const selectedInstanceReducer = (store = [], action) => {
       return { ...store, active: action.active }
     case 'SET_FINAL_REVIEW':
       return { ...store, finalReview: action.value }
+    case 'CODE_REVIEW_BULKINSERT_SUCCESS':
+      var amountOfCw = action.response.data.reviewNumber
+      var newStore
+      amountOfCw > store.amountOfCodeReviews ? (newStore = { ...store, amountOfCodeReviews: amountOfCw }) : (newStore = store)
+      return newStore
     default:
       return store
   }
