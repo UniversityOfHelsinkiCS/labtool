@@ -351,6 +351,7 @@ export class CoursePage extends React.Component {
             headers.push(
               <Accordion key={i} fluid styled>
                 <Accordion.Title className="codeReview" active={activeIndex === i || cr.points === null} index={i} onClick={this.handleClick}>
+
                   <Icon name="dropdown" /> Code Review {cr.reviewNumber} {cr.points !== null ? (", points " + cr.points) : ''}
                   
                 </Accordion.Title>
@@ -572,6 +573,7 @@ export class CoursePage extends React.Component {
                         ) : (
                           <span>not assigned</span>
                         )}
+
                         <Popup trigger={<Button circular onClick={this.changeHiddenAssistantDropdown(data.id)} icon={{ name: 'pencil', size: 'medium' }} style={{ float: 'right' }} />} content="Assign instructor" />
                         {this.props.coursePageLogic.showAssistantDropdown === data.id ? (
                           <div>

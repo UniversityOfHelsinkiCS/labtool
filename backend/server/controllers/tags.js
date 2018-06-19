@@ -278,5 +278,36 @@ module.exports = {
     } catch (e) {
       res.status(400).send('ei onnistu')
     }
+  },
+
+  removeTagFromStudentInstance(req, res) {
+    helper.controller_before_auth_check_action(req, res)
+
+    try {
+      TeacherInstance.findOne({
+        where: {
+          userId: req.decoded.id
+        }
+      }).then(found => {
+        if (!found) {
+          res.status(400).send('you have to be a teacher to do this')
+          return
+        }
+        StudentTag.findOne({
+          where: {
+            studentInstanceId: req.body.studentId,
+            tagId: req.body.tagId
+          }
+        }).then(studentTag => {
+          if (!studentTag) {
+            res.status(404).send('did not find the given student tag')
+          }
+          studentTag.destroy()
+          res.status(200).send('student tag removed succesfully')
+        })
+      })
+    } catch (e) {
+      res.status(400).send('ei onnistu')
+    }
   }
 }
