@@ -28,6 +28,10 @@ const selectedInstanceReducer = (store = [], action) => {
       return { ...store, active: action.active }
     case 'SET_FINAL_REVIEW':
       return { ...store, finalReview: action.value }
+    case 'CI_GET_ONE_ATTEMPT':
+      return []
+    case 'CP_INFO_ATTEMPT':
+      return []
     case 'CODE_REVIEW_BULKINSERT_SUCCESS':
       var amountOfCw = action.response.data.reviewNumber
       var newStore
