@@ -11,9 +11,7 @@ const INITIAL_STATE = {
 const weekReviewReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case 'WEEK_REVIEW_TOGGLE': {
-      const newChecks = state.checks
-      newChecks[action.name] = !newChecks[action.name]
-      return { ...state, checks: newChecks }
+      return { ...state, checks: { ...state.checks, [action.name]: !state.checks[action.name] } }
     }
     case 'WEEK_REVIEW_RESET':
       return INITIAL_STATE

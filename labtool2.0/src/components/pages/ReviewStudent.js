@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import { Button, Form, Input, Grid, Card, TextArea } from 'semantic-ui-react'
+import { Button, Form, Input, Grid, Card } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createOneWeek } from '../../services/week'
 import { getOneCI } from '../../services/courseInstance'
 import { clearNotifications } from '../../reducers/notificationReducer'
-import { toggleCheck } from '../../reducers/weekReviewReducer'
+import { toggleCheck, resetChecklist } from '../../reducers/weekReviewReducer'
 import store from '../../store'
 
 /**
@@ -29,6 +29,10 @@ export class ReviewStudent extends Component {
         this.props.history.push(`/labtool/courses/${this.props.selectedInstance.ohid}`)
       }
     }
+  }
+
+  componentWillUnmount() {
+    this.props.resetChecklist()
   }
 
   handleSubmit = async e => {
@@ -177,5 +181,5 @@ const mapStateToProps = (state, ownProps) => {
 
 export default connect(
   mapStateToProps,
-  { createOneWeek, getOneCI, clearNotifications, toggleCheck }
+  { createOneWeek, getOneCI, clearNotifications, toggleCheck, resetChecklist }
 )(ReviewStudent)
