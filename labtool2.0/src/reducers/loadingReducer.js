@@ -10,23 +10,26 @@ const INITITAL_STATE = {
   loading: true,
   loadingHooks: [],
   redirect: false,
-  redirectHooks: []
+  redirectHooks: [],
+  redirectFailure: false
 }
 
-const handleResponse = (state, hook) => {
+const handleResponse = (state, hook, success) => {
   const loadingHooks = [...state.loadingHooks]
   const redirectHooks = [...state.redirectHooks]
   const loadingIndex = loadingHooks.indexOf(hook)
   let loading = true
   let redirect = false
+  let redirectFailure = state.redirectFailure
   if (loadingIndex !== -1) {
     loadingHooks.splice(loadingIndex, 1)
     const redirectIndex = redirectHooks.indexOf(hook)
     if (redirectIndex !== -1) {
+      redirectFailure = redirectFailure || !success
       redirectHooks.splice(redirectIndex, 1)
       if (redirectHooks.length === 0) {
         loading = false
-        redirect = true
+        redirect = !redirectFailure
       } else {
         loading = loadingHooks.length > 0
       }
@@ -34,7 +37,7 @@ const handleResponse = (state, hook) => {
       loading = loadingHooks.length > 0
     }
   }
-  return { loading, redirect, loadingHooks, redirectHooks }
+  return { loading, redirect, loadingHooks, redirectHooks, redirectFailure }
 }
 
 const loadingReducer = (state = INITITAL_STATE, action) => {
@@ -43,14 +46,18 @@ const loadingReducer = (state = INITITAL_STATE, action) => {
     return { ...state, loading: true, loadingHooks: [...state.loadingHooks, prefix] }
   } else if (action.type.includes('SUCCESS')) {
     const prefix = action.type.split('SUCCESS')[0]
-    return handleResponse(state, prefix)
+    return handleResponse(state, prefix, true)
   } else if (action.type.includes('FAILURE')) {
     const prefix = action.type.split('FAILURE')[0]
-    return handleResponse(state, prefix)
+    return handleResponse(state, prefix, false)
   }
   switch (action.type) {
     case 'LOADING_RESET':
       return INITITAL_STATE
+    case 'LOADING_ADD_REDIRECT_HOOK':
+      return { ...state, redirectHooks: [...state.redirectHooks, action.data.hook], redirectFailure: false }
+    case 'LOADING_FORCE_SET':
+      return { ...state, loading: action.data.value }
     default:
       return state
   }
@@ -68,6 +75,15 @@ export const addRedirectHook = data => {
   return async dispatch => {
     dispatch({
       type: 'LOADING_ADD_REDIRECT_HOOK',
+      data
+    })
+  }
+}
+
+export const forceSetLoading = data => {
+  return async dispatch => {
+    dispatch({
+      type: 'LOADING_FORCE_SET',
       data
     })
   }

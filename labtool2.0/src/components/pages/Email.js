@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { updateUser } from '../../services/login'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router'
-import { resetEmailPage } from '../../reducers/emailReducer'
+import { resetLoading, addRedirectHook, forceSetLoading } from '../../reducers/loadingReducer'
 
 /*
 take some elements from SetEmail.js, if user has already email in db
@@ -19,22 +19,31 @@ export class Email extends Component {
     const content = {
       email: e.target.email.value
     }
+    this.props.addRedirectHook({
+      hook: 'USER_UPDATE_'
+    })
     await this.props.updateUser(content)
   }
 
+  componentWillMount() {
+    this.props.forceSetLoading({
+      value: false
+    })
+  }
+
   componentWillUnmount() {
-    this.props.resetEmailPage()
+    this.props.resetLoading()
   }
 
   render() {
-    if (this.props.emailPage.redirect) {
+    if (this.props.loading.redirect) {
       return <Redirect to="/labtool/myPage" />
     } else {
       const user = { ...this.props.user.user }
       const firstLogin = user.email === ''
       return (
         <div className="Email" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
-          <Loader active={this.props.emailPage.loading} inline="centered" />
+          <Loader active={this.props.loading.loading} inline="centered" />
           <Grid centered>
             {firstLogin ? (
               <div>
@@ -89,8 +98,18 @@ export class Email extends Component {
 const mapStateToProps = state => {
   return {
     user: state.user,
-    emailPage: state.emailPage
+    loading: state.loading
   }
 }
 
-export default connect(mapStateToProps, { updateUser, resetEmailPage })(Email)
+const mapDispatchToProps = {
+  updateUser,
+  resetLoading,
+  addRedirectHook,
+  forceSetLoading
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Email)

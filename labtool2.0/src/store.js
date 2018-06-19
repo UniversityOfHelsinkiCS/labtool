@@ -12,7 +12,6 @@ import studentInstance from './reducers/studentInstanceReducer'
 import selectedInstance from './reducers/selectedInstanceReducer'
 import coursePage from './reducers/coursePageReducer'
 import redirect from './reducers/redirectReducer'
-import emailPage from './reducers/emailReducer'
 import assistant from './reducers/assistantReducer'
 import coursePageLogic from './reducers/coursePageLogicReducer'
 import codeReviewLogic from './reducers/codeReviewReducer'
@@ -36,7 +35,6 @@ const reducer = combineReducers({
   studentInstance: studentInstance,
   selectedInstance: selectedInstance,
   coursePage: coursePage,
-  emailPage: emailPage,
   users: users,
   assistant: assistant,
   coursePageLogic: coursePageLogic,
