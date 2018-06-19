@@ -57,18 +57,18 @@ export class ModifyCourseInstanceStaff extends React.Component {
         </div>
         <Header as="h2">Users</Header>
         <Form id="myForm" onSubmit={this.handleSubmit}>
-          <Table singleLine color="yellow" fixed>
-            <Table.Header>
-              <Table.Row>
-                <Table.HeaderCell>Name</Table.HeaderCell>
-                <Table.HeaderCell>Status</Table.HeaderCell>
-              </Table.Row>
-            </Table.Header>
-            <Table.Body>
-              {this.props.loading.loading ? (
-                <Loader active />
-              ) : (
-                this.props.users.map(user => (
+          {this.props.loading.loading ? (
+            <Loader active />
+          ) : (
+            <Table singleLine color="yellow" fixed>
+              <Table.Header>
+                <Table.Row>
+                  <Table.HeaderCell>Name</Table.HeaderCell>
+                  <Table.HeaderCell>Status</Table.HeaderCell>
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
+                {this.props.users.map(user => (
                   <Table.Row key={user.id}>
                     <Table.Cell>
                       {user.firsts} {user.lastname}
@@ -100,10 +100,10 @@ export class ModifyCourseInstanceStaff extends React.Component {
                       )}
                     </Table.Cell>
                   </Table.Row>
-                ))
-              )}
-            </Table.Body>
-          </Table>
+                ))}
+              </Table.Body>
+            </Table>
+          )}
         </Form>
       </Container>
     )

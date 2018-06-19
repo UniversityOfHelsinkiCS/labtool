@@ -19,22 +19,22 @@ export class Courses extends Component {
       <div className="Courses">
         <Container>
           <Header as="h2">Courses</Header>
-          <Table singleLine color="yellow">
-            <Table.Header>
-              <Table.Row>
-                <Table.HeaderCell colSpan="1"> </Table.HeaderCell>
-                <Table.HeaderCell colSpan="1">Course id</Table.HeaderCell>
-                <Table.HeaderCell colSpan="1">Course name</Table.HeaderCell>
-                <Table.HeaderCell colSpan="1">Course start date</Table.HeaderCell>
-                <Table.HeaderCell colSpan="2"> </Table.HeaderCell>
-              </Table.Row>
-            </Table.Header>
+          {this.props.loading.loading ? (
+            <Loader active />
+          ) : (
+            <Table singleLine color="yellow">
+              <Table.Header>
+                <Table.Row>
+                  <Table.HeaderCell colSpan="1"> </Table.HeaderCell>
+                  <Table.HeaderCell colSpan="1">Course id</Table.HeaderCell>
+                  <Table.HeaderCell colSpan="1">Course name</Table.HeaderCell>
+                  <Table.HeaderCell colSpan="1">Course start date</Table.HeaderCell>
+                  <Table.HeaderCell colSpan="2"> </Table.HeaderCell>
+                </Table.Row>
+              </Table.Header>
 
-            <Table.Body>
-              {this.props.loading.loading ? (
-                <Loader active />
-              ) : (
-                this.props.courseInstance.map(instance => (
+              <Table.Body>
+                {this.props.courseInstance.map(instance => (
                   <Table.Row key={instance.id}>
                     <Table.Cell>
                       <div>
@@ -59,10 +59,10 @@ export class Courses extends Component {
                       <Popup trigger={<Button circular size="tiny" icon={{ name: 'eye', size: 'large', color: 'blue' }} as={Link} to={`/labtool/courses/${instance.ohid}`} />} content="View course" />
                     </Table.Cell>
                   </Table.Row>
-                ))
-              )}
-            </Table.Body>
-          </Table>
+                ))}
+              </Table.Body>
+            </Table>
+          )}
         </Container>
       </div>
     )
