@@ -18,7 +18,7 @@ const handleResponse = (state, hook, success) => {
   const loadingHooks = [...state.loadingHooks]
   const redirectHooks = [...state.redirectHooks]
   const loadingIndex = loadingHooks.indexOf(hook)
-  let loading = true
+  let loading = loadingHooks.length > 0
   let redirect = false
   let redirectFailure = state.redirectFailure
   if (loadingIndex !== -1) {
