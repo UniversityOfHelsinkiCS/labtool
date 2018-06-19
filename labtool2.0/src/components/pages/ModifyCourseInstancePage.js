@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import { Form, Input, Button, Grid, Radio } from 'semantic-ui-react'
+import { Form, Input, Button, Grid, Radio, Checkbox } from 'semantic-ui-react'
 import { getOneCI, modifyOneCI } from '../../services/courseInstance'
+import { setActive, setFinalReview } from '../../reducers/selectedInstanceReducer'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Redirect } from 'react-router'
@@ -27,7 +28,15 @@ export class ModifyCourseInstancePage extends Component {
     redirectToNewPage: false
   }
 
-  handleChange = (e, { value }) => this.setState({ value })
+  changeActive = () => {
+    const newValue = this.props.selectedInstance.active !== true
+    this.props.setActive(newValue)
+  }
+
+  changeFinalReview = () => {
+    const newValue = this.props.selectedInstance.finalReview !== true
+    this.props.setFinalReview(newValue)
+  }
 
   handleSubmit = async e => {
     try {
@@ -37,8 +46,9 @@ export class ModifyCourseInstancePage extends Component {
         weekAmount: e.target.weekAmount.value,
         weekMaxPoints: e.target.weeklyMaxpoints.value,
         currentWeek: e.target.currentWeek.value,
-        active: e.target.courseActive.value,
-        ohid: this.props.selectedInstance.ohid
+        active: this.props.selectedInstance.active,
+        ohid: this.props.selectedInstance.ohid,
+        finalReview: this.props.selectedInstance.finalReview
       }
       await this.props.modifyOneCI(content, this.props.selectedInstance.ohid)
       this.setState({ redirectToNewPage: true })
@@ -97,13 +107,19 @@ export class ModifyCourseInstancePage extends Component {
                 <Input name="currentWeek" required="true" type="text" style={{ maxWidth: '7em' }} defaultValue={JSON.stringify(selectedInstance.currentWeek)} className="form-control3" />
               </Form.Group>
 
-              <Form.Field inline>
-                <Radio name="courseActive" label="Activate course" value="true" checked={this.state.value === 'true'} onChange={this.handleChange} style={{ width: '150px', textAlign: 'left' }} />
-              </Form.Field>
+              <Form.Group inline>
+                <Checkbox
+                  name="finalReview"
+                  checked={this.props.selectedInstance.finalReview}
+                  onChange={this.changeFinalReview}
+                  label="Course has a final review"
+                  style={{ width: '150px', textAlign: 'left' }}
+                />
+              </Form.Group>
 
-              <Form.Field inline>
-                <Radio name="courseActive" label="Deactivate course" value="false" checked={this.state.value === 'false'} onChange={this.handleChange} style={{ width: '150px', textAlign: 'left' }} />
-              </Form.Field>
+              <Form.Group inline>
+                <Checkbox name="courseActive" checked={this.props.selectedInstance.active} onChange={this.changeActive} label="Course is active" style={{ width: '150px', textAlign: 'left' }} />
+              </Form.Group>
 
               <Form.Field>
                 <Button type="Submit" floated="left" color="green" size="huge">
@@ -126,17 +142,17 @@ export class ModifyCourseInstancePage extends Component {
           </Button>
         </Link>
         <Link to={`/labtool/ModifyCourseInstanceCodeReviews/${this.props.selectedInstance.ohid}`}>
-          <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px'  }} block="true">
+          <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px' }} block="true">
             Add or modify codereviews
           </Button>
         </Link>
         <Link to={`/labtool/checklist/${this.props.selectedInstance.ohid}/create`}>
-          <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px'  }} block="true">
+          <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px' }} block="true">
             Create new checklist
           </Button>
         </Link>
         <Link to={`/labtool/managetags`}>
-          <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px'  }} block="true">
+          <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px' }} block="true">
             Edit tags
           </Button>
         </Link>
@@ -153,4 +169,7 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps, { getOneCI, modifyOneCI, clearNotifications })(ModifyCourseInstancePage)
+export default connect(
+  mapStateToProps,
+  { getOneCI, modifyOneCI, clearNotifications, setActive, setFinalReview }
+)(ModifyCourseInstancePage)

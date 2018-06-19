@@ -433,7 +433,8 @@ module.exports = {
                 active: req.body.active || courseInstance.active,
                 weekAmount: req.body.weekAmount || courseInstance.weekAmount,
                 weekMaxPoints: req.body.weekMaxPoints || courseInstance.weekMaxPoints,
-                currentWeek: req.body.currentWeek || courseInstance.currentWeek
+                currentWeek: req.body.currentWeek || courseInstance.currentWeek,
+                finalReview: req.body.finalReview || courseInstance.finalReview
               })
               .then(updatedCourseInstance => res.status(200).send(updatedCourseInstance))
               .catch(error => res.status(400).send(error))
