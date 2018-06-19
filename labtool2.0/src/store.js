@@ -19,6 +19,7 @@ import codeReviewLogic from './reducers/codeReviewReducer'
 import checklist from './reducers/checklistReducer'
 import tagsReducer from './reducers/tagReducer'
 import weekReview from './reducers/weekReviewReducer'
+import loading from './reducers/loadingReducer'
 
 /**
  * The store, that takes all the redux reducers. Index imports it.
@@ -43,6 +44,7 @@ const reducer = combineReducers({
   checklist: checklist,
   redirect: redirect,
   tags: tagsReducer,
+  loading: loading,
   weekReview: weekReview
 })
 
