@@ -418,7 +418,7 @@ export class CoursePage extends React.Component {
             <div className="sixteen wide column">
               <h2>{this.props.selectedInstance.name}</h2>
             </div>
-            {this.props.selectedInstance.active === true ? (
+            {this.props.courseInstance.active === true ? (
               this.props.courseData.data !== null ? (
                 <p />
               ) : (
@@ -672,6 +672,7 @@ const mapStateToProps = (state, ownProps) => {
     studentInstance: state.studentInstance,
     teacherInstance: state.teacherInstance,
     selectedInstance: state.selectedInstance,
+    courseInstance: state.courseInstance,
     courseData: state.coursePage,
     coursePageLogic: state.coursePageLogic,
     courseId: ownProps.courseId,
