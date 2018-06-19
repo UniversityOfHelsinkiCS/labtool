@@ -38,6 +38,7 @@ export class ModifyCourseInstanceReview extends React.Component {
   handleSubmit = reviewNumber => async e => {
     try {
       e.preventDefault()
+      reviewNumber === 'create' ? this.props.toggleCreate() : undefined
       const codeReviews = this.props.codeReviewLogic.codeReviewStates[reviewNumber]
       const courseId = this.props.selectedInstance.id
       reviewNumber === 'create' ? (reviewNumber = this.props.selectedInstance.amountOfCodeReviews + 1) : reviewNumber
