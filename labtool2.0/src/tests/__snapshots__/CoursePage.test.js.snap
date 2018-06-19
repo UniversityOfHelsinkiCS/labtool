@@ -364,6 +364,11 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           <TableHeaderCell
             as="th"
           >
+            Name
+          </TableHeaderCell>
+          <TableHeaderCell
+            as="th"
+          >
             Project Info
           </TableHeaderCell>
           <TableHeaderCell
@@ -402,85 +407,51 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           <TableCell
             as="td"
           >
-            <p>
-              Tiran toinen labraprojekti
-              <br />
-              <a
-                href="http://github.com/tiralabra2"
-              >
-                http://github.com/tiralabra2
-              </a>
-            </p>
-            <div
-              key="20001"
+            <TableCell
+              as="td"
             >
-              <Button
-                as="button"
-                className="mini ui red button"
-                compact={true}
-                floated="left"
-                onClick={[Function]}
-                role="button"
+              <p>
+                Tiran toinen labraprojekti
+                <br />
+                <a
+                  href="http://github.com/tiralabra2"
+                >
+                  http://github.com/tiralabra2
+                </a>
+              </p>
+              <div
+                key="20001"
               >
-                Javascript
-              </Button>
-            </div>
-          </TableCell>
-          <TableCell
-            as="td"
-            key="0"
-          >
-            <p>
-              -
-            </p>
-          </TableCell>
-          <TableCell
-            as="td"
-            key="1"
-          >
-            <p>
-              -
-            </p>
-          </TableCell>
-          <TableCell
-            as="td"
-            key="2"
-          >
-            <p>
-              -
-            </p>
-          </TableCell>
-          <TableCell
-            as="td"
-            key="3"
-          >
-            <p>
-              -
-            </p>
-          </TableCell>
-          <TableCell
-            as="td"
-            key="4"
-          >
-            <p>
-              -
-            </p>
-          </TableCell>
-          <TableCell
-            as="td"
-            key="5"
-          >
-            <p>
-              -
-            </p>
-          </TableCell>
-          <TableCell
-            as="td"
-            key="6"
-          >
-            <p>
-              -
-            </p>
+                <Button
+                  as="button"
+                  className="mini ui red button"
+                  compact={true}
+                  floated="left"
+                  onClick={[Function]}
+                  role="button"
+                >
+                  Javascript
+                </Button>
+              </div>
+            </TableCell>
+            <TableCell
+              as="td"
+            >
+              <br />
+              <Icon
+                as="i"
+                id="tag"
+                name="pencil"
+                onClick={[Function]}
+                size="small"
+                style={
+                  Object {
+                    "float": "top",
+                  }
+                }
+              />
+              <div />
+            </TableCell>
           </TableCell>
           <TableCell
             as="td"
@@ -490,12 +461,8 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           <TableCell
             as="td"
           >
-            <span
-              key="10012"
-            >
-              Ossi Ohjaaja
-               
-              Mutikainen
+            <span>
+              not assigned
             </span>
             <Popup
               content="Assign instructor"
@@ -530,7 +497,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           >
             <Link
               replace={false}
-              to="/labtool/browsereviews/TKT20010.2018.K.A.1/10012"
+              to="/labtool/browsereviews/undefined/10012"
             >
               <Popup
                 content="Review student"
@@ -571,85 +538,51 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           <TableCell
             as="td"
           >
-            <p>
-              Tira super projekti
-              <br />
-              <a
-                href="http://github.com/superprojekti"
-              >
-                http://github.com/superprojekti
-              </a>
-            </p>
-            <div
-              key="20002"
+            <TableCell
+              as="td"
             >
-              <Button
-                as="button"
-                className="mini ui yellow button"
-                compact={true}
-                floated="left"
-                onClick={[Function]}
-                role="button"
+              <p>
+                Tira super projekti
+                <br />
+                <a
+                  href="http://github.com/superprojekti"
+                >
+                  http://github.com/superprojekti
+                </a>
+              </p>
+              <div
+                key="20002"
               >
-                HTML
-              </Button>
-            </div>
-          </TableCell>
-          <TableCell
-            as="td"
-            key="0"
-          >
-            <p>
-              -
-            </p>
-          </TableCell>
-          <TableCell
-            as="td"
-            key="1"
-          >
-            <p>
-              -
-            </p>
-          </TableCell>
-          <TableCell
-            as="td"
-            key="2"
-          >
-            <p>
-              -
-            </p>
-          </TableCell>
-          <TableCell
-            as="td"
-            key="3"
-          >
-            <p>
-              -
-            </p>
-          </TableCell>
-          <TableCell
-            as="td"
-            key="4"
-          >
-            <p>
-              -
-            </p>
-          </TableCell>
-          <TableCell
-            as="td"
-            key="5"
-          >
-            <p>
-              -
-            </p>
-          </TableCell>
-          <TableCell
-            as="td"
-            key="6"
-          >
-            <p>
-              -
-            </p>
+                <Button
+                  as="button"
+                  className="mini ui yellow button"
+                  compact={true}
+                  floated="left"
+                  onClick={[Function]}
+                  role="button"
+                >
+                  HTML
+                </Button>
+              </div>
+            </TableCell>
+            <TableCell
+              as="td"
+            >
+              <br />
+              <Icon
+                as="i"
+                id="tag"
+                name="pencil"
+                onClick={[Function]}
+                size="small"
+                style={
+                  Object {
+                    "float": "top",
+                  }
+                }
+              />
+              <div />
+            </TableCell>
           </TableCell>
           <TableCell
             as="td"
@@ -659,12 +592,8 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           <TableCell
             as="td"
           >
-            <span
-              key="10031"
-            >
-              Ossi Ohjaaja
-               
-              Mutikainen
+            <span>
+              not assigned
             </span>
             <Popup
               content="Assign instructor"
@@ -699,7 +628,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           >
             <Link
               replace={false}
-              to="/labtool/browsereviews/TKT20010.2018.K.A.1/10031"
+              to="/labtool/browsereviews/undefined/10031"
             >
               <Popup
                 content="Review student"
@@ -740,85 +669,37 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           <TableCell
             as="td"
           >
-            <p>
-              Tiran labraprojekti
-              <br />
-              <a
-                href="http://github.com/tiralabra1"
-              >
-                http://github.com/tiralabra1
-              </a>
-            </p>
-            <div
-              key="20005"
+            <TableCell
+              as="td"
             >
-              <Button
-                as="button"
-                className="mini ui blue button"
-                compact={true}
-                floated="left"
+              <p>
+                Tiran labraprojekti
+                <br />
+                <a
+                  href="http://github.com/tiralabra1"
+                >
+                  http://github.com/tiralabra1
+                </a>
+              </p>
+            </TableCell>
+            <TableCell
+              as="td"
+            >
+              <br />
+              <Icon
+                as="i"
+                id="tag"
+                name="pencil"
                 onClick={[Function]}
-                role="button"
-              >
-                Node.js
-              </Button>
-            </div>
-          </TableCell>
-          <TableCell
-            as="td"
-            key="0"
-          >
-            <p>
-              -
-            </p>
-          </TableCell>
-          <TableCell
-            as="td"
-            key="1"
-          >
-            <p>
-              -
-            </p>
-          </TableCell>
-          <TableCell
-            as="td"
-            key="2"
-          >
-            <p>
-              -
-            </p>
-          </TableCell>
-          <TableCell
-            as="td"
-            key="3"
-          >
-            <p>
-              -
-            </p>
-          </TableCell>
-          <TableCell
-            as="td"
-            key="4"
-          >
-            <p>
-              -
-            </p>
-          </TableCell>
-          <TableCell
-            as="td"
-            key="5"
-          >
-            <p>
-              -
-            </p>
-          </TableCell>
-          <TableCell
-            as="td"
-            key="6"
-          >
-            <p>
-              -
-            </p>
+                size="small"
+                style={
+                  Object {
+                    "float": "top",
+                  }
+                }
+              />
+              <div />
+            </TableCell>
           </TableCell>
           <TableCell
             as="td"
@@ -828,12 +709,8 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           <TableCell
             as="td"
           >
-            <span
-              key="10011"
-            >
-              Ossi Ohjaaja
-               
-              Mutikainen
+            <span>
+              not assigned
             </span>
             <Popup
               content="Assign instructor"
@@ -868,7 +745,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           >
             <Link
               replace={false}
-              to="/labtool/browsereviews/TKT20010.2018.K.A.1/10011"
+              to="/labtool/browsereviews/undefined/10011"
             >
               <Popup
                 content="Review student"
