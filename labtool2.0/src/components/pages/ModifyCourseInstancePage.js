@@ -18,14 +18,10 @@ export class ModifyCourseInstancePage extends Component {
 
   componentDidUpdate() {
     if (this.props.notification.error !== undefined) {
-      if (!this.props.notification.error) {
+      if (!this.props.notification.error && this.props.history) {
         this.props.history.push(`/labtool/courses/${this.props.selectedInstance.ohid}`)
       }
     }
-  }
-
-  state = {
-    redirectToNewPage: false
   }
 
   changeActive = () => {
@@ -51,7 +47,6 @@ export class ModifyCourseInstancePage extends Component {
         finalReview: this.props.selectedInstance.finalReview
       }
       await this.props.modifyOneCI(content, this.props.selectedInstance.ohid)
-      this.setState({ redirectToNewPage: true })
       this.forceUpdate()
     } catch (error) {
       console.log(error)
@@ -59,7 +54,7 @@ export class ModifyCourseInstancePage extends Component {
   }
 
   render() {
-    if (this.state.redirectToNewPage) {
+    if (this.props.redirect && this.props.redirect.redirect) {
       return <Redirect to={`/labtool/courses/${this.props.selectedInstance.ohid}`} />
     }
     const selectedInstance = { ...this.props.selectedInstance }
@@ -165,6 +160,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     selectedInstance: state.selectedInstance,
     notification: state.notification,
+    redirect: state.redirect,
     ownProps
   }
 }
