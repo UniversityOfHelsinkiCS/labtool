@@ -26,13 +26,10 @@ export class Email extends Component {
   }
 
   componentWillMount() {
+    this.props.resetLoading()
     this.props.forceSetLoading({
       value: false
     })
-  }
-
-  componentWillUnmount() {
-    this.props.resetLoading()
   }
 
   render() {

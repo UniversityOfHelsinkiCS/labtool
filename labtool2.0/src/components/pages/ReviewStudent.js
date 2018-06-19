@@ -20,6 +20,7 @@ export class ReviewStudent extends Component {
   }
 
   componentWillMount() {
+    this.props.resetLoading()
     this.props.getOneCI(this.props.courseId)
     this.props.coursePageInformation(this.props.courseId)
     this.props.clearNotifications()
@@ -35,7 +36,6 @@ export class ReviewStudent extends Component {
 
   componentWillUnmount() {
     this.props.resetChecklist()
-    this.props.resetLoading()
   }
 
   handleSubmit = async e => {

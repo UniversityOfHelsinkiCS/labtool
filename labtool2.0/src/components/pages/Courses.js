@@ -10,11 +10,8 @@ import { resetLoading } from '../../reducers/loadingReducer'
  */
 export class Courses extends Component {
   componentWillMount() {
-    this.props.getAllCI()
-  }
-
-  componentWillUnmount() {
     this.props.resetLoading()
+    this.props.getAllCI()
   }
 
   render() {
