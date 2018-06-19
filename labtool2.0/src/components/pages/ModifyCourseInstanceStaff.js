@@ -4,10 +4,12 @@ import { getAllUsers } from '../../services/user'
 import { createOne, removeOne } from '../../services/teacherinstances'
 import { connect } from 'react-redux'
 import { clearNotifications } from '../../reducers/notificationReducer'
-import { Table, Container, Header, Button, Label, Form } from 'semantic-ui-react'
+import { Table, Container, Header, Button, Label, Form, Loader } from 'semantic-ui-react'
+import { resetLoading } from '../../reducers/loadingReducer'
 
 export class ModifyCourseInstanceStaff extends React.Component {
-  componentWillMount() {
+  componentWillMount = async () => {
+    await this.props.resetLoading()
     this.props.clearNotifications()
     this.props.getOneCI(this.props.courseId)
     this.props.getAllUsers()
@@ -63,39 +65,43 @@ export class ModifyCourseInstanceStaff extends React.Component {
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {this.props.users.map(user => (
-                <Table.Row key={user.id}>
-                  <Table.Cell>
-                    {user.firsts} {user.lastname}
-                  </Table.Cell>
-                  <Table.Cell>
-                    {this.getTeacherIds().includes(user.id) ? (
-                      user.admin === true ? (
-                        <div>
-                          <Label color="orange" horizontal>
-                            Teacher
-                          </Label>
-                        </div>
+              {this.props.loading.loading ? (
+                <Loader active />
+              ) : (
+                this.props.users.map(user => (
+                  <Table.Row key={user.id}>
+                    <Table.Cell>
+                      {user.firsts} {user.lastname}
+                    </Table.Cell>
+                    <Table.Cell>
+                      {this.getTeacherIds().includes(user.id) ? (
+                        user.admin === true ? (
+                          <div>
+                            <Label color="orange" horizontal>
+                              Teacher
+                            </Label>
+                          </div>
+                        ) : (
+                          <div>
+                            <Label color="orange" horizontal>
+                              Assistant
+                            </Label>
+                            <Button onClick={this.handleRemoval(user.id)} size="tiny" color="green">
+                              Remove assistant
+                            </Button>
+                          </div>
+                        )
                       ) : (
                         <div>
-                          <Label color="orange" horizontal>
-                            Assistant
-                          </Label>
-                          <Button onClick={this.handleRemoval(user.id)} size="tiny" color="green">
-                            Remove assistant
+                          <Button onClick={this.handleSubmit(user.id)} size="tiny" color="green">
+                            Add assistant
                           </Button>
                         </div>
-                      )
-                    ) : (
-                      <div>
-                        <Button onClick={this.handleSubmit(user.id)} size="tiny" color="green">
-                          Add assistant
-                        </Button>
-                      </div>
-                    )}
-                  </Table.Cell>
-                </Table.Row>
-              ))}
+                      )}
+                    </Table.Cell>
+                  </Table.Row>
+                ))
+              )}
             </Table.Body>
           </Table>
         </Form>
@@ -118,7 +124,8 @@ const mapStateToProps = (state, ownProps) => {
   return {
     courseId: ownProps.courseId,
     users: state.users,
-    selectedInstance: state.selectedInstance
+    selectedInstance: state.selectedInstance,
+    loading: state.loading
   }
 }
 
@@ -127,7 +134,11 @@ const mapDispatchToProps = {
   getOneCI,
   clearNotifications,
   createOne,
-  removeOne
+  removeOne,
+  resetLoading
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ModifyCourseInstanceStaff)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ModifyCourseInstanceStaff)
