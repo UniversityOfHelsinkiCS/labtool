@@ -195,6 +195,14 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
     showCodeReviews: []
   }
 
+  const loading = {
+    loading: false,
+    loadingHooks: [],
+    redirect: false,
+    redirectHooks: [],
+    redirectFailure: false
+  }
+
   let mockFn = jest.fn()
 
   beforeEach(() => {
@@ -205,6 +213,7 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
         selectedInstance={coursePage}
         codeReviewLogic={codeReviewLogic}
         coursePageLogic={coursePageLogic}
+        loading={loading}
         dropdownUsers={userHelper(courseData.data)}
         clearNotifications={mockFn}
         getOneCI={mockFn}
@@ -217,6 +226,7 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
         randomAssign={mockFn}
         codeReviewReset={mockFn}
         filterByTag={mockFn}
+        resetLoading={mockFn}
       />
     )
   })
