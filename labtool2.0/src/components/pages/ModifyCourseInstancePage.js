@@ -65,25 +65,6 @@ export class ModifyCourseInstancePage extends Component {
             <h2> Edit course: {selectedInstance.name} </h2>
           </Grid.Row>
         </Grid>
-
-        <Grid>
-          <Grid.Row centered>
-            {selectedInstance.active === true ? (
-              <div>
-                <Grid.Row>
-                  <h4 style={{ color: '#21ba45' }}>This course is currently activated.</h4>
-                </Grid.Row>
-              </div>
-            ) : (
-              <div>
-                <Grid.Row>
-                  <h4 style={{ color: 'grey' }}>This course is currently passive.</h4>
-                </Grid.Row>
-              </div>
-            )}
-          </Grid.Row>
-        </Grid>
-
         <Grid>
           <Grid.Row centered>
             <Form onSubmit={this.handleSubmit}>

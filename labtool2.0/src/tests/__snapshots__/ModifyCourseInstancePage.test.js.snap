@@ -29,25 +29,6 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
     <GridRow
       centered={true}
     >
-      <div>
-        <GridRow>
-          <h4
-            style={
-              Object {
-                "color": "#21ba45",
-              }
-            }
-          >
-            This course is currently activated.
-          </h4>
-        </GridRow>
-      </div>
-    </GridRow>
-  </Grid>
-  <Grid>
-    <GridRow
-      centered={true}
-    >
       <Form
         as="form"
         onSubmit={[Function]}
