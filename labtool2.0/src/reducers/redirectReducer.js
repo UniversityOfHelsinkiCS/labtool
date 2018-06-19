@@ -14,6 +14,10 @@ const redirectReducer = (state = INITIAL_STATE, action) => {
       return { ...state, loading: true, redirect: false }
     case 'STUDENT_PROJECT_INFO_UPDATE_SUCCESS':
       return { ...state, loading: false, redirect: true }
+    case 'CI_MODIFY_ONE_SUCCESS':
+      return { ...state, redirect: true }
+    case 'CI_GET_ONE_ATTEMPT':
+      return { ...state, redirect: false }
     case 'REGISTER_RESET':
       return INITIAL_STATE
     default:
