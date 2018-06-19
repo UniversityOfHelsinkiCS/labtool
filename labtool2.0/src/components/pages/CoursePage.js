@@ -55,17 +55,6 @@ export class CoursePage extends React.Component {
     }
   }
 
-  openLastReviewedWeek() {
-    if (this.state.lastReviewedIndex === null) {
-      let lastIndexOfWeeks = this.props.courseData.data.weeks.length - 1
-      let lastReviewedWeek = this.props.courseData.data.weeks[lastIndexOfWeeks].weekNumber
-      this.setState({
-        activeIndex: lastReviewedWeek - 1,
-        lastReviewedIndex: lastReviewedWeek - 1
-      })
-    }
-  }
-
   componentWillUnmount() {
     this.setState({ lastReviewedIndex: null })
     this.props.coursePageReset()
@@ -184,10 +173,8 @@ export class CoursePage extends React.Component {
           value: tag.id
         })
       )
-
       return array
     }
-    console.log('ei tageja')
     return []
   }
 
@@ -473,9 +460,6 @@ export class CoursePage extends React.Component {
                 </Table.Row>
               </Table.Header>
             </Table>
-            <List style={{ float: 'right' }}>
-              <List.Item icon={{ name: 'edit', color: 'orange' }} content="Edit course" />
-            </List>
           </div>
         </div>
       )
@@ -554,13 +538,16 @@ export class CoursePage extends React.Component {
                           <Icon id="tag" onClick={this.changeHiddenTagDropdown(data.id)} name="pencil" size="small" style={{ float: 'top' }} />
                           {this.props.coursePageLogic.showTagDropdown === data.id ? (
                             <div>
-                              <Dropdown id="tagDropdown" options={dropDownTags} onChange={this.changeSelectedTag()} placeholder="Add tag" fluid selection />
-                              <Button onClick={this.addTag(data.id)} size="small">
-                                Add
-                              </Button>
-                              <Button onClick={this.removeTag(data.id)} size="small">
-                                Remove
-                              </Button>
+                              <Dropdown id="tagDropdown" options={dropDownTags} onChange={this.changeSelectedTag()} placeholder="Choose tag" fluid selection />
+                              <div class="two ui buttons">
+                                <button class="ui icon positive button" onClick={this.addTag(data.id)} size="mini">
+                                  <i class="plus icon"></i>
+                                </button>
+                                <div class="or"></div>
+                                <button class="ui icon button" onClick={this.removeTag(data.id)} size="mini">
+                                  <i class="trash icon"></i>
+                                </button>
+                              </div>
                             </div>
                           ) : (
                             <div />

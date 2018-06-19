@@ -29,7 +29,6 @@ export class ManageTags extends React.Component {
   }
 
   addTag = async e => {
-    console.log('olen täällä')
     try {
       e.preventDefault()
 
@@ -47,7 +46,6 @@ export class ManageTags extends React.Component {
   }
 
   removeTag = async e => {
-    console.log('removing tag')
     try {
       var txt
       if (!window.confirm('Are you sure?')) {
@@ -161,4 +159,7 @@ const mapDispatchToProps = {
   getAllTags
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ManageTags)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ManageTags)
