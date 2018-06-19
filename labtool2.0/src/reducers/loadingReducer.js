@@ -63,6 +63,7 @@ const loadingReducer = (state = INITITAL_STATE, action) => {
   }
 }
 
+// Call this before making any api calls in a component to ensure state.loading is true before rendering.
 export const resetLoading = () => {
   return async dispatch => {
     dispatch({
@@ -71,6 +72,9 @@ export const resetLoading = () => {
   }
 }
 
+// Use this method to add your service call prefix as a redirect hook.
+// data.hook should be equal to the prefix of your api call.
+// state.redirect will become true after the api call is finished successfully.
 export const addRedirectHook = data => {
   return async dispatch => {
     dispatch({
