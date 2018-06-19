@@ -8,6 +8,7 @@ module.exports = (sequelize, DataTypes) => {
       active: DataTypes.BOOLEAN,
       weekAmount: DataTypes.INTEGER,
       weekMaxPoints: DataTypes.DOUBLE,
+      finalReview: DataTypes.BOOLEAN,
       currentWeek: DataTypes.INTEGER,
       currentCodeReview: DataTypes.INTEGER,
       codeReviewActive: DataTypes.BOOLEAN,

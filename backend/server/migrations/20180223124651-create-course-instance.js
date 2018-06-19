@@ -29,6 +29,10 @@ module.exports = {
         type: Sequelize.DOUBLE,
         defaultValue: 2
       },
+      finalReview: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+      },
       currentWeek: {
         type: Sequelize.INTEGER,
         defaultValue: 1
