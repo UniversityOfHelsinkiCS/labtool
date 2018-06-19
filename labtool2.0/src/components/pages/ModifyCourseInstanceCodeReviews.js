@@ -3,20 +3,10 @@ import { connect } from 'react-redux'
 import { getOneCI } from '../../services/courseInstance'
 import { coursePageInformation } from '../../services/courseInstance'
 import { bulkinsertCodeReviews } from '../../services/codeReview'
-import {
-  initOneReview,
-  initOrRemoveRandom,
-  initCheckbox,
-  initAllCheckboxes,
-  randomAssign,
-  codeReviewReset,
-  selectDropdown,
-  toggleCreate,
-  createStates
-} from '../../reducers/codeReviewReducer'
+import { initOneReview, initOrRemoveRandom, initCheckbox, initAllCheckboxes, randomAssign, codeReviewReset, selectDropdown, toggleCreate, createStates } from '../../reducers/codeReviewReducer'
 import { filterByTag } from '../../reducers/coursePageLogicReducer'
 import { clearNotifications } from '../../reducers/notificationReducer'
-import { Button, Table, Checkbox, Loader } from 'semantic-ui-react'
+import { Button, Table, Checkbox, Loader, Dropdown } from 'semantic-ui-react'
 import Notification from '../../components/pages/Notification'
 import { resetLoading } from '../../reducers/loadingReducer'
 
@@ -387,15 +377,11 @@ const mapDispatchToProps = {
   bulkinsertCodeReviews,
   randomAssign,
   codeReviewReset,
-<<<<<<< HEAD
   filterByTag,
-  resetLoading
-=======
+  resetLoading,
   selectDropdown,
   toggleCreate,
-  createStates,
-  filterByTag
->>>>>>> e008fcb33c7facf63b5c6630550f7a8ea562f05e
+  createStates
 }
 
 export default connect(
