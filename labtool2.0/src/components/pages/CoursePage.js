@@ -40,6 +40,7 @@ export class CoursePage extends React.Component {
   }
 
   componentWillMount() {
+    this.props.resetLoading()
     this.props.getOneCI(this.props.courseId)
     this.props.coursePageInformation(this.props.courseId)
     this.props.getAllTags()
@@ -59,7 +60,6 @@ export class CoursePage extends React.Component {
   componentWillUnmount() {
     this.setState({ lastReviewedIndex: null })
     this.props.coursePageReset()
-    this.props.resetLoading()
   }
 
   changeHiddenAssistantDropdown = id => {

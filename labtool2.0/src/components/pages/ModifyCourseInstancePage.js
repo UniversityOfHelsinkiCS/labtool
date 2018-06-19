@@ -1,17 +1,19 @@
 import React, { Component } from 'react'
-import { Form, Input, Button, Grid, Checkbox } from 'semantic-ui-react'
+import { Form, Input, Button, Grid, Checkbox, Loader } from 'semantic-ui-react'
 import { getOneCI, modifyOneCI } from '../../services/courseInstance'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Redirect } from 'react-router'
 import { clearNotifications } from '../../reducers/notificationReducer'
 import { changeCourseField } from '../../reducers/selectedInstanceReducer'
+import { resetLoading, addRedirectHook, forceSetLoading } from '../../reducers/loadingReducer'
 
 /**
  *  Page used to modify a courseinstances information. Can only be accessed by teachers.
  */
 export class ModifyCourseInstancePage extends Component {
   componentWillMount() {
+    this.props.resetLoading()
     this.props.clearNotifications()
     this.props.getOneCI(this.props.courseId)
   }
@@ -41,19 +43,23 @@ export class ModifyCourseInstancePage extends Component {
         active,
         ohid
       }
-      await this.props.modifyOneCI(content, this.props.selectedInstance.ohid)
+      this.props.addRedirectHook({
+        hook: 'CI_MODIFY_ONE_'
+      })
+      this.props.modifyOneCI(content, this.props.selectedInstance.ohid)
     } catch (error) {
       console.log(error)
     }
   }
 
   render() {
-    if (false) {
+    if (this.props.loading.redirect) {
       return <Redirect to={`/labtool/courses/${this.props.selectedInstance.ohid}`} />
     }
     const selectedInstance = { ...this.props.selectedInstance }
     return (
       <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
+        <Loader active={this.props.loading.loading} inline="centered" />
         <Grid>
           <Grid.Row centered>
             <h2> Edit course: {selectedInstance.name} </h2>
@@ -144,6 +150,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     selectedInstance: state.selectedInstance,
     notification: state.notification,
+    loading: state.loading,
     ownProps
   }
 }
@@ -152,7 +159,10 @@ const mapDispatchToProps = {
   getOneCI,
   modifyOneCI,
   clearNotifications,
-  changeCourseField
+  changeCourseField,
+  resetLoading,
+  addRedirectHook,
+  forceSetLoading
 }
 
 export default connect(
