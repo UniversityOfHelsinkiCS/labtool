@@ -50,21 +50,20 @@ export class ModifyCourseInstancePage extends Component {
     this.setState({ toAddCr: value })
   }
 
-  handleChange = (e, { value }) => this.setState({ value })
-
   handleSubmit = async e => {
     try {
       e.preventDefault()
 
       let newCr = this.props.selectedInstance.currentCodeReview.filter(cr => !this.state.toRemoveCr.includes(cr))
       newCr = newCr.concat(this.state.toAddCr)
+      const { weekAmount, weekMaxPoints, currentWeek, active, ohid } = this.props.selectedInstance
       const content = {
-        weekAmount: e.target.weekAmount.value,
-        weekMaxPoints: e.target.weekMaxPoints.value,
-        currentWeek: e.target.currentWeek.value,
-        active: e.target.courseActive.value,
-        ohid: this.props.selectedInstance.ohid,
-        newCr: newCr
+        weekAmount,
+        weekMaxPoints,
+        currentWeek,
+        active,
+        ohid,
+        newCr
       }
       this.props.addRedirectHook({
         hook: 'CI_MODIFY_ONE_'
