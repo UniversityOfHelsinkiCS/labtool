@@ -28,6 +28,8 @@ const selectedInstanceReducer = (store = [], action) => {
       var newStore
       amountOfCw > store.amountOfCodeReviews ? (newStore = { ...store, amountOfCodeReviews: amountOfCw }) : (newStore = store)
       return newStore
+    case 'SET_FINAL_REVIEW':
+      return { ...store, finalReview: action.value }
     default:
       return store
   }
