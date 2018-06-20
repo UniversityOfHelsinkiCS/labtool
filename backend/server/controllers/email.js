@@ -169,29 +169,34 @@ module.exports = {
     try {
       const useComment = req.body.commentId !== undefined
       const options = {
-        from: SENDER_SETTINGS.from,
-        subject: 'Labtool notification'
+        from: SENDER_SETTINGS.from
       }
       let message
       if (useComment) {
         message = await commentMessage(req.body.role, req.body.commentId)
         if (message.content) {
+          options.subject = `${message.content.course.name} new message`
           const link =
             req.body.role === 'teacher' ? `${frontendUrl}/courses/${message.content.course.ohid}` : `${frontendUrl}/browsereviews/${message.content.course.ohid}/${message.content.studentId}`
           options.html = `
-            <p>${link}</p>
-            <p>${message.content.course.name}</p>
+            <h1>You've received a message in Labtool.</h1>
+            <p><a href="${link}">${link}</a></p>
+            <p>course: ${message.content.course.name}</p>
+            <h2>Message content</h2>
             <p>${message.content.text}</p>
           `
         }
       } else {
         message = await weekMessage(req.body.role, req.body.weekId)
         if (message.content) {
+          options.subject = `${message.content.course.name} new message`
           const link = `${frontendUrl}/courses/${message.content.course.ohid}`
           options.html = `
-            <p>${link}</p>
-            <p>${message.content.course}</p>
-            <p>${message.content.points}</p>
+            <h1>Your submission has been reviewed</h1>
+            <p><a href="${link}">${link}</a></p>
+            <p>course: ${message.content.course.name}</p>
+            <p>points awarded: ${message.content.points}</p>
+            <h2>Feedback</h2>
             <p>${message.content.text}</p>
           `
         }
