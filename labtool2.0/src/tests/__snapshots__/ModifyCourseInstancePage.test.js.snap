@@ -114,6 +114,22 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
             value={1}
           />
         </FormGroup>
+        <FormGroup
+          inline={true}
+        >
+          <Checkbox
+            label="Course has a final review"
+            name="finalReview"
+            onChange={[Function]}
+            style={
+              Object {
+                "textAlign": "left",
+                "width": "150px",
+              }
+            }
+            type="checkbox"
+          />
+        </FormGroup>
         <FormField
           inline={true}
         >
