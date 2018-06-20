@@ -14,6 +14,9 @@ const INITIAL_STATE = {
   selectedTeacher: '',
   selectedTag: '',
   filterByAssistant: 0,
+  activeIndex: 0,
+  lastReviewedWeek: 1,
+  lastReviewedIsShownAlready: false,
   filterByTag: [],
   showCodeReviews: []
 }
@@ -49,8 +52,15 @@ const coursePageLogicReducer = (state = INITIAL_STATE, action) => {
     case 'CP_INFO_SUCCESS':
       if (action.response.role === 'student') {
         try {
-          // The line below sets showCodeReviews to be equal to the reviewNumbers whose points are 0.
-          return { ...state, showCodeReviews: action.response.data.codeReviews.filter(cr => cr.points === null).map(cr => cr.reviewNumber) }
+          const newestReviewWeek = action.response.data.weeks[action.response.data.weeks.length - 1].weekNumber
+          // The showCodeReviews -line below sets showCodeReviews to be equal to the reviewNumbers whose points are 0.
+          const showNewestOrUserOpened = state.lastReviewedIsShownAlready ? state.activeIndex : newestReviewWeek - 1
+          return {
+            ...state,
+            lastReviewedWeek: newestReviewWeek,
+            activeIndex: showNewestOrUserOpened,
+            showCodeReviews: action.response.data.codeReviews.filter(cr => cr.points === null).map(cr => cr.reviewNumber)
+          }
         } catch (e) {
           console.log('ERROR: Setting initial values for shown codeReviews failed.')
           return state
@@ -67,6 +77,18 @@ const coursePageLogicReducer = (state = INITIAL_STATE, action) => {
         newValue.splice(index, 1)
         return { ...state, showCodeReviews: newValue }
       }
+    case 'COURSE_PAGE_UPDATE_ACTIVE_INDEX':
+      try {
+        return {
+          ...state,
+          lastReviewedIsShownAlready: true,
+          activeIndex: action.theNewIndex
+        }
+      } catch (e) {
+        console.log('ERROR: Updating activeIndex in coursePage failed.')
+        return state
+      }
+
     default:
       return state
   }
@@ -130,6 +152,15 @@ export const coursePageReset = () => {
   return async dispatch => {
     dispatch({
       type: 'COURSE_PAGE_RESET'
+    })
+  }
+}
+
+export const updateActiveIndex = theNewIndex => {
+  return async dispatch => {
+    dispatch({
+      type: 'COURSE_PAGE_UPDATE_ACTIVE_INDEX',
+      theNewIndex
     })
   }
 }
