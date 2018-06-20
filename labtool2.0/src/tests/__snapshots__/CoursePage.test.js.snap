@@ -105,15 +105,16 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
       <div
         className="codeReviewExpanded"
       >
-        <div>
-          <h4
-            className="codeReviewPoints"
-          >
+        <div
+          className="codeReviewPoints"
+        >
+          <strong>
             Points: 
-            2
-          </h4>
+          </strong>
+           
+          2
         </div>
-        <div />
+        <p />
       </div>
     </AccordionContent>
   </Accordion>
@@ -143,28 +144,72 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
       <div
         className="codeReviewExpanded"
       >
-        <div>
-          <h4
-            className="codeReviewPoints"
-          >
+        <div
+          className="codeReviewPoints"
+        >
+          <strong>
             Points: 
-            1
-          </h4>
+          </strong>
+           
+          1
         </div>
         <div>
-          <h4>
-            Project to review
-          </h4>
-          <p>
-            Tira super projekti
-          </p>
-          <p>
-            <a
-              href="http://github.com/superprojekti"
+          <br />
+          <strong>
+            Project to review: 
+          </strong>
+          Tira super projekti
+          <br />
+          <strong>
+            Github: 
+          </strong>
+          <a
+            href="http://github.com/superprojekti"
+          >
+            http://github.com/superprojekti
+          </a>
+          <br />
+           
+          <br />
+          <strong>
+            Link your review here:
+          </strong>
+           
+          <br />
+          <Form
+            as="form"
+            onSubmit={[Function]}
+          >
+            <FormGroup
+              inline={true}
             >
-              http://github.com/superprojekti
-            </a>
-          </p>
+              <Input
+                className="form-control1"
+                icon="github"
+                iconPosition="left"
+                name="issueslink"
+                placeholder="https://github.com/account/repo/issues/number"
+                required="true"
+                style={
+                  Object {
+                    "minWidth": "25em",
+                  }
+                }
+                type="text"
+              />
+            </FormGroup>
+            <FormGroup>
+              <Button
+                as="button"
+                color="blue"
+                compact={true}
+                role="button"
+                type="submit"
+              >
+                Submit
+              </Button>
+            </FormGroup>
+          </Form>
         </div>
       </div>
     </AccordionContent>
@@ -194,12 +239,16 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
       <div
         className="codeReviewExpanded"
       >
-        <div>
-          <p>
-            Not Graded
-          </p>
+        <div
+          className="codeReviewPoints"
+        >
+          <strong>
+            Points: 
+          </strong>
+           
+          Not graded yet
         </div>
-        <div />
+        <p />
       </div>
     </AccordionContent>
   </Accordion>

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Accordion, Button, Table, Card, Form, Comment, List, Header, Label, Message, Icon, Dropdown, Popup } from 'semantic-ui-react'
+import { Accordion, Button, Table, Input, Card, Form, Comment, Header, Label, Message, Icon, Dropdown, Popup } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createOneComment } from '../../services/comment'
@@ -36,6 +36,12 @@ export class CoursePage extends React.Component {
     } catch (error) {
       console.log(error)
     }
+  }
+
+  handleAddingIssuesLink = e => {
+    e.preventDefault()
+    console.log('Hello ', e.target.issueslink.value)
+    e.target.issueslink.value = ''
   }
 
   componentWillMount() {
@@ -352,26 +358,42 @@ export class CoursePage extends React.Component {
                 </Accordion.Title>
                 <Accordion.Content active={activeIndex === i || cr.points === null}>
                   <div className="codeReviewExpanded">
-                    {cr.points !== null ? (
-                      <div>
-                        <h4 className="codeReviewPoints">Points: {cr.points}</h4>
-                      </div>
-                    ) : (
-                      <div>
-                        <p>Not Graded</p>
-                      </div>
-                    )}
+                    <div className="codeReviewPoints">
+                      <strong>Points: </strong> {cr.points !== null ? cr.points : 'Not graded yet'}
+                    </div>
 
                     {this.props.coursePageLogic.showCodeReviews.indexOf(cr.reviewNumber) !== -1 ? (
                       <div>
-                        <h4>Project to review</h4>
-                        <p>{cr.toReview.projectName}</p>
-                        <p>
-                          <a href={cr.toReview.github}>{cr.toReview.github}</a>
-                        </p>
+                        <br />
+                        <strong>Project to review: </strong>
+                        {cr.toReview.projectName}
+                        <br />
+                        <strong>Github: </strong>
+                        <a href={cr.toReview.github}>{cr.toReview.github}</a>
+                        <br /> <br />
+                        <strong>Link your review here:</strong> <br />
+                        <Form onSubmit={this.handleAddingIssuesLink}>
+                          <Form.Group inline>
+                            <Input
+                              type="text"
+                              name="issueslink"
+                              icon="github"
+                              required="true"
+                              iconPosition="left"
+                              style={{ minWidth: '25em' }}
+                              placeholder="https://github.com/account/repo/issues/number"
+                              className="form-control1"
+                            />
+                          </Form.Group>
+                          <Form.Group>
+                            <Button compact type="submit" color="blue">
+                              Submit
+                            </Button>
+                          </Form.Group>
+                        </Form>
                       </div>
                     ) : (
-                      <div />
+                      <p />
                     )}
                   </div>
                 </Accordion.Content>
