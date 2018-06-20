@@ -430,7 +430,7 @@ module.exports = {
                 name: req.body.name || courseInstance.name,
                 start: req.body.start || courseInstance.start,
                 end: req.body.end || courseInstance.end,
-                active: req.body.active || courseInstance.active,
+                active: String(req.body.active) || courseInstance.active, //Without stringifying req.body.active this gets interpreted as a boolean operation. Go javascript.
                 weekAmount: req.body.weekAmount || courseInstance.weekAmount,
                 weekMaxPoints: req.body.weekMaxPoints || courseInstance.weekMaxPoints,
                 currentWeek: req.body.currentWeek || courseInstance.currentWeek

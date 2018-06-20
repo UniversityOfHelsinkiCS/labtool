@@ -192,8 +192,16 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
     showDropdown: '',
     selectedTeacher: '',
     filterByAssistant: 0,
-    filterByTag: 0,
+    filterByTag: [],
     showCodeReviews: []
+  }
+
+  const loading = {
+    loading: false,
+    loadingHooks: [],
+    redirect: false,
+    redirectHooks: [],
+    redirectFailure: false
   }
 
   let mockFn = jest.fn()
@@ -206,6 +214,7 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
         selectedInstance={coursePage}
         codeReviewLogic={codeReviewLogic}
         coursePageLogic={coursePageLogic}
+        loading={loading}
         dropdownUsers={userHelper(courseData.data)}
         clearNotifications={mockFn}
         getOneCI={mockFn}
@@ -219,6 +228,7 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
         codeReviewReset={mockFn}
         statesCreated={true}
         filterByTag={mockFn}
+        resetLoading={mockFn}
       />
     )
   })

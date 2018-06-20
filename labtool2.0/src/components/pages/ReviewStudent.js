@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
-import { Button, Form, Input, Grid, Card } from 'semantic-ui-react'
+import { Button, Form, Input, Grid, Card, Loader } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createOneWeek } from '../../services/week'
-import { getOneCI } from '../../services/courseInstance'
+import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import { clearNotifications } from '../../reducers/notificationReducer'
 import { toggleCheck, resetChecklist } from '../../reducers/weekReviewReducer'
+import { resetLoading } from '../../reducers/loadingReducer'
 import store from '../../store'
 
 /**
@@ -18,8 +19,10 @@ export class ReviewStudent extends Component {
     this.reviewTextRef = React.createRef()
   }
 
-  componentWillMount() {
+  componentWillMount = async () => {
+    await this.props.resetLoading()
     this.props.getOneCI(this.props.courseId)
+    this.props.coursePageInformation(this.props.courseId)
     this.props.clearNotifications()
   }
 
@@ -68,6 +71,9 @@ export class ReviewStudent extends Component {
   }
 
   render() {
+    if (this.props.loading.loading) {
+      return <Loader active />
+    }
     //this.props.ownProps.studentInstance is a string, therefore casting to number.
     const studentData = this.props.courseData.data.filter(dataArray => dataArray.id === Number(this.props.ownProps.studentInstance))
     //this.props.weekNumber is a string, therefore casting to number.
@@ -175,11 +181,12 @@ const mapStateToProps = (state, ownProps) => {
     selectedInstance: state.selectedInstance,
     notification: state.notification,
     courseData: state.coursePage,
-    weekReview: state.weekReview
+    weekReview: state.weekReview,
+    loading: state.loading
   }
 }
 
 export default connect(
   mapStateToProps,
-  { createOneWeek, getOneCI, clearNotifications, toggleCheck, resetChecklist }
+  { createOneWeek, getOneCI, clearNotifications, toggleCheck, resetChecklist, coursePageInformation, resetLoading }
 )(ReviewStudent)
