@@ -82,10 +82,5 @@ describe('<ModifyCourseInstancePage />', () => {
       const input = wrapper.find(Form.Field).at(1)
       expect(input.props().children.props['label']).toEqual('Activate course')
     })
-
-    it('renders inactive course checkbox', () => {
-      const input = wrapper.find(Form.Field).at(2)
-      expect(input.props().children.props['label']).toEqual('Deactivate course')
-    })
   })
 })

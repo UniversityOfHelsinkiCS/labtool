@@ -192,6 +192,7 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
             searchInput="text"
             selectOnBlur={true}
             selectOnNavigation={true}
+            selection={true}
             wrapSelection={true}
           />
         </FormField>
