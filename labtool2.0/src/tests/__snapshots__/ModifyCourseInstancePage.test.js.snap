@@ -218,8 +218,8 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
         <FormField
           inline={true}
         >
-          <Radio
-            checked={false}
+          <Checkbox
+            checked={true}
             label="Activate course"
             name="courseActive"
             onChange={[Function]}
@@ -229,26 +229,7 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
                 "width": "150px",
               }
             }
-            type="radio"
-            value="true"
-          />
-        </FormField>
-        <FormField
-          inline={true}
-        >
-          <Radio
-            checked={false}
-            label="Deactivate course"
-            name="courseActive"
-            onChange={[Function]}
-            style={
-              Object {
-                "textAlign": "left",
-                "width": "150px",
-              }
-            }
-            type="radio"
-            value="false"
+            type="checkbox"
           />
         </FormField>
         <FormField>
