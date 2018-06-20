@@ -179,10 +179,10 @@ export class CoursePage extends React.Component {
     return []
   }
 
-  sendEmail= commentId => async e => {
+  sendEmail = commentId => async e => {
     this.props.sendEmail({
       commentId,
-      role: 'teacher'
+      role: 'student'
     })
   }
 
