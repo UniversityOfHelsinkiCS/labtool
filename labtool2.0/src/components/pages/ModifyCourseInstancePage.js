@@ -87,25 +87,6 @@ export class ModifyCourseInstancePage extends Component {
             <h2> Edit course: {selectedInstance.name} </h2>
           </Grid.Row>
         </Grid>
-
-        <Grid>
-          <Grid.Row centered>
-            {selectedInstance.active === true ? (
-              <div>
-                <Grid.Row>
-                  <h4 style={{ color: '#21ba45' }}>This course is currently activated.</h4>
-                </Grid.Row>
-              </div>
-            ) : (
-                <div>
-                  <Grid.Row>
-                    <h4 style={{ color: 'grey' }}>This course is currently passive.</h4>
-                  </Grid.Row>
-                </div>
-              )}
-          </Grid.Row>
-        </Grid>
-
         <Grid>
           <Grid.Row centered>
             <Form onSubmit={this.handleSubmit}>
@@ -128,18 +109,18 @@ export class ModifyCourseInstancePage extends Component {
                 <label style={{ width: '125px', textAlign: 'left' }}>Currently visible code reviews</label>
                 {this.props.selectedInstance.currentCodeReview
                   ? this.props.selectedInstance.currentCodeReview.map(
-                    cr =>
-                      this.state.toRemoveCr.includes(cr) ? (
-                        <Popup
-                          key={cr}
-                          trigger={
-                            <Button className="nappisaatana" color="red" value={cr} onClick={this.handleRemoveChange} compact>
-                              {cr}
-                            </Button>
-                          }
-                          content={'Click to not be removed on save'}
-                        />
-                      ) : (
+                      cr =>
+                        this.state.toRemoveCr.includes(cr) ? (
+                          <Popup
+                            key={cr}
+                            trigger={
+                              <Button className="nappisaatana" color="red" value={cr} onClick={this.handleRemoveChange} compact>
+                                {cr}
+                              </Button>
+                            }
+                            content={'Click to not be removed on save'}
+                          />
+                        ) : (
                           <Popup
                             key={cr}
                             trigger={
@@ -150,7 +131,7 @@ export class ModifyCourseInstancePage extends Component {
                             content={'Click to be removed on save'}
                           />
                         )
-                  )
+                    )
                   : null}
               </Form.Group>
 
