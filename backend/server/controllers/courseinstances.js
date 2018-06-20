@@ -100,7 +100,7 @@ module.exports = {
             as: 'codeReviews',
             where: {
               reviewNumber: {
-                [Op.gte]: course.currentCodeReview
+                [Op.in]: course.currentCodeReview
               }
             },
             required: false,
@@ -118,7 +118,7 @@ module.exports = {
             as: 'toReviews',
             where: {
               reviewNumber: {
-                [Op.gte]: course.currentCodeReview
+                [Op.in]: course.currentCodeReview
               }
             },
             required: false,
