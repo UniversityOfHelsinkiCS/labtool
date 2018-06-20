@@ -144,10 +144,6 @@ module.exports = {
         res.status(403).send('You have to be authenticated to do this')
         return
       }
-      if (typeof req.body.studentInstanceId !== 'number' || typeof req.body.reviewNumber !== 'number' || typeof req.body.linkToIssues !== 'string') {
-        res.status(400).send('Missing or malformed inputs.')
-        return
-      }
 
       const studentInstance = await StudentInstance.findOne({
         attributes: {
@@ -164,7 +160,7 @@ module.exports = {
 
       const modifiedRows = await CodeReview.update(
         {
-          linkToIssues: req.body.linkToIssues
+          linkToReview: req.body.linkToReview
         },
         {
           where: {

@@ -20,7 +20,7 @@ module.exports = app => {
    * Expects the following fields in the body:
    * reviewNumber: reviewNumber of codeReview to update.
    * studentInstanceId: studentInstance whose codeReview to update.
-   * linkToIssues: link to insert.
+   * linkToReview: link to insert.
    */
   app.put('/api/codereviews/link', codeReviewController.addLink)
 }
