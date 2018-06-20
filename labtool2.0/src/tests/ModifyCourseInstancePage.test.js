@@ -1,7 +1,7 @@
 import React from 'react'
 import { ModifyCourseInstancePage } from '../components/pages/ModifyCourseInstancePage'
 import { shallow } from 'enzyme'
-import { Form } from 'semantic-ui-react'
+import { Form, Popup, Dropdown } from 'semantic-ui-react'
 
 describe('<ModifyCourseInstancePage />', () => {
   let wrapper
@@ -15,12 +15,14 @@ describe('<ModifyCourseInstancePage />', () => {
     weekAmount: 7,
     weekMaxPoints: 2,
     currentWeek: 1,
-    ohid: 'TKT20011.2018.K.A.1'
+    ohid: 'TKT20011.2018.K.A.1',
+    currentCodeReview: [1, 2],
+    amountOfCodeReviews: 3
   }
   let mockFn = jest.fn()
 
   beforeEach(() => {
-    wrapper = shallow(<ModifyCourseInstancePage getOneCI={mockFn} clearNotifications={mockFn} selectedInstance={courseData} />)
+    wrapper = shallow(<ModifyCourseInstancePage codeReviewDropdowns={[{ value: 3, text: '3' }]} getOneCI={mockFn} clearNotifications={mockFn} selectedInstance={courseData} />)
   })
 
   describe('Modify Instance Component', () => {
@@ -46,13 +48,32 @@ describe('<ModifyCourseInstancePage />', () => {
     it('renders current week', () => {
       expect(wrapper.find('.form-control3').length).toEqual(1)
     })
+    it('renders currently visible code reviews', () => {
+      expect(
+        wrapper
+          .find(Popup)
+          .at(0)
+          .props().trigger.props.value
+      ).toEqual(1)
+      expect(
+        wrapper
+          .find(Popup)
+          .at(1)
+          .props().trigger.props.value
+      ).toEqual(2)
+    })
+
+    it('renders dropdown to show currently not visible code reviews', () => {
+      expect(wrapper.find(Dropdown).length).toEqual(1)
+      expect(wrapper.find(Dropdown).props().options[0].text).toEqual('3')
+    })
     it('renders active course checkbox', () => {
-      const input = wrapper.find(Form.Field).at(0)
+      const input = wrapper.find(Form.Field).at(1)
       expect(input.props().children.props['label']).toEqual('Activate course')
     })
 
     it('renders inactive course checkbox', () => {
-      const input = wrapper.find(Form.Field).at(1)
+      const input = wrapper.find(Form.Field).at(2)
       expect(input.props().children.props['label']).toEqual('Deactivate course')
     })
   })

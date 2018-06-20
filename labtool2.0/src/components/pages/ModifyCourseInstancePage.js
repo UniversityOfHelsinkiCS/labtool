@@ -128,7 +128,7 @@ export class ModifyCourseInstancePage extends Component {
                         <Popup
                           key={cr}
                           trigger={
-                            <Button color="red" value={cr} onClick={this.handleRemoveChange} compact>
+                            <Button className="nappisaatana" color="red" value={cr} onClick={this.handleRemoveChange} compact>
                               {cr}
                             </Button>
                           }
@@ -150,7 +150,7 @@ export class ModifyCourseInstancePage extends Component {
               </Form.Group>
 
               <Form.Field inline>
-                <Dropdown fluid multiple selection onChange={this.handleAddChange} options={this.props.codeReviewDropdowns} placeholder="Select code review to set visible" />
+                <Dropdown onChange={this.handleAddChange} options={this.props.codeReviewDropdowns} fluid multiple placeholder="Select code review to set visible" />
               </Form.Field>
 
               <Form.Field inline>
