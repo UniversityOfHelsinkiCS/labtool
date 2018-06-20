@@ -6,6 +6,7 @@ import { createOneComment } from '../../services/comment'
 import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import { gradeCodeReview } from '../../services/codeReview'
 import ReactMarkdown from 'react-markdown'
+import { sendEmail } from '../../services/email'
 
 /**
  * Maps all comments from a single instance from coursePage reducer
@@ -52,6 +53,13 @@ export class BrowseReviews extends Component {
       points: Number(e.target.points.value)
     }
     this.props.gradeCodeReview(data)
+  }
+
+  sendEmail = commentId => async e => {
+    this.props.sendEmail({
+      commentId,
+      role: 'teacher'
+    })
   }
 
   render() {
@@ -119,6 +127,9 @@ export class BrowseReviews extends Component {
                                   {' '}
                                   <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
                                 </Comment.Text>
+                                <Button type="button" onClick={this.sendEmail(comment.id)}>
+                                  Send email notification
+                                </Button>
                               </Comment>
                             )
                         )
@@ -214,7 +225,15 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
+const mapDispatchToProps = {
+  createOneComment,
+  getOneCI,
+  coursePageInformation,
+  gradeCodeReview,
+  sendEmail
+}
+
 export default connect(
   mapStateToProps,
-  { createOneComment, getOneCI, coursePageInformation, gradeCodeReview }
+  mapDispatchToProps
 )(BrowseReviews)
