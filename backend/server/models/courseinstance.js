@@ -12,7 +12,8 @@ module.exports = (sequelize, DataTypes) => {
       currentCodeReview: DataTypes.INTEGER,
       codeReviewActive: DataTypes.BOOLEAN,
       amountOfCodeReviews: DataTypes.INTEGER,
-      ohid: DataTypes.STRING
+      ohid: DataTypes.STRING,
+      finalReview: DataTypes.BOOLEAN
     },
     {}
   )
