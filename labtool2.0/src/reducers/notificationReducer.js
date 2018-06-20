@@ -168,6 +168,11 @@ const notificationReducer = (state = {}, action) => {
         message: action.response.message,
         error: false
       }
+    case 'SEND_EMAIL_FAILURE':
+      return {
+        message: action.response.response.data,
+        error: true
+      }
     default:
       return state
   }
