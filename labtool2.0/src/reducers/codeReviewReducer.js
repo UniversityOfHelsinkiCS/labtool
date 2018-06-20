@@ -9,13 +9,10 @@
 
 const INITIAL_STATE = {
   randomizedCodeReview: [],
-  codeReviewStates: {},
-  currentSelections: {},
-  selectedDropdown: '',
+  codeReviewStates: { 1: [], 2: [] },
+  currentSelections: { 1: {}, 2: {} },
   checkBoxStates: {},
-  statesCreated: false,
-  initialized: false,
-  showCreate: false
+  initialized: false
 }
 
 function shuffleArray(array) {
@@ -28,32 +25,17 @@ function shuffleArray(array) {
 }
 
 function purgeCodeReviews(codeReviewStateArray, toPurgeArray) {
-  if (codeReviewStateArray) {
-    const codeReviewStateReviewerArray = codeReviewStateArray.map(cr => cr.reviewer)
-    let i = codeReviewStateArray.length
-    while (i--) {
-      if (toPurgeArray.indexOf(codeReviewStateReviewerArray[i]) !== -1) {
-        codeReviewStateArray.splice(i, 1)
-      }
+  const codeReviewStateReviewerArray = codeReviewStateArray.map(cr => cr.reviewer)
+  let i = codeReviewStateArray.length
+  while (i--) {
+    if (toPurgeArray.indexOf(codeReviewStateReviewerArray[i]) !== -1) {
+      codeReviewStateArray.splice(i, 1)
     }
   }
 }
 
 const codeReviewReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case 'CREATE_STATES_FOR_CODE_REVIEWS': {
-      let i = 1
-      let codeReviewStates = {}
-      let currentSelections = {}
-      while (i <= action.data) {
-        codeReviewStates[i] = []
-        currentSelections[i] = {}
-        i++
-      }
-      codeReviewStates['create'] = []
-      currentSelections['create'] = {}
-      return { ...state, codeReviewStates: codeReviewStates, currentSelections: currentSelections, statesCreated: true }
-    }
     case 'INIT_REVIEW': {
       const oldReviews = state.codeReviewStates[action.data.round]
       let updatedReviews = {}
@@ -78,10 +60,7 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
       newCurrentSelections[action.data.round][action.data.reviewer] = action.data.toReview
       return { ...state, codeReviewStates: codeReviewRoundsToUpdate, currentSelections: newCurrentSelections }
     }
-    case 'TOGGLE_CREATE':
-      return { ...state, showCreate: !state.showCreate }
-    case 'SELECT_DROPDOWN':
-      return { ...state, selectedDropdown: action.data }
+
     case 'INIT_ALL_CHECKBOXES':
       return { ...state, checkBoxStates: action.data.data, randomizedCodeReview: action.data.ids }
     case 'INIT_CHECKBOX':
@@ -105,13 +84,8 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
       return { ...state, randomizedCodeReview: rndCr }
     case 'CODE_REVIEW_BULKINSERT_SUCCESS':
       var codeReviewRoundsToUpdate = state.codeReviewStates
-      var currentSelectionsToUpdate = state.currentSelections
-      var newRound = action.response.data.reviewNumber
-      newRound > Object.keys(state.codeReviewStates).length - 1 ? (codeReviewRoundsToUpdate = { ...codeReviewRoundsToUpdate, [newRound]: [] }) : codeReviewRoundsToUpdate
-      newRound > Object.keys(state.currentSelections).length - 1 ? (currentSelectionsToUpdate = { ...currentSelectionsToUpdate, [newRound]: {} }) : currentSelectionsToUpdate
-      //This is double clear but if the ternary is not true we'll have to clear the array anyway
       codeReviewRoundsToUpdate[action.response.data.reviewNumber] = []
-      return { ...state, codeReviewStates: codeReviewRoundsToUpdate, currentSelections: currentSelectionsToUpdate }
+      return { ...state, codeReviewStates: codeReviewRoundsToUpdate }
     case 'CODE_REVIEW_RANDOMIZE': {
       const newCodeReviewStates = state.codeReviewStates
       purgeCodeReviews(newCodeReviewStates[action.data.reviewNumber], state.randomizedCodeReview)
@@ -199,32 +173,6 @@ export const codeReviewReset = () => {
   return async dispatch => {
     dispatch({
       type: 'CODE_REVIEW_RESET'
-    })
-  }
-}
-
-export const selectDropdown = data => {
-  return async dispatch => {
-    dispatch({
-      type: 'SELECT_DROPDOWN',
-      data: data
-    })
-  }
-}
-
-export const toggleCreate = () => {
-  return async dispatch => {
-    dispatch({
-      type: 'TOGGLE_CREATE'
-    })
-  }
-}
-
-export const createStates = data => {
-  return async dispatch => {
-    dispatch({
-      type: 'CREATE_STATES_FOR_CODE_REVIEWS',
-      data: data
     })
   }
 }
