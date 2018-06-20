@@ -27,7 +27,9 @@ export class CreateChecklist extends Component {
   // Make api call to save checklist to database.
   handleSubmit = async e => {
     e.preventDefault()
-    if (this.state.week <= 0 || this.state.week > this.props.selectedInstance.weekAmount) {
+    const weeks = this.props.selectedInstance.weekAmount
+    const checklists = this.props.selectedInstance.finalReview ? weeks + 1 : weeks
+    if (this.state.week <= 0 || this.state.week > checklists) {
       this.props.showNotification({
         message: 'Invalid week.',
         error: true
@@ -50,7 +52,9 @@ export class CreateChecklist extends Component {
 
   changeWeek = async e => {
     const week = Number(e.target.value)
-    if (week <= 0 || week > this.props.selectedInstance.weekAmount) {
+    const weeks = this.props.selectedInstance.weekAmount
+    const checklists = this.props.selectedInstance.finalReview ? weeks + 1 : weeks
+    if (week <= 0 || week > checklists) {
       this.props.showNotification({
         message: 'Invalid week.',
         error: true
