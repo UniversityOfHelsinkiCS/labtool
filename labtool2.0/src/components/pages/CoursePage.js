@@ -8,6 +8,7 @@ import { associateTeacherToStudent } from '../../services/assistant'
 import ReactMarkdown from 'react-markdown'
 import { getAllTags, tagStudent, unTagStudent } from '../../services/tags'
 import { showAssistantDropdown, showTagDropdown, selectTeacher, selectTag, filterByAssistant, filterByTag, coursePageReset, toggleCodeReview } from '../../reducers/coursePageLogicReducer'
+import { sendEmail } from '../../services/email'
 
 export class CoursePage extends React.Component {
   state = { activeIndex: 0, lastReviewedIndex: null }
@@ -178,6 +179,13 @@ export class CoursePage extends React.Component {
     return []
   }
 
+  sendEmail= commentId => async e => {
+    this.props.sendEmail({
+      commentId,
+      role: 'teacher'
+    })
+  }
+
   render() {
     const numberOfCodeReviews = Array.isArray(this.props.courseData.data) ? Math.max(...this.props.courseData.data.map(student => student.codeReviews.length)) : 0
 
@@ -311,6 +319,14 @@ export class CoursePage extends React.Component {
                                 {' '}
                                 <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
                               </Comment.Text>
+                              {/* This hack compares user's name to comment.from and hides theemail notification button when they match. */}
+                              {`${this.props.user.user.firsts} ${this.props.user.user.lastname}` !== comment.from ? (
+                                <Button type="button" onClick={this.sendEmail(comment.id)}>
+                                  Send email notification
+                                </Button>
+                              ) : (
+                                <div />
+                              )}
                             </Comment>
                           )
                       )
@@ -694,7 +710,8 @@ const mapDispatchToProps = {
   toggleCodeReview,
   getAllTags,
   tagStudent,
-  unTagStudent
+  unTagStudent,
+  sendEmail
 }
 
 export default connect(
