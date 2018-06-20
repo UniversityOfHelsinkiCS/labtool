@@ -127,6 +127,7 @@ require('./server/routes/codeReviewRoutes')(app)
 require('./server/routes/checklistRoutes')(app)
 require('./server/routes/tagRoutes')(app)
 require('./server/routes/checklistRoutes')(app)
+require('./server/routes/emailRoutes')(app)
 
 app.get('*', (req, res) =>
   res.status(404).send({
