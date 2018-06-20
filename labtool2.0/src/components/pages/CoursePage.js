@@ -111,7 +111,7 @@ export class CoursePage extends React.Component {
       console.log(error)
     }
   }
-  
+
   changeFilterAssistant = () => {
     return (e, data) => {
       const { value } = data
@@ -184,7 +184,9 @@ export class CoursePage extends React.Component {
     const createIndents = (weeks, codeReviews, siId) => {
       const indents = []
       let i = 0
+      let finalPoints = undefined
       for (; i < this.props.selectedInstance.weekAmount; i++) {
+        console.log('pushing week nro ', i)
         let pushattava = (
           <Table.Cell key={i}>
             <p>-</p>
@@ -192,12 +194,15 @@ export class CoursePage extends React.Component {
         )
 
         for (var j = 0; j < weeks.length; j++) {
+          console.log('setting points for week ', j)
           if (i + 1 === weeks[j].weekNumber) {
             pushattava = (
               <Table.Cell key={i}>
                 <p>{weeks[j].points}</p>
               </Table.Cell>
             )
+          } else if (weeks[j].weekNumber === this.props.selectedInstance.weekAmount + 1) {
+            finalPoints = weeks[j].points
           }
         }
         indents.push(pushattava)
@@ -215,6 +220,16 @@ export class CoursePage extends React.Component {
         )
         ii++
       }
+
+      if (this.props.selectedInstance.finalReview) {
+        let finalReviewPointsCell = (
+          <Table.Cell key={i + ii + 1}>
+            <p>{finalPoints === undefined ? '-' : finalPoints}</p>
+          </Table.Cell>
+        )
+        indents.push(finalReviewPointsCell)
+      }
+
       return indents
     }
 
@@ -229,6 +244,9 @@ export class CoursePage extends React.Component {
       }
       for (var ii = 1; ii <= numberOfCodeReviews; ii++) {
         headers.push(<Table.HeaderCell key={i + ii}>Code Review {ii} </Table.HeaderCell>)
+      }
+      if (this.props.selectedInstance.finalReview) {
+        headers.push(<Table.HeaderCell key={i + ii + 1}>Final Review </Table.HeaderCell>)
       }
       return headers
     }
@@ -535,13 +553,13 @@ export class CoursePage extends React.Component {
                           {this.props.coursePageLogic.showTagDropdown === data.id ? (
                             <div>
                               <Dropdown id="tagDropdown" options={dropDownTags} onChange={this.changeSelectedTag()} placeholder="Choose tag" fluid selection />
-                              <div class="two ui buttons">
-                                <button class="ui icon positive button" onClick={this.addTag(data.id)} size="mini">
-                                  <i class="plus icon"></i>
+                              <div className="two ui buttons">
+                                <button className="ui icon positive button" onClick={this.addTag(data.id)} size="mini">
+                                  <i className="plus icon" />
                                 </button>
-                                <div class="or"></div>
-                                <button class="ui icon button" onClick={this.removeTag(data.id)} size="mini">
-                                  <i class="trash icon"></i>
+                                <div className="or" />
+                                <button className="ui icon button" onClick={this.removeTag(data.id)} size="mini">
+                                  <i className="trash icon" />
                                 </button>
                               </div>
                             </div>
