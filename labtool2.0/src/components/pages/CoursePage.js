@@ -121,22 +121,22 @@ export class CoursePage extends React.Component {
     }
   }
 
-  changeFilterTag = id => {
+  addFilterTag = tag => {
     return () => {
-      if (this.props.coursePageLogic.filterByTag === id) {
-        this.props.filterByTag(0)
-      } else {
-        this.props.filterByTag(id)
-      }
+      this.props.filterByTag(tag)
     }
   }
 
-  hasFilteredTag = (data, id) => {
-    for (let i = 0; i < data.Tags.length; i++) {
-      if (data.Tags[i].id === id) {
-        return data
+  hasFilteringTags = (studentTagsData, filteringTags) => {
+    let studentInstanceTagIds = studentTagsData.map(tag => tag.id)
+    let filteringTagIds = filteringTags.map(tag => tag.id)
+    let hasRequiredTags = true
+    for (let i = 0; i < filteringTagIds.length; i++) {
+      if (!studentInstanceTagIds.includes(filteringTagIds[i])) {
+        hasRequiredTags = false
       }
     }
+    return hasRequiredTags
   }
 
   updateTeacher = id => async e => {
@@ -482,22 +482,29 @@ export class CoursePage extends React.Component {
               selection
               style={{ display: 'inline' }}
             />
+            <span> Tag filters: </span>
+            {this.props.coursePageLogic.filterByTag.length === 0 ? (
+              <span>
+                <Label>none</Label>
+              </span>
+            ) : (
+              <span>
+                {this.props.coursePageLogic.filterByTag.map(tag => (
+                  <span key={tag.id}>
+                    <Button compact className={`mini ui ${tag.color} button`} onClick={this.addFilterTag(tag)}>
+                      {tag.name}
+                    </Button>
+                  </span>
+                ))}
+              </span>
+            )}
           </div>
 
           <Table celled>
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell key={-1}>Student</Table.HeaderCell>
-                <Table.HeaderCell>
-                  Project Info
-                  {this.props.coursePageLogic.filterByTag !== 0 ? (
-                    <Button compact className="mini ui yellow button" floated="right" onClick={this.changeFilterTag(0)}>
-                      Clear tag filter
-                    </Button>
-                  ) : (
-                    <p />
-                  )}
-                </Table.HeaderCell>
+                <Table.HeaderCell>Project Info</Table.HeaderCell>
                 {createHeadersTeacher()}
                 <Table.HeaderCell> Sum </Table.HeaderCell>
                 <Table.HeaderCell width="six"> Instructor </Table.HeaderCell>
@@ -511,7 +518,7 @@ export class CoursePage extends React.Component {
                     return this.props.coursePageLogic.filterByAssistant === 0 || this.props.coursePageLogic.filterByAssistant === data.teacherInstanceId
                   })
                   .filter(data => {
-                    return this.props.coursePageLogic.filterByTag === 0 || this.hasFilteredTag(data, this.props.coursePageLogic.filterByTag)
+                    return this.props.coursePageLogic.filterByTag.length === 0 || this.hasFilteringTags(data.Tags, this.props.coursePageLogic.filterByTag)
                   })
                   .map(data => (
                     <Table.Row key={data.id}>
@@ -525,7 +532,7 @@ export class CoursePage extends React.Component {
                           <a href={data.github}>{data.github}</a>
                           {data.Tags.map(tag => (
                             <div key={tag.id}>
-                              <Button compact floated="left" className={`mini ui ${tag.color} button`}>
+                              <Button compact floated="left" className={`mini ui ${tag.color} button`} onClick={this.addFilterTag(tag)}>
                                 {tag.name}
                               </Button>
                             </div>
@@ -540,13 +547,13 @@ export class CoursePage extends React.Component {
                           {this.props.coursePageLogic.showTagDropdown === data.id ? (
                             <div>
                               <Dropdown id="tagDropdown" options={dropDownTags} onChange={this.changeSelectedTag()} placeholder="Choose tag" fluid selection />
-                              <div class="two ui buttons">
-                                <button class="ui icon positive button" onClick={this.addTag(data.id)} size="mini">
-                                  <i class="plus icon"></i>
+                              <div className="two ui buttons">
+                                <button className="ui icon positive button" onClick={this.addTag(data.id)} size="mini">
+                                  <i className="plus icon"></i>
                                 </button>
-                                <div class="or"></div>
-                                <button class="ui icon button" onClick={this.removeTag(data.id)} size="mini">
-                                  <i class="trash icon"></i>
+                                <div className="or"></div>
+                                <button className="ui icon button" onClick={this.removeTag(data.id)} size="mini">
+                                  <i className="trash icon"></i>
                                 </button>
                               </div>
                             </div>
@@ -557,6 +564,7 @@ export class CoursePage extends React.Component {
                       </Table.Cell>
                       {createIndents(data.weeks, data.codeReviews, data.id)}
                       <Table.Cell>
+
                         {data.weeks.map(week => week.points).reduce((a, b) => {
                           return a + b
                         }, 0) +
