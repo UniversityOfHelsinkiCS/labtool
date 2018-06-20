@@ -104,7 +104,7 @@ export class ReviewStudent extends Component {
           {' '}
           {studentData[0].User.firsts} {studentData[0].User.lastname}{' '}
         </h3>
-        <h3> Viikko {this.props.weekNumber} </h3>
+        {this.props.weekNumber > this.props.selectedInstance.weekAmount ? <h1>Final Review</h1> : <h3>Viikko {this.props.weekNumber}</h3>}
         <Grid>
           <Grid.Row columns={2}>
             <Grid.Column>
