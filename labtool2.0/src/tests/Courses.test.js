@@ -58,10 +58,18 @@ describe('<Courses />', () => {
     ]
   }
 
+  const loading = {
+    loading: false,
+    loadingHooks: [],
+    redirect: false,
+    redirectHooks: [],
+    redirectFailure: false
+  }
+
   let mockFn = jest.fn()
 
   beforeEach(() => {
-    wrapper = shallow(<Courses getAllCI={mockFn} courseInstance={props.courseInstance} />)
+    wrapper = shallow(<Courses getAllCI={mockFn} courseInstance={props.courseInstance} loading={loading} resetLoading={mockFn} />)
   })
 
   describe('Courses Component', () => {

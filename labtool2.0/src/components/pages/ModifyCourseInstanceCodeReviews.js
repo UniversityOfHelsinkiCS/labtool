@@ -1,16 +1,20 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { getOneCI } from '../../services/courseInstance'
-import { insertCodeReviews } from '../../services/codeReview'
 import { coursePageInformation } from '../../services/courseInstance'
 import { bulkinsertCodeReviews } from '../../services/codeReview'
-import { codeReviewReducer, initOneReview, initOrRemoveRandom, initCheckbox, initAllCheckboxes, randomAssign, codeReviewReset } from '../../reducers/codeReviewReducer'
+import { initOneReview, initOrRemoveRandom, initCheckbox, initAllCheckboxes, randomAssign, codeReviewReset, selectDropdown, toggleCreate, createStates } from '../../reducers/codeReviewReducer'
 import { filterByTag } from '../../reducers/coursePageLogicReducer'
 import { clearNotifications } from '../../reducers/notificationReducer'
-import { Button, Table, Card, Form, Comment, List, Header, Label, Message, Icon, Dropdown, Checkbox } from 'semantic-ui-react'
+import { Button, Table, Checkbox, Loader, Dropdown } from 'semantic-ui-react'
 import Notification from '../../components/pages/Notification'
+import { resetLoading } from '../../reducers/loadingReducer'
 
 export class ModifyCourseInstanceReview extends React.Component {
+  componentWillMount() {
+    this.props.resetLoading()
+  }
+
   componentDidMount() {
     this.props.getOneCI(this.props.courseId)
     this.props.coursePageInformation(this.props.courseId)
@@ -82,6 +86,9 @@ export class ModifyCourseInstanceReview extends React.Component {
   }
 
   render() {
+    if (this.props.loading.loading) {
+      return <Loader active />
+    }
     const createHeaders = () => {
       const headers = []
       for (var i = 0; i < this.props.selectedInstance.amountOfCodeReviews; i++) {
@@ -264,6 +271,7 @@ const mapStateToProps = (state, ownProps) => {
     selectedInstance: state.selectedInstance,
     codeReviewLogic: state.codeReviewLogic,
     coursePageLogic: state.coursePageLogic,
+    loading: state.loading,
     dropdownUsers: userHelper(state.coursePage.data)
   }
 }
@@ -279,7 +287,11 @@ const mapDispatchToProps = {
   bulkinsertCodeReviews,
   randomAssign,
   codeReviewReset,
-  filterByTag
+  filterByTag,
+  resetLoading,
+  selectDropdown,
+  toggleCreate,
+  createStates
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ModifyCourseInstanceReview)

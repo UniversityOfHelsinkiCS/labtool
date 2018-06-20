@@ -1,32 +1,36 @@
 import React, { Component } from 'react'
-import { Form, Input, Button, Grid, Radio, Checkbox } from 'semantic-ui-react'
+import { Form, Input, Button, Grid, Checkbox, Loader } from 'semantic-ui-react'
 import { getOneCI, modifyOneCI } from '../../services/courseInstance'
 import { setActive, setFinalReview } from '../../reducers/selectedInstanceReducer'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Redirect } from 'react-router'
 import { clearNotifications } from '../../reducers/notificationReducer'
+import { changeCourseField } from '../../reducers/selectedInstanceReducer'
+import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 
 /**
  *  Page used to modify a courseinstances information. Can only be accessed by teachers.
  */
 export class ModifyCourseInstancePage extends Component {
-  componentWillMount() {
+  componentWillMount = async () => {
+    await this.props.resetLoading()
     this.props.clearNotifications()
     this.props.getOneCI(this.props.courseId)
   }
 
-  componentDidUpdate() {
-    if (this.props.notification.error !== undefined) {
-      if (!this.props.notification.error && this.props.history) {
-        this.props.history.push(`/labtool/courses/${this.props.selectedInstance.ohid}`)
-      }
-    }
+  changeField = async e => {
+    this.props.changeCourseField({
+      field: e.target.name,
+      value: e.target.value
+    })
   }
 
-  changeActive = () => {
-    const newValue = this.props.selectedInstance.active !== true
-    this.props.setActive(newValue)
+  handleChange = async e => {
+    this.props.changeCourseField({
+      field: 'active',
+      value: !this.props.selectedInstance.active
+    })
   }
 
   changeFinalReview = () => {
@@ -37,69 +41,53 @@ export class ModifyCourseInstancePage extends Component {
   handleSubmit = async e => {
     try {
       e.preventDefault()
-
+      const { weekAmount, weekMaxPoints, currentWeek, active, ohid } = this.props.selectedInstance
       const content = {
-        weekAmount: e.target.weekAmount.value,
-        weekMaxPoints: e.target.weeklyMaxpoints.value,
-        currentWeek: e.target.currentWeek.value,
-        active: this.props.selectedInstance.active,
-        ohid: this.props.selectedInstance.ohid,
+        weekAmount,
+        weekMaxPoints,
+        currentWeek,
+        active,
+        ohid,
         finalReview: this.props.selectedInstance.finalReview
       }
-      await this.props.modifyOneCI(content, this.props.selectedInstance.ohid)
-      this.forceUpdate()
+      this.props.addRedirectHook({
+        hook: 'CI_MODIFY_ONE_'
+      })
+      this.props.modifyOneCI(content, this.props.selectedInstance.ohid)
     } catch (error) {
       console.log(error)
     }
   }
 
   render() {
-    if (this.props.redirect && this.props.redirect.redirect) {
+    if (this.props.loading.redirect) {
       return <Redirect to={`/labtool/courses/${this.props.selectedInstance.ohid}`} />
     }
     const selectedInstance = { ...this.props.selectedInstance }
     return (
       <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
+        <Loader active={this.props.loading.loading} inline="centered" />
         <Grid>
           <Grid.Row centered>
             <h2> Edit course: {selectedInstance.name} </h2>
           </Grid.Row>
         </Grid>
-
-        <Grid>
-          <Grid.Row centered>
-            {selectedInstance.active === true ? (
-              <div>
-                <Grid.Row>
-                  <h4 style={{ color: '#21ba45' }}>This course is currently activated.</h4>
-                </Grid.Row>
-              </div>
-            ) : (
-              <div>
-                <Grid.Row>
-                  <h4 style={{ color: 'grey' }}>This course is currently passive.</h4>
-                </Grid.Row>
-              </div>
-            )}
-          </Grid.Row>
-        </Grid>
-
         <Grid>
           <Grid.Row centered>
             <Form onSubmit={this.handleSubmit}>
               <Form.Group inline>
                 <label style={{ width: '125px', textAlign: 'left' }}>Week amount</label>
-                <Input name="weekAmount" required="true" type="text" style={{ maxWidth: '7em' }} defaultValue={JSON.stringify(selectedInstance.weekAmount)} className="form-control1" />
+                <Input name="weekAmount" required="true" type="text" style={{ maxWidth: '7em' }} value={selectedInstance.weekAmount} className="form-control1" onChange={this.changeField} />
               </Form.Group>
 
               <Form.Group inline>
                 <label style={{ width: '125px', textAlign: 'left' }}>Weekly maxpoints</label>
-                <Input name="weeklyMaxpoints" required="true" type="text" style={{ maxWidth: '7em' }} defaultValue={JSON.stringify(selectedInstance.weekMaxPoints)} className="form-control2" />
+                <Input name="weekMaxPoints" required="true" type="text" style={{ maxWidth: '7em' }} value={selectedInstance.weekMaxPoints} className="form-control2" onChange={this.changeField} />
               </Form.Group>
 
               <Form.Group inline>
                 <label style={{ width: '125px', textAlign: 'left' }}>Current week</label>
-                <Input name="currentWeek" required="true" type="text" style={{ maxWidth: '7em' }} defaultValue={JSON.stringify(selectedInstance.currentWeek)} className="form-control3" />
+                <Input name="currentWeek" required="true" type="text" style={{ maxWidth: '7em' }} value={selectedInstance.currentWeek} className="form-control3" onChange={this.changeField} />
               </Form.Group>
 
               <Form.Group inline>
@@ -112,9 +100,9 @@ export class ModifyCourseInstancePage extends Component {
                 />
               </Form.Group>
 
-              <Form.Group inline>
-                <Checkbox name="courseActive" checked={this.props.selectedInstance.active} onChange={this.changeActive} label="Course is active" style={{ width: '150px', textAlign: 'left' }} />
-              </Form.Group>
+              <Form.Field inline>
+                <Checkbox name="courseActive" label="Activate course" checked={selectedInstance.active} onChange={this.handleChange} style={{ width: '150px', textAlign: 'left' }} />
+              </Form.Field>
 
               <Form.Field>
                 <Button type="Submit" floated="left" color="green" size="huge">
@@ -160,12 +148,22 @@ const mapStateToProps = (state, ownProps) => {
   return {
     selectedInstance: state.selectedInstance,
     notification: state.notification,
-    redirect: state.redirect,
+    loading: state.loading,
     ownProps
   }
 }
 
+const mapDispatchToProps = {
+  getOneCI,
+  modifyOneCI,
+  clearNotifications,
+  changeCourseField,
+  resetLoading,
+  addRedirectHook,
+  setFinalReview
+}
+
 export default connect(
   mapStateToProps,
-  { getOneCI, modifyOneCI, clearNotifications, setActive, setFinalReview }
+  mapDispatchToProps
 )(ModifyCourseInstancePage)

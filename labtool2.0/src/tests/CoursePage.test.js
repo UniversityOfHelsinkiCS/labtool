@@ -185,6 +185,14 @@ describe('<CoursePage /> as teacher', () => {
     filterByAssistant: 0
   }
 
+  const loading = {
+    loading: false,
+    loadingHooks: [],
+    redirect: false,
+    redirectHooks: [],
+    redirectFailure: false
+  }
+
   let mockFn = jest.fn()
 
   beforeEach(() => {
@@ -199,6 +207,8 @@ describe('<CoursePage /> as teacher', () => {
         getAllTags={mockFn}
         courseReset={mockFn}
         tags={tags}
+        loading={loading}
+        resetLoading={mockFn}
       />
     )
   })
@@ -363,6 +373,14 @@ describe('<CoursePage /> as student', () => {
     showCodeReviews: [2]
   }
 
+  const loading = {
+    loading: false,
+    loadingHooks: [],
+    redirect: false,
+    redirectHooks: [],
+    redirectFailure: false
+  }
+
   let mockFn = jest.fn()
 
   beforeEach(() => {
@@ -378,6 +396,8 @@ describe('<CoursePage /> as student', () => {
         getAllTags={mockFn}
         courseReset={mockFn}
         tags={tags}
+        loading={loading}
+        resetLoading={mockFn}
       />
     )
   })

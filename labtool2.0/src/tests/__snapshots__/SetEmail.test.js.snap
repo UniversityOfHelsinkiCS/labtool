@@ -11,6 +11,7 @@ exports[`<Email/> Email Component should render correctly 1`] = `
   }
 >
   <Loader
+    active={false}
     inline="centered"
   />
   <Grid

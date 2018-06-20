@@ -103,6 +103,23 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
       }
       return { ...state, codeReviewStates: newCodeReviewStates, currentSelections: newCurrentSelections }
     }
+    case 'SELECT_DROPDOWN':
+      return { ...state, selectedDropdown: action.data }
+    case 'TOGGLE_CREATE':
+      return { ...state, showCreate: !state.showCreate }
+    case 'CREATE_STATES_FOR_CODE_REVIEWS': {
+      let i = 1
+      let codeReviewStates = {}
+      let currentSelections = {}
+      while (i <= action.data) {
+        codeReviewStates[i] = []
+        currentSelections[i] = {}
+        i++
+      }
+      codeReviewStates['create'] = []
+      currentSelections['create'] = {}
+      return { ...state, codeReviewStates: codeReviewStates, currentSelections: currentSelections, statesCreated: true }
+    }
     /* This breaks going to coursePage. So it is commented out.
     case 'CP_INFO_SUCCESS': {
       if (action.role !== 'teacher' || state.initialized) {
@@ -121,6 +138,23 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
       return INITIAL_STATE
     default:
       return state
+  }
+}
+
+export const toggleCreate = () => {
+  return async dispatch => {
+    dispatch({
+      type: 'TOGGLE_CREATE'
+    })
+  }
+}
+
+export const createStates = data => {
+  return async dispatch => {
+    dispatch({
+      type: 'CREATE_STATES_FOR_CODE_REVIEWS',
+      data: data
+    })
   }
 }
 
@@ -173,6 +207,15 @@ export const codeReviewReset = () => {
   return async dispatch => {
     dispatch({
       type: 'CODE_REVIEW_RESET'
+    })
+  }
+}
+
+export const selectDropdown = data => {
+  return async dispatch => {
+    dispatch({
+      type: 'SELECT_DROPDOWN',
+      data: data
     })
   }
 }

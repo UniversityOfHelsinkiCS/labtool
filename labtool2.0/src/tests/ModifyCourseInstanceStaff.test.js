@@ -73,8 +73,28 @@ describe('<ModifyCourseInstanceStaff />', () => {
     }
   ]
 
+  const loading = {
+    loading: false,
+    loadingHooks: [],
+    redirect: false,
+    redirectHooks: [],
+    redirectFailure: false
+  }
+
   beforeEach(() => {
-    wrapper = shallow(<ModifyCourseInstanceStaff courseId={5} users={users} selectedInstance={selectedI} getAllUsers={mockFn} getOneCI={mockFn} createOne={mockFn} clearNotifications={mockFn} />)
+    wrapper = shallow(
+      <ModifyCourseInstanceStaff
+        courseId={5}
+        users={users}
+        selectedInstance={selectedI}
+        loading={loading}
+        getAllUsers={mockFn}
+        getOneCI={mockFn}
+        createOne={mockFn}
+        clearNotifications={mockFn}
+        resetLoading={mockFn}
+      />
+    )
   })
 
   describe('Components', () => {
