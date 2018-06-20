@@ -16,4 +16,11 @@ module.exports = app => {
    * points: value to which points should be updated.
    */
   app.put('/api/codereviews/grade', codeReviewController.grade)
+  /**
+   * Expects the following fields in the body:
+   * reviewNumber: reviewNumber of codeReview to update.
+   * studentInstanceId: studentInstance whose codeReview to update.
+   * linkToIssues: link to insert.
+   */
+  app.put('/api/codereviews/link', codeReviewController.addLink)
 }

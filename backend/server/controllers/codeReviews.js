@@ -135,5 +135,54 @@ module.exports = {
     } catch (e) {
       res.status(500).send('Unexpected error.')
     }
+  },
+
+  async addLink(req, res) {
+    helper.controller_before_auth_check_action(req, res)
+    try {
+      if (!req.authenticated.success) {
+        res.status(403).send('You have to be authenticated to do this')
+        return
+      }
+      if (typeof req.body.studentInstanceId !== 'number' || typeof req.body.reviewNumber !== 'number' || typeof req.body.linkToIssues !== 'string') {
+        res.status(400).send('Missing or malformed inputs.')
+        return
+      }
+
+      const studentInstance = await StudentInstance.findOne({
+        attributes: {
+          exclude: ['createdAt', 'updatedAt']
+        },
+        where: {
+          id: req.body.studentInstanceId
+        }
+      })
+      if (!studentInstance) {
+        res.status(404).send('No student instance matched given id.')
+        return
+      }
+
+      const modifiedRows = await CodeReview.update(
+        {
+          linkToIssues: req.body.linkToIssues
+        },
+        {
+          where: {
+            studentInstanceId: req.body.studentInstanceId,
+            reviewNumber: req.body.reviewNumber
+          }
+        }
+      )
+      if (modifiedRows === 0) {
+        res.status(404).send('No code review matched the given studentInstanceId and reviewNumber.')
+      }
+      res.status(200).send({
+        message: 'Code review link added successfully',
+        data: req.body
+      })
+      return
+    } catch (e) {
+      res.status(500).send('Unexpected error.')
+    }
   }
 }
