@@ -114,7 +114,7 @@ export class ModifyCourseInstancePage extends Component {
                           <Popup
                             key={cr}
                             trigger={
-                              <Button className="nappisaatana" color="red" value={cr} onClick={this.handleRemoveChange} compact>
+                              <Button color="red" value={cr} onClick={this.handleRemoveChange} compact>
                                 {cr}
                               </Button>
                             }
