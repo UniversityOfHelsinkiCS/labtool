@@ -8,7 +8,7 @@
 const courseInstancereducer = (store = [], action) => {
   switch (action.type) {
     case 'CP_INFO_SUCCESS':
-      return action.response 
+      return action.response
     case 'ASSOCIATE_TEACHER_AND_STUDENT_SUCCESS': {
       console.log(store)
       const id = action.response.id
