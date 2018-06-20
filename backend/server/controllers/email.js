@@ -33,7 +33,7 @@ const commentMessage = async (role, commentId) => {
                 },
                 {
                   model: CourseInstance,
-                  attributes: ['name', 'ohid']
+                  attributes: ['name', 'ohid', 'id']
                 }
               ]
             }
@@ -49,7 +49,8 @@ const commentMessage = async (role, commentId) => {
             ohid: queryResult.dataValues.Week.StudentInstance.CourseInstance.dataValues.ohid
           },
           text: queryResult.dataValues.comment
-        }
+        },
+        courseId: queryResult.dataValues.Week.StudentInstance.CourseInstance.dataValues.id
       }
     } else if (role === 'student') {
       const queryResult = await Comment.findOne({
@@ -64,7 +65,7 @@ const commentMessage = async (role, commentId) => {
             include: [
               {
                 model: StudentInstance,
-                attributes: ['teacherInstanceId', 'id'],
+                attributes: ['teacherInstanceId', 'userId'],
                 include: [
                   {
                     model: TeacherInstance,
@@ -97,19 +98,29 @@ const commentMessage = async (role, commentId) => {
               name: student.CourseInstance.dataValues.name,
               ohid: student.CourseInstance.dataValues.ohid
             },
-            text: queryResult.dataValues.comment,
-            studentId: student.dataValues.id
-          }
+            text: queryResult.dataValues.comment
+          },
+          studentId: student.dataValues.userId
         }
       } else {
         return {
-          success: false
+          success: false,
+          status: 404,
+          error: 'Cannot send email to instructor because there is no instructor assigned to you.'
         }
+      }
+    } else {
+      return {
+        success: false,
+        status: 400,
+        error: 'Bad value for "role"'
       }
     }
   } catch (e) {
     return {
-      success: false
+      success: false,
+      status: 500,
+      error: 'Unexpected error'
     }
   }
 }
@@ -133,7 +144,7 @@ const weekMessage = async (role, weekId) => {
               },
               {
                 model: CourseInstance,
-                attributes: ['name', 'ohid']
+                attributes: ['name', 'ohid', 'id']
               }
             ]
           }
@@ -149,16 +160,22 @@ const weekMessage = async (role, weekId) => {
           },
           text: queryResult.dataValues.feedback,
           points: queryResult.dataValues.points
-        }
+        },
+        courseId: queryResult.dataValues.StudentInstance.CourseInstance.dataValues.id
       }
     } else {
       return {
-        success: false
+        success: false,
+        status: 400,
+        error: 'Bad value for "role"'
       }
     }
   } catch (e) {
+    console.log(e)
     return {
-      success: false
+      success: false,
+      status: 500,
+      error: 'Unexpected error'
     }
   }
 }
@@ -167,6 +184,18 @@ module.exports = {
   async send(req, res) {
     await helper.controller_before_auth_check_action(req, res)
     try {
+      if (!req.authenticated.success) {
+        res.status(403).send('you have to be authenticated to do this')
+        return
+      }
+      if (!(req.body.role === 'teacher' || req.body.role === 'student')) {
+        res.status(400).send('Missing field "role".')
+        return
+      }
+      if (typeof req.body.weekId !== 'number' && typeof req.body.commentId !== 'number') {
+        res.status(400).send('Missing required field "weekId" or "commentId".')
+        return
+      }
       const useComment = req.body.commentId !== undefined
       const options = {
         from: SENDER_SETTINGS.from
@@ -201,10 +230,27 @@ module.exports = {
           `
         }
       }
-      console.log(message)
       if (!message.success) {
-        res.status(400).send('Unable to find receiver address')
+        res.status(message.status).send(message.error)
         return
+      }
+      if (req.body.role === 'teacher') {
+        const teacherInstance = await TeacherInstance.findOne({
+          attributes: ['id'],
+          where: {
+            userId: req.decoded.id,
+            courseInstanceId: message.courseId
+          }
+        })
+        if (!teacherInstance) {
+          res.status(403).send('You must be a teacher of the course to perform this action.')
+          return
+        }
+      } else {
+        if (message.studentId !== req.decoded.id) {
+          res.status(403).send("You cannot send an email notification about someone else's comment.")
+          return
+        }
       }
       options.to = message.address
       if (env !== 'production') {
