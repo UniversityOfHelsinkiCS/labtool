@@ -29,6 +29,25 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
     <GridRow
       centered={true}
     >
+      <div>
+        <GridRow>
+          <h4
+            style={
+              Object {
+                "color": "#21ba45",
+              }
+            }
+          >
+            This course is currently activated.
+          </h4>
+        </GridRow>
+      </div>
+    </GridRow>
+  </Grid>
+  <Grid>
+    <GridRow
+      centered={true}
+    >
       <Form
         as="form"
         onSubmit={[Function]}
@@ -192,14 +211,15 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
             searchInput="text"
             selectOnBlur={true}
             selectOnNavigation={true}
+            selection={true}
             wrapSelection={true}
           />
         </FormField>
         <FormField
           inline={true}
         >
-          <Checkbox
-            checked={true}
+          <Radio
+            checked={false}
             label="Activate course"
             name="courseActive"
             onChange={[Function]}
@@ -209,7 +229,26 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
                 "width": "150px",
               }
             }
-            type="checkbox"
+            type="radio"
+            value="true"
+          />
+        </FormField>
+        <FormField
+          inline={true}
+        >
+          <Radio
+            checked={false}
+            label="Deactivate course"
+            name="courseActive"
+            onChange={[Function]}
+            style={
+              Object {
+                "textAlign": "left",
+                "width": "150px",
+              }
+            }
+            type="radio"
+            value="false"
           />
         </FormField>
         <FormField>
