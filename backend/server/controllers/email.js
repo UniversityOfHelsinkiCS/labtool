@@ -2,6 +2,7 @@ const helper = require('../helpers/email_helper')
 const nodemailer = require('nodemailer')
 const { Comment, Week, StudentInstance, TeacherInstance, User, CourseInstance } = require('../models')
 const env = process.env.NODE_ENV || 'development'
+const frontendUrl = process.env.FRONTEND_URL || 'cs.helsinki.labtool.fi'
 
 const SENDER_SETTINGS = {
   from: 'Labtool Robot <noreply@helsinki.fi>',
@@ -32,7 +33,7 @@ const commentMessage = async (role, commentId) => {
                 },
                 {
                   model: CourseInstance,
-                  attributes: ['name']
+                  attributes: ['name', 'ohid']
                 }
               ]
             }
@@ -43,7 +44,10 @@ const commentMessage = async (role, commentId) => {
         success: true,
         address: queryResult.dataValues.Week.StudentInstance.User.dataValues.email,
         content: {
-          course: queryResult.dataValues.Week.StudentInstance.CourseInstance.dataValues.name,
+          course: {
+            name: queryResult.dataValues.Week.StudentInstance.CourseInstance.dataValues.name,
+            ohid: queryResult.dataValues.Week.StudentInstance.CourseInstance.dataValues.ohid
+          },
           text: queryResult.dataValues.comment
         }
       }
@@ -60,7 +64,7 @@ const commentMessage = async (role, commentId) => {
             include: [
               {
                 model: StudentInstance,
-                attributes: ['teacherInstanceId'],
+                attributes: ['teacherInstanceId', 'id'],
                 include: [
                   {
                     model: TeacherInstance,
@@ -75,7 +79,7 @@ const commentMessage = async (role, commentId) => {
                   },
                   {
                     model: CourseInstance,
-                    attributes: ['name']
+                    attributes: ['name', 'ohid']
                   }
                 ]
               }
@@ -89,8 +93,12 @@ const commentMessage = async (role, commentId) => {
           success: true,
           address: student.TeacherInstance.User.dataValues.email,
           content: {
-            course: student.CourseInstance.dataValues.name,
-            text: queryResult.dataValues.comment
+            course: {
+              name: student.CourseInstance.dataValues.name,
+              ohid: student.CourseInstance.dataValues.ohid
+            },
+            text: queryResult.dataValues.comment,
+            studentId: student.dataValues.id
           }
         }
       } else {
@@ -125,7 +133,7 @@ const weekMessage = async (role, weekId) => {
               },
               {
                 model: CourseInstance,
-                attributes: ['name']
+                attributes: ['name', 'ohid']
               }
             ]
           }
@@ -135,7 +143,10 @@ const weekMessage = async (role, weekId) => {
         success: true,
         address: queryResult.dataValues.StudentInstance.User.dataValues.email,
         content: {
-          course: queryResult.dataValues.StudentInstance.CourseInstance.dataValues.name,
+          course: {
+            name: queryResult.dataValues.StudentInstance.CourseInstance.dataValues.name,
+            ohid: queryResult.dataValues.StudentInstance.CourseInstance.dataValues.ohid
+          },
           text: queryResult.dataValues.feedback,
           points: queryResult.dataValues.points
         }
@@ -165,15 +176,20 @@ module.exports = {
       if (useComment) {
         message = await commentMessage(req.body.role, req.body.commentId)
         if (message.content) {
+          const link =
+            req.body.role === 'teacher' ? `${frontendUrl}/courses/${message.content.course.ohid}` : `${frontendUrl}/browsereviews/${message.content.course.ohid}/${message.content.studentId}`
           options.html = `
-            <p>${message.content.course}</p>
+            <p>${link}</p>
+            <p>${message.content.course.name}</p>
             <p>${message.content.text}</p>
           `
         }
       } else {
         message = await weekMessage(req.body.role, req.body.weekId)
         if (message.content) {
+          const link = `${frontendUrl}/courses/${message.content.course.ohid}`
           options.html = `
+            <p>${link}</p>
             <p>${message.content.course}</p>
             <p>${message.content.points}</p>
             <p>${message.content.text}</p>
