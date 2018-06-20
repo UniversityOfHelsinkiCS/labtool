@@ -430,10 +430,8 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
                   Javascript
                 </Button>
               </div>
-            </span>
-            <span>
               <Popup
-                content="Add tag"
+                content="Add or remove tag"
                 keepInViewPort={true}
                 on="hover"
                 position="top left"
@@ -453,8 +451,10 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
                   />
                 }
               />
-              <div />
             </span>
+            <div>
+              <div />
+            </div>
           </TableCell>
           <TableCell
             as="td"
@@ -563,10 +563,8 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
                   HTML
                 </Button>
               </div>
-            </span>
-            <span>
               <Popup
-                content="Add tag"
+                content="Add or remove tag"
                 keepInViewPort={true}
                 on="hover"
                 position="top left"
@@ -586,8 +584,10 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
                   />
                 }
               />
-              <div />
             </span>
+            <div>
+              <div />
+            </div>
           </TableCell>
           <TableCell
             as="td"
@@ -682,10 +682,8 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
               >
                 http://github.com/tiralabra1
               </a>
-            </span>
-            <span>
               <Popup
-                content="Add tag"
+                content="Add or remove tag"
                 keepInViewPort={true}
                 on="hover"
                 position="top left"
@@ -705,8 +703,10 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
                   />
                 }
               />
-              <div />
             </span>
+            <div>
+              <div />
+            </div>
           </TableCell>
           <TableCell
             as="td"
