@@ -319,8 +319,8 @@ export class CoursePage extends React.Component {
                                 {' '}
                                 <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
                               </Comment.Text>
-                              {/* This hack compares user's name to comment.from and hides theemail notification button when they match. */}
-                              {`${this.props.user.user.firsts} ${this.props.user.user.lastname}` !== comment.from ? (
+                              {/* This hack compares user's name to comment.from and hides the email notification button when they don't match. */}
+                              {`${this.props.user.user.firsts} ${this.props.user.user.lastname}` === comment.from ? (
                                 <Button type="button" onClick={this.sendEmail(comment.id)}>
                                   Send email notification
                                 </Button>

@@ -139,9 +139,14 @@ export class BrowseReviews extends Component {
                                   {' '}
                                   <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
                                 </Comment.Text>
-                                <Button type="button" onClick={this.sendCommentEmail(comment.id)}>
-                                  Send email notification
-                                </Button>
+                                {/* This hack compares user's name to comment.from and hides the email notification button when they don't match. */}
+                                {`${this.props.user.user.firsts} ${this.props.user.user.lastname}` === comment.from ? (
+                                  <Button type="button" onClick={this.sendCommentEmail(comment.id)}>
+                                    Send email notification
+                                  </Button>
+                                ) : (
+                                  <div />
+                                )}
                               </Comment>
                             )
                         )
