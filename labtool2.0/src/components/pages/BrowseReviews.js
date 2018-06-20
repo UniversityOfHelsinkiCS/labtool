@@ -55,9 +55,16 @@ export class BrowseReviews extends Component {
     this.props.gradeCodeReview(data)
   }
 
-  sendEmail = commentId => async e => {
+  sendCommentEmail = commentId => async e => {
     this.props.sendEmail({
       commentId,
+      role: 'teacher'
+    })
+  }
+
+  sendWeekEmail = weekId => async e => {
+    this.props.sendEmail({
+      weekId,
       role: 'teacher'
     })
   }
@@ -101,6 +108,11 @@ export class BrowseReviews extends Component {
                           Weekly feedback: <ReactMarkdown>{weeks.feedback}</ReactMarkdown>{' '}
                         </h4>
                       </Card.Content>
+                      <Card.Content>
+                        <Button type="button" onClick={this.sendWeekEmail(weeks.id)}>
+                          Send email notification
+                        </Button>
+                      </Card.Content>
                     </Card>
                     <h4> Comments </h4>
                     <Comment.Group>
@@ -127,7 +139,7 @@ export class BrowseReviews extends Component {
                                   {' '}
                                   <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
                                 </Comment.Text>
-                                <Button type="button" onClick={this.sendEmail(comment.id)}>
+                                <Button type="button" onClick={this.sendCommentEmail(comment.id)}>
                                   Send email notification
                                 </Button>
                               </Comment>
