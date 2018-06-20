@@ -24,16 +24,24 @@ const selectedInstanceReducer = (store = [], action) => {
       return { ...store, teacherInstances: [...store.teacherInstances, action.response] }
     case 'TEACHER_REMOVE_SUCCESS':
       return { ...store, teacherInstances: store.teacherInstances.filter(teacher => teacher.id !== action.response.id) }
+    case 'SI_CHANGE_FIELD':
+      return { ...store, [action.data.field]: action.data.value }
     case 'CODE_REVIEW_BULKINSERT_SUCCESS':
-      console.log(store)
-      console.log(action.response.data)
       var amountOfCw = action.response.data.reviewNumber
       var newStore
-      (amountOfCw > store.amountOfCodeReviews) ? newStore = { ...store, amountOfCodeReviews: amountOfCw } : newStore = store
-      console.log(newStore)
+      amountOfCw > store.amountOfCodeReviews ? (newStore = { ...store, amountOfCodeReviews: amountOfCw }) : (newStore = store)
       return newStore
     default:
       return store
+  }
+}
+
+export const changeCourseField = data => {
+  return async dispatch => {
+    dispatch({
+      type: 'SI_CHANGE_FIELD',
+      data
+    })
   }
 }
 

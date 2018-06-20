@@ -85,7 +85,7 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
     styled={true}
   >
     <AccordionTitle
-      active={true}
+      active={false}
       className="codeReview"
       index={0}
       onClick={[Function]}
@@ -100,7 +100,7 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
       , points 2
     </AccordionTitle>
     <AccordionContent
-      active={true}
+      active={false}
     >
       <div
         className="codeReviewExpanded"
@@ -341,6 +341,14 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
         }
         wrapSelection={true}
       />
+      <span>
+         Tag filters: 
+      </span>
+      <span>
+        <Label>
+          none
+        </Label>
+      </span>
     </div>
     <Table
       as="table"
@@ -355,18 +363,14 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
         >
           <TableHeaderCell
             as="th"
+            key="-1"
+          >
+            Student
+          </TableHeaderCell>
+          <TableHeaderCell
+            as="th"
           >
             Project Info
-            <Button
-              as="button"
-              className="mini ui yellow button"
-              compact={true}
-              floated="right"
-              onClick={[Function]}
-              role="button"
-            >
-              Clear tag filter
-            </Button>
           </TableHeaderCell>
           <TableHeaderCell
             as="th"
@@ -388,7 +392,393 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
       </TableHeader>
       <TableBody
         as="tbody"
-      />
+      >
+        <TableRow
+          as="tr"
+          cellAs="td"
+          key="10012"
+        >
+          <TableCell
+            as="td"
+          >
+            Johan Wilhelm
+             
+            Studerande
+          </TableCell>
+          <TableCell
+            as="td"
+          >
+            <span>
+              Tiran toinen labraprojekti
+              <br />
+              <a
+                href="http://github.com/tiralabra2"
+              >
+                http://github.com/tiralabra2
+              </a>
+              <div
+                key="20001"
+              >
+                <Button
+                  as="button"
+                  className="mini ui red button"
+                  compact={true}
+                  floated="left"
+                  onClick={[Function]}
+                  role="button"
+                >
+                  Javascript
+                </Button>
+              </div>
+            </span>
+            <span>
+              <Popup
+                content="Add tag"
+                keepInViewPort={true}
+                on="hover"
+                position="top left"
+                trigger={
+                  <Icon
+                    as="i"
+                    color="green"
+                    id="tag"
+                    name="plus circle"
+                    onClick={[Function]}
+                    size="large"
+                    style={
+                      Object {
+                        "float": "right",
+                      }
+                    }
+                  />
+                }
+              />
+              <div />
+            </span>
+          </TableCell>
+          <TableCell
+            as="td"
+          >
+            0
+          </TableCell>
+          <TableCell
+            as="td"
+          >
+            <span>
+              not assigned
+            </span>
+            <Popup
+              content="Assign instructor"
+              keepInViewPort={true}
+              on="hover"
+              position="top left"
+              trigger={
+                <Button
+                  as="button"
+                  circular={true}
+                  icon={
+                    Object {
+                      "name": "pencil",
+                      "size": "medium",
+                    }
+                  }
+                  onClick={[Function]}
+                  role="button"
+                  style={
+                    Object {
+                      "float": "right",
+                    }
+                  }
+                />
+              }
+            />
+            <div />
+          </TableCell>
+          <TableCell
+            as="td"
+            textAlign="right"
+          >
+            <Link
+              replace={false}
+              to="/labtool/browsereviews/undefined/10012"
+            >
+              <Popup
+                content="Review student"
+                keepInViewPort={true}
+                on="hover"
+                position="top left"
+                trigger={
+                  <Button
+                    as="button"
+                    circular={true}
+                    icon={
+                      Object {
+                        "color": "orange",
+                        "name": "star",
+                        "size": "large",
+                      }
+                    }
+                    role="button"
+                    size="tiny"
+                  />
+                }
+              />
+            </Link>
+          </TableCell>
+        </TableRow>
+        <TableRow
+          as="tr"
+          cellAs="td"
+          key="10031"
+        >
+          <TableCell
+            as="td"
+          >
+            Teräs
+             
+            Henkilö
+          </TableCell>
+          <TableCell
+            as="td"
+          >
+            <span>
+              Tira super projekti
+              <br />
+              <a
+                href="http://github.com/superprojekti"
+              >
+                http://github.com/superprojekti
+              </a>
+              <div
+                key="20002"
+              >
+                <Button
+                  as="button"
+                  className="mini ui yellow button"
+                  compact={true}
+                  floated="left"
+                  onClick={[Function]}
+                  role="button"
+                >
+                  HTML
+                </Button>
+              </div>
+            </span>
+            <span>
+              <Popup
+                content="Add tag"
+                keepInViewPort={true}
+                on="hover"
+                position="top left"
+                trigger={
+                  <Icon
+                    as="i"
+                    color="green"
+                    id="tag"
+                    name="plus circle"
+                    onClick={[Function]}
+                    size="large"
+                    style={
+                      Object {
+                        "float": "right",
+                      }
+                    }
+                  />
+                }
+              />
+              <div />
+            </span>
+          </TableCell>
+          <TableCell
+            as="td"
+          >
+            0
+          </TableCell>
+          <TableCell
+            as="td"
+          >
+            <span>
+              not assigned
+            </span>
+            <Popup
+              content="Assign instructor"
+              keepInViewPort={true}
+              on="hover"
+              position="top left"
+              trigger={
+                <Button
+                  as="button"
+                  circular={true}
+                  icon={
+                    Object {
+                      "name": "pencil",
+                      "size": "medium",
+                    }
+                  }
+                  onClick={[Function]}
+                  role="button"
+                  style={
+                    Object {
+                      "float": "right",
+                    }
+                  }
+                />
+              }
+            />
+            <div />
+          </TableCell>
+          <TableCell
+            as="td"
+            textAlign="right"
+          >
+            <Link
+              replace={false}
+              to="/labtool/browsereviews/undefined/10031"
+            >
+              <Popup
+                content="Review student"
+                keepInViewPort={true}
+                on="hover"
+                position="top left"
+                trigger={
+                  <Button
+                    as="button"
+                    circular={true}
+                    icon={
+                      Object {
+                        "color": "orange",
+                        "name": "star",
+                        "size": "large",
+                      }
+                    }
+                    role="button"
+                    size="tiny"
+                  />
+                }
+              />
+            </Link>
+          </TableCell>
+        </TableRow>
+        <TableRow
+          as="tr"
+          cellAs="td"
+          key="10011"
+        >
+          <TableCell
+            as="td"
+          >
+            Maarit Mirja
+             
+            Opiskelija
+          </TableCell>
+          <TableCell
+            as="td"
+          >
+            <span>
+              Tiran labraprojekti
+              <br />
+              <a
+                href="http://github.com/tiralabra1"
+              >
+                http://github.com/tiralabra1
+              </a>
+            </span>
+            <span>
+              <Popup
+                content="Add tag"
+                keepInViewPort={true}
+                on="hover"
+                position="top left"
+                trigger={
+                  <Icon
+                    as="i"
+                    color="green"
+                    id="tag"
+                    name="plus circle"
+                    onClick={[Function]}
+                    size="large"
+                    style={
+                      Object {
+                        "float": "right",
+                      }
+                    }
+                  />
+                }
+              />
+              <div />
+            </span>
+          </TableCell>
+          <TableCell
+            as="td"
+          >
+            0
+          </TableCell>
+          <TableCell
+            as="td"
+          >
+            <span>
+              not assigned
+            </span>
+            <Popup
+              content="Assign instructor"
+              keepInViewPort={true}
+              on="hover"
+              position="top left"
+              trigger={
+                <Button
+                  as="button"
+                  circular={true}
+                  icon={
+                    Object {
+                      "name": "pencil",
+                      "size": "medium",
+                    }
+                  }
+                  onClick={[Function]}
+                  role="button"
+                  style={
+                    Object {
+                      "float": "right",
+                    }
+                  }
+                />
+              }
+            />
+            <div />
+          </TableCell>
+          <TableCell
+            as="td"
+            textAlign="right"
+          >
+            <Link
+              replace={false}
+              to="/labtool/browsereviews/undefined/10011"
+            >
+              <Popup
+                content="Review student"
+                keepInViewPort={true}
+                on="hover"
+                position="top left"
+                trigger={
+                  <Button
+                    as="button"
+                    circular={true}
+                    icon={
+                      Object {
+                        "color": "orange",
+                        "name": "star",
+                        "size": "large",
+                      }
+                    }
+                    role="button"
+                    size="tiny"
+                  />
+                }
+              />
+            </Link>
+          </TableCell>
+        </TableRow>
+      </TableBody>
     </Table>
   </div>
 </div>

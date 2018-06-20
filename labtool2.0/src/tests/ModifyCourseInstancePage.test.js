@@ -19,10 +19,21 @@ describe('<ModifyCourseInstancePage />', () => {
     currentCodeReview: [1, 2],
     amountOfCodeReviews: 3
   }
+
+  const loading = {
+    loading: false,
+    loadingHooks: [],
+    redirect: false,
+    redirectHooks: [],
+    redirectFailure: false
+  }
+
   let mockFn = jest.fn()
 
   beforeEach(() => {
-    wrapper = shallow(<ModifyCourseInstancePage codeReviewDropdowns={[{ value: 3, text: '3' }]} getOneCI={mockFn} clearNotifications={mockFn} selectedInstance={courseData} />)
+    wrapper = shallow(
+      <ModifyCourseInstancePage codeReviewDropdowns={[{ value: 3, text: '3' }]} getOneCI={mockFn} clearNotifications={mockFn} loading={loading} resetLoading={mockFn} selectedInstance={courseData} />
+    )
   })
 
   describe('Modify Instance Component', () => {

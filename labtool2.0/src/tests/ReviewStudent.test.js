@@ -221,6 +221,13 @@ describe('<ReviewStudent />', () => {
     },
     weekReview: {
       checks: {}
+    },
+    loading: {
+      loading: false,
+      loadingHooks: [],
+      redirect: false,
+      redirectHooks: [],
+      redirectFailure: false
     }
   }
 
@@ -228,7 +235,17 @@ describe('<ReviewStudent />', () => {
 
   beforeEach(() => {
     wrapper = shallow(
-      <ReviewStudent getOneCI={mockFn} clearNotifications={mockFn} courseData={props.coursePage} ownProps={ownProps} selectedInstance={props.selectedInstance} weekReview={props.weekReview} />
+      <ReviewStudent
+        getOneCI={mockFn}
+        clearNotifications={mockFn}
+        courseData={props.coursePage}
+        ownProps={ownProps}
+        selectedInstance={props.selectedInstance}
+        weekReview={props.weekReview}
+        loading={props.loading}
+        resetLoading={mockFn}
+        coursePageInformation={mockFn}
+      />
     )
   })
 

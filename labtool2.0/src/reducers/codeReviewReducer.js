@@ -28,11 +28,13 @@ function shuffleArray(array) {
 }
 
 function purgeCodeReviews(codeReviewStateArray, toPurgeArray) {
-  const codeReviewStateReviewerArray = codeReviewStateArray.map(cr => cr.reviewer)
-  let i = codeReviewStateArray.length
-  while (i--) {
-    if (toPurgeArray.indexOf(codeReviewStateReviewerArray[i]) !== -1) {
-      codeReviewStateArray.splice(i, 1)
+  if (codeReviewStateArray) {
+    const codeReviewStateReviewerArray = codeReviewStateArray.map(cr => cr.reviewer)
+    let i = codeReviewStateArray.length
+    while (i--) {
+      if (toPurgeArray.indexOf(codeReviewStateReviewerArray[i]) !== -1) {
+        codeReviewStateArray.splice(i, 1)
+      }
     }
   }
 }
@@ -40,9 +42,6 @@ function purgeCodeReviews(codeReviewStateArray, toPurgeArray) {
 const codeReviewReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case 'CREATE_STATES_FOR_CODE_REVIEWS': {
-      console.log('are we here')
-      console.log(action.data)
-
       let i = 1
       let codeReviewStates = {}
       let currentSelections = {}
@@ -108,14 +107,13 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
       var codeReviewRoundsToUpdate = state.codeReviewStates
       var currentSelectionsToUpdate = state.currentSelections
       var newRound = action.response.data.reviewNumber
-      newRound > (Object.keys(state.codeReviewStates).length - 1) ? (codeReviewRoundsToUpdate = { ...codeReviewRoundsToUpdate, [newRound]: [] }) : codeReviewRoundsToUpdate
-      newRound > (Object.keys(state.currentSelections).length - 1) ? (currentSelectionsToUpdate = { ...currentSelectionsToUpdate, [newRound]: {} }) : currentSelectionsToUpdate
+      newRound > Object.keys(state.codeReviewStates).length - 1 ? (codeReviewRoundsToUpdate = { ...codeReviewRoundsToUpdate, [newRound]: [] }) : codeReviewRoundsToUpdate
+      newRound > Object.keys(state.currentSelections).length - 1 ? (currentSelectionsToUpdate = { ...currentSelectionsToUpdate, [newRound]: {} }) : currentSelectionsToUpdate
       //This is double clear but if the ternary is not true we'll have to clear the array anyway
       codeReviewRoundsToUpdate[action.response.data.reviewNumber] = []
       return { ...state, codeReviewStates: codeReviewRoundsToUpdate, currentSelections: currentSelectionsToUpdate }
     case 'CODE_REVIEW_RANDOMIZE': {
       const newCodeReviewStates = state.codeReviewStates
-      console.log(action.data.reviewNumber)
       purgeCodeReviews(newCodeReviewStates[action.data.reviewNumber], state.randomizedCodeReview)
       const randomizedOrder = Array(state.randomizedCodeReview.length)
       let i = state.randomizedCodeReview.length
@@ -190,7 +188,6 @@ export const initAllCheckboxes = data => {
 
 export const randomAssign = data => {
   return async dispatch => {
-    console.log(data)
     dispatch({
       type: 'CODE_REVIEW_RANDOMIZE',
       data: data
