@@ -364,7 +364,6 @@ const mapStateToProps = (state, ownProps) => {
     dropdownUsers: userHelper(state.coursePage.data),
     dropdownCodeReviews: codeReviewHelper(state.selectedInstance.amountOfCodeReviews),
     coursePageLogic: state.coursePageLogic,
-    dropdownUsers: userHelper(state.coursePage.data)
   }
 }
 

@@ -99,9 +99,18 @@ module.exports = {
             attributes: ['toReview', 'reviewNumber', 'points'],
             as: 'codeReviews',
             where: {
-              reviewNumber: {
-                [Op.gte]: course.currentCodeReview
-              }
+              [Op.or]: [
+                {
+                  reviewNumber: {
+                    [Op.in]: course.currentCodeReview
+                  }
+                },
+                {
+                  points: {
+                    [Op.ne]: null
+                  }
+                }
+              ]
             },
             required: false,
             include: [
@@ -117,9 +126,18 @@ module.exports = {
             attributes: ['studentInstanceId', 'reviewNumber'],
             as: 'toReviews',
             where: {
-              reviewNumber: {
-                [Op.gte]: course.currentCodeReview
-              }
+              [Op.or]: [
+                {
+                  reviewNumber: {
+                    [Op.in]: course.currentCodeReview
+                  }
+                },
+                {
+                  points: {
+                    [Op.ne]: null
+                  }
+                }
+              ]
             },
             required: false,
             include: [
@@ -433,7 +451,8 @@ module.exports = {
                 active: req.body.active || courseInstance.active,
                 weekAmount: req.body.weekAmount || courseInstance.weekAmount,
                 weekMaxPoints: req.body.weekMaxPoints || courseInstance.weekMaxPoints,
-                currentWeek: req.body.currentWeek || courseInstance.currentWeek
+                currentWeek: req.body.currentWeek || courseInstance.currentWeek,
+                currentCodeReview: req.body.newCr.length === 0 ? '{}' : req.body.newCr
               })
               .then(updatedCourseInstance => res.status(200).send(updatedCourseInstance))
               .catch(error => res.status(400).send(error))
@@ -703,7 +722,6 @@ module.exports = {
         res.status(400).send(e)
       }
     }
-
   },
 
   /**
