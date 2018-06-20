@@ -14,11 +14,11 @@ const INITIAL_STATE = {
   selectedTeacher: '',
   selectedTag: '',
   filterByAssistant: 0,
-  filterByTag: 0,
-  showCodeReviews: [],
   activeIndex: 0,
   lastReviewedWeek: 1,
-  lastReviewedIsShownAlready: false
+  lastReviewedIsShownAlready: false,
+  filterByTag: [],
+  showCodeReviews: []
 }
 
 const coursePageLogicReducer = (state = INITIAL_STATE, action) => {
@@ -34,7 +34,13 @@ const coursePageLogicReducer = (state = INITIAL_STATE, action) => {
     case 'COURSE_PAGE_FILTER_BY_ASSISTANT':
       return { ...state, filterByAssistant: action.assistant }
     case 'COURSE_PAGE_FILTER_BY_TAG':
-      return { ...state, filterByTag: action.tag }
+      if (action.tag === 0) {
+        return { ...state, filterByTag: [] }
+      } else if (state.filterByTag.map(tag => tag.id).includes(action.tag.id)) {
+        return { ...state, filterByTag: state.filterByTag.filter(tag => tag.id !== action.tag.id) }
+      } else {
+        return { ...state, filterByTag: [...state.filterByTag, action.tag] }
+      }
     case 'ASSOCIATE_TEACHER_AND_STUDENT_SUCCESS':
       return INITIAL_STATE
     case 'COURSE_PAGE_RESET':

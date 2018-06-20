@@ -17,10 +17,19 @@ describe('<ModifyCourseInstancePage />', () => {
     currentWeek: 1,
     ohid: 'TKT20011.2018.K.A.1'
   }
+
+  const loading = {
+    loading: false,
+    loadingHooks: [],
+    redirect: false,
+    redirectHooks: [],
+    redirectFailure: false
+  }
+
   let mockFn = jest.fn()
 
   beforeEach(() => {
-    wrapper = shallow(<ModifyCourseInstancePage getOneCI={mockFn} clearNotifications={mockFn} selectedInstance={courseData} />)
+    wrapper = shallow(<ModifyCourseInstancePage getOneCI={mockFn} clearNotifications={mockFn} selectedInstance={courseData} loading={loading} resetLoading={mockFn} />)
   })
 
   describe('Modify Instance Component', () => {
@@ -49,11 +58,6 @@ describe('<ModifyCourseInstancePage />', () => {
     it('renders active course checkbox', () => {
       const input = wrapper.find(Form.Field).at(0)
       expect(input.props().children.props['label']).toEqual('Activate course')
-    })
-
-    it('renders inactive course checkbox', () => {
-      const input = wrapper.find(Form.Field).at(1)
-      expect(input.props().children.props['label']).toEqual('Deactivate course')
     })
   })
 })
