@@ -7,18 +7,24 @@ import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import { associateTeacherToStudent } from '../../services/assistant'
 import ReactMarkdown from 'react-markdown'
 import { getAllTags, tagStudent, unTagStudent } from '../../services/tags'
-import { showAssistantDropdown, showTagDropdown, selectTeacher, selectTag, filterByAssistant, filterByTag, coursePageReset, toggleCodeReview } from '../../reducers/coursePageLogicReducer'
+import {
+  showAssistantDropdown,
+  showTagDropdown,
+  filterByTag,
+  filterByAssistant,
+  updateActiveIndex,
+  selectTeacher,
+  selectTag,
+  coursePageReset,
+  toggleCodeReview
+} from '../../reducers/coursePageLogicReducer'
 import { resetLoading } from '../../reducers/loadingReducer'
 
 export class CoursePage extends React.Component {
-  state = { activeIndex: 0, lastReviewedIndex: null }
-
   handleClick = (e, titleProps) => {
     const { index } = titleProps
-    const { activeIndex } = this.state
-    const newIndex = activeIndex === index ? -1 : index
-
-    this.setState({ activeIndex: newIndex })
+    const theNewIndex = this.props.coursePageLogic.activeIndex === index ? -1 : index
+    this.props.updateActiveIndex(theNewIndex)
   }
 
   handleSubmit = async e => {
@@ -46,19 +52,18 @@ export class CoursePage extends React.Component {
     this.props.getAllTags()
   }
 
-  openLastReviewedWeek() {
-    if (this.state.lastReviewedIndex === null) {
-      let lastIndexOfWeeks = this.props.courseData.data.weeks.length - 1
-      let lastReviewedWeek = this.props.courseData.data.weeks[lastIndexOfWeeks].weekNumber
-      this.setState({
-        activeIndex: lastReviewedWeek - 1,
-        lastReviewedIndex: lastReviewedWeek - 1
-      })
+  weekNumberOfLastReviewedWeek() {
+    if (this.props.courseData.data.weeks.length > 0) {
+      if (this.state.showLastReviewed) {
+        let lastIndexOfWeeks = this.props.courseData.data.weeks.length - 1
+        let lastReviewedWeek = this.props.courseData.data.weeks[lastIndexOfWeeks].weekNumber
+        return lastReviewedWeek
+      }
     }
   }
 
   componentWillUnmount() {
-    this.setState({ lastReviewedIndex: null })
+    this.setState({ showLastReviewed: true })
     this.props.coursePageReset()
   }
 
@@ -167,7 +172,7 @@ export class CoursePage extends React.Component {
   }
 
   createDropdownTags = array => {
-    if (this.props.tags.tags != undefined) {
+    if (this.props.tags.tags !== undefined) {
       this.props.tags.tags.map(tag =>
         array.push({
           key: tag.id,
@@ -256,8 +261,6 @@ export class CoursePage extends React.Component {
       return headers
     }
 
-    const { activeIndex } = this.state
-
     const renderStudentBottomPart = () => {
       let headers = []
       // studentInstance is id of student. Type: String
@@ -288,6 +291,7 @@ export class CoursePage extends React.Component {
       )
       if (this.props.courseData && this.props.courseData.data && this.props.courseData.data.weeks) {
         let weeks = null
+
         let i = 0
         for (; i < this.props.courseData.data.weeks.length; i++) {
           weeks = this.props.courseData.data.weeks.find(function(week) {
@@ -296,11 +300,11 @@ export class CoursePage extends React.Component {
           if (weeks) {
             headers.push(
               <Accordion key={i} fluid styled>
-                <Accordion.Title active={activeIndex === i} index={i} onClick={this.handleClick}>
+                <Accordion.Title active={i === this.props.coursePageLogic.activeIndex} index={i} onClick={this.handleClick}>
                   <Icon name="dropdown" />
                   {(i + 1 > this.props.selectedInstance.weekAmount ? 'Final Review' : 'Week', i + 1)}, points {weeks.points}
                 </Accordion.Title>
-                <Accordion.Content active={activeIndex === i}>
+                <Accordion.Content active={i === this.props.coursePageLogic.activeIndex}>
                   <Card fluid color="yellow">
                     <Card.Content>
                       <h4> Points: {weeks.points} </h4>
@@ -316,7 +320,7 @@ export class CoursePage extends React.Component {
                       weeks.comments.map(
                         comment =>
                           comment.hidden ? (
-                            <Comment disabled>
+                            <Comment key={comment.id} disabled>
                               <Comment.Content>
                                 <Comment.Metadata>
                                   <div>Hidden</div>
@@ -329,7 +333,7 @@ export class CoursePage extends React.Component {
                               </Comment.Content>
                             </Comment>
                           ) : (
-                            <Comment>
+                            <Comment key={comment.id}>
                               <Comment.Author>{comment.from}</Comment.Author>
                               <Comment.Text>
                                 {' '}
@@ -352,10 +356,10 @@ export class CoursePage extends React.Component {
           } else {
             headers.push(
               <Accordion key={i} fluid styled>
-                <Accordion.Title active={activeIndex === i} index={i} onClick={this.handleClick}>
+                <Accordion.Title active={this.props.coursePageLogic.activeIndex === i} index={i} onClick={this.handleClick}>
                   <Icon name="dropdown" /> Week {i + 1}{' '}
                 </Accordion.Title>
-                <Accordion.Content active={activeIndex === i}>
+                <Accordion.Content active={this.props.coursePageLogic.activeIndex === i}>
                   <h4> Not Graded </h4>
                   <h4> No comments </h4>
                 </Accordion.Content>
@@ -371,10 +375,10 @@ export class CoursePage extends React.Component {
           .forEach(cr => {
             headers.push(
               <Accordion key={i} fluid styled>
-                <Accordion.Title className="codeReview" active={activeIndex === i || cr.points === null} index={i} onClick={this.handleClick}>
+                <Accordion.Title className="codeReview" active={this.props.coursePageLogic.activeIndex === i || cr.points === null} index={i} onClick={this.handleClick}>
                   <Icon name="dropdown" /> Code Review {cr.reviewNumber} {cr.points !== null ? ', points ' + cr.points : ''}
                 </Accordion.Title>
-                <Accordion.Content active={activeIndex === i || cr.points === null}>
+                <Accordion.Content active={this.props.coursePageLogic.activeIndex === i || cr.points === null}>
                   <div className="codeReviewExpanded">
                     {cr.points !== null ? (
                       <div>
@@ -583,7 +587,6 @@ export class CoursePage extends React.Component {
                       </Table.Cell>
                       {createIndents(data.weeks, data.codeReviews, data.id)}
                       <Table.Cell>
-
                         {data.weeks.map(week => week.points).reduce((a, b) => {
                           return a + b
                         }, 0) +
@@ -728,6 +731,7 @@ const mapDispatchToProps = {
   toggleCodeReview,
   getAllTags,
   tagStudent,
+  updateActiveIndex,
   unTagStudent,
   resetLoading
 }
