@@ -52,15 +52,14 @@ export class CoursePage extends React.Component {
   }
 
   weekNumberOfLastReviewedWeek() {
-    if (this.props.courseData && this.props.courseData.data && this.props.courseData.data.weeks !== undefined
-      && this.props.courseData.data.weeks.length > 0) {
+    if (this.props.courseData.data.weeks.length > 0) {
       if (this.state.showLastReviewed) {
         let lastIndexOfWeeks = this.props.courseData.data.weeks.length - 1
         let lastReviewedWeek = this.props.courseData.data.weeks[lastIndexOfWeeks].weekNumber
         return lastReviewedWeek
       }
     }
-  }  
+  }
 
   componentWillUnmount() {
     this.setState({ showLastReviewed: true })
