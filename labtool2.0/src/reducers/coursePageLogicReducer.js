@@ -39,6 +39,10 @@ const coursePageLogicReducer = (state = INITIAL_STATE, action) => {
       return INITIAL_STATE
     case 'COURSE_PAGE_RESET':
       return INITIAL_STATE
+    case 'TAG_STUDENT_SUCCESS':
+      return INITIAL_STATE
+    case 'UNTAG_STUDENT_SUCCESS':
+      return INITIAL_STATE
     case 'CP_INFO_SUCCESS':
       if (action.response.role === 'student') {
         try {

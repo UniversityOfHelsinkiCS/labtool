@@ -53,6 +53,12 @@ const courseInstancereducer = (store = [], action) => {
       })
       return { ...store, data: newData }
     }
+    case 'TAG_STUDENT_SUCCESS': {
+      return { ...store, data: store.data.map(student => (student.id === action.response.id ? action.response : student)) }
+    }
+    case 'UNTAG_STUDENT_SUCCESS': {
+      return { ...store, data: store.data.map(student => (student.id === action.response.id ? action.response : student)) }
+    }
     default:
       return store
   }

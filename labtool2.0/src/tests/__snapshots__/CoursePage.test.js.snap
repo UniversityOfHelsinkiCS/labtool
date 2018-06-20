@@ -295,23 +295,6 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           </TableRow>
         </TableHeader>
       </Table>
-      <List
-        style={
-          Object {
-            "float": "right",
-          }
-        }
-      >
-        <ListItem
-          content="Edit course"
-          icon={
-            Object {
-              "color": "orange",
-              "name": "edit",
-            }
-          }
-        />
-      </List>
     </div>
   </div>
   <div
@@ -370,6 +353,12 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           as="tr"
           cellAs="td"
         >
+          <TableHeaderCell
+            as="th"
+            key="-1"
+          >
+            Student
+          </TableHeaderCell>
           <TableHeaderCell
             as="th"
           >

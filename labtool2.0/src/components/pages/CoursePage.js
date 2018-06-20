@@ -6,7 +6,7 @@ import { createOneComment } from '../../services/comment'
 import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import { associateTeacherToStudent } from '../../services/assistant'
 import ReactMarkdown from 'react-markdown'
-import { getAllTags, tagStudent } from '../../services/tags'
+import { getAllTags, tagStudent, unTagStudent } from '../../services/tags'
 import {
   showAssistantDropdown,
   showTagDropdown,
@@ -106,6 +106,19 @@ export class CoursePage extends React.Component {
     }
   }
 
+  removeTag = id => async e => {
+    try {
+      e.preventDefault()
+      const data = {
+        studentId: id,
+        tagId: this.props.coursePageLogic.selectedTag
+      }
+      await this.props.unTagStudent(data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  
   changeFilterAssistant = () => {
     return (e, data) => {
       const { value } = data
@@ -167,10 +180,8 @@ export class CoursePage extends React.Component {
           value: tag.id
         })
       )
-      console.log('tags: ', array)
       return array
     }
-    console.log('ei tageja')
     return []
   }
 
@@ -357,28 +368,27 @@ export class CoursePage extends React.Component {
                 </Accordion.Title>
                 <Accordion.Content active={this.props.coursePageLogic.activeIndex === i || cr.points === null}>
                   <div className="codeReviewExpanded">
-                    {cr.points !== null ? 
+                    {cr.points !== null ? (
                       <div>
                         <h4 className="codeReviewPoints">Points: {cr.points}</h4>
                       </div>
-                    : (
+                    ) : (
                       <div>
                         <p>Not Graded</p>
                       </div>
                     )}
-                    
-                  {this.props.coursePageLogic.showCodeReviews.indexOf(cr.reviewNumber) !== -1 ? (
-                      <div>  
+
+                    {this.props.coursePageLogic.showCodeReviews.indexOf(cr.reviewNumber) !== -1 ? (
+                      <div>
                         <h4>Project to review</h4>
                         <p>{cr.toReview.projectName}</p>
                         <p>
                           <a href={cr.toReview.github}>{cr.toReview.github}</a>
                         </p>
                       </div>
-                      ) : (
-                        <div></div>
-                      )
-                  }
+                    ) : (
+                      <div />
+                    )}
                   </div>
                 </Accordion.Content>
               </Accordion>
@@ -460,9 +470,6 @@ export class CoursePage extends React.Component {
                 </Table.Row>
               </Table.Header>
             </Table>
-            <List style={{ float: 'right' }}>
-              <List.Item icon={{ name: 'edit', color: 'orange' }} content="Edit course" />
-            </List>
           </div>
         </div>
       )
@@ -491,15 +498,16 @@ export class CoursePage extends React.Component {
           <Table celled>
             <Table.Header>
               <Table.Row>
-              <Table.HeaderCell>
-                    Project Info
-                    {this.props.coursePageLogic.filterByTag !== 0 ? (
-                      <Button compact className="mini ui yellow button" floated="right" onClick={this.changeFilterTag(0)}>
-                        Clear tag filter
-                      </Button>
-                    ) : (
-                      <p />
-                    )}
+                <Table.HeaderCell key={-1}>Student</Table.HeaderCell>
+                <Table.HeaderCell>
+                  Project Info
+                  {this.props.coursePageLogic.filterByTag !== 0 ? (
+                    <Button compact className="mini ui yellow button" floated="right" onClick={this.changeFilterTag(0)}>
+                      Clear tag filter
+                    </Button>
+                  ) : (
+                    <p />
+                  )}
                 </Table.HeaderCell>
                 {createHeadersTeacher()}
                 <Table.HeaderCell> Sum </Table.HeaderCell>
@@ -522,12 +530,10 @@ export class CoursePage extends React.Component {
                         {data.User.firsts} {data.User.lastname}
                       </Table.Cell>
                       <Table.Cell>
-                        <Table.Cell>
-                          <p>
-                            {data.projectName}
-                            <br />
-                            <a href={data.github}>{data.github}</a>
-                          </p>
+                        <span>
+                          {data.projectName}
+                          <br />
+                          <a href={data.github}>{data.github}</a>
                           {data.Tags.map(tag => (
                             <div key={tag.id}>
                               <Button compact floated="left" className={`mini ui ${tag.color} button`}>
@@ -535,21 +541,30 @@ export class CoursePage extends React.Component {
                               </Button>
                             </div>
                           ))}
-                        </Table.Cell>
-                        <Table.Cell>
-                          <br />
-                          <Icon id="tag" onClick={this.changeHiddenTagDropdown(data.id)} name="pencil" size="small" style={{ float: 'top' }} />
+                        </span>
+                        <span>
+                          <Popup
+                            trigger={<Icon id="tag" onClick={this.changeHiddenTagDropdown(data.id)} name="plus circle" size="large" color="green" style={{ float: 'right' }} />}
+                            content="Add tag"
+                          />
+
                           {this.props.coursePageLogic.showTagDropdown === data.id ? (
                             <div>
-                              <Dropdown id="tagDropdown" options={dropDownTags} onChange={this.changeSelectedTag()} placeholder="Add tag" fluid selection />
-                              <Button onClick={this.addTag(data.id)} size="small">
-                                Add tag
-                              </Button>
+                              <Dropdown id="tagDropdown" options={dropDownTags} onChange={this.changeSelectedTag()} placeholder="Choose tag" fluid selection />
+                              <div class="two ui buttons">
+                                <button class="ui icon positive button" onClick={this.addTag(data.id)} size="mini">
+                                  <i class="plus icon"></i>
+                                </button>
+                                <div class="or"></div>
+                                <button class="ui icon button" onClick={this.removeTag(data.id)} size="mini">
+                                  <i class="trash icon"></i>
+                                </button>
+                              </div>
                             </div>
                           ) : (
                             <div />
                           )}
-                        </Table.Cell>
+                        </span>
                       </Table.Cell>
                       {createIndents(data.weeks, data.codeReviews, data.id)}
                       <Table.Cell>
@@ -570,7 +585,10 @@ export class CoursePage extends React.Component {
                         ) : (
                           <span>not assigned</span>
                         )}
-                        <Popup trigger={<Button circular onClick={this.changeHiddenAssistantDropdown(data.id)} icon={{ name: 'pencil', size: 'medium' }} style={{ float: 'right' }} />} content="Assign instructor" />
+                        <Popup
+                          trigger={<Button circular onClick={this.changeHiddenAssistantDropdown(data.id)} icon={{ name: 'pencil', size: 'medium' }} style={{ float: 'right' }} />}
+                          content="Assign instructor"
+                        />
                         {this.props.coursePageLogic.showAssistantDropdown === data.id ? (
                           <div>
                             <Dropdown id="assistantDropdown" options={dropDownTeachers} onChange={this.changeSelectedTeacher()} placeholder="Select teacher" fluid selection />
@@ -692,7 +710,8 @@ const mapDispatchToProps = {
   toggleCodeReview,
   getAllTags,
   tagStudent,
-  updateActiveIndex
+  updateActiveIndex,
+  unTagStudent
 }
 
 export default connect(
