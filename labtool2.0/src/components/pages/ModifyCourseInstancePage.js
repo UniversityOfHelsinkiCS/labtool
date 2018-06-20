@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Form, Input, Button, Grid, Checkbox, Loader } from 'semantic-ui-react'
 import { getOneCI, modifyOneCI } from '../../services/courseInstance'
-import { setActive, setFinalReview } from '../../reducers/selectedInstanceReducer'
+import { setFinalReview } from '../../reducers/selectedInstanceReducer'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Redirect } from 'react-router'
@@ -60,7 +60,7 @@ export class ModifyCourseInstancePage extends Component {
   }
 
   render() {
-    if (this.props.loading.redirect) {
+    if (this.props.redirect && this.props.redirect.redirect) {
       return <Redirect to={`/labtool/courses/${this.props.selectedInstance.ohid}`} />
     }
     const selectedInstance = { ...this.props.selectedInstance }
@@ -149,6 +149,7 @@ const mapStateToProps = (state, ownProps) => {
     selectedInstance: state.selectedInstance,
     notification: state.notification,
     loading: state.loading,
+    redirect: state.redirect,
     ownProps
   }
 }
