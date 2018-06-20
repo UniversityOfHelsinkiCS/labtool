@@ -48,11 +48,11 @@ const coursePageLogicReducer = (state = INITIAL_STATE, action) => {
         try {
           const newestReviewWeek = action.response.data.weeks[action.response.data.weeks.length - 1].weekNumber
           // The showCodeReviews -line below sets showCodeReviews to be equal to the reviewNumbers whose points are 0.
-          const activeIndexBasedOnWhetherWeHaveToShowNewestReviewOrExplicitlyOpenedReview = state.lastReviewedIsShownAlready ? state.activeIndex : newestReviewWeek - 1
-          return { 
-            ...state, 
+          const showNewestOrUserOpened = state.lastReviewedIsShownAlready ? state.activeIndex : newestReviewWeek - 1
+          return {
+            ...state,
             lastReviewedWeek: newestReviewWeek,
-            activeIndex: activeIndexBasedOnWhetherWeHaveToShowNewestReviewOrExplicitlyOpenedReview,
+            activeIndex: showNewestOrUserOpened,
             showCodeReviews: action.response.data.codeReviews.filter(cr => cr.points === null).map(cr => cr.reviewNumber)
           }
         } catch (e) {
@@ -72,7 +72,6 @@ const coursePageLogicReducer = (state = INITIAL_STATE, action) => {
         return { ...state, showCodeReviews: newValue }
       }
     case 'COURSE_PAGE_UPDATE_ACTIVE_INDEX':
-
       try {
         return {
           ...state,
