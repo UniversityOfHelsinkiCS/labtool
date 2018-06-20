@@ -34,7 +34,7 @@ export class ModifyCourseInstancePage extends Component {
   }
 
   changeFinalReview = () => {
-    const newValue = this.props.selectedInstance.finalReview !== true
+    const newValue = !this.props.selectedInstance.finalReview
     this.props.setFinalReview(newValue)
   }
 
