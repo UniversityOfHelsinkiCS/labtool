@@ -311,7 +311,7 @@ export class CoursePage extends React.Component {
                       weeks.comments.map(
                         comment =>
                           comment.hidden ? (
-                            <Comment disabled>
+                            <Comment key={comment.id} disabled>
                               <Comment.Content>
                                 <Comment.Metadata>
                                   <div>Hidden</div>
@@ -324,7 +324,7 @@ export class CoursePage extends React.Component {
                               </Comment.Content>
                             </Comment>
                           ) : (
-                            <Comment>
+                            <Comment key={comment.id}>
                               <Comment.Author>{comment.from}</Comment.Author>
                               <Comment.Text>
                                 {' '}
