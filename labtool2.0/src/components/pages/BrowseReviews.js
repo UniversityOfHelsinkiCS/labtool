@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
-import { Button, Card, Accordion, Icon, Form, Comment, Input, Popup } from 'semantic-ui-react'
+import { Button, Card, Accordion, Icon, Form, Comment, Input, Popup, Loader } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { createOneComment } from '../../services/comment'
 import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import { gradeCodeReview } from '../../services/codeReview'
 import ReactMarkdown from 'react-markdown'
+import { resetLoading } from '../../reducers/loadingReducer'
 
 /**
  * Maps all comments from a single instance from coursePage reducer
@@ -13,10 +14,16 @@ import ReactMarkdown from 'react-markdown'
 export class BrowseReviews extends Component {
   state = { activeIndex: 0 }
 
-  componentWillMount() {
+  componentWillMount = async () => {
+    await this.props.resetLoading()
     this.props.getOneCI(this.props.courseId)
     this.props.coursePageInformation(this.props.courseId)
-    this.setState({ activeIndex: this.props.selectedInstance.currentWeek - 1 })
+  }
+
+  componentDidMount() {
+    if (!this.props.loading.loading && this.state.activeIndex !== this.props.selectedInstance.currentWeek - 1 ) {
+      this.setState({ activeIndex: this.props.selectedInstance.currentWeek - 1 })
+    }
   }
 
   handleClick = (e, titleProps) => {
@@ -55,6 +62,9 @@ export class BrowseReviews extends Component {
   }
 
   render() {
+    if (this.props.loading.loading) {
+      return <Loader active />
+    }
     const createHeaders = (studhead, studentInstance) => {
       let headers = []
       studhead.data.map(student => {
@@ -210,11 +220,20 @@ const mapStateToProps = (state, ownProps) => {
     ownProps,
     user: state.user,
     selectedInstance: state.selectedInstance,
-    courseData: state.coursePage
+    courseData: state.coursePage,
+    loading: state.loading
   }
+}
+
+const mapDispatchToProps = {
+  createOneComment,
+  getOneCI,
+  coursePageInformation,
+  gradeCodeReview,
+  resetLoading
 }
 
 export default connect(
   mapStateToProps,
-  { createOneComment, getOneCI, coursePageInformation, gradeCodeReview }
+  mapDispatchToProps
 )(BrowseReviews)

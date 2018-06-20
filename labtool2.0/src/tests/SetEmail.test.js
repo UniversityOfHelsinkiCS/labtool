@@ -6,9 +6,12 @@ describe('<Email/>', () => {
   let wrapper
 
   const props = {
-    emailPage: {
+    loading: {
       loading: false,
-      redirect: false
+      loadingHooks: [],
+      redirect: false,
+      redirectHooks: [],
+      redirectFailure: false
     },
     user: {
       id: 2,
@@ -22,8 +25,10 @@ describe('<Email/>', () => {
     created: true
   }
 
+  let mockFn = jest.fn()
+
   beforeEach(() => {
-    wrapper = shallow(<Email emailPage={props} user={props} />)
+    wrapper = shallow(<Email loading={props.loading} user={props} resetLoading={mockFn} forceSetLoading={mockFn} />)
   })
 
   describe('Email Component', () => {
