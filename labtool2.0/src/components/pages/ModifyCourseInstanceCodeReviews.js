@@ -6,7 +6,7 @@ import { bulkinsertCodeReviews } from '../../services/codeReview'
 import { initOneReview, initOrRemoveRandom, initCheckbox, initAllCheckboxes, randomAssign, codeReviewReset, selectDropdown, toggleCreate, createStates } from '../../reducers/codeReviewReducer'
 import { filterByTag } from '../../reducers/coursePageLogicReducer'
 import { clearNotifications } from '../../reducers/notificationReducer'
-import { Button, Table, Checkbox, Loader, Dropdown } from 'semantic-ui-react'
+import { Button, Table, Checkbox, Loader, Dropdown, Label } from 'semantic-ui-react'
 import Notification from '../../components/pages/Notification'
 import { resetLoading } from '../../reducers/loadingReducer'
 
