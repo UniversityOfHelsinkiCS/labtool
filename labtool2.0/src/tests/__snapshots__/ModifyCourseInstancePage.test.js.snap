@@ -10,6 +10,10 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
     }
   }
 >
+  <Loader
+    active={false}
+    inline="centered"
+  />
   <Grid>
     <GridRow
       centered={true}
@@ -19,25 +23,6 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
         Aineopintojen harjoitustyö: Tietokantasovellus (periodi IV)
          
       </h2>
-    </GridRow>
-  </Grid>
-  <Grid>
-    <GridRow
-      centered={true}
-    >
-      <div>
-        <GridRow>
-          <h4
-            style={
-              Object {
-                "color": "#21ba45",
-              }
-            }
-          >
-            This course is currently activated.
-          </h4>
-        </GridRow>
-      </div>
     </GridRow>
   </Grid>
   <Grid>
@@ -63,8 +48,8 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
           </label>
           <Input
             className="form-control1"
-            defaultValue="7"
             name="weekAmount"
+            onChange={[Function]}
             required="true"
             style={
               Object {
@@ -72,6 +57,7 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
               }
             }
             type="text"
+            value={7}
           />
         </FormGroup>
         <FormGroup
@@ -89,8 +75,8 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
           </label>
           <Input
             className="form-control2"
-            defaultValue="2"
-            name="weeklyMaxpoints"
+            name="weekMaxPoints"
+            onChange={[Function]}
             required="true"
             style={
               Object {
@@ -98,6 +84,7 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
               }
             }
             type="text"
+            value={2}
           />
         </FormGroup>
         <FormGroup
@@ -115,8 +102,8 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
           </label>
           <Input
             className="form-control3"
-            defaultValue="1"
             name="currentWeek"
+            onChange={[Function]}
             required="true"
             style={
               Object {
@@ -124,13 +111,14 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
               }
             }
             type="text"
+            value={1}
           />
         </FormGroup>
         <FormField
           inline={true}
         >
-          <Radio
-            checked={false}
+          <Checkbox
+            checked={true}
             label="Activate course"
             name="courseActive"
             onChange={[Function]}
@@ -140,26 +128,7 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
                 "width": "150px",
               }
             }
-            type="radio"
-            value="true"
-          />
-        </FormField>
-        <FormField
-          inline={true}
-        >
-          <Radio
-            checked={false}
-            label="Deactivate course"
-            name="courseActive"
-            onChange={[Function]}
-            style={
-              Object {
-                "textAlign": "left",
-                "width": "150px",
-              }
-            }
-            type="radio"
-            value="false"
+            type="checkbox"
           />
         </FormField>
         <FormField>
