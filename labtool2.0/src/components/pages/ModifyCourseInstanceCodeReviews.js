@@ -25,6 +25,10 @@ export class ModifyCourseInstanceReview extends React.Component {
     this.props.codeReviewReset()
   }
 
+  checkStates = () => {
+    this.props.codeReviewLogic.statesCreated ? null : this.props.createStates(this.props.selectedInstance.amountOfCodeReviews)
+  }
+
   handleSubmit = reviewNumber => async e => {
     try {
       e.preventDefault()
