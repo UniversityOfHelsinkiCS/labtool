@@ -109,7 +109,8 @@ const commentMessage = async (role, commentId) => {
             },
             text: queryResult.dataValues.comment
           },
-          studentId: student.dataValues.userId
+          studentId: queryResult.dataValues.Week.dataValues.studentInstanceId,
+          userId: student.dataValues.userId
         }
       } else {
         return {
@@ -227,7 +228,7 @@ module.exports = {
 
           // Email body defined as options.html
           const link =
-            req.body.role === 'teacher' ? `${frontendUrl}/courses/${message.content.course.ohid}` : `${frontendUrl}/browsereviews/${message.content.course.ohid}/${message.content.studentId}`
+            req.body.role === 'teacher' ? `${frontendUrl}/courses/${message.content.course.ohid}` : `${frontendUrl}/browsereviews/${message.content.course.ohid}/${message.studentId}`
           options.html = `
             <h1>You've received a message in Labtool.</h1>
             <p><a href="${link}">${link}</a></p>
@@ -277,7 +278,7 @@ module.exports = {
         }
       } else {
         // Student validation
-        if (message.studentId !== req.decoded.id) {
+        if (message.userId !== req.decoded.id) {
           res.status(403).send("You cannot send an email notification about someone else's comment.")
           return
         }
