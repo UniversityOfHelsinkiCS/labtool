@@ -9,10 +9,13 @@
 
 const INITIAL_STATE = {
   randomizedCodeReview: [],
-  codeReviewStates: { 1: [], 2: [] },
-  currentSelections: { 1: {}, 2: {} },
+  codeReviewStates: {},
+  currentSelections: {},
+  selectedDropdown: '',
   checkBoxStates: {},
-  initialized: false
+  statesCreated: false,
+  initialized: false,
+  showCreate: false
 }
 
 function shuffleArray(array) {
@@ -25,17 +28,36 @@ function shuffleArray(array) {
 }
 
 function purgeCodeReviews(codeReviewStateArray, toPurgeArray) {
-  const codeReviewStateReviewerArray = codeReviewStateArray.map(cr => cr.reviewer)
-  let i = codeReviewStateArray.length
-  while (i--) {
-    if (toPurgeArray.indexOf(codeReviewStateReviewerArray[i]) !== -1) {
-      codeReviewStateArray.splice(i, 1)
+  if (codeReviewStateArray) {
+    const codeReviewStateReviewerArray = codeReviewStateArray.map(cr => cr.reviewer)
+    let i = codeReviewStateArray.length
+    while (i--) {
+      if (toPurgeArray.indexOf(codeReviewStateReviewerArray[i]) !== -1) {
+        codeReviewStateArray.splice(i, 1)
+      }
     }
   }
 }
 
 const codeReviewReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
+    case 'CREATE_STATES_FOR_CODE_REVIEWS': {
+      let i = 1
+      let codeReviewStates = {}
+      let currentSelections = {}
+      while (i <= action.data) {
+        codeReviewStates[i] = []
+        currentSelections[i] = {}
+        i++
+      }
+      codeReviewStates['create'] = []
+      currentSelections['create'] = {}
+      return { ...state, codeReviewStates: codeReviewStates, currentSelections: currentSelections, statesCreated: true }
+    }
+    case 'TOGGLE_CREATE':
+      return { ...state, showCreate: !state.showCreate }
+    case 'SELECT_DROPDOWN':
+      return { ...state, selectedDropdown: action.data }
     case 'INIT_REVIEW': {
       const oldReviews = state.codeReviewStates[action.data.round]
       let updatedReviews = {}
@@ -84,8 +106,13 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
       return { ...state, randomizedCodeReview: rndCr }
     case 'CODE_REVIEW_BULKINSERT_SUCCESS':
       var codeReviewRoundsToUpdate = state.codeReviewStates
+      var currentSelectionsToUpdate = state.currentSelections
+      var newRound = action.response.data.reviewNumber
+      newRound > Object.keys(state.codeReviewStates).length - 1 ? (codeReviewRoundsToUpdate = { ...codeReviewRoundsToUpdate, [newRound]: [] }) : codeReviewRoundsToUpdate
+      newRound > Object.keys(state.currentSelections).length - 1 ? (currentSelectionsToUpdate = { ...currentSelectionsToUpdate, [newRound]: {} }) : currentSelectionsToUpdate
+      //This is double clear but if the ternary is not true we'll have to clear the array anyway
       codeReviewRoundsToUpdate[action.response.data.reviewNumber] = []
-      return { ...state, codeReviewStates: codeReviewRoundsToUpdate }
+      return { ...state, codeReviewStates: codeReviewRoundsToUpdate, currentSelections: currentSelectionsToUpdate }
     case 'CODE_REVIEW_RANDOMIZE': {
       const newCodeReviewStates = state.codeReviewStates
       purgeCodeReviews(newCodeReviewStates[action.data.reviewNumber], state.randomizedCodeReview)
@@ -102,23 +129,6 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
         newCurrentSelections[action.data.reviewNumber][randomizedOrder[i]] = state.randomizedCodeReview[i]
       }
       return { ...state, codeReviewStates: newCodeReviewStates, currentSelections: newCurrentSelections }
-    }
-    case 'SELECT_DROPDOWN':
-      return { ...state, selectedDropdown: action.data }
-    case 'TOGGLE_CREATE':
-      return { ...state, showCreate: !state.showCreate }
-    case 'CREATE_STATES_FOR_CODE_REVIEWS': {
-      let i = 1
-      let codeReviewStates = {}
-      let currentSelections = {}
-      while (i <= action.data) {
-        codeReviewStates[i] = []
-        currentSelections[i] = {}
-        i++
-      }
-      codeReviewStates['create'] = []
-      currentSelections['create'] = {}
-      return { ...state, codeReviewStates: codeReviewStates, currentSelections: currentSelections, statesCreated: true }
     }
     /* This breaks going to coursePage. So it is commented out.
     case 'CP_INFO_SUCCESS': {

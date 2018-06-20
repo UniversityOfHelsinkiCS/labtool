@@ -7,10 +7,6 @@
 
 const courseInstancereducer = (store = [], action) => {
   switch (action.type) {
-    case 'CI_GET_ONE_ATTEMPT':
-      return []
-    case 'CP_INFO_ATTEMPT':
-      return []
     case 'CP_INFO_SUCCESS':
       return action.response
     case 'ASSOCIATE_TEACHER_AND_STUDENT_SUCCESS': {

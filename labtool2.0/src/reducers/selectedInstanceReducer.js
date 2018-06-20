@@ -21,8 +21,6 @@ const selectedInstanceReducer = (store = [], action) => {
       return { ...store, teacherInstances: [...store.teacherInstances, action.response] }
     case 'TEACHER_REMOVE_SUCCESS':
       return { ...store, teacherInstances: store.teacherInstances.filter(teacher => teacher.id !== action.response.id) }
-    case 'SET_FINAL_REVIEW':
-      return { ...store, finalReview: action.value }
     case 'SI_CHANGE_FIELD':
       return { ...store, [action.data.field]: action.data.value }
     case 'CODE_REVIEW_BULKINSERT_SUCCESS':
