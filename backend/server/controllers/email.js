@@ -11,9 +11,12 @@ const SENDER_SETTINGS = {
   secure: false
 }
 
+// Helper function for send
+// Returned fields differ based on role argument.
 const commentMessage = async (role, commentId) => {
   try {
     if (role === 'teacher') {
+      // Database query
       const queryResult = await Comment.findOne({
         attributes: ['weekId', 'comment'],
         where: {
@@ -40,6 +43,8 @@ const commentMessage = async (role, commentId) => {
           }
         ]
       })
+
+      // Parse queryResult into a more succinct form.
       return {
         success: true,
         address: queryResult.dataValues.Week.StudentInstance.User.dataValues.email,
@@ -53,6 +58,7 @@ const commentMessage = async (role, commentId) => {
         courseId: queryResult.dataValues.Week.StudentInstance.CourseInstance.dataValues.id
       }
     } else if (role === 'student') {
+      // Database query
       const queryResult = await Comment.findOne({
         attributes: ['weekId', 'comment'],
         where: {
@@ -90,6 +96,9 @@ const commentMessage = async (role, commentId) => {
       })
       const student = queryResult.dataValues.Week.StudentInstance
       if (student.TeacherInstance) {
+        // If student has an instructor assigned.
+
+        // Parse queryResult into a more succinct form.
         return {
           success: true,
           address: student.TeacherInstance.User.dataValues.email,
@@ -125,9 +134,11 @@ const commentMessage = async (role, commentId) => {
   }
 }
 
+// Helper function for send
 const weekMessage = async (role, weekId) => {
   try {
     if (role === 'teacher') {
+      // Database query
       const queryResult = await Week.findOne({
         attributes: ['studentInstanceId', 'feedback', 'points'],
         where: {
@@ -150,6 +161,8 @@ const weekMessage = async (role, weekId) => {
           }
         ]
       })
+
+      // Parse queryResult into a more succinct form.
       return {
         success: true,
         address: queryResult.dataValues.StudentInstance.User.dataValues.email,
@@ -171,7 +184,6 @@ const weekMessage = async (role, weekId) => {
       }
     }
   } catch (e) {
-    console.log(e)
     return {
       success: false,
       status: 500,
@@ -184,6 +196,7 @@ module.exports = {
   async send(req, res) {
     await helper.controller_before_auth_check_action(req, res)
     try {
+      // Basic validations
       if (!req.authenticated.success) {
         res.status(403).send('you have to be authenticated to do this')
         return
@@ -196,15 +209,23 @@ module.exports = {
         res.status(400).send('Missing required field "weekId" or "commentId".')
         return
       }
+
+      // If commentId has been supplied, use it. Otherwise use weekId.
       const useComment = req.body.commentId !== undefined
+
+      // Initialize options with just from, build the rest as we go.
       const options = {
         from: SENDER_SETTINGS.from
       }
+
+      // message is an object supplied by a helper function.
       let message
       if (useComment) {
         message = await commentMessage(req.body.role, req.body.commentId)
         if (message.content) {
-          options.subject = `${message.content.course.name} new message`
+          options.subject = `${message.content.course.name} new message` // Email tile
+
+          // Email body defined as options.html
           const link =
             req.body.role === 'teacher' ? `${frontendUrl}/courses/${message.content.course.ohid}` : `${frontendUrl}/browsereviews/${message.content.course.ohid}/${message.content.studentId}`
           options.html = `
@@ -216,9 +237,12 @@ module.exports = {
           `
         }
       } else {
+        // commentId was not supplied, so use weekId instead.
         message = await weekMessage(req.body.role, req.body.weekId)
         if (message.content) {
-          options.subject = `${message.content.course.name} new message`
+          options.subject = `${message.content.course.name} new message` // Email title
+
+          // Email body defined as options.html
           const link = `${frontendUrl}/courses/${message.content.course.ohid}`
           options.html = `
             <h1>Your submission has been reviewed</h1>
@@ -230,11 +254,16 @@ module.exports = {
           `
         }
       }
+
+      // If the helper function failed, report it here
       if (!message.success) {
         res.status(message.status).send(message.error)
         return
       }
+
       if (req.body.role === 'teacher') {
+        // Teacher validation
+        // Since a comment cannot be tracked down to its author, we just check that the request amker is a teacher.
         const teacherInstance = await TeacherInstance.findOne({
           attributes: ['id'],
           where: {
@@ -247,13 +276,16 @@ module.exports = {
           return
         }
       } else {
+        // Student validation
         if (message.studentId !== req.decoded.id) {
           res.status(403).send("You cannot send an email notification about someone else's comment.")
           return
         }
       }
-      options.to = message.address
+
+      options.to = message.address // Email recipient
       if (env !== 'production') {
+        // Cannot send emails from localhost. The smtp server would reject requests.
         res.status(200).send({
           message: 'Email sending simulated',
           data: req.body,
@@ -261,18 +293,22 @@ module.exports = {
         })
         return
       }
+
+      // In production, send email
       const transporter = nodemailer.createTransport(SENDER_SETTINGS)
       const mail = await transporter.sendMail(options)
+
+      // mail.rejected is an array that holds all rejected emails.
       if (mail.rejected.length > 0) {
         res.status(403).send('Email rejected by SMTP server.')
         return
       }
+
       res.status(200).send({
         message: 'Email sent successfully',
         data: req.body
       })
     } catch (e) {
-      console.log(e)
       res.status(500).send('Unexpected error')
     }
   }
