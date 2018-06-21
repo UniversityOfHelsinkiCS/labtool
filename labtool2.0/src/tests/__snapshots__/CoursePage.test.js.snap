@@ -109,7 +109,7 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
           <h4
             className="codeReviewPoints"
           >
-            Points: 
+            Points 
             2
           </h4>
         </div>
@@ -147,7 +147,7 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
           <h4
             className="codeReviewPoints"
           >
-            Points: 
+            Points 
             1
           </h4>
         </div>

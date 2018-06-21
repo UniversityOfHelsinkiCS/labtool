@@ -36,7 +36,7 @@ const courseInstancereducer = (store = [], action) => {
       })
     }
     case 'CI_MODIFY_ONE_SUCCESS':
-      return store
+      return action.response
     default:
       return store
   }

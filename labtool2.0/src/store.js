@@ -18,6 +18,7 @@ import checklist from './reducers/checklistReducer'
 import tagsReducer from './reducers/tagReducer'
 import weekReview from './reducers/weekReviewReducer'
 import loading from './reducers/loadingReducer'
+import redirect from './reducers/redirectReducer'
 
 /**
  * The store, that takes all the redux reducers. Index imports it.
@@ -41,7 +42,8 @@ const reducer = combineReducers({
   checklist: checklist,
   tags: tagsReducer,
   loading: loading,
-  weekReview: weekReview
+  weekReview: weekReview,
+  redirect: redirect
 })
 
 const store = createStore(reducer, composeWithDevTools(applyMiddleware(thunk, handleRequest)))
