@@ -74,6 +74,13 @@ export class CoursePage extends React.Component {
     })
   }
 
+  trimDate = date => {
+    return new Date(date)
+      .toLocaleString()
+      .replace('/', '.')
+      .replace('/', '.')
+  }
+
   changeHiddenAssistantDropdown = id => {
     return () => {
       this.props.showAssistantDropdown(this.props.coursePageLogic.showAssistantDropdown === id ? '' : id)
@@ -328,7 +335,7 @@ export class CoursePage extends React.Component {
                                   <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
                                 </Comment.Text>
                                 <Comment.Metadata>
-                                  <div>{new Date(comment.createdAt).toLocaleString()}</div>
+                                  <div>{this.trimDate(comment.createdAt)}</div>
                                 </Comment.Metadata>
                               </Comment.Content>
                             </Comment>
@@ -340,7 +347,7 @@ export class CoursePage extends React.Component {
                                 <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
                               </Comment.Text>
                               <Comment.Metadata>
-                                <div>{new Date(comment.createdAt).toLocaleString()}</div>
+                                <div>{this.trimDate(comment.createdAt)}</div>
                               </Comment.Metadata>
                             </Comment>
                           )

@@ -51,6 +51,13 @@ export class BrowseReviews extends Component {
     }
   }
 
+  trimDate = date => {
+    return new Date(date)
+      .toLocaleString()
+      .replace('/', '.')
+      .replace('/', '.')
+  }
+
   sortCommentsByDate = comments => {
     return comments.sort((a, b) => {
       return new Date(a.createdAt) - new Date(b.createdAt)
@@ -127,7 +134,7 @@ export class BrowseReviews extends Component {
                                     <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
                                   </Comment.Text>
                                   <Comment.Metadata>
-                                    <div>{new Date(comment.createdAt).toLocaleString()}</div>
+                                    <div>{this.trimDate(comment.createdAt)}</div>
                                   </Comment.Metadata>
                                 </Comment.Content>
                               </Comment>
@@ -139,7 +146,7 @@ export class BrowseReviews extends Component {
                                     <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
                                   </Comment.Text>
                                   <Comment.Metadata>
-                                    <div>{new Date(comment.createdAt).toLocaleString()}</div>
+                                    <div>{this.trimDate(comment.createdAt)}</div>
                                   </Comment.Metadata>
                               </Comment>
                             )
