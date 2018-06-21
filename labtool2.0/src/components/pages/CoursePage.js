@@ -7,6 +7,7 @@ import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import { associateTeacherToStudent } from '../../services/assistant'
 import ReactMarkdown from 'react-markdown'
 import { getAllTags, tagStudent, unTagStudent } from '../../services/tags'
+import { sendEmail } from '../../services/email'
 import {
   showAssistantDropdown,
   showTagDropdown,
@@ -21,7 +22,6 @@ import {
 import { resetLoading } from '../../reducers/loadingReducer'
 
 export class CoursePage extends React.Component {
-
   handleClick = (e, titleProps) => {
     const { index } = titleProps
     const theNewIndex = this.props.coursePageLogic.activeIndex === index ? -1 : index
@@ -132,7 +132,7 @@ export class CoursePage extends React.Component {
       console.log(error)
     }
   }
-  
+
   changeFilterAssistant = () => {
     return (e, data) => {
       const { value } = data
@@ -199,6 +199,13 @@ export class CoursePage extends React.Component {
     return []
   }
 
+  sendEmail = commentId => async e => {
+    this.props.sendEmail({
+      commentId,
+      role: 'student'
+    })
+  }
+
   render() {
     if (this.props.loading.loading) {
       return <Loader active />
@@ -208,6 +215,7 @@ export class CoursePage extends React.Component {
     const createIndents = (weeks, codeReviews, siId) => {
       const indents = []
       let i = 0
+      let finalPoints = undefined
       for (; i < this.props.selectedInstance.weekAmount; i++) {
         let pushattava = (
           <Table.Cell key={i}>
@@ -222,6 +230,8 @@ export class CoursePage extends React.Component {
                 <p>{weeks[j].points}</p>
               </Table.Cell>
             )
+          } else if (weeks[j].weekNumber === this.props.selectedInstance.weekAmount + 1) {
+            finalPoints = weeks[j].points
           }
         }
         indents.push(pushattava)
@@ -239,6 +249,16 @@ export class CoursePage extends React.Component {
         )
         ii++
       }
+
+      if (this.props.selectedInstance.finalReview) {
+        let finalReviewPointsCell = (
+          <Table.Cell key={i + ii + 1}>
+            <p>{finalPoints === undefined ? '-' : finalPoints}</p>
+          </Table.Cell>
+        )
+        indents.push(finalReviewPointsCell)
+      }
+
       return indents
     }
 
@@ -254,9 +274,11 @@ export class CoursePage extends React.Component {
       for (var ii = 1; ii <= numberOfCodeReviews; ii++) {
         headers.push(<Table.HeaderCell key={i + ii}>Code Review {ii} </Table.HeaderCell>)
       }
+      if (this.props.selectedInstance.finalReview) {
+        headers.push(<Table.HeaderCell key={i + ii + 1}>Final Review </Table.HeaderCell>)
+      }
       return headers
     }
-
 
     const renderStudentBottomPart = () => {
       let headers = []
@@ -289,33 +311,24 @@ export class CoursePage extends React.Component {
       if (this.props.courseData && this.props.courseData.data && this.props.courseData.data.weeks) {
         let weeks = null
 
-
         let i = 0
         for (; i < this.props.courseData.data.weeks.length; i++) {
           weeks = this.props.courseData.data.weeks.find(function(week) {
             return week.weekNumber === i + 1
           })
           if (weeks) {
-
             headers.push(
               <Accordion key={i} fluid styled>
-                <Accordion.Title
-                  active={ i === this.props.coursePageLogic.activeIndex }
-
-                  index={i}
-                  onClick={this.handleClick}
-                >
-                  <Icon name="dropdown" /> Week {i + 1}, points {weeks.points}
+                <Accordion.Title active={i === this.props.coursePageLogic.activeIndex} index={i} onClick={this.handleClick}>
+                  <Icon name="dropdown" />
+                  {weeks.weekNumber > this.props.selectedInstance.weekAmount ? <span>Final Review</span> : <span>Week {weeks.weekNumber}</span>}, points {weeks.points}
                 </Accordion.Title>
-                <Accordion.Content
-                  active={ i === this.props.coursePageLogic.activeIndex }>
+                <Accordion.Content active={i === this.props.coursePageLogic.activeIndex}>
                   <Card fluid color="yellow">
                     <Card.Content>
-                      <h4> Points: {weeks.points} </h4>
-                      <h4>
-                        {' '}
-                        Weekly feedback: <ReactMarkdown>{weeks.feedback}</ReactMarkdown>{' '}
-                      </h4>
+                      <h4> Points {weeks.points} </h4>
+                      <h4> Feedback </h4>
+                      <ReactMarkdown>{weeks.feedback}</ReactMarkdown>{' '}
                     </Card.Content>
                   </Card>
                   <h4> Comments </h4>
@@ -349,6 +362,14 @@ export class CoursePage extends React.Component {
                               <Comment.Metadata>
                                 <div>{this.trimDate(comment.createdAt)}</div>
                               </Comment.Metadata>
+                              {/* This hack compares user's name to comment.from and hides the email notification button when they don't match. */}
+                              {`${this.props.user.user.firsts} ${this.props.user.user.lastname}` === comment.from ? (
+                                <Button type="button" onClick={this.sendEmail(comment.id)}>
+                                  Send email notification
+                                </Button>
+                              ) : (
+                                <div />
+                              )}
                             </Comment>
                           )
                       )
@@ -386,14 +407,13 @@ export class CoursePage extends React.Component {
             headers.push(
               <Accordion key={i} fluid styled>
                 <Accordion.Title className="codeReview" active={this.props.coursePageLogic.activeIndex === i || cr.points === null} index={i} onClick={this.handleClick}>
-                  <Icon name="dropdown" /> Code Review {cr.reviewNumber} {cr.points !== null ? (", points " + cr.points) : ''}
-                  
+                  <Icon name="dropdown" /> Code Review {cr.reviewNumber} {cr.points !== null ? ', points ' + cr.points : ''}
                 </Accordion.Title>
                 <Accordion.Content active={this.props.coursePageLogic.activeIndex === i || cr.points === null}>
                   <div className="codeReviewExpanded">
                     {cr.points !== null ? (
                       <div>
-                        <h4 className="codeReviewPoints">Points: {cr.points}</h4>
+                        <h4 className="codeReviewPoints">Points {cr.points}</h4>
                       </div>
                     ) : (
                       <div>
@@ -452,7 +472,7 @@ export class CoursePage extends React.Component {
             <div className="sixteen wide column">
               <h2>{this.props.selectedInstance.name}</h2>
             </div>
-            {this.props.selectedInstance.active === true ? (
+            {this.props.courseInstance && this.props.courseInstance.active === true ? (
               this.props.courseData.data !== null ? (
                 <p />
               ) : (
@@ -571,34 +591,32 @@ export class CoursePage extends React.Component {
                               </Button>
                             </div>
                           ))}
-                        </span>
-                        <span>
                           <Popup
                             trigger={<Icon id="tag" onClick={this.changeHiddenTagDropdown(data.id)} name="plus circle" size="large" color="green" style={{ float: 'right' }} />}
-                            content="Add tag"
+                            content="Add or remove tag"
                           />
-
+                        </span>
+                        <div>
                           {this.props.coursePageLogic.showTagDropdown === data.id ? (
                             <div>
-                              <Dropdown id="tagDropdown" options={dropDownTags} onChange={this.changeSelectedTag()} placeholder="Choose tag" fluid selection />
+                              <Dropdown id="tagDropdown" style={{ float: 'left' }} options={dropDownTags} onChange={this.changeSelectedTag()} placeholder="Choose tag" fluid selection />
                               <div className="two ui buttons">
                                 <button className="ui icon positive button" onClick={this.addTag(data.id)} size="mini">
-                                  <i className="plus icon"></i>
+                                  <i className="plus icon" />
                                 </button>
-                                <div className="or"></div>
+                                <div className="or" />
                                 <button className="ui icon button" onClick={this.removeTag(data.id)} size="mini">
-                                  <i className="trash icon"></i>
+                                  <i className="trash icon" />
                                 </button>
                               </div>
                             </div>
                           ) : (
                             <div />
                           )}
-                        </span>
+                        </div>
                       </Table.Cell>
                       {createIndents(data.weeks, data.codeReviews, data.id)}
                       <Table.Cell>
-
                         {data.weeks.map(week => week.points).reduce((a, b) => {
                           return a + b
                         }, 0) +
@@ -719,6 +737,7 @@ const mapStateToProps = (state, ownProps) => {
     studentInstance: state.studentInstance,
     teacherInstance: state.teacherInstance,
     selectedInstance: state.selectedInstance,
+    courseInstance: state.courseInstance,
     courseData: state.coursePage,
     coursePageLogic: state.coursePageLogic,
     courseId: ownProps.courseId,
@@ -742,6 +761,7 @@ const mapDispatchToProps = {
   toggleCodeReview,
   getAllTags,
   tagStudent,
+  sendEmail,
   updateActiveIndex,
   unTagStudent,
   resetLoading

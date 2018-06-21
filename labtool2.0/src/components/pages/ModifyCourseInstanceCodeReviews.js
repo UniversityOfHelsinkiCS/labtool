@@ -35,6 +35,7 @@ export class ModifyCourseInstanceReview extends React.Component {
       const codeReviews = this.props.codeReviewLogic.codeReviewStates[reviewNumber]
       const courseId = this.props.selectedInstance.id
       reviewNumber === 'create' ? (reviewNumber = this.props.selectedInstance.amountOfCodeReviews + 1) : reviewNumber
+
       const data = {
         codeReviews,
         reviewNumber,
@@ -84,16 +85,6 @@ export class ModifyCourseInstanceReview extends React.Component {
     this.props.toggleCreate()
   }
 
-  getCurrentReviewer = (codeReviewRound, id) => {
-    let reviewer = this.props.courseData.data.find(studentId => studentId.id === id)
-    let reviewInstance = reviewer.codeReviews.find(cd => cd.reviewNumber === codeReviewRound && cd.studentInstanceId === id)
-    if (!reviewInstance) {
-      return 'None'
-    }
-    let reviewee = this.props.dropdownUsers.find(dropDownStudent => dropDownStudent.value === reviewInstance.toReview)
-    return reviewee.text
-  }
-  
   addFilterTag = tag => {
     return () => {
       this.props.filterByTag(tag)
@@ -112,28 +103,20 @@ export class ModifyCourseInstanceReview extends React.Component {
     return hasRequiredTags
   }
 
+  getCurrentReviewer = (codeReviewRound, id) => {
+    let reviewer = this.props.courseData.data.find(studentId => studentId.id === id)
+    let reviewInstance = reviewer.codeReviews.find(cd => cd.reviewNumber === codeReviewRound && cd.studentInstanceId === id)
+    if (!reviewInstance) {
+      return 'None'
+    }
+    let reviewee = this.props.dropdownUsers.find(dropDownStudent => dropDownStudent.value === reviewInstance.toReview)
+    return reviewee.text
+  }
+
   render() {
     if (this.props.loading.loading) {
       return <Loader active />
     }
-    const createHeaders = () => {
-      const headers = []
-      for (var i = 0; i < this.props.selectedInstance.amountOfCodeReviews; i++) {
-        headers.push(<Table.HeaderCell key={i}>Code Review {i + 1} </Table.HeaderCell>)
-      }
-      return headers
-    }
-
-    const getCurrentReviewer = (codeReviewRound, id) => {
-      let reviewer = this.props.courseData.data.find(studentId => studentId.id === id)
-      let reviewInstance = reviewer.codeReviews.find(cd => cd.reviewNumber === codeReviewRound && cd.studentInstanceId === id)
-      if (!reviewInstance) {
-        return 'None'
-      }
-      let reviewee = this.props.dropdownUsers.find(dropDownStudent => dropDownStudent.value === reviewInstance.toReview)
-      return reviewee.text
-    }
-
     return (
       <div className="ModifyCourseInstanceCodeReviews" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
         <div className="ui grid">
@@ -278,7 +261,6 @@ export class ModifyCourseInstanceReview extends React.Component {
                               ))
                             </select>
                           ) : null}
-
                           {/* <Dropdown
                         className="toReviewDropdown"
                         placeholder="Select student"
@@ -369,8 +351,7 @@ const mapStateToProps = (state, ownProps) => {
     dropdownUsers: userHelper(state.coursePage.data),
     dropdownCodeReviews: codeReviewHelper(state.selectedInstance.amountOfCodeReviews),
     coursePageLogic: state.coursePageLogic,
-    loading: state.loading,
-    dropdownUsers: userHelper(state.coursePage.data)
+    loading: state.loading
   }
 }
 

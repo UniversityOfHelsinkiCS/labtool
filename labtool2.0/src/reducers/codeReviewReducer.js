@@ -54,6 +54,10 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
       currentSelections['create'] = {}
       return { ...state, codeReviewStates: codeReviewStates, currentSelections: currentSelections, statesCreated: true }
     }
+    case 'TOGGLE_CREATE':
+      return { ...state, showCreate: !state.showCreate }
+    case 'SELECT_DROPDOWN':
+      return { ...state, selectedDropdown: action.data }
     case 'INIT_REVIEW': {
       const oldReviews = state.codeReviewStates[action.data.round]
       let updatedReviews = {}
@@ -78,10 +82,7 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
       newCurrentSelections[action.data.round][action.data.reviewer] = action.data.toReview
       return { ...state, codeReviewStates: codeReviewRoundsToUpdate, currentSelections: newCurrentSelections }
     }
-    case 'TOGGLE_CREATE':
-      return { ...state, showCreate: !state.showCreate }
-    case 'SELECT_DROPDOWN':
-      return { ...state, selectedDropdown: action.data }
+
     case 'INIT_ALL_CHECKBOXES':
       return { ...state, checkBoxStates: action.data.data, randomizedCodeReview: action.data.ids }
     case 'INIT_CHECKBOX':
@@ -150,6 +151,23 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
   }
 }
 
+export const toggleCreate = () => {
+  return async dispatch => {
+    dispatch({
+      type: 'TOGGLE_CREATE'
+    })
+  }
+}
+
+export const createStates = data => {
+  return async dispatch => {
+    dispatch({
+      type: 'CREATE_STATES_FOR_CODE_REVIEWS',
+      data: data
+    })
+  }
+}
+
 export const initOneReview = data => {
   return async dispatch => {
     dispatch({
@@ -207,23 +225,6 @@ export const selectDropdown = data => {
   return async dispatch => {
     dispatch({
       type: 'SELECT_DROPDOWN',
-      data: data
-    })
-  }
-}
-
-export const toggleCreate = () => {
-  return async dispatch => {
-    dispatch({
-      type: 'TOGGLE_CREATE'
-    })
-  }
-}
-
-export const createStates = data => {
-  return async dispatch => {
-    dispatch({
-      type: 'CREATE_STATES_FOR_CODE_REVIEWS',
       data: data
     })
   }
