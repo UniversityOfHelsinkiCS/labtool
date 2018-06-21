@@ -130,6 +130,86 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
             type="checkbox"
           />
         </FormGroup>
+          <label
+            style={
+              Object {
+                "textAlign": "left",
+                "width": "125px",
+              }
+            }
+          >
+            Currently visible code reviews
+          </label>
+          <Popup
+            content="Click to be removed on save"
+            keepInViewPort={true}
+            key="1"
+            on="hover"
+            position="top left"
+            trigger={
+              <Button
+                as="button"
+                compact={true}
+                onClick={[Function]}
+                role="button"
+                value={1}
+              >
+                1
+              </Button>
+            }
+          />
+          <Popup
+            content="Click to be removed on save"
+            keepInViewPort={true}
+            key="2"
+            on="hover"
+            position="top left"
+            trigger={
+              <Button
+                as="button"
+                compact={true}
+                onClick={[Function]}
+                role="button"
+                value={2}
+              >
+                2
+              </Button>
+            }
+          />
+        </FormGroup>
+        <FormField
+          inline={true}
+        >
+          <Dropdown
+            additionLabel="Add "
+            additionPosition="top"
+            closeOnBlur={true}
+            deburr={false}
+            fluid={true}
+            icon="dropdown"
+            minCharacters={1}
+            multiple={true}
+            noResultsMessage="No results found."
+            onChange={[Function]}
+            openOnFocus={true}
+            options={
+              Array [
+                Object {
+                  "text": "3",
+                  "value": 3,
+                },
+              ]
+            }
+            placeholder="Select code review to set visible"
+            renderLabel={[Function]}
+            searchInput="text"
+            selectOnBlur={true}
+            selectOnNavigation={true}
+            selection={true}
+            wrapSelection={true}
+          />
+        </FormField>
+
         <FormField
           inline={true}
         >

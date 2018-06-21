@@ -556,16 +556,15 @@ export class CoursePage extends React.Component {
                               </Button>
                             </div>
                           ))}
-                        </span>
-                        <span>
                           <Popup
                             trigger={<Icon id="tag" onClick={this.changeHiddenTagDropdown(data.id)} name="plus circle" size="large" color="green" style={{ float: 'right' }} />}
-                            content="Add tag"
+                            content="Add or remove tag"
                           />
-
+                        </span>
+                        <div>
                           {this.props.coursePageLogic.showTagDropdown === data.id ? (
                             <div>
-                              <Dropdown id="tagDropdown" options={dropDownTags} onChange={this.changeSelectedTag()} placeholder="Choose tag" fluid selection />
+                              <Dropdown id="tagDropdown" style={{ float: 'left' }} options={dropDownTags} onChange={this.changeSelectedTag()} placeholder="Choose tag" fluid selection />
                               <div className="two ui buttons">
                                 <button className="ui icon positive button" onClick={this.addTag(data.id)} size="mini">
                                   <i className="plus icon" />
@@ -579,7 +578,7 @@ export class CoursePage extends React.Component {
                           ) : (
                             <div />
                           )}
-                        </span>
+                        </div>
                       </Table.Cell>
                       {createIndents(data.weeks, data.codeReviews, data.id)}
                       <Table.Cell>
