@@ -48,7 +48,8 @@ module.exports = {
             points: req.body.points,
             studentInstanceId: req.body.studentInstanceId,
             feedback: req.body.feedback,
-            weekNumber: req.body.weekNumber
+            weekNumber: req.body.weekNumber,
+            notified: false
           })
           res.status(200).send(week)
         }
