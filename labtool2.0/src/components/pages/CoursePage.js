@@ -302,7 +302,7 @@ export class CoursePage extends React.Component {
               <Accordion key={i} fluid styled>
                 <Accordion.Title active={i === this.props.coursePageLogic.activeIndex} index={i} onClick={this.handleClick}>
                   <Icon name="dropdown" />
-                  {(i + 1 > this.props.selectedInstance.weekAmount ? 'Final Review' : 'Week', i + 1)}, points {weeks.points}
+                  {weeks.weekNumber > this.props.selectedInstance.weekAmount ? <span>Final Review</span> : <span>Week {weeks.weekNumber}</span>}, points {weeks.points}
                 </Accordion.Title>
                 <Accordion.Content active={i === this.props.coursePageLogic.activeIndex}>
                   <Card fluid color="yellow">
