@@ -305,11 +305,9 @@ export class CoursePage extends React.Component {
                 <Accordion.Content active={i === this.props.coursePageLogic.activeIndex}>
                   <Card fluid color="yellow">
                     <Card.Content>
-                      <h4> Points: {weeks.points} </h4>
-                      <h4>
-                        {' '}
-                        Weekly feedback: <ReactMarkdown>{weeks.feedback}</ReactMarkdown>{' '}
-                      </h4>
+                      <h4> Points {weeks.points} </h4>
+                      <h4> Feedback </h4>
+                      <ReactMarkdown>{weeks.feedback}</ReactMarkdown>{' '}
                     </Card.Content>
                   </Card>
                   <h4> Comments </h4>
@@ -380,7 +378,7 @@ export class CoursePage extends React.Component {
                   <div className="codeReviewExpanded">
                     {cr.points !== null ? (
                       <div>
-                        <h4 className="codeReviewPoints">Points: {cr.points}</h4>
+                        <h4 className="codeReviewPoints">Points {cr.points}</h4>
                       </div>
                     ) : (
                       <div>

@@ -21,7 +21,7 @@ export class BrowseReviews extends Component {
   }
 
   componentDidMount() {
-    if (!this.props.loading.loading && this.state.activeIndex !== this.props.selectedInstance.currentWeek - 1 ) {
+    if (!this.props.loading.loading && this.state.activeIndex !== this.props.selectedInstance.currentWeek - 1) {
       this.setState({ activeIndex: this.props.selectedInstance.currentWeek - 1 })
     }
   }
@@ -98,11 +98,8 @@ export class BrowseReviews extends Component {
                   <Accordion.Content active={activeIndex === i}>
                     <Card fluid color="yellow">
                       <Card.Content>
-                        <h4> Points: {weeks.points} </h4>
-                        <h4>
-                          {' '}
-                          Weekly feedback: <ReactMarkdown>{weeks.feedback}</ReactMarkdown>{' '}
-                        </h4>
+                        <h4> Points {weeks.points} </h4> <h4>Feedback </h4>
+                        <ReactMarkdown>{weeks.feedback}</ReactMarkdown>{' '}
                       </Card.Content>
                     </Card>
                     <h4> Comments </h4>
@@ -172,11 +169,11 @@ export class BrowseReviews extends Component {
             })
             .forEach(cr => {
               headers.push(
-                <Accordion key={i+ii} fluid styled>
-                  <Accordion.Title active={activeIndex === i+ii} index={i+ii} onClick={this.handleClick}>
+                <Accordion key={i + ii} fluid styled>
+                  <Accordion.Title active={activeIndex === i + ii} index={i + ii} onClick={this.handleClick}>
                     <Icon name="dropdown" /> Code Review {cr.reviewNumber}{' '}
                   </Accordion.Title>
-                  <Accordion.Content active={activeIndex === i+ii}>
+                  <Accordion.Content active={activeIndex === i + ii}>
                     <p>Project: {this.props.courseData.data.find(data => data.id === cr.toReview).projectName}</p>
                     <p>
                       GitHub: <a href={this.props.courseData.data.find(data => data.id === cr.toReview).github}>{this.props.courseData.data.find(data => data.id === cr.toReview).github}</a>
@@ -197,17 +194,15 @@ export class BrowseReviews extends Component {
             if (finalWeek) {
               headers.push(
                 <Accordion key={i} fluid styled>
-                  <Accordion.Title active={activeIndex === i+ii} index={i+ii} onClick={this.handleClick}>
+                  <Accordion.Title active={activeIndex === i + ii} index={i + ii} onClick={this.handleClick}>
                     <Icon name="dropdown" /> Final Review, points {finalWeek.points}
                   </Accordion.Title>
-                  <Accordion.Content active={activeIndex === i+ii}>
+                  <Accordion.Content active={activeIndex === i + ii}>
                     <Card fluid color="yellow">
                       <Card.Content>
-                        <h4> Points: {finalWeek.points} </h4>
-                        <h4>
-                          {' '}
-                          Weekly feedback: <ReactMarkdown>{finalWeek.feedback}</ReactMarkdown>{' '}
-                        </h4>
+                        <h4> Points {finalWeek.points} </h4>
+                        <h4> Feedback </h4>
+                        <ReactMarkdown>{finalWeek.feedback}</ReactMarkdown>{' '}
                       </Card.Content>
                     </Card>
                     <h4> Comments </h4>
