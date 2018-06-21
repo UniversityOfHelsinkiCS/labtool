@@ -173,7 +173,7 @@ export class BrowseReviews extends Component {
               headers.push(
                 <Accordion key={i} fluid styled>
                   <Accordion.Title active={activeIndex === i} index={i} onClick={this.handleClick}>
-                    <Icon name="dropdown" /> Code Review {cr.reviewNumber}{' '}
+                    <Icon name="dropdown" /> Code Review {cr.reviewNumber} {cr.points !== null ? ', points ' + cr.points : ''}
                   </Accordion.Title>
                   <Accordion.Content active={activeIndex === i}>
                     <p>
