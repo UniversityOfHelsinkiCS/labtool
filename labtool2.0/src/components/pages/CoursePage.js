@@ -321,6 +321,9 @@ export class CoursePage extends React.Component {
                                   {' '}
                                   <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
                                 </Comment.Text>
+                                <Comment.Metadata>
+                                  <div>{comment.createdAt}</div>
+                                </Comment.Metadata>
                               </Comment.Content>
                             </Comment>
                           ) : (
@@ -330,6 +333,9 @@ export class CoursePage extends React.Component {
                                 {' '}
                                 <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
                               </Comment.Text>
+                              <Comment.Metadata>
+                                <div>{comment.createdAt}</div>
+                              </Comment.Metadata>
                             </Comment>
                           )
                       )
