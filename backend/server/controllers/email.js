@@ -193,6 +193,33 @@ const weekMessage = async (role, weekId) => {
   }
 }
 
+const markAsNotified = (useComment, id) => {
+  // Mark the comment/week as notified asynchronously in the background.
+  if (useComment) {
+    Comment.update(
+      {
+        notified: true
+      },
+      {
+        where: {
+          id
+        }
+      }
+    )
+  } else {
+    Week.update(
+      {
+        notified: true
+      },
+      {
+        where: {
+          id
+        }
+      }
+    )
+  }
+}
+
 module.exports = {
   async send(req, res) {
     await helper.controller_before_auth_check_action(req, res)
@@ -227,8 +254,7 @@ module.exports = {
           options.subject = `${message.content.course.name} new message` // Email tile
 
           // Email body defined as options.html
-          const link =
-            req.body.role === 'teacher' ? `${frontendUrl}/courses/${message.content.course.ohid}` : `${frontendUrl}/browsereviews/${message.content.course.ohid}/${message.studentId}`
+          const link = req.body.role === 'teacher' ? `${frontendUrl}/courses/${message.content.course.ohid}` : `${frontendUrl}/browsereviews/${message.content.course.ohid}/${message.studentId}`
           options.html = `
             <h1>You've received a message in Labtool.</h1>
             <p><a href="${link}">${link}</a></p>
@@ -285,8 +311,11 @@ module.exports = {
       }
 
       options.to = message.address // Email recipient
+
       if (env !== 'production') {
         // Cannot send emails from localhost. The smtp server would reject requests.
+        markAsNotified(useComment, req.body.commentId || req.body.weekId)
+
         res.status(200).send({
           message: 'Email sending simulated',
           data: req.body,
@@ -304,6 +333,8 @@ module.exports = {
         res.status(403).send('Email rejected by SMTP server.')
         return
       }
+
+      markAsNotified(useComment, req.body.commentId || req.body.weekId)
 
       res.status(200).send({
         message: 'Email sent successfully',
