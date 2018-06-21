@@ -179,7 +179,7 @@ export class BrowseReviews extends Component {
                       <strong>GitHub:</strong>{' '}
                       <a href={this.props.courseData.data.find(data => data.id === cr.toReview).github}>{this.props.courseData.data.find(data => data.id === cr.toReview).github}</a>
                     </p>
-                    <strong>Code review:</strong> {cr.linkToReview ? <a href={cr.linkToReview}>{cr.linkToReview}</a> : 'No issues linked yet'}
+                    <strong>Code review:</strong> {cr.linkToReview ? <a href={cr.linkToReview}>{cr.linkToReview}</a> : 'No review linked yet'}
                     {cr.points !== null ? <h4>{cr.points} points</h4> : <h4>Not graded yet</h4>}
                     <Form onSubmit={this.gradeCodeReview(cr.reviewNumber, studentInstance)}>
                       <label>Points </label>
