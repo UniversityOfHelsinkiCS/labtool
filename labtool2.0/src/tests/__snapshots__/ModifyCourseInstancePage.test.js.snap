@@ -130,53 +130,52 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
             type="checkbox"
           />
         </FormGroup>
-          <label
-            style={
-              Object {
-                "textAlign": "left",
-                "width": "125px",
-              }
+        <label
+          style={
+            Object {
+              "textAlign": "left",
+              "width": "125px",
             }
-          >
-            Currently visible code reviews
-          </label>
-          <Popup
-            content="Click to be removed on save"
-            keepInViewPort={true}
-            key="1"
-            on="hover"
-            position="top left"
-            trigger={
-              <Button
-                as="button"
-                compact={true}
-                onClick={[Function]}
-                role="button"
-                value={1}
-              >
-                1
-              </Button>
-            }
-          />
-          <Popup
-            content="Click to be removed on save"
-            keepInViewPort={true}
-            key="2"
-            on="hover"
-            position="top left"
-            trigger={
-              <Button
-                as="button"
-                compact={true}
-                onClick={[Function]}
-                role="button"
-                value={2}
-              >
-                2
-              </Button>
-            }
-          />
-        </FormGroup>
+          }
+        >
+          Currently visible code reviews
+        </label>
+        <Popup
+          content="Click to be removed on save"
+          keepInViewPort={true}
+          key="1"
+          on="hover"
+          position="top left"
+          trigger={
+            <Button
+              as="button"
+              compact={true}
+              onClick={[Function]}
+              role="button"
+              value={1}
+            >
+              1
+            </Button>
+          }
+        />
+        <Popup
+          content="Click to be removed on save"
+          keepInViewPort={true}
+          key="2"
+          on="hover"
+          position="top left"
+          trigger={
+            <Button
+              as="button"
+              compact={true}
+              onClick={[Function]}
+              role="button"
+              value={2}
+            >
+              2
+            </Button>
+          }
+        />
         <FormField
           inline={true}
         >
@@ -209,7 +208,6 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
             wrapSelection={true}
           />
         </FormField>
-
         <FormField
           inline={true}
         >
