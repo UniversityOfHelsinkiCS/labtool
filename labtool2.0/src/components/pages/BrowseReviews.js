@@ -51,6 +51,12 @@ export class BrowseReviews extends Component {
     }
   }
 
+  sortCommentsByDate = comments => {
+    return comments.sort((a, b) => {
+      return new Date(a.createdAt) - new Date(b.createdAt)
+    })
+  }
+
   gradeCodeReview = (reviewNumber, studentInstanceId) => async e => {
     e.preventDefault()
     const data = {
@@ -107,7 +113,7 @@ export class BrowseReviews extends Component {
                     <h4> Comments </h4>
                     <Comment.Group>
                       {weeks ? (
-                        weeks.comments.map(
+                        this.sortCommentsByDate(weeks.comments).map(
                           comment =>
                             comment.hidden ? (
                               <Comment disabled>
@@ -120,15 +126,21 @@ export class BrowseReviews extends Component {
                                     {' '}
                                     <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
                                   </Comment.Text>
+                                  <Comment.Metadata>
+                                    <div>{new Date(comment.createdAt).toLocaleString()}</div>
+                                  </Comment.Metadata>
                                 </Comment.Content>
                               </Comment>
                             ) : (
                               <Comment>
-                                <Comment.Author>{comment.from}</Comment.Author>
-                                <Comment.Text>
-                                  {' '}
-                                  <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
-                                </Comment.Text>
+                                  <Comment.Author>{comment.from}</Comment.Author>
+                                  <Comment.Text>
+                                    {' '}
+                                    <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
+                                  </Comment.Text>
+                                  <Comment.Metadata>
+                                    <div>{new Date(comment.createdAt).toLocaleString()}</div>
+                                  </Comment.Metadata>
                               </Comment>
                             )
                         )
