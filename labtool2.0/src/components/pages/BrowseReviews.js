@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Card, Accordion, Icon, Form, Comment, Input, Popup, Loader } from 'semantic-ui-react'
+import { Button, Card, Accordion, Icon, Form, Comment, Input, Popup, Loader, Label } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { createOneComment } from '../../services/comment'
@@ -116,10 +116,16 @@ export class BrowseReviews extends Component {
                         <h4> Points {weeks.points} </h4> <h4>Feedback </h4>
                         <ReactMarkdown>{weeks.feedback}</ReactMarkdown>{' '}
                       </Card.Content>
-                      <Card.Content>
-                        <Button type="button" onClick={this.sendWeekEmail(weeks.id)}>
-                          Send email notification
-                        </Button>
+                      <Card.Content style={{ paddingBottom: '5px' }}>
+                        {weeks.notified ? (
+                          <Label>
+                            Notified <Icon name="check" color="green" />
+                          </Label>
+                        ) : (
+                          <Button type="button" onClick={this.sendWeekEmail(weeks.id)} size="small">
+                            Send email notification
+                          </Button>
+                        )}
                       </Card.Content>
                     </Card>
                     <h4> Comments </h4>
@@ -148,10 +154,16 @@ export class BrowseReviews extends Component {
                                   <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
                                 </Comment.Text>
                                 {/* This hack compares user's name to comment.from and hides the email notification button when they don't match. */}
-                                {`${this.props.user.user.firsts} ${this.props.user.user.lastname}` === comment.from ? (
-                                  <Button type="button" onClick={this.sendCommentEmail(comment.id)}>
-                                    Send email notification
-                                  </Button>
+                                {comment.from.includes(this.props.user.user.lastname) ? (
+                                  comment.notified ? (
+                                    <Label>
+                                      Notified <Icon name="check" color="green" />
+                                    </Label>
+                                  ) : (
+                                    <Button type="button" onClick={this.sendCommentEmail(comment.id)} size="small">
+                                      Send email notification
+                                    </Button>
+                                  )
                                 ) : (
                                   <div />
                                 )}

@@ -5,6 +5,47 @@
  *
  */
 
+const teacherCommentNotification = (state, commentId) => {
+  const newData = [...state.data]
+  newData.forEach(student => {
+    student.weeks.forEach(week => {
+      week.comments.forEach(comment => {
+        if (comment.id === commentId) {
+          comment.notified = true
+          return { ...state, data: newData }
+        }
+      })
+    })
+  })
+  return state
+}
+
+const studentCommentNotification = (state, commentId) => {
+  const newWeeks = [...state.data.weeks]
+  newWeeks.forEach(week => {
+    week.comments.forEach(comment => {
+      if (comment.id === commentId) {
+        comment.notified = true
+        return { ...state, data: { ...state.data, weeks: newWeeks } }
+      }
+    })
+  })
+  return state
+}
+
+const weekNotification = (state, weekId) => {
+  const newData = [...state.data]
+  newData.forEach(student => {
+    student.weeks.forEach(week => {
+      if (week.id === weekId) {
+        week.notified = true
+        return { ...state, data: newData }
+      }
+    })
+  })
+  return state
+}
+
 const courseInstancereducer = (store = [], action) => {
   switch (action.type) {
     case 'CP_INFO_SUCCESS':
@@ -59,6 +100,16 @@ const courseInstancereducer = (store = [], action) => {
     case 'UNTAG_STUDENT_SUCCESS': {
       return { ...store, data: store.data.map(student => (student.id === action.response.id ? action.response : student)) }
     }
+    case 'SEND_EMAIL_SUCCESS':
+      if (store.role === 'teacher') {
+        if (action.response.data.commentId) {
+          return teacherCommentNotification(store, action.response.data.commentId)
+        } else {
+          return weekNotification(store, action.response.data.weekId)
+        }
+      } else {
+        return studentCommentNotification(store, action.response.data.commentId)
+      }
     default:
       return store
   }

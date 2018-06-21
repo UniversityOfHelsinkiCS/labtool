@@ -707,7 +707,8 @@ module.exports = {
               weekId: message.week,
               hidden: message.hidden,
               comment: message.comment,
-              from: name
+              from: name,
+              notified: false
             })
               .then(comment => {
                 if (!comment) {
