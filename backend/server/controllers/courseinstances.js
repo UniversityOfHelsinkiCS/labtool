@@ -99,9 +99,18 @@ module.exports = {
             attributes: ['toReview', 'reviewNumber', 'points', 'linkToReview'],
             as: 'codeReviews',
             where: {
-              reviewNumber: {
-                [Op.in]: course.currentCodeReview
-              }
+              [Op.or]: [
+                {
+                  reviewNumber: {
+                    [Op.in]: course.currentCodeReview
+                  }
+                },
+                {
+                  points: {
+                    [Op.ne]: null
+                  }
+                }
+              ]
             },
             required: false,
             include: [
@@ -117,9 +126,18 @@ module.exports = {
             attributes: ['studentInstanceId', 'reviewNumber'],
             as: 'toReviews',
             where: {
-              reviewNumber: {
-                [Op.in]: course.currentCodeReview
-              }
+              [Op.or]: [
+                {
+                  reviewNumber: {
+                    [Op.in]: course.currentCodeReview
+                  }
+                },
+                {
+                  points: {
+                    [Op.ne]: null
+                  }
+                }
+              ]
             },
             required: false,
             include: [
@@ -431,10 +449,11 @@ module.exports = {
                 name: req.body.name || courseInstance.name,
                 start: req.body.start || courseInstance.start,
                 end: req.body.end || courseInstance.end,
-                active: req.body.active || courseInstance.active,
+                active: String(req.body.active) || courseInstance.active, //Without stringifying req.body.active this gets interpreted as a boolean operation. Go javascript.
                 weekAmount: req.body.weekAmount || courseInstance.weekAmount,
                 weekMaxPoints: req.body.weekMaxPoints || courseInstance.weekMaxPoints,
-                currentWeek: req.body.currentWeek || courseInstance.currentWeek
+                currentWeek: req.body.currentWeek || courseInstance.currentWeek,
+                currentCodeReview: req.body.newCr.length === 0 ? '{}' : req.body.newCr
               })
               .then(updatedCourseInstance => res.status(200).send(updatedCourseInstance))
               .catch(error => res.status(400).send(error))
@@ -704,7 +723,6 @@ module.exports = {
         res.status(400).send(e)
       }
     }
-
   },
 
   /**

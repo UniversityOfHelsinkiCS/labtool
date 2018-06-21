@@ -148,10 +148,18 @@ describe('<BrowseReviews />', () => {
     ]
   }
 
+  const loading = {
+    loading: false,
+    loadingHooks: [],
+    redirect: false,
+    redirectHooks: [],
+    redirectFailure: false
+  }
+
   let mockFn = jest.fn()
 
   beforeEach(() => {
-    wrapper = shallow(<BrowseReviews getOneCI={mockFn} coursePageInformation={mockFn} courseData={courseData} selectedInstance={coursePage} />)
+    wrapper = shallow(<BrowseReviews getOneCI={mockFn} coursePageInformation={mockFn} courseData={courseData} selectedInstance={coursePage} loading={loading} resetLoading={mockFn} />)
   })
 
   describe('BrowseReviews Component', () => {

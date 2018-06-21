@@ -1,27 +1,20 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { getOneCI } from '../../services/courseInstance'
-import { insertCodeReviews } from '../../services/codeReview'
 import { coursePageInformation } from '../../services/courseInstance'
 import { bulkinsertCodeReviews } from '../../services/codeReview'
-import {
-  codeReviewReducer,
-  initOneReview,
-  initOrRemoveRandom,
-  initCheckbox,
-  initAllCheckboxes,
-  randomAssign,
-  codeReviewReset,
-  selectDropdown,
-  toggleCreate,
-  createStates
-} from '../../reducers/codeReviewReducer'
+import { initOneReview, initOrRemoveRandom, initCheckbox, initAllCheckboxes, randomAssign, codeReviewReset, selectDropdown, toggleCreate, createStates } from '../../reducers/codeReviewReducer'
 import { filterByTag } from '../../reducers/coursePageLogicReducer'
 import { clearNotifications } from '../../reducers/notificationReducer'
-import { Button, Table, Card, Form, Comment, List, Header, Label, Message, Icon, Dropdown, Checkbox } from 'semantic-ui-react'
+import { Button, Table, Checkbox, Loader, Dropdown, Label } from 'semantic-ui-react'
 import Notification from '../../components/pages/Notification'
+import { resetLoading } from '../../reducers/loadingReducer'
 
 export class ModifyCourseInstanceReview extends React.Component {
+  componentWillMount() {
+    this.props.resetLoading()
+  }
+
   componentDidMount() {
     this.props.getOneCI(this.props.courseId)
     this.props.coursePageInformation(this.props.courseId)
@@ -100,64 +93,57 @@ export class ModifyCourseInstanceReview extends React.Component {
     let reviewee = this.props.dropdownUsers.find(dropDownStudent => dropDownStudent.value === reviewInstance.toReview)
     return reviewee.text
   }
-  changeFilterTag = id => {
+
+  addFilterTag = tag => {
     return () => {
-      if (this.props.coursePageLogic.filterByTag === id) {
-        this.props.filterByTag(0)
-      } else {
-        this.props.filterByTag(id)
-      }
+      this.props.filterByTag(tag)
     }
   }
 
-  hasFilteredTag = (data, id) => {
-    for (let i = 0; i < data.Tags.length; i++) {
-      if (data.Tags[i].id === id) {
-        return data
+  hasFilteringTags = (studentTagsData, filteringTags) => {
+    let studentInstanceTagIds = studentTagsData.map(tag => tag.id)
+    let filteringTagIds = filteringTags.map(tag => tag.id)
+    let hasRequiredTags = true
+    for (let i = 0; i < filteringTagIds.length; i++) {
+      if (!studentInstanceTagIds.includes(filteringTagIds[i])) {
+        hasRequiredTags = false
       }
     }
+    return hasRequiredTags
   }
 
   render() {
-    const createHeaders = () => {
-      const headers = []
-      for (var i = 0; i < this.props.selectedInstance.amountOfCodeReviews; i++) {
-        headers.push(<Table.HeaderCell key={i}>Code Review {i + 1} </Table.HeaderCell>)
-      }
-      return headers
+    if (this.props.loading.loading) {
+      return <Loader active />
     }
-
-    const getCurrentReviewer = (codeReviewRound, id) => {
-      let reviewer = this.props.courseData.data.find(studentId => studentId.id === id)
-      let reviewInstance = reviewer.codeReviews.find(cd => cd.reviewNumber === codeReviewRound && cd.studentInstanceId === id)
-      if (!reviewInstance) {
-        return 'None'
-      }
-      let reviewee = this.props.dropdownUsers.find(dropDownStudent => dropDownStudent.value === reviewInstance.toReview)
-      return reviewee.text
-    }
-
     return (
       <div className="ModifyCourseInstanceCodeReviews" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
         <div className="ui grid">
           <div className="sixteen wide column">
             <h2>{this.props.selectedInstance.name}</h2>
           </div>
+          {this.props.coursePageLogic.filterByTag.length > 0 ? (
+            <div>
+              <span> Tag filters: </span>
+              {this.props.coursePageLogic.filterByTag.map(tag => (
+                <span key={tag.id}>
+                  <Button compact className={`mini ui ${tag.color} button`} onClick={this.addFilterTag(tag)}>
+                    {tag.name}
+                  </Button>
+                </span>
+              ))}
+            </div>
+          ) : (
+            <div>
+              Tag filters: <Label>none</Label>
+            </div>
+          )}
           <Table celled>
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell />
                 <Table.HeaderCell>Reviewer</Table.HeaderCell>
-                <Table.HeaderCell>
-                  Project Info
-                  {this.props.coursePageLogic.filterByTag !== 0 ? (
-                    <Button compact className="mini ui yellow button" floated="right" onClick={this.changeFilterTag(0)}>
-                      Clear tag filter
-                    </Button>
-                  ) : (
-                    <p />
-                  )}
-                </Table.HeaderCell>
+                <Table.HeaderCell>Project Info</Table.HeaderCell>
                 <Table.HeaderCell key={1}>
                   {' '}
                   <Dropdown onChange={this.createDropdown()} placeholder="Select code review" fluid options={this.props.dropdownCodeReviews} />
@@ -182,7 +168,7 @@ export class ModifyCourseInstanceReview extends React.Component {
               {this.props.courseData.data !== undefined
                 ? this.props.courseData.data
                     .filter(data => {
-                      return this.props.coursePageLogic.filterByTag === 0 || this.hasFilteredTag(data, this.props.coursePageLogic.filterByTag)
+                      return this.props.coursePageLogic.filterByTag.length === 0 || this.hasFilteringTags(data.Tags, this.props.coursePageLogic.filterByTag)
                     })
                     .map(data => (
                       <Table.Row key={data.id}>
@@ -204,7 +190,7 @@ export class ModifyCourseInstanceReview extends React.Component {
                           </p>
                           {data.Tags.map(tag => (
                             <div key={tag.id}>
-                              <Button compact floated="left" className={`mini ui ${tag.color} button`} onClick={this.changeFilterTag(tag.id)}>
+                              <Button compact floated="left" className={`mini ui ${tag.color} button`} onClick={this.addFilterTag(tag)}>
                                 {tag.name}
                               </Button>
                             </div>
@@ -365,7 +351,7 @@ const mapStateToProps = (state, ownProps) => {
     dropdownUsers: userHelper(state.coursePage.data),
     dropdownCodeReviews: codeReviewHelper(state.selectedInstance.amountOfCodeReviews),
     coursePageLogic: state.coursePageLogic,
-    dropdownUsers: userHelper(state.coursePage.data)
+    loading: state.loading
   }
 }
 
@@ -380,10 +366,11 @@ const mapDispatchToProps = {
   bulkinsertCodeReviews,
   randomAssign,
   codeReviewReset,
+  filterByTag,
+  resetLoading,
   selectDropdown,
   toggleCreate,
-  createStates,
-  filterByTag
+  createStates
 }
 
 export default connect(

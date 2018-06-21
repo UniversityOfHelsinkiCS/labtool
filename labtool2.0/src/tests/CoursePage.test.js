@@ -182,7 +182,16 @@ describe('<CoursePage /> as teacher', () => {
   const coursePageLogic = {
     showDropdown: '',
     selectedTeacher: '',
-    filterByAssistant: 0
+    filterByAssistant: 0,
+    filterByTag: []
+  }
+
+  const loading = {
+    loading: false,
+    loadingHooks: [],
+    redirect: false,
+    redirectHooks: [],
+    redirectFailure: false
   }
 
   let mockFn = jest.fn()
@@ -199,6 +208,8 @@ describe('<CoursePage /> as teacher', () => {
         getAllTags={mockFn}
         courseReset={mockFn}
         tags={tags}
+        loading={loading}
+        resetLoading={mockFn}
       />
     )
   })
@@ -360,7 +371,16 @@ describe('<CoursePage /> as student', () => {
     showDropdown: '',
     selectedTeacher: '',
     filterByAssistant: 0,
+    filterByTag: [],
     showCodeReviews: [2]
+  }
+
+  const loading = {
+    loading: false,
+    loadingHooks: [],
+    redirect: false,
+    redirectHooks: [],
+    redirectFailure: false
   }
 
   let mockFn = jest.fn()
@@ -378,6 +398,8 @@ describe('<CoursePage /> as student', () => {
         getAllTags={mockFn}
         courseReset={mockFn}
         tags={tags}
+        loading={loading}
+        resetLoading={mockFn}
       />
     )
   })

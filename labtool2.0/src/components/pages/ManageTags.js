@@ -1,10 +1,13 @@
 import React from 'react'
-import { Form, Input, Grid, Container, Button } from 'semantic-ui-react'
+import { Form, Input, Grid, Container, Button, Loader } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { createTag, getAllTags, removeTag } from '../../services/tags'
+import { resetLoading } from '../../reducers/loadingReducer'
 
 export class ManageTags extends React.Component {
-  componentWillMount() {
+
+  componentWillMount = async () => {
+    await this.props.resetLoading()
     this.props.getAllTags()
   }
 
@@ -129,14 +132,14 @@ export class ManageTags extends React.Component {
           </Grid>
           <h2>Current tags (click us)</h2>
           <br />
-          {this.props.tags && this.props.tags.tags ? (
+          {this.props.loading.loading ? (
+            <Loader active />
+          ) : (
             this.props.tags.tags.map(tag => (
               <button key={tag.id} className={`mini ui ${tag.color} button`} onClick={this.modifyTag(tag.name, tag.color)}>
                 {tag.name}
               </button>
             ))
-          ) : (
-            <div />
           )}
           <br />
           <br />
@@ -149,14 +152,16 @@ export class ManageTags extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     ownProps,
-    tags: state.tags
+    tags: state.tags,
+    loading: state.loading
   }
 }
 
 const mapDispatchToProps = {
   createTag,
   removeTag,
-  getAllTags
+  getAllTags,
+  resetLoading
 }
 
 export default connect(
