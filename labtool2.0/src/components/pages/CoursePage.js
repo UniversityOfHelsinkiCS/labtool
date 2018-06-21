@@ -322,7 +322,8 @@ export class CoursePage extends React.Component {
                                   <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
                                 </Comment.Text>
                                 <Comment.Metadata>
-                                  <div>{comment.createdAt}</div>
+                                  <div>{new Date(comment.createdAt).toLocaleString()}</div>
+                                {/* {convertUTCDateToLocalDate(new Date(comment.createdAt)).toLocaleString()} */}
                                 </Comment.Metadata>
                               </Comment.Content>
                             </Comment>
@@ -334,7 +335,7 @@ export class CoursePage extends React.Component {
                                 <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
                               </Comment.Text>
                               <Comment.Metadata>
-                                <div>{comment.createdAt}</div>
+                                <div>{new Date(comment.createdAt).toLocaleString()}</div>
                               </Comment.Metadata>
                             </Comment>
                           )
