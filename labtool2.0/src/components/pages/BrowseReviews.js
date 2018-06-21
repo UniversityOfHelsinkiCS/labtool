@@ -6,6 +6,7 @@ import { createOneComment } from '../../services/comment'
 import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import { gradeCodeReview } from '../../services/codeReview'
 import ReactMarkdown from 'react-markdown'
+import { sendEmail } from '../../services/email'
 import { resetLoading } from '../../reducers/loadingReducer'
 
 /**
@@ -61,6 +62,20 @@ export class BrowseReviews extends Component {
     this.props.gradeCodeReview(data)
   }
 
+  sendCommentEmail = commentId => async e => {
+    this.props.sendEmail({
+      commentId,
+      role: 'teacher'
+    })
+  }
+
+  sendWeekEmail = weekId => async e => {
+    this.props.sendEmail({
+      weekId,
+      role: 'teacher'
+    })
+  }
+
   render() {
     if (this.props.loading.loading) {
       return <Loader active />
@@ -101,6 +116,11 @@ export class BrowseReviews extends Component {
                         <h4> Points {weeks.points} </h4> <h4>Feedback </h4>
                         <ReactMarkdown>{weeks.feedback}</ReactMarkdown>{' '}
                       </Card.Content>
+                      <Card.Content>
+                        <Button type="button" onClick={this.sendWeekEmail(weeks.id)}>
+                          Send email notification
+                        </Button>
+                      </Card.Content>
                     </Card>
                     <h4> Comments </h4>
                     <Comment.Group>
@@ -127,6 +147,14 @@ export class BrowseReviews extends Component {
                                   {' '}
                                   <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
                                 </Comment.Text>
+                                {/* This hack compares user's name to comment.from and hides the email notification button when they don't match. */}
+                                {`${this.props.user.user.firsts} ${this.props.user.user.lastname}` === comment.from ? (
+                                  <Button type="button" onClick={this.sendCommentEmail(comment.id)}>
+                                    Send email notification
+                                  </Button>
+                                ) : (
+                                  <div />
+                                )}
                               </Comment>
                             )
                         )
@@ -307,6 +335,7 @@ const mapDispatchToProps = {
   getOneCI,
   coursePageInformation,
   gradeCodeReview,
+  sendEmail,
   resetLoading
 }
 

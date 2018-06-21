@@ -8,6 +8,7 @@ import { associateTeacherToStudent } from '../../services/assistant'
 import ReactMarkdown from 'react-markdown'
 import { getAllTags, tagStudent, unTagStudent } from '../../services/tags'
 import { addLinkToCodeReview } from '../../services/codeReview'
+import { sendEmail } from '../../services/email'
 import {
   showAssistantDropdown,
   showTagDropdown,
@@ -197,6 +198,13 @@ export class CoursePage extends React.Component {
     return []
   }
 
+  sendEmail = commentId => async e => {
+    this.props.sendEmail({
+      commentId,
+      role: 'student'
+    })
+  }
+
   render() {
     if (this.props.loading.loading) {
       return <Loader active />
@@ -347,6 +355,14 @@ export class CoursePage extends React.Component {
                                 {' '}
                                 <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
                               </Comment.Text>
+                              {/* This hack compares user's name to comment.from and hides the email notification button when they don't match. */}
+                              {`${this.props.user.user.firsts} ${this.props.user.user.lastname}` === comment.from ? (
+                                <Button type="button" onClick={this.sendEmail(comment.id)}>
+                                  Send email notification
+                                </Button>
+                              ) : (
+                                <div />
+                              )}
                             </Comment>
                           )
                       )
@@ -768,6 +784,7 @@ const mapDispatchToProps = {
   toggleCodeReview,
   getAllTags,
   tagStudent,
+  sendEmail,
   updateActiveIndex,
   unTagStudent,
   resetLoading
