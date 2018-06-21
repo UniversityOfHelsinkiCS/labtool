@@ -113,6 +113,26 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
           </strong>
            
           2
+          <br />
+           
+          <br />
+          <strong>
+            Project to review: 
+          </strong>
+          Tiran toinen labraprojekti
+          <br />
+          <strong>
+            Github: 
+          </strong>
+          <a
+            href="http://github.com/tiralabra2"
+          >
+            http://github.com/tiralabra2
+          </a>
+          <br />
+           
+          <br />
+          <div />
         </div>
         <p />
       </div>
@@ -152,8 +172,8 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
           </strong>
            
           1
-        </div>
-        <div>
+          <br />
+           
           <br />
           <strong>
             Project to review: 
@@ -171,45 +191,50 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
           <br />
            
           <br />
-          <strong>
-            Link your review here:
-          </strong>
-           
-          <br />
-          <Form
-            as="form"
-            onSubmit={[Function]}
-          >
-            <FormGroup
-              inline={true}
+          <div />
+        </div>
+        <div>
+          <div>
+            <strong>
+              Link your review here:
+            </strong>
+             
+            <br />
+            <Form
+              as="form"
+              onSubmit={[Function]}
             >
-              <Input
-                className="form-control1"
-                icon="github"
-                iconPosition="left"
-                name="issueslink"
-                placeholder="https://github.com/account/repo/issues/number"
-                required="true"
-                style={
-                  Object {
-                    "minWidth": "25em",
-                  }
-                }
-                type="text"
-              />
-            </FormGroup>
-            <FormGroup>
-              <Button
-                as="button"
-                color="blue"
-                compact={true}
-                role="button"
-                type="submit"
+              <FormGroup
+                inline={true}
               >
-                Submit
-              </Button>
-            </FormGroup>
-          </Form>
+                <Input
+                  className="form-control1"
+                  icon="github"
+                  iconPosition="left"
+                  name="reviewLink"
+                  placeholder="https://github.com/account/repo/issues/number"
+                  required="true"
+                  style={
+                    Object {
+                      "minWidth": "25em",
+                    }
+                  }
+                  type="text"
+                />
+              </FormGroup>
+              <FormGroup>
+                <Button
+                  as="button"
+                  color="blue"
+                  compact={true}
+                  role="button"
+                  type="submit"
+                >
+                  Submit
+                </Button>
+              </FormGroup>
+            </Form>
+          </div>
         </div>
       </div>
     </AccordionContent>
@@ -247,6 +272,26 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
           </strong>
            
           Not graded yet
+          <br />
+           
+          <br />
+          <strong>
+            Project to review: 
+          </strong>
+          Tira super projekti
+          <br />
+          <strong>
+            Github: 
+          </strong>
+          <a
+            href="http://github.com/superprojekti"
+          >
+            http://github.com/superprojekti
+          </a>
+          <br />
+           
+          <br />
+          <div />
         </div>
         <p />
       </div>
