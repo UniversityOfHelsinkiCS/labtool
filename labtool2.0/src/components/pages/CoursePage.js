@@ -7,6 +7,7 @@ import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import { associateTeacherToStudent } from '../../services/assistant'
 import ReactMarkdown from 'react-markdown'
 import { getAllTags, tagStudent, unTagStudent } from '../../services/tags'
+import { addLinkToCodeReview } from '../../services/codeReview'
 import { showAssistantDropdown, showTagDropdown, selectTeacher, selectTag, filterByAssistant, filterByTag, coursePageReset, toggleCodeReview } from '../../reducers/coursePageLogicReducer'
 
 export class CoursePage extends React.Component {
@@ -36,12 +37,6 @@ export class CoursePage extends React.Component {
     } catch (error) {
       console.log(error)
     }
-  }
-
-  handleAddingIssuesLink = e => {
-    e.preventDefault()
-    console.log('Hello ', e.target.issueslink.value)
-    e.target.issueslink.value = ''
   }
 
   componentWillMount() {
@@ -117,7 +112,18 @@ export class CoursePage extends React.Component {
       console.log(error)
     }
   }
-  
+
+  handleAddingIssueLink = (reviewNumber, studentInstance) => async e => {
+    e.preventDefault()
+    const data = {
+      reviewNumber,
+      studentInstanceId: studentInstance,
+      linkToReview: e.target.reviewLink.value
+    }
+    e.target.reviewLink.value = ''
+    this.props.addLinkToCodeReview(data)
+  }
+
   changeFilterAssistant = () => {
     return (e, data) => {
       const { value } = data
@@ -360,37 +366,50 @@ export class CoursePage extends React.Component {
                   <div className="codeReviewExpanded">
                     <div className="codeReviewPoints">
                       <strong>Points: </strong> {cr.points !== null ? cr.points : 'Not graded yet'}
+                      <br /> <br />
+                      <strong>Project to review: </strong>
+                      {cr.toReview.projectName}
+                      <br />
+                      <strong>Github: </strong>
+                      <a href={cr.toReview.github}>{cr.toReview.github}</a>
+                      <br /> <br />
+                      {cr.linkToReview ? (
+                        <div>
+                          <strong>Your review: </strong> <a href={cr.linkToReview}>{cr.linkToReview}</a>
+                        </div>
+                      ) : (
+                        <div />
+                      )}
                     </div>
 
                     {this.props.coursePageLogic.showCodeReviews.indexOf(cr.reviewNumber) !== -1 ? (
                       <div>
-                        <br />
-                        <strong>Project to review: </strong>
-                        {cr.toReview.projectName}
-                        <br />
-                        <strong>Github: </strong>
-                        <a href={cr.toReview.github}>{cr.toReview.github}</a>
-                        <br /> <br />
-                        <strong>Link your review here:</strong> <br />
-                        <Form onSubmit={this.handleAddingIssuesLink}>
-                          <Form.Group inline>
-                            <Input
-                              type="text"
-                              name="issueslink"
-                              icon="github"
-                              required="true"
-                              iconPosition="left"
-                              style={{ minWidth: '25em' }}
-                              placeholder="https://github.com/account/repo/issues/number"
-                              className="form-control1"
-                            />
-                          </Form.Group>
-                          <Form.Group>
-                            <Button compact type="submit" color="blue">
-                              Submit
-                            </Button>
-                          </Form.Group>
-                        </Form>
+                        {cr.linkToReview ? (
+                          <div />
+                        ) : (
+                          <div>
+                            <strong>Link your review here:</strong> <br />
+                            <Form onSubmit={this.handleAddingIssueLink(cr.reviewNumber, this.props.courseData.data.id)}>
+                              <Form.Group inline>
+                                <Input
+                                  type="text"
+                                  name="reviewLink"
+                                  icon="github"
+                                  required="true"
+                                  iconPosition="left"
+                                  style={{ minWidth: '25em' }}
+                                  placeholder="https://github.com/account/repo/issues/number"
+                                  className="form-control1"
+                                />
+                              </Form.Group>
+                              <Form.Group>
+                                <Button compact type="submit" color="blue">
+                                  Submit
+                                </Button>
+                              </Form.Group>
+                            </Form>
+                          </div>
+                        )}
                       </div>
                     ) : (
                       <p />
@@ -706,6 +725,7 @@ const mapDispatchToProps = {
   getOneCI,
   coursePageInformation,
   associateTeacherToStudent,
+  addLinkToCodeReview,
   showAssistantDropdown,
   showTagDropdown,
   selectTeacher,
@@ -719,7 +739,4 @@ const mapDispatchToProps = {
   unTagStudent
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(CoursePage)
+export default connect(mapStateToProps, mapDispatchToProps)(CoursePage)
