@@ -68,6 +68,12 @@ export class CoursePage extends React.Component {
     this.props.coursePageReset()
   }
 
+  sortCommentsByDate = comments => {
+    return comments.sort((a, b) => {
+      return new Date(a.createdAt) - new Date(b.createdAt)
+    })
+  }
+
   changeHiddenAssistantDropdown = id => {
     return () => {
       this.props.showAssistantDropdown(this.props.coursePageLogic.showAssistantDropdown === id ? '' : id)
@@ -308,7 +314,7 @@ export class CoursePage extends React.Component {
                   <h4> Comments </h4>
                   <Comment.Group>
                     {weeks ? (
-                      weeks.comments.map(
+                      this.sortCommentsByDate(weeks.comments).map(
                         comment =>
                           comment.hidden ? (
                             <Comment key={comment.id} disabled>
@@ -323,7 +329,6 @@ export class CoursePage extends React.Component {
                                 </Comment.Text>
                                 <Comment.Metadata>
                                   <div>{new Date(comment.createdAt).toLocaleString()}</div>
-                                {/* {convertUTCDateToLocalDate(new Date(comment.createdAt)).toLocaleString()} */}
                                 </Comment.Metadata>
                               </Comment.Content>
                             </Comment>
