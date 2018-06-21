@@ -196,7 +196,6 @@ export class CoursePage extends React.Component {
       let i = 0
       let finalPoints = undefined
       for (; i < this.props.selectedInstance.weekAmount; i++) {
-        console.log('pushing week nro ', i)
         let pushattava = (
           <Table.Cell key={i}>
             <p>-</p>
@@ -204,7 +203,6 @@ export class CoursePage extends React.Component {
         )
 
         for (var j = 0; j < weeks.length; j++) {
-          console.log('setting points for week ', j)
           if (i + 1 === weeks[j].weekNumber) {
             pushattava = (
               <Table.Cell key={i}>
