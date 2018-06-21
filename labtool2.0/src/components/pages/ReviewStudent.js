@@ -90,14 +90,13 @@ export class ReviewStudent extends Component {
             checklistPoints += row.points
           }
         })
+        if (checklistPoints < 0) {
+          checklistPoints = 0
+        } else if (checklistPoints > this.props.selectedInstance.weekMaxPoints) {
+          checklistPoints = this.props.selectedInstance.weekMaxPoints
+        }
       })
-      if (checklistPoints < 0) {
-        checklistPoints = 0
-      } else if (checklistPoints > this.props.selectedInstance.weekMaxPoints) {
-        checklistPoints = this.props.selectedInstance.weekMaxPoints
-      }
     }
-
     return (
       <div className="ReviewStudent" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
         <h2> {this.props.selectedInstance.name}</h2>
@@ -105,7 +104,7 @@ export class ReviewStudent extends Component {
           {' '}
           {studentData[0].User.firsts} {studentData[0].User.lastname}{' '}
         </h3>
-        <h3> Viikko {this.props.weekNumber} </h3>
+        {this.props.weekNumber > this.props.selectedInstance.weekAmount ? <h1>Final Review</h1> : <h3>Viikko {this.props.weekNumber}</h3>}
         <Grid>
           <Grid.Row columns={2}>
             <Grid.Column>
@@ -137,37 +136,41 @@ export class ReviewStudent extends Component {
                 </Form.Field>
               </Form>
             </Grid.Column>
-            <Grid.Column>
-              <h2>Checklist</h2>
-              {checkList ? (
-                <div className="checklist">
-                  {Object.keys(checkList.list).map(cl => (
-                    <Card className="checklistCard" fluid color="red" key={cl}>
-                      <Card.Content header={cl} />
-                      {checkList.list[cl].map(row => (
-                        <Card.Content className="checklistCardRow" key={row.name}>
-                          <Form.Field>
-                            <label>{row.name} </label>
-                            <Input type="checkbox" onChange={this.toggleCheckbox(row.name)} />
-                            <label> {row.points} p</label>
-                          </Form.Field>
-                        </Card.Content>
-                      ))}
-                    </Card>
-                  ))}
-                  <div>
-                    <Form className="checklistOutput" onSubmit={this.copyChecklistOutput}>
-                      <Form.TextArea className="checklistOutputText" name="text" value={checklistOutput} style={{ width: '100%', height: '250px' }} />
-                      <p className="checklistOutputPoints">points: {checklistPoints}</p>
-                      <input type="hidden" name="points" value={checklistPoints} />
-                      <Button type="submit">Copy to review fields</Button>
-                    </Form>
+            {checkList ? (
+              <Grid.Column>
+                <h2>Checklist</h2>
+                {checkList ? (
+                  <div className="checklist">
+                    {Object.keys(checkList.list).map(cl => (
+                      <Card className="checklistCard" fluid color="red" key={cl}>
+                        <Card.Content header={cl} />
+                        {checkList.list[cl].map(row => (
+                          <Card.Content className="checklistCardRow" key={row.name}>
+                            <Form.Field>
+                              <label>{row.name} </label>
+                              <Input type="checkbox" onChange={this.toggleCheckbox(row.name)} />
+                              <label> {row.points} p</label>
+                            </Form.Field>
+                          </Card.Content>
+                        ))}
+                      </Card>
+                    ))}
+                    <div>
+                      <Form className="checklistOutput" onSubmit={this.copyChecklistOutput}>
+                        <Form.TextArea className="checklistOutputText" name="text" value={checklistOutput} style={{ width: '100%', height: '250px' }} />
+                        <p className="checklistOutputPoints">points: {checklistPoints}</p>
+                        <input type="hidden" name="points" value={checklistPoints} />
+                        <Button type="submit">Copy to review fields</Button>
+                      </Form>
+                    </div>
                   </div>
-                </div>
-              ) : (
-                <p>There is no checklist for this week.</p>
-              )}
-            </Grid.Column>
+                ) : (
+                  <p>There is no checklist for this week.</p>
+                )}
+              </Grid.Column>
+            ) : (
+              <div />
+            )}
           </Grid.Row>
         </Grid>
       </div>

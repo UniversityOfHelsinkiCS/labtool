@@ -117,53 +117,65 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
         <FormGroup
           inline={true}
         >
-          <label
+          <Checkbox
+            label="Course has a final review"
+            name="finalReview"
+            onChange={[Function]}
             style={
               Object {
                 "textAlign": "left",
-                "width": "125px",
+                "width": "150px",
               }
             }
-          >
-            Currently visible code reviews
-          </label>
-          <Popup
-            content="Click to be removed on save"
-            keepInViewPort={true}
-            key="1"
-            on="hover"
-            position="top left"
-            trigger={
-              <Button
-                as="button"
-                compact={true}
-                onClick={[Function]}
-                role="button"
-                value={1}
-              >
-                1
-              </Button>
-            }
-          />
-          <Popup
-            content="Click to be removed on save"
-            keepInViewPort={true}
-            key="2"
-            on="hover"
-            position="top left"
-            trigger={
-              <Button
-                as="button"
-                compact={true}
-                onClick={[Function]}
-                role="button"
-                value={2}
-              >
-                2
-              </Button>
-            }
+            type="checkbox"
           />
         </FormGroup>
+        <label
+          style={
+            Object {
+              "textAlign": "left",
+              "width": "125px",
+            }
+          }
+        >
+          Currently visible code reviews
+        </label>
+        <Popup
+          content="Click to be removed on save"
+          keepInViewPort={true}
+          key="1"
+          on="hover"
+          position="top left"
+          trigger={
+            <Button
+              as="button"
+              compact={true}
+              onClick={[Function]}
+              role="button"
+              value={1}
+            >
+              1
+            </Button>
+          }
+        />
+        <Popup
+          content="Click to be removed on save"
+          keepInViewPort={true}
+          key="2"
+          on="hover"
+          position="top left"
+          trigger={
+            <Button
+              as="button"
+              compact={true}
+              onClick={[Function]}
+              role="button"
+              value={2}
+            >
+              2
+            </Button>
+          }
+        />
         <FormField
           inline={true}
         >
