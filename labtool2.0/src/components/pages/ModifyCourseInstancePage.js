@@ -108,30 +108,33 @@ export class ModifyCourseInstancePage extends Component {
               <Form.Group inline>
                 <label style={{ width: '125px', textAlign: 'left' }}>Currently visible code reviews</label>
                 {this.props.selectedInstance.currentCodeReview
-                  ? this.props.selectedInstance.currentCodeReview.map(
-                      cr =>
-                        this.state.toRemoveCr.includes(cr) ? (
-                          <Popup
-                            key={cr}
-                            trigger={
-                              <Button color="red" value={cr} onClick={this.handleRemoveChange} compact>
-                                {cr}
-                              </Button>
-                            }
-                            content={'Click to not be removed on save'}
-                          />
-                        ) : (
-                          <Popup
-                            key={cr}
-                            trigger={
-                              <Button value={cr} onClick={this.handleRemoveChange} compact>
-                                {cr}
-                              </Button>
-                            }
-                            content={'Click to be removed on save'}
-                          />
-                        )
-                    )
+                  ? this.props.selectedInstance.currentCodeReview.sort((a, b) => {
+                        return a - b
+                      })
+                      .map(
+                        cr =>
+                          this.state.toRemoveCr.includes(cr) ? (
+                            <Popup
+                              key={cr}
+                              trigger={
+                                <Button color="red" value={cr} onClick={this.handleRemoveChange} compact>
+                                  {cr}
+                                </Button>
+                              }
+                              content={'Click to not be removed on save'}
+                            />
+                          ) : (
+                            <Popup
+                              key={cr}
+                              trigger={
+                                <Button value={cr} onClick={this.handleRemoveChange} compact>
+                                  {cr}
+                                </Button>
+                              }
+                              content={'Click to be removed on save'}
+                            />
+                          )
+                      )
                   : null}
               </Form.Group>
 
