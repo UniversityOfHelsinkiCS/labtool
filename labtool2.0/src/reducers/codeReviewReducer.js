@@ -11,7 +11,7 @@ const INITIAL_STATE = {
   randomizedCodeReview: [],
   codeReviewStates: {},
   currentSelections: {},
-  selectedDropdown: '',
+  selectedDropdown: null,
   checkBoxStates: {},
   statesCreated: false,
   initialized: false,
@@ -25,6 +25,12 @@ function shuffleArray(array) {
     array[i] = array[j]
     array[j] = temp
   }
+}
+
+function tagsToArray(tags) {
+  let tagsA = []
+  tags.forEach(t => tagsA.push(t.name))
+  return tagsA
 }
 
 function purgeCodeReviews(codeReviewStateArray, toPurgeArray) {
@@ -56,13 +62,17 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
     }
     case 'INIT_REVIEW': {
       const oldReviews = state.codeReviewStates[action.data.round]
+      let selections = state.currentSelections
       let updatedReviews = {}
       let codeReviewRoundsToUpdate = state.codeReviewStates
 
       if (!action.data.toReview) {
+        console.log(selections)
+        delete selections[action.data.round][action.data.reviewer]
+        console.log(selections)
         updatedReviews = oldReviews.filter(cr => cr.reviewer !== action.data.reviewer)
         codeReviewRoundsToUpdate[action.data.round] = updatedReviews
-        return { ...state, codeReviewStates: codeReviewRoundsToUpdate }
+        return { ...state, codeReviewStates: codeReviewRoundsToUpdate, currentSelections: selections }
       }
       let toUpdate = oldReviews.find(f => f.reviewer === action.data.reviewer)
       if (toUpdate) {
@@ -85,6 +95,7 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
     case 'INIT_ALL_CHECKBOXES':
       return { ...state, checkBoxStates: action.data.data, randomizedCodeReview: action.data.ids }
     case 'INIT_CHECKBOX':
+      console.log('insinde INIT checkbox', action.data)
       var cb = state.checkBoxStates
       if (cb[action.data]) {
         cb[action.data] = !cb[action.data]
@@ -103,6 +114,18 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
       }
       rndCr = rndCr.filter(rnd => rnd !== action.data)
       return { ...state, randomizedCodeReview: rndCr }
+    case 'FILTER_STATES_BY_TAG': {
+      let tags = tagsToArray(action.data.tags)
+      let cbStates = state.checkBoxStates
+      let randomized = state.randomizedCodeReview
+      action.data.students.forEach(stud => {
+        if (state.checkBoxStates[stud.id]) {
+          const studT = stud.Tags.filter(st => tags.includes(st.name))
+          studT.length === 0 ? ((cbStates[stud.id] = !cbStates[stud.id]), (randomized = randomized.filter(r => r !== stud.id))) : null
+        }
+      })
+      return { ...state, randomizedCodeReview: randomized, checkBoxStates: cbStates }
+    }
     case 'CODE_REVIEW_BULKINSERT_SUCCESS':
       var codeReviewRoundsToUpdate = state.codeReviewStates
       var currentSelectionsToUpdate = state.currentSelections
@@ -229,4 +252,12 @@ export const createStates = data => {
   }
 }
 
+export const filterStatesByTags = data => {
+  return async dispatch => {
+    dispatch({
+      type: 'FILTER_STATES_BY_TAG',
+      data: data
+    })
+  }
+}
 export default codeReviewReducer

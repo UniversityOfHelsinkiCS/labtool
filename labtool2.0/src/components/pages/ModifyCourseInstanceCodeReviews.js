@@ -3,9 +3,20 @@ import { connect } from 'react-redux'
 import { getOneCI } from '../../services/courseInstance'
 import { coursePageInformation } from '../../services/courseInstance'
 import { bulkinsertCodeReviews } from '../../services/codeReview'
-import { initOneReview, initOrRemoveRandom, initCheckbox, initAllCheckboxes, randomAssign, codeReviewReset, selectDropdown, toggleCreate, createStates } from '../../reducers/codeReviewReducer'
+import {
+  filterStatesByTags,
+  initOneReview,
+  initOrRemoveRandom,
+  initCheckbox,
+  initAllCheckboxes,
+  randomAssign,
+  codeReviewReset,
+  selectDropdown,
+  toggleCreate,
+  createStates
+} from '../../reducers/codeReviewReducer'
 import { filterByTag } from '../../reducers/coursePageLogicReducer'
-import { clearNotifications } from '../../reducers/notificationReducer'
+import { clearNotifications, showNotification } from '../../reducers/notificationReducer'
 import { Button, Table, Checkbox, Loader, Dropdown, Label } from 'semantic-ui-react'
 import Notification from '../../components/pages/Notification'
 import { resetLoading } from '../../reducers/loadingReducer'
@@ -40,7 +51,7 @@ export class ModifyCourseInstanceReview extends React.Component {
         reviewNumber,
         courseId
       }
-      await this.props.bulkinsertCodeReviews(data)
+      codeReviews.length < 2 ? this.props.showNotification({ message: 'Select atleast two persons for code review!', error: true }) : await this.props.bulkinsertCodeReviews(data)
     } catch (error) {}
   }
 
@@ -65,9 +76,18 @@ export class ModifyCourseInstanceReview extends React.Component {
 
   selectAllCheckboxes = () => {
     return () => {
+      let studentTags = []
       let allCb = {}
-      this.props.courseData.data.forEach(student => (allCb[student.id] = true))
-      let randoms = this.props.courseData.data.map(student => student.id)
+      let selectedTags = []
+      this.props.coursePageLogic.filterByTag.forEach(st => selectedTags.push(st.name))
+      selectedTags.length > 0
+        ? this.props.courseData.data.forEach(student => {
+            studentTags = student.Tags.filter(st => selectedTags.includes(st.name))
+            studentTags.length > 0 ? (allCb[student.id] = true) : null
+            studentTags = []
+          })
+        : this.props.courseData.data.forEach(st => (allCb[st.id] = true))
+      let randoms = Object.keys(allCb).map(student => parseInt(student))
       this.props.initAllCheckboxes({ data: allCb, ids: randoms })
     }
   }
@@ -95,8 +115,9 @@ export class ModifyCourseInstanceReview extends React.Component {
   }
 
   addFilterTag = tag => {
-    return () => {
-      this.props.filterByTag(tag)
+    return async () => {
+      await this.props.filterByTag(tag)
+      this.props.filterStatesByTags({ tags: this.props.coursePageLogic.filterByTag, students: this.props.courseData.data })
     }
   }
 
@@ -108,10 +129,27 @@ export class ModifyCourseInstanceReview extends React.Component {
       if (!studentInstanceTagIds.includes(filteringTagIds[i])) {
         hasRequiredTags = false
       }
+      return hasRequiredTags
     }
+
     return hasRequiredTags
   }
 
+  assignRandomly = reviewNumber => {
+    return () => {
+      if (reviewNumber === 'create') {
+        this.props.codeReviewLogic.randomizedCodeReview.length > 1
+          ? this.props.randomAssign({ reviewNumber: reviewNumber })
+          : this.props.showNotification({ message: 'Select atleast two persons for code review!', error: true })
+      } else {
+        this.props.codeReviewLogic.selectedDropdown
+          ? this.props.codeReviewLogic.randomizedCodeReview.length > 1
+            ? this.props.randomAssign({ reviewNumber: reviewNumber })
+            : this.props.showNotification({ message: 'Select atleast two persons for code review!', error: true })
+          : this.props.showNotification({ message: 'Select a code review!', error: true })
+      }
+    }
+  }
   render() {
     if (this.props.loading.loading) {
       return <Loader active />
@@ -146,7 +184,13 @@ export class ModifyCourseInstanceReview extends React.Component {
                 <Table.HeaderCell>Project Info</Table.HeaderCell>
                 <Table.HeaderCell key={1}>
                   {' '}
-                  <Dropdown onChange={this.createDropdown()} placeholder="Select code review" fluid options={this.props.dropdownCodeReviews} />
+                  <Dropdown
+                    onChange={this.createDropdown()}
+                    defaultValue={this.props.codeReviewLogic.selectedDropdown}
+                    placeholder="Select code review"
+                    fluid
+                    options={this.props.dropdownCodeReviews}
+                  />
                 </Table.HeaderCell>
                 <Table.HeaderCell>
                   {this.props.codeReviewLogic.showCreate ? (
@@ -247,15 +291,17 @@ export class ModifyCourseInstanceReview extends React.Component {
                             <select className="toReviewDropdown" onChange={this.addCodeReview('create', data.id)}>
                               {this.props.dropdownUsers.map(
                                 d =>
-                                  this.props.codeReviewLogic.currentSelections['create'][data.id] == d.value ? (
-                                    <option selected="selected" key={d.value} value={d.value}>
-                                      {d.text}
-                                    </option>
-                                  ) : (
-                                    <option key={d.value} value={d.value}>
-                                      {d.text}
-                                    </option>
-                                  )
+                                  d.value !== data.id ? (
+                                    this.props.codeReviewLogic.currentSelections['create'][data.id] == d.value ? (
+                                      <option selected="selected" key={d.value} value={d.value}>
+                                        {d.text}
+                                      </option>
+                                    ) : (
+                                      <option key={d.value} value={d.value}>
+                                        {d.text}
+                                      </option>
+                                    )
+                                  ) : null
                               )}
                               ))
                             </select>
@@ -286,7 +332,7 @@ export class ModifyCourseInstanceReview extends React.Component {
                 <Table.HeaderCell />
                 <Table.HeaderCell />
                 <Table.HeaderCell>
-                  <Button compact onClick={() => this.props.randomAssign({ reviewNumber: this.props.codeReviewLogic.selectedDropdown })} size="small" style={{ float: 'left' }}>
+                  <Button compact onClick={this.assignRandomly(this.props.codeReviewLogic.selectedDropdown)} size="small" style={{ float: 'left' }}>
                     Assign selected randomly
                   </Button>
                   <Button compact size="small" style={{ float: 'right' }} onClick={this.handleSubmit(this.props.codeReviewLogic.selectedDropdown)}>
@@ -294,7 +340,7 @@ export class ModifyCourseInstanceReview extends React.Component {
                   </Button>
                 </Table.HeaderCell>
                 <Table.HeaderCell style={{ display: this.props.codeReviewLogic.showCreate ? '' : 'none' }}>
-                  <Button compact onClick={() => this.props.randomAssign({ reviewNumber: 'create' })} size="small" style={{ float: 'left' }}>
+                  <Button compact onClick={this.assignRandomly('create')} size="small" style={{ float: 'left' }}>
                     Assign selected randomly
                   </Button>
                   <Button compact size="small" style={{ float: 'right' }} onClick={this.handleSubmit('create')}>
@@ -370,7 +416,9 @@ const mapDispatchToProps = {
   resetLoading,
   selectDropdown,
   toggleCreate,
-  createStates
+  createStates,
+  filterStatesByTags,
+  showNotification
 }
 
 export default connect(
