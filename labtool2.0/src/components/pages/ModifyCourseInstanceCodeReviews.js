@@ -93,7 +93,7 @@ export class ModifyCourseInstanceReview extends React.Component {
     let reviewee = this.props.dropdownUsers.find(dropDownStudent => dropDownStudent.value === reviewInstance.toReview)
     return reviewee.text
   }
-  
+
   addFilterTag = tag => {
     return () => {
       this.props.filterByTag(tag)
@@ -116,24 +116,6 @@ export class ModifyCourseInstanceReview extends React.Component {
     if (this.props.loading.loading) {
       return <Loader active />
     }
-    const createHeaders = () => {
-      const headers = []
-      for (var i = 0; i < this.props.selectedInstance.amountOfCodeReviews; i++) {
-        headers.push(<Table.HeaderCell key={i}>Code Review {i + 1} </Table.HeaderCell>)
-      }
-      return headers
-    }
-
-    const getCurrentReviewer = (codeReviewRound, id) => {
-      let reviewer = this.props.courseData.data.find(studentId => studentId.id === id)
-      let reviewInstance = reviewer.codeReviews.find(cd => cd.reviewNumber === codeReviewRound && cd.studentInstanceId === id)
-      if (!reviewInstance) {
-        return 'None'
-      }
-      let reviewee = this.props.dropdownUsers.find(dropDownStudent => dropDownStudent.value === reviewInstance.toReview)
-      return reviewee.text
-    }
-
     return (
       <div className="ModifyCourseInstanceCodeReviews" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
         <div className="ui grid">
@@ -369,8 +351,7 @@ const mapStateToProps = (state, ownProps) => {
     dropdownUsers: userHelper(state.coursePage.data),
     dropdownCodeReviews: codeReviewHelper(state.selectedInstance.amountOfCodeReviews),
     coursePageLogic: state.coursePageLogic,
-    loading: state.loading,
-    dropdownUsers: userHelper(state.coursePage.data)
+    loading: state.loading
   }
 }
 

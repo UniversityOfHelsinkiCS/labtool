@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Input, Button, Grid, Checkbox, Loader } from 'semantic-ui-react'
+import { Form, Input, Button, Grid, Radio, Dropdown, Checkbox, Loader, Popup } from 'semantic-ui-react'
 import { getOneCI, modifyOneCI } from '../../services/courseInstance'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
@@ -12,6 +12,14 @@ import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
  *  Page used to modify a courseinstances information. Can only be accessed by teachers.
  */
 export class ModifyCourseInstancePage extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      toRemoveCr: [],
+      toAddCr: []
+    }
+  }
+
   componentWillMount = async () => {
     await this.props.resetLoading()
     this.props.clearNotifications()
@@ -32,16 +40,30 @@ export class ModifyCourseInstancePage extends Component {
     })
   }
 
+  handleRemoveChange = (e, { value }) => {
+    e.preventDefault()
+    this.setState({ toRemoveCr: this.state.toRemoveCr.includes(value) ? this.state.toRemoveCr.filter(cr => cr !== value) : [...this.state.toRemoveCr, value] })
+  }
+
+  handleAddChange = (e, { value }) => {
+    e.preventDefault()
+    this.setState({ toAddCr: value })
+  }
+
   handleSubmit = async e => {
     try {
       e.preventDefault()
+
+      let newCr = this.props.selectedInstance.currentCodeReview.filter(cr => !this.state.toRemoveCr.includes(cr))
+      newCr = newCr.concat(this.state.toAddCr)
       const { weekAmount, weekMaxPoints, currentWeek, active, ohid } = this.props.selectedInstance
       const content = {
         weekAmount,
         weekMaxPoints,
         currentWeek,
         active,
-        ohid
+        ohid,
+        newCr
       }
       this.props.addRedirectHook({
         hook: 'CI_MODIFY_ONE_'
@@ -83,6 +105,43 @@ export class ModifyCourseInstancePage extends Component {
                 <Input name="currentWeek" required="true" type="text" style={{ maxWidth: '7em' }} value={selectedInstance.currentWeek} className="form-control3" onChange={this.changeField} />
               </Form.Group>
 
+              <Form.Group inline>
+                <label style={{ width: '125px', textAlign: 'left' }}>Currently visible code reviews</label>
+                {this.props.selectedInstance.currentCodeReview
+                  ? this.props.selectedInstance.currentCodeReview.sort((a, b) => {
+                        return a - b
+                      })
+                      .map(
+                        cr =>
+                          this.state.toRemoveCr.includes(cr) ? (
+                            <Popup
+                              key={cr}
+                              trigger={
+                                <Button color="red" value={cr} onClick={this.handleRemoveChange} compact>
+                                  {cr}
+                                </Button>
+                              }
+                              content={'Click to not be removed on save'}
+                            />
+                          ) : (
+                            <Popup
+                              key={cr}
+                              trigger={
+                                <Button value={cr} onClick={this.handleRemoveChange} compact>
+                                  {cr}
+                                </Button>
+                              }
+                              content={'Click to be removed on save'}
+                            />
+                          )
+                      )
+                  : null}
+              </Form.Group>
+
+              <Form.Field inline>
+                <Dropdown onChange={this.handleAddChange} options={this.props.codeReviewDropdowns} fluid selection multiple={true} placeholder="Select code review to set visible" />
+              </Form.Field>
+
               <Form.Field inline>
                 <Checkbox name="courseActive" label="Activate course" checked={selectedInstance.active} onChange={this.handleChange} style={{ width: '150px', textAlign: 'left' }} />
               </Form.Field>
@@ -108,17 +167,17 @@ export class ModifyCourseInstancePage extends Component {
           </Button>
         </Link>
         <Link to={`/labtool/ModifyCourseInstanceCodeReviews/${this.props.selectedInstance.ohid}`}>
-          <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px'  }} block="true">
+          <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px' }} block="true">
             Add or modify codereviews
           </Button>
         </Link>
         <Link to={`/labtool/checklist/${this.props.selectedInstance.ohid}/create`}>
-          <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px'  }} block="true">
+          <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px' }} block="true">
             Create new checklist
           </Button>
         </Link>
         <Link to={`/labtool/managetags`}>
-          <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px'  }} block="true">
+          <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px' }} block="true">
             Edit tags
           </Button>
         </Link>
@@ -127,10 +186,29 @@ export class ModifyCourseInstancePage extends Component {
   }
 }
 
+const createDropdownCodereviews = (amount, current) => {
+  let ddCr = []
+  let i = 1
+  if (amount && current) {
+    while (i <= amount) {
+      if (!current.includes(i)) {
+        ddCr.push({
+          value: i,
+          text: `Codereview ${i}`
+        })
+      }
+      i++
+    }
+  }
+  return ddCr
+}
+
 const mapStateToProps = (state, ownProps) => {
   return {
     selectedInstance: state.selectedInstance,
     notification: state.notification,
+    ownProps,
+    codeReviewDropdowns: createDropdownCodereviews(state.selectedInstance.amountOfCodeReviews, state.selectedInstance.currentCodeReview),
     loading: state.loading,
     ownProps
   }
