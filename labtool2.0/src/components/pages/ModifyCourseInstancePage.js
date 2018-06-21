@@ -45,7 +45,7 @@ export class ModifyCourseInstancePage extends Component {
     const newValue = !this.props.selectedInstance.finalReview
     this.props.setFinalReview(newValue)
   }
-  
+
   handleRemoveChange = (e, { value }) => {
     e.preventDefault()
     this.setState({ toRemoveCr: this.state.toRemoveCr.includes(value) ? this.state.toRemoveCr.filter(cr => cr !== value) : [...this.state.toRemoveCr, value] })
@@ -121,37 +121,37 @@ export class ModifyCourseInstancePage extends Component {
                   style={{ width: '150px', textAlign: 'left' }}
                 />
               </Form.Group>
-                <label style={{ width: '125px', textAlign: 'left' }}>Currently visible code reviews</label>
-                {this.props.selectedInstance.currentCodeReview
-                  ? this.props.selectedInstance.currentCodeReview.sort((a, b) => {
-                        return a - b
-                      })
-                      .map(
-                        cr =>
-                          this.state.toRemoveCr.includes(cr) ? (
-                            <Popup
-                              key={cr}
-                              trigger={
-                                <Button color="red" value={cr} onClick={this.handleRemoveChange} compact>
-                                  {cr}
-                                </Button>
-                              }
-                              content={'Click to not be removed on save'}
-                            />
-                          ) : (
-                            <Popup
-                              key={cr}
-                              trigger={
-                                <Button value={cr} onClick={this.handleRemoveChange} compact>
-                                  {cr}
-                                </Button>
-                              }
-                              content={'Click to be removed on save'}
-                            />
-                          )
-                      )
-                  : null}
-              </Form.Group>
+              <label style={{ width: '125px', textAlign: 'left' }}>Currently visible code reviews</label>
+              {this.props.selectedInstance.currentCodeReview
+                ? this.props.selectedInstance.currentCodeReview
+                    .sort((a, b) => {
+                      return a - b
+                    })
+                    .map(
+                      cr =>
+                        this.state.toRemoveCr.includes(cr) ? (
+                          <Popup
+                            key={cr}
+                            trigger={
+                              <Button color="red" value={cr} onClick={this.handleRemoveChange} compact>
+                                {cr}
+                              </Button>
+                            }
+                            content={'Click to not be removed on save'}
+                          />
+                        ) : (
+                          <Popup
+                            key={cr}
+                            trigger={
+                              <Button value={cr} onClick={this.handleRemoveChange} compact>
+                                {cr}
+                              </Button>
+                            }
+                            content={'Click to be removed on save'}
+                          />
+                        )
+                    )
+                : null}
 
               <Form.Field inline>
                 <Dropdown onChange={this.handleAddChange} options={this.props.codeReviewDropdowns} fluid selection multiple={true} placeholder="Select code review to set visible" />
