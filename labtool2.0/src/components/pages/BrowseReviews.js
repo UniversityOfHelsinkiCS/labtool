@@ -12,7 +12,13 @@ import { resetLoading } from '../../reducers/loadingReducer'
  * Maps all comments from a single instance from coursePage reducer
  */
 export class BrowseReviews extends Component {
-  state = { activeIndex: 0 }
+  constructor(props) {
+    super(props)
+    this.state = {
+      activeIndex: 0,
+      initialLoading: true
+    }
+  }
 
   componentWillMount = async () => {
     await this.props.resetLoading()
@@ -23,6 +29,12 @@ export class BrowseReviews extends Component {
   componentDidMount() {
     if (!this.props.loading.loading && this.state.activeIndex !== this.props.selectedInstance.currentWeek - 1) {
       this.setState({ activeIndex: this.props.selectedInstance.currentWeek - 1 })
+    }
+  }
+
+  componentDidUpdate() {
+    if (!this.props.loading.loading && this.state.initialLoading) {
+      this.setState({ initialLoading: false })
     }
   }
 
@@ -62,7 +74,7 @@ export class BrowseReviews extends Component {
   }
 
   render() {
-    if (this.props.loading.loading) {
+    if (this.state.initialLoading) {
       return <Loader active />
     }
     const createHeaders = (studhead, studentInstance) => {
@@ -276,6 +288,7 @@ export class BrowseReviews extends Component {
 
     return (
       <div className="BrowseReviews" style={{ overflowX: 'auto' }}>
+        <Loader active={this.props.loading.loading} />
         {this.props.courseData.role === 'teacher' ? (
           <div>
             <Link to={`/labtool/courses/${this.props.selectedInstance.ohid}`}>
