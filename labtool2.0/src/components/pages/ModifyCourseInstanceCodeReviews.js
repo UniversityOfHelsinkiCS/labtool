@@ -35,6 +35,7 @@ export class ModifyCourseInstanceReview extends React.Component {
       const codeReviews = this.props.codeReviewLogic.codeReviewStates[reviewNumber]
       const courseId = this.props.selectedInstance.id
       reviewNumber === 'create' ? (reviewNumber = this.props.selectedInstance.amountOfCodeReviews + 1) : reviewNumber
+
       const data = {
         codeReviews,
         reviewNumber,
@@ -84,16 +85,6 @@ export class ModifyCourseInstanceReview extends React.Component {
     this.props.toggleCreate()
   }
 
-  getCurrentReviewer = (codeReviewRound, id) => {
-    let reviewer = this.props.courseData.data.find(studentId => studentId.id === id)
-    let reviewInstance = reviewer.codeReviews.find(cd => cd.reviewNumber === codeReviewRound && cd.studentInstanceId === id)
-    if (!reviewInstance) {
-      return 'None'
-    }
-    let reviewee = this.props.dropdownUsers.find(dropDownStudent => dropDownStudent.value === reviewInstance.toReview)
-    return reviewee.text
-  }
-
   addFilterTag = tag => {
     return () => {
       this.props.filterByTag(tag)
@@ -110,6 +101,16 @@ export class ModifyCourseInstanceReview extends React.Component {
       }
     }
     return hasRequiredTags
+  }
+
+  getCurrentReviewer = (codeReviewRound, id) => {
+    let reviewer = this.props.courseData.data.find(studentId => studentId.id === id)
+    let reviewInstance = reviewer.codeReviews.find(cd => cd.reviewNumber === codeReviewRound && cd.studentInstanceId === id)
+    if (!reviewInstance) {
+      return 'None'
+    }
+    let reviewee = this.props.dropdownUsers.find(dropDownStudent => dropDownStudent.value === reviewInstance.toReview)
+    return reviewee.text
   }
 
   render() {
@@ -260,7 +261,6 @@ export class ModifyCourseInstanceReview extends React.Component {
                               ))
                             </select>
                           ) : null}
-
                           {/* <Dropdown
                         className="toReviewDropdown"
                         placeholder="Select student"

@@ -10,9 +10,10 @@ module.exports = (sequelize, DataTypes) => {
       weekMaxPoints: DataTypes.DOUBLE,
       currentWeek: DataTypes.INTEGER,
       currentCodeReview: DataTypes.INTEGER,
-      amountOfCodeReviews: DataTypes.INTEGER,
       codeReviewActive: DataTypes.BOOLEAN,
-      ohid: DataTypes.STRING
+      amountOfCodeReviews: DataTypes.INTEGER,
+      ohid: DataTypes.STRING,
+      finalReview: DataTypes.BOOLEAN
     },
     {}
   )

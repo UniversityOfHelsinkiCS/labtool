@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Form, Input, Button, Grid, Radio, Dropdown, Checkbox, Loader, Popup } from 'semantic-ui-react'
 import { getOneCI, modifyOneCI } from '../../services/courseInstance'
+import { setFinalReview } from '../../reducers/selectedInstanceReducer'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Redirect } from 'react-router'
@@ -40,6 +41,11 @@ export class ModifyCourseInstancePage extends Component {
     })
   }
 
+  changeFinalReview = () => {
+    const newValue = !this.props.selectedInstance.finalReview
+    this.props.setFinalReview(newValue)
+  }
+
   handleRemoveChange = (e, { value }) => {
     e.preventDefault()
     this.setState({ toRemoveCr: this.state.toRemoveCr.includes(value) ? this.state.toRemoveCr.filter(cr => cr !== value) : [...this.state.toRemoveCr, value] })
@@ -63,6 +69,7 @@ export class ModifyCourseInstancePage extends Component {
         currentWeek,
         active,
         ohid,
+        finalReview: this.props.selectedInstance.finalReview,
         newCr
       }
       this.props.addRedirectHook({
@@ -75,7 +82,7 @@ export class ModifyCourseInstancePage extends Component {
   }
 
   render() {
-    if (this.props.loading.redirect) {
+    if (this.props.redirect && this.props.redirect.redirect) {
       return <Redirect to={`/labtool/courses/${this.props.selectedInstance.ohid}`} />
     }
     const selectedInstance = { ...this.props.selectedInstance }
@@ -106,37 +113,45 @@ export class ModifyCourseInstancePage extends Component {
               </Form.Group>
 
               <Form.Group inline>
-                <label style={{ width: '125px', textAlign: 'left' }}>Currently visible code reviews</label>
-                {this.props.selectedInstance.currentCodeReview
-                  ? this.props.selectedInstance.currentCodeReview.sort((a, b) => {
-                        return a - b
-                      })
-                      .map(
-                        cr =>
-                          this.state.toRemoveCr.includes(cr) ? (
-                            <Popup
-                              key={cr}
-                              trigger={
-                                <Button color="red" value={cr} onClick={this.handleRemoveChange} compact>
-                                  {cr}
-                                </Button>
-                              }
-                              content={'Click to not be removed on save'}
-                            />
-                          ) : (
-                            <Popup
-                              key={cr}
-                              trigger={
-                                <Button value={cr} onClick={this.handleRemoveChange} compact>
-                                  {cr}
-                                </Button>
-                              }
-                              content={'Click to be removed on save'}
-                            />
-                          )
-                      )
-                  : null}
+                <Checkbox
+                  name="finalReview"
+                  checked={this.props.selectedInstance.finalReview}
+                  onChange={this.changeFinalReview}
+                  label="Course has a final review"
+                  style={{ width: '150px', textAlign: 'left' }}
+                />
               </Form.Group>
+              <label style={{ width: '125px', textAlign: 'left' }}>Currently visible code reviews</label>
+              {this.props.selectedInstance.currentCodeReview
+                ? this.props.selectedInstance.currentCodeReview
+                    .sort((a, b) => {
+                      return a - b
+                    })
+                    .map(
+                      cr =>
+                        this.state.toRemoveCr.includes(cr) ? (
+                          <Popup
+                            key={cr}
+                            trigger={
+                              <Button color="red" value={cr} onClick={this.handleRemoveChange} compact>
+                                {cr}
+                              </Button>
+                            }
+                            content={'Click to not be removed on save'}
+                          />
+                        ) : (
+                          <Popup
+                            key={cr}
+                            trigger={
+                              <Button value={cr} onClick={this.handleRemoveChange} compact>
+                                {cr}
+                              </Button>
+                            }
+                            content={'Click to be removed on save'}
+                          />
+                        )
+                    )
+                : null}
 
               <Form.Field inline>
                 <Dropdown onChange={this.handleAddChange} options={this.props.codeReviewDropdowns} fluid selection multiple={true} placeholder="Select code review to set visible" />
@@ -210,6 +225,7 @@ const mapStateToProps = (state, ownProps) => {
     ownProps,
     codeReviewDropdowns: createDropdownCodereviews(state.selectedInstance.amountOfCodeReviews, state.selectedInstance.currentCodeReview),
     loading: state.loading,
+    redirect: state.redirect,
     ownProps
   }
 }
@@ -220,7 +236,8 @@ const mapDispatchToProps = {
   clearNotifications,
   changeCourseField,
   resetLoading,
-  addRedirectHook
+  addRedirectHook,
+  setFinalReview
 }
 
 export default connect(

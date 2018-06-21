@@ -22,7 +22,7 @@ export class BrowseReviews extends Component {
   }
 
   componentDidMount() {
-    if (!this.props.loading.loading && this.state.activeIndex !== this.props.selectedInstance.currentWeek - 1 ) {
+    if (!this.props.loading.loading && this.state.activeIndex !== this.props.selectedInstance.currentWeek - 1) {
       this.setState({ activeIndex: this.props.selectedInstance.currentWeek - 1 })
     }
   }
@@ -101,6 +101,7 @@ export class BrowseReviews extends Component {
             </Card>
           )
           let i = 0
+          let ii = 0
           for (; i < this.props.selectedInstance.weekAmount; i++) {
             const weeks = student.weeks.find(week => week.weekNumber === i + 1)
             if (weeks) {
@@ -112,11 +113,8 @@ export class BrowseReviews extends Component {
                   <Accordion.Content active={activeIndex === i}>
                     <Card fluid color="yellow">
                       <Card.Content>
-                        <h4> Points: {weeks.points} </h4>
-                        <h4>
-                          {' '}
-                          Weekly feedback: <ReactMarkdown>{weeks.feedback}</ReactMarkdown>{' '}
-                        </h4>
+                        <h4> Points {weeks.points} </h4> <h4>Feedback </h4>
+                        <ReactMarkdown>{weeks.feedback}</ReactMarkdown>{' '}
                       </Card.Content>
                       <Card.Content style={{ paddingBottom: '5px' }}>
                         {weeks.notified ? (
@@ -211,11 +209,11 @@ export class BrowseReviews extends Component {
             })
             .forEach(cr => {
               headers.push(
-                <Accordion key={i} fluid styled>
-                  <Accordion.Title active={activeIndex === i} index={i} onClick={this.handleClick}>
+                <Accordion key={i + ii} fluid styled>
+                  <Accordion.Title active={activeIndex === i + ii} index={i + ii} onClick={this.handleClick}>
                     <Icon name="dropdown" /> Code Review {cr.reviewNumber}{' '}
                   </Accordion.Title>
-                  <Accordion.Content active={activeIndex === i}>
+                  <Accordion.Content active={activeIndex === i + ii}>
                     <p>Project: {this.props.courseData.data.find(data => data.id === cr.toReview).projectName}</p>
                     <p>
                       GitHub: <a href={this.props.courseData.data.find(data => data.id === cr.toReview).github}>{this.props.courseData.data.find(data => data.id === cr.toReview).github}</a>
@@ -229,8 +227,85 @@ export class BrowseReviews extends Component {
                   </Accordion.Content>
                 </Accordion>
               )
-              i++
+              ii++
             })
+          if (this.props.selectedInstance.finalReview) {
+            const finalWeek = student.weeks.find(week => week.weekNumber === this.props.selectedInstance.weekAmount + 1)
+            if (finalWeek) {
+              headers.push(
+                <Accordion key={i} fluid styled>
+                  <Accordion.Title active={activeIndex === i + ii} index={i + ii} onClick={this.handleClick}>
+                    <Icon name="dropdown" /> Final Review, points {finalWeek.points}
+                  </Accordion.Title>
+                  <Accordion.Content active={activeIndex === i + ii}>
+                    <Card fluid color="yellow">
+                      <Card.Content>
+                        <h4> Points {finalWeek.points} </h4>
+                        <h4> Feedback </h4>
+                        <ReactMarkdown>{finalWeek.feedback}</ReactMarkdown>{' '}
+                      </Card.Content>
+                    </Card>
+                    <h4> Comments </h4>
+                    <Comment.Group>
+                      {finalWeek ? (
+                        finalWeek.comments.map(
+                          comment =>
+                            comment.hidden ? (
+                              <Comment disabled>
+                                <Comment.Content>
+                                  <Comment.Metadata>
+                                    <div>Hidden</div>
+                                  </Comment.Metadata>
+                                  <Comment.Author>{comment.from}</Comment.Author>
+                                  <Comment.Text>
+                                    {' '}
+                                    <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
+                                  </Comment.Text>
+                                </Comment.Content>
+                              </Comment>
+                            ) : (
+                              <Comment>
+                                <Comment.Author>{comment.from}</Comment.Author>
+                                <Comment.Text>
+                                  {' '}
+                                  <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
+                                </Comment.Text>
+                              </Comment>
+                            )
+                        )
+                      ) : (
+                        <h4> No comments </h4>
+                      )}
+                    </Comment.Group>
+                    <Form reply onSubmit={this.handleSubmit} name={finalWeek.id} id={finalWeek.id}>
+                      <Form.TextArea name="content" placeholder="Your comment..." defaultValue="" />
+                      <Form.Checkbox label="Add comment for instructors only" name="hidden" />
+                      <Button content="Add Reply" labelPosition="left" icon="edit" primary />
+                    </Form>
+                    <h3>Review</h3>
+                    <Link to={`/labtool/reviewstudent/${this.props.selectedInstance.ohid}/${studentInstance}/${i}`}>
+                      <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'edit', color: 'black', size: 'large' }} />} content="Edit final review" />
+                    </Link>
+                  </Accordion.Content>
+                </Accordion>
+              )
+            } else {
+              headers.push(
+                <Accordion key={i} fluid styled>
+                  <Accordion.Title active={activeIndex === i} index={i} onClick={this.handleClick}>
+                    <Icon name="dropdown" /> Final Review{' '}
+                  </Accordion.Title>
+                  <Accordion.Content active={activeIndex === i}>
+                    <h4> Not Graded </h4>
+                    <h4> No comments </h4>
+                    <Link to={`/labtool/reviewstudent/${this.props.selectedInstance.ohid}/${studentInstance}/${i + 1}`}>
+                      <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'edit', color: 'black', size: 'large' }} />} content="Give Final Review" />
+                    </Link>
+                  </Accordion.Content>
+                </Accordion>
+              )
+            }
+          }
         }
         return student
       })

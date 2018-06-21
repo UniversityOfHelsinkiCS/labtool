@@ -45,6 +45,10 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         defaultValue: false
       },
+      finalReview: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+      },
       ohid: {
         type: Sequelize.STRING
       },
