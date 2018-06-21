@@ -53,23 +53,14 @@ export class CoursePage extends React.Component {
     this.props.getAllTags()
   }
 
-  weekNumberOfLastReviewedWeek() {
-    if (this.props.courseData.data.weeks.length > 0) {
-      if (this.state.showLastReviewed) {
-        let lastIndexOfWeeks = this.props.courseData.data.weeks.length - 1
-        let lastReviewedWeek = this.props.courseData.data.weeks[lastIndexOfWeeks].weekNumber
-        return lastReviewedWeek
-      }
-    }
-  }
 
   componentWillUnmount() {
-    this.setState({ showLastReviewed: true })
+    // this.setState({ showLastReviewed: true })
     this.props.coursePageReset()
   }
 
-  sortCommentsByDate = comments => {
-    return comments.sort((a, b) => {
+  sortArrayAscendingByDate = theArray => {
+    return theArray.sort((a, b) => {
       return new Date(a.createdAt) - new Date(b.createdAt)
     })
   }
@@ -334,7 +325,7 @@ export class CoursePage extends React.Component {
                   <h4> Comments </h4>
                   <Comment.Group>
                     {weeks ? (
-                      this.sortCommentsByDate(weeks.comments).map(
+                      this.sortArrayAscendingByDate(weeks.comments).map(
                         comment =>
                           comment.hidden ? (
                             <Comment key={comment.id} disabled>
@@ -349,7 +340,7 @@ export class CoursePage extends React.Component {
                                 </Comment.Text>
                                 <Comment.Metadata>
                                   <div>{this.trimDate(comment.createdAt)}</div>
-                                </Comment.Metadata>
+                                </Comment.Metadata><div> </div>
                               </Comment.Content>
                             </Comment>
                           ) : (
@@ -361,7 +352,7 @@ export class CoursePage extends React.Component {
                               </Comment.Text>
                               <Comment.Metadata>
                                 <div>{this.trimDate(comment.createdAt)}</div>
-                              </Comment.Metadata>
+                              </Comment.Metadata><div> </div>
                               {/* This hack compares user's name to comment.from and hides the email notification button when they don't match. */}
                               {`${this.props.user.user.firsts} ${this.props.user.user.lastname}` === comment.from ? (
                                 <Button type="button" onClick={this.sendEmail(comment.id)}>
