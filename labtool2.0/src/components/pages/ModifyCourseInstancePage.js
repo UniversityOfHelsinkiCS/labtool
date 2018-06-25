@@ -113,6 +113,43 @@ export class ModifyCourseInstancePage extends Component {
               </Form.Group>
 
               <Form.Group inline>
+                <label style={{ width: '125px', textAlign: 'left' }}>Currently visible code reviews</label>
+                {this.props.selectedInstance.currentCodeReview
+                  ? this.props.selectedInstance.currentCodeReview
+                      .sort((a, b) => {
+                        return a - b
+                      })
+                      .map(
+                        cr =>
+                          this.state.toRemoveCr.includes(cr) ? (
+                            <Popup
+                              key={cr}
+                              trigger={
+                                <Button color="red" value={cr} onClick={this.handleRemoveChange} compact>
+                                  {cr}
+                                </Button>
+                              }
+                              content={'Click to not be removed on save'}
+                            />
+                          ) : (
+                            <Popup
+                              key={cr}
+                              trigger={
+                                <Button value={cr} onClick={this.handleRemoveChange} compact>
+                                  {cr}
+                                </Button>
+                              }
+                              content={'Click to be removed on save'}
+                            />
+                          )
+                      )
+                  : null}
+              </Form.Group>
+              <Form.Group inline>
+                <Dropdown onChange={this.handleAddChange} options={this.props.codeReviewDropdowns} fluid selection multiple={true} placeholder="Select code review to set visible" />
+              </Form.Group>
+
+              <Form.Group inline>
                 <Checkbox
                   name="finalReview"
                   checked={this.props.selectedInstance.finalReview}
@@ -121,47 +158,12 @@ export class ModifyCourseInstancePage extends Component {
                   style={{ width: '150px', textAlign: 'left' }}
                 />
               </Form.Group>
-              <label style={{ width: '125px', textAlign: 'left' }}>Currently visible code reviews</label>
-              {this.props.selectedInstance.currentCodeReview
-                ? this.props.selectedInstance.currentCodeReview
-                    .sort((a, b) => {
-                      return a - b
-                    })
-                    .map(
-                      cr =>
-                        this.state.toRemoveCr.includes(cr) ? (
-                          <Popup
-                            key={cr}
-                            trigger={
-                              <Button color="red" value={cr} onClick={this.handleRemoveChange} compact>
-                                {cr}
-                              </Button>
-                            }
-                            content={'Click to not be removed on save'}
-                          />
-                        ) : (
-                          <Popup
-                            key={cr}
-                            trigger={
-                              <Button value={cr} onClick={this.handleRemoveChange} compact>
-                                {cr}
-                              </Button>
-                            }
-                            content={'Click to be removed on save'}
-                          />
-                        )
-                    )
-                : null}
 
-              <Form.Field inline>
-                <Dropdown onChange={this.handleAddChange} options={this.props.codeReviewDropdowns} fluid selection multiple={true} placeholder="Select code review to set visible" />
-              </Form.Field>
-
-              <Form.Field inline>
+              <Form.Group inline>
                 <Checkbox name="courseActive" label="Activate course" checked={selectedInstance.active} onChange={this.handleChange} style={{ width: '150px', textAlign: 'left' }} />
-              </Form.Field>
+              </Form.Group>
 
-              <Form.Field>
+              <Form.Group>
                 <Button type="Submit" floated="left" color="green" size="huge">
                   Save
                 </Button>
@@ -171,7 +173,7 @@ export class ModifyCourseInstancePage extends Component {
                     Cancel
                   </Button>
                 </Link>
-              </Form.Field>
+              </Form.Group>
             </Form>
           </Grid.Row>
         </Grid>
