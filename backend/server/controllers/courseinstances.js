@@ -703,7 +703,7 @@ module.exports = {
             return
           } else {
             const name = user.firsts.concat(' ').concat(user.lastname)
-            return Comment.create({
+            Comment.create({
               weekId: message.week,
               hidden: message.hidden,
               comment: message.comment,
@@ -714,7 +714,28 @@ module.exports = {
                 if (!comment) {
                   res.status(400).send('week not found')
                 } else {
-                  res.status(200).send(comment)
+                  Week.findOne({
+                    where: {
+                      id: message.week
+                    },
+                    include: [
+                      {
+                        model: Comment,
+                        attributes: {
+                          exclude: ['updatedAt']
+                        },
+                        as: 'comments'
+                      }
+                    ]
+                  }).then(week => {
+                    if (week) {
+                      res.status(200).send(week)
+                      return
+                    } else {
+                      res.status(400).send('something went wrong')
+                      return
+                    }
+                  })
                 }
               })
               .catch(error => res.status(400).send(error))
