@@ -100,7 +100,7 @@ export class BrowseReviews extends Component {
         // Tämä pitää myös korjata.
         if (student.id == studentInstance) {
           headers.push(
-            <Card fluid color="yellow">
+            <Card key={student.id} fluid color="yellow">
               <Card.Content>
                 <h2>
                   {student.User.firsts} {student.User.lastname}
@@ -163,7 +163,7 @@ export class BrowseReviews extends Component {
                                 </Comment.Content>
                               </Comment>
                             ) : (
-                              <Comment>
+                              <Comment key={comment.id}>
                                 <Comment.Author>{comment.from}</Comment.Author>
                                 <Comment.Text>
                                   {' '}
@@ -255,7 +255,7 @@ export class BrowseReviews extends Component {
             const finalWeek = student.weeks.find(week => week.weekNumber === this.props.selectedInstance.weekAmount + 1)
             if (finalWeek) {
               headers.push(
-                <Accordion key={i} fluid styled>
+                <Accordion key={i + ii + 1} fluid styled>
                   <Accordion.Title active={activeIndex === i + ii} index={i + ii} onClick={this.handleClick}>
                     <Icon name="dropdown" /> Final Review, points {finalWeek.points}
                   </Accordion.Title>
@@ -313,7 +313,7 @@ export class BrowseReviews extends Component {
               )
             } else {
               headers.push(
-                <Accordion key={i} fluid styled>
+                <Accordion key={i + ii + 1} fluid styled>
                   <Accordion.Title active={activeIndex === i} index={i} onClick={this.handleClick}>
                     <Icon name="dropdown" /> Final Review{' '}
                   </Accordion.Title>
