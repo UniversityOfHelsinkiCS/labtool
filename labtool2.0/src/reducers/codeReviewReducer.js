@@ -114,12 +114,15 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
       return { ...state, randomizedCodeReview: rndCr }
     case 'FILTER_STATES_BY_TAG': {
       let tags = tagsToArray(action.data.tags)
-      let cbStates = state.checkBoxStates
+      let cbStates = { ...state.checkBoxStates }
       let randomized = state.randomizedCodeReview
       action.data.students.forEach(stud => {
         if (state.checkBoxStates[stud.id]) {
           const studT = stud.Tags.filter(st => tags.includes(st.name))
-          studT.length === 0 ? ((cbStates[stud.id] = !cbStates[stud.id]), (randomized = randomized.filter(r => r !== stud.id))) : null
+          if (studT.length < action.data.tags.length) {
+            cbStates[stud.id] = !cbStates[stud.id]
+            randomized = randomized.filter(r => r !== stud.id)
+          }
         }
       })
       return { ...state, randomizedCodeReview: randomized, checkBoxStates: cbStates }
