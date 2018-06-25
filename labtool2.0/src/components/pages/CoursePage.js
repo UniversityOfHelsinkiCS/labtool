@@ -310,43 +310,45 @@ export class CoursePage extends React.Component {
                     </Card.Content>
                   </Card>
                   <h4> Comments </h4>
+                  <Form reply onSubmit={this.handleSubmit} name={weeks.id} id={weeks.id}>
+                    <Form.TextArea name="content" placeholder="Your comment..." defaultValue="" />
+                    <Button content="Add Reply" labelPosition="left" icon="edit" primary />
+                  </Form>
                   <Comment.Group>
                     {weeks ? (
-                      weeks.comments.sort((a, b) => {
-                        return new Date(b.createdAt) - new Date(a.createdAt)
-                      }).map(
-                        comment =>
-                          comment.hidden ? (
-                            <Comment key={comment.id} disabled>
-                              <Comment.Content>
-                                <Comment.Metadata>
-                                  <div>Hidden</div>
-                                </Comment.Metadata>
+                      weeks.comments
+                        .sort((a, b) => {
+                          return new Date(b.createdAt) - new Date(a.createdAt)
+                        })
+                        .map(
+                          comment =>
+                            comment.hidden ? (
+                              <Comment key={comment.id} disabled>
+                                <Comment.Content>
+                                  <Comment.Metadata>
+                                    <div>Hidden</div>
+                                  </Comment.Metadata>
+                                  <Comment.Author>{comment.from}</Comment.Author>
+                                  <Comment.Text>
+                                    {' '}
+                                    <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
+                                  </Comment.Text>
+                                </Comment.Content>
+                              </Comment>
+                            ) : (
+                              <Comment key={comment.id}>
                                 <Comment.Author>{comment.from}</Comment.Author>
                                 <Comment.Text>
                                   {' '}
                                   <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
                                 </Comment.Text>
-                              </Comment.Content>
-                            </Comment>
-                          ) : (
-                            <Comment key={comment.id}>
-                              <Comment.Author>{comment.from}</Comment.Author>
-                              <Comment.Text>
-                                {' '}
-                                <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
-                              </Comment.Text>
-                            </Comment>
-                          )
-                      )
+                              </Comment>
+                            )
+                        )
                     ) : (
                       <h4> No comments </h4>
                     )}
                   </Comment.Group>
-                  <Form reply onSubmit={this.handleSubmit} name={weeks.id} id={weeks.id}>
-                    <Form.TextArea name="content" placeholder="Your comment..." defaultValue="" />
-                    <Button content="Add Reply" labelPosition="left" icon="edit" primary />
-                  </Form>
                 </Accordion.Content>
               </Accordion>
             )
