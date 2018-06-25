@@ -53,19 +53,23 @@ export class CoursePage extends React.Component {
     this.props.getAllTags()
   }
 
-  weekNumberOfLastReviewedWeek() {
-    if (this.props.courseData.data.weeks.length > 0) {
-      if (this.state.showLastReviewed) {
-        let lastIndexOfWeeks = this.props.courseData.data.weeks.length - 1
-        let lastReviewedWeek = this.props.courseData.data.weeks[lastIndexOfWeeks].weekNumber
-        return lastReviewedWeek
-      }
-    }
-  }
 
   componentWillUnmount() {
-    this.setState({ showLastReviewed: true })
+    // this.setState({ showLastReviewed: true })
     this.props.coursePageReset()
+  }
+
+  sortArrayAscendingByDate = theArray => {
+    return theArray.sort((a, b) => {
+      return new Date(a.createdAt) - new Date(b.createdAt)
+    })
+  }
+
+  trimDate = date => {
+    return new Date(date)
+      .toLocaleString()
+      .replace('/', '.')
+      .replace('/', '.')
   }
 
   changeHiddenAssistantDropdown = id => {
@@ -321,7 +325,7 @@ export class CoursePage extends React.Component {
                   <h4> Comments </h4>
                   <Comment.Group>
                     {weeks ? (
-                      weeks.comments.map(
+                      this.sortArrayAscendingByDate(weeks.comments).map(
                         comment =>
                           comment.hidden ? (
                             <Comment key={comment.id} disabled>
@@ -334,6 +338,9 @@ export class CoursePage extends React.Component {
                                   {' '}
                                   <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
                                 </Comment.Text>
+                                <Comment.Metadata>
+                                  <div>{this.trimDate(comment.createdAt)}</div>
+                                </Comment.Metadata><div> </div>
                               </Comment.Content>
                             </Comment>
                           ) : (
@@ -343,6 +350,9 @@ export class CoursePage extends React.Component {
                                 {' '}
                                 <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
                               </Comment.Text>
+                              <Comment.Metadata>
+                                <div>{this.trimDate(comment.createdAt)}</div>
+                              </Comment.Metadata><div> </div>
                               {/* This hack compares user's name to comment.from and hides the email notification button when they don't match. */}
                               {comment.from.includes(this.props.user.user.lastname) ? (
                                 comment.notified ? (

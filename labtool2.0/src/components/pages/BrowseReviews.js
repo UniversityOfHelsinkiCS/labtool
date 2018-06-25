@@ -52,6 +52,19 @@ export class BrowseReviews extends Component {
     }
   }
 
+  trimDate = date => {
+    return new Date(date)
+      .toLocaleString()
+      .replace('/', '.')
+      .replace('/', '.')
+  }
+
+  sortCommentsByDate = comments => {
+    return comments.sort((a, b) => {
+      return new Date(a.createdAt) - new Date(b.createdAt)
+    })
+  }
+
   gradeCodeReview = (reviewNumber, studentInstanceId) => async e => {
     e.preventDefault()
     const data = {
@@ -131,7 +144,7 @@ export class BrowseReviews extends Component {
                     <h4> Comments </h4>
                     <Comment.Group>
                       {weeks ? (
-                        weeks.comments.map(
+                        this.sortCommentsByDate(weeks.comments).map(
                           comment =>
                             comment.hidden ? (
                               <Comment disabled>
@@ -144,6 +157,9 @@ export class BrowseReviews extends Component {
                                     {' '}
                                     <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
                                   </Comment.Text>
+                                  <Comment.Metadata>
+                                    <div>{this.trimDate(comment.createdAt)}</div>
+                                  </Comment.Metadata><div> </div>
                                 </Comment.Content>
                               </Comment>
                             ) : (
@@ -153,6 +169,10 @@ export class BrowseReviews extends Component {
                                   {' '}
                                   <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
                                 </Comment.Text>
+                                <Comment.Metadata>
+                                    <div>{this.trimDate(comment.createdAt)}</div>
+                                </Comment.Metadata>
+                                <div> </div>
                                 {/* This hack compares user's name to comment.from and hides the email notification button when they don't match. */}
                                 {comment.from.includes(this.props.user.user.lastname) ? (
                                   comment.notified ? (

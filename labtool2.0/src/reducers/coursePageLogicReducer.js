@@ -52,7 +52,19 @@ const coursePageLogicReducer = (state = INITIAL_STATE, action) => {
     case 'CP_INFO_SUCCESS':
       if (action.response.role === 'student') {
         try {
-          const newestReviewWeek = action.response.data.weeks[action.response.data.weeks.length - 1].weekNumber
+          const weeks = action.response.data.weeks
+          let newestReviewWeek = 0
+          let newestWeek
+          if (weeks) {
+            newestWeek = action.response.data.weeks[0]
+            const numberOfWeeks = action.response.data.weeks.length
+            for (let i = 1; i < numberOfWeeks; i++) {
+              const probablyNewest = new Date(action.response.data.weeks[i].createdAt) > new Date(action.response.data.weeks[i - 1]) ? action.response.data.weeks[i] : action.response.data.weeks[i - 1]
+              newestWeek = new Date(probablyNewest.createdAt) > new Date(newestWeek.createdAt) ? probablyNewest : newestWeek
+            }
+            newestReviewWeek = newestWeek.weekNumber
+          }
+
           // The showCodeReviews -line below sets showCodeReviews to be equal to the reviewNumbers whose points are 0.
           const showNewestOrUserOpened = state.lastReviewedIsShownAlready ? state.activeIndex : newestReviewWeek - 1
           return {
