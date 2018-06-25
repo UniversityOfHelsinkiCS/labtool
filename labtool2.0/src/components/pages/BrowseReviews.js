@@ -16,7 +16,7 @@ export class BrowseReviews extends Component {
     super(props)
     this.state = {
       activeIndex: 0,
-      initialLoading: true
+      initialLoading: props.initialLoading !== undefined ? this.props.initialLoading : true
     }
   }
 
@@ -305,7 +305,7 @@ export class BrowseReviews extends Component {
 }
 const mapStateToProps = (state, ownProps) => {
   return {
-    ownProps,
+    ...ownProps,
     user: state.user,
     selectedInstance: state.selectedInstance,
     courseData: state.coursePage,

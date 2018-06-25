@@ -62,10 +62,9 @@ export class LoginPage extends React.Component {
     )
   }
 }
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = state => {
   return {
     user: state.user,
-    renderAfter: ownProps.renderAfter,
     loading: state.loading
   }
 }

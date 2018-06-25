@@ -479,7 +479,6 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
                   icon={
                     Object {
                       "name": "pencil",
-                      "size": "medium",
                     }
                   }
                   onClick={[Function]}
@@ -612,7 +611,6 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
                   icon={
                     Object {
                       "name": "pencil",
-                      "size": "medium",
                     }
                   }
                   onClick={[Function]}
@@ -731,7 +729,6 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
                   icon={
                     Object {
                       "name": "pencil",
-                      "size": "medium",
                     }
                   }
                   onClick={[Function]}
