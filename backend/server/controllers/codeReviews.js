@@ -144,6 +144,10 @@ module.exports = {
         res.status(403).send('You have to be authenticated to do this')
         return
       }
+      if (!req.body.linkToReview.startsWith('http://' || !req.bod.linkToReview.startsWith('https://'))) {
+        res.status(400).send('A link usually starts with http:// or https://')
+        return
+      }
 
       const studentInstance = await StudentInstance.findOne({
         attributes: {
