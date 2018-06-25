@@ -121,8 +121,12 @@ const courseInstancereducer = (store = [], action) => {
         return studentCommentNotification(store, action.response.data.commentId)
       }
     case 'COMMENT_CREATE_ONE_SUCCESS': {
-      const newStudents = store.data.map(student => ({ ...student, weeks: student.weeks.map(week => (week.id === action.response.id ? action.response : week)) }))
-      return { ...store, data: newStudents }
+      if (store.role === 'teacher') {
+        const newStudents = store.data.map(student => ({ ...student, weeks: student.weeks.map(week => (week.id === action.response.id ? action.response : week)) }))
+        return { ...store, data: newStudents }
+      } else {
+        return { ...store, data: { ...store.data, weeks: store.data.weeks.map(week => (week.id === action.response.id ? action.response : week)) } }
+      }
     }
     default:
       return store
