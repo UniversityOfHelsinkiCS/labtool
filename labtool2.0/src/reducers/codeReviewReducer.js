@@ -67,9 +67,7 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
       let codeReviewRoundsToUpdate = state.codeReviewStates
 
       if (!action.data.toReview) {
-        console.log(selections)
         delete selections[action.data.round][action.data.reviewer]
-        console.log(selections)
         updatedReviews = oldReviews.filter(cr => cr.reviewer !== action.data.reviewer)
         codeReviewRoundsToUpdate[action.data.round] = updatedReviews
         return { ...state, codeReviewStates: codeReviewRoundsToUpdate, currentSelections: selections }
@@ -95,7 +93,6 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
     case 'INIT_ALL_CHECKBOXES':
       return { ...state, checkBoxStates: action.data.data, randomizedCodeReview: action.data.ids }
     case 'INIT_CHECKBOX':
-      console.log('insinde INIT checkbox', action.data)
       var cb = state.checkBoxStates
       if (cb[action.data]) {
         cb[action.data] = !cb[action.data]

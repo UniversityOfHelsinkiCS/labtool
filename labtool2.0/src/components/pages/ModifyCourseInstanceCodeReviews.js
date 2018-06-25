@@ -42,7 +42,7 @@ export class ModifyCourseInstanceReview extends React.Component {
   handleSubmit = reviewNumber => async e => {
     try {
       e.preventDefault()
-      reviewNumber === 'create' ? this.props.toggleCreate() : undefined
+      // reviewNumber === 'create' ? this.props.toggleCreate() : undefined
       const codeReviews = this.props.codeReviewLogic.codeReviewStates[reviewNumber]
       const courseId = this.props.selectedInstance.id
       reviewNumber === 'create' ? (reviewNumber = this.props.selectedInstance.amountOfCodeReviews + 1) : reviewNumber
@@ -51,8 +51,11 @@ export class ModifyCourseInstanceReview extends React.Component {
         reviewNumber,
         courseId
       }
-      codeReviews.length < 2 ? this.props.showNotification({ message: 'Select atleast two persons for code review!', error: true }) : await this.props.bulkinsertCodeReviews(data)
-    } catch (error) {}
+
+      await this.props.bulkinsertCodeReviews(data)
+    } catch (error) {
+      this.props.showNotification({ message: 'Select a code review!', error: true })
+    }
   }
 
   addCodeReview = (reviewRound, id) => {
@@ -82,10 +85,10 @@ export class ModifyCourseInstanceReview extends React.Component {
       this.props.coursePageLogic.filterByTag.forEach(st => selectedTags.push(st.name))
       selectedTags.length > 0
         ? this.props.courseData.data.forEach(student => {
-            studentTags = student.Tags.filter(st => selectedTags.includes(st.name))
-            studentTags.length > 0 ? (allCb[student.id] = true) : null
-            studentTags = []
-          })
+          studentTags = student.Tags.filter(st => selectedTags.includes(st.name))
+          studentTags.length > 0 ? (allCb[student.id] = true) : null
+          studentTags = []
+        })
         : this.props.courseData.data.forEach(st => (allCb[st.id] = true))
       let randoms = Object.keys(allCb).map(student => parseInt(student))
       this.props.initAllCheckboxes({ data: allCb, ids: randoms })
@@ -137,19 +140,12 @@ export class ModifyCourseInstanceReview extends React.Component {
 
   assignRandomly = reviewNumber => {
     return () => {
-      if (reviewNumber === 'create') {
-        this.props.codeReviewLogic.randomizedCodeReview.length > 1
-          ? this.props.randomAssign({ reviewNumber: reviewNumber })
-          : this.props.showNotification({ message: 'Select atleast two persons for code review!', error: true })
-      } else {
-        this.props.codeReviewLogic.selectedDropdown
-          ? this.props.codeReviewLogic.randomizedCodeReview.length > 1
-            ? this.props.randomAssign({ reviewNumber: reviewNumber })
-            : this.props.showNotification({ message: 'Select atleast two persons for code review!', error: true })
-          : this.props.showNotification({ message: 'Select a code review!', error: true })
-      }
+      this.props.codeReviewLogic.randomizedCodeReview.length > 1
+        ? this.props.randomAssign({ reviewNumber: reviewNumber })
+        : this.props.showNotification({ message: 'Select atleast two persons for randomize!', error: true })
     }
   }
+
   render() {
     if (this.props.loading.loading) {
       return <Loader active />

@@ -34,7 +34,6 @@ const coursePageLogicReducer = (state = INITIAL_STATE, action) => {
     case 'COURSE_PAGE_FILTER_BY_ASSISTANT':
       return { ...state, filterByAssistant: action.assistant }
     case 'COURSE_PAGE_FILTER_BY_TAG':
-    console.log('are we atelast here?')
       if (action.tag === 0) {
         return { ...state, filterByTag: [] }
       } else if (state.filterByTag.map(tag => tag.id).includes(action.tag.id)) {
