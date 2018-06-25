@@ -96,7 +96,7 @@ module.exports = {
           },
           {
             model: CodeReview,
-            attributes: ['toReview', 'reviewNumber', 'points'],
+            attributes: ['toReview', 'reviewNumber', 'points', 'linkToReview'],
             as: 'codeReviews',
             where: {
               [Op.or]: [
@@ -181,6 +181,7 @@ module.exports = {
                 },
                 reviewNumber: cr.reviewNumber,
                 points: cr.points,
+                linkToReview: cr.linkToReview,
                 reviewer: reviewers[cr.reviewNumber]
               }
             })

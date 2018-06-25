@@ -231,14 +231,16 @@ export class BrowseReviews extends Component {
               headers.push(
                 <Accordion key={i + ii} fluid styled>
                   <Accordion.Title active={activeIndex === i + ii} index={i + ii} onClick={this.handleClick}>
-                    <Icon name="dropdown" /> Code Review {cr.reviewNumber}{' '}
+                    <Icon name="dropdown" /> Code Review {cr.reviewNumber} {cr.points !== null ? ', points ' + cr.points : ''}
                   </Accordion.Title>
                   <Accordion.Content active={activeIndex === i + ii}>
-                    <p>Project: {this.props.courseData.data.find(data => data.id === cr.toReview).projectName}</p>
                     <p>
-                      GitHub: <a href={this.props.courseData.data.find(data => data.id === cr.toReview).github}>{this.props.courseData.data.find(data => data.id === cr.toReview).github}</a>
+                      <strong>Project to review:</strong> {this.props.courseData.data.find(data => data.id === cr.toReview).projectName} <br />
+                      <strong>GitHub:</strong>{' '}
+                      <a href={this.props.courseData.data.find(data => data.id === cr.toReview).github}>{this.props.courseData.data.find(data => data.id === cr.toReview).github}</a>
                     </p>
-                    {cr.points !== null ? <h4>{cr.points} points</h4> : <h4>Not Graded</h4>}
+                    <strong>Code review:</strong> {cr.linkToReview ? <a href={cr.linkToReview}>{cr.linkToReview}</a> : 'No review linked yet'}
+                    {cr.points !== null ? <h4>{cr.points} points</h4> : <h4>Not graded yet</h4>}
                     <Form onSubmit={this.gradeCodeReview(cr.reviewNumber, studentInstance)}>
                       <label>Points </label>
                       <Input name="points" defaultValue={cr.points ? cr.points : ''} type="number" step="0.01" style={{ width: '100px' }} />

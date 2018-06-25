@@ -118,6 +118,16 @@ const notificationReducer = (state = {}, action) => {
         message: action.response.response.data,
         error: true
       }
+    case 'CODE_REVIEW_ADD_LINK_SUCCESS':
+      return {
+        message: 'Link added successfully',
+        error: false
+      }
+    case 'CODE_REVIEW_ADD_LINK_FAILURE':
+      return {
+        message: 'Link could not be added. Please check URL formatting',
+        error: true
+      }
     case 'CHECKLIST_CREATE_SUCCESS':
       return {
         message: action.response.message,
@@ -125,7 +135,7 @@ const notificationReducer = (state = {}, action) => {
       }
     case 'TAG_STUDENT_SUCCESS':
       return {
-        message: 'Student tagged succesfully',
+        message: 'Student tagged successfully',
         error: false
       }
     case 'UNTAG_STUDENT_SUCCESS':
@@ -135,12 +145,12 @@ const notificationReducer = (state = {}, action) => {
       }
     case 'TAG_CREATE_SUCCESS':
       return {
-        message: 'Tag created succesfully',
+        message: 'Tag created successfully',
         error: false
       }
     case 'TAG_REMOVE_SUCCESS':
       return {
-        message: 'Tag removed succesfully',
+        message: 'Tag removed successfully',
         error: false
       }
     case 'CHECKLIST_CREATE_FAILURE':
@@ -160,7 +170,7 @@ const notificationReducer = (state = {}, action) => {
       }
     case 'STUDENT_PROJECT_INFO_UPDATE_SUCCESS':
       return {
-        message: 'Project info updated succesfully!',
+        message: 'Project info updated successfully!',
         error: false
       }
     case 'SEND_EMAIL_SUCCESS':

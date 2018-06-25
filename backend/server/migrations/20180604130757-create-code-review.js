@@ -14,6 +14,9 @@ module.exports = {
       reviewNumber: {
         type: Sequelize.INTEGER
       },
+      linkToReview: {
+        type: Sequelize.STRING
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
