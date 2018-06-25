@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
-import { Button, Card, Accordion, Icon, Form, Comment, Input, Popup, Loader } from 'semantic-ui-react'
+import { Button, Card, Accordion, Icon, Form, Comment, Input, Popup, Loader, Label } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { createOneComment } from '../../services/comment'
 import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import { gradeCodeReview } from '../../services/codeReview'
 import ReactMarkdown from 'react-markdown'
+import { sendEmail } from '../../services/email'
 import { resetLoading } from '../../reducers/loadingReducer'
 
 /**
@@ -63,6 +64,19 @@ export class BrowseReviews extends Component {
     }
   }
 
+  trimDate = date => {
+    return new Date(date)
+      .toLocaleString()
+      .replace('/', '.')
+      .replace('/', '.')
+  }
+
+  sortCommentsByDate = comments => {
+    return comments.sort((a, b) => {
+      return new Date(a.createdAt) - new Date(b.createdAt)
+    })
+  }
+
   gradeCodeReview = (reviewNumber, studentInstanceId) => async e => {
     e.preventDefault()
     const data = {
@@ -71,6 +85,20 @@ export class BrowseReviews extends Component {
       points: Number(e.target.points.value)
     }
     this.props.gradeCodeReview(data)
+  }
+
+  sendCommentEmail = commentId => async e => {
+    this.props.sendEmail({
+      commentId,
+      role: 'teacher'
+    })
+  }
+
+  sendWeekEmail = weekId => async e => {
+    this.props.sendEmail({
+      weekId,
+      role: 'teacher'
+    })
   }
 
   render() {
@@ -113,11 +141,22 @@ export class BrowseReviews extends Component {
                         <h4> Points {weeks.points} </h4> <h4>Feedback </h4>
                         <ReactMarkdown>{weeks.feedback}</ReactMarkdown>{' '}
                       </Card.Content>
+                      <Card.Content style={{ paddingBottom: '5px' }}>
+                        {weeks.notified ? (
+                          <Label>
+                            Notified <Icon name="check" color="green" />
+                          </Label>
+                        ) : (
+                          <Button type="button" onClick={this.sendWeekEmail(weeks.id)} size="small">
+                            Send email notification
+                          </Button>
+                        )}
+                      </Card.Content>
                     </Card>
                     <h4> Comments </h4>
                     <Comment.Group>
                       {weeks ? (
-                        weeks.comments.map(
+                        this.sortCommentsByDate(weeks.comments).map(
                           comment =>
                             comment.hidden ? (
                               <Comment disabled>
@@ -130,6 +169,9 @@ export class BrowseReviews extends Component {
                                     {' '}
                                     <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
                                   </Comment.Text>
+                                  <Comment.Metadata>
+                                    <div>{this.trimDate(comment.createdAt)}</div>
+                                  </Comment.Metadata><div> </div>
                                 </Comment.Content>
                               </Comment>
                             ) : (
@@ -139,6 +181,24 @@ export class BrowseReviews extends Component {
                                   {' '}
                                   <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
                                 </Comment.Text>
+                                <Comment.Metadata>
+                                    <div>{this.trimDate(comment.createdAt)}</div>
+                                </Comment.Metadata>
+                                <div> </div>
+                                {/* This hack compares user's name to comment.from and hides the email notification button when they don't match. */}
+                                {comment.from.includes(this.props.user.user.lastname) ? (
+                                  comment.notified ? (
+                                    <Label>
+                                      Notified <Icon name="check" color="green" />
+                                    </Label>
+                                  ) : (
+                                    <Button type="button" onClick={this.sendCommentEmail(comment.id)} size="small">
+                                      Send email notification
+                                    </Button>
+                                  )
+                                ) : (
+                                  <div />
+                                )}
                               </Comment>
                             )
                         )
@@ -318,6 +378,7 @@ const mapDispatchToProps = {
   getOneCI,
   coursePageInformation,
   gradeCodeReview,
+  sendEmail,
   resetLoading
 }
 

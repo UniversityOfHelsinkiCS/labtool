@@ -77,7 +77,7 @@ module.exports = {
           {
             model: Week,
             attributes: {
-              exclude: ['createdAt', 'updatedAt']
+              exclude: ['updatedAt']
             },
             as: 'weeks',
             include: [
@@ -696,7 +696,6 @@ module.exports = {
     if (req.authenticated.success) {
       try {
         const message = req.body
-
         User.findById(req.decoded.id).then(user => {
           if (!user) {
             res.status(400).send('you are not an user in the system')
@@ -707,7 +706,8 @@ module.exports = {
               weekId: message.week,
               hidden: message.hidden,
               comment: message.comment,
-              from: name
+              from: name,
+              notified: false
             })
               .then(comment => {
                 if (!comment) {

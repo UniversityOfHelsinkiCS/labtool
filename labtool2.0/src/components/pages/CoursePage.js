@@ -7,6 +7,7 @@ import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import { associateTeacherToStudent } from '../../services/assistant'
 import ReactMarkdown from 'react-markdown'
 import { getAllTags, tagStudent, unTagStudent } from '../../services/tags'
+import { sendEmail } from '../../services/email'
 import {
   showAssistantDropdown,
   showTagDropdown,
@@ -51,19 +52,21 @@ export class CoursePage extends React.Component {
     this.props.getAllTags()
   }
 
-  weekNumberOfLastReviewedWeek() {
-    if (this.props.courseData.data.weeks.length > 0) {
-      if (this.state.showLastReviewed) {
-        let lastIndexOfWeeks = this.props.courseData.data.weeks.length - 1
-        let lastReviewedWeek = this.props.courseData.data.weeks[lastIndexOfWeeks].weekNumber
-        return lastReviewedWeek
-      }
-    }
+  componentWillUnmount() {
+    this.props.coursePageReset()
   }
 
-  componentWillUnmount() {
-    this.setState({ showLastReviewed: true })
-    this.props.coursePageReset()
+  sortArrayDescendingByDate = theArray => {
+    return theArray.sort((a, b) => {
+      return new Date(b.createdAt) - new Date(a.createdAt)
+    })
+  }
+
+  trimDate = date => {
+    return new Date(date)
+      .toLocaleString()
+      .replace('/', '.')
+      .replace('/', '.')
   }
 
   changeHiddenAssistantDropdown = id => {
@@ -182,6 +185,13 @@ export class CoursePage extends React.Component {
       return array
     }
     return []
+  }
+
+  sendEmail = commentId => async e => {
+    this.props.sendEmail({
+      commentId,
+      role: 'student'
+    })
   }
 
   render() {
@@ -316,35 +326,51 @@ export class CoursePage extends React.Component {
                   </Form>
                   <Comment.Group>
                     {weeks ? (
-                      weeks.comments
-                        .sort((a, b) => {
-                          return new Date(b.createdAt) - new Date(a.createdAt)
-                        })
-                        .map(
-                          comment =>
-                            comment.hidden ? (
-                              <Comment key={comment.id} disabled>
-                                <Comment.Content>
-                                  <Comment.Metadata>
-                                    <div>Hidden</div>
-                                  </Comment.Metadata>
-                                  <Comment.Author>{comment.from}</Comment.Author>
-                                  <Comment.Text>
-                                    {' '}
-                                    <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
-                                  </Comment.Text>
-                                </Comment.Content>
-                              </Comment>
-                            ) : (
-                              <Comment key={comment.id}>
+                      this.sortArrayDescendingByDate(weeks.comments).map(
+                        comment =>
+                          comment.hidden ? (
+                            <Comment key={comment.id} disabled>
+                              <Comment.Content>
+                                <Comment.Metadata>
+                                  <div>Hidden</div>
+                                </Comment.Metadata>
                                 <Comment.Author>{comment.from}</Comment.Author>
                                 <Comment.Text>
                                   {' '}
                                   <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
                                 </Comment.Text>
-                              </Comment>
-                            )
-                        )
+                                <Comment.Metadata>
+                                  <div>{this.trimDate(comment.createdAt)}</div>
+                                </Comment.Metadata><div> </div>
+                              </Comment.Content>
+                            </Comment>
+                          ) : (
+                            <Comment key={comment.id}>
+                              <Comment.Author>{comment.from}</Comment.Author>
+                              <Comment.Text>
+                                {' '}
+                                <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
+                              </Comment.Text>
+                              <Comment.Metadata>
+                                <div>{this.trimDate(comment.createdAt)}</div>
+                              </Comment.Metadata><div> </div>
+                              {/* This hack compares user's name to comment.from and hides the email notification button when they don't match. */}
+                              {comment.from.includes(this.props.user.user.lastname) ? (
+                                comment.notified ? (
+                                  <Label>
+                                    Notified <Icon name="check" color="green" />
+                                  </Label>
+                                ) : (
+                                  <Button type="button" onClick={this.sendEmail(comment.id)} size="small">
+                                    Send email notification
+                                  </Button>
+                                )
+                              ) : (
+                                <div />
+                              )}
+                            </Comment>
+                          )
+                      )
                     ) : (
                       <h4> No comments </h4>
                     )}
@@ -726,6 +752,7 @@ const mapDispatchToProps = {
   toggleCodeReview,
   getAllTags,
   tagStudent,
+  sendEmail,
   updateActiveIndex,
   unTagStudent,
   resetLoading
