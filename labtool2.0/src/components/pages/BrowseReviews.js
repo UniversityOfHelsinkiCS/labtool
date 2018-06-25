@@ -251,7 +251,7 @@ export class BrowseReviews extends Component {
               )
             } else {
               headers.push(
-                <Accordion key={i} fluid styled>
+                <Accordion key={i + ii + 1} fluid styled>
                   <Accordion.Title active={activeIndex === i} index={i} onClick={this.handleClick}>
                     <Icon name="dropdown" /> Final Review{' '}
                   </Accordion.Title>
