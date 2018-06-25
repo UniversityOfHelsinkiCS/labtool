@@ -22,3 +22,10 @@ export const gradeCodeReview = data => {
   const method = 'put'
   return callController(route, prefix, data, method)
 }
+
+export const addLinkToCodeReview = data => {
+  const route = `/codereviews/link`
+  const prefix = `CODE_REVIEW_ADD_LINK_`
+  const method = 'put'
+  return callController(route, prefix, data, method)
+}

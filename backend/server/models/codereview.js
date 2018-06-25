@@ -3,7 +3,13 @@ module.exports = (sequelize, DataTypes) => {
     'CodeReview',
     {
       points: DataTypes.DOUBLE,
-      reviewNumber: DataTypes.INTEGER
+      reviewNumber: DataTypes.INTEGER,
+      linkToReview: {
+        type: DataTypes.STRING,
+        validate: {
+          isUrl: true
+        }
+      }
     },
     {
       hooks: {

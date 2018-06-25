@@ -1,5 +1,5 @@
 import React from 'react'
-import { Accordion, Button, Table, Card, Form, Comment, List, Header, Label, Message, Icon, Dropdown, Popup, Loader } from 'semantic-ui-react'
+import { Accordion, Button, Table, Card, Input, Form, Comment, Header, Label, Message, Icon, Dropdown, Popup, Loader } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createOneComment } from '../../services/comment'
@@ -7,6 +7,7 @@ import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import { associateTeacherToStudent } from '../../services/assistant'
 import ReactMarkdown from 'react-markdown'
 import { getAllTags, tagStudent, unTagStudent } from '../../services/tags'
+import { addLinkToCodeReview } from '../../services/codeReview'
 import { sendEmail } from '../../services/email'
 import {
   showAssistantDropdown,
@@ -53,19 +54,23 @@ export class CoursePage extends React.Component {
     this.props.getAllTags()
   }
 
-  weekNumberOfLastReviewedWeek() {
-    if (this.props.courseData.data.weeks.length > 0) {
-      if (this.state.showLastReviewed) {
-        let lastIndexOfWeeks = this.props.courseData.data.weeks.length - 1
-        let lastReviewedWeek = this.props.courseData.data.weeks[lastIndexOfWeeks].weekNumber
-        return lastReviewedWeek
-      }
-    }
-  }
 
   componentWillUnmount() {
-    this.setState({ showLastReviewed: true })
+    // this.setState({ showLastReviewed: true })
     this.props.coursePageReset()
+  }
+
+  sortArrayAscendingByDate = theArray => {
+    return theArray.sort((a, b) => {
+      return new Date(a.createdAt) - new Date(b.createdAt)
+    })
+  }
+
+  trimDate = date => {
+    return new Date(date)
+      .toLocaleString()
+      .replace('/', '.')
+      .replace('/', '.')
   }
 
   changeHiddenAssistantDropdown = id => {
@@ -118,6 +123,17 @@ export class CoursePage extends React.Component {
     } catch (error) {
       console.log(error)
     }
+  }
+
+  handleAddingIssueLink = (reviewNumber, studentInstance) => async e => {
+    e.preventDefault()
+    const data = {
+      reviewNumber,
+      studentInstanceId: studentInstance,
+      linkToReview: e.target.reviewLink.value
+    }
+    e.target.reviewLink.value = ''
+    this.props.addLinkToCodeReview(data)
   }
 
   changeFilterAssistant = () => {
@@ -321,7 +337,8 @@ export class CoursePage extends React.Component {
                   <h4> Comments </h4>
                   <Comment.Group>
                     {week ? (
-                      week.comments.map(
+                      this.sortArrayAscendingByDate(week.comments).map(
+
                         comment =>
                           comment.hidden ? (
                             <Comment key={comment.id} disabled>
@@ -334,6 +351,9 @@ export class CoursePage extends React.Component {
                                   {' '}
                                   <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
                                 </Comment.Text>
+                                <Comment.Metadata>
+                                  <div>{this.trimDate(comment.createdAt)}</div>
+                                </Comment.Metadata><div> </div>
                               </Comment.Content>
                             </Comment>
                           ) : (
@@ -343,6 +363,9 @@ export class CoursePage extends React.Component {
                                 {' '}
                                 <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
                               </Comment.Text>
+                              <Comment.Metadata>
+                                <div>{this.trimDate(comment.createdAt)}</div>
+                              </Comment.Metadata><div> </div>
                               {/* This hack compares user's name to comment.from and hides the email notification button when they don't match. */}
                               {comment.from.includes(this.props.user.user.lastname) ? (
                                 comment.notified ? (
@@ -398,26 +421,55 @@ export class CoursePage extends React.Component {
                 </Accordion.Title>
                 <Accordion.Content active={this.props.coursePageLogic.activeIndex === i || cr.points === null}>
                   <div className="codeReviewExpanded">
-                    {cr.points !== null ? (
-                      <div>
-                        <h4 className="codeReviewPoints">Points {cr.points}</h4>
-                      </div>
-                    ) : (
-                      <div>
-                        <p>Not Graded</p>
-                      </div>
-                    )}
+                    <div className="codeReviewPoints">
+                      <strong>Points: </strong> {cr.points !== null ? cr.points : 'Not graded yet'}
+                      <br /> <br />
+                      <strong>Project to review: </strong>
+                      {cr.toReview.projectName}
+                      <br />
+                      <strong>Github: </strong>
+                      <a href={cr.toReview.github}>{cr.toReview.github}</a>
+                      <br /> <br />
+                      {cr.linkToReview ? (
+                        <div>
+                          <strong>Your review: </strong> <a href={cr.linkToReview}>{cr.linkToReview}</a>
+                        </div>
+                      ) : (
+                        <div />
+                      )}
+                    </div>
 
                     {this.props.coursePageLogic.showCodeReviews.indexOf(cr.reviewNumber) !== -1 ? (
                       <div>
-                        <h4>Project to review</h4>
-                        <p>{cr.toReview.projectName}</p>
-                        <p>
-                          <a href={cr.toReview.github}>{cr.toReview.github}</a>
-                        </p>
+                        {cr.linkToReview ? (
+                          <div />
+                        ) : (
+                          <div>
+                            <strong>Link your review here:</strong> <br />
+                            <Form onSubmit={this.handleAddingIssueLink(cr.reviewNumber, this.props.courseData.data.id)}>
+                              <Form.Group inline>
+                                <Input
+                                  type="text"
+                                  name="reviewLink"
+                                  icon="github"
+                                  required="true"
+                                  iconPosition="left"
+                                  style={{ minWidth: '25em' }}
+                                  placeholder="https://github.com/account/repo/issues/number"
+                                  className="form-control1"
+                                />
+                              </Form.Group>
+                              <Form.Group>
+                                <Button compact type="submit" color="blue">
+                                  Submit
+                                </Button>
+                              </Form.Group>
+                            </Form>
+                          </div>
+                        )}
                       </div>
                     ) : (
-                      <div />
+                      <p />
                     )}
                   </div>
                 </Accordion.Content>
@@ -738,6 +790,7 @@ const mapDispatchToProps = {
   getOneCI,
   coursePageInformation,
   associateTeacherToStudent,
+  addLinkToCodeReview,
   showAssistantDropdown,
   showTagDropdown,
   selectTeacher,
@@ -754,7 +807,4 @@ const mapDispatchToProps = {
   resetLoading
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(CoursePage)
+export default connect(mapStateToProps, mapDispatchToProps)(CoursePage)

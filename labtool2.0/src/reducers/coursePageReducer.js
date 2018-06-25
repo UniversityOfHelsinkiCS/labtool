@@ -94,6 +94,16 @@ const courseInstancereducer = (store = [], action) => {
       })
       return { ...store, data: newData }
     }
+    case 'CODE_REVIEW_ADD_LINK_SUCCESS': {
+      let updatedCodeReview = store.data.codeReviews.filter(review => review.reviewNumber === action.response.data.reviewNumber)[0]
+      if (updatedCodeReview) {
+        const otherCodeReviews = store.data.codeReviews.filter(review => review.reviewNumber !== action.response.data.reviewNumber)
+        updatedCodeReview = { ...updatedCodeReview, linkToReview: action.response.data.linkToReview }
+        return { ...store, data: { ...store.data, codeReviews: [...otherCodeReviews, updatedCodeReview] } }
+      } else {
+        return store
+      }
+    }
     case 'TAG_STUDENT_SUCCESS': {
       return { ...store, data: store.data.map(student => (student.id === action.response.id ? action.response : student)) }
     }

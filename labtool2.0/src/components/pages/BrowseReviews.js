@@ -52,6 +52,19 @@ export class BrowseReviews extends Component {
     }
   }
 
+  trimDate = date => {
+    return new Date(date)
+      .toLocaleString()
+      .replace('/', '.')
+      .replace('/', '.')
+  }
+
+  sortCommentsByDate = comments => {
+    return comments.sort((a, b) => {
+      return new Date(a.createdAt) - new Date(b.createdAt)
+    })
+  }
+
   gradeCodeReview = (reviewNumber, studentInstanceId) => async e => {
     e.preventDefault()
     const data = {
@@ -131,7 +144,7 @@ export class BrowseReviews extends Component {
                     <h4> Comments </h4>
                     <Comment.Group>
                       {weeks ? (
-                        weeks.comments.map(
+                        this.sortCommentsByDate(weeks.comments).map(
                           comment =>
                             comment.hidden ? (
                               <Comment disabled>
@@ -144,6 +157,9 @@ export class BrowseReviews extends Component {
                                     {' '}
                                     <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
                                   </Comment.Text>
+                                  <Comment.Metadata>
+                                    <div>{this.trimDate(comment.createdAt)}</div>
+                                  </Comment.Metadata><div> </div>
                                 </Comment.Content>
                               </Comment>
                             ) : (
@@ -153,6 +169,10 @@ export class BrowseReviews extends Component {
                                   {' '}
                                   <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
                                 </Comment.Text>
+                                <Comment.Metadata>
+                                    <div>{this.trimDate(comment.createdAt)}</div>
+                                </Comment.Metadata>
+                                <div> </div>
                                 {/* This hack compares user's name to comment.from and hides the email notification button when they don't match. */}
                                 {comment.from.includes(this.props.user.user.lastname) ? (
                                   comment.notified ? (
@@ -211,14 +231,16 @@ export class BrowseReviews extends Component {
               headers.push(
                 <Accordion key={i + ii} fluid styled>
                   <Accordion.Title active={activeIndex === i + ii} index={i + ii} onClick={this.handleClick}>
-                    <Icon name="dropdown" /> Code Review {cr.reviewNumber}{' '}
+                    <Icon name="dropdown" /> Code Review {cr.reviewNumber} {cr.points !== null ? ', points ' + cr.points : ''}
                   </Accordion.Title>
                   <Accordion.Content active={activeIndex === i + ii}>
-                    <p>Project: {this.props.courseData.data.find(data => data.id === cr.toReview).projectName}</p>
                     <p>
-                      GitHub: <a href={this.props.courseData.data.find(data => data.id === cr.toReview).github}>{this.props.courseData.data.find(data => data.id === cr.toReview).github}</a>
+                      <strong>Project to review:</strong> {this.props.courseData.data.find(data => data.id === cr.toReview).projectName} <br />
+                      <strong>GitHub:</strong>{' '}
+                      <a href={this.props.courseData.data.find(data => data.id === cr.toReview).github}>{this.props.courseData.data.find(data => data.id === cr.toReview).github}</a>
                     </p>
-                    {cr.points !== null ? <h4>{cr.points} points</h4> : <h4>Not Graded</h4>}
+                    <strong>Code review:</strong> {cr.linkToReview ? <a href={cr.linkToReview}>{cr.linkToReview}</a> : 'No review linked yet'}
+                    {cr.points !== null ? <h4>{cr.points} points</h4> : <h4>Not graded yet</h4>}
                     <Form onSubmit={this.gradeCodeReview(cr.reviewNumber, studentInstance)}>
                       <label>Points </label>
                       <Input name="points" defaultValue={cr.points ? cr.points : ''} type="number" step="0.01" style={{ width: '100px' }} />
