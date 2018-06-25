@@ -20,12 +20,40 @@ export const sortTags = tags => {
   })
 }
 
-export const sortUsers = users => {
+export const sortUsersByAdminAssistantLastname = (users, assistants) => {
   return users.sort((a, b) => {
-    if (a.admin === b.admin) {
-      return a.firsts < b.firsts ? -1 : 1
+    const aIsAssistant = assistants.find(ass => ass.userId === a.id)
+    const bIsAssistant = assistants.find(ass => ass.userId === b.id)
+    if (a.admin && !b.admin) {
+      return -1
+    } else if (!a.admin && b.admin) {
+      return 1
+    } else if (aIsAssistant && !bIsAssistant) {
+      return -1
+    } else if (!aIsAssistant && bIsAssistant) {
+      return 1
+    } else if (a.lastname > b.lastname) {
+      return -1
+    } else if (a.lastname < b.lastname) {
+      return 1
+    } else if (a.firsts > b.firsts) {
+      return -1
     } else {
-      return b.admin - a.admin
+      return 1
+    }
+  })
+}
+
+export const sortStudentsByLastname = students => {
+  return students.sort((a, b) => {
+    if (a.User.lastname < b.User.lastname) {
+      return -1
+    } else if (a.User.lastname > b.User.lastname) {
+      return 1
+    } else if (a.firsts < b.firsts) {
+      return -1
+    } else {
+      return 1
     }
   })
 }
