@@ -22,8 +22,7 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
      
   </h3>
   <h3>
-     Viikko 
-     
+    Viikko 
   </h3>
   <Grid>
     <GridRow

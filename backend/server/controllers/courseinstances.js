@@ -295,7 +295,7 @@ module.exports = {
           console.log('user.studentNumber', user.studentNumber)
           helper.checkWebOodi(req, res, user, resolve) // this does not work.
 
-          setTimeout(function () {
+          setTimeout(function() {
             resolve('shitaintright') // Yay! everything went to hell.
           }, 5000) // set a high timeout value since you really want to wait x)
         })
@@ -335,7 +335,7 @@ module.exports = {
                 })*/
                 }
               })
-              .catch(function (error) {
+              .catch(function(error) {
                 res.status(400).send({
                   message: error.errors
                 })
@@ -452,6 +452,7 @@ module.exports = {
                 weekAmount: req.body.weekAmount || courseInstance.weekAmount,
                 weekMaxPoints: req.body.weekMaxPoints || courseInstance.weekMaxPoints,
                 currentWeek: req.body.currentWeek || courseInstance.currentWeek,
+                finalReview: req.body.finalReview,
                 currentCodeReview: req.body.newCr.length === 0 ? '{}' : req.body.newCr
               })
               .then(updatedCourseInstance => res.status(200).send(updatedCourseInstance))
@@ -531,7 +532,7 @@ module.exports = {
         },
         strictSSL: false
       }
-      request(options, function (err, resp, body) {
+      request(options, function(err, resp, body) {
         const json = JSON.parse(body)
         console.log('json palautta...')
         console.log(json)
@@ -584,7 +585,7 @@ module.exports = {
           },
           strictSSL: false
         }
-        request(options, function (err, resp, body) {
+        request(options, function(err, resp, body) {
           const json = JSON.parse(body)
           console.log(json)
           json.forEach(instance => {
@@ -628,7 +629,7 @@ module.exports = {
 
         let checkRegistrationStatus = new Promise((resolve, reject) => {
           helper.checkWebOodi(req, res, currentUser, resolve)
-          setTimeout(function () {
+          setTimeout(function() {
             resolve('failure')
           }, 5000)
         })
@@ -706,7 +707,8 @@ module.exports = {
               weekId: message.week,
               hidden: message.hidden,
               comment: message.comment,
-              from: name
+              from: name,
+              notified: false
             })
               .then(comment => {
                 if (!comment) {
