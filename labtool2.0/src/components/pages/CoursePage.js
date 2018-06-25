@@ -38,7 +38,6 @@ export class CoursePage extends React.Component {
     document.getElementById(e.target.name).reset()
     try {
       await this.props.createOneComment(content)
-      await this.props.coursePageInformation(this.props.selectedInstance.ohid)
       document.getElementById('comment').reset()
     } catch (error) {
       console.log(error)
@@ -313,7 +312,9 @@ export class CoursePage extends React.Component {
                   <h4> Comments </h4>
                   <Comment.Group>
                     {weeks ? (
-                      weeks.comments.map(
+                      weeks.comments.sort((a, b) => {
+                        return new Date(b.createdAt) - new Date(a.createdAt)
+                      }).map(
                         comment =>
                           comment.hidden ? (
                             <Comment key={comment.id} disabled>

@@ -84,7 +84,7 @@ module.exports = {
               {
                 model: Comment,
                 attributes: {
-                  exclude: ['createdAt', 'updatedAt']
+                  exclude: ['updatedAt']
                 },
                 as: 'comments',
                 where: {
@@ -214,7 +214,7 @@ module.exports = {
               {
                 model: Comment,
                 attributes: {
-                  exclude: ['createdAt', 'updatedAt']
+                  exclude: ['updatedAt']
                 },
                 as: 'comments'
               }
@@ -736,7 +736,7 @@ module.exports = {
 
     return Comment.findAll({
       attributes: {
-        exclude: ['createdAt', 'updatedAt']
+        exclude: ['updatedAt']
       },
       where: {
         weekId: req.body.week

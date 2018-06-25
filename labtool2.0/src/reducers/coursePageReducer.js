@@ -59,6 +59,13 @@ const courseInstancereducer = (store = [], action) => {
     case 'UNTAG_STUDENT_SUCCESS': {
       return { ...store, data: store.data.map(student => (student.id === action.response.id ? action.response : student)) }
     }
+    case 'COMMENT_CREATE_ONE_SUCCESS':
+      if (store.role === 'student') {
+        const newWeeks = [...store.data.weeks]
+        newWeeks.find(week => week.id === action.response.weekId).comments.push(action.response)
+        return { ...store, data: { ...store.data, weeks: newWeeks } }
+      }
+      return store
     default:
       return store
   }
