@@ -91,7 +91,7 @@ export class BrowseReviews extends Component {
             const weeks = student.weeks.find(week => week.weekNumber === i + 1)
             if (weeks) {
               headers.push(
-                <Accordion key={weeks.id * Math.floor(Math.random() * 999999999)} fluid styled>
+                <Accordion key={weeks.id} fluid styled>
                   <Accordion.Title active={activeIndex === i} index={i} onClick={this.handleClick}>
                     <Icon name="dropdown" /> Week {i + 1}, points {weeks.points}
                   </Accordion.Title>
@@ -121,7 +121,7 @@ export class BrowseReviews extends Component {
                                 </Comment.Content>
                               </Comment>
                             ) : (
-                              <Comment key={comment.id * Math.floor(Math.random() * 999999999)}>
+                              <Comment key={comment.id}>
                                 <Comment.Author>{comment.from}</Comment.Author>
                                 <Comment.Text>
                                   {' '}
@@ -148,6 +148,7 @@ export class BrowseReviews extends Component {
               )
             } else {
               headers.push(
+                //It's okay to use Math.Random for empty weeks
                 <Accordion key={Math.floor(Math.random() * 999999999)} fluid styled>
                   <Accordion.Title active={activeIndex === i} index={i} onClick={this.handleClick}>
                     <Icon name="dropdown" /> Week {i + 1}{' '}
@@ -169,7 +170,7 @@ export class BrowseReviews extends Component {
             })
             .forEach(cr => {
               headers.push(
-                <Accordion key={cr.id * Math.floor(Math.random() * 999999999)} fluid styled>
+                <Accordion key={cr.id} fluid styled>
                   {' '}
                   <Accordion.Title active={activeIndex === i + ii} index={i + ii} onClick={this.handleClick}>
                     <Icon name="dropdown" /> Code Review {cr.reviewNumber}{' '}
@@ -194,7 +195,7 @@ export class BrowseReviews extends Component {
             const finalWeek = student.weeks.find(week => week.weekNumber === this.props.selectedInstance.weekAmount + 1)
             if (finalWeek) {
               headers.push(
-                <Accordion key={finalWeek.id * Math.floor(Math.random() * 999999999)} fluid styled>
+                <Accordion key={finalWeek.id} fluid styled>
                   <Accordion.Title active={activeIndex === i + ii} index={i + ii} onClick={this.handleClick}>
                     <Icon name="dropdown" /> Final Review, points {finalWeek.points}
                   </Accordion.Title>
