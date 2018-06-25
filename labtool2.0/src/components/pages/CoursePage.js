@@ -298,7 +298,8 @@ export class CoursePage extends React.Component {
       if (this.props.selectedInstance && this.props.courseData && this.props.courseData.data && this.props.courseData.data.weeks) {
         let i = 0
         let week = null
-        for (; i < this.props.selectedInstance.weekAmount + 1; i++) {
+        const howManyWeeks = this.props.selectedInstance.finalReview ? this.props.selectedInstance.weekAmount + 1 : this.props.selectedInstance.weekAmount
+        for (; i < howManyWeeks; i++) {
           week = this.props.courseData.data.weeks.find(week => week.weekNumber === i + 1)
           console.log("week: ", week)
           if (week !== undefined) {
