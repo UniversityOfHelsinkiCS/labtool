@@ -703,7 +703,7 @@ module.exports = {
             return
           } else {
             const name = user.firsts.concat(' ').concat(user.lastname)
-            Comment.create({
+            return Comment.create({
               weekId: message.week,
               hidden: message.hidden,
               comment: message.comment,
