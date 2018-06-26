@@ -241,7 +241,7 @@ export class ModifyCourseInstanceReview extends React.Component {
                                 {this.props.dropdownUsers.map(
                                   d =>
                                     d.value !== data.id ? (
-                                      this.props.codeReviewLogic.currentSelections[this.props.codeReviewLogic.selectedDropdown][data.id] == d.value ? (
+                                      this.props.codeReviewLogic.currentSelections[this.props.codeReviewLogic.selectedDropdown][data.id] === d.value ? (
                                         <option selected="selected" key={d.value} value={d.value}>
                                           {d.text}
                                         </option>
@@ -285,7 +285,7 @@ export class ModifyCourseInstanceReview extends React.Component {
                               {this.props.dropdownUsers.map(
                                 d =>
                                   d.value !== data.id ? (
-                                    this.props.codeReviewLogic.currentSelections['create'][data.id] == d.value ? (
+                                    this.props.codeReviewLogic.currentSelections['create'][data.id] === d.value ? (
                                       <option selected="selected" key={d.value} value={d.value}>
                                         {d.text}
                                       </option>

@@ -98,7 +98,7 @@ export class BrowseReviews extends Component {
       studhead.data.map(student => {
         // studentInstance is id of student. Type: String
         // Tämä pitää myös korjata.
-        if (student.id == studentInstance) {
+        if (student.id === Number(studentInstance)) {
           headers.push(
             <Card key={student.id} fluid color="yellow">
               <Card.Content>
