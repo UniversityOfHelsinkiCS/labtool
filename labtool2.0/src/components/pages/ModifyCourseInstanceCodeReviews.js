@@ -86,9 +86,9 @@ export class ModifyCourseInstanceReview extends React.Component {
       this.props.coursePageLogic.filterByTag.forEach(st => selectedTags.push(st.name))
       selectedTags.length > 0
         ? this.props.courseData.data.forEach(student => {
-          studentTags = student.Tags.filter(st => selectedTags.includes(st.name))
-          studentTags.length > 0 ? (allCb[student.id] = true) : null
-          studentTags = []
+            studentTags = student.Tags.filter(st => selectedTags.includes(st.name))
+            studentTags.length > 0 ? (allCb[student.id] = true) : null
+            studentTags = []
           })
         : this.props.courseData.data.forEach(st => (allCb[st.id] = true))
       let randoms = Object.keys(allCb).map(student => parseInt(student, 10))
