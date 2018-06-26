@@ -29,7 +29,6 @@ module.exports = {
         if (err) {
           console.log('\nlogin: ', err, 'n')
         }
-
         if (result.response && result.response.body && result.response.body.username && result.response.body.error !== 'wrong credentials') {
           console.log('\n\n\nbody: ', body, '\n\n\n')
           let first
@@ -48,16 +47,21 @@ module.exports = {
               email: ''
             }
           }).spread((newuser, created) => {
-            if (newuser.firsts !== first) {
-              console.log('päivitetään kutsumanimi').then(User.update({ firsts: first }, { where: { id: newuser.id } }))
+            if (newuser.firsts) {
+              console.log('päivitetään kutsumanimi')
+              User.update({ firsts: first }, { where: { id: newuser.id } }).then(
+                body.first_names.includes('*') ? (first = result.response.body.first_names.split('*')[1].split(' ')[0]) : (first = result.response.body.first_names.split(' ')[0])
+              )
             }
 
             if (newuser.lastname !== body.last_name) {
-              console.log('päivitetään sukunimi').then(User.update({ lastname: body.last_name }, { where: { id: newuser.id } }))
+              console.log('päivitetään sukunimi')
+              User.update({ lastname: body.last_name }, { where: { id: newuser.id } }).then((newuser.lastname = body.last_name))
             }
 
             if (newuser.studentNumber === null) {
-              console.log('päivitetään opiskelijanumero').then(User.update({ studentNumber: body.student_number }, { where: { id: newuser.id } }))
+              console.log('päivitetään opiskelijanumero')
+              User.update({ studentNumber: body.student_number }, { where: { id: newuser.id } }).then((newuser.studentNumber = body.student_number))
             }
 
             console.log(
