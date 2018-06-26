@@ -316,7 +316,7 @@ export class BrowseReviews extends Component {
                       <Button content="Add Reply" labelPosition="left" icon="edit" primary />
                     </Form>
                     <h3>Review</h3>
-                    <Link to={`/labtool/reviewstudent/${this.props.selectedInstance.ohid}/${studentInstance}/${i}`}>
+                    <Link to={`/labtool/reviewstudent/${this.props.selectedInstance.ohid}/${studentInstance}/${i + 1}`}>
                       <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'edit', color: 'black', size: 'large' }} />} content="Edit final review" />
                     </Link>
                   </Accordion.Content>
