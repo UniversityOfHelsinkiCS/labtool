@@ -50,7 +50,7 @@ export const sortStudentsByLastname = students => {
       return -1
     } else if (a.User.lastname > b.User.lastname) {
       return 1
-    } else if (a.firsts < b.firsts) {
+    } else if (a.User.firsts < b.User.firsts) {
       return -1
     } else {
       return 1
