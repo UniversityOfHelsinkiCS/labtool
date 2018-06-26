@@ -33,9 +33,9 @@ export const sortUsersByAdminAssistantLastname = (users, assistants) => {
     } else if (!aIsAssistant && bIsAssistant) {
       return 1
     } else if (a.lastname > b.lastname) {
-      return -1
-    } else if (a.lastname < b.lastname) {
       return 1
+    } else if (a.lastname < b.lastname) {
+      return -1
     } else if (a.firsts > b.firsts) {
       return -1
     } else {
