@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Button, Header, Table, Container, List, Icon, Segment, Divider, Popup } from 'semantic-ui-react'
+import { Button, Header, Table, Container, Icon, Segment, Divider, Popup } from 'semantic-ui-react'
 import './MyPage.css'
 import { Link } from 'react-router-dom'
 import { getAllStudentCourses } from '../../services/studentinstances'

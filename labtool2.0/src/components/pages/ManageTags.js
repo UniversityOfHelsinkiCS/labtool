@@ -50,7 +50,6 @@ export class ManageTags extends React.Component {
 
   removeTag = async e => {
     try {
-      var txt
       if (!window.confirm('Are you sure?')) {
         return
       }

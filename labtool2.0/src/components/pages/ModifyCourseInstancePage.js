@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Input, Button, Grid, Radio, Dropdown, Checkbox, Loader, Popup } from 'semantic-ui-react'
+import { Form, Input, Button, Grid, Dropdown, Checkbox, Loader, Popup } from 'semantic-ui-react'
 import { getOneCI, modifyOneCI } from '../../services/courseInstance'
 import { setFinalReview } from '../../reducers/selectedInstanceReducer'
 import { connect } from 'react-redux'
