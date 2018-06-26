@@ -11,19 +11,6 @@ import { getAllTeacherCourses } from '../../services/teacherinstances'
  */
 
 export class MyPage extends Component {
-  // Checks if a user is logged in.
-  componentDidMount() {
-    try {
-      const loggedUserJSON = window.localStorage.getItem('loggedLabtool')
-      if (loggedUserJSON && loggedUserJSON !== '{}') {
-        const user = JSON.parse(loggedUserJSON)
-        console.log('Kirjautunut käyttäjä', user)
-      }
-    } catch (exception) {
-      console.log('no user logged in')
-    }
-  }
-
   componentWillMount() {
     this.props.getAllStudentCourses()
     this.props.getAllTeacherCourses()
