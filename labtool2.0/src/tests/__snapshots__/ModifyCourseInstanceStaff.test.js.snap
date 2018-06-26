@@ -84,34 +84,6 @@ exports[`<ModifyCourseInstanceStaff /> Components renders correctly 1`] = `
         <TableRow
           as="tr"
           cellAs="td"
-          key="10011"
-        >
-          <TableCell
-            as="td"
-          >
-            Sivu
-             
-            Opiskelija
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            <div>
-              <Button
-                as="button"
-                color="green"
-                onClick={[Function]}
-                role="button"
-                size="tiny"
-              >
-                Add assistant
-              </Button>
-            </div>
-          </TableCell>
-        </TableRow>
-        <TableRow
-          as="tr"
-          cellAs="td"
           key="10012"
         >
           <TableCell
@@ -139,6 +111,34 @@ exports[`<ModifyCourseInstanceStaff /> Components renders correctly 1`] = `
                 size="tiny"
               >
                 Remove assistant
+              </Button>
+            </div>
+          </TableCell>
+        </TableRow>
+        <TableRow
+          as="tr"
+          cellAs="td"
+          key="10011"
+        >
+          <TableCell
+            as="td"
+          >
+            Sivu
+             
+            Opiskelija
+          </TableCell>
+          <TableCell
+            as="td"
+          >
+            <div>
+              <Button
+                as="button"
+                color="green"
+                onClick={[Function]}
+                role="button"
+                size="tiny"
+              >
+                Add assistant
               </Button>
             </div>
           </TableCell>

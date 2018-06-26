@@ -737,7 +737,7 @@ module.exports = {
 
     return Comment.findAll({
       attributes: {
-        //exclude: ['createdAt']
+        exclude: ['updatedAt']
       },
       where: {
         weekId: req.body.week

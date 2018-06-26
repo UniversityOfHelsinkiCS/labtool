@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 import { Button, Form, Input, Grid, Card, Loader } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createOneWeek } from '../../services/week'
 import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import { clearNotifications } from '../../reducers/notificationReducer'
 import { toggleCheck, resetChecklist } from '../../reducers/weekReviewReducer'
-import { resetLoading } from '../../reducers/loadingReducer'
+import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 import store from '../../store'
 
 /**
@@ -26,14 +26,6 @@ export class ReviewStudent extends Component {
     this.props.clearNotifications()
   }
 
-  componentDidUpdate() {
-    if (this.props.notification.error !== undefined) {
-      if (!this.props.notification.error) {
-        this.props.history.push(`/labtool/courses/${this.props.selectedInstance.ohid}`)
-      }
-    }
-  }
-
   componentWillUnmount() {
     this.props.resetChecklist()
   }
@@ -50,6 +42,9 @@ export class ReviewStudent extends Component {
       if (e.target.points.value < 0 || e.target.points.value > this.props.selectedInstance.weekMaxPoints) {
         store.dispatch({ type: 'WEEKS_CREATE_ONEFAILURE' })
       } else {
+        this.props.addRedirectHook({
+          hook: 'WEEKS_CREATE_ONE'
+        })
         await this.props.createOneWeek(content)
       }
     } catch (error) {
@@ -73,6 +68,9 @@ export class ReviewStudent extends Component {
   render() {
     if (this.props.loading.loading) {
       return <Loader active />
+    }
+    if (this.props.loading.redirect) {
+      return <Redirect to={`/labtool/courses/${this.props.selectedInstance.ohid}`} />
     }
     //this.props.ownProps.studentInstance is a string, therefore casting to number.
     const studentData = this.props.courseData.data.filter(dataArray => dataArray.id === Number(this.props.ownProps.studentInstance))
@@ -189,7 +187,18 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
+const mapDispatchToProps = {
+  createOneWeek,
+  getOneCI,
+  clearNotifications,
+  toggleCheck,
+  resetChecklist,
+  coursePageInformation,
+  resetLoading,
+  addRedirectHook
+}
+
 export default connect(
   mapStateToProps,
-  { createOneWeek, getOneCI, clearNotifications, toggleCheck, resetChecklist, coursePageInformation, resetLoading }
+  mapDispatchToProps
 )(ReviewStudent)
