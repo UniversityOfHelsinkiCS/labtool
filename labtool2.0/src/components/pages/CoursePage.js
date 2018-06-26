@@ -56,9 +56,9 @@ export class CoursePage extends React.Component {
     this.props.coursePageReset()
   }
 
-  sortArrayDescendingByDate = theArray => {
+  sortArrayAscendingByDate = theArray => {
     return theArray.sort((a, b) => {
-      return new Date(b.createdAt) - new Date(a.createdAt)
+      return new Date(a.createdAt) - new Date(b.createdAt)
     })
   }
 
@@ -320,13 +320,9 @@ export class CoursePage extends React.Component {
                     </Card.Content>
                   </Card>
                   <h4> Comments </h4>
-                  <Form reply onSubmit={this.handleSubmit} name={weeks.id} id={weeks.id}>
-                    <Form.TextArea name="content" placeholder="Your comment..." defaultValue="" />
-                    <Button content="Add Reply" labelPosition="left" icon="edit" primary />
-                  </Form>
                   <Comment.Group>
                     {weeks ? (
-                      this.sortArrayDescendingByDate(weeks.comments).map(
+                      this.sortArrayAscendingByDate(weeks.comments).map(
                         comment =>
                           comment.hidden ? (
                             <Comment key={comment.id} disabled>
@@ -375,6 +371,10 @@ export class CoursePage extends React.Component {
                       <h4> No comments </h4>
                     )}
                   </Comment.Group>
+                  <Form reply onSubmit={this.handleSubmit} name={weeks.id} id={weeks.id}>
+                    <Form.TextArea name="content" placeholder="Your comment..." defaultValue="" />
+                    <Button content="Add Reply" labelPosition="left" icon="edit" primary />
+                  </Form>
                 </Accordion.Content>
               </Accordion>
             )
