@@ -13,7 +13,13 @@ import { resetLoading } from '../../reducers/loadingReducer'
  * Maps all comments from a single instance from coursePage reducer
  */
 export class BrowseReviews extends Component {
-  state = { activeIndex: 0 }
+  constructor(props) {
+    super(props)
+    this.state = {
+      activeIndex: 0,
+      initialLoading: props.initialLoading !== undefined ? this.props.initialLoading : true
+    }
+  }
 
   componentWillMount = async () => {
     await this.props.resetLoading()
@@ -24,6 +30,12 @@ export class BrowseReviews extends Component {
   componentDidMount() {
     if (!this.props.loading.loading && this.state.activeIndex !== this.props.selectedInstance.currentWeek - 1) {
       this.setState({ activeIndex: this.props.selectedInstance.currentWeek - 1 })
+    }
+  }
+
+  componentDidUpdate() {
+    if (!this.props.loading.loading && this.state.initialLoading) {
+      this.setState({ initialLoading: false })
     }
   }
 
@@ -88,7 +100,7 @@ export class BrowseReviews extends Component {
   }
 
   render() {
-    if (this.props.loading.loading) {
+    if (this.state.initialLoading) {
       return <Loader active />
     }
     const createHeaders = (studhead, studentInstance) => {
@@ -98,7 +110,7 @@ export class BrowseReviews extends Component {
         // Tämä pitää myös korjata.
         if (student.id == studentInstance) {
           headers.push(
-            <Card fluid color="yellow">
+            <Card key={student.id} fluid color="yellow">
               <Card.Content>
                 <h2>
                   {student.User.firsts} {student.User.lastname}
@@ -161,7 +173,7 @@ export class BrowseReviews extends Component {
                                 </Comment.Content>
                               </Comment>
                             ) : (
-                              <Comment>
+                              <Comment key={comment.id}>
                                 <Comment.Author>{comment.from}</Comment.Author>
                                 <Comment.Text>
                                   {' '}
@@ -253,7 +265,7 @@ export class BrowseReviews extends Component {
             const finalWeek = student.weeks.find(week => week.weekNumber === this.props.selectedInstance.weekAmount + 1)
             if (finalWeek) {
               headers.push(
-                <Accordion key={i} fluid styled>
+                <Accordion key={i + ii + 1} fluid styled>
                   <Accordion.Title active={activeIndex === i + ii} index={i + ii} onClick={this.handleClick}>
                     <Icon name="dropdown" /> Final Review, points {finalWeek.points}
                   </Accordion.Title>
@@ -311,7 +323,7 @@ export class BrowseReviews extends Component {
               )
             } else {
               headers.push(
-                <Accordion key={i} fluid styled>
+                <Accordion key={i + ii + 1} fluid styled>
                   <Accordion.Title active={activeIndex === i} index={i} onClick={this.handleClick}>
                     <Icon name="dropdown" /> Final Review{' '}
                   </Accordion.Title>
@@ -336,6 +348,7 @@ export class BrowseReviews extends Component {
 
     return (
       <div className="BrowseReviews" style={{ overflowX: 'auto' }}>
+        <Loader active={this.props.loading.loading} />
         {this.props.courseData.role === 'teacher' ? (
           <div>
             <Link to={`/labtool/courses/${this.props.selectedInstance.ohid}`}>
@@ -352,7 +365,7 @@ export class BrowseReviews extends Component {
 }
 const mapStateToProps = (state, ownProps) => {
   return {
-    ownProps,
+    ...ownProps,
     user: state.user,
     selectedInstance: state.selectedInstance,
     courseData: state.coursePage,

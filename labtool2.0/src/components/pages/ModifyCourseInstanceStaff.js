@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import { clearNotifications } from '../../reducers/notificationReducer'
 import { Table, Container, Header, Button, Label, Form, Loader } from 'semantic-ui-react'
 import { resetLoading } from '../../reducers/loadingReducer'
+import { sortUsersByAdminAssistantLastname } from '../../util/sort'
 
 export class ModifyCourseInstanceStaff extends React.Component {
   componentWillMount = async () => {
@@ -49,6 +50,10 @@ export class ModifyCourseInstanceStaff extends React.Component {
   }
 
   render() {
+    let sortedUsers = this.props.users
+    if (this.props.selectedInstance && this.props.selectedInstance.teacherInstances && this.props.users) {
+      sortedUsers = sortUsersByAdminAssistantLastname(this.props.users, this.props.selectedInstance.teacherInstances)
+    }
     return (
       <Container>
         <div className="sixteen wide column" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
@@ -68,7 +73,7 @@ export class ModifyCourseInstanceStaff extends React.Component {
                 </Table.Row>
               </Table.Header>
               <Table.Body>
-                {this.props.users.map(user => (
+                {sortedUsers.map(user => (
                   <Table.Row key={user.id}>
                     <Table.Cell>
                       {user.firsts} {user.lastname}
@@ -109,16 +114,6 @@ export class ModifyCourseInstanceStaff extends React.Component {
     )
   }
 }
-
-// const sortUsers = (users, selectedInstance) => {
-//   let teacherInstaceIds = []
-//   let usersWhoAreTeachers = []
-//   if (selectedInstance.teacherInstances) {
-//     teacherInstaceIds = selectedInstance.teacherInstances.map(f => f.userId)
-//     return users.filter(f => !teacherInstaceIds.includes(f.id))
-//   }
-//   return []
-// }
 
 const mapStateToProps = (state, ownProps) => {
   return {

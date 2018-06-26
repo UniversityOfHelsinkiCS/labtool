@@ -1,3 +1,5 @@
+import { sortStudentsByLastname } from '../util/sort'
+
 /**
  * The reducer for displaying pretty much all that you want to see
  * on the course page.
@@ -49,7 +51,7 @@ const weekNotification = (state, weekId) => {
 const courseInstancereducer = (store = [], action) => {
   switch (action.type) {
     case 'CP_INFO_SUCCESS':
-      return action.response
+      return { ...action.response, data: sortStudentsByLastname(action.response.data) }
     case 'ASSOCIATE_TEACHER_AND_STUDENT_SUCCESS': {
       console.log(store)
       const id = action.response.id
@@ -110,6 +112,13 @@ const courseInstancereducer = (store = [], action) => {
     case 'UNTAG_STUDENT_SUCCESS': {
       return { ...store, data: store.data.map(student => (student.id === action.response.id ? action.response : student)) }
     }
+    case 'COMMENT_CREATE_ONE_SUCCESS':
+      if (store.role === 'student') {
+        const newWeeks = [...store.data.weeks]
+        newWeeks.find(week => week.id === action.response.weekId).comments.push(action.response)
+        return { ...store, data: { ...store.data, weeks: newWeeks } }
+      }
+      return store
     case 'SEND_EMAIL_SUCCESS':
       if (store.role === 'teacher') {
         if (action.response.data.commentId) {

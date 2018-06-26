@@ -117,66 +117,54 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
         <FormGroup
           inline={true}
         >
-          <Checkbox
-            label="Course has a final review"
-            name="finalReview"
-            onChange={[Function]}
+          <label
             style={
               Object {
                 "textAlign": "left",
-                "width": "150px",
+                "width": "125px",
               }
             }
-            type="checkbox"
+          >
+            Currently visible code reviews
+          </label>
+          <Popup
+            content="Click to be removed on save"
+            keepInViewPort={true}
+            key="1"
+            on="hover"
+            position="top left"
+            trigger={
+              <Button
+                as="button"
+                compact={true}
+                onClick={[Function]}
+                role="button"
+                value={1}
+              >
+                1
+              </Button>
+            }
+          />
+          <Popup
+            content="Click to be removed on save"
+            keepInViewPort={true}
+            key="2"
+            on="hover"
+            position="top left"
+            trigger={
+              <Button
+                as="button"
+                compact={true}
+                onClick={[Function]}
+                role="button"
+                value={2}
+              >
+                2
+              </Button>
+            }
           />
         </FormGroup>
-        <label
-          style={
-            Object {
-              "textAlign": "left",
-              "width": "125px",
-            }
-          }
-        >
-          Currently visible code reviews
-        </label>
-        <Popup
-          content="Click to be removed on save"
-          keepInViewPort={true}
-          key="1"
-          on="hover"
-          position="top left"
-          trigger={
-            <Button
-              as="button"
-              compact={true}
-              onClick={[Function]}
-              role="button"
-              value={1}
-            >
-              1
-            </Button>
-          }
-        />
-        <Popup
-          content="Click to be removed on save"
-          keepInViewPort={true}
-          key="2"
-          on="hover"
-          position="top left"
-          trigger={
-            <Button
-              as="button"
-              compact={true}
-              onClick={[Function]}
-              role="button"
-              value={2}
-            >
-              2
-            </Button>
-          }
-        />
-        <FormField
+        <FormGroup
           inline={true}
         >
           <Dropdown
@@ -207,8 +195,24 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
             selection={true}
             wrapSelection={true}
           />
-        </FormField>
-        <FormField
+        </FormGroup>
+        <FormGroup
+          inline={true}
+        >
+          <Checkbox
+            label="Course has a final review"
+            name="finalReview"
+            onChange={[Function]}
+            style={
+              Object {
+                "textAlign": "left",
+                "width": "150px",
+              }
+            }
+            type="checkbox"
+          />
+        </FormGroup>
+        <FormGroup
           inline={true}
         >
           <Checkbox
@@ -224,8 +228,8 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
             }
             type="checkbox"
           />
-        </FormField>
-        <FormField>
+        </FormGroup>
+        <FormGroup>
           <Button
             as="button"
             color="green"
@@ -251,7 +255,7 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
               Cancel
             </Button>
           </Link>
-        </FormField>
+        </FormGroup>
       </Form>
     </GridRow>
   </Grid>

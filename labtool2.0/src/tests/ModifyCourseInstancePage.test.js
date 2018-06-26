@@ -79,7 +79,7 @@ describe('<ModifyCourseInstancePage />', () => {
       expect(wrapper.find(Dropdown).props().options[0].text).toEqual('3')
     })
     it('renders active course checkbox', () => {
-      const input = wrapper.find(Form.Field).at(1)
+      const input = wrapper.find(Form.Group).at(6)
       expect(input.props().children.props['label']).toEqual('Activate course')
     })
   })

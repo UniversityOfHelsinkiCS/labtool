@@ -11,7 +11,7 @@ const INITIAL_STATE = {
   randomizedCodeReview: [],
   codeReviewStates: {},
   currentSelections: {},
-  selectedDropdown: '',
+  selectedDropdown: null,
   checkBoxStates: {},
   statesCreated: false,
   initialized: false,
@@ -25,6 +25,12 @@ function shuffleArray(array) {
     array[i] = array[j]
     array[j] = temp
   }
+}
+
+function tagsToArray(tags) {
+  let tagsA = []
+  tags.forEach(t => tagsA.push(t.name))
+  return tagsA
 }
 
 function purgeCodeReviews(codeReviewStateArray, toPurgeArray) {
@@ -60,13 +66,15 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
       return { ...state, selectedDropdown: action.data }
     case 'INIT_REVIEW': {
       const oldReviews = state.codeReviewStates[action.data.round]
+      let selections = state.currentSelections
       let updatedReviews = {}
       let codeReviewRoundsToUpdate = state.codeReviewStates
 
       if (!action.data.toReview) {
+        delete selections[action.data.round][action.data.reviewer]
         updatedReviews = oldReviews.filter(cr => cr.reviewer !== action.data.reviewer)
         codeReviewRoundsToUpdate[action.data.round] = updatedReviews
-        return { ...state, codeReviewStates: codeReviewRoundsToUpdate }
+        return { ...state, codeReviewStates: codeReviewRoundsToUpdate, currentSelections: selections }
       }
       let toUpdate = oldReviews.find(f => f.reviewer === action.data.reviewer)
       if (toUpdate) {
@@ -104,6 +112,21 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
       }
       rndCr = rndCr.filter(rnd => rnd !== action.data)
       return { ...state, randomizedCodeReview: rndCr }
+    case 'FILTER_STATES_BY_TAG': {
+      let tags = tagsToArray(action.data.tags)
+      let cbStates = { ...state.checkBoxStates }
+      let randomized = state.randomizedCodeReview
+      action.data.students.forEach(stud => {
+        if (state.checkBoxStates[stud.id]) {
+          const studT = stud.Tags.filter(st => tags.includes(st.name))
+          if (studT.length < action.data.tags.length) {
+            cbStates[stud.id] = !cbStates[stud.id]
+            randomized = randomized.filter(r => r !== stud.id)
+          }
+        }
+      })
+      return { ...state, randomizedCodeReview: randomized, checkBoxStates: cbStates }
+    }
     case 'CODE_REVIEW_BULKINSERT_SUCCESS':
       var codeReviewRoundsToUpdate = state.codeReviewStates
       var currentSelectionsToUpdate = state.currentSelections
@@ -230,4 +253,12 @@ export const selectDropdown = data => {
   }
 }
 
+export const filterStatesByTags = data => {
+  return async dispatch => {
+    dispatch({
+      type: 'FILTER_STATES_BY_TAG',
+      data: data
+    })
+  }
+}
 export default codeReviewReducer

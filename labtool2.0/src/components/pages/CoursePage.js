@@ -40,7 +40,6 @@ export class CoursePage extends React.Component {
     document.getElementById(e.target.name).reset()
     try {
       await this.props.createOneComment(content)
-      await this.props.coursePageInformation(this.props.selectedInstance.ohid)
       document.getElementById('comment').reset()
     } catch (error) {
       console.log(error)
@@ -54,9 +53,7 @@ export class CoursePage extends React.Component {
     this.props.getAllTags()
   }
 
-
   componentWillUnmount() {
-    // this.setState({ showLastReviewed: true })
     this.props.coursePageReset()
   }
 
@@ -311,33 +308,32 @@ export class CoursePage extends React.Component {
           </Card.Content>
         </Card>
       )
-      if (this.props.courseData && this.props.courseData.data && this.props.courseData.data.weeks) {
-        let weeks = null
-
+      if (this.props.selectedInstance && this.props.courseData && this.props.courseData.data && this.props.courseData.data.weeks) {
         let i = 0
-        for (; i < this.props.courseData.data.weeks.length; i++) {
-          weeks = this.props.courseData.data.weeks.find(function(week) {
-            return week.weekNumber === i + 1
-          })
-          if (weeks) {
+        let week = null
+        const howManyWeeks = this.props.selectedInstance.finalReview ? this.props.selectedInstance.weekAmount + 1 : this.props.selectedInstance.weekAmount
+        for (; i < howManyWeeks; i++) {
+          week = this.props.courseData.data.weeks.find(week => week.weekNumber === i + 1)
+          if (week !== undefined) {
             headers.push(
               <Accordion key={i} fluid styled>
                 <Accordion.Title active={i === this.props.coursePageLogic.activeIndex} index={i} onClick={this.handleClick}>
                   <Icon name="dropdown" />
-                  {weeks.weekNumber > this.props.selectedInstance.weekAmount ? <span>Final Review</span> : <span>Week {weeks.weekNumber}</span>}, points {weeks.points}
+                  {i + 1 > this.props.selectedInstance.weekAmount ? <span>Final Review</span> : <span>Week {week.weekNumber}</span>}, points {week.points}
                 </Accordion.Title>
                 <Accordion.Content active={i === this.props.coursePageLogic.activeIndex}>
                   <Card fluid color="yellow">
                     <Card.Content>
-                      <h4> Points {weeks.points} </h4>
+                      <h4> Points {week.points} </h4>
                       <h4> Feedback </h4>
-                      <ReactMarkdown>{weeks.feedback}</ReactMarkdown>{' '}
+                      <ReactMarkdown>{week.feedback}</ReactMarkdown>{' '}
                     </Card.Content>
                   </Card>
                   <h4> Comments </h4>
                   <Comment.Group>
-                    {weeks ? (
-                      this.sortArrayAscendingByDate(weeks.comments).map(
+                    {week ? (
+                      this.sortArrayAscendingByDate(week.comments).map(
+
                         comment =>
                           comment.hidden ? (
                             <Comment key={comment.id} disabled>
@@ -386,7 +382,7 @@ export class CoursePage extends React.Component {
                       <h4> No comments </h4>
                     )}
                   </Comment.Group>
-                  <Form reply onSubmit={this.handleSubmit} name={weeks.id} id={weeks.id}>
+                  <Form reply onSubmit={this.handleSubmit} name={week.id} id={week.id}>
                     <Form.TextArea name="content" placeholder="Your comment..." defaultValue="" />
                     <Button content="Add Reply" labelPosition="left" icon="edit" primary />
                   </Form>
@@ -397,7 +393,7 @@ export class CoursePage extends React.Component {
             headers.push(
               <Accordion key={i} fluid styled>
                 <Accordion.Title active={this.props.coursePageLogic.activeIndex === i} index={i} onClick={this.handleClick}>
-                  <Icon name="dropdown" /> Week {i + 1}{' '}
+                  <Icon name="dropdown" /> {i + 1 > this.props.selectedInstance.weekAmount ? <span>Final Review</span> : <span>Week {i + 1}</span>}
                 </Accordion.Title>
                 <Accordion.Content active={this.props.coursePageLogic.activeIndex === i}>
                   <h4> Not Graded </h4>
@@ -672,10 +668,7 @@ export class CoursePage extends React.Component {
                         ) : (
                           <span>not assigned</span>
                         )}
-                        <Popup
-                          trigger={<Button circular onClick={this.changeHiddenAssistantDropdown(data.id)} icon={{ name: 'pencil', size: 'medium' }} style={{ float: 'right' }} />}
-                          content="Assign instructor"
-                        />
+                        <Popup trigger={<Button circular onClick={this.changeHiddenAssistantDropdown(data.id)} icon={{ name: 'pencil' }} style={{ float: 'right' }} />} content="Assign instructor" />
                         {this.props.coursePageLogic.showAssistantDropdown === data.id ? (
                           <div>
                             <Dropdown id="assistantDropdown" options={dropDownTeachers} onChange={this.changeSelectedTeacher()} placeholder="Select teacher" fluid selection />
