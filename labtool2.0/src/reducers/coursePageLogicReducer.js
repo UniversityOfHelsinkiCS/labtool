@@ -59,7 +59,7 @@ const coursePageLogicReducer = (state = INITIAL_STATE, action) => {
             newestWeek = action.response.data.weeks[0]
             const numberOfWeeks = action.response.data.weeks.length
             for (let i = 1; i < numberOfWeeks; i++) {
-              const probablyNewest = new Date(action.response.data.weeks[i].createdAt) > new Date(action.response.data.weeks[i - 1]) ? action.response.data.weeks[i] : action.response.data.weeks[i - 1]
+              const probablyNewest = new Date(action.response.data.weeks[i].createdAt) > new Date(action.response.data.weeks[i - 1].createdAt) ? action.response.data.weeks[i] : action.response.data.weeks[i - 1]
               newestWeek = new Date(probablyNewest.createdAt) > new Date(newestWeek.createdAt) ? probablyNewest : newestWeek
             }
             newestReviewWeek = newestWeek.weekNumber
