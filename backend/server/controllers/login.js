@@ -32,7 +32,6 @@ module.exports = {
 
         if (result.response && result.response.body && result.response.body.username && result.response.body.error !== 'wrong credentials') {
           console.log('\n\n\nbody: ', body, '\n\n\n')
-          console.log('type of studen_number: ', typeof body.student_number)
           let first
           // If first_names from Kurki contains *, use the name after that, otherwise use first name
           if (body.first_names.includes('*')) {
@@ -49,27 +48,6 @@ module.exports = {
               email: ''
             }
           }).spread((newuser, created) => {
-            if (newuser.firsts !== first) {
-              console.log('päivitetään kutsumanimi')
-              User.update({ firsts: first }, { where: { id: newuser.id } })
-            }
-
-            if (newuser.lastname !== body.last_name) {
-              console.log('päivitetään sukunimi')
-              User.update({ lastname: body.last_name }, { where: { id: newuser.id } })
-            }
-
-            if (newuser.studentNumber === null) {
-              console.log('päivitetään opiskelijanumero')
-              User.update({ studentNumber: body.student_number }, { where: { id: newuser.id } })
-            }
-
-            console.log(
-              newuser.get({
-                plain: true
-              })
-            )
-
             const token = jwt.sign({ username: newuser.username, id: newuser.id }, process.env.SECRET)
             const user = {
               id: newuser.id,
@@ -79,6 +57,23 @@ module.exports = {
               studentNumber: newuser.studentNumber,
               username: newuser.username
             }
+            if (newuser.firsts !== first) {
+              console.log('päivitetään kutsumanimi').then(User.update({ firsts: first }, { where: { id: newuser.id } }))
+            }
+
+            if (newuser.lastname !== body.last_name) {
+              console.log('päivitetään sukunimi').then(User.update({ lastname: body.last_name }, { where: { id: newuser.id } }))
+            }
+
+            if (newuser.studentNumber === null) {
+              console.log('päivitetään opiskelijanumero').then(User.update({ studentNumber: body.student_number }, { where: { id: newuser.id } }))
+            }
+
+            console.log(
+              newuser.get({
+                plain: true
+              })
+            )
             res.status(200).send({
               user,
               token,
