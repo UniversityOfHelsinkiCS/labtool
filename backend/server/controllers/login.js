@@ -48,15 +48,6 @@ module.exports = {
               email: ''
             }
           }).spread((newuser, created) => {
-            const token = jwt.sign({ username: newuser.username, id: newuser.id }, process.env.SECRET)
-            const user = {
-              id: newuser.id,
-              email: newuser.email,
-              firsts: newuser.firsts,
-              lastname: newuser.lastname,
-              studentNumber: newuser.studentNumber,
-              username: newuser.username
-            }
             if (newuser.firsts !== first) {
               console.log('päivitetään kutsumanimi').then(User.update({ firsts: first }, { where: { id: newuser.id } }))
             }
@@ -74,6 +65,15 @@ module.exports = {
                 plain: true
               })
             )
+            const token = jwt.sign({ username: newuser.username, id: newuser.id }, process.env.SECRET)
+            const user = {
+              id: newuser.id,
+              email: newuser.email,
+              firsts: newuser.firsts,
+              lastname: newuser.lastname,
+              studentNumber: newuser.studentNumber,
+              username: newuser.username
+            }
             res.status(200).send({
               user,
               token,
