@@ -9,6 +9,9 @@ exports[`<BrowseReviews /> BrowseReviews Component should render correctly 1`] =
     }
   }
 >
+  <Loader
+    active={false}
+  />
   <div>
     <Link
       replace={false}
