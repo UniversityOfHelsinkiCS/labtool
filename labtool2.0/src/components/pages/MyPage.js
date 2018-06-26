@@ -1,30 +1,25 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Button, Header, Table, Container, List, Icon, Segment, Divider } from 'semantic-ui-react'
+import { Button, Header, Table, Container, Icon, Segment, Divider, Popup } from 'semantic-ui-react'
 import './MyPage.css'
 import { Link } from 'react-router-dom'
+import { getAllStudentCourses } from '../../services/studentinstances'
+import { getAllTeacherCourses } from '../../services/teacherinstances'
 
 /**
  * The main page that is shown after user has logged in.
  */
 
-class MyPage extends Component {
-  // Checks if a user is logged in.
-  componentDidMount() {
-    try {
-      const loggedUserJSON = window.localStorage.getItem('loggedLabtool')
-      if (loggedUserJSON && loggedUserJSON !== '{}') {
-        const user = JSON.parse(loggedUserJSON)
-      }
-    } catch (exception) {
-      console.log('no user logged in')
-    }
+export class MyPage extends Component {
+  componentWillMount() {
+    this.props.getAllStudentCourses()
+    this.props.getAllTeacherCourses()
   }
 
   render() {
     const user = { ...this.props.user.user }
     return (
-      <div>
+      <div className="MyPage">
         <Segment padded>
           <Container>
             <Header as="h2">
@@ -59,7 +54,7 @@ class MyPage extends Component {
                   </Table.Cell>
                   <Table.Cell textAlign="right" verticalAlign="bottom">
                     <Link to="/labtool/email">
-                      <Button circular size="tiny" icon="large blue edit icon" />
+                      <Popup trigger={<Button circular size="tiny" icon={{ name: 'edit', size: 'large', color: 'blue' }} />} content="Edit email address" />
                     </Link>
                   </Table.Cell>
                 </Table.Row>
@@ -67,12 +62,6 @@ class MyPage extends Component {
             </Table>
           </Container>
         </Segment>
-
-        <div className="Instructions">
-          <List>
-            <List.Item icon="blue edit icon" content="Edit email address" />
-          </List>
-        </div>
 
         <br />
         <br />
@@ -88,11 +77,13 @@ class MyPage extends Component {
             <Table singleLine key="grey" color="yellow">
               <Table.Body>
                 {this.props.studentInstance.map(sinstance => (
-                  <Table.Row>
-                    <Table.Cell>{sinstance.name}</Table.Cell>
+                  <Table.Row key={sinstance.id}>
+                    <Table.Cell>
+                      <Link to={`/labtool/courses/${sinstance.ohid}`}>{sinstance.name}</Link>
+                    </Table.Cell>
                     <Table.Cell textAlign="right">
                       <Link to={`/labtool/courses/${sinstance.ohid}`}>
-                        <Button circular size="tiny" icon="large blue eye icon" />
+                        <Popup trigger={<Button circular size="tiny" icon={{ name: 'eye', size: 'large', color: 'blue' }} />} content="View course" />
                       </Link>
                     </Table.Cell>
                   </Table.Row>
@@ -109,14 +100,16 @@ class MyPage extends Component {
                   My Courses (Teacher)
                 </Header>
 
-                <Table singleline key="grey" color="yellow">
+                <Table singleLine key="grey" color="yellow">
                   <Table.Body>
                     {this.props.teacherInstance.map(tinstance => (
                       <Table.Row key={tinstance.id}>
-                        <Table.Cell>{tinstance.name}</Table.Cell>
+                        <Table.Cell>
+                          <Link to={`/labtool/courses/${tinstance.ohid}`}>{tinstance.name} </Link>
+                        </Table.Cell>
                         <Table.Cell textAlign="right">
                           <Link to={`/labtool/courses/${tinstance.ohid}`}>
-                            <Button circular size="tiny" icon="large blue eye icon" />
+                            <Popup trigger={<Button circular size="tiny" icon={{ name: 'eye', size: 'large', color: 'blue' }} />} content="View course" />
                           </Link>
                         </Table.Cell>
                       </Table.Row>
@@ -127,14 +120,6 @@ class MyPage extends Component {
             </div>
           </Container>
         </Segment>
-        <div className="Instructions">
-          <List>
-            <List.Item icon="blue eye icon" content="Show course page" />
-          </List>
-          <br />
-          <br />
-          <br />
-        </div>
       </div>
     )
   }
@@ -148,4 +133,7 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, {})(MyPage)
+export default connect(
+  mapStateToProps,
+  { getAllStudentCourses, getAllTeacherCourses }
+)(MyPage)

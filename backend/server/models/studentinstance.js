@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          is: ['^[a-zA-Z0-9_ ]*$']
+          is: ["^[a-zåäöA-ZÅÄÖ'0-9_ ]*$"]
         }
       }
     },
@@ -25,6 +25,21 @@ module.exports = (sequelize, DataTypes) => {
       as: 'weeks'
     })
 
+    StudentInstance.hasMany(models.CodeReview, {
+      foreignKey: 'studentInstanceId',
+      as: 'codeReviews'
+    })
+
+    StudentInstance.hasMany(models.CodeReview, {
+      foreignKey: 'toReview',
+      as: 'toReviews'
+    })
+
+    StudentInstance.belongsToMany(models.Tag, {
+      through: 'StudentTag',
+      foreignKey: 'studentInstanceId'
+    })
+
     StudentInstance.belongsTo(models.User, {
       foreignKey: 'userId',
       onDelete: 'CASCADE'
@@ -33,6 +48,10 @@ module.exports = (sequelize, DataTypes) => {
     StudentInstance.belongsTo(models.CourseInstance, {
       foreignKey: 'courseInstanceId',
       onDelete: 'CASCADE'
+    })
+
+    StudentInstance.belongsTo(models.TeacherInstance, {
+      foreignKey: 'teacherInstanceId'
     })
   }
 

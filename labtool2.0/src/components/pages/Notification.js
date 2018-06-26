@@ -8,7 +8,7 @@ let timeout
 /**
  *  Notification, that clears itself after a set of time.
  */
-class Notification extends React.Component {
+export class Notification extends React.Component {
   componentDidUpdate() {
     const message = this.props.notification.message
     if (message !== undefined) {
@@ -55,6 +55,9 @@ const mapStateToProps = state => {
   }
 }
 
-const ConnectedNotification = connect(mapStateToProps, { clearNotifications })(Notification)
+const ConnectedNotification = connect(
+  mapStateToProps,
+  { clearNotifications }
+)(Notification)
 
 export default ConnectedNotification

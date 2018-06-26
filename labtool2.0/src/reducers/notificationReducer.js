@@ -8,6 +8,8 @@
  */
 const notificationReducer = (state = {}, action) => {
   switch (action.type) {
+    case 'NOTIFICATION_SHOW':
+      return action.notification
     case 'LOGIN_SUCCESS':
       return {
         message: 'You have logged in',
@@ -31,14 +33,20 @@ const notificationReducer = (state = {}, action) => {
         error: false
       }
     case 'USER_UPDATE_FAILURE':
+      // action.response.response.data refers to the json sent by backend
       return {
-        message: 'Give a valid email',
+        message: action.response.response.data.error,
         error: true
       }
     case 'STUDENT_COURSE_CREATE_ONE_SUCCESS':
       return {
-        message: 'Course registration succesful!',
+        message: 'Course registration successful!',
         error: false
+      }
+    case 'STUDENT_COURSE_CREATE_ONE_FAILURE':
+      return {
+        message: 'You have not yet registered to this course at WebOodi. If you have already registered at WebOodi, try again in two hours.',
+        error: true
       }
     case 'CI_MODIFY_ONE_SUCCESS':
       return {
@@ -47,17 +55,17 @@ const notificationReducer = (state = {}, action) => {
       }
     case 'WEEKS_CREATE_ONESUCCESS':
       return {
-        message: 'Week reviewed succesfully!',
+        message: 'Week reviewed successfully!',
         error: false
       }
     case 'WEEKS_CREATE_ONEFAILURE':
       return {
-        message: 'Oopsie doopsie, inputs are not valid!',
+        message: 'Invalid inputs.',
         error: true
       }
     case 'COMMENT_CREATE_ONE_SUCCESS':
       return {
-        message: 'Comment created succesfully!',
+        message: 'Comment created successfully!',
         error: false
       }
     case 'COMMENT_CREATE_ONE_FAILURE':
@@ -65,8 +73,127 @@ const notificationReducer = (state = {}, action) => {
         message: 'Creating comment failed!',
         error: true
       }
+    case 'TEACHER_CREATE_SUCCESS':
+      return {
+        message: 'Added a new assistant successfully!',
+        error: false
+      }
+    case 'TEACHER_CREATE_FAILURE':
+      return {
+        message: action.response.response.data,
+        error: true
+      }
+    case 'TEACHER_REMOVE_SUCCESS':
+      return {
+        message: 'Removed an assistant successfully!',
+        error: false
+      }
+    case 'TEACHER_REMOVE_FAILURE':
+      return {
+        message: 'Removing assistant failed',
+        error: true
+      }
+    case 'ASSOCIATE_TEACHER_AND_STUDENT_FAILURE':
+      return {
+        message: action.response.response.data,
+        error: true
+      }
+    case 'CODE_REVIEW_BULKINSERT_SUCCESS':
+      return {
+        message: 'Code reviews saved successfully',
+        error: false
+      }
+    case 'CODE_REVIEW_BULKINSERT_FAILURE':
+      return {
+        message: action.response.response.data,
+        error: true
+      }
+    case 'CODE_REVIEW_GRADE_SUCCESS':
+      return {
+        message: 'Code review graded successfully',
+        error: false
+      }
+    case 'CODE_REVIEW_GRADE_FAILURE':
+      return {
+        message: action.response.response.data,
+        error: true
+      }
+    case 'CODE_REVIEW_ADD_LINK_SUCCESS':
+      return {
+        message: 'Link added successfully',
+        error: false
+      }
+    case 'CODE_REVIEW_ADD_LINK_FAILURE':
+      return {
+        message: 'Link could not be added. Please check URL formatting',
+        error: true
+      }
+    case 'CHECKLIST_CREATE_SUCCESS':
+      return {
+        message: action.response.message,
+        error: false
+      }
+    case 'TAG_STUDENT_SUCCESS':
+      return {
+        message: 'Student tagged successfully',
+        error: false
+      }
+    case 'UNTAG_STUDENT_SUCCESS':
+      return {
+        message: 'Student tag removed successfully',
+        error: false
+      }
+    case 'TAG_CREATE_SUCCESS':
+      return {
+        message: 'Tag created successfully',
+        error: false
+      }
+    case 'TAG_REMOVE_SUCCESS':
+      return {
+        message: 'Tag removed successfully',
+        error: false
+      }
+    case 'CHECKLIST_CREATE_FAILURE':
+      return {
+        message: action.response.response.data,
+        error: true
+      }
+    case 'CHECKLIST_GET_ONE_FAILURE':
+      return {
+        message: "That week doesn't have a checklist.",
+        error: true
+      }
+    case 'CODE_REVIEW_RANDOMIZE':
+      return {
+        message: 'Code reviews randomized. Click save to change',
+        error: false
+      }
+    case 'STUDENT_PROJECT_INFO_UPDATE_SUCCESS':
+      return {
+        message: 'Project info updated successfully!',
+        error: false
+      }
+    case 'SEND_EMAIL_SUCCESS':
+      return {
+        message: action.response.message,
+        error: false
+      }
+    case 'SEND_EMAIL_FAILURE':
+      return {
+        message: action.response.response.data,
+        error: true
+      }
     default:
       return state
+  }
+}
+
+export const showNotification = notification => {
+  return async dispatch => {
+    dispatch({
+      type: 'NOTIFICATION_SHOW',
+      notification
+    })
   }
 }
 

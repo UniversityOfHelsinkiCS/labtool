@@ -39,7 +39,7 @@ class Nav extends Component {
             >
               <Image
                 size="mini"
-                src="/favicon.ico"
+                src={`${process.env.PUBLIC_URL}/favicon.ico`}
                 style={{
                   bottom: '2px'
                 }}
@@ -93,4 +93,7 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, { logout })(Nav)
+export default connect(
+  mapStateToProps,
+  { logout }
+)(Nav)

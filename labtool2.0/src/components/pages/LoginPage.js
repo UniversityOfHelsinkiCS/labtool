@@ -1,5 +1,6 @@
 import { connect } from 'react-redux'
 import { login } from '../../services/login'
+import { resetLoading, forceSetLoading } from '../../reducers/loadingReducer'
 import React from 'react'
 import { Form, Input, Button, Grid, Loader } from 'semantic-ui-react'
 
@@ -7,9 +8,12 @@ import { Form, Input, Button, Grid, Loader } from 'semantic-ui-react'
  *  The page used to login
  */
 
-class LoginPage extends React.Component {
-  state = {
-    loading: false
+export class LoginPage extends React.Component {
+  componentWillMount = async () => {
+    await this.props.resetLoading()
+    this.props.forceSetLoading({
+      value: false
+    })
   }
 
   handleSubmit = async e => {
@@ -19,17 +23,13 @@ class LoginPage extends React.Component {
       username: e.target.username.value,
       password: e.target.password.value
     }
-    this.setState({ loading: true })
-    setTimeout(() => {
-      this.setState({ loading: false })
-    }, 1000)
     await this.props.login(content)
   }
 
   render() {
     return (
       <div className="LoginPage">
-        <Loader active={this.state.loading} inline="centered" />
+        <Loader active={this.props.loading.loading} inline="centered" />
 
         <Grid>
           <Grid.Row centered>
@@ -62,11 +62,20 @@ class LoginPage extends React.Component {
     )
   }
 }
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = state => {
   return {
     user: state.user,
-    renderAfter: ownProps.renderAfter
+    loading: state.loading
   }
 }
 
-export default connect(mapStateToProps, { login })(LoginPage)
+const mapDispatchToProps = {
+  login,
+  resetLoading,
+  forceSetLoading
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(LoginPage)

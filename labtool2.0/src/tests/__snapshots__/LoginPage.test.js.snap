@@ -1,15 +1,19 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<Login /> Login Component should render correctly 1`] = `
+exports[`<Login /> LoginPage Component should render correctly 1`] = `
 <div
-  className="ui"
+  className="LoginPage"
 >
+  <Loader
+    active={false}
+    inline="centered"
+  />
   <Grid>
     <GridRow
       centered={true}
     >
       <h3>
-        Enter your University of Helsinki username and password.
+        Enter your University of Helsinki username and password
       </h3>
     </GridRow>
   </Grid>
@@ -19,18 +23,27 @@ exports[`<Login /> Login Component should render correctly 1`] = `
     >
       <Form
         as="form"
+        onSubmit={[Function]}
       >
         <FormGroup
           inline={true}
         >
-          <label>
+          <label
+            style={
+              Object {
+                "width": "75px",
+              }
+            }
+          >
             Username
           </label>
           <Input
             className="form-control1"
+            icon="user"
+            iconPosition="left"
             name="username"
-            placeholder="Your username"
-            required={true}
+            placeholder="Your AD-username"
+            required="true"
             style={
               Object {
                 "minWidth": "25em",
@@ -42,14 +55,22 @@ exports[`<Login /> Login Component should render correctly 1`] = `
         <FormGroup
           inline={true}
         >
-          <label>
+          <label
+            style={
+              Object {
+                "width": "75px",
+              }
+            }
+          >
             Password
           </label>
           <Input
             className="form-control2"
+            icon="lock"
+            iconPosition="left"
             name="password"
             placeholder="Your password"
-            required={true}
+            required="true"
             style={
               Object {
                 "minWidth": "25em",
@@ -58,12 +79,11 @@ exports[`<Login /> Login Component should render correctly 1`] = `
             type="password"
           />
         </FormGroup>
-        <FormGroup
-          inline={true}
-        >
+        <FormGroup>
           <Button
             as="button"
             color="blue"
+            role="button"
             type="submit"
           >
             Login

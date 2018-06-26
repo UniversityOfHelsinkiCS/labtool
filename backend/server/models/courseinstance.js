@@ -9,7 +9,11 @@ module.exports = (sequelize, DataTypes) => {
       weekAmount: DataTypes.INTEGER,
       weekMaxPoints: DataTypes.DOUBLE,
       currentWeek: DataTypes.INTEGER,
-      ohid: DataTypes.STRING
+      currentCodeReview: DataTypes.INTEGER,
+      codeReviewActive: DataTypes.BOOLEAN,
+      amountOfCodeReviews: DataTypes.INTEGER,
+      ohid: DataTypes.STRING,
+      finalReview: DataTypes.BOOLEAN
     },
     {}
   )
@@ -17,6 +21,10 @@ module.exports = (sequelize, DataTypes) => {
     CourseInstance.hasMany(models.StudentInstance, {
       foreignKey: 'courseInstanceId',
       as: 'courseInstances'
+    })
+    CourseInstance.hasMany(models.Checklist, {
+      foreignKey: 'courseInstanceId',
+      as: 'checklists'
     })
   }
 

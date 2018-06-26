@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<Register /> Register Component should render correctly 1`] = `
+exports[`<Register /> RegisterPage Component should render correctly 1`] = `
 <div
   className="RegisterPage"
   style={
@@ -10,13 +10,19 @@ exports[`<Register /> Register Component should render correctly 1`] = `
     }
   }
 >
+  <Loader
+    active={false}
+    inline="centered"
+  />
   <Grid>
     <GridRow
       centered={true}
     >
-      <h3>
-        Register for *kurssin nimi*
-      </h3>
+      <div>
+        <h3>
+          Register for 
+        </h3>
+      </div>
     </GridRow>
   </Grid>
   <Grid>
@@ -25,62 +31,84 @@ exports[`<Register /> Register Component should render correctly 1`] = `
     >
       <Form
         as="form"
+        onSubmit={[Function]}
       >
-        <FormField
+        <FormGroup
           inline={true}
         >
-          <label>
-             Project name 
+          <label
+            style={
+              Object {
+                "textAlign": "left",
+                "width": "100px",
+              }
+            }
+          >
+            Project name
           </label>
           <Input
             className="form-control1"
-            name="project name"
+            icon="rocket"
+            iconPosition="left"
+            name="projectName"
             placeholder="MyProjectName"
             required={true}
             style={
               Object {
-                "minWidth": "20em",
+                "minWidth": "30em",
               }
             }
             type="text"
           />
-        </FormField>
-        <FormField
+        </FormGroup>
+        <FormGroup
           inline={true}
         >
-          <label>
-             GitHub link 
+          <label
+            style={
+              Object {
+                "textAlign": "left",
+                "width": "100px",
+              }
+            }
+          >
+            GitHub link
           </label>
           <Input
             className="form-control2"
+            icon="github"
+            iconPosition="left"
             name="github"
             placeholder="https://github.com/myaccount/myrepo"
             required={true}
             style={
               Object {
-                "minWidth": "20em",
+                "minWidth": "30em",
               }
             }
             type="url"
           />
-        </FormField>
+        </FormGroup>
         <FormField>
           <button
             className="ui left floated blue button"
             type="submit"
           >
+             
             Submit
           </button>
-          <button
-            className="ui right floated button"
+          <Link
+            replace={false}
+            to="/labtool/courses/undefined"
           >
-            <Link
-              replace={false}
-              to="/coursepage"
+             
+            <button
+              className="ui right floated button"
+              type="Cancel"
             >
               Cancel
-            </Link>
-          </button>
+            </button>
+          </Link>
         </FormField>
       </Form>
     </GridRow>

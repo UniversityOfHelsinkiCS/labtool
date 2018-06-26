@@ -1,0 +1,150 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<ModifyCourseInstanceStaff /> Components renders correctly 1`] = `
+<Container>
+  <div
+    className="sixteen wide column"
+    style={
+      Object {
+        "textAlign": "center",
+        "textAlignVertical": "center",
+      }
+    }
+  >
+    <h2>
+      Add and remove assistants
+    </h2>
+    <h2>
+      Aineopintojen harjoitustyö: Tietokantasovellus
+    </h2>
+  </div>
+  <Header
+    as="h2"
+  >
+    Users
+  </Header>
+  <Form
+    as="form"
+    id="myForm"
+    onSubmit={[Function]}
+  >
+    <Table
+      as="table"
+      color="yellow"
+      fixed={true}
+      singleLine={true}
+    >
+      <TableHeader
+        as="thead"
+      >
+        <TableRow
+          as="tr"
+          cellAs="td"
+        >
+          <TableHeaderCell
+            as="th"
+          >
+            Name
+          </TableHeaderCell>
+          <TableHeaderCell
+            as="th"
+          >
+            Status
+          </TableHeaderCell>
+        </TableRow>
+      </TableHeader>
+      <TableBody
+        as="tbody"
+      >
+        <TableRow
+          as="tr"
+          cellAs="td"
+          key="10010"
+        >
+          <TableCell
+            as="td"
+          >
+            Pää
+             
+            Opettaja
+          </TableCell>
+          <TableCell
+            as="td"
+          >
+            <div>
+              <Label
+                color="orange"
+                horizontal={true}
+              >
+                Teacher
+              </Label>
+            </div>
+          </TableCell>
+        </TableRow>
+        <TableRow
+          as="tr"
+          cellAs="td"
+          key="10012"
+        >
+          <TableCell
+            as="td"
+          >
+            Aimo
+             
+            Assistentti
+          </TableCell>
+          <TableCell
+            as="td"
+          >
+            <div>
+              <Label
+                color="orange"
+                horizontal={true}
+              >
+                Assistant
+              </Label>
+              <Button
+                as="button"
+                color="green"
+                onClick={[Function]}
+                role="button"
+                size="tiny"
+              >
+                Remove assistant
+              </Button>
+            </div>
+          </TableCell>
+        </TableRow>
+        <TableRow
+          as="tr"
+          cellAs="td"
+          key="10011"
+        >
+          <TableCell
+            as="td"
+          >
+            Sivu
+             
+            Opiskelija
+          </TableCell>
+          <TableCell
+            as="td"
+          >
+            <div>
+              <Button
+                as="button"
+                color="green"
+                onClick={[Function]}
+                role="button"
+                size="tiny"
+              >
+                Add assistant
+              </Button>
+            </div>
+          </TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
+  </Form>
+</Container>
+`;

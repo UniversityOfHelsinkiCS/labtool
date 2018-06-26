@@ -1,35 +1,29 @@
 'use strict'
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('StudentInstances', {
+    return queryInterface.createTable('StudentTags', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      github: {
-        type: Sequelize.STRING
-      },
-      projectName: {
-        type: Sequelize.STRING
-      },
-      userId: {
+      studentInstanceId: {
         type: Sequelize.INTEGER,
         onDelete: 'CASCADE',
         references: {
-          model: 'Users',
+          model: 'StudentInstances',
           key: 'id',
-          as: 'userId'
+          as: 'studentInstanceId'
         }
       },
-      courseInstanceId: {
+      tagId: {
         type: Sequelize.INTEGER,
         onDelete: 'CASCADE',
         references: {
-          model: 'CourseInstances',
+          model: 'Tags',
           key: 'id',
-          as: 'courseInstanceId'
+          as: 'tagId'
         }
       },
       createdAt: {
@@ -43,6 +37,6 @@ module.exports = {
     })
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('StudentInstances')
+    return queryInterface.dropTable('StudentTags')
   }
 }

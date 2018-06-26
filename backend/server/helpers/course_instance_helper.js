@@ -1,4 +1,6 @@
 const application_helpers = require('./application_helper')
+const env = process.env.NODE_ENV || 'development'
+const config = require('./../config/config.js')[env]
 
 exports.CurrentTermAndYear = application_helpers.CurrentTermAndYear
 exports.getCurrentTerm = application_helpers.getCurrentTerm
@@ -20,22 +22,33 @@ function checkWebOodi(req, res, user, resolve) {
   const request = require('request')
   const options = {
     method: 'get',
-    uri: `https://opetushallinto.cs.helsinki.fi/labtool/courses/${req.params.ohid}`,
+    uri: `${config.kurki_url}/labtool/courses/${req.params.ohid}`,
     headers: {
       'Content-Type': 'application/json',
       Authorization: process.env.TOKEN
     },
     strictSSL: false
   }
+  if (process.env.INCLUDE_TESTERS) {
+    options.uri += '?testing=1'
+  }
   request(options, function(req, res, body) {
-    const json = JSON.parse(body)
-    if (json['students'].toString().match(user.studentnumber) !== null) {
+    let json = null
+    try {
+      json = JSON.parse(body)
+    } catch (e) {
+      console.log('\n\ncheckWebOodi received this body: ', body, '\n\n\n')
+      resolve('notfound')
+      return
+    }
+    console.log('\njson students to string', json['students'].toString())
+    if (json['students'].toString().match(user.studentNumber) !== null) {
       // stupid javascript.. even regex match is simpler than json array that has or not has a key of whatever.
-      console.log('found')
+      console.log('\ncourse_instance_helper found')
       resolve('found')
       return
     } else {
-      console.log('notfound')
+      console.log('\ncourse_intance_helper notfound')
       resolve('notfound')
       return
     }
@@ -55,10 +68,9 @@ function findByUserStudentInstance(req, res) {
   const Sequelize = require('sequelize')
   const Op = Sequelize.Op
 
-  console.log('db: ', db)
   const errors = []
-  console.log('searching by studentInstance...')
-  console.log('***REQ BODY***: ', req.body)
+  console.log('\ncourse_intance_helper, searching by studentInstance...')
+  console.log('\n***REQ BODY***: ', req.body)
 
   application_helpers.controller_before_auth_check_action(req, res)
   if (Number.isInteger(req.decoded.id)) {
@@ -67,7 +79,7 @@ function findByUserStudentInstance(req, res) {
       .then(instance => res.status(200).send(instance[0]))
       .catch(error => res.status(400).send(error))
   } else {
-    errors.push('something went wrong')
+    errors.push('\nsomething went wrong')
     res.status(400).send(errors)
   }
 }

@@ -1,11 +1,14 @@
 exports.CurrentTermAndYear = CurrentTermAndYear
 exports.getCurrentTerm = getCurrentTerm
 exports.getInactive = getInactive
+exports.getActive = getActive
 exports.getNextYear = getNextYear
 exports.getNextTerm = getCurrentTerm
 exports.controller_before_auth_check_action = controller_before_auth_check_action
 exports.getCurrent = getCurrent
 exports.createCourse = createCourse
+const env = process.env.NODE_ENV || 'development'
+const config = require('./../config/config.js')[env]
 
 /**
  *
@@ -98,7 +101,7 @@ function axiosBlaBla(year, term) {
   const https = require('https')
   return {
     method: 'get',
-    baseURL: `https://opetushallinto.cs.helsinki.fi/labtool/courses?year=${year}&term=${term}`,
+    baseURL: `${config.kurki_url}/labtool/courses?year=${year}&term=${term}`,
     headers: {
       'Content-Type': 'application/json',
       Authorization: process.env.TOKEN
@@ -118,14 +121,37 @@ function axiosCourseBla(hid) {
   const https = require('https')
   return {
     method: 'get',
-    baseURL: `https://opetushallinto.cs.helsinki.fi/labtool/courses/${hid}`,
+    baseURL: `${config.kurki_url}/labtool/courses/${hid}`,
     headers: {
       'Content-Type': 'application/json',
       Authorization: process.env.TOKEN
     },
+    params: {
+      testing: process.env.INCLUDE_TESTERS //Set the environment variable if you want to include test users from Kurki.
+    },
     httpsAgent: new https.Agent({
       rejectUnauthorized: false // if you don't like this then please go ahead and do it yourself better.
     })
+  }
+}
+
+/**
+ *
+ * @param req
+ * @param res
+ * @returns {Promise<*>}
+ */
+async function getActive(req, res) {
+  try {
+    //const Sequelize = require('sequelize')
+    const CourseInstance = require('../models').CourseInstance
+    //const Op = Sequalize.Op
+    const ires = await CourseInstance.findAll({
+      order: [['createdAt', 'DESC']]
+    })
+    return ires
+  } catch (e) {
+    return e
   }
 }
 
@@ -185,40 +211,44 @@ async function createCourse(body) {
 
   const axios = require('axios')
   const options = await axiosCourseBla(body.hid)
-  const result = await axios
-    .create(options)
-    .get()
-    .then(barf => {
-      return barf.data
-    })
-  const new_course = await CourseInstance.build({
-    name: body.cname,
-    start: body.starts,
-    end: body.ends,
-    ohid: body.hid
-  }).save()
-
-  if (result.teachers.length > 0) {
-    for (let i in result.teachers) {
-      const user = await User.findOrCreate({
-        where: {
-          username: result.teachers[i]
-        },
-        defaults: {
-          username: result.teachers[i]
-        }
+  try {
+    const result = await axios
+      .create(options)
+      .get()
+      .then(barf => {
+        return barf.data
       })
-      TeacherInstance.build({
-        userId: user[i].id,
-        courseInstanceId: new_course.id,
-        admin: 'true'
-      }).save()
+    const new_course = await CourseInstance.build({
+      name: body.cname,
+      start: body.starts,
+      end: body.ends,
+      ohid: body.hid
+    }).save()
+
+    if (result.teachers.length > 0) {
+      console.log('')
+      for (let i in result.teachers) {
+        const user = await User.findOrCreate({
+          where: {
+            username: result.teachers[i]
+          },
+          defaults: {
+            username: result.teachers[i],
+            admin: true
+          }
+        })
+        TeacherInstance.build({
+          userId: user[0].id,
+          courseInstanceId: new_course.id,
+          admin: true
+        }).save()
+      }
     }
+    return result
+  } catch (error) {
+    console.log(error)
   }
-
   //await console.log(result.teachers)
-
-  return result
 }
 
 /**
@@ -231,13 +261,17 @@ async function getCurrent(req, res) {
   const timeMachine = CurrentTermAndYear()
   const axios = require('axios')
   const options = await axiosBlaBla(timeMachine.currentYear, timeMachine.currentTerm)
-  const result = await axios
-    .create(options)
-    .get()
-    .then(barf => {
-      return barf.data
-    })
-  return result
+  try {
+    const result = await axios
+      .create(options)
+      .get()
+      .then(barf => {
+        return barf.data
+      })
+    return result
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 /**
@@ -250,11 +284,15 @@ async function getNewer(req, res) {
   const timeMachine = CurrentTermAndYear()
   const axios = require('axios')
   const options = await axiosBlaBla(timeMachine.nextYear, timeMachine.nextTerm)
-  const result = await axios
-    .create(options)
-    .get()
-    .then(barf => {
-      return barf.data
-    })
-  return result
+  try {
+    const result = await axios
+      .create(options)
+      .get()
+      .then(barf => {
+        return barf.data
+      })
+    return result
+  } catch (error) {
+    console.log(error)
+  }
 }

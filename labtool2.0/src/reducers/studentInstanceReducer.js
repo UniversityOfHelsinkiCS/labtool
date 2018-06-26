@@ -11,13 +11,16 @@
   currentWeek(pin): -- integer, what is the current week
   ohid(pin): -- Opetushallitus id of the course, is often used instead of the database id
  */
+import { sortCourses } from '../util/sort'
 
 const studentInstancereducer = (store = [], action) => {
   switch (action.type) {
     case 'STUDENT_COURSE_GET_ALL_SUCCESS':
-      return action.response
+      return sortCourses(action.response)
     case 'STUDENT_COURSE_CREATE_ONE_SUCCESS':
-      return action.response
+      return [...action.response]
+    case 'STUDENT_PROJECT_INFO_UPDATE_SUCCESS':
+      return [...action.response]
     default:
       return store
   }

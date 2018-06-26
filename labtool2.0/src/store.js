@@ -5,11 +5,20 @@ import { handleRequest } from './util/apiConnection'
 
 import courseInstance from './reducers/courseInstanceReducer'
 import login from './reducers/loginReducer'
+import users from './reducers/userReducer'
 import notification from './reducers/notificationReducer'
 import teacherInstance from './reducers/teacherInstanceReducer'
 import studentInstance from './reducers/studentInstanceReducer'
 import selectedInstance from './reducers/selectedInstanceReducer'
 import coursePage from './reducers/coursePageReducer'
+import assistant from './reducers/assistantReducer'
+import coursePageLogic from './reducers/coursePageLogicReducer'
+import codeReviewLogic from './reducers/codeReviewReducer'
+import checklist from './reducers/checklistReducer'
+import tagsReducer from './reducers/tagReducer'
+import weekReview from './reducers/weekReviewReducer'
+import loading from './reducers/loadingReducer'
+import redirect from './reducers/redirectReducer'
 
 /**
  * The store, that takes all the redux reducers. Index imports it.
@@ -25,7 +34,16 @@ const reducer = combineReducers({
   teacherInstance: teacherInstance,
   studentInstance: studentInstance,
   selectedInstance: selectedInstance,
-  coursePage: coursePage
+  coursePage: coursePage,
+  users: users,
+  assistant: assistant,
+  coursePageLogic: coursePageLogic,
+  codeReviewLogic: codeReviewLogic,
+  checklist: checklist,
+  tags: tagsReducer,
+  loading: loading,
+  weekReview: weekReview,
+  redirect: redirect
 })
 
 const store = createStore(reducer, composeWithDevTools(applyMiddleware(thunk, handleRequest)))

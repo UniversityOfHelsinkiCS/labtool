@@ -2,37 +2,52 @@ import React, { Component } from 'react'
 import { Form, Input, Grid, Loader } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { createStudentCourses } from '../../services/studentinstances'
+import { createStudentCourses, updateStudentProjectInfo } from '../../services/studentinstances'
+import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 import { Redirect } from 'react-router'
+import { getOneCI } from '../../services/courseInstance'
 
 /**
  * The page user uses to register to a course AS A STUDENT
  */
-class RegisterPage extends Component {
-  state = {
-    redirectToNewPage: false,
-    loading: false
-  }
 
+export class RegisterPage extends Component {
   handleSubmit = async e => {
     try {
       e.preventDefault()
-
-      const content = {
-        projectName: e.target.projectName.value,
-        github: e.target.github.value,
-        ohid: this.props.selectedInstance.ohid
+      if (this.props.coursePage && this.props.coursePage.data !== null) {
+        const data = {
+          projectname: e.target.projectName.value,
+          github: e.target.github.value,
+          ohid: this.props.selectedInstance.ohid
+        }
+        this.props.addRedirectHook({
+          hook: 'STUDENT_PROJECT_INFO_UPDATE_'
+        })
+        await this.props.updateStudentProjectInfo(data)
+      } else {
+        const content = {
+          projectName: e.target.projectName.value,
+          github: e.target.github.value,
+          ohid: this.props.selectedInstance.ohid
+        }
+        this.props.addRedirectHook({
+          hook: 'STUDENT_COURSE_CREATE_ONE_'
+        })
+        await this.props.createStudentCourses(content, this.props.selectedInstance.ohid)
       }
-      this.setState({ loading: true })
-      await this.props.createStudentCourses(content, this.props.selectedInstance.ohid)
-      this.setState({ redirectToNewPage: true })
     } catch (error) {
       console.log(error)
     }
   }
 
+  componentWillMount = async () => {
+    await this.props.resetLoading()
+    this.props.getOneCI(this.props.courseId)
+  }
+
   render() {
-    if (this.state.redirectToNewPage) {
+    if (this.props.loading.redirect) {
       return <Redirect to={`/labtool/courses/${this.props.selectedInstance.ohid}`} />
     }
 
@@ -44,10 +59,18 @@ class RegisterPage extends Component {
           textAlign: 'center'
         }}
       >
-        <Loader active={this.state.loading} inline="centered" />
+        <Loader active={this.props.loading.loading} inline="centered" />
         <Grid>
           <Grid.Row centered>
-            <h3>Register for {this.props.selectedInstance.name}</h3>
+            {this.props.coursePage && this.props.coursePage.data !== null ? (
+              <div>
+                <h3>Update your info for {this.props.selectedInstance.name}</h3>
+              </div>
+            ) : (
+              <div>
+                <h3>Register for {this.props.selectedInstance.name}</h3>
+              </div>
+            )}
           </Grid.Row>
         </Grid>
 
@@ -86,8 +109,22 @@ class RegisterPage extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    selectedInstance: state.selectedInstance
+    coursePage: state.coursePage,
+    selectedInstance: state.selectedInstance,
+    courseId: ownProps.courseId,
+    loading: state.loading
   }
 }
 
-export default connect(mapStateToProps, { createStudentCourses })(RegisterPage)
+const mapDispatchToProps = {
+  createStudentCourses,
+  updateStudentProjectInfo,
+  getOneCI,
+  resetLoading,
+  addRedirectHook
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(RegisterPage)
