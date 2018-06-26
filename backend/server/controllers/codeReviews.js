@@ -66,9 +66,11 @@ module.exports = {
       const courseToUpdate = await CourseInstance.findOne({
         where: { id: req.body.courseId }
       })
-      courseToUpdate.update({
-        amountOfCodeReviews: courseToUpdate.amountOfCodeReviews + 1
-      })
+      req.body.createTrue
+        ? courseToUpdate.update({
+            amountOfCodeReviews: courseToUpdate.amountOfCodeReviews + 1
+          })
+        : null
       res.status(201).send({
         message: 'All code reviews inserted.',
         data: req.body
@@ -183,6 +185,41 @@ module.exports = {
       return
     } catch (e) {
       res.status(500).send('Unexpected error.')
+    }
+  },
+
+  async removeOne(req, res) {
+    helper.controller_before_auth_check_action(req, res)
+    try {
+      console.log(`_------------------------------`)
+      console.log(req.body)
+      console.log(`--------------------------------`)
+      if (!req.authenticated.success) {
+        res.status(403).send('You have to be authenticated to do this')
+        return
+      }
+      if (!req.params.id) {
+        res.status(403).send('Cant delete from null')
+        return
+      }
+      const deleteOne = await CodeReview.destroy({
+        where: {
+          studentInstanceId: req.body.reviewer,
+          reviewNumber: req.body.codeReviewRound
+        }
+      })
+      if (deleteOne === 1) {
+        console.log('wut ?')
+        res.status(200).send({
+          message: 'Code review link removed successfully',
+          data: req.body
+        })
+      }
+      return
+    } catch (e) {
+      res.status(500).send({
+        message: e
+      })
     }
   }
 }
