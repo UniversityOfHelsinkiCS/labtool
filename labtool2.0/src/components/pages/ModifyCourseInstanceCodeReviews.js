@@ -61,7 +61,7 @@ export class ModifyCourseInstanceReview extends React.Component {
 
   addCodeReview = (reviewRound, id) => {
     return e => {
-      const toReviewId = parseInt(e.target.value)
+      const toReviewId = parseInt(e.target.value, 10)
       const crData = {
         round: reviewRound,
         reviewer: id,
@@ -89,9 +89,9 @@ export class ModifyCourseInstanceReview extends React.Component {
           studentTags = student.Tags.filter(st => selectedTags.includes(st.name))
           studentTags.length > 0 ? (allCb[student.id] = true) : null
           studentTags = []
-        })
+          })
         : this.props.courseData.data.forEach(st => (allCb[st.id] = true))
-      let randoms = Object.keys(allCb).map(student => parseInt(student))
+      let randoms = Object.keys(allCb).map(student => parseInt(student, 10))
       this.props.initAllCheckboxes({ data: allCb, ids: randoms })
     }
   }
@@ -255,29 +255,6 @@ export class ModifyCourseInstanceReview extends React.Component {
                               </select>
                             </div>
                           ) : null}
-                          {/* // onChange={this.addCodeReview(1, data.id)}
-                        // value={this.props.codeReviewLogic.currentSelections[1][data.id]} */}
-                          {/* <p>Current review: {getCurrentReviewer(1, data.id)}</p>
-                        <select className="toReviewDropdown" onChange={this.addCodeReview(1, data.id)}>
-                          {this.props.dropdownUsers.map(d => (
-                            <option key={d.value} value={d.value}>
-                              {d.text}
-                            </option>
-                          ))}
-                        </select> */}
-                          {/*
-                         Semantic ui dropdown works very slow so we replaced them with html select
-                        }
-                        {/* <Dropdown
-                        className="toReviewDropdown"
-                        placeholder="Select student"
-                        fluid
-                        search
-                        selection
-                        // options={this.props.dropdownUsers}
-                        onChange={this.addCodeReview(1, data.id)}
-                        value={this.props.codeReviewLogic.currentSelections[1][data.id]}
-                      /> */}
                         </Table.Cell>
                         <Table.Cell>
                           {this.props.codeReviewLogic.showCreate ? (
@@ -299,16 +276,6 @@ export class ModifyCourseInstanceReview extends React.Component {
                               ))
                             </select>
                           ) : null}
-                          {/* <Dropdown
-                        className="toReviewDropdown"
-                        placeholder="Select student"
-                        fluid
-                        search
-                        selection
-                        // options={this.props.dropdownUsers}
-                        onChange={this.addCodeReview(2, data.id)}
-                        value={this.props.codeReviewLogic.currentSelections[2][data.id]}
-                      /> */}
                         </Table.Cell>
                       </Table.Row>
                     ))
