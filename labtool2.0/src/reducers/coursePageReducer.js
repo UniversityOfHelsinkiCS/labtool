@@ -127,6 +127,7 @@ const courseInstancereducer = (store = [], action) => {
       } else {
         return studentCommentNotification(store, action.response.data.commentId)
       }
+    }
     case 'COMMENT_CREATE_ONE_SUCCESS': {
       if (store.role === 'teacher') {
         const newStudents = store.data.map(student => ({
