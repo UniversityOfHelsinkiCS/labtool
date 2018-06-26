@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { getOneCI } from '../../services/courseInstance'
 import { coursePageInformation } from '../../services/courseInstance'
-import { bulkinsertCodeReviews } from '../../services/codeReview'
+import { bulkinsertCodeReviews, removeOneCodeReview } from '../../services/codeReview'
 import {
   filterStatesByTags,
   initOneReview,
@@ -17,11 +17,15 @@ import {
 } from '../../reducers/codeReviewReducer'
 import { filterByTag } from '../../reducers/coursePageLogicReducer'
 import { clearNotifications, showNotification } from '../../reducers/notificationReducer'
-import { Button, Table, Checkbox, Loader, Dropdown, Label } from 'semantic-ui-react'
+import { Button, Table, Checkbox, Loader, Dropdown, Label, Popup, Icon, Modal, Header } from 'semantic-ui-react'
 import Notification from '../../components/pages/Notification'
 import { resetLoading } from '../../reducers/loadingReducer'
 
 export class ModifyCourseInstanceReview extends React.Component {
+  state = {
+    open: {}
+  }
+
   componentWillMount() {
     this.props.resetLoading()
   }
@@ -43,14 +47,16 @@ export class ModifyCourseInstanceReview extends React.Component {
     try {
       e.preventDefault()
       // reviewNumber === 'create' ? this.props.toggleCreate() : undefined
+      let createTrue = false
       const codeReviews = this.props.codeReviewLogic.codeReviewStates[reviewNumber]
       const courseId = this.props.selectedInstance.id
-      reviewNumber === 'create' ? (reviewNumber = this.props.selectedInstance.amountOfCodeReviews + 1) : reviewNumber
+      reviewNumber === 'create' ? ((reviewNumber = this.props.selectedInstance.amountOfCodeReviews + 1), (createTrue = true)) : reviewNumber
 
       const data = {
         codeReviews,
         reviewNumber,
-        courseId
+        courseId,
+        createTrue
       }
 
       await this.props.bulkinsertCodeReviews(data)
@@ -141,6 +147,21 @@ export class ModifyCourseInstanceReview extends React.Component {
     }
     let reviewee = this.props.dropdownUsers.find(dropDownStudent => dropDownStudent.value === reviewInstance.toReview)
     return reviewee.text
+  }
+
+  removeOne = id => {
+    return () => {
+      const user = this.props.courseData.data.find(u => u.id === id)
+      const cr = user.codeReviews.find(cr => cr.reviewNumber === this.props.codeReviewLogic.selectedDropdown)
+      this.props.removeOneCodeReview({ reviewer: cr.studentInstanceId, codeReviewRound: cr.reviewNumber })
+    }
+  }
+
+  close = id => {
+    return () => {
+      let s = this.state.open
+      !s[id] ? ((s[id] = true), this.setState({ open: s })) : ((s[id] = !s[id]), this.setState({ open: s }))
+    }
   }
 
   render() {
@@ -410,7 +431,8 @@ const mapDispatchToProps = {
   toggleCreate,
   createStates,
   filterStatesByTags,
-  showNotification
+  showNotification,
+  removeOneCodeReview
 }
 
 export default connect(
