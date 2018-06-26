@@ -317,9 +317,7 @@ export class CoursePage extends React.Component {
         const howManyWeeks = this.props.selectedInstance.finalReview ? this.props.selectedInstance.weekAmount + 1 : this.props.selectedInstance.weekAmount
         for (; i < howManyWeeks; i++) {
           week = this.props.courseData.data.weeks.find(week => week.weekNumber === i + 1)
-          console.log("week: ", week)
           if (week !== undefined) {
-            console.log("week: ", week)
             headers.push(
               <Accordion key={i} fluid styled>
                 <Accordion.Title active={i === this.props.coursePageLogic.activeIndex} index={i} onClick={this.handleClick}>
