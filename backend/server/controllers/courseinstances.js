@@ -710,34 +710,7 @@ module.exports = {
               from: name,
               notified: false
             })
-              .then(comment => {
-                if (!comment) {
-                  res.status(400).send('week not found')
-                } else {
-                  Week.findOne({
-                    where: {
-                      id: message.week
-                    },
-                    include: [
-                      {
-                        model: Comment,
-                        attributes: {
-                          exclude: ['updatedAt']
-                        },
-                        as: 'comments'
-                      }
-                    ]
-                  }).then(week => {
-                    if (week) {
-                      res.status(200).send(week)
-                      return
-                    } else {
-                      res.status(400).send('something went wrong')
-                      return
-                    }
-                  })
-                }
-              })
+              .then(comment => res.status(200).send(comment))
               .catch(error => res.status(400).send(error))
           }
         })
