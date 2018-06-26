@@ -73,4 +73,7 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps, { login })(LoginPage)
+export default connect(
+  mapStateToProps,
+  { login }
+)(LoginPage)

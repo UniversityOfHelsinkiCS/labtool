@@ -54,7 +54,6 @@ export class CoursePage extends React.Component {
     this.props.getAllTags()
   }
 
-
   componentWillUnmount() {
     // this.setState({ showLastReviewed: true })
     this.props.coursePageReset()
@@ -352,7 +351,8 @@ export class CoursePage extends React.Component {
                                 </Comment.Text>
                                 <Comment.Metadata>
                                   <div>{this.trimDate(comment.createdAt)}</div>
-                                </Comment.Metadata><div> </div>
+                                </Comment.Metadata>
+                                <div> </div>
                               </Comment.Content>
                             </Comment>
                           ) : (
@@ -364,7 +364,8 @@ export class CoursePage extends React.Component {
                               </Comment.Text>
                               <Comment.Metadata>
                                 <div>{this.trimDate(comment.createdAt)}</div>
-                              </Comment.Metadata><div> </div>
+                              </Comment.Metadata>
+                              <div> </div>
                               {/* This hack compares user's name to comment.from and hides the email notification button when they don't match. */}
                               {comment.from.includes(this.props.user.user.lastname) ? (
                                 comment.notified ? (
@@ -806,4 +807,7 @@ const mapDispatchToProps = {
   resetLoading
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CoursePage)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CoursePage)

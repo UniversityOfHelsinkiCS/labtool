@@ -93,4 +93,7 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, { logout })(Nav)
+export default connect(
+  mapStateToProps,
+  { logout }
+)(Nav)

@@ -5,7 +5,6 @@ import { createTag, getAllTags, removeTag } from '../../services/tags'
 import { resetLoading } from '../../reducers/loadingReducer'
 
 export class ManageTags extends React.Component {
-
   componentWillMount = async () => {
     await this.props.resetLoading()
     this.props.getAllTags()
