@@ -133,4 +133,7 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, { getAllStudentCourses, getAllTeacherCourses })(MyPage)
+export default connect(
+  mapStateToProps,
+  { getAllStudentCourses, getAllTeacherCourses }
+)(MyPage)
