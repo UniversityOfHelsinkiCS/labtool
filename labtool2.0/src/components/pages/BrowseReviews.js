@@ -219,7 +219,7 @@ export class BrowseReviews extends Component {
               )
             } else {
               headers.push(
-                <Accordion key={i} fluid styled>
+                <Accordion key={i + 100} fluid styled>
                   <Accordion.Title active={activeIndex === i} index={i} onClick={this.handleClick}>
                     <Icon name="dropdown" /> Week {i + 1}{' '}
                   </Accordion.Title>
@@ -240,7 +240,8 @@ export class BrowseReviews extends Component {
             })
             .forEach(cr => {
               headers.push(
-                <Accordion key={i + ii} fluid styled>
+                <Accordion key={ii + 1000} fluid styled>
+                  {' '}
                   <Accordion.Title active={activeIndex === i + ii} index={i + ii} onClick={this.handleClick}>
                     <Icon name="dropdown" /> Code Review {cr.reviewNumber} {cr.points !== null ? ', points ' + cr.points : ''}
                   </Accordion.Title>
@@ -266,7 +267,7 @@ export class BrowseReviews extends Component {
             const finalWeek = student.weeks.find(week => week.weekNumber === this.props.selectedInstance.weekAmount + 1)
             if (finalWeek) {
               headers.push(
-                <Accordion key={i + ii + 1} fluid styled>
+                <Accordion key={10000} fluid styled>
                   <Accordion.Title active={activeIndex === i + ii} index={i + ii} onClick={this.handleClick}>
                     <Icon name="dropdown" /> Final Review, points {finalWeek.points}
                   </Accordion.Title>
@@ -324,7 +325,7 @@ export class BrowseReviews extends Component {
               )
             } else {
               headers.push(
-                <Accordion key={i + ii + 1} fluid styled>
+                <Accordion key={1000} fluid styled>
                   <Accordion.Title active={activeIndex === i} index={i} onClick={this.handleClick}>
                     <Icon name="dropdown" /> Final Review{' '}
                   </Accordion.Title>
