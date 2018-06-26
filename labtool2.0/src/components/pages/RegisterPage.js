@@ -12,7 +12,6 @@ import { getOneCI } from '../../services/courseInstance'
  */
 
 export class RegisterPage extends Component {
-
   handleSubmit = async e => {
     try {
       e.preventDefault()
