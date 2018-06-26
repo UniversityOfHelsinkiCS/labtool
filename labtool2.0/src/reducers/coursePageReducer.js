@@ -1,3 +1,5 @@
+import { sortStudentsByLastname } from '../util/sort'
+
 /**
  * The reducer for displaying pretty much all that you want to see
  * on the course page.
@@ -49,7 +51,7 @@ const weekNotification = (state, weekId) => {
 const courseInstancereducer = (store = [], action) => {
   switch (action.type) {
     case 'CP_INFO_SUCCESS':
-      return action.response
+      return { ...action.response, data: sortStudentsByLastname(action.response.data) }
     case 'ASSOCIATE_TEACHER_AND_STUDENT_SUCCESS': {
       console.log(store)
       const id = action.response.id

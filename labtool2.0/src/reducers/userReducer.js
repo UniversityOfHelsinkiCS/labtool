@@ -1,5 +1,3 @@
-import { sortUsers } from '../util/sort'
-
 /**
  * Named users in state. Contains all the users in the labtool database.
  */
@@ -12,7 +10,7 @@ const userReducer = (store = [], action) => {
           user.firsts = `username ${user.username}`
         }
       })
-      return sortUsers(users)
+      return users
     }
     default:
       return store
