@@ -285,7 +285,7 @@ export class CoursePage extends React.Component {
       // studentInstance is id of student. Type: String
       // Tämä pitää myös korjata.
       headers.push(
-        <div>
+        <div key="student info">
           {this.props.courseData && this.props.courseData.data && this.props.courseData.data.User ? (
             <Card key="card" fluid color="yellow">
               <Card.Content>
