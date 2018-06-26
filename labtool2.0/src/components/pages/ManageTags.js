@@ -132,12 +132,14 @@ export class ManageTags extends React.Component {
           <br />
           {this.props.loading.loading ? (
             <Loader active />
-          ) : (
+          ) : this.props.tags.tags ? (
             this.props.tags.tags.map(tag => (
               <button key={tag.id} className={`mini ui ${tag.color} button`} onClick={this.modifyTag(tag.name, tag.color)}>
                 {tag.name}
               </button>
             ))
+          ) : (
+            <div />
           )}
           <br />
           <br />
