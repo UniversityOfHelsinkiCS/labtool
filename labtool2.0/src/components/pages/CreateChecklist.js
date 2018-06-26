@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Form, Header, Input, Label, Button, Popup, Card } from 'semantic-ui-react'
+import { Header, Input, Label, Button, Popup, Card } from 'semantic-ui-react'
 import { showNotification } from '../../reducers/notificationReducer'
 import { createChecklist, getOneChecklist } from '../../services/checklist'
 import { getOneCI } from '../../services/courseInstance'

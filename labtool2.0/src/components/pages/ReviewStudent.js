@@ -85,7 +85,7 @@ export class ReviewStudent extends Component {
     const codeReviewPoints = studentData[0].codeReviews.map(review => review.points).reduce((a, b) => {
       return a + b
     }, 0)
-    const checkList = this.props.selectedInstance.checklists.find(checkl => checkl.week == this.props.ownProps.weekNumber)
+    const checkList = this.props.selectedInstance.checklists.find(checkl => checkl.week === Number(this.props.ownProps.weekNumber))
     let checklistOutput = ''
     let checklistPoints = 0
     if (checkList) {

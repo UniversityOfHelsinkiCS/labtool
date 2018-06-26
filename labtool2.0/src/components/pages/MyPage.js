@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Button, Header, Table, Container, List, Icon, Segment, Divider, Popup } from 'semantic-ui-react'
+import { Button, Header, Table, Container, Icon, Segment, Divider, Popup } from 'semantic-ui-react'
 import './MyPage.css'
 import { Link } from 'react-router-dom'
 import { getAllStudentCourses } from '../../services/studentinstances'
@@ -11,19 +11,6 @@ import { getAllTeacherCourses } from '../../services/teacherinstances'
  */
 
 export class MyPage extends Component {
-  // Checks if a user is logged in.
-  componentDidMount() {
-    try {
-      const loggedUserJSON = window.localStorage.getItem('loggedLabtool')
-      if (loggedUserJSON && loggedUserJSON !== '{}') {
-        const user = JSON.parse(loggedUserJSON)
-        console.log('Kirjautunut käyttäjä', user)
-      }
-    } catch (exception) {
-      console.log('no user logged in')
-    }
-  }
-
   componentWillMount() {
     this.props.getAllStudentCourses()
     this.props.getAllTeacherCourses()
@@ -146,4 +133,7 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, { getAllStudentCourses, getAllTeacherCourses })(MyPage)
+export default connect(
+  mapStateToProps,
+  { getAllStudentCourses, getAllTeacherCourses }
+)(MyPage)

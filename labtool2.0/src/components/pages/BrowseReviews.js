@@ -108,7 +108,7 @@ export class BrowseReviews extends Component {
       studhead.data.map(student => {
         // studentInstance is id of student. Type: String
         // Tämä pitää myös korjata.
-        if (student.id == studentInstance) {
+        if (student.id === Number(studentInstance)) {
           headers.push(
             <Card key={student.id} fluid color="yellow">
               <Card.Content>
@@ -169,7 +169,8 @@ export class BrowseReviews extends Component {
                                   </Comment.Text>
                                   <Comment.Metadata>
                                     <div>{this.trimDate(comment.createdAt)}</div>
-                                  </Comment.Metadata><div> </div>
+                                  </Comment.Metadata>
+                                  <div> </div>
                                 </Comment.Content>
                               </Comment>
                             ) : (
@@ -180,7 +181,7 @@ export class BrowseReviews extends Component {
                                   <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
                                 </Comment.Text>
                                 <Comment.Metadata>
-                                    <div>{this.trimDate(comment.createdAt)}</div>
+                                  <div>{this.trimDate(comment.createdAt)}</div>
                                 </Comment.Metadata>
                                 <div> </div>
                                 {/* This hack compares user's name to comment.from and hides the email notification button when they don't match. */}

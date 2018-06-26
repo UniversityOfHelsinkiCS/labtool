@@ -55,6 +55,9 @@ const mapStateToProps = state => {
   }
 }
 
-const ConnectedNotification = connect(mapStateToProps, { clearNotifications })(Notification)
+const ConnectedNotification = connect(
+  mapStateToProps,
+  { clearNotifications }
+)(Notification)
 
 export default ConnectedNotification

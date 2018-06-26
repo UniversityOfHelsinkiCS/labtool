@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Input, Button, Grid, Radio, Dropdown, Checkbox, Loader, Popup } from 'semantic-ui-react'
+import { Form, Input, Button, Grid, Dropdown, Checkbox, Loader, Popup } from 'semantic-ui-react'
 import { getOneCI, modifyOneCI } from '../../services/courseInstance'
 import { setFinalReview } from '../../reducers/selectedInstanceReducer'
 import { connect } from 'react-redux'
@@ -227,8 +227,7 @@ const mapStateToProps = (state, ownProps) => {
     ownProps,
     codeReviewDropdowns: createDropdownCodereviews(state.selectedInstance.amountOfCodeReviews, state.selectedInstance.currentCodeReview),
     loading: state.loading,
-    redirect: state.redirect,
-    ownProps
+    redirect: state.redirect
   }
 }
 
