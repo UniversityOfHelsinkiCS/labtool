@@ -227,8 +227,7 @@ const mapStateToProps = (state, ownProps) => {
     ownProps,
     codeReviewDropdowns: createDropdownCodereviews(state.selectedInstance.amountOfCodeReviews, state.selectedInstance.currentCodeReview),
     loading: state.loading,
-    redirect: state.redirect,
-    ownProps
+    redirect: state.redirect
   }
 }
 
