@@ -127,6 +127,10 @@ const courseInstancereducer = (store = [], action) => {
           weeks: student.weeks.map(week => (week.id === action.response.weekId ? { ...week, comments: [...week.comments, action.response] } : week))
         }))
         return { ...store, data: newStudents }
+      } else if (store.role === 'student') {
+        const newWeeks = [...store.data.weeks]
+        newWeeks.find(week => week.id === action.response.weekId).comments.push(action.response)
+        return { ...store, data: { ...store.data, weeks: newWeeks } }
       } else {
         return store
       }

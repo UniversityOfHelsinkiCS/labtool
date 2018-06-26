@@ -710,7 +710,13 @@ module.exports = {
               from: name,
               notified: false
             })
-              .then(comment => res.status(200).send(comment))
+              .then(comment => {
+                if (!comment) {
+                  res.status(400).send('week not found')
+                } else {
+                  res.status(200).send(comment)
+                }
+              })
               .catch(error => res.status(400).send(error))
           }
         })
