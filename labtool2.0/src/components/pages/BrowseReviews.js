@@ -242,10 +242,10 @@ export class BrowseReviews extends Component {
               headers.push(
                 <Accordion key={ii + 1000} fluid styled>
                   {' '}
-                  <Accordion.Title active={activeIndex === i + ii} index={i + ii} onClick={this.handleClick}>
+                  <Accordion.Title active={activeIndex === i + ii + 1} index={i + ii + 1} onClick={this.handleClick}>
                     <Icon name="dropdown" /> Code Review {cr.reviewNumber} {cr.points !== null ? ', points ' + cr.points : ''}
                   </Accordion.Title>
-                  <Accordion.Content active={activeIndex === i + ii}>
+                  <Accordion.Content active={activeIndex === i + ii + 1}>
                     <p>
                       <strong>Project to review:</strong> {this.props.courseData.data.find(data => data.id === cr.toReview).projectName} <br />
                       <strong>GitHub:</strong>{' '}
