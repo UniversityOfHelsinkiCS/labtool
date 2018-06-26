@@ -44,7 +44,6 @@ export class BrowseReviews extends Component {
     }
     document.getElementById(e.target.name).reset()
     try {
-      console.log(e.target)
       await this.props.createOneComment(content)
       await this.props.coursePageInformation(this.props.selectedInstance.ohid)
     } catch (error) {
