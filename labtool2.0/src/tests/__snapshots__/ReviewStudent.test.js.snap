@@ -29,7 +29,21 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
       columns={2}
     >
       <GridColumn>
-        <div />
+        <div
+          align="left"
+        >
+          <h3>
+            Points from previous weeks: 
+            0
+             
+          </h3>
+          Week points: 
+          0
+           
+          <br />
+          Code review points: 
+          0
+        </div>
         <h2>
           Feedback
         </h2>
