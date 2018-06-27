@@ -76,6 +76,15 @@ export class ReviewStudent extends Component {
     const studentData = this.props.courseData.data.filter(dataArray => dataArray.id === Number(this.props.ownProps.studentInstance))
     //this.props.weekNumber is a string, therefore casting to number.
     const weekData = studentData[0].weeks.filter(theWeek => theWeek.weekNumber === Number(this.props.ownProps.weekNumber))
+    const weekPoints = studentData[0].weeks
+      .filter(week => week.weekNumber < this.props.weekNumber)
+      .map(week => week.points)
+      .reduce((a, b) => {
+        return a + b
+      }, 0)
+    const codeReviewPoints = studentData[0].codeReviews.map(review => review.points).reduce((a, b) => {
+      return a + b
+    }, 0)
     const checkList = this.props.selectedInstance.checklists.find(checkl => checkl.week === Number(this.props.ownProps.weekNumber))
     let checklistOutput = ''
     let checklistPoints = 0
@@ -102,11 +111,24 @@ export class ReviewStudent extends Component {
           {' '}
           {studentData[0].User.firsts} {studentData[0].User.lastname}{' '}
         </h3>
-        {this.props.weekNumber > this.props.selectedInstance.weekAmount ? <h1>Final Review</h1> : <h3>Viikko {this.props.weekNumber}</h3>}
+        {this.props.weekNumber > this.props.selectedInstance.weekAmount ? <h3>Final Review</h3> : <h3>Viikko {this.props.weekNumber}</h3>}
         <Grid>
           <Grid.Row columns={2}>
             <Grid.Column>
-              <h2>Feedback</h2>
+              {this.props.weekNumber > this.props.selectedInstance.weekAmount ? (
+                <div align="left">
+                  <h3>Points before final review: {weekPoints + codeReviewPoints} </h3>
+                  Week points: {weekPoints} <br />
+                  Code review points: {codeReviewPoints}
+                </div>
+              ) : (
+                <div align="left">
+                  <h3>Points from previous weeks: {weekPoints + codeReviewPoints} </h3>
+                  Week points: {weekPoints} <br />
+                  Code review points: {codeReviewPoints}
+                </div>
+              )}
+              {this.props.weekNumber > this.props.selectedInstance.weekAmount ? <h2>Final Review Points</h2> : <h2>Feedback</h2>}
               <Form onSubmit={this.handleSubmit}>
                 <Form.Group inline unstackable>
                   <Form.Field>
