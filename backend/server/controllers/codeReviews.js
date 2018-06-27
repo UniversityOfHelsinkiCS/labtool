@@ -191,9 +191,6 @@ module.exports = {
   async removeOne(req, res) {
     helper.controller_before_auth_check_action(req, res)
     try {
-      console.log(`_------------------------------`)
-      console.log(req.body)
-      console.log(`--------------------------------`)
       if (!req.authenticated.success) {
         res.status(403).send('You have to be authenticated to do this')
         return
@@ -209,7 +206,6 @@ module.exports = {
         }
       })
       if (deleteOne === 1) {
-        console.log('wut ?')
         res.status(200).send({
           message: 'Code review link removed successfully',
           data: req.body
