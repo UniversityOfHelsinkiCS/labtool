@@ -29,6 +29,8 @@ const createShorterCourseid = ohid => {
 // We save the longer ID and the non european dates for possible database/Kurki-api operations that require them
 const courseInstancereducer = (store = [], action) => {
   switch (action.type) {
+    case 'LOGOUT_SUCCESS':
+      return {}
     case 'CI_GET_ALL_SUCCESS': {
       const sortedCourses = sortCourses(action.response)
       return sortedCourses.map(m => {

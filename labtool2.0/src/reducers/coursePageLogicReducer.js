@@ -23,6 +23,8 @@ const INITIAL_STATE = {
 
 const coursePageLogicReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
+    case 'LOGOUT_SUCCESS':
+      return {}
     case 'COURSE_PAGE_SHOW_ASSISTANT_DROPDOWN':
       return { ...state, showAssistantDropdown: action.show }
     case 'COURSE_PAGE_SHOW_TAG_DROPDOWN':

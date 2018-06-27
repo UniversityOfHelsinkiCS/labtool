@@ -50,6 +50,8 @@ const weekNotification = (state, weekId) => {
 
 const courseInstancereducer = (store = [], action) => {
   switch (action.type) {
+    case 'LOGOUT_SUCCESS':
+      return {}
     case 'CP_INFO_SUCCESS': {
       if (action.response.role === 'teacher') {
         return { ...action.response, data: sortStudentsByLastname(action.response.data) }

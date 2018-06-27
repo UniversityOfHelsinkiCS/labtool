@@ -15,6 +15,8 @@ import { sortCourses } from '../util/sort'
 
 const studentInstancereducer = (store = [], action) => {
   switch (action.type) {
+    case 'LOGOUT_SUCCESS':
+      return []
     case 'STUDENT_COURSE_GET_ALL_SUCCESS':
       return sortCourses(action.response)
     case 'STUDENT_COURSE_CREATE_ONE_SUCCESS':

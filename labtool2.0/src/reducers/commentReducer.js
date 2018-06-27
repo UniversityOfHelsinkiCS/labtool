@@ -1,5 +1,7 @@
 const commentReducer = (store = [], action) => {
   switch (action.type) {
+    case 'LOGOUT_SUCCESS':
+      return {}
     case 'COMMENT_CREATE_ONE_SUCCESS':
       return action.response
     default:

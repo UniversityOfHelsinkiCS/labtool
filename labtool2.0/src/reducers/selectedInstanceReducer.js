@@ -15,6 +15,8 @@
  */
 const selectedInstanceReducer = (store = [], action) => {
   switch (action.type) {
+    case 'LOGOUT_SUCCESS':
+      return {}
     case 'CI_GET_ONE_SUCCESS':
       return action.response
     case 'TEACHER_CREATE_SUCCESS':

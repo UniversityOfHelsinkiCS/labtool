@@ -3,6 +3,8 @@
  */
 const userReducer = (store = [], action) => {
   switch (action.type) {
+    case 'LOGOUT_SUCCESS':
+      return []
     case 'USERS_GET_ALL_SUCCESS': {
       const users = action.response
       users.forEach(user => {
