@@ -117,12 +117,16 @@ export class ReviewStudent extends Component {
             <Grid.Column>
               {this.props.weekNumber > this.props.selectedInstance.weekAmount ? (
                 <div align="left">
-                  <h3>Point sum excluding final review: {weekPoints + codeReviewPoints} </h3>
+                  <h3>Points before final review: {weekPoints + codeReviewPoints} </h3>
                   Week points: {weekPoints} <br />
                   Code review points: {codeReviewPoints}
                 </div>
               ) : (
-                <div />
+                <div align="left">
+                  <h3>Points from previous weeks: {weekPoints + codeReviewPoints} </h3>
+                  Week points: {weekPoints} <br />
+                  Code review points: {codeReviewPoints}
+                </div>
               )}
               {this.props.weekNumber > this.props.selectedInstance.weekAmount ? <h2>Final Review Points</h2> : <h2>Feedback</h2>}
               <Form onSubmit={this.handleSubmit}>
