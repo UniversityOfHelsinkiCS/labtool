@@ -29,3 +29,10 @@ export const addLinkToCodeReview = data => {
   const method = 'put'
   return callController(route, prefix, data, method)
 }
+
+export const removeOneCodeReview = data => {
+  const route = `/codereviews/delete/${data.reviewer + data.codeReviewRound}`
+  const prefix = 'CODE_REVIEW_REMOVE_ONE_'
+  const method = `post`
+  return callController(route, prefix, data, method)
+}

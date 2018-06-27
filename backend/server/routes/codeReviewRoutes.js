@@ -23,4 +23,10 @@ module.exports = app => {
    * linkToReview: link to insert.
    */
   app.put('/api/codereviews/link', codeReviewController.addLink)
+  /**
+   * Expects the following fields in the body:
+   * reviewer: the student doing the review,
+   * codereviewRound: the round the code reviews instance belongs to
+   */
+  app.post('/api/codereviews/delete/:id', codeReviewController.removeOne)
 }
