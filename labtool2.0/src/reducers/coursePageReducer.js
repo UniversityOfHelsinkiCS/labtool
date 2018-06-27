@@ -127,8 +127,7 @@ const courseInstancereducer = (store = [], action) => {
     case 'CODE_REVIEW_REMOVE_ONE_SUCCESS': {
       let studentToChange = store.data.find(student => student.id === action.response.data.reviewer)
       studentToChange.codeReviews = studentToChange.codeReviews.filter(codeR => codeR.reviewNumber !== action.response.data.codeReviewRound)
-      const newData = store.data.map(student =>
-        student.id !== action.response.data.reviewer ? student : studentToChange)
+      const newData = store.data.map(student => (student.id !== action.response.data.reviewer ? student : studentToChange))
       console.log(newData)
       return { ...store, data: newData }
     }
