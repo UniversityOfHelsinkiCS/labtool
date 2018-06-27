@@ -5,8 +5,18 @@ import { shallow } from 'enzyme'
 describe('<Login />', () => {
   let wrapper
 
+  const loading = {
+    loading: false,
+    loadingHooks: [],
+    redirect: false,
+    redirectHooks: [],
+    redirectFailure: false
+  }
+
+  const mockFn = jest.fn()
+
   beforeEach(() => {
-    wrapper = shallow(<LoginPage />)
+    wrapper = shallow(<LoginPage user={{}} loading={loading} resetLoading={mockFn} forceSetLoading={mockFn} />)
   })
 
   describe('LoginPage Component', () => {

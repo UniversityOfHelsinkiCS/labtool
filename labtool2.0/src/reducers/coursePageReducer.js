@@ -50,8 +50,13 @@ const weekNotification = (state, weekId) => {
 
 const courseInstancereducer = (store = [], action) => {
   switch (action.type) {
-    case 'CP_INFO_SUCCESS':
-      return { ...action.response, data: sortStudentsByLastname(action.response.data) }
+    case 'CP_INFO_SUCCESS': {
+      if (action.response.role === 'teacher') {
+        return { ...action.response, data: sortStudentsByLastname(action.response.data) }
+      } else {
+        return action.response
+      }
+    }
     case 'ASSOCIATE_TEACHER_AND_STUDENT_SUCCESS': {
       console.log(store)
       const id = action.response.id
@@ -112,7 +117,7 @@ const courseInstancereducer = (store = [], action) => {
     case 'UNTAG_STUDENT_SUCCESS': {
       return { ...store, data: store.data.map(student => (student.id === action.response.id ? action.response : student)) }
     }
-    case 'SEND_EMAIL_SUCCESS':
+    case 'SEND_EMAIL_SUCCESS': {
       if (store.role === 'teacher') {
         if (action.response.data.commentId) {
           return teacherCommentNotification(store, action.response.data.commentId)
@@ -122,6 +127,22 @@ const courseInstancereducer = (store = [], action) => {
       } else {
         return studentCommentNotification(store, action.response.data.commentId)
       }
+    }
+    case 'COMMENT_CREATE_ONE_SUCCESS': {
+      if (store.role === 'teacher') {
+        const newStudents = store.data.map(student => ({
+          ...student,
+          weeks: student.weeks.map(week => (week.id === action.response.weekId ? { ...week, comments: [...week.comments, action.response] } : week))
+        }))
+        return { ...store, data: newStudents }
+      } else if (store.role === 'student') {
+        const newWeeks = [...store.data.weeks]
+        newWeeks.find(week => week.id === action.response.weekId).comments.push(action.response)
+        return { ...store, data: { ...store.data, weeks: newWeeks } }
+      } else {
+        return store
+      }
+    }
     default:
       return store
     case 'CODE_REVIEW_REMOVE_ONE_SUCCESS': {

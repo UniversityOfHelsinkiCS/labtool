@@ -23,17 +23,19 @@ app.post('/login', (req, res) => {
 
   var users = require('./responses/users').users
   console.log("Users: ", users)
+  const errorMessage = {
+    "error": "wrong credentials"
+  }
   if (req.body.password === "password") {
     var user = users.filter(user => user.username === req.body.username)
     console.log("user after filtering: ", user)
     if (user.length === 0) {
-      const errorMessage = {
-        "error": "wrong credentials"
-      }
       res.json(errorMessage)
     } else {
       res.json(user[0]);
     }
+  } else {
+    res.json(errorMessage)
   }
 })
 

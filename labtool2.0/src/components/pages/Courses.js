@@ -19,7 +19,7 @@ export class Courses extends Component {
       <div className="Courses">
         <Container>
           <Header as="h2">Courses</Header>
-          {this.props.loading.loading ? (
+          {this.props.loading.loading || !Array.isArray(this.props.courseInstance) ? (
             <Loader active />
           ) : (
             <Table singleLine color="yellow">

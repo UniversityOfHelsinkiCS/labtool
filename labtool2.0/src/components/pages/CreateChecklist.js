@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Form, Header, Input, Label, Button, Popup, Card } from 'semantic-ui-react'
+import { Header, Input, Label, Button, Popup, Card } from 'semantic-ui-react'
 import { showNotification } from '../../reducers/notificationReducer'
 import { createChecklist, getOneChecklist } from '../../services/checklist'
 import { getOneCI } from '../../services/courseInstance'
@@ -236,7 +236,7 @@ export class CreateChecklist extends Component {
                 <form className="addForm" onSubmit={this.newRow(key)}>
                   {/*This, like all other addForms is here to funnel both the button press 
                     as well as a user pressing enter into the same function.*/}
-                  <Popup trigger={<Button type="submit" circular icon={{ name: 'add', size: 'medium' }} />} content="Add new checkbox" />
+                  <Popup trigger={<Button type="submit" circular icon={{ name: 'add' }} />} content="Add new checkbox" />
                   {this.state.openAdd === key ? (
                     <div>
                       <Label>Name</Label>

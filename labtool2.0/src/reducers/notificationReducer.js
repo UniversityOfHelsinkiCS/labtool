@@ -60,7 +60,7 @@ const notificationReducer = (state = {}, action) => {
       }
     case 'WEEKS_CREATE_ONEFAILURE':
       return {
-        message: 'Oopsie doopsie, inputs are not valid!',
+        message: 'Invalid inputs.',
         error: true
       }
     case 'COMMENT_CREATE_ONE_SUCCESS':

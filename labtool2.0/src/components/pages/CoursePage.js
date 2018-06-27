@@ -40,7 +40,6 @@ export class CoursePage extends React.Component {
     document.getElementById(e.target.name).reset()
     try {
       await this.props.createOneComment(content)
-      await this.props.coursePageInformation(this.props.selectedInstance.ohid)
       document.getElementById('comment').reset()
     } catch (error) {
       console.log(error)
@@ -54,9 +53,7 @@ export class CoursePage extends React.Component {
     this.props.getAllTags()
   }
 
-
   componentWillUnmount() {
-    // this.setState({ showLastReviewed: true })
     this.props.coursePageReset()
   }
 
@@ -288,28 +285,26 @@ export class CoursePage extends React.Component {
       // studentInstance is id of student. Type: String
       // Tämä pitää myös korjata.
       headers.push(
-        <Card key="card" fluid color="yellow">
-          <Card.Content>
-            {this.props.courseData && this.props.courseData.data && this.props.courseData.data.User ? (
-              <h2>
-                {this.props.courseData.data.User.firsts} {this.props.courseData.data.User.lastname}
-              </h2>
-            ) : (
-              <div />
-            )}
-            {this.props.courseData && this.props.courseData.data ? <h3> {this.props.courseData.data.projectName} </h3> : <div />}
-            {this.props.courseData && this.props.courseData.data ? (
-              <h3>
-                <a href={this.props.courseData.data.github}>{this.props.courseData.data.github}</a>{' '}
-                <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>
-                  <Button circular floated="right" size="large" icon={{ name: 'edit', color: 'orange', size: 'large' }} />
-                </Link>
-              </h3>
-            ) : (
-              <div />
-            )}
-          </Card.Content>
-        </Card>
+        <div key="student info">
+          {this.props.courseData && this.props.courseData.data && this.props.courseData.data.User ? (
+            <Card key="card" fluid color="yellow">
+              <Card.Content>
+                <h2>
+                  {this.props.courseData.data.User.firsts} {this.props.courseData.data.User.lastname}
+                </h2>
+                <h3> {this.props.courseData.data.projectName} </h3>
+                <h3>
+                  <a href={this.props.courseData.data.github}>{this.props.courseData.data.github}</a>{' '}
+                  <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>
+                    <Button circular floated="right" size="large" icon={{ name: 'edit', color: 'orange', size: 'large' }} />
+                  </Link>
+                </h3>
+              </Card.Content>
+            </Card>
+          ) : (
+            <div />
+          )}
+        </div>
       )
       if (this.props.selectedInstance && this.props.courseData && this.props.courseData.data && this.props.courseData.data.weeks) {
         let i = 0
@@ -336,7 +331,6 @@ export class CoursePage extends React.Component {
                   <Comment.Group>
                     {week ? (
                       this.sortArrayAscendingByDate(week.comments).map(
-
                         comment =>
                           comment.hidden ? (
                             <Comment key={comment.id} disabled>
@@ -351,7 +345,8 @@ export class CoursePage extends React.Component {
                                 </Comment.Text>
                                 <Comment.Metadata>
                                   <div>{this.trimDate(comment.createdAt)}</div>
-                                </Comment.Metadata><div> </div>
+                                </Comment.Metadata>
+                                <div> </div>
                               </Comment.Content>
                             </Comment>
                           ) : (
@@ -363,7 +358,8 @@ export class CoursePage extends React.Component {
                               </Comment.Text>
                               <Comment.Metadata>
                                 <div>{this.trimDate(comment.createdAt)}</div>
-                              </Comment.Metadata><div> </div>
+                              </Comment.Metadata>
+                              <div> </div>
                               {/* This hack compares user's name to comment.from and hides the email notification button when they don't match. */}
                               {comment.from.includes(this.props.user.user.lastname) ? (
                                 comment.notified ? (
@@ -629,7 +625,7 @@ export class CoursePage extends React.Component {
                             </div>
                           ))}
                           <Popup
-                            trigger={<Icon id="tag" onClick={this.changeHiddenTagDropdown(data.id)} name="plus circle" size="large" color="green" style={{ float: 'right' }} />}
+                            trigger={<Icon id="tag" onClick={this.changeHiddenTagDropdown(data.id)} name="pencil" size="large" color="green" style={{ float: 'right' }} />}
                             content="Add or remove tag"
                           />
                         </span>
@@ -671,10 +667,7 @@ export class CoursePage extends React.Component {
                         ) : (
                           <span>not assigned</span>
                         )}
-                        <Popup
-                          trigger={<Button circular onClick={this.changeHiddenAssistantDropdown(data.id)} icon={{ name: 'pencil', size: 'medium' }} style={{ float: 'right' }} />}
-                          content="Assign instructor"
-                        />
+                        <Popup trigger={<Button circular onClick={this.changeHiddenAssistantDropdown(data.id)} icon={{ name: 'pencil' }} style={{ float: 'right' }} />} content="Assign instructor" />
                         {this.props.coursePageLogic.showAssistantDropdown === data.id ? (
                           <div>
                             <Dropdown id="assistantDropdown" options={dropDownTeachers} onChange={this.changeSelectedTeacher()} placeholder="Select teacher" fluid selection />
@@ -729,7 +722,6 @@ export class CoursePage extends React.Component {
                     <Button color="blue" size="large">
                       Register
                     </Button>
-                    <Popup trigger={<Button circular floated="right" size="large" icon={{ name: 'edit', color: 'orange', size: 'large' }} />} content="Edit project details" />
                   </Link>
                 </div>
               )
@@ -805,4 +797,7 @@ const mapDispatchToProps = {
   resetLoading
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CoursePage)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CoursePage)

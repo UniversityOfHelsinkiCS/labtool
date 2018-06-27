@@ -66,7 +66,7 @@ export class ModifyCourseInstanceReview extends React.Component {
 
   addCodeReview = (reviewRound, id) => {
     return e => {
-      const toReviewId = parseInt(e.target.value)
+      const toReviewId = parseInt(e.target.value, 10)
       const crData = {
         round: reviewRound,
         reviewer: id,
@@ -91,12 +91,12 @@ export class ModifyCourseInstanceReview extends React.Component {
       this.props.coursePageLogic.filterByTag.forEach(st => selectedTags.push(st.name))
       selectedTags.length > 0
         ? this.props.courseData.data.forEach(student => {
-          studentTags = student.Tags.filter(st => selectedTags.includes(st.name))
-          studentTags.length > 0 ? (allCb[student.id] = true) : null
-          studentTags = []
-        })
+            studentTags = student.Tags.filter(st => selectedTags.includes(st.name))
+            studentTags.length > 0 ? (allCb[student.id] = true) : null
+            studentTags = []
+          })
         : this.props.courseData.data.forEach(st => (allCb[st.id] = true))
-      let randoms = Object.keys(allCb).map(student => parseInt(student))
+      let randoms = Object.keys(allCb).map(student => parseInt(student, 10))
       this.props.initAllCheckboxes({ data: allCb, ids: randoms })
     }
   }
@@ -306,7 +306,7 @@ export class ModifyCourseInstanceReview extends React.Component {
                              >
                                <Modal.Content image>
                                  <Modal.Description>
-                                   <p>Can't remove a code review that is graded:</p>
+                                   <p>Can't remove a code review that is graded.</p>
                                    <p> Grade: {(data.codeReviews.find(cr => cr.reviewNumber === this.props.codeReviewLogic.selectedDropdown)).points} points
                                    </p>
                                  </Modal.Description>
@@ -333,46 +333,23 @@ export class ModifyCourseInstanceReview extends React.Component {
                                           {d.text}
                                         </option>
                                       )
-                                  ) : null
-                              )}
-                            </select>
-                          </div>
-                        ) : null}
-                        {/* // onChange={this.addCodeReview(1, data.id)}
-                        // value={this.props.codeReviewLogic.currentSelections[1][data.id]} */}
-                        {/* <p>Current review: {getCurrentReviewer(1, data.id)}</p>
-                        <select className="toReviewDropdown" onChange={this.addCodeReview(1, data.id)}>
-                          {this.props.dropdownUsers.map(d => (
-                            <option key={d.value} value={d.value}>
-                              {d.text}
-                            </option>
-                          ))}
-                        </select> */}
-                        {/*
-                         Semantic ui dropdown works very slow so we replaced them with html select
-                        }
-                        {/* <Dropdown
-                        className="toReviewDropdown"
-                        placeholder="Select student"
-                        fluid
-                        search
-                        selection
-                        // options={this.props.dropdownUsers}
-                        onChange={this.addCodeReview(1, data.id)}
-                        value={this.props.codeReviewLogic.currentSelections[1][data.id]}
-                      /> */}
-                      </Table.Cell>
-                      <Table.Cell>
-                        {this.props.codeReviewLogic.showCreate ? (
-                          <select className="toReviewDropdown" onChange={this.addCodeReview('create', data.id)}>
-                            {this.props.dropdownUsers.map(
-                              d =>
-                                d.value !== data.id ? (
-                                  this.props.codeReviewLogic.currentSelections['create'][data.id] == d.value ? (
-                                    <option selected="selected" key={d.value} value={d.value}>
-                                      {d.text}
-                                    </option>
-                                  ) : (
+                                    ) : null
+                                )}
+                              </select>
+                            </div>
+                          ) : null}
+                        </Table.Cell>
+                        <Table.Cell>
+                          {this.props.codeReviewLogic.showCreate ? (
+                            <select className="toReviewDropdown" onChange={this.addCodeReview('create', data.id)}>
+                              {this.props.dropdownUsers.map(
+                                d =>
+                                  d.value !== data.id ? (
+                                    this.props.codeReviewLogic.currentSelections['create'][data.id] === d.value ? (
+                                      <option selected="selected" key={d.value} value={d.value}>
+                                        {d.text}
+                                      </option>
+                                    ) : (
                                       <option key={d.value} value={d.value}>
                                         {d.text}
                                       </option>
@@ -381,20 +358,10 @@ export class ModifyCourseInstanceReview extends React.Component {
                             )}
                             ))
                             </select>
-                        ) : null}
-                        {/* <Dropdown
-                        className="toReviewDropdown"
-                        placeholder="Select student"
-                        fluid
-                        search
-                        selection
-                        // options={this.props.dropdownUsers}
-                        onChange={this.addCodeReview(2, data.id)}
-                        value={this.props.codeReviewLogic.currentSelections[2][data.id]}
-                      /> */}
-                      </Table.Cell>
-                    </Table.Row>
-                  ))
+                          ) : null}
+                        </Table.Cell>
+                      </Table.Row>
+                    ))
                 : null}
             </Table.Body>
             <Table.Footer>

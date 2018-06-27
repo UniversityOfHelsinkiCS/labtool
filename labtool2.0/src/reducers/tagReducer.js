@@ -24,8 +24,6 @@ const tagsReducer = (store = INITIAL_STATE, action) => {
       return store
     case 'TAG_STUDENT_SUCCESS':
       return store
-    case 'UNTAG_STUDENT_SUCCESS':
-      return store
     default:
       return store
   }

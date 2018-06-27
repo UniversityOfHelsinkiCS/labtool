@@ -34,51 +34,55 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
       </div>
     </div>
   </div>
-  <Card
-    color="yellow"
-    fluid={true}
-    key="card"
+  <div
+    key="student info"
   >
-    <CardContent>
-      <h2>
-        Maarit Mirja
-         
-        Opiskelija
-      </h2>
-      <h3>
-         
-        Tiran labraprojekti
-         
-      </h3>
-      <h3>
-        <a
-          href="http://github.com/tiralabra1"
-        >
-          http://github.com/tiralabra1
-        </a>
-         
-        <Link
-          replace={false}
-          to="/labtool/courseregistration/undefined"
-        >
-          <Button
-            as="button"
-            circular={true}
-            floated="right"
-            icon={
-              Object {
-                "color": "orange",
-                "name": "edit",
-                "size": "large",
+    <Card
+      color="yellow"
+      fluid={true}
+      key="card"
+    >
+      <CardContent>
+        <h2>
+          Maarit Mirja
+           
+          Opiskelija
+        </h2>
+        <h3>
+           
+          Tiran labraprojekti
+           
+        </h3>
+        <h3>
+          <a
+            href="http://github.com/tiralabra1"
+          >
+            http://github.com/tiralabra1
+          </a>
+           
+          <Link
+            replace={false}
+            to="/labtool/courseregistration/undefined"
+          >
+            <Button
+              as="button"
+              circular={true}
+              floated="right"
+              icon={
+                Object {
+                  "color": "orange",
+                  "name": "edit",
+                  "size": "large",
+                }
               }
-            }
-            role="button"
-            size="large"
-          />
-        </Link>
-      </h3>
-    </CardContent>
-  </Card>
+              role="button"
+              size="large"
+            />
+          </Link>
+        </h3>
+      </CardContent>
+    </Card>
+  </div>
   <Accordion
     fluid={true}
     key="0"
@@ -534,7 +538,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
                     as="i"
                     color="green"
                     id="tag"
-                    name="plus circle"
+                    name="pencil"
                     onClick={[Function]}
                     size="large"
                     style={
@@ -573,7 +577,6 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
                   icon={
                     Object {
                       "name": "pencil",
-                      "size": "medium",
                     }
                   }
                   onClick={[Function]}
@@ -667,7 +670,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
                     as="i"
                     color="green"
                     id="tag"
-                    name="plus circle"
+                    name="pencil"
                     onClick={[Function]}
                     size="large"
                     style={
@@ -706,7 +709,6 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
                   icon={
                     Object {
                       "name": "pencil",
-                      "size": "medium",
                     }
                   }
                   onClick={[Function]}
@@ -786,7 +788,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
                     as="i"
                     color="green"
                     id="tag"
-                    name="plus circle"
+                    name="pencil"
                     onClick={[Function]}
                     size="large"
                     style={
@@ -825,7 +827,6 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
                   icon={
                     Object {
                       "name": "pencil",
-                      "size": "medium",
                     }
                   }
                   onClick={[Function]}

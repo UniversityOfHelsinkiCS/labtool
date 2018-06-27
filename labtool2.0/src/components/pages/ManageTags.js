@@ -5,7 +5,6 @@ import { createTag, getAllTags, removeTag } from '../../services/tags'
 import { resetLoading } from '../../reducers/loadingReducer'
 
 export class ManageTags extends React.Component {
-
   componentWillMount = async () => {
     await this.props.resetLoading()
     this.props.getAllTags()
@@ -50,7 +49,6 @@ export class ManageTags extends React.Component {
 
   removeTag = async e => {
     try {
-      var txt
       if (!window.confirm('Are you sure?')) {
         return
       }
@@ -134,12 +132,14 @@ export class ManageTags extends React.Component {
           <br />
           {this.props.loading.loading ? (
             <Loader active />
-          ) : (
+          ) : this.props.tags.tags ? (
             this.props.tags.tags.map(tag => (
               <button key={tag.id} className={`mini ui ${tag.color} button`} onClick={this.modifyTag(tag.name, tag.color)}>
                 {tag.name}
               </button>
             ))
+          ) : (
+            <div />
           )}
           <br />
           <br />
