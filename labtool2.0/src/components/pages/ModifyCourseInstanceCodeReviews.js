@@ -153,8 +153,8 @@ export class ModifyCourseInstanceReview extends React.Component {
       try {
         const user = this.props.courseData.data.find(u => u.id === id)
         const cr = user.codeReviews.find(cr => cr.reviewNumber === this.props.codeReviewLogic.selectedDropdown)
-        if(cr.points) {
-          this.props.showNotification({message: `Can't delete a graded code review!`, error: true })
+        if (cr.points) {
+          this.props.showNotification({ message: `Can't delete a graded code review!`, error: true })
           this.toggleModal(id)
           return
         }
@@ -193,10 +193,10 @@ export class ModifyCourseInstanceReview extends React.Component {
               ))}
             </div>
           ) : (
-              <div>
-                Tag filters: <Label>none</Label>
-              </div>
-            )}
+            <div>
+              Tag filters: <Label>none</Label>
+            </div>
+          )}
           <Table celled>
             <Table.Header>
               <Table.Row>
@@ -222,113 +222,110 @@ export class ModifyCourseInstanceReview extends React.Component {
                       </Button>
                     </div>
                   ) : (
-                      <Button size="tiny" onClick={() => this.toggleCreate()} compact>
-                        +
+                    <Button size="tiny" onClick={() => this.toggleCreate()} compact>
+                      +
                     </Button>
-                    )}
+                  )}
                 </Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>
               {this.props.courseData.data !== undefined
                 ? this.props.courseData.data
-                  .filter(data => {
-                    return this.props.coursePageLogic.filterByTag.length === 0 || this.hasFilteringTags(data.Tags, this.props.coursePageLogic.filterByTag)
-                  })
-                  .map(data => (
-                    <Table.Row key={data.id}>
-                      <Table.Cell>
-                        {this.props.codeReviewLogic.checkBoxStates[data.id] === true ? (
-                          <Checkbox checked onChange={this.initOrRemoveRandom(data.id)} />
-                        ) : (
+                    .filter(data => {
+                      return this.props.coursePageLogic.filterByTag.length === 0 || this.hasFilteringTags(data.Tags, this.props.coursePageLogic.filterByTag)
+                    })
+                    .map(data => (
+                      <Table.Row key={data.id}>
+                        <Table.Cell>
+                          {this.props.codeReviewLogic.checkBoxStates[data.id] === true ? (
+                            <Checkbox checked onChange={this.initOrRemoveRandom(data.id)} />
+                          ) : (
                             <Checkbox onChange={this.initOrRemoveRandom(data.id)} />
                           )}
-                      </Table.Cell>
-                      <Table.Cell>
-                        {data.User.firsts} {data.User.lastname}
-                      </Table.Cell>
-                      <Table.Cell>
-                        <p>
-                          {data.projectName}
-                          <br />
-                          <a href={data.github}>{data.github}</a>
-                        </p>
-                        {data.Tags.map(tag => (
-                          <div key={tag.id}>
-                            <Button compact floated="left" className={`mini ui ${tag.color} button`} onClick={this.addFilterTag(tag)}>
-                              {tag.name}
-                            </Button>
-                          </div>
-                        ))}
-                      </Table.Cell>
-                      <Table.Cell>
-                        {this.props.codeReviewLogic.selectedDropdown ? (
-                          <div>
-                            <p>
-                              Current review: {this.getCurrentReviewer(this.props.codeReviewLogic.selectedDropdown, data.id)}
-                              {data.codeReviews.find(cr => cr.reviewNumber === this.props.codeReviewLogic.selectedDropdown) ?
-                              !data.codeReviews.find(cr => cr.reviewNumber === this.props.codeReviewLogic.selectedDropdown).points ? 
-                               <Modal
-                               size="tiny"
-                               open={this.state.open[data.id]}
-                               onClose={() => this.toggleModal(data.id)}
-                               trigger={
-                                 <Popup
-                                   trigger={<Icon id="tag" onClick={() => this.toggleModal(data.id)} name="window close" size="large" color="red" style={{ float: 'right' }} />}
-                                   content="Remove code review"
-                                 />
-                               }
-                             >
-                               <Modal.Content image>
-                                 <Modal.Description>
-                                   <p>Do you wish to remove the following code review:</p>
-                                   <p>
-                                     {data.User.firsts} {data.User.lastname} reviewing {this.getCurrentReviewer(this.props.codeReviewLogic.selectedDropdown, data.id)}
-                                   </p>
-                                 </Modal.Description>
-                               </Modal.Content>
-                               <Modal.Actions>
-                                 <Button negative icon="close" labelPosition="right" color="red" content="No" onClick={() => this.toggleModal(data.id)} />
-                                 <Button positive icon="checkmark" labelPosition="right" content="Yes" onClick={this.removeOne(data.id)} />
-                               </Modal.Actions>
-                             </Modal>
-                             :
-                                            <Modal
-                               size="tiny"
-                               open={this.state.open[data.id]}
-                               onClose={() => this.toggleModal(data.id)}
-                               trigger={
-                                 <Popup
-                                   trigger={<Icon id="tag" onClick={() => this.toggleModal(data.id)} name="window close" size="large" color="red" style={{ float: 'right' }} />}
-                                   content="Remove code review"
-                                 />
-                               }
-                             >
-                               <Modal.Content image>
-                                 <Modal.Description>
-                                   <p>Can't remove a code review that is graded.</p>
-                                   <p> Grade: {(data.codeReviews.find(cr => cr.reviewNumber === this.props.codeReviewLogic.selectedDropdown)).points} points
-                                   </p>
-                                 </Modal.Description>
-                               </Modal.Content>
-                               <Modal.Actions>
-                                 <Button positive icon="checkmark" labelPosition="right" color="green" content="Ok" onClick={() => this.toggleModal(data.id)} />
-                               </Modal.Actions>
-                             </Modal>
-                              
-                             :
-                             null }
-                             
-                            </p>
-                            <select className="toReviewDropdown" onChange={this.addCodeReview(this.props.codeReviewLogic.selectedDropdown, data.id)}>
-                              {this.props.dropdownUsers.map(
-                                d =>
-                                  d.value !== data.id ? (
-                                    this.props.codeReviewLogic.currentSelections[this.props.codeReviewLogic.selectedDropdown][data.id] == d.value ? (
-                                      <option selected="selected" key={d.value} value={d.value}>
-                                        {d.text}
-                                      </option>
-                                    ) : (
+                        </Table.Cell>
+                        <Table.Cell>
+                          {data.User.firsts} {data.User.lastname}
+                        </Table.Cell>
+                        <Table.Cell>
+                          <p>
+                            {data.projectName}
+                            <br />
+                            <a href={data.github}>{data.github}</a>
+                          </p>
+                          {data.Tags.map(tag => (
+                            <div key={tag.id}>
+                              <Button compact floated="left" className={`mini ui ${tag.color} button`} onClick={this.addFilterTag(tag)}>
+                                {tag.name}
+                              </Button>
+                            </div>
+                          ))}
+                        </Table.Cell>
+                        <Table.Cell>
+                          {this.props.codeReviewLogic.selectedDropdown ? (
+                            <div>
+                              <p>
+                                Current review: {this.getCurrentReviewer(this.props.codeReviewLogic.selectedDropdown, data.id)}
+                                {data.codeReviews.find(cr => cr.reviewNumber === this.props.codeReviewLogic.selectedDropdown) ? (
+                                  !data.codeReviews.find(cr => cr.reviewNumber === this.props.codeReviewLogic.selectedDropdown).points ? (
+                                    <Modal
+                                      size="tiny"
+                                      open={this.state.open[data.id]}
+                                      onClose={() => this.toggleModal(data.id)}
+                                      trigger={
+                                        <Popup
+                                          trigger={<Icon id="tag" onClick={() => this.toggleModal(data.id)} name="window close" size="large" color="red" style={{ float: 'right' }} />}
+                                          content="Remove code review"
+                                        />
+                                      }
+                                    >
+                                      <Modal.Content image>
+                                        <Modal.Description>
+                                          <p>Do you wish to remove the following code review:</p>
+                                          <p>
+                                            {data.User.firsts} {data.User.lastname} reviewing {this.getCurrentReviewer(this.props.codeReviewLogic.selectedDropdown, data.id)}
+                                          </p>
+                                        </Modal.Description>
+                                      </Modal.Content>
+                                      <Modal.Actions>
+                                        <Button negative icon="close" labelPosition="right" color="red" content="No" onClick={() => this.toggleModal(data.id)} />
+                                        <Button positive icon="checkmark" labelPosition="right" content="Yes" onClick={this.removeOne(data.id)} />
+                                      </Modal.Actions>
+                                    </Modal>
+                                  ) : (
+                                    <Modal
+                                      size="tiny"
+                                      open={this.state.open[data.id]}
+                                      onClose={() => this.toggleModal(data.id)}
+                                      trigger={
+                                        <Popup
+                                          trigger={<Icon id="tag" onClick={() => this.toggleModal(data.id)} name="window close" size="large" color="red" style={{ float: 'right' }} />}
+                                          content="Remove code review"
+                                        />
+                                      }
+                                    >
+                                      <Modal.Content image>
+                                        <Modal.Description>
+                                          <p>Can't remove a code review that is graded.</p>
+                                          <p> Grade: {data.codeReviews.find(cr => cr.reviewNumber === this.props.codeReviewLogic.selectedDropdown).points} points</p>
+                                        </Modal.Description>
+                                      </Modal.Content>
+                                      <Modal.Actions>
+                                        <Button positive icon="checkmark" labelPosition="right" color="green" content="Ok" onClick={() => this.toggleModal(data.id)} />
+                                      </Modal.Actions>
+                                    </Modal>
+                                  )
+                                ) : null}
+                              </p>
+                              <select className="toReviewDropdown" onChange={this.addCodeReview(this.props.codeReviewLogic.selectedDropdown, data.id)}>
+                                {this.props.dropdownUsers.map(
+                                  d =>
+                                    d.value !== data.id ? (
+                                      this.props.codeReviewLogic.currentSelections[this.props.codeReviewLogic.selectedDropdown][data.id] == d.value ? (
+                                        <option selected="selected" key={d.value} value={d.value}>
+                                          {d.text}
+                                        </option>
+                                      ) : (
                                         <option key={d.value} value={d.value}>
                                           {d.text}
                                         </option>
@@ -354,9 +351,9 @@ export class ModifyCourseInstanceReview extends React.Component {
                                         {d.text}
                                       </option>
                                     )
-                                ) : null
-                            )}
-                            ))
+                                  ) : null
+                              )}
+                              ))
                             </select>
                           ) : null}
                         </Table.Cell>
