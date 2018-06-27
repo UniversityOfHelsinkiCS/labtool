@@ -306,7 +306,7 @@ export class ModifyCourseInstanceReview extends React.Component {
                                     >
                                       <Modal.Content image>
                                         <Modal.Description>
-                                          <p>Can't remove a code review that is graded.</p>
+                                          <p>Can not remove a code review that is graded.</p>
                                           <p> Grade: {data.codeReviews.find(cr => cr.reviewNumber === this.props.codeReviewLogic.selectedDropdown).points} points</p>
                                         </Modal.Description>
                                       </Modal.Content>
