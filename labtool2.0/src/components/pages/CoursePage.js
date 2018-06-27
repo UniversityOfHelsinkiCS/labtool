@@ -625,7 +625,7 @@ export class CoursePage extends React.Component {
                             </div>
                           ))}
                           <Popup
-                            trigger={<Icon id="tag" onClick={this.changeHiddenTagDropdown(data.id)} name="plus circle" size="large" color="green" style={{ float: 'right' }} />}
+                            trigger={<Icon id="tag" onClick={this.changeHiddenTagDropdown(data.id)} name="pencil" size="large" color="green" style={{ float: 'right' }} />}
                             content="Add or remove tag"
                           />
                         </span>

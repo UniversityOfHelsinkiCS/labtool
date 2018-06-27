@@ -538,7 +538,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
                     as="i"
                     color="green"
                     id="tag"
-                    name="plus circle"
+                    name="pencil"
                     onClick={[Function]}
                     size="large"
                     style={
@@ -670,7 +670,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
                     as="i"
                     color="green"
                     id="tag"
-                    name="plus circle"
+                    name="pencil"
                     onClick={[Function]}
                     size="large"
                     style={
@@ -788,7 +788,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
                     as="i"
                     color="green"
                     id="tag"
-                    name="plus circle"
+                    name="pencil"
                     onClick={[Function]}
                     size="large"
                     style={
