@@ -30,8 +30,10 @@ module.exports = {
           console.log('\nlogin: ', err, 'n')
         }
         if (result.response && result.response.body && result.response.body.username && result.response.body.error !== 'wrong credentials') {
-          console.log('\n\n\nbody: ', body, '\n\n\n')
           let first
+          const last = body.last_name
+          const number = body.student_number
+          console.log('\n\n\nbody: ', body, '\n\n\n')
           // If first_names from Kurki contains *, use the name after that, otherwise use first name
           if (body.first_names.includes('*')) {
             first = result.response.body.first_names.split('*')[1].split(' ')[0]
@@ -42,42 +44,26 @@ module.exports = {
             where: { username: body.username },
             defaults: {
               firsts: first,
-              lastname: body.last_name,
+              lastname: last,
               studentNumber: body.student_number,
               email: ''
             }
           }).spread((newuser, created) => {
-            if (newuser.firsts) {
-              console.log('päivitetään kutsumanimi')
-              User.update({ firsts: first }, { where: { id: newuser.id } }).then(
-                body.first_names.includes('*') ? (first = result.response.body.first_names.split('*')[1].split(' ')[0]) : (first = result.response.body.first_names.split(' ')[0])
-              )
-            }
+            User.update({ firsts: first }, { where: { id: newuser.id } })
+            User.update({ lastname: last }, { where: { id: newuser.id } })
+            User.update({ studentNumber: number }, { where: { id: newuser.id } })
 
-            if (newuser.lastname !== body.last_name) {
-              console.log('päivitetään sukunimi')
-              User.update({ lastname: body.last_name }, { where: { id: newuser.id } }).then((newuser.lastname = body.last_name))
-            }
-
-            if (newuser.studentNumber === null) {
-              console.log('päivitetään opiskelijanumero')
-              User.update({ studentNumber: body.student_number }, { where: { id: newuser.id } }).then((newuser.studentNumber = body.student_number))
-            }
-
-            console.log(
-              newuser.get({
-                plain: true
-              })
-            )
-            const token = jwt.sign({ username: newuser.username, id: newuser.id }, process.env.SECRET)
             const user = {
               id: newuser.id,
+              firsts: first,
+              lastname: last,
+              studentNumber: number,
               email: newuser.email,
-              firsts: newuser.firsts,
-              lastname: newuser.lastname,
-              studentNumber: newuser.studentNumber,
               username: newuser.username
             }
+            console.log('user: ', user)
+
+            const token = jwt.sign({ username: newuser.username, id: newuser.id }, process.env.SECRET)
             res.status(200).send({
               user,
               token,
