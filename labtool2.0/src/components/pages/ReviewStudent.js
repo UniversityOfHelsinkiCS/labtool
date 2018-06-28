@@ -94,9 +94,9 @@ export class ReviewStudent extends Component {
       if (checkList) {
         Object.keys(checkList.list).forEach(cl => {
           checkList.list[cl].forEach(row => {
-            const addition = checks[row.name] ? row.textWhenOn : row.textWhenOff
+            const addition = (checks[row.name] !== undefined ? checks[row.name] : false) ? row.textWhenOn : row.textWhenOff
             if (addition) checklistOutput += addition + '\n\n'
-            if (this.props.weekReview.checks[row.name]) {
+            if (this.props.weekReview.checks[row.name] !== undefined && this.props.weekReview.checks[row.name]) {
               checklistPoints += row.checkedPoints
             } else {
               checklistPoints += row.uncheckedPoints
@@ -172,10 +172,10 @@ export class ReviewStudent extends Component {
                           {checkList.list[cl].map(row => (
                             <Card.Content className="checklistCardRow" key={row.name}>
                               <Form.Field>
-                                <Input 
-                                type="checkbox" 
-                                defaultChecked={checks[row.name] !== undefined ? checks[row.name] : false}
-                                onChange={this.toggleCheckbox(row.name, this.props.ownProps.studentInstance, this.props.ownProps.weekNumber)}
+                                <Input
+                                  type="checkbox"
+                                  defaultChecked={checks[row.name] !== undefined ? checks[row.name] : false}
+                                  onChange={this.toggleCheckbox(row.name, this.props.ownProps.studentInstance, this.props.ownProps.weekNumber)}
                                 />
                                 <span>{row.name}</span>
                                 <div style={{ marginLeft: '20px', display: 'inline-block', maxWidth: '0px', textAlign: 'left' }}>
