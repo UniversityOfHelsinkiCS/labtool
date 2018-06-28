@@ -148,19 +148,29 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
               key="Koodin laatu"
             >
               <FormField>
-                <label>
-                  Koodin laatu
-                   
-                </label>
                 <Input
                   onChange={[Function]}
                   type="checkbox"
                 />
-                <label>
+                <span>
+                  Koodin laatu
                    
-                  2
-                   p
-                </label>
+                </span>
+                <span>
+                   
+                  <span>
+                    <Icon
+                      as="i"
+                      className="grey check square outline"
+                    />
+                     p 
+                    <Icon
+                      as="i"
+                      className="grey square outline"
+                    />
+                     p
+                  </span>
+                </span>
               </FormField>
             </CardContent>
           </Card>
@@ -178,19 +188,29 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
               key="Algoritmin runko"
             >
               <FormField>
-                <label>
-                  Algoritmin runko
-                   
-                </label>
                 <Input
                   onChange={[Function]}
                   type="checkbox"
                 />
-                <label>
+                <span>
+                  Algoritmin runko
                    
-                  2
-                   p
-                </label>
+                </span>
+                <span>
+                   
+                  <span>
+                    <Icon
+                      as="i"
+                      className="grey check square outline"
+                    />
+                     p 
+                    <Icon
+                      as="i"
+                      className="grey square outline"
+                    />
+                     p
+                  </span>
+                </span>
               </FormField>
             </CardContent>
             <CardContent
@@ -198,19 +218,29 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
               key="Tietorakenteita luotu"
             >
               <FormField>
-                <label>
-                  Tietorakenteita luotu
-                   
-                </label>
                 <Input
                   onChange={[Function]}
                   type="checkbox"
                 />
-                <label>
+                <span>
+                  Tietorakenteita luotu
                    
-                  2
-                   p
-                </label>
+                </span>
+                <span>
+                   
+                  <span>
+                    <Icon
+                      as="i"
+                      className="grey check square outline"
+                    />
+                     p 
+                    <Icon
+                      as="i"
+                      className="grey square outline"
+                    />
+                     p
+                  </span>
+                </span>
               </FormField>
             </CardContent>
           </Card>
@@ -228,19 +258,29 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
               key="Readme"
             >
               <FormField>
-                <label>
-                  Readme
-                   
-                </label>
                 <Input
                   onChange={[Function]}
                   type="checkbox"
                 />
-                <label>
+                <span>
+                  Readme
                    
-                  1
-                   p
-                </label>
+                </span>
+                <span>
+                   
+                  <span>
+                    <Icon
+                      as="i"
+                      className="grey check square outline"
+                    />
+                     p 
+                    <Icon
+                      as="i"
+                      className="grey square outline"
+                    />
+                     p
+                  </span>
+                </span>
               </FormField>
             </CardContent>
             <CardContent
@@ -248,19 +288,29 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
               key="Tuntikirjanpito"
             >
               <FormField>
-                <label>
-                  Tuntikirjanpito
-                   
-                </label>
                 <Input
                   onChange={[Function]}
                   type="checkbox"
                 />
-                <label>
+                <span>
+                  Tuntikirjanpito
                    
-                  1
-                   p
-                </label>
+                </span>
+                <span>
+                   
+                  <span>
+                    <Icon
+                      as="i"
+                      className="grey check square outline"
+                    />
+                     p 
+                    <Icon
+                      as="i"
+                      className="grey square outline"
+                    />
+                     p
+                  </span>
+                </span>
               </FormField>
             </CardContent>
           </Card>
@@ -297,12 +347,12 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
                 className="checklistOutputPoints"
               >
                 points: 
-                0
+                NaN
               </p>
               <input
                 name="points"
                 type="hidden"
-                value={0}
+                value={NaN}
               />
               <Button
                 as="button"
