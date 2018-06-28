@@ -95,7 +95,9 @@ export class ReviewStudent extends Component {
             const addition = this.props.weekReview.checks[row.name] ? row.textWhenOn : row.textWhenOff
             if (addition) checklistOutput += addition + '\n\n'
             if (this.props.weekReview.checks[row.name]) {
-              checklistPoints += row.points
+              checklistPoints += row.checkedPoints
+            } else {
+              checklistPoints += row.uncheckedPoints
             }
           })
           if (checklistPoints < 0) {
@@ -170,7 +172,7 @@ export class ReviewStudent extends Component {
                               <Form.Field>
                                 <label>{row.name} </label>
                                 <Input type="checkbox" onChange={this.toggleCheckbox(row.name)} />
-                                <label> {row.points} p</label>
+                                <label> {row.checkedPoints > 0 ? <span>{row.checkedPoints} p</span> : <span>{row.uncheckedPoints} p</span>}</label>
                               </Form.Field>
                             </Card.Content>
                           ))}
