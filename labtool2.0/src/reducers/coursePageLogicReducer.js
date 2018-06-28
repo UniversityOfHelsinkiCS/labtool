@@ -23,8 +23,6 @@ const INITIAL_STATE = {
 
 const coursePageLogicReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case 'LOGOUT_SUCCESS':
-      return {}
     case 'COURSE_PAGE_SHOW_ASSISTANT_DROPDOWN':
       return { ...state, showAssistantDropdown: action.show }
     case 'COURSE_PAGE_SHOW_TAG_DROPDOWN':
@@ -61,7 +59,8 @@ const coursePageLogicReducer = (state = INITIAL_STATE, action) => {
             newestWeek = action.response.data.weeks[0]
             const numberOfWeeks = action.response.data.weeks.length
             for (let i = 1; i < numberOfWeeks; i++) {
-              const probablyNewest = new Date(action.response.data.weeks[i].createdAt) > new Date(action.response.data.weeks[i - 1].createdAt) ? action.response.data.weeks[i] : action.response.data.weeks[i - 1]
+              const probablyNewest =
+                new Date(action.response.data.weeks[i].createdAt) > new Date(action.response.data.weeks[i - 1].createdAt) ? action.response.data.weeks[i] : action.response.data.weeks[i - 1]
               newestWeek = new Date(probablyNewest.createdAt) > new Date(newestWeek.createdAt) ? probablyNewest : newestWeek
             }
             newestReviewWeek = newestWeek.weekNumber
@@ -82,8 +81,8 @@ const coursePageLogicReducer = (state = INITIAL_STATE, action) => {
       } else {
         return state
       }
-    case 'COURSE_PAGE_TOGGLE_CODE_REVIEW':
-      var index = state.showCodeReviews.indexOf(action.reviewNumber)
+    case 'COURSE_PAGE_TOGGLE_CODE_REVIEW': {
+      const index = state.showCodeReviews.indexOf(action.reviewNumber)
       if (index === -1) {
         return { ...state, showCodeReviews: [...state.showCodeReviews, action.reviewNumber] }
       } else {
@@ -91,6 +90,7 @@ const coursePageLogicReducer = (state = INITIAL_STATE, action) => {
         newValue.splice(index, 1)
         return { ...state, showCodeReviews: newValue }
       }
+    }
     case 'COURSE_PAGE_UPDATE_ACTIVE_INDEX':
       try {
         return {

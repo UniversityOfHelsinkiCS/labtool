@@ -13,10 +13,13 @@
   teacherInstances: all the teacherinstances related to his course instance
  * 
  */
-const selectedInstanceReducer = (store = [], action) => {
+
+const INITIAL_STATE = {}
+
+const selectedInstanceReducer = (store = INITIAL_STATE, action) => {
   switch (action.type) {
     case 'LOGOUT_SUCCESS':
-      return {}
+      return INITIAL_STATE
     case 'CI_GET_ONE_SUCCESS':
       return action.response
     case 'TEACHER_CREATE_SUCCESS':

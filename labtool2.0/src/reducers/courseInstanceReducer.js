@@ -24,13 +24,15 @@ const createShorterCourseid = ohid => {
   return `${ohid.substring(0, 8)}`
 }
 
+const INITIAL_STATE = {}
+
 // I map the results and add the desired UI values for dates and id to the object
 // These values are only used in the frontend UI components
 // We save the longer ID and the non european dates for possible database/Kurki-api operations that require them
-const courseInstancereducer = (store = [], action) => {
+const courseInstancereducer = (store = INITIAL_STATE, action) => {
   switch (action.type) {
     case 'LOGOUT_SUCCESS':
-      return {}
+      return INITIAL_STATE
     case 'CI_GET_ALL_SUCCESS': {
       const sortedCourses = sortCourses(action.response)
       return sortedCourses.map(m => {

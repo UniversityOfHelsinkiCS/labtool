@@ -13,10 +13,12 @@
  */
 import { sortCourses } from '../util/sort'
 
-const studentInstancereducer = (store = [], action) => {
+const INITIAL_STATE = []
+
+const studentInstancereducer = (store = INITIAL_STATE, action) => {
   switch (action.type) {
     case 'LOGOUT_SUCCESS':
-      return []
+      return INITIAL_STATE
     case 'STUDENT_COURSE_GET_ALL_SUCCESS':
       return sortCourses(action.response)
     case 'STUDENT_COURSE_CREATE_ONE_SUCCESS':
