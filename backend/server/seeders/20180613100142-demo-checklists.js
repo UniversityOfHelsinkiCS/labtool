@@ -14,13 +14,15 @@ module.exports = {
               name: 'Readme',
               textWhenOn: 'README kunnossa',
               textWhenOff: 'README puuttuu',
-              points: 1
+              checkedPoints: 0,
+              uncheckedPoints: -0.5
             },
             {
               name: 'Tuntikirjanpito',
               textWhenOn: 'Tuntikirjanpito täytetty oikein',
               textWhenOff: 'Tuntikirjanpito puuttuu',
-              points: 1
+              checkedPoints: 0,
+              uncheckedPoints: -0.5
             }
           ],
           Tietokanta: [
@@ -28,19 +30,22 @@ module.exports = {
               name: 'Tietokantakaavio',
               textWhenOn: 'Tietokantakaavio luotu',
               textWhenOff: 'Tietokantakaavio puuttuu',
-              points: 2
+              checkedPoints: 0.5,
+              uncheckedPoints: 0
             },
             {
               name: 'Tietokanta luotu',
               textWhenOn: 'Tietokanta luotu',
               textWhenOff: 'Tietokantaa ei luotu',
-              points: 2
+              checkedPoints: 0.5,
+              uncheckedPoints: 0
             },
             {
               name: 'Tietokannassa dataa',
               textWhenOn: 'Tietokanta sisältää dataa',
               textWhenOff: 'Tietokannassa ei dataa',
-              points: 1
+              checkedPoints: 0.5,
+              uncheckedPoints: 0
             }
           ],
           Koodi: [
@@ -48,7 +53,8 @@ module.exports = {
               name: 'Koodin laatu',
               textWhenOn: 'Koodi tehty laadukkaasti ja sisältää kommentteja',
               textWhenOff: 'Koodin laadussa parantamisen varaa',
-              points: 2
+              checkedPoints: 0.5,
+              uncheckedPoints: 0
             }
           ]
         }),
@@ -67,13 +73,15 @@ module.exports = {
               name: 'Readme',
               textWhenOn: 'README kunnossa',
               textWhenOff: 'README puuttuu',
-              points: 1
+              checkedPoints: 0,
+              uncheckedPoints: 0
             },
             {
               name: 'Tuntikirjanpito',
               textWhenOn: 'Tuntikirjanpito täytetty oikein',
               textWhenOff: 'Tuntikirjanpito puuttuu',
-              points: 1
+              checkedPoints: 0,
+              uncheckedPoints: 0
             }
           ],
           Algoritmit: [
@@ -81,13 +89,15 @@ module.exports = {
               name: 'Algoritmin runko',
               textWhenOn: 'Algoritmin runko luotu',
               textWhenOff: 'Algoritmin runko puuttuu',
-              points: 2
+              checkedPoints: 0,
+              uncheckedPoints: 0
             },
             {
               name: 'Tietorakenteita luotu',
               textWhenOn: 'Tietorakenteita luotu',
               textWhenOff: 'Tietorakenteita ei ole luotu',
-              points: 2
+              checkedPoints: 0,
+              uncheckedPoints: 0
             }
           ],
           Koodi: [
@@ -95,7 +105,8 @@ module.exports = {
               name: 'Koodin laatu',
               textWhenOn: 'Koodi tehty laadukkaasti ja sisältää kommentteja',
               textWhenOff: 'Koodin laadussa parantamisen varaa',
-              points: 2
+              checkedPoints: 0,
+              uncheckedPoints: 0
             }
           ]
         }),
