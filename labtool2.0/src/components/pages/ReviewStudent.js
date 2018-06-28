@@ -31,7 +31,6 @@ export class ReviewStudent extends Component {
   }
 
   handleSubmit = async e => {
-    console.log('this.props.weekReview.checks: ', this.props.weekReview.checks)
     try {
       e.preventDefault()
       const content = {
@@ -79,7 +78,7 @@ export class ReviewStudent extends Component {
       const studentData = this.props.weekReview.data.filter(dataArray => dataArray.id === Number(this.props.ownProps.studentInstance))
       //this.props.weekNumber is a string, therefore casting to number.
       const weekData = studentData[0].weeks.filter(theWeek => theWeek.weekNumber === Number(this.props.ownProps.weekNumber))
-      const checks = weekData[0].checks
+      const checks = weekData[0] ? weekData[0].checks : {}
       const weekPoints = studentData[0].weeks
         .filter(week => week.weekNumber < this.props.weekNumber)
         .map(week => week.points)

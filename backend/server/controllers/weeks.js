@@ -64,7 +64,7 @@ module.exports = {
             feedback: req.body.feedback,
             weekNumber: req.body.weekNumber,
             notified: false,
-            checks: {}
+            checks: req.body.checks
           })
           res.status(200).send(week)
         }

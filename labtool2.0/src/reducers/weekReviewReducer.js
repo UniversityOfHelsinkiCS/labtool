@@ -15,6 +15,7 @@ const weekReviewReducer = (state = INITIAL_STATE, action) => {
       return { ...state, data: action.response.data }
     }
     case 'WEEK_REVIEW_TOGGLE': {
+      const thisWeek = state.data.filter(student => student.id === Number(action.studentId, 10))[0].weeks.filter(week => week.weekNumber === Number(action.weekNbr, 10))[0]
       return {
         ...state,
         data: state.data.map(
@@ -28,10 +29,7 @@ const weekReviewReducer = (state = INITIAL_STATE, action) => {
         ),
         checks: {
           ...state.checks,
-          [action.name]:
-            state.checks[action.name] !== undefined
-              ? !state.checks[action.name]
-              : !state.data.filter(student => student.id === Number(action.studentId, 10))[0].weeks.filter(week => week.weekNumber === Number(action.weekNbr, 10))[0].checks[action.name]
+          [action.name]: state.checks[action.name] !== undefined ? !state.checks[action.name] : thisWeek ? !thisWeek.checks[action.name] : !state.checks[action.name]
         }
       }
     }
