@@ -363,7 +363,7 @@ const createWeekDropdowns = selectedInstance => {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const selectedInstance = state.courseInstance.find(course => course.ohid === ownProps.courseId)
+  const selectedInstance = Array.isArray(state.courseInstance) ? state.courseInstance.find(course => course.ohid === ownProps.courseId) : state.courseInstance
   return {
     selectedInstance: selectedInstance || {},
     weekDropdowns: createWeekDropdowns(selectedInstance),
