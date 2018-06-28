@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Header, Input, Label, Button, Popup, Card, Dropdown, Loader } from 'semantic-ui-react'
+import { Header, Input, Label, Button, Popup, Card, Dropdown, Loader, Icon } from 'semantic-ui-react'
 import { showNotification } from '../../reducers/notificationReducer'
 import { resetLoading } from '../../reducers/loadingReducer'
 import { createChecklist, getOneChecklist } from '../../services/checklist'
@@ -233,9 +233,8 @@ export class CreateChecklist extends Component {
       let bestPoints = 0
       this.props.checklist.data[key].forEach(row => {
         const greaterPoints = row.checkedPoints > row.uncheckedPoints ? row.checkedPoints : row.uncheckedPoints
-        bestPoints += greaterPoints
+        bestPoints += Number(greaterPoints)
       })
-      bestPoints = Number(bestPoints)
       maxPoints += bestPoints
       return (
         <Card fluid color="red" key={key}>
@@ -249,6 +248,14 @@ export class CreateChecklist extends Component {
             <div>
               <p>
                 Max points: <strong>{bestPoints}</strong>
+                {bestPoints < 0 ? (
+                  <span>
+                    {' '}
+                    <Popup trigger={<Icon name="delete" color="red" size="large" />} content="This topic will always award negative points." />
+                  </span>
+                ) : (
+                  <span />
+                )}
               </p>
             </div>
           </Card.Content>
@@ -344,11 +351,23 @@ export class CreateChecklist extends Component {
           ) : this.state.week !== undefined ? (
             <div>
               <div>
-                {checklistJsx}
+                {checklistJsx /* This block of jsx is defined in this.renderChecklist */}
                 <Card className="totalMaxPointsCard">
                   <Card.Content>
                     <p>
                       Total max points: <strong>{maxPoints}</strong>
+                      {this.state.week > this.props.selectedInstance.weekAmount ? (
+                        <span />
+                      ) : (
+                        <span>
+                          {' '}
+                          {this.props.selectedInstance.weekMaxPoints === maxPoints ? (
+                            <Popup trigger={<Icon name="check" size="large" color="green" />} content="The total matches maximum weekly points for this course." />
+                          ) : (
+                            <Popup trigger={<Icon name="delete" size="large" color="red" />} content="The total does not match maximum weekly points for this course." />
+                          )}
+                        </span>
+                      )}
                     </p>
                   </Card.Content>
                 </Card>
