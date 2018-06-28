@@ -227,7 +227,98 @@ export class CreateChecklist extends Component {
     return options
   }
 
+  renderChecklist() {
+    let maxPoints = 0
+    const checklistJsx = Object.keys(this.props.checklist.data).map(key => {
+      let bestPoints = 0
+      this.props.checklist.data[key].forEach(row => {
+        const greaterPoints = row.checkedPoints > row.uncheckedPoints ? row.checkedPoints : row.uncheckedPoints
+        bestPoints += greaterPoints
+      })
+      bestPoints = Number(bestPoints)
+      maxPoints += bestPoints
+      return (
+        <Card fluid color="red" key={key}>
+          <Card.Content>
+            <Header>
+              {key}{' '}
+              <Button className="deleteButton" type="button" color="red" size="tiny" onClick={this.removeTopic(key)}>
+                <div className="deleteButtonText">Delete topic</div>
+              </Button>
+            </Header>
+            <div>
+              <p>
+                Max points: <strong>{bestPoints}</strong>
+              </p>
+            </div>
+          </Card.Content>
+          {this.props.checklist.data[key].map(row => (
+            <Card.Content key={row.name}>
+              <Header>
+                {row.name}{' '}
+                <Button className="deleteButton" type="button" color="red" size="tiny" onClick={this.removeRow(key, row.name)}>
+                  <div className="deleteButtonText">Delete checkbox</div>
+                </Button>
+              </Header>
+              <div className="formField">
+                <Label>Points when checked</Label>
+                <Input
+                  className="numberField"
+                  type="number"
+                  step="0.01"
+                  value={row.checkedPoints}
+                  onChange={this.changeField(key, row.name, 'checkedPoints')}
+                  onBlur={this.castPointsToNumber(key, row.name)}
+                />
+              </div>
+              <div className="formField">
+                <Label>Text</Label>
+                <Input className="textField" type="text" value={row.textWhenOn} onChange={this.changeField(key, row.name, 'textWhenOn')} />
+              </div>
+              <div className="formField">
+                <Label>Points when unchecked</Label>
+                <Input
+                  className="numberField"
+                  type="number"
+                  step="0.25"
+                  value={row.uncheckedPoints}
+                  onChange={this.changeField(key, row.name, 'uncheckedPoints')}
+                  onBlur={this.castPointsToNumber(key, row.name)}
+                />
+              </div>
+              <div className="formField">
+                <Label>Text</Label>
+                <Input className="textField" type="text" value={row.textWhenOff} onChange={this.changeField(key, row.name, 'textWhenOff')} />
+              </div>
+            </Card.Content>
+          ))}
+          <form className="addForm" onSubmit={this.newRow(key)}>
+            {/*This, like all other addForms is here to funnel both the button press 
+              as well as a user pressing enter into the same function.*/}
+            <Popup trigger={<Button type="submit" circular icon={{ name: 'add' }} />} content="Add new checkbox" />
+            {this.state.openAdd === key ? (
+              <div>
+                <Label>Name</Label>
+                <Input className="newRowNameInput" type="text" value={this.state.rowName} onChange={this.changeRowName} />
+                <Button type="button" onClick={this.cancelAdd}>
+                  Cancel
+                </Button>
+              </div>
+            ) : (
+              <div />
+            )}
+          </form>
+        </Card>
+      )
+    })
+    return {
+      checklistJsx,
+      maxPoints
+    }
+  }
+
   render() {
+    const { checklistJsx, maxPoints } = this.props.loading.loading ? { checklistJsx: null, maxPoints: null } : this.renderChecklist()
     return (
       <div className="CreateChecklist">
         <Header>{this.props.selectedInstance.name}</Header>
@@ -253,74 +344,14 @@ export class CreateChecklist extends Component {
           ) : this.state.week !== undefined ? (
             <div>
               <div>
-                {Object.keys(this.props.checklist.data).map(key => (
-                  <Card fluid color="red" key={key}>
-                    <Card.Content>
-                      <Header>
-                        {key}{' '}
-                        <Button className="deleteButton" type="button" color="red" size="tiny" onClick={this.removeTopic(key)}>
-                          <div className="deleteButtonText">Delete topic</div>
-                        </Button>
-                      </Header>
-                    </Card.Content>
-                    {this.props.checklist.data[key].map(row => (
-                      <Card.Content key={row.name}>
-                        <Header>
-                          {row.name}{' '}
-                          <Button className="deleteButton" type="button" color="red" size="tiny" onClick={this.removeRow(key, row.name)}>
-                            <div className="deleteButtonText">Delete checkbox</div>
-                          </Button>
-                        </Header>
-                        <div className="formField">
-                          <Label>Points when checked</Label>
-                          <Input
-                            className="numberField"
-                            type="number"
-                            step="0.01"
-                            value={row.checkedPoints}
-                            onChange={this.changeField(key, row.name, 'checkedPoints')}
-                            onBlur={this.castPointsToNumber(key, row.name)}
-                          />
-                        </div>
-                        <div className="formField">
-                          <Label>Text</Label>
-                          <Input className="textField" type="text" value={row.textWhenOn} onChange={this.changeField(key, row.name, 'textWhenOn')} />
-                        </div>
-                        <div className="formField">
-                          <Label>Points when unchecked</Label>
-                          <Input
-                            className="numberField"
-                            type="number"
-                            step="0.25"
-                            value={row.uncheckedPoints}
-                            onChange={this.changeField(key, row.name, 'uncheckedPoints')}
-                            onBlur={this.castPointsToNumber(key, row.name)}
-                          />
-                        </div>
-                        <div className="formField">
-                          <Label>Text</Label>
-                          <Input className="textField" type="text" value={row.textWhenOff} onChange={this.changeField(key, row.name, 'textWhenOff')} />
-                        </div>
-                      </Card.Content>
-                    ))}
-                    <form className="addForm" onSubmit={this.newRow(key)}>
-                      {/*This, like all other addForms is here to funnel both the button press 
-                        as well as a user pressing enter into the same function.*/}
-                      <Popup trigger={<Button type="submit" circular icon={{ name: 'add' }} />} content="Add new checkbox" />
-                      {this.state.openAdd === key ? (
-                        <div>
-                          <Label>Name</Label>
-                          <Input className="newRowNameInput" type="text" value={this.state.rowName} onChange={this.changeRowName} />
-                          <Button type="button" onClick={this.cancelAdd}>
-                            Cancel
-                          </Button>
-                        </div>
-                      ) : (
-                        <div />
-                      )}
-                    </form>
-                  </Card>
-                ))}
+                {checklistJsx}
+                <Card className="totalMaxPointsCard">
+                  <Card.Content>
+                    <p>
+                      Total max points: <strong>{maxPoints}</strong>
+                    </p>
+                  </Card.Content>
+                </Card>
                 <form className="addForm" onSubmit={this.newTopic}>
                   <Popup trigger={<Button type="submit" circular icon={{ name: 'add', size: 'large' }} />} content="Add new topic" />
                   {this.state.openAdd === 'newTopic' ? (
