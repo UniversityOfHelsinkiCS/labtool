@@ -14,6 +14,8 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
     weekAmount: 7,
     weekMaxPoints: 3,
     currentWeek: 1,
+    currentCodeReview: [1, 2],
+    amountOfCodeReviews: 2,
     ohid: 'TKT20010.2018.K.A.1',
     teacherInstances: [
       {
@@ -229,6 +231,7 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
         statesCreated={true}
         filterByTag={mockFn}
         resetLoading={mockFn}
+        dropdownCodeReviews={[{ value: 1, text: 'Codereview 1' }, { value: 2, text: 'Codereview 2' }]}
       />
     )
   })
