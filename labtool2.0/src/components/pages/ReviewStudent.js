@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Form, Input, Grid, Card, Loader } from 'semantic-ui-react'
+import { Button, Form, Input, Grid, Card, Loader, Icon } from 'semantic-ui-react'
 import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createOneWeek } from '../../services/week'
@@ -170,9 +170,16 @@ export class ReviewStudent extends Component {
                           {checkList.list[cl].map(row => (
                             <Card.Content className="checklistCardRow" key={row.name}>
                               <Form.Field>
-                                <label>{row.name} </label>
                                 <Input type="checkbox" onChange={this.toggleCheckbox(row.name)} />
-                                <label> {row.checkedPoints > 0 ? <span>{row.checkedPoints} p</span> : <span>{row.uncheckedPoints} p</span>}</label>
+                                <span>{row.name} </span>
+                                <span>
+                                  {' '}
+                                  <span>
+                                    <Icon className="grey check square outline" />
+                                    {row.checkedPoints} p <Icon className="grey square outline" />
+                                    {row.uncheckedPoints} p
+                                  </span>
+                                </span>
                               </Form.Field>
                             </Card.Content>
                           ))}
