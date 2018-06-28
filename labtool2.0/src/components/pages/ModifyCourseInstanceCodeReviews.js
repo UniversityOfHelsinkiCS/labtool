@@ -5,6 +5,7 @@ import { coursePageInformation } from '../../services/courseInstance'
 import { bulkinsertCodeReviews } from '../../services/codeReview'
 import {
   filterStatesByTags,
+  filterByReview,
   initOneReview,
   initOrRemoveRandom,
   initCheckbox,
@@ -100,12 +101,33 @@ export class ModifyCourseInstanceReview extends React.Component {
     return (e, data) => {
       this.checkStates()
       this.props.selectDropdown(data.value)
+      // if (this.props.codeReviewLogic.filterByReview !== this.props.selectDropdown(data.value)) {
+      //   this.props.filterByReview(0)
+      // }
+      if (this.props.filterActive) {
+        this.props.filterByReview(this.props.selectDropdown(data.value))
+      }
     }
   }
 
   toggleCreate = () => {
     this.checkStates()
     this.props.toggleCreate()
+  }
+
+  filterUnassigned = review => {
+    return async () => {
+      if (this.props.codeReviewLogic.filterByReview === review) {
+        await this.props.filterByReview(0)
+      } else {
+        await this.props.filterByReview(review)
+      }
+    }
+  }
+
+  isAssignedToReview = (studentData, reviewWeek) => {
+    const studentReviewWeeks = studentData.codeReviews.map(review => review.reviewNumber).filter(review => review === reviewWeek)
+    return Array.isArray(studentReviewWeeks) && !studentReviewWeeks.length
   }
 
   addFilterTag = tag => {
@@ -151,7 +173,25 @@ export class ModifyCourseInstanceReview extends React.Component {
       <div className="ModifyCourseInstanceCodeReviews" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
         <div className="ui grid">
           <div className="sixteen wide column">
-            <h2>{this.props.selectedInstance.name}</h2>
+            <h2>{this.props.selectedInstance.name}</h2> <br />
+          </div>
+          <div>
+            {this.props.codeReviewLogic.selectedDropdown === null ? (
+              <Button
+                disabled
+                toggle
+                compact
+                className={`mini ui button`}
+                active={this.props.codeReviewLogic.filterActive}
+                onClick={this.filterUnassigned(this.props.codeReviewLogic.selectedDropdown)}
+              >
+                Show unassigned students
+              </Button>
+            ) : (
+              <Button toggle compact className={`mini ui button`} active={this.props.codeReviewLogic.filterActive} onClick={this.filterUnassigned(this.props.codeReviewLogic.selectedDropdown)}>
+                Show unassigned students
+              </Button>
+            )}
           </div>
           {this.props.coursePageLogic.filterByTag.length > 0 ? (
             <div>
@@ -206,6 +246,9 @@ export class ModifyCourseInstanceReview extends React.Component {
                 ? this.props.courseData.data
                     .filter(data => {
                       return this.props.coursePageLogic.filterByTag.length === 0 || this.hasFilteringTags(data.Tags, this.props.coursePageLogic.filterByTag)
+                    })
+                    .filter(data => {
+                      return this.props.codeReviewLogic.filterByReview === 0 || this.isAssignedToReview(data, this.props.codeReviewLogic.selectedDropdown)
                     })
                     .map(data => (
                       <Table.Row key={data.id}>
@@ -377,6 +420,7 @@ const mapDispatchToProps = {
   toggleCreate,
   createStates,
   filterStatesByTags,
+  filterByReview,
   showNotification
 }
 
