@@ -158,6 +158,14 @@ const notificationReducer = (state = {}, action) => {
         message: action.response.response.data,
         error: true
       }
+    case 'CHECKLIST_GET_ONE_FAILURE':
+      if (action.response.response.data.data.copying) {
+        return {
+          message: action.response.response.data.message,
+          error: true
+        }
+      }
+      return state
     case 'CODE_REVIEW_RANDOMIZE':
       return {
         message: 'Code reviews randomized. Click save to change',

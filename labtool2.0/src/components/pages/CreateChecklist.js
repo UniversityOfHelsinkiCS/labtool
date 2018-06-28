@@ -93,7 +93,8 @@ export class CreateChecklist extends Component {
     const week = this.state.week > this.props.selectedInstance.weekAmount ? this.props.courses.find(course => course.id === this.state.copyCourse).weekAmount + 1 : this.state.week
     this.props.getOneChecklist({
       week,
-      courseInstanceId: this.state.copyCourse
+      courseInstanceId: this.state.copyCourse,
+      copying: true
     })
   }
 
@@ -192,25 +193,21 @@ export class CreateChecklist extends Component {
     })
   }
 
-  finalOptions() {
-    return this.props.courses.filter(course => course.finalReview && this.props.selectedInstance.id !== course.id).map(course => {
-      return {
-        value: course.id,
-        text: `${course.name} (${course.europeanStart})`
-      }
-    })
+  weekFilter = courses => {
+    return courses.filter(course => this.state.week <= course.weekAmount)
   }
-  weekOptions() {
-    return this.props.courses.filter(course => this.state.week <= course.weekAmount && this.props.selectedInstance.id !== course.id).map(course => {
-      return {
-        value: course.id,
-        text: `${course.name} (${course.europeanStart})`
-      }
-    })
+  finalFilter = courses => {
+    return courses.filter(course => course.finalReview)
   }
   createCourseDropdowns = () => {
     if (!this.props.courses || !this.props.selectedInstance) return []
-    const options = this.state.week > this.props.selectedInstance.weekAmount ? this.finalOptions() : this.weekOptions()
+    const courses = this.state.week > this.props.selectedInstance.weekAmount ? this.finalFilter(this.props.courses) : this.weekFilter(this.props.courses)
+    const options = courses.filter(course => this.props.selectedInstance.id !== course.id).map(course => {
+      return {
+        value: course.id,
+        text: `${course.name} (${course.europeanStart})`
+      }
+    })
     console.log(options)
     return options
   }
