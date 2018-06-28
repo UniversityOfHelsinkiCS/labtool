@@ -129,15 +129,21 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
       })
       return { ...state, randomizedCodeReview: randomized, checkBoxStates: cbStates }
     }
-    case 'CODE_REVIEW_BULKINSERT_SUCCESS':
+    case 'CODE_REVIEW_BULKINSERT_SUCCESS': {
       var codeReviewRoundsToUpdate = state.codeReviewStates
       var currentSelectionsToUpdate = state.currentSelections
       var newRound = action.response.data.reviewNumber
+      let dropdown = state.selectedDropdown
       newRound > Object.keys(state.codeReviewStates).length - 1 ? (codeReviewRoundsToUpdate = { ...codeReviewRoundsToUpdate, [newRound]: [] }) : codeReviewRoundsToUpdate
       newRound > Object.keys(state.currentSelections).length - 1 ? (currentSelectionsToUpdate = { ...currentSelectionsToUpdate, [newRound]: {} }) : currentSelectionsToUpdate
       //This is double clear but if the ternary is not true we'll have to clear the array anyway
       codeReviewRoundsToUpdate[action.response.data.reviewNumber] = []
-      return { ...state, codeReviewStates: codeReviewRoundsToUpdate, currentSelections: currentSelectionsToUpdate }
+      if (action.response.data.createTrue) {
+        dropdown = action.response.data.reviewNumber
+        currentSelectionsToUpdate['create'] = {}
+      }
+      return { ...state, codeReviewStates: codeReviewRoundsToUpdate, currentSelections: currentSelectionsToUpdate, selectedDropdown: dropdown }
+    }
     case 'CODE_REVIEW_RANDOMIZE': {
       const newCodeReviewStates = state.codeReviewStates
       purgeCodeReviews(newCodeReviewStates[action.data.reviewNumber], state.randomizedCodeReview)
