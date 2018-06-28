@@ -154,23 +154,46 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
                 />
                 <span>
                   Koodin laatu
-                   
                 </span>
-                <span>
-                   
-                  <span>
+                <div
+                  style={
+                    Object {
+                      "display": "inline-block",
+                      "marginLeft": "20px",
+                      "maxWidth": "0px",
+                      "textAlign": "left",
+                    }
+                  }
+                >
+                  <span
+                    style={
+                      Object {
+                        "display": "inline-block",
+                        "minWidth": "100px",
+                      }
+                    }
+                  >
                     <Icon
                       as="i"
                       className="grey check square outline"
                     />
-                     p 
+                     p
+                  </span>
+                  <span
+                    style={
+                      Object {
+                        "display": "inline-block",
+                        "minWidth": "100px",
+                      }
+                    }
+                  >
                     <Icon
                       as="i"
                       className="grey square outline"
                     />
                      p
                   </span>
-                </span>
+                </div>
               </FormField>
             </CardContent>
           </Card>
@@ -194,23 +217,46 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
                 />
                 <span>
                   Algoritmin runko
-                   
                 </span>
-                <span>
-                   
-                  <span>
+                <div
+                  style={
+                    Object {
+                      "display": "inline-block",
+                      "marginLeft": "20px",
+                      "maxWidth": "0px",
+                      "textAlign": "left",
+                    }
+                  }
+                >
+                  <span
+                    style={
+                      Object {
+                        "display": "inline-block",
+                        "minWidth": "100px",
+                      }
+                    }
+                  >
                     <Icon
                       as="i"
                       className="grey check square outline"
                     />
-                     p 
+                     p
+                  </span>
+                  <span
+                    style={
+                      Object {
+                        "display": "inline-block",
+                        "minWidth": "100px",
+                      }
+                    }
+                  >
                     <Icon
                       as="i"
                       className="grey square outline"
                     />
                      p
                   </span>
-                </span>
+                </div>
               </FormField>
             </CardContent>
             <CardContent
@@ -224,23 +270,46 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
                 />
                 <span>
                   Tietorakenteita luotu
-                   
                 </span>
-                <span>
-                   
-                  <span>
+                <div
+                  style={
+                    Object {
+                      "display": "inline-block",
+                      "marginLeft": "20px",
+                      "maxWidth": "0px",
+                      "textAlign": "left",
+                    }
+                  }
+                >
+                  <span
+                    style={
+                      Object {
+                        "display": "inline-block",
+                        "minWidth": "100px",
+                      }
+                    }
+                  >
                     <Icon
                       as="i"
                       className="grey check square outline"
                     />
-                     p 
+                     p
+                  </span>
+                  <span
+                    style={
+                      Object {
+                        "display": "inline-block",
+                        "minWidth": "100px",
+                      }
+                    }
+                  >
                     <Icon
                       as="i"
                       className="grey square outline"
                     />
                      p
                   </span>
-                </span>
+                </div>
               </FormField>
             </CardContent>
           </Card>
@@ -264,23 +333,46 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
                 />
                 <span>
                   Readme
-                   
                 </span>
-                <span>
-                   
-                  <span>
+                <div
+                  style={
+                    Object {
+                      "display": "inline-block",
+                      "marginLeft": "20px",
+                      "maxWidth": "0px",
+                      "textAlign": "left",
+                    }
+                  }
+                >
+                  <span
+                    style={
+                      Object {
+                        "display": "inline-block",
+                        "minWidth": "100px",
+                      }
+                    }
+                  >
                     <Icon
                       as="i"
                       className="grey check square outline"
                     />
-                     p 
+                     p
+                  </span>
+                  <span
+                    style={
+                      Object {
+                        "display": "inline-block",
+                        "minWidth": "100px",
+                      }
+                    }
+                  >
                     <Icon
                       as="i"
                       className="grey square outline"
                     />
                      p
                   </span>
-                </span>
+                </div>
               </FormField>
             </CardContent>
             <CardContent
@@ -294,23 +386,46 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
                 />
                 <span>
                   Tuntikirjanpito
-                   
                 </span>
-                <span>
-                   
-                  <span>
+                <div
+                  style={
+                    Object {
+                      "display": "inline-block",
+                      "marginLeft": "20px",
+                      "maxWidth": "0px",
+                      "textAlign": "left",
+                    }
+                  }
+                >
+                  <span
+                    style={
+                      Object {
+                        "display": "inline-block",
+                        "minWidth": "100px",
+                      }
+                    }
+                  >
                     <Icon
                       as="i"
                       className="grey check square outline"
                     />
-                     p 
+                     p
+                  </span>
+                  <span
+                    style={
+                      Object {
+                        "display": "inline-block",
+                        "minWidth": "100px",
+                      }
+                    }
+                  >
                     <Icon
                       as="i"
                       className="grey square outline"
                     />
                      p
                   </span>
-                </span>
+                </div>
               </FormField>
             </CardContent>
           </Card>
