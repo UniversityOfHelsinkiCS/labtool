@@ -74,14 +74,14 @@ module.exports = {
               textWhenOn: 'README kunnossa',
               textWhenOff: 'README puuttuu',
               checkedPoints: 0,
-              uncheckedPoints: 0
+              uncheckedPoints: -0.5
             },
             {
               name: 'Tuntikirjanpito',
               textWhenOn: 'Tuntikirjanpito täytetty oikein',
               textWhenOff: 'Tuntikirjanpito puuttuu',
               checkedPoints: 0,
-              uncheckedPoints: 0
+              uncheckedPoints: -0.5
             }
           ],
           Algoritmit: [
@@ -89,14 +89,14 @@ module.exports = {
               name: 'Algoritmin runko',
               textWhenOn: 'Algoritmin runko luotu',
               textWhenOff: 'Algoritmin runko puuttuu',
-              checkedPoints: 0,
+              checkedPoints: 1,
               uncheckedPoints: 0
             },
             {
               name: 'Tietorakenteita luotu',
               textWhenOn: 'Tietorakenteita luotu',
               textWhenOff: 'Tietorakenteita ei ole luotu',
-              checkedPoints: 0,
+              checkedPoints: 0.5,
               uncheckedPoints: 0
             }
           ],
@@ -105,7 +105,7 @@ module.exports = {
               name: 'Koodin laatu',
               textWhenOn: 'Koodi tehty laadukkaasti ja sisältää kommentteja',
               textWhenOff: 'Koodin laadussa parantamisen varaa',
-              checkedPoints: 0,
+              checkedPoints: 0.5,
               uncheckedPoints: 0
             }
           ]
