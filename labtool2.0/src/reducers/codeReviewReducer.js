@@ -15,7 +15,9 @@ const INITIAL_STATE = {
   checkBoxStates: {},
   statesCreated: false,
   initialized: false,
-  showCreate: false
+  showCreate: false,
+  filterByReview: 0,
+  filterActive: false
 }
 
 function shuffleArray(array) {
@@ -64,6 +66,13 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
       return { ...state, showCreate: !state.showCreate }
     case 'SELECT_DROPDOWN':
       return { ...state, selectedDropdown: action.data }
+    case 'FILTER_BY_REVIEW': {
+      let newActiveStatus = true
+      if (action.data === 0) {
+        newActiveStatus = false
+      }
+      return { ...state, filterByReview: action.data, filterActive: newActiveStatus }
+    }
     case 'INIT_REVIEW': {
       const oldReviews = state.codeReviewStates[action.data.round]
       let selections = state.currentSelections
@@ -261,4 +270,14 @@ export const filterStatesByTags = data => {
     })
   }
 }
+
+export const filterByReview = data => {
+  return async dispatch => {
+    dispatch({
+      type: 'FILTER_BY_REVIEW',
+      data: data
+    })
+  }
+}
+
 export default codeReviewReducer
