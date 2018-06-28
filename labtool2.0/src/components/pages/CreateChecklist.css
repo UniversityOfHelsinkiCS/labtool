@@ -29,3 +29,7 @@
 .deleteButtonText {
   font-size: 14px;
 }
+
+.copyForm {
+  float: right;
+}

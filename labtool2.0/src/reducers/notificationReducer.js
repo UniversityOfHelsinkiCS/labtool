@@ -158,11 +158,6 @@ const notificationReducer = (state = {}, action) => {
         message: action.response.response.data,
         error: true
       }
-    case 'CHECKLIST_GET_ONE_FAILURE':
-      return {
-        message: "That week doesn't have a checklist.",
-        error: true
-      }
     case 'CODE_REVIEW_RANDOMIZE':
       return {
         message: 'Code reviews randomized. Click save to change',
