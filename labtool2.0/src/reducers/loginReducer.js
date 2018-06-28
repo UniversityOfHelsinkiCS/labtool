@@ -14,8 +14,9 @@
   created: did the user exist in database before logging in?
  * 
  */
+const INITIAL_STATE = {}
 
-const loginReducer = (state = {}, action) => {
+const loginReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case 'LOGIN_SUCCESS':
       return action.response

@@ -47,6 +47,8 @@ function purgeCodeReviews(codeReviewStateArray, toPurgeArray) {
 
 const codeReviewReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
+    case 'LOGOUT_SUCCESS':
+      return {}
     case 'CREATE_STATES_FOR_CODE_REVIEWS': {
       let i = 1
       let codeReviewStates = {}

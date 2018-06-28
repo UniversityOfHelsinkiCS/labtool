@@ -11,7 +11,6 @@ import teacherInstance from './reducers/teacherInstanceReducer'
 import studentInstance from './reducers/studentInstanceReducer'
 import selectedInstance from './reducers/selectedInstanceReducer'
 import coursePage from './reducers/coursePageReducer'
-import assistant from './reducers/assistantReducer'
 import coursePageLogic from './reducers/coursePageLogicReducer'
 import codeReviewLogic from './reducers/codeReviewReducer'
 import checklist from './reducers/checklistReducer'
@@ -36,7 +35,6 @@ const reducer = combineReducers({
   selectedInstance: selectedInstance,
   coursePage: coursePage,
   users: users,
-  assistant: assistant,
   coursePageLogic: coursePageLogic,
   codeReviewLogic: codeReviewLogic,
   checklist: checklist,
