@@ -33,6 +33,10 @@ module.exports = {
         res.status(404).send('Specified student instance could not be found.')
         return
       }
+      if (!teacherInsId) {
+        res.status(404).send(`Can't assign null teacher!`)
+        return
+      }
       const requestMakerAsTeacher = await TeacherInstance.findOne({
         where: {
           userId: requestMakerId,

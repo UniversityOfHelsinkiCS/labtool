@@ -13,8 +13,12 @@
  */
 import { sortCourses } from '../util/sort'
 
-const teacherInstancereducer = (store = [], action) => {
+const INITIAL_STATE = []
+
+const teacherInstancereducer = (store = INITIAL_STATE, action) => {
   switch (action.type) {
+    case 'LOGOUT_SUCCESS':
+      return INITIAL_STATE
     case 'TEACHER_COURSE_GET_ALL_SUCCESS':
       return sortCourses(action.response)
     default:

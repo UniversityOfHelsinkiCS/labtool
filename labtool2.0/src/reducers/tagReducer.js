@@ -4,6 +4,8 @@ const INITIAL_STATE = {}
 
 const tagsReducer = (store = INITIAL_STATE, action) => {
   switch (action.type) {
+    case 'LOGOUT_SUCCESS':
+      return INITIAL_STATE
     case 'TAG_CREATE_SUCCESS': {
       const id = action.response.id
       const changedTag = store.tags.filter(tag => tag.id === id)

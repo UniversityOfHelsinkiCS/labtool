@@ -10,6 +10,8 @@ const INITIAL_STATE = {
 
 const weekReviewReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
+    case 'LOGOUT_SUCCESS':
+      return INITIAL_STATE
     case 'WEEK_REVIEW_TOGGLE': {
       return { ...state, checks: { ...state.checks, [action.name]: !state.checks[action.name] } }
     }
