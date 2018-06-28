@@ -128,7 +128,7 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
               className="formField"
             >
               <Label>
-                Points
+                Points when checked
               </Label>
               <Input
                 className="numberField"
@@ -143,7 +143,7 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
               className="formField"
             >
               <Label>
-                Text when checked
+                Text
               </Label>
               <Input
                 className="textField"
@@ -156,13 +156,159 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
               className="formField"
             >
               <Label>
-                Text when unchecked
+                Points when unchecked
+              </Label>
+              <Input
+                className="numberField"
+                onBlur={[Function]}
+                onChange={[Function]}
+                step="0.25"
+                type="number"
+                value={0}
+              />
+            </div>
+            <div
+              className="formField"
+            >
+              <Label>
+                Text
               </Label>
               <Input
                 className="textField"
                 onChange={[Function]}
                 type="text"
                 value="Koodin laadussa parantamisen varaa"
+              />
+            </div>
+          </CardContent>
+          <form
+            className="addForm"
+            onSubmit={[Function]}
+          >
+            <Popup
+              content="Add new checkbox"
+              keepInViewPort={true}
+              on="hover"
+              position="top left"
+              trigger={
+                <Button
+                  as="button"
+                  circular={true}
+                  icon={
+                    Object {
+                      "name": "add",
+                    }
+                  }
+                  role="button"
+                  type="submit"
+                />
+              }
+            />
+            <div />
+          </form>
+        </Card>
+        <Card
+          color="red"
+          fluid={true}
+          key="Repo"
+        >
+          <CardContent>
+            <Header>
+              Repo
+               
+              <Button
+                as="button"
+                className="deleteButton"
+                color="red"
+                onClick={[Function]}
+                role="button"
+                size="tiny"
+                type="button"
+              >
+                <div
+                  className="deleteButtonText"
+                >
+                  Delete topic
+                </div>
+              </Button>
+            </Header>
+          </CardContent>
+          <CardContent
+            key="Readme kunnossa"
+          >
+            <Header>
+              Readme kunnossa
+               
+              <Button
+                as="button"
+                className="deleteButton"
+                color="red"
+                onClick={[Function]}
+                role="button"
+                size="tiny"
+                type="button"
+              >
+                <div
+                  className="deleteButtonText"
+                >
+                  Delete checkbox
+                </div>
+              </Button>
+            </Header>
+            <div
+              className="formField"
+            >
+              <Label>
+                Points when checked
+              </Label>
+              <Input
+                className="numberField"
+                onBlur={[Function]}
+                onChange={[Function]}
+                step="0.01"
+                type="number"
+                value={0}
+              />
+            </div>
+            <div
+              className="formField"
+            >
+              <Label>
+                Text
+              </Label>
+              <Input
+                className="textField"
+                onChange={[Function]}
+                type="text"
+                value=""
+              />
+            </div>
+            <div
+              className="formField"
+            >
+              <Label>
+                Points when unchecked
+              </Label>
+              <Input
+                className="numberField"
+                onBlur={[Function]}
+                onChange={[Function]}
+                step="0.25"
+                type="number"
+                value={-1}
+              />
+            </div>
+            <div
+              className="formField"
+            >
+              <Label>
+                Text
+              </Label>
+              <Input
+                className="textField"
+                onChange={[Function]}
+                type="text"
+                value="Readmessa feelua"
               />
             </div>
           </CardContent>
