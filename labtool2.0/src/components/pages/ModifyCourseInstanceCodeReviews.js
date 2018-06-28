@@ -87,18 +87,33 @@ export class ModifyCourseInstanceReview extends React.Component {
   selectAllCheckboxes = () => {
     return () => {
       let studentTags = []
-      let allCb = {}
+      let allCheckboxes = {}
       let selectedTags = []
+      let unassignedStudentsAsIds = []
+
+      if (this.props.codeReviewLogic.filterActive) {
+        unassignedStudentsAsIds = this.props.courseData.data.filter(student => this.isAssignedToReview(student, this.props.codeReviewLogic.selectedDropdown)).map(student => student.id)
+      }
+
       this.props.coursePageLogic.filterByTag.forEach(st => selectedTags.push(st.name))
-      selectedTags.length > 0
-        ? this.props.courseData.data.forEach(student => {
-            studentTags = student.Tags.filter(st => selectedTags.includes(st.name))
-            studentTags.length > 0 ? (allCb[student.id] = true) : null
-            studentTags = []
-          })
-        : this.props.courseData.data.forEach(st => (allCb[st.id] = true))
-      let randoms = Object.keys(allCb).map(student => parseInt(student, 10))
-      this.props.initAllCheckboxes({ data: allCb, ids: randoms })
+
+      if (selectedTags.length) {
+        this.props.courseData.data.forEach(student => {
+          studentTags = student.Tags.filter(st => selectedTags.includes(st.name))
+          if (unassignedStudentsAsIds.length) {
+            studentTags = studentTags.filter(st => unassignedStudentsAsIds.includes(st.StudentTag.studentInstanceId))
+          }
+          studentTags.length ? (allCheckboxes[student.id] = true) : null
+          studentTags = []
+        })
+      } else if (unassignedStudentsAsIds.length) {
+        unassignedStudentsAsIds.forEach(studentId => (allCheckboxes[studentId] = true))
+      } else {
+        this.props.courseData.data.forEach(student => (allCheckboxes[student.id] = true))
+      }
+
+      let randoms = Object.keys(allCheckboxes).map(student => parseInt(student, 10))
+      this.props.initAllCheckboxes({ data: allCheckboxes, ids: randoms })
     }
   }
 
@@ -154,7 +169,7 @@ export class ModifyCourseInstanceReview extends React.Component {
     return () => {
       this.props.codeReviewLogic.randomizedCodeReview.length > 1
         ? this.props.randomAssign({ reviewNumber: reviewNumber })
-        : this.props.showNotification({ message: 'Select atleast two persons for randomize!', error: true })
+        : this.props.showNotification({ message: 'Select at least two persons to randomize!', error: true })
     }
   }
   getCurrentReviewer = (codeReviewRound, id) => {
