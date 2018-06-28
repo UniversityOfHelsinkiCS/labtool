@@ -120,6 +120,7 @@ describe('<ReviewStudent />', () => {
           userId: 10012,
           teacherInstanceId: 10011,
           weeks: [],
+          codeReviews: [],
           User: {
             id: 10012,
             username: 'tiraopiskelija2',
@@ -142,6 +143,7 @@ describe('<ReviewStudent />', () => {
           userId: 10031,
           teacherInstanceId: 10011,
           weeks: [],
+          codeReviews: [],
           User: {
             id: 10031,
             username: 'superopiskelija',
@@ -205,6 +207,7 @@ describe('<ReviewStudent />', () => {
               comments: []
             }
           ],
+          codeReviews: [],
           User: {
             id: 10011,
             username: 'tiraopiskelija1',
