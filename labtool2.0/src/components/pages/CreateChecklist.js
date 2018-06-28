@@ -247,11 +247,11 @@ export class CreateChecklist extends Component {
             </Header>
             <div>
               <p>
-                Max points: <strong>{bestPoints}</strong>
+                Max points: <strong className="bestPointsNumber">{bestPoints}</strong>
                 {bestPoints < 0 ? (
                   <span>
                     {' '}
-                    <Popup trigger={<Icon name="delete" color="red" size="large" />} content="This topic will always award negative points." />
+                    <Popup trigger={<Icon className="bestpointsIcon" name="delete" color="red" size="large" />} content="This topic will always award negative points." />
                   </span>
                 ) : (
                   <span />
@@ -287,7 +287,7 @@ export class CreateChecklist extends Component {
                 <Input
                   className="numberField"
                   type="number"
-                  step="0.25"
+                  step="0.01"
                   value={row.uncheckedPoints}
                   onChange={this.changeField(key, row.name, 'uncheckedPoints')}
                   onBlur={this.castPointsToNumber(key, row.name)}
@@ -352,25 +352,6 @@ export class CreateChecklist extends Component {
             <div>
               <div>
                 {checklistJsx /* This block of jsx is defined in this.renderChecklist */}
-                <Card className="totalMaxPointsCard">
-                  <Card.Content>
-                    <p>
-                      Total max points: <strong>{maxPoints}</strong>
-                      {this.state.week > this.props.selectedInstance.weekAmount ? (
-                        <span />
-                      ) : (
-                        <span>
-                          {' '}
-                          {this.props.selectedInstance.weekMaxPoints === maxPoints ? (
-                            <Popup trigger={<Icon name="check" size="large" color="green" />} content="The total matches maximum weekly points for this course." />
-                          ) : (
-                            <Popup trigger={<Icon name="delete" size="large" color="red" />} content="The total does not match maximum weekly points for this course." />
-                          )}
-                        </span>
-                      )}
-                    </p>
-                  </Card.Content>
-                </Card>
                 <form className="addForm" onSubmit={this.newTopic}>
                   <Popup trigger={<Button type="submit" circular icon={{ name: 'add', size: 'large' }} />} content="Add new topic" />
                   {this.state.openAdd === 'newTopic' ? (
@@ -386,6 +367,25 @@ export class CreateChecklist extends Component {
                   )}
                 </form>
               </div>
+              <Card className="totalMaxPointsCard">
+                <Card.Content>
+                  <p>
+                    Total max points: <strong className="totalMaxPointsNumber">{maxPoints}</strong>
+                    {this.state.week > this.props.selectedInstance.weekAmount ? (
+                      <span />
+                    ) : (
+                      <span>
+                        {' '}
+                        {this.props.selectedInstance.weekMaxPoints === maxPoints ? (
+                          <Popup trigger={<Icon className="maxPointsIcon" name="check" size="large" color="green" />} content="The total matches maximum weekly points for this course." />
+                        ) : (
+                          <Popup trigger={<Icon className="maxPointsIcon" name="delete" size="large" color="red" />} content="The total does not match maximum weekly points for this course." />
+                        )}
+                      </span>
+                    )}
+                  </p>
+                </Card.Content>
+              </Card>
               <form onSubmit={this.handleSubmit}>
                 {/*This is a form with a single button instead of just a button because it doesn't work 
                   (doesn't call the function) as just a button with onClick.*/}
