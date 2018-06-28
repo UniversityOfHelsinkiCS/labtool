@@ -106,9 +106,6 @@ export class ModifyCourseInstanceReview extends React.Component {
     return (e, data) => {
       this.checkStates()
       this.props.selectDropdown(data.value)
-      // if (this.props.codeReviewLogic.filterByReview !== this.props.selectDropdown(data.value)) {
-      //   this.props.filterByReview(0)
-      // }
       if (this.props.filterActive) {
         this.props.filterByReview(this.props.selectDropdown(data.value))
       }
@@ -122,7 +119,7 @@ export class ModifyCourseInstanceReview extends React.Component {
 
   filterUnassigned = review => {
     return async () => {
-      if (this.props.codeReviewLogic.filterByReview === review) {
+      if (this.props.codeReviewLogic.filterByReview === review || this.props.codeReviewLogic.filterActive) {
         await this.props.filterByReview(0)
       } else {
         await this.props.filterByReview(review)
@@ -209,14 +206,14 @@ export class ModifyCourseInstanceReview extends React.Component {
                 disabled
                 toggle
                 compact
-                className={`mini ui button`}
+                className={`tiny ui button`}
                 active={this.props.codeReviewLogic.filterActive}
                 onClick={this.filterUnassigned(this.props.codeReviewLogic.selectedDropdown)}
               >
                 Show unassigned students
               </Button>
             ) : (
-              <Button toggle compact className={`mini ui button`} active={this.props.codeReviewLogic.filterActive} onClick={this.filterUnassigned(this.props.codeReviewLogic.selectedDropdown)}>
+              <Button toggle compact className={`tiny ui button`} active={this.props.codeReviewLogic.filterActive} onClick={this.filterUnassigned(this.props.codeReviewLogic.selectedDropdown)}>
                 Show unassigned students
               </Button>
             )}
