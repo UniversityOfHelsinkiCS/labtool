@@ -176,7 +176,7 @@ export class ReviewStudent extends Component {
                                 type="checkbox" 
                                 defaultChecked={checks[row.name] !== undefined ? checks[row.name] : false}
                                 onChange={this.toggleCheckbox(row.name, this.props.ownProps.studentInstance, this.props.ownProps.weekNumber)}
-                                onChange={this.toggleCheckbox(row.name)} />
+                                />
                                 <span>{row.name}</span>
                                 <div style={{ marginLeft: '20px', display: 'inline-block', maxWidth: '0px', textAlign: 'left' }}>
                                   <span style={{ display: 'inline-block', minWidth: '100px' }}>
