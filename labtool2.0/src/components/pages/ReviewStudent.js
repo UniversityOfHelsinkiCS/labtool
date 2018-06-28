@@ -171,15 +171,17 @@ export class ReviewStudent extends Component {
                             <Card.Content className="checklistCardRow" key={row.name}>
                               <Form.Field>
                                 <Input type="checkbox" onChange={this.toggleCheckbox(row.name)} />
-                                <span>{row.name} </span>
-                                <span>
-                                  {' '}
-                                  <span>
+                                <span>{row.name}</span>
+                                <div style={{ marginLeft: '20px', display: 'inline-block', maxWidth: '0px', textAlign: 'left' }}>
+                                  <span style={{ display: 'inline-block', minWidth: '100px' }}>
                                     <Icon className="grey check square outline" />
-                                    {row.checkedPoints} p <Icon className="grey square outline" />
+                                    {row.checkedPoints} p
+                                  </span>
+                                  <span style={{ display: 'inline-block', minWidth: '100px' }}>
+                                    <Icon className="grey square outline" />
                                     {row.uncheckedPoints} p
                                   </span>
-                                </span>
+                                </div>
                               </Form.Field>
                             </Card.Content>
                           ))}
