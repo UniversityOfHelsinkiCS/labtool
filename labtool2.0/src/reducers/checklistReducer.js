@@ -31,7 +31,8 @@ const checklistReducer = (state = INITIAL_STATE, action) => {
       const newData = state.data
       newData[action.data.key].push({
         name: action.data.name,
-        points: 0,
+        checkedPoints: 0,
+        uncheckedPoints: 0,
         textWhenOn: '',
         textWhenOff: ''
       })
@@ -50,7 +51,8 @@ const checklistReducer = (state = INITIAL_STATE, action) => {
     }
     case 'CHECKLIST_CAST_POINTS': {
       const newData = state.data
-      newData[action.data.key].find(row => row.name === action.data.name).points = Number(newData[action.data.key].find(row => row.name === action.data.name).points)
+      newData[action.data.key].find(row => row.name === action.data.name).checkedPoints = Number(newData[action.data.key].find(row => row.name === action.data.name).checkedPoints)
+      newData[action.data.key].find(row => row.name === action.data.name).uncheckedPoints = Number(newData[action.data.key].find(row => row.name === action.data.name).uncheckedPoints)
       return { ...state, data: newData }
     }
     case 'CHECKLIST_RESET':

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Form, Input, Grid, Card, Loader } from 'semantic-ui-react'
+import { Button, Form, Input, Grid, Card, Loader, Icon } from 'semantic-ui-react'
 import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createOneWeek } from '../../services/week'
@@ -96,8 +96,10 @@ export class ReviewStudent extends Component {
           checkList.list[cl].forEach(row => {
             const addition = checks[row.name] ? row.textWhenOn : row.textWhenOff
             if (addition) checklistOutput += addition + '\n\n'
-            if (checks[row.name]) {
-              checklistPoints += row.points
+            if (this.props.weekReview.checks[row.name]) {
+              checklistPoints += row.checkedPoints
+            } else {
+              checklistPoints += row.uncheckedPoints
             }
           })
           if (checklistPoints < 0) {
@@ -170,13 +172,22 @@ export class ReviewStudent extends Component {
                           {checkList.list[cl].map(row => (
                             <Card.Content className="checklistCardRow" key={row.name}>
                               <Form.Field>
-                                <label>{row.name} </label>
-                                <Input
-                                  type="checkbox"
-                                  defaultChecked={checks[row.name] !== undefined ? checks[row.name] : false}
-                                  onChange={this.toggleCheckbox(row.name, this.props.ownProps.studentInstance, this.props.ownProps.weekNumber)}
-                                />
-                                <label> {row.points} p</label>
+                                <Input 
+                                type="checkbox" 
+                                defaultChecked={checks[row.name] !== undefined ? checks[row.name] : false}
+                                onChange={this.toggleCheckbox(row.name, this.props.ownProps.studentInstance, this.props.ownProps.weekNumber)}
+                                onChange={this.toggleCheckbox(row.name)} />
+                                <span>{row.name}</span>
+                                <div style={{ marginLeft: '20px', display: 'inline-block', maxWidth: '0px', textAlign: 'left' }}>
+                                  <span style={{ display: 'inline-block', minWidth: '100px' }}>
+                                    <Icon className="grey check square outline" />
+                                    {row.checkedPoints} p
+                                  </span>
+                                  <span style={{ display: 'inline-block', minWidth: '100px' }}>
+                                    <Icon className="grey square outline" />
+                                    {row.uncheckedPoints} p
+                                  </span>
+                                </div>
                               </Form.Field>
                             </Card.Content>
                           ))}

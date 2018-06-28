@@ -213,22 +213,33 @@ export class CreateChecklist extends Component {
                       </Button>
                     </Header>
                     <div className="formField">
-                      <Label>Points</Label>
+                      <Label>Points when checked</Label>
                       <Input
                         className="numberField"
                         type="number"
                         step="0.25"
-                        value={row.points}
-                        onChange={this.changeField(key, row.name, 'points')}
+                        value={row.checkedPoints}
+                        onChange={this.changeField(key, row.name, 'checkedPoints')}
                         onBlur={this.castPointsToNumber(key, row.name)}
                       />
                     </div>
                     <div className="formField">
-                      <Label>Text when checked</Label>
+                      <Label>Text</Label>
                       <Input className="textField" type="text" value={row.textWhenOn} onChange={this.changeField(key, row.name, 'textWhenOn')} />
                     </div>
                     <div className="formField">
-                      <Label>Text when unchecked</Label>
+                      <Label>Points when unchecked</Label>
+                      <Input
+                        className="numberField"
+                        type="number"
+                        step="0.25"
+                        value={row.uncheckedPoints}
+                        onChange={this.changeField(key, row.name, 'uncheckedPoints')}
+                        onBlur={this.castPointsToNumber(key, row.name)}
+                      />
+                    </div>
+                    <div className="formField">
+                      <Label>Text</Label>
                       <Input className="textField" type="text" value={row.textWhenOff} onChange={this.changeField(key, row.name, 'textWhenOff')} />
                     </div>
                   </Card.Content>
