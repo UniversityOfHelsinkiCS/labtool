@@ -101,6 +101,12 @@ export class ModifyCourseInstanceReview extends React.Component {
     }
   }
 
+  clearAllCheckboxes = () => {
+    return () => {
+      this.props.initAllCheckboxes({ data: [], ids: [] })
+    }
+  }
+
   createDropdown = () => {
     return (e, data) => {
       this.checkStates()
@@ -366,6 +372,9 @@ export class ModifyCourseInstanceReview extends React.Component {
                 <Table.HeaderCell>
                   <Button compact onClick={this.selectAllCheckboxes()}>
                     ALL
+                  </Button>
+                  <Button compact onClick={this.clearAllCheckboxes()}>
+                    NONE
                   </Button>
                 </Table.HeaderCell>
                 <Table.HeaderCell />
