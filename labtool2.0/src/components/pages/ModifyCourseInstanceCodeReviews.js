@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { getOneCI } from '../../services/courseInstance'
 import { coursePageInformation } from '../../services/courseInstance'
-import { bulkinsertCodeReviews } from '../../services/codeReview'
+import { bulkinsertCodeReviews, removeOneCodeReview } from '../../services/codeReview'
 import {
   filterStatesByTags,
   filterByReview,
@@ -18,11 +18,14 @@ import {
 } from '../../reducers/codeReviewReducer'
 import { filterByTag } from '../../reducers/coursePageLogicReducer'
 import { clearNotifications, showNotification } from '../../reducers/notificationReducer'
-import { Button, Table, Checkbox, Loader, Dropdown, Label } from 'semantic-ui-react'
+import { Button, Table, Checkbox, Loader, Dropdown, Label, Popup, Modal, Icon } from 'semantic-ui-react'
 import Notification from '../../components/pages/Notification'
 import { resetLoading } from '../../reducers/loadingReducer'
 
 export class ModifyCourseInstanceReview extends React.Component {
+  state = {
+    open: {}
+  }
   componentWillMount() {
     this.props.resetLoading()
   }
@@ -43,15 +46,17 @@ export class ModifyCourseInstanceReview extends React.Component {
   handleSubmit = reviewNumber => async e => {
     try {
       e.preventDefault()
+      let createTrue = false
       // reviewNumber === 'create' ? this.props.toggleCreate() : undefined
       const codeReviews = this.props.codeReviewLogic.codeReviewStates[reviewNumber]
       const courseId = this.props.selectedInstance.id
-      reviewNumber === 'create' ? (reviewNumber = this.props.selectedInstance.amountOfCodeReviews + 1) : reviewNumber
+      reviewNumber === 'create' ? ((reviewNumber = this.props.selectedInstance.amountOfCodeReviews + 1), (createTrue = true)) : reviewNumber
 
       const data = {
         codeReviews,
         reviewNumber,
-        courseId
+        courseId,
+        createTrue
       }
 
       await this.props.bulkinsertCodeReviews(data)
@@ -163,6 +168,29 @@ export class ModifyCourseInstanceReview extends React.Component {
     }
     let reviewee = this.props.dropdownUsers.find(dropDownStudent => dropDownStudent.value === reviewInstance.toReview)
     return reviewee.text
+  }
+
+  removeOne = id => {
+    return () => {
+      try {
+        const user = this.props.courseData.data.find(u => u.id === id)
+        const cr = user.codeReviews.find(cr => cr.reviewNumber === this.props.codeReviewLogic.selectedDropdown)
+        if (cr.points) {
+          this.props.showNotification({ message: `Can't delete a graded code review!`, error: true })
+          this.toggleModal(id)
+          return
+        }
+        this.props.removeOneCodeReview({ reviewer: cr.studentInstanceId, codeReviewRound: cr.reviewNumber })
+        this.toggleModal(id)
+      } catch (e) {
+        console.log(e)
+      }
+    }
+  }
+
+  toggleModal = id => {
+    let s = this.state.open
+    !s[id] ? ((s[id] = true), this.setState({ open: s })) : ((s[id] = !s[id]), this.setState({ open: s }))
   }
 
   render() {
@@ -279,12 +307,64 @@ export class ModifyCourseInstanceReview extends React.Component {
                         <Table.Cell>
                           {this.props.codeReviewLogic.selectedDropdown ? (
                             <div>
-                              <p>Current review: {this.getCurrentReviewer(this.props.codeReviewLogic.selectedDropdown, data.id)}</p>
+                              <p>
+                                Current review: {this.getCurrentReviewer(this.props.codeReviewLogic.selectedDropdown, data.id)}
+                                {data.codeReviews.find(cr => cr.reviewNumber === this.props.codeReviewLogic.selectedDropdown) ? (
+                                  !data.codeReviews.find(cr => cr.reviewNumber === this.props.codeReviewLogic.selectedDropdown).points ? (
+                                    <Modal
+                                      size="tiny"
+                                      open={this.state.open[data.id]}
+                                      onClose={() => this.toggleModal(data.id)}
+                                      trigger={
+                                        <Popup
+                                          trigger={<Icon id="tag" onClick={() => this.toggleModal(data.id)} name="window close" size="large" color="red" style={{ float: 'right' }} />}
+                                          content="Remove code review"
+                                        />
+                                      }
+                                    >
+                                      <Modal.Content image>
+                                        <Modal.Description>
+                                          <p>Do you wish to remove the following code review:</p>
+                                          <p>
+                                            {data.User.firsts} {data.User.lastname} reviewing {this.getCurrentReviewer(this.props.codeReviewLogic.selectedDropdown, data.id)}
+                                          </p>
+                                        </Modal.Description>
+                                      </Modal.Content>
+                                      <Modal.Actions>
+                                        <Button negative icon="close" labelPosition="right" color="red" content="No" onClick={() => this.toggleModal(data.id)} />
+                                        <Button positive icon="checkmark" labelPosition="right" content="Yes" onClick={this.removeOne(data.id)} />
+                                      </Modal.Actions>
+                                    </Modal>
+                                  ) : (
+                                    <Modal
+                                      size="tiny"
+                                      open={this.state.open[data.id]}
+                                      onClose={() => this.toggleModal(data.id)}
+                                      trigger={
+                                        <Popup
+                                          trigger={<Icon id="tag" onClick={() => this.toggleModal(data.id)} name="window close" size="large" color="red" style={{ float: 'right' }} />}
+                                          content="Remove code review"
+                                        />
+                                      }
+                                    >
+                                      <Modal.Content image>
+                                        <Modal.Description>
+                                          <p>Can not remove a code review that is graded.</p>
+                                          <p> Grade: {data.codeReviews.find(cr => cr.reviewNumber === this.props.codeReviewLogic.selectedDropdown).points} points</p>
+                                        </Modal.Description>
+                                      </Modal.Content>
+                                      <Modal.Actions>
+                                        <Button positive icon="checkmark" labelPosition="right" color="green" content="Ok" onClick={() => this.toggleModal(data.id)} />
+                                      </Modal.Actions>
+                                    </Modal>
+                                  )
+                                ) : null}
+                              </p>
                               <select className="toReviewDropdown" onChange={this.addCodeReview(this.props.codeReviewLogic.selectedDropdown, data.id)}>
                                 {this.props.dropdownUsers.map(
                                   d =>
                                     d.value !== data.id ? (
-                                      this.props.codeReviewLogic.currentSelections[this.props.codeReviewLogic.selectedDropdown][data.id] === d.value ? (
+                                      this.props.codeReviewLogic.currentSelections[this.props.codeReviewLogic.selectedDropdown][data.id] == d.value ? (
                                         <option selected="selected" key={d.value} value={d.value}>
                                           {d.text}
                                         </option>
@@ -421,7 +501,8 @@ const mapDispatchToProps = {
   createStates,
   filterStatesByTags,
   filterByReview,
-  showNotification
+  showNotification,
+  removeOneCodeReview
 }
 
 export default connect(
