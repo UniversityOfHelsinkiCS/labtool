@@ -1,0 +1,389 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<CreateChecklist /> component should render correctly 1`] = `
+<div
+  className="CreateChecklist"
+>
+  <Header>
+    Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit
+  </Header>
+  <div
+    className="editForm"
+  >
+    <div
+      className="topOptions"
+    >
+      <Dropdown
+        additionLabel="Add "
+        additionPosition="top"
+        closeOnBlur={true}
+        deburr={false}
+        icon="dropdown"
+        minCharacters={1}
+        noResultsMessage="No results found."
+        onChange={[Function]}
+        openOnFocus={true}
+        options={Array []}
+        placeholder="Select Checklist"
+        renderLabel={[Function]}
+        searchInput="text"
+        selectOnBlur={true}
+        selectOnNavigation={true}
+        selection={true}
+        value={6}
+        wrapSelection={true}
+      />
+      <div
+        className="copyForm"
+      >
+        <Button
+          as="button"
+          disabled={true}
+          onClick={[Function]}
+          role="button"
+          type="button"
+        >
+          Copy
+        </Button>
+        <Dropdown
+          additionLabel="Add "
+          additionPosition="top"
+          className="courseDropdown"
+          closeOnBlur={true}
+          deburr={false}
+          icon="dropdown"
+          minCharacters={1}
+          noResultsMessage="No results found."
+          onChange={[Function]}
+          openOnFocus={true}
+          options={
+            Array [
+              Object {
+                "text": "Ohjelmistotekniikan menetelmät (11.03.2018)",
+                "value": 10012,
+              },
+            ]
+          }
+          placeholder="Copy checklist from another course"
+          renderLabel={[Function]}
+          searchInput="text"
+          selectOnBlur={true}
+          selectOnNavigation={true}
+          selection={true}
+          wrapSelection={true}
+        />
+      </div>
+    </div>
+    <div>
+      <div>
+        <Card
+          color="red"
+          fluid={true}
+          key="Koodi"
+        >
+          <CardContent>
+            <Header>
+              Koodi
+               
+              <Button
+                as="button"
+                className="deleteButton"
+                color="red"
+                onClick={[Function]}
+                role="button"
+                size="tiny"
+                type="button"
+              >
+                <div
+                  className="deleteButtonText"
+                >
+                  Delete topic
+                </div>
+              </Button>
+            </Header>
+          </CardContent>
+          <CardContent
+            key="Koodin laatu"
+          >
+            <Header>
+              Koodin laatu
+               
+              <Button
+                as="button"
+                className="deleteButton"
+                color="red"
+                onClick={[Function]}
+                role="button"
+                size="tiny"
+                type="button"
+              >
+                <div
+                  className="deleteButtonText"
+                >
+                  Delete checkbox
+                </div>
+              </Button>
+            </Header>
+            <div
+              className="formField"
+            >
+              <Label>
+                Points when checked
+              </Label>
+              <Input
+                className="numberField"
+                onBlur={[Function]}
+                onChange={[Function]}
+                step="0.01"
+                type="number"
+                value={2}
+              />
+            </div>
+            <div
+              className="formField"
+            >
+              <Label>
+                Text
+              </Label>
+              <Input
+                className="textField"
+                onChange={[Function]}
+                type="text"
+                value="Koodin laatu kiitettävää"
+              />
+            </div>
+            <div
+              className="formField"
+            >
+              <Label>
+                Points when unchecked
+              </Label>
+              <Input
+                className="numberField"
+                onBlur={[Function]}
+                onChange={[Function]}
+                step="0.25"
+                type="number"
+                value={0}
+              />
+            </div>
+            <div
+              className="formField"
+            >
+              <Label>
+                Text
+              </Label>
+              <Input
+                className="textField"
+                onChange={[Function]}
+                type="text"
+                value="Koodin laadussa parantamisen varaa"
+              />
+            </div>
+          </CardContent>
+          <form
+            className="addForm"
+            onSubmit={[Function]}
+          >
+            <Popup
+              content="Add new checkbox"
+              keepInViewPort={true}
+              on="hover"
+              position="top left"
+              trigger={
+                <Button
+                  as="button"
+                  circular={true}
+                  icon={
+                    Object {
+                      "name": "add",
+                    }
+                  }
+                  role="button"
+                  type="submit"
+                />
+              }
+            />
+            <div />
+          </form>
+        </Card>
+        <Card
+          color="red"
+          fluid={true}
+          key="Repo"
+        >
+          <CardContent>
+            <Header>
+              Repo
+               
+              <Button
+                as="button"
+                className="deleteButton"
+                color="red"
+                onClick={[Function]}
+                role="button"
+                size="tiny"
+                type="button"
+              >
+                <div
+                  className="deleteButtonText"
+                >
+                  Delete topic
+                </div>
+              </Button>
+            </Header>
+          </CardContent>
+          <CardContent
+            key="Readme kunnossa"
+          >
+            <Header>
+              Readme kunnossa
+               
+              <Button
+                as="button"
+                className="deleteButton"
+                color="red"
+                onClick={[Function]}
+                role="button"
+                size="tiny"
+                type="button"
+              >
+                <div
+                  className="deleteButtonText"
+                >
+                  Delete checkbox
+                </div>
+              </Button>
+            </Header>
+            <div
+              className="formField"
+            >
+              <Label>
+                Points when checked
+              </Label>
+              <Input
+                className="numberField"
+                onBlur={[Function]}
+                onChange={[Function]}
+                step="0.01"
+                type="number"
+                value={0}
+              />
+            </div>
+            <div
+              className="formField"
+            >
+              <Label>
+                Text
+              </Label>
+              <Input
+                className="textField"
+                onChange={[Function]}
+                type="text"
+                value=""
+              />
+            </div>
+            <div
+              className="formField"
+            >
+              <Label>
+                Points when unchecked
+              </Label>
+              <Input
+                className="numberField"
+                onBlur={[Function]}
+                onChange={[Function]}
+                step="0.25"
+                type="number"
+                value={-1}
+              />
+            </div>
+            <div
+              className="formField"
+            >
+              <Label>
+                Text
+              </Label>
+              <Input
+                className="textField"
+                onChange={[Function]}
+                type="text"
+                value="Readmessa feelua"
+              />
+            </div>
+          </CardContent>
+          <form
+            className="addForm"
+            onSubmit={[Function]}
+          >
+            <Popup
+              content="Add new checkbox"
+              keepInViewPort={true}
+              on="hover"
+              position="top left"
+              trigger={
+                <Button
+                  as="button"
+                  circular={true}
+                  icon={
+                    Object {
+                      "name": "add",
+                    }
+                  }
+                  role="button"
+                  type="submit"
+                />
+              }
+            />
+            <div />
+          </form>
+        </Card>
+        <form
+          className="addForm"
+          onSubmit={[Function]}
+        >
+          <Popup
+            content="Add new topic"
+            keepInViewPort={true}
+            on="hover"
+            position="top left"
+            trigger={
+              <Button
+                as="button"
+                circular={true}
+                icon={
+                  Object {
+                    "name": "add",
+                    "size": "large",
+                  }
+                }
+                role="button"
+                type="submit"
+              />
+            }
+          />
+          <div />
+        </form>
+      </div>
+      <form
+        onSubmit={[Function]}
+      >
+        <Button
+          as="button"
+          className="saveButton"
+          color="green"
+          role="button"
+          size="large"
+          type="submit"
+        >
+          <div
+            className="saveButtonText"
+          >
+            Save
+          </div>
+        </Button>
+      </form>
+    </div>
+  </div>
+</div>
+`;

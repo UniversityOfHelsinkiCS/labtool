@@ -5,6 +5,7 @@ import { coursePageInformation } from '../../services/courseInstance'
 import { bulkinsertCodeReviews, removeOneCodeReview } from '../../services/codeReview'
 import {
   filterStatesByTags,
+  filterByReview,
   initOneReview,
   initOrRemoveRandom,
   initCheckbox,
@@ -86,18 +87,39 @@ export class ModifyCourseInstanceReview extends React.Component {
   selectAllCheckboxes = () => {
     return () => {
       let studentTags = []
-      let allCb = {}
+      let allCheckboxes = {}
       let selectedTags = []
+      let unassignedStudentsAsIds = []
+
+      if (this.props.codeReviewLogic.filterActive) {
+        unassignedStudentsAsIds = this.props.courseData.data.filter(student => this.isAssignedToReview(student, this.props.codeReviewLogic.selectedDropdown)).map(student => student.id)
+      }
+
       this.props.coursePageLogic.filterByTag.forEach(st => selectedTags.push(st.name))
-      selectedTags.length > 0
-        ? this.props.courseData.data.forEach(student => {
-            studentTags = student.Tags.filter(st => selectedTags.includes(st.name))
-            studentTags.length > 0 ? (allCb[student.id] = true) : null
-            studentTags = []
-          })
-        : this.props.courseData.data.forEach(st => (allCb[st.id] = true))
-      let randoms = Object.keys(allCb).map(student => parseInt(student, 10))
-      this.props.initAllCheckboxes({ data: allCb, ids: randoms })
+
+      if (selectedTags.length) {
+        this.props.courseData.data.forEach(student => {
+          studentTags = student.Tags.filter(st => selectedTags.includes(st.name))
+          if (unassignedStudentsAsIds.length) {
+            studentTags = studentTags.filter(st => unassignedStudentsAsIds.includes(st.StudentTag.studentInstanceId))
+          }
+          studentTags.length ? (allCheckboxes[student.id] = true) : null
+          studentTags = []
+        })
+      } else if (unassignedStudentsAsIds.length) {
+        unassignedStudentsAsIds.forEach(studentId => (allCheckboxes[studentId] = true))
+      } else {
+        this.props.courseData.data.forEach(student => (allCheckboxes[student.id] = true))
+      }
+
+      let randoms = Object.keys(allCheckboxes).map(student => parseInt(student, 10))
+      this.props.initAllCheckboxes({ data: allCheckboxes, ids: randoms })
+    }
+  }
+
+  clearAllCheckboxes = () => {
+    return () => {
+      this.props.initAllCheckboxes({ data: [], ids: [] })
     }
   }
 
@@ -105,12 +127,30 @@ export class ModifyCourseInstanceReview extends React.Component {
     return (e, data) => {
       this.checkStates()
       this.props.selectDropdown(data.value)
+      if (this.props.filterActive) {
+        this.props.filterByReview(this.props.selectDropdown(data.value))
+      }
     }
   }
 
   toggleCreate = () => {
     this.checkStates()
     this.props.toggleCreate()
+  }
+
+  filterUnassigned = review => {
+    return async () => {
+      if (this.props.codeReviewLogic.filterByReview === review || this.props.codeReviewLogic.filterActive) {
+        await this.props.filterByReview(0)
+      } else {
+        await this.props.filterByReview(review)
+      }
+    }
+  }
+
+  isAssignedToReview = (studentData, reviewWeek) => {
+    const studentReviewWeeks = studentData.codeReviews.map(review => review.reviewNumber).filter(review => review === reviewWeek)
+    return Array.isArray(studentReviewWeeks) && !studentReviewWeeks.length
   }
 
   addFilterTag = tag => {
@@ -135,7 +175,7 @@ export class ModifyCourseInstanceReview extends React.Component {
     return () => {
       this.props.codeReviewLogic.randomizedCodeReview.length > 1
         ? this.props.randomAssign({ reviewNumber: reviewNumber })
-        : this.props.showNotification({ message: 'Select atleast two persons for randomize!', error: true })
+        : this.props.showNotification({ message: 'Select at least two persons to randomize!', error: true })
     }
   }
   getCurrentReviewer = (codeReviewRound, id) => {
@@ -179,7 +219,25 @@ export class ModifyCourseInstanceReview extends React.Component {
       <div className="ModifyCourseInstanceCodeReviews" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
         <div className="ui grid">
           <div className="sixteen wide column">
-            <h2>{this.props.selectedInstance.name}</h2>
+            <h2>{this.props.selectedInstance.name}</h2> <br />
+          </div>
+          <div>
+            {this.props.codeReviewLogic.selectedDropdown === null ? (
+              <Button
+                disabled
+                toggle
+                compact
+                className={`tiny ui button`}
+                active={this.props.codeReviewLogic.filterActive}
+                onClick={this.filterUnassigned(this.props.codeReviewLogic.selectedDropdown)}
+              >
+                Show unassigned students
+              </Button>
+            ) : (
+              <Button toggle compact className={`tiny ui button`} active={this.props.codeReviewLogic.filterActive} onClick={this.filterUnassigned(this.props.codeReviewLogic.selectedDropdown)}>
+                Show unassigned students
+              </Button>
+            )}
           </div>
           {this.props.coursePageLogic.filterByTag.length > 0 ? (
             <div>
@@ -200,7 +258,15 @@ export class ModifyCourseInstanceReview extends React.Component {
           <Table celled>
             <Table.Header>
               <Table.Row>
-                <Table.HeaderCell />
+                <Table.HeaderCell>
+                  {' '}
+                  <Button compact size="mini" onClick={this.selectAllCheckboxes()}>
+                    All
+                  </Button>
+                  <Button compact size="mini" onClick={this.clearAllCheckboxes()}>
+                    None
+                  </Button>
+                </Table.HeaderCell>
                 <Table.HeaderCell>Reviewer</Table.HeaderCell>
                 <Table.HeaderCell>Project Info</Table.HeaderCell>
                 <Table.HeaderCell key={1}>
@@ -234,6 +300,9 @@ export class ModifyCourseInstanceReview extends React.Component {
                 ? this.props.courseData.data
                     .filter(data => {
                       return this.props.coursePageLogic.filterByTag.length === 0 || this.hasFilteringTags(data.Tags, this.props.coursePageLogic.filterByTag)
+                    })
+                    .filter(data => {
+                      return this.props.codeReviewLogic.filterByReview === 0 || this.isAssignedToReview(data, this.props.codeReviewLogic.selectedDropdown)
                     })
                     .map(data => (
                       <Table.Row key={data.id}>
@@ -364,8 +433,11 @@ export class ModifyCourseInstanceReview extends React.Component {
             <Table.Footer>
               <Table.Row>
                 <Table.HeaderCell>
-                  <Button compact onClick={this.selectAllCheckboxes()}>
-                    ALL
+                  <Button compact size="mini" onClick={this.selectAllCheckboxes()}>
+                    All
+                  </Button>
+                  <Button compact size="mini" onClick={this.clearAllCheckboxes()}>
+                    None
                   </Button>
                 </Table.HeaderCell>
                 <Table.HeaderCell />
@@ -420,7 +492,7 @@ const codeReviewHelper = data => {
   while (i <= data) {
     codeReviews.push({
       value: i,
-      text: `Codereview ${i}`
+      text: `Code review ${i}`
     })
     i++
   }
@@ -457,6 +529,7 @@ const mapDispatchToProps = {
   toggleCreate,
   createStates,
   filterStatesByTags,
+  filterByReview,
   showNotification,
   removeOneCodeReview
 }
