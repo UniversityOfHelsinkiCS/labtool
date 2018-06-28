@@ -34,8 +34,7 @@ module.exports = {
         defaultValue: 1
       },
       currentCodeReview: {
-        type: Sequelize.ARRAY(Sequelize.INTEGER),
-        defaultValue: [1, 2]
+        type: Sequelize.ARRAY(Sequelize.INTEGER)
       },
       amountOfCodeReviews: {
         type: Sequelize.INTEGER,
