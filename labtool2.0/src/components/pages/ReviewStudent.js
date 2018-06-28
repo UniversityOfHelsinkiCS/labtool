@@ -37,7 +37,8 @@ export class ReviewStudent extends Component {
         points: e.target.points.value,
         studentInstanceId: this.props.studentInstance,
         feedback: e.target.comment.value,
-        weekNumber: this.props.weekNumber
+        weekNumber: this.props.weekNumber,
+        checks: this.props.weekReview.checks
       }
       if (e.target.points.value < 0 || e.target.points.value > this.props.selectedInstance.weekMaxPoints) {
         store.dispatch({ type: 'WEEKS_CREATE_ONEFAILURE' })
@@ -52,8 +53,8 @@ export class ReviewStudent extends Component {
     }
   }
 
-  toggleCheckbox = name => async e => {
-    this.props.toggleCheck(name)
+  toggleCheckbox = (name, studentId, weekNbr) => async e => {
+    this.props.toggleCheck(name, studentId, weekNbr)
   }
 
   copyChecklistOutput = async e => {
@@ -72,11 +73,12 @@ export class ReviewStudent extends Component {
     if (this.props.loading.redirect) {
       return <Redirect to={`/labtool/courses/${this.props.selectedInstance.ohid}`} />
     }
-    if (Array.isArray(this.props.courseData.data)) {
+    if (Array.isArray(this.props.weekReview.data)) {
       //this.props.ownProps.studentInstance is a string, therefore casting to number.
-      const studentData = this.props.courseData.data.filter(dataArray => dataArray.id === Number(this.props.ownProps.studentInstance))
+      const studentData = this.props.weekReview.data.filter(dataArray => dataArray.id === Number(this.props.ownProps.studentInstance))
       //this.props.weekNumber is a string, therefore casting to number.
       const weekData = studentData[0].weeks.filter(theWeek => theWeek.weekNumber === Number(this.props.ownProps.weekNumber))
+      const checks = weekData[0] ? weekData[0].checks : {}
       const weekPoints = studentData[0].weeks
         .filter(week => week.weekNumber < this.props.weekNumber)
         .map(week => week.points)
@@ -92,7 +94,7 @@ export class ReviewStudent extends Component {
       if (checkList) {
         Object.keys(checkList.list).forEach(cl => {
           checkList.list[cl].forEach(row => {
-            const addition = this.props.weekReview.checks[row.name] ? row.textWhenOn : row.textWhenOff
+            const addition = checks[row.name] ? row.textWhenOn : row.textWhenOff
             if (addition) checklistOutput += addition + '\n\n'
             if (this.props.weekReview.checks[row.name]) {
               checklistPoints += row.checkedPoints
@@ -159,7 +161,7 @@ export class ReviewStudent extends Component {
                   </Form.Field>
                 </Form>
               </Grid.Column>
-              {checkList ? (
+              {checkList && checks !== undefined ? (
                 <Grid.Column>
                   <h2>Checklist</h2>
                   {checkList ? (
@@ -170,7 +172,11 @@ export class ReviewStudent extends Component {
                           {checkList.list[cl].map(row => (
                             <Card.Content className="checklistCardRow" key={row.name}>
                               <Form.Field>
-                                <Input type="checkbox" onChange={this.toggleCheckbox(row.name)} />
+                                <Input 
+                                type="checkbox" 
+                                defaultChecked={checks[row.name] !== undefined ? checks[row.name] : false}
+                                onChange={this.toggleCheckbox(row.name, this.props.ownProps.studentInstance, this.props.ownProps.weekNumber)}
+                                />
                                 <span>{row.name}</span>
                                 <div style={{ marginLeft: '20px', display: 'inline-block', maxWidth: '0px', textAlign: 'left' }}>
                                   <span style={{ display: 'inline-block', minWidth: '100px' }}>

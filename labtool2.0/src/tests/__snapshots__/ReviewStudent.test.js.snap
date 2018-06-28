@@ -149,6 +149,7 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
             >
               <FormField>
                 <Input
+                  defaultChecked={false}
                   onChange={[Function]}
                   type="checkbox"
                 />
@@ -212,6 +213,7 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
             >
               <FormField>
                 <Input
+                  defaultChecked={false}
                   onChange={[Function]}
                   type="checkbox"
                 />
@@ -265,6 +267,7 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
             >
               <FormField>
                 <Input
+                  defaultChecked={false}
                   onChange={[Function]}
                   type="checkbox"
                 />
@@ -328,6 +331,7 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
             >
               <FormField>
                 <Input
+                  defaultChecked={false}
                   onChange={[Function]}
                   type="checkbox"
                 />
@@ -381,6 +385,7 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
             >
               <FormField>
                 <Input
+                  defaultChecked={false}
                   onChange={[Function]}
                   type="checkbox"
                 />
