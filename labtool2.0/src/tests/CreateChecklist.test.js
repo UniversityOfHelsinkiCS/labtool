@@ -61,9 +61,19 @@ describe('<CreateChecklist /> component', () => {
       Koodi: [
         {
           name: 'Koodin laatu',
-          points: 2,
+          checkedPoints: 2,
+          uncheckedPoints: 0,
           textWhenOn: 'Koodin laatu kiitettävää',
           textWhenOff: 'Koodin laadussa parantamisen varaa'
+        }
+      ],
+      Repo: [
+        {
+          name: 'Readme kunnossa',
+          checkedPoints: 0,
+          uncheckedPoints: -1,
+          textWhenOn: '',
+          textWhenOff: 'Readmessa feelua'
         }
       ]
     }
@@ -142,13 +152,13 @@ describe('<CreateChecklist /> component', () => {
       const pointInputs = wrapper.find('.numberField')
       Object.keys(checklist.data).forEach(key => {
         checklist.data[key].forEach(row => {
-          let pointsMatch = undefined
+          let checkedPointsMatch = undefined
           pointInputs.forEach(ti => {
-            if (Number(ti.prop('value')) === row.points) {
-              pointsMatch = ti
+            if (Number(ti.prop('value')) === row.checkedPoints) {
+              checkedPointsMatch = ti
             }
           })
-          expect(pointsMatch).not.toBe(undefined)
+          expect(checkedPointsMatch).not.toBe(undefined)
         })
       })
     })

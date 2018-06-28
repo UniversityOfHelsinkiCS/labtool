@@ -25,15 +25,21 @@ module.exports = {
               res.status(400).send('All objects in array must have field "name" with string value.')
               return
             }
-            if (typeof row.points !== 'number') {
-              res.status(400).send('All objects in array must have field "points" with number value.')
+            if (typeof row.checkedPoints !== 'number') {
+              res.status(400).send('All objects in array must have field "points when checked" with number value.')
+              return
+            }
+            if (typeof row.uncheckedPoints !== 'number') {
+              res.status(400).send('All objects in array must have field "points when unchecked" with number value.')
               return
             }
             Object.keys(row).forEach(key => {
               switch (key) {
                 case 'name':
                   break
-                case 'points':
+                case 'checkedPoints':
+                  break
+                case 'uncheckedPoints':
                   break
                 case 'textWhenOn':
                   if (typeof row[key] !== 'string') {
