@@ -48,8 +48,12 @@ const weekNotification = (state, weekId) => {
   return state
 }
 
-const courseInstancereducer = (store = [], action) => {
+const INITIAL_STATE = {}
+
+const courseInstancereducer = (store = INITIAL_STATE, action) => {
   switch (action.type) {
+    case 'LOGOUT_SUCCESS':
+      return INITIAL_STATE
     case 'CP_INFO_SUCCESS': {
       if (action.response.role === 'teacher') {
         return { ...action.response, data: sortStudentsByLastname(action.response.data) }
@@ -58,7 +62,6 @@ const courseInstancereducer = (store = [], action) => {
       }
     }
     case 'ASSOCIATE_TEACHER_AND_STUDENT_SUCCESS': {
-      console.log(store)
       const id = action.response.id
       const studentToChange = store.data.find(s => s.id === id)
       const changedStudent = { ...studentToChange, teacherInstanceId: action.response.teacherInstanceId }

@@ -14,6 +14,8 @@ const weekReviewReducer = (state = INITIAL_STATE, action) => {
     case 'CP_INFO_SUCCESS': {
       return { ...state, data: action.response.data }
     }
+    case 'LOGOUT_SUCCESS':
+      return INITIAL_STATE
     case 'WEEK_REVIEW_TOGGLE': {
       const thisWeek = state.data.filter(student => student.id === Number(action.studentId, 10))[0].weeks.filter(week => week.weekNumber === Number(action.weekNbr, 10))[0]
       return {

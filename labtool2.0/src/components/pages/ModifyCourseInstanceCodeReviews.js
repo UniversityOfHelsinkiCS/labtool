@@ -46,7 +46,7 @@ export class ModifyCourseInstanceReview extends React.Component {
     try {
       e.preventDefault()
       let createTrue = false
-      // reviewNumber === 'create' ? this.props.toggleCreate() : undefined
+      reviewNumber === 'create' ? this.props.toggleCreate() : undefined
       const codeReviews = this.props.codeReviewLogic.codeReviewStates[reviewNumber]
       const courseId = this.props.selectedInstance.id
       reviewNumber === 'create' ? ((reviewNumber = this.props.selectedInstance.amountOfCodeReviews + 1), (createTrue = true)) : reviewNumber

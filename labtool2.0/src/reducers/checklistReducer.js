@@ -11,6 +11,8 @@ const INITIAL_STATE = {
 
 const checklistReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
+    case 'LOGOUT_SUCCESS':
+      return {}
     case 'CHECKLIST_GET_ONE_SUCCESS':
       return { data: action.response.list }
     case 'CHECKLIST_GET_ONE_FAILURE':
