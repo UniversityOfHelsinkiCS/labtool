@@ -173,6 +173,76 @@ describe('<CreateChecklist /> component', () => {
         expect(options.length).toEqual(courseInstance.filter(course => course.weekAmount >= weekChoice && course !== courseInstance[0]).length)
       })
     })
+
+    describe('maximum points', () => {
+      it('renders a maximum points card', () => {
+        expect(wrapper.find('.maxPointsCard').exists()).toEqual(true)
+      })
+
+      it('renders correct value for max points', () => {
+        let maxPoints = 0
+        Object.keys(checklist.data).forEach(key => {
+          checklist.data[key].forEach(row => {
+            if (row.checkedPoints < row.uncheckedPoints) {
+              maxPoints += row.uncheckedPoints
+            } else {
+              maxPoints += row.checkedPoints
+            }
+          })
+        })
+        expect(wrapper.find('.maxPointsNumber').text()).toEqual(String(maxPoints))
+      })
+
+      it('renders the correct icon for max points', () => {
+        let maxPoints = 0
+        Object.keys(checklist.data).forEach(key => {
+          checklist.data[key].forEach(row => {
+            if (row.checkedPoints < row.uncheckedPoints) {
+              maxPoints += row.uncheckedPoints
+            } else {
+              maxPoints += row.checkedPoints
+            }
+          })
+        })
+        if (maxPoints === courseInstance[0].weekMaxPoints) {
+          expect(wrapper.find('.maxPointsIcon').prop('content')).toEqual('The total matches maximum weekly points for this course.')
+          wrapper.setProps({
+            selectedInstance: { ...courseInstance[0], weekMaxPoints: maxPoints + 1 }
+          })
+          expect(wrapper.find('.maxPointsIcon').prop('content')).toEqual('The total does not match maximum weekly points for this course.')
+        } else {
+          expect(wrapper.find('.maxPointsIcon').prop('content')).toEqual('The total does not match maximum weekly points for this course.')
+          wrapper.setProps({
+            selectedInstance: { ...courseInstance[0], weekMaxPoints: maxPoints }
+          })
+          expect(wrapper.find('.maxPointsIcon').prop('content')).toEqual('The total matches maximum weekly points for this course.')
+        }
+        wrapper.setState({
+          week: courseInstance[0].weekAmount + 1
+        })
+        expect(wrapper.find('.maxPointsIcon').exists()).toEqual(false)
+      })
+
+      it('renders the correct max points for individual topics', () => {
+        const maxPoints = []
+        Object.keys(checklist.data).forEach(key => {
+          checklist.data[key].forEach(row => {
+            let bestPoints = 0
+            if (row.checkedPoints < row.uncheckedPoints) {
+              bestPoints += row.uncheckedPoints
+            } else {
+              bestPoints += row.checkedPoints
+            }
+            maxPoints.push(String(bestPoints))
+          })
+        })
+        wrapper.find('.bestPointsNumber').forEach(bestPoints => {
+          const index = maxPoints.indexOf(bestPoints.text())
+          maxPoints.splice(index, 1)
+        })
+        expect(maxPoints).toEqual([])
+      })
+    })
   })
 
   // It turns out there's no way of testing form functionality in shallow rendering.

@@ -251,7 +251,7 @@ export class CreateChecklist extends Component {
                 {bestPoints < 0 ? (
                   <span>
                     {' '}
-                    <Popup trigger={<Icon className="bestpointsIcon" name="delete" color="red" size="large" />} content="This topic will always award negative points." />
+                    <Popup className="bestpointsIcon" trigger={<Icon name="delete" color="red" size="large" />} content="This topic will always award negative points." />
                   </span>
                 ) : (
                   <span />
@@ -367,19 +367,19 @@ export class CreateChecklist extends Component {
                   )}
                 </form>
               </div>
-              <Card className="totalMaxPointsCard">
+              <Card className="maxPointsCard">
                 <Card.Content>
                   <p>
-                    Total max points: <strong className="totalMaxPointsNumber">{maxPoints}</strong>
+                    Total max points: <strong className="maxPointsNumber">{maxPoints}</strong>
                     {this.state.week > this.props.selectedInstance.weekAmount ? (
                       <span />
                     ) : (
                       <span>
                         {' '}
                         {this.props.selectedInstance.weekMaxPoints === maxPoints ? (
-                          <Popup trigger={<Icon className="maxPointsIcon" name="check" size="large" color="green" />} content="The total matches maximum weekly points for this course." />
+                          <Popup className="maxPointsIcon" trigger={<Icon name="check" size="large" color="green" />} content="The total matches maximum weekly points for this course." />
                         ) : (
-                          <Popup trigger={<Icon className="maxPointsIcon" name="delete" size="large" color="red" />} content="The total does not match maximum weekly points for this course." />
+                          <Popup className="maxPointsIcon" trigger={<Icon name="delete" size="large" color="red" />} content="The total does not match maximum weekly points for this course." />
                         )}
                       </span>
                     )}
