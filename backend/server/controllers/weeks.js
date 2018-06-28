@@ -37,9 +37,23 @@ module.exports = {
         console.log('\n\n\nweeks, week: ', week)
         if (week) {
           console.log('\n\nupdating a week\n\n')
+          let updatedChecks = {}
+          if (req.body.checks) {
+            Object.keys(week.checks).map(key => {
+              req.body.checks[key] !== undefined ? (updatedChecks[key] = req.body.checks[key]) : (updatedChecks[key] = week.checks[key])
+            })
+            Object.keys(req.body.checks).map(key => {
+              updatedChecks[key] = req.body.checks[key]
+            })
+          } else {
+            updatedChecks = week.checks
+          }
+          console.log('\n\nreq.body.checks: ', req.body.checks, '\n\n')
+          console.log('\n\nupdatedChecks: ', updatedChecks, '\n\n')
           await week.update({
             points: req.body.points || week.points,
-            feedback: req.body.feedback || week.feedback
+            feedback: req.body.feedback || week.feedback,
+            checks: updatedChecks
           })
           res.status(200).send(week)
         } else {
@@ -49,7 +63,8 @@ module.exports = {
             studentInstanceId: req.body.studentInstanceId,
             feedback: req.body.feedback,
             weekNumber: req.body.weekNumber,
-            notified: false
+            notified: false,
+            checks: {}
           })
           res.status(200).send(week)
         }
