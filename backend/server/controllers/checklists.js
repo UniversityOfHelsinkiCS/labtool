@@ -97,7 +97,10 @@ module.exports = {
     // There is no validation, since checklists are not secret/sensitive.
     try {
       if (typeof req.body.week !== 'number' || typeof req.body.courseInstanceId !== 'number') {
-        res.status(400).send('Missing or malformed inputs.')
+        res.status(400).send({
+          message: 'Missing or malformed inputs.',
+          data: req.body
+        })
         return
       }
       const checklist = await Checklist.findOne({
@@ -112,7 +115,10 @@ module.exports = {
       if (checklist) {
         res.status(200).send(checklist)
       } else {
-        res.status(404).send('No matching checklist found.')
+        res.status(404).send({
+          message: 'No matching checklist found.',
+          data: req.body
+        })
       }
     } catch (e) {
       res.status(500).send(e)
