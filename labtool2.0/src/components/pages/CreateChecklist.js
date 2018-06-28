@@ -11,17 +11,26 @@ export class CreateChecklist extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      week: undefined, // tracks value of week dropdown
-      copyCourse: undefined, // tracks value of course dropdown
+      week: undefined, // tracks value of week dropdown.
+      copyCourse: undefined, // tracks value of course dropdown.
       topicName: '', // tracks value inputted into topic creation dialog box.
       rowName: '', // tracks value inputted into row creation dialog box.
-      openAdd: '' // which addForm is currently open. '' denotes no open addForms. Only one addForm can be open at one time.
+      openAdd: '', // which addForm is currently open. '' denotes no open addForms. Only one addForm can be open at one time.
+      courseDropdowns: [] // Dropdown options to show for copying checklist.
     }
   }
 
   componentWillMount() {
     this.props.resetChecklist()
     this.props.getAllCI()
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.week !== prevState.week) {
+      this.setState({
+        courseDropdowns: this.createCourseDropdowns()
+      })
+    }
   }
 
   // Make api call to save checklist to database.
@@ -213,7 +222,6 @@ export class CreateChecklist extends Component {
         text: `${course.name} (${course.europeanStart})`
       }
     })
-    console.log(options)
     return options
   }
 
@@ -228,7 +236,7 @@ export class CreateChecklist extends Component {
               <Button type="button" onClick={this.copyChecklist} disabled={!this.state.copyCourse}>
                 Copy
               </Button>
-              <Dropdown placeholder="Copy checklist from another course" selection value={this.state.copyCourse} onChange={this.changeCopyCourse} options={this.createCourseDropdowns()} />
+              <Dropdown placeholder="Copy checklist from another course" selection value={this.state.copyCourse} onChange={this.changeCopyCourse} options={this.state.courseDropdowns} />
             </div>
           </div>
           {this.state.week !== undefined ? (
