@@ -238,7 +238,14 @@ export class CreateChecklist extends Component {
               <Button type="button" onClick={this.copyChecklist} disabled={!this.state.copyCourse}>
                 Copy
               </Button>
-              <Dropdown placeholder="Copy checklist from another course" selection value={this.state.copyCourse} onChange={this.changeCopyCourse} options={this.state.courseDropdowns} />
+              <Dropdown
+                className="courseDropdown"
+                placeholder="Copy checklist from another course"
+                selection
+                value={this.state.copyCourse}
+                onChange={this.changeCopyCourse}
+                options={this.state.courseDropdowns}
+              />
             </div>
           </div>
           {this.props.loading.loading ? (

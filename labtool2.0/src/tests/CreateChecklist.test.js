@@ -113,6 +113,10 @@ describe('<CreateChecklist /> component', () => {
     expect(wrapper.find('.CreateChecklist').exists()).toEqual(true)
   })
 
+  it('should render correctly', () => {
+    expect(wrapper).toMatchSnapshot()
+  })
+
   describe('Editing form', () => {
     it('autofills text areas', () => {
       const textInputs = wrapper.find('.textField')
