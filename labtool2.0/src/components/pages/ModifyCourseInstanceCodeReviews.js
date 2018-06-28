@@ -460,7 +460,7 @@ const codeReviewHelper = data => {
   while (i <= data) {
     codeReviews.push({
       value: i,
-      text: `Codereview ${i}`
+      text: `Code review ${i}`
     })
     i++
   }
