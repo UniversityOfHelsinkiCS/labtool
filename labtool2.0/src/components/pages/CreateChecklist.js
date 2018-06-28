@@ -54,7 +54,11 @@ export class CreateChecklist extends Component {
     const week = value
     let copyCourse
     if (this.state.copyCourse) {
-      copyCourse = this.props.courses.find(course => course.id === this.state.copyCourse).weekAmount >= week ? this.state.copyCourse : undefined
+      if (week > this.props.selectedInstance.weekAmount) {
+        copyCourse = this.props.courses.find(course => course.id === this.state.copyCourse).finalReview ? this.state.copyCourse : undefined
+      } else {
+        copyCourse = this.props.courses.find(course => course.id === this.state.copyCourse).weekAmount >= week ? this.state.copyCourse : undefined
+      }
     } else {
       copyCourse = undefined
     }
@@ -90,6 +94,7 @@ export class CreateChecklist extends Component {
   }
 
   copyChecklist = async e => {
+    if (!this.state.copyCourse) return
     const week = this.state.week > this.props.selectedInstance.weekAmount ? this.props.courses.find(course => course.id === this.state.copyCourse).weekAmount + 1 : this.state.week
     this.props.getOneChecklist({
       week,
@@ -220,7 +225,7 @@ export class CreateChecklist extends Component {
           <div className="topOptions">
             <Dropdown placeholder="Select Checklist" selection value={this.state.week} onChange={this.changeWeek} options={this.props.weekDropdowns} />
             <div className="copyForm">
-              <Button type="button" onClick={this.copyChecklist}>
+              <Button type="button" onClick={this.copyChecklist} disabled={!this.state.copyCourse}>
                 Copy
               </Button>
               <Dropdown placeholder="Copy checklist from another course" selection value={this.state.copyCourse} onChange={this.changeCopyCourse} options={this.createCourseDropdowns()} />
