@@ -5,35 +5,57 @@ import { shallow } from 'enzyme'
 describe('<CreateChecklist /> component', () => {
   let wrapper
 
-  const coursePage = {
-    id: 10011,
-    name: 'Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit',
-    start: '2018-03-11T21:00:00.000Z',
-    end: '2018-04-29T21:00:00.000Z',
-    active: true,
-    weekAmount: 7,
-    weekMaxPoints: 3,
-    currentWeek: 1,
-    ohid: 'TKT20010.2018.K.A.1',
-    teacherInstances: [
-      {
-        id: 10001,
-        admin: true,
-        userId: 10010,
-        courseInstanceId: 10011,
-        firsts: 'Pää',
-        lastname: 'Opettaja'
-      },
-      {
-        id: 10011,
-        admin: true,
-        userId: 10015,
-        courseInstanceId: 10011,
-        firsts: 'Ossi Ohjaaja',
-        lastname: 'Mutikainen'
-      }
-    ]
-  }
+  const courseInstance = [
+    {
+      id: 10011,
+      name: 'Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit',
+      start: '2018-03-11T21:00:00.000Z',
+      end: '2018-04-29T21:00:00.000Z',
+      active: true,
+      weekAmount: 7,
+      weekMaxPoints: 3,
+      currentWeek: 1,
+      ohid: 'TKT20010.2018.K.A.1',
+      createdAt: '2018-03-26T00:00:00.000Z',
+      updatedAt: '2018-03-26T00:00:00.000Z',
+      europeanStart: '11.03.2018',
+      europeanEnd: '29.04.2018',
+      shorterId: 'TKT20010'
+    },
+    {
+      id: 10012,
+      name: 'Ohjelmistotekniikan menetelmät',
+      start: '2018-03-11T21:00:00.000Z',
+      end: '2018-04-29T21:00:00.000Z',
+      active: true,
+      weekAmount: 7,
+      weekMaxPoints: 3,
+      currentWeek: 1,
+      ohid: 'TKT20002.2018.K.K.1',
+      createdAt: '2018-03-26T00:00:00.000Z',
+      updatedAt: '2018-03-26T00:00:00.000Z',
+      europeanStart: '11.03.2018',
+      europeanEnd: '29.04.2018',
+      shorterId: 'TKT20002'
+    },
+    {
+      id: 10013,
+      name: 'Aineopintojen harjoitustyö: Tietokantasovellus',
+      start: '2018-01-16T21:00:00.000Z',
+      end: '2018-03-10T21:00:00.000Z',
+      active: false,
+      weekAmount: 5,
+      weekMaxPoints: 3,
+      currentWeek: 1,
+      ohid: 'TKT20011.2018.K.A.1',
+      createdAt: '2018-03-26T00:00:00.000Z',
+      updatedAt: '2018-03-26T00:00:00.000Z',
+      europeanStart: '16.01.2018',
+      europeanEnd: '10.03.2018',
+      shorterId: 'TKT20011'
+    }
+  ]
+
   const checklist = {
     data: {
       Koodi: [
@@ -47,15 +69,29 @@ describe('<CreateChecklist /> component', () => {
     }
   }
 
+  const loading = {
+    loading: false,
+    loadingHooks: [],
+    redirect: false,
+    redirectHooks: [],
+    redirectFailure: false
+  }
+
+  const weekChoice = 6
+
   let mockFn = jest.fn()
 
   beforeEach(() => {
     wrapper = shallow(
       <CreateChecklist
-        courseId={coursePage.ohid}
-        selectedInstance={coursePage}
+        courses={courseInstance}
+        courseId={courseInstance[0].ohid}
+        selectedInstance={courseInstance[0]}
         checklist={checklist}
+        loading={loading}
+        weekDropdowns={[]}
         showNotification={mockFn}
+        resetLoading={mockFn}
         createChecklist={mockFn}
         getOneCI={mockFn}
         getOneChecklist={mockFn}
@@ -65,8 +101,12 @@ describe('<CreateChecklist /> component', () => {
         addRow={mockFn}
         removeTopic={mockFn}
         removeRow={mockFn}
+        getAllCI={mockFn}
       />
     )
+    wrapper.setState({
+      week: weekChoice
+    })
   })
 
   it('renders without error', () => {
@@ -106,6 +146,17 @@ describe('<CreateChecklist /> component', () => {
           })
           expect(pointsMatch).not.toBe(undefined)
         })
+      })
+    })
+
+    describe('Copying form', () => {
+      it('Renders a copy form', () => {
+        expect(wrapper.find('.copyForm').exists()).toEqual(true)
+      })
+
+      it('Renders appropriate options for week', () => {
+        const options = wrapper.find('.courseDropdown').prop('options')
+        expect(options.length).toEqual(courseInstance.filter(course => course.weekAmount >= weekChoice && course !== courseInstance[0]).length)
       })
     })
   })
