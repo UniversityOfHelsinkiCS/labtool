@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Header, Input, Label, Button, Popup, Card, Dropdown } from 'semantic-ui-react'
+import { Header, Input, Label, Button, Popup, Card, Dropdown, Loader } from 'semantic-ui-react'
 import { showNotification } from '../../reducers/notificationReducer'
+import { resetLoading } from '../../reducers/loadingReducer'
 import { createChecklist, getOneChecklist } from '../../services/checklist'
 import { getOneCI, getAllCI } from '../../services/courseInstance'
 import { resetChecklist, changeField, addTopic, addRow, removeTopic, removeRow, castPointsToNumber } from '../../reducers/checklistReducer'
@@ -20,7 +21,8 @@ export class CreateChecklist extends Component {
     }
   }
 
-  componentWillMount() {
+  componentWillMount = async () => {
+    await this.props.resetLoading()
     this.props.resetChecklist()
     this.props.getAllCI()
   }
@@ -239,7 +241,9 @@ export class CreateChecklist extends Component {
               <Dropdown placeholder="Copy checklist from another course" selection value={this.state.copyCourse} onChange={this.changeCopyCourse} options={this.state.courseDropdowns} />
             </div>
           </div>
-          {this.state.week !== undefined ? (
+          {this.props.loading.loading ? (
+            <Loader active />
+          ) : this.state.week !== undefined ? (
             <div>
               <div>
                 {Object.keys(this.props.checklist.data).map(key => (
@@ -357,12 +361,14 @@ const mapStateToProps = (state, ownProps) => {
     selectedInstance: selectedInstance || {},
     weekDropdowns: createWeekDropdowns(selectedInstance),
     checklist: state.checklist,
-    courses: state.courseInstance
+    courses: state.courseInstance,
+    loading: state.loading
   }
 }
 
 const mapDispatchToProps = {
   showNotification,
+  resetLoading,
   createChecklist,
   getOneCI,
   getAllCI,
