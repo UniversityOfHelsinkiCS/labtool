@@ -223,6 +223,250 @@ describe('<ReviewStudent />', () => {
       ]
     },
     weekReview: {
+      data: [
+        {
+          id: 10031,
+          github: 'http://github.com/superprojekti',
+          projectName: 'Tira super projekti',
+          courseInstanceId: 10011,
+          userId: 10031,
+          teacherInstanceId: 10001,
+          weeks: [
+            {
+              id: 1,
+              points: 0,
+              weekNumber: 1,
+              feedback: 'Koodin laadussa parantamisen varaa\n\nAlgoritmin runko puuttuu\n\nTietorakenteita ei ole luotu\n\nREADME puuttuu\n\nTuntikirjanpito puuttuu\n\n',
+              notified: false,
+              checks: {
+                'Algoritmin runko': true,
+                'Tietorakenteita luotu': true,
+                'Koodin laatu': true
+              },
+              studentInstanceId: 10031,
+              comments: []
+            }
+          ],
+          codeReviews: [
+            {
+              id: 10003,
+              points: null,
+              reviewNumber: 1,
+              linkToReview: null,
+              studentInstanceId: 10031,
+              toReview: 10011
+            },
+            {
+              id: 10008,
+              points: null,
+              reviewNumber: 2,
+              linkToReview: null,
+              studentInstanceId: 10031,
+              toReview: 10012
+            }
+          ],
+          User: {
+            id: 10031,
+            username: 'superopiskelija',
+            email: 'teras.henkilo@helsinki.fi',
+            firsts: 'Teräs',
+            lastname: 'Henkilö',
+            studentNumber: '014666666',
+            admin: false
+          },
+          Tags: [
+            {
+              id: 20007,
+              name: 'FORTRAN',
+              color: 'pink',
+              StudentTag: {
+                id: 30007,
+                studentInstanceId: 10031,
+                tagId: 20007,
+                createdAt: '2018-06-13T00:00:00.000Z',
+                updatedAt: '2018-06-13T00:00:00.000Z'
+              }
+            }
+          ]
+        },
+        {
+          id: 10011,
+          github: 'http://github.com/tiraopi1/tiralabra1',
+          projectName: 'Tiran labraprojekti',
+          courseInstanceId: 10011,
+          userId: 10011,
+          teacherInstanceId: 10011,
+          weeks: [
+            {
+              id: 10002,
+              points: 2,
+              weekNumber: 2,
+              feedback: 'Melko hienoa työtä!',
+              notified: false,
+              checks: {},
+              studentInstanceId: 10011,
+              comments: []
+            },
+            {
+              id: 10001,
+              points: 3,
+              weekNumber: 1,
+              feedback: 'Hienoa työtä!',
+              notified: false,
+              checks: {},
+              studentInstanceId: 10011,
+              comments: []
+            },
+            {
+              id: 10003,
+              points: 3,
+              weekNumber: 3,
+              feedback: 'Erittäin hienoa työtä!',
+              notified: false,
+              checks: {},
+              studentInstanceId: 10011,
+              comments: []
+            },
+            {
+              id: 10004,
+              points: 3,
+              weekNumber: 4,
+              feedback: 'Hyvin menee!',
+              notified: false,
+              checks: {},
+              studentInstanceId: 10011,
+              comments: []
+            }
+          ],
+          codeReviews: [
+            {
+              id: 10001,
+              points: null,
+              reviewNumber: 1,
+              linkToReview: null,
+              studentInstanceId: 10011,
+              toReview: 10012
+            },
+            {
+              id: 10007,
+              points: null,
+              reviewNumber: 2,
+              linkToReview: null,
+              studentInstanceId: 10011,
+              toReview: 10031
+            }
+          ],
+          User: {
+            id: 10011,
+            username: 'tiraopiskelija1',
+            email: 'maarit.opiskelija@helsinki.fi',
+            firsts: 'Maarit Mirja',
+            lastname: 'Opiskelija',
+            studentNumber: '014578343',
+            admin: false
+          },
+          Tags: [
+            {
+              id: 20003,
+              name: 'game',
+              color: 'black',
+              StudentTag: {
+                id: 30003,
+                studentInstanceId: 10011,
+                tagId: 20003,
+                createdAt: '2018-06-13T00:00:00.000Z',
+                updatedAt: '2018-06-13T00:00:00.000Z'
+              }
+            },
+            {
+              id: 20002,
+              name: 'HTML',
+              color: 'yellow',
+              StudentTag: {
+                id: 30002,
+                studentInstanceId: 10011,
+                tagId: 20002,
+                createdAt: '2018-06-13T00:00:00.000Z',
+                updatedAt: '2018-06-13T00:00:00.000Z'
+              }
+            },
+            {
+              id: 20001,
+              name: 'Javascript',
+              color: 'red',
+              StudentTag: {
+                id: 30001,
+                studentInstanceId: 10011,
+                tagId: 20001,
+                createdAt: '2018-06-13T00:00:00.000Z',
+                updatedAt: '2018-06-13T00:00:00.000Z'
+              }
+            }
+          ]
+        },
+        {
+          id: 10012,
+          github: 'http://github.com/tiraopi2/tiralabra2',
+          projectName: 'Tiran toinen labraprojekti',
+          courseInstanceId: 10011,
+          userId: 10012,
+          teacherInstanceId: 10011,
+          weeks: [],
+          codeReviews: [
+            {
+              id: 10002,
+              points: null,
+              reviewNumber: 1,
+              linkToReview: null,
+              studentInstanceId: 10012,
+              toReview: 10031
+            },
+            {
+              id: 10009,
+              points: null,
+              reviewNumber: 2,
+              linkToReview: null,
+              studentInstanceId: 10012,
+              toReview: 10011
+            }
+          ],
+          User: {
+            id: 10012,
+            username: 'tiraopiskelija2',
+            email: 'johan.studerande@helsinki.fi',
+            firsts: 'Johan Wilhelm',
+            lastname: 'Studerande',
+            studentNumber: '014553242',
+            admin: false
+          },
+          Tags: [
+            {
+              id: 20005,
+              name: 'Node.js',
+              color: 'blue',
+              StudentTag: {
+                id: 30005,
+                studentInstanceId: 10012,
+                tagId: 20005,
+                createdAt: '2018-06-13T00:00:00.000Z',
+                updatedAt: '2018-06-13T00:00:00.000Z'
+              }
+            },
+            {
+              id: 20001,
+              name: 'Javascript',
+              color: 'red',
+              StudentTag: {
+                id: 30004,
+                studentInstanceId: 10012,
+                tagId: 20001,
+                createdAt: '2018-06-13T00:00:00.000Z',
+                updatedAt: '2018-06-13T00:00:00.000Z'
+              }
+            }
+          ]
+        }
+      ],
       checks: {}
     },
     loading: {
