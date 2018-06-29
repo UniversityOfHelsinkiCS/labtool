@@ -9,7 +9,6 @@ import { logout } from '../../reducers/loginReducer'
  */
 class Nav extends Component {
   handleLogout = async e => {
-    e.preventDefault()
     window.localStorage.removeItem('loggedLabtool')
     await this.props.logout()
   }
