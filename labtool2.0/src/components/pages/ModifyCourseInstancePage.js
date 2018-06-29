@@ -146,7 +146,14 @@ export class ModifyCourseInstancePage extends Component {
                   : null}
               </Form.Group>
               <Form.Group inline>
-                <Dropdown onChange={this.handleAddChange} options={this.props.codeReviewDropdowns} fluid selection multiple={true} placeholder="Select code review to set visible" />
+                <Dropdown
+                  onChange={this.handleAddChange}
+                  options={this.props.codeReviewDropdowns}
+                  fluid
+                  selection
+                  multiple={true}
+                  placeholder={this.props.selectedInstance.amountOfCodeReviews > 0 ? 'Select code reviews to set visible' : 'No code reviews'}
+                />
               </Form.Group>
 
               <Form.Group inline>

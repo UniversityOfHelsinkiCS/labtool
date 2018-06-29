@@ -1,8 +1,13 @@
 /**
  * Named users in state. Contains all the users in the labtool database.
  */
-const userReducer = (store = [], action) => {
+
+const INITIAL_STATE = []
+
+const userReducer = (store = INITIAL_STATE, action) => {
   switch (action.type) {
+    case 'LOGOUT_SUCCESS':
+      return INITIAL_STATE
     case 'USERS_GET_ALL_SUCCESS': {
       const users = action.response
       users.forEach(user => {

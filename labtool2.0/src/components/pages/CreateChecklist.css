@@ -29,3 +29,11 @@
 .deleteButtonText {
   font-size: 14px;
 }
+
+.copyForm {
+  float: right;
+}
+
+.maxPointsCard {
+  font-size: 20px;
+}

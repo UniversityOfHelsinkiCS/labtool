@@ -29,6 +29,21 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
       columns={2}
     >
       <GridColumn>
+        <div
+          align="left"
+        >
+          <h3>
+            Points from previous weeks: 
+            0
+             
+          </h3>
+          Week points: 
+          0
+           
+          <br />
+          Code review points: 
+          0
+        </div>
         <h2>
           Feedback
         </h2>
@@ -133,19 +148,53 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
               key="Koodin laatu"
             >
               <FormField>
-                <label>
-                  Koodin laatu
-                   
-                </label>
                 <Input
+                  defaultChecked={false}
                   onChange={[Function]}
                   type="checkbox"
                 />
-                <label>
-                   
-                  2
-                   p
-                </label>
+                <span>
+                  Koodin laatu
+                </span>
+                <div
+                  style={
+                    Object {
+                      "display": "inline-block",
+                      "marginLeft": "20px",
+                      "maxWidth": "0px",
+                      "textAlign": "left",
+                    }
+                  }
+                >
+                  <span
+                    style={
+                      Object {
+                        "display": "inline-block",
+                        "minWidth": "100px",
+                      }
+                    }
+                  >
+                    <Icon
+                      as="i"
+                      className="grey check square outline"
+                    />
+                     p
+                  </span>
+                  <span
+                    style={
+                      Object {
+                        "display": "inline-block",
+                        "minWidth": "100px",
+                      }
+                    }
+                  >
+                    <Icon
+                      as="i"
+                      className="grey square outline"
+                    />
+                     p
+                  </span>
+                </div>
               </FormField>
             </CardContent>
           </Card>
@@ -163,19 +212,53 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
               key="Algoritmin runko"
             >
               <FormField>
-                <label>
-                  Algoritmin runko
-                   
-                </label>
                 <Input
+                  defaultChecked={false}
                   onChange={[Function]}
                   type="checkbox"
                 />
-                <label>
-                   
-                  2
-                   p
-                </label>
+                <span>
+                  Algoritmin runko
+                </span>
+                <div
+                  style={
+                    Object {
+                      "display": "inline-block",
+                      "marginLeft": "20px",
+                      "maxWidth": "0px",
+                      "textAlign": "left",
+                    }
+                  }
+                >
+                  <span
+                    style={
+                      Object {
+                        "display": "inline-block",
+                        "minWidth": "100px",
+                      }
+                    }
+                  >
+                    <Icon
+                      as="i"
+                      className="grey check square outline"
+                    />
+                     p
+                  </span>
+                  <span
+                    style={
+                      Object {
+                        "display": "inline-block",
+                        "minWidth": "100px",
+                      }
+                    }
+                  >
+                    <Icon
+                      as="i"
+                      className="grey square outline"
+                    />
+                     p
+                  </span>
+                </div>
               </FormField>
             </CardContent>
             <CardContent
@@ -183,19 +266,53 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
               key="Tietorakenteita luotu"
             >
               <FormField>
-                <label>
-                  Tietorakenteita luotu
-                   
-                </label>
                 <Input
+                  defaultChecked={false}
                   onChange={[Function]}
                   type="checkbox"
                 />
-                <label>
-                   
-                  2
-                   p
-                </label>
+                <span>
+                  Tietorakenteita luotu
+                </span>
+                <div
+                  style={
+                    Object {
+                      "display": "inline-block",
+                      "marginLeft": "20px",
+                      "maxWidth": "0px",
+                      "textAlign": "left",
+                    }
+                  }
+                >
+                  <span
+                    style={
+                      Object {
+                        "display": "inline-block",
+                        "minWidth": "100px",
+                      }
+                    }
+                  >
+                    <Icon
+                      as="i"
+                      className="grey check square outline"
+                    />
+                     p
+                  </span>
+                  <span
+                    style={
+                      Object {
+                        "display": "inline-block",
+                        "minWidth": "100px",
+                      }
+                    }
+                  >
+                    <Icon
+                      as="i"
+                      className="grey square outline"
+                    />
+                     p
+                  </span>
+                </div>
               </FormField>
             </CardContent>
           </Card>
@@ -213,19 +330,53 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
               key="Readme"
             >
               <FormField>
-                <label>
-                  Readme
-                   
-                </label>
                 <Input
+                  defaultChecked={false}
                   onChange={[Function]}
                   type="checkbox"
                 />
-                <label>
-                   
-                  1
-                   p
-                </label>
+                <span>
+                  Readme
+                </span>
+                <div
+                  style={
+                    Object {
+                      "display": "inline-block",
+                      "marginLeft": "20px",
+                      "maxWidth": "0px",
+                      "textAlign": "left",
+                    }
+                  }
+                >
+                  <span
+                    style={
+                      Object {
+                        "display": "inline-block",
+                        "minWidth": "100px",
+                      }
+                    }
+                  >
+                    <Icon
+                      as="i"
+                      className="grey check square outline"
+                    />
+                     p
+                  </span>
+                  <span
+                    style={
+                      Object {
+                        "display": "inline-block",
+                        "minWidth": "100px",
+                      }
+                    }
+                  >
+                    <Icon
+                      as="i"
+                      className="grey square outline"
+                    />
+                     p
+                  </span>
+                </div>
               </FormField>
             </CardContent>
             <CardContent
@@ -233,19 +384,53 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
               key="Tuntikirjanpito"
             >
               <FormField>
-                <label>
-                  Tuntikirjanpito
-                   
-                </label>
                 <Input
+                  defaultChecked={false}
                   onChange={[Function]}
                   type="checkbox"
                 />
-                <label>
-                   
-                  1
-                   p
-                </label>
+                <span>
+                  Tuntikirjanpito
+                </span>
+                <div
+                  style={
+                    Object {
+                      "display": "inline-block",
+                      "marginLeft": "20px",
+                      "maxWidth": "0px",
+                      "textAlign": "left",
+                    }
+                  }
+                >
+                  <span
+                    style={
+                      Object {
+                        "display": "inline-block",
+                        "minWidth": "100px",
+                      }
+                    }
+                  >
+                    <Icon
+                      as="i"
+                      className="grey check square outline"
+                    />
+                     p
+                  </span>
+                  <span
+                    style={
+                      Object {
+                        "display": "inline-block",
+                        "minWidth": "100px",
+                      }
+                    }
+                  >
+                    <Icon
+                      as="i"
+                      className="grey square outline"
+                    />
+                     p
+                  </span>
+                </div>
               </FormField>
             </CardContent>
           </Card>
@@ -282,12 +467,12 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
                 className="checklistOutputPoints"
               >
                 points: 
-                0
+                NaN
               </p>
               <input
                 name="points"
                 type="hidden"
-                value={0}
+                value={NaN}
               />
               <Button
                 as="button"

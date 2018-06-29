@@ -159,10 +159,13 @@ const notificationReducer = (state = {}, action) => {
         error: true
       }
     case 'CHECKLIST_GET_ONE_FAILURE':
-      return {
-        message: "That week doesn't have a checklist.",
-        error: true
+      if (action.response.response.data.data.copying) {
+        return {
+          message: action.response.response.data.message,
+          error: true
+        }
       }
+      return state
     case 'CODE_REVIEW_RANDOMIZE':
       return {
         message: 'Code reviews randomized. Click save to change',
@@ -183,6 +186,12 @@ const notificationReducer = (state = {}, action) => {
         message: action.response.response.data,
         error: true
       }
+
+    case 'CODE_REVIEW_REMOVE_ONE_SUCCESS':
+    return {
+        message: 'Code review removed succesfully!',
+        error: false
+    }
     default:
       return state
   }
