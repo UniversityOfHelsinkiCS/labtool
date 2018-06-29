@@ -274,7 +274,8 @@ export class ModifyCourseInstanceReview extends React.Component {
                   <Dropdown
                     onChange={this.createDropdown()}
                     defaultValue={this.props.codeReviewLogic.selectedDropdown}
-                    placeholder="Select code review"
+                    noResultsMessage={'Try another search.'}
+                    placeholder={Object.keys(this.props.dropdownCodeReviews).length > 0 ? 'Select code review' : 'No code reviews'}
                     fluid
                     options={this.props.dropdownCodeReviews}
                   />

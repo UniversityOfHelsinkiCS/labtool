@@ -187,7 +187,7 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
                 },
               ]
             }
-            placeholder="Select code review to set visible"
+            placeholder="Select code reviews to set visible"
             renderLabel={[Function]}
             searchInput="text"
             selectOnBlur={true}
