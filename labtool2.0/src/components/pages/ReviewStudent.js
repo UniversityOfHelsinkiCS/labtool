@@ -94,9 +94,12 @@ export class ReviewStudent extends Component {
       if (checkList) {
         Object.keys(checkList.list).forEach(cl => {
           checkList.list[cl].forEach(row => {
-            const addition = (checks[row.name] !== undefined ? checks[row.name] : false) ? row.textWhenOn : row.textWhenOff
+            const isChecked = this.props.weekReview.checks[row.name] === undefined ? (checks[row.name] !== undefined ? checks[row.name] : false) : this.props.weekReview.checks[row.name]
+
+            const addition = isChecked ? row.textWhenOn : row.textWhenOff
             if (addition) checklistOutput += addition + '\n\n'
-            if (this.props.weekReview.checks[row.name] !== undefined && this.props.weekReview.checks[row.name]) {
+
+            if (isChecked) {
               checklistPoints += row.checkedPoints
             } else {
               checklistPoints += row.uncheckedPoints
