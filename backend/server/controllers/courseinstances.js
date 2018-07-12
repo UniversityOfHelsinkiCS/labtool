@@ -24,11 +24,8 @@ module.exports = {
   findByUserTeacherInstance(req, res) {
     helper.controller_before_auth_check_action(req, res)
     const errors = []
-    console.log('***REQ BODY***: ', req.body)
 
     const id = parseInt(req.body.userId) //TODO: CHECK THAT THIS IS SANITICED ID
-    console.log('TOKEN VERIFIED: ', req.authenticated)
-    console.log('token.data.id: ', req.decoded.id)
     db.sequelize
       .query(`SELECT * FROM "CourseInstances" JOIN "TeacherInstances" ON "CourseInstances"."id" = "TeacherInstances"."courseInstanceId" WHERE "TeacherInstances"."userId" = ${req.decoded.id}`)
       .then(instance => res.status(200).send(instance[0]))
@@ -53,8 +50,6 @@ module.exports = {
       data: undefined
     }
     const user = req.decoded.id
-    console.log(req.decoded)
-    console.log('user.id: ', user)
     const teacher = await TeacherInstance.findAll({
       where: {
         userId: user,
@@ -62,9 +57,6 @@ module.exports = {
       }
     })
     if (teacher[0] === undefined) {
-      console.log('studentti')
-      console.log('userId: ', user)
-      console.log('courseInstanceId:', courseInst)
       const student = await StudentInstance.findOne({
         attributes: {
           exclude: ['createdAt', 'updatedAt']
@@ -156,7 +148,6 @@ module.exports = {
           }
         ]
       })
-      console.log('studentInst: ', student)
 
       try {
         if (student) {
@@ -267,9 +258,6 @@ module.exports = {
    */
   registerToCourseInstance(req, res) {
     helper.controller_before_auth_check_action(req, res)
-    console.log(`----------------------------------`)
-    console.log(req.decoded)
-    console.log(`----------------------------------`)
 
     CourseInstance.findOne({
       where: {
@@ -293,7 +281,6 @@ module.exports = {
           })
         }
         let promisingThatWeboodiStatusIsChecked = new Promise((resolve, reject) => {
-          console.log('user.studentNumber', user.studentNumber)
           helper.checkWebOodi(req, res, user, resolve) // this does not work.
 
           setTimeout(function() {
@@ -302,9 +289,6 @@ module.exports = {
         })
 
         promisingThatWeboodiStatusIsChecked.then(barf => {
-          console.log('Yay! ' + barf)
-          console.log(req.body)
-
           if (barf === 'found') {
             StudentInstance.findOrCreate({
               where: {
@@ -419,8 +403,6 @@ module.exports = {
   update(req, res) {
     helper.controller_before_auth_check_action(req, res)
 
-    console.log('REQ body: ', req.body)
-    console.log('REQ params: ', req.params)
     CourseInstance.findOne({
       where: {
         ohid: req.params.id
@@ -519,7 +501,6 @@ module.exports = {
     helper.controller_before_auth_check_action(req, res)
 
     const termAndYear = helper.CurrentTermAndYear()
-    console.log('term and year: ', termAndYear)
     if (this.remoteAddress === '127.0.0.1') {
       res.send('gtfo')
     } else {
@@ -535,8 +516,6 @@ module.exports = {
       }
       request(options, function(err, resp, body) {
         const json = JSON.parse(body)
-        console.log('json palautta...')
-        console.log(json)
         json.forEach(instance => {
           CourseInstance.findOrCreate({
             attributes: {
@@ -569,7 +548,6 @@ module.exports = {
     console.log('update next...')
     const auth = process.env.TOKEN || 'notset' //You have to set TOKEN in .env file in order for this to work
     const termAndYear = helper.CurrentTermAndYear()
-    console.log('term and year: ', termAndYear)
     if (auth === 'notset') {
       res.send('Please restart the backend with the correct TOKEN environment variable set')
     } else {
@@ -588,7 +566,6 @@ module.exports = {
         }
         request(options, function(err, resp, body) {
           const json = JSON.parse(body)
-          console.log(json)
           json.forEach(instance => {
             CourseInstance.findOrCreate({
               attributes: {

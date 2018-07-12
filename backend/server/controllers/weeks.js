@@ -5,7 +5,6 @@ const helper = require('../helpers/weeks_controller_helper')
 
 module.exports = {
   async create(req, res) {
-    console.log('\n\n\nweeks.create req: ', req, '\n\n\n')
     try {
       await helper.controller_before_auth_check_action(req, res)
 
@@ -34,9 +33,7 @@ module.exports = {
             studentInstanceId: req.body.studentInstanceId
           }
         })
-        console.log('\n\n\nweeks, week: ', week)
         if (week) {
-          console.log('\n\nupdating a week\n\n')
           let updatedChecks = {}
           if (req.body.checks) {
             Object.keys(week.checks).map(key => {
@@ -48,8 +45,6 @@ module.exports = {
           } else {
             updatedChecks = week.checks
           }
-          console.log('\n\nreq.body.checks: ', req.body.checks, '\n\n')
-          console.log('\n\nupdatedChecks: ', updatedChecks, '\n\n')
           await week.update({
             points: req.body.points || week.points,
             feedback: req.body.feedback || week.feedback,
@@ -57,7 +52,6 @@ module.exports = {
           })
           res.status(200).send(week)
         } else {
-          console.log('\n\ncreating a new week\n\n')
           await Week.create({
             points: req.body.points,
             studentInstanceId: req.body.studentInstanceId,

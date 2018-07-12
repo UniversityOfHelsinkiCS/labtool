@@ -123,18 +123,14 @@ module.exports = {
         res.status(200).send(returnedAssistantInfo)
       }
     } catch (e) {
-      console.log('\n\nAAAA\n\n')
       res.status(400).send(e)
     }
   },
 
   async findStudentsByTeacherInstance(req, res) {
-    console.log('Etsitään assarin oppilaat')
-
     helper.controller_before_auth_check_action(req, res)
     try {
       const teacherInsId = req.params.id
-      console.log('\n\nteacherInsId: ', req.param.id)
 
       const studentsForThisTeacherInstance = await StudentInstance.findAll({
         where: {

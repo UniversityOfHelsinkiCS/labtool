@@ -44,6 +44,8 @@ const reducer = combineReducers({
   redirect: redirect
 })
 
-const store = createStore(reducer, composeWithDevTools(applyMiddleware(thunk, handleRequest)))
+const compose = process.env.NODE_ENV === 'production' ? (store) => store : (store) => composeWithDevTools(store)
+
+const store = createStore(reducer, compose(applyMiddleware(thunk, handleRequest)))
 
 export default store
