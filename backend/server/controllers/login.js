@@ -21,11 +21,6 @@ module.exports = {
 
     try {
       const result = request(options, function(err, resp, body) {
-        if (result.response) {
-          console.log('testitulostus: ', result.response.body)
-        } else {
-          console.log('testitulostus: result.response.body is undefined')
-        }
         if (err) {
           console.log('\nlogin: ', err, 'n')
         }
@@ -33,7 +28,6 @@ module.exports = {
           let first
           const last = body.last_name
           const number = body.student_number
-          console.log('\n\n\nbody: ', body, '\n\n\n')
           // If first_names from Kurki contains *, use the name after that, otherwise use first name
           if (body.first_names.includes('*')) {
             first = result.response.body.first_names.split('*')[1].split(' ')[0]
@@ -61,7 +55,6 @@ module.exports = {
               email: newuser.email,
               username: newuser.username
             }
-            console.log('user: ', user)
 
             const token = jwt.sign({ username: newuser.username, id: newuser.id }, process.env.SECRET)
             res.status(200).send({

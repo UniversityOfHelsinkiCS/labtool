@@ -30,8 +30,6 @@ function CurrentTermAndYear() {
   const month = date.getMonth() + 1
   const currentTerm = getCurrentTerm(month)
   var year = date.getFullYear()
-  //console.log('month is: ', month)
-  //console.log('date: ', date)
   if (month >= 11) {
     year = year + 1
   }
@@ -39,7 +37,6 @@ function CurrentTermAndYear() {
   var nextYear = getNextYear(currentTerm, year)
   nextYear.toString()
   const nextTerm = getNextTerm(currentTerm)
-  //console.log('year: ', year)
   return { currentYear, currentTerm, nextTerm, nextYear }
 }
 
@@ -226,7 +223,6 @@ async function createCourse(body) {
     }).save()
 
     if (result.teachers.length > 0) {
-      console.log('')
       for (let i in result.teachers) {
         const user = await User.findOrCreate({
           where: {
@@ -248,7 +244,6 @@ async function createCourse(body) {
   } catch (error) {
     console.log(error)
   }
-  //await console.log(result.teachers)
 }
 
 /**
