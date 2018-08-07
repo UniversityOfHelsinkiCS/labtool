@@ -1,4 +1,4 @@
-FROM node:8-wheezy
+FROM node:8
 ADD ./labtool2.0 /code
 WORKDIR /code
 COPY ./labtool2.0/package.json ../

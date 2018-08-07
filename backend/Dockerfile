@@ -1,4 +1,4 @@
-FROM node:8-wheezy
+FROM node:8
 ADD ./ /code
 WORKDIR /code
 COPY ./package.json ./
