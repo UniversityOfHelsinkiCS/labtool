@@ -17,7 +17,7 @@ app.get('/labtool/courses/:id', (req, res) => {
 })
 
 // If password is "password" and username is listed in
-// ./reposonses/users logs in as username.
+// ./responses/users logs in as username.
 // Otherwise, does not let one log in.
 app.post('/login', (req, res) => {
 
