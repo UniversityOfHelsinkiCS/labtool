@@ -46,13 +46,13 @@ function CurrentTermAndYear() {
  * @returns {string}
  */
 function getCurrentTerm(month) {
-  if (1 <= month <= 5) {
+  if (1 <= month && month <= 5) {
     return 'K'
   }
-  if (6 <= month <= 8) {
+  if (6 <= month && month <= 8) {
     return 'V'
   }
-  if (9 <= month <= 12) {
+  if (9 <= month && month <= 12) {
     return 'S'
   }
 }
