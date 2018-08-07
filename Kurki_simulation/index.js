@@ -5,7 +5,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.get('/labtool/courses', (req, res) => {
-  const responseJson = require('./responses/courses');
+  const termString = req.query.year + req.query.term
+  const responseJson = require('./responses/' + termString);
   res.json(responseJson.courses);
 })
 
