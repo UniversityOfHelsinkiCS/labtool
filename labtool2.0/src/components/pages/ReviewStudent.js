@@ -105,12 +105,12 @@ export class ReviewStudent extends Component {
               checklistPoints += row.uncheckedPoints
             }
           })
-          if (checklistPoints < 0) {
-            checklistPoints = 0
-          } else if (checklistPoints > this.props.selectedInstance.weekMaxPoints) {
-            checklistPoints = this.props.selectedInstance.weekMaxPoints
-          }
         })
+        if (checklistPoints < 0) {
+          checklistPoints = 0
+        } else if (checklistPoints > this.props.selectedInstance.weekMaxPoints) {
+          checklistPoints = this.props.selectedInstance.weekMaxPoints
+        }
       }
       return (
         <div className="ReviewStudent" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
