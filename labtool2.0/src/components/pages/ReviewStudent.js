@@ -199,7 +199,7 @@ export class ReviewStudent extends Component {
                       <div>
                         <Form className="checklistOutput" onSubmit={this.copyChecklistOutput}>
                           <Form.TextArea className="checklistOutputText" name="text" value={checklistOutput} style={{ width: '100%', height: '250px' }} />
-                          <p className="checklistOutputPoints">points: {checklistPoints}</p>
+                          <p className="checklistOutputPoints">points: {checklistPoints.toFixed(2)}</p>
                           <input type="hidden" name="points" value={checklistPoints} />
                           <Button type="submit">Copy to review fields</Button>
                         </Form>
