@@ -30,9 +30,6 @@ function CurrentTermAndYear() {
   const month = date.getMonth() + 1
   const currentTerm = getCurrentTerm(month)
   var year = date.getFullYear()
-  if (month >= 11) {
-    year = year + 1
-  }
   const currentYear = year.toString()
   var nextYear = getNextYear(currentTerm, year)
   nextYear.toString()
