@@ -40,13 +40,14 @@ function checkWebOodi(req, res, user, resolve) {
       resolve('notfound')
       return
     }
-    if (json['students'].toString().match(user.studentNumber) !== null) {
-      // stupid javascript.. even regex match is simpler than json array that has or not has a key of whatever.
+    if (json.students.find(student => student === user.studentNumber)) {
       console.log('\ncourse_instance_helper found')
       resolve('found')
       return
     } else {
-      console.log('\ncourse_intance_helper notfound')
+      console.log('\ncourse_instance_helper notfound')
+      console.info(json.students)
+      console.info(user.studentNumber)
       resolve('notfound')
       return
     }

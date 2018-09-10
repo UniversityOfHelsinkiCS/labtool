@@ -256,83 +256,74 @@ module.exports = {
    * @param req
    * @param res
    */
-  registerToCourseInstance(req, res) {
-    helper.controller_before_auth_check_action(req, res)
+  async registerToCourseInstance(req, res) {
+    await helper.controller_before_auth_check_action(req, res)
 
-    CourseInstance.findOne({
+    const course = await CourseInstance.findOne({
       where: {
         ohid: req.params.ohid
       }
-    }).then(course => {
-      if (!course) {
-        return res.status(400).send({
-          message: 'course instance not found'
-        })
-      } else if (course.active === false) {
-        console.log('course is no active')
-        return res.status(400).send({
-          message: 'course is not active'
-        })
-      }
-      User.findById(req.decoded.id).then(user => {
-        if (!user) {
-          return res.status(400).send({
-            message: 'something went wrong (clear these specific error messages later): user not found'
-          })
-        }
-        let promisingThatWeboodiStatusIsChecked = new Promise((resolve, reject) => {
-          helper.checkWebOodi(req, res, user, resolve) // this does not work.
-
-          setTimeout(function() {
-            resolve('shitaintright') // Yay! everything went to hell.
-          }, 5000) // set a high timeout value since you really want to wait x)
-        })
-
-        promisingThatWeboodiStatusIsChecked.then(barf => {
-          if (barf === 'found') {
-            StudentInstance.findOrCreate({
-              where: {
-                userId: user.id,
-                courseInstanceId: course.dataValues.id
-              },
-              defaults: {
-                userId: user.id,
-                name: user,
-                courseInstanceId: course.dataValues.id,
-                github: req.body.github || '', // model would like to validate this to be an URL but seems like crap
-                projectName: req.body.projectName || '' // model would like to validate this to alphanumeric but seems like this needs specific nulls or empties or whatever
-              }
-            })
-              .then(student => {
-                if (!student) {
-                  res.status(400).send({
-                    message: 'something went wrong: if somehow we could not find or create a record we see this'
-                  })
-                } else {
-                  helper.findByUserStudentInstance(req, res)
-
-                  //      this.findByUserStudentInstance(req,res)
-                  //                  res.status(200).send({
-
-                  /*
-                  message: 'something went right',
-                  whatever: student
-                })*/
-                }
-              })
-              .catch(function(error) {
-                res.status(400).send({
-                  message: error.errors
-                })
-              })
-          } else {
-            res.status(400).send({
-              message: 'something went wrong'
-            })
-          }
-        })
-      })
     })
+    if (!course) {
+      return res.status(400).send({
+        message: 'course instance not found'
+      })
+    } else if (course.active === false) {
+      console.log('course is no active')
+      return res.status(400).send({
+        message: 'course is not active'
+      })
+    }
+    const user = await User.findById(req.decoded.id)
+    if (!user) {
+      return res.status(400).send({
+        message: 'something went wrong (clear these specific error messages later): user not found'
+      })
+    }
+    const webOodiStatus = await new Promise((resolve, reject) => {
+      helper.checkWebOodi(req, res, user, resolve) // this does not work.
+
+      setTimeout(function() {
+        resolve('shitaintright') // Yay! everything went to hell.
+      }, 5000) // set a high timeout value since you really want to wait x)
+    })
+
+    if (webOodiStatus !== 'found') {
+      // Temporarily allow non-registered users past until issue with registered users being blocked is resolved.
+      console.warn(`Expected user to be found in Kurki students. status - expected: found, actual: ${webOodiStatus}`)
+      console.warn(`The following user was not found to have been registered in weboodi to course ${req.params.ohid}. Proceeding anyway.`, user)
+    } else {
+      res.status(400).send({
+        message: 'something went wrong'
+      })
+    }
+    let student
+    try {
+      student = await StudentInstance.findOrCreate({
+        where: {
+          userId: user.id,
+          courseInstanceId: course.dataValues.id
+        },
+        defaults: {
+          userId: user.id,
+          name: user,
+          courseInstanceId: course.dataValues.id,
+          github: req.body.github || '', // model would like to validate this to be an URL but seems like crap
+          projectName: req.body.projectName || '' // model would like to validate this to alphanumeric but seems like this needs specific nulls or empties or whatever
+        }
+      })
+    } catch (e) {
+      res.status(400).send({
+        message: error.errors
+      })
+    }
+    if (!student) {
+      res.status(400).send({
+        message: 'something went wrong: if somehow we could not find or create a record we see this'
+      })
+    } else {
+      helper.findByUserStudentInstance(req, res)
+    }
   },
 
   /**
