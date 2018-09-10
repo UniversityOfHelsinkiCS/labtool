@@ -46,6 +46,8 @@ function checkWebOodi(req, res, user, resolve) {
       return
     } else {
       console.log('\ncourse_instance_helper notfound')
+      console.info(json.students)
+      console.info(user.studentNumber)
       resolve('notfound')
       return
     }
