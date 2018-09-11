@@ -3,6 +3,7 @@ const nodemailer = require('nodemailer')
 const { Comment, Week, StudentInstance, TeacherInstance, User, CourseInstance } = require('../models')
 const env = process.env.NODE_ENV || 'development'
 const frontendUrl = process.env.FRONTEND_URL || 'cs.helsinki.labtool.fi'
+const logger = require('../utils/logger')
 
 const SENDER_SETTINGS = {
   from: 'Labtool Robot <noreply@helsinki.fi>',
@@ -127,6 +128,7 @@ const commentMessage = async (role, commentId) => {
       }
     }
   } catch (e) {
+    logger.error(e)
     return {
       success: false,
       status: 500,
@@ -185,6 +187,7 @@ const weekMessage = async (role, weekId) => {
       }
     }
   } catch (e) {
+    logger.error(e)
     return {
       success: false,
       status: 500,
@@ -341,6 +344,7 @@ module.exports = {
         data: req.body
       })
     } catch (e) {
+      logger.error(e)
       res.status(500).send('Unexpected error')
     }
   }

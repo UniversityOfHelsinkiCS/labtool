@@ -3,6 +3,7 @@ const StudentInstance = require('../models').StudentInstance
 const TeacherInstance = require('../models').TeacherInstance
 const CourseInstance = require('../models').CourseInstance
 const helper = require('../helpers/code_review_helper')
+const logger = require('../utils/logger')
 
 module.exports = {
   async bulkInsert(req, res) {
@@ -76,7 +77,8 @@ module.exports = {
         data: req.body
       })
     } catch (e) {
-      console.log('CodeReview bulk insert failed.\n', e)
+      logger.error(e)
+      console.log('CodeReview bulk insert failed.\n')
       res.status(500).send('Unexpected error.')
     }
   },
@@ -135,6 +137,7 @@ module.exports = {
       })
       return
     } catch (e) {
+      logger.error(e)
       res.status(500).send('Unexpected error.')
     }
   },
@@ -184,6 +187,7 @@ module.exports = {
       })
       return
     } catch (e) {
+      logger.error(e)
       res.status(500).send('Unexpected error.')
     }
   },
@@ -213,6 +217,7 @@ module.exports = {
       }
       return
     } catch (e) {
+      logger.error(e)
       res.status(500).send({
         message: e
       })

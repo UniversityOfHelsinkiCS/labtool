@@ -176,6 +176,12 @@ const notificationReducer = (state = {}, action) => {
         message: 'Project info updated successfully!',
         error: false
       }
+    case 'STUDENT_PROJECT_INFO_UPDATE_FAILURE':
+      return {
+        message: action.response.response.data.message,
+        error: true
+      }
+
     case 'SEND_EMAIL_SUCCESS':
       return {
         message: action.response.message,
