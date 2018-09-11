@@ -15,6 +15,11 @@ const Checklist = require('../models').Checklist
 const env = process.env.NODE_ENV || 'development'
 const config = require('./../config/config.js')[env]
 
+const overkillLogging = (req, error) => {
+  console.log('request: ', req)
+  console.log('error: ', error)
+}
+
 module.exports = {
   /**
    *
@@ -265,36 +270,38 @@ module.exports = {
       }
     })
     if (!course) {
+      overkillLogging(req, null)
       return res.status(400).send({
         message: 'course instance not found'
       })
-    } else if (course.active === false) {
-      console.log('course is no active')
+    }
+    if (course.active === false) {
+      console.log('course is not active')
+      overkillLogging(req, null)
       return res.status(400).send({
         message: 'course is not active'
       })
     }
     const user = await User.findById(req.decoded.id)
     if (!user) {
+      overkillLogging(req, null)
       return res.status(400).send({
-        message: 'something went wrong (clear these specific error messages later): user not found'
+        message: 'User could not be found.'
       })
     }
-    const webOodiStatus = await new Promise((resolve, reject) => {
+    const webOodiStatus = await new Promise((resolve) => {
       helper.checkWebOodi(req, res, user, resolve) // this does not work.
 
       setTimeout(function() {
+        overkillLogging(req, null)
         resolve('shitaintright') // Yay! everything went to hell.
       }, 5000) // set a high timeout value since you really want to wait x)
     })
 
     if (webOodiStatus !== 'found') {
-      // Temporarily allow non-registered users past until issue with registered users being blocked is resolved.
-      console.warn(`Expected user to be found in Kurki students. status - expected: found, actual: ${webOodiStatus}`)
-      console.warn(`The following user was not found to have been registered in weboodi to course ${req.params.ohid}. Proceeding anyway.`, user)
-    } else {
-      res.status(400).send({
-        message: 'something went wrong'
+      overkillLogging(req, null)
+      return res.status(403).json({
+        message: 'You have not yet registered to this course at WebOodi. If you have already registered at WebOodi, try again in two hours.'
       })
     }
     let student
@@ -312,14 +319,26 @@ module.exports = {
           projectName: req.body.projectName || '' // model would like to validate this to alphanumeric but seems like this needs specific nulls or empties or whatever
         }
       })
-    } catch (e) {
-      res.status(400).send({
-        message: error.errors
+    } catch (error) {
+      if (error.name === 'SequelizeValidationError') {
+        const validationErrorMessages = {
+          github: 'Github repository link is not a proper url.',
+          projectName: 'Project name contains illegal characters.'
+        }
+        const errorMessage = error.errors.map(e => validationErrorMessages[e.path] || 'Unknown validation error.')
+        return res.status(400).json({
+          message: errorMessage.join('\n')
+        })
+      }
+      overkillLogging(req, error)
+      return res.status(500).json({
+        message: 'Unexpected error.'
       })
     }
     if (!student) {
-      res.status(400).send({
-        message: 'something went wrong: if somehow we could not find or create a record we see this'
+      overkillLogging(req, null)
+      res.status(400).json({
+        message: 'Student record could not be found or created.'
       })
     } else {
       helper.findByUserStudentInstance(req, res)

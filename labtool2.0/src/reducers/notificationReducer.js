@@ -45,7 +45,7 @@ const notificationReducer = (state = {}, action) => {
       }
     case 'STUDENT_COURSE_CREATE_ONE_FAILURE':
       return {
-        message: 'You have not yet registered to this course at WebOodi. If you have already registered at WebOodi, try again in two hours.',
+        message: action.response.response.data.message,
         error: true
       }
     case 'CI_MODIFY_ONE_SUCCESS':
