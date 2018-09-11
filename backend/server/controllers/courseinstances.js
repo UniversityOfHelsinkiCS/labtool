@@ -15,6 +15,11 @@ const Checklist = require('../models').Checklist
 const env = process.env.NODE_ENV || 'development'
 const config = require('./../config/config.js')[env]
 
+const overkillLogging = (req, error) => {
+  console.log('request: ', req)
+  console.log('error: ', error)
+}
+
 module.exports = {
   /**
    *
@@ -265,31 +270,36 @@ module.exports = {
       }
     })
     if (!course) {
+      overkillLogging(req, null)
       return res.status(400).send({
         message: 'course instance not found'
       })
     }
     if (course.active === false) {
       console.log('course is not active')
+      overkillLogging(req, null)
       return res.status(400).send({
         message: 'course is not active'
       })
     }
     const user = await User.findById(req.decoded.id)
     if (!user) {
+      overkillLogging(req, null)
       return res.status(400).send({
-        message: 'something went wrong (clear these specific error messages later): user not found'
+        message: 'User could not be found.'
       })
     }
     const webOodiStatus = await new Promise((resolve) => {
       helper.checkWebOodi(req, res, user, resolve) // this does not work.
 
       setTimeout(function() {
+        overkillLogging(req, null)
         resolve('shitaintright') // Yay! everything went to hell.
       }, 5000) // set a high timeout value since you really want to wait x)
     })
 
     if (webOodiStatus !== 'found') {
+      overkillLogging(req, null)
       return res.status(403).json({
         message: 'You have not yet registered to this course at WebOodi. If you have already registered at WebOodi, try again in two hours.'
       })
@@ -320,12 +330,13 @@ module.exports = {
           message: errorMessage.join('\n')
         })
       }
-      console.log('Unexpected error in registration.', error)
+      overkillLogging(req, error)
       return res.status(500).json({
         message: 'Unexpected error.'
       })
     }
     if (!student) {
+      overkillLogging(req, null)
       res.status(400).json({
         message: 'Student record could not be found or created.'
       })
