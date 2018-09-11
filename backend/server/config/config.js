@@ -27,7 +27,7 @@ module.exports = {
     host: process.env.DB_HOST,
     dialect: 'postgres',
     operatorsAliases: 'false',
-    logging: 'false',
+    logging: false,
     kurki_url: "https://opetushallinto.cs.helsinki.fi"
   }
 }
