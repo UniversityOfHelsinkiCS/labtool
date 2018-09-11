@@ -294,7 +294,6 @@ module.exports = {
         message: 'You have not yet registered to this course at WebOodi. If you have already registered at WebOodi, try again in two hours.'
       })
     }
-
     let student
     try {
       student = await StudentInstance.findOrCreate({
@@ -321,12 +320,13 @@ module.exports = {
           message: errorMessage.join('\n')
         })
       }
-      return res.status(400).send({
-        message: error.errors
+      console.log('Unexpected error in registration.', error)
+      return res.status(500).json({
+        message: 'Unexpected error.'
       })
     }
     if (!student) {
-      res.status(400).send({
+      res.status(400).json({
         message: 'Student record could not be found or created.'
       })
     } else {
