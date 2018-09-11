@@ -2,6 +2,7 @@ const Week = require('../models').Week
 const TeacherInstance = require('../models').TeacherInstance
 const StudentInstance = require('../models').StudentInstance
 const helper = require('../helpers/weeks_controller_helper')
+const logger = require('../utils/logger')
 
 module.exports = {
   async create(req, res) {
@@ -67,7 +68,7 @@ module.exports = {
         res.status(400).send('token verific ation failed')
       }
     } catch (error) {
-      console.log('\nweeks, ', error, '\n')
+      logger.error(error)
     }
   },
   /**

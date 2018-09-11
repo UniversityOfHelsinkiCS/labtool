@@ -14,10 +14,16 @@ const Tag = require('../models').Tag
 const Checklist = require('../models').Checklist
 const env = process.env.NODE_ENV || 'development'
 const config = require('./../config/config.js')[env]
+const logger = require('../utils/logger')
 
 const overkillLogging = (req, error) => {
   console.log('request: ', req)
   console.log('error: ', error)
+}
+
+const validationErrorMessages = {
+  github: 'Github repository link is not a proper url.',
+  projectName: 'Project name contains illegal characters.'
 }
 
 module.exports = {
@@ -190,6 +196,7 @@ module.exports = {
         palautus.role = 'student'
         res.status(200).send(palautus)
       } catch (error) {
+        logger.error(error)
         res.status(400).send(error)
       }
     } else {
@@ -241,6 +248,7 @@ module.exports = {
         palautus.role = 'teacher'
         res.status(200).send(palautus)
       } catch (e) {
+        logger.error(e)
         res.status(200).send(e)
       }
     }
@@ -292,7 +300,7 @@ module.exports = {
     const webOodiStatus = await new Promise((resolve) => {
       helper.checkWebOodi(req, res, user, resolve) // this does not work.
 
-      setTimeout(function() {
+      setTimeout(function () {
         overkillLogging(req, null)
         resolve('shitaintright') // Yay! everything went to hell.
       }, 5000) // set a high timeout value since you really want to wait x)
@@ -321,22 +329,18 @@ module.exports = {
       })
     } catch (error) {
       if (error.name === 'SequelizeValidationError') {
-        const validationErrorMessages = {
-          github: 'Github repository link is not a proper url.',
-          projectName: 'Project name contains illegal characters.'
-        }
         const errorMessage = error.errors.map(e => validationErrorMessages[e.path] || 'Unknown validation error.')
+        logger.error(error)
         return res.status(400).json({
           message: errorMessage.join('\n')
         })
       }
-      overkillLogging(req, error)
+      logger.error(error)
       return res.status(500).json({
         message: 'Unexpected error.'
       })
     }
     if (!student) {
-      overkillLogging(req, null)
       res.status(400).json({
         message: 'Student record could not be found or created.'
       })
@@ -392,12 +396,22 @@ module.exports = {
                   res.status(200).send(updatedStudentInstance)
                 })
                 .catch(error => {
-                  console.log('\nerror happened\n')
-                  res.status(400).send('update failed')
+                  if (error.name === 'SequelizeValidationError') {
+                    const errorMessage = error.errors.map(e => validationErrorMessages[e.path] || 'Unknown validation error.')
+                    logger.error(error)
+                    return res.status(400).json({
+                      message: errorMessage.join('\n')
+                    })
+                  }
+                  logger.error(error)
+                  res.status(400).send('Error')
                 })
             })
           })
-          .catch(error => res.status(400).send('\n\n\n\ntuli joku error: ', error))
+          .catch(error => {
+            logger.error(error)
+            return res.status(400).send('\n\n\n\ntuli joku error: ', error)
+          })
       }
     } catch (e) {
       res.status(400).send(e)
@@ -449,11 +463,20 @@ module.exports = {
                 currentCodeReview: req.body.newCr.length === 0 ? '{}' : req.body.newCr
               })
               .then(updatedCourseInstance => res.status(200).send(updatedCourseInstance))
-              .catch(error => res.status(400).send(error))
+              .catch(error => {
+                logger.error(error)
+                res.status(400).send(error)
+              })
           })
-          .catch(error => res.status(400).send(error))
+          .catch(error => {
+            logger.error(error)
+            res.status(400).send(error)
+          })
       })
-      .catch(error => res.status(400).send(error))
+      .catch(error => {
+        logger.error(error)
+        res.status(400).send(error)
+      })
   },
 
   /**
@@ -500,7 +523,10 @@ module.exports = {
         }
         return res.status(200).send(courseInstance)
       })
-      .catch(error => res.status(400).send(error))
+      .catch(error => {
+        logger.error(error)
+        res.status(400).send(error)
+      })
   },
   /**
    *
@@ -524,7 +550,7 @@ module.exports = {
         },
         strictSSL: false
       }
-      request(options, function(err, resp, body) {
+      request(options, function (err, resp, body) {
         const json = JSON.parse(body)
         json.forEach(instance => {
           CourseInstance.findOrCreate({
@@ -574,7 +600,7 @@ module.exports = {
           },
           strictSSL: false
         }
-        request(options, function(err, resp, body) {
+        request(options, function (err, resp, body) {
           const json = JSON.parse(body)
           json.forEach(instance => {
             CourseInstance.findOrCreate({
@@ -667,6 +693,7 @@ module.exports = {
 
         return res.status(200).send(course)
       } catch (exception) {
+        logger.error(exception)
         return res.status(400).send(exception)
       }
     }
@@ -704,10 +731,14 @@ module.exports = {
                   res.status(200).send(comment)
                 }
               })
-              .catch(error => res.status(400).send(error))
+              .catch(error => {
+                logger.error(error)
+                res.status(400).send(error)
+              })
           }
         })
       } catch (e) {
+        logger.error(e)
         res.status(400).send(e)
       }
     }
@@ -731,6 +762,8 @@ module.exports = {
       }
     })
       .then(comment => res.status(200).send(comment))
-      .catch(error => res.status(400).send(error))
+      .catch(error => {
+        logger.error(error)
+        res.status(400).send(error)})
   }
 }

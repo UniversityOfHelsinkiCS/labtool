@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken')
 const CourseInstance = require('../models').CourseInstance
 const TeacherInstance = require('../models').TeacherInstance
 const helper = require('../helpers/users_controller_helper')
+const logger = require('../utils/logger')
 
 function invalidInputResponse(res, error) {
   res.status(400).send({ error })
@@ -73,6 +74,7 @@ module.exports = {
         })
         res.status(200).send(users)
       } catch (exception) {
+        logger.error(exception)
         res.status(400).send('Unable to send user list')
       }
     }
@@ -129,6 +131,7 @@ module.exports = {
         })
         res.status(200).send(assistant)
       } catch (exception) {
+        logger.error(exception)
         res.status(400).send('Error in creating teacher/assistant')
       }
     }
@@ -186,6 +189,7 @@ module.exports = {
 
         res.status(200).send(teacherInstanceToRemove)
       } catch (exception) {
+        logger.error(exception)
         res.status(400).send('Error removing assistant.')
       }
     }
