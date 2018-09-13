@@ -1,7 +1,6 @@
 const helper = require('../helpers/checklist_helper')
 const TeacherInstance = require('../models').TeacherInstance
 const Checklist = require('../models').Checklist
-const logger = require('../utils/logger')
 
 module.exports = {
   async create(req, res) {
@@ -63,7 +62,6 @@ module.exports = {
         })
       } catch (e) {
         res.status(400).send('Cannot parse checklist JSON.')
-        logger.error(e)
         return
       }
       const teacherInstance = await TeacherInstance.findOne({
@@ -92,7 +90,7 @@ module.exports = {
       })
     } catch (e) {
       res.status(500).send('Unexpected error')
-      logger.error(e)
+      console.log(e)
     }
   },
   async getOne(req, res) {
@@ -123,8 +121,8 @@ module.exports = {
         })
       }
     } catch (e) {
-      logger.error(e)
       res.status(500).send(e)
+      console.log(e)
     }
   }
 }

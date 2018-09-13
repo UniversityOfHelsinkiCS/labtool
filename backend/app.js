@@ -1,13 +1,7 @@
 let express = require('express')
+let app = express()
 const jwt = require('jsonwebtoken')
 const bodyParser = require('body-parser')
-const Raven = require('raven')
-
-const logger = require('./server/utils/logger')
-
-let app = express()
-Raven.config(process.env.SENTRY_ADDR).install()
-
 require('dotenv').config()
 
 /**
@@ -89,11 +83,11 @@ app.use(adminPwToken)
 app.use(bodyParser.json())
 
 // respond with "hello world" when a GET request is made to the homepage
-app.get('/', function (req, res) {
+app.get('/', function(req, res) {
   res.send('hello world')
 })
 
-app.use(function (req, res, next) {
+app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*')
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization')
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
@@ -111,11 +105,11 @@ const authenticate = (request, response, next) => {
   if (!excludedPaths.includes(request.path)) {
     try {
       let decoded = jwt.verify(request.token, process.env.SECRET)
-        ; (request.decoded = decoded), (request.authenticated = { success: true, error: '' })
+      ;(request.decoded = decoded), (request.authenticated = { success: true, error: '' })
+      console.log('  Authenticated: true')
     } catch (e) {
-      logger.error(e)
       request.authenticated = { success: false, error: 'token verification failed' }
-
+      console.log('  Authenticated: false')
     }
   }
 
@@ -141,7 +135,7 @@ app.get('*', (req, res) =>
   })
 )
 
-let server = app.listen(3001, function () {
+let server = app.listen(3001, function() {
   let port = server.address().port
   console.log('Backend is listening on port %s', port)
 })

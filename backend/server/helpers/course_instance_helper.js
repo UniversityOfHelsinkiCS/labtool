@@ -1,7 +1,6 @@
 const application_helpers = require('./application_helper')
 const env = process.env.NODE_ENV || 'development'
 const config = require('./../config/config.js')[env]
-const logger = require('../utils/logger')
 
 exports.CurrentTermAndYear = application_helpers.CurrentTermAndYear
 exports.getCurrentTerm = application_helpers.getCurrentTerm
@@ -33,12 +32,11 @@ function checkWebOodi(req, res, user, resolve) {
   if (process.env.INCLUDE_TESTERS) {
     options.uri += '?testing=1'
   }
-  request(options, function (req, res, body) {
+  request(options, function(req, res, body) {
     let json = null
     try {
       json = JSON.parse(body)
     } catch (e) {
-      logger.error(e)
       resolve('notfound')
       return
     }
@@ -76,9 +74,7 @@ function findByUserStudentInstance(req, res) {
     db.sequelize
       .query(`SELECT * FROM "CourseInstances" JOIN "StudentInstances" ON "CourseInstances"."id" = "StudentInstances"."courseInstanceId" WHERE "StudentInstances"."userId" = ${req.decoded.id}`)
       .then(instance => res.status(200).send(instance[0]))
-      .catch(error => { 
-        logger.error(error)
-        res.status(400).send(error)})
+      .catch(error => res.status(400).send(error))
   } else {
     errors.push('\nsomething went wrong')
     res.status(400).send(errors)

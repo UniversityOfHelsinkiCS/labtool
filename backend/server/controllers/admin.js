@@ -1,5 +1,4 @@
 const helper = require('../helpers/admin_helper')
-const logger = require('../utils/logger')
 
 module.exports = {
   /**
@@ -23,7 +22,8 @@ module.exports = {
         values2: areActive
       })
     } catch (e) {
-      logger.error(e)
+      console.log('\nadmin, async list catch: ', e, '\n')
+
       res.send('errored in controllers/admin/list')
     }
   },

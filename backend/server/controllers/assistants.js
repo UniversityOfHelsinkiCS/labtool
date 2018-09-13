@@ -9,7 +9,6 @@ const Op = Sequelize.Op
 const StudentInstanceController = require('../controllers').studentInstances
 const env = process.env.NODE_ENV || 'development'
 const config = require('./../config/config.js')[env]
-const logger = require('../utils/logger')
 
 module.exports = {
   async create(req, res) {
@@ -74,7 +73,6 @@ module.exports = {
       })
       res.status(200).send(studentInstance)
     } catch (e) {
-      logger.error(e)
       console.log('\n\nAssistantInstance creation failed.\n', e)
     }
   },
@@ -91,7 +89,6 @@ module.exports = {
     try {
       studentInstanceId = req.params.id
     } catch (e) {
-      logger.error(e)
       res.status(400).send(e)
     }
 
@@ -126,7 +123,6 @@ module.exports = {
         res.status(200).send(returnedAssistantInfo)
       }
     } catch (e) {
-      logger.error(e)
       res.status(400).send(e)
     }
   },
@@ -143,7 +139,7 @@ module.exports = {
       })
       res.status(200).send(studentsForThisTeacherInstance)
     } catch (e) {
-      logger.error(e)
+      console.log('\nfindStudentsByTeacherInstance did not succeed\n\n')
       res.status(400).send(e)
     }
   }

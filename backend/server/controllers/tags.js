@@ -7,7 +7,6 @@ const User = require('../models').User
 const Comment = require('../models').Comment
 const CodeReview = require('../models').CodeReview
 const helper = require('../helpers/course_instance_helper')
-const logger = require('../utils/logger')
 
 module.exports = {
   /**
@@ -58,7 +57,6 @@ module.exports = {
         })
       })
     } catch (e) {
-      logger.error(e)
       res.status(400).send(e)
     }
   },
@@ -90,7 +88,6 @@ module.exports = {
         })
       })
     } catch (e) {
-      logger.error(e)
       return res.status(400).send(e)
     }
   },
@@ -105,7 +102,6 @@ module.exports = {
         })
         .catch(error => res.status(400).send('et ny saa niitä tageja'))
     } catch (e) {
-      logger.error(e)
       res.status(400).send('nymmeni jokin pieleen')
       return
     }
@@ -201,7 +197,6 @@ module.exports = {
           })
         })
       } catch (e) {
-        logger.error(e)
         res.status(400).send('ei onnistu')
       }
     } else {
@@ -284,7 +279,6 @@ module.exports = {
           })
         })
       } catch (e) {
-        logger.error(e)
         res.status(400).send('ei onnistu')
       }
     } else {

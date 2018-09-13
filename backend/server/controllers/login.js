@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken')
 const User = require('../models').User
 const request = require('request')
-const logger = require('../utils/logger')
 const env = process.env.NODE_ENV || 'development'
 const config = require('./../config/config.js')[env]
 
@@ -12,6 +11,7 @@ module.exports = {
    * @param res
    */
   login(req, res) {
+    console.log('entered login')
     const options = {
       method: 'post',
       uri: `${config.kurki_url}/login`,
@@ -20,9 +20,9 @@ module.exports = {
     }
 
     try {
-      const result = request(options, function (err, resp, body) {
+      const result = request(options, function(err, resp, body) {
         if (err) {
-          logger.error(err)
+          console.log('\nlogin: ', err, 'n')
         }
         if (result.response && result.response.body && result.response.body.username && result.response.body.error !== 'wrong credentials') {
           let first
@@ -70,10 +70,10 @@ module.exports = {
         }
       })
     } catch (error) {
-      logger.error(error)
       res.status(500).send({
         error: 'Unexpected error'
       })
+      console.log(error)
     }
   }
 }
