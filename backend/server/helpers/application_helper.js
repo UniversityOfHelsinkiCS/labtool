@@ -9,7 +9,6 @@ exports.getCurrent = getCurrent
 exports.createCourse = createCourse
 const env = process.env.NODE_ENV || 'development'
 const config = require('./../config/config.js')[env]
-const logger = require('../utils/logger')
 
 /**
  *
@@ -146,7 +145,6 @@ async function getActive(req, res) {
     })
     return ires
   } catch (e) {
-    logger.error(e)
     return e
   }
 }
@@ -191,7 +189,6 @@ async function getInactive(req, res) {
 
     return notactivated
   } catch (e) {
-    logger.error(e)
     return e
   }
 }
@@ -242,7 +239,7 @@ async function createCourse(body) {
     }
     return result
   } catch (error) {
-    logger.error(error)
+    console.log(error)
   }
 }
 
@@ -265,7 +262,7 @@ async function getCurrent(req, res) {
       })
     return result
   } catch (error) {
-    logger.error(error)
+    console.log(error)
   }
 }
 
@@ -288,6 +285,6 @@ async function getNewer(req, res) {
       })
     return result
   } catch (error) {
-    logger.error(error)
+    console.log(error)
   }
 }
