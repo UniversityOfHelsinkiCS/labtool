@@ -2,6 +2,7 @@ const Week = require('../models').Week
 const TeacherInstance = require('../models').TeacherInstance
 const StudentInstance = require('../models').StudentInstance
 const helper = require('../helpers/weeks_controller_helper')
+const logger = require('../utils/logger')
 
 module.exports = {
   async create(req, res) {
@@ -81,7 +82,10 @@ module.exports = {
 
     return Week.all()
       .then(ui => res.status(200).send(ui))
-      .catch(error => res.status(400).send(error))
+      .catch(error => {
+        logger.error(error)
+        res.status(400).send(error)
+      })
   },
   /**
    *
@@ -101,6 +105,9 @@ module.exports = {
         }
         return res.status(200).send(week)
       })
-      .catch(error => res.status(400).send(error))
+      .catch(error => {
+        logger.error(error)
+        res.status(400).send(error)
+      })
   }
 }

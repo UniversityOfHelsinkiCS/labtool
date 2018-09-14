@@ -7,6 +7,7 @@ const User = require('../models').User
 const Comment = require('../models').Comment
 const CodeReview = require('../models').CodeReview
 const helper = require('../helpers/course_instance_helper')
+const logger = require('../../server/utils/logger')
 
 module.exports = {
   /**
@@ -51,6 +52,7 @@ module.exports = {
               return
             })
             .catch(error => {
+              logger.error(error)
               res.status(400).send('color did not update')
               return
             })
@@ -100,7 +102,10 @@ module.exports = {
         .then(tag => {
           return res.status(200).send(tag)
         })
-        .catch(error => res.status(400).send('et ny saa niitä tageja'))
+        .catch(error => {
+          res.status(400).send('et ny saa niitä tageja')
+          logger.error(error)
+        })
     } catch (e) {
       res.status(400).send('nymmeni jokin pieleen')
       return
