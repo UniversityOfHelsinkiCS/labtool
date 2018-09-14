@@ -21,6 +21,11 @@ const overkillLogging = (req, error) => {
   console.log('error: ', error)
 }
 
+const validationErrorMessages = {
+  github: 'Github repository link is not a proper url.',
+  projectName: 'Project name contains illegal characters.\nCharacters allowed are letters from a-ö, numbers, apostrophe and whitespace (not multiple in a row or at first/last character)'
+}
+
 module.exports = {
   /**
    *
@@ -325,10 +330,6 @@ module.exports = {
       })
     } catch (error) {
       if (error.name === 'SequelizeValidationError') {
-        const validationErrorMessages = {
-          github: 'Github repository link is not a proper url.',
-          projectName: 'Project name contains illegal characters.'
-        }
         const errorMessage = error.errors.map(e => validationErrorMessages[e.path] || 'Unknown validation error.')
         return res.status(400).json({
           message: errorMessage.join('\n')
@@ -395,9 +396,12 @@ module.exports = {
                   console.log('\nUpdated student project info succesfully\n')
                   res.status(200).send(updatedStudentInstance)
                 })
-                .catch(error => {
-                  logger.error(error)
-                  res.status(400).send('update failed')
+                .catch((error) => {
+                  if (error.name === 'SequelizeValidationError') {
+                    const errorMessage = error.errors.map(e => validationErrorMessages[e.path] || 'Unknown validation error.')
+                    logger.error(error)
+                    return res.status(400).send({ message: errorMessage.join('\n') })
+                  }
                 })
             })
           })
