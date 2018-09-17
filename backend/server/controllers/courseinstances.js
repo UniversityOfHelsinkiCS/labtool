@@ -23,7 +23,7 @@ const overkillLogging = (req, error) => {
 
 const validationErrorMessages = {
   github: 'Github repository link is not a proper url.',
-  projectName: 'Project name contains illegal characters.\nCharacters allowed are letters from a-ö, numbers, apostrophe and whitespace (not multiple in a row or at first/last character)'
+  projectName: 'Project name contains illegal characters.\nCharacters allowed are letters from a-ö, numbers, apostrophe, - and whitespace (not multiple in a row or at first/last character)'
 }
 
 module.exports = {

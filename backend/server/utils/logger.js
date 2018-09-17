@@ -10,7 +10,7 @@ if (process.env.NODE_ENV !== 'test') {
 transports.push(new (winston.transports.Console)())
 if (process.env.LOG_PORT && process.env.LOG_HOST) {
   transports.push(new Log2gelf({
-    hostname: 'labtool-backend',
+    hostname: process.env.LOG_HOSTNAME || 'labtool-backend',
     host: process.env.LOG_HOST,
     port: process.env.LOG_PORT,
     protocol: 'http'
