@@ -2,7 +2,10 @@ let express = require('express')
 let app = express()
 const jwt = require('jsonwebtoken')
 const bodyParser = require('body-parser')
+const Raven = require('raven')
 const logger = require('./server/utils/logger')
+
+Raven.config(process.env.SENTRY_ADDR).install()
 
 require('dotenv').config()
 
