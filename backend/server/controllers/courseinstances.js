@@ -243,6 +243,12 @@ module.exports = {
             model: Tag,
             attributes: ['id', 'name', 'color']
           }
+        ],
+        order: [
+          [
+            { model: CodeReview, as: 'codeReviews' },
+            'reviewNumber', 'ASC'
+          ]
         ]
       })
       try {
