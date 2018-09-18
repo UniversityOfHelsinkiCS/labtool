@@ -213,6 +213,10 @@ export class CoursePage extends React.Component {
     const numberOfCodeReviews = Array.isArray(this.props.courseData.data) ? Math.max(...this.props.courseData.data.map(student => student.codeReviews.length)) : 0
 
     const createIndents = (weeks, codeReviews, siId) => {
+      const cr = codeReviews &&
+        codeReviews.reduce((a, b) => {
+          return { ...a, [b.reviewNumber]: b.points }
+        }, {})
       const indents = []
       let i = 0
       let finalPoints = undefined
@@ -236,19 +240,26 @@ export class CoursePage extends React.Component {
         }
         indents.push(pushattava)
       }
+
       let ii = 0
-      codeReviews.forEach(cr => {
-        indents.push(<Table.Cell key={i + ii}>{cr.points !== null ? <p className="codeReviewPoints">{cr.points}</p> : <p>-</p>}</Table.Cell>)
-        ii++
-      })
-      while (ii < numberOfCodeReviews) {
-        indents.push(
-          <Table.Cell key={i + ii}>
-            <p>-</p>
-          </Table.Cell>
-        )
-        ii++
+      const { amountOfCodeReviews } = this.props.selectedInstance
+      if (amountOfCodeReviews) {
+        for (let index = 1; index <= amountOfCodeReviews; index++) {
+          indents.push(<Table.Cell key={siId + index}>{cr[index] || cr[index] === 0 ? <p className="codeReviewPoints">{cr[index]}</p> : <p>-</p>}</Table.Cell>)
+        }
       }
+      // codeReviews.forEach(cr => {
+      //   indents.push(<Table.Cell key={i + ii}>{cr.points !== null ? <p className="codeReviewPoints">{cr.points}</p> : <p>-</p>}</Table.Cell>)
+      //   ii++
+      // // })
+      // while (ii < numberOfCodeReviews) {
+      //   indents.push(
+      //     <Table.Cell key={i + ii}>
+      //       <p>-</p>
+      //     </Table.Cell>
+      //   )
+      //   ii++
+      // }
 
       if (this.props.selectedInstance.finalReview) {
         let finalReviewPointsCell = (
@@ -271,7 +282,7 @@ export class CoursePage extends React.Component {
       for (; i < this.props.selectedInstance.weekAmount; i++) {
         headers.push(<Table.HeaderCell key={i}>Week {i + 1} </Table.HeaderCell>)
       }
-      for (var ii = 1; ii <= numberOfCodeReviews; ii++) {
+      for (var ii = 1; ii <= this.props.selectedInstance.amountOfCodeReviews; ii++) {
         headers.push(<Table.HeaderCell key={i + ii}>Code Review {ii} </Table.HeaderCell>)
       }
       if (this.props.selectedInstance.finalReview) {
