@@ -129,7 +129,7 @@ export class ModifyCourseInstancePage extends Component {
                                   {cr}
                                 </Button>
                               }
-                              content={'Click to not be removed on save'}
+                              content={'This code review will be hidden on save'}
                             />
                           ) : (
                             <Popup
@@ -139,7 +139,7 @@ export class ModifyCourseInstancePage extends Component {
                                   {cr}
                                 </Button>
                               }
-                              content={'Click to be removed on save'}
+                              content={'Click to hide this code review on save'}
                             />
                           )
                       )
@@ -187,17 +187,17 @@ export class ModifyCourseInstancePage extends Component {
 
         <Link to={`/labtool/ModifyCourseInstanceStaff/${this.props.selectedInstance.ohid}`}>
           <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px' }} block="true">
-            Add or remove assistant teachers
+            Manage assistant teachers
           </Button>
         </Link>
         <Link to={`/labtool/ModifyCourseInstanceCodeReviews/${this.props.selectedInstance.ohid}`}>
           <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px' }} block="true">
-            Add or modify codereviews
+            Edit code reviews
           </Button>
         </Link>
         <Link to={`/labtool/checklist/${this.props.selectedInstance.ohid}/create`}>
           <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px' }} block="true">
-            Create new checklist
+            Edit checklists
           </Button>
         </Link>
         <Link to={`/labtool/managetags`}>
