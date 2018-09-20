@@ -512,15 +512,15 @@ export class CoursePage extends React.Component {
     let renderTeacherTopPart = () => {
       return (
         <div className="TeachersTopView" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
-          <div className="ui grid">
-            <div className="sixteen wide column">
+          <div>
+            <div>
               <h2>{this.props.selectedInstance.name}</h2>
             </div>
             {this.props.courseInstance && this.props.courseInstance.active === true ? (
               this.props.courseData.data !== null ? (
                 <p />
               ) : (
-                <div className="sixteen wide column">
+                <div>
                   <Message compact>
                     <Message.Header>You have not activated this course.</Message.Header>
                   </Message>
@@ -598,7 +598,7 @@ export class CoursePage extends React.Component {
             )}
           </div>
 
-          <Table celled>
+          <Table celled compact unstackable>
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell key={-1}>Student</Table.HeaderCell>
@@ -760,7 +760,7 @@ export class CoursePage extends React.Component {
       )
     } else if (this.props.courseData.role === 'teacher') {
       return (
-        <div>
+        <div style={{ overflow: 'auto' }}>
           {renderTeacherTopPart()}
           {renderTeacherBottomPart()}
         </div>
