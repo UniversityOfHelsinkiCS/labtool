@@ -59,7 +59,7 @@ export class ReviewStudent extends Component {
 
   copyChecklistOutput = async e => {
     e.preventDefault()
-    this.reviewPointsRef.current.inputRef.value = e.target.points.value
+    this.reviewPointsRef.current.inputRef.value = Number(e.target.points.value).toFixed(2)
     /* The below line is as hacky as it is because functional elements cannot directly have refs.
     * This abomination somehow accesses a textarea that is a child of a div that holds the ref.
     */
