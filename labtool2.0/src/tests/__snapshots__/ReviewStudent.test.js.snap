@@ -148,53 +148,40 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
               key="Koodin laatu"
             >
               <FormField>
-                <Input
-                  defaultChecked={false}
-                  onChange={[Function]}
-                  type="checkbox"
-                />
-                <span>
-                  Koodin laatu
-                </span>
-                <div
-                  style={
-                    Object {
-                      "display": "inline-block",
-                      "marginLeft": "20px",
-                      "maxWidth": "0px",
-                      "textAlign": "left",
-                    }
-                  }
-                >
-                  <span
-                    style={
-                      Object {
-                        "display": "inline-block",
-                        "minWidth": "100px",
-                      }
-                    }
-                  >
-                    <Icon
-                      as="i"
-                      className="grey check square outline"
-                    />
-                     p
-                  </span>
-                  <span
-                    style={
-                      Object {
-                        "display": "inline-block",
-                        "minWidth": "100px",
-                      }
-                    }
-                  >
-                    <Icon
-                      as="i"
-                      className="grey square outline"
-                    />
-                     p
-                  </span>
-                </div>
+                <Grid>
+                  <GridRow>
+                    <GridColumn
+                      width={3}
+                    >
+                      <Input
+                        defaultChecked={false}
+                        onChange={[Function]}
+                        type="checkbox"
+                      />
+                    </GridColumn>
+                    <GridColumn
+                      width={10}
+                    >
+                      <span
+                        style={
+                          Object {
+                            "flexGrow": 1,
+                            "textAlign": "center",
+                          }
+                        }
+                      >
+                        Koodin laatu
+                      </span>
+                    </GridColumn>
+                    <GridColumn
+                      width={3}
+                    >
+                      <span>
+                        undefined p / undefined p
+                      </span>
+                    </GridColumn>
+                  </GridRow>
+                </Grid>
               </FormField>
             </CardContent>
           </Card>
@@ -212,53 +199,40 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
               key="Algoritmin runko"
             >
               <FormField>
-                <Input
-                  defaultChecked={false}
-                  onChange={[Function]}
-                  type="checkbox"
-                />
-                <span>
-                  Algoritmin runko
-                </span>
-                <div
-                  style={
-                    Object {
-                      "display": "inline-block",
-                      "marginLeft": "20px",
-                      "maxWidth": "0px",
-                      "textAlign": "left",
-                    }
-                  }
-                >
-                  <span
-                    style={
-                      Object {
-                        "display": "inline-block",
-                        "minWidth": "100px",
-                      }
-                    }
-                  >
-                    <Icon
-                      as="i"
-                      className="grey check square outline"
-                    />
-                     p
-                  </span>
-                  <span
-                    style={
-                      Object {
-                        "display": "inline-block",
-                        "minWidth": "100px",
-                      }
-                    }
-                  >
-                    <Icon
-                      as="i"
-                      className="grey square outline"
-                    />
-                     p
-                  </span>
-                </div>
+                <Grid>
+                  <GridRow>
+                    <GridColumn
+                      width={3}
+                    >
+                      <Input
+                        defaultChecked={false}
+                        onChange={[Function]}
+                        type="checkbox"
+                      />
+                    </GridColumn>
+                    <GridColumn
+                      width={10}
+                    >
+                      <span
+                        style={
+                          Object {
+                            "flexGrow": 1,
+                            "textAlign": "center",
+                          }
+                        }
+                      >
+                        Algoritmin runko
+                      </span>
+                    </GridColumn>
+                    <GridColumn
+                      width={3}
+                    >
+                      <span>
+                        undefined p / undefined p
+                      </span>
+                    </GridColumn>
+                  </GridRow>
+                </Grid>
               </FormField>
             </CardContent>
             <CardContent
@@ -266,53 +240,40 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
               key="Tietorakenteita luotu"
             >
               <FormField>
-                <Input
-                  defaultChecked={false}
-                  onChange={[Function]}
-                  type="checkbox"
-                />
-                <span>
-                  Tietorakenteita luotu
-                </span>
-                <div
-                  style={
-                    Object {
-                      "display": "inline-block",
-                      "marginLeft": "20px",
-                      "maxWidth": "0px",
-                      "textAlign": "left",
-                    }
-                  }
-                >
-                  <span
-                    style={
-                      Object {
-                        "display": "inline-block",
-                        "minWidth": "100px",
-                      }
-                    }
-                  >
-                    <Icon
-                      as="i"
-                      className="grey check square outline"
-                    />
-                     p
-                  </span>
-                  <span
-                    style={
-                      Object {
-                        "display": "inline-block",
-                        "minWidth": "100px",
-                      }
-                    }
-                  >
-                    <Icon
-                      as="i"
-                      className="grey square outline"
-                    />
-                     p
-                  </span>
-                </div>
+                <Grid>
+                  <GridRow>
+                    <GridColumn
+                      width={3}
+                    >
+                      <Input
+                        defaultChecked={false}
+                        onChange={[Function]}
+                        type="checkbox"
+                      />
+                    </GridColumn>
+                    <GridColumn
+                      width={10}
+                    >
+                      <span
+                        style={
+                          Object {
+                            "flexGrow": 1,
+                            "textAlign": "center",
+                          }
+                        }
+                      >
+                        Tietorakenteita luotu
+                      </span>
+                    </GridColumn>
+                    <GridColumn
+                      width={3}
+                    >
+                      <span>
+                        undefined p / undefined p
+                      </span>
+                    </GridColumn>
+                  </GridRow>
+                </Grid>
               </FormField>
             </CardContent>
           </Card>
@@ -330,53 +291,40 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
               key="Readme"
             >
               <FormField>
-                <Input
-                  defaultChecked={false}
-                  onChange={[Function]}
-                  type="checkbox"
-                />
-                <span>
-                  Readme
-                </span>
-                <div
-                  style={
-                    Object {
-                      "display": "inline-block",
-                      "marginLeft": "20px",
-                      "maxWidth": "0px",
-                      "textAlign": "left",
-                    }
-                  }
-                >
-                  <span
-                    style={
-                      Object {
-                        "display": "inline-block",
-                        "minWidth": "100px",
-                      }
-                    }
-                  >
-                    <Icon
-                      as="i"
-                      className="grey check square outline"
-                    />
-                     p
-                  </span>
-                  <span
-                    style={
-                      Object {
-                        "display": "inline-block",
-                        "minWidth": "100px",
-                      }
-                    }
-                  >
-                    <Icon
-                      as="i"
-                      className="grey square outline"
-                    />
-                     p
-                  </span>
-                </div>
+                <Grid>
+                  <GridRow>
+                    <GridColumn
+                      width={3}
+                    >
+                      <Input
+                        defaultChecked={false}
+                        onChange={[Function]}
+                        type="checkbox"
+                      />
+                    </GridColumn>
+                    <GridColumn
+                      width={10}
+                    >
+                      <span
+                        style={
+                          Object {
+                            "flexGrow": 1,
+                            "textAlign": "center",
+                          }
+                        }
+                      >
+                        Readme
+                      </span>
+                    </GridColumn>
+                    <GridColumn
+                      width={3}
+                    >
+                      <span>
+                        undefined p / undefined p
+                      </span>
+                    </GridColumn>
+                  </GridRow>
+                </Grid>
               </FormField>
             </CardContent>
             <CardContent
@@ -384,53 +332,40 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
               key="Tuntikirjanpito"
             >
               <FormField>
-                <Input
-                  defaultChecked={false}
-                  onChange={[Function]}
-                  type="checkbox"
-                />
-                <span>
-                  Tuntikirjanpito
-                </span>
-                <div
-                  style={
-                    Object {
-                      "display": "inline-block",
-                      "marginLeft": "20px",
-                      "maxWidth": "0px",
-                      "textAlign": "left",
-                    }
-                  }
-                >
-                  <span
-                    style={
-                      Object {
-                        "display": "inline-block",
-                        "minWidth": "100px",
-                      }
-                    }
-                  >
-                    <Icon
-                      as="i"
-                      className="grey check square outline"
-                    />
-                     p
-                  </span>
-                  <span
-                    style={
-                      Object {
-                        "display": "inline-block",
-                        "minWidth": "100px",
-                      }
-                    }
-                  >
-                    <Icon
-                      as="i"
-                      className="grey square outline"
-                    />
-                     p
-                  </span>
-                </div>
+                <Grid>
+                  <GridRow>
+                    <GridColumn
+                      width={3}
+                    >
+                      <Input
+                        defaultChecked={false}
+                        onChange={[Function]}
+                        type="checkbox"
+                      />
+                    </GridColumn>
+                    <GridColumn
+                      width={10}
+                    >
+                      <span
+                        style={
+                          Object {
+                            "flexGrow": 1,
+                            "textAlign": "center",
+                          }
+                        }
+                      >
+                        Tuntikirjanpito
+                      </span>
+                    </GridColumn>
+                    <GridColumn
+                      width={3}
+                    >
+                      <span>
+                        undefined p / undefined p
+                      </span>
+                    </GridColumn>
+                  </GridRow>
+                </Grid>
               </FormField>
             </CardContent>
           </Card>

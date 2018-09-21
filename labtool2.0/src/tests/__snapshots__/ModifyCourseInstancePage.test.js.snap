@@ -1,339 +1,344 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`<ModifyCourseInstancePage /> Modify Instance Component should render correctly 1`] = `
-<div
-  className="CoursePage"
-  style={
-    Object {
-      "textAlign": "center",
-      "textAlignVertical": "center",
-    }
-  }
->
-  <Loader
-    active={false}
-    inline="centered"
+<div>
+  <Connect(BackButton)
+    preset="coursePage"
   />
-  <Grid>
-    <GridRow
-      centered={true}
-    >
-      <h2>
-         Edit course: 
-        Aineopintojen harjoitustyö: Tietokantasovellus (periodi IV)
-         
-      </h2>
-    </GridRow>
-  </Grid>
-  <Grid>
-    <GridRow
-      centered={true}
-    >
-      <Form
-        as="form"
-        onSubmit={[Function]}
+  <div
+    className="CoursePage"
+    style={
+      Object {
+        "textAlign": "center",
+        "textAlignVertical": "center",
+      }
+    }
+  >
+    <Loader
+      active={false}
+      inline="centered"
+    />
+    <Grid>
+      <GridRow
+        centered={true}
       >
-        <FormGroup
-          inline={true}
+        <h2>
+           Edit course: 
+          Aineopintojen harjoitustyö: Tietokantasovellus (periodi IV)
+           
+        </h2>
+      </GridRow>
+    </Grid>
+    <Grid>
+      <GridRow
+        centered={true}
+      >
+        <Form
+          as="form"
+          onSubmit={[Function]}
         >
-          <label
-            style={
-              Object {
-                "textAlign": "left",
-                "width": "125px",
-              }
-            }
+          <FormGroup
+            inline={true}
           >
-            Week amount
-          </label>
-          <Input
-            className="form-control1"
-            name="weekAmount"
-            onChange={[Function]}
-            required="true"
-            style={
-              Object {
-                "maxWidth": "7em",
-              }
-            }
-            type="text"
-            value={7}
-          />
-        </FormGroup>
-        <FormGroup
-          inline={true}
-        >
-          <label
-            style={
-              Object {
-                "textAlign": "left",
-                "width": "125px",
-              }
-            }
-          >
-            Weekly maxpoints
-          </label>
-          <Input
-            className="form-control2"
-            name="weekMaxPoints"
-            onChange={[Function]}
-            required="true"
-            style={
-              Object {
-                "maxWidth": "7em",
-              }
-            }
-            type="text"
-            value={2}
-          />
-        </FormGroup>
-        <FormGroup
-          inline={true}
-        >
-          <label
-            style={
-              Object {
-                "textAlign": "left",
-                "width": "125px",
-              }
-            }
-          >
-            Current week
-          </label>
-          <Input
-            className="form-control3"
-            name="currentWeek"
-            onChange={[Function]}
-            required="true"
-            style={
-              Object {
-                "maxWidth": "7em",
-              }
-            }
-            type="text"
-            value={1}
-          />
-        </FormGroup>
-        <FormGroup
-          inline={true}
-        >
-          <label
-            style={
-              Object {
-                "textAlign": "left",
-                "width": "125px",
-              }
-            }
-          >
-            Currently visible code reviews
-          </label>
-          <Popup
-            content="Click to be removed on save"
-            keepInViewPort={true}
-            key="1"
-            on="hover"
-            position="top left"
-            trigger={
-              <Button
-                as="button"
-                compact={true}
-                onClick={[Function]}
-                role="button"
-                value={1}
-              >
-                1
-              </Button>
-            }
-          />
-          <Popup
-            content="Click to be removed on save"
-            keepInViewPort={true}
-            key="2"
-            on="hover"
-            position="top left"
-            trigger={
-              <Button
-                as="button"
-                compact={true}
-                onClick={[Function]}
-                role="button"
-                value={2}
-              >
-                2
-              </Button>
-            }
-          />
-        </FormGroup>
-        <FormGroup
-          inline={true}
-        >
-          <Dropdown
-            additionLabel="Add "
-            additionPosition="top"
-            closeOnBlur={true}
-            deburr={false}
-            fluid={true}
-            icon="dropdown"
-            minCharacters={1}
-            multiple={true}
-            noResultsMessage="No results found."
-            onChange={[Function]}
-            openOnFocus={true}
-            options={
-              Array [
+            <label
+              style={
                 Object {
-                  "text": "3",
-                  "value": 3,
-                },
-              ]
-            }
-            placeholder="Select code reviews to set visible"
-            renderLabel={[Function]}
-            searchInput="text"
-            selectOnBlur={true}
-            selectOnNavigation={true}
-            selection={true}
-            wrapSelection={true}
-          />
-        </FormGroup>
-        <FormGroup
-          inline={true}
-        >
-          <Checkbox
-            label="Course has a final review"
-            name="finalReview"
-            onChange={[Function]}
-            style={
-              Object {
-                "textAlign": "left",
-                "width": "150px",
+                  "textAlign": "left",
+                  "width": "125px",
+                }
               }
-            }
-            type="checkbox"
-          />
-        </FormGroup>
-        <FormGroup
-          inline={true}
-        >
-          <Checkbox
-            checked={true}
-            label="Activate course"
-            name="courseActive"
-            onChange={[Function]}
-            style={
-              Object {
-                "textAlign": "left",
-                "width": "150px",
+            >
+              Week amount
+            </label>
+            <Input
+              className="form-control1"
+              name="weekAmount"
+              onChange={[Function]}
+              required="true"
+              style={
+                Object {
+                  "maxWidth": "7em",
+                }
               }
-            }
-            type="checkbox"
-          />
-        </FormGroup>
-        <FormGroup>
-          <Button
-            as="button"
-            color="green"
-            floated="left"
-            role="button"
-            size="huge"
-            type="Submit"
+              type="text"
+              value={7}
+            />
+          </FormGroup>
+          <FormGroup
+            inline={true}
           >
-            Save
-          </Button>
-          <Link
-            replace={false}
-            to="/labtool/courses"
+            <label
+              style={
+                Object {
+                  "textAlign": "left",
+                  "width": "125px",
+                }
+              }
+            >
+              Weekly maxpoints
+            </label>
+            <Input
+              className="form-control2"
+              name="weekMaxPoints"
+              onChange={[Function]}
+              required="true"
+              style={
+                Object {
+                  "maxWidth": "7em",
+                }
+              }
+              type="text"
+              value={2}
+            />
+          </FormGroup>
+          <FormGroup
+            inline={true}
           >
+            <label
+              style={
+                Object {
+                  "textAlign": "left",
+                  "width": "125px",
+                }
+              }
+            >
+              Current week
+            </label>
+            <Input
+              className="form-control3"
+              name="currentWeek"
+              onChange={[Function]}
+              required="true"
+              style={
+                Object {
+                  "maxWidth": "7em",
+                }
+              }
+              type="text"
+              value={1}
+            />
+          </FormGroup>
+          <FormGroup
+            inline={true}
+          >
+            <label
+              style={
+                Object {
+                  "textAlign": "left",
+                  "width": "125px",
+                }
+              }
+            >
+              Currently visible code reviews
+            </label>
+            <Popup
+              content="Click to hide this code review on save"
+              keepInViewPort={true}
+              key="1"
+              on="hover"
+              position="top left"
+              trigger={
+                <Button
+                  as="button"
+                  compact={true}
+                  onClick={[Function]}
+                  role="button"
+                  value={1}
+                >
+                  1
+                </Button>
+              }
+            />
+            <Popup
+              content="Click to hide this code review on save"
+              keepInViewPort={true}
+              key="2"
+              on="hover"
+              position="top left"
+              trigger={
+                <Button
+                  as="button"
+                  compact={true}
+                  onClick={[Function]}
+                  role="button"
+                  value={2}
+                >
+                  2
+                </Button>
+              }
+            />
+          </FormGroup>
+          <FormGroup
+            inline={true}
+          >
+            <Dropdown
+              additionLabel="Add "
+              additionPosition="top"
+              closeOnBlur={true}
+              deburr={false}
+              fluid={true}
+              icon="dropdown"
+              minCharacters={1}
+              multiple={true}
+              noResultsMessage="No results found."
+              onChange={[Function]}
+              openOnFocus={true}
+              options={
+                Array [
+                  Object {
+                    "text": "3",
+                    "value": 3,
+                  },
+                ]
+              }
+              placeholder="Select code reviews to set visible"
+              renderLabel={[Function]}
+              searchInput="text"
+              selectOnBlur={true}
+              selectOnNavigation={true}
+              selection={true}
+              wrapSelection={true}
+            />
+          </FormGroup>
+          <FormGroup
+            inline={true}
+          >
+            <Checkbox
+              label="Course has a final review"
+              name="finalReview"
+              onChange={[Function]}
+              style={
+                Object {
+                  "textAlign": "left",
+                  "width": "150px",
+                }
+              }
+              type="checkbox"
+            />
+          </FormGroup>
+          <FormGroup
+            inline={true}
+          >
+            <Checkbox
+              checked={true}
+              label="Activate course"
+              name="courseActive"
+              onChange={[Function]}
+              style={
+                Object {
+                  "textAlign": "left",
+                  "width": "150px",
+                }
+              }
+              type="checkbox"
+            />
+          </FormGroup>
+          <FormGroup>
             <Button
               as="button"
-              color="red"
-              floated="right"
+              color="green"
+              floated="left"
               role="button"
               size="huge"
-              type="Cancel"
+              type="Submit"
             >
-              Cancel
+              Save
             </Button>
-          </Link>
-        </FormGroup>
-      </Form>
-    </GridRow>
-  </Grid>
-  <Link
-    replace={false}
-    to="/labtool/ModifyCourseInstanceStaff/TKT20011.2018.K.A.1"
-  >
-    <Button
-      as="button"
-      block="true"
-      role="button"
-      style={
-        Object {
-          "marginLeft": "5px",
-          "marginRight": "5px",
-          "marginTop": "20px",
-        }
-      }
+            <Link
+              replace={false}
+              to="/labtool/courses"
+            >
+              <Button
+                as="button"
+                color="red"
+                floated="right"
+                role="button"
+                size="huge"
+                type="Cancel"
+              >
+                Cancel
+              </Button>
+            </Link>
+          </FormGroup>
+        </Form>
+      </GridRow>
+    </Grid>
+    <Link
+      replace={false}
+      to="/labtool/ModifyCourseInstanceStaff/TKT20011.2018.K.A.1"
     >
-      Add or remove assistant teachers
-    </Button>
-  </Link>
-  <Link
-    replace={false}
-    to="/labtool/ModifyCourseInstanceCodeReviews/TKT20011.2018.K.A.1"
-  >
-    <Button
-      as="button"
-      block="true"
-      role="button"
-      style={
-        Object {
-          "marginLeft": "5px",
-          "marginRight": "5px",
-          "marginTop": "20px",
+      <Button
+        as="button"
+        block="true"
+        role="button"
+        style={
+          Object {
+            "marginLeft": "5px",
+            "marginRight": "5px",
+            "marginTop": "20px",
+          }
         }
-      }
+      >
+        Manage assistant teachers
+      </Button>
+    </Link>
+    <Link
+      replace={false}
+      to="/labtool/ModifyCourseInstanceCodeReviews/TKT20011.2018.K.A.1"
     >
-      Add or modify codereviews
-    </Button>
-  </Link>
-  <Link
-    replace={false}
-    to="/labtool/checklist/TKT20011.2018.K.A.1/create"
-  >
-    <Button
-      as="button"
-      block="true"
-      role="button"
-      style={
-        Object {
-          "marginLeft": "5px",
-          "marginRight": "5px",
-          "marginTop": "20px",
+      <Button
+        as="button"
+        block="true"
+        role="button"
+        style={
+          Object {
+            "marginLeft": "5px",
+            "marginRight": "5px",
+            "marginTop": "20px",
+          }
         }
-      }
+      >
+        Edit code reviews
+      </Button>
+    </Link>
+    <Link
+      replace={false}
+      to="/labtool/checklist/TKT20011.2018.K.A.1/create"
     >
-      Create new checklist
-    </Button>
-  </Link>
-  <Link
-    replace={false}
-    to="/labtool/managetags"
-  >
-    <Button
-      as="button"
-      block="true"
-      role="button"
-      style={
-        Object {
-          "marginLeft": "5px",
-          "marginRight": "5px",
-          "marginTop": "20px",
+      <Button
+        as="button"
+        block="true"
+        role="button"
+        style={
+          Object {
+            "marginLeft": "5px",
+            "marginRight": "5px",
+            "marginTop": "20px",
+          }
         }
-      }
+      >
+        Edit checklists
+      </Button>
+    </Link>
+    <Link
+      replace={false}
+      to="/labtool/managetags"
     >
-      Edit tags
-    </Button>
-  </Link>
+      <Button
+        as="button"
+        block="true"
+        role="button"
+        style={
+          Object {
+            "marginLeft": "5px",
+            "marginRight": "5px",
+            "marginTop": "20px",
+          }
+        }
+      >
+        Edit tags
+      </Button>
+    </Link>
+  </div>
 </div>
 `;
