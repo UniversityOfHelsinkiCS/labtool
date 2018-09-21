@@ -188,9 +188,16 @@ const notificationReducer = (state = {}, action) => {
       }
 
     case 'CODE_REVIEW_REMOVE_ONE_SUCCESS':
-    return {
+      return {
         message: 'Code review removed succesfully!',
         error: false
+      }
+    case 'STUDENT_PROJECT_INFO_UPDATE_FAILURE': {
+      const { message } = action.response.response.data
+      return {
+        message,
+        error: true
+      }
     }
     default:
       return state

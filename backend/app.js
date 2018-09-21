@@ -2,6 +2,11 @@ let express = require('express')
 let app = express()
 const jwt = require('jsonwebtoken')
 const bodyParser = require('body-parser')
+const Raven = require('raven')
+const logger = require('./server/utils/logger')
+
+Raven.config(process.env.SENTRY_ADDR).install()
+
 require('dotenv').config()
 
 /**
@@ -106,10 +111,9 @@ const authenticate = (request, response, next) => {
     try {
       let decoded = jwt.verify(request.token, process.env.SECRET)
       ;(request.decoded = decoded), (request.authenticated = { success: true, error: '' })
-      console.log('  Authenticated: true')
     } catch (e) {
       request.authenticated = { success: false, error: 'token verification failed' }
-      console.log('  Authenticated: false')
+      logger.error(e)
     }
   }
 

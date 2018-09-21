@@ -14,10 +14,16 @@ const Tag = require('../models').Tag
 const Checklist = require('../models').Checklist
 const env = process.env.NODE_ENV || 'development'
 const config = require('./../config/config.js')[env]
+const logger = require('../utils/logger')
 
 const overkillLogging = (req, error) => {
   console.log('request: ', req)
   console.log('error: ', error)
+}
+
+const validationErrorMessages = {
+  github: 'Github repository link is not a proper url.',
+  projectName: 'Project name contains illegal characters.\nCharacters allowed are letters from a-ö, numbers, apostrophe, - and whitespace (not multiple in a row or at first/last character)'
 }
 
 module.exports = {
@@ -34,7 +40,10 @@ module.exports = {
     db.sequelize
       .query(`SELECT * FROM "CourseInstances" JOIN "TeacherInstances" ON "CourseInstances"."id" = "TeacherInstances"."courseInstanceId" WHERE "TeacherInstances"."userId" = ${req.decoded.id}`)
       .then(instance => res.status(200).send(instance[0]))
-      .catch(error => res.status(400).send(error))
+      .catch((error) => {
+        logger.error(error)
+        res.status(400).send(error)
+      })
   },
   /**
    *
@@ -234,6 +243,12 @@ module.exports = {
             model: Tag,
             attributes: ['id', 'name', 'color']
           }
+        ],
+        order: [
+          [
+            { model: CodeReview, as: 'codeReviews' },
+            'reviewNumber', 'ASC'
+          ]
         ]
       })
       try {
@@ -321,10 +336,6 @@ module.exports = {
       })
     } catch (error) {
       if (error.name === 'SequelizeValidationError') {
-        const validationErrorMessages = {
-          github: 'Github repository link is not a proper url.',
-          projectName: 'Project name contains illegal characters.'
-        }
         const errorMessage = error.errors.map(e => validationErrorMessages[e.path] || 'Unknown validation error.')
         return res.status(400).json({
           message: errorMessage.join('\n')
@@ -391,15 +402,22 @@ module.exports = {
                   console.log('\nUpdated student project info succesfully\n')
                   res.status(200).send(updatedStudentInstance)
                 })
-                .catch(error => {
-                  console.log('\nerror happened\n')
-                  res.status(400).send('update failed')
+                .catch((error) => {
+                  if (error.name === 'SequelizeValidationError') {
+                    const errorMessage = error.errors.map(e => validationErrorMessages[e.path] || 'Unknown validation error.')
+                    logger.error(error)
+                    return res.status(400).send({ message: errorMessage.join('\n') })
+                  }
                 })
             })
           })
-          .catch(error => res.status(400).send('\n\n\n\ntuli joku error: ', error))
+          .catch(error => {
+            logger.error(error)
+            res.status(400).send('\n\n\n\ntuli joku error: ', error)
+          })
       }
     } catch (e) {
+      logger.error(e)
       res.status(400).send(e)
     }
   },
@@ -449,11 +467,20 @@ module.exports = {
                 currentCodeReview: req.body.newCr.length === 0 ? '{}' : req.body.newCr
               })
               .then(updatedCourseInstance => res.status(200).send(updatedCourseInstance))
-              .catch(error => res.status(400).send(error))
+              .catch(error => {
+                res.status(400).send(error)
+                logger.error(error)
+              })
           })
-          .catch(error => res.status(400).send(error))
+          .catch(error => {
+            res.status(400).send(error)
+            logger.error(error)
+          })
       })
-      .catch(error => res.status(400).send(error))
+      .catch(error => {
+        res.status(400).send(error)
+        logger.error(error)
+      })
   },
 
   /**
@@ -469,7 +496,10 @@ module.exports = {
       }
     })
       .then(instance => res.status(200).send(instance))
-      .catch(error => res.status(400).send(error))
+      .catch(error => {
+        logger.error(error)
+        res.status(400).send(error)
+      })
   },
 
   /**
@@ -500,7 +530,10 @@ module.exports = {
         }
         return res.status(200).send(courseInstance)
       })
-      .catch(error => res.status(400).send(error))
+      .catch(error => {
+        logger.error(error)
+        res.status(400).send(error)
+      })
   },
   /**
    *
@@ -704,7 +737,10 @@ module.exports = {
                   res.status(200).send(comment)
                 }
               })
-              .catch(error => res.status(400).send(error))
+              .catch(error => {
+                res.status(400).send(error)
+                logger.error(error)
+              })
           }
         })
       } catch (e) {
@@ -731,6 +767,9 @@ module.exports = {
       }
     })
       .then(comment => res.status(200).send(comment))
-      .catch(error => res.status(400).send(error))
+      .catch(error => {
+        res.status(400).send(error)
+        logger.error(error)
+      })
   }
 }

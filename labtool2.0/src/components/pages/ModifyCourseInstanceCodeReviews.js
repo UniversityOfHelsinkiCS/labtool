@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 import { getOneCI } from '../../services/courseInstance'
 import { coursePageInformation } from '../../services/courseInstance'
 import { bulkinsertCodeReviews, removeOneCodeReview } from '../../services/codeReview'
@@ -21,6 +22,8 @@ import { clearNotifications, showNotification } from '../../reducers/notificatio
 import { Button, Table, Checkbox, Loader, Dropdown, Label, Popup, Modal, Icon } from 'semantic-ui-react'
 import Notification from '../../components/pages/Notification'
 import { resetLoading } from '../../reducers/loadingReducer'
+
+import BackButton from '../BackButton'
 
 export class ModifyCourseInstanceReview extends React.Component {
   state = {
@@ -211,6 +214,23 @@ export class ModifyCourseInstanceReview extends React.Component {
     !s[id] ? ((s[id] = true), this.setState({ open: s })) : ((s[id] = !s[id]), this.setState({ open: s }))
   }
 
+  visibilityReminder = () =>
+    this.props.selectedInstance.currentCodeReview && this.props.codeReviewLogic.selectedDropdown ? (
+      this.props.selectedInstance.currentCodeReview.findIndex(cr => cr === this.props.codeReviewLogic.selectedDropdown) === -1 ? (
+        <Popup
+          trigger={<Icon name="eye" size="large" color="red" />}
+          content={
+            <span>
+              <span>This code review is currently not visible to students. You can make it visible on the </span>
+              <Link to={`/labtool/ModifyCourseInstancePage/${this.props.selectedInstance.ohid}`}>course editing page</Link>
+              <span>.</span>
+            </span>
+          }
+          hoverable
+        />
+      ) : null
+    ) : null
+
   render() {
     if (this.props.loading.loading) {
       return <Loader active />
@@ -218,6 +238,7 @@ export class ModifyCourseInstanceReview extends React.Component {
     return (
       <div className="ModifyCourseInstanceCodeReviews" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
         <div className="ui grid">
+          <BackButton preset="modifyCIPage" />
           <div className="sixteen wide column">
             <h2>{this.props.selectedInstance.name}</h2> <br />
           </div>
@@ -270,15 +291,17 @@ export class ModifyCourseInstanceReview extends React.Component {
                 <Table.HeaderCell>Reviewer</Table.HeaderCell>
                 <Table.HeaderCell>Project Info</Table.HeaderCell>
                 <Table.HeaderCell key={1}>
-                  {' '}
-                  <Dropdown
-                    onChange={this.createDropdown()}
-                    defaultValue={this.props.codeReviewLogic.selectedDropdown}
-                    noResultsMessage={'Try another search.'}
-                    placeholder={Object.keys(this.props.dropdownCodeReviews).length > 0 ? 'Select code review' : 'No code reviews'}
-                    fluid
-                    options={this.props.dropdownCodeReviews}
-                  />
+                  <div style={{ display: 'flex' }}>
+                    <this.visibilityReminder />
+                    <Dropdown
+                      onChange={this.createDropdown()}
+                      defaultValue={this.props.codeReviewLogic.selectedDropdown}
+                      noResultsMessage={'Try another search.'}
+                      placeholder={Object.keys(this.props.dropdownCodeReviews).length > 0 ? 'Select code review' : 'No code reviews'}
+                      fluid
+                      options={this.props.dropdownCodeReviews}
+                    />
+                  </div>
                 </Table.HeaderCell>
                 <Table.HeaderCell>
                   {this.props.codeReviewLogic.showCreate ? (
