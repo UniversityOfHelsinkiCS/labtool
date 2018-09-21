@@ -349,8 +349,8 @@ export class BrowseReviews extends Component {
         <Loader active={this.props.loading.loading} />
         {this.props.courseData.role === 'teacher' ? (
           <div>
-            <Link to={`/labtool/courses/${this.props.selectedInstance.ohid}`}>
-              <BackButton preset="coursePage" />
+            <BackButton preset="coursePage" />
+            <Link to={`/labtool/courses/${this.props.selectedInstance.ohid}`} style={{ textAlign: 'center' }}>
               <h2> {this.props.selectedInstance.name} </h2>
             </Link>
             {createHeaders(this.props.courseData, this.props.studentInstance)}

@@ -15,7 +15,7 @@ const BackButton = props => (
 
 BackButton.propTypes = {
   to: PropTypes.string,
-  enabled: PropTypes.bool.isRequred,
+  enabled: PropTypes.bool.isRequired,
   text: PropTypes.string.isRequired
 }
 
