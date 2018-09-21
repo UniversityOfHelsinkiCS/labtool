@@ -9,6 +9,8 @@ import ReactMarkdown from 'react-markdown'
 import { sendEmail } from '../../services/email'
 import { resetLoading } from '../../reducers/loadingReducer'
 
+import BackButton from '../BackButton'
+
 /**
  * Maps all comments from a single instance from coursePage reducer
  */
@@ -354,6 +356,7 @@ export class BrowseReviews extends Component {
         {this.props.courseData.role === 'teacher' ? (
           <div>
             <Link to={`/labtool/courses/${this.props.selectedInstance.ohid}`}>
+              <BackButton preset="coursePage" />
               <h2> {this.props.selectedInstance.name} </h2>
             </Link>
             {createHeaders(this.props.courseData, this.props.studentInstance)}
