@@ -21,6 +21,7 @@ import {
   toggleCodeReview
 } from '../../reducers/coursePageLogicReducer'
 import { resetLoading } from '../../reducers/loadingReducer'
+import { trimDate } from '../../util/format'
 
 export class CoursePage extends React.Component {
   handleClick = (e, titleProps) => {
@@ -61,13 +62,6 @@ export class CoursePage extends React.Component {
     return theArray.sort((a, b) => {
       return new Date(a.createdAt) - new Date(b.createdAt)
     })
-  }
-
-  trimDate = date => {
-    return new Date(date)
-      .toLocaleString()
-      .replace('/', '.')
-      .replace('/', '.')
   }
 
   changeHiddenAssistantDropdown = id => {
@@ -355,7 +349,7 @@ export class CoursePage extends React.Component {
                                   <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
                                 </Comment.Text>
                                 <Comment.Metadata>
-                                  <div>{this.trimDate(comment.createdAt)}</div>
+                                  <div>{trimDate(comment.createdAt)}</div>
                                 </Comment.Metadata>
                                 <div> </div>
                               </Comment.Content>
@@ -368,7 +362,7 @@ export class CoursePage extends React.Component {
                                 <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
                               </Comment.Text>
                               <Comment.Metadata>
-                                <div>{this.trimDate(comment.createdAt)}</div>
+                                <div>{trimDate(comment.createdAt)}</div>
                               </Comment.Metadata>
                               <div> </div>
                               {/* This hack compares user's name to comment.from and hides the email notification button when they don't match. */}

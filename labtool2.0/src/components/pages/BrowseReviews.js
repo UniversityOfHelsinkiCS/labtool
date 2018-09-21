@@ -8,6 +8,7 @@ import { gradeCodeReview } from '../../services/codeReview'
 import ReactMarkdown from 'react-markdown'
 import { sendEmail } from '../../services/email'
 import { resetLoading } from '../../reducers/loadingReducer'
+import { trimDate } from '../../util/format'
 
 import BackButton from '../BackButton'
 
@@ -62,13 +63,6 @@ export class BrowseReviews extends Component {
     } catch (error) {
       console.log(error)
     }
-  }
-
-  trimDate = date => {
-    return new Date(date)
-      .toLocaleString()
-      .replace('/', '.')
-      .replace('/', '.')
   }
 
   sortCommentsByDate = comments => {
@@ -170,7 +164,7 @@ export class BrowseReviews extends Component {
                                     <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
                                   </Comment.Text>
                                   <Comment.Metadata>
-                                    <div>{this.trimDate(comment.createdAt)}</div>
+                                    <div>{trimDate(comment.createdAt)}</div>
                                   </Comment.Metadata>
                                   <div> </div>
                                 </Comment.Content>
@@ -183,7 +177,7 @@ export class BrowseReviews extends Component {
                                   <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
                                 </Comment.Text>
                                 <Comment.Metadata>
-                                  <div>{this.trimDate(comment.createdAt)}</div>
+                                  <div>{trimDate(comment.createdAt)}</div>
                                 </Comment.Metadata>
                                 <div> </div>
                                 {/* This hack compares user's name to comment.from and hides the email notification button when they don't match. */}
