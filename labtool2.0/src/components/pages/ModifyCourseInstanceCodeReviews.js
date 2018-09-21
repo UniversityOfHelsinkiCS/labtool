@@ -23,6 +23,8 @@ import { Button, Table, Checkbox, Loader, Dropdown, Label, Popup, Modal, Icon } 
 import Notification from '../../components/pages/Notification'
 import { resetLoading } from '../../reducers/loadingReducer'
 
+import BackButton from '../BackButton'
+
 export class ModifyCourseInstanceReview extends React.Component {
   state = {
     open: {}
@@ -236,6 +238,7 @@ export class ModifyCourseInstanceReview extends React.Component {
     return (
       <div className="ModifyCourseInstanceCodeReviews" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
         <div className="ui grid">
+          <BackButton preset="modifyCIPage" />
           <div className="sixteen wide column">
             <h2>{this.props.selectedInstance.name}</h2> <br />
           </div>

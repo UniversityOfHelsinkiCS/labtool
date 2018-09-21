@@ -8,6 +8,8 @@ import { getOneCI, getAllCI } from '../../services/courseInstance'
 import { resetChecklist, changeField, addTopic, addRow, removeTopic, removeRow, castPointsToNumber } from '../../reducers/checklistReducer'
 import './CreateChecklist.css'
 
+import BackButton from '../BackButton'
+
 export class CreateChecklist extends Component {
   constructor(props) {
     super(props)
@@ -328,6 +330,7 @@ export class CreateChecklist extends Component {
     const { checklistJsx, maxPoints } = this.props.loading.loading ? { checklistJsx: null, maxPoints: null } : this.renderChecklist()
     return (
       <div className="CreateChecklist">
+        <BackButton preset="modifyCIPage" />
         <Header>{this.props.selectedInstance.name}</Header>
         <div className="editForm">
           <div className="topOptions">
