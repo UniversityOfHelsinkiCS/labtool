@@ -8,7 +8,7 @@ const BackButton = props => (
   <Link to={props.to}>
     <Button compact disabled={!props.enabled}>
       <Icon name="angle left" />
-      <span>{props.text || 'Back'}</span>
+      <span>{props.text}</span>
     </Button>
   </Link>
 )
@@ -16,23 +16,36 @@ const BackButton = props => (
 BackButton.propTypes = {
   to: PropTypes.string,
   enabled: PropTypes.bool.isRequred,
-  text: PropTypes.string
+  text: PropTypes.string.isRequired
 }
 
 const presets = {
-  modifyCIPage: state => `/labtool/ModifyCourseInstancePage/${state.selectedInstance.ohid}`,
-  coursePage: state => `/labtool/courses/${state.selectedInstance.ohid}`
+  modifyCIPage: {
+    to: state => `/labtool/ModifyCourseInstancePage/${state.selectedInstance.ohid}`,
+    text: 'Back to course editing'
+  },
+  coursePage: {
+    to: state => `/labtool/courses/${state.selectedInstance.ohid}`,
+    text: 'Back to course page'
+  }
 }
 
 const mapStateToProps = (state, ownProps) => {
   let to
   try {
-    to = presets[ownProps.preset](state)
+    to = presets[ownProps.preset].to(state)
   } catch (e) {
     to = ownProps.to
   }
+  let text
+  if (presets[ownProps.preset]) {
+    text = presets[ownProps.preset].text
+  } else {
+    text = ownProps.text || 'Back'
+  }
   return {
     to,
+    text,
     enabled: to !== undefined
   }
 }
