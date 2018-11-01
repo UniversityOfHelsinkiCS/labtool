@@ -16,7 +16,7 @@ module.exports = {
       method: 'post',
       uri: `${config.kurki_url}/login`,
       strictSSL: false,
-      json: { username: req.body.username, password: req.body.password }
+      json: { username: req.body.username.toLowerCase(), password: req.body.password }
     }
 
     try {
