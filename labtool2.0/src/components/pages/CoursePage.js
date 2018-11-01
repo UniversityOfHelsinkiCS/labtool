@@ -532,7 +532,7 @@ export class CoursePage extends React.Component {
                     <div>
                       {this.props.selectedInstance.active === true ? (
                         <Label ribbon style={{ backgroundColor: '#21ba45' }}>
-                          Active
+                          Active registration
                         </Label>
                       ) : (
                         <div />
