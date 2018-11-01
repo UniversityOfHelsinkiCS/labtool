@@ -6,6 +6,7 @@ module.exports = {
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
     host: '127.0.0.1',
+    port: process.env.DB_PORT,
     dialect: 'postgres',
     operatorsAliases: 'false',
     kurki_url: process.env.KURKI_URL == null ? "https://opetushallinto.cs.helsinki.fi" : process.env.KURKI_URL
