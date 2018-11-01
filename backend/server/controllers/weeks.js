@@ -68,7 +68,7 @@ module.exports = {
         res.status(400).send('token verific ation failed')
       }
     } catch (error) {
-      console.log('\nweeks, ', error, '\n')
+      logger.error('\nweeks, ', error, '\n')
     }
   },
   /**

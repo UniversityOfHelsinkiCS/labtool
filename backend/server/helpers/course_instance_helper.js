@@ -34,7 +34,7 @@ function checkWebOodi(req, res, user, resolve) {
   if (process.env.INCLUDE_TESTERS) {
     options.uri += '?testing=1'
   }
-  request(options, function (req, res, body) {
+  request(options, (req, res, body) => {
     let json = null
     try {
       json = JSON.parse(body)
@@ -44,13 +44,11 @@ function checkWebOodi(req, res, user, resolve) {
       return
     }
     if (json.students.find(student => student === user.studentNumber)) {
-      console.log('\ncourse_instance_helper found')
       resolve('found')
       return
     } else {
-      console.log('\ncourse_instance_helper notfound')
-      console.info(json)
-      console.info('studentNumber:', user.studentNumber)
+      logger.info(json)
+      logger.info('course registration not found for studentNumber', user.studentNumber)
       resolve('notfound')
       return
     }

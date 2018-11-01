@@ -17,8 +17,8 @@ const config = require('./../config/config.js')[env]
 const logger = require('../utils/logger')
 
 const overkillLogging = (req, error) => {
-  console.log('request: ', req)
-  console.log('error: ', error)
+  logger.debug('request: ', req)
+  logger.error('error: ', error)
 }
 
 const validationErrorMessages = {
@@ -291,7 +291,7 @@ module.exports = {
       })
     }
     if (course.active === false) {
-      console.log('course is not active')
+      logger.info('course registration failed because course is not active')
       overkillLogging(req, null)
       return res.status(400).send({
         message: 'course is not active'
@@ -368,7 +368,6 @@ module.exports = {
 
     try {
       if (req.authenticated.success) {
-        console.log('\nauth success\n')
         CourseInstance.findOne({
           where: {
             ohid: req.body.ohid
@@ -376,11 +375,9 @@ module.exports = {
         })
           .then(course => {
             if (!course) {
-              console.log('\nkurssia ei löytynyt\n')
               res.status(404).send('course not found')
               return
             }
-            console.log('\nkurssi löytyi\n')
             StudentInstance.find({
               where: {
                 userId: req.decoded.id,
@@ -388,18 +385,15 @@ module.exports = {
               }
             }).then(targetStudent => {
               if (!targetStudent) {
-                console.log('\nopiskelijaa ei löytynyt\n')
                 res.status(404).send('Student not found')
                 return
               }
-              console.log('\nopiskelija löytyi\n')
               return targetStudent
                 .update({
                   github: req.body.github || targetStudent.github,
                   projectName: req.body.projectname || targetStudent.projectName
                 })
                 .then(updatedStudentInstance => {
-                  console.log('\nUpdated student project info succesfully\n')
                   res.status(200).send(updatedStudentInstance)
                 })
                 .catch((error) => {
@@ -588,7 +582,6 @@ module.exports = {
   getNewer(req, res) {
     helper.controller_before_auth_check_action(req, res)
 
-    console.log('update next...')
     const auth = process.env.TOKEN || 'notset' //You have to set TOKEN in .env file in order for this to work
     const termAndYear = helper.CurrentTermAndYear()
     if (auth === 'notset') {
