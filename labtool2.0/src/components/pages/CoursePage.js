@@ -696,6 +696,7 @@ export class CoursePage extends React.Component {
               )}
             </Table.Body>
           </Table>
+          <br />
         </div>
       )
     }
