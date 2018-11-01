@@ -56,6 +56,8 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
         <h3>
           <a
             href="http://github.com/tiralabra1"
+            rel="noopener noreferrer"
+            target="_blank"
           >
             http://github.com/tiralabra1
           </a>
@@ -130,6 +132,8 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
           </strong>
           <a
             href="http://github.com/tiralabra2"
+            rel="noopener noreferrer"
+            target="_blank"
           >
             http://github.com/tiralabra2
           </a>
@@ -189,6 +193,8 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
           </strong>
           <a
             href="http://github.com/superprojekti"
+            rel="noopener noreferrer"
+            target="_blank"
           >
             http://github.com/superprojekti
           </a>
@@ -289,6 +295,8 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
           </strong>
           <a
             href="http://github.com/superprojekti"
+            rel="noopener noreferrer"
+            target="_blank"
           >
             http://github.com/superprojekti
           </a>
@@ -515,6 +523,8 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
               <br />
               <a
                 href="http://github.com/tiralabra2"
+                rel="noopener noreferrer"
+                target="_blank"
               >
                 http://github.com/tiralabra2
               </a>
@@ -647,6 +657,8 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
               <br />
               <a
                 href="http://github.com/superprojekti"
+                rel="noopener noreferrer"
+                target="_blank"
               >
                 http://github.com/superprojekti
               </a>
@@ -779,6 +791,8 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
               <br />
               <a
                 href="http://github.com/tiralabra1"
+                rel="noopener noreferrer"
+                target="_blank"
               >
                 http://github.com/tiralabra1
               </a>
@@ -879,6 +893,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
         </TableRow>
       </TableBody>
     </Table>
+    <br />
   </div>
 </div>
 `;

@@ -344,7 +344,9 @@ export class ModifyCourseInstanceReview extends React.Component {
                           <p>
                             {data.projectName}
                             <br />
-                            <a href={data.github}>{data.github}</a>
+                            <a href={data.github} target="_blank" rel="noopener noreferrer">
+                              {data.github}
+                            </a>
                           </p>
                           {data.Tags.map(tag => (
                             <div key={tag.id}>
