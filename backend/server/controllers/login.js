@@ -35,7 +35,7 @@ module.exports = {
             first = result.response.body.first_names.split(' ')[0]
           }
           User.findOrCreate({
-            where: { username: body.username },
+            where: { username: body.username.toLowerCase() },
             defaults: {
               firsts: first,
               lastname: last,
