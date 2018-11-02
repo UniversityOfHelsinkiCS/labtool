@@ -113,7 +113,7 @@ const authenticate = (request, response, next) => {
       ;(request.decoded = decoded), (request.authenticated = { success: true, error: '' })
     } catch (e) {
       request.authenticated = { success: false, error: 'token verification failed' }
-      logger.error(e)
+      // logger.error(e)
     }
   }
 
