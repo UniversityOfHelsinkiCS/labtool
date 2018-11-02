@@ -1,6 +1,7 @@
 const helper = require('../helpers/checklist_helper')
 const TeacherInstance = require('../models').TeacherInstance
 const Checklist = require('../models').Checklist
+const logger = require('../utils/logger')
 
 module.exports = {
   async create(req, res) {
@@ -89,8 +90,8 @@ module.exports = {
         data: req.body
       })
     } catch (e) {
+      logger.error(e)
       res.status(500).send('Unexpected error')
-      console.log(e)
     }
   },
   async getOne(req, res) {
@@ -121,8 +122,8 @@ module.exports = {
         })
       }
     } catch (e) {
+      logger.error(e)
       res.status(500).send(e)
-      console.log(e)
     }
   }
 }

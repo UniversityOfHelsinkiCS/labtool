@@ -299,7 +299,9 @@ export class CoursePage extends React.Component {
                 </h2>
                 <h3> {this.props.courseData.data.projectName} </h3>
                 <h3>
-                  <a href={this.props.courseData.data.github}>{this.props.courseData.data.github}</a>{' '}
+                  <a href={this.props.courseData.data.github} target="_blank" rel="noopener noreferrer">
+                    {this.props.courseData.data.github}
+                  </a>{' '}
                   <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>
                     <Button circular floated="right" size="large" icon={{ name: 'edit', color: 'orange', size: 'large' }} />
                   </Link>
@@ -427,11 +429,16 @@ export class CoursePage extends React.Component {
                       {cr.toReview.projectName}
                       <br />
                       <strong>Github: </strong>
-                      <a href={cr.toReview.github}>{cr.toReview.github}</a>
+                      <a href={cr.toReview.github} target="_blank" rel="noopener noreferrer">
+                        {cr.toReview.github}
+                      </a>
                       <br /> <br />
                       {cr.linkToReview ? (
                         <div>
-                          <strong>Your review: </strong> <a href={cr.linkToReview}>{cr.linkToReview}</a>
+                          <strong>Your review: </strong>
+                          <a href={cr.linkToReview} target="_blank" rel="noopener noreferrer">
+                            {cr.linkToReview}
+                          </a>
                         </div>
                       ) : (
                         <div />
@@ -532,7 +539,7 @@ export class CoursePage extends React.Component {
                     <div>
                       {this.props.selectedInstance.active === true ? (
                         <Label ribbon style={{ backgroundColor: '#21ba45' }}>
-                          Active
+                          Active registration
                         </Label>
                       ) : (
                         <div />
@@ -621,7 +628,9 @@ export class CoursePage extends React.Component {
                         <span>
                           {data.projectName}
                           <br />
-                          <a href={data.github}>{data.github}</a>
+                          <a href={data.github} target="_blank" rel="noopener noreferrer">
+                            {data.github}
+                          </a>
                           {data.Tags.map(tag => (
                             <div key={tag.id}>
                               <Button compact floated="left" className={`mini ui ${tag.color} button`} onClick={this.addFilterTag(tag)}>
@@ -696,6 +705,7 @@ export class CoursePage extends React.Component {
               )}
             </Table.Body>
           </Table>
+          <br />
         </div>
       )
     }

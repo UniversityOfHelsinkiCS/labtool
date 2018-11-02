@@ -113,7 +113,7 @@ const authenticate = (request, response, next) => {
       ;(request.decoded = decoded), (request.authenticated = { success: true, error: '' })
     } catch (e) {
       request.authenticated = { success: false, error: 'token verification failed' }
-      logger.error(e)
+      // logger.error(e)
     }
   }
 
@@ -139,9 +139,9 @@ app.get('*', (req, res) =>
   })
 )
 
-let server = app.listen(3001, function() {
-  let port = server.address().port
-  console.log('Backend is listening on port %s', port)
+const server = app.listen(3001, () => {
+  const port = server.address().port
+  logger.info('Backend started and listening on port ' + port)
 })
 
 module.exports = server

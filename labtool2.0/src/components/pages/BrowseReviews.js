@@ -114,7 +114,9 @@ export class BrowseReviews extends Component {
                 <h3> {student.projectName} </h3>
                 <h3>
                   {' '}
-                  <a href={student.github}>{student.github} </a>
+                  <a href={student.github} target="_blank" rel="noopener noreferrer">
+                    {student.github}
+                  </a>
                 </h3>
               </Card.Content>
             </Card>
@@ -245,9 +247,11 @@ export class BrowseReviews extends Component {
                     <p>
                       <strong>Project to review:</strong> {this.props.courseData.data.find(data => data.id === cr.toReview).projectName} <br />
                       <strong>GitHub:</strong>{' '}
-                      <a href={this.props.courseData.data.find(data => data.id === cr.toReview).github}>{this.props.courseData.data.find(data => data.id === cr.toReview).github}</a>
+                      <a href={this.props.courseData.data.find(data => data.id === cr.toReview).github} target="_blank" rel="noopener noreferrer">
+                        {this.props.courseData.data.find(data => data.id === cr.toReview).github}
+                      </a>
                     </p>
-                    <strong>Code review:</strong> {cr.linkToReview ? <a href={cr.linkToReview}>{cr.linkToReview}</a> : 'No review linked yet'}
+                    <strong>Code review:</strong> {cr.linkToReview ? <a href={cr.linkToReview} target="_blank" rel="noopener noreferrer">{cr.linkToReview}</a> : 'No review linked yet'}
                     {cr.points !== null ? <h4>{cr.points} points</h4> : <h4>Not graded yet</h4>}
                     <Form onSubmit={this.gradeCodeReview(cr.reviewNumber, studentInstance)}>
                       <label>Points </label>

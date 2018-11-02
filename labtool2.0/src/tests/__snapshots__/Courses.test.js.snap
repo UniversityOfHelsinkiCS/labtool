@@ -74,7 +74,7 @@ exports[`<Courses /> Courses Component should render correctly 1`] = `
                   }
                 }
               >
-                Active
+                Active registration
               </Label>
             </div>
           </TableCell>
@@ -148,7 +148,7 @@ exports[`<Courses /> Courses Component should render correctly 1`] = `
                   }
                 }
               >
-                Active
+                Active registration
               </Label>
             </div>
           </TableCell>
