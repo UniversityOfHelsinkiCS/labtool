@@ -109,11 +109,10 @@ export class BrowseReviews extends Component {
             <Card key={student.id} fluid color="yellow">
               <Card.Content>
                 <h2>
-                  {student.User.firsts} {student.User.lastname}
+                  {student.User.firsts} {student.User.lastname} {student.User.studentNumber}
                 </h2>
-                <h3> {student.projectName} </h3>
                 <h3>
-                  {' '}
+                  {student.projectName}{' '}
                   <a href={student.github} target="_blank" rel="noopener noreferrer">
                     {student.github}
                   </a>
