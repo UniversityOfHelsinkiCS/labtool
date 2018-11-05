@@ -25,6 +25,10 @@ import ManageTags from './components/pages/ManageTags'
 import { logout } from './reducers/loginReducer'
 import { tokenLogin } from './reducers/loginReducer'
 
+try {
+  Raven.config('https://d12f1efa9d2a4d88a34584707472b08f@toska.cs.helsinki.fi/8').install() // eslint-disable-line
+} catch (e) { } // eslint-disable-line
+
 // The main component of the whole application.
 class App extends Component {
   /**
