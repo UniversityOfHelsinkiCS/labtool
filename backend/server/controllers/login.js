@@ -22,7 +22,7 @@ module.exports = {
     try {
       const result = request(options, (err, resp, body) => {
         if (err) {
-          logger.error('\nlogin: ', err, 'n')
+          logger.error('login result error', { error: err.message })
         }
         if (result.response && result.response.body && result.response.body.username && result.response.body.error !== 'wrong credentials') {
           let first
@@ -70,7 +70,7 @@ module.exports = {
         }
       })
     } catch (error) {
-      logger.error(error)
+      logger.error('login error', { error: error.message })
       res.status(500).send({
         error: 'Unexpected error'
       })

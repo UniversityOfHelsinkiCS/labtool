@@ -72,7 +72,7 @@ module.exports = {
       })
       res.status(200).send(studentInstance)
     } catch (e) {
-      logger.error(e)
+      logger.error('create assistant error', { error: e.message })
     }
   },
 
@@ -83,7 +83,7 @@ module.exports = {
       status: undefined,
       data: undefined
     }
-    let studentInstanceId = undefined
+    let studentInstanceId
 
     try {
       studentInstanceId = req.params.id
@@ -138,7 +138,7 @@ module.exports = {
       })
       res.status(200).send(studentsForThisTeacherInstance)
     } catch (e) {
-      logger.error(e)
+      logger.error('find students by teacher instance error', { error: e.message })
       res.status(400).send(e)
     }
   }

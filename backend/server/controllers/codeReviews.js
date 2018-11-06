@@ -77,7 +77,7 @@ module.exports = {
         data: req.body
       })
     } catch (e) {
-      logger.error('CodeReview bulk insert failed.\n', e)
+      logger.error('CodeReview bulk insert failed.', { error: e.message })
       res.status(500).send('Unexpected error.')
     }
   },
