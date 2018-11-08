@@ -90,7 +90,7 @@ module.exports = {
         data: req.body
       })
     } catch (e) {
-      logger.error(e)
+      logger.error('checklist creation error', { error: e.message })
       res.status(500).send('Unexpected error')
     }
   },
@@ -122,7 +122,7 @@ module.exports = {
         })
       }
     } catch (e) {
-      logger.error(e)
+      logger.error('get checklist error', { error: e.message })
       res.status(500).send(e)
     }
   }

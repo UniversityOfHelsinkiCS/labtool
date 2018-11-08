@@ -68,7 +68,7 @@ module.exports = {
         res.status(400).send('token verific ation failed')
       }
     } catch (error) {
-      logger.error('\nweeks, ', error, '\n')
+      logger.error('create weeks error', { error: error.message })
     }
   },
   /**
@@ -82,8 +82,8 @@ module.exports = {
 
     return Week.all()
       .then(ui => res.status(200).send(ui))
-      .catch(error => {
-        logger.error(error)
+      .catch((error) => {
+        logger.error('list weeks error', { error: error.message })
         res.status(400).send(error)
       })
   },
@@ -97,7 +97,7 @@ module.exports = {
     helper.controller_before_auth_check_action(req, res)
 
     return Week.findById(req.params.id, {})
-      .then(week => {
+      .then((week) => {
         if (!week) {
           return res.status(404).send({
             message: 'Teacher Instance not Found'
@@ -105,8 +105,8 @@ module.exports = {
         }
         return res.status(200).send(week)
       })
-      .catch(error => {
-        logger.error(error)
+      .catch((error) => {
+        logger.error('retrieve weeks error', {error: error.message})
         res.status(400).send(error)
       })
   }

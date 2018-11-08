@@ -39,7 +39,7 @@ function checkWebOodi(req, res, user, resolve) {
     try {
       json = JSON.parse(body)
     } catch (e) {
-      logger.error(e)
+      logger.error('checkweboodi error', { error: e.message })
       resolve('notfound')
       return
     }
@@ -47,8 +47,8 @@ function checkWebOodi(req, res, user, resolve) {
       resolve('found')
       return
     } else {
-      logger.info(json)
-      logger.info('course registration not found for studentNumber', user.studentNumber)
+//      logger.info(json)
+//      logger.info('course registration not found for studentNumber', user.studentNumber)
       resolve('notfound')
       return
     }
@@ -76,7 +76,7 @@ function findByUserStudentInstance(req, res) {
       .query(`SELECT * FROM "CourseInstances" JOIN "StudentInstances" ON "CourseInstances"."id" = "StudentInstances"."courseInstanceId" WHERE "StudentInstances"."userId" = ${req.decoded.id}`)
       .then(instance => res.status(200).send(instance[0]))
       .catch((error) => {
-        logger.error(error)
+        logger.error('findByUserStudentInstance error', { error: error.message })
         res.status(400).send(error)
       })
   } else {

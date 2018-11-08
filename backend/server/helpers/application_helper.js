@@ -240,7 +240,7 @@ async function createCourse(body) {
     }
     return result
   } catch (error) {
-    logger.error(error)
+    logger.error('createCourse error', { error: error.message })
   }
 }
 
@@ -263,7 +263,7 @@ async function getCurrent(req, res) {
       })
     return result
   } catch (error) {
-    logger.error(error)
+    logger.error('getCurrent error', { error: error.message })
   }
 }
 
@@ -286,6 +286,6 @@ async function getNewer(req, res) {
       })
     return result
   } catch (error) {
-    logger.error(error)
+    logger.error('getNewer error', { error: error.message })
   }
 }

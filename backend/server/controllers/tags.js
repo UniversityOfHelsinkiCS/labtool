@@ -52,7 +52,7 @@ module.exports = {
               return
             })
             .catch(error => {
-              logger.error(error)
+              logger.error('tag create/update error', { error: error.message })
               res.status(400).send('color did not update')
               return
             })
@@ -99,16 +99,15 @@ module.exports = {
 
     try {
       return Tag.findAll()
-        .then(tag => {
+        .then((tag) => {
           return res.status(200).send(tag)
         })
-        .catch(error => {
+        .catch((error) => {
           res.status(400).send('et ny saa niitä tageja')
-          logger.error(error)
+          logger.error('tag getall error', { error: error.message })
         })
     } catch (e) {
       res.status(400).send('nymmeni jokin pieleen')
-      return
     }
   },
 
@@ -120,7 +119,7 @@ module.exports = {
           where: {
             userId: req.decoded.id
           }
-        }).then(found => {
+        }).then((found) => {
           if (!found) {
             res.status(400).send('you have to be a teacher to do this')
             return
@@ -129,7 +128,7 @@ module.exports = {
             where: {
               id: req.body.studentId
             }
-          }).then(student => {
+          }).then((student) => {
             if (!student) {
               res.status(404).send('did not found student with that id')
               return
@@ -138,8 +137,8 @@ module.exports = {
               where: {
                 id: req.body.tagId
               }
-            }).then(found => {
-              if (!found) {
+            }).then((foundTag) => {
+              if (!foundTag) {
                 res.status(404).send('did not find a tag with that id')
               }
               StudentTag.findOrCreate({
@@ -147,7 +146,7 @@ module.exports = {
                   tagId: req.body.tagId,
                   studentInstanceId: req.body.studentId
                 }
-              }).then(studentTag => {
+              }).then((studentTag) => {
                 if (!studentTag) {
                   return res.status(400).send('tagging did not succeed')
                 }
@@ -194,7 +193,7 @@ module.exports = {
                       attributes: ['id', 'name', 'color']
                     }
                   ]
-                }).then(student => {
+                }).then((student) => {
                   return res.status(200).send(student)
                 })
               })
