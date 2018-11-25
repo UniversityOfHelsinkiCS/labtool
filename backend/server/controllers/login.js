@@ -43,9 +43,10 @@ module.exports = {
               email: ''
             }
           }).spread((newuser, created) => {
-            User.update({ firsts: first }, { where: { id: newuser.id } })
-            User.update({ lastname: last }, { where: { id: newuser.id } })
-            User.update({ studentNumber: number }, { where: { id: newuser.id } })
+            if ( first !== 'n' && last !== body.username.toLowerCase() ) {
+              User.update({ firsts: first }, { where: { id: newuser.id } })
+              User.update({ lastname: last }, { where: { id: newuser.id } })
+            }
 
             const user = {
               id: newuser.id,
