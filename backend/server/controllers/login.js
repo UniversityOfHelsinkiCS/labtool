@@ -65,7 +65,7 @@ module.exports = {
             })
           })
         } else {
-          logger.error('wrong credentials', { error: 'wrong credentials for user: ' + result.response.body.username })
+          logger.error('wrong credentials', { error: 'wrong credentials for user: ' + req.body.username.toLowerCase() })
           res.status(401).send({
             body
           })
