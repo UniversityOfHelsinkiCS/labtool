@@ -664,12 +664,12 @@ export class CoursePage extends React.Component {
                       </Table.Cell>
                       {createIndents(data.weeks, data.codeReviews, data.id)}
                       <Table.Cell>
-                        {data.weeks.map(week => week.points).reduce((a, b) => {
+                        {(data.weeks.map(week => week.points).reduce((a, b) => {
                           return a + b
                         }, 0) +
                           data.codeReviews.map(cr => cr.points).reduce((a, b) => {
                             return a + b
-                          }, 0)}
+                          }, 0)).toFixed(2).replace(/[.,]00$/, '')}
                       </Table.Cell>
                       <Table.Cell>
                         {data.teacherInstanceId && this.props.selectedInstance.teacherInstances ? (
