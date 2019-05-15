@@ -34,8 +34,13 @@ function checkWebOodi(req, res, user, resolve) {
   if (process.env.INCLUDE_TESTERS) {
     options.uri += '?testing=1'
   }
+
+  console.log('reguest_to',`${config.kurki_url}/labtool/courses/${req.params.ohid}`)
+  console.log(process.env.TOKEN)
+
   request(options, (req, res, body) => {
     let json = null
+    console.log(body)
     try {
       json = JSON.parse(body)
     } catch (e) {
