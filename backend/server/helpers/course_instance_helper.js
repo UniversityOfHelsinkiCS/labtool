@@ -38,6 +38,8 @@ function checkWebOodi(req, res, user, resolve) {
   console.log('reguest_to',`${config.kurki_url}/labtool/courses/${req.params.ohid}`)
   console.log(process.env.TOKEN)
 
+  resolve('found')
+/*
   request(options, (req, res, body) => {
     let json = null
     console.log(body)
@@ -57,7 +59,7 @@ function checkWebOodi(req, res, user, resolve) {
       resolve('notfound')
       return
     }
-  })
+  })*/
 }
 
 /**
