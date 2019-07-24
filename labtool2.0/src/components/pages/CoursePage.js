@@ -207,7 +207,8 @@ export class CoursePage extends React.Component {
     const numberOfCodeReviews = Array.isArray(this.props.courseData.data) ? Math.max(...this.props.courseData.data.map(student => student.codeReviews.length)) : 0
 
     const createIndents = (weeks, codeReviews, siId) => {
-      const cr = codeReviews &&
+      const cr =
+        codeReviews &&
         codeReviews.reduce((a, b) => {
           return { ...a, [b.reviewNumber]: b.points }
         }, {})
@@ -316,6 +317,7 @@ export class CoursePage extends React.Component {
       if (this.props.selectedInstance && this.props.courseData && this.props.courseData.data && this.props.courseData.data.weeks) {
         let i = 0
         let week = null
+
         const howManyWeeks = this.props.selectedInstance.finalReview ? this.props.selectedInstance.weekAmount + 1 : this.props.selectedInstance.weekAmount
         for (; i < howManyWeeks; i++) {
           week = this.props.courseData.data.weeks.find(week => week.weekNumber === i + 1)
@@ -484,6 +486,25 @@ export class CoursePage extends React.Component {
             i++
           })
       }
+
+      headers.push(
+        <Accordion key="total" fluid styled style={{ marginBottom: '2em' }}>
+          <Accordion.Title active="true" index="total">
+            <Icon name="check" />
+            <strong> Total Points: </strong>
+            {(
+              this.props.courseData.data.weeks.map(week => week.points).reduce((a, b) => {
+                return a + b
+              }, 0) +
+              this.props.courseData.data.codeReviews.map(cr => cr.points).reduce((a, b) => {
+                return a + b
+              }, 0)
+            )
+              .toFixed(2)
+              .replace(/[.,]00$/, '')}
+          </Accordion.Title>
+        </Accordion>
+      )
 
       return headers
     }
@@ -664,12 +685,16 @@ export class CoursePage extends React.Component {
                       </Table.Cell>
                       {createIndents(data.weeks, data.codeReviews, data.id)}
                       <Table.Cell>
-                        {(data.weeks.map(week => week.points).reduce((a, b) => {
-                          return a + b
-                        }, 0) +
+                        {(
+                          data.weeks.map(week => week.points).reduce((a, b) => {
+                            return a + b
+                          }, 0) +
                           data.codeReviews.map(cr => cr.points).reduce((a, b) => {
                             return a + b
-                          }, 0)).toFixed(2).replace(/[.,]00$/, '')}
+                          }, 0)
+                        )
+                          .toFixed(2)
+                          .replace(/[.,]00$/, '')}
                       </Table.Cell>
                       <Table.Cell>
                         {data.teacherInstanceId && this.props.selectedInstance.teacherInstances ? (
