@@ -489,7 +489,7 @@ export class CoursePage extends React.Component {
 
       headers.push(
         <Accordion key="total" fluid styled style={{ marginBottom: '2em' }}>
-          <Accordion.Title active="true" index="total">
+          <Accordion.Title active={true} index="total">
             <Icon name="check" />
             <strong> Total Points: </strong>
             {(
