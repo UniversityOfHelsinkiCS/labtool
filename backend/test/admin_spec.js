@@ -24,7 +24,7 @@ describe('Admin page', function() {
     server.close()
   })
 
-  it('should return 404 without basic authentication', function(done) {
+  it('should return 401 without basic authentication', function(done) {
     supertest
       .get('/admin')
       .expect(401)

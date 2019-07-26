@@ -4,6 +4,9 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
 <div
   className="CreateChecklist"
 >
+  <Connect(BackButton)
+    preset="modifyCIPage"
+  />
   <Header>
     Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit
   </Header>

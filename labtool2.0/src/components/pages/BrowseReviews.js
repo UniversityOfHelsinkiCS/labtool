@@ -8,6 +8,9 @@ import { gradeCodeReview } from '../../services/codeReview'
 import ReactMarkdown from 'react-markdown'
 import { sendEmail } from '../../services/email'
 import { resetLoading } from '../../reducers/loadingReducer'
+import { trimDate } from '../../util/format'
+
+import BackButton from '../BackButton'
 
 /**
  * Maps all comments from a single instance from coursePage reducer
@@ -62,13 +65,6 @@ export class BrowseReviews extends Component {
     }
   }
 
-  trimDate = date => {
-    return new Date(date)
-      .toLocaleString()
-      .replace('/', '.')
-      .replace('/', '.')
-  }
-
   sortCommentsByDate = comments => {
     return comments.sort((a, b) => {
       return new Date(a.createdAt) - new Date(b.createdAt)
@@ -113,12 +109,13 @@ export class BrowseReviews extends Component {
             <Card key={student.id} fluid color="yellow">
               <Card.Content>
                 <h2>
-                  {student.User.firsts} {student.User.lastname}
+                  {student.User.firsts} {student.User.lastname} {student.User.studentNumber}
                 </h2>
-                <h3> {student.projectName} </h3>
                 <h3>
-                  {' '}
-                  <a href={student.github}>{student.github} </a>
+                  {student.projectName}{' '}
+                  <a href={student.github} target="_blank" rel="noopener noreferrer">
+                    {student.github}
+                  </a>
                 </h3>
               </Card.Content>
             </Card>
@@ -129,7 +126,7 @@ export class BrowseReviews extends Component {
             const weeks = student.weeks.find(week => week.weekNumber === i + 1)
             if (weeks) {
               headers.push(
-                <Accordion key={i} fluid styled>
+                <Accordion fluid styled>
                   <Accordion.Title active={activeIndex === i} index={i} onClick={this.handleClick}>
                     <Icon name="dropdown" /> Week {i + 1}, points {weeks.points}
                   </Accordion.Title>
@@ -168,7 +165,7 @@ export class BrowseReviews extends Component {
                                     <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
                                   </Comment.Text>
                                   <Comment.Metadata>
-                                    <div>{this.trimDate(comment.createdAt)}</div>
+                                    <div>{trimDate(comment.createdAt)}</div>
                                   </Comment.Metadata>
                                   <div> </div>
                                 </Comment.Content>
@@ -181,7 +178,7 @@ export class BrowseReviews extends Component {
                                   <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
                                 </Comment.Text>
                                 <Comment.Metadata>
-                                  <div>{this.trimDate(comment.createdAt)}</div>
+                                  <div>{trimDate(comment.createdAt)}</div>
                                 </Comment.Metadata>
                                 <div> </div>
                                 {/* This hack compares user's name to comment.from and hides the email notification button when they don't match. */}
@@ -219,7 +216,7 @@ export class BrowseReviews extends Component {
               )
             } else {
               headers.push(
-                <Accordion key={i + 100} fluid styled>
+                <Accordion fluid styled>
                   <Accordion.Title active={activeIndex === i} index={i} onClick={this.handleClick}>
                     <Icon name="dropdown" /> Week {i + 1}{' '}
                   </Accordion.Title>
@@ -240,7 +237,7 @@ export class BrowseReviews extends Component {
             })
             .forEach(cr => {
               headers.push(
-                <Accordion key={ii + 1000} fluid styled>
+                <Accordion fluid styled>
                   {' '}
                   <Accordion.Title active={activeIndex === i + ii + 1} index={i + ii + 1} onClick={this.handleClick}>
                     <Icon name="dropdown" /> Code Review {cr.reviewNumber} {cr.points !== null ? ', points ' + cr.points : ''}
@@ -249,9 +246,11 @@ export class BrowseReviews extends Component {
                     <p>
                       <strong>Project to review:</strong> {this.props.courseData.data.find(data => data.id === cr.toReview).projectName} <br />
                       <strong>GitHub:</strong>{' '}
-                      <a href={this.props.courseData.data.find(data => data.id === cr.toReview).github}>{this.props.courseData.data.find(data => data.id === cr.toReview).github}</a>
+                      <a href={this.props.courseData.data.find(data => data.id === cr.toReview).github} target="_blank" rel="noopener noreferrer">
+                        {this.props.courseData.data.find(data => data.id === cr.toReview).github}
+                      </a>
                     </p>
-                    <strong>Code review:</strong> {cr.linkToReview ? <a href={cr.linkToReview}>{cr.linkToReview}</a> : 'No review linked yet'}
+                    <strong>Code review:</strong> {cr.linkToReview ? <a href={cr.linkToReview} target="_blank" rel="noopener noreferrer">{cr.linkToReview}</a> : 'No review linked yet'}
                     {cr.points !== null ? <h4>{cr.points} points</h4> : <h4>Not graded yet</h4>}
                     <Form onSubmit={this.gradeCodeReview(cr.reviewNumber, studentInstance)}>
                       <label>Points </label>
@@ -267,7 +266,7 @@ export class BrowseReviews extends Component {
             const finalWeek = student.weeks.find(week => week.weekNumber === this.props.selectedInstance.weekAmount + 1)
             if (finalWeek) {
               headers.push(
-                <Accordion key={10000} fluid styled>
+                <Accordion fluid styled>
                   <Accordion.Title active={activeIndex === i + ii} index={i + ii} onClick={this.handleClick}>
                     <Icon name="dropdown" /> Final Review, points {finalWeek.points}
                   </Accordion.Title>
@@ -325,7 +324,7 @@ export class BrowseReviews extends Component {
               )
             } else {
               headers.push(
-                <Accordion key={1000} fluid styled>
+                <Accordion fluid styled>
                   <Accordion.Title active={activeIndex === i} index={i} onClick={this.handleClick}>
                     <Icon name="dropdown" /> Final Review{' '}
                   </Accordion.Title>
@@ -343,7 +342,7 @@ export class BrowseReviews extends Component {
         }
         return student
       })
-      return headers
+      return headers.map((header, index) => React.cloneElement(header, { key: index }))
     }
 
     const { activeIndex } = this.state
@@ -353,7 +352,8 @@ export class BrowseReviews extends Component {
         <Loader active={this.props.loading.loading} />
         {this.props.courseData.role === 'teacher' ? (
           <div>
-            <Link to={`/labtool/courses/${this.props.selectedInstance.ohid}`}>
+            <BackButton preset="coursePage" />
+            <Link to={`/labtool/courses/${this.props.selectedInstance.ohid}`} style={{ textAlign: 'center' }}>
               <h2> {this.props.selectedInstance.name} </h2>
             </Link>
             {createHeaders(this.props.courseData, this.props.studentInstance)}

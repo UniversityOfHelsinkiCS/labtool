@@ -13,8 +13,16 @@ exports[`<BrowseReviews /> BrowseReviews Component should render correctly 1`] =
     active={false}
   />
   <div>
+    <Connect(BackButton)
+      preset="coursePage"
+    />
     <Link
       replace={false}
+      style={
+        Object {
+          "textAlign": "center",
+        }
+      }
       to="/labtool/courses/TKT20010.2018.K.A.1"
     >
       <h2>

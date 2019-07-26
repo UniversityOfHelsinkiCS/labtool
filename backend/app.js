@@ -1,7 +1,13 @@
-let express = require('express')
-let app = express()
+const express = require('express')
+
+const app = express()
 const jwt = require('jsonwebtoken')
 const bodyParser = require('body-parser')
+const Raven = require('raven')
+const logger = require('./server/utils/logger')
+
+Raven.config(process.env.SENTRY_ADDR).install()
+
 require('dotenv').config()
 
 /**
@@ -31,8 +37,7 @@ app.use(extractToken)
 const upstreamToken = (req, res, next) => {
   const auth = process.env.TOKEN || 'notset'
   if (auth === 'notset') {
-    res.send('Please restart the backend with the correct TOKEN environment variable set')
-    res.end
+    res.send('Please restart the backend with the correct TOKEN environment variable set').end()
   } else {
     // should check if the token is valid but maybe not this time
     next()
@@ -50,8 +55,7 @@ app.use(upstreamToken)
 const appSecretENV = (req, res, next) => {
   const secret = process.env.SECRET || 'notset'
   if (secret === 'notset') {
-    res.send('Please restart the backend having the SECRET environment variable set')
-    res.end
+    res.send('Please restart the backend having the SECRET environment variable set').end()
   } else {
     next()
   }
@@ -68,8 +72,7 @@ app.use(appSecretENV)
 const adminPwToken = (req, res, next) => {
   const auth = process.env.ADMIN_PW || 'notset'
   if (auth === 'notset') {
-    res.send('Please restart the backend with a ADMIN_PW environment variable set')
-    res.end
+    res.send('Please restart the backend with a ADMIN_PW environment variable set').end()
   } else {
     next()
   }
@@ -82,12 +85,18 @@ app.use(adminPwToken)
  */
 app.use(bodyParser.json())
 
-// respond with "hello world" when a GET request is made to the homepage
-app.get('/', function(req, res) {
-  res.send('hello world')
-})
+const fakeshibbo = (req, res, next) => {
+  req.headers.uid = 'tiraopiskelija1'
+  req.headers.employeenumber = '1234567'
+  req.headers.mail = 'maarit.opiskelija@helsinki.fi'
+  req.headers.schacpersonaluniquecode = 'urn:schac:personalUniqueCode:int:studentID:helsinki.fi:014578343'
+  req.headers.givenname = 'Maarit'
+  req.headers.sn = 'Opiskelija'
+  next()
+}
+// app.use(fakeshibbo)
 
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*')
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization')
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
@@ -104,12 +113,12 @@ const authenticate = (request, response, next) => {
   const excludedPaths = ['/api/login', '/api', '/admin']
   if (!excludedPaths.includes(request.path)) {
     try {
-      let decoded = jwt.verify(request.token, process.env.SECRET)
-      ;(request.decoded = decoded), (request.authenticated = { success: true, error: '' })
-      console.log('  Authenticated: true')
+      const decoded = jwt.verify(request.token, process.env.SECRET)
+      request.decoded = decoded
+      request.authenticated = { success: true, error: '' }
     } catch (e) {
       request.authenticated = { success: false, error: 'token verification failed' }
-      console.log('  Authenticated: false')
+      // logger.error(e)
     }
   }
 
@@ -129,15 +138,14 @@ require('./server/routes/tagRoutes')(app)
 require('./server/routes/checklistRoutes')(app)
 require('./server/routes/emailRoutes')(app)
 
-app.get('*', (req, res) =>
-  res.status(404).send({
-    message: 'Not found.'
-  })
+app.get('*', (req, res) => res.status(404).send({
+  message: 'Not found.'
+})
 )
 
-let server = app.listen(3001, function() {
-  let port = server.address().port
-  console.log('Backend is listening on port %s', port)
+const server = app.listen(3001, () => {
+  const port = server.address().port
+  logger.info(`Backend started and listening on port ${port}`)
 })
 
 module.exports = server

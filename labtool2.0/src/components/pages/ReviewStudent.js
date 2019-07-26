@@ -59,7 +59,7 @@ export class ReviewStudent extends Component {
 
   copyChecklistOutput = async e => {
     e.preventDefault()
-    this.reviewPointsRef.current.inputRef.value = e.target.points.value
+    this.reviewPointsRef.current.inputRef.value = Number(e.target.points.value).toFixed(2)
     /* The below line is as hacky as it is because functional elements cannot directly have refs.
     * This abomination somehow accesses a textarea that is a child of a div that holds the ref.
     */
@@ -105,12 +105,12 @@ export class ReviewStudent extends Component {
               checklistPoints += row.uncheckedPoints
             }
           })
-          if (checklistPoints < 0) {
-            checklistPoints = 0
-          } else if (checklistPoints > this.props.selectedInstance.weekMaxPoints) {
-            checklistPoints = this.props.selectedInstance.weekMaxPoints
-          }
         })
+        if (checklistPoints < 0) {
+          checklistPoints = 0
+        } else if (checklistPoints > this.props.selectedInstance.weekMaxPoints) {
+          checklistPoints = this.props.selectedInstance.weekMaxPoints
+        }
       }
       return (
         <div className="ReviewStudent" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
@@ -175,22 +175,23 @@ export class ReviewStudent extends Component {
                           {checkList.list[cl].map(row => (
                             <Card.Content className="checklistCardRow" key={row.name}>
                               <Form.Field>
-                                <Input
-                                  type="checkbox"
-                                  defaultChecked={checks[row.name] !== undefined ? checks[row.name] : false}
-                                  onChange={this.toggleCheckbox(row.name, this.props.ownProps.studentInstance, this.props.ownProps.weekNumber)}
-                                />
-                                <span>{row.name}</span>
-                                <div style={{ marginLeft: '20px', display: 'inline-block', maxWidth: '0px', textAlign: 'left' }}>
-                                  <span style={{ display: 'inline-block', minWidth: '100px' }}>
-                                    <Icon className="grey check square outline" />
-                                    {row.checkedPoints} p
-                                  </span>
-                                  <span style={{ display: 'inline-block', minWidth: '100px' }}>
-                                    <Icon className="grey square outline" />
-                                    {row.uncheckedPoints} p
-                                  </span>
-                                </div>
+                                <Grid>
+                                  <Grid.Row>
+                                    <Grid.Column width={3}>
+                                      <Input
+                                        type="checkbox"
+                                        defaultChecked={checks[row.name] !== undefined ? checks[row.name] : false}
+                                        onChange={this.toggleCheckbox(row.name, this.props.ownProps.studentInstance, this.props.ownProps.weekNumber)}
+                                      />
+                                    </Grid.Column>
+                                    <Grid.Column width={10}>
+                                      <span style={{ flexGrow: 1, textAlign: 'center' }}>{row.name}</span>
+                                    </Grid.Column>
+                                    <Grid.Column width={3}>
+                                      <span>{`${row.checkedPoints} p / ${row.uncheckedPoints} p`}</span>
+                                    </Grid.Column>
+                                  </Grid.Row>
+                                </Grid>
                               </Form.Field>
                             </Card.Content>
                           ))}
@@ -199,7 +200,7 @@ export class ReviewStudent extends Component {
                       <div>
                         <Form className="checklistOutput" onSubmit={this.copyChecklistOutput}>
                           <Form.TextArea className="checklistOutputText" name="text" value={checklistOutput} style={{ width: '100%', height: '250px' }} />
-                          <p className="checklistOutputPoints">points: {checklistPoints}</p>
+                          <p className="checklistOutputPoints">points: {checklistPoints.toFixed(2)}</p>
                           <input type="hidden" name="points" value={checklistPoints} />
                           <Button type="submit">Copy to review fields</Button>
                         </Form>

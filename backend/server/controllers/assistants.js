@@ -9,6 +9,7 @@ const Op = Sequelize.Op
 const StudentInstanceController = require('../controllers').studentInstances
 const env = process.env.NODE_ENV || 'development'
 const config = require('./../config/config.js')[env]
+const logger = require('../utils/logger')
 
 module.exports = {
   async create(req, res) {
@@ -22,7 +23,6 @@ module.exports = {
         res.status(400).send('you have to be authenticated to do this')
         return
       }
-      console.log('\n\nAuthentication succeeded')
       const requestMakerId = req.decoded.id
       const studentInstance = await StudentInstance.findOne({
         where: {
@@ -67,13 +67,12 @@ module.exports = {
         res.status(400).send('The teacher is not from the same course as this student.')
         return
       }
-      console.log('\n\nCourses match')
       studentInstance.updateAttributes({
         teacherInstanceId: teacherInsId
       })
       res.status(200).send(studentInstance)
     } catch (e) {
-      console.log('\n\nAssistantInstance creation failed.\n', e)
+      logger.error('create assistant error', { error: e.message })
     }
   },
 
@@ -84,7 +83,7 @@ module.exports = {
       status: undefined,
       data: undefined
     }
-    let studentInstanceId = undefined
+    let studentInstanceId
 
     try {
       studentInstanceId = req.params.id
@@ -139,7 +138,7 @@ module.exports = {
       })
       res.status(200).send(studentsForThisTeacherInstance)
     } catch (e) {
-      console.log('\nfindStudentsByTeacherInstance did not succeed\n\n')
+      logger.error('find students by teacher instance error', { error: e.message })
       res.status(400).send(e)
     }
   }

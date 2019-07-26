@@ -11,7 +11,6 @@ import Notification from './components/pages/Notification'
 import RegisterPage from './components/pages/RegisterPage'
 import CoursePage from './components/pages/CoursePage'
 import Email from './components/pages/Email.js'
-import LoginPage from './components/pages/LoginPage.js'
 import ModifyCourseInstancePage from './components/pages/ModifyCourseInstancePage'
 import ModifyCourseInstanceStaff from './components/pages/ModifyCourseInstanceStaff'
 import ModifyCourseInstanceCodeReviews from './components/pages/ModifyCourseInstanceCodeReviews'
@@ -25,8 +24,26 @@ import ManageTags from './components/pages/ManageTags'
 import { logout } from './reducers/loginReducer'
 import { tokenLogin } from './reducers/loginReducer'
 
+import { login } from './services/login'
+import { resetLoading, forceSetLoading } from './reducers/loadingReducer'
+
+try {
+  Raven.config('https://d12f1efa9d2a4d88a34584707472b08f@toska.cs.helsinki.fi/8').install() // eslint-disable-line
+} catch (e) {} // eslint-disable-line
+
 // The main component of the whole application.
 class App extends Component {
+  /**
+   * Automatically log in when landing on front page
+   */
+  componentWillMount = async () => {
+    await this.props.resetLoading()
+    this.props.forceSetLoading({
+      value: false
+    })
+    await this.props.login()
+  }
+
   /**
    * After mounting, it checks from the localstorage if user is logged in.
    * If true, it parses the user from the storage and puts it and
@@ -63,8 +80,6 @@ class App extends Component {
   render() {
     /**
      *  The main component that shows the applications pages.
-     * If the user isnt logged in or the user has not set an email, main
-     * wont be shown.
      */
 
     const Main = () => {
@@ -97,19 +112,16 @@ class App extends Component {
      * a component that forces the user to put an email.
      * Checks the email from redux store.
      */
-    const EmailChecker = () => <div>{this.props.user.email === '' || this.props.user.email === null ? <Email /> : <Main />}</div>
+    const EmailChecker = () => (this.props.user.email === '' || this.props.user.email === null ? <Email /> : <Main />)
 
     return (
       /**
-       * LoginPage is shown if store doesnt have a user,
-       * as in user isnt logged in.
-       *
        * Nav is the component for the navbar, that is always displayed.
        */
       <Container>
         <Nav />
         <Notification />
-        {this.props.user ? EmailChecker() : <LoginPage />}
+        {this.props.user ? EmailChecker() : null}
       </Container>
     )
   }
@@ -126,4 +138,15 @@ const mapStateToProps = state => {
   }
 }
 
-export default withRouter(connect(mapStateToProps, { tokenLogin, logout })(App))
+export default withRouter(
+  connect(
+    mapStateToProps,
+    {
+      tokenLogin,
+      logout,
+      login,
+      resetLoading,
+      forceSetLoading
+    }
+  )(App)
+)

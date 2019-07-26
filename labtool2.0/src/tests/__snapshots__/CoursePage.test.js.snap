@@ -56,6 +56,8 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
         <h3>
           <a
             href="http://github.com/tiralabra1"
+            rel="noopener noreferrer"
+            target="_blank"
           >
             http://github.com/tiralabra1
           </a>
@@ -130,6 +132,8 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
           </strong>
           <a
             href="http://github.com/tiralabra2"
+            rel="noopener noreferrer"
+            target="_blank"
           >
             http://github.com/tiralabra2
           </a>
@@ -189,6 +193,8 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
           </strong>
           <a
             href="http://github.com/superprojekti"
+            rel="noopener noreferrer"
+            target="_blank"
           >
             http://github.com/superprojekti
           </a>
@@ -289,6 +295,8 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
           </strong>
           <a
             href="http://github.com/superprojekti"
+            rel="noopener noreferrer"
+            target="_blank"
           >
             http://github.com/superprojekti
           </a>
@@ -301,11 +309,41 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
       </div>
     </AccordionContent>
   </Accordion>
+  <Accordion
+    fluid={true}
+    key="total"
+    style={
+      Object {
+        "marginBottom": "2em",
+      }
+    }
+    styled={true}
+  >
+    <AccordionTitle
+      active={true}
+      index="total"
+    >
+      <Icon
+        as="i"
+        name="check"
+      />
+      <strong>
+         Total Points: 
+      </strong>
+      3
+    </AccordionTitle>
+  </Accordion>
 </div>
 `;
 
 exports[`<CoursePage /> as teacher CoursePage Component should render correctly 1`] = `
-<div>
+<div
+  style={
+    Object {
+      "overflow": "auto",
+    }
+  }
+>
   <div
     className="TeachersTopView"
     style={
@@ -315,12 +353,8 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
       }
     }
   >
-    <div
-      className="ui grid"
-    >
-      <div
-        className="sixteen wide column"
-      >
+    <div>
+      <div>
         <h2 />
       </div>
       <p />
@@ -451,6 +485,8 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
     <Table
       as="table"
       celled={true}
+      compact={true}
+      unstackable={true}
     >
       <TableHeader
         as="thead"
@@ -511,6 +547,8 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
               <br />
               <a
                 href="http://github.com/tiralabra2"
+                rel="noopener noreferrer"
+                target="_blank"
               >
                 http://github.com/tiralabra2
               </a>
@@ -643,6 +681,8 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
               <br />
               <a
                 href="http://github.com/superprojekti"
+                rel="noopener noreferrer"
+                target="_blank"
               >
                 http://github.com/superprojekti
               </a>
@@ -775,6 +815,8 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
               <br />
               <a
                 href="http://github.com/tiralabra1"
+                rel="noopener noreferrer"
+                target="_blank"
               >
                 http://github.com/tiralabra1
               </a>
@@ -875,6 +917,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
         </TableRow>
       </TableBody>
     </Table>
+    <br />
   </div>
 </div>
 `;

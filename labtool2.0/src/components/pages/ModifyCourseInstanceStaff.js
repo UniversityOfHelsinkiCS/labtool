@@ -8,6 +8,8 @@ import { Table, Container, Header, Button, Label, Form, Loader } from 'semantic-
 import { resetLoading } from '../../reducers/loadingReducer'
 import { sortUsersByAdminAssistantLastname } from '../../util/sort'
 
+import BackButton from '../BackButton'
+
 export class ModifyCourseInstanceStaff extends React.Component {
   componentWillMount = async () => {
     await this.props.resetLoading()
@@ -56,6 +58,7 @@ export class ModifyCourseInstanceStaff extends React.Component {
     }
     return (
       <Container>
+        <BackButton preset="modifyCIPage" />
         <div className="sixteen wide column" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
           <h2>Add and remove assistants</h2>
           <h2>{this.props.selectedInstance.name}</h2>

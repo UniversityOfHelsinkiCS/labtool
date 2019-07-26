@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          is: ["^[a-zåäöA-ZÅÄÖ'0-9_ ]*$"]
+          is: ['^[a-zåäöA-ZÅÄÖ\'\\-0-9]+( [a-zåäöA-ZÅÄÖ\'\\-0-9]+)*$']
         }
       }
     },

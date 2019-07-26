@@ -9,6 +9,8 @@ import { clearNotifications } from '../../reducers/notificationReducer'
 import { changeCourseField } from '../../reducers/selectedInstanceReducer'
 import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 
+import BackButton from '../BackButton'
+
 /**
  *  Page used to modify a courseinstances information. Can only be accessed by teachers.
  */
@@ -87,124 +89,127 @@ export class ModifyCourseInstancePage extends Component {
     }
     const selectedInstance = { ...this.props.selectedInstance }
     return (
-      <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
-        <Loader active={this.props.loading.loading} inline="centered" />
-        <Grid>
-          <Grid.Row centered>
-            <h2> Edit course: {selectedInstance.name} </h2>
-          </Grid.Row>
-        </Grid>
-        <Grid>
-          <Grid.Row centered>
-            <Form onSubmit={this.handleSubmit}>
-              <Form.Group inline>
-                <label style={{ width: '125px', textAlign: 'left' }}>Week amount</label>
-                <Input name="weekAmount" required="true" type="text" style={{ maxWidth: '7em' }} value={selectedInstance.weekAmount} className="form-control1" onChange={this.changeField} />
-              </Form.Group>
+      <div>
+        <BackButton preset="coursePage" />
+        <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
+          <Loader active={this.props.loading.loading} inline="centered" />
+          <Grid>
+            <Grid.Row centered>
+              <h2> Edit course: {selectedInstance.name} </h2>
+            </Grid.Row>
+          </Grid>
+          <Grid>
+            <Grid.Row centered>
+              <Form onSubmit={this.handleSubmit}>
+                <Form.Group inline>
+                  <label style={{ width: '125px', textAlign: 'left' }}>Week amount</label>
+                  <Input name="weekAmount" required="true" type="text" style={{ maxWidth: '7em' }} value={selectedInstance.weekAmount} className="form-control1" onChange={this.changeField} />
+                </Form.Group>
 
-              <Form.Group inline>
-                <label style={{ width: '125px', textAlign: 'left' }}>Weekly maxpoints</label>
-                <Input name="weekMaxPoints" required="true" type="text" style={{ maxWidth: '7em' }} value={selectedInstance.weekMaxPoints} className="form-control2" onChange={this.changeField} />
-              </Form.Group>
+                <Form.Group inline>
+                  <label style={{ width: '125px', textAlign: 'left' }}>Weekly maxpoints</label>
+                  <Input name="weekMaxPoints" required="true" type="text" style={{ maxWidth: '7em' }} value={selectedInstance.weekMaxPoints} className="form-control2" onChange={this.changeField} />
+                </Form.Group>
 
-              <Form.Group inline>
-                <label style={{ width: '125px', textAlign: 'left' }}>Current week</label>
-                <Input name="currentWeek" required="true" type="text" style={{ maxWidth: '7em' }} value={selectedInstance.currentWeek} className="form-control3" onChange={this.changeField} />
-              </Form.Group>
+                <Form.Group inline>
+                  <label style={{ width: '125px', textAlign: 'left' }}>Current week</label>
+                  <Input name="currentWeek" required="true" type="text" style={{ maxWidth: '7em' }} value={selectedInstance.currentWeek} className="form-control3" onChange={this.changeField} />
+                </Form.Group>
 
-              <Form.Group inline>
-                <label style={{ width: '125px', textAlign: 'left' }}>Currently visible code reviews</label>
-                {this.props.selectedInstance.currentCodeReview
-                  ? this.props.selectedInstance.currentCodeReview
-                      .sort((a, b) => {
-                        return a - b
-                      })
-                      .map(
-                        cr =>
-                          this.state.toRemoveCr.includes(cr) ? (
-                            <Popup
-                              key={cr}
-                              trigger={
-                                <Button color="red" value={cr} onClick={this.handleRemoveChange} compact>
-                                  {cr}
-                                </Button>
-                              }
-                              content={'Click to not be removed on save'}
-                            />
-                          ) : (
-                            <Popup
-                              key={cr}
-                              trigger={
-                                <Button value={cr} onClick={this.handleRemoveChange} compact>
-                                  {cr}
-                                </Button>
-                              }
-                              content={'Click to be removed on save'}
-                            />
-                          )
-                      )
-                  : null}
-              </Form.Group>
-              <Form.Group inline>
-                <Dropdown
-                  onChange={this.handleAddChange}
-                  options={this.props.codeReviewDropdowns}
-                  fluid
-                  selection
-                  multiple={true}
-                  placeholder={this.props.selectedInstance.amountOfCodeReviews > 0 ? 'Select code reviews to set visible' : 'No code reviews'}
-                />
-              </Form.Group>
+                <Form.Group inline>
+                  <label style={{ width: '125px', textAlign: 'left' }}>Currently visible code reviews</label>
+                  {this.props.selectedInstance.currentCodeReview
+                    ? this.props.selectedInstance.currentCodeReview
+                        .sort((a, b) => {
+                          return a - b
+                        })
+                        .map(
+                          cr =>
+                            this.state.toRemoveCr.includes(cr) ? (
+                              <Popup
+                                key={cr}
+                                trigger={
+                                  <Button color="red" value={cr} onClick={this.handleRemoveChange} compact>
+                                    {cr}
+                                  </Button>
+                                }
+                                content={'This code review will be hidden on save'}
+                              />
+                            ) : (
+                              <Popup
+                                key={cr}
+                                trigger={
+                                  <Button value={cr} onClick={this.handleRemoveChange} compact>
+                                    {cr}
+                                  </Button>
+                                }
+                                content={'Click to hide this code review on save'}
+                              />
+                            )
+                        )
+                    : null}
+                </Form.Group>
+                <Form.Group inline>
+                  <Dropdown
+                    onChange={this.handleAddChange}
+                    options={this.props.codeReviewDropdowns}
+                    fluid
+                    selection
+                    multiple={true}
+                    placeholder={this.props.selectedInstance.amountOfCodeReviews > 0 ? 'Select code reviews to set visible' : 'No code reviews'}
+                  />
+                </Form.Group>
 
-              <Form.Group inline>
-                <Checkbox
-                  name="finalReview"
-                  checked={this.props.selectedInstance.finalReview}
-                  onChange={this.changeFinalReview}
-                  label="Course has a final review"
-                  style={{ width: '150px', textAlign: 'left' }}
-                />
-              </Form.Group>
+                <Form.Group inline>
+                  <Checkbox
+                    name="finalReview"
+                    checked={this.props.selectedInstance.finalReview}
+                    onChange={this.changeFinalReview}
+                    label="Course has a final review"
+                    style={{ width: '150px', textAlign: 'left' }}
+                  />
+                </Form.Group>
 
-              <Form.Group inline>
-                <Checkbox name="courseActive" label="Activate course" checked={selectedInstance.active} onChange={this.handleChange} style={{ width: '150px', textAlign: 'left' }} />
-              </Form.Group>
+                <Form.Group inline>
+                  <Checkbox name="courseActive" label="Activate course" checked={selectedInstance.active} onChange={this.handleChange} style={{ width: '150px', textAlign: 'left' }} />
+                </Form.Group>
 
-              <Form.Group>
-                <Button type="Submit" floated="left" color="green" size="huge">
-                  Save
-                </Button>
-
-                <Link to="/labtool/courses">
-                  <Button type="Cancel" floated="right" color="red" size="huge">
-                    Cancel
+                <Form.Group>
+                  <Button type="Submit" floated="left" color="green" size="huge">
+                    Save
                   </Button>
-                </Link>
-              </Form.Group>
-            </Form>
-          </Grid.Row>
-        </Grid>
 
-        <Link to={`/labtool/ModifyCourseInstanceStaff/${this.props.selectedInstance.ohid}`}>
-          <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px' }} block="true">
-            Add or remove assistant teachers
-          </Button>
-        </Link>
-        <Link to={`/labtool/ModifyCourseInstanceCodeReviews/${this.props.selectedInstance.ohid}`}>
-          <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px' }} block="true">
-            Add or modify codereviews
-          </Button>
-        </Link>
-        <Link to={`/labtool/checklist/${this.props.selectedInstance.ohid}/create`}>
-          <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px' }} block="true">
-            Create new checklist
-          </Button>
-        </Link>
-        <Link to={`/labtool/managetags`}>
-          <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px' }} block="true">
-            Edit tags
-          </Button>
-        </Link>
+                  <Link to="/labtool/courses">
+                    <Button type="Cancel" floated="right" color="red" size="huge">
+                      Cancel
+                    </Button>
+                  </Link>
+                </Form.Group>
+              </Form>
+            </Grid.Row>
+          </Grid>
+
+          <Link to={`/labtool/ModifyCourseInstanceStaff/${this.props.selectedInstance.ohid}`}>
+            <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px' }} block="true">
+              Manage assistant teachers
+            </Button>
+          </Link>
+          <Link to={`/labtool/ModifyCourseInstanceCodeReviews/${this.props.selectedInstance.ohid}`}>
+            <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px' }} block="true">
+              Edit code reviews
+            </Button>
+          </Link>
+          <Link to={`/labtool/checklist/${this.props.selectedInstance.ohid}/create`}>
+            <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px' }} block="true">
+              Edit checklists
+            </Button>
+          </Link>
+          <Link to={`/labtool/managetags`}>
+            <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px' }} block="true">
+              Edit tags
+            </Button>
+          </Link>
+        </div>
       </div>
     )
   }

@@ -5,7 +5,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.get('/labtool/courses', (req, res) => {
-  const responseJson = require('./responses/courses');
+  const termString = req.query.year + req.query.term
+  const responseJson = require('./responses/' + termString);
   res.json(responseJson.courses);
 })
 
@@ -17,7 +18,7 @@ app.get('/labtool/courses/:id', (req, res) => {
 })
 
 // If password is "password" and username is listed in
-// ./reposonses/users logs in as username.
+// ./responses/users logs in as username.
 // Otherwise, does not let one log in.
 app.post('/login', (req, res) => {
 

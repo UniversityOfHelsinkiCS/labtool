@@ -1,8 +1,8 @@
-FROM node:8-wheezy
+FROM node:8
 ADD ./ /code
 WORKDIR /code
 COPY ./package.json ./
-RUN npm install
+RUN npm ci --only=production
 ENV PATH=".:${PATH}"
 EXPOSE 3001
 CMD [ "sh", "start.sh" ]

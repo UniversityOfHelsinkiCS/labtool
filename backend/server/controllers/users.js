@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken')
 const CourseInstance = require('../models').CourseInstance
 const TeacherInstance = require('../models').TeacherInstance
 const helper = require('../helpers/users_controller_helper')
+const logger = require('../utils/logger')
 
 function invalidInputResponse(res, error) {
   res.status(400).send({ error })
@@ -29,7 +30,7 @@ module.exports = {
     } else {
       User.update({ email: req.body.email }, { where: { id: req.decoded.id } }).then(
         User.findById(req.decoded.id)
-          .then(user => {
+          .then((user) => {
             const returnedUser = {
               email: req.body.email,
               firsts: user.firsts,
@@ -39,7 +40,10 @@ module.exports = {
             }
             res.status(201).send(returnedUser)
           })
-          .catch(error => res.status(400).send(error))
+          .catch((error) => {
+            res.status(400).send(error)
+            logger.error('user update error', { error: error.message })
+          })
       )
     }
   },
@@ -73,6 +77,7 @@ module.exports = {
         })
         res.status(200).send(users)
       } catch (exception) {
+        logger.error('user list error', { error: exception.message })
         res.status(400).send('Unable to send user list')
       }
     }

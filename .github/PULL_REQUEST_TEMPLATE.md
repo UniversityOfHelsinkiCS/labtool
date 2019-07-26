@@ -10,4 +10,4 @@ I have:
 - [ ] documented the code or added documentation to the wiki.
 - [ ] added or modified test(s).
 - [ ] test(s) that actually pass.
-- [ ] works in dev branch <!-- remove this line if your PR is not against master -->
+- [ ] works in trunk branch <!-- remove this line if your PR is not against master -->

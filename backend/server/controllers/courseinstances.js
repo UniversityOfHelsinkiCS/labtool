@@ -14,6 +14,17 @@ const Tag = require('../models').Tag
 const Checklist = require('../models').Checklist
 const env = process.env.NODE_ENV || 'development'
 const config = require('./../config/config.js')[env]
+const logger = require('../utils/logger')
+
+const overkillLogging = (req, error) => {
+  logger.debug('request: ', req)
+  logger.error('error: ', error)
+}
+
+const validationErrorMessages = {
+  github: 'Github repository link is not a proper url.',
+  projectName: 'Project name contains illegal characters.\nCharacters allowed are letters from a-ö, numbers, apostrophe, - and whitespace (not multiple in a row or at first/last character)'
+}
 
 module.exports = {
   /**
@@ -23,13 +34,13 @@ module.exports = {
    */
   findByUserTeacherInstance(req, res) {
     helper.controller_before_auth_check_action(req, res)
-    const errors = []
-
-    const id = parseInt(req.body.userId) //TODO: CHECK THAT THIS IS SANITICED ID
     db.sequelize
       .query(`SELECT * FROM "CourseInstances" JOIN "TeacherInstances" ON "CourseInstances"."id" = "TeacherInstances"."courseInstanceId" WHERE "TeacherInstances"."userId" = ${req.decoded.id}`)
       .then(instance => res.status(200).send(instance[0]))
-      .catch(error => res.status(400).send(error))
+      .catch((error) => {
+        logger.error(error)
+        res.status(400).send(error)
+      })
   },
   /**
    *
@@ -229,6 +240,12 @@ module.exports = {
             model: Tag,
             attributes: ['id', 'name', 'color']
           }
+        ],
+        order: [
+          [
+            { model: CodeReview, as: 'codeReviews' },
+            'reviewNumber', 'ASC'
+          ]
         ]
       })
       try {
@@ -256,83 +273,84 @@ module.exports = {
    * @param req
    * @param res
    */
-  registerToCourseInstance(req, res) {
-    helper.controller_before_auth_check_action(req, res)
+  async registerToCourseInstance(req, res) {
+    await helper.controller_before_auth_check_action(req, res)
 
-    CourseInstance.findOne({
+    const course = await CourseInstance.findOne({
       where: {
         ohid: req.params.ohid
       }
-    }).then(course => {
-      if (!course) {
-        return res.status(400).send({
-          message: 'course instance not found'
-        })
-      } else if (course.active === false) {
-        console.log('course is no active')
-        return res.status(400).send({
-          message: 'course is not active'
+    })
+    if (!course) {
+      overkillLogging(req, null)
+      return res.status(400).send({
+        message: 'course instance not found'
+      })
+    }
+    if (course.active === false) {
+      logger.info('course registration failed because course is not active')
+      overkillLogging(req, null)
+      return res.status(400).send({
+        message: 'course is not active'
+      })
+    }
+    const user = await User.findById(req.decoded.id)
+    if (!user) {
+      overkillLogging(req, null)
+      return res.status(400).send({
+        message: 'User could not be found.'
+      })
+    }
+    const webOodiStatus = await new Promise((resolve) => {
+      helper.checkWebOodi(req, res, user, resolve) // this does not work.
+
+      setTimeout(function() {
+        overkillLogging(req, null)
+        resolve('shitaintright') // Yay! everything went to hell.
+      }, 5000) // set a high timeout value since you really want to wait x)
+    })
+
+    if (webOodiStatus !== 'found') {
+      overkillLogging(req, null)
+      return res.status(403).json({
+        message: 'You have not yet registered to this course at WebOodi. If you have already registered at WebOodi, try again in two hours.'
+      })
+    }
+    let student
+    try {
+      student = await StudentInstance.findOrCreate({
+        where: {
+          userId: user.id,
+          courseInstanceId: course.dataValues.id
+        },
+        defaults: {
+          userId: user.id,
+          name: user,
+          courseInstanceId: course.dataValues.id,
+          github: req.body.github || '', // model would like to validate this to be an URL but seems like crap
+          projectName: req.body.projectName || '' // model would like to validate this to alphanumeric but seems like this needs specific nulls or empties or whatever
+        }
+      })
+    } catch (error) {
+      if (error.name === 'SequelizeValidationError') {
+        const errorMessage = error.errors.map(e => validationErrorMessages[e.path] || 'Unknown validation error.')
+        return res.status(400).json({
+          message: errorMessage.join('\n')
         })
       }
-      User.findById(req.decoded.id).then(user => {
-        if (!user) {
-          return res.status(400).send({
-            message: 'something went wrong (clear these specific error messages later): user not found'
-          })
-        }
-        let promisingThatWeboodiStatusIsChecked = new Promise((resolve, reject) => {
-          helper.checkWebOodi(req, res, user, resolve) // this does not work.
-
-          setTimeout(function() {
-            resolve('shitaintright') // Yay! everything went to hell.
-          }, 5000) // set a high timeout value since you really want to wait x)
-        })
-
-        promisingThatWeboodiStatusIsChecked.then(barf => {
-          if (barf === 'found') {
-            StudentInstance.findOrCreate({
-              where: {
-                userId: user.id,
-                courseInstanceId: course.dataValues.id
-              },
-              defaults: {
-                userId: user.id,
-                name: user,
-                courseInstanceId: course.dataValues.id,
-                github: req.body.github || '', // model would like to validate this to be an URL but seems like crap
-                projectName: req.body.projectName || '' // model would like to validate this to alphanumeric but seems like this needs specific nulls or empties or whatever
-              }
-            })
-              .then(student => {
-                if (!student) {
-                  res.status(400).send({
-                    message: 'something went wrong: if somehow we could not find or create a record we see this'
-                  })
-                } else {
-                  helper.findByUserStudentInstance(req, res)
-
-                  //      this.findByUserStudentInstance(req,res)
-                  //                  res.status(200).send({
-
-                  /*
-                  message: 'something went right',
-                  whatever: student
-                })*/
-                }
-              })
-              .catch(function(error) {
-                res.status(400).send({
-                  message: error.errors
-                })
-              })
-          } else {
-            res.status(400).send({
-              message: 'something went wrong'
-            })
-          }
-        })
+      overkillLogging(req, error)
+      return res.status(500).json({
+        message: 'Unexpected error.'
       })
-    })
+    }
+    if (!student) {
+      overkillLogging(req, null)
+      res.status(400).json({
+        message: 'Student record could not be found or created.'
+      })
+    } else {
+      helper.findByUserStudentInstance(req, res)
+    }
   },
 
   /**
@@ -347,7 +365,6 @@ module.exports = {
 
     try {
       if (req.authenticated.success) {
-        console.log('\nauth success\n')
         CourseInstance.findOne({
           where: {
             ohid: req.body.ohid
@@ -355,11 +372,9 @@ module.exports = {
         })
           .then(course => {
             if (!course) {
-              console.log('\nkurssia ei löytynyt\n')
               res.status(404).send('course not found')
               return
             }
-            console.log('\nkurssi löytyi\n')
             StudentInstance.find({
               where: {
                 userId: req.decoded.id,
@@ -367,29 +382,33 @@ module.exports = {
               }
             }).then(targetStudent => {
               if (!targetStudent) {
-                console.log('\nopiskelijaa ei löytynyt\n')
                 res.status(404).send('Student not found')
                 return
               }
-              console.log('\nopiskelija löytyi\n')
               return targetStudent
                 .update({
                   github: req.body.github || targetStudent.github,
                   projectName: req.body.projectname || targetStudent.projectName
                 })
                 .then(updatedStudentInstance => {
-                  console.log('\nUpdated student project info succesfully\n')
                   res.status(200).send(updatedStudentInstance)
                 })
-                .catch(error => {
-                  console.log('\nerror happened\n')
-                  res.status(400).send('update failed')
+                .catch((error) => {
+                  if (error.name === 'SequelizeValidationError') {
+                    const errorMessage = error.errors.map(e => validationErrorMessages[e.path] || 'Unknown validation error.')
+                    logger.error(error)
+                    return res.status(400).send({ message: errorMessage.join('\n') })
+                  }
                 })
             })
           })
-          .catch(error => res.status(400).send('\n\n\n\ntuli joku error: ', error))
+          .catch(error => {
+            logger.error(error)
+            res.status(400).send('\n\n\n\ntuli joku error: ', error)
+          })
       }
     } catch (e) {
+      logger.error(e)
       res.status(400).send(e)
     }
   },
@@ -439,11 +458,20 @@ module.exports = {
                 currentCodeReview: req.body.newCr.length === 0 ? '{}' : req.body.newCr
               })
               .then(updatedCourseInstance => res.status(200).send(updatedCourseInstance))
-              .catch(error => res.status(400).send(error))
+              .catch(error => {
+                res.status(400).send(error)
+                logger.error(error)
+              })
           })
-          .catch(error => res.status(400).send(error))
+          .catch(error => {
+            res.status(400).send(error)
+            logger.error(error)
+          })
       })
-      .catch(error => res.status(400).send(error))
+      .catch(error => {
+        res.status(400).send(error)
+        logger.error(error)
+      })
   },
 
   /**
@@ -459,7 +487,10 @@ module.exports = {
       }
     })
       .then(instance => res.status(200).send(instance))
-      .catch(error => res.status(400).send(error))
+      .catch(error => {
+        logger.error(error)
+        res.status(400).send(error)
+      })
   },
 
   /**
@@ -490,7 +521,10 @@ module.exports = {
         }
         return res.status(200).send(courseInstance)
       })
-      .catch(error => res.status(400).send(error))
+      .catch(error => {
+        logger.error(error)
+        res.status(400).send(error)
+      })
   },
   /**
    *
@@ -545,7 +579,6 @@ module.exports = {
   getNewer(req, res) {
     helper.controller_before_auth_check_action(req, res)
 
-    console.log('update next...')
     const auth = process.env.TOKEN || 'notset' //You have to set TOKEN in .env file in order for this to work
     const termAndYear = helper.CurrentTermAndYear()
     if (auth === 'notset') {
@@ -694,7 +727,10 @@ module.exports = {
                   res.status(200).send(comment)
                 }
               })
-              .catch(error => res.status(400).send(error))
+              .catch(error => {
+                res.status(400).send(error)
+                logger.error(error)
+              })
           }
         })
       } catch (e) {
@@ -721,6 +757,9 @@ module.exports = {
       }
     })
       .then(comment => res.status(200).send(comment))
-      .catch(error => res.status(400).send(error))
+      .catch(error => {
+        res.status(400).send(error)
+        logger.error(error)
+      })
   }
 }

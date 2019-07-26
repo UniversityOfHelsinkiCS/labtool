@@ -10,23 +10,23 @@ const notificationReducer = (state = {}, action) => {
   switch (action.type) {
     case 'NOTIFICATION_SHOW':
       return action.notification
-    case 'LOGIN_SUCCESS':
-      return {
-        message: 'You have logged in',
-        error: false
-      }
+    //case 'LOGIN_SUCCESS':
+    //  return {
+    //    message: 'You have logged in',
+    //    error: false
+    //  }
     case 'NOTIFICATION_CLEAR':
       return {}
-    case 'LOGIN_FAILURE':
-      return {
-        message: 'Wrong username or password',
-        error: true
-      }
-    case 'LOGOUT_SUCCESS':
-      return {
-        message: 'You have logged out',
-        error: false
-      }
+    //case 'LOGIN_FAILURE':
+    //  return {
+    //    message: 'Wrong username or password',
+    //    error: true
+    //  }
+    //case 'LOGOUT_SUCCESS':
+    //  return {
+    //    message: 'You have logged out',
+    //    error: false
+    //  }
     case 'USER_UPDATE_SUCCESS':
       return {
         message: 'You have updated your email',
@@ -45,7 +45,7 @@ const notificationReducer = (state = {}, action) => {
       }
     case 'STUDENT_COURSE_CREATE_ONE_FAILURE':
       return {
-        message: 'You have not yet registered to this course at WebOodi. If you have already registered at WebOodi, try again in two hours.',
+        message: action.response.response.data.message,
         error: true
       }
     case 'CI_MODIFY_ONE_SUCCESS':
@@ -188,9 +188,16 @@ const notificationReducer = (state = {}, action) => {
       }
 
     case 'CODE_REVIEW_REMOVE_ONE_SUCCESS':
-    return {
+      return {
         message: 'Code review removed succesfully!',
         error: false
+      }
+    case 'STUDENT_PROJECT_INFO_UPDATE_FAILURE': {
+      const { message } = action.response.response.data
+      return {
+        message,
+        error: true
+      }
     }
     default:
       return state

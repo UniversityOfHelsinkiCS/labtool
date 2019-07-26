@@ -21,6 +21,7 @@ import {
   toggleCodeReview
 } from '../../reducers/coursePageLogicReducer'
 import { resetLoading } from '../../reducers/loadingReducer'
+import { trimDate } from '../../util/format'
 
 export class CoursePage extends React.Component {
   handleClick = (e, titleProps) => {
@@ -61,13 +62,6 @@ export class CoursePage extends React.Component {
     return theArray.sort((a, b) => {
       return new Date(a.createdAt) - new Date(b.createdAt)
     })
-  }
-
-  trimDate = date => {
-    return new Date(date)
-      .toLocaleString()
-      .replace('/', '.')
-      .replace('/', '.')
   }
 
   changeHiddenAssistantDropdown = id => {
@@ -213,6 +207,11 @@ export class CoursePage extends React.Component {
     const numberOfCodeReviews = Array.isArray(this.props.courseData.data) ? Math.max(...this.props.courseData.data.map(student => student.codeReviews.length)) : 0
 
     const createIndents = (weeks, codeReviews, siId) => {
+      const cr =
+        codeReviews &&
+        codeReviews.reduce((a, b) => {
+          return { ...a, [b.reviewNumber]: b.points }
+        }, {})
       const indents = []
       let i = 0
       let finalPoints = undefined
@@ -236,19 +235,26 @@ export class CoursePage extends React.Component {
         }
         indents.push(pushattava)
       }
+
       let ii = 0
-      codeReviews.forEach(cr => {
-        indents.push(<Table.Cell key={i + ii}>{cr.points !== null ? <p className="codeReviewPoints">{cr.points}</p> : <p>-</p>}</Table.Cell>)
-        ii++
-      })
-      while (ii < numberOfCodeReviews) {
-        indents.push(
-          <Table.Cell key={i + ii}>
-            <p>-</p>
-          </Table.Cell>
-        )
-        ii++
+      const { amountOfCodeReviews } = this.props.selectedInstance
+      if (amountOfCodeReviews) {
+        for (let index = 1; index <= amountOfCodeReviews; index++) {
+          indents.push(<Table.Cell key={siId + index}>{cr[index] || cr[index] === 0 ? <p className="codeReviewPoints">{cr[index]}</p> : <p>-</p>}</Table.Cell>)
+        }
       }
+      // codeReviews.forEach(cr => {
+      //   indents.push(<Table.Cell key={i + ii}>{cr.points !== null ? <p className="codeReviewPoints">{cr.points}</p> : <p>-</p>}</Table.Cell>)
+      //   ii++
+      // // })
+      // while (ii < numberOfCodeReviews) {
+      //   indents.push(
+      //     <Table.Cell key={i + ii}>
+      //       <p>-</p>
+      //     </Table.Cell>
+      //   )
+      //   ii++
+      // }
 
       if (this.props.selectedInstance.finalReview) {
         let finalReviewPointsCell = (
@@ -271,7 +277,7 @@ export class CoursePage extends React.Component {
       for (; i < this.props.selectedInstance.weekAmount; i++) {
         headers.push(<Table.HeaderCell key={i}>Week {i + 1} </Table.HeaderCell>)
       }
-      for (var ii = 1; ii <= numberOfCodeReviews; ii++) {
+      for (var ii = 1; ii <= this.props.selectedInstance.amountOfCodeReviews; ii++) {
         headers.push(<Table.HeaderCell key={i + ii}>Code Review {ii} </Table.HeaderCell>)
       }
       if (this.props.selectedInstance.finalReview) {
@@ -294,7 +300,9 @@ export class CoursePage extends React.Component {
                 </h2>
                 <h3> {this.props.courseData.data.projectName} </h3>
                 <h3>
-                  <a href={this.props.courseData.data.github}>{this.props.courseData.data.github}</a>{' '}
+                  <a href={this.props.courseData.data.github} target="_blank" rel="noopener noreferrer">
+                    {this.props.courseData.data.github}
+                  </a>{' '}
                   <Link to={`/labtool/courseregistration/${this.props.selectedInstance.ohid}`}>
                     <Button circular floated="right" size="large" icon={{ name: 'edit', color: 'orange', size: 'large' }} />
                   </Link>
@@ -309,6 +317,7 @@ export class CoursePage extends React.Component {
       if (this.props.selectedInstance && this.props.courseData && this.props.courseData.data && this.props.courseData.data.weeks) {
         let i = 0
         let week = null
+
         const howManyWeeks = this.props.selectedInstance.finalReview ? this.props.selectedInstance.weekAmount + 1 : this.props.selectedInstance.weekAmount
         for (; i < howManyWeeks; i++) {
           week = this.props.courseData.data.weeks.find(week => week.weekNumber === i + 1)
@@ -344,7 +353,7 @@ export class CoursePage extends React.Component {
                                   <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
                                 </Comment.Text>
                                 <Comment.Metadata>
-                                  <div>{this.trimDate(comment.createdAt)}</div>
+                                  <div>{trimDate(comment.createdAt)}</div>
                                 </Comment.Metadata>
                                 <div> </div>
                               </Comment.Content>
@@ -357,7 +366,7 @@ export class CoursePage extends React.Component {
                                 <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
                               </Comment.Text>
                               <Comment.Metadata>
-                                <div>{this.trimDate(comment.createdAt)}</div>
+                                <div>{trimDate(comment.createdAt)}</div>
                               </Comment.Metadata>
                               <div> </div>
                               {/* This hack compares user's name to comment.from and hides the email notification button when they don't match. */}
@@ -422,11 +431,16 @@ export class CoursePage extends React.Component {
                       {cr.toReview.projectName}
                       <br />
                       <strong>Github: </strong>
-                      <a href={cr.toReview.github}>{cr.toReview.github}</a>
+                      <a href={cr.toReview.github} target="_blank" rel="noopener noreferrer">
+                        {cr.toReview.github}
+                      </a>
                       <br /> <br />
                       {cr.linkToReview ? (
                         <div>
-                          <strong>Your review: </strong> <a href={cr.linkToReview}>{cr.linkToReview}</a>
+                          <strong>Your review: </strong>
+                          <a href={cr.linkToReview} target="_blank" rel="noopener noreferrer">
+                            {cr.linkToReview}
+                          </a>
                         </div>
                       ) : (
                         <div />
@@ -473,6 +487,25 @@ export class CoursePage extends React.Component {
           })
       }
 
+      headers.push(
+        <Accordion key="total" fluid styled style={{ marginBottom: '2em' }}>
+          <Accordion.Title active={true} index="total">
+            <Icon name="check" />
+            <strong> Total Points: </strong>
+            {(
+              this.props.courseData.data.weeks.map(week => week.points).reduce((a, b) => {
+                return a + b
+              }, 0) +
+              this.props.courseData.data.codeReviews.map(cr => cr.points).reduce((a, b) => {
+                return a + b
+              }, 0)
+            )
+              .toFixed(2)
+              .replace(/[.,]00$/, '')}
+          </Accordion.Title>
+        </Accordion>
+      )
+
       return headers
     }
 
@@ -501,15 +534,15 @@ export class CoursePage extends React.Component {
     let renderTeacherTopPart = () => {
       return (
         <div className="TeachersTopView" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
-          <div className="ui grid">
-            <div className="sixteen wide column">
+          <div>
+            <div>
               <h2>{this.props.selectedInstance.name}</h2>
             </div>
             {this.props.courseInstance && this.props.courseInstance.active === true ? (
               this.props.courseData.data !== null ? (
                 <p />
               ) : (
-                <div className="sixteen wide column">
+                <div>
                   <Message compact>
                     <Message.Header>You have not activated this course.</Message.Header>
                   </Message>
@@ -527,7 +560,7 @@ export class CoursePage extends React.Component {
                     <div>
                       {this.props.selectedInstance.active === true ? (
                         <Label ribbon style={{ backgroundColor: '#21ba45' }}>
-                          Active
+                          Active registration
                         </Label>
                       ) : (
                         <div />
@@ -587,7 +620,7 @@ export class CoursePage extends React.Component {
             )}
           </div>
 
-          <Table celled>
+          <Table celled compact unstackable>
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell key={-1}>Student</Table.HeaderCell>
@@ -616,7 +649,9 @@ export class CoursePage extends React.Component {
                         <span>
                           {data.projectName}
                           <br />
-                          <a href={data.github}>{data.github}</a>
+                          <a href={data.github} target="_blank" rel="noopener noreferrer">
+                            {data.github}
+                          </a>
                           {data.Tags.map(tag => (
                             <div key={tag.id}>
                               <Button compact floated="left" className={`mini ui ${tag.color} button`} onClick={this.addFilterTag(tag)}>
@@ -650,12 +685,16 @@ export class CoursePage extends React.Component {
                       </Table.Cell>
                       {createIndents(data.weeks, data.codeReviews, data.id)}
                       <Table.Cell>
-                        {data.weeks.map(week => week.points).reduce((a, b) => {
-                          return a + b
-                        }, 0) +
+                        {(
+                          data.weeks.map(week => week.points).reduce((a, b) => {
+                            return a + b
+                          }, 0) +
                           data.codeReviews.map(cr => cr.points).reduce((a, b) => {
                             return a + b
-                          }, 0)}
+                          }, 0)
+                        )
+                          .toFixed(2)
+                          .replace(/[.,]00$/, '')}
                       </Table.Cell>
                       <Table.Cell>
                         {data.teacherInstanceId && this.props.selectedInstance.teacherInstances ? (
@@ -691,6 +730,7 @@ export class CoursePage extends React.Component {
               )}
             </Table.Body>
           </Table>
+          <br />
         </div>
       )
     }
@@ -749,7 +789,7 @@ export class CoursePage extends React.Component {
       )
     } else if (this.props.courseData.role === 'teacher') {
       return (
-        <div>
+        <div style={{ overflow: 'auto' }}>
           {renderTeacherTopPart()}
           {renderTeacherBottomPart()}
         </div>
