@@ -16,8 +16,7 @@ const logger = require('../utils/logger')
  */
 function controller_before_auth_check_action(req, res) {
   if (req.authenticated.success == false) {
-    res.send(401)
-    res.end
+    res.status(401).end()
   }
 }
 
@@ -30,9 +29,9 @@ function CurrentTermAndYear() {
   const date = new Date()
   const month = date.getMonth() + 1
   const currentTerm = getCurrentTerm(month)
-  var year = date.getFullYear()
+  const year = date.getFullYear()
   const currentYear = year.toString()
-  var nextYear = getNextYear(currentTerm, year)
+  const nextYear = getNextYear(currentTerm, year)
   nextYear.toString()
   const nextTerm = getNextTerm(currentTerm)
   return { currentYear, currentTerm, nextTerm, nextYear }
@@ -44,13 +43,13 @@ function CurrentTermAndYear() {
  * @returns {string}
  */
 function getCurrentTerm(month) {
-  if (1 <= month && month <= 5) {
+  if (month >= 1 && month <= 5) {
     return 'K'
   }
-  if (6 <= month && month <= 8) {
+  if (month >= 6 && month <= 8) {
     return 'V'
   }
-  if (9 <= month && month <= 12) {
+  if (month >= 9 && month <= 12) {
     return 'S'
   }
 }
@@ -64,9 +63,8 @@ function getCurrentTerm(month) {
 function getNextYear(currentTerm, currentYear) {
   if (currentTerm === 'S') {
     return currentYear + 1
-  } else {
-    return currentYear
   }
+  return currentYear
 }
 
 /**
@@ -122,7 +120,7 @@ function axiosCourseBla(hid) {
       Authorization: process.env.TOKEN
     },
     params: {
-      testing: process.env.INCLUDE_TESTERS //Set the environment variable if you want to include test users from Kurki.
+      testing: process.env.INCLUDE_TESTERS // Set the environment variable if you want to include test users from Kurki.
     },
     httpsAgent: new https.Agent({
       rejectUnauthorized: false // if you don't like this then please go ahead and do it yourself better.
@@ -138,9 +136,9 @@ function axiosCourseBla(hid) {
  */
 async function getActive(req, res) {
   try {
-    //const Sequelize = require('sequelize')
+    // const Sequelize = require('sequelize')
     const CourseInstance = require('../models').CourseInstance
-    //const Op = Sequalize.Op
+    // const Op = Sequalize.Op
     const ires = await CourseInstance.findAll({
       order: [['createdAt', 'DESC']]
     })
@@ -162,7 +160,7 @@ async function getInactive(req, res) {
     const nxt = await getNewer(req, res)
     const newobj = await cur.concat(nxt)
     const iarr = []
-    for (var blob in newobj) {
+    for (const blob in newobj) {
       iarr.push(newobj[blob].id)
     }
     const Sequelize = require('sequelize')
@@ -176,9 +174,9 @@ async function getInactive(req, res) {
     })
     const notactivated = []
 
-    for (var i in newobj) {
-      var found = 0
-      for (var j in ires) {
+    for (const i in newobj) {
+      let found = 0
+      for (const j in ires) {
         if (newobj[i].id == ires[j].ohid) {
           found = 1
         }
@@ -210,9 +208,7 @@ async function createCourse(body) {
     const result = await axios
       .create(options)
       .get()
-      .then(barf => {
-        return barf.data
-      })
+      .then(barf => barf.data)
     const new_course = await CourseInstance.build({
       name: body.cname,
       start: body.starts,
@@ -221,7 +217,7 @@ async function createCourse(body) {
     }).save()
 
     if (result.teachers.length > 0) {
-      for (let i in result.teachers) {
+      for (const i in result.teachers) {
         const user = await User.findOrCreate({
           where: {
             username: result.teachers[i]
@@ -258,9 +254,7 @@ async function getCurrent(req, res) {
     const result = await axios
       .create(options)
       .get()
-      .then(barf => {
-        return barf.data
-      })
+      .then(barf => barf.data)
     return result
   } catch (error) {
     logger.error('getCurrent error', { error: error.message })
@@ -281,9 +275,7 @@ async function getNewer(req, res) {
     const result = await axios
       .create(options)
       .get()
-      .then(barf => {
-        return barf.data
-      })
+      .then(barf => barf.data)
     return result
   } catch (error) {
     logger.error('getNewer error', { error: error.message })

@@ -34,8 +34,15 @@ function checkWebOodi(req, res, user, resolve) {
   if (process.env.INCLUDE_TESTERS) {
     options.uri += '?testing=1'
   }
+
+  console.log('request_to', `${config.kurki_url}/labtool/courses/${req.params.ohid}`)
+  console.log(process.env.TOKEN)
+
+  resolve('found')
+  /*
   request(options, (req, res, body) => {
     let json = null
+    console.log(body)
     try {
       json = JSON.parse(body)
     } catch (e) {
@@ -52,7 +59,7 @@ function checkWebOodi(req, res, user, resolve) {
       resolve('notfound')
       return
     }
-  })
+  }) */
 }
 
 /**
@@ -61,7 +68,7 @@ function checkWebOodi(req, res, user, resolve) {
  * @param res
  */
 function findByUserStudentInstance(req, res) {
-  //token verification might not work..? and we don't knpw if search works
+  // token verification might not work..? and we don't knpw if search works
 
   const StudentInstanceController = require('../controllers').studentInstances
   const db = require('../models')
@@ -73,7 +80,11 @@ function findByUserStudentInstance(req, res) {
   application_helpers.controller_before_auth_check_action(req, res)
   if (Number.isInteger(req.decoded.id)) {
     db.sequelize
-      .query(`SELECT * FROM "CourseInstances" JOIN "StudentInstances" ON "CourseInstances"."id" = "StudentInstances"."courseInstanceId" WHERE "StudentInstances"."userId" = ${req.decoded.id}`)
+      .query(
+        `SELECT * FROM "CourseInstances" JOIN "StudentInstances" ON "CourseInstances"."id" = "StudentInstances"."courseInstanceId" WHERE "StudentInstances"."userId" = ${
+          req.decoded.id
+        }`
+      )
       .then(instance => res.status(200).send(instance[0]))
       .catch((error) => {
         logger.error('findByUserStudentInstance error', { error: error.message })

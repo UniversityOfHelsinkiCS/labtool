@@ -64,22 +64,6 @@ class Nav extends Component {
               <p />
             )}
           </Menu.Menu>
-
-          {this.props.user.user ? (
-            <div>
-              <Menu.Menu position="right">
-                <Menu.Item name="Logout" as={Link} to="/labtool" onClick={this.handleLogout}>
-                  <Icon name="log out" />
-                  <p>
-                    {' '}
-                    Logout <em>{user.username} </em>
-                  </p>
-                </Menu.Item>
-              </Menu.Menu>
-            </div>
-          ) : (
-            <div />
-          )}
         </Menu>
       </main>
     )
