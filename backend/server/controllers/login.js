@@ -13,8 +13,8 @@ module.exports = {
       User.findOrCreate({
         where: { username: req.headers.uid },
         defaults: {
-          firsts: req.headers.givenname,
-          lastname: req.headers.sn,
+          firsts: Buffer.from(req.headers.givenname, 'binary').toString('utf8'),
+          lastname: Buffer.from(req.headers.sn, 'binary').toString('utf8'),
           studentNumber: req.headers.schacpersonaluniquecode ? req.headers.schacpersonaluniquecode.split(':')[6] : null,
           email: req.headers.mail
         }
