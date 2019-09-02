@@ -10,23 +10,23 @@ const notificationReducer = (state = {}, action) => {
   switch (action.type) {
     case 'NOTIFICATION_SHOW':
       return action.notification
-    case 'LOGIN_SUCCESS':
-      return {
-        message: 'You have logged in',
-        error: false
-      }
+    //case 'LOGIN_SUCCESS':
+    //  return {
+    //    message: 'You have logged in',
+    //    error: false
+    //  }
     case 'NOTIFICATION_CLEAR':
       return {}
-    case 'LOGIN_FAILURE':
-      return {
-        message: 'Wrong username or password',
-        error: true
-      }
-    case 'LOGOUT_SUCCESS':
-      return {
-        message: 'You have logged out',
-        error: false
-      }
+    //case 'LOGIN_FAILURE':
+    //  return {
+    //    message: 'Wrong username or password',
+    //    error: true
+    //  }
+    //case 'LOGOUT_SUCCESS':
+    //  return {
+    //    message: 'You have logged out',
+    //    error: false
+    //  }
     case 'USER_UPDATE_SUCCESS':
       return {
         message: 'You have updated your email',

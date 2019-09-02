@@ -34,9 +34,6 @@ module.exports = {
    */
   findByUserTeacherInstance(req, res) {
     helper.controller_before_auth_check_action(req, res)
-    const errors = []
-
-    const id = parseInt(req.body.userId) //TODO: CHECK THAT THIS IS SANITICED ID
     db.sequelize
       .query(`SELECT * FROM "CourseInstances" JOIN "TeacherInstances" ON "CourseInstances"."id" = "TeacherInstances"."courseInstanceId" WHERE "TeacherInstances"."userId" = ${req.decoded.id}`)
       .then(instance => res.status(200).send(instance[0]))
