@@ -485,26 +485,26 @@ export class CoursePage extends React.Component {
             )
             i++
           })
-      }
 
-      headers.push(
-        <Accordion key="total" fluid styled style={{ marginBottom: '2em' }}>
-          <Accordion.Title active={true} index="total">
-            <Icon name="check" />
-            <strong> Total Points: </strong>
-            {(
-              this.props.courseData.data.weeks.map(week => week.points).reduce((a, b) => {
-                return a + b
-              }, 0) +
-              this.props.courseData.data.codeReviews.map(cr => cr.points).reduce((a, b) => {
-                return a + b
-              }, 0)
-            )
-              .toFixed(2)
-              .replace(/[.,]00$/, '')}
-          </Accordion.Title>
-        </Accordion>
-      )
+        headers.push(
+          <Accordion key="total" fluid styled style={{ marginBottom: '2em' }}>
+            <Accordion.Title active={true} index="total">
+              <Icon name="check" />
+              <strong> Total Points: </strong>
+              {(
+                this.props.courseData.data.weeks.map(week => week.points).reduce((a, b) => {
+                  return a + b
+                }, 0) +
+                this.props.courseData.data.codeReviews.map(cr => cr.points).reduce((a, b) => {
+                  return a + b
+                }, 0)
+              )
+                .toFixed(2)
+                .replace(/[.,]00$/, '')}
+            </Accordion.Title>
+          </Accordion>
+        )
+      }
 
       return headers
     }
