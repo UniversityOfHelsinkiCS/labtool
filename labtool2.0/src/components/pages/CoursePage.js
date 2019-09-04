@@ -2,6 +2,7 @@ import React from 'react'
 import { Accordion, Button, Table, Card, Input, Form, Comment, Header, Label, Message, Icon, Dropdown, Popup, Loader } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
+import { FormMarkdownTextArea } from './MarkdownTextArea'
 import { createOneComment } from '../../services/comment'
 import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import { associateTeacherToStudent } from '../../services/assistant'
@@ -391,7 +392,7 @@ export class CoursePage extends React.Component {
                     )}
                   </Comment.Group>
                   <Form reply onSubmit={this.handleSubmit} name={week.id} id={week.id}>
-                    <Form.TextArea name="content" placeholder="Your comment..." defaultValue="" />
+                    <FormMarkdownTextArea name="content" placeholder="Your comment..." defaultValue="" />
                     <Button content="Add Reply" labelPosition="left" icon="edit" primary />
                   </Form>
                 </Accordion.Content>

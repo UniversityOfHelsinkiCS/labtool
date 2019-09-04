@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Button, Form, Input, Grid, Card, Loader, Icon } from 'semantic-ui-react'
 import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
+import { FormMarkdownTextArea } from './MarkdownTextArea'
 import { createOneWeek } from '../../services/week'
 import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import { clearNotifications } from '../../reducers/notificationReducer'
@@ -63,7 +64,7 @@ export class ReviewStudent extends Component {
     /* The below line is as hacky as it is because functional elements cannot directly have refs.
     * This abomination somehow accesses a textarea that is a child of a div that holds the ref.
     */
-    this.reviewTextRef.current.children[0].children.comment.value = e.target.text.value
+    this.reviewTextRef.current.getElementsByTagName('textarea')[0].value = e.target.text.value
   }
 
   render() {
@@ -148,8 +149,8 @@ export class ReviewStudent extends Component {
                   <label> Feedback </label>
                   <Form.Group inline unstackable style={{ textAlignVertical: 'top' }}>
                     <div ref={this.reviewTextRef}>
-                      {/*Do not add anything else to this div. If you do, you'll break this.copyChecklistOutput.*/}
-                      <Form.TextArea defaultValue={weekData[0] ? weekData[0].feedback : ''} name="comment" style={{ width: '500px', height: '250px' }} />
+                      {/*Do not add any other textareas to this div. If you do, you'll break this.copyChecklistOutput.*/}
+                      <FormMarkdownTextArea defaultValue={weekData[0] ? weekData[0].feedback : ''} name="comment" style={{ width: '500px', height: '250px' }} />
                     </div>
                   </Form.Group>
                   <Form.Field>

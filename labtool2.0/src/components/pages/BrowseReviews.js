@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Button, Card, Accordion, Icon, Form, Comment, Input, Popup, Loader, Label } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { FormMarkdownTextArea } from './MarkdownTextArea'
 import { createOneComment } from '../../services/comment'
 import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import { gradeCodeReview } from '../../services/codeReview'
@@ -203,7 +204,7 @@ export class BrowseReviews extends Component {
                       )}
                     </Comment.Group>
                     <Form reply onSubmit={this.handleSubmit} name={weeks.id} id={weeks.id}>
-                      <Form.TextArea name="content" placeholder="Your comment..." defaultValue="" />
+                      <FormMarkdownTextArea name="content" placeholder="Your comment..." defaultValue="" />
                       <Form.Checkbox label="Add comment for instructors only" name="hidden" />
                       <Button content="Add Reply" labelPosition="left" icon="edit" primary />
                     </Form>
@@ -311,7 +312,7 @@ export class BrowseReviews extends Component {
                       )}
                     </Comment.Group>
                     <Form reply onSubmit={this.handleSubmit} name={finalWeek.id} id={finalWeek.id}>
-                      <Form.TextArea name="content" placeholder="Your comment..." defaultValue="" />
+                      <FormMarkdownTextArea name="content" placeholder="Your comment..." defaultValue="" />
                       <Form.Checkbox label="Add comment for instructors only" name="hidden" />
                       <Button content="Add Reply" labelPosition="left" icon="edit" primary />
                     </Form>
