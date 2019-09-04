@@ -64,8 +64,12 @@ class Nav extends Component {
             <p />
           )}
         </Menu.Menu>
-        
-        {user && <Menu.Item position='right' style={{ margin: "auto 0" }}><LogoutButton /></Menu.Item>}
+
+        {user && (
+          <Menu.Item position="right" style={{ margin: 'auto 0' }}>
+            <LogoutButton />
+          </Menu.Item>
+        )}
       </Menu>
     )
   }
