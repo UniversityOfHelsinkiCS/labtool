@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import React, { Component } from 'react'
 import { Menu, Icon, Image } from 'semantic-ui-react'
 import { logout } from '../../reducers/loginReducer'
+import LogoutButton from '../LogoutButton'
 
 /**
  * Navigation bar component
@@ -63,6 +64,8 @@ class Nav extends Component {
             <p />
           )}
         </Menu.Menu>
+        
+        {user && <Menu.Item position='right' style={{ margin: "auto 0" }}><LogoutButton /></Menu.Item>}
       </Menu>
     )
   }
