@@ -2,13 +2,14 @@ import React, { Component } from 'react'
 import { Button, Form, Input, Grid, Card, Loader, Icon } from 'semantic-ui-react'
 import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { FormMarkdownTextArea } from './MarkdownTextArea'
 import { createOneWeek } from '../../services/week'
 import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import { clearNotifications } from '../../reducers/notificationReducer'
 import { toggleCheck, resetChecklist } from '../../reducers/weekReviewReducer'
 import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 import store from '../../store'
+
+import { FormMarkdownTextArea } from '../MarkdownTextArea'
 
 /**
  *  The page which is used by teacher to review submissions,.

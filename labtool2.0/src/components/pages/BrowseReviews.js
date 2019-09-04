@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { Button, Card, Accordion, Icon, Form, Comment, Input, Popup, Loader, Label } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { FormMarkdownTextArea } from './MarkdownTextArea'
 import { createOneComment } from '../../services/comment'
 import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import { gradeCodeReview } from '../../services/codeReview'
@@ -12,6 +11,7 @@ import { resetLoading } from '../../reducers/loadingReducer'
 import { trimDate } from '../../util/format'
 
 import BackButton from '../BackButton'
+import { FormMarkdownTextArea } from '../MarkdownTextArea'
 
 /**
  * Maps all comments from a single instance from coursePage reducer

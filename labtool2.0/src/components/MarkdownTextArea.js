@@ -1,9 +1,10 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Accordion, Form, Icon } from 'semantic-ui-react'
 import ReactMarkdown from 'react-markdown'
 
 export class FormMarkdownTextArea extends React.Component {
-  state = { activeIndex: -1, textValue: this.props.defaultValue || '' }
+  state = { activeIndex: -1, textValue: this.props.defaultValue ? this.props.defaultValue : '' }
 
   handleClick = (e, titleProps) => {
     const { index } = titleProps
@@ -36,4 +37,8 @@ export class FormMarkdownTextArea extends React.Component {
       </div>
     )
   }
+}
+
+FormMarkdownTextArea.propTypes = {
+  defaultValue: PropTypes.string
 }

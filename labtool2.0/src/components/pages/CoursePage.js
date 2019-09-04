@@ -2,7 +2,6 @@ import React from 'react'
 import { Accordion, Button, Table, Card, Input, Form, Comment, Header, Label, Message, Icon, Dropdown, Popup, Loader } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { FormMarkdownTextArea } from './MarkdownTextArea'
 import { createOneComment } from '../../services/comment'
 import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import { associateTeacherToStudent } from '../../services/assistant'
@@ -23,6 +22,8 @@ import {
 } from '../../reducers/coursePageLogicReducer'
 import { resetLoading } from '../../reducers/loadingReducer'
 import { trimDate } from '../../util/format'
+
+import { FormMarkdownTextArea } from '../MarkdownTextArea'
 
 export class CoursePage extends React.Component {
   handleClick = (e, titleProps) => {
