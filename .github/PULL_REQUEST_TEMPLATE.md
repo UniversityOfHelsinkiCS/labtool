@@ -5,7 +5,7 @@
 <!-- please indicate if any of these things are done/included with this Pull Request. Not all boxes need to be checked for the Pull Request to be accepted -->
 I have:
 - [ ] added actual code.
-- [ ] produced clean code.
+- [ ] produced clean code that passes ESLint.
 - [ ] code that actually does what it should.
 - [ ] documented the code or added documentation to the wiki.
 - [ ] added or modified test(s).
