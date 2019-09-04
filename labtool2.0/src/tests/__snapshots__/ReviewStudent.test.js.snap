@@ -87,9 +87,7 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
             unstackable={true}
           >
             <div>
-              <FormTextArea
-                as={[Function]}
-                control={[Function]}
+              <FormMarkdownTextArea
                 defaultValue="Hienoa työtä!"
                 name="comment"
                 style={
