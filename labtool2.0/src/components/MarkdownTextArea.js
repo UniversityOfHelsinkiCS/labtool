@@ -3,6 +3,9 @@ import PropTypes from 'prop-types'
 import { Accordion, Form, Icon } from 'semantic-ui-react'
 import ReactMarkdown from 'react-markdown'
 
+// replace Form.TextArea with FormMarkdownTextArea
+// only adds preview and info line, Markdown needs to be supported by code
+// viewing the text outside the text area
 export class FormMarkdownTextArea extends React.Component {
   state = { activeIndex: -1, textValue: this.props.defaultValue ? this.props.defaultValue : '' }
 
