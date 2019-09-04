@@ -28,6 +28,7 @@
     "debug": "react-scripts --inspect=0.0.0.0:9230 start .env.development.local",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
+    "lint": "./node_modules/.bin/eslint .",
     "tryTest": "npm run test a q",
     "eject": "react-scripts eject"
   },
