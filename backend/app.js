@@ -94,7 +94,10 @@ const fakeshibbo = (req, res, next) => {
   req.headers.sn = 'Opiskelija'
   next()
 }
-// app.use(fakeshibbo)
+
+ // REMEMBER TO COMMENT THIS
+
+ //app.use(fakeshibbo)
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*')
@@ -146,6 +149,7 @@ app.get('*', (req, res) => res.status(404).send({
 const server = app.listen(3001, () => {
   const port = server.address().port
   logger.info(`Backend started and listening on port ${port}`)
+  // TODO: Add info if using fakeshibbo (Riku).
 })
 
 module.exports = server

@@ -550,6 +550,10 @@ module.exports = {
       }
       request(options, function(err, resp, body) {
         const json = JSON.parse(body)
+        if (!json.forEach) {
+          logger.error(json)
+          return
+        }
         json.forEach(instance => {
           CourseInstance.findOrCreate({
             attributes: {
