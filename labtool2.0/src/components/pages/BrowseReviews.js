@@ -11,6 +11,7 @@ import { resetLoading } from '../../reducers/loadingReducer'
 import { trimDate } from '../../util/format'
 
 import BackButton from '../BackButton'
+import { FormMarkdownTextArea } from '../MarkdownTextArea'
 
 /**
  * Maps all comments from a single instance from coursePage reducer
@@ -203,7 +204,7 @@ export class BrowseReviews extends Component {
                       )}
                     </Comment.Group>
                     <Form reply onSubmit={this.handleSubmit} name={weeks.id} id={weeks.id}>
-                      <Form.TextArea name="content" placeholder="Your comment..." defaultValue="" />
+                      <FormMarkdownTextArea name="content" placeholder="Your comment..." defaultValue="" />
                       <Form.Checkbox label="Add comment for instructors only" name="hidden" />
                       <Button content="Add Reply" labelPosition="left" icon="edit" primary />
                     </Form>
@@ -311,7 +312,7 @@ export class BrowseReviews extends Component {
                       )}
                     </Comment.Group>
                     <Form reply onSubmit={this.handleSubmit} name={finalWeek.id} id={finalWeek.id}>
-                      <Form.TextArea name="content" placeholder="Your comment..." defaultValue="" />
+                      <FormMarkdownTextArea name="content" placeholder="Your comment..." defaultValue="" />
                       <Form.Checkbox label="Add comment for instructors only" name="hidden" />
                       <Button content="Add Reply" labelPosition="left" icon="edit" primary />
                     </Form>

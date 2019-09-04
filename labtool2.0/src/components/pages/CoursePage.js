@@ -23,6 +23,8 @@ import {
 import { resetLoading } from '../../reducers/loadingReducer'
 import { trimDate } from '../../util/format'
 
+import { FormMarkdownTextArea } from '../MarkdownTextArea'
+
 export class CoursePage extends React.Component {
   handleClick = (e, titleProps) => {
     const { index } = titleProps
@@ -391,7 +393,7 @@ export class CoursePage extends React.Component {
                     )}
                   </Comment.Group>
                   <Form reply onSubmit={this.handleSubmit} name={week.id} id={week.id}>
-                    <Form.TextArea name="content" placeholder="Your comment..." defaultValue="" />
+                    <FormMarkdownTextArea name="content" placeholder="Your comment..." defaultValue="" />
                     <Button content="Add Reply" labelPosition="left" icon="edit" primary />
                   </Form>
                 </Accordion.Content>
