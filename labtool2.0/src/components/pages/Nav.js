@@ -2,18 +2,12 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import React, { Component } from 'react'
 import { Menu, Icon, Image } from 'semantic-ui-react'
-import { logout } from '../../reducers/loginReducer'
 import LogoutButton from '../LogoutButton'
 
 /**
  * Navigation bar component
  */
 class Nav extends Component {
-  handleLogout = async e => {
-    window.localStorage.removeItem('loggedLabtool')
-    await this.props.logout()
-  }
-
   render() {
     const user = { ...this.props.user.user }
 
@@ -67,7 +61,7 @@ class Nav extends Component {
 
         {user && (
           <Menu.Item position="right" style={{ margin: 'auto 0' }}>
-            <LogoutButton />
+            <LogoutButton logout={ this.props.logout } />
           </Menu.Item>
         )}
       </Menu>
@@ -83,5 +77,5 @@ const mapStateToProps = state => {
 
 export default connect(
   mapStateToProps,
-  { logout }
+  { }
 )(Nav)

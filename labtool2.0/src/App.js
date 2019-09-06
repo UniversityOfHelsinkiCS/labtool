@@ -22,13 +22,13 @@ import ManageTags from './components/pages/ManageTags'
 import FakeLoginPage from './components/pages/FakeLoginPage'
 
 // Reducer imports
-import { logout } from './reducers/loginReducer'
-import { tokenLogin } from './reducers/loginReducer'
-
+import { logout, tokenLogin } from './reducers/loginReducer'
 import { login, fakeShibboLogin } from './services/login'
 import { resetLoading, forceSetLoading } from './reducers/loadingReducer'
 
-if (process.env.REACT_APP_USE_FAKE_LOGIN) {
+const USE_FAKE_LOGIN = process.env.REACT_APP_USE_FAKE_LOGIN === 'ThisIsNotProduction'
+
+if (USE_FAKE_LOGIN) {
   console.log('USING FAKE LOGIN!!! DISABLE ON PRODUCTION!!!')
 }
 
@@ -46,11 +46,7 @@ class App extends Component {
     this.props.forceSetLoading({
       value: false
     })
-    if (process.env.REACT_APP_USE_FAKE_LOGIN && window.localStorage.getItem('fakeShibboLoginUser')) {
-      await this.props.login(JSON.parse(window.localStorage.getItem('fakeShibboLoginUser')))
-    } else {
-      await this.props.login()
-    }
+    await this.props.login()
   }
 
   /**
@@ -123,14 +119,23 @@ class App extends Component {
      */
     const EmailChecker = () => (this.props.user.email === '' || this.props.user.email === null ? <Email /> : <Main />)
 
+    /**
+     * Logout code.
+     */
+    const doLogout = async () => {
+      window.localStorage.removeItem('loggedLabtool')
+      await this.props.logout()
+      this.props.history.push('/')
+    }
+
     return (
       /**
        * Nav is the component for the navbar, that is always displayed.
        */
       <Container>
-        <Nav />
+        <Nav logout={ doLogout } />
         <Notification />
-        {this.props.user ? EmailChecker() : (process.env.REACT_APP_USE_FAKE_LOGIN ? <FakeLoginPage /> : null)}
+        {this.props.user ? EmailChecker() : (USE_FAKE_LOGIN ? <FakeLoginPage /> : null)}
       </Container>
     )
   }
@@ -153,7 +158,7 @@ export default withRouter(
     {
       tokenLogin,
       logout,
-      login: process.env.REACT_APP_USE_FAKE_LOGIN ? fakeShibboLogin : login,
+      login: process.env.USE_FAKE_LOGIN ? fakeShibboLogin : login,
       resetLoading,
       forceSetLoading
     }

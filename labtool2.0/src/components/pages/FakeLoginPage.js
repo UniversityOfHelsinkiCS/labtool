@@ -37,7 +37,6 @@ export class FakeLoginPage extends React.Component {
       givenname: given_name,
       sn: user.last_name
     }
-    window.localStorage.setItem('fakeShibboLoginUser', JSON.stringify(content))
     await this.props.login(content)
   }
 
