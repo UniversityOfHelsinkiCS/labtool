@@ -12,6 +12,6 @@ export const LogoutButton = ({ logout }) => (
 export default withRouter(
   connect(
     null,
-    { }
+    {}
   )(LogoutButton)
 )

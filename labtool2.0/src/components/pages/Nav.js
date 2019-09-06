@@ -61,7 +61,7 @@ class Nav extends Component {
 
         {user && (
           <Menu.Item position="right" style={{ margin: 'auto 0' }}>
-            <LogoutButton logout={ this.props.logout } />
+            <LogoutButton logout={this.props.logout} />
           </Menu.Item>
         )}
       </Menu>
@@ -77,5 +77,5 @@ const mapStateToProps = state => {
 
 export default connect(
   mapStateToProps,
-  { }
+  {}
 )(Nav)

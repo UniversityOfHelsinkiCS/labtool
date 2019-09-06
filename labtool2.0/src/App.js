@@ -158,7 +158,7 @@ export default withRouter(
     {
       tokenLogin,
       logout,
-      login: process.env.USE_FAKE_LOGIN ? fakeShibboLogin : login,
+      login: USE_FAKE_LOGIN ? fakeShibboLogin : login,
       resetLoading,
       forceSetLoading
     }
