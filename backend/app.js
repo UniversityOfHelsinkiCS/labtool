@@ -90,6 +90,7 @@ app.use(adminPwToken)
 app.use(bodyParser.json())
 
 app.use((req, res, next) => {
+  // add Shibboleth headers if fake login allowed WHICH SHOULD NEVER BE ON PRODUCTION!!
   const extra = process.env.USE_FAKE_LOGIN ? ', uid, employeenumber, mail, schacpersonaluniquecode, givenname, sn' : ''
   res.header('Access-Control-Allow-Origin', '*')
   res.header('Access-Control-Allow-Headers', `Origin, X-Requested-With, Content-Type, Accept, Authorization${extra}`)
