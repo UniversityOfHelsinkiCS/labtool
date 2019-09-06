@@ -149,7 +149,6 @@ app.get('*', (req, res) => res.status(404).send({
 const server = app.listen(3001, () => {
   const port = server.address().port
   logger.info(`Backend started and listening on port ${port}`)
-  // TODO: Add info if using fakeshibbo (Riku).
 })
 
 module.exports = server
