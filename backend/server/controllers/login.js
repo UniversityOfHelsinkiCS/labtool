@@ -20,6 +20,7 @@ module.exports = {
         }
       }).spread((user, created) => {
         const token = jwt.sign({ username: user.username, id: user.id }, process.env.SECRET)
+        logger.info('stuff', {user, token, created})
         res.status(200).send({
           user,
           token,

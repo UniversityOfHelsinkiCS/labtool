@@ -19,13 +19,18 @@ import BrowseReviews from './components/pages/BrowseReviews'
 import MyPage from './components/pages/MyPage'
 import CreateChecklist from './components/pages/CreateChecklist'
 import ManageTags from './components/pages/ManageTags'
+import FakeLoginPage from './components/pages/FakeLoginPage'
 
 // Reducer imports
 import { logout } from './reducers/loginReducer'
 import { tokenLogin } from './reducers/loginReducer'
 
-import { login } from './services/login'
+import { login, fakeShibboLogin } from './services/login'
 import { resetLoading, forceSetLoading } from './reducers/loadingReducer'
+
+if (process.env.REACT_APP_USE_FAKE_LOGIN) {
+  console.log('USING FAKE LOGIN!!! DISABLE ON PRODUCTION!!!')
+}
 
 try {
   Raven.config('https://d12f1efa9d2a4d88a34584707472b08f@toska.cs.helsinki.fi/8').install() // eslint-disable-line
@@ -41,7 +46,11 @@ class App extends Component {
     this.props.forceSetLoading({
       value: false
     })
-    await this.props.login()
+    if (process.env.REACT_APP_USE_FAKE_LOGIN && window.localStorage.getItem('fakeShibboLoginUser')) {
+      await this.props.login(JSON.parse(window.localStorage.getItem('fakeShibboLoginUser')))
+    } else {
+      await this.props.login()
+    }
   }
 
   /**
@@ -121,7 +130,7 @@ class App extends Component {
       <Container>
         <Nav />
         <Notification />
-        {this.props.user ? EmailChecker() : null}
+        {this.props.user ? EmailChecker() : (process.env.REACT_APP_USE_FAKE_LOGIN ? <FakeLoginPage /> : null)}
       </Container>
     )
   }
@@ -144,7 +153,7 @@ export default withRouter(
     {
       tokenLogin,
       logout,
-      login,
+      login: process.env.REACT_APP_USE_FAKE_LOGIN ? fakeShibboLogin : login,
       resetLoading,
       forceSetLoading
     }

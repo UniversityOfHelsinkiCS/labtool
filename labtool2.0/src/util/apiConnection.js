@@ -41,6 +41,11 @@ function callApi(url, method = 'get', data, prefix, token) {
       Authorization: `bearer ${token}`
     }
   }
+
+  if (data && data.__HEADERS) {
+    options.headers = { ...options.headers, ...data.__HEADERS }
+  }
+
   switch (method) {
     case 'get':
       return getAxios().get(url, options)
