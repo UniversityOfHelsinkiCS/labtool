@@ -3,7 +3,7 @@ import { fakeShibboLogin } from '../../services/login'
 import { resetLoading, forceSetLoading } from '../../reducers/loadingReducer'
 import React from 'react'
 import { Select, Grid, Loader } from 'semantic-ui-react'
-import { users } from '../../util/fakeLoginUsers'
+import { users } from '../../util/fakeLoginUsers'
 
 /**
  *  The page used to login
@@ -23,7 +23,6 @@ export class FakeLoginPage extends React.Component {
     const { value } = v
     const user = users.find(x => x.username === value)
     if (!user) {
-      console.log('could not recognize ' + value)
       return
     }
 
@@ -36,7 +35,7 @@ export class FakeLoginPage extends React.Component {
       mail: user.email,
       schacpersonaluniquecode: 'urn:schac:personalUniqueCode:int:studentID:fake_shibbo:' + user.student_number,
       givenname: given_name,
-      sn: user.last_name,
+      sn: user.last_name
     }
     window.localStorage.setItem('fakeShibboLoginUser', JSON.stringify(content))
     await this.props.login(content)
@@ -63,7 +62,7 @@ export class FakeLoginPage extends React.Component {
 
         <Grid>
           <Grid.Row centered>
-             <Select inline onChange={(e, v) => this.handleSubmit(e, v)} icon="user" options={options} />
+            <Select inline onChange={(e, v) => this.handleSubmit(e, v)} icon="user" options={options} />
           </Grid.Row>
         </Grid>
       </div>
