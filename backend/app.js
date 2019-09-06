@@ -10,6 +10,10 @@ Raven.config(process.env.SENTRY_ADDR).install()
 
 require('dotenv').config()
 
+if (process.env.USE_FAKE_LOGIN) {
+  console.log('YOU ARE USING FAKE LOGIN !!! MAKE SURE YOU ARE NOT IN PRODUCTION')
+}
+
 /**
  *
  * @param request sets the token into easily accessible variable request.token
@@ -85,6 +89,15 @@ app.use(adminPwToken)
  */
 app.use(bodyParser.json())
 
+app.use((req, res, next) => {
+  // add Shibboleth headers if fake login allowed WHICH SHOULD NEVER BE ON PRODUCTION!!
+  const extra = process.env.USE_FAKE_LOGIN ? ', uid, employeenumber, mail, schacpersonaluniquecode, givenname, sn' : ''
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Headers', `Origin, X-Requested-With, Content-Type, Accept, Authorization${extra}`)
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+  next()
+})
+
 const fakeshibbo = (req, res, next) => {
   req.headers.uid = 'tiraopiskelija1'
   req.headers.employeenumber = '1234567'
@@ -94,17 +107,8 @@ const fakeshibbo = (req, res, next) => {
   req.headers.sn = 'Opiskelija'
   next()
 }
-
- // REMEMBER TO COMMENT THIS
-
- //app.use(fakeshibbo)
-
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*')
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization')
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
-  next()
-})
+// DO NOT UNCOMMENT
+// app.use(fakeshibbo)
 
 /**
  *
