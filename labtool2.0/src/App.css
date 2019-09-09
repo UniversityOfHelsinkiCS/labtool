@@ -45,6 +45,7 @@
   font-size: 20;
 }
 
+/* allow horizontal scrolling */
 main {
   overflow-x: scroll;
 }
