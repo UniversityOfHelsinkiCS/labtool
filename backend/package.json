@@ -54,7 +54,7 @@
     "debug": "node --inspect=0.0.0.0:9229 app.js",
     "createdb": "node_modules/.bin/sequelize db:create",
     "dropdb": "node_modules/.bin/sequelize db:drop",
-    "import_courses": "echo 'I expect to have backend running on localhost port 3001\n\n';curl -k -X POST -H 'Content-Type: application/json' http://localhost:3001/api/courseinstances/update",
+    "import_courses": "echo \"I expect to have backend running on localhost port 3001\n\n\";curl -k -X POST -H \"Content-Type: application/json\" http://localhost:3001/api/courseinstances/update",
     "test": "ADMIN_PW=test NODE_ENV=test ./node_modules/.bin/mocha --exit -R spec",
     "lint": "./node_modules/.bin/eslint .",
     "create_test_db": "./node_modules/.bin/sequelize db:drop --env test; ./node_modules/.bin/sequelize db:create --env test; ./node_modules/.bin/sequelize db:migrate --env test;",
