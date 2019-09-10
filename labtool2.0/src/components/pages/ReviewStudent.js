@@ -78,6 +78,7 @@ export class ReviewStudent extends Component {
     if (Array.isArray(this.props.weekReview.data)) {
       //this.props.ownProps.studentInstance is a string, therefore casting to number.
       const studentData = this.props.weekReview.data.filter(dataArray => dataArray.id === Number(this.props.ownProps.studentInstance))
+      console.log('studentData', studentData)
       //this.props.weekNumber is a string, therefore casting to number.
       const weekData = studentData[0].weeks.filter(theWeek => theWeek.weekNumber === Number(this.props.ownProps.weekNumber))
       const checks = weekData[0] ? weekData[0].checks : {}
@@ -120,6 +121,13 @@ export class ReviewStudent extends Component {
           <h3>
             {' '}
             {studentData[0].User.firsts} {studentData[0].User.lastname}{' '}
+            {studentData[0].Tags.map(tag => (
+              <div key={tag.id}>
+                <Button compact floated="right" className={`mini ui ${tag.color} button`}>
+                  {tag.name}
+                </Button>
+              </div>
+            ))}
           </h3>
           {this.props.weekNumber > this.props.selectedInstance.weekAmount ? <h3>Final Review</h3> : <h3>Viikko {this.props.weekNumber}</h3>}
           <Grid>
