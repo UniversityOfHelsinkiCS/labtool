@@ -14,10 +14,11 @@ export default class JsonExport extends React.Component {
         return (
             <React.Fragment>
                 <Button
-                    content='Export as JSON'
                     disabled={open}
                     positive
-                    onClick={this.open}/>
+                    onClick={this.open}>
+                    Export as JSON
+                </Button>
 
                 <Portal onClose={this.close} open={open}>
                     <Segment
