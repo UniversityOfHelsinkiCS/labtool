@@ -74,33 +74,38 @@ function checkWebOodi(req, res, user, resolve) {
  * @returns {*|Promise<T>}
  */
 async function check_has_comment_permission(user, weekId) {
+  // get actual week instance to get student instance
   const week = await Week.findOne({
     where: {
       id: weekId
     }
   })
   if (!week) {
-    return resolve(false)
+    return false
   }
 
+  // get student instance to check if the user is a correct student
+  // and also to get a course
   const student = await StudentInstance.findOne({
     where: {
       id: week.studentInstanceId
     }
   })
   if (!student) {
-    return resolve(false)
+    return false
   }
 
+  // get course id to get teacher
   const course = await CourseInstance.findOne({
     where: {
       id: student.courseInstanceId
     }
   })
   if (!course) {
-    return resolve(false)
+    return false
   }
 
+  // check if the user is a teacher
   const teacher = await TeacherInstance.findOne({
     where: {
       userId: user.id,
@@ -108,7 +113,9 @@ async function check_has_comment_permission(user, weekId) {
     }
   })
 
+  // ok, user is a teacher?
   const isTeacher = !!teacher
+  // ok, user is the student whose review we are trying to comment on?
   const isCorrectStudent = student && (student.userId === user.id)
   return isTeacher || isCorrectStudent
 }
