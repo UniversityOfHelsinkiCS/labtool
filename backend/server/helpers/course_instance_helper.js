@@ -16,7 +16,7 @@ exports.checkWebOodi = checkWebOodi
 exports.findByUserStudentInstance = findByUserStudentInstance
 exports.getCurrent = application_helpers.getCurrent
 exports.controller_before_auth_check_action = application_helpers.controller_before_auth_check_action
-exports.check_has_comment_permission = check_has_comment_permission
+exports.checkHasCommentPermission = checkHasCommentPermission
 
 /**
  * Only used in courseInstance controller so its place is here.
@@ -73,7 +73,7 @@ function checkWebOodi(req, res, user, resolve) {
  * @param weekId
  * @returns {*|Promise<T>}
  */
-async function check_has_comment_permission(user, weekId) {
+async function checkHasCommentPermission(user, weekId) {
   // get actual week instance to get student instance
   const week = await Week.findOne({
     where: {

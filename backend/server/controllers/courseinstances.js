@@ -712,12 +712,12 @@ module.exports = {
       const userId = req.decoded.id
       try {
         const message = req.body
-        const user = await User.findById(req.decoded.id)
+        const user = await User.findById(userId)
         if (!user) {
           res.status(400).send('you are not an user in the system')
           return
         } else {
-          const hasPermission = await helper.check_has_comment_permission(user, message.week)
+          const hasPermission = await helper.checkHasCommentPermission(user, message.week)
           if (!hasPermission) {
             res.status(403).send('you are not allowed to comment here')
             return
