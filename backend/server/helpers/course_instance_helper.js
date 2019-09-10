@@ -3,6 +3,10 @@ const application_helpers = require('./application_helper')
 const env = process.env.NODE_ENV || 'development'
 const config = require('./../config/config.js')[env]
 const logger = require('../utils/logger')
+const Week = require('../models').Week
+const CourseInstance = require('../models').CourseInstance
+const StudentInstance = require('../models').StudentInstance
+const TeacherInstance = require('../models').TeacherInstance
 
 exports.CurrentTermAndYear = application_helpers.CurrentTermAndYear
 exports.getCurrentTerm = application_helpers.getCurrentTerm
@@ -12,6 +16,7 @@ exports.checkWebOodi = checkWebOodi
 exports.findByUserStudentInstance = findByUserStudentInstance
 exports.getCurrent = application_helpers.getCurrent
 exports.controller_before_auth_check_action = application_helpers.controller_before_auth_check_action
+exports.check_has_comment_permission = check_has_comment_permission
 
 /**
  * Only used in courseInstance controller so its place is here.
@@ -60,6 +65,52 @@ function checkWebOodi(req, res, user, resolve) {
       return
     }
   }) */
+}
+
+/**
+ * Check if teacher or correct student. Assumes auth already successful
+ * @param user
+ * @param weekId
+ * @returns {*|Promise<T>}
+ */
+async function check_has_comment_permission(user, weekId) {
+  const week = await Week.findOne({
+    where: {
+      id: weekId
+    }
+  })
+  if (!week) {
+    return resolve(false)
+  }
+
+  const student = await StudentInstance.findOne({
+    where: {
+      id: week.studentInstanceId
+    }
+  })
+  if (!student) {
+    return resolve(false)
+  }
+
+  const course = await CourseInstance.findOne({
+    where: {
+      id: student.courseInstanceId
+    }
+  })
+  if (!course) {
+    return resolve(false)
+  }
+
+  const teacher = await TeacherInstance.findOne({
+    where: {
+      userId: user.id,
+      courseInstanceId: course.id
+    }
+  })
+
+  const isTeacher = !!teacher
+  const isCorrectStudent = student && (student.userId === user.id)
+  return isTeacher || isCorrectStudent
 }
 
 /**
