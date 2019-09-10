@@ -20,6 +20,45 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
      
     Opiskelija
      
+    <div
+      key="20003"
+    >
+      <Button
+        as="button"
+        className="mini ui black button"
+        compact={true}
+        floated="right"
+        role="button"
+      >
+        game
+      </Button>
+    </div>
+    <div
+      key="20002"
+    >
+      <Button
+        as="button"
+        className="mini ui yellow button"
+        compact={true}
+        floated="right"
+        role="button"
+      >
+        HTML
+      </Button>
+    </div>
+    <div
+      key="20001"
+    >
+      <Button
+        as="button"
+        className="mini ui red button"
+        compact={true}
+        floated="right"
+        role="button"
+      >
+        Javascript
+      </Button>
+    </div>
   </h3>
   <h3>
     Viikko 
