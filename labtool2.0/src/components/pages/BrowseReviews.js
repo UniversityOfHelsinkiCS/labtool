@@ -113,6 +113,9 @@ export class BrowseReviews extends Component {
                   {student.User.firsts} {student.User.lastname} {student.User.studentNumber}
                 </h2>
                 <h3>
+                  <a href={`mailto:${student.User.email}`}>{student.User.email}</a>
+                </h3>
+                <h3>
                   {student.projectName}{' '}
                   <a href={student.github} target="_blank" rel="noopener noreferrer">
                     {student.github}
