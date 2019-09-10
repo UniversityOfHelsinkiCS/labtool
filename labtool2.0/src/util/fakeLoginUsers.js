@@ -17,13 +17,15 @@ exports.users = [
     username: 'tiraopiskelija2',
     student_number: '014553242',
     first_names: 'Johan Wilhelm',
-    last_name: 'Studerande'
+    last_name: 'Studerande',
+    email: 'johan.wilhelm@example.com'
   },
   {
     username: 'tiraopiskelija3',
     student_number: '014623598',
     first_names: 'Hanna *Julia',
-    last_name: 'Studerande'
+    last_name: 'Studerande',
+    email: 'hanna.julia@example.com'
   },
   {
     username: 'tiraopiskelija4',
@@ -35,7 +37,8 @@ exports.users = [
     username: 'tiraohjaaja',
     student_number: '013245662',
     first_names: 'Ossi Ohjaaja',
-    last_name: 'Mutikainen'
+    last_name: 'Mutikainen',
+    email: 'ossi.ohjaaja@example.com'
   },
   {
     username: 'otmopiskelija1',
