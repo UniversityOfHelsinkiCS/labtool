@@ -598,9 +598,9 @@ export class CoursePage extends React.Component {
     /**
      * Function that returns what teachers should see at the bottom of this page
      */
-    let renderTeacherBottomPart = () => {
+    let renderTeacherBottomPartForActiveStudents = () => {
       return (
-        <div className="TeachersBottomView">
+        <div className="TeachersBottomViewForActiveStudents">
           <Header as="h2">Students </Header>
           <div style={{ textAlign: 'left' }}>
             <span>Filter by instructor </span>
@@ -921,7 +921,7 @@ export class CoursePage extends React.Component {
       return (
         <div style={{ overflow: 'auto' }}>
           {renderTeacherTopPart()}
-          {renderTeacherBottomPart()}
+          {renderTeacherBottomPartForActiveStudents()}
           {renderTeacherBottomPartForDroppedOutStudents()}
         </div>
       )
