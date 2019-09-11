@@ -180,31 +180,7 @@ exports[`<MassEmailPage /> MassEmailPage Component should render correctly 1`] =
                     Javascript
                   </Button>
                 </div>
-                <Popup
-                  content="Add or remove tag"
-                  keepInViewPort={true}
-                  on="hover"
-                  position="top left"
-                  trigger={
-                    <Icon
-                      as="i"
-                      color="green"
-                      id="tag"
-                      name="pencil"
-                      onClick={[Function]}
-                      size="large"
-                      style={
-                        Object {
-                          "float": "right",
-                        }
-                      }
-                    />
-                  }
-                />
               </span>
-              <div>
-                <div />
-              </div>
             </TableCell>
             <TableCell
               as="td"
@@ -293,31 +269,7 @@ exports[`<MassEmailPage /> MassEmailPage Component should render correctly 1`] =
                     HTML
                   </Button>
                 </div>
-                <Popup
-                  content="Add or remove tag"
-                  keepInViewPort={true}
-                  on="hover"
-                  position="top left"
-                  trigger={
-                    <Icon
-                      as="i"
-                      color="green"
-                      id="tag"
-                      name="pencil"
-                      onClick={[Function]}
-                      size="large"
-                      style={
-                        Object {
-                          "float": "right",
-                        }
-                      }
-                    />
-                  }
-                />
               </span>
-              <div>
-                <div />
-              </div>
             </TableCell>
             <TableCell
               as="td"
@@ -378,31 +330,7 @@ exports[`<MassEmailPage /> MassEmailPage Component should render correctly 1`] =
                 >
                   http://github.com/tiralabra1
                 </a>
-                <Popup
-                  content="Add or remove tag"
-                  keepInViewPort={true}
-                  on="hover"
-                  position="top left"
-                  trigger={
-                    <Icon
-                      as="i"
-                      color="green"
-                      id="tag"
-                      name="pencil"
-                      onClick={[Function]}
-                      size="large"
-                      style={
-                        Object {
-                          "float": "right",
-                        }
-                      }
-                    />
-                  }
-                />
               </span>
-              <div>
-                <div />
-              </div>
             </TableCell>
             <TableCell
               as="td"
