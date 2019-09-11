@@ -705,40 +705,40 @@ module.exports = {
    * @param res
    * @returns {*|Promise<T>}
    */
-  addComment(req, res) {
+  async addComment(req, res) {
     helper.controller_before_auth_check_action(req, res)
 
     if (req.authenticated.success) {
+      const userId = req.decoded.id
       try {
         const message = req.body
-        User.findById(req.decoded.id).then(user => {
-          if (!user) {
-            res.status(400).send('you are not an user in the system')
+        const user = await User.findById(userId)
+        if (!user) {
+          res.status(400).send('you are not an user in the system')
+          return
+        } else {
+          const hasPermission = await helper.checkHasCommentPermission(user, message.week)
+          if (!hasPermission) {
+            res.status(403).send('you are not allowed to comment here')
             return
-          } else {
-            const name = user.firsts.concat(' ').concat(user.lastname)
-            return Comment.create({
-              weekId: message.week,
-              hidden: message.hidden,
-              comment: message.comment,
-              from: name,
-              notified: false
-            })
-              .then(comment => {
-                if (!comment) {
-                  res.status(400).send('week not found')
-                } else {
-                  res.status(200).send(comment)
-                }
-              })
-              .catch(error => {
-                res.status(400).send(error)
-                logger.error(error)
-              })
           }
-        })
+          const name = user.firsts.concat(' ').concat(user.lastname)
+          const comment = await Comment.create({
+            weekId: message.week,
+            hidden: message.hidden,
+            comment: message.comment,
+            from: name,
+            notified: false
+          })
+          if (!comment) {
+            res.status(400).send('week not found')
+          } else {
+            res.status(200).send(comment)
+          }
+        }
       } catch (e) {
         res.status(400).send(e)
+        logger.error(e)
       }
     }
   },

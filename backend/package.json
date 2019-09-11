@@ -32,6 +32,7 @@
   },
   "devDependencies": {
     "assert": "^1.4.1",
+    "cross-env": "^5.2.1",
     "eslint": "^4.19.1",
     "eslint-config-airbnb-base": "^13.0.0",
     "eslint-config-standard": "^11.0.0",
@@ -54,8 +55,8 @@
     "debug": "node --inspect=0.0.0.0:9229 app.js",
     "createdb": "node_modules/.bin/sequelize db:create",
     "dropdb": "node_modules/.bin/sequelize db:drop",
-    "import_courses": "echo 'I expect to have backend running on localhost port 3001\n\n';curl -k -X POST -H 'Content-Type: application/json' http://localhost:3001/api/courseinstances/update",
-    "test": "ADMIN_PW=test NODE_ENV=test ./node_modules/.bin/mocha --exit -R spec",
+    "import_courses": "echo \"I expect to have backend running on localhost port 3001\n\n\";curl -k -X POST -H \"Content-Type: application/json\" http://localhost:3001/api/courseinstances/update",
+    "test": "cross-env ADMIN_PW=test NODE_ENV=test ./node_modules/.bin/mocha --exit -R spec",
     "lint": "./node_modules/.bin/eslint .",
     "create_test_db": "./node_modules/.bin/sequelize db:drop --env test; ./node_modules/.bin/sequelize db:create --env test; ./node_modules/.bin/sequelize db:migrate --env test;",
     "drop_test_db": "./node_modules/.bin/sequelize db:drop --env test; ",
