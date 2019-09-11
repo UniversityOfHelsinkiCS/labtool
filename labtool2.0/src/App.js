@@ -10,6 +10,7 @@ import Nav from './components/pages/Nav'
 import Notification from './components/pages/Notification'
 import RegisterPage from './components/pages/RegisterPage'
 import CoursePage from './components/pages/CoursePage'
+import MassEmailPage from './components/pages/MassEmailPage'
 import Email from './components/pages/Email.js'
 import ModifyCourseInstancePage from './components/pages/ModifyCourseInstancePage'
 import ModifyCourseInstanceStaff from './components/pages/ModifyCourseInstanceStaff'
@@ -96,6 +97,7 @@ class App extends Component {
             <Route path={`/labtool/courseregistration/:id`} render={({ match, history }) => <RegisterPage history={history} courseId={match.params.id} />} />
             <Route path={`/labtool/browsereviews/:id/:si/`} render={({ match, history }) => <BrowseReviews history={history} courseId={match.params.id} studentInstance={match.params.si} />} />
             <Route path={`/labtool/email`} component={Email} />
+            <Route path={`/labtool/massemail/:id`} render={({ match, history }) => <MassEmailPage history={history} courseId={match.params.id} />} />
             <Route path={`/labtool/registerPage`} component={RegisterPage} />
             <Route
               path={`/labtool/reviewstudent/:id/:si/:wk`}

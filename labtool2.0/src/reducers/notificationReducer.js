@@ -189,7 +189,7 @@ const notificationReducer = (state = {}, action) => {
 
     case 'CODE_REVIEW_REMOVE_ONE_SUCCESS':
       return {
-        message: 'Code review removed succesfully!',
+        message: 'Code review removed successfully!',
         error: false
       }
     case 'STUDENT_PROJECT_INFO_UPDATE_FAILURE': {
@@ -199,6 +199,16 @@ const notificationReducer = (state = {}, action) => {
         error: true
       }
     }
+    case 'MASS_EMAIL_SENDSUCCESS':
+      return {
+        message: action.response.message,
+        error: false
+      }
+    case 'MASS_EMAIL_SENDFAILURE':
+      return {
+        message: `Could not send e-mail; ${action.response && action.response.response.data.message || 'no students selected'}`,
+        error: true
+      }
     default:
       return state
   }
