@@ -78,7 +78,6 @@ export class ReviewStudent extends Component {
     if (Array.isArray(this.props.weekReview.data)) {
       //this.props.ownProps.studentInstance is a string, therefore casting to number.
       const studentData = this.props.weekReview.data.filter(dataArray => dataArray.id === Number(this.props.ownProps.studentInstance))
-      console.log('studentData', studentData)
       //this.props.weekNumber is a string, therefore casting to number.
       const weekData = studentData[0].weeks.filter(theWeek => theWeek.weekNumber === Number(this.props.ownProps.weekNumber))
       const checks = weekData[0] ? weekData[0].checks : {}
