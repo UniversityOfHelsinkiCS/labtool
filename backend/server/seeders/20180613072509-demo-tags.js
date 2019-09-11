@@ -74,6 +74,13 @@ module.exports = {
           color: 'purple',
           createdAt: '2018-06-13',
           updatedAt: '2018-06-13'
+        },
+        {
+          id: 20011,
+          name: 'DROPPED',
+          color: 'grey',
+          createdAt: '2018-06-13',
+          updatedAt: '2018-06-13'
         }
       ],
       {}
