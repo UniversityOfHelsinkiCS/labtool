@@ -662,6 +662,12 @@ export class CoursePage extends React.Component {
                         {data.User.firsts} {data.User.lastname}
                       </Table.Cell>
                       <Table.Cell>
+                        <span>{data.User.studentNumber}</span>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <a href={`mailto:${data.User.email}`}>{data.User.email}</a>
+                      </Table.Cell>
+                      <Table.Cell>
                         <span>
                           {data.projectName}
                           <br />
@@ -759,6 +765,8 @@ export class CoursePage extends React.Component {
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell key={-1}>Student</Table.HeaderCell>
+                <Table.HeaderCell>id</Table.HeaderCell>
+                <Table.HeaderCell>email</Table.HeaderCell>
                 <Table.HeaderCell>Project Info</Table.HeaderCell>
                 {createHeadersTeacher()}
                 <Table.HeaderCell> Sum </Table.HeaderCell>
