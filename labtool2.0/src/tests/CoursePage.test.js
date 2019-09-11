@@ -92,6 +92,11 @@ describe('<CoursePage /> as teacher', () => {
         },
         Tags: [
           {
+            id: 20008,
+            name: 'DROPPED',
+            color: 'grey'
+          },
+          {
             id: 20002,
             name: 'HTML',
             color: 'yellow'
@@ -175,6 +180,13 @@ describe('<CoursePage /> as teacher', () => {
         color: 'pink',
         createdAt: '2018-06-13T00:00:00.000Z',
         updatedAt: '2018-06-13T00:00:00.000Z'
+      },
+      {
+        id: 20008,
+        name: 'DROPPED',
+        color: 'grey',
+        createdAt: '2018-06-13T00:00:00.000Z',
+        updatedAt: '2018-06-13T00:00:00.000Z'
       }
     ]
   }
@@ -237,6 +249,14 @@ describe('<CoursePage /> as teacher', () => {
 
     it('doesnt render students top view when role is teacher', () => {
       expect(wrapper.find('.StudentsView').length).toEqual(0)
+    })
+
+    it('shows active students in a separate list', () => {
+      expect(wrapper.find('.TableRowForActiveStudents').length).toEqual(2)
+    })
+
+    it('shows dropped out students in a separate list', () => {
+      expect(wrapper.find('.TableRowForDroppeOutStudents').length).toEqual(1)
     })
 
     // it('assistant dropdown menu is not shown when page loads', () => {
