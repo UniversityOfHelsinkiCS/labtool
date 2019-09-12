@@ -9,6 +9,7 @@ import { resetChecklist, changeField, addTopic, addRow, removeTopic, removeRow, 
 import './CreateChecklist.css'
 
 import BackButton from '../BackButton'
+import JsonImport from '../JsonImport'
 
 export class CreateChecklist extends Component {
   constructor(props) {
@@ -114,6 +115,35 @@ export class CreateChecklist extends Component {
       courseInstanceId: this.state.copyCourse,
       copying: true
     })
+  }
+
+  validateChecklist = checklist => {
+    return (
+      !!checklist.week &&
+      !!checklist.list &&
+      Object.keys(checklist.list).every(listKey => {
+        return (
+          typeof listKey === 'string' &&
+          Object.values(checklist.list[listKey]).every(row => {
+            return row.name !== null && row.textWhenOn !== null && row.textWhenOff !== null && row.checkedPoints !== null && row.uncheckedPoints !== null
+          })
+        )
+      })
+    )
+  }
+
+  importChecklists = data => {
+    if (Array.isArray(data)) {
+      data.forEach(checklistForWeek => {
+        if (this.validateChecklist(checklistForWeek)) {
+          this.props.createChecklist({
+            courseInstanceId: this.props.selectedInstance.id,
+            week: checklistForWeek.week,
+            checklist: checklistForWeek.list
+          })
+        }
+      })
+    }
   }
 
   /**
@@ -336,6 +366,7 @@ export class CreateChecklist extends Component {
           <div className="topOptions">
             <Dropdown placeholder="Select Checklist" selection value={this.state.week} onChange={this.changeWeek} options={this.props.weekDropdowns} />
             <div className="copyForm">
+              <JsonImport onImport={this.importChecklists} />
               <Button type="button" onClick={this.copyChecklist} disabled={!this.state.copyCourse}>
                 Copy
               </Button>

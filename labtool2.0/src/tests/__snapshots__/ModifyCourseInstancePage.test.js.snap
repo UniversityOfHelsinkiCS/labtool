@@ -339,6 +339,33 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
         Edit tags
       </Button>
     </Link>
+    <JsonExport
+      data={
+        Object {
+          "active": true,
+          "amountOfCodeReviews": 3,
+          "currentCodeReview": Array [
+            1,
+            2,
+          ],
+          "currentWeek": 1,
+          "end": "2018-03-11T21:00:00.000Z",
+          "id": 1,
+          "name": "Aineopintojen harjoitustyö: Tietokantasovellus (periodi IV)",
+          "ohid": "TKT20011.2018.K.A.1",
+          "start": "2018-03-11T21:00:00.000Z",
+          "weekAmount": 7,
+          "weekMaxPoints": 2,
+        }
+      }
+      style={
+        Object {
+          "marginLeft": "5px",
+          "marginRight": "5px",
+          "marginTop": "20px",
+        }
+      }
+    />
   </div>
 </div>
 `;

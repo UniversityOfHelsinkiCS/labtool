@@ -39,6 +39,9 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
       <div
         className="copyForm"
       >
+        <JsonImport
+          onImport={[Function]}
+        />
         <Button
           as="button"
           disabled={true}

@@ -10,6 +10,7 @@ import { changeCourseField } from '../../reducers/selectedInstanceReducer'
 import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 
 import BackButton from '../BackButton'
+import JsonExport from '../JsonExport'
 
 /**
  *  Page used to modify a courseinstances information. Can only be accessed by teachers.
@@ -209,6 +210,8 @@ export class ModifyCourseInstancePage extends Component {
               Edit tags
             </Button>
           </Link>
+
+          <JsonExport style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px' }} data={this.props.selectedInstance} />
         </div>
       </div>
     )
