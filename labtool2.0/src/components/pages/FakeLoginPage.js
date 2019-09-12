@@ -27,7 +27,7 @@ export class FakeLoginPage extends React.Component {
     }
 
     const given_names = user.first_names.split(' ')
-    let given_name = given_names.find(x => x.charAt(0) == '*') || given_names[0]
+    let given_name = given_names.find(x => x.charAt(0) === '*') || given_names[0]
     given_name = given_name.replace('*', '')
     const content = {
       uid: user.username,
