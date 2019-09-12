@@ -9,7 +9,7 @@ import { resetChecklist, changeField, addTopic, addRow, removeTopic, removeRow, 
 import './CreateChecklist.css'
 
 import BackButton from '../BackButton'
-import JsonImport from '../JsonImport'
+import JsonEdit from '../JsonEdit'
 
 export class CreateChecklist extends Component {
   constructor(props) {
@@ -132,16 +132,27 @@ export class CreateChecklist extends Component {
     )
   }
 
-  importChecklists = data => {
-    if (Array.isArray(data)) {
-      data.forEach(checklistForWeek => {
-        if (this.validateChecklist(checklistForWeek)) {
-          this.props.createChecklist({
-            courseInstanceId: this.props.selectedInstance.id,
-            week: checklistForWeek.week,
-            checklist: checklistForWeek.list
-          })
-        }
+  importChecklist = checklistForWeek => {
+    if (this.validateChecklist({ week: this.state.week, list: checklistForWeek })) {
+      try {
+        this.props.createChecklist({
+          courseInstanceId: this.props.selectedInstance.id,
+          week: this.state.week,
+          checklist: checklistForWeek
+        })
+        const checklist = this.props.checklist
+        checklist.data = checklistForWeek
+        this.setState({ checklist })
+      } catch (e) {
+        this.props.showNotification({
+          message: 'Could not save JSON.',
+          error: true
+        })
+      }
+    } else {
+      this.props.showNotification({
+        message: 'Invalid checklist.',
+        error: true
       })
     }
   }
@@ -366,7 +377,6 @@ export class CreateChecklist extends Component {
           <div className="topOptions">
             <Dropdown placeholder="Select Checklist" selection value={this.state.week} onChange={this.changeWeek} options={this.props.weekDropdowns} />
             <div className="copyForm">
-              <JsonImport onImport={this.importChecklists} />
               <Button type="button" onClick={this.copyChecklist} disabled={!this.state.copyCourse}>
                 Copy
               </Button>
@@ -379,6 +389,11 @@ export class CreateChecklist extends Component {
                 options={this.state.courseDropdowns}
               />
             </div>
+            { this.state.week !== undefined ?
+              <div className="jsonButtons">
+                <JsonEdit onImport={this.importChecklist} data={this.props.checklist.data} />
+              </div> : <div />
+            }
           </div>
           {this.props.loading.loading ? (
             <Loader active />

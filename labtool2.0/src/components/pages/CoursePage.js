@@ -631,7 +631,7 @@ export class CoursePage extends React.Component {
             )}
           </div>
 
-          <Table celled compact unstackable>
+          <Table celled compact unstackable style={{ 'overflow-x': 'scroll' }}>
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell key={-1}>Student</Table.HeaderCell>
@@ -767,7 +767,7 @@ export class CoursePage extends React.Component {
       return (
         <div className="TeachersBottomViewForDroppedOutStudents">
           <Header as="h2">Dropped out students </Header>
-          <Table celled compact unstackable>
+          <Table celled compact unstackable style={{ 'overflow-x': 'scroll' }}>
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell key={-1}>Student</Table.HeaderCell>

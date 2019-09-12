@@ -1,14 +1,32 @@
 import React from 'react'
 import { Form, TextArea, Message, Button, Modal } from 'semantic-ui-react'
 
-export default class JsonImport extends React.Component {
+export default class JsonEdit extends React.Component {
   state = { open: false, data: null, error: null }
 
   close = () => this.setState({ open: false })
   open = () => this.setState({ open: true })
 
+  validateChecklist = checklist => {
+    return (
+      !!checklist.week &&
+      !!checklist.list &&
+      Object.keys(checklist.list).every(listKey => {
+        return (
+          typeof listKey === 'string' &&
+          Object.values(checklist.list[listKey]).every(row => {
+            return row.name !== null && row.textWhenOn !== null && row.textWhenOff !== null && row.checkedPoints !== null && row.uncheckedPoints !== null
+          })
+        )
+      })
+    )
+  }
+
   onChange = e => {
     try {
+      if (!e.target.value) {
+        this.setState({ error: null })
+      }
       const parsedJson = JSON.parse(e.target.value)
       this.setState({ data: parsedJson, error: null })
     } catch (error) {
@@ -19,17 +37,20 @@ export default class JsonImport extends React.Component {
   }
 
   render() {
-    const { style } = this.props
+    const { data, style } = this.props
     const { open } = this.state
 
     return (
       <React.Fragment>
         <Button disabled={open} onClick={this.open} style={style}>
-          Import from JSON
+          Edit as JSON
         </Button>
 
         <Modal onClose={this.close} open={open}>
           <Modal.Header>JSON</Modal.Header>
+          <Modal.Description style={{ padding: 15 }}>
+            Saving overwrites the current checklist.
+          </Modal.Description>
           <Modal.Description style={{ padding: 15 }}>
             {this.state.error && (
               <Message error>
@@ -37,15 +58,15 @@ export default class JsonImport extends React.Component {
               </Message>
             )}
             <Form>
-              <TextArea rows={40} onChange={this.onChange} />
+              <TextArea rows={40} onChange={this.onChange} style={{ fontFamily: 'monospace' }} defaultValue={JSON.stringify(data, null, 4)} />
             </Form>
           </Modal.Description>
           <Modal.Actions>
             <Button content="Close" negative onClick={this.close} />
             <Button
-              content="Import"
+              content="Save"
               positive
-              disabled={!!this.state.error}
+              disabled={!!this.state.error || !this.state.data}
               onClick={() => {
                 this.props.onImport(this.state.data)
                 this.close()
