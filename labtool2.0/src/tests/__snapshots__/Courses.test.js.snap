@@ -4,7 +4,13 @@ exports[`<Courses /> Courses Component should render correctly 1`] = `
 <div
   className="Courses"
 >
-  <Container>
+  <Container
+    style={
+      Object {
+        "overflow-x": "scroll",
+      }
+    }
+  >
     <Header
       as="h2"
     >

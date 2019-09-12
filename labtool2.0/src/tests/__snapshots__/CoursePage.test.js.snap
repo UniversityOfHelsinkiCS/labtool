@@ -486,6 +486,11 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
       as="table"
       celled={true}
       compact={true}
+      style={
+        Object {
+          "overflow-x": "scroll",
+        }
+      }
       unstackable={true}
     >
       <TableHeader
@@ -855,6 +860,11 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
       as="table"
       celled={true}
       compact={true}
+      style={
+        Object {
+          "overflow-x": "scroll",
+        }
+      }
       unstackable={true}
     >
       <TableHeader
