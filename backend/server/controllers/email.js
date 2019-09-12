@@ -448,7 +448,7 @@ module.exports = {
 
       // prepare email here
       const link = `${frontendUrl}/courses/${req.params.id}`
-      options.subject = `${courseInstance.name} new message from teacher`
+      options.subject = `${courseInstance.name} new message from instructor`
       options.html = `
         <h1>You've received a message in Labtool.</h1>
         <p><a href="${link}">${link}</a></p>
