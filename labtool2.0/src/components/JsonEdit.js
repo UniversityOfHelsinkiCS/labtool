@@ -48,9 +48,7 @@ export default class JsonEdit extends React.Component {
 
         <Modal onClose={this.close} open={open}>
           <Modal.Header>JSON</Modal.Header>
-          <Modal.Description style={{ padding: 15 }}>
-            Saving overwrites the current checklist.
-          </Modal.Description>
+          <Modal.Description style={{ padding: 15 }}>Pressing &quot;Save&quot; saves immediately and overwrites the current checklist.</Modal.Description>
           <Modal.Description style={{ padding: 15 }}>
             {this.state.error && (
               <Message error>

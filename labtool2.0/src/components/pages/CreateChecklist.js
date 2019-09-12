@@ -389,11 +389,13 @@ export class CreateChecklist extends Component {
                 options={this.state.courseDropdowns}
               />
             </div>
-            { this.state.week !== undefined ?
+            {this.state.week !== undefined ? (
               <div className="jsonButtons">
                 <JsonEdit onImport={this.importChecklist} data={this.props.checklist.data} />
-              </div> : <div />
-            }
+              </div>
+            ) : (
+              <div />
+            )}
           </div>
           {this.props.loading.loading ? (
             <Loader active />

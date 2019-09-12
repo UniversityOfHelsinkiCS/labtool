@@ -39,9 +39,6 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
       <div
         className="copyForm"
       >
-        <JsonImport
-          onImport={[Function]}
-        />
         <Button
           as="button"
           disabled={true}
@@ -77,6 +74,35 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
           selectOnNavigation={true}
           selection={true}
           wrapSelection={true}
+        />
+      </div>
+      <div
+        className="jsonButtons"
+      >
+        <JsonEdit
+          data={
+            Object {
+              "Koodi": Array [
+                Object {
+                  "checkedPoints": 2,
+                  "name": "Koodin laatu",
+                  "textWhenOff": "Koodin laadussa parantamisen varaa",
+                  "textWhenOn": "Koodin laatu kiitettävää",
+                  "uncheckedPoints": 0,
+                },
+              ],
+              "Repo": Array [
+                Object {
+                  "checkedPoints": 0,
+                  "name": "Readme kunnossa",
+                  "textWhenOff": "Readmessa feelua",
+                  "textWhenOn": "",
+                  "uncheckedPoints": -1,
+                },
+              ],
+            }
+          }
+          onImport={[Function]}
         />
       </div>
     </div>

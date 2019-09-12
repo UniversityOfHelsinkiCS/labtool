@@ -1,18 +1,18 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 import { Button, TextArea } from 'semantic-ui-react'
-import JsonImport from '../components/JsonImport'
+import JsonEdit from '../components/JsonEdit'
 
-describe('<JsonImport />', () => {
+describe('<JsonEdit />', () => {
   let onImport
   let wrapper
 
   beforeEach(() => {
     onImport = jest.fn()
-    wrapper = shallow(<JsonImport onImport={onImport} />)
+    wrapper = shallow(<JsonEdit onImport={onImport} />)
   })
 
-  describe('JsonImport component', () => {
+  describe('JsonEdit component', () => {
     it('renders ok', () => {
       expect(wrapper).toBeDefined()
       expect(
@@ -21,7 +21,7 @@ describe('<JsonImport />', () => {
           .first()
           .children()
           .text()
-      ).toEqual('Import from JSON')
+      ).toEqual('Edit as JSON')
     })
 
     it('can import valid JSON', () => {

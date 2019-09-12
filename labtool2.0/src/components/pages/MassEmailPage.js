@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Table, Form, Header, Label, Icon, Dropdown, Popup, Loader } from 'semantic-ui-react'
+import { Button, Table, Form, Header, Label, Dropdown, Loader } from 'semantic-ui-react'
 import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createOneComment } from '../../services/comment'
