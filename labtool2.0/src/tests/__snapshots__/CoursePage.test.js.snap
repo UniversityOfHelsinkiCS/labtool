@@ -828,6 +828,20 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
       </TableBody>
     </Table>
     <br />
+    <Link
+      replace={false}
+      to="/labtool/massemail/undefined"
+    >
+      <Button
+        as="button"
+        role="button"
+        size="small"
+      >
+        Send email to multiple students
+      </Button>
+    </Link>
+    <br />
+    <br />
   </div>
   <div
     className="TeachersBottomViewForDroppedOutStudents"

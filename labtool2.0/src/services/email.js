@@ -15,3 +15,21 @@ export const sendEmail = data => {
   const method = 'post'
   return callController(route, prefix, data, method)
 }
+
+/**
+ * Send mass email message to students.
+ *
+ * data:
+ * {
+ *   students: [
+ *     {id: student id}
+ *   ],
+ *   content: {string}
+ * }
+ */
+export const sendMassEmail = (data, id) => {
+  const route = `/email/sendmass/${id}`
+  const prefix = 'MASS_EMAIL_SEND'
+  const method = 'post'
+  return callController(route, prefix, data, method)
+}

@@ -753,6 +753,12 @@ export class CoursePage extends React.Component {
             </Table.Body>
           </Table>
           <br />
+
+          <Link to={`/labtool/massemail/${this.props.selectedInstance.ohid}`}>
+            <Button size="small">Send email to multiple students</Button>
+          </Link>
+          <br />
+          <br />
         </div>
       )
     }

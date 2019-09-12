@@ -1,8 +1,10 @@
-const helper = require('../helpers/email_helper')
+const escape = require('escape-html')
 const nodemailer = require('nodemailer')
+const helper = require('../helpers/email_helper')
 const { Comment, Week, StudentInstance, TeacherInstance, User, CourseInstance } = require('../models')
 const env = process.env.NODE_ENV || 'development'
 const frontendUrl = process.env.FRONTEND_URL || 'cs.helsinki.labtool.fi'
+const logger = require('../utils/logger')
 
 const SENDER_SETTINGS = {
   from: 'Labtool Robot <noreply@helsinki.fi>',
@@ -221,7 +223,7 @@ const markAsNotified = (useComment, id) => {
 }
 
 module.exports = {
-  async send(req, res) {
+  send: async (req, res) => {
     await helper.controller_before_auth_check_action(req, res)
     try {
       // Basic validations
@@ -305,7 +307,7 @@ module.exports = {
       } else {
         // Student validation
         if (message.userId !== req.decoded.id) {
-          res.status(403).send("You cannot send an email notification about someone else's comment.")
+          res.status(403).send('You cannot send an email notification about someone else\'s comment.')
           return
         }
       }
@@ -342,6 +344,153 @@ module.exports = {
       })
     } catch (e) {
       res.status(500).send('Unexpected error')
+    }
+  },
+  sendMass: async (req, res) => {
+    await helper.controller_before_auth_check_action(req, res)
+    try {
+      // Basic validations
+      if (!req.authenticated.success) {
+        res.status(403).send({
+          message: 'you have to be authenticated to do this'
+        })
+        return
+      }
+      if (!(req.body.students)) {
+        res.status(400).send({
+          message: 'Missing field "students".'
+        })
+        return
+      }
+      if (!(req.body.content) || req.body.content.length > 4096) {
+        res.status(400).send({
+          message: 'Missing field "content".'
+        })
+        return
+      }
+
+      const courseInstance = await CourseInstance.findOne({
+        where: {
+          ohid: req.params.id
+        }
+      })
+      if (!courseInstance) {
+        res.status(400).send({
+          message: 'course instance not found'
+        })
+        return
+      }
+
+      const teacher = await TeacherInstance.findOne({
+        where: {
+          userId: req.decoded.id,
+          courseInstanceId: courseInstance.id
+        }
+      })
+      if (!teacher || !req.authenticated.success) {
+        res.status(400).send({
+          message: 'You have to be a teacher to send mass emails'
+        })
+        return
+      }
+
+      const inputStudents = req.body.students
+      const students = []
+      // apparently for...of is not fine -- lint
+      /* " iterators/generators require regenerator-runtime,
+       which is too heavyweight for this guide to allow them.
+       Separately, loops should be avoided in favor of array iterations
+       no-restricted-syntax" */
+
+      /* eslint-disable no-await-in-loop */
+      // not worth refactoring into two separate loops
+
+      /* eslint no-plusplus: ["error", { "allowForLoopAfterthoughts": true }] */
+      // why would you disallow these??
+
+      for (let i = 0; i < inputStudents.length; ++i) {
+        const { id } = inputStudents[i]
+        const studentInstance = await StudentInstance.findOne({
+          where: {
+            id,
+            courseInstanceId: courseInstance.id
+          }
+        })
+        if (!studentInstance) {
+          res.status(404).send({
+            message: 'Invalid student ID given'
+          })
+          return
+        }
+        // ok, get user
+        const user = await User.findOne({
+          where: {
+            id: studentInstance.userId
+          }
+        })
+        if (user && user.email) {
+          students.push(user.email)
+        }
+      }
+      /* eslint-enable no-await-in-loop */
+
+      if (!students.length) {
+        res.status(400).send({
+          message: 'No email addresses to send to (students missing email addresses?)'
+        })
+        return
+      }
+
+      // Initialize options with just from, build the rest as we go.
+      const options = {
+        from: SENDER_SETTINGS.from
+      }
+
+      // prepare email here
+      const link = `${frontendUrl}/courses/${req.params.id}`
+      options.subject = `${courseInstance.name} new message from teacher`
+      options.html = `
+        <h1>You've received a message in Labtool.</h1>
+        <p><a href="${link}">${link}</a></p>
+        <p>course: ${courseInstance.name}</p>
+        <h2>Message content</h2>
+        <p>${escape(req.body.content)}</p>
+      `
+
+      // use BCC to hide recipient emails
+      options.bcc = students
+
+      if (env !== 'production') {
+        console.log(options)
+        res.status(200).send({
+          message: 'Email sending simulated',
+          data: req.body,
+          options
+        })
+        return
+      }
+
+      // In production, send email
+      const transporter = nodemailer.createTransport(SENDER_SETTINGS)
+      const mail = await transporter.sendMail(options)
+
+      // mail.rejected is an array that holds all rejected emails.
+      if (mail.rejected.length > 0) {
+        res.status(403).send({
+          message: 'Email rejected by SMTP server.'
+        })
+        return
+      }
+
+      res.status(200).send({
+        message: 'Email sent successfully',
+        data: req.body
+      })
+    } catch (e) {
+      logger.error(e)
+      res.status(500).send({
+        message: 'Unexpected error'
+      })
     }
   }
 }
