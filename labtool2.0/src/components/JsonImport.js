@@ -42,7 +42,15 @@ export default class JsonImport extends React.Component {
           </Modal.Description>
           <Modal.Actions>
             <Button content="Close" negative onClick={this.close} />
-            <Button content="Import" positive disabled={!!this.state.error} onClick={() => this.props.onImport(this.state.data)} />
+            <Button
+              content="Import"
+              positive
+              disabled={!!this.state.error}
+              onClick={() => {
+                this.props.onImport(this.state.data)
+                this.close()
+              }}
+            />
           </Modal.Actions>
         </Modal>
       </React.Fragment>
