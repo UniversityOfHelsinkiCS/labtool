@@ -9,6 +9,7 @@ import { resetChecklist, changeField, addTopic, addRow, removeTopic, removeRow, 
 import './CreateChecklist.css'
 
 import BackButton from '../BackButton'
+import JsonEdit from '../JsonEdit'
 
 export class CreateChecklist extends Component {
   constructor(props) {
@@ -114,6 +115,46 @@ export class CreateChecklist extends Component {
       courseInstanceId: this.state.copyCourse,
       copying: true
     })
+  }
+
+  validateChecklist = checklist => {
+    return (
+      !!checklist.week &&
+      !!checklist.list &&
+      Object.keys(checklist.list).every(listKey => {
+        return (
+          typeof listKey === 'string' &&
+          Object.values(checklist.list[listKey]).every(row => {
+            return row.name !== null && row.textWhenOn !== null && row.textWhenOff !== null && row.checkedPoints !== null && row.uncheckedPoints !== null
+          })
+        )
+      })
+    )
+  }
+
+  importChecklist = checklistForWeek => {
+    if (this.validateChecklist({ week: this.state.week, list: checklistForWeek })) {
+      try {
+        this.props.createChecklist({
+          courseInstanceId: this.props.selectedInstance.id,
+          week: this.state.week,
+          checklist: checklistForWeek
+        })
+        const checklist = this.props.checklist
+        checklist.data = checklistForWeek
+        this.setState({ checklist })
+      } catch (e) {
+        this.props.showNotification({
+          message: 'Could not save JSON.',
+          error: true
+        })
+      }
+    } else {
+      this.props.showNotification({
+        message: 'Invalid checklist.',
+        error: true
+      })
+    }
   }
 
   /**
@@ -231,7 +272,7 @@ export class CreateChecklist extends Component {
 
   renderChecklist() {
     let maxPoints = 0
-    const checklistJsx = Object.keys(this.props.checklist.data).map(key => {
+    const checklistJsx = Object.keys(this.props.checklist.data || {}).map(key => {
       let bestPoints = 0
       this.props.checklist.data[key].forEach(row => {
         const greaterPoints = row.checkedPoints > row.uncheckedPoints ? row.checkedPoints : row.uncheckedPoints
@@ -348,6 +389,13 @@ export class CreateChecklist extends Component {
                 options={this.state.courseDropdowns}
               />
             </div>
+            {this.state.week !== undefined ? (
+              <div className="jsonButtons">
+                <JsonEdit onImport={this.importChecklist} data={this.props.checklist.data} />
+              </div>
+            ) : (
+              <div />
+            )}
           </div>
           {this.props.loading.loading ? (
             <Loader active />

@@ -10,6 +10,12 @@ Raven.config(process.env.SENTRY_ADDR).install()
 
 require('dotenv').config()
 
+const USE_FAKE_LOGIN = process.env.USE_FAKE_LOGIN === 'ThisIsNotProduction'
+
+if (USE_FAKE_LOGIN) {
+  console.log('YOU ARE USING FAKE LOGIN !!! MAKE SURE YOU ARE NOT IN PRODUCTION')
+}
+
 /**
  *
  * @param request sets the token into easily accessible variable request.token
@@ -20,7 +26,6 @@ const extractToken = (request, response, next) => {
   const authorization = request.get('authorization')
   if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
     request.token = authorization.substring(7)
-  } else {
   }
 
   next()
@@ -85,23 +90,11 @@ app.use(adminPwToken)
  */
 app.use(bodyParser.json())
 
-const fakeshibbo = (req, res, next) => {
-  req.headers.uid = 'tiraopiskelija1'
-  req.headers.employeenumber = '1234567'
-  req.headers.mail = 'maarit.opiskelija@helsinki.fi'
-  req.headers.schacpersonaluniquecode = 'urn:schac:personalUniqueCode:int:studentID:helsinki.fi:014578343'
-  req.headers.givenname = 'Maarit'
-  req.headers.sn = 'Opiskelija'
-  next()
-}
-
- // REMEMBER TO COMMENT THIS
-
- //app.use(fakeshibbo)
-
 app.use((req, res, next) => {
+  // add Shibboleth headers if fake login allowed WHICH SHOULD NEVER BE ON PRODUCTION!!
+  const extra = USE_FAKE_LOGIN ? ', uid, employeenumber, mail, schacpersonaluniquecode, givenname, sn' : ''
   res.header('Access-Control-Allow-Origin', '*')
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization')
+  res.header('Access-Control-Allow-Headers', `Origin, X-Requested-With, Content-Type, Accept, Authorization${extra}`)
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
   next()
 })
@@ -149,7 +142,6 @@ app.get('*', (req, res) => res.status(404).send({
 const server = app.listen(3001, () => {
   const port = server.address().port
   logger.info(`Backend started and listening on port ${port}`)
-  // TODO: Add info if using fakeshibbo (Riku).
 })
 
 module.exports = server

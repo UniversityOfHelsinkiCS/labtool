@@ -23,6 +23,8 @@ import {
 import { resetLoading } from '../../reducers/loadingReducer'
 import { trimDate } from '../../util/format'
 
+import { FormMarkdownTextArea } from '../MarkdownTextArea'
+
 export class CoursePage extends React.Component {
   handleClick = (e, titleProps) => {
     const { index } = titleProps
@@ -150,6 +152,15 @@ export class CoursePage extends React.Component {
       }
     }
     return hasRequiredTags
+  }
+
+  hasDroppedOut = studentTagsData => {
+    let studentInstanceTagNames = studentTagsData.map(tag => tag.name)
+    let hasDroppedOut = false
+    if (studentInstanceTagNames.includes('DROPPED')) {
+      hasDroppedOut = true
+    }
+    return hasDroppedOut
   }
 
   updateTeacher = id => async e => {
@@ -391,7 +402,7 @@ export class CoursePage extends React.Component {
                     )}
                   </Comment.Group>
                   <Form reply onSubmit={this.handleSubmit} name={week.id} id={week.id}>
-                    <Form.TextArea name="content" placeholder="Your comment..." defaultValue="" />
+                    <FormMarkdownTextArea name="content" placeholder="Your comment..." defaultValue="" />
                     <Button content="Add Reply" labelPosition="left" icon="edit" primary />
                   </Form>
                 </Accordion.Content>
@@ -587,9 +598,9 @@ export class CoursePage extends React.Component {
     /**
      * Function that returns what teachers should see at the bottom of this page
      */
-    let renderTeacherBottomPart = () => {
+    let renderTeacherBottomPartForActiveStudents = () => {
       return (
-        <div className="TeachersBottomView">
+        <div className="TeachersBottomViewForActiveStudents">
           <Header as="h2">Students </Header>
           <div style={{ textAlign: 'left' }}>
             <span>Filter by instructor </span>
@@ -620,10 +631,12 @@ export class CoursePage extends React.Component {
             )}
           </div>
 
-          <Table celled compact unstackable>
+          <Table celled compact unstackable style={{ 'overflow-x': 'scroll' }}>
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell key={-1}>Student</Table.HeaderCell>
+                <Table.HeaderCell>id</Table.HeaderCell>
+                <Table.HeaderCell>email</Table.HeaderCell>
                 <Table.HeaderCell>Project Info</Table.HeaderCell>
                 {createHeadersTeacher()}
                 <Table.HeaderCell> Sum </Table.HeaderCell>
@@ -635,15 +648,154 @@ export class CoursePage extends React.Component {
               {this.props.courseData && this.props.courseData.data ? (
                 this.props.courseData.data
                   .filter(data => {
+                    return !this.hasDroppedOut(data.Tags)
+                  })
+                  .filter(data => {
                     return this.props.coursePageLogic.filterByAssistant === 0 || this.props.coursePageLogic.filterByAssistant === data.teacherInstanceId
                   })
                   .filter(data => {
                     return this.props.coursePageLogic.filterByTag.length === 0 || this.hasFilteringTags(data.Tags, this.props.coursePageLogic.filterByTag)
                   })
                   .map(data => (
-                    <Table.Row key={data.id}>
+                    <Table.Row key={data.id} className="TableRowForActiveStudents">
                       <Table.Cell>
                         {data.User.firsts} {data.User.lastname}
+                      </Table.Cell>
+                      <Table.Cell>
+                        <span>{data.User.studentNumber}</span>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <a href={`mailto:${data.User.email}`}>{data.User.email}</a>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <span>
+                          {data.projectName}
+                          <br />
+                          <a href={data.github} target="_blank" rel="noopener noreferrer">
+                            {data.github}
+                          </a>
+                          {data.Tags.map(tag => (
+                            <div key={tag.id}>
+                              <Button compact floated="left" className={`mini ui ${tag.color} button`} onClick={this.addFilterTag(tag)}>
+                                {tag.name}
+                              </Button>
+                            </div>
+                          ))}
+                          <Popup
+                            trigger={<Icon id="tag" onClick={this.changeHiddenTagDropdown(data.id)} name="pencil" size="large" color="green" style={{ float: 'right' }} />}
+                            content="Add or remove tag"
+                          />
+                        </span>
+                        <div>
+                          {this.props.coursePageLogic.showTagDropdown === data.id ? (
+                            <div>
+                              <Dropdown id="tagDropdown" style={{ float: 'left' }} options={dropDownTags} onChange={this.changeSelectedTag()} placeholder="Choose tag" fluid selection />
+                              <div className="two ui buttons">
+                                <button className="ui icon positive button" onClick={this.addTag(data.id)} size="mini">
+                                  <i className="plus icon" />
+                                </button>
+                                <div className="or" />
+                                <button className="ui icon button" onClick={this.removeTag(data.id)} size="mini">
+                                  <i className="trash icon" />
+                                </button>
+                              </div>
+                            </div>
+                          ) : (
+                            <div />
+                          )}
+                        </div>
+                      </Table.Cell>
+                      {createIndents(data.weeks, data.codeReviews, data.id)}
+                      <Table.Cell>
+                        {(
+                          data.weeks.map(week => week.points).reduce((a, b) => {
+                            return a + b
+                          }, 0) +
+                          data.codeReviews.map(cr => cr.points).reduce((a, b) => {
+                            return a + b
+                          }, 0)
+                        )
+                          .toFixed(2)
+                          .replace(/[.,]00$/, '')}
+                      </Table.Cell>
+                      <Table.Cell>
+                        {data.teacherInstanceId && this.props.selectedInstance.teacherInstances ? (
+                          this.props.selectedInstance.teacherInstances.filter(teacher => teacher.id === data.teacherInstanceId).map(teacher => (
+                            <span key={data.id}>
+                              {teacher.firsts} {teacher.lastname}
+                            </span>
+                          ))
+                        ) : (
+                          <span>not assigned</span>
+                        )}
+                        <Popup trigger={<Button circular onClick={this.changeHiddenAssistantDropdown(data.id)} icon={{ name: 'pencil' }} style={{ float: 'right' }} />} content="Assign instructor" />
+                        {this.props.coursePageLogic.showAssistantDropdown === data.id ? (
+                          <div>
+                            <Dropdown id="assistantDropdown" options={dropDownTeachers} onChange={this.changeSelectedTeacher()} placeholder="Select teacher" fluid selection />
+                            <Button onClick={this.updateTeacher(data.id, data.teacherInstanceId)} size="small">
+                              Change instructor
+                            </Button>
+                          </div>
+                        ) : (
+                          <div />
+                        )}
+                      </Table.Cell>
+                      <Table.Cell textAlign="right">
+                        <Link to={`/labtool/browsereviews/${this.props.selectedInstance.ohid}/${data.id}`}>
+                          <Popup trigger={<Button circular size="tiny" icon={{ name: 'star', size: 'large', color: 'orange' }} />} content="Review student" />
+                        </Link>
+                      </Table.Cell>
+                    </Table.Row>
+                  ))
+              ) : (
+                <p />
+              )}
+            </Table.Body>
+          </Table>
+          <br />
+
+          <Link to={`/labtool/massemail/${this.props.selectedInstance.ohid}`}>
+            <Button size="small">Send email to multiple students</Button>
+          </Link>
+          <br />
+          <br />
+        </div>
+      )
+    }
+
+    let renderTeacherBottomPartForDroppedOutStudents = () => {
+      return (
+        <div className="TeachersBottomViewForDroppedOutStudents">
+          <Header as="h2">Dropped out students </Header>
+          <Table celled compact unstackable style={{ 'overflow-x': 'scroll' }}>
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell key={-1}>Student</Table.HeaderCell>
+                <Table.HeaderCell>id</Table.HeaderCell>
+                <Table.HeaderCell>email</Table.HeaderCell>
+                <Table.HeaderCell>Project Info</Table.HeaderCell>
+                {createHeadersTeacher()}
+                <Table.HeaderCell> Sum </Table.HeaderCell>
+                <Table.HeaderCell width="six"> Instructor </Table.HeaderCell>
+                <Table.HeaderCell> Review </Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {this.props.courseData && this.props.courseData.data ? (
+                this.props.courseData.data
+                  .filter(data => {
+                    return this.hasDroppedOut(data.Tags)
+                  })
+                  .map(data => (
+                    <Table.Row key={data.id} className="TableRowForDroppeOutStudents">
+                      <Table.Cell>
+                        {data.User.firsts} {data.User.lastname}
+                      </Table.Cell>
+                      <Table.Cell>
+                        <span>{data.User.studentNumber}</span>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <a href={`mailto:${data.User.email}`}>{data.User.email}</a>
                       </Table.Cell>
                       <Table.Cell>
                         <span>
@@ -791,7 +943,8 @@ export class CoursePage extends React.Component {
       return (
         <div style={{ overflow: 'auto' }}>
           {renderTeacherTopPart()}
-          {renderTeacherBottomPart()}
+          {renderTeacherBottomPartForActiveStudents()}
+          {renderTeacherBottomPartForDroppedOutStudents()}
         </div>
       )
     } else {

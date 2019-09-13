@@ -10,6 +10,7 @@ import Nav from './components/pages/Nav'
 import Notification from './components/pages/Notification'
 import RegisterPage from './components/pages/RegisterPage'
 import CoursePage from './components/pages/CoursePage'
+import MassEmailPage from './components/pages/MassEmailPage'
 import Email from './components/pages/Email.js'
 import ModifyCourseInstancePage from './components/pages/ModifyCourseInstancePage'
 import ModifyCourseInstanceStaff from './components/pages/ModifyCourseInstanceStaff'
@@ -19,13 +20,18 @@ import BrowseReviews from './components/pages/BrowseReviews'
 import MyPage from './components/pages/MyPage'
 import CreateChecklist from './components/pages/CreateChecklist'
 import ManageTags from './components/pages/ManageTags'
+import FakeLoginPage from './components/pages/FakeLoginPage'
 
 // Reducer imports
-import { logout } from './reducers/loginReducer'
-import { tokenLogin } from './reducers/loginReducer'
-
-import { login } from './services/login'
+import { logout, tokenLogin } from './reducers/loginReducer'
+import { login, fakeShibboLogin } from './services/login'
 import { resetLoading, forceSetLoading } from './reducers/loadingReducer'
+
+const USE_FAKE_LOGIN = process.env.REACT_APP_USE_FAKE_LOGIN === 'ThisIsNotProduction'
+
+if (USE_FAKE_LOGIN) {
+  console.log('USING FAKE LOGIN!!! DISABLE ON PRODUCTION!!!')
+}
 
 try {
   Raven.config('https://d12f1efa9d2a4d88a34584707472b08f@toska.cs.helsinki.fi/8').install() // eslint-disable-line
@@ -91,6 +97,7 @@ class App extends Component {
             <Route path={`/labtool/courseregistration/:id`} render={({ match, history }) => <RegisterPage history={history} courseId={match.params.id} />} />
             <Route path={`/labtool/browsereviews/:id/:si/`} render={({ match, history }) => <BrowseReviews history={history} courseId={match.params.id} studentInstance={match.params.si} />} />
             <Route path={`/labtool/email`} component={Email} />
+            <Route path={`/labtool/massemail/:id`} render={({ match, history }) => <MassEmailPage history={history} courseId={match.params.id} />} />
             <Route path={`/labtool/registerPage`} component={RegisterPage} />
             <Route
               path={`/labtool/reviewstudent/:id/:si/:wk`}
@@ -114,14 +121,23 @@ class App extends Component {
      */
     const EmailChecker = () => (this.props.user.email === '' || this.props.user.email === null ? <Email /> : <Main />)
 
+    /**
+     * Logout code.
+     */
+    const doLogout = async () => {
+      window.localStorage.removeItem('loggedLabtool')
+      await this.props.logout()
+      this.props.history.push('/')
+    }
+
     return (
       /**
        * Nav is the component for the navbar, that is always displayed.
        */
       <Container>
-        <Nav />
+        <Nav logout={ doLogout } />
         <Notification />
-        {this.props.user ? EmailChecker() : null}
+        {this.props.user ? EmailChecker() : (USE_FAKE_LOGIN ? <FakeLoginPage /> : null)}
       </Container>
     )
   }
@@ -144,7 +160,7 @@ export default withRouter(
     {
       tokenLogin,
       logout,
-      login,
+      login: USE_FAKE_LOGIN ? fakeShibboLogin : login,
       resetLoading,
       forceSetLoading
     }

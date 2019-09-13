@@ -21,13 +21,14 @@
     "redux-thunk": "^2.3.0",
     "semantic-ui-react": "^0.80.2",
     "sequelize": "^4.37.10",
-    "serve": "^6.5.8"
+    "serve": "^7.1.3"
   },
   "scripts": {
     "start": "react-scripts start",
     "debug": "react-scripts --inspect=0.0.0.0:9230 start .env.development.local",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
+    "lint": "./node_modules/.bin/eslint .",
     "tryTest": "npm run test a q",
     "eject": "react-scripts eject"
   },
