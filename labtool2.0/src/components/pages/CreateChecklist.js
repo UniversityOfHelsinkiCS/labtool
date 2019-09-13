@@ -272,7 +272,7 @@ export class CreateChecklist extends Component {
 
   renderChecklist() {
     let maxPoints = 0
-    const checklistJsx = Object.keys(this.props.checklist.data).map(key => {
+    const checklistJsx = Object.keys(this.props.checklist.data || {}).map(key => {
       let bestPoints = 0
       this.props.checklist.data[key].forEach(row => {
         const greaterPoints = row.checkedPoints > row.uncheckedPoints ? row.checkedPoints : row.uncheckedPoints
