@@ -21,11 +21,11 @@ BackButton.propTypes = {
 
 const presets = {
   modifyCIPage: {
-    to: state => `/labtool/ModifyCourseInstancePage/${state.selectedInstance.ohid}`,
+    to: state => state.selectedInstance.ohid ? `/labtool/ModifyCourseInstancePage/${state.selectedInstance.ohid}` : `/labtool/courses`,
     text: 'Back to course editing'
   },
   coursePage: {
-    to: state => `/labtool/courses/${state.selectedInstance.ohid}`,
+    to: state => state.selectedInstance.ohid ? `/labtool/courses/${state.selectedInstance.ohid}` : `/labtool/courses`,
     text: 'Back to course page'
   }
 }
