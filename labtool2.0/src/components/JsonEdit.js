@@ -45,6 +45,7 @@ export default class JsonEdit extends React.Component {
             </Form>
           </Modal.Description>
           <Modal.Actions>
+            <Button content="Download" floated="left" as="a" href={`data:application/json,${encodeURI(JSON.stringify(data, null, 4))}`} download="data.json" target="_blank" />
             <Button content="Close" negative onClick={this.close} />
             <Button
               content="Save"

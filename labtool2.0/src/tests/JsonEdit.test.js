@@ -34,7 +34,7 @@ describe('<JsonEdit />', () => {
 
       wrapper
         .find(Button)
-        .at(2)
+        .find({ content: 'Save' })
         .simulate('click')
 
       expect(onImport).toBeCalledWith({ a: 'b' })
