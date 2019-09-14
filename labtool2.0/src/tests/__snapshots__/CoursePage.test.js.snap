@@ -509,16 +509,6 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           <TableHeaderCell
             as="th"
           >
-            id
-          </TableHeaderCell>
-          <TableHeaderCell
-            as="th"
-          >
-            email
-          </TableHeaderCell>
-          <TableHeaderCell
-            as="th"
-          >
             Project Info
           </TableHeaderCell>
           <TableHeaderCell
@@ -554,22 +544,6 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             Johan Wilhelm
              
             Studerande
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            <span>
-              014553242
-            </span>
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            <a
-              href="mailto:johan.studerande@helsinki.fi"
-            >
-              johan.studerande@helsinki.fi
-            </a>
           </TableCell>
           <TableCell
             as="td"
@@ -705,22 +679,6 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             Maarit Mirja
              
             Opiskelija
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            <span>
-              014578343
-            </span>
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            <a
-              href="mailto:maarit.opiskelija@helsinki.fi"
-            >
-              maarit.opiskelija@helsinki.fi
-            </a>
           </TableCell>
           <TableCell
             as="td"
@@ -883,16 +841,6 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           <TableHeaderCell
             as="th"
           >
-            id
-          </TableHeaderCell>
-          <TableHeaderCell
-            as="th"
-          >
-            email
-          </TableHeaderCell>
-          <TableHeaderCell
-            as="th"
-          >
             Project Info
           </TableHeaderCell>
           <TableHeaderCell
@@ -928,22 +876,6 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             Teräs
              
             Henkilö
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            <span>
-              014666666
-            </span>
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            <a
-              href="mailto:teras.henkilo@helsinki.fi"
-            >
-              teras.henkilo@helsinki.fi
-            </a>
           </TableCell>
           <TableCell
             as="td"
