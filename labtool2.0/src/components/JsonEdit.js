@@ -7,21 +7,6 @@ export default class JsonEdit extends React.Component {
   close = () => this.setState({ open: false })
   open = () => this.setState({ open: true })
 
-  validateChecklist = checklist => {
-    return (
-      !!checklist.week &&
-      !!checklist.list &&
-      Object.keys(checklist.list).every(listKey => {
-        return (
-          typeof listKey === 'string' &&
-          Object.values(checklist.list[listKey]).every(row => {
-            return row.name !== null && row.textWhenOn !== null && row.textWhenOff !== null && row.checkedPoints !== null && row.uncheckedPoints !== null
-          })
-        )
-      })
-    )
-  }
-
   onChange = e => {
     try {
       if (!e.target.value) {
