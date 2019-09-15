@@ -3,10 +3,10 @@ const db = require('../models')
 const helper = require('../helpers/course_instance_helper')
 const logger = require('../utils/logger')
 /*
+const env = process.env.NODE_ENV || 'development'
 const StudentInstanceController = require('../controllers').studentInstances
 const config = require('./../config/config.js')[env]
 const Op = Sequelize.Op
-const env = process.env.NODE_ENV || 'development'
 */
 
 const { User, StudentInstance, TeacherInstance } = db

@@ -9,14 +9,21 @@ exports.getCurrent = getCurrent
 exports.createCourse = createCourse
 
 const env = process.env.NODE_ENV || 'development'
+
+const Sequelize = require('sequelize')
+const https = require('https')
+const axios = require('axios')
 const config = require('./../config/config.js')[env]
 const logger = require('../utils/logger')
+const { CourseInstance, TeacherInstance, User } = require('../models')
+
+const { Op } = Sequelize
 
 /**
  *
  */
 function controller_before_auth_check_action(req, res) {
-  if (req.authenticated.success == false) {
+  if (!req.authenticated.success) {
     res.status(401).end()
   }
 }
@@ -33,7 +40,6 @@ function CurrentTermAndYear() {
   const year = date.getFullYear()
   const currentYear = year.toString()
   const nextYear = getNextYear(currentTerm, year)
-  nextYear.toString()
   const nextTerm = getNextTerm(currentTerm)
   return { currentYear, currentTerm, nextTerm, nextYear }
 }
@@ -44,14 +50,14 @@ function CurrentTermAndYear() {
  * @returns {string}
  */
 function getCurrentTerm(month) {
-  if (month >= 1 && month <= 5) {
+  if (1 <= month && month <= 5) {
     return 'K'
-  }
-  if (month >= 6 && month <= 8) {
+  } else if (6 <= month && month <= 8) {
     return 'V'
-  }
-  if (month >= 9 && month <= 12) {
+  } else if (9 <= month && month <= 12) {
     return 'S'
+  } else {
+    return null
   }
 }
 
@@ -62,10 +68,7 @@ function getCurrentTerm(month) {
  * @returns {*}
  */
 function getNextYear(currentTerm, currentYear) {
-  if (currentTerm === 'S') {
-    return currentYear + 1
-  }
-  return currentYear
+  return currentTerm === 'S' ? (currentYear + 1) : currentYear
 }
 
 /**
@@ -74,14 +77,15 @@ function getNextYear(currentTerm, currentYear) {
  * @returns {string}
  */
 function getNextTerm(term) {
-  if (term === 'K') {
-    return 'V'
-  }
-  if (term === 'V') {
-    return 'S'
-  }
-  if (term === 'S') {
-    return 'K'
+  switch (term) {
+    case 'K':
+      return 'V'
+    case 'V':
+      return 'S'
+    case 'S':
+      return 'K'
+    default:
+      return null
   }
 }
 
@@ -92,7 +96,6 @@ function getNextTerm(term) {
  * @returns {{method: string, baseURL: string, headers: {'Content-Type': string, Authorization: string}, httpsAgent: "https".Agent}}
  */
 function axiosBlaBla(year, term) {
-  const https = require('https')
   return {
     method: 'get',
     baseURL: `${config.kurki_url}/labtool/courses?year=${year}&term=${term}`,
@@ -112,7 +115,6 @@ function axiosBlaBla(year, term) {
  * @returns {{method: string, baseURL: string, headers: {'Content-Type': string, Authorization: string}, httpsAgent: "https".Agent}}
  */
 function axiosCourseBla(hid) {
-  const https = require('https')
   return {
     method: 'get',
     baseURL: `${config.kurki_url}/labtool/courses/${hid}`,
@@ -137,13 +139,9 @@ function axiosCourseBla(hid) {
  */
 async function getActive(req, res) {
   try {
-    // const Sequelize = require('sequelize')
-    const CourseInstance = require('../models').CourseInstance
-    // const Op = Sequalize.Op
-    const ires = await CourseInstance.findAll({
+    return await CourseInstance.findAll({
       order: [['createdAt', 'DESC']]
     })
-    return ires
   } catch (e) {
     return e
   }
@@ -164,9 +162,6 @@ async function getInactive(req, res) {
     for (const blob in newobj) {
       iarr.push(newobj[blob].id)
     }
-    const Sequelize = require('sequelize')
-    const CourseInstance = require('../models').CourseInstance
-    const Op = Sequelize.Op
 
     const ires = await CourseInstance.findAll({
       where: {
@@ -178,11 +173,11 @@ async function getInactive(req, res) {
     for (const i in newobj) {
       let found = 0
       for (const j in ires) {
-        if (newobj[i].id == ires[j].ohid) {
+        if (newobj[i].id === ires[j].ohid) {
           found = 1
         }
       }
-      if (found == 0) {
+      if (found === 0) {
         notactivated.push(newobj[i])
       }
     }
@@ -199,18 +194,13 @@ async function getInactive(req, res) {
  * @returns {Promise<*>}
  */
 async function createCourse(body) {
-  const CourseInstance = require('../models').CourseInstance
-  const TeacherInstance = require('../models').TeacherInstance
-  const User = require('../models').User
-
-  const axios = require('axios')
   const options = await axiosCourseBla(body.hid)
   try {
     const result = await axios
       .create(options)
       .get()
       .then(barf => barf.data)
-    const new_course = await CourseInstance.build({
+    const newCourse = await CourseInstance.build({
       name: body.cname,
       start: body.starts,
       end: body.ends,
@@ -218,7 +208,7 @@ async function createCourse(body) {
     }).save()
 
     if (result.teachers.length > 0) {
-      for (const i in result.teachers) {
+      for (let i = 0; i < result.teachers.length; ++i) {
         const user = await User.findOrCreate({
           where: {
             username: result.teachers[i]
@@ -230,7 +220,7 @@ async function createCourse(body) {
         })
         TeacherInstance.build({
           userId: user[0].id,
-          courseInstanceId: new_course.id,
+          courseInstanceId: newCourse.id,
           admin: true
         }).save()
       }
@@ -249,7 +239,6 @@ async function createCourse(body) {
  */
 async function getCurrent(req, res) {
   const timeMachine = CurrentTermAndYear()
-  const axios = require('axios')
   const options = await axiosBlaBla(timeMachine.currentYear, timeMachine.currentTerm)
   try {
     const result = await axios
@@ -270,7 +259,6 @@ async function getCurrent(req, res) {
  */
 async function getNewer(req, res) {
   const timeMachine = CurrentTermAndYear()
-  const axios = require('axios')
   const options = await axiosBlaBla(timeMachine.nextYear, timeMachine.nextTerm)
   try {
     const result = await axios
