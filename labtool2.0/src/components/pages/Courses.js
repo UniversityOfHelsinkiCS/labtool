@@ -17,7 +17,7 @@ export class Courses extends Component {
   render() {
     return (
       <div className="Courses">
-        <Container style={{ 'overflow-x': 'scroll' }}>
+        <Container style={{ overflowX: 'scroll' }}>
           <Header as="h2">Courses</Header>
           {this.props.loading.loading || !Array.isArray(this.props.courseInstance) ? (
             <Loader active />
