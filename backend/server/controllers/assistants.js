@@ -1,15 +1,15 @@
-const db = require('../models')
-const CourseInstance = require('../models').CourseInstance
-const StudentInstance = require('../models').StudentInstance
-const TeacherInstance = require('../models').TeacherInstance
-const User = require('../models').User
-const helper = require('../helpers/course_instance_helper')
 const Sequelize = require('sequelize')
-const Op = Sequelize.Op
-const StudentInstanceController = require('../controllers').studentInstances
-const env = process.env.NODE_ENV || 'development'
-const config = require('./../config/config.js')[env]
+const db = require('../models')
+const helper = require('../helpers/course_instance_helper')
 const logger = require('../utils/logger')
+/*
+const StudentInstanceController = require('../controllers').studentInstances
+const config = require('./../config/config.js')[env]
+const Op = Sequelize.Op
+const env = process.env.NODE_ENV || 'development'
+*/
+
+const { User, StudentInstance, TeacherInstance } = db
 
 module.exports = {
   async create(req, res) {
@@ -34,7 +34,7 @@ module.exports = {
         return
       }
       if (!teacherInsId) {
-        res.status(404).send(`Can't assign null teacher!`)
+        res.status(404).send('Can\'t assign null teacher!')
         return
       }
       const requestMakerAsTeacher = await TeacherInstance.findOne({

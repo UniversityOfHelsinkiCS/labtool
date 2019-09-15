@@ -1,7 +1,7 @@
 const env = process.env.NODE_ENV || 'development'
 const config = require('./../config/config.js')[env]
 
-describe('Login', function() {
+describe('Login', () => {
   let User
   let server
   let supertest
@@ -10,7 +10,7 @@ describe('Login', function() {
   let assert
   let nock
 
-  beforeEach(function() {
+  beforeEach(() => {
     User = require('../server/models').User
     server = require('../app')
     supertest = require('supertest')(server)
@@ -21,14 +21,14 @@ describe('Login', function() {
     jwt = require('jsonwebtoken')
     assert = require('assert')
   })
-  afterEach(function() {
+  afterEach(() => {
     server.close()
   })
 
   /*
   * This test tests nothing, so I commented it out.
   * If you know what it is supposed to test, fix it and uncomment.
-  * 
+  *
   it('respond to /api/login with correct credentials', function(done) {
     process.env.SECRET = 'testest'
     let token = jwt.sign({ username: 'rkeskiva', id: 1 }, process.env.SECRET)
@@ -45,7 +45,7 @@ describe('Login', function() {
   })
   */
 
-  it('respond to /login with incorrect credentials with "wrong credentials"', function(done) {
+  it('respond to /login with incorrect credentials with "wrong credentials"', (done) => {
     nock(`${config.kurki_url}`)
       .post('/login')
       .reply(200, {
@@ -54,7 +54,7 @@ describe('Login', function() {
     supertest.post('/login').expect('{"body":{"error":"wrong credentials"}}', done())
   })
 
-  it('respond to /login with correct credentials second time', function(done) {
+  it('respond to /login with correct credentials second time', (done) => {
     nock(`${config.kurki_url}`)
       .post('/login')
       .reply(200, {
@@ -65,7 +65,7 @@ describe('Login', function() {
       .get('/admin')
       .expect('Content-type', /json/)
       .expect(200) // THis is HTTP response
-      .end(function(err, res) {
+      .end((err, res) => {
         res.status.should.equal(401)
 
         done()

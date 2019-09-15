@@ -7,6 +7,7 @@ exports.getNextTerm = getCurrentTerm
 exports.controller_before_auth_check_action = controller_before_auth_check_action
 exports.getCurrent = getCurrent
 exports.createCourse = createCourse
+
 const env = process.env.NODE_ENV || 'development'
 const config = require('./../config/config.js')[env]
 const logger = require('../utils/logger')

@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   )
-  CourseInstance.associate = models => {
+  CourseInstance.associate = (models) => {
     CourseInstance.hasMany(models.StudentInstance, {
       foreignKey: 'courseInstanceId',
       as: 'courseInstances'

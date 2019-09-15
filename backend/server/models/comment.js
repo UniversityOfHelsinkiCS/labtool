@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  /*feedback, hiddenComment, comment */
+  /* feedback, hiddenComment, comment */
   const Comment = sequelize.define(
     'Comment',
     {
@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   )
-  Comment.associate = function(models) {
+  Comment.associate = function (models) {
     Comment.belongsTo(models.Week, {
       foreignKey: 'weekId',
       onDelete: 'CASCADE'

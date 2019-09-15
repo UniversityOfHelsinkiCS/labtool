@@ -1,4 +1,4 @@
-'use strict'
+
 module.exports = (sequelize, DataTypes) => {
   const Tag = sequelize.define(
     'Tag',
@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   )
-  Tag.associate = models => {
+  Tag.associate = (models) => {
     Tag.belongsToMany(models.StudentInstance, {
       through: 'StudentTag',
       foreignKey: 'tagId'

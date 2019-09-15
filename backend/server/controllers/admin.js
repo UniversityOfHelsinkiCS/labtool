@@ -12,7 +12,7 @@ module.exports = {
     try {
       const nonActive = await helper.getInactive(req, res)
       const areActive = await helper.getActive(req, res)
-      res.render('index', { 
+      res.render('index', {
         title: 'Import courses to Labtool from Kurki',
         message1: 'Current and upcoming courses',
         submessage1: 'Current and upcoming courses from Kurki which are not yet in Labtool database. Click Import to import course to Labtool.',

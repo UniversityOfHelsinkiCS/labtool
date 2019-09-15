@@ -60,7 +60,7 @@ const commentMessage = async (role, commentId) => {
         },
         courseId: queryResult.dataValues.Week.StudentInstance.CourseInstance.dataValues.id
       }
-    } else if (role === 'student') {
+    } if (role === 'student') {
       // Database query
       const queryResult = await Comment.findOne({
         attributes: ['weekId', 'comment'],
@@ -115,19 +115,17 @@ const commentMessage = async (role, commentId) => {
           studentId: queryResult.dataValues.Week.dataValues.studentInstanceId,
           userId: student.dataValues.userId
         }
-      } else {
-        return {
-          success: false,
-          status: 404,
-          error: 'Cannot send email to instructor because there is no instructor assigned to you.'
-        }
       }
-    } else {
       return {
         success: false,
-        status: 400,
-        error: 'Bad value for "role"'
+        status: 404,
+        error: 'Cannot send email to instructor because there is no instructor assigned to you.'
       }
+    }
+    return {
+      success: false,
+      status: 400,
+      error: 'Bad value for "role"'
     }
   } catch (e) {
     return {
@@ -180,12 +178,11 @@ const weekMessage = async (role, weekId) => {
         },
         courseId: queryResult.dataValues.StudentInstance.CourseInstance.dataValues.id
       }
-    } else {
-      return {
-        success: false,
-        status: 400,
-        error: 'Bad value for "role"'
-      }
+    }
+    return {
+      success: false,
+      status: 400,
+      error: 'Bad value for "role"'
     }
   } catch (e) {
     return {

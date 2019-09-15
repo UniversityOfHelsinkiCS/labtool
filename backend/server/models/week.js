@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   )
-  Week.associate = models => {
+  Week.associate = (models) => {
     Week.belongsTo(models.StudentInstance, {
       foreignKey: 'studentInstanceId',
       onDelete: 'CASCADE'

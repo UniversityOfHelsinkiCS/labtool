@@ -1,6 +1,6 @@
 const checklistController = require('../controllers/checklists')
 
-module.exports = app => {
+module.exports = (app) => {
   /**
    * Expects a JSON body with the following fields:
    * week: number of week to associate checklist with.

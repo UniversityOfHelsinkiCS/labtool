@@ -1,20 +1,15 @@
-const db = require('../models')
-const CourseInstance = require('../models').CourseInstance
-const StudentInstance = require('../models').StudentInstance
-const TeacherInstance = require('../models').TeacherInstance
-const User = require('../models').User
-const helper = require('../helpers/course_instance_helper')
 const Sequelize = require('sequelize')
-const Op = Sequelize.Op
+const request = require('request')
+const db = require('../models')
+const helper = require('../helpers/course_instance_helper')
+const logger = require('../utils/logger')
+
 const StudentInstanceController = require('../controllers').studentInstances
-const Week = require('../models').Week
-const CodeReview = require('../models').CodeReview
-const Comment = require('../models').Comment
-const Tag = require('../models').Tag
-const Checklist = require('../models').Checklist
+const { Op } = Sequelize
+const { User, CourseInstance, StudentInstance, TeacherInstance, Week, CodeReview, Comment, Tag, Checklist } = db
+
 const env = process.env.NODE_ENV || 'development'
 const config = require('./../config/config.js')[env]
-const logger = require('../utils/logger')
 
 const overkillLogging = (req, error) => {
   logger.debug('request: ', req)
@@ -167,26 +162,24 @@ module.exports = {
           // Here we splice together the codeReviews field
           if (palautus.data.codeReviews) {
             const reviewers = {} // Map reviewers here using the reviewNumber as a key.
-            palautus.data.toReviews.forEach(cr => {
+            palautus.data.toReviews.forEach((cr) => {
               reviewers[cr.dataValues.reviewNumber] = {
                 github: cr.dataValues.codeReviews.github,
                 projectName: cr.dataValues.codeReviews.projectName
               }
             })
             palautus.data.codeReviews = palautus.data.codeReviews.map(cr => cr.dataValues)
-            palautus.data.codeReviews = palautus.data.codeReviews.map(cr => {
-              // Replace the CodeReview rows from the database with a more user-friendly representation.
-              return {
-                toReview: {
-                  github: cr.toReviews.github,
-                  projectName: cr.toReviews.projectName
-                },
-                reviewNumber: cr.reviewNumber,
-                points: cr.points,
-                linkToReview: cr.linkToReview,
-                reviewer: reviewers[cr.reviewNumber]
-              }
+            palautus.data.codeReviews = palautus.data.codeReviews.map(cr => ({
+              toReview: {
+                github: cr.toReviews.github,
+                projectName: cr.toReviews.projectName
+              },
+              reviewNumber: cr.reviewNumber,
+              points: cr.points,
+              linkToReview: cr.linkToReview,
+              reviewer: reviewers[cr.reviewNumber]
             })
+            )
             delete palautus.data.toReviews // This was only ever included to be spliced into the codeReviews filed above.
           }
         } else {
@@ -304,7 +297,7 @@ module.exports = {
     const webOodiStatus = await new Promise((resolve) => {
       helper.checkWebOodi(req, res, user, resolve) // this does not work.
 
-      setTimeout(function() {
+      setTimeout(() => {
         overkillLogging(req, null)
         resolve('shitaintright') // Yay! everything went to hell.
       }, 5000) // set a high timeout value since you really want to wait x)
@@ -370,7 +363,7 @@ module.exports = {
             ohid: req.body.ohid
           }
         })
-          .then(course => {
+          .then((course) => {
             if (!course) {
               res.status(404).send('course not found')
               return
@@ -380,17 +373,17 @@ module.exports = {
                 userId: req.decoded.id,
                 courseInstanceId: course.id
               }
-            }).then(targetStudent => {
+            }).then((targetStudent) => {
               if (!targetStudent) {
                 res.status(404).send('Student not found')
                 return
               }
-              return targetStudent
+              targetStudent
                 .update({
                   github: req.body.github || targetStudent.github,
                   projectName: req.body.projectname || targetStudent.projectName
                 })
-                .then(updatedStudentInstance => {
+                .then((updatedStudentInstance) => {
                   res.status(200).send(updatedStudentInstance)
                 })
                 .catch((error) => {
@@ -402,7 +395,7 @@ module.exports = {
                 })
             })
           })
-          .catch(error => {
+          .catch((error) => {
             logger.error(error)
             res.status(400).send('\n\n\n\ntuli joku error: ', error)
           })
@@ -427,7 +420,7 @@ module.exports = {
         ohid: req.params.id
       }
     })
-      .then(courseInstance => {
+      .then((courseInstance) => {
         if (!courseInstance) {
           res.status(400).send({
             message: 'course instance not found'
@@ -440,7 +433,7 @@ module.exports = {
             courseInstanceId: courseInstance.id
           }
         })
-          .then(teacher => {
+          .then((teacher) => {
             if (!teacher || !req.authenticated.success) {
               res.status(400).send('You have to be a teacher to update course info')
               return
@@ -450,7 +443,7 @@ module.exports = {
                 name: req.body.name || courseInstance.name,
                 start: req.body.start || courseInstance.start,
                 end: req.body.end || courseInstance.end,
-                active: String(req.body.active) || courseInstance.active, //Without stringifying req.body.active this gets interpreted as a boolean operation. Go javascript.
+                active: String(req.body.active) || courseInstance.active, // Without stringifying req.body.active this gets interpreted as a boolean operation. Go javascript.
                 weekAmount: req.body.weekAmount || courseInstance.weekAmount,
                 weekMaxPoints: req.body.weekMaxPoints || courseInstance.weekMaxPoints,
                 currentWeek: req.body.currentWeek || courseInstance.currentWeek,
@@ -458,17 +451,17 @@ module.exports = {
                 currentCodeReview: req.body.newCr.length === 0 ? '{}' : req.body.newCr
               })
               .then(updatedCourseInstance => res.status(200).send(updatedCourseInstance))
-              .catch(error => {
+              .catch((error) => {
                 res.status(400).send(error)
                 logger.error(error)
               })
           })
-          .catch(error => {
+          .catch((error) => {
             res.status(400).send(error)
             logger.error(error)
           })
       })
-      .catch(error => {
+      .catch((error) => {
         res.status(400).send(error)
         logger.error(error)
       })
@@ -487,7 +480,7 @@ module.exports = {
       }
     })
       .then(instance => res.status(200).send(instance))
-      .catch(error => {
+      .catch((error) => {
         logger.error(error)
         res.status(400).send(error)
       })
@@ -501,7 +494,6 @@ module.exports = {
   retrieve(req, res) {
     helper.controller_before_auth_check_action(req, res)
 
-    const errors = []
     CourseInstance.find(
       {
         attributes: {
@@ -513,7 +505,7 @@ module.exports = {
       },
       {}
     )
-      .then(courseInstance => {
+      .then((courseInstance) => {
         if (!courseInstance) {
           return res.status(404).send({
             message: 'Course not Found'
@@ -521,7 +513,7 @@ module.exports = {
         }
         return res.status(200).send(courseInstance)
       })
-      .catch(error => {
+      .catch((error) => {
         logger.error(error)
         res.status(400).send(error)
       })
@@ -538,7 +530,6 @@ module.exports = {
     if (this.remoteAddress === '127.0.0.1') {
       res.send('gtfo')
     } else {
-      const request = require('request')
       const options = {
         method: 'get',
         uri: `${config.kurki_url}/labtool/courses?year=${termAndYear.currentYear}&term=${termAndYear.currentTerm}`,
@@ -548,13 +539,13 @@ module.exports = {
         },
         strictSSL: false
       }
-      request(options, function(err, resp, body) {
+      request(options, (err, resp, body) => {
         const json = JSON.parse(body)
         if (!json.forEach) {
           logger.error(json)
           return
         }
-        json.forEach(instance => {
+        json.forEach((instance) => {
           CourseInstance.findOrCreate({
             attributes: {
               exclude: ['createdAt', 'updatedAt']
@@ -583,45 +574,42 @@ module.exports = {
   getNewer(req, res) {
     helper.controller_before_auth_check_action(req, res)
 
-    const auth = process.env.TOKEN || 'notset' //You have to set TOKEN in .env file in order for this to work
+    const auth = process.env.TOKEN || 'notset' // You have to set TOKEN in .env file in order for this to work
     const termAndYear = helper.CurrentTermAndYear()
     if (auth === 'notset') {
       res.send('Please restart the backend with the correct TOKEN environment variable set')
+    } else if (this.remoteAddress === '127.0.0.1') {
+      res.send('gtfo')
     } else {
-      if (this.remoteAddress === '127.0.0.1') {
-        res.send('gtfo')
-      } else {
-        const request = require('request')
-        const options = {
-          method: 'get',
-          uri: `${config.kurki_url}/labtool/courses?year=${termAndYear.nextYear}&term=${termAndYear.nextTerm}`,
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: process.env.TOKEN
-          },
-          strictSSL: false
-        }
-        request(options, function(err, resp, body) {
-          const json = JSON.parse(body)
-          json.forEach(instance => {
-            CourseInstance.findOrCreate({
-              attributes: {
-                exclude: ['createdAt', 'updatedAt']
-              },
-              where: { ohid: instance.id },
-              defaults: {
-                name: instance.name,
-                start: instance.starts,
-                end: instance.ends,
-                ohid: instance.id
-              }
-            })
-          })
-          if (req.decoded) {
-            res.status(204).send({ hello: 'hello' }) // nodejs crashes if someone just posts here without valid token.
-          }
-        })
+      const options = {
+        method: 'get',
+        uri: `${config.kurki_url}/labtool/courses?year=${termAndYear.nextYear}&term=${termAndYear.nextTerm}`,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: process.env.TOKEN
+        },
+        strictSSL: false
       }
+      request(options, (err, resp, body) => {
+        const json = JSON.parse(body)
+        json.forEach((instance) => {
+          CourseInstance.findOrCreate({
+            attributes: {
+              exclude: ['createdAt', 'updatedAt']
+            },
+            where: { ohid: instance.id },
+            defaults: {
+              name: instance.name,
+              start: instance.starts,
+              end: instance.ends,
+              ohid: instance.id
+            }
+          })
+        })
+        if (req.decoded) {
+          res.status(204).send({ hello: 'hello' }) // nodejs crashes if someone just posts here without valid token.
+        }
+      })
     }
   },
 
@@ -642,9 +630,9 @@ module.exports = {
           return res.status(404).send('User not found')
         }
 
-        let checkRegistrationStatus = new Promise((resolve, reject) => {
+        const checkRegistrationStatus = new Promise((resolve, reject) => {
           helper.checkWebOodi(req, res, currentUser, resolve)
-          setTimeout(function() {
+          setTimeout(() => {
             resolve('failure')
           }, 5000)
         })
@@ -669,28 +657,28 @@ module.exports = {
 
         const names = {}
         const users = await User.findAll()
-        users.forEach(user => {
+        users.forEach((user) => {
           names[user.id] = {
             firsts: user.firsts,
             lastname: user.lastname
           }
         })
 
-        teachers = teachers.map(teacher => {
+        teachers = teachers.map((teacher) => {
           teacher.dataValues.firsts = names[teacher.userId].firsts
           teacher.dataValues.lastname = names[teacher.userId].lastname
           return teacher
         })
 
-        let checklists = await Checklist.findAll({
+        const checklists = await Checklist.findAll({
           where: {
             courseInstanceId: course.id
           }
         })
 
-        course.dataValues['teacherInstances'] = teachers
-        course.dataValues['registrationAtWebOodi'] = registrationAtWebOodi
-        course.dataValues['checklists'] = checklists
+        course.dataValues.teacherInstances = teachers
+        course.dataValues.registrationAtWebOodi = registrationAtWebOodi
+        course.dataValues.checklists = checklists
 
         return res.status(200).send(course)
       } catch (exception) {
@@ -716,25 +704,24 @@ module.exports = {
         if (!user) {
           res.status(400).send('you are not an user in the system')
           return
+        }
+        const hasPermission = await helper.checkHasCommentPermission(user, message.week)
+        if (!hasPermission) {
+          res.status(403).send('you are not allowed to comment here')
+          return
+        }
+        const name = user.firsts.concat(' ').concat(user.lastname)
+        const comment = await Comment.create({
+          weekId: message.week,
+          hidden: message.hidden,
+          comment: message.comment,
+          from: name,
+          notified: false
+        })
+        if (!comment) {
+          res.status(400).send('week not found')
         } else {
-          const hasPermission = await helper.checkHasCommentPermission(user, message.week)
-          if (!hasPermission) {
-            res.status(403).send('you are not allowed to comment here')
-            return
-          }
-          const name = user.firsts.concat(' ').concat(user.lastname)
-          const comment = await Comment.create({
-            weekId: message.week,
-            hidden: message.hidden,
-            comment: message.comment,
-            from: name,
-            notified: false
-          })
-          if (!comment) {
-            res.status(400).send('week not found')
-          } else {
-            res.status(200).send(comment)
-          }
+          res.status(200).send(comment)
         }
       } catch (e) {
         res.status(400).send(e)
@@ -761,7 +748,7 @@ module.exports = {
       }
     })
       .then(comment => res.status(200).send(comment))
-      .catch(error => {
+      .catch((error) => {
         res.status(400).send(error)
         logger.error(error)
       })

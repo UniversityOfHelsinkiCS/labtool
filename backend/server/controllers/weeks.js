@@ -1,6 +1,4 @@
-const Week = require('../models').Week
-const TeacherInstance = require('../models').TeacherInstance
-const StudentInstance = require('../models').StudentInstance
+const { Week, TeacherInstance, StudentInstance } = require('../models')
 const helper = require('../helpers/weeks_controller_helper')
 const logger = require('../utils/logger')
 
@@ -37,10 +35,10 @@ module.exports = {
         if (week) {
           let updatedChecks = {}
           if (req.body.checks) {
-            Object.keys(week.checks).map(key => {
+            Object.keys(week.checks).map((key) => {
               req.body.checks[key] !== undefined ? (updatedChecks[key] = req.body.checks[key]) : (updatedChecks[key] = week.checks[key])
             })
-            Object.keys(req.body.checks).map(key => {
+            Object.keys(req.body.checks).map((key) => {
               updatedChecks[key] = req.body.checks[key]
             })
           } else {
@@ -106,7 +104,7 @@ module.exports = {
         return res.status(200).send(week)
       })
       .catch((error) => {
-        logger.error('retrieve weeks error', {error: error.message})
+        logger.error('retrieve weeks error', { error: error.message })
         res.status(400).send(error)
       })
   }
