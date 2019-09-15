@@ -15,12 +15,11 @@ export default class JsonEdit extends React.Component {
       if (!json) {
         this.setState({ error: null })
       }
-      this.setState({ data: json })
       JSON.parse(json)
-      this.setState({ error: null })
+      this.setState({ data: json, error: null })
     } catch (error) {
       if (error instanceof SyntaxError) {
-        this.setState({ error: `Failed to parse JSON: ${error.message}` })
+        this.setState({ error: `Failed to parse JSON: ${error.message}`, data: json })
       }
     }
   }
