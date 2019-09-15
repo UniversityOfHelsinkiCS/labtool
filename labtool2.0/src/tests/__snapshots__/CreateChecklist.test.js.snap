@@ -80,7 +80,7 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
         className="jsonButtons"
       >
         <JsonEdit
-          data={
+          initialData={
             Object {
               "Koodi": Array [
                 Object {

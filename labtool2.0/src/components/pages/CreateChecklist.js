@@ -391,7 +391,7 @@ export class CreateChecklist extends Component {
             </div>
             {this.state.week !== undefined ? (
               <div className="jsonButtons">
-                <JsonEdit onImport={this.importChecklist} data={this.props.checklist.data} />
+                <JsonEdit onImport={this.importChecklist} initialData={this.props.checklist.data} />
               </div>
             ) : (
               <div />
