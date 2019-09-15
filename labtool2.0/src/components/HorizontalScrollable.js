@@ -27,6 +27,8 @@ export class HorizontalScrollable extends React.Component {
 
   maybeResizeBar() {
     if (this.content && this.scrollbar) {
+      // make scrollable range as wide as table itself, but keep the
+      // scroll bar width as the viewable width of the table
       const oldScrollLeft = this.scrollbar.scrollLeft
       this.scrollbar.style.maxWidth = `${this.content.offsetWidth}px`
       this.scrollbar.children[0].style.width = `${this.content.scrollWidth}px`
@@ -36,6 +38,7 @@ export class HorizontalScrollable extends React.Component {
   }
 
   updateScrollX(e) {
+    // synchronize scroll positions
     const newX = e.target.scrollLeft
     this.maybeResizeBar()
     if (this.content) this.content.scrollLeft = newX
@@ -44,19 +47,29 @@ export class HorizontalScrollable extends React.Component {
 
   updateSticky() {
     if (this.content && this.scrollbar) {
+      // viewport viewable range of Y: [windowTop, windowBottom[
       const windowTop = document.documentElement.scrollTop
       const windowBottom = windowTop + window.innerHeight
+
+      // top and bottom Y coordinates of table
       const contentTop = this.content.offsetTop
       const contentBottom = contentTop + this.content.clientHeight
 
+      // the table is visible on or above the viewport?
       const pastTableTop = windowBottom >= contentTop
+      // the scroll bar is below the viewport?
       const pastTableBottom = windowBottom >= contentBottom
 
+      // we want to display the scroll bar on the screen if
+      //   1. the table is visible on or above the viewport (pastTableTop)
+      //   2. the scroll bar is *not* below the viewport (!pastTableBottom)
       const makeSticky = pastTableTop && !pastTableBottom
       if (makeSticky) {
+        // sticky: fix to bottom of viewport
         this.scrollbar.style.position = 'fixed'
         this.scrollbar.style.bottom = '0px'
       } else {
+        // relative: display where it would be otherwise
         this.scrollbar.style.position = 'relative'
         this.scrollbar.style.bottom = 'none'
       }
