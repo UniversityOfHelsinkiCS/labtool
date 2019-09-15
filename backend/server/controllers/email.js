@@ -2,9 +2,10 @@ const escape = require('escape-html')
 const nodemailer = require('nodemailer')
 const helper = require('../helpers/email_helper')
 const { Comment, Week, StudentInstance, TeacherInstance, User, CourseInstance } = require('../models')
+const logger = require('../utils/logger')
+
 const env = process.env.NODE_ENV || 'development'
 const frontendUrl = process.env.FRONTEND_URL || 'cs.helsinki.labtool.fi'
-const logger = require('../utils/logger')
 
 const SENDER_SETTINGS = {
   from: 'Labtool Robot <noreply@helsinki.fi>',
@@ -222,275 +223,237 @@ const markAsNotified = (useComment, id) => {
   }
 }
 
-module.exports = {
-  send: async (req, res) => {
-    await helper.controller_before_auth_check_action(req, res)
-    try {
-      // Basic validations
-      if (!req.authenticated.success) {
-        res.status(403).send('you have to be authenticated to do this')
-        return
-      }
-      if (!(req.body.role === 'teacher' || req.body.role === 'student')) {
-        res.status(400).send('Missing field "role".')
-        return
-      }
-      if (typeof req.body.weekId !== 'number' && typeof req.body.commentId !== 'number') {
-        res.status(400).send('Missing required field "weekId" or "commentId".')
-        return
-      }
+const reject = async (res, code, message) => {
+  res.status(code).send({
+    message
+  })
+}
 
-      // If commentId has been supplied, use it. Otherwise use weekId.
-      const useComment = req.body.commentId !== undefined
+const trySendEmail = async (emailOptions) => {
+  const options = {
+    from: SENDER_SETTINGS.from,
+    ...emailOptions
+  }
 
-      // Initialize options with just from, build the rest as we go.
-      const options = {
-        from: SENDER_SETTINGS.from
-      }
-
-      // message is an object supplied by a helper function.
-      let message
-      if (useComment) {
-        message = await commentMessage(req.body.role, req.body.commentId)
-        if (message.content) {
-          options.subject = `${message.content.course.name} new message` // Email tile
-
-          // Email body defined as options.html
-          const link = req.body.role === 'teacher' ? `${frontendUrl}/courses/${message.content.course.ohid}` : `${frontendUrl}/browsereviews/${message.content.course.ohid}/${message.studentId}`
-          options.html = `
-            <h1>You've received a message in Labtool.</h1>
-            <p><a href="${link}">${link}</a></p>
-            <p>course: ${message.content.course.name}</p>
-            <h2>Message content</h2>
-            <p>${message.content.text}</p>
-          `
-        }
-      } else {
-        // commentId was not supplied, so use weekId instead.
-        message = await weekMessage(req.body.role, req.body.weekId)
-        if (message.content) {
-          options.subject = `${message.content.course.name} new message` // Email title
-
-          // Email body defined as options.html
-          const link = `${frontendUrl}/courses/${message.content.course.ohid}`
-          options.html = `
-            <h1>Your submission has been reviewed</h1>
-            <p><a href="${link}">${link}</a></p>
-            <p>course: ${message.content.course.name}</p>
-            <p>points awarded: ${message.content.points}</p>
-            <h2>Feedback</h2>
-            <p>${message.content.text}</p>
-          `
-        }
-      }
-
-      // If the helper function failed, report it here
-      if (!message.success) {
-        res.status(message.status).send(message.error)
-        return
-      }
-
-      if (req.body.role === 'teacher') {
-        // Teacher validation
-        // Since a comment cannot be tracked down to its author, we just check that the request amker is a teacher.
-        const teacherInstance = await TeacherInstance.findOne({
-          attributes: ['id'],
-          where: {
-            userId: req.decoded.id,
-            courseInstanceId: message.courseId
-          }
-        })
-        if (!teacherInstance) {
-          res.status(403).send('You must be a teacher of the course to perform this action.')
-          return
-        }
-      } else {
-        // Student validation
-        if (message.userId !== req.decoded.id) {
-          res.status(403).send('You cannot send an email notification about someone else\'s comment.')
-          return
-        }
-      }
-
-      options.to = message.address // Email recipient
-
-      if (env !== 'production') {
-        // Cannot send emails from localhost. The smtp server would reject requests.
-        markAsNotified(useComment, req.body.commentId || req.body.weekId)
-
-        res.status(200).send({
-          message: 'Email sending simulated',
-          data: req.body,
-          options
-        })
-        return
-      }
-
-      // In production, send email
-      const transporter = nodemailer.createTransport(SENDER_SETTINGS)
-      const mail = await transporter.sendMail(options)
-
-      // mail.rejected is an array that holds all rejected emails.
-      if (mail.rejected.length > 0) {
-        res.status(403).send('Email rejected by SMTP server.')
-        return
-      }
-
-      markAsNotified(useComment, req.body.commentId || req.body.weekId)
-
-      res.status(200).send({
-        message: 'Email sent successfully',
-        data: req.body
-      })
-    } catch (e) {
-      res.status(500).send('Unexpected error')
+  if (env !== 'production') {
+    console.log('simulated email sending', options)
+    return {
+      success: true,
+      simulated: true
     }
-  },
-  sendMass: async (req, res) => {
-    await helper.controller_before_auth_check_action(req, res)
-    try {
-      // Basic validations
-      if (!req.authenticated.success) {
-        res.status(403).send({
-          message: 'you have to be authenticated to do this'
-        })
-        return
-      }
-      if (!(req.body.students)) {
-        res.status(400).send({
-          message: 'Missing field "students".'
-        })
-        return
-      }
-      if (!(req.body.content) || req.body.content.length > 4096) {
-        res.status(400).send({
-          message: 'Missing field "content".'
-        })
-        return
-      }
+  }
 
-      const courseInstance = await CourseInstance.findOne({
-        where: {
-          ohid: req.params.id
-        }
-      })
-      if (!courseInstance) {
-        res.status(400).send({
-          message: 'course instance not found'
-        })
-        return
-      }
+  // In production, send email
+  const transporter = nodemailer.createTransport(SENDER_SETTINGS)
+  const mail = await transporter.sendMail(options)
 
-      const teacher = await TeacherInstance.findOne({
+  return {
+    success: mail.rejected.length === 0,
+    simulated: false
+  }
+}
+
+const send = async (req, res) => {
+  await helper.controller_before_auth_check_action(req, res)
+  try {
+    // Basic validations
+    if (!req.authenticated.success) {
+      return reject(res, 403, 'you have to be authenticated to do this')
+    }
+    if (!(req.body.role === 'teacher' || req.body.role === 'student')) {
+      return reject(res, 400, 'Missing field "role".')
+    }
+    if (typeof req.body.weekId !== 'number' && typeof req.body.commentId !== 'number') {
+      return reject(res, 400, 'Missing required field "weekId" or "commentId".')
+    }
+
+    // If commentId has been supplied, use it. Otherwise use weekId.
+    const useComment = req.body.commentId !== undefined
+
+    let subject
+    let html
+
+    // message is an object supplied by a helper function.
+    let message
+    if (useComment) {
+      message = await commentMessage(req.body.role, req.body.commentId)
+      if (message.content) {
+        subject = `${message.content.course.name} new message` // Email tile
+
+        // Email body defined as html
+        const link = req.body.role === 'teacher'
+          ? `${frontendUrl}/courses/${message.content.course.ohid}`
+          : `${frontendUrl}/browsereviews/${message.content.course.ohid}/${message.studentId}`
+        html = `
+          <h1>You've received a message in Labtool.</h1>
+          <p><a href="${link}">${link}</a></p>
+          <p>course: ${message.content.course.name}</p>
+          <h2>Message content</h2>
+          <p>${message.content.text}</p>
+        `
+      }
+    } else {
+      // commentId was not supplied, so use weekId instead.
+      message = await weekMessage(req.body.role, req.body.weekId)
+      if (message.content) {
+        subject = `${message.content.course.name} new message` // Email title
+
+        // Email body defined as html
+        const link = `${frontendUrl}/courses/${message.content.course.ohid}`
+        html = `
+          <h1>Your submission has been reviewed</h1>
+          <p><a href="${link}">${link}</a></p>
+          <p>course: ${message.content.course.name}</p>
+          <p>points awarded: ${message.content.points}</p>
+          <h2>Feedback</h2>
+          <p>${message.content.text}</p>
+        `
+      }
+    }
+
+    // If the helper function failed, report it here
+    if (!message.success) {
+      res.status(message.status).send(message.error)
+      return
+    }
+
+    if (req.body.role === 'teacher') {
+      // Teacher validation
+      // Since a comment cannot be tracked down to its author, we just check that the request amker is a teacher.
+      const teacherInstance = await TeacherInstance.findOne({
+        attributes: ['id'],
         where: {
           userId: req.decoded.id,
+          courseInstanceId: message.courseId
+        }
+      })
+      if (!teacherInstance) {
+        return reject(res, 403, 'You must be a teacher of the course to perform this action.')
+      }
+    } else if (req.body.role === 'student') {
+      // Student validation
+      if (message.userId !== req.decoded.id) {
+        return reject(res, 403, 'You cannot send an email notification about someone else\'s comment.')
+      }
+    }
+
+    const { success, simulated } = await trySendEmail({
+      subject,
+      html,
+      to: message.address
+    })
+
+    if (success) {
+      markAsNotified(useComment, req.body.commentId || req.body.weekId)
+      res.status(200).send({
+        message: simulated ? 'Email sending simulated' : 'Email sent successfully',
+        data: req.body
+      })
+    } else {
+      return reject(res, 400, 'Email rejected by SMTP server.')
+    }
+  } catch (e) {
+    logger.error(e)
+    return reject(res, 500, 'Unexpected error')
+  }
+}
+
+const sendMass = async (req, res) => {
+  await helper.controller_before_auth_check_action(req, res)
+  try {
+    // Basic validations
+    if (!req.authenticated.success) {
+      return reject(res, 403, 'you have to be authenticated to do this')
+    }
+    if (!(req.body.students)) {
+      return reject(res, 400, 'Missing field "students".')
+    }
+    if (!(req.body.content) || req.body.content.length > 4096) {
+      return reject(res, 400, 'Missing field "content".')
+    }
+
+    const courseInstance = await CourseInstance.findOne({
+      where: {
+        ohid: req.params.id
+      }
+    })
+    if (!courseInstance) {
+      return reject(res, 404, 'course instance not found')
+    }
+
+    const teacher = await TeacherInstance.findOne({
+      attributes: ['id'],
+      where: {
+        userId: req.decoded.id,
+        courseInstanceId: courseInstance.id
+      }
+    })
+    if (!teacher || !req.authenticated.success) {
+      return reject(res, 403, 'You have to be a teacher of the course to send mass emails')
+    }
+
+    const inputStudents = req.body.students
+    const studentEmails = (await Promise.all(inputStudents.map(async ({ id }) => {
+      const studentInstance = await StudentInstance.findOne({
+        attributes: ['userId'],
+        where: {
+          id,
           courseInstanceId: courseInstance.id
         }
       })
-      if (!teacher || !req.authenticated.success) {
-        res.status(400).send({
-          message: 'You have to be a teacher to send mass emails'
-        })
-        return
+      if (!studentInstance) {
+        return null
       }
 
-      const inputStudents = req.body.students
-      const students = []
-      // apparently for...of is not fine -- lint
-      /* " iterators/generators require regenerator-runtime,
-       which is too heavyweight for this guide to allow them.
-       Separately, loops should be avoided in favor of array iterations
-       no-restricted-syntax" */
-
-      /* eslint-disable no-await-in-loop */
-      // not worth refactoring into two separate loops
-
-      /* eslint no-plusplus: ["error", { "allowForLoopAfterthoughts": true }] */
-      // why would you disallow these??
-
-      for (let i = 0; i < inputStudents.length; ++i) {
-        const { id } = inputStudents[i]
-        const studentInstance = await StudentInstance.findOne({
-          where: {
-            id,
-            courseInstanceId: courseInstance.id
-          }
-        })
-        if (!studentInstance) {
-          res.status(404).send({
-            message: 'Invalid student ID given'
-          })
-          return
+      // ok, get user
+      const user = await User.findOne({
+        where: {
+          id: studentInstance.userId
         }
-        // ok, get user
-        const user = await User.findOne({
-          where: {
-            id: studentInstance.userId
-          }
-        })
-        if (user && user.email) {
-          students.push(user.email)
-        }
-      }
-      /* eslint-enable no-await-in-loop */
-
-      if (!students.length) {
-        res.status(400).send({
-          message: 'No email addresses to send to (students missing email addresses?)'
-        })
-        return
+      })
+      if (!user) {
+        return null
       }
 
-      // Initialize options with just from, build the rest as we go.
-      const options = {
-        from: SENDER_SETTINGS.from
-      }
+      return user.email || ''
+    }))).filter(email => email)
 
-      // prepare email here
-      const link = `${frontendUrl}/courses/${req.params.id}`
-      options.subject = `${courseInstance.name} new message from instructor`
-      options.html = `
-        <h1>You've received a message in Labtool.</h1>
-        <p><a href="${link}">${link}</a></p>
-        <p>course: ${courseInstance.name}</p>
-        <h2>Message content</h2>
-        <p>${escape(req.body.content)}</p>
-      `
+    if (studentEmails.length === 0) {
+      return reject(res, 404, 'No student email addresses found')
+    }
 
-      // use BCC to hide recipient emails
-      options.bcc = students
+    // prepare email here
+    const link = `${frontendUrl}/courses/${req.params.id}`
+    const subject = `${courseInstance.name} new message from instructor`
+    const html = `
+      <h1>You've received a message in Labtool.</h1>
+      <p><a href="${link}">${link}</a></p>
+      <p>course: ${courseInstance.name}</p>
+      <h2>Message content</h2>
+      <p>${escape(req.body.content)}</p>
+    `
 
-      if (env !== 'production') {
-        console.log(options)
-        res.status(200).send({
-          message: 'Email sending simulated',
-          data: req.body,
-          options
-        })
-        return
-      }
+    const { success, simulated } = await trySendEmail({
+      subject,
+      html,
+      bcc: studentEmails
+    })
 
-      // In production, send email
-      const transporter = nodemailer.createTransport(SENDER_SETTINGS)
-      const mail = await transporter.sendMail(options)
-
-      // mail.rejected is an array that holds all rejected emails.
-      if (mail.rejected.length > 0) {
-        res.status(403).send({
-          message: 'Email rejected by SMTP server.'
-        })
-        return
-      }
-
+    if (success) {
       res.status(200).send({
-        message: 'Email sent successfully',
+        message: simulated ? 'Email sending simulated' : 'Email sent successfully',
         data: req.body
       })
-    } catch (e) {
-      logger.error(e)
-      res.status(500).send({
-        message: 'Unexpected error'
-      })
+    } else {
+      return reject(res, 400, 'Email rejected by SMTP server.')
     }
+  } catch (e) {
+    logger.error(e)
+    return reject(res, 500, 'Unexpected error')
   }
+}
+
+module.exports = {
+  send,
+  sendMass
 }
