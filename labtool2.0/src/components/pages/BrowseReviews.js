@@ -57,9 +57,17 @@ export class BrowseReviews extends Component {
     }
   }
 
+  getMaximumIndexForStudent = student => {
+    return this.props.selectedInstance.weekAmount + student.codeReviews.length + 1
+  }
+
+  hasAllTabsOpen = student => {
+    return Object.values(this.state.openWeeks).filter(x => x).length == this.getMaximumIndexForStudent(student)
+  }
+
   handleClickShowAll = student => () => {
     const openWeeks = {}
-    const maximumIndex = this.props.selectedInstance.weekAmount + student.codeReviews.length + 1
+    const maximumIndex = this.getMaximumIndexForStudent(student)
     for (let i = 0; i < maximumIndex; i++) {
       openWeeks[i] = true
     }
@@ -311,15 +319,19 @@ export class BrowseReviews extends Component {
         // studentInstance is id of student. Type: String
         // Tämä pitää myös korjata.
         if (student.id === Number(studentInstance)) {
+          const allTabsOpen = this.hasAllTabsOpen(student)
           headers.push(this.renderStudentCard(student))
           headers.push(
             <span>
-              <Button type="button" onClick={this.handleClickShowAll(student)} size="small">
-                Open all reviews
-              </Button>
-              <Button type="button" onClick={this.handleClickHideAll} size="small">
-                Close all reviews
-              </Button>
+              {allTabsOpen ? (
+                <Button type="button" onClick={this.handleClickHideAll} size="small">
+                  Hide all reviews
+                </Button>
+              ) : (
+                <Button type="button" onClick={this.handleClickShowAll(student)} size="small">
+                  Show all reviews
+                </Button>
+              )}
               <br />
             </span>
           )
