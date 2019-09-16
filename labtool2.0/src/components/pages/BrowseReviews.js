@@ -20,7 +20,7 @@ export class BrowseReviews extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      activeIndex: 0,
+      openWeeks: { },
       initialLoading: props.initialLoading !== undefined ? this.props.initialLoading : true
     }
   }
@@ -32,8 +32,8 @@ export class BrowseReviews extends Component {
   }
 
   componentDidMount() {
-    if (!this.props.loading.loading && this.state.activeIndex !== this.props.selectedInstance.currentWeek - 1) {
-      this.setState({ activeIndex: this.props.selectedInstance.currentWeek - 1 })
+    if (!this.props.loading.loading && !this.state.openWeeks[this.props.selectedInstance.currentWeek - 1]) {
+      this.setState({ openWeeks: { [this.props.selectedInstance.currentWeek - 1]: true } })
     }
   }
 
@@ -45,10 +45,29 @@ export class BrowseReviews extends Component {
 
   handleClick = (e, titleProps) => {
     const { index } = titleProps
-    const { activeIndex } = this.state
-    const newIndex = activeIndex === index ? -1 : index
+    const { openWeeks } = this.state
+    const numberOfOpen = Object.values(openWeeks).filter(x => x).length
 
-    this.setState({ activeIndex: newIndex })
+    if (numberOfOpen === 0) {
+      this.setState({ openWeeks: { [index]: true } })
+    } else if (numberOfOpen === 1) {
+      this.setState({ openWeeks: { [index]: !openWeeks[index] } })
+    } else {
+      this.setState({ openWeeks: { ...openWeeks, [index]: !openWeeks[index] } })
+    }
+  }
+
+  handleClickShowAll = student => () => {
+    const openWeeks = { }
+    const maximumIndex = this.props.selectedInstance.weekAmount + student.codeReviews.length + 1
+    for (let i = 0; i < maximumIndex; i++) {
+      openWeeks[i] = true
+    }
+    this.setState({ openWeeks })
+  }
+
+  handleClickHideAll = student => () => {
+    this.setState({ openWeeks: { } })
   }
 
   handleSubmit = async e => {
@@ -96,252 +115,232 @@ export class BrowseReviews extends Component {
     })
   }
 
+  renderStudentCard = student => (
+    <Card key={student.id} fluid color="yellow">
+      <Card.Content>
+        <h2>
+          {student.User.firsts} {student.User.lastname} ({student.User.studentNumber})
+        </h2>
+        <h3>
+          <a href={`mailto:${student.User.email}`}>{student.User.email}</a>
+        </h3>
+        <h3>
+          {student.projectName}{' '}
+          <a href={student.github} target="_blank" rel="noopener noreferrer">
+            {student.github}
+          </a>
+        </h3>
+      </Card.Content>
+    </Card>
+  )
+
+  isTeacher = () => {
+    return this.props.courseData.role === 'teacher'
+  }
+
+  renderComment = (isFinalWeek) => comment => (
+    comment.hidden ? (
+      <Comment disabled>
+        <Comment.Content>
+          <Comment.Metadata>
+            <div>Hidden</div>
+          </Comment.Metadata>
+          <Comment.Author>{comment.from}</Comment.Author>
+          <Comment.Text>
+            {' '}
+            <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
+          </Comment.Text>
+          <Comment.Metadata>
+            <div>{trimDate(comment.createdAt)}</div>
+          </Comment.Metadata>
+          <div> </div>
+        </Comment.Content>
+      </Comment>
+    ) : (
+      <Comment key={comment.id}>
+        <Comment.Author>{comment.from}</Comment.Author>
+        <Comment.Text>
+          {' '}
+          <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
+        </Comment.Text>
+        <Comment.Metadata>
+          <div>{trimDate(comment.createdAt)}</div>
+        </Comment.Metadata>
+        {!isFinalWeek ? (
+          <div>
+            <div> </div>
+            {/* This hack compares user's name to comment.from and hides the email notification button when they don't match. */}
+            {comment.from.includes(this.props.user.user.firsts) && comment.from.includes(this.props.user.user.lastname) ? (
+              comment.notified ? (
+                <Label>
+                  Notified <Icon name="check" color="green" />
+                </Label>
+              ) : (
+                <Button type="button" onClick={this.sendCommentEmail(comment.id)} size="small">
+                  Send email notification
+                </Button>
+              )
+            ) : (
+              <div />
+            )}
+          </div>
+        ) : (
+          <div />
+        )
+        }
+      </Comment>
+    )
+  )
+
+  renderWeek = (i, week, studentInstance, isFinalWeek) => {
+    const { openWeeks } = this.state
+    const reviewIndex = isFinalWeek ? (this.props.selectedInstance.weekAmount + 1) : (i + 1)
+    
+    if (week) {
+      return (
+        <Accordion fluid styled>
+          <Accordion.Title active={openWeeks[i]} index={i} onClick={this.handleClick}>
+            <Icon name="dropdown" /> {isFinalWeek ? 'Final Review' : `Week ${i + 1}`}, points {week.points}
+          </Accordion.Title>
+          <Accordion.Content active={openWeeks[i]}>
+            <Card fluid color="yellow">
+              <Card.Content>
+                <h4> Points {week.points} </h4>
+                <h4> Feedback </h4>
+                <ReactMarkdown>{week.feedback}</ReactMarkdown>{' '}
+                {(this.isTeacher() && week.instructorNotes) ? (
+                  <div>
+                    <br />
+                    <h4>Review notes for instructors </h4>
+                    <ReactMarkdown>{week.instructorNotes}</ReactMarkdown>{' '}
+                  </div>
+                ) : (
+                  <span />
+                )}
+              </Card.Content>
+              {!isFinalWeek ? (
+                <Card.Content style={{ paddingBottom: '5px' }}>
+                  {week.notified ? (
+                    <Label>
+                      Notified <Icon name="check" color="green" />
+                    </Label>
+                  ) : (
+                    <Button type="button" onClick={this.sendWeekEmail(week.id)} size="small">
+                      Send email notification
+                    </Button>
+                  )}
+                </Card.Content>
+              ) : (
+                <span />
+              )}
+            </Card>
+            <h4> Comments </h4>
+            <Comment.Group>
+              {week ? (
+                this.sortCommentsByDate(week.comments).map(this.renderComment(isFinalWeek))
+              ) : (
+                <h4> No comments </h4>
+              )}
+            </Comment.Group>
+            <Form reply onSubmit={this.handleSubmit} name={week.id} id={week.id}>
+              <FormMarkdownTextArea name="content" placeholder="Your comment..." defaultValue="" />
+              <Form.Checkbox label="Add comment for instructors only" name="hidden" />
+              <Button content="Add Reply" labelPosition="left" icon="edit" primary />
+            </Form>
+            <h3>Review</h3>
+            <Link to={`/labtool/reviewstudent/${this.props.selectedInstance.ohid}/${studentInstance}/${reviewIndex}`}>
+              <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'edit', color: 'black', size: 'large' }} />} content={isFinalWeek ? 'Edit final review' : 'Edit review'} />
+            </Link>
+          </Accordion.Content>
+        </Accordion>
+      )
+    } else {
+      return (
+        <Accordion fluid styled>
+          <Accordion.Title active={openWeeks[i]} index={i} onClick={this.handleClick}>
+            <Icon name="dropdown" /> {isFinalWeek ? 'Final Review' : `Week ${i + 1}`}{' '}
+          </Accordion.Title>
+          <Accordion.Content active={openWeeks[i]}>
+            <h4> Not Graded </h4>
+            <h4> No comments </h4>
+            <Link to={`/labtool/reviewstudent/${this.props.selectedInstance.ohid}/${studentInstance}/${reviewIndex}`}>
+              <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'edit', color: 'black', size: 'large' }} />} content={isFinalWeek ? 'Give Final Review' : 'Review week'} />
+            </Link>
+          </Accordion.Content>
+        </Accordion>
+      )
+    }
+  }
+
+  renderCodeReview = (i, cr, studentInstance) => {
+    const { openWeeks } = this.state
+
+    return (
+      <Accordion fluid styled>
+        {' '}
+        <Accordion.Title active={openWeeks[i]} index={i} onClick={this.handleClick}>
+          <Icon name="dropdown" /> Code Review {cr.reviewNumber} {cr.points !== null ? ', points ' + cr.points : ''}
+        </Accordion.Title>
+        <Accordion.Content active={openWeeks[i]}>
+          <p>
+            <strong>Project to review:</strong> {this.props.courseData.data.find(data => data.id === cr.toReview).projectName} <br />
+            <strong>GitHub:</strong>{' '}
+            <a href={this.props.courseData.data.find(data => data.id === cr.toReview).github} target="_blank" rel="noopener noreferrer">
+              {this.props.courseData.data.find(data => data.id === cr.toReview).github}
+            </a>
+          </p>
+          <strong>Code review:</strong> {cr.linkToReview ? <a href={cr.linkToReview} target="_blank" rel="noopener noreferrer">{cr.linkToReview}</a> : 'No review linked yet'}
+          {cr.points !== null ? <h4>{cr.points} points</h4> : <h4>Not graded yet</h4>}
+          <Form onSubmit={this.gradeCodeReview(cr.reviewNumber, studentInstance)}>
+            <label>Points </label>
+            <Input name="points" defaultValue={cr.points ? cr.points : ''} type="number" step="0.01" style={{ width: '100px' }} />
+            <Input type="submit" value="Grade" />
+          </Form>
+        </Accordion.Content>
+      </Accordion>
+    )
+  }
+
   render() {
     if (this.state.initialLoading) {
       return <Loader active />
     }
+
     const createHeaders = (studhead, studentInstance) => {
       let headers = []
       studhead.data.map(student => {
         // studentInstance is id of student. Type: String
         // Tämä pitää myös korjata.
         if (student.id === Number(studentInstance)) {
+          headers.push(this.renderStudentCard(student))
           headers.push(
-            <Card key={student.id} fluid color="yellow">
-              <Card.Content>
-                <h2>
-                  {student.User.firsts} {student.User.lastname} {student.User.studentNumber}
-                </h2>
-                <h3>
-                  <a href={`mailto:${student.User.email}`}>{student.User.email}</a>
-                </h3>
-                <h3>
-                  {student.projectName}{' '}
-                  <a href={student.github} target="_blank" rel="noopener noreferrer">
-                    {student.github}
-                  </a>
-                </h3>
-              </Card.Content>
-            </Card>
+            <span>
+              <Button type="button" onClick={this.handleClickShowAll(student)} size="small">
+                Open all reviews
+              </Button>
+              <Button type="button" onClick={this.handleClickHideAll(student)} size="small">
+                Close all reviews
+              </Button>
+              <br />
+            </span>
           )
           let i = 0
           let ii = 0
           for (; i < this.props.selectedInstance.weekAmount; i++) {
             const weeks = student.weeks.find(week => week.weekNumber === i + 1)
-            if (weeks) {
-              headers.push(
-                <Accordion fluid styled>
-                  <Accordion.Title active={activeIndex === i} index={i} onClick={this.handleClick}>
-                    <Icon name="dropdown" /> Week {i + 1}, points {weeks.points}
-                  </Accordion.Title>
-                  <Accordion.Content active={activeIndex === i}>
-                    <Card fluid color="yellow">
-                      <Card.Content>
-                        <h4> Points {weeks.points} </h4> <h4>Feedback </h4>
-                        <ReactMarkdown>{weeks.feedback}</ReactMarkdown>{' '}
-                      </Card.Content>
-                      <Card.Content style={{ paddingBottom: '5px' }}>
-                        {weeks.notified ? (
-                          <Label>
-                            Notified <Icon name="check" color="green" />
-                          </Label>
-                        ) : (
-                          <Button type="button" onClick={this.sendWeekEmail(weeks.id)} size="small">
-                            Send email notification
-                          </Button>
-                        )}
-                      </Card.Content>
-                    </Card>
-                    <h4> Comments </h4>
-                    <Comment.Group>
-                      {weeks ? (
-                        this.sortCommentsByDate(weeks.comments).map(
-                          comment =>
-                            comment.hidden ? (
-                              <Comment disabled>
-                                <Comment.Content>
-                                  <Comment.Metadata>
-                                    <div>Hidden</div>
-                                  </Comment.Metadata>
-                                  <Comment.Author>{comment.from}</Comment.Author>
-                                  <Comment.Text>
-                                    {' '}
-                                    <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
-                                  </Comment.Text>
-                                  <Comment.Metadata>
-                                    <div>{trimDate(comment.createdAt)}</div>
-                                  </Comment.Metadata>
-                                  <div> </div>
-                                </Comment.Content>
-                              </Comment>
-                            ) : (
-                              <Comment key={comment.id}>
-                                <Comment.Author>{comment.from}</Comment.Author>
-                                <Comment.Text>
-                                  {' '}
-                                  <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
-                                </Comment.Text>
-                                <Comment.Metadata>
-                                  <div>{trimDate(comment.createdAt)}</div>
-                                </Comment.Metadata>
-                                <div> </div>
-                                {/* This hack compares user's name to comment.from and hides the email notification button when they don't match. */}
-                                {comment.from.includes(this.props.user.user.lastname) ? (
-                                  comment.notified ? (
-                                    <Label>
-                                      Notified <Icon name="check" color="green" />
-                                    </Label>
-                                  ) : (
-                                    <Button type="button" onClick={this.sendCommentEmail(comment.id)} size="small">
-                                      Send email notification
-                                    </Button>
-                                  )
-                                ) : (
-                                  <div />
-                                )}
-                              </Comment>
-                            )
-                        )
-                      ) : (
-                        <h4> No comments </h4>
-                      )}
-                    </Comment.Group>
-                    <Form reply onSubmit={this.handleSubmit} name={weeks.id} id={weeks.id}>
-                      <FormMarkdownTextArea name="content" placeholder="Your comment..." defaultValue="" />
-                      <Form.Checkbox label="Add comment for instructors only" name="hidden" />
-                      <Button content="Add Reply" labelPosition="left" icon="edit" primary />
-                    </Form>
-                    <h3>Review</h3>
-                    <Link to={`/labtool/reviewstudent/${this.props.selectedInstance.ohid}/${studentInstance}/${i + 1}`}>
-                      <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'edit', color: 'black', size: 'large' }} />} content="Edit review" />
-                    </Link>
-                  </Accordion.Content>
-                </Accordion>
-              )
-            } else {
-              headers.push(
-                <Accordion fluid styled>
-                  <Accordion.Title active={activeIndex === i} index={i} onClick={this.handleClick}>
-                    <Icon name="dropdown" /> Week {i + 1}{' '}
-                  </Accordion.Title>
-                  <Accordion.Content active={activeIndex === i}>
-                    <h4> Not Graded </h4>
-                    <h4> No comments </h4>
-                    <Link to={`/labtool/reviewstudent/${this.props.selectedInstance.ohid}/${studentInstance}/${i + 1}`}>
-                      <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'edit', color: 'black', size: 'large' }} />} content="Review week" />
-                    </Link>
-                  </Accordion.Content>
-                </Accordion>
-              )
-            }
+            headers.push(this.renderWeek(i, weeks, studentInstance, false))
           }
           student.codeReviews
             .sort((a, b) => {
               return a.reviewNumber - b.reviewNumber
             })
             .forEach(cr => {
-              headers.push(
-                <Accordion fluid styled>
-                  {' '}
-                  <Accordion.Title active={activeIndex === i + ii + 1} index={i + ii + 1} onClick={this.handleClick}>
-                    <Icon name="dropdown" /> Code Review {cr.reviewNumber} {cr.points !== null ? ', points ' + cr.points : ''}
-                  </Accordion.Title>
-                  <Accordion.Content active={activeIndex === i + ii + 1}>
-                    <p>
-                      <strong>Project to review:</strong> {this.props.courseData.data.find(data => data.id === cr.toReview).projectName} <br />
-                      <strong>GitHub:</strong>{' '}
-                      <a href={this.props.courseData.data.find(data => data.id === cr.toReview).github} target="_blank" rel="noopener noreferrer">
-                        {this.props.courseData.data.find(data => data.id === cr.toReview).github}
-                      </a>
-                    </p>
-                    <strong>Code review:</strong> {cr.linkToReview ? <a href={cr.linkToReview} target="_blank" rel="noopener noreferrer">{cr.linkToReview}</a> : 'No review linked yet'}
-                    {cr.points !== null ? <h4>{cr.points} points</h4> : <h4>Not graded yet</h4>}
-                    <Form onSubmit={this.gradeCodeReview(cr.reviewNumber, studentInstance)}>
-                      <label>Points </label>
-                      <Input name="points" defaultValue={cr.points ? cr.points : ''} type="number" step="0.01" style={{ width: '100px' }} />
-                      <Input type="submit" value="Grade" />
-                    </Form>
-                  </Accordion.Content>
-                </Accordion>
-              )
+              headers.push(this.renderCodeReview(i + ii + 1, cr, studentInstance))
               ii++
             })
           if (this.props.selectedInstance.finalReview) {
             const finalWeek = student.weeks.find(week => week.weekNumber === this.props.selectedInstance.weekAmount + 1)
-            if (finalWeek) {
-              headers.push(
-                <Accordion fluid styled>
-                  <Accordion.Title active={activeIndex === i + ii} index={i + ii} onClick={this.handleClick}>
-                    <Icon name="dropdown" /> Final Review, points {finalWeek.points}
-                  </Accordion.Title>
-                  <Accordion.Content active={activeIndex === i + ii}>
-                    <Card fluid color="yellow">
-                      <Card.Content>
-                        <h4> Points {finalWeek.points} </h4>
-                        <h4> Feedback </h4>
-                        <ReactMarkdown>{finalWeek.feedback}</ReactMarkdown>{' '}
-                      </Card.Content>
-                    </Card>
-                    <h4> Comments </h4>
-                    <Comment.Group>
-                      {finalWeek ? (
-                        finalWeek.comments.map(
-                          comment =>
-                            comment.hidden ? (
-                              <Comment disabled>
-                                <Comment.Content>
-                                  <Comment.Metadata>
-                                    <div>Hidden</div>
-                                  </Comment.Metadata>
-                                  <Comment.Author>{comment.from}</Comment.Author>
-                                  <Comment.Text>
-                                    {' '}
-                                    <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
-                                  </Comment.Text>
-                                </Comment.Content>
-                              </Comment>
-                            ) : (
-                              <Comment>
-                                <Comment.Author>{comment.from}</Comment.Author>
-                                <Comment.Text>
-                                  {' '}
-                                  <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
-                                </Comment.Text>
-                              </Comment>
-                            )
-                        )
-                      ) : (
-                        <h4> No comments </h4>
-                      )}
-                    </Comment.Group>
-                    <Form reply onSubmit={this.handleSubmit} name={finalWeek.id} id={finalWeek.id}>
-                      <FormMarkdownTextArea name="content" placeholder="Your comment..." defaultValue="" />
-                      <Form.Checkbox label="Add comment for instructors only" name="hidden" />
-                      <Button content="Add Reply" labelPosition="left" icon="edit" primary />
-                    </Form>
-                    <h3>Review</h3>
-                    <Link to={`/labtool/reviewstudent/${this.props.selectedInstance.ohid}/${studentInstance}/${i + 1}`}>
-                      <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'edit', color: 'black', size: 'large' }} />} content="Edit final review" />
-                    </Link>
-                  </Accordion.Content>
-                </Accordion>
-              )
-            } else {
-              headers.push(
-                <Accordion fluid styled>
-                  <Accordion.Title active={activeIndex === i} index={i} onClick={this.handleClick}>
-                    <Icon name="dropdown" /> Final Review{' '}
-                  </Accordion.Title>
-                  <Accordion.Content active={activeIndex === i}>
-                    <h4> Not Graded </h4>
-                    <h4> No comments </h4>
-                    <Link to={`/labtool/reviewstudent/${this.props.selectedInstance.ohid}/${studentInstance}/${i + 1}`}>
-                      <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'edit', color: 'black', size: 'large' }} />} content="Give Final Review" />
-                    </Link>
-                  </Accordion.Content>
-                </Accordion>
-              )
-            }
+            headers.push(this.renderWeek(i + ii, finalWeek, studentInstance, true))
           }
         }
         return student
@@ -349,12 +348,10 @@ export class BrowseReviews extends Component {
       return headers.map((header, index) => React.cloneElement(header, { key: index }))
     }
 
-    const { activeIndex } = this.state
-
     return (
       <div className="BrowseReviews" style={{ overflowX: 'auto' }}>
         <Loader active={this.props.loading.loading} />
-        {this.props.courseData.role === 'teacher' ? (
+        {this.isTeacher() ? (
           <div>
             <BackButton preset="coursePage" />
             <Link to={`/labtool/courses/${this.props.selectedInstance.ohid}`} style={{ textAlign: 'center' }}>

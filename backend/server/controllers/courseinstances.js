@@ -56,13 +56,8 @@ module.exports = {
       data: undefined
     }
     const user = req.decoded.id
-    const teacher = await TeacherInstance.findAll({
-      where: {
-        userId: user,
-        courseInstanceId: courseInst
-      }
-    })
-    if (teacher[0] === undefined) {
+    const isTeacher = await helper.getTeacherId(user, courseInst)
+    if (!isTeacher) {
       const student = await StudentInstance.findOne({
         attributes: {
           exclude: ['createdAt', 'updatedAt']
@@ -75,7 +70,7 @@ module.exports = {
           {
             model: Week,
             attributes: {
-              exclude: ['updatedAt']
+              exclude: ['updatedAt', 'instructorNotes']
             },
             as: 'weeks',
             include: [

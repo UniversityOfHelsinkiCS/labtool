@@ -1,4 +1,4 @@
-const { Week, TeacherInstance, StudentInstance } = require('../models')
+const { Week, StudentInstance } = require('../models')
 const helper = require('../helpers/weeks_controller_helper')
 const logger = require('../utils/logger')
 
@@ -14,14 +14,8 @@ module.exports = {
             id: req.body.studentInstanceId
           }
         })
-        const teacherInstanceCount = await TeacherInstance.count({
-          where: {
-            userId: req.decoded.id,
-            courseInstanceId: studentInstance.courseInstanceId
-          }
-        })
-        // If there is no TeacherInstance, reject.
-        if (teacherInstanceCount === 0) {
+        const isTeacher = await helper.getTeacherId(req.decoded.id, studentInstance.courseInstanceId)
+        if (!isTeacher) {
           res.status(400).send('You must be a teacher to give points.')
           return
         }
@@ -47,6 +41,7 @@ module.exports = {
           await week.update({
             points: req.body.points || week.points,
             feedback: req.body.feedback || week.feedback,
+            instructorNotes: req.body.instructorNotes || week.instructorNotes,
             checks: updatedChecks
           })
           res.status(200).send(week)
@@ -55,6 +50,7 @@ module.exports = {
             points: req.body.points,
             studentInstanceId: req.body.studentInstanceId,
             feedback: req.body.feedback,
+            instructorNotes: req.body.instructorNotes,
             weekNumber: req.body.weekNumber,
             notified: false,
             checks: req.body.checks

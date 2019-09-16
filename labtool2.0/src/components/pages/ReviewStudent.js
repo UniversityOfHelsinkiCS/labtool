@@ -39,6 +39,7 @@ export class ReviewStudent extends Component {
         points: e.target.points.value,
         studentInstanceId: this.props.studentInstance,
         feedback: e.target.comment.value,
+        instructorNotes: e.target.instructorNotes.value,
         weekNumber: this.props.weekNumber,
         checks: this.props.weekReview.checks
       }
@@ -145,7 +146,7 @@ export class ReviewStudent extends Component {
                     Code review points: {codeReviewPoints}
                   </div>
                 )}
-                {this.props.weekNumber > this.props.selectedInstance.weekAmount ? <h2>Final Review Points</h2> : <h2>Feedback</h2>}
+                {this.props.weekNumber > this.props.selectedInstance.weekAmount ? <h2>Final Review Points</h2> : <h2>Review</h2>}
                 <Form onSubmit={this.handleSubmit}>
                   <Form.Group inline unstackable>
                     <Form.Field>
@@ -154,11 +155,18 @@ export class ReviewStudent extends Component {
                       <Input ref={this.reviewPointsRef} name="points" defaultValue={weekData[0] ? weekData[0].points : ''} type="number" step="0.01" style={{ width: '150px', align: 'center' }} />
                     </Form.Field>
                   </Form.Group>
-                  <label> Feedback </label>
+                  <h4>Feedback</h4>
                   <Form.Group inline unstackable style={{ textAlignVertical: 'top' }}>
                     <div ref={this.reviewTextRef}>
                       {/*Do not add any other textareas to this div. If you do, you'll break this.copyChecklistOutput.*/}
                       <FormMarkdownTextArea defaultValue={weekData[0] ? weekData[0].feedback : ''} name="comment" style={{ width: '500px', height: '250px' }} />
+                    </div>
+                  </Form.Group>
+                  <h4>Review notes</h4>
+                  <p><em>Only shown to instructors on this course</em></p>
+                  <Form.Group inline unstackable style={{ textAlignVertical: 'top' }}>
+                    <div ref={this.reviewTextRef}>
+                      <FormMarkdownTextArea defaultValue={weekData[0] ? weekData[0].instructorNotes : ''} name="instructorNotes" style={{ width: '500px', height: '150px' }} />
                     </div>
                   </Form.Group>
                   <Form.Field>
