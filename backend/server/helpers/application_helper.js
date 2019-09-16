@@ -7,6 +7,7 @@ exports.getNextTerm = getCurrentTerm
 exports.controller_before_auth_check_action = controller_before_auth_check_action
 exports.getCurrent = getCurrent
 exports.createCourse = createCourse
+exports.getTeacherId = getTeacherId
 
 const env = process.env.NODE_ENV || 'development'
 
@@ -129,6 +130,24 @@ function axiosCourseBla(hid) {
       rejectUnauthorized: false // if you don't like this then please go ahead and do it yourself better.
     })
   }
+}
+
+/**
+ *
+ * @param req
+ * @param res
+ * @returns {Promise<*>}
+ */
+async function getTeacherId(userId, courseInstanceId) {
+  const teacher = await TeacherInstance.findOne({
+    attributes: ['id'],
+    where: {
+      userId,
+      courseInstanceId
+    }
+  })
+
+  return teacher ? teacher.id : null
 }
 
 /**

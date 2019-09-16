@@ -35,7 +35,7 @@ export class FormMarkdownTextArea extends React.Component {
             </a>.
           </i>
         </p>
-        <Accordion key fluid styled>
+        <Accordion key fluid styled style={{ textAlign: 'start' }}>
           <Accordion.Title active={0 === activeIndex} index={0} onClick={this.handleClick.bind(this)}>
             <Icon name="dropdown" />
             Preview Markdown

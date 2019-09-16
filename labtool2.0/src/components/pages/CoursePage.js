@@ -604,7 +604,7 @@ export class CoursePage extends React.Component {
       const rowClassName = droppedOut ? 'TableRowForDroppedOutStudents' : 'TableRowForActiveStudents'
       return (
         <div className={tableClassName}>
-          <Header as="h2">{ heading } </Header>
+          <Header as="h2">{heading} </Header>
           <div style={{ textAlign: 'left' }}>
             <span>Filter by instructor </span>
             <Dropdown

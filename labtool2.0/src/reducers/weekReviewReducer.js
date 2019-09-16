@@ -6,7 +6,9 @@
 
 const INITIAL_STATE = {
   checks: {},
-  data: {}
+  data: {},
+  draftData: {},
+  draftCreatedAt: null
 }
 
 const weekReviewReducer = (state = INITIAL_STATE, action) => {
@@ -37,6 +39,22 @@ const weekReviewReducer = (state = INITIAL_STATE, action) => {
     }
     case 'WEEK_REVIEW_RESET':
       return INITIAL_STATE
+    case 'WEEKDRAFTS_GET_ONE_SUCCESS':
+      if (!action.response || !action.response.data) {
+        return {
+          ...state,
+          draftData: {},
+          draftCreatedAt: null
+        }
+      }
+      return { 
+        ...state,
+        draftData: action.response.data,
+        draftCreatedAt: action.response.updatedAt,
+        checks: action.response.data.checks
+      }
+    case 'WEEKDRAFTS_GET_ONE_FAILURE':
+      return state
     default:
       return state
   }
