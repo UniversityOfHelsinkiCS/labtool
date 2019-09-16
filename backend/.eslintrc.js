@@ -33,6 +33,7 @@ module.exports = {
     'no-underscore-dangle': 'warn',
     'quote-props': 'warn',
     'func-names': 'off',
+    'yoda': 'off',
 
     'no-use-before-define': 'off',
     'no-shadow': 'warn',

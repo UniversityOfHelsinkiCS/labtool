@@ -1,12 +1,9 @@
 const application_helpers = require('./application_helper')
+const logger = require('../utils/logger')
+const { Week, CourseInstance, StudentInstance, TeacherInstance } = require('../models')
 
 const env = process.env.NODE_ENV || 'development'
 const config = require('./../config/config.js')[env]
-const logger = require('../utils/logger')
-const Week = require('../models').Week
-const CourseInstance = require('../models').CourseInstance
-const StudentInstance = require('../models').StudentInstance
-const TeacherInstance = require('../models').TeacherInstance
 
 exports.CurrentTermAndYear = application_helpers.CurrentTermAndYear
 exports.getCurrentTerm = application_helpers.getCurrentTerm

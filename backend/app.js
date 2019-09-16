@@ -140,7 +140,7 @@ app.get('*', (req, res) => res.status(404).send({
 )
 
 const server = app.listen(3001, () => {
-  const port = server.address().port
+  const { port } = server.address()
   logger.info(`Backend started and listening on port ${port}`)
 })
 

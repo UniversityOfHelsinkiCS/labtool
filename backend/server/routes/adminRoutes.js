@@ -1,6 +1,7 @@
-const admin = require('../controllers').admin
 const bodyParser = require('body-parser')
 const basicAuth = require('express-basic-auth')
+const admin = require('../controllers').admin
+
 const staticUserAuth = basicAuth({
   users: { admin: process.env.ADMIN_PW },
   challenge: true,
@@ -8,7 +9,7 @@ const staticUserAuth = basicAuth({
 })
 const parser = bodyParser.urlencoded({ extended: true })
 
-module.exports = app => {
+module.exports = (app) => {
   app.get('/admin', staticUserAuth, parser, admin.list).set('view engine', 'pug')
   app.post('/admin', staticUserAuth, parser, admin.process).set('view engine', 'pug')
 }

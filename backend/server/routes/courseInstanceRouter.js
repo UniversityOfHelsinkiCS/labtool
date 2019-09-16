@@ -2,7 +2,7 @@ const courseInstanceController = require('../controllers').courseInstances
 const weekController = require('../controllers').weeks
 const assistantController = require('../controllers').assistants
 
-module.exports = app => {
+module.exports = (app) => {
   app.post('/api/courseinstances/update', courseInstanceController.getNew) // User story (issue) #106 will replace this
   app.post('/api/courseinstances/update/next', courseInstanceController.getNewer) // User story (issue) #106 will replace this
   app.post('/api/course/register/:ohid', courseInstanceController.registerToCourseInstance)
