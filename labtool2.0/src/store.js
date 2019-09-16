@@ -44,7 +44,7 @@ const reducer = combineReducers({
   redirect: redirect
 })
 
-const compose = process.env.NODE_ENV === 'production' ? (store) => store : (store) => composeWithDevTools(store)
+const compose = process.env.NODE_ENV === 'production' ? store => store : store => composeWithDevTools(store)
 
 const store = createStore(reducer, compose(applyMiddleware(thunk, handleRequest)))
 

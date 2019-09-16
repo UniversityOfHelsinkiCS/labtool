@@ -4,6 +4,7 @@ const { Week, CourseInstance, StudentInstance, TeacherInstance } = require('../m
 
 const env = process.env.NODE_ENV || 'development'
 const config = require('./../config/config.js')[env]
+const db = require('../models')
 
 exports.CurrentTermAndYear = application_helpers.CurrentTermAndYear
 exports.getCurrentTerm = application_helpers.getCurrentTerm
@@ -14,6 +15,7 @@ exports.findByUserStudentInstance = findByUserStudentInstance
 exports.getCurrent = application_helpers.getCurrent
 exports.controller_before_auth_check_action = application_helpers.controller_before_auth_check_action
 exports.checkHasCommentPermission = checkHasCommentPermission
+exports.getTeacherId = application_helpers.getTeacherId
 
 /**
  * Only used in courseInstance controller so its place is here.
@@ -23,7 +25,6 @@ exports.checkHasCommentPermission = checkHasCommentPermission
  * @param resolve
  */
 function checkWebOodi(req, res, user, resolve) {
-  const request = require('request')
   const options = {
     method: 'get',
     uri: `${config.kurki_url}/labtool/courses/${req.params.ohid}`,
@@ -124,11 +125,6 @@ async function checkHasCommentPermission(user, weekId) {
  */
 function findByUserStudentInstance(req, res) {
   // token verification might not work..? and we don't knpw if search works
-
-  const StudentInstanceController = require('../controllers').studentInstances
-  const db = require('../models')
-  const Sequelize = require('sequelize')
-  const Op = Sequelize.Op
 
   const errors = []
 
