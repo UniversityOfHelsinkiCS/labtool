@@ -28,6 +28,12 @@ export default class JsonEdit extends React.Component {
 
   hasValidData = () => !!this.state.data && !this.state.error
 
+  componentDidUpdate(prevProps) {
+    if (!Object.is(prevProps.initialData, this.props.initialData)) {
+      this.setData(JSON.stringify(this.props.initialData, null, 4))
+    }
+  }
+
   render() {
     const { initialData, style } = this.props
     const { data, open } = this.state
@@ -48,7 +54,7 @@ export default class JsonEdit extends React.Component {
               </Message>
             )}
             <Form>
-              <TextArea rows={40} onChange={this.onChange} style={{ fontFamily: 'monospace' }} value={data} defaultValue={JSON.stringify(initialData, null, 4)} />
+              <TextArea rows={40} onChange={this.onChange} style={{ fontFamily: 'monospace' }} value={data} />
             </Form>
           </Modal.Description>
           <Modal.Actions>
