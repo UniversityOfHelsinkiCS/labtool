@@ -261,7 +261,7 @@ describe('<CoursePage /> as teacher', () => {
     })
 
     it('shows dropped out students in a separate list', () => {
-      expect(wrapper.find('.TableRowForDroppeOutStudents').length).toEqual(1)
+      expect(wrapper.find('.TableRowForDroppedOutStudents').length).toEqual(1)
     })
 
     // it('assistant dropdown menu is not shown when page loads', () => {
