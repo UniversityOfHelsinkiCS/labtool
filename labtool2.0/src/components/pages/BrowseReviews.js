@@ -121,6 +121,7 @@ export class BrowseReviews extends Component {
                     {student.github}
                   </a>
                 </h3>
+                <p>{`Dropped course: ${student.dropped}`}</p>
               </Card.Content>
             </Card>
           )
