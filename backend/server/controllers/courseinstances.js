@@ -350,7 +350,8 @@ module.exports = {
    * req.body:
    *    {
    *      github,
-   *      projectname
+   *      projectname,
+   *      dropped
    *    }
    */
   updateStudentInstance(req, res) {
@@ -381,7 +382,8 @@ module.exports = {
               targetStudent
                 .update({
                   github: req.body.github || targetStudent.github,
-                  projectName: req.body.projectname || targetStudent.projectName
+                  projectName: req.body.projectname || targetStudent.projectName,
+                  dropped: req.body.dropped || targetStudent.dropped
                 })
                 .then((updatedStudentInstance) => {
                   res.status(200).send(updatedStudentInstance)
