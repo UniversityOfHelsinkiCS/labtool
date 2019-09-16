@@ -1,5 +1,8 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Form, TextArea, Message, Button, Modal } from 'semantic-ui-react'
+
+import FileInput from './FileInput'
 
 export default class JsonEdit extends React.Component {
   state = { open: false, data: null, error: null }
@@ -7,38 +10,33 @@ export default class JsonEdit extends React.Component {
   close = () => this.setState({ open: false })
   open = () => this.setState({ open: true })
 
-  validateChecklist = checklist => {
-    return (
-      !!checklist.week &&
-      !!checklist.list &&
-      Object.keys(checklist.list).every(listKey => {
-        return (
-          typeof listKey === 'string' &&
-          Object.values(checklist.list[listKey]).every(row => {
-            return row.name !== null && row.textWhenOn !== null && row.textWhenOff !== null && row.checkedPoints !== null && row.uncheckedPoints !== null
-          })
-        )
-      })
-    )
-  }
-
-  onChange = e => {
+  setData = json => {
     try {
-      if (!e.target.value) {
+      if (!json) {
         this.setState({ error: null })
       }
-      const parsedJson = JSON.parse(e.target.value)
-      this.setState({ data: parsedJson, error: null })
+      JSON.parse(json)
+      this.setState({ data: json, error: null })
     } catch (error) {
       if (error instanceof SyntaxError) {
-        this.setState({ error: `Failed to parse JSON: ${error.message}` })
+        this.setState({ error: `Failed to parse JSON: ${error.message}`, data: json })
       }
     }
   }
 
+  onChange = e => this.setData(e.target.value)
+
+  hasValidData = () => !!this.state.data && !this.state.error
+
+  componentDidUpdate(prevProps) {
+    if (!Object.is(prevProps.initialData, this.props.initialData)) {
+      this.setData(JSON.stringify(this.props.initialData, null, 4))
+    }
+  }
+
   render() {
-    const { data, style } = this.props
-    const { open } = this.state
+    const { downloadName, style } = this.props
+    const { data, open } = this.state
 
     return (
       <React.Fragment>
@@ -56,17 +54,37 @@ export default class JsonEdit extends React.Component {
               </Message>
             )}
             <Form>
-              <TextArea rows={40} onChange={this.onChange} style={{ fontFamily: 'monospace' }} defaultValue={JSON.stringify(data, null, 4)} />
+              <TextArea rows={40} onChange={this.onChange} style={{ fontFamily: 'monospace' }} value={data} />
             </Form>
           </Modal.Description>
           <Modal.Actions>
+            <Button
+              disabled={!this.hasValidData()}
+              content="Download"
+              floated="left"
+              as="a"
+              href={this.hasValidData() ? `data:application/json,${encodeURI(JSON.stringify(JSON.parse(data), null, 4))}` : undefined}
+              download={downloadName || 'data.json'}
+              target="_blank"
+            />
+            <FileInput
+              onFileUploaded={data => {
+                try {
+                  this.setData(JSON.stringify(JSON.parse(new TextDecoder().decode(data)), null, 4))
+                } catch (e) {
+                  this.setState({ error: `File had invalid data: ${e.message}` })
+                }
+              }}
+              floated="left"
+              allowedFileTypes={['application/json']}
+            />
             <Button content="Close" negative onClick={this.close} />
             <Button
               content="Save"
               positive
-              disabled={!!this.state.error || !this.state.data}
+              disabled={!this.hasValidData()}
               onClick={() => {
-                this.props.onImport(this.state.data)
+                this.props.onImport(JSON.parse(this.state.data))
                 this.close()
               }}
             />
@@ -75,4 +93,11 @@ export default class JsonEdit extends React.Component {
       </React.Fragment>
     )
   }
+}
+
+JsonEdit.propTypes = {
+  onImport: PropTypes.func.isRequired,
+  initialData: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+  style: PropTypes.object,
+  downloadName: PropTypes.string
 }

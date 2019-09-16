@@ -30,11 +30,11 @@ describe('<JsonEdit />', () => {
         .first()
         .simulate('change', { target: { value: `{ "a": "b" }` } })
 
-      expect(wrapper.state('data')).toEqual({ a: 'b' })
+      expect(wrapper.state('data')).toEqual(`{ "a": "b" }`)
 
       wrapper
         .find(Button)
-        .at(2)
+        .find({ content: 'Save' })
         .simulate('click')
 
       expect(onImport).toBeCalledWith({ a: 'b' })
