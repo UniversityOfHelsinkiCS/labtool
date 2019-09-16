@@ -21,6 +21,7 @@ import {
 } from '../../reducers/coursePageLogicReducer'
 import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 import store from '../../store'
+import { HorizontalScrollable } from '../HorizontalScrollable'
 
 export class MassEmailPage extends React.Component {
   handleClick = (e, titleProps) => {
@@ -193,74 +194,76 @@ export class MassEmailPage extends React.Component {
           </div>
 
           <Form onSubmit={this.handleSubmit}>
-            <Table celled compact unstackable>
-              <Table.Header>
-                <Table.Row>
-                  <Table.HeaderCell key={-1}>Send?</Table.HeaderCell>
-                  <Table.HeaderCell>Student</Table.HeaderCell>
-                  <Table.HeaderCell>id</Table.HeaderCell>
-                  <Table.HeaderCell>email</Table.HeaderCell>
-                  <Table.HeaderCell>Project Info</Table.HeaderCell>
-                  <Table.HeaderCell width="six"> Instructor </Table.HeaderCell>
-                </Table.Row>
-              </Table.Header>
-              <Table.Body>
-                {this.props.courseData && this.props.courseData.data ? (
-                  this.props.courseData.data
-                    .filter(data => {
-                      return this.props.coursePageLogic.filterByAssistant === 0 || this.props.coursePageLogic.filterByAssistant === data.teacherInstanceId
-                    })
-                    .filter(data => {
-                      return this.props.coursePageLogic.filterByTag.length === 0 || this.hasFilteringTags(data.Tags, this.props.coursePageLogic.filterByTag)
-                    })
-                    .map(data => (
-                      <Table.Row key={data.id} className="TableRowForActiveStudents">
-                        <Table.Cell>
-                          <Form.Checkbox name={'send' + data.id} />
-                        </Table.Cell>
-                        <Table.Cell>
-                          {data.User.firsts} {data.User.lastname}
-                        </Table.Cell>
-                        <Table.Cell>
-                          <span>{data.User.studentNumber}</span>
-                        </Table.Cell>
-                        <Table.Cell>
-                          <a href={`mailto:${data.User.email}`}>{data.User.email}</a>
-                        </Table.Cell>
-                        <Table.Cell>
-                          <span>
-                            {data.projectName}
-                            <br />
-                            <a href={data.github} target="_blank" rel="noopener noreferrer">
-                              {data.github}
-                            </a>
-                            {data.Tags.map(tag => (
-                              <div key={tag.id}>
-                                <Button compact floated="left" className={`mini ui ${tag.color} button`} onClick={this.addFilterTag(tag)}>
-                                  {tag.name}
-                                </Button>
-                              </div>
-                            ))}
-                          </span>
-                        </Table.Cell>
-                        <Table.Cell>
-                          {data.teacherInstanceId && this.props.selectedInstance.teacherInstances ? (
-                            this.props.selectedInstance.teacherInstances.filter(teacher => teacher.id === data.teacherInstanceId).map(teacher => (
-                              <span key={data.id}>
-                                {teacher.firsts} {teacher.lastname}
-                              </span>
-                            ))
-                          ) : (
-                            <span>not assigned</span>
-                          )}
-                        </Table.Cell>
-                      </Table.Row>
-                    ))
-                ) : (
-                  <p />
-                )}
-              </Table.Body>
-            </Table>
+            <HorizontalScrollable>
+              <Table celled compact unstackable style={{ overflowX: 'visible' }}>
+                <Table.Header>
+                  <Table.Row>
+                    <Table.HeaderCell key={-1}>Send?</Table.HeaderCell>
+                    <Table.HeaderCell>Student</Table.HeaderCell>
+                    <Table.HeaderCell>id</Table.HeaderCell>
+                    <Table.HeaderCell>email</Table.HeaderCell>
+                    <Table.HeaderCell>Project Info</Table.HeaderCell>
+                    <Table.HeaderCell width="six"> Instructor </Table.HeaderCell>
+                  </Table.Row>
+                </Table.Header>
+                <Table.Body>
+                  {this.props.courseData && this.props.courseData.data ? (
+                    this.props.courseData.data
+                      .filter(data => {
+                        return this.props.coursePageLogic.filterByAssistant === 0 || this.props.coursePageLogic.filterByAssistant === data.teacherInstanceId
+                      })
+                      .filter(data => {
+                        return this.props.coursePageLogic.filterByTag.length === 0 || this.hasFilteringTags(data.Tags, this.props.coursePageLogic.filterByTag)
+                      })
+                      .map(data => (
+                        <Table.Row key={data.id} className="TableRowForActiveStudents">
+                          <Table.Cell>
+                            <Form.Checkbox name={'send' + data.id} />
+                          </Table.Cell>
+                          <Table.Cell>
+                            {data.User.firsts} {data.User.lastname}
+                          </Table.Cell>
+                          <Table.Cell>
+                            <span>{data.User.studentNumber}</span>
+                          </Table.Cell>
+                          <Table.Cell>
+                            <a href={`mailto:${data.User.email}`}>{data.User.email}</a>
+                          </Table.Cell>
+                          <Table.Cell>
+                            <span>
+                              {data.projectName}
+                              <br />
+                              <a href={data.github} target="_blank" rel="noopener noreferrer">
+                                {data.github}
+                              </a>
+                              {data.Tags.map(tag => (
+                                <div key={tag.id}>
+                                  <Button compact floated="left" className={`mini ui ${tag.color} button`} onClick={this.addFilterTag(tag)}>
+                                    {tag.name}
+                                  </Button>
+                                </div>
+                              ))}
+                            </span>
+                          </Table.Cell>
+                          <Table.Cell>
+                            {data.teacherInstanceId && this.props.selectedInstance.teacherInstances ? (
+                              this.props.selectedInstance.teacherInstances.filter(teacher => teacher.id === data.teacherInstanceId).map(teacher => (
+                                <span key={data.id}>
+                                  {teacher.firsts} {teacher.lastname}
+                                </span>
+                              ))
+                            ) : (
+                              <span>not assigned</span>
+                            )}
+                          </Table.Cell>
+                        </Table.Row>
+                      ))
+                  ) : (
+                    <p />
+                  )}
+                </Table.Body>
+              </Table>
+            </HorizontalScrollable>
             <br />
 
             <Form.TextArea name="content" placeholder="Type email here..." defaultValue="" required />

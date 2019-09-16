@@ -18,11 +18,13 @@ export class HorizontalScrollable extends React.Component {
   }
 
   componentDidMount() {
-    window.addEventListener('scroll', this.updateSticky.bind(this))
+    window.addEventListener('scroll', this.updateSticky)
+    window.addEventListener('resize', this.updateSticky)
     this.updateSticky()
   }
   componentWillUnmount() {
-    window.removeEventListener('scroll', this.updateSticky.bind(this))
+    window.removeEventListener('scroll', this.updateSticky)
+    window.removeEventListener('resize', this.updateSticky)
   }
 
   maybeResizeBar() {
@@ -37,7 +39,7 @@ export class HorizontalScrollable extends React.Component {
     }
   }
 
-  updateScrollX(e) {
+  updateScrollX = e => {
     // synchronize scroll positions
     const newX = e.target.scrollLeft
     this.maybeResizeBar()
@@ -45,7 +47,7 @@ export class HorizontalScrollable extends React.Component {
     if (this.scrollbar) this.scrollbar.scrollLeft = newX
   }
 
-  updateSticky() {
+  updateSticky = () => {
     if (this.content && this.scrollbar) {
       // viewport viewable range of Y: [windowTop, windowBottom[
       const windowTop = document.documentElement.scrollTop
@@ -79,10 +81,10 @@ export class HorizontalScrollable extends React.Component {
   render() {
     return (
       <span>
-        <div ref={this.mainElementReady} onScroll={this.updateScrollX.bind(this)} style={{ overflowX: 'hidden' }}>
+        <div ref={this.mainElementReady} onScroll={this.updateScrollX} style={{ overflowX: 'hidden' }}>
           {this.props.children}
         </div>
-        <div ref={this.scrollBarReady} onScroll={this.updateScrollX.bind(this)} style={{ overflowX: 'scroll', bottom: '0', position: 'sticky' }}>
+        <div ref={this.scrollBarReady} onScroll={this.updateScrollX} style={{ overflowX: 'scroll', bottom: '0', position: 'sticky' }}>
           <div />
         </div>
       </span>

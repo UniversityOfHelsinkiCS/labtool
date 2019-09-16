@@ -27,7 +27,14 @@ export class FormMarkdownTextArea extends React.Component {
     return (
       <div>
         <Form.TextArea onInput={this.handleChange.bind(this)} {...this.props} />
-        <p><i>This field supports <a href="https://guides.github.com/features/mastering-markdown/" target="_blank" rel="noopener noreferrer">Markdown</a>.</i></p>
+        <p>
+          <i>
+            This field supports{' '}
+            <a href="https://guides.github.com/features/mastering-markdown/" target="_blank" rel="noopener noreferrer">
+              Markdown
+            </a>.
+          </i>
+        </p>
         <Accordion key fluid styled>
           <Accordion.Title active={0 === activeIndex} index={0} onClick={this.handleClick.bind(this)}>
             <Icon name="dropdown" />

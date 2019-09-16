@@ -5,6 +5,7 @@ import './MyPage.css'
 import { Link } from 'react-router-dom'
 import { getAllStudentCourses } from '../../services/studentinstances'
 import { getAllTeacherCourses } from '../../services/teacherinstances'
+import { HorizontalScrollable } from '../HorizontalScrollable'
 
 /**
  * The main page that is shown after user has logged in.
@@ -74,22 +75,24 @@ export class MyPage extends Component {
               My Courses (Student){' '}
             </Header>
 
-            <Table singleLine key="grey" color="yellow">
-              <Table.Body>
-                {this.props.studentInstance.map(sinstance => (
-                  <Table.Row key={sinstance.id}>
-                    <Table.Cell>
-                      <Link to={`/labtool/courses/${sinstance.ohid}`}>{sinstance.name}</Link>
-                    </Table.Cell>
-                    <Table.Cell textAlign="right">
-                      <Link to={`/labtool/courses/${sinstance.ohid}`}>
-                        <Popup trigger={<Button circular size="tiny" icon={{ name: 'eye', size: 'large', color: 'blue' }} />} content="View course" />
-                      </Link>
-                    </Table.Cell>
-                  </Table.Row>
-                ))}
-              </Table.Body>
-            </Table>
+            <HorizontalScrollable>
+              <Table singleLine key="grey" color="yellow" style={{ overflowX: 'visible' }}>
+                <Table.Body>
+                  {this.props.studentInstance.map(sinstance => (
+                    <Table.Row key={sinstance.id}>
+                      <Table.Cell>
+                        <Link to={`/labtool/courses/${sinstance.ohid}`}>{sinstance.name}</Link>
+                      </Table.Cell>
+                      <Table.Cell textAlign="right">
+                        <Link to={`/labtool/courses/${sinstance.ohid}`}>
+                          <Popup trigger={<Button circular size="tiny" icon={{ name: 'eye', size: 'large', color: 'blue' }} />} content="View course" />
+                        </Link>
+                      </Table.Cell>
+                    </Table.Row>
+                  ))}
+                </Table.Body>
+              </Table>
+            </HorizontalScrollable>
 
             <div>
               <br />
@@ -100,22 +103,24 @@ export class MyPage extends Component {
                   My Courses (Teacher)
                 </Header>
 
-                <Table singleLine key="grey" color="yellow">
-                  <Table.Body>
-                    {this.props.teacherInstance.map(tinstance => (
-                      <Table.Row key={tinstance.id}>
-                        <Table.Cell>
-                          <Link to={`/labtool/courses/${tinstance.ohid}`}>{tinstance.name} </Link>
-                        </Table.Cell>
-                        <Table.Cell textAlign="right">
-                          <Link to={`/labtool/courses/${tinstance.ohid}`}>
-                            <Popup trigger={<Button circular size="tiny" icon={{ name: 'eye', size: 'large', color: 'blue' }} />} content="View course" />
-                          </Link>
-                        </Table.Cell>
-                      </Table.Row>
-                    ))}
-                  </Table.Body>
-                </Table>
+                <HorizontalScrollable>
+                  <Table singleLine key="grey" color="yellow" style={{ overflowX: 'visible' }}>
+                    <Table.Body>
+                      {this.props.teacherInstance.map(tinstance => (
+                        <Table.Row key={tinstance.id}>
+                          <Table.Cell>
+                            <Link to={`/labtool/courses/${tinstance.ohid}`}>{tinstance.name} </Link>
+                          </Table.Cell>
+                          <Table.Cell textAlign="right">
+                            <Link to={`/labtool/courses/${tinstance.ohid}`}>
+                              <Popup trigger={<Button circular size="tiny" icon={{ name: 'eye', size: 'large', color: 'blue' }} />} content="View course" />
+                            </Link>
+                          </Table.Cell>
+                        </Table.Row>
+                      ))}
+                    </Table.Body>
+                  </Table>
+                </HorizontalScrollable>
               </Container>
             </div>
           </Container>

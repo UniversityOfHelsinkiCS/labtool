@@ -159,64 +159,71 @@ exports[`<MyPage /> MyPage Component should render correctly 1`] = `
         My Courses (Student)
          
       </Header>
-      <Table
-        as="table"
-        color="yellow"
-        key="grey"
-        singleLine={true}
-      >
-        <TableBody
-          as="tbody"
+      <HorizontalScrollable>
+        <Table
+          as="table"
+          color="yellow"
+          key="grey"
+          singleLine={true}
+          style={
+            Object {
+              "overflowX": "visible",
+            }
+          }
         >
-          <TableRow
-            as="tr"
-            cellAs="td"
-            key="10011"
+          <TableBody
+            as="tbody"
           >
-            <TableCell
-              as="td"
+            <TableRow
+              as="tr"
+              cellAs="td"
+              key="10011"
             >
-              <Link
-                replace={false}
-                to="/labtool/courses/TKT20010.2018.K.A.1"
+              <TableCell
+                as="td"
               >
-                Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit
-              </Link>
-            </TableCell>
-            <TableCell
-              as="td"
-              textAlign="right"
-            >
-              <Link
-                replace={false}
-                to="/labtool/courses/TKT20010.2018.K.A.1"
+                <Link
+                  replace={false}
+                  to="/labtool/courses/TKT20010.2018.K.A.1"
+                >
+                  Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit
+                </Link>
+              </TableCell>
+              <TableCell
+                as="td"
+                textAlign="right"
               >
-                <Popup
-                  content="View course"
-                  keepInViewPort={true}
-                  on="hover"
-                  position="top left"
-                  trigger={
-                    <Button
-                      as="button"
-                      circular={true}
-                      icon={
-                        Object {
-                          "color": "blue",
-                          "name": "eye",
-                          "size": "large",
+                <Link
+                  replace={false}
+                  to="/labtool/courses/TKT20010.2018.K.A.1"
+                >
+                  <Popup
+                    content="View course"
+                    keepInViewPort={true}
+                    on="hover"
+                    position="top left"
+                    trigger={
+                      <Button
+                        as="button"
+                        circular={true}
+                        icon={
+                          Object {
+                            "color": "blue",
+                            "name": "eye",
+                            "size": "large",
+                          }
                         }
-                      }
-                      role="button"
-                      size="tiny"
-                    />
-                  }
-                />
-              </Link>
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
+                        role="button"
+                        size="tiny"
+                      />
+                    }
+                  />
+                </Link>
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </HorizontalScrollable>
       <div>
         <br />
         <Divider
@@ -229,16 +236,23 @@ exports[`<MyPage /> MyPage Component should render correctly 1`] = `
           >
             My Courses (Teacher)
           </Header>
-          <Table
-            as="table"
-            color="yellow"
-            key="grey"
-            singleLine={true}
-          >
-            <TableBody
-              as="tbody"
-            />
-          </Table>
+          <HorizontalScrollable>
+            <Table
+              as="table"
+              color="yellow"
+              key="grey"
+              singleLine={true}
+              style={
+                Object {
+                  "overflowX": "visible",
+                }
+              }
+            >
+              <TableBody
+                as="tbody"
+              />
+            </Table>
+          </HorizontalScrollable>
         </Container>
       </div>
     </Container>
