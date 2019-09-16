@@ -25,13 +25,7 @@ export class Notification extends React.Component {
 
     if (message === undefined) {
       return (
-        <Grid>
-          <Grid.Row>
-            <br />
-            <br />
-            <br />
-          </Grid.Row>
-        </Grid>
+        <div />
       )
     } else if (error) {
       return (
