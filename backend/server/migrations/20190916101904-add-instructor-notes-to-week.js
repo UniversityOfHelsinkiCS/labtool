@@ -11,4 +11,4 @@ module.exports = {
   down: (queryInterface, Sequelize) => {
     queryInterface.removeColumn('Weeks', 'instructorNotes')
   }
-};
+}

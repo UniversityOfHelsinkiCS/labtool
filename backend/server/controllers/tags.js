@@ -61,7 +61,7 @@ module.exports = {
       if (!teacher) {
         return res.status(400).send('you have to be a course teacher to do this')
       }
-      
+
       const tag = await Tag.findOne({
         where: {
           name: req.body.text

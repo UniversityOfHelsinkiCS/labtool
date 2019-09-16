@@ -78,7 +78,7 @@ module.exports = {
       res.status(500).send('Unexpected error.')
     }
   },
-  
+
   async grade(req, res) {
     helper.controller_before_auth_check_action(req, res)
     try {

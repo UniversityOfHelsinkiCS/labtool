@@ -4,7 +4,6 @@ const db = require('../models')
 const helper = require('../helpers/course_instance_helper')
 const logger = require('../utils/logger')
 
-const StudentInstanceController = require('../controllers').studentInstances
 const { Op } = Sequelize
 const { User, CourseInstance, StudentInstance, TeacherInstance, Week, CodeReview, Comment, Tag, Checklist } = db
 

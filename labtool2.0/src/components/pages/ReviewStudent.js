@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
-import { Button, Form, Input, Grid, Card, Loader, Icon } from 'semantic-ui-react'
+import { Button, Form, Input, Grid, Card, Loader } from 'semantic-ui-react'
 import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { createOneWeek } from '../../services/week'
+import { createOneWeek, getWeekDraft, saveWeekDraft } from '../../services/week'
 import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import { clearNotifications } from '../../reducers/notificationReducer'
 import { toggleCheck, resetChecklist } from '../../reducers/weekReviewReducer'
 import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 import store from '../../store'
+import { trimDate } from '../../util/format'
 
 import { FormMarkdownTextArea } from '../MarkdownTextArea'
 
@@ -26,6 +27,7 @@ export class ReviewStudent extends Component {
     this.props.getOneCI(this.props.courseId)
     this.props.coursePageInformation(this.props.courseId)
     this.props.clearNotifications()
+    this.importWeekDataFromDraft()
   }
 
   componentWillUnmount() {
@@ -56,8 +58,37 @@ export class ReviewStudent extends Component {
     }
   }
 
-  toggleCheckbox = (name, studentId, weekNbr) => async e => {
+  toggleCheckbox = (name, studentId, weekNbr) => async () => {
     this.props.toggleCheck(name, studentId, weekNbr)
+  }
+
+  importWeekDataFromDraft = async () => {
+    await this.props.getWeekDraft({
+      studentInstanceId: this.props.studentInstance,
+      weekNumber: this.props.weekNumber
+    })
+  }
+
+  exportToDraft = form => {
+    const draftData = {}
+    draftData.checks = this.props.weekReview.checks || {}
+    draftData.points = form.points.value || ''
+    draftData.feedback = form.comment.value || ''
+    draftData.instructorNotes = form.instructorNotes.value || ''
+    return draftData
+  }
+
+  onClickSaveDraft = async e => {
+    const content = {
+      studentInstanceId: this.props.studentInstance,
+      weekNumber: this.props.weekNumber,
+      reviewData: this.exportToDraft(e.target.form)
+    }
+    console.log(content)
+    this.props.addRedirectHook({
+      hook: 'WEEKDRAFTS_CREATE_ONE'
+    })
+    await this.props.saveWeekDraft(content)
   }
 
   copyChecklistOutput = async e => {
@@ -80,8 +111,9 @@ export class ReviewStudent extends Component {
       //this.props.ownProps.studentInstance is a string, therefore casting to number.
       const studentData = this.props.weekReview.data.filter(dataArray => dataArray.id === Number(this.props.ownProps.studentInstance))
       //this.props.weekNumber is a string, therefore casting to number.
-      const weekData = studentData[0].weeks.filter(theWeek => theWeek.weekNumber === Number(this.props.ownProps.weekNumber))
-      const checks = weekData[0] ? weekData[0].checks : {}
+      const loadedFromDraft = !!this.props.weekReview.draftCreatedAt
+      const weekData = loadedFromDraft ? this.props.weekReview.draftData : studentData[0].weeks.filter(theWeek => theWeek.weekNumber === Number(this.props.ownProps.weekNumber))[0]
+      const checks = weekData ? weekData.checks || {} : {}
       const weekPoints = studentData[0].weeks
         .filter(week => week.weekNumber < this.props.weekNumber)
         .map(week => week.points)
@@ -129,7 +161,7 @@ export class ReviewStudent extends Component {
               </div>
             ))}
           </h3>
-          {this.props.weekNumber > this.props.selectedInstance.weekAmount ? <h3>Final Review</h3> : <h3>Viikko {this.props.weekNumber}</h3>}
+          {this.props.weekNumber > this.props.selectedInstance.weekAmount ? <h3>Final Review</h3> : <h3>Week {this.props.weekNumber}</h3>}
           <Grid>
             <Grid.Row columns={2}>
               <Grid.Column>
@@ -147,31 +179,44 @@ export class ReviewStudent extends Component {
                   </div>
                 )}
                 {this.props.weekNumber > this.props.selectedInstance.weekAmount ? <h2>Final Review Points</h2> : <h2>Review</h2>}
+                {loadedFromDraft && (
+                  <div>
+                    <p>
+                      <em>Loaded from draft saved at {trimDate(this.props.weekReview.draftCreatedAt)}</em>
+                    </p>
+                    <br />
+                  </div>
+                )}
                 <Form onSubmit={this.handleSubmit}>
                   <Form.Group inline unstackable>
                     <Form.Field>
                       <label>Points 0-{this.props.selectedInstance.weekMaxPoints}</label>
 
-                      <Input ref={this.reviewPointsRef} name="points" defaultValue={weekData[0] ? weekData[0].points : ''} type="number" step="0.01" style={{ width: '150px', align: 'center' }} />
+                      <Input ref={this.reviewPointsRef} name="points" defaultValue={weekData ? weekData.points : ''} type="number" step="0.01" style={{ width: '150px', align: 'center' }} />
                     </Form.Field>
                   </Form.Group>
                   <h4>Feedback</h4>
                   <Form.Group inline unstackable style={{ textAlignVertical: 'top' }}>
                     <div ref={this.reviewTextRef}>
                       {/*Do not add any other textareas to this div. If you do, you'll break this.copyChecklistOutput.*/}
-                      <FormMarkdownTextArea defaultValue={weekData[0] ? weekData[0].feedback : ''} name="comment" style={{ width: '500px', height: '250px' }} />
+                      <FormMarkdownTextArea defaultValue={weekData ? weekData.feedback : ''} name="comment" style={{ width: '500px', height: '250px' }} />
                     </div>
                   </Form.Group>
                   <h4>Review notes</h4>
-                  <p><em>Only shown to instructors on this course</em></p>
+                  <p>
+                    <em>Only shown to instructors on this course</em>
+                  </p>
                   <Form.Group inline unstackable style={{ textAlignVertical: 'top' }}>
                     <div ref={this.reviewTextRef}>
-                      <FormMarkdownTextArea defaultValue={weekData[0] ? weekData[0].instructorNotes : ''} name="instructorNotes" style={{ width: '500px', height: '150px' }} />
+                      <FormMarkdownTextArea defaultValue={weekData ? weekData.instructorNotes : ''} name="instructorNotes" style={{ width: '500px', height: '150px' }} />
                     </div>
                   </Form.Group>
                   <Form.Field>
                     <Button className="ui center floated green button" type="submit">
                       Save
+                    </Button>
+                    <Button className="ui center floated button" type="button" onClick={this.onClickSaveDraft}>
+                      Save as draft
                     </Button>
                     <Link to={`/labtool/browsereviews/${this.props.selectedInstance.ohid}/${studentData[0].id}`} type="Cancel">
                       <Button className="ui center floated button" type="cancel">
@@ -253,6 +298,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = {
   createOneWeek,
+  getWeekDraft,
+  saveWeekDraft,
   getOneCI,
   clearNotifications,
   toggleCheck,

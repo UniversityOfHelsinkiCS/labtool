@@ -137,7 +137,7 @@ class App extends Component {
       <Container>
         <Nav logout={ doLogout } />
         <Notification />
-        {this.props.user ? EmailChecker() : (USE_FAKE_LOGIN ? <FakeLoginPage /> : null)}
+        {this.props.user ? EmailChecker() : USE_FAKE_LOGIN ? <FakeLoginPage /> : null}
       </Container>
     )
   }

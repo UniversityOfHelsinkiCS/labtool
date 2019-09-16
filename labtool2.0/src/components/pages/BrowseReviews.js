@@ -20,7 +20,7 @@ export class BrowseReviews extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      openWeeks: { },
+      openWeeks: {},
       initialLoading: props.initialLoading !== undefined ? this.props.initialLoading : true
     }
   }
@@ -58,7 +58,7 @@ export class BrowseReviews extends Component {
   }
 
   handleClickShowAll = student => () => {
-    const openWeeks = { }
+    const openWeeks = {}
     const maximumIndex = this.props.selectedInstance.weekAmount + student.codeReviews.length + 1
     for (let i = 0; i < maximumIndex; i++) {
       openWeeks[i] = true
@@ -66,8 +66,8 @@ export class BrowseReviews extends Component {
     this.setState({ openWeeks })
   }
 
-  handleClickHideAll = student => () => {
-    this.setState({ openWeeks: { } })
+  handleClickHideAll = () => {
+    this.setState({ openWeeks: {} })
   }
 
   handleSubmit = async e => {
@@ -101,14 +101,14 @@ export class BrowseReviews extends Component {
     this.props.gradeCodeReview(data)
   }
 
-  sendCommentEmail = commentId => async e => {
+  sendCommentEmail = commentId => async () => {
     this.props.sendEmail({
       commentId,
       role: 'teacher'
     })
   }
 
-  sendWeekEmail = weekId => async e => {
+  sendWeekEmail = weekId => async () => {
     this.props.sendEmail({
       weekId,
       role: 'teacher'
@@ -138,7 +138,7 @@ export class BrowseReviews extends Component {
     return this.props.courseData.role === 'teacher'
   }
 
-  renderComment = (isFinalWeek) => comment => (
+  renderComment = isFinalWeek => comment =>
     comment.hidden ? (
       <Comment disabled>
         <Comment.Content>
@@ -186,16 +186,14 @@ export class BrowseReviews extends Component {
           </div>
         ) : (
           <div />
-        )
-        }
+        )}
       </Comment>
     )
-  )
 
   renderWeek = (i, week, studentInstance, isFinalWeek) => {
     const { openWeeks } = this.state
-    const reviewIndex = isFinalWeek ? (this.props.selectedInstance.weekAmount + 1) : (i + 1)
-    
+    const reviewIndex = isFinalWeek ? this.props.selectedInstance.weekAmount + 1 : i + 1
+
     if (week) {
       return (
         <Accordion fluid styled>
@@ -208,7 +206,7 @@ export class BrowseReviews extends Component {
                 <h4> Points {week.points} </h4>
                 <h4> Feedback </h4>
                 <ReactMarkdown>{week.feedback}</ReactMarkdown>{' '}
-                {(this.isTeacher() && week.instructorNotes) ? (
+                {this.isTeacher() && week.instructorNotes ? (
                   <div>
                     <br />
                     <h4>Review notes for instructors </h4>
@@ -235,13 +233,7 @@ export class BrowseReviews extends Component {
               )}
             </Card>
             <h4> Comments </h4>
-            <Comment.Group>
-              {week ? (
-                this.sortCommentsByDate(week.comments).map(this.renderComment(isFinalWeek))
-              ) : (
-                <h4> No comments </h4>
-              )}
-            </Comment.Group>
+            <Comment.Group>{week ? this.sortCommentsByDate(week.comments).map(this.renderComment(isFinalWeek)) : <h4> No comments </h4>}</Comment.Group>
             <Form reply onSubmit={this.handleSubmit} name={week.id} id={week.id}>
               <FormMarkdownTextArea name="content" placeholder="Your comment..." defaultValue="" />
               <Form.Checkbox label="Add comment for instructors only" name="hidden" />
@@ -289,7 +281,14 @@ export class BrowseReviews extends Component {
               {this.props.courseData.data.find(data => data.id === cr.toReview).github}
             </a>
           </p>
-          <strong>Code review:</strong> {cr.linkToReview ? <a href={cr.linkToReview} target="_blank" rel="noopener noreferrer">{cr.linkToReview}</a> : 'No review linked yet'}
+          <strong>Code review:</strong>{' '}
+          {cr.linkToReview ? (
+            <a href={cr.linkToReview} target="_blank" rel="noopener noreferrer">
+              {cr.linkToReview}
+            </a>
+          ) : (
+            'No review linked yet'
+          )}
           {cr.points !== null ? <h4>{cr.points} points</h4> : <h4>Not graded yet</h4>}
           <Form onSubmit={this.gradeCodeReview(cr.reviewNumber, studentInstance)}>
             <label>Points </label>
@@ -318,7 +317,7 @@ export class BrowseReviews extends Component {
               <Button type="button" onClick={this.handleClickShowAll(student)} size="small">
                 Open all reviews
               </Button>
-              <Button type="button" onClick={this.handleClickHideAll(student)} size="small">
+              <Button type="button" onClick={this.handleClickHideAll} size="small">
                 Close all reviews
               </Button>
               <br />
