@@ -70,6 +70,9 @@ export class ReviewStudent extends Component {
   }
 
   exportToDraft = form => {
+    // produce a JSON object for all the review data;
+    // this will be used verbatim as weekData (except for checks;
+    // they get passed to weekReview by the reducer)
     const draftData = {}
     draftData.checks = this.props.weekReview.checks || {}
     draftData.points = form.points.value || ''
@@ -108,10 +111,11 @@ export class ReviewStudent extends Component {
       return <Redirect to={`/labtool/courses/${this.props.selectedInstance.ohid}`} />
     }
     if (Array.isArray(this.props.weekReview.data)) {
-      //this.props.ownProps.studentInstance is a string, therefore casting to number.
+      // this.props.ownProps.studentInstance is a string, therefore casting to number.
       const studentData = this.props.weekReview.data.filter(dataArray => dataArray.id === Number(this.props.ownProps.studentInstance))
-      //this.props.weekNumber is a string, therefore casting to number.
+      // do we have a draft?
       const loadedFromDraft = !!this.props.weekReview.draftCreatedAt
+      // this.props.weekNumber is a string, therefore casting to number.
       const weekData = loadedFromDraft ? this.props.weekReview.draftData : studentData[0].weeks.filter(theWeek => theWeek.weekNumber === Number(this.props.ownProps.weekNumber))[0]
       const checks = weekData ? weekData.checks || {} : {}
       const weekPoints = studentData[0].weeks

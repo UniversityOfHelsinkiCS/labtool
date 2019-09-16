@@ -49,19 +49,24 @@ export class BrowseReviews extends Component {
     const numberOfOpen = Object.values(openWeeks).filter(x => x).length
 
     if (numberOfOpen === 0) {
+      // if no reviews open, open the clicked tab
       this.setState({ openWeeks: { [index]: true } })
     } else if (numberOfOpen === 1) {
+      // if one open, open the clicked tab and close everything else,
+      // or close everything if we clicked the open one
       this.setState({ openWeeks: { [index]: !openWeeks[index] } })
     } else {
+      // if multiple open, simply toggle open/close
       this.setState({ openWeeks: { ...openWeeks, [index]: !openWeeks[index] } })
     }
   }
 
   getMaximumIndexForStudent = student => {
+    // how many reviews will there be?
     return this.props.selectedInstance.weekAmount + student.codeReviews.length + 1
   }
 
-  hasAllTabsOpen = student => {
+  hasAllReviewsOpen = student => {
     return Object.values(this.state.openWeeks).filter(x => x).length == this.getMaximumIndexForStudent(student)
   }
 
@@ -123,6 +128,10 @@ export class BrowseReviews extends Component {
     })
   }
 
+  isTeacher = () => {
+    return this.props.courseData.role === 'teacher'
+  }
+
   renderStudentCard = student => (
     <Card key={student.id} fluid color="yellow">
       <Card.Content>
@@ -141,10 +150,6 @@ export class BrowseReviews extends Component {
       </Card.Content>
     </Card>
   )
-
-  isTeacher = () => {
-    return this.props.courseData.role === 'teacher'
-  }
 
   renderComment = isFinalWeek => comment =>
     comment.hidden ? (
@@ -319,11 +324,10 @@ export class BrowseReviews extends Component {
         // studentInstance is id of student. Type: String
         // Tämä pitää myös korjata.
         if (student.id === Number(studentInstance)) {
-          const allTabsOpen = this.hasAllTabsOpen(student)
           headers.push(this.renderStudentCard(student))
           headers.push(
             <span>
-              {allTabsOpen ? (
+              {this.hasAllReviewsOpen(student) ? (
                 <Button type="button" onClick={this.handleClickHideAll} size="small">
                   Hide all reviews
                 </Button>
@@ -377,6 +381,7 @@ export class BrowseReviews extends Component {
     )
   }
 }
+
 const mapStateToProps = (state, ownProps) => {
   return {
     ...ownProps,
