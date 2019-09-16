@@ -13,7 +13,7 @@ Project technical name: labtool2019
 We have continued work which was started by the previous group (Software Engineering Project, TKT20007) during spring and early summer semesters, 2018. They rewrote the entire codebase of Labtool in `Node.js` and `React`. Previously `Ruby on Rails` was used.
 
 Current documentation:
-- Current group's [GitHub Project](https://github.com/UniversityOfHelsinkiCS/labtool/projects/2) (latest)
+- Current group's [GitHub Project](https://github.com/UniversityOfHelsinkiCS/labtool/projects/3) (latest)
 - Labtool's [Wiki on GitHub](https://github.com/UniversityOfHelsinkiCS/labtool/wiki)
 - Our public [Google Drive -folder](https://drive.google.com/drive/folders/1yXDXPn3Vj0_D2rhvVpFLupjDC3mlR-hf)
 
