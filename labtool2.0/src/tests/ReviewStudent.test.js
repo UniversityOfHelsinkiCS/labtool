@@ -485,6 +485,7 @@ describe('<ReviewStudent />', () => {
       <ReviewStudent
         getOneCI={mockFn}
         clearNotifications={mockFn}
+        getWeekDraft={mockFn}
         courseData={props.coursePage}
         ownProps={ownProps}
         selectedInstance={props.selectedInstance}

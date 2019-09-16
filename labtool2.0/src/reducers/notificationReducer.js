@@ -63,6 +63,16 @@ const notificationReducer = (state = {}, action) => {
         message: 'Invalid inputs.',
         error: true
       }
+    case 'WEEKDRAFTS_CREATE_ONESUCCESS':
+      return {
+        message: 'Week draft saved successfully!',
+        error: false
+      }
+    case 'WEEKDRAFTS_CREATE_ONEFAILURE':
+      return {
+        message: 'Invalid inputs.',
+        error: true
+      }
     case 'COMMENT_CREATE_ONE_SUCCESS':
       return {
         message: 'Comment created successfully!',

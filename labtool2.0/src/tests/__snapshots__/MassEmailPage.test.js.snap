@@ -65,283 +65,290 @@ exports[`<MassEmailPage /> MassEmailPage Component should render correctly 1`] =
       as="form"
       onSubmit={[Function]}
     >
-      <Table
-        as="table"
-        celled={true}
-        compact={true}
-        unstackable={true}
-      >
-        <TableHeader
-          as="thead"
+      <HorizontalScrollable>
+        <Table
+          as="table"
+          celled={true}
+          compact={true}
+          style={
+            Object {
+              "overflowX": "visible",
+            }
+          }
+          unstackable={true}
         >
-          <TableRow
-            as="tr"
-            cellAs="td"
+          <TableHeader
+            as="thead"
           >
-            <TableHeaderCell
-              as="th"
-              key="-1"
+            <TableRow
+              as="tr"
+              cellAs="td"
             >
-              Send?
-            </TableHeaderCell>
-            <TableHeaderCell
-              as="th"
-            >
-              Student
-            </TableHeaderCell>
-            <TableHeaderCell
-              as="th"
-            >
-              id
-            </TableHeaderCell>
-            <TableHeaderCell
-              as="th"
-            >
-              email
-            </TableHeaderCell>
-            <TableHeaderCell
-              as="th"
-            >
-              Project Info
-            </TableHeaderCell>
-            <TableHeaderCell
-              as="th"
-              width="six"
-            >
-               Instructor 
-            </TableHeaderCell>
-          </TableRow>
-        </TableHeader>
-        <TableBody
-          as="tbody"
-        >
-          <TableRow
-            as="tr"
-            cellAs="td"
-            className="TableRowForActiveStudents"
-            key="10012"
-          >
-            <TableCell
-              as="td"
-            >
-              <FormCheckbox
-                as={[Function]}
-                control={[Function]}
-                name="send10012"
-              />
-            </TableCell>
-            <TableCell
-              as="td"
-            >
-              Johan Wilhelm
-               
-              Studerande
-            </TableCell>
-            <TableCell
-              as="td"
-            >
-              <span>
-                014553242
-              </span>
-            </TableCell>
-            <TableCell
-              as="td"
-            >
-              <a
-                href="mailto:johan.studerande@helsinki.fi"
+              <TableHeaderCell
+                as="th"
+                key="-1"
               >
-                johan.studerande@helsinki.fi
-              </a>
-            </TableCell>
-            <TableCell
-              as="td"
-            >
-              <span>
-                Tiran toinen labraprojekti
-                <br />
-                <a
-                  href="http://github.com/tiralabra2"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  http://github.com/tiralabra2
-                </a>
-                <div
-                  key="20001"
-                >
-                  <Button
-                    as="button"
-                    className="mini ui red button"
-                    compact={true}
-                    floated="left"
-                    onClick={[Function]}
-                    role="button"
-                  >
-                    Javascript
-                  </Button>
-                </div>
-              </span>
-            </TableCell>
-            <TableCell
-              as="td"
-            >
-              <span>
-                not assigned
-              </span>
-            </TableCell>
-          </TableRow>
-          <TableRow
-            as="tr"
-            cellAs="td"
-            className="TableRowForActiveStudents"
-            key="10031"
-          >
-            <TableCell
-              as="td"
-            >
-              <FormCheckbox
-                as={[Function]}
-                control={[Function]}
-                name="send10031"
-              />
-            </TableCell>
-            <TableCell
-              as="td"
-            >
-              Teräs
-               
-              Henkilö
-            </TableCell>
-            <TableCell
-              as="td"
-            >
-              <span>
-                014666666
-              </span>
-            </TableCell>
-            <TableCell
-              as="td"
-            >
-              <a
-                href="mailto:teras.henkilo@helsinki.fi"
+                Send?
+              </TableHeaderCell>
+              <TableHeaderCell
+                as="th"
               >
-                teras.henkilo@helsinki.fi
-              </a>
-            </TableCell>
-            <TableCell
-              as="td"
-            >
-              <span>
-                Tira super projekti
-                <br />
-                <a
-                  href="http://github.com/superprojekti"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  http://github.com/superprojekti
-                </a>
-                <div
-                  key="20008"
-                >
-                  <Button
-                    as="button"
-                    className="mini ui grey button"
-                    compact={true}
-                    floated="left"
-                    onClick={[Function]}
-                    role="button"
-                  >
-                    DROPPED
-                  </Button>
-                </div>
-                <div
-                  key="20002"
-                >
-                  <Button
-                    as="button"
-                    className="mini ui yellow button"
-                    compact={true}
-                    floated="left"
-                    onClick={[Function]}
-                    role="button"
-                  >
-                    HTML
-                  </Button>
-                </div>
-              </span>
-            </TableCell>
-            <TableCell
-              as="td"
-            >
-              <span>
-                not assigned
-              </span>
-            </TableCell>
-          </TableRow>
-          <TableRow
-            as="tr"
-            cellAs="td"
-            className="TableRowForActiveStudents"
-            key="10011"
-          >
-            <TableCell
-              as="td"
-            >
-              <FormCheckbox
-                as={[Function]}
-                control={[Function]}
-                name="send10011"
-              />
-            </TableCell>
-            <TableCell
-              as="td"
-            >
-              Maarit Mirja
-               
-              Opiskelija
-            </TableCell>
-            <TableCell
-              as="td"
-            >
-              <span>
-                014578343
-              </span>
-            </TableCell>
-            <TableCell
-              as="td"
-            >
-              <a
-                href="mailto:maarit.opiskelija@helsinki.fi"
+                Student
+              </TableHeaderCell>
+              <TableHeaderCell
+                as="th"
               >
-                maarit.opiskelija@helsinki.fi
-              </a>
-            </TableCell>
-            <TableCell
-              as="td"
+                id
+              </TableHeaderCell>
+              <TableHeaderCell
+                as="th"
+              >
+                email
+              </TableHeaderCell>
+              <TableHeaderCell
+                as="th"
+              >
+                Project Info
+              </TableHeaderCell>
+              <TableHeaderCell
+                as="th"
+                width="six"
+              >
+                 Instructor 
+              </TableHeaderCell>
+            </TableRow>
+          </TableHeader>
+          <TableBody
+            as="tbody"
+          >
+            <TableRow
+              as="tr"
+              cellAs="td"
+              className="TableRowForActiveStudents"
+              key="10012"
             >
-              <span>
-                Tiran labraprojekti
-                <br />
+              <TableCell
+                as="td"
+              >
+                <FormCheckbox
+                  as={[Function]}
+                  control={[Function]}
+                  name="send10012"
+                />
+              </TableCell>
+              <TableCell
+                as="td"
+              >
+                Johan Wilhelm
+                 
+                Studerande
+              </TableCell>
+              <TableCell
+                as="td"
+              >
+                <span>
+                  014553242
+                </span>
+              </TableCell>
+              <TableCell
+                as="td"
+              >
                 <a
-                  href="http://github.com/tiralabra1"
-                  rel="noopener noreferrer"
-                  target="_blank"
+                  href="mailto:johan.studerande@helsinki.fi"
                 >
-                  http://github.com/tiralabra1
+                  johan.studerande@helsinki.fi
                 </a>
-              </span>
-            </TableCell>
-            <TableCell
-              as="td"
+              </TableCell>
+              <TableCell
+                as="td"
+              >
+                <span>
+                  Tiran toinen labraprojekti
+                  <br />
+                  <a
+                    href="http://github.com/tiralabra2"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    http://github.com/tiralabra2
+                  </a>
+                  <div
+                    key="20001"
+                  >
+                    <Button
+                      as="button"
+                      className="mini ui red button"
+                      compact={true}
+                      floated="left"
+                      onClick={[Function]}
+                      role="button"
+                    >
+                      Javascript
+                    </Button>
+                  </div>
+                </span>
+              </TableCell>
+              <TableCell
+                as="td"
+              >
+                <span>
+                  not assigned
+                </span>
+              </TableCell>
+            </TableRow>
+            <TableRow
+              as="tr"
+              cellAs="td"
+              className="TableRowForActiveStudents"
+              key="10031"
             >
-              <span>
-                not assigned
-              </span>
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
+              <TableCell
+                as="td"
+              >
+                <FormCheckbox
+                  as={[Function]}
+                  control={[Function]}
+                  name="send10031"
+                />
+              </TableCell>
+              <TableCell
+                as="td"
+              >
+                Teräs
+                 
+                Henkilö
+              </TableCell>
+              <TableCell
+                as="td"
+              >
+                <span>
+                  014666666
+                </span>
+              </TableCell>
+              <TableCell
+                as="td"
+              >
+                <a
+                  href="mailto:teras.henkilo@helsinki.fi"
+                >
+                  teras.henkilo@helsinki.fi
+                </a>
+              </TableCell>
+              <TableCell
+                as="td"
+              >
+                <span>
+                  Tira super projekti
+                  <br />
+                  <a
+                    href="http://github.com/superprojekti"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    http://github.com/superprojekti
+                  </a>
+                  <div
+                    key="20008"
+                  >
+                    <Button
+                      as="button"
+                      className="mini ui grey button"
+                      compact={true}
+                      floated="left"
+                      onClick={[Function]}
+                      role="button"
+                    >
+                      DROPPED
+                    </Button>
+                  </div>
+                  <div
+                    key="20002"
+                  >
+                    <Button
+                      as="button"
+                      className="mini ui yellow button"
+                      compact={true}
+                      floated="left"
+                      onClick={[Function]}
+                      role="button"
+                    >
+                      HTML
+                    </Button>
+                  </div>
+                </span>
+              </TableCell>
+              <TableCell
+                as="td"
+              >
+                <span>
+                  not assigned
+                </span>
+              </TableCell>
+            </TableRow>
+            <TableRow
+              as="tr"
+              cellAs="td"
+              className="TableRowForActiveStudents"
+              key="10011"
+            >
+              <TableCell
+                as="td"
+              >
+                <FormCheckbox
+                  as={[Function]}
+                  control={[Function]}
+                  name="send10011"
+                />
+              </TableCell>
+              <TableCell
+                as="td"
+              >
+                Maarit Mirja
+                 
+                Opiskelija
+              </TableCell>
+              <TableCell
+                as="td"
+              >
+                <span>
+                  014578343
+                </span>
+              </TableCell>
+              <TableCell
+                as="td"
+              >
+                <a
+                  href="mailto:maarit.opiskelija@helsinki.fi"
+                >
+                  maarit.opiskelija@helsinki.fi
+                </a>
+              </TableCell>
+              <TableCell
+                as="td"
+              >
+                <span>
+                  Tiran labraprojekti
+                  <br />
+                  <a
+                    href="http://github.com/tiralabra1"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    http://github.com/tiralabra1
+                  </a>
+                </span>
+              </TableCell>
+              <TableCell
+                as="td"
+              >
+                <span>
+                  not assigned
+                </span>
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </HorizontalScrollable>
       <br />
       <FormTextArea
         as={[Function]}

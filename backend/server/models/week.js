@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
       points: DataTypes.DOUBLE,
       weekNumber: DataTypes.INTEGER,
       feedback: DataTypes.STRING,
+      instructorNotes: DataTypes.STRING,
       notified: DataTypes.BOOLEAN,
       checks: DataTypes.JSONB
     },

@@ -554,14 +554,13 @@ export class CoursePage extends React.Component {
             <div>
               <h2>{this.props.selectedInstance.name}</h2>
             </div>
-            {this.props.courseInstance && this.props.courseInstance.active === true ? (
-              this.props.courseData.data !== null ? (
-                <p />
-              ) : (
+            {this.props.courseInstance && this.props.courseInstance.active !== true ? (
+              !this.props.selectedInstance.active && (
                 <div>
                   <Message compact>
                     <Message.Header>You have not activated this course.</Message.Header>
                   </Message>
+                  <br />
                 </div>
               )
             ) : (
@@ -605,7 +604,7 @@ export class CoursePage extends React.Component {
       const rowClassName = droppedOut ? 'TableRowForDroppedOutStudents' : 'TableRowForActiveStudents'
       return (
         <div className={tableClassName}>
-          <Header as="h2">{ heading } </Header>
+          <Header as="h2">{heading} </Header>
           <div style={{ textAlign: 'left' }}>
             <span>Filter by instructor </span>
             <Dropdown

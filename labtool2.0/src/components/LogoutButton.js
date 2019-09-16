@@ -4,9 +4,7 @@ import { connect } from 'react-redux'
 import { Button } from 'semantic-ui-react'
 
 export const LogoutButton = ({ logout }) => (
-  <Button onClick={logout}>
-    Logout
-  </Button>
+  <Button onClick={logout}>Logout</Button>
 )
 
 export default withRouter(
