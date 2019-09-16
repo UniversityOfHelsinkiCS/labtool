@@ -35,7 +35,7 @@ export default class JsonEdit extends React.Component {
   }
 
   render() {
-    const { initialData, style } = this.props
+    const { downloadName, style } = this.props
     const { data, open } = this.state
 
     return (
@@ -64,7 +64,7 @@ export default class JsonEdit extends React.Component {
               floated="left"
               as="a"
               href={this.hasValidData() ? `data:application/json,${encodeURI(JSON.stringify(JSON.parse(data), null, 4))}` : undefined}
-              download="data.json"
+              download={downloadName || 'data.json'}
               target="_blank"
             />
             <FileInput
@@ -98,5 +98,6 @@ export default class JsonEdit extends React.Component {
 JsonEdit.propTypes = {
   onImport: PropTypes.func.isRequired,
   initialData: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
-  style: PropTypes.object
+  style: PropTypes.object,
+  downloadName: PropTypes.string
 }
