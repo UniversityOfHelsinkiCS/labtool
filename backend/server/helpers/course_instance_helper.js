@@ -1,3 +1,5 @@
+const Sequelize = require('sequelize')
+
 const application_helpers = require('./application_helper')
 const logger = require('../utils/logger')
 const { Week, CourseInstance, StudentInstance, TeacherInstance } = require('../models')
@@ -116,6 +118,39 @@ async function checkHasCommentPermission(user, weekId) {
   // ok, user is the student whose review we are trying to comment on?
   const isCorrectStudent = student && (student.userId === user.id)
   return isTeacher || isCorrectStudent
+}
+
+/**
+ * Checks if logged in user has permission to see student instance
+ * @param {*} req
+ * @param {*} courseInstanceId
+ * @param {*} userId
+ */
+async function checkHasPermissionToViewStudentInstance(req, courseInstanceId, userId) {
+  const adminTeacherInstance = await TeacherInstance.findOne({ where: {
+    userId: req.decoded.id,
+    courseInstanceId,
+    admin: true
+  } })
+
+  // Logged in user is admin on the course
+  if (adminTeacherInstance) {
+    return true
+  }
+
+  // Find student instance where logged in user is either student or assigned teacher
+  const studentInstances = await StudentInstance.findAll({
+    where: {
+      courseInstanceId,
+      userId,
+      [Sequelize.Op.or]: [
+        { userId: req.decoded.id },
+        { '$TeacherInstance.userId$': req.decoded.id }
+      ]
+    },
+    include: [TeacherInstance]
+  })
+  return studentInstances.length > 0
 }
 
 /**
