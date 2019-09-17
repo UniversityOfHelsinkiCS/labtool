@@ -18,6 +18,7 @@ exports.getCurrent = application_helpers.getCurrent
 exports.controller_before_auth_check_action = application_helpers.controller_before_auth_check_action
 exports.checkHasCommentPermission = checkHasCommentPermission
 exports.getTeacherId = application_helpers.getTeacherId
+exports.checkHasPermissionToViewStudentInstance = checkHasPermissionToViewStudentInstance
 
 /**
  * Only used in courseInstance controller so its place is here.
