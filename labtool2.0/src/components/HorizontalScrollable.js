@@ -19,30 +19,35 @@ export class HorizontalScrollable extends React.Component {
 
   componentDidMount() {
     window.addEventListener('scroll', this.updateSticky)
-    window.addEventListener('resize', this.updateSticky)
-    this.updateSticky()
+    window.addEventListener('resize', this.onResize)
+    this.onResize()
   }
   componentWillUnmount() {
     window.removeEventListener('scroll', this.updateSticky)
-    window.removeEventListener('resize', this.updateSticky)
+    window.removeEventListener('resize', this.onResize)
   }
 
-  maybeResizeBar() {
+  onResize = () => {
+    this.maybeResizeBar()
+    this.updateSticky()
+  }
+
+  maybeResizeBar = () => {
     if (this.content && this.scrollbar) {
       // make scrollable range as wide as table itself, but keep the
       // scroll bar width as the viewable width of the table
       const oldScrollLeft = this.scrollbar.scrollLeft
-      this.scrollbar.style.maxWidth = `${this.content.offsetWidth}px`
+      this.scrollbar.style.width = this.scrollbar.style.maxWidth = `${this.content.offsetWidth}px`
       this.scrollbar.children[0].style.width = `${this.content.scrollWidth}px`
       this.scrollbar.children[0].style.height = '1px'
       this.scrollbar.scrollLeft = oldScrollLeft
+      this.scrollbar.style.overflowX = this.content.scrollWidth > this.content.offsetWidth ? 'scroll' : 'auto'
     }
   }
 
   updateScrollX = e => {
     // synchronize scroll positions
     const newX = e.target.scrollLeft
-    this.maybeResizeBar()
     if (this.content) this.content.scrollLeft = newX
     if (this.scrollbar) this.scrollbar.scrollLeft = newX
   }
