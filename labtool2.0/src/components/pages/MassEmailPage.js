@@ -270,7 +270,7 @@ export class MassEmailPage extends React.Component {
 
             <Form.TextArea name="content" placeholder="Type email here..." defaultValue="" required />
             <Button type="submit" className="ui green button" content="Send" />
-            
+
             <br />
             <br />
 

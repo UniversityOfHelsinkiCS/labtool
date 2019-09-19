@@ -32,7 +32,7 @@ async function hasPermissionToImport(userId) {
 function formatCoursesForList(courses) {
   const result = []
 
-  courses.forEach(course => {
+  courses.forEach((course) => {
     result.push({
       hid: course.id,
       cname: course.name,

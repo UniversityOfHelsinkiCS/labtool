@@ -216,7 +216,7 @@ const notificationReducer = (state = {}, action) => {
       }
     case 'MASS_EMAIL_SENDFAILURE':
       return {
-        message: `Could not send e-mail; ${action.response && action.response.response.data.message || 'no students selected'}`,
+        message: `Could not send e-mail; ${(action.response && action.response.response.data.message) || 'no students selected'}`,
         error: true
       }
     case 'COURSE_IMPORT_DO_IMPORT_SUCCESS':

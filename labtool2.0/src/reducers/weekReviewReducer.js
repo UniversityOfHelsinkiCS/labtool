@@ -47,7 +47,7 @@ const weekReviewReducer = (state = INITIAL_STATE, action) => {
           draftCreatedAt: null
         }
       }
-      return { 
+      return {
         ...state,
         draftData: action.response.data,
         draftCreatedAt: action.response.updatedAt,

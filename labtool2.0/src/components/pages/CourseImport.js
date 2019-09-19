@@ -43,7 +43,9 @@ export class CourseImport extends Component {
                 <Table singleLine color="yellow" style={{ overflowX: 'visible' }}>
                   <Table.Header>
                     <Table.Row>
-                      <Table.HeaderCell colSpan="1" key={-1}>Import?</Table.HeaderCell>
+                      <Table.HeaderCell colSpan="1" key={-1}>
+                        Import?
+                      </Table.HeaderCell>
                       <Table.HeaderCell colSpan="1">Course id</Table.HeaderCell>
                       <Table.HeaderCell colSpan="1">Course name</Table.HeaderCell>
                       <Table.HeaderCell colSpan="1">Course start date</Table.HeaderCell>
@@ -83,10 +85,8 @@ export class CourseImport extends Component {
             </Form>
           ) : (
             <div>
-              <h4>
-                There are no courses in Kurki to import
-              </h4>
-              
+              <h4>There are no courses in Kurki to import</h4>
+
               <Link to="/labtool/courses">
                 <Button className="ui button" type="cancel">
                   Back
@@ -109,11 +109,11 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 const mapDispatchToProps = {
-  resetLoading, 
-  getIsAllowedToImport, 
-  getImportableCourses, 
+  resetLoading,
+  getIsAllowedToImport,
+  getImportableCourses,
   importCourses,
-  addRedirectHook 
+  addRedirectHook
 }
 
 export default connect(
