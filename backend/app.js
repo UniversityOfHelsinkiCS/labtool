@@ -133,6 +133,7 @@ require('./server/routes/checklistRoutes')(app)
 require('./server/routes/tagRoutes')(app)
 require('./server/routes/checklistRoutes')(app)
 require('./server/routes/emailRoutes')(app)
+require('./server/routes/courseImportRoutes')(app)
 
 app.get('*', (req, res) => res.status(404).send({
   message: 'Not found.'

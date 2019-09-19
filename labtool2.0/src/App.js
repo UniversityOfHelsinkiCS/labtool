@@ -21,6 +21,7 @@ import MyPage from './components/pages/MyPage'
 import CreateChecklist from './components/pages/CreateChecklist'
 import ManageTags from './components/pages/ManageTags'
 import FakeLoginPage from './components/pages/FakeLoginPage'
+import CourseImport from './components/pages/CourseImport'
 
 // Reducer imports
 import { logout, tokenLogin } from './reducers/loginReducer'
@@ -109,6 +110,7 @@ class App extends Component {
             <Route path={'/labtool/checklist/:id/create'} render={({ match }) => <CreateChecklist courseId={match.params.id} />} />
             <Route path={'/labtool/ManageTags'} component={ManageTags} />
             <Route path={'/labtool/checklist/:id/create'} render={({ match }) => <CreateChecklist courseId={match.params.id} />} />
+            <Route path={'/labtool/courseimport'} render={() => <CourseImport />} />
             <Route path={`/`} render={() => <MyPage />} />
           </Switch>
         </main>

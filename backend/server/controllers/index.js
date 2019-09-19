@@ -6,6 +6,7 @@ const weeks = require('./weeks')
 const assistants = require('./assistants')
 const codeReviews = require('./codeReviews')
 const tags = require('./tags')
+const courseImport = require('./courseImport')
 
 module.exports = {
   courseInstances,
@@ -15,5 +16,6 @@ module.exports = {
   weeks,
   assistants,
   codeReviews,
-  tags
+  tags,
+  courseImport
 }
