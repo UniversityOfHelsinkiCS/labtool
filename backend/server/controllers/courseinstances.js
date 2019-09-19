@@ -385,7 +385,7 @@ module.exports = {
                 .update({
                   github: req.body.github || targetStudent.github,
                   projectName: req.body.projectname || targetStudent.projectName,
-                  dropped: req.body.dropped || targetStudent.dropped
+                  dropped: 'dropped' in req.body ? req.body.dropped : targetStudent.dropped
                 })
                 .then((updatedStudentInstance) => {
                   res.status(200).send(updatedStudentInstance)

@@ -103,7 +103,7 @@ export class BrowseReviews extends Component {
     this.props.updateStudentProjectInfo({
       ohid: this.props.selectedInstance.ohid,
       userId: this.props.courseData.data.find(data => data.id === Number(this.props.studentInstance)).userId,
-      dropped: dropped
+      dropped
     })
   }
 
