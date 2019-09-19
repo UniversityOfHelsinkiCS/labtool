@@ -9,6 +9,7 @@ import ReactMarkdown from 'react-markdown'
 import { sendEmail } from '../../services/email'
 import { resetLoading } from '../../reducers/loadingReducer'
 import { trimDate } from '../../util/format'
+import { getCoursesByStudentId } from '../../services/studentinstances'
 
 import BackButton from '../BackButton'
 import { FormMarkdownTextArea } from '../MarkdownTextArea'
@@ -29,6 +30,7 @@ export class BrowseReviews extends Component {
     await this.props.resetLoading()
     this.props.getOneCI(this.props.courseId)
     this.props.coursePageInformation(this.props.courseId)
+    this.props.getCoursesByStudentId(Number(this.props.studentInstance))
   }
 
   componentDidMount() {
@@ -132,6 +134,22 @@ export class BrowseReviews extends Component {
     return this.props.courseData.role === 'teacher'
   }
 
+  //get student's other participations in the same course
+  renderStudentPreviousParticipation = () => {
+    const previousParticipations = this.props.studentInstanceToBeReviewed.filter(
+      courseInstance => courseInstance.ohid.includes(this.props.courseId.substring(0, 8)) && courseInstance.ohid !== this.props.courseId
+    )
+    if (previousParticipations.length === 0) {
+      return <p>First time to participate the course</p>
+    }
+    return (
+      <div>
+        <p style={{ color: 'red' }}>Has other participations</p>
+        {previousParticipations.map(participation => <p key={participation.id}>{participation.ohid}</p>)}
+      </div>
+    )
+  }
+
   renderStudentCard = student => (
     <Card key={student.id} fluid color="yellow">
       <Card.Content>
@@ -147,6 +165,7 @@ export class BrowseReviews extends Component {
             {student.github}
           </a>
         </h3>
+        {this.renderStudentPreviousParticipation()}
       </Card.Content>
     </Card>
   )
@@ -388,6 +407,7 @@ const mapStateToProps = (state, ownProps) => {
     user: state.user,
     selectedInstance: state.selectedInstance,
     courseData: state.coursePage,
+    studentInstanceToBeReviewed: state.studentInstance,
     loading: state.loading
   }
 }
@@ -398,6 +418,7 @@ const mapDispatchToProps = {
   coursePageInformation,
   gradeCodeReview,
   sendEmail,
+  getCoursesByStudentId: getCoursesByStudentId,
   resetLoading
 }
 
