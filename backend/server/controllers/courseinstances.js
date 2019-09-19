@@ -36,6 +36,30 @@ module.exports = {
         res.status(400).send(error)
       })
   },
+
+  /**
+   * Gets courses of a user who has the studentInstance with id=req.params.id
+   * @param {*} req 
+   * @param {*} res 
+   */
+  async findByStudentInstanceId(req, res) {
+    helper.controller_before_auth_check_action(req, res)
+    const studentInstance = await StudentInstance.findOne({
+      where: { id: req.params.id } // id is StudentInstance.id
+    })
+    await CourseInstance.findAll({
+      include: [{
+        model: StudentInstance,
+        required: true,
+        where: { userId: studentInstance.userId },
+        as: 'courseInstances'
+      }]
+    }).then(courseInstances => res.status(200).send(courseInstances))
+      .catch((error) => {
+        logger.error(error)
+        res.status(400).send(error)
+      })
+  },
   /**
    *
    * @param req
