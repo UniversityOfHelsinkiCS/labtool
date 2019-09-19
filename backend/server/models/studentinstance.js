@@ -15,6 +15,11 @@ module.exports = (sequelize, DataTypes) => {
         validate: {
           is: ['^[a-zåäöA-ZÅÄÖ\'\\-0-9]+( [a-zåäöA-ZÅÄÖ\'\\-0-9]+)*$']
         }
+      },
+      dropped: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
       }
     },
     {}

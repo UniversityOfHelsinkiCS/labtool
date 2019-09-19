@@ -343,8 +343,10 @@ module.exports = {
   /**
    * req.body:
    *    {
+   *      userId, //Only required if updating student instance of other user than the currently logged in
    *      github,
-   *      projectname
+   *      projectname,
+   *      dropped
    *    }
    */
   updateStudentInstance(req, res) {
@@ -352,6 +354,8 @@ module.exports = {
 
     try {
       if (req.authenticated.success) {
+        const userId = req.body.userId || req.decoded.id
+
         CourseInstance.findOne({
           where: {
             ohid: req.body.ohid
@@ -362,9 +366,14 @@ module.exports = {
               res.status(404).send('course not found')
               return
             }
+            helper.checkHasPermissionToViewStudentInstance(req, course.id, userId).then(isAllowedToUpdate => {
+              if (!isAllowedToUpdate) {
+                res.status(401).send(`Not allowed to update student instance for user ${userId}`)
+              }
+            })
             StudentInstance.find({
               where: {
-                userId: req.decoded.id,
+                userId: userId,
                 courseInstanceId: course.id
               }
             }).then((targetStudent) => {
@@ -375,7 +384,8 @@ module.exports = {
               targetStudent
                 .update({
                   github: req.body.github || targetStudent.github,
-                  projectName: req.body.projectname || targetStudent.projectName
+                  projectName: req.body.projectname || targetStudent.projectName,
+                  dropped: req.body.dropped || targetStudent.dropped
                 })
                 .then((updatedStudentInstance) => {
                   res.status(200).send(updatedStudentInstance)
