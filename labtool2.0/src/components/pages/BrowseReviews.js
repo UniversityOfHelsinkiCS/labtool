@@ -100,7 +100,7 @@ export class BrowseReviews extends Component {
   }
 
   handleMarkAsDropped = async dropped => {
-    this.props.updateStudentProjectInfo({ 
+    this.props.updateStudentProjectInfo({
       ohid: this.props.selectedInstance.ohid,
       userId: this.props.courseData.data.find(data => data.id === Number(this.props.studentInstance)).userId,
       dropped: dropped
@@ -157,7 +157,7 @@ export class BrowseReviews extends Component {
           </a>
         </h3>
         <p>{`Dropped course: ${student.dropped}`}</p>
-        { <Button onClick={() => this.handleMarkAsDropped(!student.dropped)}>{ student.dropped ? "Mark as non-dropped" : "Mark as dropped" }</Button> }
+        {<Button onClick={() => this.handleMarkAsDropped(!student.dropped)}>{student.dropped ? 'Mark as non-dropped' : 'Mark as dropped'}</Button>}
       </Card.Content>
     </Card>
   )

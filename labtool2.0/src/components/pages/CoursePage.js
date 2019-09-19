@@ -7,6 +7,7 @@ import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import { associateTeacherToStudent } from '../../services/assistant'
 import ReactMarkdown from 'react-markdown'
 import { getAllTags, tagStudent, unTagStudent } from '../../services/tags'
+import { updateStudentProjectInfo } from '../../services/studentinstances'
 import { addLinkToCodeReview } from '../../services/codeReview'
 import { sendEmail } from '../../services/email'
 import {
@@ -155,13 +156,24 @@ export class CoursePage extends React.Component {
     return hasRequiredTags
   }
 
-  hasDroppedOut = studentTagsData => {
-    let studentInstanceTagNames = studentTagsData.map(tag => tag.name)
+  hasDroppedOut = dropped => {
     let hasDroppedOut = false
-    if (studentInstanceTagNames.includes('DROPPED')) {
+    if (dropped === true) {
       hasDroppedOut = true
     }
     return hasDroppedOut
+  }
+
+  hasDroppedTag = studentTagsData => {
+    let studentInstanceTagNames = studentTagsData.map(tag => tag.name)
+    let hasDroppedTag = false
+    if (studentInstanceTagNames.includes('DROPPED')) {
+      hasDroppedTag = true
+    }
+    if (studentInstanceTagNames.includes('dropped')) {
+      hasDroppedTag = true
+    }
+    return hasDroppedTag
   }
 
   updateTeacher = id => async e => {
@@ -650,7 +662,7 @@ export class CoursePage extends React.Component {
                 {this.props.courseData && this.props.courseData.data ? (
                   this.props.courseData.data
                     .filter(data => {
-                      return droppedOut === this.hasDroppedOut(data.Tags)
+                      return droppedOut === this.hasDroppedOut(data.dropped)
                     })
                     .filter(data => {
                       return droppedOut || this.props.coursePageLogic.filterByAssistant === 0 || this.props.coursePageLogic.filterByAssistant === data.teacherInstanceId
@@ -871,7 +883,8 @@ const mapDispatchToProps = {
   sendEmail,
   updateActiveIndex,
   unTagStudent,
-  resetLoading
+  resetLoading,
+  updateStudentProjectInfo
 }
 
 export default connect(
