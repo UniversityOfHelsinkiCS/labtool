@@ -24,9 +24,7 @@ export class Notification extends React.Component {
     const error = this.props.notification.error
 
     if (message === undefined) {
-      return (
-        <div />
-      )
+      return <div />
     } else if (error) {
       return (
         <Message className="error" color="red" size="large">

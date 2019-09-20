@@ -13,16 +13,9 @@
   ohid(pin): "TKT20011.2018.K.A.1" -- Opetushallitus id of the course, is often used instead of the database id
  */
 import { sortCourses } from '../util/sort'
+import { createEuropeanDate, createShorterCourseid } from '../util/format'
 
 // A few helperfunctions to create european form start / end date and to make a prettier course id `
-
-const createEuropeanDate = date => {
-  return `${date.substring(8, 10)}.${date.substring(5, 7)}.${date.substring(0, 4)}`
-}
-
-const createShorterCourseid = ohid => {
-  return `${ohid.substring(0, 8)}`
-}
 
 const INITIAL_STATE = {}
 
