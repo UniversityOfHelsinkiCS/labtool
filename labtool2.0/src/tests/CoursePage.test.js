@@ -251,7 +251,6 @@ describe('<CoursePage /> as teacher', () => {
       expect(wrapper.find('.TeachersBottomViewForDroppedOutStudents').length).toEqual(1)
     })
 
-
     it('doesnt render students top view when role is teacher', () => {
       expect(wrapper.find('.StudentsView').length).toEqual(0)
     })

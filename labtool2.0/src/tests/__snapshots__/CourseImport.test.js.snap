@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<CourseImport /> CourseImport Component should render correctly 1`] = `
+<div
+  className="CourseImport"
+>
+  <Container>
+    <Header
+      as="h2"
+    >
+      Import courses
+    </Header>
+    <Loader
+      active={true}
+    />
+  </Container>
+</div>
+`;

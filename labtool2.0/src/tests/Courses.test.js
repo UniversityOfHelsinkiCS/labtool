@@ -55,7 +55,10 @@ describe('<Courses />', () => {
         europeanEnd: '10.03.2018',
         shorterId: 'TKT20011'
       }
-    ]
+    ],
+    courseImport: {
+      canImport: true
+    }
   }
 
   const loading = {
@@ -69,7 +72,7 @@ describe('<Courses />', () => {
   let mockFn = jest.fn()
 
   beforeEach(() => {
-    wrapper = shallow(<Courses getAllCI={mockFn} courseInstance={props.courseInstance} loading={loading} resetLoading={mockFn} />)
+    wrapper = shallow(<Courses getAllCI={mockFn} courseInstance={props.courseInstance} loading={loading} resetLoading={mockFn} getIsAllowedToImport={mockFn} />)
   })
 
   describe('Courses Component', () => {

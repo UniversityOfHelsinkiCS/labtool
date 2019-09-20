@@ -3,6 +3,7 @@ import { Button, Container, Header, Table, Label, Popup, Loader } from 'semantic
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { getAllCI } from '../../services/courseInstance'
+import { getIsAllowedToImport } from '../../services/courseImport'
 import { resetLoading } from '../../reducers/loadingReducer'
 import { HorizontalScrollable } from '../HorizontalScrollable'
 
@@ -12,6 +13,7 @@ import { HorizontalScrollable } from '../HorizontalScrollable'
 export class Courses extends Component {
   componentWillMount = async () => {
     await this.props.resetLoading()
+    this.props.getIsAllowedToImport()
     this.props.getAllCI()
   }
 
@@ -69,6 +71,12 @@ export class Courses extends Component {
               </Table>
             </HorizontalScrollable>
           )}
+          {this.props.canImport && (
+            <Link to="/labtool/courseimport">
+              <br />
+              <Button size="small">Import courses to Labtool</Button>
+            </Link>
+          )}
         </Container>
       </div>
     )
@@ -78,11 +86,12 @@ export class Courses extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     courseInstance: state.courseInstance,
-    loading: state.loading
+    loading: state.loading,
+    canImport: state.courseImport.canImport
   }
 }
 
 export default connect(
   mapStateToProps,
-  { getAllCI, resetLoading }
+  { getAllCI, resetLoading, getIsAllowedToImport }
 )(Courses)

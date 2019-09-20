@@ -264,10 +264,12 @@ export class MassEmailPage extends React.Component {
                 </Table.Body>
               </Table>
             </HorizontalScrollable>
+
+            <br />
             <br />
 
             <Form.TextArea name="content" placeholder="Type email here..." defaultValue="" required />
-            <Button type="submit" content="Send" />
+            <Button type="submit" className="ui green button" content="Send" />
 
             <br />
             <br />
