@@ -695,11 +695,6 @@ module.exports = {
       try {
         const message = req.body
 
-        if (message.trim().isEmpty) {
-          res.status(400).send('comment cannot be empty')
-          return
-        }
-
         const user = await User.findById(userId)
         if (!user) {
           res.status(400).send('you are not an user in the system')
@@ -718,11 +713,20 @@ module.exports = {
           from: name,
           notified: false
         })
+
         if (!comment) {
           res.status(400).send('week not found')
         } else {
+
+          if (comment.comment.trim().isEmpty) {
+            res.status(400).send('comment cannot be empty')
+            return
+          }
+
           res.status(200).send(comment)
         }
+
+
       } catch (e) {
         res.status(400).send(e)
         logger.error(e)
