@@ -694,6 +694,12 @@ module.exports = {
       const userId = req.decoded.id
       try {
         const message = req.body
+
+        if (message.trim().isEmpty) {
+          res.status(400).send('comment cannot be empty')
+          return
+        }
+
         const user = await User.findById(userId)
         if (!user) {
           res.status(400).send('you are not an user in the system')
