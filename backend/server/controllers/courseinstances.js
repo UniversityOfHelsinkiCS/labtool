@@ -706,6 +706,12 @@ module.exports = {
           return
         }
         const name = user.firsts.concat(' ').concat(user.lastname)
+
+        if (message.comment.trim().length === 0) {
+          res.status(400).send('comment cannot be empty')
+          return
+        }
+
         const comment = await Comment.create({
           weekId: message.week,
           hidden: message.hidden,
@@ -717,12 +723,6 @@ module.exports = {
         if (!comment) {
           res.status(400).send('week not found')
         } else {
-
-          if (comment.comment.trim().isEmpty) {
-            res.status(400).send('comment cannot be empty')
-            return
-          }
-
           res.status(200).send(comment)
         }
 
