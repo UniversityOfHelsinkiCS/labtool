@@ -165,15 +165,30 @@ export class CoursePage extends React.Component {
   }
 
   hasDroppedTag = studentTagsData => {
-    let studentInstanceTagNames = studentTagsData.map(tag => tag.name)
+    let studentInstanceTagNames = studentTagsData.map(tag => tag.name.toUpperCase())
     let hasDroppedTag = false
     if (studentInstanceTagNames.includes('DROPPED')) {
       hasDroppedTag = true
     }
-    if (studentInstanceTagNames.includes('dropped')) {
-      hasDroppedTag = true
-    }
     return hasDroppedTag
+  }
+
+  markAllWithDroppedTagAsDropped = courseData => {
+    for (let i = 0; i < courseData.data.length; i++) {
+      let student = courseData.data[i]
+      let studentTags = student.Tags
+      if (this.hasDroppedTag(studentTags) === true) {
+        this.handleMarkAsDropped(true, student.User.id)
+      }
+    }
+  }
+
+  handleMarkAsDropped = async (dropped, id) => {
+    this.props.updateStudentProjectInfo({
+      ohid: this.props.selectedInstance.ohid,
+      userId: id,
+      dropped: dropped
+    })
   }
 
   updateTeacher = id => async e => {
@@ -614,6 +629,11 @@ export class CoursePage extends React.Component {
       const heading = droppedOut ? 'Dropped out students' : 'Students'
       const tableClassName = droppedOut ? 'TeachersBottomViewForDroppedOutStudents' : 'TeachersBottomViewForActiveStudents'
       const rowClassName = droppedOut ? 'TableRowForDroppedOutStudents' : 'TableRowForActiveStudents'
+      const button = droppedOut ? null : (
+        <Button onClick={() => this.markAllWithDroppedTagAsDropped(this.props.courseData)} size="small">
+          Mark all with dropped tag as dropped
+        </Button>
+      )
       return (
         <div className={tableClassName}>
           <Header as="h2">{heading} </Header>
@@ -762,6 +782,7 @@ export class CoursePage extends React.Component {
             </Table>
           </HorizontalScrollable>
           <br />
+          {button}
 
           <Link to={`/labtool/massemail/${this.props.selectedInstance.ohid}`}>
             <Button size="small">Send email to multiple students</Button>
