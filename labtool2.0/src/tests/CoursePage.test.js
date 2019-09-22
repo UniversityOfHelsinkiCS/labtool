@@ -42,6 +42,7 @@ describe('<CoursePage /> as teacher', () => {
         id: 10012,
         github: 'http://github.com/tiralabra2',
         projectName: 'Tiran toinen labraprojekti',
+        dropped: false,
         createdAt: '2018-03-26T00:00:00.000Z',
         updatedAt: '2018-03-26T00:00:00.000Z',
         courseInstanceId: 10011,
@@ -72,6 +73,7 @@ describe('<CoursePage /> as teacher', () => {
         id: 10031,
         github: 'http://github.com/superprojekti',
         projectName: 'Tira super projekti',
+        dropped: true,
         createdAt: '2018-03-26T00:00:00.000Z',
         updatedAt: '2018-06-05T07:12:28.603Z',
         courseInstanceId: 10011,
@@ -107,6 +109,7 @@ describe('<CoursePage /> as teacher', () => {
         id: 10011,
         github: 'http://github.com/tiralabra1',
         projectName: 'Tiran labraprojekti',
+        dropped: false,
         createdAt: '2018-03-26T00:00:00.000Z',
         updatedAt: '2018-03-26T00:00:00.000Z',
         courseInstanceId: 10011,
@@ -250,7 +253,6 @@ describe('<CoursePage /> as teacher', () => {
     it('renders teachers bottom view for dropped out students', () => {
       expect(wrapper.find('.TeachersBottomViewForDroppedOutStudents').length).toEqual(1)
     })
-
 
     it('doesnt render students top view when role is teacher', () => {
       expect(wrapper.find('.StudentsView').length).toEqual(0)
