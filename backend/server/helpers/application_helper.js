@@ -53,13 +53,12 @@ function CurrentTermAndYear() {
 function getCurrentTerm(month) {
   if (1 <= month && month <= 5) {
     return 'K'
-  } else if (6 <= month && month <= 8) {
+  } if (6 <= month && month <= 8) {
     return 'V'
-  } else if (9 <= month && month <= 12) {
+  } if (9 <= month && month <= 12) {
     return 'S'
-  } else {
-    return null
   }
+  return null
 }
 
 /**

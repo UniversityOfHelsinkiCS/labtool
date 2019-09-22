@@ -8,7 +8,7 @@ import { gradeCodeReview } from '../../services/codeReview'
 import ReactMarkdown from 'react-markdown'
 import { sendEmail } from '../../services/email'
 import { resetLoading } from '../../reducers/loadingReducer'
-import { trimDate } from '../../util/format'
+import { trimDate, createCourseIdWithYearAndTerm } from '../../util/format'
 import { getCoursesByStudentId } from '../../services/studentinstances'
 
 import BackButton from '../BackButton'
@@ -140,18 +140,20 @@ export class BrowseReviews extends Component {
       courseInstance => courseInstance.ohid.includes(this.props.courseId.substring(0, 8)) && courseInstance.ohid !== this.props.courseId
     )
     if (previousParticipations.length === 0) {
-      return <p>First time to participate the course</p>
+      return <p className="noPrevious">First time to participate the course</p>
     }
     return (
-      <div>
-        <p style={{ color: 'red' }}>Has other participations</p>
-        {previousParticipations.map(participation => <p key={participation.id}>{participation.ohid}</p>)}
+      <div className="hasPrevious">
+        <p className style={{ color: 'red' }}>
+          Has other participations
+        </p>
+        {previousParticipations.map(participation => <p key={participation.id}>{createCourseIdWithYearAndTerm(participation.ohid, participation.start)}</p>)}
       </div>
     )
   }
 
   renderStudentCard = student => (
-    <Card key={student.id} fluid color="yellow">
+    <Card key={student.id} fluid color="yellow" className="studentCard">
       <Card.Content>
         <h2>
           {student.User.firsts} {student.User.lastname} ({student.User.studentNumber})
