@@ -762,6 +762,7 @@ module.exports = {
       const userId = req.decoded.id
       try {
         const message = req.body
+
         const user = await User.findById(userId)
         if (!user) {
           res.status(400).send('you are not an user in the system')
@@ -773,6 +774,12 @@ module.exports = {
           return
         }
         const name = user.firsts.concat(' ').concat(user.lastname)
+
+        if (message.comment.trim().length === 0) {
+          res.status(400).send('comment cannot be empty')
+          return
+        }
+
         const comment = await Comment.create({
           weekId: message.week,
           hidden: message.hidden,
@@ -780,11 +787,14 @@ module.exports = {
           from: name,
           notified: false
         })
+
         if (!comment) {
           res.status(400).send('week not found')
         } else {
           res.status(200).send(comment)
         }
+
+
       } catch (e) {
         res.status(400).send(e)
         logger.error(e)
