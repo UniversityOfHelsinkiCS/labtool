@@ -102,11 +102,12 @@ export class BrowseReviews extends Component {
   }
 
   handleMarkAsDropped = async dropped => {
-    this.props.updateStudentProjectInfo({
+    await this.props.updateStudentProjectInfo({
       ohid: this.props.selectedInstance.ohid,
       userId: this.props.courseData.data.find(data => data.id === Number(this.props.studentInstance)).userId,
       dropped
     })
+    this.props.coursePageInformation(this.props.courseId)
   }
 
   sortCommentsByDate = comments => {
