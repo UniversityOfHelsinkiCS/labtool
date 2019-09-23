@@ -137,6 +137,7 @@ describe('<BrowseReviews />', () => {
             comments: []
           }
         ],
+        codeReviews: [],
         User: {
           id: 10011,
           username: 'tiraopiskelija1',
@@ -162,9 +163,23 @@ describe('<BrowseReviews />', () => {
 
   let mockFn = jest.fn()
 
+  const studentWithoutPreviousParticipation = [coursePage]
+
   beforeEach(() => {
     wrapper = shallow(
-      <BrowseReviews getOneCI={mockFn} coursePageInformation={mockFn} courseData={courseData} selectedInstance={coursePage} loading={loading} resetLoading={mockFn} initialLoading={false} />
+      <BrowseReviews
+        getOneCI={mockFn}
+        coursePageInformation={mockFn}
+        getCoursesByStudentId={mockFn}
+        courseData={courseData}
+        selectedInstance={coursePage}
+        studentInstanceToBeReviewed={studentWithoutPreviousParticipation}
+        courseId={coursePage.ohid}
+        studentInstance={10011} //studentInstance id which was chosen randomly from courseData
+        loading={loading}
+        resetLoading={mockFn}
+        initialLoading={false}
+      />
     )
   })
 
@@ -179,6 +194,46 @@ describe('<BrowseReviews />', () => {
 
     it('should render correctly', () => {
       expect(wrapper).toMatchSnapshot()
+    })
+
+    describe('student card', () => {
+      it('should render student card', () => {
+        expect(wrapper.find('.studentCard').exists()).toEqual(true)
+      })
+      it('when student participates the course first time', () => {
+        expect(wrapper.find('.noPrevious').text()).toEqual('First time to participate the course')
+      })
+      it('when student participate previous instances of the course', () => {
+        const studentWithPreviousParticipation = [
+          {
+            ...coursePage,
+            id: 10000,
+            name: 'Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit',
+            start: '2017-03-11T21:00:00.000Z',
+            end: '2017-04-29T21:00:00.000Z',
+            active: false,
+            ohid: 'TKT20010.2017.K.A.1'
+          },
+          coursePage
+        ]
+        wrapper = shallow(
+          <BrowseReviews
+            getOneCI={mockFn}
+            coursePageInformation={mockFn}
+            getCoursesByStudentId={mockFn}
+            courseData={courseData}
+            selectedInstance={coursePage}
+            studentInstanceToBeReviewed={studentWithPreviousParticipation}
+            courseId={coursePage.ohid}
+            studentInstance={10011}
+            loading={loading}
+            resetLoading={mockFn}
+            initialLoading={false}
+          />
+        )
+        expect(wrapper.find('.hasPrevious').text()).toContain('Has other participations')
+        expect(wrapper.find('.hasPrevious').text()).toContain('TKT20010 16-17 4.period')
+      })
     })
   })
 })
