@@ -368,7 +368,7 @@ export class CoursePage extends React.Component {
               )}
             </Comment.Group>
             <Form reply onSubmit={this.handleSubmit} name={week.id} id={week.id}>
-              <FormMarkdownTextArea name="content" placeholder="Your comment..." defaultValue="" />
+              <FormMarkdownTextArea name="content" placeholder="Your comment..." defaultValue="" required="required" />
               <Button content="Add Reply" labelPosition="left" icon="edit" primary />
             </Form>
           </Accordion.Content>
