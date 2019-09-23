@@ -389,7 +389,7 @@ export class StudentTable extends React.Component {
               {this.props.courseData && this.props.courseData.data ? (
                 this.props.courseData.data
                   // remove special filter
-                  .filter(data => filterStudents(data))
+                  .filter(data => !filterStudents || filterStudents(data))
                   // remove students when filtering assistants and it doesn't match
                   .filter(data => disableDefaultFilter || this.props.coursePageLogic.filterByAssistant === 0 || this.props.coursePageLogic.filterByAssistant === data.teacherInstanceId)
                   // remove students when filtering tags and they don't match

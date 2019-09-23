@@ -41,23 +41,6 @@ export class MassEmailPage extends React.Component {
     this.props.coursePageReset()
   }
 
-  sortArrayAscendingByDate = theArray => {
-    return theArray.sort((a, b) => {
-      return new Date(a.createdAt) - new Date(b.createdAt)
-    })
-  }
-
-  handleAddingIssueLink = (reviewNumber, studentInstance) => async e => {
-    e.preventDefault()
-    const data = {
-      reviewNumber,
-      studentInstanceId: studentInstance,
-      linkToReview: e.target.reviewLink.value
-    }
-    e.target.reviewLink.value = ''
-    this.props.addLinkToCodeReview(data)
-  }
-
   handleSubmit = async e => {
     e.preventDefault()
     const data = this.props.courseData && this.props.courseData.data
@@ -83,46 +66,6 @@ export class MassEmailPage extends React.Component {
       return <Redirect to={`/labtool/courses/${this.props.selectedInstance.ohid}`} />
     }
 
-    /*
-    const createStudentTableRow = (data, rowClassName) => (
-      <Table.Row key={data.id} className={rowClassName}>
-        <Table.Cell>
-          <Form.Checkbox name={'send' + data.id} />
-        </Table.Cell>
-        
-        <Table.Cell>
-          {data.User.firsts} {data.User.lastname} ({data.User.studentNumber})
-        </Table.Cell>
-        <Table.Cell>
-          <span>
-            {data.projectName}
-            <br />
-            <a href={data.github} target="_blank" rel="noopener noreferrer">
-              {data.github}
-            </a>
-            {data.Tags.map(tag => (
-              <div key={tag.id}>
-                <Button compact floated="left" className={`mini ui ${tag.color} button`} onClick={this.addFilterTag(tag)}>
-                  {tag.name}
-                </Button>
-              </div>
-            ))}
-          </span>
-        </Table.Cell>
-        <Table.Cell>
-          {data.teacherInstanceId && this.props.selectedInstance.teacherInstances ? (
-            this.props.selectedInstance.teacherInstances.filter(teacher => teacher.id === data.teacherInstanceId).map(teacher => (
-              <span key={data.id}>
-                {teacher.firsts} {teacher.lastname}
-              </span>
-            ))
-          ) : (
-            <span>not assigned</span>
-          )}
-        </Table.Cell>
-      </Table.Row>
-    )*/
-
     /**
      * Function that returns what teachers should see at this page
      * We will use a form to decide which students to send an email
@@ -145,34 +88,6 @@ export class MassEmailPage extends React.Component {
               coursePageLogic={this.props.coursePageLogic}
               tags={this.props.tags}
             />
-            {/*
-            <HorizontalScrollable>
-              <Table celled compact unstackable style={{ overflowX: 'visible' }}>
-                <Table.Header>
-                  <Table.Row>
-                    <Table.HeaderCell key={-1}>Send?</Table.HeaderCell>
-                    <Table.HeaderCell>Student</Table.HeaderCell>
-                    <Table.HeaderCell>Project Info</Table.HeaderCell>
-                    <Table.HeaderCell width="six"> Instructor </Table.HeaderCell>
-                  </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                  {this.props.courseData && this.props.courseData.data ? (
-                    this.props.courseData.data
-                      // remove students when filtering assistants and it doesn't match
-                      .filter(data => this.props.coursePageLogic.filterByAssistant === 0 || this.props.coursePageLogic.filterByAssistant === data.teacherInstanceId)
-                      // remove students when filtering tags and they don't match
-                      .filter(data => this.props.coursePageLogic.filterByTag.length === 0 || this.hasFilteringTags(data.Tags, this.props.coursePageLogic.filterByTag))
-                      // remove students with no email address set
-                      .filter(data => data.User.email)
-                      .map(data => createStudentTableRow(data, 'TableRowForActiveStudents'))
-                  ) : (
-                    <p />
-                  )}
-                </Table.Body>
-              </Table>
-            </HorizontalScrollable>
-            */}
 
             <br />
             <br />

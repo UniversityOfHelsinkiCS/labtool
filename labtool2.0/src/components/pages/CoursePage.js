@@ -8,11 +8,7 @@ import ReactMarkdown from 'react-markdown'
 import { getAllTags, tagStudent, unTagStudent } from '../../services/tags'
 import { addLinkToCodeReview } from '../../services/codeReview'
 import { sendEmail } from '../../services/email'
-import {
-  coursePageReset,
-  updateActiveIndex,
-  toggleCodeReview
-} from '../../reducers/coursePageLogicReducer'
+import { coursePageReset, updateActiveIndex, toggleCodeReview } from '../../reducers/coursePageLogicReducer'
 import { resetLoading } from '../../reducers/loadingReducer'
 
 import { LabtoolComment } from '../LabtoolComment'
@@ -95,10 +91,8 @@ export class CoursePage extends React.Component {
     const renderComment = comment => {
       /* This hack compares user's name to comment.from and hides the email notification button when they don't match. */
       const userIsCommandSender = comment.from.includes(this.props.user.user.firsts) && comment.from.includes(this.props.user.user.lastname)
-  
-      return (
-        <LabtoolComment key={comment.id} comment={comment} allowNotify={userIsCommandSender} />
-      )
+
+      return <LabtoolComment key={comment.id} comment={comment} allowNotify={userIsCommandSender} />
     }
 
     const createStudentGradedWeek = (i, week) => (
@@ -116,13 +110,7 @@ export class CoursePage extends React.Component {
             </Card.Content>
           </Card>
           <h4> Comments </h4>
-          <Comment.Group>
-            {week ? (
-              this.sortArrayAscendingByDate(week.comments).map(renderComment)
-            ) : (
-              <h4> No comments </h4>
-            )}
-          </Comment.Group>
+          <Comment.Group>{week ? this.sortArrayAscendingByDate(week.comments).map(renderComment) : <h4> No comments </h4>}</Comment.Group>
           <Form reply onSubmit={this.handleSubmit} name={week.id} id={week.id}>
             <FormMarkdownTextArea name="content" placeholder="Your comment..." defaultValue="" />
             <Button content="Add Reply" labelPosition="left" icon="edit" primary />

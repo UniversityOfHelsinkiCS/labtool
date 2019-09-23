@@ -1,0 +1,254 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
+<React.Fragment>
+  <div
+    style={
+      Object {
+        "textAlign": "left",
+      }
+    }
+  >
+    <span>
+      Filter by instructor 
+    </span>
+    <Dropdown
+      additionLabel="Add "
+      additionPosition="top"
+      closeOnBlur={true}
+      deburr={false}
+      defaultValue={0}
+      fluid={true}
+      icon="dropdown"
+      minCharacters={1}
+      noResultsMessage="No results found."
+      onChange={[Function]}
+      openOnFocus={true}
+      options={Array []}
+      placeholder="Select Teacher"
+      renderLabel={[Function]}
+      searchInput="text"
+      selectOnBlur={true}
+      selectOnNavigation={true}
+      selection={true}
+      style={
+        Object {
+          "display": "inline",
+        }
+      }
+      wrapSelection={true}
+    />
+    <span>
+       Tag filters: 
+    </span>
+    <span>
+      <Label>
+        none
+      </Label>
+    </span>
+  </div>
+  <Connect(HorizontalScrollable)>
+    <Table
+      as="table"
+      celled={true}
+      compact={true}
+      style={
+        Object {
+          "overflowX": "visible",
+        }
+      }
+      unstackable={true}
+    >
+      <TableHeader
+        as="thead"
+      >
+        <TableRow
+          as="tr"
+          cellAs="td"
+        >
+          <TableHeaderCell
+            as="th"
+            key="-1"
+          >
+            Student
+          </TableHeaderCell>
+          <TableHeaderCell
+            as="th"
+          >
+            Project Info
+          </TableHeaderCell>
+          <TableHeaderCell
+            as="th"
+            width="six"
+          >
+            Instructor
+          </TableHeaderCell>
+        </TableRow>
+      </TableHeader>
+      <TableBody
+        as="tbody"
+      >
+        <TableRow
+          as="tr"
+          cellAs="td"
+          className="StudentRow"
+          key="10012"
+        >
+          <TableCell
+            as="td"
+          >
+            Johan Wilhelm
+             
+            Studerande
+             (
+            014553242
+            )
+          </TableCell>
+          <TableCell
+            as="td"
+          >
+            <span>
+              Tiran toinen labraprojekti
+              <br />
+              <a
+                href="http://github.com/tiralabra2"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                http://github.com/tiralabra2
+              </a>
+              <div
+                key="20001"
+              >
+                <Button
+                  as="button"
+                  className="mini ui red button"
+                  compact={true}
+                  floated="left"
+                  onClick={[Function]}
+                  role="button"
+                >
+                  Javascript
+                </Button>
+              </div>
+            </span>
+          </TableCell>
+          <TableCell
+            as="td"
+          >
+            <span>
+              not assigned
+            </span>
+          </TableCell>
+        </TableRow>
+        <TableRow
+          as="tr"
+          cellAs="td"
+          className="StudentRow"
+          key="10031"
+        >
+          <TableCell
+            as="td"
+          >
+            Teräs
+             
+            Henkilö
+             (
+            014666666
+            )
+          </TableCell>
+          <TableCell
+            as="td"
+          >
+            <span>
+              Tira super projekti
+              <br />
+              <a
+                href="http://github.com/superprojekti"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                http://github.com/superprojekti
+              </a>
+              <div
+                key="20008"
+              >
+                <Button
+                  as="button"
+                  className="mini ui grey button"
+                  compact={true}
+                  floated="left"
+                  onClick={[Function]}
+                  role="button"
+                >
+                  DROPPED
+                </Button>
+              </div>
+              <div
+                key="20002"
+              >
+                <Button
+                  as="button"
+                  className="mini ui yellow button"
+                  compact={true}
+                  floated="left"
+                  onClick={[Function]}
+                  role="button"
+                >
+                  HTML
+                </Button>
+              </div>
+            </span>
+          </TableCell>
+          <TableCell
+            as="td"
+          >
+            <span>
+              not assigned
+            </span>
+          </TableCell>
+        </TableRow>
+        <TableRow
+          as="tr"
+          cellAs="td"
+          className="StudentRow"
+          key="10011"
+        >
+          <TableCell
+            as="td"
+          >
+            Maarit Mirja
+             
+            Opiskelija
+             (
+            014578343
+            )
+          </TableCell>
+          <TableCell
+            as="td"
+          >
+            <span>
+              Tiran labraprojekti
+              <br />
+              <a
+                href="http://github.com/tiralabra1"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                http://github.com/tiralabra1
+              </a>
+            </span>
+          </TableCell>
+          <TableCell
+            as="td"
+          >
+            <span>
+              not assigned
+            </span>
+          </TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
+  </Connect(HorizontalScrollable)>
+</React.Fragment>
+`;

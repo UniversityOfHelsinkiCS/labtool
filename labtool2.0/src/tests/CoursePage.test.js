@@ -254,6 +254,9 @@ describe('<CoursePage /> as teacher', () => {
     it('doesnt render students top view when role is teacher', () => {
       expect(wrapper.find('.StudentsView').length).toEqual(0)
     })
+    /*
+    no longer possible with shallow testing since StudentTable became
+    its own component
 
     it('shows active students in a separate list', () => {
       expect(wrapper.find('.TableRowForActiveStudents').length).toEqual(2)
@@ -262,6 +265,7 @@ describe('<CoursePage /> as teacher', () => {
     it('shows dropped out students in a separate list', () => {
       expect(wrapper.find('.TableRowForDroppedOutStudents').length).toEqual(1)
     })
+    */
 
     // it('assistant dropdown menu is not shown when page loads', () => {
     //   expect(wrapper.find('.AssistantDropdown').length).toEqual(0)

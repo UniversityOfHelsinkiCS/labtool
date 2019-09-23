@@ -17,7 +17,7 @@ export class MyPage extends Component {
     this.props.getAllTeacherCourses()
   }
 
-  renderCourseRow = (instance) => (
+  renderCourseRow = instance => (
     <Table.Row key={instance.id}>
       <Table.Cell>
         <Link to={`/labtool/courses/${instance.ohid}`}>{instance.name}</Link>
@@ -90,9 +90,7 @@ export class MyPage extends Component {
 
             <HorizontalScrollable>
               <Table singleLine key="grey" color="yellow" style={{ overflowX: 'visible' }}>
-                <Table.Body>
-                  {this.props.studentInstance.map(this.renderCourseRow)}
-                </Table.Body>
+                <Table.Body>{this.props.studentInstance.map(this.renderCourseRow)}</Table.Body>
               </Table>
             </HorizontalScrollable>
 
@@ -107,9 +105,7 @@ export class MyPage extends Component {
 
                 <HorizontalScrollable>
                   <Table singleLine key="grey" color="yellow" style={{ overflowX: 'visible' }}>
-                    <Table.Body>
-                      {this.props.teacherInstance.map(this.renderCourseRow)}
-                    </Table.Body>
+                    <Table.Body>{this.props.teacherInstance.map(this.renderCourseRow)}</Table.Body>
                   </Table>
                 </HorizontalScrollable>
               </Container>
