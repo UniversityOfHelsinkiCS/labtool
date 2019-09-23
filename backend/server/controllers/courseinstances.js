@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize')
 const request = require('request')
 const db = require('../models')
-const helper = require('../helpers/course_instance_helper')
+const helper = require('../helpers/courseInstanceHelper')
 const logger = require('../utils/logger')
 
 const { Op } = Sequelize
@@ -17,7 +17,9 @@ const overkillLogging = (req, error) => {
 
 const validationErrorMessages = {
   github: 'Github repository link is not a proper url.',
-  projectName: 'Project name contains illegal characters.\nCharacters allowed are letters from a-ö, numbers, apostrophe, - and whitespace (not multiple in a row or at first/last character)'
+  projectName: 'Project name contains illegal characters.\nCharacters allowed'
+    + 'are letters from a-ö, numbers, apostrophe, - and whitespace'
+    + '(not multiple in a row or at first/last character)'
 }
 
 module.exports = {
@@ -27,19 +29,24 @@ module.exports = {
    * @param res
    */
   async findByUserTeacherInstance(req, res) {
-    helper.controller_before_auth_check_action(req, res)
-    await CourseInstance.findAll({
-      include: [{
-        model: TeacherInstance,
-        required: true,
-        where: { userId: req.decoded.id },
-        as: 'teachercourseInstances'
-      }]
-    }).then(courseInstances => res.status(200).send(courseInstances))
-      .catch((error) => {
-        logger.error(error)
-        res.status(400).send(error)
-      })
+    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
+
+    if (req.authenticated.success) {
+      await CourseInstance.findAll({
+        include: [{
+          model: TeacherInstance,
+          required: true,
+          where: { userId: req.decoded.id },
+          as: 'teachercourseInstances'
+        }]
+      }).then(courseInstances => res.status(200).send(courseInstances))
+        .catch((error) => {
+          logger.error(error)
+          res.status(400).send(error)
+        })
+    }
   },
 
   /**
@@ -48,22 +55,27 @@ module.exports = {
    * @param {*} res
    */
   async findByStudentInstanceId(req, res) {
-    helper.controller_before_auth_check_action(req, res)
-    const studentInstance = await StudentInstance.findOne({
-      where: { id: req.params.id } // id is StudentInstance.id
-    })
-    await CourseInstance.findAll({
-      include: [{
-        model: StudentInstance,
-        required: true,
-        where: { userId: studentInstance.userId },
-        as: 'courseInstances'
-      }]
-    }).then(courseInstances => res.status(200).send(courseInstances))
-      .catch((error) => {
-        logger.error(error)
-        res.status(400).send(error)
+    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
+
+    if (req.authenticated.success) {
+      const studentInstance = await StudentInstance.findOne({
+        where: { id: req.params.id } // id is StudentInstance.id
       })
+      await CourseInstance.findAll({
+        include: [{
+          model: StudentInstance,
+          required: true,
+          where: { userId: studentInstance.userId },
+          as: 'courseInstances'
+        }]
+      }).then(courseInstances => res.status(200).send(courseInstances))
+        .catch((error) => {
+          logger.error(error)
+          res.status(400).send(error)
+        })
+    }
   },
   /**
    *
@@ -72,7 +84,10 @@ module.exports = {
    * @returns {Promise<void>}
    */
   async coursePage(req, res) {
-    helper.controller_before_auth_check_action(req, res)
+    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
+
     const course = await CourseInstance.findOne({
       where: {
         ohid: req.body.course
@@ -203,7 +218,8 @@ module.exports = {
               reviewer: reviewers[cr.reviewNumber]
             })
             )
-            delete palautus.data.toReviews // This was only ever included to be spliced into the codeReviews filed above.
+            // This was only ever included to be spliced into the codeReviews filed above.
+            delete palautus.data.toReviews
           }
         } else {
           palautus.data = null
@@ -280,7 +296,10 @@ module.exports = {
    * @param res
    */
   findByUserStudentInstance(req, res) {
-    helper.controller_before_auth_check_action(req, res)
+    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
+
     helper.findByUserStudentInstance(req, res)
   },
 
@@ -290,7 +309,9 @@ module.exports = {
    * @param res
    */
   async registerToCourseInstance(req, res) {
-    await helper.controller_before_auth_check_action(req, res)
+    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
 
     const course = await CourseInstance.findOne({
       where: {
@@ -343,8 +364,10 @@ module.exports = {
           userId: user.id,
           name: user,
           courseInstanceId: course.dataValues.id,
-          github: req.body.github || '', // model would like to validate this to be an URL but seems like crap
-          projectName: req.body.projectName || '' // model would like to validate this to alphanumeric but seems like this needs specific nulls or empties or whatever
+          // model would like to validate this to be an URL but seems like crap
+          github: req.body.github || '',
+          // model would like to validate this to alphanumeric but seems like this needs specific nulls or empties or whatever
+          projectName: req.body.projectName || ''
         }
       })
     } catch (error) {
@@ -377,7 +400,9 @@ module.exports = {
    *    }
    */
   updateStudentInstance(req, res) {
-    helper.controller_before_auth_check_action(req, res)
+    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
 
     try {
       if (req.authenticated.success) {
@@ -411,7 +436,8 @@ module.exports = {
                 })
                 .catch((error) => {
                   if (error.name === 'SequelizeValidationError') {
-                    const errorMessage = error.errors.map(e => validationErrorMessages[e.path] || 'Unknown validation error.')
+                    const errorMessage = error.errors.map(
+                      e => validationErrorMessages[e.path] || 'Unknown validation error.')
                     logger.error(error)
                     return res.status(400).send({ message: errorMessage.join('\n') })
                   }
@@ -436,7 +462,9 @@ module.exports = {
    * @returns {*|Promise<T>}
    */
   update(req, res) {
-    helper.controller_before_auth_check_action(req, res)
+    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
 
     CourseInstance.findOne({
       where: {
@@ -466,7 +494,8 @@ module.exports = {
                 name: req.body.name || courseInstance.name,
                 start: req.body.start || courseInstance.start,
                 end: req.body.end || courseInstance.end,
-                active: String(req.body.active) || courseInstance.active, // Without stringifying req.body.active this gets interpreted as a boolean operation. Go javascript.
+                // Without stringifying req.body.active this gets interpreted as a boolean operation. Go javascript.
+                active: String(req.body.active) || courseInstance.active,
                 weekAmount: req.body.weekAmount || courseInstance.weekAmount,
                 weekMaxPoints: req.body.weekMaxPoints || courseInstance.weekMaxPoints,
                 currentWeek: req.body.currentWeek || courseInstance.currentWeek,
@@ -515,7 +544,9 @@ module.exports = {
    * @param res
    */
   retrieve(req, res) {
-    helper.controller_before_auth_check_action(req, res)
+    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
 
     CourseInstance.find(
       {
@@ -547,7 +578,9 @@ module.exports = {
    * @param res
    */
   getNew(req, res) {
-    helper.controller_before_auth_check_action(req, res)
+    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
 
     const termAndYear = helper.CurrentTermAndYear()
     if (this.remoteAddress === '127.0.0.1') {
@@ -595,7 +628,9 @@ module.exports = {
    * @param res
    */
   getNewer(req, res) {
-    helper.controller_before_auth_check_action(req, res)
+    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
 
     const auth = process.env.TOKEN || 'notset' // You have to set TOKEN in .env file in order for this to work
     const termAndYear = helper.CurrentTermAndYear()
@@ -643,7 +678,9 @@ module.exports = {
    * @returns {Promise<Model>}
    */
   async retrieveCourseStuff(req, res) {
-    await helper.controller_before_auth_check_action(req, res)
+    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
 
     if (req.authenticated.success) {
       try {
@@ -653,7 +690,7 @@ module.exports = {
           return res.status(404).send('User not found')
         }
 
-        const checkRegistrationStatus = new Promise((resolve, reject) => {
+        const checkRegistrationStatus = new Promise((resolve, _reject) => {
           helper.checkWebOodi(req, res, currentUser, resolve)
           setTimeout(() => {
             resolve('failure')
@@ -687,11 +724,11 @@ module.exports = {
           }
         })
 
-        teachers = teachers.map((teacher) => {
+        for (const i in Object.keys(teachers)) {
+          const teacher = teachers[i]
           teacher.dataValues.firsts = names[teacher.userId].firsts
           teacher.dataValues.lastname = names[teacher.userId].lastname
-          return teacher
-        })
+        }
 
         const checklists = await Checklist.findAll({
           where: {
@@ -717,7 +754,9 @@ module.exports = {
    * @returns {*|Promise<T>}
    */
   async addComment(req, res) {
-    helper.controller_before_auth_check_action(req, res)
+    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
 
     if (req.authenticated.success) {
       const userId = req.decoded.id
@@ -760,7 +799,9 @@ module.exports = {
    * @returns {Promise<Array<Model>>}
    */
   getCommentsForWeek(req, res) {
-    helper.controller_before_auth_check_action(req, res)
+    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
 
     return Comment.findAll({
       attributes: {

@@ -11,7 +11,7 @@ describe('Login', () => {
   let nock
 
   beforeEach(() => {
-    User = require('../server/models').User
+    ({ User } = require('../server/models'))
     server = require('../app')
     supertest = require('supertest')(server)
     nock = require('nock')

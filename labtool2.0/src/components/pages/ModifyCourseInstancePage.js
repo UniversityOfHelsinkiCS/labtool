@@ -36,7 +36,7 @@ export class ModifyCourseInstancePage extends Component {
     })
   }
 
-  handleChange = async e => {
+  handleChange = async () => {
     this.props.changeCourseField({
       field: 'active',
       value: !this.props.selectedInstance.active
@@ -79,7 +79,7 @@ export class ModifyCourseInstancePage extends Component {
       })
       this.props.modifyOneCI(content, this.props.selectedInstance.ohid)
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
   }
 

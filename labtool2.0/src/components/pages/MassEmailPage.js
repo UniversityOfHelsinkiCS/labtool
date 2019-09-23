@@ -21,7 +21,7 @@ import {
 } from '../../reducers/coursePageLogicReducer'
 import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 import store from '../../store'
-import { HorizontalScrollable } from '../HorizontalScrollable'
+import StudentTable from '../StudentTable'
 
 export class MassEmailPage extends React.Component {
   handleClick = (e, titleProps) => {
@@ -47,25 +47,6 @@ export class MassEmailPage extends React.Component {
     })
   }
 
-  changeHiddenAssistantDropdown = id => {
-    return () => {
-      this.props.showAssistantDropdown(this.props.coursePageLogic.showAssistantDropdown === id ? '' : id)
-    }
-  }
-
-  changeHiddenTagDropdown = id => {
-    return () => {
-      this.props.showTagDropdown(this.props.coursePageLogic.showTagDropdown === id ? '' : id)
-    }
-  }
-
-  changeSelectedTag = () => {
-    return (e, data) => {
-      const { value } = data
-      this.props.selectTag(value)
-    }
-  }
-
   handleAddingIssueLink = (reviewNumber, studentInstance) => async e => {
     e.preventDefault()
     const data = {
@@ -75,45 +56,6 @@ export class MassEmailPage extends React.Component {
     }
     e.target.reviewLink.value = ''
     this.props.addLinkToCodeReview(data)
-  }
-
-  changeFilterAssistant = () => {
-    return (e, data) => {
-      const { value } = data
-      this.props.filterByAssistant(value)
-    }
-  }
-
-  addFilterTag = tag => {
-    return () => {
-      this.props.filterByTag(tag)
-    }
-  }
-
-  hasFilteringTags = (studentTagsData, filteringTags) => {
-    let studentInstanceTagIds = studentTagsData.map(tag => tag.id)
-    let filteringTagIds = filteringTags.map(tag => tag.id)
-    let hasRequiredTags = true
-    for (let i = 0; i < filteringTagIds.length; i++) {
-      if (!studentInstanceTagIds.includes(filteringTagIds[i])) {
-        hasRequiredTags = false
-      }
-    }
-    return hasRequiredTags
-  }
-
-  createDropdownTeachers = array => {
-    if (this.props.selectedInstance.teacherInstances !== undefined) {
-      this.props.selectedInstance.teacherInstances.map(m =>
-        array.push({
-          key: m.id,
-          text: m.firsts + ' ' + m.lastname,
-          value: m.id
-        })
-      )
-      return array
-    }
-    return []
   }
 
   handleSubmit = async e => {
@@ -141,19 +83,45 @@ export class MassEmailPage extends React.Component {
       return <Redirect to={`/labtool/courses/${this.props.selectedInstance.ohid}`} />
     }
 
-    let dropDownFilterTeachers = [
-      {
-        key: 0,
-        text: 'no filter',
-        value: 0
-      },
-      {
-        key: null,
-        text: 'unassigned students',
-        value: null
-      }
-    ]
-    dropDownFilterTeachers = this.createDropdownTeachers(dropDownFilterTeachers)
+    /*
+    const createStudentTableRow = (data, rowClassName) => (
+      <Table.Row key={data.id} className={rowClassName}>
+        <Table.Cell>
+          <Form.Checkbox name={'send' + data.id} />
+        </Table.Cell>
+        
+        <Table.Cell>
+          {data.User.firsts} {data.User.lastname} ({data.User.studentNumber})
+        </Table.Cell>
+        <Table.Cell>
+          <span>
+            {data.projectName}
+            <br />
+            <a href={data.github} target="_blank" rel="noopener noreferrer">
+              {data.github}
+            </a>
+            {data.Tags.map(tag => (
+              <div key={tag.id}>
+                <Button compact floated="left" className={`mini ui ${tag.color} button`} onClick={this.addFilterTag(tag)}>
+                  {tag.name}
+                </Button>
+              </div>
+            ))}
+          </span>
+        </Table.Cell>
+        <Table.Cell>
+          {data.teacherInstanceId && this.props.selectedInstance.teacherInstances ? (
+            this.props.selectedInstance.teacherInstances.filter(teacher => teacher.id === data.teacherInstanceId).map(teacher => (
+              <span key={data.id}>
+                {teacher.firsts} {teacher.lastname}
+              </span>
+            ))
+          ) : (
+            <span>not assigned</span>
+          )}
+        </Table.Cell>
+      </Table.Row>
+    )*/
 
     /**
      * Function that returns what teachers should see at this page
@@ -164,44 +132,26 @@ export class MassEmailPage extends React.Component {
       return (
         <div className="TeacherMassEmailPart">
           <Header as="h2">Send email to students </Header>
-          <div style={{ textAlign: 'left' }}>
-            <span>Filter by instructor </span>
-            <Dropdown
-              options={dropDownFilterTeachers}
-              onChange={this.changeFilterAssistant()}
-              placeholder="Select Teacher"
-              defaultValue={this.props.coursePageLogic.filterByAssistant}
-              fluid
-              selection
-              style={{ display: 'inline' }}
-            />
-            <span> Tag filters: </span>
-            {this.props.coursePageLogic.filterByTag.length === 0 ? (
-              <span>
-                <Label>none</Label>
-              </span>
-            ) : (
-              <span>
-                {this.props.coursePageLogic.filterByTag.map(tag => (
-                  <span key={tag.id}>
-                    <Button compact className={`mini ui ${tag.color} button`} onClick={this.addFilterTag(tag)}>
-                      {tag.name}
-                    </Button>
-                  </span>
-                ))}
-              </span>
-            )}
-          </div>
 
           <Form onSubmit={this.handleSubmit}>
+            <StudentTable
+              rowClassName="TableRowForActiveStudents"
+              columns={['sendcheck']}
+              allowModify={false}
+              filterStudents={data => data.User.email}
+              disableDefaultFilter={false}
+              selectedInstance={this.props.selectedInstance}
+              courseData={this.props.courseData}
+              coursePageLogic={this.props.coursePageLogic}
+              tags={this.props.tags}
+            />
+            {/*
             <HorizontalScrollable>
               <Table celled compact unstackable style={{ overflowX: 'visible' }}>
                 <Table.Header>
                   <Table.Row>
                     <Table.HeaderCell key={-1}>Send?</Table.HeaderCell>
                     <Table.HeaderCell>Student</Table.HeaderCell>
-                    <Table.HeaderCell>id</Table.HeaderCell>
-                    <Table.HeaderCell>email</Table.HeaderCell>
                     <Table.HeaderCell>Project Info</Table.HeaderCell>
                     <Table.HeaderCell width="six"> Instructor </Table.HeaderCell>
                   </Table.Row>
@@ -209,61 +159,20 @@ export class MassEmailPage extends React.Component {
                 <Table.Body>
                   {this.props.courseData && this.props.courseData.data ? (
                     this.props.courseData.data
-                      .filter(data => {
-                        return this.props.coursePageLogic.filterByAssistant === 0 || this.props.coursePageLogic.filterByAssistant === data.teacherInstanceId
-                      })
-                      .filter(data => {
-                        return this.props.coursePageLogic.filterByTag.length === 0 || this.hasFilteringTags(data.Tags, this.props.coursePageLogic.filterByTag)
-                      })
-                      .map(data => (
-                        <Table.Row key={data.id} className="TableRowForActiveStudents">
-                          <Table.Cell>
-                            <Form.Checkbox name={'send' + data.id} />
-                          </Table.Cell>
-                          <Table.Cell>
-                            {data.User.firsts} {data.User.lastname}
-                          </Table.Cell>
-                          <Table.Cell>
-                            <span>{data.User.studentNumber}</span>
-                          </Table.Cell>
-                          <Table.Cell>
-                            <a href={`mailto:${data.User.email}`}>{data.User.email}</a>
-                          </Table.Cell>
-                          <Table.Cell>
-                            <span>
-                              {data.projectName}
-                              <br />
-                              <a href={data.github} target="_blank" rel="noopener noreferrer">
-                                {data.github}
-                              </a>
-                              {data.Tags.map(tag => (
-                                <div key={tag.id}>
-                                  <Button compact floated="left" className={`mini ui ${tag.color} button`} onClick={this.addFilterTag(tag)}>
-                                    {tag.name}
-                                  </Button>
-                                </div>
-                              ))}
-                            </span>
-                          </Table.Cell>
-                          <Table.Cell>
-                            {data.teacherInstanceId && this.props.selectedInstance.teacherInstances ? (
-                              this.props.selectedInstance.teacherInstances.filter(teacher => teacher.id === data.teacherInstanceId).map(teacher => (
-                                <span key={data.id}>
-                                  {teacher.firsts} {teacher.lastname}
-                                </span>
-                              ))
-                            ) : (
-                              <span>not assigned</span>
-                            )}
-                          </Table.Cell>
-                        </Table.Row>
-                      ))
+                      // remove students when filtering assistants and it doesn't match
+                      .filter(data => this.props.coursePageLogic.filterByAssistant === 0 || this.props.coursePageLogic.filterByAssistant === data.teacherInstanceId)
+                      // remove students when filtering tags and they don't match
+                      .filter(data => this.props.coursePageLogic.filterByTag.length === 0 || this.hasFilteringTags(data.Tags, this.props.coursePageLogic.filterByTag))
+                      // remove students with no email address set
+                      .filter(data => data.User.email)
+                      .map(data => createStudentTableRow(data, 'TableRowForActiveStudents'))
                   ) : (
                     <p />
                   )}
                 </Table.Body>
               </Table>
             </HorizontalScrollable>
+            */}
 
             <br />
             <br />

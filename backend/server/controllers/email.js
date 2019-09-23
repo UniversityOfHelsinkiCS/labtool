@@ -1,6 +1,6 @@
 const escape = require('escape-html')
 const nodemailer = require('nodemailer')
-const helper = require('../helpers/email_helper')
+const helper = require('../helpers/emailHelper')
 const { Comment, Week, StudentInstance, TeacherInstance, User, CourseInstance } = require('../models')
 const logger = require('../utils/logger')
 
@@ -251,7 +251,10 @@ const trySendEmail = async (emailOptions) => {
 }
 
 const send = async (req, res) => {
-  await helper.controller_before_auth_check_action(req, res)
+  if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+    return
+  }
+
   try {
     // Basic validations
     if (!req.authenticated.success) {
@@ -356,7 +359,10 @@ const send = async (req, res) => {
 }
 
 const sendMass = async (req, res) => {
-  await helper.controller_before_auth_check_action(req, res)
+  if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+    return
+  }
+
   try {
     // Basic validations
     if (!req.authenticated.success) {

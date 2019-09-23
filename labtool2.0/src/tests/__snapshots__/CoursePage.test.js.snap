@@ -128,7 +128,7 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
           Tiran toinen labraprojekti
           <br />
           <strong>
-            Github: 
+            GitHub: 
           </strong>
           <a
             href="http://github.com/tiralabra2"
@@ -189,7 +189,7 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
           Tira super projekti
           <br />
           <strong>
-            Github: 
+            GitHub: 
           </strong>
           <a
             href="http://github.com/superprojekti"
@@ -291,7 +291,7 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
           Tira super projekti
           <br />
           <strong>
-            Github: 
+            GitHub: 
           </strong>
           <a
             href="http://github.com/superprojekti"
@@ -390,7 +390,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             <TableCell
               as="td"
             >
-              Week maxpoints: 
+              Week max points: 
             </TableCell>
             <TableCell
               as="td"
@@ -516,18 +516,18 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             <TableHeaderCell
               as="th"
             >
-               Sum 
+              Sum
             </TableHeaderCell>
             <TableHeaderCell
               as="th"
               width="six"
             >
-               Instructor 
+              Instructor
             </TableHeaderCell>
             <TableHeaderCell
               as="th"
             >
-               Review 
+              Review
             </TableHeaderCell>
           </TableRow>
         </TableHeader>
@@ -896,18 +896,18 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             <TableHeaderCell
               as="th"
             >
-               Sum 
+              Sum
             </TableHeaderCell>
             <TableHeaderCell
               as="th"
               width="six"
             >
-               Instructor 
+              Instructor
             </TableHeaderCell>
             <TableHeaderCell
               as="th"
             >
-               Review 
+              Review
             </TableHeaderCell>
           </TableRow>
         </TableHeader>

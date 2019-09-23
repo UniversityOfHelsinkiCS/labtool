@@ -37,7 +37,7 @@ export class RegisterPage extends Component {
         await this.props.createStudentCourses(content, this.props.selectedInstance.ohid)
       }
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
   }
 

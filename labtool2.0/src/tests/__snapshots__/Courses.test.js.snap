@@ -38,7 +38,7 @@ exports[`<Courses /> Courses Component should render correctly 1`] = `
               as="th"
               colSpan="1"
             >
-              Course id
+              Course ID
             </TableHeaderCell>
             <TableHeaderCell
               as="th"

@@ -201,7 +201,7 @@ describe('<BrowseReviews />', () => {
         expect(wrapper.find('.studentCard').exists()).toEqual(true)
       })
       it('when student participates the course first time', () => {
-        expect(wrapper.find('.noPrevious').text()).toEqual('First time to participate the course')
+        expect(wrapper.find('.noPrevious').text()).toEqual('Has not been on this course before')
       })
       it('when student participate previous instances of the course', () => {
         const studentWithPreviousParticipation = [
@@ -231,7 +231,7 @@ describe('<BrowseReviews />', () => {
             initialLoading={false}
           />
         )
-        expect(wrapper.find('.hasPrevious').text()).toContain('Has other participations')
+        expect(wrapper.find('.hasPrevious').text()).toContain('Has taken this course before')
         expect(wrapper.find('.hasPrevious').text()).toContain('TKT20010 16-17 4.period')
       })
     })

@@ -1,8 +1,8 @@
-const Sequelize = require('sequelize')
 const db = require('../models')
-const helper = require('../helpers/course_instance_helper')
+const helper = require('../helpers/courseInstanceHelper')
 const logger = require('../utils/logger')
 /*
+const Sequelize = require('sequelize')
 const env = process.env.NODE_ENV || 'development'
 const StudentInstanceController = require('../controllers').studentInstances
 const config = require('./../config/config.js')[env]
@@ -13,7 +13,9 @@ const { User, StudentInstance, TeacherInstance } = db
 
 module.exports = {
   async create(req, res) {
-    await helper.controller_before_auth_check_action(req, res)
+    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
 
     try {
       const teacherInsId = req.body.teacherInstanceId
@@ -44,7 +46,8 @@ module.exports = {
         }
       })
       if (!requestMakerAsTeacher) {
-        res.status(400).send('You have to be an assistant or teacher in the same course as the student you are assigning a teacher to.')
+        res.status(400).send('You have to be an assistant or teacher in the'
+          + 'same course as the student you are assigning a teacher to.')
         return
       }
       const requestMakersCoursesId = requestMakerAsTeacher.courseInstanceId
@@ -77,7 +80,9 @@ module.exports = {
   },
 
   async findAssistantByStudentInstance(req, res) {
-    await helper.controller_before_auth_check_action(req, res)
+    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
 
     const returnedAssistantInfo = {
       status: undefined,
@@ -127,7 +132,9 @@ module.exports = {
   },
 
   async findStudentsByTeacherInstance(req, res) {
-    helper.controller_before_auth_check_action(req, res)
+    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
     try {
       const teacherInsId = req.params.id
 

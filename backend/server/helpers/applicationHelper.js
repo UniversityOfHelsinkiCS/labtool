@@ -4,7 +4,7 @@ exports.getInactive = getInactive
 exports.getActive = getActive
 exports.getNextYear = getNextYear
 exports.getNextTerm = getCurrentTerm
-exports.controller_before_auth_check_action = controller_before_auth_check_action
+exports.controllerBeforeAuthCheckAction = controllerBeforeAuthCheckAction
 exports.getCurrent = getCurrent
 exports.createCourse = createCourse
 exports.getTeacherId = getTeacherId
@@ -14,7 +14,7 @@ const env = process.env.NODE_ENV || 'development'
 const Sequelize = require('sequelize')
 const https = require('https')
 const axios = require('axios')
-const config = require('./../config/config.js')[env]
+const config = require('../config/config.js')[env]
 const logger = require('../utils/logger')
 const { CourseInstance, TeacherInstance, User } = require('../models')
 
@@ -23,10 +23,11 @@ const { Op } = Sequelize
 /**
  *
  */
-function controller_before_auth_check_action(req, res) {
+function controllerBeforeAuthCheckAction(req, res) {
   if (!req.authenticated.success) {
     res.status(401).end()
   }
+  return req.authenticated.success
 }
 
 /**
@@ -155,7 +156,7 @@ async function getTeacherId(userId, courseInstanceId) {
  * @param res
  * @returns {Promise<*>}
  */
-async function getActive(req, res) {
+async function getActive(req, _res) {
   try {
     return await CourseInstance.findAll({
       order: [['createdAt', 'DESC']]
@@ -177,7 +178,7 @@ async function getInactive(req, res) {
     const nxt = await getNewer(req, res)
     const newobj = await cur.concat(nxt)
     const iarr = []
-    for (const blob in newobj) {
+    for (const blob in Object.keys(newobj)) {
       iarr.push(newobj[blob].id)
     }
 
@@ -188,7 +189,7 @@ async function getInactive(req, res) {
     })
     const notactivated = []
 
-    for (const i in newobj) {
+    for (const i in Object.keys(newobj)) {
       let found = 0
       for (const j in ires) {
         if (newobj[i].id === ires[j].ohid) {
@@ -255,7 +256,7 @@ async function createCourse(body) {
  * @param res
  * @returns {Promise<*>}
  */
-async function getCurrent(req, res) {
+async function getCurrent(req, _res) {
   const timeMachine = CurrentTermAndYear()
   const options = await axiosBlaBla(timeMachine.currentYear, timeMachine.currentTerm)
   try {
@@ -275,7 +276,7 @@ async function getCurrent(req, res) {
  * @param res
  * @returns {Promise<*>}
  */
-async function getNewer(req, res) {
+async function getNewer(req, _res) {
   const timeMachine = CurrentTermAndYear()
   const options = await axiosBlaBla(timeMachine.nextYear, timeMachine.nextTerm)
   try {

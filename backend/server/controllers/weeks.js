@@ -1,11 +1,13 @@
 const { Week, WeekDraft, StudentInstance } = require('../models')
-const helper = require('../helpers/weeks_controller_helper')
+const helper = require('../helpers/weeksControllerHelper')
 const logger = require('../utils/logger')
 
 module.exports = {
   async create(req, res) {
     try {
-      await helper.controller_before_auth_check_action(req, res)
+      if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+        return
+      }
 
       if (req.authenticated.success) {
         // Check that there is a TeacherInstance for this user and this course.
@@ -37,10 +39,14 @@ module.exports = {
         if (week) {
           let updatedChecks = {}
           if (req.body.checks) {
-            Object.keys(week.checks).map((key) => {
-              req.body.checks[key] !== undefined ? (updatedChecks[key] = req.body.checks[key]) : (updatedChecks[key] = week.checks[key])
+            Object.keys(week.checks).forEach((key) => {
+              if (req.body.checks[key] !== undefined) {
+                updatedChecks[key] = req.body.checks[key]
+              } else {
+                updatedChecks[key] = week.checks[key]
+              }
             })
-            Object.keys(req.body.checks).map((key) => {
+            Object.keys(req.body.checks).forEach((key) => {
               updatedChecks[key] = req.body.checks[key]
             })
           } else {
@@ -78,7 +84,9 @@ module.exports = {
    * @returns {*|Promise<T>}
    */
   async getDraft(req, res) {
-    helper.controller_before_auth_check_action(req, res)
+    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
 
     if (req.authenticated.success) {
       // Check that there is a TeacherInstance for this user and this course.
@@ -114,7 +122,9 @@ module.exports = {
    * @returns {*|Promise<T>}
    */
   async saveDraft(req, res) {
-    helper.controller_before_auth_check_action(req, res)
+    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
 
     if (req.authenticated.success) {
       // Check that there is a TeacherInstance for this user and this course.
@@ -156,7 +166,9 @@ module.exports = {
    * @returns {*|Promise<T>}
    */
   list(req, res) {
-    helper.controller_before_auth_check_action(req, res)
+    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
 
     return Week.all()
       .then(ui => res.status(200).send(ui))
@@ -172,7 +184,9 @@ module.exports = {
    * @returns {Promise<Model>}
    */
   retrieve(req, res) {
-    helper.controller_before_auth_check_action(req, res)
+    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
 
     return Week.findById(req.params.id, {})
       .then((week) => {

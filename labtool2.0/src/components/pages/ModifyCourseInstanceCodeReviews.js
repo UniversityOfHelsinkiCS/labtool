@@ -213,7 +213,7 @@ export class ModifyCourseInstanceReview extends React.Component {
         this.props.removeOneCodeReview({ reviewer: cr.studentInstanceId, codeReviewRound: cr.reviewNumber })
         this.toggleModal(id)
       } catch (e) {
-        console.log(e)
+        console.error(e)
       }
     }
   }

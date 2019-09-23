@@ -98,16 +98,6 @@ exports[`<MassEmailPage /> MassEmailPage Component should render correctly 1`] =
               <TableHeaderCell
                 as="th"
               >
-                id
-              </TableHeaderCell>
-              <TableHeaderCell
-                as="th"
-              >
-                email
-              </TableHeaderCell>
-              <TableHeaderCell
-                as="th"
-              >
                 Project Info
               </TableHeaderCell>
               <TableHeaderCell
@@ -142,22 +132,9 @@ exports[`<MassEmailPage /> MassEmailPage Component should render correctly 1`] =
                 Johan Wilhelm
                  
                 Studerande
-              </TableCell>
-              <TableCell
-                as="td"
-              >
-                <span>
-                  014553242
-                </span>
-              </TableCell>
-              <TableCell
-                as="td"
-              >
-                <a
-                  href="mailto:johan.studerande@helsinki.fi"
-                >
-                  johan.studerande@helsinki.fi
-                </a>
+                 (
+                014553242
+                )
               </TableCell>
               <TableCell
                 as="td"
@@ -217,22 +194,9 @@ exports[`<MassEmailPage /> MassEmailPage Component should render correctly 1`] =
                 Teräs
                  
                 Henkilö
-              </TableCell>
-              <TableCell
-                as="td"
-              >
-                <span>
-                  014666666
-                </span>
-              </TableCell>
-              <TableCell
-                as="td"
-              >
-                <a
-                  href="mailto:teras.henkilo@helsinki.fi"
-                >
-                  teras.henkilo@helsinki.fi
-                </a>
+                 (
+                014666666
+                )
               </TableCell>
               <TableCell
                 as="td"
@@ -306,22 +270,9 @@ exports[`<MassEmailPage /> MassEmailPage Component should render correctly 1`] =
                 Maarit Mirja
                  
                 Opiskelija
-              </TableCell>
-              <TableCell
-                as="td"
-              >
-                <span>
-                  014578343
-                </span>
-              </TableCell>
-              <TableCell
-                as="td"
-              >
-                <a
-                  href="mailto:maarit.opiskelija@helsinki.fi"
-                >
-                  maarit.opiskelija@helsinki.fi
-                </a>
+                 (
+                014578343
+                )
               </TableCell>
               <TableCell
                 as="td"

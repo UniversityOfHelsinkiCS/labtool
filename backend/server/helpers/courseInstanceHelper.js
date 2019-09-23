@@ -1,23 +1,23 @@
 const Sequelize = require('sequelize')
 
-const application_helpers = require('./application_helper')
+const applicationHelpers = require('./applicationHelper')
 const logger = require('../utils/logger')
 const { Week, CourseInstance, StudentInstance, TeacherInstance } = require('../models')
 
 const env = process.env.NODE_ENV || 'development'
-const config = require('./../config/config.js')[env]
+const config = require('../config/config.js')[env]
 const db = require('../models')
 
-exports.CurrentTermAndYear = application_helpers.CurrentTermAndYear
-exports.getCurrentTerm = application_helpers.getCurrentTerm
-exports.getNextYear = application_helpers.getNextYear
-exports.getNextTerm = application_helpers.getNextTerm
+exports.CurrentTermAndYear = applicationHelpers.CurrentTermAndYear
+exports.getCurrentTerm = applicationHelpers.getCurrentTerm
+exports.getNextYear = applicationHelpers.getNextYear
+exports.getNextTerm = applicationHelpers.getNextTerm
 exports.checkWebOodi = checkWebOodi
 exports.findByUserStudentInstance = findByUserStudentInstance
-exports.getCurrent = application_helpers.getCurrent
-exports.controller_before_auth_check_action = application_helpers.controller_before_auth_check_action
+exports.getCurrent = applicationHelpers.getCurrent
+exports.controllerBeforeAuthCheckAction = applicationHelpers.controllerBeforeAuthCheckAction
 exports.checkHasCommentPermission = checkHasCommentPermission
-exports.getTeacherId = application_helpers.getTeacherId
+exports.getTeacherId = applicationHelpers.getTeacherId
 exports.checkHasPermissionToViewStudentInstance = checkHasPermissionToViewStudentInstance
 
 /**
@@ -164,7 +164,9 @@ function findByUserStudentInstance(req, res) {
 
   const errors = []
 
-  application_helpers.controller_before_auth_check_action(req, res)
+  if (!applicationHelpers.controllerBeforeAuthCheckAction(req, res)) {
+    return
+  }
   if (Number.isInteger(req.decoded.id)) {
     db.sequelize
       .query(

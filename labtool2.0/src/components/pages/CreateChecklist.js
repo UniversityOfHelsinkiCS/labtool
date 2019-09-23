@@ -107,7 +107,7 @@ export class CreateChecklist extends Component {
     })
   }
 
-  copyChecklist = async e => {
+  copyChecklist = async () => {
     if (!this.state.copyCourse) return
     const week = this.state.week > this.props.selectedInstance.weekAmount ? this.props.courses.find(course => course.id === this.state.copyCourse).weekAmount + 1 : this.state.week
     this.props.getOneChecklist({
@@ -226,26 +226,26 @@ export class CreateChecklist extends Component {
     })
   }
 
-  removeTopic = key => async e => {
+  removeTopic = key => async () => {
     this.props.removeTopic({
       key
     })
   }
 
-  removeRow = (key, name) => async e => {
+  removeRow = (key, name) => async () => {
     this.props.removeRow({
       key,
       name
     })
   }
 
-  cancelAdd = async e => {
+  cancelAdd = async () => {
     this.setState({
       openAdd: ''
     })
   }
 
-  castPointsToNumber = (key, name) => async e => {
+  castPointsToNumber = (key, name) => async () => {
     this.props.castPointsToNumber({
       key,
       name

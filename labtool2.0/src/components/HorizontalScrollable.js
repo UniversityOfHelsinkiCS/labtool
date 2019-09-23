@@ -33,7 +33,7 @@ export class HorizontalScrollable extends React.Component {
   }
 
   maybeResizeBar = () => {
-    if (this.content && this.scrollbar) {
+    if (this.content && this.scrollbar && this.content.offsetWidth !== this.scrollbar.style.width) {
       // make scrollable range as wide as table itself, but keep the
       // scroll bar width as the viewable width of the table
       const oldScrollLeft = this.scrollbar.scrollLeft

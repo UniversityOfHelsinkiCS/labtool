@@ -1,10 +1,10 @@
-const application_helpers = require('./application_helper')
+const applicationHelpers = require('./applicationHelper')
 const { User, TeacherInstance } = require('../models')
 
-exports.controller_before_auth_check_action = application_helpers.controller_before_auth_check_action
-exports.getInactive = application_helpers.getInactive
-exports.createCourse = application_helpers.createCourse
-exports.getActive = application_helpers.getActive
+exports.controllerBeforeAuthCheckAction = applicationHelpers.controllerBeforeAuthCheckAction
+exports.getInactive = applicationHelpers.getInactive
+exports.createCourse = applicationHelpers.createCourse
+exports.getActive = applicationHelpers.getActive
 exports.hasPermissionToImport = hasPermissionToImport
 exports.formatCoursesForList = formatCoursesForList
 

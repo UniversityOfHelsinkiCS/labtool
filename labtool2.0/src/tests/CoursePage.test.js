@@ -5,7 +5,7 @@ import { shallow } from 'enzyme'
 describe('<CoursePage /> as teacher', () => {
   let wrapper
 
-  const selectedInstance = {
+  /* const selectedInstance = {
     id: 10011,
     name: 'Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit',
     start: '2018-03-11T21:00:00.000Z',
@@ -33,7 +33,7 @@ describe('<CoursePage /> as teacher', () => {
         lastname: 'Mutikainen'
       }
     ]
-  }
+  }*/
 
   const coursePage = {
     role: 'teacher',
