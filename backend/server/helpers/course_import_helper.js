@@ -8,6 +8,11 @@ exports.getActive = application_helpers.getActive
 exports.hasPermissionToImport = hasPermissionToImport
 exports.formatCoursesForList = formatCoursesForList
 
+/**
+ * Checks whether an user is allowed to import courses.
+ * The user must either be admin or a teacher/instructor on at least one course.
+ * @param userId
+ */
 async function hasPermissionToImport(userId) {
   const user = await User.findOne({
     attributes: ['admin'],
@@ -29,10 +34,14 @@ async function hasPermissionToImport(userId) {
   return !!(teacher && teacher.id)
 }
 
+/**
+ * Formats an array of courses for returning to client
+ * @param courses
+ */
 function formatCoursesForList(courses) {
   const result = []
 
-  courses.forEach(course => {
+  courses.forEach((course) => {
     result.push({
       hid: course.id,
       cname: course.name,

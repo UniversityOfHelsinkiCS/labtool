@@ -26,11 +26,40 @@ module.exports = {
    * @param req
    * @param res
    */
-  findByUserTeacherInstance(req, res) {
+  async findByUserTeacherInstance(req, res) {
     helper.controller_before_auth_check_action(req, res)
-    db.sequelize
-      .query(`SELECT * FROM "CourseInstances" JOIN "TeacherInstances" ON "CourseInstances"."id" = "TeacherInstances"."courseInstanceId" WHERE "TeacherInstances"."userId" = ${req.decoded.id}`)
-      .then(instance => res.status(200).send(instance[0]))
+    await CourseInstance.findAll({
+      include: [{
+        model: TeacherInstance,
+        required: true,
+        where: { userId: req.decoded.id },
+        as: 'teachercourseInstances'
+      }]
+    }).then(courseInstances => res.status(200).send(courseInstances))
+      .catch((error) => {
+        logger.error(error)
+        res.status(400).send(error)
+      })
+  },
+
+  /**
+   * Gets courses of a user who has the studentInstance with id=req.params.id
+   * @param {*} req
+   * @param {*} res
+   */
+  async findByStudentInstanceId(req, res) {
+    helper.controller_before_auth_check_action(req, res)
+    const studentInstance = await StudentInstance.findOne({
+      where: { id: req.params.id } // id is StudentInstance.id
+    })
+    await CourseInstance.findAll({
+      include: [{
+        model: StudentInstance,
+        required: true,
+        where: { userId: studentInstance.userId },
+        as: 'courseInstances'
+      }]
+    }).then(courseInstances => res.status(200).send(courseInstances))
       .catch((error) => {
         logger.error(error)
         res.status(400).send(error)
@@ -704,6 +733,7 @@ module.exports = {
       const userId = req.decoded.id
       try {
         const message = req.body
+
         const user = await User.findById(userId)
         if (!user) {
           res.status(400).send('you are not an user in the system')
@@ -715,6 +745,12 @@ module.exports = {
           return
         }
         const name = user.firsts.concat(' ').concat(user.lastname)
+
+        if (message.comment.trim().length === 0) {
+          res.status(400).send('comment cannot be empty')
+          return
+        }
+
         const comment = await Comment.create({
           weekId: message.week,
           hidden: message.hidden,
@@ -722,11 +758,14 @@ module.exports = {
           from: name,
           notified: false
         })
+
         if (!comment) {
           res.status(400).send('week not found')
         } else {
           res.status(200).send(comment)
         }
+
+
       } catch (e) {
         res.status(400).send(e)
         logger.error(e)

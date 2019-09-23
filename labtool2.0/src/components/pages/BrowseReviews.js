@@ -9,7 +9,8 @@ import { updateStudentProjectInfo } from '../../services/studentinstances'
 import ReactMarkdown from 'react-markdown'
 import { sendEmail } from '../../services/email'
 import { resetLoading } from '../../reducers/loadingReducer'
-import { trimDate } from '../../util/format'
+import { trimDate, createCourseIdWithYearAndTerm } from '../../util/format'
+import { getCoursesByStudentId } from '../../services/studentinstances'
 
 import BackButton from '../BackButton'
 import { FormMarkdownTextArea } from '../MarkdownTextArea'
@@ -30,6 +31,7 @@ export class BrowseReviews extends Component {
     await this.props.resetLoading()
     this.props.getOneCI(this.props.courseId)
     this.props.coursePageInformation(this.props.courseId)
+    this.props.getCoursesByStudentId(Number(this.props.studentInstance))
   }
 
   componentDidMount() {
@@ -141,8 +143,26 @@ export class BrowseReviews extends Component {
     return this.props.courseData.role === 'teacher'
   }
 
+  //get student's other participations in the same course
+  renderStudentPreviousParticipation = () => {
+    const previousParticipations = this.props.studentInstanceToBeReviewed.filter(
+      courseInstance => courseInstance.ohid.includes(this.props.courseId.substring(0, 8)) && courseInstance.ohid !== this.props.courseId
+    )
+    if (previousParticipations.length === 0) {
+      return <p className="noPrevious">First time to participate the course</p>
+    }
+    return (
+      <div className="hasPrevious">
+        <p className style={{ color: 'red' }}>
+          Has other participations
+        </p>
+        {previousParticipations.map(participation => <p key={participation.id}>{createCourseIdWithYearAndTerm(participation.ohid, participation.start)}</p>)}
+      </div>
+    )
+  }
+
   renderStudentCard = student => (
-    <Card key={student.id} fluid color="yellow">
+    <Card key={student.id} fluid color="yellow" className="studentCard">
       <Card.Content>
         <h2>
           {student.User.firsts} {student.User.lastname} ({student.User.studentNumber})
@@ -156,8 +176,9 @@ export class BrowseReviews extends Component {
             {student.github}
           </a>
         </h3>
-        <p>{`Dropped course: ${student.dropped}`}</p>
+        <p>{`Has dropped course: ${student.dropped}`}</p>
         {<Button onClick={() => this.handleMarkAsDropped(!student.dropped)}>{student.dropped ? 'Mark as non-dropped' : 'Mark as dropped'}</Button>}
+        {this.renderStudentPreviousParticipation()}
       </Card.Content>
     </Card>
   )
@@ -399,6 +420,7 @@ const mapStateToProps = (state, ownProps) => {
     user: state.user,
     selectedInstance: state.selectedInstance,
     courseData: state.coursePage,
+    studentInstanceToBeReviewed: state.studentInstance,
     loading: state.loading
   }
 }
@@ -410,6 +432,7 @@ const mapDispatchToProps = {
   gradeCodeReview,
   sendEmail,
   resetLoading,
+  getCoursesByStudentId,
   updateStudentProjectInfo
 }
 

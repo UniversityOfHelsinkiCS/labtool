@@ -350,6 +350,7 @@ exports[`<MassEmailPage /> MassEmailPage Component should render correctly 1`] =
         </Table>
       </HorizontalScrollable>
       <br />
+      <br />
       <FormTextArea
         as={[Function]}
         control={[Function]}
@@ -360,6 +361,7 @@ exports[`<MassEmailPage /> MassEmailPage Component should render correctly 1`] =
       />
       <Button
         as="button"
+        className="ui green button"
         content="Send"
         role="button"
         type="submit"

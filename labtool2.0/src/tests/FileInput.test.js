@@ -7,7 +7,7 @@ describe('<FileInput />', () => {
   let wrapper
 
   beforeEach(() => {
-    wrapper = shallow(<FileInput onFileUploaded={(_) => _} allowedFileTypes={['text/plain', 'application/json']} />)
+    wrapper = shallow(<FileInput onFileUploaded={_ => _} allowedFileTypes={['text/plain', 'application/json']} />)
   })
 
   describe('FileInput component', () => {

@@ -137,7 +137,7 @@ class App extends Component {
        * Nav is the component for the navbar, that is always displayed.
        */
       <Container>
-        <Nav logout={ doLogout } />
+        <Nav logout={doLogout} />
         <Notification />
         {this.props.user ? EmailChecker() : USE_FAKE_LOGIN ? <FakeLoginPage /> : null}
       </Container>
