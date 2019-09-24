@@ -210,8 +210,15 @@ describe('<CoursePage /> as teacher', () => {
   }
 
   let mockFn = jest.fn()
+  
+  let mockUpdateStudentProjectInfo
+
+  //Mock window.confirm to return true in all cases
+  window.confirm = jest.fn(() => true)
 
   beforeEach(() => {
+    mockUpdateStudentProjectInfo = jest.fn()
+
     wrapper = shallow(
       <CoursePage
         courseData={coursePage}
@@ -220,6 +227,7 @@ describe('<CoursePage /> as teacher', () => {
         associateTeacherToStudent={mockFn}
         selectedInstance={coursePage}
         coursePageLogic={coursePageLogic}
+        updateStudentProjectInfo={mockUpdateStudentProjectInfo}
         getAllTags={mockFn}
         courseReset={mockFn}
         tags={tags}
@@ -264,6 +272,12 @@ describe('<CoursePage /> as teacher', () => {
 
     it('shows dropped out students in a separate list', () => {
       expect(wrapper.find('.TableRowForDroppedOutStudents').length).toEqual(1)
+    })
+
+    it('can mark all students with DROPPED tag as dropped', () => {
+      wrapper.find({ children: 'Mark all with dropped tag as dropped out' }).simulate('click')
+
+      expect(mockUpdateStudentProjectInfo).toBeCalledWith(expect.objectContaining({ userId: 10031, dropped: true }))
     })
 
     // it('assistant dropdown menu is not shown when page loads', () => {

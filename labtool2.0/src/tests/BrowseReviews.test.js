@@ -166,19 +166,26 @@ describe('<BrowseReviews />', () => {
 
   let mockFn = jest.fn()
 
+  let mockUpdateStudentProjectInfo
+
   const studentWithoutPreviousParticipation = [coursePage]
 
+  const studentInstanceId = 10011
+
   beforeEach(() => {
+    mockUpdateStudentProjectInfo = jest.fn()
+
     wrapper = shallow(
       <BrowseReviews
         getOneCI={mockFn}
         coursePageInformation={mockFn}
         getCoursesByStudentId={mockFn}
+        updateStudentProjectInfo={mockUpdateStudentProjectInfo}
         courseData={courseData}
         selectedInstance={coursePage}
         studentInstanceToBeReviewed={studentWithoutPreviousParticipation}
         courseId={coursePage.ohid}
-        studentInstance={10011} //studentInstance id which was chosen randomly from courseData
+        studentInstance={studentInstanceId} //studentInstance id which was chosen randomly from courseData
         loading={loading}
         resetLoading={mockFn}
         initialLoading={false}
@@ -236,6 +243,11 @@ describe('<BrowseReviews />', () => {
         )
         expect(wrapper.find('.hasPrevious').text()).toContain('Has other participations')
         expect(wrapper.find('.hasPrevious').text()).toContain('TKT20010 16-17 4.period')
+      })
+      it('student can be marked as dropped and non-dropped', () => {
+        wrapper.find({ children: 'Mark as dropped'}).simulate('click')
+
+        expect(mockUpdateStudentProjectInfo).toBeCalledWith(expect.objectContaining({ dropped: true }))
       })
     })
   })
