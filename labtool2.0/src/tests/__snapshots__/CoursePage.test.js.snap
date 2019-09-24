@@ -800,7 +800,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
       role="button"
       size="small"
     >
-      Mark all with dropped tag as dropped
+      Mark all with dropped tag as dropped out
     </Button>
     <Link
       replace={false}
