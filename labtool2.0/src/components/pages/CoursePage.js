@@ -173,7 +173,7 @@ export class CoursePage extends React.Component {
     return hasDroppedTag
   }
 
-  markAllWithDroppedTagAsDropped = courseData => {
+  markAllWithDroppedTagAsDropped = async courseData => {
     if (
       !window.confirm(
         'Confirming will mark the students with a dropped tag as dropped out. If a different tag was being used, the system will not suggest an automatic change. In that case, you need to change the status manually in the review page of that student. Are you sure you want to confirm?'
@@ -181,13 +181,15 @@ export class CoursePage extends React.Component {
     ) {
       return
     }
+    const promises = []
     for (let i = 0; i < courseData.data.length; i++) {
       let student = courseData.data[i]
       let studentTags = student.Tags
       if (this.hasDroppedTag(studentTags) === true) {
-        this.handleMarkAsDropped(true, student.User.id)
+        promises.push(this.handleMarkAsDropped(true, student.User.id))
       }
     }
+    Promise.all(promises).then(() => this.props.coursePageInformation(this.props.courseId))
   }
 
   handleMarkAsDropped = async (dropped, id) => {
