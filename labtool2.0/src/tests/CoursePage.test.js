@@ -210,7 +210,7 @@ describe('<CoursePage /> as teacher', () => {
   }
 
   let mockFn = jest.fn()
-  
+
   let mockUpdateStudentProjectInfo
 
   //Mock window.confirm to return true in all cases

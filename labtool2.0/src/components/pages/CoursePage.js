@@ -628,11 +628,12 @@ export class CoursePage extends React.Component {
       const heading = droppedOut ? 'Dropped out students' : 'Students'
       const tableClassName = droppedOut ? 'TeachersBottomViewForDroppedOutStudents' : 'TeachersBottomViewForActiveStudents'
       const rowClassName = droppedOut ? 'TableRowForDroppedOutStudents' : 'TableRowForActiveStudents'
-      const dropConvertButton = !droppedOut && this.droppedTagExists() && (
-        <Button onClick={() => this.markAllWithDroppedTagAsDropped(this.props.courseData)} size="small">
-          Mark all with dropped tag as dropped out
-        </Button>
-      )
+      const dropConvertButton = !droppedOut &&
+        this.droppedTagExists() && (
+          <Button onClick={() => this.markAllWithDroppedTagAsDropped(this.props.courseData)} size="small">
+            Mark all with dropped tag as dropped out
+          </Button>
+        )
       return (
         <div className={tableClassName}>
           <Header as="h2">{heading} </Header>

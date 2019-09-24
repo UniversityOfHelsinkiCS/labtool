@@ -245,7 +245,7 @@ describe('<BrowseReviews />', () => {
         expect(wrapper.find('.hasPrevious').text()).toContain('TKT20010 16-17 4.period')
       })
       it('student can be marked as dropped and non-dropped', () => {
-        wrapper.find({ children: 'Mark as dropped'}).simulate('click')
+        wrapper.find({ children: 'Mark as dropped' }).simulate('click')
 
         expect(mockUpdateStudentProjectInfo).toBeCalledWith(expect.objectContaining({ dropped: true }))
       })
