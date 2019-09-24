@@ -156,13 +156,13 @@ export class CoursePage extends React.Component {
     return hasRequiredTags
   }
 
+  droppedTagExists = () => {
+    return this.props.tags.tags && this.props.tags.tags.map(tag => tag.name.toUpperCase()).includes('DROPPED')
+  }
+
   hasDroppedTag = studentTagsData => {
     let studentInstanceTagNames = studentTagsData.map(tag => tag.name.toUpperCase())
-    let hasDroppedTag = false
-    if (studentInstanceTagNames.includes('DROPPED')) {
-      hasDroppedTag = true
-    }
-    return hasDroppedTag
+    return studentInstanceTagNames.includes('DROPPED')
   }
 
   markAllWithDroppedTagAsDropped = async courseData => {
@@ -630,7 +630,7 @@ export class CoursePage extends React.Component {
       const heading = droppedOut ? 'Dropped out students' : 'Students'
       const tableClassName = droppedOut ? 'TeachersBottomViewForDroppedOutStudents' : 'TeachersBottomViewForActiveStudents'
       const rowClassName = droppedOut ? 'TableRowForDroppedOutStudents' : 'TableRowForActiveStudents'
-      const button = droppedOut ? null : (
+      const dropConvertButton = !droppedOut && this.droppedTagExists() && (
         <Button onClick={() => this.markAllWithDroppedTagAsDropped(this.props.courseData)} size="small">
           Mark all with dropped tag as dropped out
         </Button>
@@ -783,7 +783,7 @@ export class CoursePage extends React.Component {
             </Table>
           </HorizontalScrollable>
           <br />
-          {button}
+          {dropConvertButton}
 
           <Link to={`/labtool/massemail/${this.props.selectedInstance.ohid}`}>
             <Button size="small">Send email to multiple students</Button>
