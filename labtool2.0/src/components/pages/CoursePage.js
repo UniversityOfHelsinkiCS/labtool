@@ -156,14 +156,6 @@ export class CoursePage extends React.Component {
     return hasRequiredTags
   }
 
-  hasDroppedOut = dropped => {
-    let hasDroppedOut = false
-    if (dropped === true) {
-      hasDroppedOut = true
-    }
-    return hasDroppedOut
-  }
-
   hasDroppedTag = studentTagsData => {
     let studentInstanceTagNames = studentTagsData.map(tag => tag.name.toUpperCase())
     let hasDroppedTag = false
@@ -691,7 +683,7 @@ export class CoursePage extends React.Component {
                 {this.props.courseData && this.props.courseData.data ? (
                   this.props.courseData.data
                     .filter(data => {
-                      return droppedOut === this.hasDroppedOut(data.dropped)
+                      return droppedOut === data.dropped
                     })
                     .filter(data => {
                       return droppedOut || this.props.coursePageLogic.filterByAssistant === 0 || this.props.coursePageLogic.filterByAssistant === data.teacherInstanceId
