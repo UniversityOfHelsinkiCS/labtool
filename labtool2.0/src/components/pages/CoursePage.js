@@ -173,15 +173,13 @@ export class CoursePage extends React.Component {
     ) {
       return
     }
-    const promises = []
     for (let i = 0; i < courseData.data.length; i++) {
       let student = courseData.data[i]
       let studentTags = student.Tags
       if (this.hasDroppedTag(studentTags) === true) {
-        promises.push(this.handleMarkAsDropped(true, student.User.id))
+        this.handleMarkAsDropped(true, student.User.id)
       }
     }
-    Promise.all(promises).then(() => this.props.coursePageInformation(this.props.courseId))
   }
 
   handleMarkAsDropped = async (dropped, id) => {

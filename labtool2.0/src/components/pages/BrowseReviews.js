@@ -107,7 +107,6 @@ export class BrowseReviews extends Component {
       userId: this.props.courseData.data.find(data => data.id === Number(this.props.studentInstance)).userId,
       dropped
     })
-    this.props.coursePageInformation(this.props.courseId)
   }
 
   sortCommentsByDate = comments => {
