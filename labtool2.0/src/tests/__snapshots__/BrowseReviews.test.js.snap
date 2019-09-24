@@ -65,7 +65,7 @@ exports[`<BrowseReviews /> BrowseReviews Component should render correctly 1`] =
           </a>
         </h3>
         <p>
-          Has dropped course: undefined
+          Has dropped course: false
         </p>
         <Button
           as="button"
