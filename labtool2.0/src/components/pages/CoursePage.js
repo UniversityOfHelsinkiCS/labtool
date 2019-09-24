@@ -174,6 +174,13 @@ export class CoursePage extends React.Component {
   }
 
   markAllWithDroppedTagAsDropped = courseData => {
+    if (
+      !window.confirm(
+        'Confirming will mark the students with a dropped tag as dropped out. If a different tag was being used, the system will not suggest an automatic change. In that case, you need to change the status manually in the review page of that student. Are you sure you want to confirm?'
+      )
+    ) {
+      return
+    }
     for (let i = 0; i < courseData.data.length; i++) {
       let student = courseData.data[i]
       let studentTags = student.Tags
@@ -631,7 +638,7 @@ export class CoursePage extends React.Component {
       const rowClassName = droppedOut ? 'TableRowForDroppedOutStudents' : 'TableRowForActiveStudents'
       const button = droppedOut ? null : (
         <Button onClick={() => this.markAllWithDroppedTagAsDropped(this.props.courseData)} size="small">
-          Mark all with dropped tag as dropped
+          Mark all with dropped tag as dropped out
         </Button>
       )
       return (
