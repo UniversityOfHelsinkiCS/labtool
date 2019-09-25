@@ -33,6 +33,8 @@
   "devDependencies": {
     "babel-eslint": "^8.2.3",
     "deep-freeze": "0.0.1",
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
     "enzyme-to-json": "^3.3.4",
     "eslint": "^4.19.1",
     "eslint-config-google": "^0.9.1",
@@ -43,18 +45,26 @@
     "eslint-plugin-promise": "^3.8.0",
     "eslint-plugin-react": "^7.9.1",
     "eslint-plugin-standard": "^3.1.0",
+    "husky": "^3.0.5",
     "identity-obj-proxy": "^3.0.0",
     "jest-css-modules": "^1.1.0",
-    "js-beautify": "^1.7.5",
-    "prettier": "^1.13.5",
-    "enzyme": "^3.3.0",
-    "enzyme-adapter-react-16": "^1.1.1",
     "jest-enzyme": "^6.0.1",
+    "js-beautify": "^1.7.5",
+    "lint-staged": "^9.3.0",
+    "prettier": "^1.13.5",
     "react-test-renderer": "^16.4.0"
   },
   "jest": {
     "snapshotSerializers": [
       "enzyme-to-json/serializer"
     ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+   "*.js": ["prettier --write", "git add"]
   }
 }
