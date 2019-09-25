@@ -24,8 +24,8 @@ import FakeLoginPage from './components/pages/FakeLoginPage'
 import CourseImport from './components/pages/CourseImport'
 
 // Reducer imports
-import { logout, tokenLogin } from './reducers/loginReducer'
-import { login, fakeShibboLogin } from './services/login'
+import { tokenLogin } from './reducers/loginReducer'
+import { login, logout, fakeShibboLogin } from './services/login'
 import { resetLoading, forceSetLoading } from './reducers/loadingReducer'
 
 const USE_FAKE_LOGIN = process.env.REACT_APP_USE_FAKE_LOGIN === 'ThisIsNotProduction'
@@ -128,8 +128,9 @@ class App extends Component {
      */
     const doLogout = async () => {
       window.localStorage.removeItem('loggedLabtool')
+
       await this.props.logout()
-      this.props.history.push('/')
+      //this.props.history.push('/')
     }
 
     return (

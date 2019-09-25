@@ -1,6 +1,7 @@
 const courseInstances = require('./courseinstances')
 const users = require('./users')
 const login = require('./login')
+const logout = require('./logout')
 const admin = require('./admin')
 const weeks = require('./weeks')
 const assistants = require('./assistants')
@@ -12,6 +13,7 @@ module.exports = {
   courseInstances,
   users,
   login,
+  logout,
   admin,
   weeks,
   assistants,

@@ -24,7 +24,9 @@ const loginReducer = (state = INITIAL_STATE, action) => {
       return {}
     case 'LOGIN_BYTOKEN':
       return action.user
-    case 'LOGOUT_SUCCESS':
+    case 'LOG_OUT_SUCCESS':
+      console.log(action)
+      window.location.href=action.response.logoutUrl
       return {}
     case 'USER_UPDATE_SUCCESS':
       return { ...state, user: { ...state.user, email: action.response.email } }
