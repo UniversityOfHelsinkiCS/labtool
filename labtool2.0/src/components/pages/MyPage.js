@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom'
 import { getAllStudentCourses } from '../../services/studentinstances'
 import { getAllTeacherCourses } from '../../services/teacherinstances'
 import { HorizontalScrollable } from '../HorizontalScrollable'
+import { createCourseIdWithYearAndTerm } from '../../util/format'
 
 /**
  * The main page that is shown after user has logged in.
@@ -81,7 +82,10 @@ export class MyPage extends Component {
                   {this.props.studentInstance.map(sinstance => (
                     <Table.Row key={sinstance.id}>
                       <Table.Cell>
-                        <Link to={`/labtool/courses/${sinstance.ohid}`}>{sinstance.name}</Link>
+                        <Link to={`/labtool/courses/${sinstance.ohid}`}>
+                          {sinstance.name}
+                          ({createCourseIdWithYearAndTerm(sinstance.ohid, sinstance.start)})
+                        </Link>
                       </Table.Cell>
                       <Table.Cell textAlign="right">
                         <Link to={`/labtool/courses/${sinstance.ohid}`}>
@@ -109,7 +113,10 @@ export class MyPage extends Component {
                       {this.props.teacherInstance.map(tinstance => (
                         <Table.Row key={tinstance.id}>
                           <Table.Cell>
-                            <Link to={`/labtool/courses/${tinstance.ohid}`}>{tinstance.name} </Link>
+                            <Link to={`/labtool/courses/${tinstance.ohid}`}>
+                              {tinstance.name}
+                              ({createCourseIdWithYearAndTerm(tinstance.ohid, tinstance.start)})
+                            </Link>
                           </Table.Cell>
                           <Table.Cell textAlign="right">
                             <Link to={`/labtool/courses/${tinstance.ohid}`}>
