@@ -51,7 +51,7 @@ export class HorizontalScrollable extends React.Component {
   updateScrollX = doNotUpdate => e => {
     // synchronize scroll positions
     const newX = e.target.scrollLeft
-    
+
     if (this.antibounce[doNotUpdate]) {
       this.antibounce[doNotUpdate] = false
       return
