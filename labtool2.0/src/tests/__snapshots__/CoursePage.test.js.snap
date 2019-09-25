@@ -794,6 +794,14 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
       </Table>
     </HorizontalScrollable>
     <br />
+    <Button
+      as="button"
+      onClick={[Function]}
+      role="button"
+      size="small"
+    >
+      Mark all with dropped tag as dropped out
+    </Button>
     <Link
       replace={false}
       to="/labtool/massemail/undefined"
