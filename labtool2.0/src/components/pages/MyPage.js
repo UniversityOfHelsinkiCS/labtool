@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 import { getAllStudentCourses } from '../../services/studentinstances'
 import { getAllTeacherCourses } from '../../services/teacherinstances'
 import { HorizontalScrollable } from '../HorizontalScrollable'
-import { createCourseIdWithYearAndTerm } from '../../util/format'
+import { createYearAndTerm } from '../../util/format'
 
 /**
  * The main page that is shown after user has logged in.
@@ -84,7 +84,7 @@ export class MyPage extends Component {
                       <Table.Cell>
                         <Link to={`/labtool/courses/${sinstance.ohid}`}>
                           {sinstance.name}
-                          ({createCourseIdWithYearAndTerm(sinstance.ohid, sinstance.start)})
+                          ({createYearAndTerm(sinstance.name, sinstance.start)})
                         </Link>
                       </Table.Cell>
                       <Table.Cell textAlign="right">
@@ -115,7 +115,7 @@ export class MyPage extends Component {
                           <Table.Cell>
                             <Link to={`/labtool/courses/${tinstance.ohid}`}>
                               {tinstance.name}
-                              ({createCourseIdWithYearAndTerm(tinstance.ohid, tinstance.start)})
+                              ({createYearAndTerm(tinstance.name, tinstance.start)})
                             </Link>
                           </Table.Cell>
                           <Table.Cell textAlign="right">
