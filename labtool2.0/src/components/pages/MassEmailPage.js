@@ -200,10 +200,8 @@ export class MassEmailPage extends React.Component {
                   <Table.Row>
                     <Table.HeaderCell key={-1}>Send?</Table.HeaderCell>
                     <Table.HeaderCell>Student</Table.HeaderCell>
-                    <Table.HeaderCell>id</Table.HeaderCell>
-                    <Table.HeaderCell>email</Table.HeaderCell>
-                    <Table.HeaderCell>Project Info</Table.HeaderCell>
                     <Table.HeaderCell width="six"> Instructor </Table.HeaderCell>
+                    <Table.HeaderCell>Project Info</Table.HeaderCell>
                   </Table.Row>
                 </Table.Header>
                 <Table.Body>
@@ -221,13 +219,18 @@ export class MassEmailPage extends React.Component {
                             <Form.Checkbox name={'send' + data.id} />
                           </Table.Cell>
                           <Table.Cell>
-                            {data.User.firsts} {data.User.lastname}
+                            {data.User.firsts} {data.User.lastname} ({data.User.studentNumber})
                           </Table.Cell>
                           <Table.Cell>
-                            <span>{data.User.studentNumber}</span>
-                          </Table.Cell>
-                          <Table.Cell>
-                            <a href={`mailto:${data.User.email}`}>{data.User.email}</a>
+                            {data.teacherInstanceId && this.props.selectedInstance.teacherInstances ? (
+                              this.props.selectedInstance.teacherInstances.filter(teacher => teacher.id === data.teacherInstanceId).map(teacher => (
+                                <span key={data.id}>
+                                  {teacher.firsts} {teacher.lastname}
+                                </span>
+                              ))
+                            ) : (
+                              <span>not assigned</span>
+                            )}
                           </Table.Cell>
                           <Table.Cell>
                             <span>
@@ -244,17 +247,6 @@ export class MassEmailPage extends React.Component {
                                 </div>
                               ))}
                             </span>
-                          </Table.Cell>
-                          <Table.Cell>
-                            {data.teacherInstanceId && this.props.selectedInstance.teacherInstances ? (
-                              this.props.selectedInstance.teacherInstances.filter(teacher => teacher.id === data.teacherInstanceId).map(teacher => (
-                                <span key={data.id}>
-                                  {teacher.firsts} {teacher.lastname}
-                                </span>
-                              ))
-                            ) : (
-                              <span>not assigned</span>
-                            )}
                           </Table.Cell>
                         </Table.Row>
                       ))

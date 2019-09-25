@@ -672,10 +672,10 @@ export class CoursePage extends React.Component {
                 <Table.Row>
                   <Table.HeaderCell key={-1}>Student</Table.HeaderCell>
                   <Table.HeaderCell>Project Info</Table.HeaderCell>
-                  {createHeadersTeacher()}
-                  <Table.HeaderCell> Sum </Table.HeaderCell>
                   <Table.HeaderCell width="six"> Instructor </Table.HeaderCell>
                   <Table.HeaderCell> Review </Table.HeaderCell>
+                  {createHeadersTeacher()}
+                  <Table.HeaderCell> Sum </Table.HeaderCell>
                 </Table.Row>
               </Table.Header>
               <Table.Body>
@@ -733,19 +733,6 @@ export class CoursePage extends React.Component {
                             )}
                           </div>
                         </Table.Cell>
-                        {createIndents(data.weeks, data.codeReviews, data.id)}
-                        <Table.Cell>
-                          {(
-                            data.weeks.map(week => week.points).reduce((a, b) => {
-                              return a + b
-                            }, 0) +
-                            data.codeReviews.map(cr => cr.points).reduce((a, b) => {
-                              return a + b
-                            }, 0)
-                          )
-                            .toFixed(2)
-                            .replace(/[.,]00$/, '')}
-                        </Table.Cell>
                         <Table.Cell>
                           {data.teacherInstanceId && this.props.selectedInstance.teacherInstances ? (
                             this.props.selectedInstance.teacherInstances.filter(teacher => teacher.id === data.teacherInstanceId).map(teacher => (
@@ -772,6 +759,19 @@ export class CoursePage extends React.Component {
                           <Link to={`/labtool/browsereviews/${this.props.selectedInstance.ohid}/${data.id}`}>
                             <Popup trigger={<Button circular size="tiny" icon={{ name: 'star', size: 'large', color: 'orange' }} />} content="Review student" />
                           </Link>
+                        </Table.Cell>
+                        {createIndents(data.weeks, data.codeReviews, data.id)}
+                        <Table.Cell>
+                          {(
+                            data.weeks.map(week => week.points).reduce((a, b) => {
+                              return a + b
+                            }, 0) +
+                            data.codeReviews.map(cr => cr.points).reduce((a, b) => {
+                              return a + b
+                            }, 0)
+                          )
+                            .toFixed(2)
+                            .replace(/[.,]00$/, '')}
                         </Table.Cell>
                       </Table.Row>
                     ))
