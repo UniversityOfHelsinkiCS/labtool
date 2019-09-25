@@ -21,13 +21,13 @@ const loginReducer = (state = INITIAL_STATE, action) => {
     case 'LOGIN_SUCCESS':
       return action.response
     case 'LOGIN_FAILURE':
-      return {}
+      return INITIAL_STATE
     case 'LOGIN_BYTOKEN':
       return action.user
-    case 'LOG_OUT_SUCCESS':
-      console.log(action)
-      window.location.href=action.response.logoutUrl
-      return {}
+    case 'LOGOUT_SUCCESS':
+      window.localStorage.removeItem('fake-shibbo-data')
+      window.location.href = action.response.logoutUrl
+      return INITIAL_STATE
     case 'USER_UPDATE_SUCCESS':
       return { ...state, user: { ...state.user, email: action.response.email } }
     default:
@@ -40,14 +40,6 @@ export const tokenLogin = user => {
     dispatch({
       type: 'LOGIN_BYTOKEN',
       user
-    })
-  }
-}
-
-export const logout = () => {
-  return async dispatch => {
-    dispatch({
-      type: 'LOGOUT_SUCCESS'
     })
   }
 }
