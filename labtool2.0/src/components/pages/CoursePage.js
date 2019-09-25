@@ -710,7 +710,7 @@ export class CoursePage extends React.Component {
                               </div>
                             ))}
                             <Popup
-                              trigger={<Icon id="tag" onClick={this.changeHiddenTagDropdown(data.id)} name="pencil" size="large" color="green" style={{ float: 'right' }} />}
+                              trigger={<Icon id="tag" onClick={this.changeHiddenTagDropdown(data.id)} name="pencil" color="green" style={{ float: 'right', fontSize: '1.25em' }} />}
                               content="Add or remove tag"
                             />
                           </span>
@@ -747,6 +747,10 @@ export class CoursePage extends React.Component {
                             .replace(/[.,]00$/, '')}
                         </Table.Cell>
                         <Table.Cell>
+                          <Popup
+                            trigger={<Button circular onClick={this.changeHiddenAssistantDropdown(data.id)} size="small" icon={{ name: 'pencil' }} style={{ margin: '0.25em', float: 'right' }} />}
+                            content="Assign instructor"
+                          />
                           {data.teacherInstanceId && this.props.selectedInstance.teacherInstances ? (
                             this.props.selectedInstance.teacherInstances.filter(teacher => teacher.id === data.teacherInstanceId).map(teacher => (
                               <span key={data.id}>
@@ -756,7 +760,6 @@ export class CoursePage extends React.Component {
                           ) : (
                             <span>not assigned</span>
                           )}
-                          <Popup trigger={<Button circular onClick={this.changeHiddenAssistantDropdown(data.id)} icon={{ name: 'pencil' }} style={{ float: 'right' }} />} content="Assign instructor" />
                           {this.props.coursePageLogic.showAssistantDropdown === data.id ? (
                             <div>
                               <Dropdown id="assistantDropdown" options={dropDownTeachers} onChange={this.changeSelectedTeacher()} placeholder="Select teacher" fluid selection />
@@ -765,7 +768,7 @@ export class CoursePage extends React.Component {
                               </Button>
                             </div>
                           ) : (
-                            <div />
+                            <span />
                           )}
                         </Table.Cell>
                         <Table.Cell textAlign="right">
