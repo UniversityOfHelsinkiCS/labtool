@@ -471,6 +471,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
               "codeReviews": Array [],
               "courseInstanceId": 10011,
               "createdAt": "2018-03-26T00:00:00.000Z",
+              "dropped": false,
               "github": "http://github.com/tiralabra2",
               "id": 10012,
               "projectName": "Tiran toinen labraprojekti",
@@ -506,6 +507,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
               "codeReviews": Array [],
               "courseInstanceId": 10011,
               "createdAt": "2018-03-26T00:00:00.000Z",
+              "dropped": true,
               "github": "http://github.com/superprojekti",
               "id": 10031,
               "projectName": "Tira super projekti",
@@ -530,6 +532,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
               "codeReviews": Array [],
               "courseInstanceId": 10011,
               "createdAt": "2018-03-26T00:00:00.000Z",
+              "dropped": false,
               "github": "http://github.com/tiralabra1",
               "id": 10011,
               "projectName": "Tiran labraprojekti",
@@ -578,6 +581,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
               "codeReviews": Array [],
               "courseInstanceId": 10011,
               "createdAt": "2018-03-26T00:00:00.000Z",
+              "dropped": false,
               "github": "http://github.com/tiralabra2",
               "id": 10012,
               "projectName": "Tiran toinen labraprojekti",
@@ -613,6 +617,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
               "codeReviews": Array [],
               "courseInstanceId": 10011,
               "createdAt": "2018-03-26T00:00:00.000Z",
+              "dropped": true,
               "github": "http://github.com/superprojekti",
               "id": 10031,
               "projectName": "Tira super projekti",
@@ -637,6 +642,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
               "codeReviews": Array [],
               "courseInstanceId": 10011,
               "createdAt": "2018-03-26T00:00:00.000Z",
+              "dropped": false,
               "github": "http://github.com/tiralabra1",
               "id": 10011,
               "projectName": "Tiran labraprojekti",
@@ -713,6 +719,14 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
       }
     />
     <br />
+    <Button
+      as="button"
+      onClick={[Function]}
+      role="button"
+      size="small"
+    >
+      Mark all with dropped tag as dropped out
+    </Button>
     <Link
       replace={false}
       to="/labtool/massemail/undefined"
@@ -770,6 +784,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
               "codeReviews": Array [],
               "courseInstanceId": 10011,
               "createdAt": "2018-03-26T00:00:00.000Z",
+              "dropped": false,
               "github": "http://github.com/tiralabra2",
               "id": 10012,
               "projectName": "Tiran toinen labraprojekti",
@@ -805,6 +820,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
               "codeReviews": Array [],
               "courseInstanceId": 10011,
               "createdAt": "2018-03-26T00:00:00.000Z",
+              "dropped": true,
               "github": "http://github.com/superprojekti",
               "id": 10031,
               "projectName": "Tira super projekti",
@@ -829,6 +845,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
               "codeReviews": Array [],
               "courseInstanceId": 10011,
               "createdAt": "2018-03-26T00:00:00.000Z",
+              "dropped": false,
               "github": "http://github.com/tiralabra1",
               "id": 10011,
               "projectName": "Tiran labraprojekti",
@@ -877,6 +894,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
               "codeReviews": Array [],
               "courseInstanceId": 10011,
               "createdAt": "2018-03-26T00:00:00.000Z",
+              "dropped": false,
               "github": "http://github.com/tiralabra2",
               "id": 10012,
               "projectName": "Tiran toinen labraprojekti",
@@ -912,6 +930,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
               "codeReviews": Array [],
               "courseInstanceId": 10011,
               "createdAt": "2018-03-26T00:00:00.000Z",
+              "dropped": true,
               "github": "http://github.com/superprojekti",
               "id": 10031,
               "projectName": "Tira super projekti",
@@ -936,6 +955,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
               "codeReviews": Array [],
               "courseInstanceId": 10011,
               "createdAt": "2018-03-26T00:00:00.000Z",
+              "dropped": false,
               "github": "http://github.com/tiralabra1",
               "id": 10011,
               "projectName": "Tiran labraprojekti",

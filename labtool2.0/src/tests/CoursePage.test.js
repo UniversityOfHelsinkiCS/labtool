@@ -42,6 +42,7 @@ describe('<CoursePage /> as teacher', () => {
         id: 10012,
         github: 'http://github.com/tiralabra2',
         projectName: 'Tiran toinen labraprojekti',
+        dropped: false,
         createdAt: '2018-03-26T00:00:00.000Z',
         updatedAt: '2018-03-26T00:00:00.000Z',
         courseInstanceId: 10011,
@@ -72,6 +73,7 @@ describe('<CoursePage /> as teacher', () => {
         id: 10031,
         github: 'http://github.com/superprojekti',
         projectName: 'Tira super projekti',
+        dropped: true,
         createdAt: '2018-03-26T00:00:00.000Z',
         updatedAt: '2018-06-05T07:12:28.603Z',
         courseInstanceId: 10011,
@@ -107,6 +109,7 @@ describe('<CoursePage /> as teacher', () => {
         id: 10011,
         github: 'http://github.com/tiralabra1',
         projectName: 'Tiran labraprojekti',
+        dropped: false,
         createdAt: '2018-03-26T00:00:00.000Z',
         updatedAt: '2018-03-26T00:00:00.000Z',
         courseInstanceId: 10011,
@@ -208,7 +211,14 @@ describe('<CoursePage /> as teacher', () => {
 
   let mockFn = jest.fn()
 
+  let mockUpdateStudentProjectInfo
+
+  //Mock window.confirm to return true in all cases
+  window.confirm = jest.fn(() => true)
+
   beforeEach(() => {
+    mockUpdateStudentProjectInfo = jest.fn()
+
     wrapper = shallow(
       <CoursePage
         courseData={coursePage}
@@ -217,6 +227,7 @@ describe('<CoursePage /> as teacher', () => {
         associateTeacherToStudent={mockFn}
         selectedInstance={coursePage}
         coursePageLogic={coursePageLogic}
+        updateStudentProjectInfo={mockUpdateStudentProjectInfo}
         getAllTags={mockFn}
         courseReset={mockFn}
         tags={tags}
@@ -266,6 +277,12 @@ describe('<CoursePage /> as teacher', () => {
       expect(wrapper.find('.TableRowForDroppedOutStudents').length).toEqual(1)
     })
     */
+
+    it('can mark all students with DROPPED tag as dropped', () => {
+      wrapper.find({ children: 'Mark all with dropped tag as dropped out' }).simulate('click')
+
+      expect(mockUpdateStudentProjectInfo).toBeCalledWith(expect.objectContaining({ userId: 10031, dropped: true }))
+    })
 
     // it('assistant dropdown menu is not shown when page loads', () => {
     //   expect(wrapper.find('.AssistantDropdown').length).toEqual(0)

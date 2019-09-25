@@ -1,6 +1,6 @@
 import { sortTags } from '../util/sort'
 
-const INITIAL_STATE = {}
+const INITIAL_STATE = { modifyTag: null }
 
 const tagsReducer = (store = INITIAL_STATE, action) => {
   switch (action.type) {
@@ -22,12 +22,33 @@ const tagsReducer = (store = INITIAL_STATE, action) => {
     }
     case 'TAGS_GET_ALL_SUCCESS':
       return { ...store, tags: sortTags(action.response) }
+    case 'TAGS_UI_CREATE_NEW':
+      return { ...store, modifyTag: null }
+    case 'TAGS_UI_MODIFY':
+      return { ...store, modifyTag: action.tag }
     case 'UNTAG_STUDENT_SUCCESS':
       return store
     case 'TAG_STUDENT_SUCCESS':
       return store
     default:
       return store
+  }
+}
+
+export const willCreateNewTag = () => {
+  return async dispatch => {
+    dispatch({
+      type: 'TAGS_UI_CREATE_NEW'
+    })
+  }
+}
+
+export const willModifyExistingTag = tag => {
+  return async dispatch => {
+    dispatch({
+      type: 'TAGS_UI_MODIFY',
+      tag
+    })
   }
 }
 

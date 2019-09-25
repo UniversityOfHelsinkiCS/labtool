@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import { createOneComment } from '../../services/comment'
 import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import { gradeCodeReview } from '../../services/codeReview'
+import { updateStudentProjectInfo } from '../../services/studentinstances'
 import ReactMarkdown from 'react-markdown'
 import { sendEmail } from '../../services/email'
 import { resetLoading } from '../../reducers/loadingReducer'
@@ -101,6 +102,14 @@ export class BrowseReviews extends Component {
     }
   }
 
+  handleMarkAsDropped = async dropped => {
+    await this.props.updateStudentProjectInfo({
+      ohid: this.props.selectedInstance.ohid,
+      userId: this.props.courseData.data.find(data => data.id === Number(this.props.studentInstance)).userId,
+      dropped
+    })
+  }
+
   sortCommentsByDate = comments => {
     return comments.sort((a, b) => {
       return new Date(a.createdAt) - new Date(b.createdAt)
@@ -141,7 +150,7 @@ export class BrowseReviews extends Component {
       courseInstance => courseInstance.ohid.includes(this.props.courseId.substring(0, 8)) && courseInstance.ohid !== this.props.courseId
     )
     if (previousParticipations.length === 0) {
-      return <p className="noPrevious">Has not been on this course before</p>
+      return <p className="noPrevious">Has not taken part in this course before</p>
     }
     return (
       <div className="hasPrevious">
@@ -168,6 +177,8 @@ export class BrowseReviews extends Component {
             {student.github}
           </a>
         </h3>
+        <p>{`Has dropped course: ${student.dropped}`}</p>
+        {<Button onClick={() => this.handleMarkAsDropped(!student.dropped)}>{student.dropped ? 'Mark as non-dropped' : 'Mark as dropped'}</Button>}
         {this.renderStudentPreviousParticipation()}
       </Card.Content>
     </Card>
@@ -376,8 +387,9 @@ const mapDispatchToProps = {
   coursePageInformation,
   gradeCodeReview,
   sendEmail,
-  getCoursesByStudentId: getCoursesByStudentId,
-  resetLoading
+  resetLoading,
+  getCoursesByStudentId,
+  updateStudentProjectInfo
 }
 
 export default connect(

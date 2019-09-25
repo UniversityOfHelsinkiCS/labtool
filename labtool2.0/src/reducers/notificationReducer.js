@@ -155,7 +155,7 @@ const notificationReducer = (state = {}, action) => {
       }
     case 'TAG_CREATE_SUCCESS':
       return {
-        message: 'Tag created successfully',
+        message: 'Tag saved successfully',
         error: false
       }
     case 'TAG_REMOVE_SUCCESS':

@@ -174,10 +174,9 @@ export class ModifyCourseInstanceReview extends React.Component {
     return true
   }
 
-  hasDroppedOut = studentTagsData => {
-    let studentInstanceTagNames = studentTagsData.map(tag => tag.name)
+  hasDroppedOut = dropped => {
     let hasDroppedOut = false
-    if (studentInstanceTagNames.includes('DROPPED')) {
+    if (dropped === true) {
       hasDroppedOut = true
     }
     return hasDroppedOut
@@ -332,7 +331,7 @@ export class ModifyCourseInstanceReview extends React.Component {
               {this.props.courseData.data !== undefined
                 ? this.props.courseData.data
                     .filter(data => {
-                      return !this.hasDroppedOut(data.Tags)
+                      return !this.hasDroppedOut(data.dropped)
                     })
                     .filter(data => {
                       return this.props.coursePageLogic.filterByTag.length === 0 || this.hasFilteringTags(data.Tags, this.props.coursePageLogic.filterByTag)

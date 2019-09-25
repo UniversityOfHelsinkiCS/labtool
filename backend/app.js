@@ -4,6 +4,7 @@ const app = express()
 const jwt = require('jsonwebtoken')
 const bodyParser = require('body-parser')
 const Raven = require('raven')
+const headerMiddleware = require('unfuck-utf8-headers-middleware')
 const logger = require('./server/utils/logger')
 
 Raven.config(process.env.SENTRY_ADDR).install()
@@ -15,6 +16,18 @@ const USE_FAKE_LOGIN = process.env.USE_FAKE_LOGIN === 'ThisIsNotProduction'
 if (USE_FAKE_LOGIN) {
   console.warn('YOU ARE USING FAKE LOGIN !!! MAKE SURE YOU ARE NOT IN PRODUCTION')
 }
+
+/**
+ * Fix charset for shibboleth headers
+ */
+const shibbolethHeaders = [
+  'uid',
+  'givenname', // First name
+  'mail', // Email
+  'schacpersonaluniquecode', // Contains student number
+  'sn' // Last name
+]
+app.use(headerMiddleware(shibbolethHeaders))
 
 /**
  *

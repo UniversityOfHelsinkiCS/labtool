@@ -99,6 +99,9 @@ exports[`<Courses /> Courses Component should render correctly 1`] = `
                   to="/labtool/courses/TKT20010.2018.K.A.1"
                 >
                   Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit
+                   (
+                  17-18 4.period
+                  )
                 </Link>
               </strong>
             </TableCell>
@@ -173,6 +176,9 @@ exports[`<Courses /> Courses Component should render correctly 1`] = `
                   to="/labtool/courses/TKT20002.2018.K.K.1"
                 >
                   Ohjelmistotekniikan menetelmät
+                   (
+                  17-18 4.period
+                  )
                 </Link>
               </strong>
             </TableCell>
@@ -236,6 +242,9 @@ exports[`<Courses /> Courses Component should render correctly 1`] = `
                   to="/labtool/courses/TKT20011.2018.K.A.1"
                 >
                   Aineopintojen harjoitustyö: Tietokantasovellus
+                   (
+                  17-18 3.period
+                  )
                 </Link>
               </strong>
             </TableCell>

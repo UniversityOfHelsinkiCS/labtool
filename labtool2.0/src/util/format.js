@@ -58,3 +58,15 @@ const getPeriod = startDate => {
 export const createCourseIdWithYearAndTerm = (ohid, startDate) => {
   return createShorterCourseid(ohid) + ' ' + getAcademicYear(startDate) + ' ' + getPeriod(startDate)
 }
+
+export const createYearAndTerm = startDate => {
+  return getAcademicYear(startDate) + ' ' + getPeriod(startDate)
+}
+
+export const capitalize = text => {
+  if (text.length < 2) {
+    return text.toUpperCase()
+  } else {
+    return text.slice(0, 1).toUpperCase() + text.slice(1).toLowerCase()
+  }
+}

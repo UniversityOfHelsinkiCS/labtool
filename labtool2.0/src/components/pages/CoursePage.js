@@ -6,6 +6,7 @@ import { createOneComment } from '../../services/comment'
 import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import ReactMarkdown from 'react-markdown'
 import { getAllTags, tagStudent, unTagStudent } from '../../services/tags'
+import { updateStudentProjectInfo } from '../../services/studentinstances'
 import { addLinkToCodeReview } from '../../services/codeReview'
 import { sendEmail } from '../../services/email'
 import { coursePageReset, updateActiveIndex, toggleCodeReview } from '../../reducers/coursePageLogicReducer'
@@ -67,13 +68,50 @@ export class CoursePage extends React.Component {
     this.props.addLinkToCodeReview(data)
   }
 
-  hasDroppedOut = studentTagsData => {
-    let studentInstanceTagNames = studentTagsData.map(tag => tag.name)
-    let hasDroppedOut = false
-    if (studentInstanceTagNames.includes('DROPPED')) {
-      hasDroppedOut = true
+  hasFilteringTags = (studentTagsData, filteringTags) => {
+    let studentInstanceTagIds = studentTagsData.map(tag => tag.id)
+    let filteringTagIds = filteringTags.map(tag => tag.id)
+    let hasRequiredTags = true
+    for (let i = 0; i < filteringTagIds.length; i++) {
+      if (!studentInstanceTagIds.includes(filteringTagIds[i])) {
+        hasRequiredTags = false
+      }
     }
-    return hasDroppedOut
+    return hasRequiredTags
+  }
+
+  droppedTagExists = () => {
+    return this.props.tags.tags && this.props.tags.tags.map(tag => tag.name.toUpperCase()).includes('DROPPED')
+  }
+
+  hasDroppedTag = studentTagsData => {
+    let studentInstanceTagNames = studentTagsData.map(tag => tag.name.toUpperCase())
+    return studentInstanceTagNames.includes('DROPPED')
+  }
+
+  markAllWithDroppedTagAsDropped = async courseData => {
+    if (
+      !window.confirm(
+        'Confirming will mark the students with a dropped tag as dropped out. If a different tag was being used, the system will not suggest an automatic change. In that case, you need to change the status manually in the review page of that student. Are you sure you want to confirm?'
+      )
+    ) {
+      return
+    }
+    for (let i = 0; i < courseData.data.length; i++) {
+      let student = courseData.data[i]
+      let studentTags = student.Tags
+      if (this.hasDroppedTag(studentTags) === true) {
+        this.handleMarkAsDropped(true, student.User.id)
+      }
+    }
+  }
+
+  handleMarkAsDropped = async (dropped, id) => {
+    this.props.updateStudentProjectInfo({
+      ohid: this.props.selectedInstance.ohid,
+      userId: id,
+      dropped: dropped
+    })
   }
 
   sendEmail = commentId => async () => {
@@ -331,6 +369,12 @@ export class CoursePage extends React.Component {
       const heading = droppedOut ? 'Dropped out students' : 'Students'
       const tableClassName = droppedOut ? 'TeachersBottomViewForDroppedOutStudents' : 'TeachersBottomViewForActiveStudents'
       const rowClassName = droppedOut ? 'TableRowForDroppedOutStudents' : 'TableRowForActiveStudents'
+      const dropConvertButton = !droppedOut &&
+        this.droppedTagExists() && (
+          <Button onClick={() => this.markAllWithDroppedTagAsDropped(this.props.courseData)} size="small">
+            Mark all with dropped tag as dropped out
+          </Button>
+        )
       return (
         <div className={tableClassName}>
           <Header as="h2">{heading} </Header>
@@ -339,7 +383,7 @@ export class CoursePage extends React.Component {
             rowClassName={rowClassName}
             columns={['points', 'review']}
             allowModify={true}
-            filterStudents={data => droppedOut === this.hasDroppedOut(data.Tags)}
+            filterStudents={data => droppedOut === data.dropped}
             disableDefaultFilter={droppedOut}
             selectedInstance={this.props.selectedInstance}
             courseData={this.props.courseData}
@@ -347,6 +391,7 @@ export class CoursePage extends React.Component {
             tags={this.props.tags}
           />
           <br />
+          {dropConvertButton}
 
           <Link to={`/labtool/massemail/${this.props.selectedInstance.ohid}`}>
             <Button size="small">Send email to multiple students</Button>
@@ -461,7 +506,8 @@ const mapDispatchToProps = {
   sendEmail,
   updateActiveIndex,
   unTagStudent,
-  resetLoading
+  resetLoading,
+  updateStudentProjectInfo
 }
 
 export default connect(

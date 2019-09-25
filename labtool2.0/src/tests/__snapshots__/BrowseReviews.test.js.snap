@@ -64,10 +64,20 @@ exports[`<BrowseReviews /> BrowseReviews Component should render correctly 1`] =
             http://github.com/tiralabra1
           </a>
         </h3>
+        <p>
+          Has dropped course: false
+        </p>
+        <Button
+          as="button"
+          onClick={[Function]}
+          role="button"
+        >
+          Mark as dropped
+        </Button>
         <p
           className="noPrevious"
         >
-          Has not been on this course before
+          Has not taken part in this course before
         </p>
       </CardContent>
     </Card>
