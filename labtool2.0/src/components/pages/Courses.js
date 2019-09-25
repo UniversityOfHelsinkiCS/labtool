@@ -56,7 +56,7 @@ export class Courses extends Component {
                       <Table.Cell>
                         <strong>
                           <Link to={`/labtool/courses/${instance.ohid}`}>
-                            {instance.name} ({createYearAndTerm(instance.start)})
+                            {instance.name} ({createYearAndTerm(instance.name, instance.start)})
                           </Link>
                         </strong>
                       </Table.Cell>

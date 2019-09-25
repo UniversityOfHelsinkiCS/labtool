@@ -59,7 +59,10 @@ export const createCourseIdWithYearAndTerm = (ohid, startDate) => {
   return createShorterCourseid(ohid) + ' ' + getAcademicYear(startDate) + ' ' + getPeriod(startDate)
 }
 
-export const createYearAndTerm = startDate => {
+export const createYearAndTerm = (courseName, startDate) => {
+  if (courseName.includes('(')) {
+    return getAcademicYear(startDate)
+  }
   return getAcademicYear(startDate) + ' ' + getPeriod(startDate)
 }
 
