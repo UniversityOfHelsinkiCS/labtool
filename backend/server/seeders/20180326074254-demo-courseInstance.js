@@ -6,7 +6,7 @@ module.exports = {
     [
       {
         id: 10011,
-        name: 'Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit',
+        name: 'Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit (periodi IV)',
         start: '2018-03-11T21:00:00.000Z',
         end: '2018-04-29T21:00:00.000Z',
         active: true,
@@ -36,7 +36,7 @@ module.exports = {
       },
       {
         id: 10013,
-        name: 'Aineopintojen harjoitustyö: Tietokantasovellus',
+        name: 'Aineopintojen harjoitustyö: Tietokantasovellus (periodi III)',
         start: '2018-01-16T21:00:00.000Z',
         end: '2018-03-10T21:00:00.000Z',
         active: false,
