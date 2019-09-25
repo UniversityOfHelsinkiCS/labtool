@@ -41,7 +41,7 @@ export const updateUser = content => {
 
 export const logout = () => {
   const route = '/logout'
-  const prefix = 'LOG_OUT_'
+  const prefix = 'LOGOUT_'
   const method = 'post'
   return callController(route, prefix, { returnUrl: window.location.href }, method)
 }
