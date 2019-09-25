@@ -6,6 +6,8 @@ export class HorizontalScrollable extends React.Component {
     super(props)
     this.content = null
     this.scrollbar = null
+    this.lastWidth = null
+    this.antibounce = {}
 
     this.mainElementReady = element => {
       this.content = element
@@ -33,7 +35,7 @@ export class HorizontalScrollable extends React.Component {
   }
 
   maybeResizeBar = () => {
-    if (this.content && this.scrollbar) {
+    if (this.content && this.scrollbar && (this.lastWidth === null || this.lastWidth !== this.content.offsetWidth)) {
       // make scrollable range as wide as table itself, but keep the
       // scroll bar width as the viewable width of the table
       const oldScrollLeft = this.scrollbar.scrollLeft
@@ -42,14 +44,27 @@ export class HorizontalScrollable extends React.Component {
       this.scrollbar.children[0].style.height = '1px'
       this.scrollbar.scrollLeft = oldScrollLeft
       this.scrollbar.style.overflowX = this.content.scrollWidth > this.content.offsetWidth ? 'scroll' : 'auto'
+      this.lastWidth = this.content.offsetWidth
     }
   }
 
-  updateScrollX = e => {
+  updateScrollX = doNotUpdate => e => {
     // synchronize scroll positions
     const newX = e.target.scrollLeft
-    if (this.content) this.content.scrollLeft = newX
-    if (this.scrollbar) this.scrollbar.scrollLeft = newX
+    
+    if (this.antibounce[doNotUpdate]) {
+      this.antibounce[doNotUpdate] = false
+      return
+    }
+
+    if (doNotUpdate !== 'content' && this.content) {
+      this.antibounce.content = true
+      this.content.scrollLeft = newX
+    }
+    if (doNotUpdate !== 'scrollbar' && this.scrollbar) {
+      this.antibounce.scrollbar = true
+      this.scrollbar.scrollLeft = newX
+    }
   }
 
   updateSticky = () => {
@@ -86,10 +101,10 @@ export class HorizontalScrollable extends React.Component {
   render() {
     return (
       <span>
-        <div ref={this.mainElementReady} onScroll={this.updateScrollX} style={{ overflowX: 'hidden' }}>
+        <div ref={this.mainElementReady} onScroll={this.updateScrollX('content')} style={{ overflowX: 'hidden' }}>
           {this.props.children}
         </div>
-        <div ref={this.scrollBarReady} onScroll={this.updateScrollX} style={{ overflowX: 'scroll', bottom: '0', position: 'sticky' }}>
+        <div ref={this.scrollBarReady} onScroll={this.updateScrollX('scrollbar')} style={{ overflowX: 'scroll', bottom: '0', position: 'sticky' }}>
           <div />
         </div>
       </span>
