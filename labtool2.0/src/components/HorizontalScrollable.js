@@ -52,6 +52,21 @@ export class HorizontalScrollable extends React.Component {
     // synchronize scroll positions
     const newX = e.target.scrollLeft
 
+    /*
+    antibounce.
+    this is to prevent from "bouncing" back and forth. for example:
+
+    1. scroll the scrollbar. onscroll is called for the scrollbar.
+    2. to synchronize, we cause the content to scroll.
+    3. onscroll is called for content. we now scroll the scrollbar instead.
+
+    this is bad, because setting scrollLeft also removes any "velocity"
+    the scroll bar has, meaning that mouse wheel scrolling or scrolling by
+    clicking the scroll bar will stop almost immediately, scrolling only a
+    small distance.
+
+    by preventing bouncing of the event, we let either scroll freely at a time.
+    */
     if (this.antibounce[doNotUpdate]) {
       this.antibounce[doNotUpdate] = false
       return
