@@ -634,6 +634,11 @@ export class CoursePage extends React.Component {
             Mark all with dropped tag as dropped out
           </Button>
         )
+      const sendEmailButton = !droppedOut && (
+        <Link to={`/labtool/massemail/${this.props.selectedInstance.ohid}`}>
+          <Button size="small">Send email to multiple students</Button>
+        </Link>
+      )
       return (
         <div className={tableClassName}>
           <Header as="h2">{heading} </Header>
@@ -783,10 +788,8 @@ export class CoursePage extends React.Component {
           </HorizontalScrollable>
           <br />
           {dropConvertButton}
+          {sendEmailButton}
 
-          <Link to={`/labtool/massemail/${this.props.selectedInstance.ohid}`}>
-            <Button size="small">Send email to multiple students</Button>
-          </Link>
           <br />
           <br />
         </div>
