@@ -27,6 +27,7 @@
     "sequelize-cli": "^4.0.0",
     "should": "^13.2.1",
     "tape": "^4.9.0",
+    "unfuck-utf8-headers-middleware": "^1.0.0",
     "winston": "^3.1.0",
     "winston-log2gelf": "^2.0.3"
   },
