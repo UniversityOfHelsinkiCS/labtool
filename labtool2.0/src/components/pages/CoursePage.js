@@ -678,7 +678,6 @@ export class CoursePage extends React.Component {
                   <Table.HeaderCell key={-1}>Student</Table.HeaderCell>
                   <Table.HeaderCell>Project Info</Table.HeaderCell>
                   <Table.HeaderCell width="six"> Instructor </Table.HeaderCell>
-                  <Table.HeaderCell> Review </Table.HeaderCell>
                   {createHeadersTeacher()}
                   <Table.HeaderCell> Sum </Table.HeaderCell>
                 </Table.Row>
@@ -698,7 +697,10 @@ export class CoursePage extends React.Component {
                     .map(data => (
                       <Table.Row key={data.id} className={rowClassName}>
                         <Table.Cell>
-                          {data.User.firsts} {data.User.lastname}
+                          {data.User.firsts} {data.User.lastname} <small>({data.User.studentNumber})</small>{' '}
+                          <Link to={`/labtool/browsereviews/${this.props.selectedInstance.ohid}/${data.id}`}>
+                            <Popup trigger={<Button circular size="tiny" icon={{ name: 'star', size: 'large', color: 'orange' }} />} content="Review student" />
+                          </Link>
                         </Table.Cell>
                         <Table.Cell>
                           <span>
@@ -759,11 +761,6 @@ export class CoursePage extends React.Component {
                           ) : (
                             <div />
                           )}
-                        </Table.Cell>
-                        <Table.Cell textAlign="right">
-                          <Link to={`/labtool/browsereviews/${this.props.selectedInstance.ohid}/${data.id}`}>
-                            <Popup trigger={<Button circular size="tiny" icon={{ name: 'star', size: 'large', color: 'orange' }} />} content="Review student" />
-                          </Link>
                         </Table.Cell>
                         {createIndents(data.weeks, data.codeReviews, data.id)}
                         <Table.Cell>

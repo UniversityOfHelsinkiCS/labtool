@@ -515,11 +515,6 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             </TableHeaderCell>
             <TableHeaderCell
               as="th"
-            >
-               Sum 
-            </TableHeaderCell>
-            <TableHeaderCell
-              as="th"
               width="six"
             >
                Instructor 
@@ -527,7 +522,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             <TableHeaderCell
               as="th"
             >
-               Review 
+               Sum 
             </TableHeaderCell>
           </TableRow>
         </TableHeader>
@@ -546,6 +541,39 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
               Johan Wilhelm
                
               Studerande
+               
+              <small>
+                (
+                014553242
+                )
+              </small>
+               
+              <Link
+                replace={false}
+                to="/labtool/browsereviews/undefined/10012"
+              >
+                <Popup
+                  content="Review student"
+                  keepInViewPort={true}
+                  on="hover"
+                  position="top left"
+                  trigger={
+                    <Button
+                      as="button"
+                      circular={true}
+                      icon={
+                        Object {
+                          "color": "orange",
+                          "name": "star",
+                          "size": "large",
+                        }
+                      }
+                      role="button"
+                      size="tiny"
+                    />
+                  }
+                />
+              </Link>
             </TableCell>
             <TableCell
               as="td"
@@ -603,11 +631,6 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             <TableCell
               as="td"
             >
-              0
-            </TableCell>
-            <TableCell
-              as="td"
-            >
               <span>
                 not assigned
               </span>
@@ -639,11 +662,32 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             </TableCell>
             <TableCell
               as="td"
-              textAlign="right"
             >
+              0
+            </TableCell>
+          </TableRow>
+          <TableRow
+            as="tr"
+            cellAs="td"
+            className="TableRowForActiveStudents"
+            key="10011"
+          >
+            <TableCell
+              as="td"
+            >
+              Maarit Mirja
+               
+              Opiskelija
+               
+              <small>
+                (
+                014578343
+                )
+              </small>
+               
               <Link
                 replace={false}
-                to="/labtool/browsereviews/undefined/10012"
+                to="/labtool/browsereviews/undefined/10011"
               >
                 <Popup
                   content="Review student"
@@ -667,20 +711,6 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
                   }
                 />
               </Link>
-            </TableCell>
-          </TableRow>
-          <TableRow
-            as="tr"
-            cellAs="td"
-            className="TableRowForActiveStudents"
-            key="10011"
-          >
-            <TableCell
-              as="td"
-            >
-              Maarit Mirja
-               
-              Opiskelija
             </TableCell>
             <TableCell
               as="td"
@@ -724,11 +754,6 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             <TableCell
               as="td"
             >
-              0
-            </TableCell>
-            <TableCell
-              as="td"
-            >
               <span>
                 not assigned
               </span>
@@ -760,34 +785,8 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             </TableCell>
             <TableCell
               as="td"
-              textAlign="right"
             >
-              <Link
-                replace={false}
-                to="/labtool/browsereviews/undefined/10011"
-              >
-                <Popup
-                  content="Review student"
-                  keepInViewPort={true}
-                  on="hover"
-                  position="top left"
-                  trigger={
-                    <Button
-                      as="button"
-                      circular={true}
-                      icon={
-                        Object {
-                          "color": "orange",
-                          "name": "star",
-                          "size": "large",
-                        }
-                      }
-                      role="button"
-                      size="tiny"
-                    />
-                  }
-                />
-              </Link>
+              0
             </TableCell>
           </TableRow>
         </TableBody>
@@ -903,11 +902,6 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             </TableHeaderCell>
             <TableHeaderCell
               as="th"
-            >
-               Sum 
-            </TableHeaderCell>
-            <TableHeaderCell
-              as="th"
               width="six"
             >
                Instructor 
@@ -915,7 +909,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             <TableHeaderCell
               as="th"
             >
-               Review 
+               Sum 
             </TableHeaderCell>
           </TableRow>
         </TableHeader>
@@ -934,6 +928,39 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
               Teräs
                
               Henkilö
+               
+              <small>
+                (
+                014666666
+                )
+              </small>
+               
+              <Link
+                replace={false}
+                to="/labtool/browsereviews/undefined/10031"
+              >
+                <Popup
+                  content="Review student"
+                  keepInViewPort={true}
+                  on="hover"
+                  position="top left"
+                  trigger={
+                    <Button
+                      as="button"
+                      circular={true}
+                      icon={
+                        Object {
+                          "color": "orange",
+                          "name": "star",
+                          "size": "large",
+                        }
+                      }
+                      role="button"
+                      size="tiny"
+                    />
+                  }
+                />
+              </Link>
             </TableCell>
             <TableCell
               as="td"
@@ -1005,11 +1032,6 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             <TableCell
               as="td"
             >
-              0
-            </TableCell>
-            <TableCell
-              as="td"
-            >
               <span>
                 not assigned
               </span>
@@ -1041,52 +1063,14 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             </TableCell>
             <TableCell
               as="td"
-              textAlign="right"
             >
-              <Link
-                replace={false}
-                to="/labtool/browsereviews/undefined/10031"
-              >
-                <Popup
-                  content="Review student"
-                  keepInViewPort={true}
-                  on="hover"
-                  position="top left"
-                  trigger={
-                    <Button
-                      as="button"
-                      circular={true}
-                      icon={
-                        Object {
-                          "color": "orange",
-                          "name": "star",
-                          "size": "large",
-                        }
-                      }
-                      role="button"
-                      size="tiny"
-                    />
-                  }
-                />
-              </Link>
+              0
             </TableCell>
           </TableRow>
         </TableBody>
       </Table>
     </HorizontalScrollable>
     <br />
-    <Link
-      replace={false}
-      to="/labtool/massemail/undefined"
-    >
-      <Button
-        as="button"
-        role="button"
-        size="small"
-      >
-        Send email to multiple students
-      </Button>
-    </Link>
     <br />
     <br />
   </div>

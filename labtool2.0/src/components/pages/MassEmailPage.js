@@ -200,8 +200,8 @@ export class MassEmailPage extends React.Component {
                   <Table.Row>
                     <Table.HeaderCell key={-1}>Send?</Table.HeaderCell>
                     <Table.HeaderCell>Student</Table.HeaderCell>
-                    <Table.HeaderCell width="six"> Instructor </Table.HeaderCell>
-                    <Table.HeaderCell>Project Info</Table.HeaderCell>
+                    <Table.HeaderCell> Instructor </Table.HeaderCell>
+                    <Table.HeaderCell width="six">Project Info</Table.HeaderCell>
                   </Table.Row>
                 </Table.Header>
                 <Table.Body>
@@ -219,7 +219,7 @@ export class MassEmailPage extends React.Component {
                             <Form.Checkbox name={'send' + data.id} />
                           </Table.Cell>
                           <Table.Cell>
-                            {data.User.firsts} {data.User.lastname} ({data.User.studentNumber})
+                            {data.User.firsts} {data.User.lastname} <small>({data.User.studentNumber})</small>
                           </Table.Cell>
                           <Table.Cell>
                             {data.teacherInstanceId && this.props.selectedInstance.teacherInstances ? (
