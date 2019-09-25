@@ -24,7 +24,7 @@ const loginReducer = (state = INITIAL_STATE, action) => {
       return {}
     case 'LOGIN_BYTOKEN':
       return action.user
-    case 'LOG_OUT_SUCCESS':
+    case 'LOGOUT_SUCCESS':
       console.log(action)
       window.location.href=action.response.logoutUrl
       return {}
