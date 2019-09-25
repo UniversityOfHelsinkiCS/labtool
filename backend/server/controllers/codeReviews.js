@@ -1,7 +1,4 @@
-const CodeReview = require('../models').CodeReview
-const StudentInstance = require('../models').StudentInstance
-const TeacherInstance = require('../models').TeacherInstance
-const CourseInstance = require('../models').CourseInstance
+const { CodeReview, StudentInstance, TeacherInstance, CourseInstance } = require('../models')
 const helper = require('../helpers/code_review_helper')
 const logger = require('../utils/logger')
 
@@ -22,7 +19,7 @@ module.exports = {
         return
       }
       const allStudentInstancesIds = [] // Gather all student instance ids for future query
-      const values = req.body.codeReviews.map(codeReview => {
+      const values = req.body.codeReviews.map((codeReview) => {
         if (typeof codeReview.reviewer !== 'number' || typeof codeReview.toReview !== 'number') {
           return null // This will lead to rejection later.
         }
@@ -67,11 +64,11 @@ module.exports = {
       const courseToUpdate = await CourseInstance.findOne({
         where: { id: req.body.courseId }
       })
-      req.body.createTrue
-        ? courseToUpdate.update({
-            amountOfCodeReviews: courseToUpdate.amountOfCodeReviews + 1
-          })
-        : null
+      if (req.body.createTrue) {
+        courseToUpdate.update({
+          amountOfCodeReviews: courseToUpdate.amountOfCodeReviews + 1
+        })
+      }
       res.status(201).send({
         message: 'All code reviews inserted.',
         data: req.body
@@ -81,6 +78,7 @@ module.exports = {
       res.status(500).send('Unexpected error.')
     }
   },
+
   async grade(req, res) {
     helper.controller_before_auth_check_action(req, res)
     try {

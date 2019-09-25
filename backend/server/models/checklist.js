@@ -1,6 +1,6 @@
-'use strict'
+
 module.exports = (sequelize, DataTypes) => {
-  var Checklist = sequelize.define(
+  const Checklist = sequelize.define(
     'Checklist',
     {
       week: DataTypes.INTEGER,
@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     }
   )
-  Checklist.associate = function(models) {
+  Checklist.associate = function (models) {
     Checklist.belongsTo(models.CourseInstance, {
       foreignKey: 'courseInstanceId',
       onDelete: 'CASCADE'

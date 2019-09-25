@@ -1,13 +1,13 @@
 const env = process.env.NODE_ENV || 'development'
 const config = require('./../config/config.js')[env]
 
-describe('Admin page', function() {
+describe('Admin page', () => {
   let server
   let supertest
   let nock
   let should
 
-  beforeEach(function() {
+  beforeEach(() => {
     server = require('../app')
     supertest = require('supertest')(server)
     nock = require('nock')
@@ -19,41 +19,41 @@ describe('Admin page', function() {
       .reply(200, '[]')
     should = require('should')
   })
-  afterEach(function() {
+  afterEach(() => {
     nock.cleanAll()
     server.close()
   })
 
-  it('should return 401 without basic authentication', function(done) {
+  it('should return 401 without basic authentication', (done) => {
     supertest
       .get('/admin')
       .expect(401)
-      .end(function(err, res) {
+      .end((err, res) => {
         res.status.should.equal(401)
         done()
       })
   })
-  it('should return 200 with basic auth correct credentials', function(done) {
+  it('should return 200 with basic auth correct credentials', (done) => {
     supertest
       .get('/admin')
       .auth('admin', 'test')
       .expect(200)
-      .end(function(err, res) {
+      .end((err, res) => {
         res.status.should.equal(200)
         done()
       })
   })
-  it('should return 401 with basic auth incorrect credentials', function(done) {
+  it('should return 401 with basic auth incorrect credentials', (done) => {
     supertest
       .get('/admin')
       .auth('admin', 'wrong')
       .expect(401)
-      .end(function(err, res) {
+      .end((err, res) => {
         res.status.should.equal(401)
         done()
       })
   })
-/*This test is commented because of continuing development of index.pug
+/* This test is commented because of continuing development of index.pug
   it('with correct credentials page should show a course to be activated', function(done) {
     supertest
       .get('/admin')

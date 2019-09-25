@@ -146,14 +146,20 @@ const courseInstancereducer = (store = INITIAL_STATE, action) => {
         return store
       }
     }
-    default:
-      return store
     case 'CODE_REVIEW_REMOVE_ONE_SUCCESS': {
       let studentToChange = store.data.find(student => student.id === action.response.data.reviewer)
       studentToChange.codeReviews = studentToChange.codeReviews.filter(codeR => codeR.reviewNumber !== action.response.data.codeReviewRound)
       const newData = store.data.map(student => (student.id !== action.response.data.reviewer ? student : studentToChange))
       return { ...store, data: newData }
     }
+    case 'STUDENT_PROJECT_INFO_UPDATE_SUCCESS': {
+      let studentToChange = store.data.find(student => student.id === action.response.id)
+      studentToChange.dropped = action.response.dropped
+      const newData = store.data.map(student => (student.id !== action.response.id ? student : studentToChange))
+      return { ...store, data: newData }
+    }
+    default:
+      return store
   }
 }
 

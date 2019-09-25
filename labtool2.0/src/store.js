@@ -18,6 +18,7 @@ import tagsReducer from './reducers/tagReducer'
 import weekReview from './reducers/weekReviewReducer'
 import loading from './reducers/loadingReducer'
 import redirect from './reducers/redirectReducer'
+import courseImport from './reducers/courseImportReducer'
 
 /**
  * The store, that takes all the redux reducers. Index imports it.
@@ -41,10 +42,11 @@ const reducer = combineReducers({
   tags: tagsReducer,
   loading: loading,
   weekReview: weekReview,
-  redirect: redirect
+  redirect: redirect,
+  courseImport: courseImport
 })
 
-const compose = process.env.NODE_ENV === 'production' ? (store) => store : (store) => composeWithDevTools(store)
+const compose = process.env.NODE_ENV === 'production' ? store => store : store => composeWithDevTools(store)
 
 const store = createStore(reducer, compose(applyMiddleware(thunk, handleRequest)))
 

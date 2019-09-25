@@ -1,6 +1,5 @@
 const helper = require('../helpers/checklist_helper')
-const TeacherInstance = require('../models').TeacherInstance
-const Checklist = require('../models').Checklist
+const { TeacherInstance, Checklist } = require('../models')
 const logger = require('../utils/logger')
 
 module.exports = {
@@ -16,12 +15,12 @@ module.exports = {
         return
       }
       try {
-        Object.keys(req.body.checklist).forEach(cl => {
+        Object.keys(req.body.checklist).forEach((cl) => {
           if (!Array.isArray(req.body.checklist[cl])) {
             res.status(400).send('Supplied JSON should be an object with strings as keys and arrays as values.')
             return
           }
-          req.body.checklist[cl].forEach(row => {
+          req.body.checklist[cl].forEach((row) => {
             if (typeof row.name !== 'string') {
               res.status(400).send('All objects in array must have field "name" with string value.')
               return
@@ -34,7 +33,7 @@ module.exports = {
               res.status(400).send('All objects in array must have field "points when unchecked" with number value.')
               return
             }
-            Object.keys(row).forEach(key => {
+            Object.keys(row).forEach((key) => {
               switch (key) {
                 case 'name':
                   break
@@ -45,18 +44,15 @@ module.exports = {
                 case 'textWhenOn':
                   if (typeof row[key] !== 'string') {
                     res.status(400).send('textWhenOn must have a string value or be undefined.')
-                    return
                   }
                   break
                 case 'textWhenOff':
                   if (typeof row[key] !== 'string') {
                     res.status(400).send('textWhenOff must have a string value or be undefined.')
-                    return
                   }
                   break
                 default:
-                  res.status(400).send(`FOund unexpected key: ${key}`)
-                  return
+                  res.status(400).send(`Found unexpected key: ${key}`)
               }
             })
           })
@@ -85,7 +81,7 @@ module.exports = {
         courseInstanceId: req.body.courseInstanceId
       })
       res.status(200).send({
-        message: `checklist saved succesfully for week ${req.body.week}.`,
+        message: `checklist saved successfully for week ${req.body.week}.`,
         result,
         data: req.body
       })

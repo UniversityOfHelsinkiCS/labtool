@@ -19,9 +19,7 @@ if (process.env.LOG_PORT && process.env.LOG_HOST) {
 const logger = winston.createLogger({
   format: combine(
     timestamp({
-      format: () => {
-        return moment().format('DD-MM-YYYY HH:mm:ss')
-      }
+      format: () => moment().format('DD-MM-YYYY HH:mm:ss')
     }),
     prettyPrint({ depth: 5 })
   ),

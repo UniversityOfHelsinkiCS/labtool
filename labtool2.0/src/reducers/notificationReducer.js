@@ -63,6 +63,16 @@ const notificationReducer = (state = {}, action) => {
         message: 'Invalid inputs.',
         error: true
       }
+    case 'WEEKDRAFTS_CREATE_ONESUCCESS':
+      return {
+        message: 'Week draft saved successfully!',
+        error: false
+      }
+    case 'WEEKDRAFTS_CREATE_ONEFAILURE':
+      return {
+        message: 'Invalid inputs.',
+        error: true
+      }
     case 'COMMENT_CREATE_ONE_SUCCESS':
       return {
         message: 'Comment created successfully!',
@@ -145,7 +155,7 @@ const notificationReducer = (state = {}, action) => {
       }
     case 'TAG_CREATE_SUCCESS':
       return {
-        message: 'Tag created successfully',
+        message: 'Tag saved successfully',
         error: false
       }
     case 'TAG_REMOVE_SUCCESS':
@@ -206,7 +216,17 @@ const notificationReducer = (state = {}, action) => {
       }
     case 'MASS_EMAIL_SENDFAILURE':
       return {
-        message: `Could not send e-mail; ${action.response && action.response.response.data.message || 'no students selected'}`,
+        message: `Could not send e-mail; ${(action.response && action.response.response.data.message) || 'no students selected'}`,
+        error: true
+      }
+    case 'COURSE_IMPORT_DO_IMPORT_SUCCESS':
+      return {
+        message: 'Courses imported successfully',
+        error: false
+      }
+    case 'COURSE_IMPORT_DO_IMPORT_FAILURE':
+      return {
+        message: 'Could not import courses',
         error: true
       }
     default:

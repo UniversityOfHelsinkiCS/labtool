@@ -1,7 +1,4 @@
-const User = require('../models').User
-const jwt = require('jsonwebtoken')
-const CourseInstance = require('../models').CourseInstance
-const TeacherInstance = require('../models').TeacherInstance
+const { User, CourseInstance, TeacherInstance } = require('../models')
 const helper = require('../helpers/users_controller_helper')
 const logger = require('../utils/logger')
 

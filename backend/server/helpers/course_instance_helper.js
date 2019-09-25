@@ -1,12 +1,12 @@
+const Sequelize = require('sequelize')
+
 const application_helpers = require('./application_helper')
+const logger = require('../utils/logger')
+const { Week, CourseInstance, StudentInstance, TeacherInstance } = require('../models')
 
 const env = process.env.NODE_ENV || 'development'
 const config = require('./../config/config.js')[env]
-const logger = require('../utils/logger')
-const Week = require('../models').Week
-const CourseInstance = require('../models').CourseInstance
-const StudentInstance = require('../models').StudentInstance
-const TeacherInstance = require('../models').TeacherInstance
+const db = require('../models')
 
 exports.CurrentTermAndYear = application_helpers.CurrentTermAndYear
 exports.getCurrentTerm = application_helpers.getCurrentTerm
@@ -17,6 +17,8 @@ exports.findByUserStudentInstance = findByUserStudentInstance
 exports.getCurrent = application_helpers.getCurrent
 exports.controller_before_auth_check_action = application_helpers.controller_before_auth_check_action
 exports.checkHasCommentPermission = checkHasCommentPermission
+exports.getTeacherId = application_helpers.getTeacherId
+exports.checkHasPermissionToViewStudentInstance = checkHasPermissionToViewStudentInstance
 
 /**
  * Only used in courseInstance controller so its place is here.
@@ -26,7 +28,6 @@ exports.checkHasCommentPermission = checkHasCommentPermission
  * @param resolve
  */
 function checkWebOodi(req, res, user, resolve) {
-  const request = require('request')
   const options = {
     method: 'get',
     uri: `${config.kurki_url}/labtool/courses/${req.params.ohid}`,
@@ -121,17 +122,45 @@ async function checkHasCommentPermission(user, weekId) {
 }
 
 /**
+ * Checks if logged in user has permission to see student instance
+ * @param {*} req
+ * @param {*} courseInstanceId
+ * @param {*} userId
+ */
+async function checkHasPermissionToViewStudentInstance(req, courseInstanceId, userId) {
+  const adminTeacherInstance = await TeacherInstance.findOne({ where: {
+    userId: req.decoded.id,
+    courseInstanceId,
+    admin: true
+  } })
+
+  // Logged in user is admin on the course
+  if (adminTeacherInstance) {
+    return true
+  }
+
+  // Find student instance where logged in user is either student or assigned teacher
+  const studentInstances = await StudentInstance.findAll({
+    where: {
+      courseInstanceId,
+      userId,
+      [Sequelize.Op.or]: [
+        { userId: req.decoded.id },
+        { '$TeacherInstance.userId$': req.decoded.id }
+      ]
+    },
+    include: [TeacherInstance]
+  })
+  return studentInstances.length > 0
+}
+
+/**
  *
  * @param req
  * @param res
  */
 function findByUserStudentInstance(req, res) {
   // token verification might not work..? and we don't knpw if search works
-
-  const StudentInstanceController = require('../controllers').studentInstances
-  const db = require('../models')
-  const Sequelize = require('sequelize')
-  const Op = Sequelize.Op
 
   const errors = []
 

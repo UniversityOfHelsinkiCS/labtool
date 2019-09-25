@@ -61,7 +61,7 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
     </div>
   </h3>
   <h3>
-    Viikko 
+    Week 
   </h3>
   <Grid>
     <GridRow
@@ -84,7 +84,7 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
           0
         </div>
         <h2>
-          Feedback
+          Review
         </h2>
         <Form
           as="form"
@@ -113,9 +113,9 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
               />
             </FormField>
           </FormGroup>
-          <label>
-             Feedback 
-          </label>
+          <h4>
+            Feedback
+          </h4>
           <FormGroup
             inline={true}
             style={
@@ -138,6 +138,35 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
               />
             </div>
           </FormGroup>
+          <h4>
+            Review notes
+          </h4>
+          <p>
+            <em>
+              Only shown to instructors on this course
+            </em>
+          </p>
+          <FormGroup
+            inline={true}
+            style={
+              Object {
+                "textAlignVertical": "top",
+              }
+            }
+            unstackable={true}
+          >
+            <div>
+              <FormMarkdownTextArea
+                name="instructorNotes"
+                style={
+                  Object {
+                    "height": "150px",
+                    "width": "500px",
+                  }
+                }
+              />
+            </div>
+          </FormGroup>
           <FormField>
             <Button
               as="button"
@@ -146,6 +175,15 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
               type="submit"
             >
               Save
+            </Button>
+            <Button
+              as="button"
+              className="ui center floated button"
+              onClick={[Function]}
+              role="button"
+              type="button"
+            >
+              Save as draft
             </Button>
             <Link
               replace={false}

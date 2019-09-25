@@ -24,15 +24,7 @@ export class Notification extends React.Component {
     const error = this.props.notification.error
 
     if (message === undefined) {
-      return (
-        <Grid>
-          <Grid.Row>
-            <br />
-            <br />
-            <br />
-          </Grid.Row>
-        </Grid>
-      )
+      return <div />
     } else if (error) {
       return (
         <Message className="error" color="red" size="large">

@@ -1,6 +1,6 @@
 const codeReviewController = require('../controllers').codeReviews
 
-module.exports = app => {
+module.exports = (app) => {
   /**
    * Expects the following fields in the body:
    * reviewNumber: reviewNumber to insert

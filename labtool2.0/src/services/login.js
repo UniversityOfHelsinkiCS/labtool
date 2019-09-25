@@ -22,7 +22,7 @@ export const fakeShibboLogin = loginInformation => {
   const route = '/login'
   const prefix = 'LOGIN_'
   const method = 'post'
-  return callController(route, prefix, { __HEADERS: loginInformation }, method)
+  return callController(route, prefix, { __HEADERS: loginInformation }, method)
 }
 
 /**

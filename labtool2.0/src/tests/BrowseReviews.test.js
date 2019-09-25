@@ -42,6 +42,7 @@ describe('<BrowseReviews />', () => {
         id: 10012,
         github: 'http://github.com/tiralabra2',
         projectName: 'Tiran toinen labraprojekti',
+        dropped: false,
         createdAt: '2018-03-26T00:00:00.000Z',
         updatedAt: '2018-03-26T00:00:00.000Z',
         courseInstanceId: 10011,
@@ -64,6 +65,7 @@ describe('<BrowseReviews />', () => {
         id: 10031,
         github: 'http://github.com/superprojekti',
         projectName: 'Tira super projekti',
+        dropped: false,
         createdAt: '2018-03-26T00:00:00.000Z',
         updatedAt: '2018-06-05T07:12:28.603Z',
         courseInstanceId: 10011,
@@ -86,6 +88,7 @@ describe('<BrowseReviews />', () => {
         id: 10011,
         github: 'http://github.com/tiralabra1',
         projectName: 'Tiran labraprojekti',
+        dropped: false,
         createdAt: '2018-03-26T00:00:00.000Z',
         updatedAt: '2018-03-26T00:00:00.000Z',
         courseInstanceId: 10011,
@@ -97,6 +100,7 @@ describe('<BrowseReviews />', () => {
             points: 2,
             weekNumber: 2,
             feedback: 'Melko hienoa työtä!',
+            instructorNotes: 'READMEssa ongelmia',
             createdAt: '2018-03-26T00:00:00.000Z',
             updatedAt: '2018-03-26T00:00:00.000Z',
             studentInstanceId: 10011,
@@ -107,6 +111,7 @@ describe('<BrowseReviews />', () => {
             points: 3,
             weekNumber: 1,
             feedback: 'Hienoa työtä!',
+            instructorNotes: '',
             createdAt: '2018-03-26T00:00:00.000Z',
             updatedAt: '2018-03-26T00:00:00.000Z',
             studentInstanceId: 10011,
@@ -117,6 +122,7 @@ describe('<BrowseReviews />', () => {
             points: 3,
             weekNumber: 3,
             feedback: 'Erittäin hienoa työtä!',
+            instructorNotes: '',
             createdAt: '2018-03-26T00:00:00.000Z',
             updatedAt: '2018-03-26T00:00:00.000Z',
             studentInstanceId: 10011,
@@ -127,12 +133,14 @@ describe('<BrowseReviews />', () => {
             points: 3,
             weekNumber: 4,
             feedback: 'Hyvin menee!',
+            instructorNotes: '',
             createdAt: '2018-03-26T00:00:00.000Z',
             updatedAt: '2018-03-26T00:00:00.000Z',
             studentInstanceId: 10011,
             comments: []
           }
         ],
+        codeReviews: [],
         User: {
           id: 10011,
           username: 'tiraopiskelija1',
@@ -158,9 +166,30 @@ describe('<BrowseReviews />', () => {
 
   let mockFn = jest.fn()
 
+  let mockUpdateStudentProjectInfo
+
+  const studentWithoutPreviousParticipation = [coursePage]
+
+  const studentInstanceId = 10011
+
   beforeEach(() => {
+    mockUpdateStudentProjectInfo = jest.fn()
+
     wrapper = shallow(
-      <BrowseReviews getOneCI={mockFn} coursePageInformation={mockFn} courseData={courseData} selectedInstance={coursePage} loading={loading} resetLoading={mockFn} initialLoading={false} />
+      <BrowseReviews
+        getOneCI={mockFn}
+        coursePageInformation={mockFn}
+        getCoursesByStudentId={mockFn}
+        updateStudentProjectInfo={mockUpdateStudentProjectInfo}
+        courseData={courseData}
+        selectedInstance={coursePage}
+        studentInstanceToBeReviewed={studentWithoutPreviousParticipation}
+        courseId={coursePage.ohid}
+        studentInstance={studentInstanceId} //studentInstance id which was chosen randomly from courseData
+        loading={loading}
+        resetLoading={mockFn}
+        initialLoading={false}
+      />
     )
   })
 
@@ -175,6 +204,51 @@ describe('<BrowseReviews />', () => {
 
     it('should render correctly', () => {
       expect(wrapper).toMatchSnapshot()
+    })
+
+    describe('student card', () => {
+      it('should render student card', () => {
+        expect(wrapper.find('.studentCard').exists()).toEqual(true)
+      })
+      it('when student participates the course first time', () => {
+        expect(wrapper.find('.noPrevious').text()).toEqual('First time to participate the course')
+      })
+      it('when student participate previous instances of the course', () => {
+        const studentWithPreviousParticipation = [
+          {
+            ...coursePage,
+            id: 10000,
+            name: 'Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit',
+            start: '2017-03-11T21:00:00.000Z',
+            end: '2017-04-29T21:00:00.000Z',
+            active: false,
+            ohid: 'TKT20010.2017.K.A.1'
+          },
+          coursePage
+        ]
+        wrapper = shallow(
+          <BrowseReviews
+            getOneCI={mockFn}
+            coursePageInformation={mockFn}
+            getCoursesByStudentId={mockFn}
+            courseData={courseData}
+            selectedInstance={coursePage}
+            studentInstanceToBeReviewed={studentWithPreviousParticipation}
+            courseId={coursePage.ohid}
+            studentInstance={10011}
+            loading={loading}
+            resetLoading={mockFn}
+            initialLoading={false}
+          />
+        )
+        expect(wrapper.find('.hasPrevious').text()).toContain('Has other participations')
+        expect(wrapper.find('.hasPrevious').text()).toContain('TKT20010 16-17 4.period')
+      })
+      it('student can be marked as dropped and non-dropped', () => {
+        wrapper.find({ children: 'Mark as dropped' }).simulate('click')
+
+        expect(mockUpdateStudentProjectInfo).toBeCalledWith(expect.objectContaining({ dropped: true }))
+      })
     })
   })
 })

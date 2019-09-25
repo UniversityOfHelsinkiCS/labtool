@@ -15,11 +15,16 @@ module.exports = (sequelize, DataTypes) => {
         validate: {
           is: ['^[a-zåäöA-ZÅÄÖ\'\\-0-9]+( [a-zåäöA-ZÅÄÖ\'\\-0-9]+)*$']
         }
+      },
+      dropped: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
       }
     },
     {}
   )
-  StudentInstance.associate = models => {
+  StudentInstance.associate = (models) => {
     StudentInstance.hasMany(models.Week, {
       foreignKey: 'studentInstanceId',
       as: 'weeks'
@@ -52,6 +57,11 @@ module.exports = (sequelize, DataTypes) => {
 
     StudentInstance.belongsTo(models.TeacherInstance, {
       foreignKey: 'teacherInstanceId'
+    })
+
+    StudentInstance.hasMany(models.WeekDraft, {
+      foreignKey: 'studentInstanceId',
+      as: 'weekdrafts'
     })
   }
 

@@ -9,7 +9,7 @@ module.exports = {
     port: process.env.DB_PORT,
     dialect: 'postgres',
     operatorsAliases: 'false',
-    kurki_url: process.env.KURKI_URL == null ? "https://opetushallinto.cs.helsinki.fi" : process.env.KURKI_URL
+    kurki_url: process.env.KURKI_URL == null ? 'https://opetushallinto.cs.helsinki.fi' : process.env.KURKI_URL
   },
   test: {
     username: 'postgres',
@@ -19,7 +19,7 @@ module.exports = {
     dialect: 'postgres',
     operatorsAliases: false,
     logging: false,
-    kurki_url: "https://opetushallinto.cs.helsinki.fi"
+    kurki_url: 'https://opetushallinto.cs.helsinki.fi'
   },
   production: {
     username: process.env.DB_USERNAME,
@@ -29,6 +29,6 @@ module.exports = {
     dialect: 'postgres',
     operatorsAliases: 'false',
     logging: false,
-    kurki_url: "https://opetushallinto.cs.helsinki.fi"
+    kurki_url: 'https://opetushallinto.cs.helsinki.fi'
   }
 }

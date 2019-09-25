@@ -5,12 +5,13 @@ module.exports = (sequelize, DataTypes) => {
       points: DataTypes.DOUBLE,
       weekNumber: DataTypes.INTEGER,
       feedback: DataTypes.STRING,
+      instructorNotes: DataTypes.STRING,
       notified: DataTypes.BOOLEAN,
       checks: DataTypes.JSONB
     },
     {}
   )
-  Week.associate = models => {
+  Week.associate = (models) => {
     Week.belongsTo(models.StudentInstance, {
       foreignKey: 'studentInstanceId',
       onDelete: 'CASCADE'

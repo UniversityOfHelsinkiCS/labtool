@@ -2,10 +2,22 @@ import { callController } from '../util/apiConnection'
 
 /**
  * Gets all the courses where user is a student.
+ * Used in MyPage when logged in
  */
 export const getAllStudentCourses = () => {
   const route = '/course/student'
   const prefix = 'STUDENT_COURSE_GET_ALL_'
+  const method = 'post'
+  return callController(route, prefix, null, method)
+}
+
+/**
+ * Gets all courses according to a studentInstance's id
+ * @param {*} studentInstanceId is student's uderId
+ */
+export const getCoursesByStudentId = studentInstanceId => {
+  const route = `/courseinstances/${studentInstanceId}`
+  const prefix = 'STUDENT_COURSES_GET_ALL_BY_USERID_'
   const method = 'post'
   return callController(route, prefix, null, method)
 }
