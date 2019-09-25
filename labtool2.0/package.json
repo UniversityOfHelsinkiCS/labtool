@@ -45,11 +45,13 @@
     "eslint-plugin-promise": "^3.8.0",
     "eslint-plugin-react": "^7.9.1",
     "eslint-plugin-standard": "^3.1.0",
+    "husky": "^3.0.5",
     "identity-obj-proxy": "^3.0.0",
     "jest-css-modules": "^1.1.0",
     "jest-enzyme": "^6.0.1",
     "js-beautify": "^1.7.5",
     "jsinspect": "^0.12.7",
+    "lint-staged": "^9.3.0",
     "prettier": "^1.13.5",
     "react-test-renderer": "^16.4.0"
   },
@@ -57,5 +59,13 @@
     "snapshotSerializers": [
       "enzyme-to-json/serializer"
     ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+   "*.js": ["prettier --write", "git add"]
   }
 }
