@@ -48,7 +48,17 @@ class App extends Component {
     this.props.forceSetLoading({
       value: false
     })
-    await this.props.login()
+    if (USE_FAKE_LOGIN) {
+      let obj
+      try {
+        obj = JSON.parse(window.localStorage.getItem('fake-shibbo-data'))
+      } catch (e) {
+        obj = {}
+      }
+      await this.props.login(obj)
+    } else {
+      await this.props.login()
+    }
   }
 
   /**
@@ -126,11 +136,9 @@ class App extends Component {
     /**
      * Logout code.
      */
-    const doLogout = async () => {
+    const doLogout = () => {
       window.localStorage.removeItem('loggedLabtool')
-
-      await this.props.logout()
-      //this.props.history.push('/')
+      this.props.logout()
     }
 
     return (

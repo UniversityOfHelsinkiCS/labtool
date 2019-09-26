@@ -19,7 +19,7 @@ export const login = loginInformation => {
  * Does fake Shibboleth login
  */
 export const fakeShibboLogin = loginInformation => {
-  const route = '/login'
+  const route = '/loginFake'
   const prefix = 'LOGIN_'
   const method = 'post'
   return callController(route, prefix, { __HEADERS: loginInformation }, method)
@@ -41,7 +41,7 @@ export const updateUser = content => {
 
 export const logout = () => {
   const route = '/logout'
-  const prefix = 'LOG_OUT_'
+  const prefix = 'LOGOUT_'
   const method = 'post'
   return callController(route, prefix, { returnUrl: window.location.href }, method)
 }

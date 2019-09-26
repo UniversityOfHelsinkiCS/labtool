@@ -488,6 +488,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
         as="table"
         celled={true}
         compact={true}
+        singleLine={true}
         style={
           Object {
             "overflowX": "visible",
@@ -535,6 +536,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           as="tbody"
         >
           <TableRow
+            active={false}
             as="tr"
             cellAs="td"
             className="TableRowForActiveStudents"
@@ -586,10 +588,10 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
                       id="tag"
                       name="pencil"
                       onClick={[Function]}
-                      size="large"
                       style={
                         Object {
                           "float": "right",
+                          "fontSize": "1.25em",
                         }
                       }
                     />
@@ -627,15 +629,17 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
                     }
                     onClick={[Function]}
                     role="button"
+                    size="small"
                     style={
                       Object {
                         "float": "right",
+                        "margin": "0.25em",
                       }
                     }
                   />
                 }
               />
-              <div />
+              <span />
             </TableCell>
             <TableCell
               as="td"
@@ -670,6 +674,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             </TableCell>
           </TableRow>
           <TableRow
+            active={false}
             as="tr"
             cellAs="td"
             className="TableRowForActiveStudents"
@@ -707,10 +712,10 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
                       id="tag"
                       name="pencil"
                       onClick={[Function]}
-                      size="large"
                       style={
                         Object {
                           "float": "right",
+                          "fontSize": "1.25em",
                         }
                       }
                     />
@@ -748,15 +753,17 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
                     }
                     onClick={[Function]}
                     role="button"
+                    size="small"
                     style={
                       Object {
                         "float": "right",
+                        "margin": "0.25em",
                       }
                     }
                   />
                 }
               />
-              <div />
+              <span />
             </TableCell>
             <TableCell
               as="td"
@@ -876,6 +883,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
         as="table"
         celled={true}
         compact={true}
+        singleLine={true}
         style={
           Object {
             "overflowX": "visible",
@@ -923,6 +931,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           as="tbody"
         >
           <TableRow
+            active={true}
             as="tr"
             cellAs="td"
             className="TableRowForDroppedOutStudents"
@@ -988,10 +997,10 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
                       id="tag"
                       name="pencil"
                       onClick={[Function]}
-                      size="large"
                       style={
                         Object {
                           "float": "right",
+                          "fontSize": "1.25em",
                         }
                       }
                     />
@@ -1029,15 +1038,17 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
                     }
                     onClick={[Function]}
                     role="button"
+                    size="small"
                     style={
                       Object {
                         "float": "right",
+                        "margin": "0.25em",
                       }
                     }
                   />
                 }
               />
-              <div />
+              <span />
             </TableCell>
             <TableCell
               as="td"
