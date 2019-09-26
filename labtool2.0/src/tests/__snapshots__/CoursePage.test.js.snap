@@ -535,6 +535,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           as="tbody"
         >
           <TableRow
+            active={false}
             as="tr"
             cellAs="td"
             className="TableRowForActiveStudents"
@@ -670,6 +671,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             </TableCell>
           </TableRow>
           <TableRow
+            active={false}
             as="tr"
             cellAs="td"
             className="TableRowForActiveStudents"
@@ -923,6 +925,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           as="tbody"
         >
           <TableRow
+            active={true}
             as="tr"
             cellAs="td"
             className="TableRowForDroppedOutStudents"
