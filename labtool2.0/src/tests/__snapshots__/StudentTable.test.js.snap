@@ -52,6 +52,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
       as="table"
       celled={true}
       compact={true}
+      singleLine={true}
       style={
         Object {
           "overflowX": "visible",

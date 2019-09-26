@@ -188,7 +188,7 @@ exports[`<MyPage /> MyPage Component should render correctly 1`] = `
                 >
                   Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit (periodi IV)
                   (
-                  17-18
+                  17-18 4.period
                   )
                 </Link>
               </TableCell>
