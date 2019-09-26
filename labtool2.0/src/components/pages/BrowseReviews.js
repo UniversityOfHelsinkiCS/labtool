@@ -71,7 +71,7 @@ export class BrowseReviews extends Component {
   }
 
   hasAllReviewsOpen = student => {
-    return Object.values(this.state.openWeeks).filter(x => x).length == this.getMaximumIndexForStudent(student)
+    return Object.values(this.state.openWeeks).filter(x => x).length === this.getMaximumIndexForStudent(student)
   }
 
   handleClickShowAll = student => () => {
@@ -308,6 +308,7 @@ export class BrowseReviews extends Component {
 
     const createHeaders = (studhead, studentInstance) => {
       let headers = []
+      const weekMatcher = i => week => week.weekNumber === i + 1
       studhead.data.map(student => {
         // studentInstance is id of student. Type: String
         // Tämä pitää myös korjata.
@@ -330,7 +331,7 @@ export class BrowseReviews extends Component {
           let i = 0
           let ii = 0
           for (; i < this.props.selectedInstance.weekAmount; i++) {
-            const weeks = student.weeks.find(week => week.weekNumber === i + 1)
+            const weeks = student.weeks.find(weekMatcher(i))
             headers.push(this.renderWeek(i, weeks, studentInstance, false))
           }
           student.codeReviews

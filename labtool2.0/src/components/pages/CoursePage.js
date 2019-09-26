@@ -1,5 +1,5 @@
 import React from 'react'
-import { Accordion, Button, Table, Card, Input, Form, Comment, Header, Label, Message, Icon, Dropdown, Popup, Loader } from 'semantic-ui-react'
+import { Accordion, Button, Table, Card, Input, Form, Comment, Header, Label, Message, Icon, Popup, Loader } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createOneComment } from '../../services/comment'
@@ -271,10 +271,11 @@ export class CoursePage extends React.Component {
       if (this.props.selectedInstance && this.props.courseData && this.props.courseData.data && this.props.courseData.data.weeks) {
         let i = 0
         let week = null
+        const weekMatcher = i => week => week.weekNumber === i + 1
 
         const howManyWeeks = this.props.selectedInstance.finalReview ? this.props.selectedInstance.weekAmount + 1 : this.props.selectedInstance.weekAmount
         for (; i < howManyWeeks; i++) {
-          week = this.props.courseData.data.weeks.find(week => week.weekNumber === i + 1)
+          week = this.props.courseData.data.weeks.find(weekMatcher(i))
           headers.push(week !== undefined ? createStudentGradedWeek(i, week) : createStudentUngradedWeek(i))
         }
 

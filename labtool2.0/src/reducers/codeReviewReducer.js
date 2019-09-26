@@ -118,7 +118,9 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
       var idToCheck = rndCr.find(cr => cr === action.data)
 
       if (cbState[action.data]) {
-        idToCheck !== undefined ? rndCr : (rndCr = [...rndCr, action.data])
+        if (idToCheck === undefined) {
+          rndCr = [...rndCr, action.data]
+        }
         return { ...state, randomizedCodeReview: rndCr }
       }
       rndCr = rndCr.filter(rnd => rnd !== action.data)
@@ -143,8 +145,13 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
       var currentSelectionsToUpdate = state.currentSelections
       var newRound = action.response.data.reviewNumber
       let dropdown = state.selectedDropdown
-      newRound > Object.keys(state.codeReviewStates).length - 1 ? (codeReviewRoundsToUpdate = { ...codeReviewRoundsToUpdate, [newRound]: [] }) : codeReviewRoundsToUpdate
-      newRound > Object.keys(state.currentSelections).length - 1 ? (currentSelectionsToUpdate = { ...currentSelectionsToUpdate, [newRound]: {} }) : currentSelectionsToUpdate
+
+      if (newRound > Object.keys(state.codeReviewStates).length - 1) {
+        codeReviewRoundsToUpdate = { ...codeReviewRoundsToUpdate, [newRound]: [] }
+      }
+      if (newRound > Object.keys(state.currentSelections).length - 1) {
+        currentSelectionsToUpdate = { ...currentSelectionsToUpdate, [newRound]: {} }
+      }
       //This is double clear but if the ternary is not true we'll have to clear the array anyway
       codeReviewRoundsToUpdate[action.response.data.reviewNumber] = []
       if (action.response.data.createTrue) {

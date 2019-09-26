@@ -350,9 +350,7 @@ export class CreateChecklist extends Component {
               <div>
                 <Label>Name</Label>
                 <Input className="newRowNameInput" type="text" value={this.state.rowName} onChange={this.changeRowName} />
-                <Button type="submit">
-                  Save
-                </Button>
+                <Button type="submit">Save</Button>
                 <Button type="button" onClick={this.cancelAdd}>
                   Cancel
                 </Button>
@@ -412,9 +410,7 @@ export class CreateChecklist extends Component {
                     <div>
                       <Label>Name</Label>
                       <Input className="newTopicNameInput" type="text" value={this.state.topicName} onChange={this.changeTopicName} />
-                      <Button type="submit">
-                        Save
-                      </Button>
+                      <Button type="submit">Save</Button>
                       <Button type="button" onClick={this.cancelAdd}>
                         Cancel
                       </Button>
