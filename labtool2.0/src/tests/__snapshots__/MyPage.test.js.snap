@@ -186,9 +186,9 @@ exports[`<MyPage /> MyPage Component should render correctly 1`] = `
                   replace={false}
                   to="/labtool/courses/TKT20010.2018.K.A.1"
                 >
-                  Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit
+                  Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit (periodi IV)
                   (
-                  TKT20010 17-18 4.period
+                  17-18
                   )
                 </Link>
               </TableCell>

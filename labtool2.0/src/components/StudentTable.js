@@ -132,13 +132,27 @@ export class StudentTable extends React.Component {
     const headers = []
     let i = 0
     for (; i < this.props.selectedInstance.weekAmount; i++) {
-      headers.push(<Table.HeaderCell key={i}>Week {i + 1} </Table.HeaderCell>)
+      headers.push(
+        <Table.HeaderCell key={i}>
+          Week<br />
+          {i + 1}{' '}
+        </Table.HeaderCell>
+      )
     }
     for (var ii = 1; ii <= this.props.selectedInstance.amountOfCodeReviews; ii++) {
-      headers.push(<Table.HeaderCell key={i + ii}>Code Review {ii} </Table.HeaderCell>)
+      headers.push(
+        <Table.HeaderCell key={i + ii}>
+          Code<br />Review<br />
+          {ii}{' '}
+        </Table.HeaderCell>
+      )
     }
     if (this.props.selectedInstance.finalReview) {
-      headers.push(<Table.HeaderCell key={i + ii + 1}>Final Review </Table.HeaderCell>)
+      headers.push(
+        <Table.HeaderCell key={i + ii + 1}>
+          Final<br />Review{' '}
+        </Table.HeaderCell>
+      )
     }
     return headers
   }
@@ -235,7 +249,7 @@ export class StudentTable extends React.Component {
             </div>
           ))}
           {this.props.allowModify && (
-            <Popup trigger={<Icon id="tag" onClick={this.changeHiddenTagDropdown(data.id)} name="pencil" size="large" color="green" style={{ float: 'right' }} />} content="Add or remove tag" />
+            <Popup trigger={<Icon id="tag" onClick={this.changeHiddenTagDropdown(data.id)} name="pencil" color="green" style={{ float: 'right', fontSize: '1.25em' }} />} content="Add or remove tag" />
           )}
         </span>
         {this.props.allowModify && (
@@ -285,7 +299,10 @@ export class StudentTable extends React.Component {
         )}
         {this.props.allowModify && (
           <Fragment>
-            <Popup trigger={<Button circular onClick={this.changeHiddenAssistantDropdown(data.id)} icon={{ name: 'pencil' }} style={{ float: 'right' }} />} content="Assign instructor" />
+            <Popup
+              trigger={<Button circular onClick={this.changeHiddenAssistantDropdown(data.id)} size="small" icon={{ name: 'pencil' }} style={{ margin: '0.25em', float: 'right' }} />}
+              content="Assign instructor"
+            />
             {this.props.coursePageLogic.showAssistantDropdown === data.id ? (
               <div>
                 <Dropdown id="assistantDropdown" options={dropDownTeachers} onChange={this.changeSelectedTeacher()} placeholder="Select teacher" fluid selection />
@@ -369,7 +386,7 @@ export class StudentTable extends React.Component {
         </div>
 
         <HorizontalScrollable>
-          <Table celled compact unstackable style={{ overflowX: 'visible' }}>
+          <Table celled compact unstackable singleLine style={{ overflowX: 'visible' }}>
             <Table.Header>
               <Table.Row>
                 {showColumn('sendcheck') && <Table.HeaderCell key={-2}>Send?</Table.HeaderCell>}

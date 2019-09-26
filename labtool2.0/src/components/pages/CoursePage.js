@@ -380,7 +380,7 @@ export class CoursePage extends React.Component {
           <Header as="h2">{heading} </Header>
 
           <StudentTable
-            rowClassName={rowClassName}
+            rowClassName={rowClassName + (droppedOut ? ' active' : '')}
             columns={['points', 'review']}
             allowModify={true}
             filterStudents={data => droppedOut === data.dropped}
