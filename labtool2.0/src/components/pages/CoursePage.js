@@ -705,7 +705,7 @@ export class CoursePage extends React.Component {
                       return droppedOut || this.props.coursePageLogic.filterByTag.length === 0 || this.hasFilteringTags(data.Tags, this.props.coursePageLogic.filterByTag)
                     })
                     .map(data => (
-                      <Table.Row key={data.id} className={rowClassName}>
+                      <Table.Row key={data.id} className={rowClassName} active={droppedOut}>
                         <Table.Cell>
                           {data.User.firsts} {data.User.lastname}
                         </Table.Cell>
