@@ -130,7 +130,7 @@ export class CoursePage extends React.Component {
       /* This hack compares user's name to comment.from and hides the email notification button when they don't match. */
       const userIsCommandSender = comment.from.includes(this.props.user.user.firsts) && comment.from.includes(this.props.user.user.lastname)
 
-      return <LabtoolComment key={comment.id} comment={comment} allowNotify={userIsCommandSender} sendCommentEmail={this.sendEmail} />
+      return <LabtoolComment key={comment.id} comment={comment} allowNotify={userIsCommandSender} sendCommentEmail={this.sendEmail(comment.id)} />
     }
 
     const createStudentGradedWeek = (i, week) => (

@@ -36,13 +36,14 @@ export class LabtoolComment extends React.Component {
         <Comment.Metadata>
           <div>{trimDate(comment.createdAt)}</div>
         </Comment.Metadata>
+        <div> </div>
         {allowNotify ? (
           comment.notified ? (
             <Label>
               Notified <Icon name="check" color="green" />
             </Label>
           ) : (
-            <Button type="button" onClick={sendCommentEmail(comment.id)} size="small">
+            <Button type="button" onClick={sendCommentEmail} size="small">
               Send email notification
             </Button>
           )
