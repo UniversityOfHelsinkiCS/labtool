@@ -42,7 +42,7 @@ export class LabtoolComment extends React.Component {
               Notified <Icon name="check" color="green" />
             </Label>
           ) : (
-            <Button type="button" onClick={this.sendCommentEmail(comment.id)} size="small">
+            <Button type="button" onClick={this.props.sendCommentEmail(comment.id)} size="small">
               Send email notification
             </Button>
           )
