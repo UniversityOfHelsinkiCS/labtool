@@ -7,7 +7,7 @@ import { trimDate } from '../util/format'
 
 export class LabtoolComment extends React.Component {
   render() {
-    const { comment, allowNotify } = this.props
+    const { comment, allowNotify, sendCommentEmail } = this.props
 
     return comment.hidden ? (
       <Comment key={comment.id} disabled>
@@ -42,7 +42,7 @@ export class LabtoolComment extends React.Component {
               Notified <Icon name="check" color="green" />
             </Label>
           ) : (
-            <Button type="button" onClick={this.props.sendCommentEmail(comment.id)} size="small">
+            <Button type="button" onClick={sendCommentEmail(comment.id)} size="small">
               Send email notification
             </Button>
           )
