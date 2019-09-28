@@ -6,6 +6,8 @@ import { resetLoading } from '../../reducers/loadingReducer'
 import { willCreateNewTag, willModifyExistingTag } from '../../reducers/tagReducer'
 import { capitalize } from '../../util/format'
 
+import BackButton from '../BackButton'
+
 export class ManageTags extends React.Component {
   constructor(props) {
     super(props)
@@ -107,6 +109,7 @@ export class ManageTags extends React.Component {
   render() {
     return (
       <Container>
+        <BackButton preset="modifyCIPage" />
         <div className="sixteen wide column" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
           <h2>Add, modify or remove tags</h2>
           <p />
