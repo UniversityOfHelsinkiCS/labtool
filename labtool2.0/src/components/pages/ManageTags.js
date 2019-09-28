@@ -6,6 +6,8 @@ import { resetLoading } from '../../reducers/loadingReducer'
 import { willCreateNewTag, willModifyExistingTag } from '../../reducers/tagReducer'
 import { capitalize } from '../../util/format'
 
+import BackButton from '../BackButton'
+
 export class ManageTags extends React.Component {
   constructor(props) {
     super(props)
@@ -107,6 +109,7 @@ export class ManageTags extends React.Component {
   render() {
     return (
       <Container>
+        <BackButton preset="modifyCIPage" />
         <div className="sixteen wide column" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
           <h2>Add, modify or remove tags</h2>
           <p />
@@ -131,7 +134,7 @@ export class ManageTags extends React.Component {
                   <label style={{ width: '100px', textAlign: 'left' }}>Text</label>
                   <Input type="text" id="tagText" className="form-control1" name="text" placeholder="Tag name" required style={{ minWidth: '30em' }} onChange={this.updateTagPreview} />
                 </Form.Field>
-                <Form.Field inline>
+                <Form.Field required inline>
                   <label style={{ width: '100px', textAlign: 'left' }}>Color</label>
                   <select className="ui dropdown" id="tagColor" name="color" style={{ minWidth: '30em' }} required onChange={this.updateTagPreview}>
                     <option value="" disabled selected>

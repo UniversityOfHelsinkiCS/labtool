@@ -22,8 +22,7 @@ export class MyPage extends Component {
     <Table.Row key={instance.id}>
       <Table.Cell>
         <Link to={`/labtool/courses/${instance.ohid}`}>
-          {instance.name}
-          ({createYearAndTerm(instance.ohid, instance.start)})
+          {instance.name} ({createYearAndTerm(instance.ohid, instance.start)})
         </Link>
       </Table.Cell>
       <Table.Cell textAlign="right">

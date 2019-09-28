@@ -211,7 +211,7 @@ export class ReviewStudent extends Component {
                     <em>Only shown to instructors on this course</em>
                   </p>
                   <Form.Group inline unstackable style={{ textAlignVertical: 'top' }}>
-                    <div ref={this.reviewTextRef}>
+                    <div>
                       <FormMarkdownTextArea defaultValue={weekData ? weekData.instructorNotes : ''} name="instructorNotes" style={{ width: '500px', height: '150px' }} />
                     </div>
                   </Form.Group>
