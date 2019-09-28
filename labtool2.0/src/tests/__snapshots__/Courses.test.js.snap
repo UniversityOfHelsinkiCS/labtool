@@ -175,10 +175,7 @@ exports[`<Courses /> Courses Component should render correctly 1`] = `
                   replace={false}
                   to="/labtool/courses/TKT20002.2018.K.K.1"
                 >
-                  Ohjelmistotekniikan menetelmät
-                   (
-                  17-18 4.period
-                  )
+                  Ohjelmistotekniikan menetelmät (17-18 4.period)
                 </Link>
               </strong>
             </TableCell>
