@@ -83,8 +83,7 @@ export class MyPage extends Component {
                     <Table.Row key={sinstance.id}>
                       <Table.Cell>
                         <Link to={`/labtool/courses/${sinstance.ohid}`}>
-                          {sinstance.name}
-                          ({createYearAndTerm(sinstance.name, sinstance.start)})
+                          {sinstance.name} ({createYearAndTerm(sinstance.name, sinstance.start)})
                         </Link>
                       </Table.Cell>
                       <Table.Cell textAlign="right">
@@ -114,8 +113,7 @@ export class MyPage extends Component {
                         <Table.Row key={tinstance.id}>
                           <Table.Cell>
                             <Link to={`/labtool/courses/${tinstance.ohid}`}>
-                              {tinstance.name}
-                              ({createYearAndTerm(tinstance.name, tinstance.start)})
+                              {tinstance.name} ({createYearAndTerm(tinstance.name, tinstance.start)})
                             </Link>
                           </Table.Cell>
                           <Table.Cell textAlign="right">
