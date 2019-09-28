@@ -160,7 +160,7 @@ export class CoursePage extends React.Component {
     return this.props.tags.tags && this.props.tags.tags.map(tag => tag.name.toUpperCase()).includes('DROPPED')
   }
 
-  droppedStudentExist = () => {
+  droppedStudentExists = () => {
     let dropped = this.props.courseData.data.map(student => student.dropped)
     return dropped.includes(true)
   }
@@ -824,7 +824,7 @@ export class CoursePage extends React.Component {
     }
 
     let renderTeacherBottomPartForDroppedOutStudents = () => {
-      if (this.droppedStudentExist()) {
+      if (this.droppedStudentExists()) {
         return renderTeacherBottomPartForStudents(true)
       }
     }
