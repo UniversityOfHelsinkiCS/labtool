@@ -11,15 +11,12 @@ const compactState = (vars) => {
 
   for (const key of keys) {
     [_get[key], _set[key]] = useState(vars[key])
+
     Object.defineProperty(result, key, {
       enumerable: false,
       configurable: false,
-      get: () => {
-        return _get[key]
-      },
-      set: (val) => {
-        _set[key](val)
-      }
+      get: () => _get[key],
+      set: val => _set[key](val)
     })
   }
 
