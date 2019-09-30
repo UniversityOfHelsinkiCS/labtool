@@ -114,9 +114,7 @@ describe('<CreateChecklist /> component', () => {
         getAllCI={mockFn}
       />
     )
-    wrapper.setState({
-      week: weekChoice
-    })
+    wrapper.find('#weekDropdown').prop('onChange')(null, { value: weekChoice })
   })
 
   it('renders without error', () => {
@@ -217,9 +215,7 @@ describe('<CreateChecklist /> component', () => {
           })
           expect(wrapper.find('.maxPointsIcon').prop('content')).toEqual('The total matches maximum weekly points for this course.')
         }
-        wrapper.setState({
-          week: courseInstance[0].weekAmount + 1
-        })
+        wrapper.find('#weekDropdown').prop('onChange')(null, { value: courseInstance[0].weekAmount + 1 })
         expect(wrapper.find('.maxPointsIcon').exists()).toEqual(false)
       })
 

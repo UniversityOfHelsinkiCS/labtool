@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Form, Input, Grid, Container, Button, Loader } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { createTag, getAllTags, removeTag } from '../../services/tags'
@@ -8,46 +8,42 @@ import { capitalize } from '../../util/format'
 
 import BackButton from '../BackButton'
 
-export class ManageTags extends React.Component {
-  constructor(props) {
-    super(props)
+export const ManageTags = (props) => {
+  const validColors = ['red', 'orange', 'yellow', 'olive', 'green', 'teal', 'blue', 'violet', 'purple', 'pink', 'brown', 'grey', 'black']
 
-    // list of colors from https://semantic-ui.com/usage/theming.html#sitewide-defaults
-    this.validColors = ['red', 'orange', 'yellow', 'olive', 'green', 'teal', 'blue', 'violet', 'purple', 'pink', 'brown', 'grey', 'black']
-  }
+  useEffect(() => {
+    // run on component mount
+    props.resetLoading()
+    props.getAllTags()
+  }, [])
 
-  componentWillMount = async () => {
-    await this.props.resetLoading()
-    this.props.getAllTags()
-  }
-
-  handleSubmit = e => {
+  const handleSubmit = e => {
     try {
       e.preventDefault()
 
-      this.props.resetLoading()
+      props.resetLoading()
       const tag = {
-        text: this.props.tags.modifyTag || e.target.text.value,
+        text: props.tags.modifyTag || e.target.text.value,
         newText: e.target.text.value,
         color: e.target.color.value
       }
 
-      this.props.createTag(tag)
+      props.createTag(tag)
       document.getElementById('tagText').value = ''
       document.getElementById('tagColor').value = ''
 
-      if (this.props.tags.modifyTag) {
-        this.modifyTag(tag.newText, tag.color)(e)
+      if (props.tags.modifyTag) {
+        modifyTag(tag.newText, tag.color)(e)
       } else {
-        this.createNewTag(e)
+        createNewTag(e)
       }
-      this.updateTagPreview()
+      updateTagPreview()
     } catch (error) {
       console.error(error)
     }
   }
 
-  removeTag = e => {
+  const removeTag = e => {
     try {
       if (!window.confirm('Are you sure?')) {
         return
@@ -55,137 +51,135 @@ export class ManageTags extends React.Component {
 
       e.preventDefault()
 
-      this.props.resetLoading()
+      props.resetLoading()
 
       const tag = {
-        text: this.props.tags.modifyTag
+        text: props.tags.modifyTag
       }
-      this.props.removeTag(tag)
-      this.props.willCreateNewTag()
+      props.removeTag(tag)
+      props.willCreateNewTag()
       document.getElementById('tagText').value = ''
       document.getElementById('tagColor').value = ''
-      this.updateTagPreview()
+      updateTagPreview()
     } catch (error) {
       console.error(error)
     }
   }
 
-  createNewTag = e => {
+  const createNewTag = e => {
     try {
       e.preventDefault()
-      this.props.willCreateNewTag()
+      props.willCreateNewTag()
 
       document.getElementById('tagText').value = ''
       document.getElementById('tagColor').value = ''
-      this.updateTagPreview()
+      updateTagPreview()
     } catch (error) {
       console.error(error)
     }
   }
 
-  modifyTag = (text, color) => e => {
+  const modifyTag = (text, color) => e => {
     try {
       e.preventDefault()
-      this.props.willModifyExistingTag(text)
+      props.willModifyExistingTag(text)
 
       document.getElementById('tagText').value = text
-      document.getElementById('tagColor').value = this.validColors.includes(color) ? color : 'white'
-      this.updateTagPreview()
+      document.getElementById('tagColor').value = validColors.includes(color) ? color : 'white'
+      updateTagPreview()
     } catch (error) {
       console.error(error)
     }
   }
 
-  updateTagPreview = () => {
+  const updateTagPreview = () => {
     const tagPreview = document.getElementById('tagPreview')
     const newText = document.getElementById('tagText').value
     const newColor = document.getElementById('tagColor').value
 
     tagPreview.style.display = newText ? 'inline' : 'none'
     tagPreview.textContent = newText
-    tagPreview.className = this.validColors.includes(newColor) ? 'mini ui button ' + newColor : 'mini ui button'
+    tagPreview.className = validColors.includes(newColor) ? 'mini ui button ' + newColor : 'mini ui button'
   }
 
-  render() {
-    return (
-      <Container>
-        <BackButton preset="modifyCIPage" />
-        <div className="sixteen wide column" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
-          <h2>Add, modify or remove tags</h2>
-          <p />
-        </div>
-        <div
-          className="Add tag"
-          style={{
-            textAlignVertical: 'center',
-            textAlign: 'center'
-          }}
-        >
-          <Grid>
-            <Grid.Row centered>
-              <Form key="createOrModify" onSubmit={this.handleSubmit}>
-                {this.props.tags.modifyTag ? <h4>Editing tag: {this.props.tags.modifyTag}</h4> : <h4>You are creating a new tag.</h4>}
-                <div>
-                  Preview: <button id="tagPreview" className={`mini ui button`} style={{ display: 'none' }} />
-                  <br />
-                  <br />
-                </div>{' '}
-                <Form.Field required inline>
-                  <label style={{ width: '100px', textAlign: 'left' }}>Text</label>
-                  <Input type="text" id="tagText" className="form-control1" name="text" placeholder="Tag name" required style={{ minWidth: '30em' }} onChange={this.updateTagPreview} />
-                </Form.Field>
-                <Form.Field required inline>
-                  <label style={{ width: '100px', textAlign: 'left' }}>Color</label>
-                  <select className="ui dropdown" id="tagColor" name="color" style={{ minWidth: '30em' }} required onChange={this.updateTagPreview}>
-                    <option value="" disabled selected>
-                      Select a tag color
+  return (
+    <Container>
+      <BackButton preset="modifyCIPage" />
+      <div className="sixteen wide column" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
+        <h2>Add, modify or remove tags</h2>
+        <p />
+      </div>
+      <div
+        className="Add tag"
+        style={{
+          textAlignVertical: 'center',
+          textAlign: 'center'
+        }}
+      >
+        <Grid>
+          <Grid.Row centered>
+            <Form key="createOrModify" onSubmit={handleSubmit}>
+              {props.tags.modifyTag ? <h4>Editing tag: {props.tags.modifyTag}</h4> : <h4>You are creating a new tag.</h4>}
+              <div>
+                Preview: <button id="tagPreview" className={`mini ui button`} style={{ display: 'none' }} />
+                <br />
+                <br />
+              </div>{' '}
+              <Form.Field required inline>
+                <label style={{ width: '100px', textAlign: 'left' }}>Text</label>
+                <Input type="text" id="tagText" className="form-control1" name="text" placeholder="Tag name" required style={{ minWidth: '30em' }} onChange={updateTagPreview} />
+              </Form.Field>
+              <Form.Field required inline>
+                <label style={{ width: '100px', textAlign: 'left' }}>Color</label>
+                <select className="ui dropdown" id="tagColor" name="color" style={{ minWidth: '30em' }} required onChange={updateTagPreview}>
+                  <option value="" disabled selected>
+                    Select a tag color
+                  </option>
+                  <option value="white">White</option>
+                  {validColors.map(color => (
+                    <option key={color} value={color}>
+                      {capitalize(color)}
                     </option>
-                    <option value="white">White</option>
-                    {this.validColors.map(color => (
-                      <option key={color} value={color}>
-                        {capitalize(color)}
-                      </option>
-                    ))}
-                  </select>
-                </Form.Field>
-                <Form.Field>
-                  <Button className="ui left floated blue button" type="submit">
+                  ))}
+                </select>
+              </Form.Field>
+              <Form.Field>
+                <Button className="ui left floated blue button" type="submit">
+                  {' '}
+                  Save
+                </Button>
+                {props.tags.modifyTag && (
+                  <Button className="ui left floated blue button" onClick={removeTag}>
                     {' '}
-                    Save
+                    Remove
                   </Button>
-                  {this.props.tags.modifyTag && (
-                    <Button className="ui left floated blue button" onClick={this.removeTag}>
-                      {' '}
-                      Remove
-                    </Button>
-                  )}
-                </Form.Field>
-              </Form>
-            </Grid.Row>
-          </Grid>
-          <h2>Click a tag below to edit</h2>
-          <button className={`mini ui button`} onClick={this.createNewTag}>
-            I want to create a new tag
-          </button>
-          <br />
-          <br />
-          {this.props.loading.loading ? (
-            <Loader active />
-          ) : this.props.tags.tags ? (
-            this.props.tags.tags.map(tag => (
-              <button key={tag.id} className={`mini ui ${tag.color} button`} onClick={this.modifyTag(tag.name, tag.color)}>
-                {tag.name}
-              </button>
-            ))
-          ) : (
-            <div />
-          )}
-          <br />
-          <br />
-        </div>
-      </Container>
-    )
-  }
+                )}
+              </Form.Field>
+            </Form>
+          </Grid.Row>
+        </Grid>
+        <h2>Click a tag below to edit</h2>
+        <button className={`mini ui button`} onClick={createNewTag}>
+          I want to create a new tag
+        </button>
+        <br />
+        <br />
+        {props.loading.loading ? (
+          <Loader active />
+        ) : props.tags.tags ? (
+          props.tags.tags.map(tag => (
+            <button key={tag.id} className={`mini ui ${tag.color} button`} onClick={modifyTag(tag.name, tag.color)}>
+              {tag.name}
+            </button>
+          ))
+        ) : (
+          <div />
+        )}
+        <br />
+        <br />
+      </div>
+    </Container>
+  )
 }
 
 const mapStateToProps = (state, ownProps) => {

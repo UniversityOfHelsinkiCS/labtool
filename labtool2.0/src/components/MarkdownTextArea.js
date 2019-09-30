@@ -1,8 +1,9 @@
 import React from 'react'
-import useLegacyState from '../hooks/legacyState'
 import PropTypes from 'prop-types'
 import { Accordion, Form, Icon } from 'semantic-ui-react'
 import ReactMarkdown from 'react-markdown'
+
+import useLegacyState from '../hooks/legacyState'
 
 // replace Form.TextArea with FormMarkdownTextArea
 // only adds preview and info line, Markdown needs to be supported by code

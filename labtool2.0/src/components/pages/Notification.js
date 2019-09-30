@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { clearNotifications } from '../../reducers/notificationReducer'
 import { Message } from 'semantic-ui-react'
@@ -8,36 +8,34 @@ let timeout
 /**
  *  Notification, that clears itself after a set of time.
  */
-export class Notification extends React.Component {
-  componentDidUpdate() {
-    const message = this.props.notification.message
+export const Notification = (props) => {
+  useEffect(() => {
+    const { message } = props.notification
     if (message !== undefined) {
       clearTimeout(timeout)
       timeout = setTimeout(() => {
-        this.props.clearNotifications()
+        props.clearNotifications()
       }, 5000)
     }
-  }
+  }, [props.notification.message])
+  
+  const message = props.notification.message
+  const error = props.notification.error
 
-  render() {
-    const message = this.props.notification.message
-    const error = this.props.notification.error
-
-    if (message === undefined) {
-      return <div />
-    } else if (error) {
-      return (
-        <Message className="error" color="red" size="large">
-          {message}
-        </Message>
-      )
-    } else {
-      return (
-        <Message className="success" color="green" size="large">
-          {message}
-        </Message>
-      )
-    }
+  if (message === undefined) {
+    return <div />
+  } else if (error) {
+    return (
+      <Message className="error" color="red" size="large">
+        {message}
+      </Message>
+    )
+  } else {
+    return (
+      <Message className="success" color="green" size="large">
+        {message}
+      </Message>
+    )
   }
 }
 

@@ -25,7 +25,7 @@ describe('<Login />', () => {
     })
 
     it('should render without throwing an error', () => {
-      expect(wrapper.exists(<form className="LoginPage" />)).toBe(true)
+      expect(wrapper.exists(<div className="LoginPage" />)).toBe(true)
     })
 
     it('should render correctly', () => {
