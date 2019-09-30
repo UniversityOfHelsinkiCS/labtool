@@ -3,14 +3,15 @@ import { useState } from 'react'
 /*
  * compactState({ stateVariable: defaultValue })
  */
-const compactState = (vars) => {
+const useLegacyState = vars => {
   const _get = {}
   const _set = {}
   const keys = Object.keys(vars)
   const result = {}
 
   for (const key of keys) {
-    [_get[key], _set[key]] = useState(vars[key])
+    [_get[key], _set[key]] = useState(vars[key]) // eslint-disable-line prettier/prettier
+    // prettier complains about a missing ; (???) for the line above
 
     Object.defineProperty(result, key, {
       enumerable: false,
@@ -23,4 +24,4 @@ const compactState = (vars) => {
   return result
 }
 
-export default compactState
+export default useLegacyState

@@ -399,9 +399,11 @@ export class CoursePage extends React.Component {
           <br />
           {dropConvertButton}
 
-          <Link to={`/labtool/massemail/${this.props.selectedInstance.ohid}`}>
-            <Button size="small">Send email to multiple students</Button>
-          </Link>
+          {!droppedOut && (
+            <Link to={`/labtool/massemail/${this.props.selectedInstance.ohid}`}>
+              <Button size="small">Send email to multiple students</Button>
+            </Link>
+          )}
           <br />
           <br />
         </div>

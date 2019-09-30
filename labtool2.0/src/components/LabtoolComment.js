@@ -5,29 +5,13 @@ import { withRouter } from 'react-router'
 import { connect } from 'react-redux'
 import { trimDate } from '../util/format'
 
-export class LabtoolComment extends React.Component {
-  render() {
-    const { comment, allowNotify, sendCommentEmail } = this.props
-
-    return comment.hidden ? (
-      <Comment key={comment.id} disabled>
-        <Comment.Content>
-          <Comment.Metadata>
-            <div>Hidden</div>
-          </Comment.Metadata>
-          <Comment.Author>{comment.from}</Comment.Author>
-          <Comment.Text>
-            {' '}
-            <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
-          </Comment.Text>
-          <Comment.Metadata>
-            <div>{trimDate(comment.createdAt)}</div>
-          </Comment.Metadata>
-          <div> </div>
-        </Comment.Content>
-      </Comment>
-    ) : (
-      <Comment key={comment.id}>
+export const LabtoolComment = ({ comment, allowNotify, sendCommentEmail }) =>
+  comment.hidden ? (
+    <Comment key={comment.id} disabled>
+      <Comment.Content>
+        <Comment.Metadata>
+          <div>Hidden</div>
+        </Comment.Metadata>
         <Comment.Author>{comment.from}</Comment.Author>
         <Comment.Text>
           {' '}
@@ -37,23 +21,34 @@ export class LabtoolComment extends React.Component {
           <div>{trimDate(comment.createdAt)}</div>
         </Comment.Metadata>
         <div> </div>
-        {allowNotify ? (
-          comment.notified ? (
-            <Label>
-              Notified <Icon name="check" color="green" />
-            </Label>
-          ) : (
-            <Button type="button" onClick={sendCommentEmail} size="small">
-              Send email notification
-            </Button>
-          )
+      </Comment.Content>
+    </Comment>
+  ) : (
+    <Comment key={comment.id}>
+      <Comment.Author>{comment.from}</Comment.Author>
+      <Comment.Text>
+        {' '}
+        <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
+      </Comment.Text>
+      <Comment.Metadata>
+        <div>{trimDate(comment.createdAt)}</div>
+      </Comment.Metadata>
+      <div> </div>
+      {allowNotify ? (
+        comment.notified ? (
+          <Label>
+            Notified <Icon name="check" color="green" />
+          </Label>
         ) : (
-          <div />
-        )}
-      </Comment>
-    )
-  }
-}
+          <Button type="button" onClick={sendCommentEmail} size="small">
+            Send email notification
+          </Button>
+        )
+      ) : (
+        <div />
+      )}
+    </Comment>
+  )
 
 export default withRouter(
   connect(

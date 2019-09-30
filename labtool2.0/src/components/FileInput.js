@@ -1,10 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Button, Modal, Form, Progress, Message } from 'semantic-ui-react'
-import compactState from '../util/compactState'
+import useLegacyState from '../hooks/legacyState'
 
-const FileInput = (props) => {
-  const state = compactState({ open: false, uploading: false, uploadProgress: null, uploadError: null })
+export const FileInput = props => {
+  const state = useLegacyState({ open: false, uploading: false, uploadProgress: null, uploadError: null })
 
   const openDialog = () => {
     state.open = true
