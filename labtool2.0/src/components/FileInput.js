@@ -1,73 +1,80 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Button, Modal, Form, Progress, Message } from 'semantic-ui-react'
+import compactState from '../util/compactState'
 
-export default class FileInput extends React.Component {
-  state = { open: false, uploading: false, uploadProgress: null, uploadError: null }
+const FileInput = (props) => {
+  const state = compactState({ open: false, uploading: false, uploadProgress: null, uploadError: null })
 
-  constructor(props) {
-    super(props)
-
-    this.fileReader = new FileReader()
-    this.fileReader.onloadstart = () => this.setState({ uploading: true, uploadProgress: 0 })
-    this.fileReader.onprogress = progress => {
-      if (progress.lengthComputable) {
-        this.setState({ uploadProgress: 100 * (progress.loaded / progress.total) })
-      }
-    }
-    this.fileReader.onerror = () => this.setState({ uploadError: this.fileReader.error.message, uploadProgress: null })
-    this.fileReader.onload = () => {
-      this.props.onFileUploaded(this.fileReader.result)
-      this.close()
-    }
+  const openDialog = () => {
+    state.open = true
+  }
+  const closeDialog = () => {
+    fileReader.abort()
+    state.open = false
+    state.uploading = false
+    state.uploadProgress = null
+    state.uploadError = null
   }
 
-  open = () => this.setState({ open: true })
-  close = () => {
-    this.fileReader.abort()
-    this.setState({ open: false, uploading: false, uploadProgress: null, uploadError: null })
+  const fileReader = new FileReader()
+  fileReader.onloadstart = () => {
+    state.uploading = true
+    state.uploadProgress = 0
+  }
+  fileReader.onprogress = progress => {
+    if (progress.lengthComputable) {
+      state.uploadProgress = 100 * (progress.loaded / progress.total)
+    }
+  }
+  fileReader.onerror = () => {
+    state.uploadError = fileReader.error.message
+    state.uploadProgress = null
+  }
+  fileReader.onload = () => {
+    props.onFileUploaded(fileReader.result)
+    closeDialog()
   }
 
-  handleFile = event => {
+  const handleFile = event => {
     if (event.target.files && event.target.files[0]) {
-      this.fileReader.readAsArrayBuffer(event.target.files[0])
+      fileReader.readAsArrayBuffer(event.target.files[0])
     }
   }
 
-  render() {
-    const { allowedFileTypes, style, ...props } = this.props
-    const { open, uploading, uploadProgress, uploadError } = this.state
+  const { allowedFileTypes, style } = props
+  const { open, uploading, uploadProgress, uploadError } = state
 
-    return (
-      <React.Fragment>
-        <Button disabled={open} onClick={this.open} style={style} {...props}>
-          Upload
-        </Button>
+  return (
+    <React.Fragment>
+      <Button disabled={open} onClick={openDialog} style={style} {...props}>
+        Upload
+      </Button>
 
-        <Modal onClose={this.close} open={open}>
-          <Modal.Header>Select file</Modal.Header>
-          <Modal.Description style={{ padding: 15 }}>
-            {!uploading && (
-              <Form>
-                <Form.Input type="file" name="file" accept={allowedFileTypes && allowedFileTypes.join()} onChange={this.handleFile} onClick={e => (e.target.value = null)} />
-              </Form>
+      <Modal onClose={closeDialog} open={open}>
+        <Modal.Header>Select file</Modal.Header>
+        <Modal.Description style={{ padding: 15 }}>
+          {!uploading && (
+            <Form>
+              <Form.Input type="file" name="file" accept={allowedFileTypes && allowedFileTypes.join()} onChange={handleFile} onClick={e => (e.target.value = null)} />
+            </Form>
+          )}
+          {uploading && uploadProgress !== null && <Progress percent={uploadProgress} indicating />}
+          {uploading &&
+            uploadError && (
+              <Message error>
+                <p>{uploadError}</p>
+              </Message>
             )}
-            {uploading && uploadProgress !== null && <Progress percent={uploadProgress} indicating />}
-            {uploading &&
-              uploadError && (
-                <Message error>
-                  <p>{this.state.uploadError}</p>
-                </Message>
-              )}
-          </Modal.Description>
-          <Modal.Actions>
-            <Button content="Close" negative onClick={this.close} />
-          </Modal.Actions>
-        </Modal>
-      </React.Fragment>
-    )
-  }
+        </Modal.Description>
+        <Modal.Actions>
+          <Button content="Close" negative onClick={closeDialog} />
+        </Modal.Actions>
+      </Modal>
+    </React.Fragment>
+  )
 }
+export default FileInput
 
 FileInput.propTypes = {
   onFileUploaded: PropTypes.func.isRequired,
