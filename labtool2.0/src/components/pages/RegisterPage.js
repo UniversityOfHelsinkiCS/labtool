@@ -11,7 +11,7 @@ import { getOneCI } from '../../services/courseInstance'
  * The page user uses to register to a course AS A STUDENT
  */
 
-export const RegisterPage = (props) => {
+export const RegisterPage = props => {
   useEffect(() => {
     // run on component mount
     props.resetLoading()

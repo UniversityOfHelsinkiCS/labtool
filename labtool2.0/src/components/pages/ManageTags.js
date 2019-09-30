@@ -8,7 +8,7 @@ import { capitalize } from '../../util/format'
 
 import BackButton from '../BackButton'
 
-export const ManageTags = (props) => {
+export const ManageTags = props => {
   const validColors = ['red', 'orange', 'yellow', 'olive', 'green', 'teal', 'blue', 'violet', 'purple', 'pink', 'brown', 'grey', 'black']
 
   useEffect(() => {

@@ -8,7 +8,7 @@ import { Form, Input, Button, Grid, Loader } from 'semantic-ui-react'
  *  The page used to login
  */
 
-export const LoginPage = (props) => {
+export const LoginPage = props => {
   useEffect(() => {
     // run on component mount
     props.resetLoading()

@@ -16,7 +16,7 @@ import { LabtoolComment } from '../LabtoolComment'
 import { FormMarkdownTextArea } from '../MarkdownTextArea'
 import StudentTable from '../StudentTable'
 
-export const CoursePage = (props) => {
+export const CoursePage = props => {
   useEffect(() => {
     // run on component mount
     props.resetLoading()

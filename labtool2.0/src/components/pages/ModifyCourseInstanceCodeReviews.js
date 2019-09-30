@@ -26,11 +26,11 @@ import useLegacyState from '../../hooks/legacyState'
 
 import BackButton from '../BackButton'
 
-export const ModifyCourseInstanceReview = (props) => {
+export const ModifyCourseInstanceReview = props => {
   const state = useLegacyState({
     open: {}
   })
-  
+
   useEffect(() => {
     // run on component mount
     props.resetLoading()
@@ -255,14 +255,7 @@ export const ModifyCourseInstanceReview = (props) => {
         </div>
         <div>
           {props.codeReviewLogic.selectedDropdown === null ? (
-            <Button
-              disabled
-              toggle
-              compact
-              className={`tiny ui button`}
-              active={props.codeReviewLogic.filterActive}
-              onClick={filterUnassigned(props.codeReviewLogic.selectedDropdown)}
-            >
+            <Button disabled toggle compact className={`tiny ui button`} active={props.codeReviewLogic.filterActive} onClick={filterUnassigned(props.codeReviewLogic.selectedDropdown)}>
               Show unassigned students
             </Button>
           ) : (
@@ -345,11 +338,7 @@ export const ModifyCourseInstanceReview = (props) => {
                   .map(data => (
                     <Table.Row key={data.id}>
                       <Table.Cell>
-                        {props.codeReviewLogic.checkBoxStates[data.id] === true ? (
-                          <Checkbox checked onChange={initOrRemoveRandom(data.id)} />
-                        ) : (
-                          <Checkbox onChange={initOrRemoveRandom(data.id)} />
-                        )}
+                        {props.codeReviewLogic.checkBoxStates[data.id] === true ? <Checkbox checked onChange={initOrRemoveRandom(data.id)} /> : <Checkbox onChange={initOrRemoveRandom(data.id)} />}
                       </Table.Cell>
                       <Table.Cell>
                         {data.User.firsts} {data.User.lastname}

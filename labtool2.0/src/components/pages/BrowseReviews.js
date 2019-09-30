@@ -20,7 +20,7 @@ import { FormMarkdownTextArea } from '../MarkdownTextArea'
 /**
  * Maps all comments from a single instance from coursePage reducer
  */
-export const BrowseReviews = (props) => {
+export const BrowseReviews = props => {
   const state = useLegacyState({
     openWeeks: {},
     initialLoading: props.initialLoading !== undefined ? props.initialLoading : true
@@ -37,11 +37,14 @@ export const BrowseReviews = (props) => {
     }
   }, [])
 
-  useEffect(() => {
-    if (!props.loading.loading && state.initialLoading) {
-      state.initialLoading = false
-    }
-  }, [props.loading.loading, state.initialLoading])
+  useEffect(
+    () => {
+      if (!props.loading.loading && state.initialLoading) {
+        state.initialLoading = false
+      }
+    },
+    [props.loading.loading, state.initialLoading]
+  )
 
   const handleClick = (e, titleProps) => {
     const { index } = titleProps
@@ -142,9 +145,7 @@ export const BrowseReviews = (props) => {
 
   //get student's other participations in the same course
   const renderStudentPreviousParticipation = () => {
-    const previousParticipations = props.studentInstanceToBeReviewed.filter(
-      courseInstance => courseInstance.ohid.includes(props.courseId.substring(0, 8)) && courseInstance.ohid !== props.courseId
-    )
+    const previousParticipations = props.studentInstanceToBeReviewed.filter(courseInstance => courseInstance.ohid.includes(props.courseId.substring(0, 8)) && courseInstance.ohid !== props.courseId)
     if (previousParticipations.length === 0) {
       return <p className="noPrevious">Has not taken part in this course before</p>
     }

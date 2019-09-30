@@ -12,7 +12,7 @@ import useLegacyState from '../../hooks/legacyState'
 import BackButton from '../BackButton'
 import JsonEdit from '../JsonEdit'
 
-export const CreateChecklist = (props) => {
+export const CreateChecklist = props => {
   const state = useLegacyState({
     week: undefined, // tracks value of week dropdown.
     copyCourse: undefined, // tracks value of course dropdown.
@@ -29,9 +29,12 @@ export const CreateChecklist = (props) => {
     props.getAllCI()
   }, [])
 
-  useEffect(() => {
-    state.courseDropdowns = createCourseDropdowns()
-  }, [state.week])
+  useEffect(
+    () => {
+      state.courseDropdowns = createCourseDropdowns()
+    },
+    [state.week]
+  )
 
   // Make api call to save checklist to database.
   const handleSubmit = async e => {
@@ -289,14 +292,7 @@ export const CreateChecklist = (props) => {
               </Header>
               <div className="formField">
                 <Label>Points when checked</Label>
-                <Input
-                  className="numberField"
-                  type="number"
-                  step="0.01"
-                  value={row.checkedPoints}
-                  onChange={changeField(key, row.name, 'checkedPoints')}
-                  onBlur={castPointsToNumber(key, row.name)}
-                />
+                <Input className="numberField" type="number" step="0.01" value={row.checkedPoints} onChange={changeField(key, row.name, 'checkedPoints')} onBlur={castPointsToNumber(key, row.name)} />
               </div>
               <div className="formField">
                 <Label>Text</Label>
@@ -357,14 +353,7 @@ export const CreateChecklist = (props) => {
             <Button type="button" onClick={copyChecklist} disabled={!state.copyCourse}>
               Copy
             </Button>
-            <Dropdown
-              className="courseDropdown"
-              placeholder="Copy checklist from another course"
-              selection
-              value={state.copyCourse}
-              onChange={changeCopyCourse}
-              options={state.courseDropdowns}
-            />
+            <Dropdown className="courseDropdown" placeholder="Copy checklist from another course" selection value={state.copyCourse} onChange={changeCopyCourse} options={state.courseDropdowns} />
           </div>
           {state.week !== undefined ? (
             <div className="jsonButtons">

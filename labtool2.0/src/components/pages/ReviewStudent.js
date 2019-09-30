@@ -15,7 +15,7 @@ import { FormMarkdownTextArea } from '../MarkdownTextArea'
 /**
  *  The page which is used by teacher to review submissions,.
  */
-export const ReviewStudent = (props) => {
+export const ReviewStudent = props => {
   const reviewPointsRef = useRef(null)
   const reviewTextRef = useRef(null)
 

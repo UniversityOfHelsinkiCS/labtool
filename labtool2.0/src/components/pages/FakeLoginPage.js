@@ -9,7 +9,7 @@ import { users } from '../../util/fakeLoginUsers'
  *  The page used to login
  */
 
-export const FakeLoginPage = (props) => {
+export const FakeLoginPage = props => {
   useEffect(() => {
     // run on component mount
     props.resetLoading()

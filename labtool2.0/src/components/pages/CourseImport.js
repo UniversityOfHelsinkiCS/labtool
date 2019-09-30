@@ -9,7 +9,7 @@ import { HorizontalScrollable } from '../HorizontalScrollable'
 /**
  *  Show all the courses in a single list.
  */
-export const CourseImport = (props) => {
+export const CourseImport = props => {
   useEffect(() => {
     // run on component mount
     props.resetLoading()

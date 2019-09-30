@@ -7,7 +7,7 @@ import LogoutButton from '../LogoutButton'
 /**
  * Navigation bar component
  */
-const Nav = (props) => {
+const Nav = props => {
   const user = { ...props.user.user }
 
   return (

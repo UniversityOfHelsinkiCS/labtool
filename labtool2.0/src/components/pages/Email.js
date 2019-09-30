@@ -13,7 +13,7 @@ text should be "Edit your email address" if email can be found from db
 Is used to modify users email.
 */
 
-export const Email = (props) => {
+export const Email = props => {
   useEffect(() => {
     // run on component mount
     props.resetLoading()

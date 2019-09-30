@@ -23,7 +23,7 @@ import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 import store from '../../store'
 import StudentTable from '../StudentTable'
 
-export const MassEmailPage = (props) => {
+export const MassEmailPage = props => {
   useEffect(() => {
     // run on component mount
     props.resetLoading()

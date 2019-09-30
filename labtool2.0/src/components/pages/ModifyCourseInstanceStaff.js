@@ -10,7 +10,7 @@ import { sortUsersByAdminAssistantLastname } from '../../util/sort'
 
 import BackButton from '../BackButton'
 
-export const ModifyCourseInstanceStaff = (props) => {
+export const ModifyCourseInstanceStaff = props => {
   useEffect(() => {
     // run on component mount
     props.resetLoading()

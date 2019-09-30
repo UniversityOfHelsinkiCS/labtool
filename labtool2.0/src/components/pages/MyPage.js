@@ -12,7 +12,7 @@ import { createYearAndTerm } from '../../util/format'
  * The main page that is shown after user has logged in.
  */
 
-export const MyPage = (props) => {
+export const MyPage = props => {
   useEffect(() => {
     // run on component mount
     props.getAllStudentCourses()

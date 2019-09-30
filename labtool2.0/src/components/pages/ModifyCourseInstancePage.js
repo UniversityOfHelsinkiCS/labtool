@@ -15,12 +15,12 @@ import BackButton from '../BackButton'
 /**
  *  Page used to modify a courseinstances information. Can only be accessed by teachers.
  */
-export const ModifyCourseInstancePage = (props) => {
+export const ModifyCourseInstancePage = props => {
   const state = useLegacyState({
     toRemoveCr: [],
     toAddCr: []
   })
-  
+
   useEffect(() => {
     // run on component mount
     props.resetLoading()

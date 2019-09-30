@@ -11,7 +11,7 @@ import { createYearAndTerm } from '../../util/format'
 /**
  *  Show all the courses in a single list.
  */
-export const Courses = (props) => {
+export const Courses = props => {
   useEffect(() => {
     // run on component mount
     props.resetLoading()
@@ -63,10 +63,7 @@ export const Courses = (props) => {
 
                     <Table.Cell> {instance.europeanStart} </Table.Cell>
                     <Table.Cell textAlign="center">
-                      <Popup
-                        trigger={<Button circular size="tiny" icon={{ name: 'eye', size: 'large', color: 'blue' }} as={Link} to={`/labtool/courses/${instance.ohid}`} />}
-                        content="View course"
-                      />
+                      <Popup trigger={<Button circular size="tiny" icon={{ name: 'eye', size: 'large', color: 'blue' }} as={Link} to={`/labtool/courses/${instance.ohid}`} />} content="View course" />
                     </Table.Cell>
                   </Table.Row>
                 ))}
