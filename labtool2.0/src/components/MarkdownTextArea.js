@@ -13,7 +13,7 @@ export const FormMarkdownTextArea = props => {
 
   const handleClick = (e, titleProps) => {
     const { index } = titleProps
-    const { activeIndex } = this.state
+    const { activeIndex } = state
     const newIndex = activeIndex === index ? -1 : index
 
     state.activeIndex = newIndex
