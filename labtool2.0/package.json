@@ -34,7 +34,7 @@
     "babel-eslint": "^8.2.3",
     "deep-freeze": "0.0.1",
     "enzyme": "^3.10.0",
-    "enzyme-adapter-react-16": "^1.1.1",
+    "enzyme-adapter-react-16": "^1.14.0",
     "enzyme-to-json": "^3.3.4",
     "eslint": "^4.19.1",
     "eslint-config-google": "^0.9.1",
@@ -48,12 +48,12 @@
     "husky": "^3.0.5",
     "identity-obj-proxy": "^3.0.0",
     "jest-css-modules": "^1.1.0",
-    "jest-enzyme": "^6.0.1",
+    "jest-enzyme": "^6.1.2",
     "js-beautify": "^1.7.5",
     "jsinspect": "^0.12.7",
     "lint-staged": "^9.3.0",
     "prettier": "^1.13.5",
-    "react-test-renderer": "^16.4.0"
+    "react-test-renderer": "^16.10.1"
   },
   "jest": {
     "snapshotSerializers": [

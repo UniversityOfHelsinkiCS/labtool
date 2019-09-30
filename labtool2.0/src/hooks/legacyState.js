@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 /*
- * compactState({ stateVariable: defaultValue })
+ * useLegacyState({ stateVariable: defaultValue })
  */
 const useLegacyState = vars => {
   const _get = {}
