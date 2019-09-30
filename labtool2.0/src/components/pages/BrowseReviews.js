@@ -9,10 +9,11 @@ import { updateStudentProjectInfo } from '../../services/studentinstances'
 import ReactMarkdown from 'react-markdown'
 import { sendEmail } from '../../services/email'
 import { resetLoading } from '../../reducers/loadingReducer'
-import { trimDate, createCourseIdWithYearAndTerm } from '../../util/format'
+import { createCourseIdWithYearAndTerm } from '../../util/format'
 import { getCoursesByStudentId } from '../../services/studentinstances'
 
 import BackButton from '../BackButton'
+import LabtoolComment from '../LabtoolComment'
 import { FormMarkdownTextArea } from '../MarkdownTextArea'
 
 /**
@@ -70,7 +71,7 @@ export class BrowseReviews extends Component {
   }
 
   hasAllReviewsOpen = student => {
-    return Object.values(this.state.openWeeks).filter(x => x).length == this.getMaximumIndexForStudent(student)
+    return Object.values(this.state.openWeeks).filter(x => x).length === this.getMaximumIndexForStudent(student)
   }
 
   handleClickShowAll = student => () => {
@@ -97,7 +98,7 @@ export class BrowseReviews extends Component {
     try {
       await this.props.createOneComment(content)
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
   }
 
@@ -149,12 +150,12 @@ export class BrowseReviews extends Component {
       courseInstance => courseInstance.ohid.includes(this.props.courseId.substring(0, 8)) && courseInstance.ohid !== this.props.courseId
     )
     if (previousParticipations.length === 0) {
-      return <p className="noPrevious">First time to participate the course</p>
+      return <p className="noPrevious">Has not taken part in this course before</p>
     }
     return (
       <div className="hasPrevious">
         <p className style={{ color: 'red' }}>
-          Has other participations
+          Has taken this course before
         </p>
         {previousParticipations.map(participation => <p key={participation.id}>{createCourseIdWithYearAndTerm(participation.ohid, participation.start)}</p>)}
       </div>
@@ -183,57 +184,12 @@ export class BrowseReviews extends Component {
     </Card>
   )
 
-  renderComment = isFinalWeek => comment =>
-    comment.hidden ? (
-      <Comment disabled>
-        <Comment.Content>
-          <Comment.Metadata>
-            <div>Hidden</div>
-          </Comment.Metadata>
-          <Comment.Author>{comment.from}</Comment.Author>
-          <Comment.Text>
-            {' '}
-            <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
-          </Comment.Text>
-          <Comment.Metadata>
-            <div>{trimDate(comment.createdAt)}</div>
-          </Comment.Metadata>
-          <div> </div>
-        </Comment.Content>
-      </Comment>
-    ) : (
-      <Comment key={comment.id}>
-        <Comment.Author>{comment.from}</Comment.Author>
-        <Comment.Text>
-          {' '}
-          <ReactMarkdown>{comment.comment}</ReactMarkdown>{' '}
-        </Comment.Text>
-        <Comment.Metadata>
-          <div>{trimDate(comment.createdAt)}</div>
-        </Comment.Metadata>
-        {!isFinalWeek ? (
-          <div>
-            <div> </div>
-            {/* This hack compares user's name to comment.from and hides the email notification button when they don't match. */}
-            {comment.from.includes(this.props.user.user.firsts) && comment.from.includes(this.props.user.user.lastname) ? (
-              comment.notified ? (
-                <Label>
-                  Notified <Icon name="check" color="green" />
-                </Label>
-              ) : (
-                <Button type="button" onClick={this.sendCommentEmail(comment.id)} size="small">
-                  Send email notification
-                </Button>
-              )
-            ) : (
-              <div />
-            )}
-          </div>
-        ) : (
-          <div />
-        )}
-      </Comment>
-    )
+  renderComment = isFinalWeek => comment => {
+    /* This hack compares user's name to comment.from and hides the email notification button when they don't match. */
+    const userIsCommandSender = comment.from.includes(this.props.user.user.firsts) && comment.from.includes(this.props.user.user.lastname)
+
+    return <LabtoolComment key={comment.id} comment={comment} allowNotify={!isFinalWeek && userIsCommandSender} sendCommentEmail={this.sendCommentEmail(comment.id)} />
+  }
 
   renderWeek = (i, week, studentInstance, isFinalWeek) => {
     const { openWeeks } = this.state
@@ -352,6 +308,7 @@ export class BrowseReviews extends Component {
 
     const createHeaders = (studhead, studentInstance) => {
       let headers = []
+      const weekMatcher = i => week => week.weekNumber === i + 1
       studhead.data.map(student => {
         // studentInstance is id of student. Type: String
         // Tämä pitää myös korjata.
@@ -374,7 +331,7 @@ export class BrowseReviews extends Component {
           let i = 0
           let ii = 0
           for (; i < this.props.selectedInstance.weekAmount; i++) {
-            const weeks = student.weeks.find(week => week.weekNumber === i + 1)
+            const weeks = student.weeks.find(weekMatcher(i))
             headers.push(this.renderWeek(i, weeks, studentInstance, false))
           }
           student.codeReviews

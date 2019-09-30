@@ -1,7 +1,7 @@
 import React from 'react'
 import { ModifyCourseInstanceStaff } from '../components/pages/ModifyCourseInstanceStaff'
 import { shallow } from 'enzyme'
-import { Container, Table, Label } from 'semantic-ui-react'
+import { Table, Label } from 'semantic-ui-react'
 
 describe('<ModifyCourseInstanceStaff />', () => {
   let wrapper
@@ -37,7 +37,7 @@ describe('<ModifyCourseInstanceStaff />', () => {
     createdAt: '2018-03-26T00:00:00.000Z',
     updatedAt: '2018-05-28T13:13:32.540Z'
   }
-  const courseId = selectedI['ohid']
+  // const courseId = selectedI['ohid']
   const users = [
     {
       id: 10010,

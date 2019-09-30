@@ -18,6 +18,21 @@ export class MyPage extends Component {
     this.props.getAllTeacherCourses()
   }
 
+  renderCourseRow = instance => (
+    <Table.Row key={instance.id}>
+      <Table.Cell>
+        <Link to={`/labtool/courses/${instance.ohid}`}>
+          {instance.name} ({createYearAndTerm(instance.ohid, instance.start)})
+        </Link>
+      </Table.Cell>
+      <Table.Cell textAlign="right">
+        <Link to={`/labtool/courses/${instance.ohid}`}>
+          <Popup trigger={<Button circular size="tiny" icon={{ name: 'eye', size: 'large', color: 'blue' }} />} content="View course" />
+        </Link>
+      </Table.Cell>
+    </Table.Row>
+  )
+
   render() {
     const user = { ...this.props.user.user }
     return (
@@ -78,22 +93,7 @@ export class MyPage extends Component {
 
             <HorizontalScrollable>
               <Table singleLine key="grey" color="yellow" style={{ overflowX: 'visible' }}>
-                <Table.Body>
-                  {this.props.studentInstance.map(sinstance => (
-                    <Table.Row key={sinstance.id}>
-                      <Table.Cell>
-                        <Link to={`/labtool/courses/${sinstance.ohid}`}>
-                          {sinstance.name} ({createYearAndTerm(sinstance.name, sinstance.start)})
-                        </Link>
-                      </Table.Cell>
-                      <Table.Cell textAlign="right">
-                        <Link to={`/labtool/courses/${sinstance.ohid}`}>
-                          <Popup trigger={<Button circular size="tiny" icon={{ name: 'eye', size: 'large', color: 'blue' }} />} content="View course" />
-                        </Link>
-                      </Table.Cell>
-                    </Table.Row>
-                  ))}
-                </Table.Body>
+                <Table.Body>{this.props.studentInstance.map(this.renderCourseRow)}</Table.Body>
               </Table>
             </HorizontalScrollable>
 
@@ -108,22 +108,7 @@ export class MyPage extends Component {
 
                 <HorizontalScrollable>
                   <Table singleLine key="grey" color="yellow" style={{ overflowX: 'visible' }}>
-                    <Table.Body>
-                      {this.props.teacherInstance.map(tinstance => (
-                        <Table.Row key={tinstance.id}>
-                          <Table.Cell>
-                            <Link to={`/labtool/courses/${tinstance.ohid}`}>
-                              {tinstance.name} ({createYearAndTerm(tinstance.name, tinstance.start)})
-                            </Link>
-                          </Table.Cell>
-                          <Table.Cell textAlign="right">
-                            <Link to={`/labtool/courses/${tinstance.ohid}`}>
-                              <Popup trigger={<Button circular size="tiny" icon={{ name: 'eye', size: 'large', color: 'blue' }} />} content="View course" />
-                            </Link>
-                          </Table.Cell>
-                        </Table.Row>
-                      ))}
-                    </Table.Body>
+                    <Table.Body>{this.props.teacherInstance.map(this.renderCourseRow)}</Table.Body>
                   </Table>
                 </HorizontalScrollable>
               </Container>

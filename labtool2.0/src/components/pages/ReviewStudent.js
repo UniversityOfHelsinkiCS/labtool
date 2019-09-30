@@ -54,7 +54,7 @@ export class ReviewStudent extends Component {
         await this.props.createOneWeek(content)
       }
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
   }
 
@@ -87,7 +87,7 @@ export class ReviewStudent extends Component {
       weekNumber: this.props.weekNumber,
       reviewData: this.exportToDraft(e.target.form)
     }
-    console.log(content)
+    console.error(content)
     this.props.addRedirectHook({
       hook: 'WEEKDRAFTS_CREATE_ONE'
     })

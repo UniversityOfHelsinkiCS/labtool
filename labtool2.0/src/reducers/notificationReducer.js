@@ -29,7 +29,7 @@ const notificationReducer = (state = {}, action) => {
     //  }
     case 'USER_UPDATE_SUCCESS':
       return {
-        message: 'You have updated your email',
+        message: 'Your email address has been updated',
         error: false
       }
     case 'USER_UPDATE_FAILURE':
@@ -178,7 +178,7 @@ const notificationReducer = (state = {}, action) => {
       return state
     case 'CODE_REVIEW_RANDOMIZE':
       return {
-        message: 'Code reviews randomized. Click save to change',
+        message: 'Code reviews randomized, changes need to be saved',
         error: false
       }
     case 'STUDENT_PROJECT_INFO_UPDATE_SUCCESS':

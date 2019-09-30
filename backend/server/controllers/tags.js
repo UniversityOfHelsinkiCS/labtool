@@ -1,5 +1,5 @@
 const { Tag, StudentTag, TeacherInstance, StudentInstance, Week, User, Comment, CodeReview } = require('../models')
-const helper = require('../helpers/course_instance_helper')
+const helper = require('../helpers/courseInstanceHelper')
 const logger = require('../../server/utils/logger')
 
 module.exports = {
@@ -9,7 +9,9 @@ module.exports = {
    * @param res
    */
   async createOrUpdate(req, res) {
-    helper.controller_before_auth_check_action(req, res)
+    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
 
     try {
       const teacher = await TeacherInstance.findOne({
@@ -49,7 +51,9 @@ module.exports = {
   },
 
   async remove(req, res) {
-    helper.controller_before_auth_check_action(req, res)
+    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
 
     try {
       const teacher = await TeacherInstance.findOne({
@@ -71,7 +75,7 @@ module.exports = {
         return res.status(404).send('there is no tag with that name')
       }
 
-      const id = tag.id
+      const { id } = tag
       await tag.destroy()
       return res.status(200).send(id.toString())
     } catch (e) {
@@ -80,7 +84,9 @@ module.exports = {
   },
 
   getAll(req, res) {
-    helper.controller_before_auth_check_action(req, res)
+    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
 
     try {
       return Tag.findAll()
@@ -96,7 +102,10 @@ module.exports = {
 
   async addTagToStudentInstance(req, res) {
     if (req.body.tagId) {
-      helper.controller_before_auth_check_action(req, res)
+      if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+        return
+      }
+
       try {
         const teacher = await TeacherInstance.findOne({
           where: {
@@ -193,7 +202,10 @@ module.exports = {
 
   async removeTagFromStudentInstance(req, res) {
     if (req.body.tagId) {
-      helper.controller_before_auth_check_action(req, res)
+      if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+        return
+      }
+
       try {
         const teacher = await TeacherInstance.findOne({
           where: {

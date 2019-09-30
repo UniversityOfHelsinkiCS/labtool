@@ -14,7 +14,7 @@ require('dotenv').config()
 const USE_FAKE_LOGIN = process.env.USE_FAKE_LOGIN === 'ThisIsNotProduction'
 
 if (USE_FAKE_LOGIN) {
-  console.log('YOU ARE USING FAKE LOGIN !!! MAKE SURE YOU ARE NOT IN PRODUCTION')
+  console.warn('YOU ARE USING FAKE LOGIN !!! MAKE SURE YOU ARE NOT IN PRODUCTION')
 }
 
 /**

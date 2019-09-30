@@ -16,339 +16,283 @@ exports[`<MassEmailPage /> MassEmailPage Component should render correctly 1`] =
     >
       Send email to students 
     </Header>
-    <div
-      style={
-        Object {
-          "textAlign": "left",
-        }
-      }
-    >
-      <span>
-        Filter by instructor 
-      </span>
-      <Dropdown
-        additionLabel="Add "
-        additionPosition="top"
-        closeOnBlur={true}
-        deburr={false}
-        defaultValue={0}
-        fluid={true}
-        icon="dropdown"
-        minCharacters={1}
-        noResultsMessage="No results found."
-        onChange={[Function]}
-        openOnFocus={true}
-        options={Array []}
-        placeholder="Select Teacher"
-        renderLabel={[Function]}
-        searchInput="text"
-        selectOnBlur={true}
-        selectOnNavigation={true}
-        selection={true}
-        style={
-          Object {
-            "display": "inline",
-          }
-        }
-        wrapSelection={true}
-      />
-      <span>
-         Tag filters: 
-      </span>
-      <span>
-        <Label>
-          none
-        </Label>
-      </span>
-    </div>
     <Form
       as="form"
       onSubmit={[Function]}
     >
-      <HorizontalScrollable>
-        <Table
-          as="table"
-          celled={true}
-          compact={true}
-          style={
-            Object {
-              "overflowX": "visible",
-            }
+      <Connect(StudentTable)
+        allowModify={false}
+        columns={
+          Array [
+            "sendcheck",
+          ]
+        }
+        courseData={
+          Object {
+            "data": Array [
+              Object {
+                "Tags": Array [
+                  Object {
+                    "color": "red",
+                    "id": 20001,
+                    "name": "Javascript",
+                  },
+                ],
+                "User": Object {
+                  "admin": false,
+                  "createdAt": "2018-03-26T00:00:00.000Z",
+                  "email": "johan.studerande@helsinki.fi",
+                  "firsts": "Johan Wilhelm",
+                  "id": 10012,
+                  "lastname": "Studerande",
+                  "studentNumber": "014553242",
+                  "updatedAt": "2018-03-26T00:00:00.000Z",
+                  "username": "tiraopiskelija2",
+                },
+                "codeReviews": Array [],
+                "courseInstanceId": 10011,
+                "createdAt": "2018-03-26T00:00:00.000Z",
+                "github": "http://github.com/tiralabra2",
+                "id": 10012,
+                "projectName": "Tiran toinen labraprojekti",
+                "teacherInstanceId": 10011,
+                "updatedAt": "2018-03-26T00:00:00.000Z",
+                "userId": 10012,
+                "weeks": Array [],
+              },
+              Object {
+                "Tags": Array [
+                  Object {
+                    "color": "grey",
+                    "id": 20008,
+                    "name": "DROPPED",
+                  },
+                  Object {
+                    "color": "yellow",
+                    "id": 20002,
+                    "name": "HTML",
+                  },
+                ],
+                "User": Object {
+                  "admin": false,
+                  "createdAt": "2018-03-26T00:00:00.000Z",
+                  "email": "teras.henkilo@helsinki.fi",
+                  "firsts": "Teräs",
+                  "id": 10031,
+                  "lastname": "Henkilö",
+                  "studentNumber": "014666666",
+                  "updatedAt": "2018-03-26T00:00:00.000Z",
+                  "username": "superopiskelija",
+                },
+                "codeReviews": Array [],
+                "courseInstanceId": 10011,
+                "createdAt": "2018-03-26T00:00:00.000Z",
+                "github": "http://github.com/superprojekti",
+                "id": 10031,
+                "projectName": "Tira super projekti",
+                "teacherInstanceId": 10011,
+                "updatedAt": "2018-06-05T07:12:28.603Z",
+                "userId": 10031,
+                "weeks": Array [],
+              },
+              Object {
+                "Tags": Array [],
+                "User": Object {
+                  "admin": false,
+                  "createdAt": "2018-03-26T00:00:00.000Z",
+                  "email": "maarit.opiskelija@helsinki.fi",
+                  "firsts": "Maarit Mirja",
+                  "id": 10011,
+                  "lastname": "Opiskelija",
+                  "studentNumber": "014578343",
+                  "updatedAt": "2018-03-26T00:00:00.000Z",
+                  "username": "tiraopiskelija1",
+                },
+                "codeReviews": Array [],
+                "courseInstanceId": 10011,
+                "createdAt": "2018-03-26T00:00:00.000Z",
+                "github": "http://github.com/tiralabra1",
+                "id": 10011,
+                "projectName": "Tiran labraprojekti",
+                "teacherInstanceId": 10011,
+                "updatedAt": "2018-03-26T00:00:00.000Z",
+                "userId": 10011,
+                "weeks": Array [],
+              },
+            ],
+            "role": "teacher",
           }
-          unstackable={true}
-        >
-          <TableHeader
-            as="thead"
-          >
-            <TableRow
-              as="tr"
-              cellAs="td"
-            >
-              <TableHeaderCell
-                as="th"
-                key="-1"
-              >
-                Send?
-              </TableHeaderCell>
-              <TableHeaderCell
-                as="th"
-              >
-                Student
-              </TableHeaderCell>
-              <TableHeaderCell
-                as="th"
-              >
-                id
-              </TableHeaderCell>
-              <TableHeaderCell
-                as="th"
-              >
-                email
-              </TableHeaderCell>
-              <TableHeaderCell
-                as="th"
-              >
-                Project Info
-              </TableHeaderCell>
-              <TableHeaderCell
-                as="th"
-                width="six"
-              >
-                 Instructor 
-              </TableHeaderCell>
-            </TableRow>
-          </TableHeader>
-          <TableBody
-            as="tbody"
-          >
-            <TableRow
-              as="tr"
-              cellAs="td"
-              className="TableRowForActiveStudents"
-              key="10012"
-            >
-              <TableCell
-                as="td"
-              >
-                <FormCheckbox
-                  as={[Function]}
-                  control={[Function]}
-                  name="send10012"
-                />
-              </TableCell>
-              <TableCell
-                as="td"
-              >
-                Johan Wilhelm
-                 
-                Studerande
-              </TableCell>
-              <TableCell
-                as="td"
-              >
-                <span>
-                  014553242
-                </span>
-              </TableCell>
-              <TableCell
-                as="td"
-              >
-                <a
-                  href="mailto:johan.studerande@helsinki.fi"
-                >
-                  johan.studerande@helsinki.fi
-                </a>
-              </TableCell>
-              <TableCell
-                as="td"
-              >
-                <span>
-                  Tiran toinen labraprojekti
-                  <br />
-                  <a
-                    href="http://github.com/tiralabra2"
-                    rel="noopener noreferrer"
-                    target="_blank"
-                  >
-                    http://github.com/tiralabra2
-                  </a>
-                  <div
-                    key="20001"
-                  >
-                    <Button
-                      as="button"
-                      className="mini ui red button"
-                      compact={true}
-                      floated="left"
-                      onClick={[Function]}
-                      role="button"
-                    >
-                      Javascript
-                    </Button>
-                  </div>
-                </span>
-              </TableCell>
-              <TableCell
-                as="td"
-              >
-                <span>
-                  not assigned
-                </span>
-              </TableCell>
-            </TableRow>
-            <TableRow
-              as="tr"
-              cellAs="td"
-              className="TableRowForActiveStudents"
-              key="10031"
-            >
-              <TableCell
-                as="td"
-              >
-                <FormCheckbox
-                  as={[Function]}
-                  control={[Function]}
-                  name="send10031"
-                />
-              </TableCell>
-              <TableCell
-                as="td"
-              >
-                Teräs
-                 
-                Henkilö
-              </TableCell>
-              <TableCell
-                as="td"
-              >
-                <span>
-                  014666666
-                </span>
-              </TableCell>
-              <TableCell
-                as="td"
-              >
-                <a
-                  href="mailto:teras.henkilo@helsinki.fi"
-                >
-                  teras.henkilo@helsinki.fi
-                </a>
-              </TableCell>
-              <TableCell
-                as="td"
-              >
-                <span>
-                  Tira super projekti
-                  <br />
-                  <a
-                    href="http://github.com/superprojekti"
-                    rel="noopener noreferrer"
-                    target="_blank"
-                  >
-                    http://github.com/superprojekti
-                  </a>
-                  <div
-                    key="20008"
-                  >
-                    <Button
-                      as="button"
-                      className="mini ui grey button"
-                      compact={true}
-                      floated="left"
-                      onClick={[Function]}
-                      role="button"
-                    >
-                      DROPPED
-                    </Button>
-                  </div>
-                  <div
-                    key="20002"
-                  >
-                    <Button
-                      as="button"
-                      className="mini ui yellow button"
-                      compact={true}
-                      floated="left"
-                      onClick={[Function]}
-                      role="button"
-                    >
-                      HTML
-                    </Button>
-                  </div>
-                </span>
-              </TableCell>
-              <TableCell
-                as="td"
-              >
-                <span>
-                  not assigned
-                </span>
-              </TableCell>
-            </TableRow>
-            <TableRow
-              as="tr"
-              cellAs="td"
-              className="TableRowForActiveStudents"
-              key="10011"
-            >
-              <TableCell
-                as="td"
-              >
-                <FormCheckbox
-                  as={[Function]}
-                  control={[Function]}
-                  name="send10011"
-                />
-              </TableCell>
-              <TableCell
-                as="td"
-              >
-                Maarit Mirja
-                 
-                Opiskelija
-              </TableCell>
-              <TableCell
-                as="td"
-              >
-                <span>
-                  014578343
-                </span>
-              </TableCell>
-              <TableCell
-                as="td"
-              >
-                <a
-                  href="mailto:maarit.opiskelija@helsinki.fi"
-                >
-                  maarit.opiskelija@helsinki.fi
-                </a>
-              </TableCell>
-              <TableCell
-                as="td"
-              >
-                <span>
-                  Tiran labraprojekti
-                  <br />
-                  <a
-                    href="http://github.com/tiralabra1"
-                    rel="noopener noreferrer"
-                    target="_blank"
-                  >
-                    http://github.com/tiralabra1
-                  </a>
-                </span>
-              </TableCell>
-              <TableCell
-                as="td"
-              >
-                <span>
-                  not assigned
-                </span>
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </HorizontalScrollable>
+        }
+        coursePageLogic={
+          Object {
+            "filterByAssistant": 0,
+            "filterByTag": Array [],
+            "selectedTeacher": "",
+            "showDropdown": "",
+          }
+        }
+        disableDefaultFilter={false}
+        filterStudents={[Function]}
+        rowClassName="TableRowForActiveStudents"
+        selectedInstance={
+          Object {
+            "data": Array [
+              Object {
+                "Tags": Array [
+                  Object {
+                    "color": "red",
+                    "id": 20001,
+                    "name": "Javascript",
+                  },
+                ],
+                "User": Object {
+                  "admin": false,
+                  "createdAt": "2018-03-26T00:00:00.000Z",
+                  "email": "johan.studerande@helsinki.fi",
+                  "firsts": "Johan Wilhelm",
+                  "id": 10012,
+                  "lastname": "Studerande",
+                  "studentNumber": "014553242",
+                  "updatedAt": "2018-03-26T00:00:00.000Z",
+                  "username": "tiraopiskelija2",
+                },
+                "codeReviews": Array [],
+                "courseInstanceId": 10011,
+                "createdAt": "2018-03-26T00:00:00.000Z",
+                "github": "http://github.com/tiralabra2",
+                "id": 10012,
+                "projectName": "Tiran toinen labraprojekti",
+                "teacherInstanceId": 10011,
+                "updatedAt": "2018-03-26T00:00:00.000Z",
+                "userId": 10012,
+                "weeks": Array [],
+              },
+              Object {
+                "Tags": Array [
+                  Object {
+                    "color": "grey",
+                    "id": 20008,
+                    "name": "DROPPED",
+                  },
+                  Object {
+                    "color": "yellow",
+                    "id": 20002,
+                    "name": "HTML",
+                  },
+                ],
+                "User": Object {
+                  "admin": false,
+                  "createdAt": "2018-03-26T00:00:00.000Z",
+                  "email": "teras.henkilo@helsinki.fi",
+                  "firsts": "Teräs",
+                  "id": 10031,
+                  "lastname": "Henkilö",
+                  "studentNumber": "014666666",
+                  "updatedAt": "2018-03-26T00:00:00.000Z",
+                  "username": "superopiskelija",
+                },
+                "codeReviews": Array [],
+                "courseInstanceId": 10011,
+                "createdAt": "2018-03-26T00:00:00.000Z",
+                "github": "http://github.com/superprojekti",
+                "id": 10031,
+                "projectName": "Tira super projekti",
+                "teacherInstanceId": 10011,
+                "updatedAt": "2018-06-05T07:12:28.603Z",
+                "userId": 10031,
+                "weeks": Array [],
+              },
+              Object {
+                "Tags": Array [],
+                "User": Object {
+                  "admin": false,
+                  "createdAt": "2018-03-26T00:00:00.000Z",
+                  "email": "maarit.opiskelija@helsinki.fi",
+                  "firsts": "Maarit Mirja",
+                  "id": 10011,
+                  "lastname": "Opiskelija",
+                  "studentNumber": "014578343",
+                  "updatedAt": "2018-03-26T00:00:00.000Z",
+                  "username": "tiraopiskelija1",
+                },
+                "codeReviews": Array [],
+                "courseInstanceId": 10011,
+                "createdAt": "2018-03-26T00:00:00.000Z",
+                "github": "http://github.com/tiralabra1",
+                "id": 10011,
+                "projectName": "Tiran labraprojekti",
+                "teacherInstanceId": 10011,
+                "updatedAt": "2018-03-26T00:00:00.000Z",
+                "userId": 10011,
+                "weeks": Array [],
+              },
+            ],
+            "role": "teacher",
+          }
+        }
+        tags={
+          Object {
+            "tags": Array [
+              Object {
+                "color": "red",
+                "createdAt": "2018-06-13T00:00:00.000Z",
+                "id": 20001,
+                "name": "Javascript",
+                "updatedAt": "2018-06-13T00:00:00.000Z",
+              },
+              Object {
+                "color": "yellow",
+                "createdAt": "2018-06-13T00:00:00.000Z",
+                "id": 20002,
+                "name": "HTML",
+                "updatedAt": "2018-06-13T00:00:00.000Z",
+              },
+              Object {
+                "color": "black",
+                "createdAt": "2018-06-13T00:00:00.000Z",
+                "id": 20003,
+                "name": "game",
+                "updatedAt": "2018-06-13T00:00:00.000Z",
+              },
+              Object {
+                "color": "green",
+                "createdAt": "2018-06-13T00:00:00.000Z",
+                "id": 20004,
+                "name": "React",
+                "updatedAt": "2018-06-13T00:00:00.000Z",
+              },
+              Object {
+                "color": "blue",
+                "createdAt": "2018-06-13T00:00:00.000Z",
+                "id": 20005,
+                "name": "Node.js",
+                "updatedAt": "2018-06-13T00:00:00.000Z",
+              },
+              Object {
+                "color": "orange",
+                "createdAt": "2018-06-13T00:00:00.000Z",
+                "id": 20006,
+                "name": "Java",
+                "updatedAt": "2018-06-13T00:00:00.000Z",
+              },
+              Object {
+                "color": "pink",
+                "createdAt": "2018-06-13T00:00:00.000Z",
+                "id": 20007,
+                "name": "FORTRAN",
+                "updatedAt": "2018-06-13T00:00:00.000Z",
+              },
+              Object {
+                "color": "grey",
+                "createdAt": "2018-06-13T00:00:00.000Z",
+                "id": 20008,
+                "name": "DROPPED",
+                "updatedAt": "2018-06-13T00:00:00.000Z",
+              },
+            ],
+          }
+        }
+      />
       <br />
       <br />
       <FormTextArea

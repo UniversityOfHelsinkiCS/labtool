@@ -43,17 +43,24 @@ export class ModifyCourseInstanceReview extends React.Component {
   }
 
   checkStates = () => {
-    this.props.codeReviewLogic.statesCreated ? null : this.props.createStates(this.props.selectedInstance.amountOfCodeReviews)
+    if (!this.props.codeReviewLogic.statesCreated) {
+      this.props.createStates(this.props.selectedInstance.amountOfCodeReviews)
+    }
   }
 
   handleSubmit = reviewNumber => async e => {
     try {
       e.preventDefault()
       let createTrue = false
-      reviewNumber === 'create' ? this.props.toggleCreate() : undefined
+      if (reviewNumber === 'create') {
+        this.props.toggleCreate()
+      }
       const codeReviews = this.props.codeReviewLogic.codeReviewStates[reviewNumber]
       const courseId = this.props.selectedInstance.id
-      reviewNumber === 'create' ? ((reviewNumber = this.props.selectedInstance.amountOfCodeReviews + 1), (createTrue = true)) : reviewNumber
+      if (reviewNumber === 'create') {
+        reviewNumber = this.props.selectedInstance.amountOfCodeReviews + 1
+        createTrue = true
+      }
 
       const data = {
         codeReviews,
@@ -106,7 +113,9 @@ export class ModifyCourseInstanceReview extends React.Component {
           if (unassignedStudentsAsIds.length) {
             studentTags = studentTags.filter(st => unassignedStudentsAsIds.includes(st.StudentTag.studentInstanceId))
           }
-          studentTags.length ? (allCheckboxes[student.id] = true) : null
+          if (studentTags.length) {
+            allCheckboxes[student.id] = true
+          }
           studentTags = []
         })
       } else if (unassignedStudentsAsIds.length) {
@@ -212,14 +221,15 @@ export class ModifyCourseInstanceReview extends React.Component {
         this.props.removeOneCodeReview({ reviewer: cr.studentInstanceId, codeReviewRound: cr.reviewNumber })
         this.toggleModal(id)
       } catch (e) {
-        console.log(e)
+        console.error(e)
       }
     }
   }
 
   toggleModal = id => {
     let s = this.state.open
-    !s[id] ? ((s[id] = true), this.setState({ open: s })) : ((s[id] = !s[id]), this.setState({ open: s }))
+    s[id] = !s[id]
+    this.setState({ open: s })
   }
 
   visibilityReminder = () =>
@@ -427,7 +437,7 @@ export class ModifyCourseInstanceReview extends React.Component {
                                 {this.props.dropdownUsers.map(
                                   d =>
                                     d.value !== data.id ? (
-                                      this.props.codeReviewLogic.currentSelections[this.props.codeReviewLogic.selectedDropdown][data.id] == d.value ? (
+                                      this.props.codeReviewLogic.currentSelections[this.props.codeReviewLogic.selectedDropdown][data.id] === d.value ? (
                                         <option selected="selected" key={d.value} value={d.value}>
                                           {d.text}
                                         </option>

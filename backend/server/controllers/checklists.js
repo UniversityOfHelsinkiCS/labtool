@@ -1,10 +1,13 @@
-const helper = require('../helpers/checklist_helper')
+const helper = require('../helpers/checklistHelper')
 const { TeacherInstance, Checklist } = require('../models')
 const logger = require('../utils/logger')
 
 module.exports = {
   async create(req, res) {
-    await helper.controller_before_auth_check_action(req, res)
+    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
+
     try {
       if (!req.authenticated.success) {
         res.status(403).send('you have to be authenticated to do this')
