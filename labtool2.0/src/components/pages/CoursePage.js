@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { Accordion, Button, Table, Card, Input, Form, Comment, Header, Label, Message, Icon, Popup, Loader } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
@@ -206,7 +207,7 @@ export const CoursePage = props => {
                         type="text"
                         name="reviewLink"
                         icon="github"
-                        required="true"
+                        required={true}
                         iconPosition="left"
                         style={{ minWidth: '25em' }}
                         placeholder="https://github.com/account/repo/issues/number"
@@ -506,6 +507,34 @@ const mapDispatchToProps = {
   unTagStudent,
   resetLoading,
   updateStudentProjectInfo
+}
+
+CoursePage.propTypes = {
+  courseId: PropTypes.string.isRequired,
+
+  user: PropTypes.object.isRequired,
+  studentInstance: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+  teacherInstance: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+  selectedInstance: PropTypes.object.isRequired,
+  courseInstance: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+  courseData: PropTypes.object.isRequired,
+  coursePageLogic: PropTypes.object.isRequired,
+  tags: PropTypes.object.isRequired,
+  loading: PropTypes.object.isRequired,
+
+  createOneComment: PropTypes.func.isRequired,
+  getOneCI: PropTypes.func.isRequired,
+  coursePageInformation: PropTypes.func.isRequired,
+  addLinkToCodeReview: PropTypes.func.isRequired,
+  coursePageReset: PropTypes.func.isRequired,
+  toggleCodeReview: PropTypes.func.isRequired,
+  getAllTags: PropTypes.func.isRequired,
+  tagStudent: PropTypes.func.isRequired,
+  sendEmail: PropTypes.func.isRequired,
+  updateActiveIndex: PropTypes.func.isRequired,
+  unTagStudent: PropTypes.func.isRequired,
+  resetLoading: PropTypes.func.isRequired,
+  updateStudentProjectInfo: PropTypes.func.isRequired
 }
 
 export default connect(

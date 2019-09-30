@@ -1,24 +1,12 @@
 import React, { useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { Button, Form, Header, Loader } from 'semantic-ui-react'
 import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { createOneComment } from '../../services/comment'
 import { getOneCI, coursePageInformation } from '../../services/courseInstance'
-import { associateTeacherToStudent } from '../../services/assistant'
-import { getAllTags, tagStudent, unTagStudent } from '../../services/tags'
-import { addLinkToCodeReview } from '../../services/codeReview'
+import { getAllTags } from '../../services/tags'
 import { sendMassEmail } from '../../services/email'
-import {
-  showAssistantDropdown,
-  showTagDropdown,
-  filterByTag,
-  filterByAssistant,
-  updateActiveIndex,
-  selectTeacher,
-  selectTag,
-  coursePageReset,
-  toggleCodeReview
-} from '../../reducers/coursePageLogicReducer'
+import { coursePageReset } from '../../reducers/coursePageLogicReducer'
 import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 import store from '../../store'
 import StudentTable from '../StudentTable'
@@ -130,26 +118,35 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 const mapDispatchToProps = {
-  createOneComment,
   getOneCI,
   coursePageInformation,
-  associateTeacherToStudent,
-  addLinkToCodeReview,
-  showAssistantDropdown,
-  showTagDropdown,
-  selectTeacher,
-  selectTag,
-  filterByAssistant,
-  filterByTag,
   coursePageReset,
-  toggleCodeReview,
   getAllTags,
-  tagStudent,
   sendMassEmail,
-  updateActiveIndex,
-  unTagStudent,
   resetLoading,
   addRedirectHook
+}
+
+MassEmailPage.propTypes = {
+  courseId: PropTypes.string.isRequired,
+
+  user: PropTypes.object.isRequired,
+  studentInstance: PropTypes.object.isRequired,
+  teacherInstance: PropTypes.object.isRequired,
+  selectedInstance: PropTypes.object.isRequired,
+  courseInstance: PropTypes.object.isRequired,
+  courseData: PropTypes.object.isRequired,
+  coursePageLogic: PropTypes.object.isRequired,
+  tags: PropTypes.object.isRequired,
+  loading: PropTypes.object.isRequired,
+
+  getOneCI: PropTypes.func.isRequired,
+  coursePageInformation: PropTypes.func.isRequired,
+  coursePageReset: PropTypes.func.isRequired,
+  getAllTags: PropTypes.func.isRequired,
+  sendMassEmail: PropTypes.func.isRequired,
+  resetLoading: PropTypes.func.isRequired,
+  addRedirectHook: PropTypes.func.isRequired
 }
 
 export default connect(

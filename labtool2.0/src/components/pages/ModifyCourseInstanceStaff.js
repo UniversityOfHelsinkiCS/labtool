@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { getOneCI } from '../../services/courseInstance'
 import { getAllUsers } from '../../services/user'
 import { createOne, removeOne } from '../../services/teacherinstances'
@@ -133,6 +134,21 @@ const mapDispatchToProps = {
   createOne,
   removeOne,
   resetLoading
+}
+
+ModifyCourseInstanceStaff.propTypes = {
+  courseId: PropTypes.string.isRequired,
+
+  users: PropTypes.array.isRequired,
+  selectedInstance: PropTypes.object.isRequired,
+  loading: PropTypes.object.isRequired,
+
+  getAllUsers: PropTypes.func.isRequired,
+  getOneCI: PropTypes.func.isRequired,
+  clearNotifications: PropTypes.func.isRequired,
+  createOne: PropTypes.func.isRequired,
+  removeOne: PropTypes.func.isRequired,
+  resetLoading: PropTypes.func.isRequired
 }
 
 export default connect(

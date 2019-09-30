@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Button, Header, Table, Container, Icon, Segment, Divider, Popup } from 'semantic-ui-react'
 import './MyPage.css'
@@ -125,6 +126,15 @@ const mapStateToProps = state => {
     studentInstance: state.studentInstance,
     teacherInstance: state.teacherInstance
   }
+}
+
+MyPage.propTypes = {
+  user: PropTypes.object.isRequired,
+  studentInstance: PropTypes.array.isRequired,
+  teacherInstance: PropTypes.array.isRequired,
+
+  getAllStudentCourses: PropTypes.func.isRequired,
+  getAllTeacherCourses: PropTypes.func.isRequired
 }
 
 export default connect(

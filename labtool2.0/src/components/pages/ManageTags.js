@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { Form, Input, Grid, Container, Button, Loader } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { createTag, getAllTags, removeTag } from '../../services/tags'
@@ -131,8 +132,8 @@ export const ManageTags = props => {
               </Form.Field>
               <Form.Field required inline>
                 <label style={{ width: '100px', textAlign: 'left' }}>Color</label>
-                <select className="ui dropdown" id="tagColor" name="color" style={{ minWidth: '30em' }} required onChange={updateTagPreview}>
-                  <option value="" disabled selected>
+                <select defaultValue="" className="ui dropdown" id="tagColor" name="color" style={{ minWidth: '30em' }} required onChange={updateTagPreview}>
+                  <option value="" disabled>
                     Select a tag color
                   </option>
                   <option value="white">White</option>
@@ -197,6 +198,18 @@ const mapDispatchToProps = {
   resetLoading,
   willCreateNewTag,
   willModifyExistingTag
+}
+
+ManageTags.propTypes = {
+  tags: PropTypes.object.isRequired,
+  loading: PropTypes.object.isRequired,
+
+  createTag: PropTypes.func.isRequired,
+  removeTag: PropTypes.func.isRequired,
+  getAllTags: PropTypes.func.isRequired,
+  resetLoading: PropTypes.func.isRequired,
+  willCreateNewTag: PropTypes.func.isRequired,
+  willModifyExistingTag: PropTypes.func.isRequired
 }
 
 export default connect(

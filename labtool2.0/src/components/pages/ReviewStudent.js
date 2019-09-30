@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react'
+import PropTypes from 'prop-types'
 import { Button, Form, Input, Grid, Card, Loader } from 'semantic-ui-react'
 import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
@@ -308,6 +309,29 @@ const mapDispatchToProps = {
   coursePageInformation,
   resetLoading,
   addRedirectHook
+}
+
+ReviewStudent.propTypes = {
+  courseId: PropTypes.string.isRequired,
+  studentInstance: PropTypes.string.isRequired,
+  weekNumber: PropTypes.string.isRequired,
+
+  selectedInstance: PropTypes.object.isRequired,
+  notification: PropTypes.object.isRequired,
+  courseData: PropTypes.object.isRequired,
+  weekReview: PropTypes.object.isRequired,
+  loading: PropTypes.object.isRequired,
+
+  createOneWeek: PropTypes.func.isRequired,
+  getWeekDraft: PropTypes.func.isRequired,
+  saveWeekDraft: PropTypes.func.isRequired,
+  getOneCI: PropTypes.func.isRequired,
+  clearNotifications: PropTypes.func.isRequired,
+  toggleCheck: PropTypes.func.isRequired,
+  resetChecklist: PropTypes.func.isRequired,
+  coursePageInformation: PropTypes.func.isRequired,
+  resetLoading: PropTypes.func.isRequired,
+  addRedirectHook: PropTypes.func.isRequired
 }
 
 export default connect(

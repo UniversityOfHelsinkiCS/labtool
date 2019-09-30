@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { Button, Card, Accordion, Icon, Form, Comment, Input, Popup, Loader, Label } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
@@ -181,7 +182,7 @@ export const BrowseReviews = props => {
     </Card>
   )
 
-  const renderComment = isFinalWeek => comment => {
+  const renderComment = (isFinalWeek, comment) => {
     /* This hack compares user's name to comment.from and hides the email notification button when they don't match. */
     const userIsCommandSender = comment.from.includes(props.user.user.firsts) && comment.from.includes(props.user.user.lastname)
 
@@ -231,7 +232,7 @@ export const BrowseReviews = props => {
               )}
             </Card>
             <h4> Comments </h4>
-            <Comment.Group>{week ? sortCommentsByDate(week.comments).map(renderComment(isFinalWeek)) : <h4> No comments </h4>}</Comment.Group>
+            <Comment.Group>{week ? sortCommentsByDate(week.comments).map(c => renderComment(isFinalWeek, c)) : <h4> No comments </h4>}</Comment.Group>
             <Form reply onSubmit={handleSubmit} name={week.id} id={week.id}>
               <FormMarkdownTextArea name="content" placeholder="Your comment..." defaultValue="" />
               <Form.Checkbox label="Add comment for instructors only" name="hidden" />
@@ -386,6 +387,27 @@ const mapDispatchToProps = {
   resetLoading,
   getCoursesByStudentId,
   updateStudentProjectInfo
+}
+
+BrowseReviews.propTypes = {
+  courseId: PropTypes.string.isRequired,
+  studentInstance: PropTypes.string.isRequired,
+  initialLoading: PropTypes.bool,
+
+  user: PropTypes.object.isRequired,
+  selectedInstance: PropTypes.object.isRequired,
+  courseData: PropTypes.object.isRequired,
+  studentInstanceToBeReviewed: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+  loading: PropTypes.object.isRequired,
+
+  createOneComment: PropTypes.func.isRequired,
+  getOneCI: PropTypes.func.isRequired,
+  coursePageInformation: PropTypes.func.isRequired,
+  gradeCodeReview: PropTypes.func.isRequired,
+  sendEmail: PropTypes.func.isRequired,
+  resetLoading: PropTypes.func.isRequired,
+  getCoursesByStudentId: PropTypes.func.isRequired,
+  updateStudentProjectInfo: PropTypes.func.isRequired
 }
 
 export default connect(

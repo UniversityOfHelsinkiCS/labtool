@@ -1,7 +1,8 @@
+import React, { useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { login } from '../../services/login'
 import { resetLoading, forceSetLoading } from '../../reducers/loadingReducer'
-import React, { useEffect } from 'react'
 import { Form, Input, Button, Grid, Loader } from 'semantic-ui-react'
 
 /**
@@ -72,6 +73,15 @@ const mapDispatchToProps = {
   login,
   resetLoading,
   forceSetLoading
+}
+
+LoginPage.propTypes = {
+  user: PropTypes.object.isRequired,
+  loading: PropTypes.object.isRequired,
+
+  login: PropTypes.func.isRequired,
+  resetLoading: PropTypes.func.isRequired,
+  forceSetLoading: PropTypes.func.isRequired
 }
 
 export default connect(

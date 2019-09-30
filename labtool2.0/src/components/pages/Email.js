@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { Form, Grid, Loader } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { updateUser } from '../../services/login'
@@ -103,6 +104,16 @@ const mapDispatchToProps = {
   resetLoading,
   addRedirectHook,
   forceSetLoading
+}
+
+Email.propTypes = {
+  user: PropTypes.object.isRequired,
+  loading: PropTypes.object.isRequired,
+
+  updateUser: PropTypes.func.isRequired,
+  resetLoading: PropTypes.func.isRequired,
+  addRedirectHook: PropTypes.func.isRequired,
+  forceSetLoading: PropTypes.func.isRequired
 }
 
 export default connect(

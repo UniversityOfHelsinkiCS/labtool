@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { Form, Input, Button, Grid, Dropdown, Checkbox, Loader, Popup } from 'semantic-ui-react'
 import { getOneCI, modifyOneCI } from '../../services/courseInstance'
 import { setFinalReview } from '../../reducers/selectedInstanceReducer'
@@ -101,17 +102,17 @@ export const ModifyCourseInstancePage = props => {
             <Form onSubmit={handleSubmit}>
               <Form.Group inline>
                 <label style={{ width: '125px', textAlign: 'left' }}>Week amount</label>
-                <Input name="weekAmount" required="true" type="text" style={{ maxWidth: '7em' }} value={selectedInstance.weekAmount} className="form-control1" onChange={changeField} />
+                <Input name="weekAmount" required={true} type="text" style={{ maxWidth: '7em' }} value={selectedInstance.weekAmount} className="form-control1" onChange={changeField} />
               </Form.Group>
 
               <Form.Group inline>
                 <label style={{ width: '125px', textAlign: 'left' }}>Weekly maxpoints</label>
-                <Input name="weekMaxPoints" required="true" type="text" style={{ maxWidth: '7em' }} value={selectedInstance.weekMaxPoints} className="form-control2" onChange={changeField} />
+                <Input name="weekMaxPoints" required={true} type="text" style={{ maxWidth: '7em' }} value={selectedInstance.weekMaxPoints} className="form-control2" onChange={changeField} />
               </Form.Group>
 
               <Form.Group inline>
                 <label style={{ width: '125px', textAlign: 'left' }}>Current week</label>
-                <Input name="currentWeek" required="true" type="text" style={{ maxWidth: '7em' }} value={selectedInstance.currentWeek} className="form-control3" onChange={changeField} />
+                <Input name="currentWeek" required={true} type="text" style={{ maxWidth: '7em' }} value={selectedInstance.currentWeek} className="form-control3" onChange={changeField} />
               </Form.Group>
 
               <Form.Group inline>
@@ -248,6 +249,24 @@ const mapDispatchToProps = {
   resetLoading,
   addRedirectHook,
   setFinalReview
+}
+
+ModifyCourseInstancePage.propTypes = {
+  courseId: PropTypes.string.isRequired,
+
+  selectedInstance: PropTypes.object.isRequired,
+  notification: PropTypes.object.isRequired,
+  codeReviewDropdowns: PropTypes.array,
+  loading: PropTypes.object.isRequired,
+  redirect: PropTypes.object.isRequired,
+
+  getOneCI: PropTypes.func.isRequired,
+  modifyOneCI: PropTypes.func.isRequired,
+  clearNotifications: PropTypes.func.isRequired,
+  changeCourseField: PropTypes.func.isRequired,
+  resetLoading: PropTypes.func.isRequired,
+  addRedirectHook: PropTypes.func.isRequired,
+  setFinalReview: PropTypes.func.isRequired
 }
 
 export default connect(

@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Header, Input, Label, Button, Popup, Card, Dropdown, Loader, Icon } from 'semantic-ui-react'
 import { showNotification } from '../../reducers/notificationReducer'
@@ -465,6 +466,30 @@ const mapDispatchToProps = {
   removeTopic,
   removeRow,
   castPointsToNumber
+}
+
+CreateChecklist.propTypes = {
+  courseId: PropTypes.string.isRequired,
+
+  selectedInstance: PropTypes.object.isRequired,
+  weekDropdowns: PropTypes.array,
+  checklist: PropTypes.object.isRequired,
+  courses: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+  loading: PropTypes.object.isRequired,
+
+  showNotification: PropTypes.func.isRequired,
+  resetLoading: PropTypes.func.isRequired,
+  createChecklist: PropTypes.func.isRequired,
+  getOneCI: PropTypes.func.isRequired,
+  getAllCI: PropTypes.func.isRequired,
+  getOneChecklist: PropTypes.func.isRequired,
+  resetChecklist: PropTypes.func.isRequired,
+  changeField: PropTypes.func.isRequired,
+  addTopic: PropTypes.func.isRequired,
+  addRow: PropTypes.func.isRequired,
+  removeTopic: PropTypes.func.isRequired,
+  removeRow: PropTypes.func.isRequired,
+  castPointsToNumber: PropTypes.func.isRequired
 }
 
 export default connect(

@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Button, Icon, Table, Form, Popup, Dropdown, Label } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
@@ -433,6 +434,30 @@ const mapDispatchToProps = {
   getAllTags,
   tagStudent,
   unTagStudent
+}
+
+StudentTable.propTypes = {
+  rowClassName: PropTypes.string,
+  columns: PropTypes.array,
+  allowModify: PropTypes.bool,
+  filterStudents: PropTypes.func,
+  disableDefaultFilter: PropTypes.bool,
+
+  selectedInstance: PropTypes.object.isRequired,
+  courseData: PropTypes.object.isRequired,
+  coursePageLogic: PropTypes.object.isRequired,
+  tags: PropTypes.object.isRequired,
+
+  associateTeacherToStudent: PropTypes.func.isRequired,
+  showAssistantDropdown: PropTypes.func.isRequired,
+  showTagDropdown: PropTypes.func.isRequired,
+  selectTeacher: PropTypes.func.isRequired,
+  selectTag: PropTypes.func.isRequired,
+  filterByAssistant: PropTypes.func.isRequired,
+  filterByTag: PropTypes.func.isRequired,
+  getAllTags: PropTypes.func.isRequired,
+  tagStudent: PropTypes.func.isRequired,
+  unTagStudent: PropTypes.func.isRequired
 }
 
 export default connect(

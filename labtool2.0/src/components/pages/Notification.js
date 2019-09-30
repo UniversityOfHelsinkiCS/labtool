@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { clearNotifications } from '../../reducers/notificationReducer'
 import { Message } from 'semantic-ui-react'
@@ -48,9 +49,11 @@ const mapStateToProps = state => {
   }
 }
 
-const ConnectedNotification = connect(
+Notification.propTypes = {
+  notification: PropTypes.object.isRequired
+}
+
+export default connect(
   mapStateToProps,
   { clearNotifications }
 )(Notification)
-
-export default ConnectedNotification

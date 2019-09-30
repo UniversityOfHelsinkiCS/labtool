@@ -1,5 +1,6 @@
 // Package related imports
-import React, { Component } from 'react'
+import React, { useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { Switch, Route, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { Container } from 'semantic-ui-react'
@@ -39,13 +40,13 @@ try {
 } catch (e) {} // eslint-disable-line
 
 // The main component of the whole application.
-class App extends Component {
-  /**
-   * Automatically log in when landing on front page
-   */
-  componentWillMount = async () => {
-    await this.props.resetLoading()
-    this.props.forceSetLoading({
+const App = props => {
+  useEffect(() => {
+    /**
+     * Automatically log in when landing on front page
+     */
+    props.resetLoading()
+    props.forceSetLoading({
       value: false
     })
     if (USE_FAKE_LOGIN) {
@@ -55,103 +56,101 @@ class App extends Component {
       } catch (e) {
         obj = {}
       }
-      await this.props.login(obj)
+      props.login(obj)
     } else {
-      await this.props.login()
+      props.login()
     }
-  }
 
-  /**
-   * After mounting, it checks from the localstorage if user is logged in.
-   * If true, it parses the user from the storage and puts it and
-   * the courses of the user, both student and teacher, to the store.
-   */
-
-  componentDidMount() {
+    /**
+     * After mounting, it checks from the localstorage if user is logged in.
+     * If true, it parses the user from the storage and puts it and
+     * the courses of the user, both student and teacher, to the store.
+     */
     try {
       const loggedUserJSON = window.localStorage.getItem('loggedLabtool')
       if (loggedUserJSON && loggedUserJSON !== '{}') {
         const user = JSON.parse(loggedUserJSON)
-        this.props.tokenLogin(user)
+        props.tokenLogin(user)
       }
     } catch (exception) {
       console.error(exception)
     }
-  }
+  }, [])
 
   /**
-   * @param {*} nProps nProps are the props the component will receive next,
+   * the props the component will receive next,
    * in this case after succesfull login.
    *
    * It puts the users data the storage
    */
-  componentWillReceiveProps(nProps) {
-    const userAndToken = {
-      user: nProps.user,
-      token: nProps.token,
-      created: nProps.created
-    }
-    window.localStorage.setItem('loggedLabtool', JSON.stringify(userAndToken))
-  }
+  useEffect(
+    () => {
+      const userAndToken = {
+        user: props.user,
+        token: props.token,
+        created: props.created
+      }
+      window.localStorage.setItem('loggedLabtool', JSON.stringify(userAndToken))
+    },
+    [props.user, props.token, props.created]
+  )
 
-  render() {
-    /**
-     *  The main component that shows the applications pages.
-     */
+  /**
+   *  The main component that shows the applications pages.
+   */
 
-    const Main = () => {
-      return (
-        <main>
-          <Switch>
-            <Route path={`/labtool/courses/:id`} render={({ match, history }) => <CoursePage history={history} courseId={match.params.id} />} />
-            <Route exact path={`/labtool/courses`} render={({ history }) => <Courses history={history} />} />
-            <Route path={`/labtool/courseregistration/:id`} render={({ match, history }) => <RegisterPage history={history} courseId={match.params.id} />} />
-            <Route path={`/labtool/browsereviews/:id/:si/`} render={({ match, history }) => <BrowseReviews history={history} courseId={match.params.id} studentInstance={match.params.si} />} />
-            <Route path={`/labtool/email`} component={Email} />
-            <Route path={`/labtool/massemail/:id`} render={({ match, history }) => <MassEmailPage history={history} courseId={match.params.id} />} />
-            <Route path={`/labtool/registerPage`} component={RegisterPage} />
-            <Route
-              path={`/labtool/reviewstudent/:id/:si/:wk`}
-              render={({ match, history }) => <ReviewStudent history={history} courseId={match.params.id} studentInstance={match.params.si} weekNumber={match.params.wk} />}
-            />
-            <Route path={`/labtool/ModifyCourseInstancePage/:id`} render={({ match }) => <ModifyCourseInstancePage courseId={match.params.id} />} />
-            <Route path={`/labtool/ModifyCourseInstanceStaff/:id`} render={({ match }) => <ModifyCourseInstanceStaff courseId={match.params.id} />} />
-            <Route path={'/labtool/ModifyCourseInstanceCodeReviews/:id'} render={({ match }) => <ModifyCourseInstanceCodeReviews courseId={match.params.id} />} />
-            <Route path={'/labtool/checklist/:id/create'} render={({ match }) => <CreateChecklist courseId={match.params.id} />} />
-            <Route path={'/labtool/ManageTags'} component={ManageTags} />
-            <Route path={'/labtool/checklist/:id/create'} render={({ match }) => <CreateChecklist courseId={match.params.id} />} />
-            <Route path={'/labtool/courseimport'} render={() => <CourseImport />} />
-            <Route path={`/`} render={() => <MyPage />} />
-          </Switch>
-        </main>
-      )
-    }
-
-    /**
-     * a component that forces the user to put an email.
-     * Checks the email from redux store.
-     */
-    const EmailChecker = () => (this.props.user.email === '' || this.props.user.email === null ? <Email /> : <Main />)
-
-    /**
-     * Logout code.
-     */
-    const doLogout = () => {
-      window.localStorage.removeItem('loggedLabtool')
-      this.props.logout()
-    }
-
+  const Main = () => {
     return (
-      /**
-       * Nav is the component for the navbar, that is always displayed.
-       */
-      <Container>
-        <Nav logout={doLogout} />
-        <Notification />
-        {this.props.user ? EmailChecker() : USE_FAKE_LOGIN ? <FakeLoginPage /> : null}
-      </Container>
+      <main>
+        <Switch>
+          <Route path={`/labtool/courses/:id`} render={({ match, history }) => <CoursePage history={history} courseId={match.params.id} />} />
+          <Route exact path={`/labtool/courses`} render={({ history }) => <Courses history={history} />} />
+          <Route path={`/labtool/courseregistration/:id`} render={({ match, history }) => <RegisterPage history={history} courseId={match.params.id} />} />
+          <Route path={`/labtool/browsereviews/:id/:si/`} render={({ match, history }) => <BrowseReviews history={history} courseId={match.params.id} studentInstance={match.params.si} />} />
+          <Route path={`/labtool/email`} component={Email} />
+          <Route path={`/labtool/massemail/:id`} render={({ match, history }) => <MassEmailPage history={history} courseId={match.params.id} />} />
+          <Route path={`/labtool/registerPage`} component={RegisterPage} />
+          <Route
+            path={`/labtool/reviewstudent/:id/:si/:wk`}
+            render={({ match, history }) => <ReviewStudent history={history} courseId={match.params.id} studentInstance={match.params.si} weekNumber={match.params.wk} />}
+          />
+          <Route path={`/labtool/ModifyCourseInstancePage/:id`} render={({ match }) => <ModifyCourseInstancePage courseId={match.params.id} />} />
+          <Route path={`/labtool/ModifyCourseInstanceStaff/:id`} render={({ match }) => <ModifyCourseInstanceStaff courseId={match.params.id} />} />
+          <Route path={'/labtool/ModifyCourseInstanceCodeReviews/:id'} render={({ match }) => <ModifyCourseInstanceCodeReviews courseId={match.params.id} />} />
+          <Route path={'/labtool/checklist/:id/create'} render={({ match }) => <CreateChecklist courseId={match.params.id} />} />
+          <Route path={'/labtool/ManageTags'} component={ManageTags} />
+          <Route path={'/labtool/checklist/:id/create'} render={({ match }) => <CreateChecklist courseId={match.params.id} />} />
+          <Route path={'/labtool/courseimport'} render={() => <CourseImport />} />
+          <Route path={`/`} render={() => <MyPage />} />
+        </Switch>
+      </main>
     )
   }
+
+  /**
+   * a component that forces the user to put an email.
+   * Checks the email from redux store.
+   */
+  const EmailChecker = () => (props.user.email === '' || props.user.email === null ? <Email /> : <Main />)
+
+  /**
+   * Logout code.
+   */
+  const doLogout = () => {
+    window.localStorage.removeItem('loggedLabtool')
+    props.logout()
+  }
+
+  return (
+    /**
+     * Nav is the component for the navbar, that is always displayed.
+     */
+    <Container>
+      <Nav logout={doLogout} />
+      <Notification />
+      {props.user ? EmailChecker() : USE_FAKE_LOGIN ? <FakeLoginPage /> : null}
+    </Container>
+  )
 }
 
 /**
@@ -163,6 +162,18 @@ const mapStateToProps = state => {
     token: state.user.token,
     created: state.user.created
   }
+}
+
+App.propTypes = {
+  user: PropTypes.object,
+  token: PropTypes.string,
+  created: PropTypes.bool,
+
+  tokenLogin: PropTypes.func.isRequired,
+  logout: PropTypes.func.isRequired,
+  login: PropTypes.func.isRequired,
+  resetLoading: PropTypes.func.isRequired,
+  forceSetLoading: PropTypes.func.isRequired
 }
 
 export default withRouter(

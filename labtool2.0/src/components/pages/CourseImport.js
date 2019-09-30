@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { Button, Container, Header, Table, Loader, Form } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { Link, Redirect } from 'react-router-dom'
@@ -114,6 +115,18 @@ const mapDispatchToProps = {
   getImportableCourses,
   importCourses,
   addRedirectHook
+}
+
+CourseImport.propTypes = {
+  loading: PropTypes.object.isRequired,
+  canImport: PropTypes.bool,
+  importable: PropTypes.array,
+
+  resetLoading: PropTypes.func.isRequired,
+  getIsAllowedToImport: PropTypes.func.isRequired,
+  getImportableCourses: PropTypes.func.isRequired,
+  importCourses: PropTypes.func.isRequired,
+  addRedirectHook: PropTypes.func.isRequired
 }
 
 export default connect(

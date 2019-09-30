@@ -1,6 +1,7 @@
+import React from 'react'
+import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import React from 'react'
 import { Menu, Icon, Image } from 'semantic-ui-react'
 import LogoutButton from '../LogoutButton'
 
@@ -71,6 +72,12 @@ const mapStateToProps = state => {
   return {
     user: state.user
   }
+}
+
+Nav.propTypes = {
+  user: PropTypes.object.isRequired,
+
+  logout: PropTypes.func.isRequired
 }
 
 export default connect(

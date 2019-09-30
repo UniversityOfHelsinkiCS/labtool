@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { Form, Input, Grid, Loader } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
@@ -121,6 +122,20 @@ const mapDispatchToProps = {
   getOneCI,
   resetLoading,
   addRedirectHook
+}
+
+RegisterPage.propTypes = {
+  courseId: PropTypes.string.isRequired,
+
+  coursePage: PropTypes.object.isRequired,
+  selectedInstance: PropTypes.object.isRequired,
+  loading: PropTypes.object.isRequired,
+
+  createStudentCourses: PropTypes.func.isRequired,
+  updateStudentProjectInfo: PropTypes.func.isRequired,
+  getOneCI: PropTypes.func.isRequired,
+  resetLoading: PropTypes.func.isRequired,
+  addRedirectHook: PropTypes.func.isRequired
 }
 
 export default connect(

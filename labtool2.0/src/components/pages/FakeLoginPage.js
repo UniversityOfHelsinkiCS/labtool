@@ -1,7 +1,8 @@
+import React, { useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { fakeShibboLogin } from '../../services/login'
 import { resetLoading, forceSetLoading } from '../../reducers/loadingReducer'
-import React, { useEffect } from 'react'
 import { Select, Grid, Loader } from 'semantic-ui-react'
 import { users } from '../../util/fakeLoginUsers'
 
@@ -79,6 +80,15 @@ const mapDispatchToProps = {
   login: fakeShibboLogin,
   resetLoading,
   forceSetLoading
+}
+
+FakeLoginPage.propTypes = {
+  user: PropTypes.object.isRequired,
+  loading: PropTypes.object.isRequired,
+
+  login: PropTypes.func.isRequired,
+  resetLoading: PropTypes.func.isRequired,
+  forceSetLoading: PropTypes.func.isRequired
 }
 
 export default connect(

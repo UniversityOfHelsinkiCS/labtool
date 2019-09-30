@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Button, Icon, Comment, Label } from 'semantic-ui-react'
 import ReactMarkdown from 'react-markdown'
 import { withRouter } from 'react-router'
@@ -49,6 +50,12 @@ export const LabtoolComment = ({ comment, allowNotify, sendCommentEmail }) =>
       )}
     </Comment>
   )
+
+LabtoolComment.propTypes = {
+  comment: PropTypes.object.isRequired,
+  allowNotify: PropTypes.bool,
+  sendCommentEmail: PropTypes.func
+}
 
 export default withRouter(
   connect(

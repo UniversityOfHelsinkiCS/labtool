@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { getOneCI } from '../../services/courseInstance'
@@ -140,7 +141,7 @@ export const ModifyCourseInstanceReview = props => {
     return (e, data) => {
       checkStates()
       props.selectDropdown(data.value)
-      if (props.filterActive) {
+      if (props.codeReviewLogic.filterActive) {
         props.filterByReview(props.selectDropdown(data.value))
       }
     }
@@ -226,7 +227,7 @@ export const ModifyCourseInstanceReview = props => {
     state.open = s
   }
 
-  const visibilityReminder = () =>
+  const VisibilityReminder = () =>
     props.selectedInstance.currentCodeReview && props.codeReviewLogic.selectedDropdown ? (
       props.selectedInstance.currentCodeReview.findIndex(cr => cr === props.codeReviewLogic.selectedDropdown) === -1 ? (
         <Popup
@@ -296,7 +297,7 @@ export const ModifyCourseInstanceReview = props => {
               <Table.HeaderCell>Project Info</Table.HeaderCell>
               <Table.HeaderCell key={1}>
                 <div style={{ display: 'flex' }}>
-                  <visibilityReminder />
+                  <VisibilityReminder />
                   <Dropdown
                     onChange={createDropdown()}
                     defaultValue={props.codeReviewLogic.selectedDropdown}
@@ -560,6 +561,38 @@ const mapDispatchToProps = {
   filterByReview,
   showNotification,
   removeOneCodeReview
+}
+
+ModifyCourseInstanceReview.propTypes = {
+  courseId: PropTypes.string.isRequired,
+
+  courseData: PropTypes.object.isRequired,
+  selectedInstance: PropTypes.object.isRequired,
+  codeReviewLogic: PropTypes.object.isRequired,
+  dropdownUsers: PropTypes.array,
+  dropdownCodeReviews: PropTypes.array,
+  coursePageLogic: PropTypes.object.isRequired,
+  loading: PropTypes.object.isRequired,
+
+  getOneCI: PropTypes.func.isRequired,
+  clearNotifications: PropTypes.func.isRequired,
+  coursePageInformation: PropTypes.func.isRequired,
+  initOneReview: PropTypes.func.isRequired,
+  initOrRemoveRandom: PropTypes.func.isRequired,
+  initCheckbox: PropTypes.func.isRequired,
+  initAllCheckboxes: PropTypes.func.isRequired,
+  bulkinsertCodeReviews: PropTypes.func.isRequired,
+  randomAssign: PropTypes.func.isRequired,
+  codeReviewReset: PropTypes.func.isRequired,
+  filterByTag: PropTypes.func.isRequired,
+  resetLoading: PropTypes.func.isRequired,
+  selectDropdown: PropTypes.func.isRequired,
+  toggleCreate: PropTypes.func.isRequired,
+  createStates: PropTypes.func.isRequired,
+  filterStatesByTags: PropTypes.func.isRequired,
+  filterByReview: PropTypes.func.isRequired,
+  showNotification: PropTypes.func.isRequired,
+  removeOneCodeReview: PropTypes.func.isRequired
 }
 
 export default connect(

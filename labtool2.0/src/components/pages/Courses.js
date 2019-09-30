@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { Button, Container, Header, Table, Label, Popup, Loader } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
@@ -89,6 +90,17 @@ const mapStateToProps = (state, ownProps) => {
     loading: state.loading,
     canImport: state.courseImport.canImport
   }
+}
+
+Courses.propTypes = {
+  history: PropTypes.object.isRequired,
+  courseInstance: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+  loading: PropTypes.object.isRequired,
+  canImport: PropTypes.bool,
+
+  getAllCI: PropTypes.func.isRequired,
+  resetLoading: PropTypes.func.isRequired,
+  getIsAllowedToImport: PropTypes.func.isRequired
 }
 
 export default connect(
