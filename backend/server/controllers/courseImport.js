@@ -8,7 +8,7 @@ module.exports = {
     }
 
     if (!req.authenticated.success) {
-      res.status(401).end()
+      res.status(401).send('be authenticated').end()
     }
     const user = req.decoded.id
 
@@ -26,7 +26,7 @@ module.exports = {
     }
 
     if (!req.authenticated.success) {
-      res.status(401).end()
+      res.status(401).send('be authenticated').end()
     }
     const user = req.decoded.id
 
@@ -50,7 +50,7 @@ module.exports = {
     }
 
     if (!req.authenticated.success) {
-      res.status(401).end()
+      res.status(401).send('be authenticated').end()
     }
     const user = req.decoded.id
 
