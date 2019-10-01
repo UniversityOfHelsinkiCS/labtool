@@ -74,7 +74,7 @@ export class HorizontalScrollable extends React.Component {
 
     if (doNotUpdate !== 'content' && this.content) {
       this.antibounce.content = true
-      this.content.marginLeft = `-${newX}px`
+      this.content.style.marginLeft = `-${newX}px`
     }
     if (doNotUpdate !== 'scrollbar' && this.scrollbar) {
       this.antibounce.scrollbar = true
