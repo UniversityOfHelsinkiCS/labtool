@@ -177,7 +177,7 @@ exports[`<Courses /> Courses Component should render correctly 1`] = `
                 >
                   Ohjelmistotekniikan menetelmät
                    (
-                  17-18 4.period
+                  17-18
                   )
                 </Link>
               </strong>

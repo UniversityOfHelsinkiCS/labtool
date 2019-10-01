@@ -17,7 +17,7 @@ export const createShorterCourseid = ohid => {
   return `${ohid.substring(0, 8)}`
 }
 
-const getAcademicYear = startDate => {
+export const getAcademicYear = startDate => {
   let year = Number(startDate.substring(2, 4))
   const month = Number(startDate.split('-')[1])
   if (1 <= month && month <= 4) {
@@ -57,13 +57,6 @@ const getPeriod = startDate => {
  */
 export const createCourseIdWithYearAndTerm = (ohid, startDate) => {
   return createShorterCourseid(ohid) + ' ' + getAcademicYear(startDate) + ' ' + getPeriod(startDate)
-}
-
-export const createYearAndTerm = (courseName, startDate) => {
-  if (courseName.includes('(')) {
-    return getAcademicYear(startDate)
-  }
-  return getAcademicYear(startDate) + ' ' + getPeriod(startDate)
 }
 
 export const capitalize = text => {
