@@ -74,7 +74,7 @@ export class HorizontalScrollable extends React.Component {
 
     if (doNotUpdate !== 'content' && this.content) {
       this.antibounce.content = true
-      this.content.scrollLeft = newX
+      this.content.marginLeft = `-${newX}px`
     }
     if (doNotUpdate !== 'scrollbar' && this.scrollbar) {
       this.antibounce.scrollbar = true
@@ -115,14 +115,14 @@ export class HorizontalScrollable extends React.Component {
 
   render() {
     return (
-      <span>
-        <div ref={this.mainElementReady} onScroll={this.updateScrollX('content')} style={{ overflowX: 'hidden' }}>
+      <div style={{ overflowX: 'hidden', marginBottom: '-200vh', paddingBottom: '200vh' }}>
+        <div ref={this.mainElementReady} onScroll={this.updateScrollX('content')} style={{ overflowX: 'visible', overflowY: 'visible' }}>
           {this.props.children}
         </div>
         <div ref={this.scrollBarReady} onScroll={this.updateScrollX('scrollbar')} style={{ overflowX: 'scroll', bottom: '0', position: 'sticky' }}>
           <div />
         </div>
-      </span>
+      </div>
     )
   }
 }
