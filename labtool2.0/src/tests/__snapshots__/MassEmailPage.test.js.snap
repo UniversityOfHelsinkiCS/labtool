@@ -4,7 +4,8 @@ exports[`<MassEmailPage /> MassEmailPage Component should render correctly 1`] =
 <div
   style={
     Object {
-      "overflow": "auto",
+      "overflowX": "auto",
+      "overflowY": "hidden",
     }
   }
 >
@@ -328,5 +329,12 @@ exports[`<MassEmailPage /> MassEmailPage Component should render correctly 1`] =
     </Form>
     <br />
   </div>
+  <br />
+  <br />
+  <br />
+  <br />
+  <br />
+  <br />
+  <br />
 </div>
 `;
