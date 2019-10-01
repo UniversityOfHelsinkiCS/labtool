@@ -425,6 +425,28 @@ const sendMass = async (req, res) => {
       return reject(res, 404, 'No student email addresses found')
     }
 
+    let instructorEmails = []
+    if (req.body.sendToInstructors) {
+      const teachers = await TeacherInstance.findAll({
+        attributes: ['userId'],
+        where: {
+          courseInstanceId: courseInstance.id
+        }
+      })
+      instructorEmails = (await Promise.all(teachers.map(async ({ userId }) => {
+        const user = await User.findOne({
+          where: {
+            id: userId
+          }
+        })
+        if (!user) {
+          return null
+        }
+  
+        return user.email || ''
+      }))).filter(email => email)
+    }
+
     // prepare email here
     const link = `${frontendUrl}/courses/${req.params.id}`
     const subject = `${courseInstance.name} new message from instructor`
@@ -432,6 +454,7 @@ const sendMass = async (req, res) => {
       <h1>You've received a message in Labtool.</h1>
       <p><a href="${link}">${link}</a></p>
       <p>course: ${courseInstance.name}</p>
+      <p><i>This is an automated message sent using the Labtool email tool. Please do not reply to this email.</i></p>
       <h2>Message content</h2>
       <p>${escape(req.body.content)}</p>
     `
@@ -439,7 +462,7 @@ const sendMass = async (req, res) => {
     const { success, simulated } = await trySendEmail({
       subject,
       html,
-      bcc: studentEmails
+      bcc: studentEmails.concat(instructorEmails)
     })
 
     if (success) {
