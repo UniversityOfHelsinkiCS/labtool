@@ -454,7 +454,7 @@ const sendMass = async (req, res) => {
       <h1>You've received a message in Labtool.</h1>
       <p><a href="${link}">${link}</a></p>
       <p>course: ${courseInstance.name}</p>
-      <p><i>This is an automated message sent using the Labtool email tool. Do not reply to this email.</i></p>
+      <p><i>This is an automated message sent using the Labtool email tool. Please do not reply to this email.</i></p>
       <h2>Message content</h2>
       <p>${escape(req.body.content)}</p>
     `
