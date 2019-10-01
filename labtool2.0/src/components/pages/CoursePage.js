@@ -299,12 +299,16 @@ export class CoursePage extends React.Component {
               <Icon name="check" />
               <strong> Total Points: </strong>
               {(
-                this.props.courseData.data.weeks.map(week => week.points).reduce((a, b) => {
-                  return a + b
-                }, 0) +
-                this.props.courseData.data.codeReviews.map(cr => cr.points).reduce((a, b) => {
-                  return a + b
-                }, 0)
+                this.props.courseData.data.weeks
+                  .map(week => week.points)
+                  .reduce((a, b) => {
+                    return a + b
+                  }, 0) +
+                this.props.courseData.data.codeReviews
+                  .map(cr => cr.points)
+                  .reduce((a, b) => {
+                    return a + b
+                  }, 0)
               )
                 .toFixed(2)
                 .replace(/[.,]00$/, '')}
@@ -375,12 +379,11 @@ export class CoursePage extends React.Component {
       const heading = droppedOut ? 'Dropped out students' : 'Students'
       const tableClassName = droppedOut ? 'TeachersBottomViewForDroppedOutStudents' : 'TeachersBottomViewForActiveStudents'
       const rowClassName = droppedOut ? 'TableRowForDroppedOutStudents' : 'TableRowForActiveStudents'
-      const dropConvertButton = !droppedOut &&
-        this.droppedTagExists() && (
-          <Button onClick={() => this.markAllWithDroppedTagAsDropped(this.props.courseData)} size="small">
-            Mark all with dropped tag as dropped out
-          </Button>
-        )
+      const dropConvertButton = !droppedOut && this.droppedTagExists() && (
+        <Button onClick={() => this.markAllWithDroppedTagAsDropped(this.props.courseData)} size="small">
+          Mark all with dropped tag as dropped out
+        </Button>
+      )
       return (
         <div className={tableClassName}>
           <Header as="h2">{heading} </Header>
@@ -475,10 +478,17 @@ export class CoursePage extends React.Component {
       )
     } else if (this.props.courseData.role === 'teacher') {
       return (
-        <div style={{ overflow: 'auto' }}>
+        <div style={{ overflowX: 'auto', overflowY: 'hidden' }}>
           {renderTeacherTopPart()}
           {renderTeacherBottomPartForActiveStudents()}
           {renderTeacherBottomPartForDroppedOutStudents()}
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
         </div>
       )
     } else {
