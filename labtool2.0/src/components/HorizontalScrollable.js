@@ -115,6 +115,9 @@ export class HorizontalScrollable extends React.Component {
 
   render() {
     // marginBottom, paddingBottom hack adds unused "overflowable" space
+    // this causes issues in Firefox (it shows up as scrollable), so
+    // the parent page should define overflowY: hidden and add some extra
+    // <br />s to the bottom
     return (
       <div style={{ overflow: 'hidden', boxSizing: 'border-box', marginBottom: '-50vh', paddingBottom: '50vh' }}>
         <div ref={this.mainElementReady} onScroll={this.updateScrollX('content')} style={{ overflowX: 'visible', overflowY: 'visible' }}>
