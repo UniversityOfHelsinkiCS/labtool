@@ -470,10 +470,16 @@ export const CoursePage = props => {
     )
   } else if (props.courseData.role === 'teacher') {
     return (
-      <div style={{ overflow: 'auto' }}>
+      <div style={{ overflowX: 'auto', overflowY: 'hidden' }}>
         {renderTeacherTopPart()}
         {renderTeacherBottomPartForActiveStudents()}
         {renderTeacherBottomPartForDroppedOutStudents()}
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
       </div>
     )
   } else {

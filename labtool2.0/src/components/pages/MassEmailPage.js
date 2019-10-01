@@ -97,7 +97,18 @@ export const MassEmailPage = props => {
    * This part actually tells what to show to the user
    */
   if (props.courseData.role === 'teacher') {
-    return <div style={{ overflow: 'auto' }}>{renderTeacherPart()}</div>
+    return (
+      <div style={{ overflowX: 'auto', overflowY: 'hidden' }}>
+        {renderTeacherPart()}
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+      </div>
+    )
   } else {
     return <div />
   }

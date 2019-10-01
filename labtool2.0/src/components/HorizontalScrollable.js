@@ -72,7 +72,7 @@ export const HorizontalScrollable = props => {
 
     if (doNotUpdate !== 'content' && content) {
       antibounce.content = true
-      content.scrollLeft = newX
+      content.style.marginLeft = `-${newX}px`
     }
     if (doNotUpdate !== 'scrollbar' && scrollbar) {
       antibounce.scrollbar = true
@@ -111,15 +111,19 @@ export const HorizontalScrollable = props => {
     }
   }
 
+  // marginBottom, paddingBottom hack adds unused "overflowable" space
+  // this causes issues in Firefox (it shows up as scrollable), so
+  // the parent page should define overflowY: hidden and add some extra
+  // <br />s to the bottom
   return (
-    <span>
-      <div ref={mainElementReady} onScroll={updateScrollX('content')} style={{ overflowX: 'hidden' }}>
+    <div style={{ overflow: 'hidden', boxSizing: 'border-box', marginBottom: '-50vh', paddingBottom: '50vh' }}>
+      <div ref={mainElementReady} onScroll={updateScrollX('content')} style={{ overflowX: 'visible', overflowY: 'visible' }}>
         {props.children}
       </div>
       <div ref={scrollBarReady} onScroll={updateScrollX('scrollbar')} style={{ overflowX: 'scroll', bottom: '0', position: 'sticky' }}>
         <div />
       </div>
-    </span>
+    </div>
   )
 }
 
