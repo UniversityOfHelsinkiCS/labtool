@@ -37,7 +37,7 @@ export const MassEmailPage = props => {
         props.addRedirectHook({
           hook: 'MASS_EMAIL_SEND'
         })
-        await props.sendMassEmail({ students: sendingTo, content: e.target.content.value }, props.selectedInstance.ohid)
+        await props.sendMassEmail({ students: sendingTo, content: e.target.content.value, sendToInstructors: e.target.sendToInstructors.checked }, props.selectedInstance.ohid)
       }
     }
   }
@@ -76,6 +76,7 @@ export const MassEmailPage = props => {
           <br />
 
           <Form.TextArea name="content" placeholder="Type email here..." defaultValue="" required />
+          <Form.Checkbox name="sendToInstructors" defaultChecked={true} label="Send a copy to all instructors" />
           <Button type="submit" className="ui green button" content="Send" />
 
           <br />

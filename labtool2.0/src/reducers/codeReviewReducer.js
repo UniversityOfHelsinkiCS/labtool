@@ -35,18 +35,6 @@ function tagsToArray(tags) {
   return tagsA
 }
 
-function purgeCodeReviews(codeReviewStateArray, toPurgeArray) {
-  if (codeReviewStateArray) {
-    const codeReviewStateReviewerArray = codeReviewStateArray.map(cr => cr.reviewer)
-    let i = codeReviewStateArray.length
-    while (i--) {
-      if (toPurgeArray.indexOf(codeReviewStateReviewerArray[i]) !== -1) {
-        codeReviewStateArray.splice(i, 1)
-      }
-    }
-  }
-}
-
 const codeReviewReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case 'LOGOUT_SUCCESS':
@@ -161,20 +149,26 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
       return { ...state, codeReviewStates: codeReviewRoundsToUpdate, currentSelections: currentSelectionsToUpdate, selectedDropdown: dropdown }
     }
     case 'CODE_REVIEW_RANDOMIZE': {
-      const newCodeReviewStates = state.codeReviewStates
-      purgeCodeReviews(newCodeReviewStates[action.data.reviewNumber], state.randomizedCodeReview)
-      const randomizedOrder = Array(state.randomizedCodeReview.length)
-      let i = state.randomizedCodeReview.length
-      while (i--) randomizedOrder[i] = state.randomizedCodeReview[i]
+      const newCodeReviewStates = { ...state.codeReviewStates }
+      const randomizedCodeReviewSet = new Set([...state.randomizedCodeReview])
+
+      let codeReviews = newCodeReviewStates[action.data.reviewNumber]
+      //Do not assign code review to students who have not been selected
+      codeReviews = codeReviews.filter(cr => !randomizedCodeReviewSet.has(cr.reviewer))
+      //Do not assign code reviews to dropped students
+      codeReviews = codeReviews.filter(cr => !action.data.dropped.includes(cr.reviewer))
+
+      const randomizedOrder = [...state.randomizedCodeReview]
       shuffleArray(randomizedOrder)
-      const newCurrentSelections = state.currentSelections
+      const newCurrentSelections = { ...state.currentSelections }
       for (let i = 0; i < randomizedOrder.length; i++) {
-        newCodeReviewStates[action.data.reviewNumber].push({
+        codeReviews = codeReviews.concat({
           reviewer: randomizedOrder[i],
           toReview: state.randomizedCodeReview[i]
         })
         newCurrentSelections[action.data.reviewNumber][randomizedOrder[i]] = state.randomizedCodeReview[i]
       }
+      newCodeReviewStates[action.data.reviewNumber] = codeReviews
       return { ...state, codeReviewStates: newCodeReviewStates, currentSelections: newCurrentSelections }
     }
 
@@ -259,10 +253,15 @@ export const initAllCheckboxes = data => {
 }
 
 export const randomAssign = data => {
-  return async dispatch => {
+  return async (dispatch, getState) => {
     dispatch({
       type: 'CODE_REVIEW_RANDOMIZE',
-      data: data
+      data: {
+        reviewNumber: data.reviewNumber,
+        dropped: getState()
+          .coursePage.data.filter(user => user.dropped)
+          .map(user => user.id)
+      }
     })
   }
 }
