@@ -32,7 +32,7 @@ describe('<ModifyCourseInstancePage />', () => {
 
   beforeEach(() => {
     wrapper = shallow(
-      <ModifyCourseInstancePage 
+      <ModifyCourseInstancePage
         codeReviewDropdowns={[{ value: 3, text: '3' }]}
         getOneCI={mockFn}
         clearNotifications={mockFn}
@@ -40,8 +40,8 @@ describe('<ModifyCourseInstancePage />', () => {
         resetLoading={mockFn}
         selectedInstance={courseData}
         courseId={''}
-        notification={{ }}
-        redirect={{ }}
+        notification={{}}
+        redirect={{}}
         modifyOneCI={mockFn}
         changeCourseField={mockFn}
         addRedirectHook={mockFn}

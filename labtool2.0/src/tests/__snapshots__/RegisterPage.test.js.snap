@@ -31,6 +31,7 @@ exports[`<Register /> RegisterPage Component should render correctly 1`] = `
     >
       <Form
         as="form"
+        className="Register"
         onSubmit={[Function]}
       >
         <FormGroup
@@ -98,7 +99,6 @@ exports[`<Register /> RegisterPage Component should render correctly 1`] = `
             Submit
           </button>
           <Link
-            replace={false}
             to="/labtool/courses/undefined"
           >
              

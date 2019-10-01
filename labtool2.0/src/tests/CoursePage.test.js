@@ -234,7 +234,7 @@ describe('<CoursePage /> as teacher', () => {
         loading={loading}
         resetLoading={mockFn}
         courseId={''}
-        user={{ }}
+        user={{}}
         createOneComment={mockFn}
         addLinkToCodeReview={mockFn}
         coursePageReset={mockFn}
@@ -243,7 +243,6 @@ describe('<CoursePage /> as teacher', () => {
         sendEmail={mockFn}
         updateActiveIndex={mockFn}
         unTagStudent={mockFn}
-        updateStudentProjectInfo={mockFn}
       />
     )
   })
@@ -458,7 +457,7 @@ describe('<CoursePage /> as student', () => {
         loading={loading}
         resetLoading={mockFn}
         courseId={''}
-        user={{ }}
+        user={{}}
         createOneComment={mockFn}
         addLinkToCodeReview={mockFn}
         coursePageReset={mockFn}

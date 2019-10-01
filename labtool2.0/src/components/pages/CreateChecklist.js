@@ -74,6 +74,7 @@ export const CreateChecklist = props => {
     }
     state.week = week
     state.copyCourse = copyCourse
+    state.courseDropdowns = createCourseDropdowns()
     loadChecklist(week)
   }
 

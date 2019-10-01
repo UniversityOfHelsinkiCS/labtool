@@ -168,6 +168,7 @@ describe('<CreateChecklist /> component', () => {
       })
 
       it('Renders appropriate options for week', () => {
+        wrapper.find('#weekDropdown').prop('onChange')(null, { value: weekChoice })
         const options = wrapper.find('.courseDropdown').prop('options')
         expect(options.length).toEqual(courseInstance.filter(course => course.weekAmount >= weekChoice && course !== courseInstance[0]).length)
       })

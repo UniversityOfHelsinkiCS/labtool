@@ -193,7 +193,6 @@ describe('<BrowseReviews />', () => {
         createOneComment={mockFn}
         gradeCodeReview={mockFn}
         sendEmail={mockFn}
-        updateStudentProjectInfo={mockFn}
       />
     )
   })

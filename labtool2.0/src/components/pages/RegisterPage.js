@@ -77,7 +77,7 @@ export const RegisterPage = props => {
 
       <Grid>
         <Grid.Row centered>
-          <Form onSubmit={handleSubmit}>
+          <Form onSubmit={handleSubmit} className="Register">
             <Form.Group inline>
               <label style={{ width: '100px', textAlign: 'left' }}>Project name</label>
               <Input icon="rocket" iconPosition="left" type="text" className="form-control1" name="projectName" placeholder="MyProjectName" required style={{ minWidth: '30em' }} />

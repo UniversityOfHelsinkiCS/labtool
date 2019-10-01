@@ -13,7 +13,9 @@ const useLegacyState = vars => {
   const result = {}
 
   for (const key of keys) {
-    [_get[key], _set[key]] = useState(vars[key])
+    const [g, s] = useState(vars[key])
+    _get[key] = g
+    _set[key] = s
 
     Object.defineProperty(result, key, {
       enumerable: false,

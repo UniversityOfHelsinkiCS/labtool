@@ -53,7 +53,19 @@ describe('<Register />', () => {
   let mockFn = jest.fn()
 
   beforeEach(() => {
-    wrapper = shallow(<RegisterPage getOneCI={mockFn} selectedInstance={props} loading={props.loading} resetLoading={mockFn} />)
+    wrapper = shallow(
+      <RegisterPage
+        getOneCI={mockFn}
+        selectedInstance={props}
+        loading={props.loading}
+        resetLoading={mockFn}
+        courseId={'10012'}
+        coursePage={{ data: null }}
+        createStudentCourses={mockFn}
+        updateStudentProjectInfo={mockFn}
+        addRedirectHook={mockFn}
+      />
+    )
   })
 
   describe('RegisterPage Component', () => {
@@ -66,7 +78,7 @@ describe('<Register />', () => {
     })
 
     it('should render without throwing an error', () => {
-      expect(wrapper.exists(<form className="Register" />)).toBe(true)
+      expect(wrapper.find('.Register').length).toEqual(1)
     })
 
     it('renders project name input', () => {
