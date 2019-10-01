@@ -114,6 +114,7 @@ export class HorizontalScrollable extends React.Component {
   }
 
   render() {
+    // marginBottom, paddingBottom hack adds unused "overflowable" space
     return (
       <div style={{ overflowX: 'hidden', marginBottom: '-200vh', paddingBottom: '200vh' }}>
         <div ref={this.mainElementReady} onScroll={this.updateScrollX('content')} style={{ overflowX: 'visible', overflowY: 'visible' }}>
