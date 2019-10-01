@@ -6,7 +6,7 @@ import { getAllCI } from '../../services/courseInstance'
 import { getIsAllowedToImport } from '../../services/courseImport'
 import { resetLoading } from '../../reducers/loadingReducer'
 import { HorizontalScrollable } from '../HorizontalScrollable'
-import { createYearAndTerm } from '../../util/format'
+import { getAcademicYear } from '../../util/format'
 
 /**
  *  Show all the courses in a single list.
@@ -56,7 +56,7 @@ export class Courses extends Component {
                       <Table.Cell>
                         <strong>
                           <Link to={`/labtool/courses/${instance.ohid}`}>
-                            {instance.name} ({createYearAndTerm(instance.name, instance.start)})
+                            {instance.name} ({getAcademicYear(instance.start)})
                           </Link>
                         </strong>
                       </Table.Cell>
