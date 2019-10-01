@@ -25,7 +25,7 @@ const { Op } = Sequelize
  */
 function controllerBeforeAuthCheckAction(req, res) {
   if (!req.authenticated.success) {
-    res.status(401).end()
+    res.status(401).send('you have to be authenticated').end()
   }
   return req.authenticated.success
 }
