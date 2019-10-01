@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom'
 import { getAllStudentCourses } from '../../services/studentinstances'
 import { getAllTeacherCourses } from '../../services/teacherinstances'
 import { HorizontalScrollable } from '../HorizontalScrollable'
-import { createYearAndTerm } from '../../util/format'
+import { getAcademicYear } from '../../util/format'
 
 /**
  * The main page that is shown after user has logged in.
@@ -24,7 +24,7 @@ export const MyPage = props => {
     <Table.Row key={instance.id}>
       <Table.Cell>
         <Link to={`/labtool/courses/${instance.ohid}`}>
-          {instance.name} ({createYearAndTerm(instance.ohid, instance.start)})
+          {instance.name} ({getAcademicYear(instance.start)})
         </Link>
       </Table.Cell>
       <Table.Cell textAlign="right">
