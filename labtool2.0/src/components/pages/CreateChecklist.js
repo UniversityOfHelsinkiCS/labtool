@@ -30,12 +30,9 @@ export const CreateChecklist = props => {
     props.getAllCI()
   }, [])
 
-  useEffect(
-    () => {
-      state.courseDropdowns = createCourseDropdowns()
-    },
-    [state.week]
-  )
+  useEffect(() => {
+    state.courseDropdowns = createCourseDropdowns()
+  }, [state.week])
 
   // Make api call to save checklist to database.
   const handleSubmit = async e => {
@@ -242,12 +239,14 @@ export const CreateChecklist = props => {
   const createCourseDropdowns = () => {
     if (!props.courses || !props.selectedInstance || !Object.keys(props.courses).length) return []
     const courses = state.week > props.selectedInstance.weekAmount ? finalFilter(props.courses) : weekFilter(props.courses)
-    const options = courses.filter(course => props.selectedInstance.id !== course.id).map(course => {
-      return {
-        value: course.id,
-        text: `${course.name} (${course.europeanStart})`
-      }
-    })
+    const options = courses
+      .filter(course => props.selectedInstance.id !== course.id)
+      .map(course => {
+        return {
+          value: course.id,
+          text: `${course.name} (${course.europeanStart})`
+        }
+      })
     return options
   }
 

@@ -233,6 +233,17 @@ describe('<CoursePage /> as teacher', () => {
         tags={tags}
         loading={loading}
         resetLoading={mockFn}
+        courseId={''}
+        user={{ }}
+        createOneComment={mockFn}
+        addLinkToCodeReview={mockFn}
+        coursePageReset={mockFn}
+        toggleCodeReview={mockFn}
+        tagStudent={mockFn}
+        sendEmail={mockFn}
+        updateActiveIndex={mockFn}
+        unTagStudent={mockFn}
+        updateStudentProjectInfo={mockFn}
       />
     )
   })
@@ -279,6 +290,7 @@ describe('<CoursePage /> as teacher', () => {
     */
 
     it('can mark all students with DROPPED tag as dropped', () => {
+      window.confirm = jest.fn(() => true)
       wrapper.find({ children: 'Mark all with dropped tag as dropped out' }).simulate('click')
 
       expect(mockUpdateStudentProjectInfo).toBeCalledWith(expect.objectContaining({ userId: 10031, dropped: true }))
@@ -445,6 +457,17 @@ describe('<CoursePage /> as student', () => {
         tags={tags}
         loading={loading}
         resetLoading={mockFn}
+        courseId={''}
+        user={{ }}
+        createOneComment={mockFn}
+        addLinkToCodeReview={mockFn}
+        coursePageReset={mockFn}
+        toggleCodeReview={mockFn}
+        tagStudent={mockFn}
+        sendEmail={mockFn}
+        updateActiveIndex={mockFn}
+        unTagStudent={mockFn}
+        updateStudentProjectInfo={mockFn}
       />
     )
   })

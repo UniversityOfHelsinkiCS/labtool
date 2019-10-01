@@ -78,6 +78,9 @@ export const handleRequest = store => next => action => {
       .then(res => {
         store.dispatch({ type: `${payload.prefix}SUCCESS`, response: res.data })
       })
-      .catch(err => store.dispatch({ type: `${payload.prefix}FAILURE`, response: err }))
+      .catch(err => {
+        console.error(err)
+        store.dispatch({ type: `${payload.prefix}FAILURE`, response: err })
+      })
   }
 }

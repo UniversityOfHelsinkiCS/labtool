@@ -28,7 +28,6 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
         className="mini ui black button"
         compact={true}
         floated="right"
-        role="button"
       >
         game
       </Button>
@@ -41,7 +40,6 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
         className="mini ui yellow button"
         compact={true}
         floated="right"
-        role="button"
       >
         HTML
       </Button>
@@ -54,7 +52,6 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
         className="mini ui red button"
         compact={true}
         floated="right"
-        role="button"
       >
         Javascript
       </Button>
@@ -171,7 +168,6 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
             <Button
               as="button"
               className="ui center floated green button"
-              role="button"
               type="submit"
             >
               Save
@@ -180,20 +176,17 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
               as="button"
               className="ui center floated button"
               onClick={[Function]}
-              role="button"
               type="button"
             >
               Save as draft
             </Button>
             <Link
-              replace={false}
               to="/labtool/browsereviews/TKT20010.2018.K.A.1/10011"
               type="Cancel"
             >
               <Button
                 as="button"
                 className="ui center floated button"
-                role="button"
                 type="cancel"
               >
                 Cancel
@@ -462,16 +455,16 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
                   }
                 }
                 value="Koodin laadussa parantamisen varaa
-              
-              Algoritmin runko puuttuu
-              
-              Tietorakenteita ei ole luotu
-              
-              README puuttuu
-              
-              Tuntikirjanpito puuttuu
-              
-              "
+
+Algoritmin runko puuttuu
+
+Tietorakenteita ei ole luotu
+
+README puuttuu
+
+Tuntikirjanpito puuttuu
+
+"
               />
               <p
                 className="checklistOutputPoints"
@@ -486,7 +479,6 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
               />
               <Button
                 as="button"
-                role="button"
                 type="submit"
               >
                 Copy to review fields

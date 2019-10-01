@@ -60,12 +60,11 @@ export const FileInput = props => {
             </Form>
           )}
           {uploading && uploadProgress !== null && <Progress percent={uploadProgress} indicating />}
-          {uploading &&
-            uploadError && (
-              <Message error>
-                <p>{uploadError}</p>
-              </Message>
-            )}
+          {uploading && uploadError && (
+            <Message error>
+              <p>{uploadError}</p>
+            </Message>
+          )}
         </Modal.Description>
         <Modal.Actions>
           <Button content="Close" negative onClick={closeDialog} />

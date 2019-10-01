@@ -197,7 +197,7 @@ describe('<StudentTable />', () => {
         filterByAssistant={mockFn}
         filterByTag={mockFn}
         tagStudent={mockFn}
-        untagStudent={mockFn}
+        unTagStudent={mockFn}
         rowClassName="StudentRow"
       />
     )

@@ -289,12 +289,16 @@ export const CoursePage = props => {
             <Icon name="check" />
             <strong> Total Points: </strong>
             {(
-              props.courseData.data.weeks.map(week => week.points).reduce((a, b) => {
-                return a + b
-              }, 0) +
-              props.courseData.data.codeReviews.map(cr => cr.points).reduce((a, b) => {
-                return a + b
-              }, 0)
+              props.courseData.data.weeks
+                .map(week => week.points)
+                .reduce((a, b) => {
+                  return a + b
+                }, 0) +
+              props.courseData.data.codeReviews
+                .map(cr => cr.points)
+                .reduce((a, b) => {
+                  return a + b
+                }, 0)
             )
               .toFixed(2)
               .replace(/[.,]00$/, '')}
@@ -365,12 +369,11 @@ export const CoursePage = props => {
     const heading = droppedOut ? 'Dropped out students' : 'Students'
     const tableClassName = droppedOut ? 'TeachersBottomViewForDroppedOutStudents' : 'TeachersBottomViewForActiveStudents'
     const rowClassName = droppedOut ? 'TableRowForDroppedOutStudents' : 'TableRowForActiveStudents'
-    const dropConvertButton = !droppedOut &&
-      droppedTagExists() && (
-        <Button onClick={() => markAllWithDroppedTagAsDropped(props.courseData)} size="small">
-          Mark all with dropped tag as dropped out
-        </Button>
-      )
+    const dropConvertButton = !droppedOut && droppedTagExists() && (
+      <Button onClick={() => markAllWithDroppedTagAsDropped(props.courseData)} size="small">
+        Mark all with dropped tag as dropped out
+      </Button>
+    )
     return (
       <div className={tableClassName}>
         <Header as="h2">{heading} </Header>

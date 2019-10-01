@@ -307,19 +307,16 @@ exports[`<MassEmailPage /> MassEmailPage Component should render correctly 1`] =
         as="button"
         className="ui green button"
         content="Send"
-        role="button"
         type="submit"
       />
       <br />
       <br />
       <Link
-        replace={false}
         to="/labtool/courses/undefined"
       >
         <Button
           as="button"
           className="ui button"
-          role="button"
           type="cancel"
         >
           Cancel

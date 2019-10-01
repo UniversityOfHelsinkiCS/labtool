@@ -122,29 +122,28 @@ export const ModifyCourseInstancePage = props => {
                       .sort((a, b) => {
                         return a - b
                       })
-                      .map(
-                        cr =>
-                          state.toRemoveCr.includes(cr) ? (
-                            <Popup
-                              key={cr}
-                              trigger={
-                                <Button color="red" value={cr} onClick={handleRemoveChange} compact>
-                                  {cr}
-                                </Button>
-                              }
-                              content={'This code review will be hidden on save'}
-                            />
-                          ) : (
-                            <Popup
-                              key={cr}
-                              trigger={
-                                <Button value={cr} onClick={handleRemoveChange} compact>
-                                  {cr}
-                                </Button>
-                              }
-                              content={'Click to hide this code review on save'}
-                            />
-                          )
+                      .map(cr =>
+                        state.toRemoveCr.includes(cr) ? (
+                          <Popup
+                            key={cr}
+                            trigger={
+                              <Button color="red" value={cr} onClick={handleRemoveChange} compact>
+                                {cr}
+                              </Button>
+                            }
+                            content={'This code review will be hidden on save'}
+                          />
+                        ) : (
+                          <Popup
+                            key={cr}
+                            trigger={
+                              <Button value={cr} onClick={handleRemoveChange} compact>
+                                {cr}
+                              </Button>
+                            }
+                            content={'Click to hide this code review on save'}
+                          />
+                        )
                       )
                   : null}
               </Form.Group>

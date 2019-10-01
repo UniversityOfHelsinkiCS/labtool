@@ -10,18 +10,15 @@ let timeout
  *  Notification, that clears itself after a set of time.
  */
 export const Notification = props => {
-  useEffect(
-    () => {
-      const { message } = props.notification
-      if (message !== undefined) {
-        clearTimeout(timeout)
-        timeout = setTimeout(() => {
-          props.clearNotifications()
-        }, 5000)
-      }
-    },
-    [props.notification.message]
-  )
+  useEffect(() => {
+    const { message } = props.notification
+    if (message !== undefined) {
+      clearTimeout(timeout)
+      timeout = setTimeout(() => {
+        props.clearNotifications()
+      }, 5000)
+    }
+  }, [props.notification.message])
 
   const message = props.notification.message
   const error = props.notification.error

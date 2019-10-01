@@ -135,7 +135,8 @@ export const StudentTable = props => {
     for (; i < props.selectedInstance.weekAmount; i++) {
       headers.push(
         <Table.HeaderCell key={i}>
-          Week<br />
+          Week
+          <br />
           {i + 1}{' '}
         </Table.HeaderCell>
       )
@@ -143,7 +144,10 @@ export const StudentTable = props => {
     for (var ii = 1; ii <= props.selectedInstance.amountOfCodeReviews; ii++) {
       headers.push(
         <Table.HeaderCell key={i + ii}>
-          Code<br />Review<br />
+          Code
+          <br />
+          Review
+          <br />
           {ii}{' '}
         </Table.HeaderCell>
       )
@@ -151,7 +155,9 @@ export const StudentTable = props => {
     if (props.selectedInstance.finalReview) {
       headers.push(
         <Table.HeaderCell key={i + ii + 1}>
-          Final<br />Review{' '}
+          Final
+          <br />
+          Review{' '}
         </Table.HeaderCell>
       )
     }
@@ -291,11 +297,13 @@ export const StudentTable = props => {
       {/* Instructor */}
       <Table.Cell>
         {data.teacherInstanceId && props.selectedInstance.teacherInstances ? (
-          props.selectedInstance.teacherInstances.filter(teacher => teacher.id === data.teacherInstanceId).map(teacher => (
-            <span key={data.id}>
-              {teacher.firsts} {teacher.lastname}
-            </span>
-          ))
+          props.selectedInstance.teacherInstances
+            .filter(teacher => teacher.id === data.teacherInstanceId)
+            .map(teacher => (
+              <span key={data.id}>
+                {teacher.firsts} {teacher.lastname}
+              </span>
+            ))
         ) : (
           <span>not assigned</span>
         )}

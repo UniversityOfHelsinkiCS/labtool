@@ -417,31 +417,9 @@ export const ModifyCourseInstanceReview = props => {
                               ) : null}
                             </p>
                             <select className="toReviewDropdown" onChange={addCodeReview(props.codeReviewLogic.selectedDropdown, data.id)}>
-                              {props.dropdownUsers.map(
-                                d =>
-                                  d.value !== data.id ? (
-                                    props.codeReviewLogic.currentSelections[props.codeReviewLogic.selectedDropdown][data.id] === d.value ? (
-                                      <option selected="selected" key={d.value} value={d.value}>
-                                        {d.text}
-                                      </option>
-                                    ) : (
-                                      <option key={d.value} value={d.value}>
-                                        {d.text}
-                                      </option>
-                                    )
-                                  ) : null
-                              )}
-                            </select>
-                          </div>
-                        ) : null}
-                      </Table.Cell>
-                      <Table.Cell>
-                        {props.codeReviewLogic.showCreate ? (
-                          <select className="toReviewDropdown" onChange={addCodeReview('create', data.id)}>
-                            {props.dropdownUsers.map(
-                              d =>
+                              {props.dropdownUsers.map(d =>
                                 d.value !== data.id ? (
-                                  props.codeReviewLogic.currentSelections['create'][data.id] === d.value ? (
+                                  props.codeReviewLogic.currentSelections[props.codeReviewLogic.selectedDropdown][data.id] === d.value ? (
                                     <option selected="selected" key={d.value} value={d.value}>
                                       {d.text}
                                     </option>
@@ -451,6 +429,26 @@ export const ModifyCourseInstanceReview = props => {
                                     </option>
                                   )
                                 ) : null
+                              )}
+                            </select>
+                          </div>
+                        ) : null}
+                      </Table.Cell>
+                      <Table.Cell>
+                        {props.codeReviewLogic.showCreate ? (
+                          <select className="toReviewDropdown" onChange={addCodeReview('create', data.id)}>
+                            {props.dropdownUsers.map(d =>
+                              d.value !== data.id ? (
+                                props.codeReviewLogic.currentSelections['create'][data.id] === d.value ? (
+                                  <option selected="selected" key={d.value} value={d.value}>
+                                    {d.text}
+                                  </option>
+                                ) : (
+                                  <option key={d.value} value={d.value}>
+                                    {d.text}
+                                  </option>
+                                )
+                              ) : null
                             )}
                             ))
                           </select>

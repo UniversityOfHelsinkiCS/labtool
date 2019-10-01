@@ -112,6 +112,7 @@ describe('<CreateChecklist /> component', () => {
         removeTopic={mockFn}
         removeRow={mockFn}
         getAllCI={mockFn}
+        castPointsToNumber={mockFn}
       />
     )
     wrapper.find('#weekDropdown').prop('onChange')(null, { value: weekChoice })

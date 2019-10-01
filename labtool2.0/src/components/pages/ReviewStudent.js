@@ -98,8 +98,8 @@ export const ReviewStudent = props => {
     e.preventDefault()
     reviewPointsRef.current.inputRef.value = Number(e.target.points.value).toFixed(2)
     /* The below line is as hacky as it is because functional elements cannot directly have refs.
-    * This abomination somehow accesses a textarea that is a child of a div that holds the ref.
-    */
+     * This abomination somehow accesses a textarea that is a child of a div that holds the ref.
+     */
     reviewTextRef.current.getElementsByTagName('textarea')[0].value = e.target.text.value
   }
 
@@ -123,9 +123,11 @@ export const ReviewStudent = props => {
       .reduce((a, b) => {
         return a + b
       }, 0)
-    const codeReviewPoints = studentData[0].codeReviews.map(review => review.points).reduce((a, b) => {
-      return a + b
-    }, 0)
+    const codeReviewPoints = studentData[0].codeReviews
+      .map(review => review.points)
+      .reduce((a, b) => {
+        return a + b
+      }, 0)
     const checkList = props.selectedInstance.checklists.find(checkl => checkl.week === Number(props.ownProps.weekNumber))
     let checklistOutput = ''
     let checklistPoints = 0

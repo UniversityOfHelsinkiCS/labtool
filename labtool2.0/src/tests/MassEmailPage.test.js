@@ -192,6 +192,14 @@ describe('<MassEmailPage />', () => {
         tags={tags}
         loading={loading}
         resetLoading={mockFn}
+        courseId={''}
+        user={{ }}
+        studentInstance={{ }}
+        teacherInstance={{ }}
+        courseInstance={{ }}
+        coursePageReset={mockFn}
+        sendMassEmail={mockFn}
+        addRedirectHook={mockFn}
       />
     )
   })

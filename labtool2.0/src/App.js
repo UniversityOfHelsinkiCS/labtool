@@ -83,17 +83,14 @@ const App = props => {
    *
    * It puts the users data the storage
    */
-  useEffect(
-    () => {
-      const userAndToken = {
-        user: props.user,
-        token: props.token,
-        created: props.created
-      }
-      window.localStorage.setItem('loggedLabtool', JSON.stringify(userAndToken))
-    },
-    [props.user, props.token, props.created]
-  )
+  useEffect(() => {
+    const userAndToken = {
+      user: props.user,
+      token: props.token,
+      created: props.created
+    }
+    window.localStorage.setItem('loggedLabtool', JSON.stringify(userAndToken))
+  }, [props.user, props.token, props.created])
 
   /**
    *  The main component that shows the applications pages.

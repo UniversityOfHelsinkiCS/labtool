@@ -34,7 +34,8 @@ export const FormMarkdownTextArea = props => {
           This field supports{' '}
           <a href="https://guides.github.com/features/mastering-markdown/" target="_blank" rel="noopener noreferrer">
             Markdown
-          </a>.
+          </a>
+          .
         </i>
       </p>
       <Accordion key fluid styled style={{ textAlign: 'start' }}>

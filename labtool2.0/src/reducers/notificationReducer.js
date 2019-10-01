@@ -203,7 +203,7 @@ const notificationReducer = (state = {}, action) => {
         error: false
       }
     case 'STUDENT_PROJECT_INFO_UPDATE_FAILURE': {
-      const { message } = action.response.response.data
+      const { message } = action.response.response ? action.response.response.data : { message: 'Error updating project info' }
       return {
         message,
         error: true

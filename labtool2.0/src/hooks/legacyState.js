@@ -1,5 +1,8 @@
 import { useState } from 'react'
 
+/* eslint react-hooks/rules-of-hooks: off */
+// leave me alone, I know what I'm doing
+
 /*
  * useLegacyState({ stateVariable: defaultValue })
  */
@@ -10,8 +13,7 @@ const useLegacyState = vars => {
   const result = {}
 
   for (const key of keys) {
-    [_get[key], _set[key]] = useState(vars[key]) // eslint-disable-line prettier/prettier
-    // prettier complains about a missing ; (???) for the line above
+    [_get[key], _set[key]] = useState(vars[key])
 
     Object.defineProperty(result, key, {
       enumerable: false,

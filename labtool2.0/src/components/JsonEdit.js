@@ -30,12 +30,9 @@ const JsonEdit = props => {
   const onChange = e => setData(e.target.value)
   const hasValidData = () => !!state.data && !state.error
 
-  useEffect(
-    () => {
-      setData(JSON.stringify(props.initialData, null, 4))
-    },
-    [props.initialData]
-  )
+  useEffect(() => {
+    setData(JSON.stringify(props.initialData, null, 4))
+  }, [props.initialData])
 
   const { downloadName, style } = props
   const { data, open } = state
