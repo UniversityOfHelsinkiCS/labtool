@@ -303,6 +303,13 @@ exports[`<MassEmailPage /> MassEmailPage Component should render correctly 1`] =
         placeholder="Type email here..."
         required={true}
       />
+      <FormCheckbox
+        as={[Function]}
+        control={[Function]}
+        defaultChecked={true}
+        label="Send a copy to all instructors"
+        name="sendToInstructors"
+      />
       <Button
         as="button"
         className="ui green button"

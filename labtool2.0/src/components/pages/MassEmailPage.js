@@ -53,7 +53,7 @@ export class MassEmailPage extends React.Component {
         this.props.addRedirectHook({
           hook: 'MASS_EMAIL_SEND'
         })
-        await this.props.sendMassEmail({ students: sendingTo, content: e.target.content.value }, this.props.selectedInstance.ohid)
+        await this.props.sendMassEmail({ students: sendingTo, content: e.target.content.value, sendToInstructors: e.target.sendToInstructors.checked }, this.props.selectedInstance.ohid)
       }
     }
   }
@@ -93,6 +93,7 @@ export class MassEmailPage extends React.Component {
             <br />
 
             <Form.TextArea name="content" placeholder="Type email here..." defaultValue="" required />
+            <Form.Checkbox name="sendToInstructors" defaultChecked={true} label="Send a copy to all instructors" />
             <Button type="submit" className="ui green button" content="Send" />
 
             <br />
