@@ -155,6 +155,8 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
       let codeReviews = newCodeReviewStates[action.data.reviewNumber]
       //Do not assign code review to students who have not been selected
       codeReviews = codeReviews.filter(cr => !randomizedCodeReviewSet.has(cr.reviewer))
+      //Do not assign code reviews to dropped students
+      codeReviews = codeReviews.filter(cr => !action.data.dropped.includes(cr.reviewer))
 
       const randomizedOrder = [...state.randomizedCodeReview]
       shuffleArray(randomizedOrder)
@@ -251,10 +253,15 @@ export const initAllCheckboxes = data => {
 }
 
 export const randomAssign = data => {
-  return async dispatch => {
+  return async (dispatch, getState) => {
     dispatch({
       type: 'CODE_REVIEW_RANDOMIZE',
-      data: data
+      data: {
+        reviewNumber: data.reviewNumber,
+        dropped: getState()
+          .coursePage.data.filter(user => user.dropped)
+          .map(user => user.id)
+      }
     })
   }
 }
