@@ -30,11 +30,8 @@ jobs:
          paths:
            - ./labtool2.0/node_modules
       - run: cd labtool2.0 && FRONTEND=true CI=true npm test
-workflows:
-  test-build-deploy:
-    jobs:
-      - test-backend
-      - test-frontend
+  publish-backend-trunk:
+    steps:
       - dockerhub/publish:
           requires:
             - test-backend
@@ -45,6 +42,8 @@ workflows:
           filters:
             branches:
               only: trunk
+  publish-backend-master:
+    steps:
       - dockerhub/publish:
           requires:
             - test-backend
@@ -55,6 +54,8 @@ workflows:
           filters:
             branches:
               only: master
+  publish-frontend-trunk:
+    steps:
       - dockerhub/publish:
           requires:
             - test-frontend
@@ -64,6 +65,8 @@ workflows:
           filters:
             branches:
               only: trunk
+  publish-frontend-master:
+    steps:
       - dockerhub/publish:
           requires:
             - test-frontend
@@ -73,3 +76,13 @@ workflows:
           filters:
             branches:
               only: master
+
+workflows:
+  test-build-deploy:
+    jobs:
+      - test-backend
+      - test-frontend
+      - publish-backend-trunk
+      - publish-backend-master
+      - publish-frontend-trunk
+      - publish-frontend-master
