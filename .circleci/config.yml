@@ -1,38 +1,41 @@
 version: 2.1
 orbs:
   dockerhub: circleci/docker@0.5.1
+jobs: 
+  - test-backend:
+      docker:
+        - image: circleci/node:8
+      steps:
+        - checkout
+        - run: cd backend
+        - restore_cache:
+           key: dependency-cache-backend-{{ checksum "package.json" }}
+        - run: npm install
+        - save_cache:
+           key: dependency-cache-backend-{{ checksum "package.json" }}
+           paths:
+             - ./node_modules
+        - run: npm run create_test_db
+        - run: BACKEND=true npm test
+  - test-frontend:
+      docker:
+        - image: circleci/node:8
+      steps:
+        - checkout
+        - run: cd labtool2.0
+        - restore_cache:
+           key: dependency-cache-frontend-{{ checksum "package.json" }}
+        - run: npm install
+        - save_cache:
+           key: dependency-cache-frontend-{{ checksum "package.json" }}
+           paths:
+             - ./node_modules
+        - run: FRONTEND=true CI=true npm test
 workflows:
   test-build-deploy:
     jobs:
-      - test-backend:
-          docker:
-            - image: circleci/node:8
-          steps:
-            - checkout
-            - run: cd backend
-            - restore_cache:
-               key: dependency-cache-{{ checksum "package.json" }}
-            - run: npm install
-            - save_cache:
-               key: dependency-cache-{{ checksum "package.json" }}
-               paths:
-                 - ./node_modules
-            - run: npm run create_test_db
-            - run: BACKEND=true npm test
-      - test-frontend:
-          docker:
-            - image: circleci/node:8
-          steps:
-            - checkout
-            - run: cd labtool2.0
-            - restore_cache:
-                key: dependency-cache-{{ checksum "package.json" }}
-            - run: npm install
-            - save_cache:
-                key: dependency-cache-{{ checksum "package.json" }}
-                paths:
-                  - ./node_modules
-            - run: FRONTEND=true CI=true npm test
+      - test-backend
+      - test-frontend
       - dockerhub/publish:
           requires:
             - test-backend
