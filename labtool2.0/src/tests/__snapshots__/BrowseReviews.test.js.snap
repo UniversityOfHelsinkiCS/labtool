@@ -38,47 +38,62 @@ exports[`<BrowseReviews /> BrowseReviews Component should render correctly 1`] =
       key="0"
     >
       <CardContent>
-        <h2>
+        <Header
+          as="h2"
+        >
           Maarit Mirja
            
           Opiskelija
            (
           014578343
           )
-        </h2>
-        <h3>
-          <a
-            href="mailto:maarit.opiskelija@helsinki.fi"
-          >
-            maarit.opiskelija@helsinki.fi
-          </a>
-        </h3>
-        <h3>
-          Tiran labraprojekti
-           
+          <HeaderSubheader>
+            <a
+              href="mailto:maarit.opiskelija@helsinki.fi"
+            >
+              maarit.opiskelija@helsinki.fi
+            </a>
+          </HeaderSubheader>
+        </Header>
+        <div
+          style={
+            Object {
+              "display": "inline-block",
+            }
+          }
+        >
           <a
             href="http://github.com/tiralabra1"
             rel="noopener noreferrer"
             target="_blank"
           >
-            http://github.com/tiralabra1
+            <Icon
+              as="i"
+              color="black"
+              name="github"
+            />
+            Tiran labraprojekti
           </a>
-        </h3>
-        <p>
-          Has dropped course: false
-        </p>
+          <br />
+          <p
+            className="noPrevious"
+          >
+            Has not taken part in this course before
+          </p>
+        </div>
         <Button
           as="button"
+          color="red"
           onClick={[Function]}
           role="button"
+          style={
+            Object {
+              "float": "right",
+            }
+          }
         >
           Mark as dropped
         </Button>
-        <p
-          className="noPrevious"
-        >
-          Has not taken part in this course before
-        </p>
       </CardContent>
     </Card>
     <span
