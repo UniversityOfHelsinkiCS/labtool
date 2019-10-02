@@ -38,7 +38,8 @@ workflows:
       - dockerhub/publish:
           requires:
             - test-backend
-          dockerfile: backend/Dockerfile
+          path: backend
+          dockerfile: Dockerfile
           image: $DOCKER_USER/$CIRCLE_PROJECT_REPONAME-backend
           tag: 'test'
           filters:
@@ -47,7 +48,8 @@ workflows:
       - dockerhub/publish:
           requires:
             - test-backend
-          dockerfile: backend/Dockerfile
+          path: backend
+          dockerfile: Dockerfile
           image: $DOCKER_USER/$CIRCLE_PROJECT_REPONAME-backend
           tag: 'staging'
           filters:
