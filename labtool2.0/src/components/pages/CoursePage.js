@@ -480,6 +480,7 @@ export const CoursePage = props => {
         <br />
         <br />
         <br />
+        <br />
       </div>
     )
   } else {
