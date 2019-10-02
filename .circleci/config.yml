@@ -10,13 +10,13 @@ workflows:
           steps:
             - checkout
             - run: cd backend
-	    - restore_cache:
-                key: dependency-cache-{{ checksum "package.json" }}
+            - restore_cache:
+               key: dependency-cache-{{ checksum "package.json" }}
             - run: npm install
             - save_cache:
-                key: dependency-cache-{{ checksum "package.json" }}
-                paths:
-                  - ./node_modules
+               key: dependency-cache-{{ checksum "package.json" }}
+               paths:
+                 - ./node_modules
             - run: npm run create_test_db
             - run: BACKEND=true npm test
       - test-frontend:
@@ -25,7 +25,7 @@ workflows:
           steps:
             - checkout
             - run: cd labtool2.0
-	    - restore_cache:
+            - restore_cache:
                 key: dependency-cache-{{ checksum "package.json" }}
             - run: npm install
             - save_cache:
