@@ -8,13 +8,12 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-         key: dependency-cache-backend-{{ checksum "package.json" }}
+         key: dependency-cache-backend-{{ checksum "backend/package.json" }}
       - run: cd backend && npm install
       - save_cache:
-         key: dependency-cache-backend-{{ checksum "package.json" }}
+         key: dependency-cache-backend-{{ checksum "backend/package.json" }}
          paths:
            - ./backend/node_modules
-      - run: cd backend && npm run create_test_db
       - run: cd backend && BACKEND=true npm test
   test-frontend:
     docker:
@@ -22,10 +21,10 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-         key: dependency-cache-frontend-{{ checksum "package.json" }}
+         key: dependency-cache-frontend-{{ checksum "labtool2.0/package.json" }}
       - run: cd labtool2.0 && npm install
       - save_cache:
-         key: dependency-cache-frontend-{{ checksum "package.json" }}
+         key: dependency-cache-frontend-{{ checksum "labtool2.0/package.json" }}
          paths:
            - ./labtool2.0/node_modules
       - run: cd labtool2.0 && FRONTEND=true CI=true npm test
