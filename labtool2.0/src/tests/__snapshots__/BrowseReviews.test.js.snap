@@ -84,7 +84,6 @@ exports[`<BrowseReviews /> BrowseReviews Component should render correctly 1`] =
           as="button"
           color="red"
           onClick={[Function]}
-          role="button"
           style={
             Object {
               "float": "right",
