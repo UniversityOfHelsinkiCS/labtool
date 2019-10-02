@@ -86,27 +86,27 @@ workflows:
     jobs:
       - test-backend
       - test-frontend
-      publish-backend-trunk:
-        requires:
-          - test-backend
-        filters:
-          branches:
-            only: trunk
-      publish-backend-master:
-        requires:
-          - test-backend
-        filters:
-          branches:
-            only: master
-      publish-frontend-trunk:
-        requires:
-          - test-frontend
-        filters:
-          branches:
-            only: trunk
-      publish-frontend-master:
-        requires:
-          - test-frontend
-        filters:
-          branches:
-            only: master
+      - publish-backend-trunk:
+          requires:
+            - test-backend
+          filters:
+            branches:
+              only: trunk
+      - publish-backend-master:
+          requires:
+            - test-backend
+          filters:
+            branches:
+              only: master
+      - publish-frontend-trunk:
+          requires:
+            - test-frontend
+          filters:
+            branches:
+              only: trunk
+      - publish-frontend-master:
+          requires:
+            - test-frontend
+          filters:
+            branches:
+              only: master
