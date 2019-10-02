@@ -30,44 +30,83 @@ jobs:
          paths:
            - ./labtool2.0/node_modules
       - run: cd labtool2.0 && FRONTEND=true CI=true npm test
+  publish-backend-trunk:
+    executor: dockerhub/machine
+    steps:
+    - checkout
+    - dockerhub/check
+    - dockerhub/build:
+        path: backend
+        image: $DOCKER_USER/$CIRCLE_PROJECT_REPONAME-backend
+        dockerfile: backend/Dockerfile
+        tag: 'test'
+    - dockerhub/push:
+        image: $DOCKER_USER/$CIRCLE_PROJECT_REPONAME-backend
+        tag: 'test'
+  publish-backend-master:
+    executor: dockerhub/machine
+    steps:
+    - checkout
+    - dockerhub/check
+    - dockerhub/build:
+        path: backend
+        image: $DOCKER_USER/$CIRCLE_PROJECT_REPONAME-backend
+        dockerfile: backend/Dockerfile
+        tag: 'staging'
+    - dockerhub/push:
+        image: $DOCKER_USER/$CIRCLE_PROJECT_REPONAME-backend
+        tag: 'staging'
+  publish-frontend-trunk:
+    executor: dockerhub/machine
+    steps:
+    - checkout
+    - dockerhub/check
+    - dockerhub/build:
+        image: $DOCKER_USER/$CIRCLE_PROJECT_REPONAME
+        dockerfile: Dockerfile.test
+        tag: 'test'
+    - dockerhub/push:
+        image: $DOCKER_USER/$CIRCLE_PROJECT_REPONAME
+        tag: 'test'
+  publish-frontend-master:
+    executor: dockerhub/machine
+    steps:
+    - checkout
+    - dockerhub/check
+    - dockerhub/build:
+        image: $DOCKER_USER/$CIRCLE_PROJECT_REPONAME
+        dockerfile: Dockerfile
+        tag: 'staging'
+    - dockerhub/push:
+        image: $DOCKER_USER/$CIRCLE_PROJECT_REPONAME
+        tag: 'staging'
+
 workflows:
   test-build-deploy:
     jobs:
       - test-backend
       - test-frontend
-      - dockerhub/publish:
+      - publish-backend-trunk:
           requires:
             - test-backend
-          dockerfile: backend/Dockerfile
-          image: $DOCKER_USER/$CIRCLE_PROJECT_REPONAME-backend
-          tag: 'test'
           filters:
             branches:
               only: trunk
-      - dockerhub/publish:
+      - publish-backend-master:
           requires:
             - test-backend
-          dockerfile: backend/Dockerfile
-          image: $DOCKER_USER/$CIRCLE_PROJECT_REPONAME-backend
-          tag: 'staging'
           filters:
             branches:
               only: master
-      - dockerhub/publish:
+      - publish-frontend-trunk:
           requires:
             - test-frontend
-          dockerfile: Dockerfile.test
-          image: $DOCKER_USER/$CIRCLE_PROJECT_REPONAME
-          tag: 'test'
           filters:
             branches:
               only: trunk
-      - dockerhub/publish:
+      - publish-frontend-master:
           requires:
             - test-frontend
-          dockerfile: Dockerfile
-          image: $DOCKER_USER/$CIRCLE_PROJECT_REPONAME
-          tag: 'staging'
           filters:
             branches:
               only: master
