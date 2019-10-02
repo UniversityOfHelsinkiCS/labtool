@@ -1,0 +1,18 @@
+# This is a test Dockerfile that is designed for test environments only.
+# It enables the fake login UI which allows the client to log in as any
+# user as chosen from a dropdown. This dropdown however only works if
+# the backend also allows it.
+# 
+# You should *NOT* use this image in a production environment!
+# 
+FROM node:8
+ADD ./labtool2.0 /code
+WORKDIR /code
+COPY ./labtool2.0/package.json ../
+RUN npm ci
+RUN npm run build
+RUN npm install -g serve@6.5.8
+ENV PATH=".:${PATH}"
+ENV REACT_APP_USE_FAKE_LOGIN=ThisIsNotProduction
+EXPOSE 3000
+CMD [ "serve", "-p", "3000", "-s", "build" ]
