@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Card, Accordion, Icon, Form, Comment, Input, Popup, Loader, Label } from 'semantic-ui-react'
+import { Button, Card, Accordion, Icon, Form, Comment, Input, Popup, Loader, Label, Header } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { createOneComment } from '../../services/comment'
@@ -165,21 +165,30 @@ export class BrowseReviews extends Component {
   renderStudentCard = student => (
     <Card key={student.id} fluid color="yellow" className="studentCard">
       <Card.Content>
-        <h2>
+        <Header as="h2">
           {student.User.firsts} {student.User.lastname} ({student.User.studentNumber})
-        </h2>
-        <h3>
-          <a href={`mailto:${student.User.email}`}>{student.User.email}</a>
-        </h3>
-        <h3>
-          {student.projectName}{' '}
+          {student.dropped && (
+            <Label style={{ marginTop: 5, float: 'right' }}>
+              <Icon name="warning sign" color="red" />Has dropped course
+            </Label>
+          )}
+          <Header.Subheader>
+            <a href={`mailto:${student.User.email}`}>{student.User.email}</a>
+          </Header.Subheader>
+        </Header>
+        <div style={{ display: 'inline-block' }}>
           <a href={student.github} target="_blank" rel="noopener noreferrer">
-            {student.github}
+            <Icon name="github" color="black" />
+            {student.projectName}
           </a>
-        </h3>
-        <p>{`Has dropped course: ${student.dropped}`}</p>
-        {<Button onClick={() => this.handleMarkAsDropped(!student.dropped)}>{student.dropped ? 'Mark as non-dropped' : 'Mark as dropped'}</Button>}
-        {this.renderStudentPreviousParticipation()}
+          <br />
+          {this.renderStudentPreviousParticipation()}
+        </div>
+        {
+          <Button color="red" style={{ float: 'right' }} onClick={() => this.handleMarkAsDropped(!student.dropped)}>
+            {student.dropped ? 'Mark as non-dropped' : 'Mark as dropped'}
+          </Button>
+        }
       </Card.Content>
     </Card>
   )
