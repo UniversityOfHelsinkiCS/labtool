@@ -20,8 +20,10 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
         additionLabel="Add "
         additionPosition="top"
         closeOnBlur={true}
+        closeOnEscape={true}
         deburr={false}
         icon="dropdown"
+        id="weekDropdown"
         minCharacters={1}
         noResultsMessage="No results found."
         onChange={[Function]}
@@ -43,7 +45,6 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
           as="button"
           disabled={true}
           onClick={[Function]}
-          role="button"
           type="button"
         >
           Copy
@@ -53,20 +54,14 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
           additionPosition="top"
           className="courseDropdown"
           closeOnBlur={true}
+          closeOnEscape={true}
           deburr={false}
           icon="dropdown"
           minCharacters={1}
           noResultsMessage="No results found."
           onChange={[Function]}
           openOnFocus={true}
-          options={
-            Array [
-              Object {
-                "text": "Ohjelmistotekniikan menetelmät (11.03.2018)",
-                "value": 10012,
-              },
-            ]
-          }
+          options={Array []}
           placeholder="Copy checklist from another course"
           renderLabel={[Function]}
           searchInput="text"
@@ -123,7 +118,6 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
                 className="deleteButton"
                 color="red"
                 onClick={[Function]}
-                role="button"
                 size="tiny"
                 type="button"
               >
@@ -157,7 +151,6 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
                 className="deleteButton"
                 color="red"
                 onClick={[Function]}
-                role="button"
                 size="tiny"
                 type="button"
               >
@@ -231,8 +224,16 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
           >
             <Popup
               content="Add new checkbox"
-              keepInViewPort={true}
-              on="hover"
+              disabled={false}
+              eventsEnabled={true}
+              offset={0}
+              on={
+                Array [
+                  "click",
+                  "hover",
+                ]
+              }
+              pinned={false}
               position="top left"
               trigger={
                 <Button
@@ -243,7 +244,6 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
                       "name": "add",
                     }
                   }
-                  role="button"
                   type="submit"
                 />
               }
@@ -265,7 +265,6 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
                 className="deleteButton"
                 color="red"
                 onClick={[Function]}
-                role="button"
                 size="tiny"
                 type="button"
               >
@@ -299,7 +298,6 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
                 className="deleteButton"
                 color="red"
                 onClick={[Function]}
-                role="button"
                 size="tiny"
                 type="button"
               >
@@ -373,8 +371,16 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
           >
             <Popup
               content="Add new checkbox"
-              keepInViewPort={true}
-              on="hover"
+              disabled={false}
+              eventsEnabled={true}
+              offset={0}
+              on={
+                Array [
+                  "click",
+                  "hover",
+                ]
+              }
+              pinned={false}
               position="top left"
               trigger={
                 <Button
@@ -385,7 +391,6 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
                       "name": "add",
                     }
                   }
-                  role="button"
                   type="submit"
                 />
               }
@@ -399,8 +404,16 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
         >
           <Popup
             content="Add new topic"
-            keepInViewPort={true}
-            on="hover"
+            disabled={false}
+            eventsEnabled={true}
+            offset={0}
+            on={
+              Array [
+                "click",
+                "hover",
+              ]
+            }
+            pinned={false}
             position="top left"
             trigger={
               <Button
@@ -412,7 +425,6 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
                     "size": "large",
                   }
                 }
-                role="button"
                 type="submit"
               />
             }
@@ -436,8 +448,16 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
               <Popup
                 className="maxPointsIcon"
                 content="The total does not match maximum weekly points for this course."
-                keepInViewPort={true}
-                on="hover"
+                disabled={false}
+                eventsEnabled={true}
+                offset={0}
+                on={
+                  Array [
+                    "click",
+                    "hover",
+                  ]
+                }
+                pinned={false}
                 position="top left"
                 trigger={
                   <Icon
@@ -459,7 +479,6 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
           as="button"
           className="saveButton"
           color="green"
-          role="button"
           size="large"
           type="submit"
         >

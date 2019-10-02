@@ -1,4 +1,5 @@
-import React, { Component } from 'react'
+import React, { useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { Button, Card, Accordion, Icon, Form, Comment, Input, Popup, Loader, Label, Header } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
@@ -11,6 +12,7 @@ import { sendEmail } from '../../services/email'
 import { resetLoading } from '../../reducers/loadingReducer'
 import { createCourseIdWithYearAndTerm } from '../../util/format'
 import { getCoursesByStudentId } from '../../services/studentinstances'
+import useLegacyState from '../../hooks/legacyState'
 
 import BackButton from '../BackButton'
 import LabtoolComment from '../LabtoolComment'
@@ -19,75 +21,70 @@ import { FormMarkdownTextArea } from '../MarkdownTextArea'
 /**
  * Maps all comments from a single instance from coursePage reducer
  */
-export class BrowseReviews extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      openWeeks: {},
-      initialLoading: props.initialLoading !== undefined ? this.props.initialLoading : true
+export const BrowseReviews = props => {
+  const state = useLegacyState({
+    openWeeks: {},
+    initialLoading: props.initialLoading !== undefined ? props.initialLoading : true
+  })
+
+  useEffect(() => {
+    // run on component mount
+    props.resetLoading()
+    props.getOneCI(props.courseId)
+    props.coursePageInformation(props.courseId)
+    props.getCoursesByStudentId(Number(props.studentInstance))
+    if (!props.loading.loading && !state.openWeeks[props.selectedInstance.currentWeek - 1]) {
+      state.openWeeks = { [props.selectedInstance.currentWeek - 1]: true }
     }
-  }
+  }, [])
 
-  componentWillMount = async () => {
-    await this.props.resetLoading()
-    this.props.getOneCI(this.props.courseId)
-    this.props.coursePageInformation(this.props.courseId)
-    this.props.getCoursesByStudentId(Number(this.props.studentInstance))
-  }
-
-  componentDidMount() {
-    if (!this.props.loading.loading && !this.state.openWeeks[this.props.selectedInstance.currentWeek - 1]) {
-      this.setState({ openWeeks: { [this.props.selectedInstance.currentWeek - 1]: true } })
+  useEffect(() => {
+    if (!props.loading.loading && state.initialLoading) {
+      state.initialLoading = false
     }
-  }
+  }, [props.loading.loading, state.initialLoading])
 
-  componentDidUpdate() {
-    if (!this.props.loading.loading && this.state.initialLoading) {
-      this.setState({ initialLoading: false })
-    }
-  }
-
-  handleClick = (e, titleProps) => {
+  const handleClick = (e, titleProps) => {
     const { index } = titleProps
-    const { openWeeks } = this.state
+    const { openWeeks } = state
     const numberOfOpen = Object.values(openWeeks).filter(x => x).length
 
     if (numberOfOpen === 0) {
       // if no reviews open, open the clicked tab
-      this.setState({ openWeeks: { [index]: true } })
+      state.openWeeks = { [index]: true }
     } else if (numberOfOpen === 1) {
       // if one open, open the clicked tab and close everything else,
       // or close everything if we clicked the open one
-      this.setState({ openWeeks: { [index]: !openWeeks[index] } })
+      state.openWeeks = { [index]: !openWeeks[index] }
     } else {
       // if multiple open, simply toggle open/close
-      this.setState({ openWeeks: { ...openWeeks, [index]: !openWeeks[index] } })
+      state.openWeeks = { ...openWeeks, [index]: !openWeeks[index] }
     }
   }
 
-  getMaximumIndexForStudent = student => {
+  const getMaximumIndexForStudent = student => {
     // how many reviews will there be?
-    return this.props.selectedInstance.weekAmount + student.codeReviews.length + 1
+    return props.selectedInstance.weekAmount + student.codeReviews.length + 1
   }
 
-  hasAllReviewsOpen = student => {
-    return Object.values(this.state.openWeeks).filter(x => x).length === this.getMaximumIndexForStudent(student)
+  const hasAllReviewsOpen = student => {
+    return Object.values(state.openWeeks).filter(x => x).length === getMaximumIndexForStudent(student)
   }
 
-  handleClickShowAll = student => () => {
+  const handleClickShowAll = student => () => {
     const openWeeks = {}
-    const maximumIndex = this.getMaximumIndexForStudent(student)
+    const maximumIndex = getMaximumIndexForStudent(student)
     for (let i = 0; i < maximumIndex; i++) {
       openWeeks[i] = true
     }
-    this.setState({ openWeeks })
+    state.openWeeks = openWeeks
   }
 
-  handleClickHideAll = () => {
-    this.setState({ openWeeks: {} })
+  const handleClickHideAll = () => {
+    state.openWeeks = {}
   }
 
-  handleSubmit = async e => {
+  const handleSubmit = async e => {
     e.preventDefault()
     const content = {
       hidden: e.target.hidden.checked,
@@ -96,59 +93,57 @@ export class BrowseReviews extends Component {
     }
     document.getElementById(e.target.name).reset()
     try {
-      await this.props.createOneComment(content)
+      await props.createOneComment(content)
     } catch (error) {
       console.error(error)
     }
   }
 
-  handleMarkAsDropped = async dropped => {
-    await this.props.updateStudentProjectInfo({
-      ohid: this.props.selectedInstance.ohid,
-      userId: this.props.courseData.data.find(data => data.id === Number(this.props.studentInstance)).userId,
+  const handleMarkAsDropped = async dropped => {
+    await props.updateStudentProjectInfo({
+      ohid: props.selectedInstance.ohid,
+      userId: props.courseData.data.find(data => data.id === Number(props.studentInstance)).userId,
       dropped
     })
   }
 
-  sortCommentsByDate = comments => {
+  const sortCommentsByDate = comments => {
     return comments.sort((a, b) => {
       return new Date(a.createdAt) - new Date(b.createdAt)
     })
   }
 
-  gradeCodeReview = (reviewNumber, studentInstanceId) => async e => {
+  const gradeCodeReview = (reviewNumber, studentInstanceId) => async e => {
     e.preventDefault()
     const data = {
       reviewNumber,
       studentInstanceId: Number(studentInstanceId),
       points: Number(e.target.points.value)
     }
-    this.props.gradeCodeReview(data)
+    props.gradeCodeReview(data)
   }
 
-  sendCommentEmail = commentId => async () => {
-    this.props.sendEmail({
+  const sendCommentEmail = commentId => async () => {
+    props.sendEmail({
       commentId,
       role: 'teacher'
     })
   }
 
-  sendWeekEmail = weekId => async () => {
-    this.props.sendEmail({
+  const sendWeekEmail = weekId => async () => {
+    props.sendEmail({
       weekId,
       role: 'teacher'
     })
   }
 
-  isTeacher = () => {
-    return this.props.courseData.role === 'teacher'
+  const isTeacher = () => {
+    return props.courseData.role === 'teacher'
   }
 
   //get student's other participations in the same course
-  renderStudentPreviousParticipation = () => {
-    const previousParticipations = this.props.studentInstanceToBeReviewed.filter(
-      courseInstance => courseInstance.ohid.includes(this.props.courseId.substring(0, 8)) && courseInstance.ohid !== this.props.courseId
-    )
+  const renderStudentPreviousParticipation = () => {
+    const previousParticipations = props.studentInstanceToBeReviewed.filter(courseInstance => courseInstance.ohid.includes(props.courseId.substring(0, 8)) && courseInstance.ohid !== props.courseId)
     if (previousParticipations.length === 0) {
       return <p className="noPrevious">Has not taken part in this course before</p>
     }
@@ -157,12 +152,14 @@ export class BrowseReviews extends Component {
         <p className style={{ color: 'red' }}>
           Has taken this course before
         </p>
-        {previousParticipations.map(participation => <p key={participation.id}>{createCourseIdWithYearAndTerm(participation.ohid, participation.start)}</p>)}
+        {previousParticipations.map(participation => (
+          <p key={participation.id}>{createCourseIdWithYearAndTerm(participation.ohid, participation.start)}</p>
+        ))}
       </div>
     )
   }
 
-  renderStudentCard = student => (
+  const renderStudentCard = student => (
     <Card key={student.id} fluid color="yellow" className="studentCard">
       <Card.Content>
         <Header as="h2">
@@ -182,10 +179,10 @@ export class BrowseReviews extends Component {
             {student.projectName}
           </a>
           <br />
-          {this.renderStudentPreviousParticipation()}
+          {renderStudentPreviousParticipation()}
         </div>
         {
-          <Button color="red" style={{ float: 'right' }} onClick={() => this.handleMarkAsDropped(!student.dropped)}>
+          <Button color="red" style={{ float: 'right' }} onClick={() => handleMarkAsDropped(!student.dropped)}>
             {student.dropped ? 'Mark as non-dropped' : 'Mark as dropped'}
           </Button>
         }
@@ -193,21 +190,21 @@ export class BrowseReviews extends Component {
     </Card>
   )
 
-  renderComment = isFinalWeek => comment => {
+  const renderComment = (isFinalWeek, comment) => {
     /* This hack compares user's name to comment.from and hides the email notification button when they don't match. */
-    const userIsCommandSender = comment.from.includes(this.props.user.user.firsts) && comment.from.includes(this.props.user.user.lastname)
+    const userIsCommandSender = comment.from.includes(props.user.user.firsts) && comment.from.includes(props.user.user.lastname)
 
-    return <LabtoolComment key={comment.id} comment={comment} allowNotify={!isFinalWeek && userIsCommandSender} sendCommentEmail={this.sendCommentEmail(comment.id)} />
+    return <LabtoolComment key={comment.id} comment={comment} allowNotify={!isFinalWeek && userIsCommandSender} sendCommentEmail={sendCommentEmail(comment.id)} />
   }
 
-  renderWeek = (i, week, studentInstance, isFinalWeek) => {
-    const { openWeeks } = this.state
-    const reviewIndex = isFinalWeek ? this.props.selectedInstance.weekAmount + 1 : i + 1
+  const renderWeek = (i, week, studentInstance, isFinalWeek) => {
+    const { openWeeks } = state
+    const reviewIndex = isFinalWeek ? props.selectedInstance.weekAmount + 1 : i + 1
 
     if (week) {
       return (
         <Accordion fluid styled>
-          <Accordion.Title active={openWeeks[i]} index={i} onClick={this.handleClick}>
+          <Accordion.Title active={openWeeks[i]} index={i} onClick={handleClick}>
             <Icon name="dropdown" /> {isFinalWeek ? 'Final Review' : `Week ${i + 1}`}, points {week.points}
           </Accordion.Title>
           <Accordion.Content active={openWeeks[i]}>
@@ -216,7 +213,7 @@ export class BrowseReviews extends Component {
                 <h4> Points {week.points} </h4>
                 <h4> Feedback </h4>
                 <ReactMarkdown>{week.feedback}</ReactMarkdown>{' '}
-                {this.isTeacher() && week.instructorNotes ? (
+                {isTeacher() && week.instructorNotes ? (
                   <div>
                     <br />
                     <h4>Review notes for instructors </h4>
@@ -233,7 +230,7 @@ export class BrowseReviews extends Component {
                       Notified <Icon name="check" color="green" />
                     </Label>
                   ) : (
-                    <Button type="button" onClick={this.sendWeekEmail(week.id)} size="small">
+                    <Button type="button" onClick={sendWeekEmail(week.id)} size="small">
                       Send email notification
                     </Button>
                   )}
@@ -243,14 +240,14 @@ export class BrowseReviews extends Component {
               )}
             </Card>
             <h4> Comments </h4>
-            <Comment.Group>{week ? this.sortCommentsByDate(week.comments).map(this.renderComment(isFinalWeek)) : <h4> No comments </h4>}</Comment.Group>
-            <Form reply onSubmit={this.handleSubmit} name={week.id} id={week.id}>
+            <Comment.Group>{week ? sortCommentsByDate(week.comments).map(c => renderComment(isFinalWeek, c)) : <h4> No comments </h4>}</Comment.Group>
+            <Form reply onSubmit={handleSubmit} name={week.id} id={week.id}>
               <FormMarkdownTextArea name="content" placeholder="Your comment..." defaultValue="" />
               <Form.Checkbox label="Add comment for instructors only" name="hidden" />
               <Button content="Add Reply" labelPosition="left" icon="edit" primary />
             </Form>
             <h3>Review</h3>
-            <Link to={`/labtool/reviewstudent/${this.props.selectedInstance.ohid}/${studentInstance}/${reviewIndex}`}>
+            <Link to={`/labtool/reviewstudent/${props.selectedInstance.ohid}/${studentInstance}/${reviewIndex}`}>
               <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'edit', color: 'black', size: 'large' }} />} content={isFinalWeek ? 'Edit final review' : 'Edit review'} />
             </Link>
           </Accordion.Content>
@@ -259,13 +256,13 @@ export class BrowseReviews extends Component {
     } else {
       return (
         <Accordion fluid styled>
-          <Accordion.Title active={openWeeks[i]} index={i} onClick={this.handleClick}>
+          <Accordion.Title active={openWeeks[i]} index={i} onClick={handleClick}>
             <Icon name="dropdown" /> {isFinalWeek ? 'Final Review' : `Week ${i + 1}`}{' '}
           </Accordion.Title>
           <Accordion.Content active={openWeeks[i]}>
             <h4> Not Graded </h4>
             <h4> No comments </h4>
-            <Link to={`/labtool/reviewstudent/${this.props.selectedInstance.ohid}/${studentInstance}/${reviewIndex}`}>
+            <Link to={`/labtool/reviewstudent/${props.selectedInstance.ohid}/${studentInstance}/${reviewIndex}`}>
               <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'edit', color: 'black', size: 'large' }} />} content={isFinalWeek ? 'Give Final Review' : 'Review week'} />
             </Link>
           </Accordion.Content>
@@ -274,21 +271,21 @@ export class BrowseReviews extends Component {
     }
   }
 
-  renderCodeReview = (i, cr, studentInstance) => {
-    const { openWeeks } = this.state
+  const renderCodeReview = (i, cr, studentInstance) => {
+    const { openWeeks } = state
 
     return (
       <Accordion fluid styled>
         {' '}
-        <Accordion.Title active={openWeeks[i]} index={i} onClick={this.handleClick}>
+        <Accordion.Title active={openWeeks[i]} index={i} onClick={handleClick}>
           <Icon name="dropdown" /> Code Review {cr.reviewNumber} {cr.points !== null ? ', points ' + cr.points : ''}
         </Accordion.Title>
         <Accordion.Content active={openWeeks[i]}>
           <p>
-            <strong>Project to review:</strong> {this.props.courseData.data.find(data => data.id === cr.toReview).projectName} <br />
+            <strong>Project to review:</strong> {props.courseData.data.find(data => data.id === cr.toReview).projectName} <br />
             <strong>GitHub:</strong>{' '}
-            <a href={this.props.courseData.data.find(data => data.id === cr.toReview).github} target="_blank" rel="noopener noreferrer">
-              {this.props.courseData.data.find(data => data.id === cr.toReview).github}
+            <a href={props.courseData.data.find(data => data.id === cr.toReview).github} target="_blank" rel="noopener noreferrer">
+              {props.courseData.data.find(data => data.id === cr.toReview).github}
             </a>
           </p>
           <strong>Code review:</strong>{' '}
@@ -300,7 +297,7 @@ export class BrowseReviews extends Component {
             'No review linked yet'
           )}
           {cr.points !== null ? <h4>{cr.points} points</h4> : <h4>Not graded yet</h4>}
-          <Form onSubmit={this.gradeCodeReview(cr.reviewNumber, studentInstance)}>
+          <Form onSubmit={gradeCodeReview(cr.reviewNumber, studentInstance)}>
             <label>Points </label>
             <Input name="points" defaultValue={cr.points ? cr.points : ''} type="number" step="0.01" style={{ width: '100px' }} />
             <Input type="submit" value="Grade" />
@@ -310,74 +307,72 @@ export class BrowseReviews extends Component {
     )
   }
 
-  render() {
-    if (this.state.initialLoading) {
-      return <Loader active />
-    }
-
-    const createHeaders = (studhead, studentInstance) => {
-      let headers = []
-      const weekMatcher = i => week => week.weekNumber === i + 1
-      studhead.data.map(student => {
-        // studentInstance is id of student. Type: String
-        // Tämä pitää myös korjata.
-        if (student.id === Number(studentInstance)) {
-          headers.push(this.renderStudentCard(student))
-          headers.push(
-            <span>
-              {this.hasAllReviewsOpen(student) ? (
-                <Button type="button" onClick={this.handleClickHideAll} size="small">
-                  Hide all reviews
-                </Button>
-              ) : (
-                <Button type="button" onClick={this.handleClickShowAll(student)} size="small">
-                  Show all reviews
-                </Button>
-              )}
-              <br />
-            </span>
-          )
-          let i = 0
-          let ii = 0
-          for (; i < this.props.selectedInstance.weekAmount; i++) {
-            const weeks = student.weeks.find(weekMatcher(i))
-            headers.push(this.renderWeek(i, weeks, studentInstance, false))
-          }
-          student.codeReviews
-            .sort((a, b) => {
-              return a.reviewNumber - b.reviewNumber
-            })
-            .forEach(cr => {
-              headers.push(this.renderCodeReview(i + ii + 1, cr, studentInstance))
-              ii++
-            })
-          if (this.props.selectedInstance.finalReview) {
-            const finalWeek = student.weeks.find(week => week.weekNumber === this.props.selectedInstance.weekAmount + 1)
-            headers.push(this.renderWeek(i + ii, finalWeek, studentInstance, true))
-          }
-        }
-        return student
-      })
-      return headers.map((header, index) => React.cloneElement(header, { key: index }))
-    }
-
-    return (
-      <div className="BrowseReviews" style={{ overflowX: 'auto' }}>
-        <Loader active={this.props.loading.loading} />
-        {this.isTeacher() ? (
-          <div>
-            <BackButton preset="coursePage" />
-            <Link to={`/labtool/courses/${this.props.selectedInstance.ohid}`} style={{ textAlign: 'center' }}>
-              <h2> {this.props.selectedInstance.name} </h2>
-            </Link>
-            {createHeaders(this.props.courseData, this.props.studentInstance)}
-          </div>
-        ) : (
-          <p />
-        )}
-      </div>
-    )
+  if (state.initialLoading) {
+    return <Loader active />
   }
+
+  const createHeaders = (studhead, studentInstance) => {
+    let headers = []
+    const weekMatcher = i => week => week.weekNumber === i + 1
+    studhead.data.map(student => {
+      // studentInstance is id of student. Type: String
+      // Tämä pitää myös korjata.
+      if (student.id === Number(studentInstance)) {
+        headers.push(renderStudentCard(student))
+        headers.push(
+          <span>
+            {hasAllReviewsOpen(student) ? (
+              <Button type="button" onClick={handleClickHideAll} size="small">
+                Hide all reviews
+              </Button>
+            ) : (
+              <Button type="button" onClick={handleClickShowAll(student)} size="small">
+                Show all reviews
+              </Button>
+            )}
+            <br />
+          </span>
+        )
+        let i = 0
+        let ii = 0
+        for (; i < props.selectedInstance.weekAmount; i++) {
+          const weeks = student.weeks.find(weekMatcher(i))
+          headers.push(renderWeek(i, weeks, studentInstance, false))
+        }
+        student.codeReviews
+          .sort((a, b) => {
+            return a.reviewNumber - b.reviewNumber
+          })
+          .forEach(cr => {
+            headers.push(renderCodeReview(i + ii + 1, cr, studentInstance))
+            ii++
+          })
+        if (props.selectedInstance.finalReview) {
+          const finalWeek = student.weeks.find(week => week.weekNumber === props.selectedInstance.weekAmount + 1)
+          headers.push(renderWeek(i + ii, finalWeek, studentInstance, true))
+        }
+      }
+      return student
+    })
+    return headers.map((header, index) => React.cloneElement(header, { key: index }))
+  }
+
+  return (
+    <div className="BrowseReviews" style={{ overflowX: 'auto' }}>
+      <Loader active={props.loading.loading} />
+      {isTeacher() ? (
+        <div>
+          <BackButton preset="coursePage" />
+          <Link to={`/labtool/courses/${props.selectedInstance.ohid}`} style={{ textAlign: 'center' }}>
+            <h2> {props.selectedInstance.name} </h2>
+          </Link>
+          {createHeaders(props.courseData, props.studentInstance)}
+        </div>
+      ) : (
+        <p />
+      )}
+    </div>
+  )
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -400,6 +395,27 @@ const mapDispatchToProps = {
   resetLoading,
   getCoursesByStudentId,
   updateStudentProjectInfo
+}
+
+BrowseReviews.propTypes = {
+  courseId: PropTypes.string.isRequired,
+  studentInstance: PropTypes.string.isRequired,
+  initialLoading: PropTypes.bool,
+
+  user: PropTypes.object.isRequired,
+  selectedInstance: PropTypes.object.isRequired,
+  courseData: PropTypes.object.isRequired,
+  studentInstanceToBeReviewed: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+  loading: PropTypes.object.isRequired,
+
+  createOneComment: PropTypes.func.isRequired,
+  getOneCI: PropTypes.func.isRequired,
+  coursePageInformation: PropTypes.func.isRequired,
+  gradeCodeReview: PropTypes.func.isRequired,
+  sendEmail: PropTypes.func.isRequired,
+  resetLoading: PropTypes.func.isRequired,
+  getCoursesByStudentId: PropTypes.func.isRequired,
+  updateStudentProjectInfo: PropTypes.func.isRequired
 }
 
 export default connect(
