@@ -31,53 +31,53 @@ jobs:
            - ./labtool2.0/node_modules
       - run: cd labtool2.0 && FRONTEND=true CI=true npm test
   publish-backend-trunk:
-    executor: docker/machine
+    executor: dockerhub/machine
     steps:
     - checkout
-    - docker/check
-    - docker/build:
+    - dockerhub/check
+    - dockerhub/build:
         path: backend
         image: $DOCKER_USER/$CIRCLE_PROJECT_REPONAME-backend
         dockerfile: backend/Dockerfile
         tag: 'test'
-    - docker/push:
+    - dockerhub/push:
         image: $DOCKER_USER/$CIRCLE_PROJECT_REPONAME-backend
         tag: 'test'
   publish-backend-master:
-    executor: docker/machine
+    executor: dockerhub/machine
     steps:
     - checkout
-    - docker/check
-    - docker/build:
+    - dockerhub/check
+    - dockerhub/build:
         path: backend
         image: $DOCKER_USER/$CIRCLE_PROJECT_REPONAME-backend
         dockerfile: backend/Dockerfile
         tag: 'staging'
-    - docker/push:
+    - dockerhub/push:
         image: $DOCKER_USER/$CIRCLE_PROJECT_REPONAME-backend
         tag: 'staging'
   publish-frontend-trunk:
-    executor: docker/machine
+    executor: dockerhub/machine
     steps:
     - checkout
-    - docker/check
-    - docker/build:
+    - dockerhub/check
+    - dockerhub/build:
         image: $DOCKER_USER/$CIRCLE_PROJECT_REPONAME
         dockerfile: Dockerfile.test
         tag: 'test'
-    - docker/push:
+    - dockerhub/push:
         image: $DOCKER_USER/$CIRCLE_PROJECT_REPONAME
         tag: 'test'
   publish-frontend-master:
-    executor: docker/machine
+    executor: dockerhub/machine
     steps:
     - checkout
-    - docker/check
-    - docker/build:
+    - dockerhub/check
+    - dockerhub/build:
         image: $DOCKER_USER/$CIRCLE_PROJECT_REPONAME
         dockerfile: Dockerfile
         tag: 'staging'
-    - docker/push:
+    - dockerhub/push:
         image: $DOCKER_USER/$CIRCLE_PROJECT_REPONAME
         tag: 'staging'
 
