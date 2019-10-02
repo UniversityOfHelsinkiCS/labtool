@@ -1,5 +1,5 @@
 const { User, CourseInstance, TeacherInstance } = require('../models')
-const helper = require('../helpers/users_controller_helper')
+const helper = require('../helpers/usersControllerHelper')
 const logger = require('../utils/logger')
 
 function invalidInputResponse(res, error) {
@@ -14,7 +14,9 @@ module.exports = {
    * @returns {*}
    */
   update(req, res) {
-    helper.controller_before_auth_check_action(req, res)
+    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
 
     if (!req.body.email || req.body.email.length < 1) {
       invalidInputResponse(res, 'Email was too short.')
@@ -52,7 +54,9 @@ module.exports = {
    * @returns {Promise<Array<Model>>}
    */
   async list(req, res) {
-    await helper.controller_before_auth_check_action(req, res)
+    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
 
     if (req.authenticated.success) {
       try {
@@ -87,7 +91,9 @@ module.exports = {
    * @returns {Promise<*|Promise<T>>}
    */
   async createTeacher(req, res) {
-    await helper.controller_before_auth_check_action(req, res)
+    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
 
     if (req.authenticated.success) {
       try {
@@ -143,7 +149,9 @@ module.exports = {
    * @returns {Promise<*|Promise<T>>}
    */
   async removeTeacher(req, res) {
-    await helper.controller_before_auth_check_action(req, res)
+    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
 
     if (req.authenticated.success) {
       try {

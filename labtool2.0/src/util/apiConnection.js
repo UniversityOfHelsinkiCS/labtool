@@ -78,6 +78,23 @@ export const handleRequest = store => next => action => {
       .then(res => {
         store.dispatch({ type: `${payload.prefix}SUCCESS`, response: res.data })
       })
-      .catch(err => store.dispatch({ type: `${payload.prefix}FAILURE`, response: err }))
+      .catch(err => {
+        // the issue with Shibbo timeouts is that Shibbo will just return
+        // a 302 for any backend request, which isn't easy to handle,
+        // as the browser will just follow the 302 and tell *nothing* to
+        // any AJAX library, like axios.
+
+        // instead we have to rely on err.response being available on all
+        // valid responses from the backend. if there is no err.response,
+        // we assume the browser tried to make an AJAX request to Shibbo
+        // and we will instead refresh the window.
+
+        if (!err.response) {
+          window.location.reload(true)
+          return
+        }
+
+        store.dispatch({ type: `${payload.prefix}FAILURE`, response: err })
+      })
   }
 }

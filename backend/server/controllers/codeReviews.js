@@ -1,10 +1,13 @@
 const { CodeReview, StudentInstance, TeacherInstance, CourseInstance } = require('../models')
-const helper = require('../helpers/code_review_helper')
+const helper = require('../helpers/codeReviewHelper')
 const logger = require('../utils/logger')
 
 module.exports = {
   async bulkInsert(req, res) {
-    helper.controller_before_auth_check_action(req, res)
+    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
+
     try {
       if (!req.authenticated.success) {
         res.status(403).send('you have to be authenticated to do this')
@@ -42,7 +45,8 @@ module.exports = {
           id: allStudentInstancesIds
         }
       })
-      const courseId = allStudentInstances[0].courseInstanceId // All studentInstances and the teacherInstance must share this common course.
+      // All studentInstances and the teacherInstance must share this common course.
+      const courseId = allStudentInstances[0].courseInstanceId
       if (allStudentInstances.map(si => si.courseInstanceId).filter(ciid => ciid !== courseId).length > 0) {
         // All studentInstances should be on the same course.
         res.status(400).send('Given student instances are from multiple courses.')
@@ -80,13 +84,18 @@ module.exports = {
   },
 
   async grade(req, res) {
-    helper.controller_before_auth_check_action(req, res)
+    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
+
     try {
       if (!req.authenticated.success) {
         res.status(403).send('you have to be authenticated to do this')
         return
       }
-      if (typeof req.body.studentInstanceId !== 'number' || typeof req.body.reviewNumber !== 'number' || typeof req.body.points !== 'number') {
+      if (typeof req.body.studentInstanceId !== 'number'
+        || typeof req.body.reviewNumber !== 'number'
+        || typeof req.body.points !== 'number') {
         res.status(400).send('Missing or malformed inputs.')
         return
       }
@@ -139,7 +148,10 @@ module.exports = {
   },
 
   async addLink(req, res) {
-    helper.controller_before_auth_check_action(req, res)
+    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
+
     try {
       if (!req.authenticated.success) {
         res.status(403).send('You have to be authenticated to do this')
@@ -188,7 +200,10 @@ module.exports = {
   },
 
   async removeOne(req, res) {
-    helper.controller_before_auth_check_action(req, res)
+    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
+
     try {
       if (!req.authenticated.success) {
         res.status(403).send('You have to be authenticated to do this')

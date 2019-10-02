@@ -68,6 +68,7 @@ module.exports = {
       destructuring: 'any',
       ignoreReadBeforeAssign: true
     }],
-    'no-var': 'warn'
+    'no-var': 'warn',
+    'no-unused-vars': ['warn', { argsIgnorePattern: '^_|Sequelize' }]
   }
 }

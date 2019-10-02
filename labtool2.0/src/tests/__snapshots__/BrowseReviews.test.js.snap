@@ -77,7 +77,7 @@ exports[`<BrowseReviews /> BrowseReviews Component should render correctly 1`] =
         <p
           className="noPrevious"
         >
-          First time to participate the course
+          Has not taken part in this course before
         </p>
       </CardContent>
     </Card>

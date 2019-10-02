@@ -1,6 +1,6 @@
 const bodyParser = require('body-parser')
 const basicAuth = require('express-basic-auth')
-const admin = require('../controllers').admin
+const { admin } = require('../controllers')
 
 const staticUserAuth = basicAuth({
   users: { admin: process.env.ADMIN_PW },

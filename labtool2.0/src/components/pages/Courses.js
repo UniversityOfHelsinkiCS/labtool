@@ -6,7 +6,7 @@ import { getAllCI } from '../../services/courseInstance'
 import { getIsAllowedToImport } from '../../services/courseImport'
 import { resetLoading } from '../../reducers/loadingReducer'
 import { HorizontalScrollable } from '../HorizontalScrollable'
-import { createYearAndTerm } from '../../util/format'
+import { getAcademicYear } from '../../util/format'
 
 /**
  *  Show all the courses in a single list.
@@ -31,7 +31,7 @@ export class Courses extends Component {
                 <Table.Header>
                   <Table.Row>
                     <Table.HeaderCell colSpan="1"> </Table.HeaderCell>
-                    <Table.HeaderCell colSpan="1">Course id</Table.HeaderCell>
+                    <Table.HeaderCell colSpan="1">Course ID</Table.HeaderCell>
                     <Table.HeaderCell colSpan="1">Course name</Table.HeaderCell>
                     <Table.HeaderCell colSpan="1">Course start date</Table.HeaderCell>
                     <Table.HeaderCell colSpan="2"> </Table.HeaderCell>
@@ -56,7 +56,7 @@ export class Courses extends Component {
                       <Table.Cell>
                         <strong>
                           <Link to={`/labtool/courses/${instance.ohid}`}>
-                            {instance.name} ({createYearAndTerm(instance.name, instance.start)})
+                            {instance.name} ({getAcademicYear(instance.start)})
                           </Link>
                         </strong>
                       </Table.Cell>
@@ -88,6 +88,7 @@ export class Courses extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
+    history: ownProps.history,
     courseInstance: state.courseInstance,
     loading: state.loading,
     canImport: state.courseImport.canImport

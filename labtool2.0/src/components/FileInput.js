@@ -35,7 +35,7 @@ export default class FileInput extends React.Component {
   }
 
   render() {
-    const { allowedFileTypes, onFileUploaded, style, ...props } = this.props
+    const { allowedFileTypes, style, ...props } = this.props
     const { open, uploading, uploadProgress, uploadError } = this.state
 
     return (

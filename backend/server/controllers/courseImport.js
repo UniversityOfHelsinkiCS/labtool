@@ -1,11 +1,14 @@
-const helper = require('../helpers/course_import_helper')
+const helper = require('../helpers/courseImportHelper')
 const logger = require('../utils/logger')
 
 module.exports = {
   async hasPermission(req, res) {
-    helper.controller_before_auth_check_action(req, res)
+    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
+
     if (!req.authenticated.success) {
-      res.status(401).end()
+      res.status(401).send('be authenticated').end()
     }
     const user = req.decoded.id
 
@@ -18,9 +21,12 @@ module.exports = {
   },
 
   async list(req, res) {
-    helper.controller_before_auth_check_action(req, res)
+    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
+
     if (!req.authenticated.success) {
-      res.status(401).end()
+      res.status(401).send('be authenticated').end()
     }
     const user = req.decoded.id
 
@@ -39,9 +45,12 @@ module.exports = {
   },
 
   async import(req, res) {
-    helper.controller_before_auth_check_action(req, res)
+    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
+
     if (!req.authenticated.success) {
-      res.status(401).end()
+      res.status(401).send('be authenticated').end()
     }
     const user = req.decoded.id
 

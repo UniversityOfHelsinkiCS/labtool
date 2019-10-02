@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       hooks: {
         // This will automatically destroy any pre-existing row before inserting to avoid duplicates.
         // Updating happens by destroying the old, then inserting the new.
-        beforeCreate: (newCodeReview, options) => {
+        beforeCreate: (newCodeReview, _options) => {
           CodeReview.destroy({
             where: {
               studentInstanceId: newCodeReview.studentInstanceId,

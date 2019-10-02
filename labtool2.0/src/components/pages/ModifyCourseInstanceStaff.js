@@ -34,7 +34,7 @@ export class ModifyCourseInstanceStaff extends React.Component {
       }
       await this.props.createOne(teacherInformation)
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
   }
 
@@ -47,7 +47,7 @@ export class ModifyCourseInstanceStaff extends React.Component {
       }
       await this.props.removeOne(teacherInformation)
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
   }
 

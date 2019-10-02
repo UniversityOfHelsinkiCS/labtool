@@ -25,12 +25,12 @@ module.exports = {
     propWrapperFunctions: ['forbidExtraProps']
   },
   rules: {
-    'no-console': 0,
     indent: ['error', 2],
     quotes: [2, 'single', 'avoid-escape'],
     semi: ['error', 'never'],
     'no-undef': 1,
-    'no-unused-vars': 1
+    'no-unused-vars': 1,
+    'no-console': [1, { allow: ['error'] }]
   },
   plugins: ['prettier'],
   rules: {

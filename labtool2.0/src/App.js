@@ -75,7 +75,7 @@ class App extends Component {
         this.props.tokenLogin(user)
       }
     } catch (exception) {
-      console.log(exception)
+      console.error(exception)
     }
   }
 

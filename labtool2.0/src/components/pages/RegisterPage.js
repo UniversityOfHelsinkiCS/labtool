@@ -37,7 +37,7 @@ export class RegisterPage extends Component {
         await this.props.createStudentCourses(content, this.props.selectedInstance.ohid)
       }
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
   }
 
@@ -84,7 +84,7 @@ export class RegisterPage extends Component {
 
               <Form.Group inline>
                 <label style={{ width: '100px', textAlign: 'left' }}>GitHub link</label>
-                <Input icon="github" iconPosition="left" type="url" className="form-control2" name="github" placeholder="https://github.com/myaccount/myrepo" required style={{ minWidth: '30em' }} />
+                <Input icon="github" iconPosition="left" type="url" className="form-control2" name="github" defaultValue="https://github.com/" required style={{ minWidth: '30em' }} />
               </Form.Group>
 
               <Form.Field>

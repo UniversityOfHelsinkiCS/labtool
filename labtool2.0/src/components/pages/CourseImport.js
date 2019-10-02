@@ -28,6 +28,18 @@ export class CourseImport extends Component {
     }
   }
 
+  renderCourse = instance => (
+    <Table.Row key={instance.hid}>
+      <Table.Cell>
+        <Form.Checkbox name={'import' + instance.hid} />
+      </Table.Cell>
+      <Table.Cell>{instance.shorterId}</Table.Cell>
+      <Table.Cell>{instance.cname}</Table.Cell>
+      <Table.Cell>{instance.europeanStart}</Table.Cell>
+      <Table.Cell>{instance.europeanEnd}</Table.Cell>
+    </Table.Row>
+  )
+
   render() {
     return (
       <div className="CourseImport">
@@ -46,26 +58,14 @@ export class CourseImport extends Component {
                       <Table.HeaderCell colSpan="1" key={-1}>
                         Import?
                       </Table.HeaderCell>
-                      <Table.HeaderCell colSpan="1">Course id</Table.HeaderCell>
+                      <Table.HeaderCell colSpan="1">Course ID</Table.HeaderCell>
                       <Table.HeaderCell colSpan="1">Course name</Table.HeaderCell>
                       <Table.HeaderCell colSpan="1">Course start date</Table.HeaderCell>
                       <Table.HeaderCell colSpan="1">Course end date</Table.HeaderCell>
                     </Table.Row>
                   </Table.Header>
 
-                  <Table.Body>
-                    {this.props.importable.map(instance => (
-                      <Table.Row key={instance.hid}>
-                        <Table.Cell>
-                          <Form.Checkbox name={'import' + instance.hid} />
-                        </Table.Cell>
-                        <Table.Cell>{instance.shorterId}</Table.Cell>
-                        <Table.Cell>{instance.cname}</Table.Cell>
-                        <Table.Cell>{instance.europeanStart}</Table.Cell>
-                        <Table.Cell>{instance.europeanEnd}</Table.Cell>
-                      </Table.Row>
-                    ))}
-                  </Table.Body>
+                  <Table.Body>{this.props.importable.map(this.renderCourse)}</Table.Body>
                 </Table>
               </HorizontalScrollable>
 
@@ -102,6 +102,7 @@ export class CourseImport extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
+    ...ownProps,
     loading: state.loading,
     canImport: state.courseImport.canImport,
     importable: state.courseImport.importable

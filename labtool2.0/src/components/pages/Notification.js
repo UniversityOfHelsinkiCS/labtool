@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { clearNotifications } from '../../reducers/notificationReducer'
-import { Message, Grid } from 'semantic-ui-react'
+import { Message } from 'semantic-ui-react'
 
 let timeout
 
