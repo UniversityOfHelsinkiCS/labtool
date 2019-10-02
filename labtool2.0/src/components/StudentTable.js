@@ -10,22 +10,15 @@ import { showAssistantDropdown, showTagDropdown, filterByTag, filterByAssistant,
 
 const { Fragment } = React
 
-<<<<<<< HEAD
-export class StudentTable extends React.Component {
-  createDropdownTeachers = array => {
-    if (this.props.selectedInstance.teacherInstances !== undefined) {
+export const StudentTable = props => {
+  const createDropdownTeachers = array => {
+    if (props.selectedInstance.teacherInstances !== undefined) {
       array.push({
         key: '-',
         text: '(unassigned)',
         value: '-'
       })
-      this.props.selectedInstance.teacherInstances.map(m =>
-=======
-export const StudentTable = props => {
-  const createDropdownTeachers = array => {
-    if (props.selectedInstance.teacherInstances !== undefined) {
       props.selectedInstance.teacherInstances.map(m =>
->>>>>>> 45845c9338e5c2bc284d62c166a406da2991e55a
         array.push({
           key: m.id,
           text: m.firsts + ' ' + m.lastname,
@@ -62,11 +55,7 @@ export const StudentTable = props => {
 
       const data = {
         studentInstanceId: id,
-<<<<<<< HEAD
         teacherInstanceId: teacherId
-=======
-        teacherInstanceId: props.coursePageLogic.selectedTeacher
->>>>>>> 45845c9338e5c2bc284d62c166a406da2991e55a
       }
       await props.associateTeacherToStudent(data)
     } catch (error) {
