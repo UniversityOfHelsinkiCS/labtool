@@ -13,6 +13,11 @@ const { Fragment } = React
 export const StudentTable = props => {
   const createDropdownTeachers = array => {
     if (props.selectedInstance.teacherInstances !== undefined) {
+      array.push({
+        key: '-',
+        text: '(unassigned)',
+        value: '-'
+      })
       props.selectedInstance.teacherInstances.map(m =>
         array.push({
           key: m.id,
@@ -42,9 +47,15 @@ export const StudentTable = props => {
   const updateTeacher = id => async e => {
     try {
       e.preventDefault()
+      let teacherId = this.props.coursePageLogic.selectedTeacher
+      if (teacherId == '-') {
+        // unassign
+        teacherId = null
+      }
+
       const data = {
         studentInstanceId: id,
-        teacherInstanceId: props.coursePageLogic.selectedTeacher
+        teacherInstanceId: teacherId
       }
       await props.associateTeacherToStudent(data)
     } catch (error) {
@@ -351,11 +362,6 @@ export const StudentTable = props => {
       key: 0,
       text: 'no filter',
       value: 0
-    },
-    {
-      key: null,
-      text: 'unassigned students',
-      value: null
     }
   ]
   dropDownFilterTeachers = createDropdownTeachers(dropDownFilterTeachers)
@@ -417,7 +423,7 @@ export const StudentTable = props => {
                 // remove special filter
                 .filter(data => !filterStudents || filterStudents(data))
                 // remove students when filtering assistants and it doesn't match
-                .filter(data => disableDefaultFilter || props.coursePageLogic.filterByAssistant === 0 || props.coursePageLogic.filterByAssistant === data.teacherInstanceId)
+                .filter(data => disableDefaultFilter || this.props.coursePageLogic.filterByAssistant === 0 || this.props.coursePageLogic.filterByAssistant === data.teacherInstanceId || (this.props.coursePageLogic.filterByAssistant === '-' && data.teacherInstanceId === null))
                 // remove students when filtering tags and they don't match
                 .filter(data => disableDefaultFilter || props.coursePageLogic.filterByTag.length === 0 || hasFilteringTags(data.Tags, props.coursePageLogic.filterByTag))
                 .map(data => createStudentTableRow(showColumn, data, rowClassName, dropDownTags, dropDownTeachers))
