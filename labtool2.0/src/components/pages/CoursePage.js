@@ -374,13 +374,15 @@ export const CoursePage = props => {
         Mark all with dropped tag as dropped out
       </Button>
     )
+    // if any selected, even if outside filters
+    const showMassAssign = Object.keys(props.coursePageLogic.selectedStudents).length
     return (
       <div className={tableClassName}>
         <Header as="h2">{heading} </Header>
 
         <StudentTable
           rowClassName={rowClassName + (droppedOut ? ' active' : '')}
-          columns={['points', 'review']}
+          columns={['select', 'points', 'review']}
           allowModify={true}
           filterStudents={data => droppedOut === data.dropped}
           disableDefaultFilter={droppedOut}
@@ -391,14 +393,22 @@ export const CoursePage = props => {
         />
         <br />
         {dropConvertButton}
-
         {!droppedOut && (
           <Link to={`/labtool/massemail/${props.selectedInstance.ohid}`}>
             <Button size="small">Send email to multiple students</Button>
           </Link>
         )}
         <br />
-        <br />
+        {showMassAssign ? (
+          <div>
+            <br />
+            <h3>Modify selected students</h3>
+
+            <br />
+          </div>
+        ) : (
+          <br />
+        )}
       </div>
     )
   }

@@ -1,44 +1,28 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Button, Icon, Table, Form, Popup, Dropdown, Label } from 'semantic-ui-react'
+import { Button, Icon, Table, Popup, Dropdown, Label, Checkbox } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import HorizontalScrollable from './HorizontalScrollable'
 import { getAllTags, tagStudent, unTagStudent } from '../services/tags'
 import { associateTeacherToStudent } from '../services/assistant'
-import { showAssistantDropdown, showTagDropdown, filterByTag, filterByAssistant, selectTeacher, selectTag } from '../reducers/coursePageLogicReducer'
+import { 
+  showAssistantDropdown,
+  showTagDropdown,
+  filterByTag,
+  filterByAssistant,
+  selectTeacher,
+  selectTag,
+  selectStudent,
+  unselectStudent,
+  selectAllStudents,
+  unselectAllStudents
+} from '../reducers/coursePageLogicReducer'
+import { createDropdownTeachers, createDropdownTags } from '../util/dropdown'
 
 const { Fragment } = React
 
 export const StudentTable = props => {
-  const createDropdownTeachers = array => {
-    if (props.selectedInstance.teacherInstances !== undefined) {
-      props.selectedInstance.teacherInstances.map(m =>
-        array.push({
-          key: m.id,
-          text: m.firsts + ' ' + m.lastname,
-          value: m.id
-        })
-      )
-      return array
-    }
-    return []
-  }
-
-  const createDropdownTags = array => {
-    if (props.tags.tags !== undefined) {
-      props.tags.tags.map(tag =>
-        array.push({
-          key: tag.id,
-          text: tag.name,
-          value: tag.id
-        })
-      )
-      return array
-    }
-    return []
-  }
-
   const updateTeacher = id => async e => {
     try {
       e.preventDefault()
@@ -49,6 +33,27 @@ export const StudentTable = props => {
       await props.associateTeacherToStudent(data)
     } catch (error) {
       console.error(error)
+    }
+  }
+
+  const handleSelectCheck = id => (e, data) => {
+    const { checked } = data
+    if (checked) {
+      props.selectStudent(id)
+    } else {
+      props.unselectStudent(id)
+    }
+  }
+
+  const handleSelectAll = filteredData => (e, data) => {
+    const { checked } = data
+    // we use filteredData so that we only select or deselect
+    // only the filtered entries. sneaky!
+    const ids = filteredData.map(data => data.id)
+    if (checked) {
+      props.selectAllStudents(ids)
+    } else {
+      props.unselectAllStudents(ids)
     }
   }
 
@@ -183,7 +188,7 @@ export const StudentTable = props => {
       for (var j = 0; j < weeks.length; j++) {
         if (i + 1 === weeks[j].weekNumber) {
           pushattava = (
-            <Table.Cell key={i}>
+            <Table.Cell key={i + ':' + j}>
               <p>{weeks[j].points}</p>
             </Table.Cell>
           )
@@ -228,10 +233,10 @@ export const StudentTable = props => {
 
   const createStudentTableRow = (showColumn, data, rowClassName, dropDownTags, dropDownTeachers) => (
     <Table.Row key={data.id} className={rowClassName}>
-      {/* Send? */}
-      {showColumn('sendcheck') && (
+      {/* Select Check Box */}
+      {showColumn('select') && (
         <Table.Cell>
-          <Form.Checkbox name={'send' + data.id} />
+          <Checkbox id={'select' + data.id} checked={props.coursePageLogic.selectedStudents[data.id]} onChange={handleSelectCheck(data.id)} />
         </Table.Cell>
       )}
 
@@ -249,7 +254,7 @@ export const StudentTable = props => {
             {data.github}
           </a>
           {data.Tags.map(tag => (
-            <div key={tag.id}>
+            <div key={data.id + ':' + tag.id}>
               <Button compact floated="left" className={`mini ui ${tag.color} button`} onClick={addFilterTag(tag)}>
                 {tag.name}
               </Button>
@@ -300,7 +305,7 @@ export const StudentTable = props => {
           props.selectedInstance.teacherInstances
             .filter(teacher => teacher.id === data.teacherInstanceId)
             .map(teacher => (
-              <span key={data.id}>
+              <span key={data.id + ':' + teacher.id}>
                 {teacher.firsts} {teacher.lastname}
               </span>
             ))
@@ -345,7 +350,7 @@ export const StudentTable = props => {
   const showColumn = column => columns.indexOf(column) >= 0
 
   let dropDownTeachers = []
-  dropDownTeachers = createDropdownTeachers(dropDownTeachers)
+  dropDownTeachers = createDropdownTeachers(props.selectedInstance.teacherInstances, dropDownTeachers)
   let dropDownFilterTeachers = [
     {
       key: 0,
@@ -358,10 +363,19 @@ export const StudentTable = props => {
       value: null
     }
   ]
-  dropDownFilterTeachers = createDropdownTeachers(dropDownFilterTeachers)
+  dropDownFilterTeachers = createDropdownTeachers(props.selectedInstance.teacherInstances, dropDownFilterTeachers)
 
   let dropDownTags = []
-  dropDownTags = createDropdownTags(dropDownTags)
+  dropDownTags = createDropdownTags(props.tags.tags, dropDownTags)
+
+  const filteredData = (props.courseData.data || [])
+    // remove special filter
+    .filter(data => !filterStudents || filterStudents(data))
+    // remove students when filtering assistants and it doesn't match
+    .filter(data => disableDefaultFilter || props.coursePageLogic.filterByAssistant === 0 || props.coursePageLogic.filterByAssistant === data.teacherInstanceId)
+    // remove students when filtering tags and they don't match
+    .filter(data => disableDefaultFilter || props.coursePageLogic.filterByTag.length === 0 || hasFilteringTags(data.Tags, props.coursePageLogic.filterByTag))
+  const allSelected = filteredData.map(data => data.id).every(id => props.coursePageLogic.selectedStudents[id])
 
   return (
     <Fragment>
@@ -398,7 +412,11 @@ export const StudentTable = props => {
         <Table celled compact unstackable singleLine style={{ overflowX: 'visible' }}>
           <Table.Header>
             <Table.Row>
-              {showColumn('sendcheck') && <Table.HeaderCell key={-2}>Send?</Table.HeaderCell>}
+              {showColumn('select') && (
+                <Table.HeaderCell key={-2}>
+                  <Checkbox id="selectAll" checked={allSelected} onChange={handleSelectAll(filteredData)} />
+                </Table.HeaderCell>
+              )}
               <Table.HeaderCell key={-1}>Student</Table.HeaderCell>
               <Table.HeaderCell>Project Info</Table.HeaderCell>
               {showColumn('points') && (
@@ -413,14 +431,7 @@ export const StudentTable = props => {
           </Table.Header>
           <Table.Body>
             {props.courseData && props.courseData.data ? (
-              props.courseData.data
-                // remove special filter
-                .filter(data => !filterStudents || filterStudents(data))
-                // remove students when filtering assistants and it doesn't match
-                .filter(data => disableDefaultFilter || props.coursePageLogic.filterByAssistant === 0 || props.coursePageLogic.filterByAssistant === data.teacherInstanceId)
-                // remove students when filtering tags and they don't match
-                .filter(data => disableDefaultFilter || props.coursePageLogic.filterByTag.length === 0 || hasFilteringTags(data.Tags, props.coursePageLogic.filterByTag))
-                .map(data => createStudentTableRow(showColumn, data, rowClassName, dropDownTags, dropDownTeachers))
+              filteredData.map(data => createStudentTableRow(showColumn, data, rowClassName, dropDownTags, dropDownTeachers))
             ) : (
               <p />
             )}
@@ -441,7 +452,11 @@ const mapDispatchToProps = {
   filterByTag,
   getAllTags,
   tagStudent,
-  unTagStudent
+  unTagStudent,
+  selectStudent,
+  unselectStudent,
+  selectAllStudents,
+  unselectAllStudents
 }
 
 StudentTable.propTypes = {
@@ -465,7 +480,11 @@ StudentTable.propTypes = {
   filterByTag: PropTypes.func.isRequired,
   getAllTags: PropTypes.func.isRequired,
   tagStudent: PropTypes.func.isRequired,
-  unTagStudent: PropTypes.func.isRequired
+  unTagStudent: PropTypes.func.isRequired,
+  selectStudent: PropTypes.func.isRequired,
+  unselectStudent: PropTypes.func.isRequired,
+  selectAllStudents: PropTypes.func.isRequired,
+  unselectAllStudents: PropTypes.func.isRequired
 }
 
 export default connect(
