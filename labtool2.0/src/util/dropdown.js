@@ -1,4 +1,6 @@
 
+// generating dropdowns for StudentTable etc.
+
 export const createDropdownTeachers = (teachers, array) => {
   if (teachers !== undefined) {
     array.push({

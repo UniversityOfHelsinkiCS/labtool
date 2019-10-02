@@ -212,18 +212,6 @@ export const StudentTable = props => {
         indents.push(<Table.Cell key={siId + index}>{cr[index] || cr[index] === 0 ? <p className="codeReviewPoints">{cr[index]}</p> : <p>-</p>}</Table.Cell>)
       }
     }
-    // codeReviews.forEach(cr => {
-    //   indents.push(<Table.Cell key={i + ii}>{cr.points !== null ? <p className="codeReviewPoints">{cr.points}</p> : <p>-</p>}</Table.Cell>)
-    //   ii++
-    // // })
-    // while (ii < numberOfCodeReviews) {
-    //   indents.push(
-    //     <Table.Cell key={i + ii}>
-    //       <p>-</p>
-    //     </Table.Cell>
-    //   )
-    //   ii++
-    // }
 
     if (props.selectedInstance.finalReview) {
       let finalReviewPointsCell = (
@@ -378,10 +366,12 @@ export const StudentTable = props => {
         disableDefaultFilter ||
         props.coursePageLogic.filterByAssistant === 0 ||
         props.coursePageLogic.filterByAssistant === data.teacherInstanceId ||
-        (props.coursePageLogic.filterByAssistant === '-' && data.teacherInstanceId === null)
+        (props.coursePageLogic.filterByAssistant === '-' && data.teacherInstanceId === null) // unassign = -
     )
     // remove students when filtering tags and they don't match
     .filter(data => disableDefaultFilter || props.coursePageLogic.filterByTag.length === 0 || hasFilteringTags(data.Tags, props.coursePageLogic.filterByTag))
+
+  // all students currently visible selected?
   const allSelected = filteredData.map(data => data.id).every(id => props.coursePageLogic.selectedStudents[id])
 
   return (

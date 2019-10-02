@@ -19,6 +19,7 @@ export const MassEmailPage = props => {
     props.coursePageInformation(props.courseId)
     props.getAllTags()
 
+    // do not carry over selection changes back to main student table
     const oldSelectedStudents = { ...props.coursePageLogic.selectedStudents }
     return () => {
       // run on component unmount
