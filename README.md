@@ -1,8 +1,8 @@
 # Labtool 2.0
 
-| Travis | codebeat |
+| CircleCI | codebeat |
 | - | - |
-[![Build Status](https://travis-ci.org/UniversityOfHelsinkiCS/labtool.svg?branch=master)](https://travis-ci.org/UniversityOfHelsinkiCS/labtool) | [![codebeat badge](https://codebeat.co/badges/626bae1d-35dd-4806-8ef3-9a4415519808)](https://codebeat.co/projects/github-com-universityofhelsinkics-labtool-master) |
+[![Build Status](https://circleci.com/gh/UniversityOfHelsinkiCS/labtool/tree/master.svg)](https://circleci.com/gh/UniversityOfHelsinkiCS/labtool) | [![codebeat badge](https://codebeat.co/badges/626bae1d-35dd-4806-8ef3-9a4415519808)](https://codebeat.co/projects/github-com-universityofhelsinkics-labtool-master) |
 
 Group name: Labtool-2019
 
