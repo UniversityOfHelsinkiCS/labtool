@@ -12,6 +12,11 @@ const { Fragment } = React
 export class StudentTable extends React.Component {
   createDropdownTeachers = array => {
     if (this.props.selectedInstance.teacherInstances !== undefined) {
+      array.push({
+        key: '-',
+        text: '(unassign)',
+        value: '-'
+      })
       this.props.selectedInstance.teacherInstances.map(m =>
         array.push({
           key: m.id,
@@ -41,9 +46,15 @@ export class StudentTable extends React.Component {
   updateTeacher = id => async e => {
     try {
       e.preventDefault()
+      let teacherId = this.props.coursePageLogic.selectedTeacher
+      if (teacherId == '-') {
+        // unassign
+        teacherId = null
+      }
+
       const data = {
         studentInstanceId: id,
-        teacherInstanceId: this.props.coursePageLogic.selectedTeacher
+        teacherInstanceId: teacherId
       }
       await this.props.associateTeacherToStudent(data)
     } catch (error) {
