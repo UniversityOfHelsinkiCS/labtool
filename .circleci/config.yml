@@ -1,0 +1,112 @@
+version: 2.1
+orbs:
+  dockerhub: circleci/docker@0.5.1
+jobs: 
+  test-backend:
+    docker:
+      - image: circleci/node:8
+      - image: circleci/postgres:10.1-alpine-ram
+    steps:
+      - checkout
+      - restore_cache:
+         key: dependency-cache-backend-{{ checksum "backend/package.json" }}
+      - run: cd backend && npm install
+      - save_cache:
+         key: dependency-cache-backend-{{ checksum "backend/package.json" }}
+         paths:
+           - ./backend/node_modules
+      - run: cd backend && npm run create_test_db
+      - run: cd backend && ADMIN_PW=test TOKEN=test SECRET=test BACKEND=true npm test
+  test-frontend:
+    docker:
+      - image: circleci/node:8
+    steps:
+      - checkout
+      - restore_cache:
+         key: dependency-cache-frontend-{{ checksum "labtool2.0/package.json" }}
+      - run: cd labtool2.0 && npm install
+      - save_cache:
+         key: dependency-cache-frontend-{{ checksum "labtool2.0/package.json" }}
+         paths:
+           - ./labtool2.0/node_modules
+      - run: cd labtool2.0 && FRONTEND=true CI=true npm test
+  publish-backend-trunk:
+    executor: dockerhub/machine
+    steps:
+    - checkout
+    - dockerhub/check
+    - dockerhub/build:
+        path: backend
+        image: $DOCKER_USER/$CIRCLE_PROJECT_REPONAME-backend
+        dockerfile: backend/Dockerfile
+        tag: 'test'
+    - dockerhub/push:
+        image: $DOCKER_USER/$CIRCLE_PROJECT_REPONAME-backend
+        tag: 'test'
+  publish-backend-master:
+    executor: dockerhub/machine
+    steps:
+    - checkout
+    - dockerhub/check
+    - dockerhub/build:
+        path: backend
+        image: $DOCKER_USER/$CIRCLE_PROJECT_REPONAME-backend
+        dockerfile: backend/Dockerfile
+        tag: 'staging'
+    - dockerhub/push:
+        image: $DOCKER_USER/$CIRCLE_PROJECT_REPONAME-backend
+        tag: 'staging'
+  publish-frontend-trunk:
+    executor: dockerhub/machine
+    steps:
+    - checkout
+    - dockerhub/check
+    - dockerhub/build:
+        image: $DOCKER_USER/$CIRCLE_PROJECT_REPONAME
+        dockerfile: Dockerfile.test
+        tag: 'test'
+    - dockerhub/push:
+        image: $DOCKER_USER/$CIRCLE_PROJECT_REPONAME
+        tag: 'test'
+  publish-frontend-master:
+    executor: dockerhub/machine
+    steps:
+    - checkout
+    - dockerhub/check
+    - dockerhub/build:
+        image: $DOCKER_USER/$CIRCLE_PROJECT_REPONAME
+        dockerfile: Dockerfile
+        tag: 'staging'
+    - dockerhub/push:
+        image: $DOCKER_USER/$CIRCLE_PROJECT_REPONAME
+        tag: 'staging'
+
+workflows:
+  test-build-deploy:
+    jobs:
+      - test-backend
+      - test-frontend
+      - publish-backend-trunk:
+          requires:
+            - test-backend
+          filters:
+            branches:
+              only: trunk
+      - publish-backend-master:
+          requires:
+            - test-backend
+          filters:
+            branches:
+              only: master
+      - publish-frontend-trunk:
+          requires:
+            - test-frontend
+          filters:
+            branches:
+              only: trunk
+      - publish-frontend-master:
+          requires:
+            - test-frontend
+          filters:
+            branches:
+              only: master

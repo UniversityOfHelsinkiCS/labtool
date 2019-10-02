@@ -77,10 +77,10 @@ exports[`<Register /> RegisterPage Component should render correctly 1`] = `
           </label>
           <Input
             className="form-control2"
+            defaultValue="https://github.com/"
             icon="github"
             iconPosition="left"
             name="github"
-            placeholder="https://github.com/myaccount/myrepo"
             required={true}
             style={
               Object {
