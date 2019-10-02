@@ -14,7 +14,7 @@ export class StudentTable extends React.Component {
     if (this.props.selectedInstance.teacherInstances !== undefined) {
       array.push({
         key: '-',
-        text: '(unassign)',
+        text: '(unassigned)',
         value: '-'
       })
       this.props.selectedInstance.teacherInstances.map(m =>
@@ -354,11 +354,6 @@ export class StudentTable extends React.Component {
         key: 0,
         text: 'no filter',
         value: 0
-      },
-      {
-        key: null,
-        text: 'unassigned students',
-        value: null
       }
     ]
     dropDownFilterTeachers = this.createDropdownTeachers(dropDownFilterTeachers)
@@ -420,7 +415,7 @@ export class StudentTable extends React.Component {
                   // remove special filter
                   .filter(data => !filterStudents || filterStudents(data))
                   // remove students when filtering assistants and it doesn't match
-                  .filter(data => disableDefaultFilter || this.props.coursePageLogic.filterByAssistant === 0 || this.props.coursePageLogic.filterByAssistant === data.teacherInstanceId)
+                  .filter(data => disableDefaultFilter || this.props.coursePageLogic.filterByAssistant === 0 || this.props.coursePageLogic.filterByAssistant === data.teacherInstanceId || (this.props.coursePageLogic.filterByAssistant === '-' && data.teacherInstanceId === null))
                   // remove students when filtering tags and they don't match
                   .filter(data => disableDefaultFilter || this.props.coursePageLogic.filterByTag.length === 0 || this.hasFilteringTags(data.Tags, this.props.coursePageLogic.filterByTag))
                   .map(data => this.createStudentTableRow(showColumn, data, rowClassName, dropDownTags, dropDownTeachers))
