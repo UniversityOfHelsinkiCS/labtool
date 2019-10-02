@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import HorizontalScrollable from './HorizontalScrollable'
 import { getAllTags, tagStudent, unTagStudent } from '../services/tags'
 import { associateTeacherToStudent } from '../services/assistant'
-import { 
+import {
   showAssistantDropdown,
   showTagDropdown,
   filterByTag,
@@ -26,9 +26,15 @@ export const StudentTable = props => {
   const updateTeacher = id => async e => {
     try {
       e.preventDefault()
+      let teacherId = props.coursePageLogic.selectedTeacher
+      if (teacherId === '-') {
+        // unassign
+        teacherId = null
+      }
+
       const data = {
         studentInstanceId: id,
-        teacherInstanceId: props.coursePageLogic.selectedTeacher
+        teacherInstanceId: teacherId
       }
       await props.associateTeacherToStudent(data)
     } catch (error) {
@@ -180,7 +186,7 @@ export const StudentTable = props => {
     let finalPoints = undefined
     for (; i < props.selectedInstance.weekAmount; i++) {
       let pushattava = (
-        <Table.Cell key={i}>
+        <Table.Cell key={'week' + i}>
           <p>-</p>
         </Table.Cell>
       )
@@ -235,18 +241,18 @@ export const StudentTable = props => {
     <Table.Row key={data.id} className={rowClassName}>
       {/* Select Check Box */}
       {showColumn('select') && (
-        <Table.Cell>
+        <Table.Cell key="select">
           <Checkbox id={'select' + data.id} checked={props.coursePageLogic.selectedStudents[data.id]} onChange={handleSelectCheck(data.id)} />
         </Table.Cell>
       )}
 
       {/* Student */}
-      <Table.Cell>
+      <Table.Cell key="studentinfo">
         {data.User.firsts} {data.User.lastname} ({data.User.studentNumber})
       </Table.Cell>
 
       {/* Project Info */}
-      <Table.Cell>
+      <Table.Cell key="projectinfo">
         <span>
           {data.projectName}
           <br />
@@ -293,14 +299,14 @@ export const StudentTable = props => {
           {createIndents(data.weeks, data.codeReviews, data.id)}
 
           {/* Sum */}
-          <Table.Cell>
+          <Table.Cell key="pointssum">
             {(data.weeks.map(week => week.points).reduce((a, b) => a + b, 0) + data.codeReviews.map(cr => cr.points).reduce((a, b) => a + b, 0)).toFixed(2).replace(/[.,]00$/, '')}
           </Table.Cell>
         </Fragment>
       )}
 
       {/* Instructor */}
-      <Table.Cell>
+      <Table.Cell key="instructor">
         {data.teacherInstanceId && props.selectedInstance.teacherInstances ? (
           props.selectedInstance.teacherInstances
             .filter(teacher => teacher.id === data.teacherInstanceId)
@@ -335,7 +341,7 @@ export const StudentTable = props => {
       {showColumn('review') && (
         <Fragment>
           {/* Review */}
-          <Table.Cell textAlign="right">
+          <Table.Cell key="reviewbutton" textAlign="right">
             <Link to={`/labtool/browsereviews/${props.selectedInstance.ohid}/${data.id}`}>
               <Popup trigger={<Button circular size="tiny" icon={{ name: 'star', size: 'large', color: 'orange' }} />} content="Review student" />
             </Link>
@@ -356,11 +362,6 @@ export const StudentTable = props => {
       key: 0,
       text: 'no filter',
       value: 0
-    },
-    {
-      key: null,
-      text: 'unassigned students',
-      value: null
     }
   ]
   dropDownFilterTeachers = createDropdownTeachers(props.selectedInstance.teacherInstances, dropDownFilterTeachers)
@@ -372,7 +373,13 @@ export const StudentTable = props => {
     // remove special filter
     .filter(data => !filterStudents || filterStudents(data))
     // remove students when filtering assistants and it doesn't match
-    .filter(data => disableDefaultFilter || props.coursePageLogic.filterByAssistant === 0 || props.coursePageLogic.filterByAssistant === data.teacherInstanceId)
+    .filter(
+      data =>
+        disableDefaultFilter ||
+        props.coursePageLogic.filterByAssistant === 0 ||
+        props.coursePageLogic.filterByAssistant === data.teacherInstanceId ||
+        (props.coursePageLogic.filterByAssistant === '-' && data.teacherInstanceId === null)
+    )
     // remove students when filtering tags and they don't match
     .filter(data => disableDefaultFilter || props.coursePageLogic.filterByTag.length === 0 || hasFilteringTags(data.Tags, props.coursePageLogic.filterByTag))
   const allSelected = filteredData.map(data => data.id).every(id => props.coursePageLogic.selectedStudents[id])
@@ -429,13 +436,7 @@ export const StudentTable = props => {
               {showColumn('review') && <Table.HeaderCell>Review</Table.HeaderCell>}
             </Table.Row>
           </Table.Header>
-          <Table.Body>
-            {props.courseData && props.courseData.data ? (
-              filteredData.map(data => createStudentTableRow(showColumn, data, rowClassName, dropDownTags, dropDownTeachers))
-            ) : (
-              <p />
-            )}
-          </Table.Body>
+          <Table.Body>{props.courseData && props.courseData.data ? filteredData.map(data => createStudentTableRow(showColumn, data, rowClassName, dropDownTags, dropDownTeachers)) : <p />}</Table.Body>
         </Table>
       </HorizontalScrollable>
     </Fragment>

@@ -1,6 +1,11 @@
 
 export const createDropdownTeachers = (teachers, array) => {
   if (teachers !== undefined) {
+    array.push({
+      key: '-',
+      text: '(unassigned)',
+      value: '-'
+    })
     teachers.map(m =>
       array.push({
         key: m.id,

@@ -1,21 +1,23 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { Accordion, Button, Table, Card, Input, Form, Comment, Header, Label, Message, Icon, Popup, Loader } from 'semantic-ui-react'
+import { Accordion, Button, Table, Card, Input, Form, Comment, Header, Label, Message, Icon, Popup, Loader, Dropdown, Grid, Segment } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createOneComment } from '../../services/comment'
 import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import ReactMarkdown from 'react-markdown'
 import { getAllTags, tagStudent, unTagStudent } from '../../services/tags'
-import { updateStudentProjectInfo } from '../../services/studentinstances'
+import { associateTeacherToStudent } from '../../services/assistant'
 import { addLinkToCodeReview } from '../../services/codeReview'
 import { sendEmail } from '../../services/email'
-import { coursePageReset, updateActiveIndex, toggleCodeReview } from '../../reducers/coursePageLogicReducer'
+import { coursePageReset, updateActiveIndex, toggleCodeReview, selectTag, selectTeacher } from '../../reducers/coursePageLogicReducer'
+import { updateStudentProjectInfo } from '../../services/studentinstances'
 import { resetLoading } from '../../reducers/loadingReducer'
 
 import { LabtoolComment } from '../LabtoolComment'
 import { FormMarkdownTextArea } from '../MarkdownTextArea'
 import StudentTable from '../StudentTable'
+import { createDropdownTeachers, createDropdownTags } from '../../util/dropdown'
 
 export const CoursePage = props => {
   useEffect(() => {
@@ -116,6 +118,84 @@ export const CoursePage = props => {
       role: 'student'
     })
   }
+
+  const changeSelectedTeacher = () => {
+    return (e, data) => {
+      const { value } = data
+      props.selectTeacher(value)
+    }
+  }
+
+  const changeSelectedTag = () => {
+    return (e, data) => {
+      const { value } = data
+      props.selectTag(value)
+    }
+  }
+
+  const bulkDoAction = action => {
+    const selectedStudents = props.coursePageLogic.selectedStudents
+    const studentIds = Object.keys(selectedStudents).filter(key => selectedStudents[key])
+    studentIds.forEach(action)
+  }
+
+  const bulkAddTag = () => {
+    bulkDoAction(id => {
+      const data = {
+        studentId: id,
+        tagId: props.coursePageLogic.selectedTag
+      }
+      props.tagStudent(data)
+    })
+  }
+
+  const bulkRemoveTag = () => {
+    bulkDoAction(id => {
+      const data = {
+        studentId: id,
+        tagId: props.coursePageLogic.selectedTag
+      }
+      props.unTagStudent(data)
+    })
+  }
+
+  const bulkUpdateTeacher = () => {
+    let teacherId = props.coursePageLogic.selectedTeacher
+    if (teacherId === '-') {
+      // unassign
+      teacherId = null
+    }
+    bulkDoAction(id => {
+      const data = {
+        studentInstanceId: id,
+        teacherInstanceId: teacherId
+      }
+      props.associateTeacherToStudent(data)
+    })
+  }
+
+  const bulkMarkDroppedBool = dropped => {
+    bulkDoAction(id => {
+      const student = props.courseData.data.find(data => data.id === Number(id))
+      if (student) {
+        handleMarkAsDropped(dropped, student.User.id)
+      }
+    })
+  }
+
+  const bulkMarkNotDropped = () => {
+    bulkMarkDroppedBool(false)
+  }
+
+  const bulkMarkDropped = () => {
+    bulkMarkDroppedBool(true)
+  }
+
+  let dropDownTeachers = []
+  dropDownTeachers = createDropdownTeachers(props.selectedInstance.teacherInstances, dropDownTeachers)
+
+  let dropDownTags = []
+  dropDownTags = createDropdownTags(props.tags.tags, dropDownTags)
 
   if (props.loading.loading) {
     return <Loader active />
@@ -374,8 +454,6 @@ export const CoursePage = props => {
         Mark all with dropped tag as dropped out
       </Button>
     )
-    // if any selected, even if outside filters
-    const showMassAssign = Object.keys(props.coursePageLogic.selectedStudents).length
     return (
       <div className={tableClassName}>
         <Header as="h2">{heading} </Header>
@@ -398,17 +476,6 @@ export const CoursePage = props => {
             <Button size="small">Send email to multiple students</Button>
           </Link>
         )}
-        <br />
-        {showMassAssign ? (
-          <div>
-            <br />
-            <h3>Modify selected students</h3>
-
-            <br />
-          </div>
-        ) : (
-          <br />
-        )}
       </div>
     )
   }
@@ -424,6 +491,68 @@ export const CoursePage = props => {
     if (droppedStudentExists()) {
       return renderTeacherBottomPartForStudents(true)
     }
+  }
+
+  const renderTeacherBulkForm = () => {
+    // if any selected, even if outside filters
+    const showMassAssign = Object.keys(props.coursePageLogic.selectedStudents).length
+
+    return showMassAssign ? (
+      <div className="TeacherBulkForm">
+        <br />
+        <h2>Modify selected students</h2>
+        <Grid columns="equal">
+          <Grid.Column>
+            <Segment>Add/remove tag</Segment>
+          </Grid.Column>
+          <Grid.Column>
+            <Dropdown id="tagDropdown" style={{ float: 'left' }} options={dropDownTags} onChange={changeSelectedTag()} placeholder="Choose tag" fluid selection />
+          </Grid.Column>
+          <Grid.Column>
+            <div className="two ui buttons" style={{ float: 'left' }}>
+              <button className="ui icon positive button" onClick={() => bulkAddTag()} size="mini">
+                <i className="plus icon" />
+              </button>
+              <div className="or" />
+              <button className="ui icon button" onClick={() => bulkRemoveTag()} size="mini">
+                <i className="trash icon" />
+              </button>
+            </div>
+          </Grid.Column>
+        </Grid>
+        <hr />
+        <Grid columns="equal">
+          <Grid.Column>
+            <Segment>Assign instructor</Segment>
+          </Grid.Column>
+          <Grid.Column>
+            <Dropdown id="assistantDropdown" options={dropDownTeachers} onChange={changeSelectedTeacher()} placeholder="Select teacher" fluid selection />
+          </Grid.Column>
+          <Grid.Column>
+            <Button onClick={() => bulkUpdateTeacher()} size="small">
+              Change instructor
+            </Button>
+          </Grid.Column>
+        </Grid>
+        <hr />
+        <Grid columns="equal">
+          <Grid.Column>
+            <Segment>Dropped status</Segment>
+          </Grid.Column>
+          <Grid.Column>
+            <Button onClick={() => bulkMarkNotDropped()}>Mark as non-dropped</Button>
+          </Grid.Column>
+          <Grid.Column>
+            <Button color="red" onClick={() => bulkMarkDropped()}>
+              Mark as dropped
+            </Button>
+          </Grid.Column>
+        </Grid>
+        <br />
+      </div>
+    ) : (
+      <br />
+    )
   }
 
   /**
@@ -484,6 +613,7 @@ export const CoursePage = props => {
         {renderTeacherTopPart()}
         {renderTeacherBottomPartForActiveStudents()}
         {renderTeacherBottomPartForDroppedOutStudents()}
+        {renderTeacherBulkForm()}
         <br />
         <br />
         <br />
@@ -526,7 +656,10 @@ const mapDispatchToProps = {
   updateActiveIndex,
   unTagStudent,
   resetLoading,
-  updateStudentProjectInfo
+  updateStudentProjectInfo,
+  associateTeacherToStudent,
+  selectTag,
+  selectTeacher
 }
 
 CoursePage.propTypes = {
@@ -554,7 +687,10 @@ CoursePage.propTypes = {
   updateActiveIndex: PropTypes.func.isRequired,
   unTagStudent: PropTypes.func.isRequired,
   resetLoading: PropTypes.func.isRequired,
-  updateStudentProjectInfo: PropTypes.func.isRequired
+  updateStudentProjectInfo: PropTypes.func.isRequired,
+  associateTeacherToStudent: PropTypes.func.isRequired,
+  selectTag: PropTypes.func.isRequired,
+  selectTeacher: PropTypes.func.isRequired
 }
 
 export default connect(

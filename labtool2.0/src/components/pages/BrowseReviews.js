@@ -166,7 +166,8 @@ export const BrowseReviews = props => {
           {student.User.firsts} {student.User.lastname} ({student.User.studentNumber})
           {student.dropped && (
             <Label style={{ marginTop: 5, float: 'right' }}>
-              <Icon name="warning sign" color="red" />Has dropped course
+              <Icon name="warning sign" color="red" />
+              Has dropped course
             </Label>
           )}
           <Header.Subheader>

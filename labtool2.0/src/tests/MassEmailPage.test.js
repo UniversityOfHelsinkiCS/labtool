@@ -200,6 +200,7 @@ describe('<MassEmailPage />', () => {
         coursePageReset={mockFn}
         sendMassEmail={mockFn}
         addRedirectHook={mockFn}
+        restoreStudentSelection={mockFn}
       />
     )
   })
