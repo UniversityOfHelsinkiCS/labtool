@@ -389,6 +389,7 @@ module.exports = {
       })
     } else {
       helper.findByUserStudentInstance(req, res)
+      return res.status(200).json(student)
     }
   },
 

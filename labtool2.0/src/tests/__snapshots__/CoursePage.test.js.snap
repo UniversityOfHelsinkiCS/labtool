@@ -63,7 +63,6 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
           </a>
            
           <Link
-            replace={false}
             to="/labtool/courseregistration/undefined"
           >
             <Button
@@ -77,7 +76,6 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
                   "size": "large",
                 }
               }
-              role="button"
               size="large"
             />
           </Link>
@@ -223,7 +221,7 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
                   iconPosition="left"
                   name="reviewLink"
                   placeholder="https://github.com/account/repo/issues/number"
-                  required="true"
+                  required={true}
                   style={
                     Object {
                       "minWidth": "25em",
@@ -237,7 +235,6 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
                   as="button"
                   color="blue"
                   compact={true}
-                  role="button"
                   type="submit"
                 >
                   Submit
@@ -399,13 +396,20 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             >
                
               <Link
-                replace={false}
                 to="/labtool/ModifyCourseInstancePage/undefined"
               >
                 <Popup
                   content="Edit course"
-                  keepInViewPort={true}
-                  on="hover"
+                  disabled={false}
+                  eventsEnabled={true}
+                  offset={0}
+                  on={
+                    Array [
+                      "click",
+                      "hover",
+                    ]
+                  }
+                  pinned={false}
                   position="top left"
                   trigger={
                     <Button
@@ -418,7 +422,6 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
                           "size": "large",
                         }
                       }
-                      role="button"
                       size="tiny"
                     />
                   }
@@ -723,18 +726,15 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
     <Button
       as="button"
       onClick={[Function]}
-      role="button"
       size="small"
     >
       Mark all with dropped tag as dropped out
     </Button>
     <Link
-      replace={false}
       to="/labtool/massemail/undefined"
     >
       <Button
         as="button"
-        role="button"
         size="small"
       >
         Send email to multiple students
@@ -1033,18 +1033,6 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
       }
     />
     <br />
-    <Link
-      replace={false}
-      to="/labtool/massemail/undefined"
-    >
-      <Button
-        as="button"
-        role="button"
-        size="small"
-      >
-        Send email to multiple students
-      </Button>
-    </Link>
     <br />
     <br />
   </div>

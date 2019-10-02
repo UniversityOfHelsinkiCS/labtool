@@ -32,8 +32,9 @@ module.exports = {
     'no-unused-vars': 1,
     'no-console': [1, { allow: ['error'] }]
   },
-  plugins: ['prettier'],
+  plugins: ['prettier', 'react-hooks'],
   rules: {
-    'prettier/prettier': 'error'
+    'prettier/prettier': 'error',
+    'react-hooks/exhaustive-deps': 'off'
   }
 }

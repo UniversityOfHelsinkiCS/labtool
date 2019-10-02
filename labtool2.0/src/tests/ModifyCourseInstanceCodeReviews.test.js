@@ -232,6 +232,13 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
         filterByTag={mockFn}
         resetLoading={mockFn}
         dropdownCodeReviews={[{ value: 1, text: 'Codereview 1' }, { value: 2, text: 'Codereview 2' }]}
+        selectDropdown={mockFn}
+        toggleCreate={mockFn}
+        createStates={mockFn}
+        filterStatesByTags={mockFn}
+        filterByReview={mockFn}
+        showNotification={mockFn}
+        removeOneCodeReview={mockFn}
       />
     )
   })

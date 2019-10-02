@@ -30,7 +30,17 @@ describe('<CourseImport />', () => {
   let mockFn = jest.fn()
 
   beforeEach(() => {
-    wrapper = shallow(<CourseImport getIsAllowedToImport={mockFn} getImportableCourses={mockFn} courseImport={props.courseImport} loading={loading} resetLoading={mockFn} />)
+    wrapper = shallow(
+      <CourseImport
+        getIsAllowedToImport={mockFn}
+        getImportableCourses={mockFn}
+        courseImport={props.courseImport}
+        loading={loading}
+        resetLoading={mockFn}
+        importCourses={mockFn}
+        addRedirectHook={mockFn}
+      />
+    )
   })
 
   describe('CourseImport Component', () => {

@@ -54,7 +54,7 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
               className="form-control1"
               name="weekAmount"
               onChange={[Function]}
-              required="true"
+              required={true}
               style={
                 Object {
                   "maxWidth": "7em",
@@ -81,7 +81,7 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
               className="form-control2"
               name="weekMaxPoints"
               onChange={[Function]}
-              required="true"
+              required={true}
               style={
                 Object {
                   "maxWidth": "7em",
@@ -108,7 +108,7 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
               className="form-control3"
               name="currentWeek"
               onChange={[Function]}
-              required="true"
+              required={true}
               style={
                 Object {
                   "maxWidth": "7em",
@@ -133,16 +133,23 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
             </label>
             <Popup
               content="Click to hide this code review on save"
-              keepInViewPort={true}
+              disabled={false}
+              eventsEnabled={true}
               key="1"
-              on="hover"
+              offset={0}
+              on={
+                Array [
+                  "click",
+                  "hover",
+                ]
+              }
+              pinned={false}
               position="top left"
               trigger={
                 <Button
                   as="button"
                   compact={true}
                   onClick={[Function]}
-                  role="button"
                   value={1}
                 >
                   1
@@ -151,16 +158,23 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
             />
             <Popup
               content="Click to hide this code review on save"
-              keepInViewPort={true}
+              disabled={false}
+              eventsEnabled={true}
               key="2"
-              on="hover"
+              offset={0}
+              on={
+                Array [
+                  "click",
+                  "hover",
+                ]
+              }
+              pinned={false}
               position="top left"
               trigger={
                 <Button
                   as="button"
                   compact={true}
                   onClick={[Function]}
-                  role="button"
                   value={2}
                 >
                   2
@@ -175,6 +189,7 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
               additionLabel="Add "
               additionPosition="top"
               closeOnBlur={true}
+              closeOnEscape={true}
               deburr={false}
               fluid={true}
               icon="dropdown"
@@ -238,21 +253,18 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
               as="button"
               color="green"
               floated="left"
-              role="button"
               size="huge"
               type="Submit"
             >
               Save
             </Button>
             <Link
-              replace={false}
               to="/labtool/courses"
             >
               <Button
                 as="button"
                 color="red"
                 floated="right"
-                role="button"
                 size="huge"
                 type="Cancel"
               >
@@ -264,13 +276,11 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
       </GridRow>
     </Grid>
     <Link
-      replace={false}
       to="/labtool/ModifyCourseInstanceStaff/TKT20011.2018.K.A.1"
     >
       <Button
         as="button"
         block="true"
-        role="button"
         style={
           Object {
             "marginLeft": "5px",
@@ -283,13 +293,11 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
       </Button>
     </Link>
     <Link
-      replace={false}
       to="/labtool/ModifyCourseInstanceCodeReviews/TKT20011.2018.K.A.1"
     >
       <Button
         as="button"
         block="true"
-        role="button"
         style={
           Object {
             "marginLeft": "5px",
@@ -302,13 +310,11 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
       </Button>
     </Link>
     <Link
-      replace={false}
       to="/labtool/checklist/TKT20011.2018.K.A.1/create"
     >
       <Button
         as="button"
         block="true"
-        role="button"
         style={
           Object {
             "marginLeft": "5px",
@@ -321,13 +327,11 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
       </Button>
     </Link>
     <Link
-      replace={false}
       to="/labtool/managetags"
     >
       <Button
         as="button"
         block="true"
-        role="button"
         style={
           Object {
             "marginLeft": "5px",

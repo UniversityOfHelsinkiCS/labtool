@@ -170,7 +170,7 @@ describe('<BrowseReviews />', () => {
 
   const studentWithoutPreviousParticipation = [coursePage]
 
-  const studentInstanceId = 10011
+  const studentInstanceId = '10011'
 
   beforeEach(() => {
     mockUpdateStudentProjectInfo = jest.fn()
@@ -189,6 +189,10 @@ describe('<BrowseReviews />', () => {
         loading={loading}
         resetLoading={mockFn}
         initialLoading={false}
+        user={{}}
+        createOneComment={mockFn}
+        gradeCodeReview={mockFn}
+        sendEmail={mockFn}
       />
     )
   })
@@ -235,10 +239,15 @@ describe('<BrowseReviews />', () => {
             selectedInstance={coursePage}
             studentInstanceToBeReviewed={studentWithPreviousParticipation}
             courseId={coursePage.ohid}
-            studentInstance={10011}
+            studentInstance={'10011'}
             loading={loading}
             resetLoading={mockFn}
             initialLoading={false}
+            updateStudentProjectInfo={mockFn}
+            user={{}}
+            createOneComment={mockFn}
+            gradeCodeReview={mockFn}
+            sendEmail={mockFn}
           />
         )
         expect(wrapper.find('.hasPrevious').text()).toContain('Has taken this course before')

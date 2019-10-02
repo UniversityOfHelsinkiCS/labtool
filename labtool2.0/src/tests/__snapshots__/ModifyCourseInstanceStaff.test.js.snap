@@ -110,7 +110,6 @@ exports[`<ModifyCourseInstanceStaff /> Components renders correctly 1`] = `
                 as="button"
                 color="green"
                 onClick={[Function]}
-                role="button"
                 size="tiny"
               >
                 Remove assistant
@@ -138,7 +137,6 @@ exports[`<ModifyCourseInstanceStaff /> Components renders correctly 1`] = `
                 as="button"
                 color="green"
                 onClick={[Function]}
-                role="button"
                 size="tiny"
               >
                 Add assistant

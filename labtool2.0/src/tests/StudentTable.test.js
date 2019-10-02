@@ -190,6 +190,14 @@ describe('<StudentTable />', () => {
         tags={tags}
         loading={loading}
         resetLoading={mockFn}
+        showAssistantDropdown={mockFn}
+        showTagDropdown={mockFn}
+        selectTeacher={mockFn}
+        selectTag={mockFn}
+        filterByAssistant={mockFn}
+        filterByTag={mockFn}
+        tagStudent={mockFn}
+        unTagStudent={mockFn}
         rowClassName="StudentRow"
       />
     )

@@ -1,4 +1,5 @@
-import React, { Component } from 'react'
+import React, { useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Header, Input, Label, Button, Popup, Card, Dropdown, Loader, Icon } from 'semantic-ui-react'
 import { showNotification } from '../../reducers/notificationReducer'
@@ -7,91 +8,82 @@ import { createChecklist, getOneChecklist } from '../../services/checklist'
 import { getOneCI, getAllCI } from '../../services/courseInstance'
 import { resetChecklist, changeField, addTopic, addRow, removeTopic, removeRow, castPointsToNumber } from '../../reducers/checklistReducer'
 import './CreateChecklist.css'
+import useLegacyState from '../../hooks/legacyState'
 
 import BackButton from '../BackButton'
 import JsonEdit from '../JsonEdit'
 
-export class CreateChecklist extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      week: undefined, // tracks value of week dropdown.
-      copyCourse: undefined, // tracks value of course dropdown.
-      topicName: '', // tracks value inputted into topic creation dialog box.
-      rowName: '', // tracks value inputted into row creation dialog box.
-      openAdd: '', // which addForm is currently open. '' denotes no open addForms. Only one addForm can be open at one time.
-      courseDropdowns: [] // Dropdown options to show for copying checklist.
-    }
-  }
+export const CreateChecklist = props => {
+  const state = useLegacyState({
+    week: undefined, // tracks value of week dropdown.
+    copyCourse: undefined, // tracks value of course dropdown.
+    topicName: '', // tracks value inputted into topic creation dialog box.
+    rowName: '', // tracks value inputted into row creation dialog box.
+    openAdd: '', // which addForm is currently open. '' denotes no open addForms. Only one addForm can be open at one time.
+    courseDropdowns: [] // Dropdown options to show for copying checklist.
+  })
 
-  componentWillMount = async () => {
-    await this.props.resetLoading()
-    this.props.resetChecklist()
-    this.props.getAllCI()
-  }
+  useEffect(() => {
+    // run on component mount
+    props.resetLoading()
+    props.resetChecklist()
+    props.getAllCI()
+  }, [])
 
-  componentDidUpdate(prevProps, prevState) {
-    if (this.state.week !== prevState.week) {
-      this.setState({
-        courseDropdowns: this.createCourseDropdowns()
-      })
-    }
-  }
+  useEffect(() => {
+    state.courseDropdowns = createCourseDropdowns()
+  }, [state.week])
 
   // Make api call to save checklist to database.
-  handleSubmit = async e => {
+  const handleSubmit = async e => {
     e.preventDefault()
-    const weeks = this.props.selectedInstance.weekAmount
-    const checklists = this.props.selectedInstance.finalReview ? weeks + 1 : weeks
-    if (this.state.week <= 0 || this.state.week > checklists) {
-      this.props.showNotification({
+    const weeks = props.selectedInstance.weekAmount
+    const checklists = props.selectedInstance.finalReview ? weeks + 1 : weeks
+    if (state.week <= 0 || state.week > checklists) {
+      props.showNotification({
         message: 'Invalid week.',
         error: true
       })
       return
     }
     try {
-      this.props.createChecklist({
-        courseInstanceId: this.props.selectedInstance.id,
-        week: this.state.week,
-        checklist: this.props.checklist.data
+      props.createChecklist({
+        courseInstanceId: props.selectedInstance.id,
+        week: state.week,
+        checklist: props.checklist.data
       })
     } catch (e) {
-      this.props.showNotification({
+      props.showNotification({
         message: 'Could not parse JSON.',
         error: true
       })
     }
   }
 
-  changeWeek = async (e, { value }) => {
+  const changeWeek = async (e, { value }) => {
     const week = value
     let copyCourse
-    if (this.state.copyCourse) {
-      if (week > this.props.selectedInstance.weekAmount) {
-        copyCourse = this.props.courses.find(course => course.id === this.state.copyCourse).finalReview ? this.state.copyCourse : undefined
+    if (state.copyCourse) {
+      if (week > props.selectedInstance.weekAmount) {
+        copyCourse = props.courses.find(course => course.id === state.copyCourse).finalReview ? state.copyCourse : undefined
       } else {
-        copyCourse = this.props.courses.find(course => course.id === this.state.copyCourse).weekAmount >= week ? this.state.copyCourse : undefined
+        copyCourse = props.courses.find(course => course.id === state.copyCourse).weekAmount >= week ? state.copyCourse : undefined
       }
     } else {
       copyCourse = undefined
     }
-    this.setState({
-      week,
-      copyCourse
-    })
-    this.loadChecklist(week)
+    state.week = week
+    state.copyCourse = copyCourse
+    state.courseDropdowns = createCourseDropdowns()
+    loadChecklist(week)
   }
 
-  changeCopyCourse = async (e, { value }) => {
-    const copyCourse = value
-    this.setState({
-      copyCourse
-    })
+  const changeCopyCourse = async (e, { value }) => {
+    state.copyCourse = value
   }
 
-  changeField = (key, name, field) => async e => {
-    this.props.changeField({
+  const changeField = (key, name, field) => async e => {
+    props.changeField({
       key,
       name,
       field,
@@ -100,24 +92,24 @@ export class CreateChecklist extends Component {
   }
 
   // Make api call to receive checklist from database.
-  loadChecklist = async week => {
-    this.props.getOneChecklist({
+  const loadChecklist = async week => {
+    props.getOneChecklist({
       week,
-      courseInstanceId: this.props.selectedInstance.id
+      courseInstanceId: props.selectedInstance.id
     })
   }
 
-  copyChecklist = async () => {
-    if (!this.state.copyCourse) return
-    const week = this.state.week > this.props.selectedInstance.weekAmount ? this.props.courses.find(course => course.id === this.state.copyCourse).weekAmount + 1 : this.state.week
-    this.props.getOneChecklist({
+  const copyChecklist = async () => {
+    if (!state.copyCourse) return
+    const week = state.week > props.selectedInstance.weekAmount ? props.courses.find(course => course.id === state.copyCourse).weekAmount + 1 : state.week
+    props.getOneChecklist({
       week,
-      courseInstanceId: this.state.copyCourse,
+      courseInstanceId: state.copyCourse,
       copying: true
     })
   }
 
-  validateChecklist = checklist => {
+  const validateChecklist = checklist => {
     return (
       !!checklist.week &&
       !!checklist.list &&
@@ -132,25 +124,25 @@ export class CreateChecklist extends Component {
     )
   }
 
-  importChecklist = checklistForWeek => {
-    if (this.validateChecklist({ week: this.state.week, list: checklistForWeek })) {
+  const importChecklist = checklistForWeek => {
+    if (validateChecklist({ week: state.week, list: checklistForWeek })) {
       try {
-        this.props.createChecklist({
-          courseInstanceId: this.props.selectedInstance.id,
-          week: this.state.week,
+        props.createChecklist({
+          courseInstanceId: props.selectedInstance.id,
+          week: state.week,
           checklist: checklistForWeek
         })
-        const checklist = this.props.checklist
+        const checklist = props.checklist
         checklist.data = checklistForWeek
-        this.setState({ checklist })
+        state.checklist = checklist
       } catch (e) {
-        this.props.showNotification({
+        props.showNotification({
           message: 'Could not save JSON.',
           error: true
         })
       }
     } else {
-      this.props.showNotification({
+      props.showNotification({
         message: 'Invalid checklist.',
         error: true
       })
@@ -161,120 +153,109 @@ export class CreateChecklist extends Component {
    * First call opens a dialog box.
    * Subsequent call actually adds the new topic.
    */
-  newTopic = async e => {
+  const newTopic = async e => {
     e.preventDefault()
-    if (this.state.openAdd !== 'newTopic') {
-      this.setState({
-        openAdd: 'newTopic'
-      })
+    if (state.openAdd !== 'newTopic') {
+      state.openAdd = 'newTopic'
       return
     }
-    if (this.state.topicName === '') {
-      this.props.showNotification({
+    if (state.topicName === '') {
+      props.showNotification({
         message: 'Topic name cannot be blank.',
         error: true
       })
       return
     }
-    this.props.addTopic({
-      key: this.state.topicName
+    props.addTopic({
+      key: state.topicName
     })
-    this.setState({
-      topicName: '',
-      openAdd: ''
-    })
+    state.topicName = ''
+    state.openAdd = ''
   }
 
   /**
    * First call opens a dialog box.
    * Subsequent call actually adds the new row.
    */
-  newRow = key => async e => {
+  const newRow = key => async e => {
     e.preventDefault()
-    if (this.state.openAdd !== key) {
-      this.setState({
-        openAdd: key
-      })
+    if (state.openAdd !== key) {
+      state.openAdd = key
       return
     }
-    if (this.state.rowName === '') {
-      this.props.showNotification({
+    if (state.rowName === '') {
+      props.showNotification({
         message: 'Checkbox name cannot be blank.',
         error: true
       })
       return
     }
-    this.props.addRow({
+    props.addRow({
       key,
-      name: this.state.rowName
+      name: state.rowName
     })
-    this.setState({
-      rowName: '',
-      openAdd: ''
-    })
+    state.rowName = ''
+    state.openAdd = 'newTopic'
   }
 
-  changeTopicName = async e => {
-    this.setState({
-      topicName: e.target.value
-    })
+  const changeTopicName = async e => {
+    state.topicName = e.target.value
   }
 
-  changeRowName = async e => {
-    this.setState({
-      rowName: e.target.value
-    })
+  const changeRowName = async e => {
+    state.rowName = e.target.value
   }
 
-  removeTopic = key => async () => {
-    this.props.removeTopic({
+  const removeTopic = key => async () => {
+    props.removeTopic({
       key
     })
   }
 
-  removeRow = (key, name) => async () => {
-    this.props.removeRow({
+  const removeRow = (key, name) => async () => {
+    props.removeRow({
       key,
       name
     })
   }
 
-  cancelAdd = async () => {
-    this.setState({
-      openAdd: ''
-    })
+  const cancelAdd = async () => {
+    state.openAdd = ''
   }
 
-  castPointsToNumber = (key, name) => async () => {
-    this.props.castPointsToNumber({
+  const castPointsToNumber = (key, name) => async () => {
+    props.castPointsToNumber({
       key,
       name
     })
   }
 
-  weekFilter = courses => {
-    return courses.filter(course => this.state.week <= course.weekAmount)
+  const weekFilter = courses => {
+    return courses.filter(course => state.week <= course.weekAmount)
   }
-  finalFilter = courses => {
+  const finalFilter = courses => {
     return courses.filter(course => course.finalReview)
   }
-  createCourseDropdowns = () => {
-    if (!this.props.courses || !this.props.selectedInstance) return []
-    const courses = this.state.week > this.props.selectedInstance.weekAmount ? this.finalFilter(this.props.courses) : this.weekFilter(this.props.courses)
-    const options = courses.filter(course => this.props.selectedInstance.id !== course.id).map(course => {
-      return {
-        value: course.id,
-        text: `${course.name} (${course.europeanStart})`
-      }
-    })
+
+  const createCourseDropdowns = () => {
+    if (!props.courses || !props.selectedInstance || !Object.keys(props.courses).length) return []
+    const courses = state.week > props.selectedInstance.weekAmount ? finalFilter(props.courses) : weekFilter(props.courses)
+    const options = courses
+      .filter(course => props.selectedInstance.id !== course.id)
+      .map(course => {
+        return {
+          value: course.id,
+          text: `${course.name} (${course.europeanStart})`
+        }
+      })
     return options
   }
 
-  renderChecklist() {
+  const renderChecklist = () => {
     let maxPoints = 0
-    const checklistJsx = Object.keys(this.props.checklist.data || {}).map(key => {
+    const checklistJsx = Object.keys(props.checklist.data || {}).map(key => {
       let bestPoints = 0
-      this.props.checklist.data[key].forEach(row => {
+      props.checklist.data[key].forEach(row => {
         const greaterPoints = row.checkedPoints > row.uncheckedPoints ? row.checkedPoints : row.uncheckedPoints
         bestPoints += Number(greaterPoints)
       })
@@ -284,7 +265,7 @@ export class CreateChecklist extends Component {
           <Card.Content>
             <Header>
               {key}{' '}
-              <Button className="deleteButton" type="button" color="red" size="tiny" onClick={this.removeTopic(key)}>
+              <Button className="deleteButton" type="button" color="red" size="tiny" onClick={removeTopic(key)}>
                 <div className="deleteButtonText">Delete topic</div>
               </Button>
             </Header>
@@ -302,28 +283,21 @@ export class CreateChecklist extends Component {
               </p>
             </div>
           </Card.Content>
-          {this.props.checklist.data[key].map(row => (
+          {props.checklist.data[key].map(row => (
             <Card.Content key={row.name}>
               <Header>
                 {row.name}{' '}
-                <Button className="deleteButton" type="button" color="red" size="tiny" onClick={this.removeRow(key, row.name)}>
+                <Button className="deleteButton" type="button" color="red" size="tiny" onClick={removeRow(key, row.name)}>
                   <div className="deleteButtonText">Delete checkbox</div>
                 </Button>
               </Header>
               <div className="formField">
                 <Label>Points when checked</Label>
-                <Input
-                  className="numberField"
-                  type="number"
-                  step="0.01"
-                  value={row.checkedPoints}
-                  onChange={this.changeField(key, row.name, 'checkedPoints')}
-                  onBlur={this.castPointsToNumber(key, row.name)}
-                />
+                <Input className="numberField" type="number" step="0.01" value={row.checkedPoints} onChange={changeField(key, row.name, 'checkedPoints')} onBlur={castPointsToNumber(key, row.name)} />
               </div>
               <div className="formField">
                 <Label>Text</Label>
-                <Input className="textField" type="text" value={row.textWhenOn} onChange={this.changeField(key, row.name, 'textWhenOn')} />
+                <Input className="textField" type="text" value={row.textWhenOn} onChange={changeField(key, row.name, 'textWhenOn')} />
               </div>
               <div className="formField">
                 <Label>Points when unchecked</Label>
@@ -332,26 +306,26 @@ export class CreateChecklist extends Component {
                   type="number"
                   step="0.01"
                   value={row.uncheckedPoints}
-                  onChange={this.changeField(key, row.name, 'uncheckedPoints')}
-                  onBlur={this.castPointsToNumber(key, row.name)}
+                  onChange={changeField(key, row.name, 'uncheckedPoints')}
+                  onBlur={castPointsToNumber(key, row.name)}
                 />
               </div>
               <div className="formField">
                 <Label>Text</Label>
-                <Input className="textField" type="text" value={row.textWhenOff} onChange={this.changeField(key, row.name, 'textWhenOff')} />
+                <Input className="textField" type="text" value={row.textWhenOff} onChange={changeField(key, row.name, 'textWhenOff')} />
               </div>
             </Card.Content>
           ))}
-          <form className="addForm" onSubmit={this.newRow(key)}>
+          <form className="addForm" onSubmit={newRow(key)}>
             {/*This, like all other addForms is here to funnel both the button press 
               as well as a user pressing enter into the same function.*/}
             <Popup trigger={<Button type="submit" circular icon={{ name: 'add' }} />} content="Add new checkbox" />
-            {this.state.openAdd === key ? (
+            {state.openAdd === key ? (
               <div>
                 <Label>Name</Label>
-                <Input className="newRowNameInput" type="text" value={this.state.rowName} onChange={this.changeRowName} />
+                <Input className="newRowNameInput" type="text" value={state.rowName} onChange={changeRowName} />
                 <Button type="submit">Save</Button>
-                <Button type="button" onClick={this.cancelAdd}>
+                <Button type="button" onClick={cancelAdd}>
                   Cancel
                 </Button>
               </div>
@@ -368,92 +342,83 @@ export class CreateChecklist extends Component {
     }
   }
 
-  render() {
-    const { checklistJsx, maxPoints } = this.props.loading.loading ? { checklistJsx: null, maxPoints: null } : this.renderChecklist()
-    return (
-      <div className="CreateChecklist">
-        <BackButton preset="modifyCIPage" />
-        <Header>{this.props.selectedInstance.name}</Header>
-        <div className="editForm">
-          <div className="topOptions">
-            <Dropdown placeholder="Select Checklist" selection value={this.state.week} onChange={this.changeWeek} options={this.props.weekDropdowns} />
-            <div className="copyForm">
-              <Button type="button" onClick={this.copyChecklist} disabled={!this.state.copyCourse}>
-                Copy
-              </Button>
-              <Dropdown
-                className="courseDropdown"
-                placeholder="Copy checklist from another course"
-                selection
-                value={this.state.copyCourse}
-                onChange={this.changeCopyCourse}
-                options={this.state.courseDropdowns}
-              />
-            </div>
-            {this.state.week !== undefined ? (
-              <div className="jsonButtons">
-                <JsonEdit onImport={this.importChecklist} initialData={this.props.checklist.data} downloadName={`${this.props.selectedInstance.ohid}_week_${this.state.week}.json`} />
-              </div>
-            ) : (
-              <div />
-            )}
+  const { checklistJsx, maxPoints } = props.loading.loading ? { checklistJsx: null, maxPoints: null } : renderChecklist()
+  return (
+    <div className="CreateChecklist">
+      <BackButton preset="modifyCIPage" />
+      <Header>{props.selectedInstance.name}</Header>
+      <div className="editForm">
+        <div className="topOptions">
+          <Dropdown id="weekDropdown" placeholder="Select Checklist" selection value={state.week} onChange={changeWeek} options={props.weekDropdowns} />
+          <div className="copyForm">
+            <Button type="button" onClick={copyChecklist} disabled={!state.copyCourse}>
+              Copy
+            </Button>
+            <Dropdown className="courseDropdown" placeholder="Copy checklist from another course" selection value={state.copyCourse} onChange={changeCopyCourse} options={state.courseDropdowns} />
           </div>
-          {this.props.loading.loading ? (
-            <Loader active />
-          ) : this.state.week !== undefined ? (
-            <div>
-              <div>
-                {checklistJsx /* This block of jsx is defined in this.renderChecklist */}
-                <form className="addForm" onSubmit={this.newTopic}>
-                  <Popup trigger={<Button type="submit" circular icon={{ name: 'add', size: 'large' }} />} content="Add new topic" />
-                  {this.state.openAdd === 'newTopic' ? (
-                    <div>
-                      <Label>Name</Label>
-                      <Input className="newTopicNameInput" type="text" value={this.state.topicName} onChange={this.changeTopicName} />
-                      <Button type="submit">Save</Button>
-                      <Button type="button" onClick={this.cancelAdd}>
-                        Cancel
-                      </Button>
-                    </div>
-                  ) : (
-                    <div />
-                  )}
-                </form>
-              </div>
-              <Card className="maxPointsCard">
-                <Card.Content>
-                  <p>
-                    Total max points: <strong className="maxPointsNumber">{maxPoints}</strong>
-                    {this.state.week > this.props.selectedInstance.weekAmount ? (
-                      <span />
-                    ) : (
-                      <span>
-                        {' '}
-                        {this.props.selectedInstance.weekMaxPoints === maxPoints ? (
-                          <Popup className="maxPointsIcon" trigger={<Icon name="check" size="large" color="green" />} content="The total matches maximum weekly points for this course." />
-                        ) : (
-                          <Popup className="maxPointsIcon" trigger={<Icon name="delete" size="large" color="red" />} content="The total does not match maximum weekly points for this course." />
-                        )}
-                      </span>
-                    )}
-                  </p>
-                </Card.Content>
-              </Card>
-              <form onSubmit={this.handleSubmit}>
-                {/*This is a form with a single button instead of just a button because it doesn't work 
-                  (doesn't call the function) as just a button with onClick.*/}
-                <Button className="saveButton" type="submit" color="green" size="large">
-                  <div className="saveButtonText">Save</div>
-                </Button>
-              </form>
+          {state.week !== undefined ? (
+            <div className="jsonButtons">
+              <JsonEdit onImport={importChecklist} initialData={props.checklist.data} downloadName={`${props.selectedInstance.ohid}_week_${state.week}.json`} />
             </div>
           ) : (
             <div />
           )}
         </div>
+        {props.loading.loading ? (
+          <Loader active />
+        ) : state.week !== undefined ? (
+          <div>
+            <div>
+              {checklistJsx /* This block of jsx is defined in renderChecklist */}
+              <form className="addForm" onSubmit={newTopic}>
+                <Popup trigger={<Button type="submit" circular icon={{ name: 'add', size: 'large' }} />} content="Add new topic" />
+                {state.openAdd === 'newTopic' ? (
+                  <div>
+                    <Label>Name</Label>
+                    <Input className="newTopicNameInput" type="text" value={state.topicName} onChange={changeTopicName} />
+                    <Button type="submit">Save</Button>
+                    <Button type="button" onClick={cancelAdd}>
+                      Cancel
+                    </Button>
+                  </div>
+                ) : (
+                  <div />
+                )}
+              </form>
+            </div>
+            <Card className="maxPointsCard">
+              <Card.Content>
+                <p>
+                  Total max points: <strong className="maxPointsNumber">{maxPoints}</strong>
+                  {state.week > props.selectedInstance.weekAmount ? (
+                    <span />
+                  ) : (
+                    <span>
+                      {' '}
+                      {props.selectedInstance.weekMaxPoints === maxPoints ? (
+                        <Popup className="maxPointsIcon" trigger={<Icon name="check" size="large" color="green" />} content="The total matches maximum weekly points for this course." />
+                      ) : (
+                        <Popup className="maxPointsIcon" trigger={<Icon name="delete" size="large" color="red" />} content="The total does not match maximum weekly points for this course." />
+                      )}
+                    </span>
+                  )}
+                </p>
+              </Card.Content>
+            </Card>
+            <form onSubmit={handleSubmit}>
+              {/*This is a form with a single button instead of just a button because it doesn't work 
+                (doesn't call the function) as just a button with onClick.*/}
+              <Button className="saveButton" type="submit" color="green" size="large">
+                <div className="saveButtonText">Save</div>
+              </Button>
+            </form>
+          </div>
+        ) : (
+          <div />
+        )}
       </div>
-    )
-  }
+    </div>
+  )
 }
 
 const createWeekDropdowns = selectedInstance => {
@@ -501,6 +466,30 @@ const mapDispatchToProps = {
   removeTopic,
   removeRow,
   castPointsToNumber
+}
+
+CreateChecklist.propTypes = {
+  courseId: PropTypes.string.isRequired,
+
+  selectedInstance: PropTypes.object.isRequired,
+  weekDropdowns: PropTypes.array,
+  checklist: PropTypes.object.isRequired,
+  courses: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+  loading: PropTypes.object.isRequired,
+
+  showNotification: PropTypes.func.isRequired,
+  resetLoading: PropTypes.func.isRequired,
+  createChecklist: PropTypes.func.isRequired,
+  getOneCI: PropTypes.func.isRequired,
+  getAllCI: PropTypes.func.isRequired,
+  getOneChecklist: PropTypes.func.isRequired,
+  resetChecklist: PropTypes.func.isRequired,
+  changeField: PropTypes.func.isRequired,
+  addTopic: PropTypes.func.isRequired,
+  addRow: PropTypes.func.isRequired,
+  removeTopic: PropTypes.func.isRequired,
+  removeRow: PropTypes.func.isRequired,
+  castPointsToNumber: PropTypes.func.isRequired
 }
 
 export default connect(
