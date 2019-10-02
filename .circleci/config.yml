@@ -39,7 +39,7 @@ workflows:
           requires:
             - test-backend
           path: backend
-          dockerfile: Dockerfile
+          dockerfile: backend/Dockerfile
           image: $DOCKER_USER/$CIRCLE_PROJECT_REPONAME-backend
           tag: 'test'
           filters:
@@ -49,7 +49,7 @@ workflows:
           requires:
             - test-backend
           path: backend
-          dockerfile: Dockerfile
+          dockerfile: backend/Dockerfile
           image: $DOCKER_USER/$CIRCLE_PROJECT_REPONAME-backend
           tag: 'staging'
           filters:
