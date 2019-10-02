@@ -5,7 +5,7 @@ jobs:
   test-backend:
     docker:
       - image: circleci/node:8
-      - image: circleci/postgres:10.1
+      - image: circleci/postgres:10.1-alpine-ram
     steps:
       - checkout
       - restore_cache:
@@ -16,7 +16,7 @@ jobs:
          paths:
            - ./backend/node_modules
       - run: cd backend && npm run create_test_db
-      - run: cd backend && BACKEND=true npm test
+      - run: cd backend && ADMIN_PW=test TOKEN=test SECRET=test BACKEND=true npm test
   test-frontend:
     docker:
       - image: circleci/node:8
