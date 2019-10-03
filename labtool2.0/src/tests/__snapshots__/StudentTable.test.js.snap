@@ -15,11 +15,11 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
     <Dropdown
       additionLabel="Add "
       additionPosition="top"
+      className="aha"
       closeOnBlur={true}
       closeOnEscape={true}
       deburr={false}
       defaultValue={0}
-      fluid={true}
       icon="dropdown"
       minCharacters={1}
       noResultsMessage="No results found."
@@ -28,13 +28,14 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
       options={Array []}
       placeholder="Select Teacher"
       renderLabel={[Function]}
+      scrolling={true}
       searchInput="text"
       selectOnBlur={true}
       selectOnNavigation={true}
       selection={true}
       style={
         Object {
-          "display": "inline",
+          "width": "NaNpx",
         }
       }
       wrapSelection={true}

@@ -47,7 +47,7 @@ export const StudentTable = props => {
   const updateTeacher = id => async e => {
     try {
       e.preventDefault()
-      let teacherId = this.props.coursePageLogic.selectedTeacher
+      let teacherId = props.coursePageLogic.selectedTeacher
       if (teacherId == '-') {
         // unassign
         teacherId = null
@@ -369,20 +369,28 @@ export const StudentTable = props => {
   let dropDownTags = []
   dropDownTags = createDropdownTags(dropDownTags)
 
+  // calculate the length of the longest text in a drop down
+  const getBiggestWidthInDropdown = dropdownList => {
+    const lengths = dropdownList.map(dp => dp.text.length)
+    return lengths.reduce((longest, comp) => (longest > comp ? longest : comp), lengths[0])
+  }
+
   return (
     <Fragment>
       <div style={{ textAlign: 'left' }}>
         <span>Filter by instructor </span>
         <Dropdown
+          className="aha"
+          scrolling
           options={dropDownFilterTeachers}
           onChange={changeFilterAssistant()}
           placeholder="Select Teacher"
           defaultValue={props.coursePageLogic.filterByAssistant}
-          fluid
           selection
-          style={{ display: 'inline' }}
+          style={{ width: `${getBiggestWidthInDropdown(dropDownFilterTeachers) * 9}px` }}
         />
         <span> Tag filters: </span>
+
         {props.coursePageLogic.filterByTag.length === 0 ? (
           <span>
             <Label>none</Label>
@@ -423,7 +431,13 @@ export const StudentTable = props => {
                 // remove special filter
                 .filter(data => !filterStudents || filterStudents(data))
                 // remove students when filtering assistants and it doesn't match
-                .filter(data => disableDefaultFilter || this.props.coursePageLogic.filterByAssistant === 0 || this.props.coursePageLogic.filterByAssistant === data.teacherInstanceId || (this.props.coursePageLogic.filterByAssistant === '-' && data.teacherInstanceId === null))
+                .filter(
+                  data =>
+                    disableDefaultFilter ||
+                    props.coursePageLogic.filterByAssistant === 0 ||
+                    props.coursePageLogic.filterByAssistant === data.teacherInstanceId ||
+                    (props.coursePageLogic.filterByAssistant === '-' && data.teacherInstanceId === null)
+                )
                 // remove students when filtering tags and they don't match
                 .filter(data => disableDefaultFilter || props.coursePageLogic.filterByTag.length === 0 || hasFilteringTags(data.Tags, props.coursePageLogic.filterByTag))
                 .map(data => createStudentTableRow(showColumn, data, rowClassName, dropDownTags, dropDownTeachers))
