@@ -376,6 +376,9 @@ export const StudentTable = props => {
 
   // calculate the length of the longest text in a drop down
   const getBiggestWidthInDropdown = dropdownList => {
+    if (dropdownList.length === 0) {
+      return 3
+    }
     const lengths = dropdownList.map(dp => dp.text.length)
     return lengths.reduce((longest, comp) => (longest > comp ? longest : comp), lengths[0])
   }
@@ -391,7 +394,7 @@ export const StudentTable = props => {
           placeholder="Select Teacher"
           defaultValue={props.coursePageLogic.filterByAssistant}
           selection
-          style={{ width: `${getBiggestWidthInDropdown(dropDownFilterTeachers) * 9}px` }}
+          style={{ width: `${getBiggestWidthInDropdown(dropDownFilterTeachers)}em` }}
         />
         <span> Tag filters: </span>
 

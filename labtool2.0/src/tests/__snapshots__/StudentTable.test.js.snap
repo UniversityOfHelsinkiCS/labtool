@@ -34,7 +34,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
       selection={true}
       style={
         Object {
-          "width": "NaNpx",
+          "width": "3em",
         }
       }
       wrapSelection={true}
