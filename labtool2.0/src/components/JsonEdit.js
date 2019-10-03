@@ -1,99 +1,98 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Form, TextArea, Message, Button, Modal } from 'semantic-ui-react'
+import useLegacyState from '../hooks/legacyState'
 
 import FileInput from './FileInput'
 
-export default class JsonEdit extends React.Component {
-  state = { open: false, data: null, error: null }
+const JsonEdit = props => {
+  const state = useLegacyState({ open: false, data: null, error: null })
 
-  close = () => this.setState({ open: false })
-  open = () => this.setState({ open: true })
+  const closeDialog = () => (state.open = false)
+  const openDialog = () => (state.open = true)
 
-  setData = json => {
+  const setData = json => {
     try {
       if (!json) {
-        this.setState({ error: null })
+        state.error = null
       }
       JSON.parse(json)
-      this.setState({ data: json, error: null })
+      state.data = json
+      state.error = null
     } catch (error) {
       if (error instanceof SyntaxError) {
-        this.setState({ error: `Failed to parse JSON: ${error.message}`, data: json })
+        state.data = json
+        state.error = `Failed to parse JSON: ${error.message}`
       }
     }
   }
 
-  onChange = e => this.setData(e.target.value)
+  const onChange = e => setData(e.target.value)
+  const hasValidData = () => !!state.data && !state.error
 
-  hasValidData = () => !!this.state.data && !this.state.error
+  useEffect(() => {
+    setData(JSON.stringify(props.initialData, null, 4))
+  }, [props.initialData])
 
-  componentDidUpdate(prevProps) {
-    if (!Object.is(prevProps.initialData, this.props.initialData)) {
-      this.setData(JSON.stringify(this.props.initialData, null, 4))
-    }
-  }
+  const { downloadName, style } = props
+  const { data, open } = state
 
-  render() {
-    const { downloadName, style } = this.props
-    const { data, open } = this.state
+  return (
+    <React.Fragment>
+      <Button disabled={open} onClick={openDialog} style={style}>
+        Edit as JSON
+      </Button>
 
-    return (
-      <React.Fragment>
-        <Button disabled={open} onClick={this.open} style={style}>
-          Edit as JSON
-        </Button>
-
-        <Modal onClose={this.close} open={open}>
-          <Modal.Header>JSON</Modal.Header>
-          <Modal.Description style={{ padding: 15 }}>Pressing &quot;Save&quot; saves immediately and overwrites the current checklist.</Modal.Description>
-          <Modal.Description style={{ padding: 15 }}>
-            {this.state.error && (
-              <Message error>
-                <p>{this.state.error}</p>
-              </Message>
-            )}
-            <Form>
-              <TextArea rows={40} onChange={this.onChange} style={{ fontFamily: 'monospace' }} value={data} />
-            </Form>
-          </Modal.Description>
-          <Modal.Actions>
-            <Button
-              disabled={!this.hasValidData()}
-              content="Download"
-              floated="left"
-              as="a"
-              href={this.hasValidData() ? `data:application/json,${encodeURI(JSON.stringify(JSON.parse(data), null, 4))}` : undefined}
-              download={downloadName || 'data.json'}
-              target="_blank"
-            />
-            <FileInput
-              onFileUploaded={data => {
-                try {
-                  this.setData(JSON.stringify(JSON.parse(new TextDecoder().decode(data)), null, 4))
-                } catch (e) {
-                  this.setState({ error: `File had invalid data: ${e.message}` })
-                }
-              }}
-              floated="left"
-              allowedFileTypes={['application/json']}
-            />
-            <Button content="Close" negative onClick={this.close} />
-            <Button
-              content="Save"
-              positive
-              disabled={!this.hasValidData()}
-              onClick={() => {
-                this.props.onImport(JSON.parse(this.state.data))
-                this.close()
-              }}
-            />
-          </Modal.Actions>
-        </Modal>
-      </React.Fragment>
-    )
-  }
+      <Modal onClose={closeDialog} open={open}>
+        <Modal.Header>JSON</Modal.Header>
+        <Modal.Description style={{ padding: 15 }}>Pressing &quot;Save&quot; saves immediately and overwrites the current checklist.</Modal.Description>
+        <Modal.Description style={{ padding: 15 }}>
+          {state.error && (
+            <Message error>
+              <p>{state.error}</p>
+            </Message>
+          )}
+          <Form>
+            <TextArea rows={40} onChange={onChange} style={{ fontFamily: 'monospace' }} value={data} />
+          </Form>
+        </Modal.Description>
+        <Modal.Actions>
+          <Button
+            disabled={!hasValidData()}
+            content="Download"
+            floated="left"
+            as="a"
+            href={hasValidData() ? `data:application/json,${encodeURI(JSON.stringify(JSON.parse(data), null, 4))}` : undefined}
+            download={downloadName || 'data.json'}
+            target="_blank"
+          />
+          <FileInput
+            onFileUploaded={data => {
+              try {
+                state.data = JSON.stringify(JSON.parse(new TextDecoder().decode(data)), null, 4)
+              } catch (e) {
+                state.error = `File had invalid data: ${e.message}`
+              }
+            }}
+            floated="left"
+            allowedFileTypes={['application/json']}
+          />
+          <Button content="Close" negative onClick={closeDialog} />
+          <Button
+            content="Save"
+            positive
+            disabled={!hasValidData()}
+            onClick={() => {
+              props.onImport(JSON.parse(state.data))
+              closeDialog()
+            }}
+          />
+        </Modal.Actions>
+      </Modal>
+    </React.Fragment>
+  )
 }
+export default JsonEdit
 
 JsonEdit.propTypes = {
   onImport: PropTypes.func.isRequired,

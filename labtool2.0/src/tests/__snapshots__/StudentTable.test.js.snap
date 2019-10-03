@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
-<React.Fragment>
+<Fragment>
   <div
     style={
       Object {
@@ -16,6 +16,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
       additionLabel="Add "
       additionPosition="top"
       closeOnBlur={true}
+      closeOnEscape={true}
       deburr={false}
       defaultValue={0}
       fluid={true}
@@ -127,7 +128,6 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
                   compact={true}
                   floated="left"
                   onClick={[Function]}
-                  role="button"
                 >
                   Javascript
                 </Button>
@@ -180,7 +180,6 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
                   compact={true}
                   floated="left"
                   onClick={[Function]}
-                  role="button"
                 >
                   DROPPED
                 </Button>
@@ -194,7 +193,6 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
                   compact={true}
                   floated="left"
                   onClick={[Function]}
-                  role="button"
                 >
                   HTML
                 </Button>
@@ -251,5 +249,5 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
       </TableBody>
     </Table>
   </Connect(HorizontalScrollable)>
-</React.Fragment>
+</Fragment>
 `;

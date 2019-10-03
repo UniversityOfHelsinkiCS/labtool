@@ -113,13 +113,20 @@ exports[`<MyPage /> MyPage Component should render correctly 1`] = `
               verticalAlign="bottom"
             >
               <Link
-                replace={false}
                 to="/labtool/email"
               >
                 <Popup
                   content="Edit email address"
-                  keepInViewPort={true}
-                  on="hover"
+                  disabled={false}
+                  eventsEnabled={true}
+                  offset={0}
+                  on={
+                    Array [
+                      "click",
+                      "hover",
+                    ]
+                  }
+                  pinned={false}
                   position="top left"
                   trigger={
                     <Button
@@ -132,7 +139,6 @@ exports[`<MyPage /> MyPage Component should render correctly 1`] = `
                           "size": "large",
                         }
                       }
-                      role="button"
                       size="tiny"
                     />
                   }
@@ -183,7 +189,6 @@ exports[`<MyPage /> MyPage Component should render correctly 1`] = `
                 as="td"
               >
                 <Link
-                  replace={false}
                   to="/labtool/courses/TKT20010.2018.K.A.1"
                 >
                   Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit (periodi IV)
@@ -197,13 +202,20 @@ exports[`<MyPage /> MyPage Component should render correctly 1`] = `
                 textAlign="right"
               >
                 <Link
-                  replace={false}
                   to="/labtool/courses/TKT20010.2018.K.A.1"
                 >
                   <Popup
                     content="View course"
-                    keepInViewPort={true}
-                    on="hover"
+                    disabled={false}
+                    eventsEnabled={true}
+                    offset={0}
+                    on={
+                      Array [
+                        "click",
+                        "hover",
+                      ]
+                    }
+                    pinned={false}
                     position="top left"
                     trigger={
                       <Button
@@ -216,7 +228,6 @@ exports[`<MyPage /> MyPage Component should render correctly 1`] = `
                             "size": "large",
                           }
                         }
-                        role="button"
                         size="tiny"
                       />
                     }
