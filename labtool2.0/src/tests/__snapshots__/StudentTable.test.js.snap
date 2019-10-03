@@ -15,7 +15,6 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
     <Dropdown
       additionLabel="Add "
       additionPosition="top"
-      className="aha"
       closeOnBlur={true}
       closeOnEscape={true}
       deburr={false}
