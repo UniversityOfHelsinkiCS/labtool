@@ -385,7 +385,6 @@ export const StudentTable = props => {
       <div style={{ textAlign: 'left' }}>
         <span>Filter by instructor </span>
         <Dropdown
-          className="aha"
           scrolling
           options={dropDownFilterTeachers}
           onChange={changeFilterAssistant()}
