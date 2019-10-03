@@ -451,105 +451,6 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           "review",
         ]
       }
-      courseData={
-        Object {
-          "data": Array [
-            Object {
-              "Tags": Array [
-                Object {
-                  "color": "red",
-                  "id": 20001,
-                  "name": "Javascript",
-                },
-              ],
-              "User": Object {
-                "admin": false,
-                "createdAt": "2018-03-26T00:00:00.000Z",
-                "email": "johan.studerande@helsinki.fi",
-                "firsts": "Johan Wilhelm",
-                "id": 10012,
-                "lastname": "Studerande",
-                "studentNumber": "014553242",
-                "updatedAt": "2018-03-26T00:00:00.000Z",
-                "username": "tiraopiskelija2",
-              },
-              "codeReviews": Array [],
-              "courseInstanceId": 10011,
-              "createdAt": "2018-03-26T00:00:00.000Z",
-              "dropped": false,
-              "github": "http://github.com/tiralabra2",
-              "id": 10012,
-              "projectName": "Tiran toinen labraprojekti",
-              "teacherInstanceId": 10011,
-              "updatedAt": "2018-03-26T00:00:00.000Z",
-              "userId": 10012,
-              "weeks": Array [],
-            },
-            Object {
-              "Tags": Array [
-                Object {
-                  "color": "grey",
-                  "id": 20008,
-                  "name": "DROPPED",
-                },
-                Object {
-                  "color": "yellow",
-                  "id": 20002,
-                  "name": "HTML",
-                },
-              ],
-              "User": Object {
-                "admin": false,
-                "createdAt": "2018-03-26T00:00:00.000Z",
-                "email": "teras.henkilo@helsinki.fi",
-                "firsts": "Teräs",
-                "id": 10031,
-                "lastname": "Henkilö",
-                "studentNumber": "014666666",
-                "updatedAt": "2018-03-26T00:00:00.000Z",
-                "username": "superopiskelija",
-              },
-              "codeReviews": Array [],
-              "courseInstanceId": 10011,
-              "createdAt": "2018-03-26T00:00:00.000Z",
-              "dropped": true,
-              "github": "http://github.com/superprojekti",
-              "id": 10031,
-              "projectName": "Tira super projekti",
-              "teacherInstanceId": 10011,
-              "updatedAt": "2018-06-05T07:12:28.603Z",
-              "userId": 10031,
-              "weeks": Array [],
-            },
-            Object {
-              "Tags": Array [],
-              "User": Object {
-                "admin": false,
-                "createdAt": "2018-03-26T00:00:00.000Z",
-                "email": "maarit.opiskelija@helsinki.fi",
-                "firsts": "Maarit Mirja",
-                "id": 10011,
-                "lastname": "Opiskelija",
-                "studentNumber": "014578343",
-                "updatedAt": "2018-03-26T00:00:00.000Z",
-                "username": "tiraopiskelija1",
-              },
-              "codeReviews": Array [],
-              "courseInstanceId": 10011,
-              "createdAt": "2018-03-26T00:00:00.000Z",
-              "dropped": false,
-              "github": "http://github.com/tiralabra1",
-              "id": 10011,
-              "projectName": "Tiran labraprojekti",
-              "teacherInstanceId": 10011,
-              "updatedAt": "2018-03-26T00:00:00.000Z",
-              "userId": 10011,
-              "weeks": Array [],
-            },
-          ],
-          "role": "teacher",
-        }
-      }
       coursePageLogic={
         Object {
           "filterByAssistant": 0,
@@ -562,7 +463,6 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
         }
       }
       disableDefaultFilter={false}
-      filterStudents={[Function]}
       rowClassName="TableRowForActiveStudents"
       selectedInstance={
         Object {
@@ -662,6 +562,66 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           ],
           "role": "teacher",
         }
+      }
+      studentInstances={
+        Array [
+          Object {
+            "Tags": Array [
+              Object {
+                "color": "red",
+                "id": 20001,
+                "name": "Javascript",
+              },
+            ],
+            "User": Object {
+              "admin": false,
+              "createdAt": "2018-03-26T00:00:00.000Z",
+              "email": "johan.studerande@helsinki.fi",
+              "firsts": "Johan Wilhelm",
+              "id": 10012,
+              "lastname": "Studerande",
+              "studentNumber": "014553242",
+              "updatedAt": "2018-03-26T00:00:00.000Z",
+              "username": "tiraopiskelija2",
+            },
+            "codeReviews": Array [],
+            "courseInstanceId": 10011,
+            "createdAt": "2018-03-26T00:00:00.000Z",
+            "dropped": false,
+            "github": "http://github.com/tiralabra2",
+            "id": 10012,
+            "projectName": "Tiran toinen labraprojekti",
+            "teacherInstanceId": 10011,
+            "updatedAt": "2018-03-26T00:00:00.000Z",
+            "userId": 10012,
+            "weeks": Array [],
+          },
+          Object {
+            "Tags": Array [],
+            "User": Object {
+              "admin": false,
+              "createdAt": "2018-03-26T00:00:00.000Z",
+              "email": "maarit.opiskelija@helsinki.fi",
+              "firsts": "Maarit Mirja",
+              "id": 10011,
+              "lastname": "Opiskelija",
+              "studentNumber": "014578343",
+              "updatedAt": "2018-03-26T00:00:00.000Z",
+              "username": "tiraopiskelija1",
+            },
+            "codeReviews": Array [],
+            "courseInstanceId": 10011,
+            "createdAt": "2018-03-26T00:00:00.000Z",
+            "dropped": false,
+            "github": "http://github.com/tiralabra1",
+            "id": 10011,
+            "projectName": "Tiran labraprojekti",
+            "teacherInstanceId": 10011,
+            "updatedAt": "2018-03-26T00:00:00.000Z",
+            "userId": 10011,
+            "weeks": Array [],
+          },
+        ]
       }
       tags={
         Object {
@@ -763,105 +723,6 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           "review",
         ]
       }
-      courseData={
-        Object {
-          "data": Array [
-            Object {
-              "Tags": Array [
-                Object {
-                  "color": "red",
-                  "id": 20001,
-                  "name": "Javascript",
-                },
-              ],
-              "User": Object {
-                "admin": false,
-                "createdAt": "2018-03-26T00:00:00.000Z",
-                "email": "johan.studerande@helsinki.fi",
-                "firsts": "Johan Wilhelm",
-                "id": 10012,
-                "lastname": "Studerande",
-                "studentNumber": "014553242",
-                "updatedAt": "2018-03-26T00:00:00.000Z",
-                "username": "tiraopiskelija2",
-              },
-              "codeReviews": Array [],
-              "courseInstanceId": 10011,
-              "createdAt": "2018-03-26T00:00:00.000Z",
-              "dropped": false,
-              "github": "http://github.com/tiralabra2",
-              "id": 10012,
-              "projectName": "Tiran toinen labraprojekti",
-              "teacherInstanceId": 10011,
-              "updatedAt": "2018-03-26T00:00:00.000Z",
-              "userId": 10012,
-              "weeks": Array [],
-            },
-            Object {
-              "Tags": Array [
-                Object {
-                  "color": "grey",
-                  "id": 20008,
-                  "name": "DROPPED",
-                },
-                Object {
-                  "color": "yellow",
-                  "id": 20002,
-                  "name": "HTML",
-                },
-              ],
-              "User": Object {
-                "admin": false,
-                "createdAt": "2018-03-26T00:00:00.000Z",
-                "email": "teras.henkilo@helsinki.fi",
-                "firsts": "Teräs",
-                "id": 10031,
-                "lastname": "Henkilö",
-                "studentNumber": "014666666",
-                "updatedAt": "2018-03-26T00:00:00.000Z",
-                "username": "superopiskelija",
-              },
-              "codeReviews": Array [],
-              "courseInstanceId": 10011,
-              "createdAt": "2018-03-26T00:00:00.000Z",
-              "dropped": true,
-              "github": "http://github.com/superprojekti",
-              "id": 10031,
-              "projectName": "Tira super projekti",
-              "teacherInstanceId": 10011,
-              "updatedAt": "2018-06-05T07:12:28.603Z",
-              "userId": 10031,
-              "weeks": Array [],
-            },
-            Object {
-              "Tags": Array [],
-              "User": Object {
-                "admin": false,
-                "createdAt": "2018-03-26T00:00:00.000Z",
-                "email": "maarit.opiskelija@helsinki.fi",
-                "firsts": "Maarit Mirja",
-                "id": 10011,
-                "lastname": "Opiskelija",
-                "studentNumber": "014578343",
-                "updatedAt": "2018-03-26T00:00:00.000Z",
-                "username": "tiraopiskelija1",
-              },
-              "codeReviews": Array [],
-              "courseInstanceId": 10011,
-              "createdAt": "2018-03-26T00:00:00.000Z",
-              "dropped": false,
-              "github": "http://github.com/tiralabra1",
-              "id": 10011,
-              "projectName": "Tiran labraprojekti",
-              "teacherInstanceId": 10011,
-              "updatedAt": "2018-03-26T00:00:00.000Z",
-              "userId": 10011,
-              "weeks": Array [],
-            },
-          ],
-          "role": "teacher",
-        }
-      }
       coursePageLogic={
         Object {
           "filterByAssistant": 0,
@@ -874,7 +735,6 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
         }
       }
       disableDefaultFilter={true}
-      filterStudents={[Function]}
       rowClassName="TableRowForDroppedOutStudents active"
       selectedInstance={
         Object {
@@ -974,6 +834,46 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           ],
           "role": "teacher",
         }
+      }
+      studentInstances={
+        Array [
+          Object {
+            "Tags": Array [
+              Object {
+                "color": "grey",
+                "id": 20008,
+                "name": "DROPPED",
+              },
+              Object {
+                "color": "yellow",
+                "id": 20002,
+                "name": "HTML",
+              },
+            ],
+            "User": Object {
+              "admin": false,
+              "createdAt": "2018-03-26T00:00:00.000Z",
+              "email": "teras.henkilo@helsinki.fi",
+              "firsts": "Teräs",
+              "id": 10031,
+              "lastname": "Henkilö",
+              "studentNumber": "014666666",
+              "updatedAt": "2018-03-26T00:00:00.000Z",
+              "username": "superopiskelija",
+            },
+            "codeReviews": Array [],
+            "courseInstanceId": 10011,
+            "createdAt": "2018-03-26T00:00:00.000Z",
+            "dropped": true,
+            "github": "http://github.com/superprojekti",
+            "id": 10031,
+            "projectName": "Tira super projekti",
+            "teacherInstanceId": 10011,
+            "updatedAt": "2018-06-05T07:12:28.603Z",
+            "userId": 10031,
+            "weeks": Array [],
+          },
+        ]
       }
       tags={
         Object {

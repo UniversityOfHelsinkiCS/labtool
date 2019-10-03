@@ -183,7 +183,7 @@ describe('<StudentTable />', () => {
     wrapper = shallow(
       <StudentTable
         columns={[]}
-        courseData={coursePage}
+        studentInstances={coursePage.data}
         selectedInstance={coursePage}
         coursePageLogic={coursePageLogic}
         associateTeacherToStudent={mockFn}
