@@ -296,13 +296,11 @@ export const StudentTable = props => {
       {/* Instructor */}
       <Table.Cell key="instructor">
         {data.teacherInstanceId && props.selectedInstance.teacherInstances ? (
-          props.selectedInstance.teacherInstances
-            .filter(teacher => teacher.id === data.teacherInstanceId)
-            .map(teacher => (
-              <span key={data.id + ':' + teacher.id}>
-                {teacher.firsts} {teacher.lastname}
-              </span>
-            ))
+          props.selectedInstance.teacherInstances.filter(teacher => teacher.id === data.teacherInstanceId).map(teacher => (
+            <span key={data.id + ':' + teacher.id}>
+              {teacher.firsts} {teacher.lastname}
+            </span>
+          ))
         ) : (
           <span>not assigned</span>
         )}
@@ -357,9 +355,7 @@ export const StudentTable = props => {
   let dropDownTags = []
   dropDownTags = createDropdownTags(props.tags.tags, dropDownTags)
 
-  const filteredData = (props.courseData.data || [])
-    // remove special filter
-    .filter(data => !filterStudents || filterStudents(data))
+  const filteredData = (props.studentInstances || [])
     // remove students when filtering assistants and it doesn't match
     .filter(
       data =>
@@ -426,7 +422,7 @@ export const StudentTable = props => {
               {showColumn('review') && <Table.HeaderCell>Review</Table.HeaderCell>}
             </Table.Row>
           </Table.Header>
-          <Table.Body>{props.courseData && props.courseData.data ? filteredData.map(data => createStudentTableRow(showColumn, data, rowClassName, dropDownTags, dropDownTeachers)) : <p />}</Table.Body>
+          <Table.Body>{filteredData.map(data => createStudentTableRow(showColumn, data, rowClassName, dropDownTags, dropDownTeachers))}</Table.Body>
         </Table>
       </HorizontalScrollable>
     </Fragment>
@@ -454,11 +450,10 @@ StudentTable.propTypes = {
   rowClassName: PropTypes.string,
   columns: PropTypes.array,
   allowModify: PropTypes.bool,
-  filterStudents: PropTypes.func,
   disableDefaultFilter: PropTypes.bool,
 
+  studentInstances: PropTypes.array.isRequired,
   selectedInstance: PropTypes.object.isRequired,
-  courseData: PropTypes.object.isRequired,
   coursePageLogic: PropTypes.object.isRequired,
   tags: PropTypes.object.isRequired,
 
