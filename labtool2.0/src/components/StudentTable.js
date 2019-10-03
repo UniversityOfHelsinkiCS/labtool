@@ -140,6 +140,8 @@ export const StudentTable = props => {
     return hasRequiredTags
   }
 
+  const shouldHideInstructor = studentInstances => studentInstances.every(studentInstance => studentInstance.teacherInstanceId === null)
+
   const createHeadersTeacher = () => {
     const headers = []
     let i = 0
@@ -294,35 +296,37 @@ export const StudentTable = props => {
       )}
 
       {/* Instructor */}
-      <Table.Cell key="instructor">
-        {data.teacherInstanceId && props.selectedInstance.teacherInstances ? (
-          props.selectedInstance.teacherInstances.filter(teacher => teacher.id === data.teacherInstanceId).map(teacher => (
-            <span key={data.id + ':' + teacher.id}>
-              {teacher.firsts} {teacher.lastname}
-            </span>
-          ))
-        ) : (
-          <span>not assigned</span>
-        )}
-        {props.allowModify && (
-          <Fragment>
-            <Popup
-              trigger={<Button circular onClick={changeHiddenAssistantDropdown(data.id)} size="small" icon={{ name: 'pencil' }} style={{ margin: '0.25em', float: 'right' }} />}
-              content="Assign instructor"
-            />
-            {props.coursePageLogic.showAssistantDropdown === data.id ? (
-              <div>
-                <Dropdown id="assistantDropdown" options={dropDownTeachers} onChange={changeSelectedTeacher()} placeholder="Select teacher" fluid selection />
-                <Button onClick={updateTeacher(data.id, data.teacherInstanceId)} size="small">
-                  Change instructor
-                </Button>
-              </div>
-            ) : (
-              <div />
-            )}
-          </Fragment>
-        )}
-      </Table.Cell>
+      {!shouldHideInstructor(props.studentInstances) && (
+        <Table.Cell key="instructor">
+          {data.teacherInstanceId && props.selectedInstance.teacherInstances ? (
+            props.selectedInstance.teacherInstances.filter(teacher => teacher.id === data.teacherInstanceId).map(teacher => (
+              <span key={data.id + ':' + teacher.id}>
+                {teacher.firsts} {teacher.lastname}
+              </span>
+            ))
+          ) : (
+            <span>not assigned</span>
+          )}
+          {props.allowModify && (
+            <Fragment>
+              <Popup
+                trigger={<Button circular onClick={changeHiddenAssistantDropdown(data.id)} size="small" icon={{ name: 'pencil' }} style={{ margin: '0.25em', float: 'right' }} />}
+                content="Assign instructor"
+              />
+              {props.coursePageLogic.showAssistantDropdown === data.id ? (
+                <div>
+                  <Dropdown id="assistantDropdown" options={dropDownTeachers} onChange={changeSelectedTeacher()} placeholder="Select teacher" fluid selection />
+                  <Button onClick={updateTeacher(data.id, data.teacherInstanceId)} size="small">
+                    Change instructor
+                  </Button>
+                </div>
+              ) : (
+                <div />
+              )}
+            </Fragment>
+          )}
+        </Table.Cell>
+      )}
 
       {showColumn('review') && (
         <Fragment>
@@ -337,7 +341,7 @@ export const StudentTable = props => {
     </Table.Row>
   )
 
-  const { columns, filterStudents, rowClassName, disableDefaultFilter } = props
+  const { columns, rowClassName, disableDefaultFilter } = props
 
   const showColumn = column => columns.indexOf(column) >= 0
 
@@ -418,7 +422,7 @@ export const StudentTable = props => {
                   <Table.HeaderCell>Sum</Table.HeaderCell>
                 </Fragment>
               )}
-              <Table.HeaderCell width="six">Instructor</Table.HeaderCell>
+              {!shouldHideInstructor(props.studentInstances) && <Table.HeaderCell width="six">Instructor</Table.HeaderCell>}
               {showColumn('review') && <Table.HeaderCell>Review</Table.HeaderCell>}
             </Table.Row>
           </Table.Header>
