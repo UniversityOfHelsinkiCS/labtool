@@ -47,7 +47,7 @@ export const StudentTable = props => {
   const updateTeacher = id => async e => {
     try {
       e.preventDefault()
-      let teacherId = this.props.coursePageLogic.selectedTeacher
+      let teacherId = props.coursePageLogic.selectedTeacher
       if (teacherId == '-') {
         // unassign
         teacherId = null
@@ -308,13 +308,11 @@ export const StudentTable = props => {
       {/* Instructor */}
       <Table.Cell>
         {data.teacherInstanceId && props.selectedInstance.teacherInstances ? (
-          props.selectedInstance.teacherInstances
-            .filter(teacher => teacher.id === data.teacherInstanceId)
-            .map(teacher => (
-              <span key={data.id}>
-                {teacher.firsts} {teacher.lastname}
-              </span>
-            ))
+          props.selectedInstance.teacherInstances.filter(teacher => teacher.id === data.teacherInstanceId).map(teacher => (
+            <span key={data.id}>
+              {teacher.firsts} {teacher.lastname}
+            </span>
+          ))
         ) : (
           <span>not assigned</span>
         )}
@@ -423,7 +421,13 @@ export const StudentTable = props => {
                 // remove special filter
                 .filter(data => !filterStudents || filterStudents(data))
                 // remove students when filtering assistants and it doesn't match
-                .filter(data => disableDefaultFilter || this.props.coursePageLogic.filterByAssistant === 0 || this.props.coursePageLogic.filterByAssistant === data.teacherInstanceId || (this.props.coursePageLogic.filterByAssistant === '-' && data.teacherInstanceId === null))
+                .filter(
+                  data =>
+                    disableDefaultFilter ||
+                    props.coursePageLogic.filterByAssistant === 0 ||
+                    props.coursePageLogic.filterByAssistant === data.teacherInstanceId ||
+                    (props.coursePageLogic.filterByAssistant === '-' && data.teacherInstanceId === null)
+                )
                 // remove students when filtering tags and they don't match
                 .filter(data => disableDefaultFilter || props.coursePageLogic.filterByTag.length === 0 || hasFilteringTags(data.Tags, props.coursePageLogic.filterByTag))
                 .map(data => createStudentTableRow(showColumn, data, rowClassName, dropDownTags, dropDownTeachers))
