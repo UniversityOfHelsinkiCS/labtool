@@ -165,7 +165,8 @@ describe('<StudentTable />', () => {
     showDropdown: '',
     selectedTeacher: '',
     filterByAssistant: 0,
-    filterByTag: []
+    filterByTag: [],
+    selectedStudents: {}
   }
 
   const loading = {
@@ -198,6 +199,10 @@ describe('<StudentTable />', () => {
         filterByTag={mockFn}
         tagStudent={mockFn}
         unTagStudent={mockFn}
+        selectStudent={mockFn}
+        unselectStudent={mockFn}
+        selectAllStudents={mockFn}
+        unselectAllStudents={mockFn}
         rowClassName="StudentRow"
       />
     )

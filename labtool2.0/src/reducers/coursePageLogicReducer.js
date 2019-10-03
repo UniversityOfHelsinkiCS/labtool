@@ -18,7 +18,8 @@ const INITIAL_STATE = {
   lastReviewedWeek: 1,
   lastReviewedIsShownAlready: false,
   filterByTag: [],
-  showCodeReviews: []
+  showCodeReviews: [],
+  selectedStudents: {}
 }
 
 const coursePageLogicReducer = (state = INITIAL_STATE, action) => {
@@ -31,6 +32,34 @@ const coursePageLogicReducer = (state = INITIAL_STATE, action) => {
       return { ...state, selectedTeacher: action.selection }
     case 'COURSE_PAGE_SELECT_TAG':
       return { ...state, selectedTag: action.selection }
+    case 'COURSE_PAGE_SET_SELECTED_STUDENTS':
+      return { ...state, selectedStudents: action.selection }
+    case 'COURSE_PAGE_SELECT_STUDENT': {
+      const newSelectedStudents = state.selectedStudents
+      newSelectedStudents[action.id] = true
+      return { ...state, selectedStudents: newSelectedStudents }
+    }
+    case 'COURSE_PAGE_UNSELECT_STUDENT': {
+      const newSelectedStudents = state.selectedStudents
+      delete newSelectedStudents[action.id]
+      return { ...state, selectedStudents: newSelectedStudents }
+    }
+    case 'COURSE_PAGE_SELECT_MANY_STUDENTS': {
+      const newSelectedStudents = state.selectedStudents
+      action.ids.map(id => {
+        newSelectedStudents[id] = true
+        return id
+      })
+      return { ...state, selectedStudents: newSelectedStudents }
+    }
+    case 'COURSE_PAGE_UNSELECT_MANY_STUDENTS': {
+      const newSelectedStudents = state.selectedStudents
+      action.ids.map(id => {
+        delete newSelectedStudents[id]
+        return id
+      })
+      return { ...state, selectedStudents: newSelectedStudents }
+    }
     case 'COURSE_PAGE_FILTER_BY_ASSISTANT':
       return { ...state, filterByAssistant: action.assistant }
     case 'COURSE_PAGE_FILTER_BY_TAG':
@@ -139,6 +168,51 @@ export const selectTag = selection => {
   return async dispatch => {
     dispatch({
       type: 'COURSE_PAGE_SELECT_TAG',
+      selection
+    })
+  }
+}
+
+export const selectStudent = id => {
+  return async dispatch => {
+    dispatch({
+      type: 'COURSE_PAGE_SELECT_STUDENT',
+      id
+    })
+  }
+}
+
+export const unselectStudent = id => {
+  return async dispatch => {
+    dispatch({
+      type: 'COURSE_PAGE_UNSELECT_STUDENT',
+      id
+    })
+  }
+}
+
+export const selectAllStudents = ids => {
+  return async dispatch => {
+    dispatch({
+      type: 'COURSE_PAGE_SELECT_MANY_STUDENTS',
+      ids
+    })
+  }
+}
+
+export const unselectAllStudents = ids => {
+  return async dispatch => {
+    dispatch({
+      type: 'COURSE_PAGE_UNSELECT_MANY_STUDENTS',
+      ids
+    })
+  }
+}
+
+export const restoreStudentSelection = selection => {
+  return async dispatch => {
+    dispatch({
+      type: 'COURSE_PAGE_SET_SELECTED_STUDENTS',
       selection
     })
   }

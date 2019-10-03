@@ -166,7 +166,8 @@ export const BrowseReviews = props => {
           {student.User.firsts} {student.User.lastname} ({student.User.studentNumber})
           {student.dropped && (
             <Label style={{ marginTop: 5, float: 'right' }}>
-              <Icon name="warning sign" color="red" />Has dropped course
+              <Icon name="warning sign" color="red" />
+              Has dropped course
             </Label>
           )}
           <Header.Subheader>
@@ -208,6 +209,10 @@ export const BrowseReviews = props => {
             <Icon name="dropdown" /> {isFinalWeek ? 'Final Review' : `Week ${i + 1}`}, points {week.points}
           </Accordion.Title>
           <Accordion.Content active={openWeeks[i]}>
+            <h3>Review</h3>
+            <Link to={`/labtool/reviewstudent/${props.selectedInstance.ohid}/${studentInstance}/${reviewIndex}`}>
+              <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'edit', color: 'black', size: 'large' }} />} content={isFinalWeek ? 'Edit final review' : 'Edit review'} />
+            </Link>
             <Card fluid color="yellow">
               <Card.Content>
                 <h4> Points {week.points} </h4>
@@ -246,10 +251,6 @@ export const BrowseReviews = props => {
               <Form.Checkbox label="Add comment for instructors only" name="hidden" />
               <Button content="Add Reply" labelPosition="left" icon="edit" primary />
             </Form>
-            <h3>Review</h3>
-            <Link to={`/labtool/reviewstudent/${props.selectedInstance.ohid}/${studentInstance}/${reviewIndex}`}>
-              <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'edit', color: 'black', size: 'large' }} />} content={isFinalWeek ? 'Edit final review' : 'Edit review'} />
-            </Link>
           </Accordion.Content>
         </Accordion>
       )
@@ -260,11 +261,12 @@ export const BrowseReviews = props => {
             <Icon name="dropdown" /> {isFinalWeek ? 'Final Review' : `Week ${i + 1}`}{' '}
           </Accordion.Title>
           <Accordion.Content active={openWeeks[i]}>
-            <h4> Not Graded </h4>
-            <h4> No comments </h4>
+            <h3>Review</h3>
             <Link to={`/labtool/reviewstudent/${props.selectedInstance.ohid}/${studentInstance}/${reviewIndex}`}>
               <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'edit', color: 'black', size: 'large' }} />} content={isFinalWeek ? 'Give Final Review' : 'Review week'} />
             </Link>
+            <h4> Not Graded </h4>
+            <h4> No comments </h4>
           </Accordion.Content>
         </Accordion>
       )

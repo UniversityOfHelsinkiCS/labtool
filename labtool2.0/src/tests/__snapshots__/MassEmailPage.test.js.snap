@@ -25,7 +25,7 @@ exports[`<MassEmailPage /> MassEmailPage Component should render correctly 1`] =
         allowModify={false}
         columns={
           Array [
-            "sendcheck",
+            "select",
           ]
         }
         courseData={
