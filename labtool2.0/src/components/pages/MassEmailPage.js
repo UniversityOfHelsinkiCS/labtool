@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import { getAllTags } from '../../services/tags'
 import { sendMassEmail } from '../../services/email'
-import { coursePageReset } from '../../reducers/coursePageLogicReducer'
+import { coursePageReset, restoreStudentSelection } from '../../reducers/coursePageLogicReducer'
 import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 import store from '../../store'
 import StudentTable from '../StudentTable'
@@ -19,9 +19,12 @@ export const MassEmailPage = props => {
     props.coursePageInformation(props.courseId)
     props.getAllTags()
 
+    // do not carry over selection changes back to main student table
+    const oldSelectedStudents = { ...props.coursePageLogic.selectedStudents }
     return () => {
       // run on component unmount
       props.coursePageReset()
+      props.restoreStudentSelection(oldSelectedStudents)
     }
   }, [])
 
@@ -29,7 +32,7 @@ export const MassEmailPage = props => {
     e.preventDefault()
     const data = props.courseData && props.courseData.data
     if (data) {
-      const sendingTo = data.filter(entry => e.target['send' + entry.id] && e.target['send' + entry.id].checked).map(entry => ({ id: entry.id }))
+      const sendingTo = data.filter(entry => props.coursePageLogic.selectedStudents[entry.id]).map(entry => ({ id: entry.id }))
 
       if (!sendingTo.length) {
         store.dispatch({ type: 'MASS_EMAIL_SENDFAILURE' })
@@ -62,7 +65,7 @@ export const MassEmailPage = props => {
         <Form onSubmit={handleSubmit}>
           <StudentTable
             rowClassName="TableRowForActiveStudents"
-            columns={['sendcheck']}
+            columns={['select']}
             allowModify={false}
             filterStudents={data => data.User.email}
             disableDefaultFilter={false}
@@ -136,17 +139,18 @@ const mapDispatchToProps = {
   getAllTags,
   sendMassEmail,
   resetLoading,
-  addRedirectHook
+  addRedirectHook,
+  restoreStudentSelection
 }
 
 MassEmailPage.propTypes = {
   courseId: PropTypes.string.isRequired,
 
   user: PropTypes.object.isRequired,
-  studentInstance: PropTypes.object.isRequired,
-  teacherInstance: PropTypes.object.isRequired,
+  studentInstance: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+  teacherInstance: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
   selectedInstance: PropTypes.object.isRequired,
-  courseInstance: PropTypes.object.isRequired,
+  courseInstance: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
   courseData: PropTypes.object.isRequired,
   coursePageLogic: PropTypes.object.isRequired,
   tags: PropTypes.object.isRequired,
@@ -158,7 +162,8 @@ MassEmailPage.propTypes = {
   getAllTags: PropTypes.func.isRequired,
   sendMassEmail: PropTypes.func.isRequired,
   resetLoading: PropTypes.func.isRequired,
-  addRedirectHook: PropTypes.func.isRequired
+  addRedirectHook: PropTypes.func.isRequired,
+  restoreStudentSelection: PropTypes.func.isRequired
 }
 
 export default connect(

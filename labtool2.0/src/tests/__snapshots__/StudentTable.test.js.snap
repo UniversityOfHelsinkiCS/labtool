@@ -98,6 +98,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
         >
           <TableCell
             as="td"
+            key="studentinfo"
           >
             Johan Wilhelm
              
@@ -108,6 +109,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
           </TableCell>
           <TableCell
             as="td"
+            key="projectinfo"
           >
             <span>
               Tiran toinen labraprojekti
@@ -120,7 +122,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
                 http://github.com/tiralabra2
               </a>
               <div
-                key="20001"
+                key="10012:20001"
               >
                 <Button
                   as="button"
@@ -136,6 +138,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
           </TableCell>
           <TableCell
             as="td"
+            key="instructor"
           >
             <span>
               not assigned
@@ -150,6 +153,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
         >
           <TableCell
             as="td"
+            key="studentinfo"
           >
             Teräs
              
@@ -160,6 +164,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
           </TableCell>
           <TableCell
             as="td"
+            key="projectinfo"
           >
             <span>
               Tira super projekti
@@ -172,7 +177,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
                 http://github.com/superprojekti
               </a>
               <div
-                key="20008"
+                key="10031:20008"
               >
                 <Button
                   as="button"
@@ -185,7 +190,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
                 </Button>
               </div>
               <div
-                key="20002"
+                key="10031:20002"
               >
                 <Button
                   as="button"
@@ -201,6 +206,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
           </TableCell>
           <TableCell
             as="td"
+            key="instructor"
           >
             <span>
               not assigned
@@ -215,6 +221,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
         >
           <TableCell
             as="td"
+            key="studentinfo"
           >
             Maarit Mirja
              
@@ -225,6 +232,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
           </TableCell>
           <TableCell
             as="td"
+            key="projectinfo"
           >
             <span>
               Tiran labraprojekti
@@ -240,6 +248,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
           </TableCell>
           <TableCell
             as="td"
+            key="instructor"
           >
             <span>
               not assigned

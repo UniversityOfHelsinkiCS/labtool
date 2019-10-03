@@ -198,7 +198,8 @@ describe('<CoursePage /> as teacher', () => {
     showDropdown: '',
     selectedTeacher: '',
     filterByAssistant: 0,
-    filterByTag: []
+    filterByTag: [],
+    selectedStudents: { 10011: true }
   }
 
   const loading = {
@@ -243,6 +244,8 @@ describe('<CoursePage /> as teacher', () => {
         sendEmail={mockFn}
         updateActiveIndex={mockFn}
         unTagStudent={mockFn}
+        selectTag={mockFn}
+        selectTeacher={mockFn}
       />
     )
   })
@@ -275,6 +278,18 @@ describe('<CoursePage /> as teacher', () => {
     it('doesnt render students top view when role is teacher', () => {
       expect(wrapper.find('.StudentsView').length).toEqual(0)
     })
+
+    it('renders bulk editing form when a student is selected', () => {
+      expect(wrapper.find('.TeacherBulkForm').length).toEqual(1)
+    })
+
+    it('can mark all students with DROPPED tag as dropped', () => {
+      window.confirm = jest.fn(() => true)
+      wrapper.find({ children: 'Mark all with dropped tag as dropped out' }).simulate('click')
+
+      expect(mockUpdateStudentProjectInfo).toBeCalledWith(expect.objectContaining({ userId: 10031, dropped: true }))
+    })
+
     /*
     no longer possible with shallow testing since StudentTable became
     its own component
@@ -287,13 +302,6 @@ describe('<CoursePage /> as teacher', () => {
       expect(wrapper.find('.TableRowForDroppedOutStudents').length).toEqual(1)
     })
     */
-
-    it('can mark all students with DROPPED tag as dropped', () => {
-      window.confirm = jest.fn(() => true)
-      wrapper.find({ children: 'Mark all with dropped tag as dropped out' }).simulate('click')
-
-      expect(mockUpdateStudentProjectInfo).toBeCalledWith(expect.objectContaining({ userId: 10031, dropped: true }))
-    })
 
     // it('assistant dropdown menu is not shown when page loads', () => {
     //   expect(wrapper.find('.AssistantDropdown').length).toEqual(0)
@@ -467,6 +475,8 @@ describe('<CoursePage /> as student', () => {
         updateActiveIndex={mockFn}
         unTagStudent={mockFn}
         updateStudentProjectInfo={mockFn}
+        selectTag={mockFn}
+        selectTeacher={mockFn}
       />
     )
   })
