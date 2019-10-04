@@ -13,7 +13,9 @@ module.exports = (sequelize, DataTypes) => {
       codeReviewActive: DataTypes.BOOLEAN,
       amountOfCodeReviews: DataTypes.INTEGER,
       ohid: DataTypes.STRING,
-      finalReview: DataTypes.BOOLEAN
+      finalReview: DataTypes.BOOLEAN,
+      coursesPage: DataTypes.STRING,
+      courseMaterial: DataTypes.STRING
     },
     {}
   )
