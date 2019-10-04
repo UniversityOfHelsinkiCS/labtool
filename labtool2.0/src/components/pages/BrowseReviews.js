@@ -38,14 +38,11 @@ export const BrowseReviews = props => {
     }
   }, [])
 
-  useEffect(
-    () => {
-      if (!props.loading.loading && state.initialLoading) {
-        state.initialLoading = false
-      }
-    },
-    [props.loading.loading, state.initialLoading]
-  )
+  useEffect(() => {
+    if (!props.loading.loading && state.initialLoading) {
+      state.initialLoading = false
+    }
+  }, [props.loading.loading, state.initialLoading])
 
   const handleClick = (e, titleProps) => {
     const { index } = titleProps
@@ -155,7 +152,9 @@ export const BrowseReviews = props => {
         <p className style={{ color: 'red' }}>
           Has taken this course before
         </p>
-        {previousParticipations.map(participation => <p key={participation.id}>{createCourseIdWithYearAndTerm(participation.ohid, participation.start)}</p>)}
+        {previousParticipations.map(participation => (
+          <p key={participation.id}>{createCourseIdWithYearAndTerm(participation.ohid, participation.start)}</p>
+        ))}
       </div>
     )
   }

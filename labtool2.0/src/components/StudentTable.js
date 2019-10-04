@@ -374,20 +374,30 @@ export const StudentTable = props => {
   // all students currently visible selected?
   const allSelected = filteredData.map(data => data.id).every(id => props.coursePageLogic.selectedStudents[id])
 
+  // calculate the length of the longest text in a drop down
+  const getBiggestWidthInDropdown = dropdownList => {
+    if (dropdownList.length === 0) {
+      return 3
+    }
+    const lengths = dropdownList.map(dp => dp.text.length)
+    return lengths.reduce((longest, comp) => (longest > comp ? longest : comp), lengths[0])
+  }
+
   return (
     <Fragment>
       <div style={{ textAlign: 'left' }}>
         <span>Filter by instructor </span>
         <Dropdown
+          scrolling
           options={dropDownFilterTeachers}
           onChange={changeFilterAssistant()}
           placeholder="Select Teacher"
           defaultValue={props.coursePageLogic.filterByAssistant}
-          fluid
           selection
-          style={{ display: 'inline' }}
+          style={{ width: `${getBiggestWidthInDropdown(dropDownFilterTeachers)}em` }}
         />
         <span> Tag filters: </span>
+
         {props.coursePageLogic.filterByTag.length === 0 ? (
           <span>
             <Label>none</Label>

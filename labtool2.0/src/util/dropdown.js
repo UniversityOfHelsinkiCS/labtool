@@ -1,4 +1,3 @@
-
 // generating dropdowns for StudentTable etc.
 
 export const createDropdownTeachers = (teachers, array) => {
