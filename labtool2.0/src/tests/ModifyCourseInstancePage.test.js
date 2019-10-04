@@ -1,7 +1,7 @@
 import React from 'react'
 import { ModifyCourseInstancePage } from '../components/pages/ModifyCourseInstancePage'
 import { shallow } from 'enzyme'
-import { Form, Popup, Dropdown } from 'semantic-ui-react'
+import { Popup, Dropdown, Checkbox } from 'semantic-ui-react'
 
 describe('<ModifyCourseInstancePage />', () => {
   let wrapper
@@ -93,8 +93,9 @@ describe('<ModifyCourseInstancePage />', () => {
       expect(wrapper.find(Dropdown).props().options[0].text).toEqual('3')
     })
     it('renders active course checkbox', () => {
-      const input = wrapper.find(Form.Group).at(6)
-      expect(input.props().children.props['label']).toEqual('Activate course')
+      const checkbox = wrapper.find(Checkbox).find({ name: 'courseActive' })
+
+      expect(checkbox.prop('label')).toEqual('Activate course')
     })
   })
 })
