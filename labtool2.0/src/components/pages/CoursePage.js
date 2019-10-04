@@ -19,6 +19,18 @@ import { FormMarkdownTextArea } from '../MarkdownTextArea'
 import StudentTable from '../StudentTable'
 import { createDropdownTeachers, createDropdownTags } from '../../util/dropdown'
 
+const CoursePageHeader = ({ courseInstance }) => (
+  <Header as="h2" style={{ marginBottom: '1em' }}>
+    <Header.Content>
+      {courseInstance.name}
+      <Header.Subheader>
+        {courseInstance.coursesPage && <a href={courseInstance.coursesPage}>courses.helsinki.fi</a>} {courseInstance.coursesPage && courseInstance.courseMaterial && '|'}{' '}
+        {courseInstance.courseMaterial && <a href={courseInstance.courseMaterial}>Course material</a>}
+      </Header.Subheader>
+    </Header.Content>
+  </Header>
+)
+
 export const CoursePage = props => {
   useEffect(() => {
     // run on component mount
@@ -369,12 +381,16 @@ export const CoursePage = props => {
             <Icon name="check" />
             <strong> Total Points: </strong>
             {(
-              props.courseData.data.weeks.map(week => week.points).reduce((a, b) => {
-                return a + b
-              }, 0) +
-              props.courseData.data.codeReviews.map(cr => cr.points).reduce((a, b) => {
-                return a + b
-              }, 0)
+              props.courseData.data.weeks
+                .map(week => week.points)
+                .reduce((a, b) => {
+                  return a + b
+                }, 0) +
+              props.courseData.data.codeReviews
+                .map(cr => cr.points)
+                .reduce((a, b) => {
+                  return a + b
+                }, 0)
             )
               .toFixed(2)
               .replace(/[.,]00$/, '')}
@@ -392,51 +408,43 @@ export const CoursePage = props => {
   let renderTeacherTopPart = () => {
     return (
       <div className="TeachersTopView" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
-        <div>
-          <div>
-            <h2>{props.selectedInstance.name}</h2>
-          </div>
-          {props.courseInstance && props.courseInstance.active !== true ? (
-            !props.selectedInstance.active && (
-              <div>
-                <Message compact>
-                  <Message.Header>You have not activated this course.</Message.Header>
-                </Message>
-                <br />
-              </div>
-            )
-          ) : (
-            <p />
-          )}
-        </div>
-        <div>
-          <Table>
-            <Table.Header>
-              <Table.Row>
-                <Table.Cell>
-                  <div>
-                    {props.selectedInstance.active === true ? (
-                      <Label ribbon style={{ backgroundColor: '#21ba45' }}>
-                        Active registration
-                      </Label>
-                    ) : (
-                      <div />
-                    )}
-                  </div>
-                </Table.Cell>
-                <Table.Cell>Week amount: {props.selectedInstance.weekAmount}</Table.Cell>
-                <Table.Cell>Current week: {props.selectedInstance.currentWeek}</Table.Cell>
-                <Table.Cell>Week max points: {props.selectedInstance.weekMaxPoints}</Table.Cell>
-                <Table.Cell textAlign="right">
-                  {' '}
-                  <Link to={`/labtool/ModifyCourseInstancePage/${props.selectedInstance.ohid}`}>
-                    <Popup trigger={<Button circular size="tiny" icon={{ name: 'edit', size: 'large', color: 'orange' }} />} content="Edit course" />
-                  </Link>
-                </Table.Cell>
-              </Table.Row>
-            </Table.Header>
-          </Table>
-        </div>
+        <CoursePageHeader courseInstance={props.selectedInstance} />
+        {props.courseInstance &&
+          props.courseInstance.active !== true &&
+          (!props.selectedInstance.active && (
+            <div>
+              <Message compact>
+                <Message.Header>You have not activated this course.</Message.Header>
+              </Message>
+              <br />
+            </div>
+          ))}
+        <Table>
+          <Table.Header>
+            <Table.Row>
+              <Table.Cell>
+                <div>
+                  {props.selectedInstance.active === true ? (
+                    <Label ribbon style={{ backgroundColor: '#21ba45' }}>
+                      Active registration
+                    </Label>
+                  ) : (
+                    <div />
+                  )}
+                </div>
+              </Table.Cell>
+              <Table.Cell>Week amount: {props.selectedInstance.weekAmount}</Table.Cell>
+              <Table.Cell>Current week: {props.selectedInstance.currentWeek}</Table.Cell>
+              <Table.Cell>Week max points: {props.selectedInstance.weekMaxPoints}</Table.Cell>
+              <Table.Cell textAlign="right">
+                {' '}
+                <Link to={`/labtool/ModifyCourseInstancePage/${props.selectedInstance.ohid}`}>
+                  <Popup trigger={<Button circular size="tiny" icon={{ name: 'edit', size: 'large', color: 'orange' }} />} content="Edit course" />
+                </Link>
+              </Table.Cell>
+            </Table.Row>
+          </Table.Header>
+        </Table>
       </div>
     )
   }
@@ -445,12 +453,11 @@ export const CoursePage = props => {
     const heading = droppedOut ? 'Dropped out students' : 'Students'
     const tableClassName = droppedOut ? 'TeachersBottomViewForDroppedOutStudents' : 'TeachersBottomViewForActiveStudents'
     const rowClassName = droppedOut ? 'TableRowForDroppedOutStudents' : 'TableRowForActiveStudents'
-    const dropConvertButton = !droppedOut &&
-      droppedTagExists() && (
-        <Button onClick={() => markAllWithDroppedTagAsDropped(props.courseData)} size="small">
-          Mark all with dropped tag as dropped out
-        </Button>
-      )
+    const dropConvertButton = !droppedOut && droppedTagExists() && (
+      <Button onClick={() => markAllWithDroppedTagAsDropped(props.courseData)} size="small">
+        Mark all with dropped tag as dropped out
+      </Button>
+    )
     return (
       <div className={tableClassName}>
         <Header as="h2">{heading} </Header>
@@ -557,10 +564,8 @@ export const CoursePage = props => {
   let renderStudentTopPart = () => {
     return (
       <div className="StudentsView" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
-        <div className="ui grid">
-          <div className="sixteen wide column">
-            <h2>{props.selectedInstance.name}</h2>
-          </div>
+        <CoursePageHeader courseInstance={props.selectedInstance} />
+        <div className="grid">
           {props.selectedInstance.active === true ? (
             props.courseData.data !== null ? (
               <p />
