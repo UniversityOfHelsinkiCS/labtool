@@ -511,7 +511,9 @@ module.exports = {
                 weekMaxPoints: req.body.weekMaxPoints || courseInstance.weekMaxPoints,
                 currentWeek: req.body.currentWeek || courseInstance.currentWeek,
                 finalReview: req.body.finalReview,
-                currentCodeReview: req.body.newCr.length === 0 ? '{}' : req.body.newCr
+                currentCodeReview: req.body.newCr.length === 0 ? '{}' : req.body.newCr,
+                coursesPage: req.body.coursesPage || courseInstance.coursesPage,
+                courseMaterial: req.body.courseMaterial || courseInstance.courseMaterial
               })
               .then(updatedCourseInstance => res.status(200).send(updatedCourseInstance))
               .catch((error) => {

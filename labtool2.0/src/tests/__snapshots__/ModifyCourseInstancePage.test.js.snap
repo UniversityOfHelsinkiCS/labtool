@@ -129,6 +129,56 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
                 }
               }
             >
+              Link to courses.helsinki.fi
+            </label>
+            <Input
+              className="form-control4"
+              name="coursesPage"
+              onChange={[Function]}
+              style={
+                Object {
+                  "maxWidth": "12em",
+                }
+              }
+              type="text"
+            />
+          </FormGroup>
+          <FormGroup
+            inline={true}
+          >
+            <label
+              style={
+                Object {
+                  "textAlign": "left",
+                  "width": "125px",
+                }
+              }
+            >
+              Link to course material
+            </label>
+            <Input
+              className="form-control5"
+              name="courseMaterial"
+              onChange={[Function]}
+              style={
+                Object {
+                  "maxWidth": "12em",
+                }
+              }
+              type="text"
+            />
+          </FormGroup>
+          <FormGroup
+            inline={true}
+          >
+            <label
+              style={
+                Object {
+                  "textAlign": "left",
+                  "width": "125px",
+                }
+              }
+            >
               Currently visible code reviews
             </label>
             <Popup
@@ -248,11 +298,18 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
               type="checkbox"
             />
           </FormGroup>
-          <FormGroup>
+          <FormGroup
+            style={
+              Object {
+                "display": "inline-block",
+                "marginLeft": "auto",
+                "marginRight": "auto",
+              }
+            }
+          >
             <Button
               as="button"
               color="green"
-              floated="left"
               size="huge"
               type="Submit"
             >
@@ -264,7 +321,6 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
               <Button
                 as="button"
                 color="red"
-                floated="right"
                 size="huge"
                 type="Cancel"
               >

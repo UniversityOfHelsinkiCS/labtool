@@ -64,15 +64,17 @@ export const ModifyCourseInstancePage = props => {
 
       let newCr = props.selectedInstance.currentCodeReview.filter(cr => !state.toRemoveCr.includes(cr))
       newCr = newCr.concat(state.toAddCr)
-      const { weekAmount, weekMaxPoints, currentWeek, active, ohid } = props.selectedInstance
+      const { weekAmount, weekMaxPoints, currentWeek, active, ohid, finalReview, coursesPage, courseMaterial } = props.selectedInstance
       const content = {
         weekAmount,
         weekMaxPoints,
         currentWeek,
         active,
         ohid,
-        finalReview: props.selectedInstance.finalReview,
-        newCr
+        finalReview,
+        newCr,
+        coursesPage,
+        courseMaterial
       }
       props.addRedirectHook({
         hook: 'CI_MODIFY_ONE_'
@@ -113,6 +115,16 @@ export const ModifyCourseInstancePage = props => {
               <Form.Group inline>
                 <label style={{ width: '125px', textAlign: 'left' }}>Current week</label>
                 <Input name="currentWeek" required={true} type="text" style={{ maxWidth: '7em' }} value={selectedInstance.currentWeek} className="form-control3" onChange={changeField} />
+              </Form.Group>
+
+              <Form.Group inline>
+                <label style={{ width: '125px', textAlign: 'left' }}>Link to courses.helsinki.fi</label>
+                <Input name="coursesPage" type="text" style={{ maxWidth: '12em' }} value={selectedInstance.coursesPage} className="form-control4" onChange={changeField} />
+              </Form.Group>
+
+              <Form.Group inline>
+                <label style={{ width: '125px', textAlign: 'left' }}>Link to course material</label>
+                <Input name="courseMaterial" type="text" style={{ maxWidth: '12em' }} value={selectedInstance.courseMaterial} className="form-control5" onChange={changeField} />
               </Form.Group>
 
               <Form.Group inline>
@@ -172,13 +184,13 @@ export const ModifyCourseInstancePage = props => {
                 <Checkbox name="courseActive" label="Activate course" checked={selectedInstance.active} onChange={handleChange} style={{ width: '150px', textAlign: 'left' }} />
               </Form.Group>
 
-              <Form.Group>
-                <Button type="Submit" floated="left" color="green" size="huge">
+              <Form.Group style={{ display: 'inline-block', marginLeft: 'auto', marginRight: 'auto' }}>
+                <Button type="Submit" color="green" size="huge">
                   Save
                 </Button>
 
                 <Link to="/labtool/courses">
-                  <Button type="Cancel" floated="right" color="red" size="huge">
+                  <Button type="Cancel" color="red" size="huge">
                     Cancel
                   </Button>
                 </Link>

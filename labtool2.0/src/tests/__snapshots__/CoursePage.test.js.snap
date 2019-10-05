@@ -13,14 +13,77 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
       }
     }
   >
+    <CoursePageHeader
+      courseInstance={
+        Object {
+          "data": Object {
+            "Tags": Array [],
+            "User": Object {
+              "admin": false,
+              "createdAt": "2018-03-26T00:00:00.000Z",
+              "email": "maarit.opiskelija@helsinki.fi",
+              "firsts": "Maarit Mirja",
+              "id": 10011,
+              "lastname": "Opiskelija",
+              "studentNumber": "014578343",
+              "updatedAt": "2018-03-26T00:00:00.000Z",
+              "username": "tiraopiskelija1",
+            },
+            "codeReviews": Array [
+              Object {
+                "points": 2,
+                "reviewNumber": 1,
+                "reviewer": Object {
+                  "github": "http://github.com/superprojekti",
+                  "projectName": "Tira super projekti",
+                },
+                "toReview": Object {
+                  "github": "http://github.com/tiralabra2",
+                  "projectName": "Tiran toinen labraprojekti",
+                },
+              },
+              Object {
+                "points": 1,
+                "reviewNumber": 2,
+                "reviewer": Object {
+                  "github": "http://github.com/tiralabra2",
+                  "projectName": "Tiran toinen labraprojekti",
+                },
+                "toReview": Object {
+                  "github": "http://github.com/superprojekti",
+                  "projectName": "Tira super projekti",
+                },
+              },
+              Object {
+                "points": null,
+                "reviewNumber": 3,
+                "reviewer": Object {
+                  "github": "http://github.com/tiralabra2",
+                  "projectName": "Tiran toinen labraprojekti",
+                },
+                "toReview": Object {
+                  "github": "http://github.com/superprojekti",
+                  "projectName": "Tira super projekti",
+                },
+              },
+            ],
+            "courseInstanceId": 10011,
+            "createdAt": "2018-03-26T00:00:00.000Z",
+            "github": "http://github.com/tiralabra1",
+            "id": 10011,
+            "projectName": "Tiran labraprojekti",
+            "teacherInstanceId": 10011,
+            "updatedAt": "2018-03-26T00:00:00.000Z",
+            "userId": 10011,
+            "weeks": Array [],
+          },
+          "role": "student",
+        }
+      }
+    />
     <div
-      className="ui grid"
+      className="grid"
     >
-      <div
-        className="sixteen wide column"
-      >
-        <h2 />
-      </div>
       <div
         className="sixteen wide column"
       >
@@ -351,87 +414,180 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
       }
     }
   >
-    <div>
-      <div>
-        <h2 />
-      </div>
-      <p />
-    </div>
-    <div>
-      <Table
-        as="table"
+    <CoursePageHeader
+      courseInstance={
+        Object {
+          "data": Array [
+            Object {
+              "Tags": Array [
+                Object {
+                  "color": "red",
+                  "id": 20001,
+                  "name": "Javascript",
+                },
+              ],
+              "User": Object {
+                "admin": false,
+                "createdAt": "2018-03-26T00:00:00.000Z",
+                "email": "johan.studerande@helsinki.fi",
+                "firsts": "Johan Wilhelm",
+                "id": 10012,
+                "lastname": "Studerande",
+                "studentNumber": "014553242",
+                "updatedAt": "2018-03-26T00:00:00.000Z",
+                "username": "tiraopiskelija2",
+              },
+              "codeReviews": Array [],
+              "courseInstanceId": 10011,
+              "createdAt": "2018-03-26T00:00:00.000Z",
+              "dropped": false,
+              "github": "http://github.com/tiralabra2",
+              "id": 10012,
+              "projectName": "Tiran toinen labraprojekti",
+              "teacherInstanceId": 10011,
+              "updatedAt": "2018-03-26T00:00:00.000Z",
+              "userId": 10012,
+              "weeks": Array [],
+            },
+            Object {
+              "Tags": Array [
+                Object {
+                  "color": "grey",
+                  "id": 20008,
+                  "name": "DROPPED",
+                },
+                Object {
+                  "color": "yellow",
+                  "id": 20002,
+                  "name": "HTML",
+                },
+              ],
+              "User": Object {
+                "admin": false,
+                "createdAt": "2018-03-26T00:00:00.000Z",
+                "email": "teras.henkilo@helsinki.fi",
+                "firsts": "Teräs",
+                "id": 10031,
+                "lastname": "Henkilö",
+                "studentNumber": "014666666",
+                "updatedAt": "2018-03-26T00:00:00.000Z",
+                "username": "superopiskelija",
+              },
+              "codeReviews": Array [],
+              "courseInstanceId": 10011,
+              "createdAt": "2018-03-26T00:00:00.000Z",
+              "dropped": true,
+              "github": "http://github.com/superprojekti",
+              "id": 10031,
+              "projectName": "Tira super projekti",
+              "teacherInstanceId": 10011,
+              "updatedAt": "2018-06-05T07:12:28.603Z",
+              "userId": 10031,
+              "weeks": Array [],
+            },
+            Object {
+              "Tags": Array [],
+              "User": Object {
+                "admin": false,
+                "createdAt": "2018-03-26T00:00:00.000Z",
+                "email": "maarit.opiskelija@helsinki.fi",
+                "firsts": "Maarit Mirja",
+                "id": 10011,
+                "lastname": "Opiskelija",
+                "studentNumber": "014578343",
+                "updatedAt": "2018-03-26T00:00:00.000Z",
+                "username": "tiraopiskelija1",
+              },
+              "codeReviews": Array [],
+              "courseInstanceId": 10011,
+              "createdAt": "2018-03-26T00:00:00.000Z",
+              "dropped": false,
+              "github": "http://github.com/tiralabra1",
+              "id": 10011,
+              "projectName": "Tiran labraprojekti",
+              "teacherInstanceId": 10011,
+              "updatedAt": "2018-03-26T00:00:00.000Z",
+              "userId": 10011,
+              "weeks": Array [],
+            },
+          ],
+          "role": "teacher",
+        }
+      }
+    />
+    <Table
+      as="table"
+    >
+      <TableHeader
+        as="thead"
       >
-        <TableHeader
-          as="thead"
+        <TableRow
+          as="tr"
+          cellAs="td"
         >
-          <TableRow
-            as="tr"
-            cellAs="td"
+          <TableCell
+            as="td"
           >
-            <TableCell
-              as="td"
+            <div>
+              <div />
+            </div>
+          </TableCell>
+          <TableCell
+            as="td"
+          >
+            Week amount: 
+          </TableCell>
+          <TableCell
+            as="td"
+          >
+            Current week: 
+          </TableCell>
+          <TableCell
+            as="td"
+          >
+            Week max points: 
+          </TableCell>
+          <TableCell
+            as="td"
+            textAlign="right"
+          >
+             
+            <Link
+              to="/labtool/ModifyCourseInstancePage/undefined"
             >
-              <div>
-                <div />
-              </div>
-            </TableCell>
-            <TableCell
-              as="td"
-            >
-              Week amount: 
-            </TableCell>
-            <TableCell
-              as="td"
-            >
-              Current week: 
-            </TableCell>
-            <TableCell
-              as="td"
-            >
-              Week max points: 
-            </TableCell>
-            <TableCell
-              as="td"
-              textAlign="right"
-            >
-               
-              <Link
-                to="/labtool/ModifyCourseInstancePage/undefined"
-              >
-                <Popup
-                  content="Edit course"
-                  disabled={false}
-                  eventsEnabled={true}
-                  offset={0}
-                  on={
-                    Array [
-                      "click",
-                      "hover",
-                    ]
-                  }
-                  pinned={false}
-                  position="top left"
-                  trigger={
-                    <Button
-                      as="button"
-                      circular={true}
-                      icon={
-                        Object {
-                          "color": "orange",
-                          "name": "edit",
-                          "size": "large",
-                        }
+              <Popup
+                content="Edit course"
+                disabled={false}
+                eventsEnabled={true}
+                offset={0}
+                on={
+                  Array [
+                    "click",
+                    "hover",
+                  ]
+                }
+                pinned={false}
+                position="top left"
+                trigger={
+                  <Button
+                    as="button"
+                    circular={true}
+                    icon={
+                      Object {
+                        "color": "orange",
+                        "name": "edit",
+                        "size": "large",
                       }
-                      size="tiny"
-                    />
-                  }
-                />
-              </Link>
-            </TableCell>
-          </TableRow>
-        </TableHeader>
-      </Table>
-    </div>
+                    }
+                    size="tiny"
+                  />
+                }
+              />
+            </Link>
+          </TableCell>
+        </TableRow>
+      </TableHeader>
+    </Table>
   </div>
   <div
     className="TeachersBottomViewForActiveStudents"
