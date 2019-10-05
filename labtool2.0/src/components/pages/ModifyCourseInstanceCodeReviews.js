@@ -16,7 +16,8 @@ import {
   codeReviewReset,
   selectDropdown,
   toggleCreate,
-  createStates
+  createStates,
+  restoreData
 } from '../../reducers/codeReviewReducer'
 import { filterByTag } from '../../reducers/coursePageLogicReducer'
 import { clearNotifications, showNotification } from '../../reducers/notificationReducer'
@@ -24,6 +25,7 @@ import { Button, Table, Checkbox, Loader, Dropdown, Label, Popup, Modal, Icon } 
 import Notification from '../../components/pages/Notification'
 import { resetLoading } from '../../reducers/loadingReducer'
 import useLegacyState from '../../hooks/legacyState'
+import { useLegacyPersistedState } from '../../hooks/legacyPersistedState'
 
 import BackButton from '../BackButton'
 
@@ -31,18 +33,28 @@ export const ModifyCourseInstanceReview = props => {
   const state = useLegacyState({
     open: {}
   })
+  const pstate = useLegacyPersistedState('ModifyCourseInstanceCodeReviews', {
+    codeReviewData: null
+  })
 
   useEffect(() => {
     // run on component mount
     props.resetLoading()
     props.getOneCI(props.courseId)
     props.coursePageInformation(props.courseId)
+    if (pstate.codeReviewData) {
+      props.restoreData(pstate.codeReviewData)
+    }
 
     return () => {
       // run on component unmount
       props.codeReviewReset()
     }
   }, [])
+
+  useEffect(() => {
+    pstate.codeReviewData = { ...props.codeReviewLogic }
+  }, [props.codeReviewLogic])
 
   const checkStates = () => {
     if (!props.codeReviewLogic.statesCreated) {
@@ -250,7 +262,7 @@ export const ModifyCourseInstanceReview = props => {
   return (
     <div className="ModifyCourseInstanceCodeReviews" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
       <div className="ui grid">
-        <BackButton preset="modifyCIPage" />
+        <BackButton preset="modifyCIPage" cleanup={pstate.clear} />
         <div className="sixteen wide column">
           <h2>{props.selectedInstance.name}</h2> <br />
         </div>
@@ -416,18 +428,16 @@ export const ModifyCourseInstanceReview = props => {
                                 )
                               ) : null}
                             </p>
-                            <select className="toReviewDropdown" onChange={addCodeReview(props.codeReviewLogic.selectedDropdown, data.id)}>
+                            <select
+                              className="toReviewDropdown"
+                              onChange={addCodeReview(props.codeReviewLogic.selectedDropdown, data.id)}
+                              value={props.codeReviewLogic.currentSelections[props.codeReviewLogic.selectedDropdown][data.id]}
+                            >
                               {props.dropdownUsers.map(d =>
                                 d.value !== data.id ? (
-                                  props.codeReviewLogic.currentSelections[props.codeReviewLogic.selectedDropdown][data.id] === d.value ? (
-                                    <option selected="selected" key={d.value} value={d.value}>
-                                      {d.text}
-                                    </option>
-                                  ) : (
-                                    <option key={d.value} value={d.value}>
-                                      {d.text}
-                                    </option>
-                                  )
+                                  <option key={d.value} value={d.value}>
+                                    {d.text}
+                                  </option>
                                 ) : null
                               )}
                             </select>
@@ -436,21 +446,14 @@ export const ModifyCourseInstanceReview = props => {
                       </Table.Cell>
                       <Table.Cell>
                         {props.codeReviewLogic.showCreate ? (
-                          <select className="toReviewDropdown" onChange={addCodeReview('create', data.id)}>
+                          <select className="toReviewDropdown" onChange={addCodeReview('create', data.id)} value={props.codeReviewLogic.currentSelections['create'][data.id]}>
                             {props.dropdownUsers.map(d =>
                               d.value !== data.id ? (
-                                props.codeReviewLogic.currentSelections['create'][data.id] === d.value ? (
-                                  <option selected="selected" key={d.value} value={d.value}>
-                                    {d.text}
-                                  </option>
-                                ) : (
-                                  <option key={d.value} value={d.value}>
-                                    {d.text}
-                                  </option>
-                                )
+                                <option key={d.value} value={d.value}>
+                                  {d.text}
+                                </option>
                               ) : null
                             )}
-                            ))
                           </select>
                         ) : null}
                       </Table.Cell>
@@ -555,6 +558,7 @@ const mapDispatchToProps = {
   selectDropdown,
   toggleCreate,
   createStates,
+  restoreData,
   filterStatesByTags,
   filterByReview,
   showNotification,
@@ -587,6 +591,7 @@ ModifyCourseInstanceReview.propTypes = {
   selectDropdown: PropTypes.func.isRequired,
   toggleCreate: PropTypes.func.isRequired,
   createStates: PropTypes.func.isRequired,
+  restoreData: PropTypes.func.isRequired,
   filterStatesByTags: PropTypes.func.isRequired,
   filterByReview: PropTypes.func.isRequired,
   showNotification: PropTypes.func.isRequired,

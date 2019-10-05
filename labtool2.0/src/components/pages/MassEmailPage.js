@@ -10,8 +10,14 @@ import { coursePageReset, restoreStudentSelection } from '../../reducers/courseP
 import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 import store from '../../store'
 import StudentTable from '../StudentTable'
+import { useLegacyPersistedState } from '../../hooks/legacyPersistedState'
 
 export const MassEmailPage = props => {
+  const pstate = useLegacyPersistedState('MassEmailPage', {
+    value: '',
+    checked: true
+  })
+
   useEffect(() => {
     // run on component mount
     props.resetLoading()
@@ -49,6 +55,7 @@ export const MassEmailPage = props => {
     return <Loader active />
   }
   if (props.loading.redirect) {
+    pstate.clear()
     return <Redirect to={`/labtool/courses/${props.selectedInstance.ohid}`} />
   }
 
@@ -57,7 +64,7 @@ export const MassEmailPage = props => {
    * We will use a form to decide which students to send an email
    * and what exactly to send
    */
-  let renderTeacherPart = () => {
+  const renderTeacherPart = () => {
     return (
       <div className="TeacherMassEmailPart">
         <Header as="h2">Send email to students </Header>
@@ -69,6 +76,7 @@ export const MassEmailPage = props => {
             allowModify={false}
             filterStudents={data => data.User.email}
             disableDefaultFilter={false}
+            studentInstances={props.courseData.data}
             selectedInstance={props.selectedInstance}
             courseData={props.courseData}
             coursePageLogic={props.coursePageLogic}
@@ -78,15 +86,15 @@ export const MassEmailPage = props => {
           <br />
           <br />
 
-          <Form.TextArea name="content" placeholder="Type email here..." defaultValue="" required />
-          <Form.Checkbox name="sendToInstructors" defaultChecked={true} label="Send a copy to all instructors" />
+          <Form.TextArea name="content" placeholder="Type email here..." value={pstate.value} onChange={(e, { value }) => (pstate.value = value)} required />
+          <Form.Checkbox name="sendToInstructors" checked={pstate.checked} onChange={(e, { checked }) => (pstate.checked = checked)} label="Send a copy to all instructors" />
           <Button type="submit" className="ui green button" content="Send" />
 
           <br />
           <br />
 
           <Link to={`/labtool/courses/${props.selectedInstance.ohid}`}>
-            <Button className="ui button" type="cancel">
+            <Button className="ui button" type="cancel" onClick={pstate.clear}>
               Cancel
             </Button>
           </Link>
@@ -117,6 +125,29 @@ export const MassEmailPage = props => {
   }
 }
 
+MassEmailPage.propTypes = {
+  courseId: PropTypes.string.isRequired,
+
+  user: PropTypes.object.isRequired,
+  studentInstance: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+  teacherInstance: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+  selectedInstance: PropTypes.object.isRequired,
+  courseInstance: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+  courseData: PropTypes.object.isRequired,
+  coursePageLogic: PropTypes.object.isRequired,
+  tags: PropTypes.object.isRequired,
+  loading: PropTypes.object.isRequired,
+
+  getOneCI: PropTypes.func.isRequired,
+  coursePageInformation: PropTypes.func.isRequired,
+  coursePageReset: PropTypes.func.isRequired,
+  getAllTags: PropTypes.func.isRequired,
+  sendMassEmail: PropTypes.func.isRequired,
+  resetLoading: PropTypes.func.isRequired,
+  addRedirectHook: PropTypes.func.isRequired,
+  restoreStudentSelection: PropTypes.func.isRequired
+}
+
 const mapStateToProps = (state, ownProps) => {
   return {
     user: state.user,
@@ -141,29 +172,6 @@ const mapDispatchToProps = {
   resetLoading,
   addRedirectHook,
   restoreStudentSelection
-}
-
-MassEmailPage.propTypes = {
-  courseId: PropTypes.string.isRequired,
-
-  user: PropTypes.object.isRequired,
-  studentInstance: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
-  teacherInstance: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
-  selectedInstance: PropTypes.object.isRequired,
-  courseInstance: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
-  courseData: PropTypes.object.isRequired,
-  coursePageLogic: PropTypes.object.isRequired,
-  tags: PropTypes.object.isRequired,
-  loading: PropTypes.object.isRequired,
-
-  getOneCI: PropTypes.func.isRequired,
-  coursePageInformation: PropTypes.func.isRequired,
-  coursePageReset: PropTypes.func.isRequired,
-  getAllTags: PropTypes.func.isRequired,
-  sendMassEmail: PropTypes.func.isRequired,
-  resetLoading: PropTypes.func.isRequired,
-  addRedirectHook: PropTypes.func.isRequired,
-  restoreStudentSelection: PropTypes.func.isRequired
 }
 
 export default connect(

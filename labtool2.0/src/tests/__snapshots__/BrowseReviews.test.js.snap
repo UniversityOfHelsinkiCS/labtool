@@ -212,32 +212,11 @@ exports[`<BrowseReviews /> BrowseReviews Component should render correctly 1`] =
            Comments 
         </h4>
         <CommentGroup />
-        <Form
-          as="form"
-          id={10001}
-          name={10001}
-          onSubmit={[Function]}
-          reply={true}
-        >
-          <FormMarkdownTextArea
-            defaultValue=""
-            name="content"
-            placeholder="Your comment..."
-          />
-          <FormCheckbox
-            as={[Function]}
-            control={[Function]}
-            label="Add comment for instructors only"
-            name="hidden"
-          />
-          <Button
-            as="button"
-            content="Add Reply"
-            icon="edit"
-            labelPosition="left"
-            primary={true}
-          />
-        </Form>
+        <withRouter(Connect(LabtoolAddComment))
+          allowHidden={true}
+          handleSubmit={[Function]}
+          weekId={10001}
+        />
       </AccordionContent>
     </Accordion>
     <Accordion
@@ -364,32 +343,11 @@ exports[`<BrowseReviews /> BrowseReviews Component should render correctly 1`] =
            Comments 
         </h4>
         <CommentGroup />
-        <Form
-          as="form"
-          id={10002}
-          name={10002}
-          onSubmit={[Function]}
-          reply={true}
-        >
-          <FormMarkdownTextArea
-            defaultValue=""
-            name="content"
-            placeholder="Your comment..."
-          />
-          <FormCheckbox
-            as={[Function]}
-            control={[Function]}
-            label="Add comment for instructors only"
-            name="hidden"
-          />
-          <Button
-            as="button"
-            content="Add Reply"
-            icon="edit"
-            labelPosition="left"
-            primary={true}
-          />
-        </Form>
+        <withRouter(Connect(LabtoolAddComment))
+          allowHidden={true}
+          handleSubmit={[Function]}
+          weekId={10002}
+        />
       </AccordionContent>
     </Accordion>
     <Accordion
@@ -497,32 +455,11 @@ exports[`<BrowseReviews /> BrowseReviews Component should render correctly 1`] =
            Comments 
         </h4>
         <CommentGroup />
-        <Form
-          as="form"
-          id={10003}
-          name={10003}
-          onSubmit={[Function]}
-          reply={true}
-        >
-          <FormMarkdownTextArea
-            defaultValue=""
-            name="content"
-            placeholder="Your comment..."
-          />
-          <FormCheckbox
-            as={[Function]}
-            control={[Function]}
-            label="Add comment for instructors only"
-            name="hidden"
-          />
-          <Button
-            as="button"
-            content="Add Reply"
-            icon="edit"
-            labelPosition="left"
-            primary={true}
-          />
-        </Form>
+        <withRouter(Connect(LabtoolAddComment))
+          allowHidden={true}
+          handleSubmit={[Function]}
+          weekId={10003}
+        />
       </AccordionContent>
     </Accordion>
     <Accordion
@@ -630,32 +567,11 @@ exports[`<BrowseReviews /> BrowseReviews Component should render correctly 1`] =
            Comments 
         </h4>
         <CommentGroup />
-        <Form
-          as="form"
-          id={10004}
-          name={10004}
-          onSubmit={[Function]}
-          reply={true}
-        >
-          <FormMarkdownTextArea
-            defaultValue=""
-            name="content"
-            placeholder="Your comment..."
-          />
-          <FormCheckbox
-            as={[Function]}
-            control={[Function]}
-            label="Add comment for instructors only"
-            name="hidden"
-          />
-          <Button
-            as="button"
-            content="Add Reply"
-            icon="edit"
-            labelPosition="left"
-            primary={true}
-          />
-        </Form>
+        <withRouter(Connect(LabtoolAddComment))
+          allowHidden={true}
+          handleSubmit={[Function]}
+          weekId={10004}
+        />
       </AccordionContent>
     </Accordion>
     <Accordion

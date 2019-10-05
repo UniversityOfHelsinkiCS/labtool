@@ -6,33 +6,42 @@ import { showNotification } from '../../reducers/notificationReducer'
 import { resetLoading } from '../../reducers/loadingReducer'
 import { createChecklist, getOneChecklist } from '../../services/checklist'
 import { getOneCI, getAllCI } from '../../services/courseInstance'
-import { resetChecklist, changeField, addTopic, addRow, removeTopic, removeRow, castPointsToNumber } from '../../reducers/checklistReducer'
+import { resetChecklist, changeField, restoreChecklist, addTopic, addRow, removeTopic, removeRow, castPointsToNumber } from '../../reducers/checklistReducer'
 import './CreateChecklist.css'
-import useLegacyState from '../../hooks/legacyState'
+import { useLegacyPersistedState } from '../../hooks/legacyPersistedState'
 
 import BackButton from '../BackButton'
 import JsonEdit from '../JsonEdit'
 
 export const CreateChecklist = props => {
-  const state = useLegacyState({
+  const state = useLegacyPersistedState('CreateChecklist', {
     week: undefined, // tracks value of week dropdown.
     copyCourse: undefined, // tracks value of course dropdown.
     topicName: '', // tracks value inputted into topic creation dialog box.
     rowName: '', // tracks value inputted into row creation dialog box.
     openAdd: '', // which addForm is currently open. '' denotes no open addForms. Only one addForm can be open at one time.
-    courseDropdowns: [] // Dropdown options to show for copying checklist.
+    courseDropdowns: [], // Dropdown options to show for copying checklist.
+    checklistData: null
   })
 
   useEffect(() => {
     // run on component mount
     props.resetLoading()
-    props.resetChecklist()
+    if (state.checklistData) {
+      props.restoreChecklist(state.checklistData)
+    } else {
+      props.resetChecklist()
+    }
     props.getAllCI()
   }, [])
 
   useEffect(() => {
     state.courseDropdowns = createCourseDropdowns()
   }, [state.week])
+
+  useEffect(() => {
+    state.checklistData = props.checklist.data
+  }, [props.checklist])
 
   // Make api call to save checklist to database.
   const handleSubmit = async e => {
@@ -345,7 +354,7 @@ export const CreateChecklist = props => {
   const { checklistJsx, maxPoints } = props.loading.loading ? { checklistJsx: null, maxPoints: null } : renderChecklist()
   return (
     <div className="CreateChecklist">
-      <BackButton preset="modifyCIPage" />
+      <BackButton preset="modifyCIPage" cleanup={state.clear} />
       <Header>{props.selectedInstance.name}</Header>
       <div className="editForm">
         <div className="topOptions">
@@ -460,6 +469,7 @@ const mapDispatchToProps = {
   getAllCI,
   getOneChecklist,
   resetChecklist,
+  restoreChecklist,
   changeField,
   addTopic,
   addRow,
@@ -484,6 +494,7 @@ CreateChecklist.propTypes = {
   getAllCI: PropTypes.func.isRequired,
   getOneChecklist: PropTypes.func.isRequired,
   resetChecklist: PropTypes.func.isRequired,
+  restoreChecklist: PropTypes.func.isRequired,
   changeField: PropTypes.func.isRequired,
   addTopic: PropTypes.func.isRequired,
   addRow: PropTypes.func.isRequired,

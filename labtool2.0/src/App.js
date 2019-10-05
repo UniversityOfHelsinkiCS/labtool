@@ -29,6 +29,8 @@ import { tokenLogin } from './reducers/loginReducer'
 import { login, logout, fakeShibboLogin } from './services/login'
 import { resetLoading, forceSetLoading } from './reducers/loadingReducer'
 
+import { clearAllPersistedStates } from './hooks/legacyPersistedState'
+
 const USE_FAKE_LOGIN = process.env.REACT_APP_USE_FAKE_LOGIN === 'ThisIsNotProduction'
 
 if (USE_FAKE_LOGIN) {
@@ -134,6 +136,7 @@ const App = props => {
    * Logout code.
    */
   const doLogout = () => {
+    clearAllPersistedStates()
     window.localStorage.removeItem('loggedLabtool')
     props.logout()
   }

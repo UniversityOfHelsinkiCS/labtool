@@ -299,11 +299,13 @@ export const StudentTable = props => {
       {!shouldHideInstructor(props.studentInstances) && (
         <Table.Cell key="instructor">
           {data.teacherInstanceId && props.selectedInstance.teacherInstances ? (
-            props.selectedInstance.teacherInstances.filter(teacher => teacher.id === data.teacherInstanceId).map(teacher => (
-              <span key={data.id + ':' + teacher.id}>
-                {teacher.firsts} {teacher.lastname}
-              </span>
-            ))
+            props.selectedInstance.teacherInstances
+              .filter(teacher => teacher.id === data.teacherInstanceId)
+              .map(teacher => (
+                <span key={data.id + ':' + teacher.id}>
+                  {teacher.firsts} {teacher.lastname}
+                </span>
+              ))
           ) : (
             <span>not assigned</span>
           )}

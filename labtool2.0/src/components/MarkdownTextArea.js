@@ -10,21 +10,17 @@ import useLegacyState from '../hooks/legacyState'
 // viewing the text outside the text area
 export const FormMarkdownTextArea = props => {
   const { defaultValue } = props
-  const state = useLegacyState({ activeIndex: -1, textValue: defaultValue ? defaultValue : '' })
+  const state = useLegacyState({ previewOpen: false, textValue: defaultValue ? defaultValue : '' })
 
-  const handleClick = (e, titleProps) => {
-    const { index } = titleProps
-    const { activeIndex } = state
-    const newIndex = activeIndex === index ? -1 : index
-
-    state.activeIndex = newIndex
+  const handleClick = e => {
+    state.previewOpen = !state.previewOpen
   }
 
   const handleChange = (e, data) => {
     state.textValue = data.value
   }
 
-  const { activeIndex, textValue } = state
+  const { previewOpen, textValue } = state
 
   return (
     <div>
@@ -39,11 +35,11 @@ export const FormMarkdownTextArea = props => {
         </i>
       </p>
       <Accordion key fluid styled style={{ textAlign: 'start' }}>
-        <Accordion.Title active={0 === activeIndex} index={0} onClick={handleClick}>
+        <Accordion.Title active={previewOpen} onClick={handleClick}>
           <Icon name="dropdown" />
           Preview Markdown
         </Accordion.Title>
-        <Accordion.Content active={activeIndex === 0}>
+        <Accordion.Content active={previewOpen}>
           <ReactMarkdown source={textValue} />
         </Accordion.Content>
       </Accordion>
@@ -52,5 +48,6 @@ export const FormMarkdownTextArea = props => {
 }
 
 FormMarkdownTextArea.propTypes = {
+  value: PropTypes.any,
   defaultValue: PropTypes.string
 }
