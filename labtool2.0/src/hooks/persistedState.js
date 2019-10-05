@@ -7,10 +7,10 @@ const myPrefix = 'labtoolPersistedState_'
 // leave me alone, I know what I'm doing
 
 /*
- * usePersistedLegacyState(prefix, { stateVariable: defaultValue })
+ * usePersistedState(prefix, { stateVariable: defaultValue })
  * Prefix should be unique per component/page
  */
-const useLegacyPersistedState = (prefix, vars) => {
+const usePersistedState = (prefix, vars) => {
   const _get = {}
   const _set = {}
   const keys = Object.keys(vars)
@@ -57,4 +57,4 @@ const clearAllPersistedStates = () => {
     .forEach(key => store.removeItem(key))
 }
 
-export { useLegacyPersistedState, clearAllPersistedStates }
+export { usePersistedState, clearAllPersistedStates }

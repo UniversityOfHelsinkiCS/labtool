@@ -29,7 +29,7 @@ import { tokenLogin } from './reducers/loginReducer'
 import { login, logout, fakeShibboLogin } from './services/login'
 import { resetLoading, forceSetLoading } from './reducers/loadingReducer'
 
-import { clearAllPersistedStates } from './hooks/legacyPersistedState'
+import { clearAllPersistedStates } from './hooks/persistedState'
 
 const USE_FAKE_LOGIN = process.env.REACT_APP_USE_FAKE_LOGIN === 'ThisIsNotProduction'
 

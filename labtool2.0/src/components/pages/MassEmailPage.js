@@ -10,10 +10,10 @@ import { coursePageReset, restoreStudentSelection } from '../../reducers/courseP
 import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 import store from '../../store'
 import StudentTable from '../StudentTable'
-import { useLegacyPersistedState } from '../../hooks/legacyPersistedState'
+import { usePersistedState } from '../../hooks/persistedState'
 
 export const MassEmailPage = props => {
-  const pstate = useLegacyPersistedState('MassEmailPage', {
+  const pstate = usePersistedState('MassEmailPage', {
     value: '',
     checked: true
   })

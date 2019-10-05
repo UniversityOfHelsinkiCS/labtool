@@ -8,13 +8,13 @@ import { createChecklist, getOneChecklist } from '../../services/checklist'
 import { getOneCI, getAllCI } from '../../services/courseInstance'
 import { resetChecklist, changeField, restoreChecklist, addTopic, addRow, removeTopic, removeRow, castPointsToNumber } from '../../reducers/checklistReducer'
 import './CreateChecklist.css'
-import { useLegacyPersistedState } from '../../hooks/legacyPersistedState'
+import { usePersistedState } from '../../hooks/persistedState'
 
 import BackButton from '../BackButton'
 import JsonEdit from '../JsonEdit'
 
 export const CreateChecklist = props => {
-  const state = useLegacyPersistedState('CreateChecklist', {
+  const state = usePersistedState('CreateChecklist', {
     week: undefined, // tracks value of week dropdown.
     copyCourse: undefined, // tracks value of course dropdown.
     topicName: '', // tracks value inputted into topic creation dialog box.

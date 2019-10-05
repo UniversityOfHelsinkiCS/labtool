@@ -25,7 +25,7 @@ import { Button, Table, Checkbox, Loader, Dropdown, Label, Popup, Modal, Icon } 
 import Notification from '../../components/pages/Notification'
 import { resetLoading } from '../../reducers/loadingReducer'
 import useLegacyState from '../../hooks/legacyState'
-import { useLegacyPersistedState } from '../../hooks/legacyPersistedState'
+import { usePersistedState } from '../../hooks/persistedState'
 
 import BackButton from '../BackButton'
 
@@ -33,7 +33,7 @@ export const ModifyCourseInstanceReview = props => {
   const state = useLegacyState({
     open: {}
   })
-  const pstate = useLegacyPersistedState('ModifyCourseInstanceCodeReviews', {
+  const pstate = usePersistedState('ModifyCourseInstanceCodeReviews', {
     codeReviewData: null
   })
 

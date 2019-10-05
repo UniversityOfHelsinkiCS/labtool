@@ -10,7 +10,7 @@ import { toggleCheck, resetChecklist, restoreChecks } from '../../reducers/weekR
 import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 import store from '../../store'
 import { trimDate } from '../../util/format'
-import { useLegacyPersistedState } from '../../hooks/legacyPersistedState'
+import { usePersistedState } from '../../hooks/persistedState'
 
 import { FormMarkdownTextArea } from '../MarkdownTextArea'
 
@@ -20,7 +20,7 @@ import { FormMarkdownTextArea } from '../MarkdownTextArea'
 export const ReviewStudent = props => {
   const [loadedWeekData, setLoadedWeekData] = useState(false)
   const [allowChecksCopy, setAllowChecksCopy] = useState(false)
-  const pstate = useLegacyPersistedState('ReviewStudent', {
+  const pstate = usePersistedState('ReviewStudent', {
     points: '',
     feedback: '',
     instructorNotes: '',

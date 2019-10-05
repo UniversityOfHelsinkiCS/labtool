@@ -4,10 +4,10 @@ import { Accordion, Button, Form, Icon } from 'semantic-ui-react'
 import { withRouter } from 'react-router'
 import { connect } from 'react-redux'
 import { FormMarkdownTextArea } from './MarkdownTextArea'
-import { useLegacyPersistedState } from '../hooks/legacyPersistedState'
+import { usePersistedState } from '../hooks/persistedState'
 
 export const LabtoolAddComment = ({ weekId, handleSubmit, allowHidden }) => {
-  const state = useLegacyPersistedState(`LabtoolAddComment_${weekId}`, { commentOpen: false, comment: '' })
+  const state = usePersistedState(`LabtoolAddComment_${weekId}`, { commentOpen: false, comment: '' })
 
   const toggleOpen = () => {
     state.commentOpen = !state.commentOpen
