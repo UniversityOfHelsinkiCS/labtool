@@ -119,12 +119,26 @@ export const ModifyCourseInstancePage = props => {
 
               <Form.Group inline>
                 <label style={{ width: '125px', textAlign: 'left' }}>Link to courses.helsinki.fi</label>
-                <Input name="coursesPage" type="text" style={{ maxWidth: '12em' }} value={selectedInstance.coursesPage} className="form-control4" onChange={changeField} />
+                <Input
+                  name="coursesPage"
+                  type="text"
+                  style={{ maxWidth: '12em' }}
+                  value={selectedInstance.coursesPage === null ? '' : selectedInstance.coursesPage}
+                  className="form-control4"
+                  onChange={changeField}
+                />
               </Form.Group>
 
               <Form.Group inline>
                 <label style={{ width: '125px', textAlign: 'left' }}>Link to course material</label>
-                <Input name="courseMaterial" type="text" style={{ maxWidth: '12em' }} value={selectedInstance.courseMaterial} className="form-control5" onChange={changeField} />
+                <Input
+                  name="courseMaterial"
+                  type="text"
+                  style={{ maxWidth: '12em' }}
+                  value={selectedInstance.courseMaterial === null ? '' : selectedInstance.courseMaterial}
+                  className="form-control5"
+                  onChange={changeField}
+                />
               </Form.Group>
 
               <Form.Group inline>
