@@ -10,6 +10,10 @@ const myPrefix = 'labtoolPersistedState_'
  * usePersistedState(prefix, { stateVariable: defaultValue })
  * Prefix should be unique per component/page
  */
+
+// note: if you destructure one of these states, only use const -
+//       assigning to destructured values will not work
+
 const usePersistedState = (prefix, vars) => {
   const _get = {}
   const _set = {}
