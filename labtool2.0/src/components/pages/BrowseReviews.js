@@ -17,6 +17,7 @@ import useLegacyState from '../../hooks/legacyState'
 import BackButton from '../BackButton'
 import LabtoolComment from '../LabtoolComment'
 import { FormMarkdownTextArea } from '../MarkdownTextArea'
+import { getAcademicYear } from '../../util/format'
 
 /**
  * Maps all comments from a single instance from coursePage reducer
@@ -144,16 +145,17 @@ export const BrowseReviews = props => {
   //get student's other participations in the same course
   const renderStudentPreviousParticipation = () => {
     const previousParticipations = props.studentInstanceToBeReviewed.filter(courseInstance => courseInstance.ohid.includes(props.courseId.substring(0, 8)) && courseInstance.ohid !== props.courseId)
+
     if (previousParticipations.length === 0) {
       return <p className="noPrevious">Has not taken part in this course before</p>
     }
     return (
       <div className="hasPrevious">
-        <p className style={{ color: 'red' }}>
-          Has taken this course before
-        </p>
+        <p style={{ color: 'red' }}>Has taken this course before</p>
         {previousParticipations.map(participation => (
-          <p key={participation.id}>{createCourseIdWithYearAndTerm(participation.ohid, participation.start)}</p>
+          <Link key={participation.id} to={`/labtool/browsereviews/${participation.ohid}/${participation.courseInstances[0].id}`} target="_blank">
+            <Popup content="click to open a new tab to see the details" trigger={<p>{createCourseIdWithYearAndTerm(participation.ohid, participation.start)}</p>} />
+          </Link>
         ))}
       </div>
     )
@@ -366,7 +368,10 @@ export const BrowseReviews = props => {
         <div>
           <BackButton preset="coursePage" />
           <Link to={`/labtool/courses/${props.selectedInstance.ohid}`} style={{ textAlign: 'center' }}>
-            <h2> {props.selectedInstance.name} </h2>
+            <h2>
+              {' '}
+              {props.selectedInstance.name} ({getAcademicYear(props.selectedInstance.start)}){' '}
+            </h2>
           </Link>
           {createHeaders(props.courseData, props.studentInstance)}
         </div>
