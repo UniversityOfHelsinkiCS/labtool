@@ -1104,187 +1104,189 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
       Modify selected students
     </h2>
     <Grid
-      columns="equal"
+      columns={3}
+      divided={true}
+      style={
+        Object {
+          "width": "90%",
+        }
+      }
     >
-      <GridColumn>
-        <Segment>
-          Add/remove tag
-        </Segment>
-      </GridColumn>
-      <GridColumn>
-        <Dropdown
-          additionLabel="Add "
-          additionPosition="top"
-          closeOnBlur={true}
-          closeOnEscape={true}
-          deburr={false}
-          fluid={true}
-          icon="dropdown"
-          id="tagDropdown"
-          minCharacters={1}
-          noResultsMessage="No results found."
-          onChange={[Function]}
-          openOnFocus={true}
-          options={
-            Array [
-              Object {
-                "key": 20001,
-                "text": "Javascript",
-                "value": 20001,
-              },
-              Object {
-                "key": 20002,
-                "text": "HTML",
-                "value": 20002,
-              },
-              Object {
-                "key": 20003,
-                "text": "game",
-                "value": 20003,
-              },
-              Object {
-                "key": 20004,
-                "text": "React",
-                "value": 20004,
-              },
-              Object {
-                "key": 20005,
-                "text": "Node.js",
-                "value": 20005,
-              },
-              Object {
-                "key": 20006,
-                "text": "Java",
-                "value": 20006,
-              },
-              Object {
-                "key": 20007,
-                "text": "FORTRAN",
-                "value": 20007,
-              },
-              Object {
-                "key": 20008,
-                "text": "DROPPED",
-                "value": 20008,
-              },
-            ]
-          }
-          placeholder="Choose tag"
-          renderLabel={[Function]}
-          searchInput="text"
-          selectOnBlur={true}
-          selectOnNavigation={true}
-          selection={true}
-          style={
-            Object {
-              "float": "left",
+      <GridRow>
+        <GridColumn>
+          <Segment>
+            Add/remove tag
+          </Segment>
+        </GridColumn>
+        <GridColumn>
+          <Dropdown
+            additionLabel="Add "
+            additionPosition="top"
+            closeOnBlur={true}
+            closeOnEscape={true}
+            deburr={false}
+            fluid={true}
+            icon="dropdown"
+            id="tagDropdown"
+            minCharacters={1}
+            noResultsMessage="No results found."
+            onChange={[Function]}
+            openOnFocus={true}
+            options={
+              Array [
+                Object {
+                  "key": 20001,
+                  "text": "Javascript",
+                  "value": 20001,
+                },
+                Object {
+                  "key": 20002,
+                  "text": "HTML",
+                  "value": 20002,
+                },
+                Object {
+                  "key": 20003,
+                  "text": "game",
+                  "value": 20003,
+                },
+                Object {
+                  "key": 20004,
+                  "text": "React",
+                  "value": 20004,
+                },
+                Object {
+                  "key": 20005,
+                  "text": "Node.js",
+                  "value": 20005,
+                },
+                Object {
+                  "key": 20006,
+                  "text": "Java",
+                  "value": 20006,
+                },
+                Object {
+                  "key": 20007,
+                  "text": "FORTRAN",
+                  "value": 20007,
+                },
+                Object {
+                  "key": 20008,
+                  "text": "DROPPED",
+                  "value": 20008,
+                },
+              ]
             }
-          }
-          wrapSelection={true}
-        />
-      </GridColumn>
-      <GridColumn>
-        <div
-          className="two ui buttons"
-          style={
-            Object {
-              "float": "left",
+            placeholder="Choose tag"
+            renderLabel={[Function]}
+            searchInput="text"
+            selectOnBlur={true}
+            selectOnNavigation={true}
+            selection={true}
+            style={
+              Object {
+                "float": "left",
+              }
             }
-          }
-        >
-          <button
-            className="ui icon positive button"
-            onClick={[Function]}
-            size="mini"
-          >
-            <i
-              className="plus icon"
-            />
-          </button>
-          <div
-            className="or"
+            wrapSelection={true}
           />
-          <button
-            className="ui icon button"
-            onClick={[Function]}
-            size="mini"
+        </GridColumn>
+        <GridColumn>
+          <div
+            className="two ui buttons"
+            style={
+              Object {
+                "float": "left",
+              }
+            }
           >
-            <i
-              className="trash icon"
+            <button
+              className="ui icon positive button"
+              onClick={[Function]}
+              size="mini"
+            >
+              <i
+                className="plus icon"
+              />
+            </button>
+            <div
+              className="or"
             />
-          </button>
-        </div>
-      </GridColumn>
-    </Grid>
-    <hr />
-    <Grid
-      columns="equal"
-    >
-      <GridColumn>
-        <Segment>
-          Assign instructor
-        </Segment>
-      </GridColumn>
-      <GridColumn>
-        <Dropdown
-          additionLabel="Add "
-          additionPosition="top"
-          closeOnBlur={true}
-          closeOnEscape={true}
-          deburr={false}
-          fluid={true}
-          icon="dropdown"
-          id="assistantDropdown"
-          minCharacters={1}
-          noResultsMessage="No results found."
-          onChange={[Function]}
-          openOnFocus={true}
-          options={Array []}
-          placeholder="Select teacher"
-          renderLabel={[Function]}
-          searchInput="text"
-          selectOnBlur={true}
-          selectOnNavigation={true}
-          selection={true}
-          wrapSelection={true}
-        />
-      </GridColumn>
-      <GridColumn>
-        <Button
-          as="button"
-          onClick={[Function]}
-          size="small"
-        >
-          Change instructor
-        </Button>
-      </GridColumn>
-    </Grid>
-    <hr />
-    <Grid
-      columns="equal"
-    >
-      <GridColumn>
-        <Segment>
-          Dropped status
-        </Segment>
-      </GridColumn>
-      <GridColumn>
-        <Button
-          as="button"
-          onClick={[Function]}
-        >
-          Mark as non-dropped
-        </Button>
-      </GridColumn>
-      <GridColumn>
-        <Button
-          as="button"
-          color="red"
-          onClick={[Function]}
-        >
-          Mark as dropped
-        </Button>
-      </GridColumn>
+            <button
+              className="ui icon button"
+              onClick={[Function]}
+              size="mini"
+            >
+              <i
+                className="trash icon"
+              />
+            </button>
+          </div>
+        </GridColumn>
+      </GridRow>
+      <GridRow>
+        <GridColumn>
+          <Segment>
+            Assign instructor
+          </Segment>
+        </GridColumn>
+        <GridColumn>
+          <Dropdown
+            additionLabel="Add "
+            additionPosition="top"
+            closeOnBlur={true}
+            closeOnEscape={true}
+            deburr={false}
+            fluid={true}
+            icon="dropdown"
+            id="assistantDropdown"
+            minCharacters={1}
+            noResultsMessage="No results found."
+            onChange={[Function]}
+            openOnFocus={true}
+            options={Array []}
+            placeholder="Select teacher"
+            renderLabel={[Function]}
+            searchInput="text"
+            selectOnBlur={true}
+            selectOnNavigation={true}
+            selection={true}
+            wrapSelection={true}
+          />
+        </GridColumn>
+        <GridColumn>
+          <Button
+            as="button"
+            onClick={[Function]}
+            size="small"
+          >
+            Change instructor
+          </Button>
+        </GridColumn>
+      </GridRow>
+      <GridRow>
+        <GridColumn>
+          <Segment>
+            Dropped status
+          </Segment>
+        </GridColumn>
+        <GridColumn>
+          <Button
+            as="button"
+            onClick={[Function]}
+          >
+            Mark as non-dropped
+          </Button>
+        </GridColumn>
+        <GridColumn>
+          <Button
+            as="button"
+            color="red"
+            onClick={[Function]}
+          >
+            Mark as dropped
+          </Button>
+        </GridColumn>
+      </GridRow>
     </Grid>
     <br />
   </div>

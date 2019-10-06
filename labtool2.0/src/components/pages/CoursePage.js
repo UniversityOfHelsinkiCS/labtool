@@ -505,52 +505,52 @@ export const CoursePage = props => {
       <div className="TeacherBulkForm">
         <br />
         <h2>Modify selected students</h2>
-        <Grid columns="equal">
-          <Grid.Column>
-            <Segment>Add/remove tag</Segment>
-          </Grid.Column>
-          <Grid.Column>
-            <Dropdown id="tagDropdown" style={{ float: 'left' }} options={dropDownTags} onChange={changeSelectedTag()} placeholder="Choose tag" fluid selection />
-          </Grid.Column>
-          <Grid.Column>
-            <div className="two ui buttons" style={{ float: 'left' }}>
-              <button className="ui icon positive button" onClick={() => bulkAddTag()} size="mini">
-                <i className="plus icon" />
-              </button>
-              <div className="or" />
-              <button className="ui icon button" onClick={() => bulkRemoveTag()} size="mini">
-                <i className="trash icon" />
-              </button>
-            </div>
-          </Grid.Column>
-        </Grid>
-        <hr />
-        <Grid columns="equal">
-          <Grid.Column>
-            <Segment>Assign instructor</Segment>
-          </Grid.Column>
-          <Grid.Column>
-            <Dropdown id="assistantDropdown" options={dropDownTeachers} onChange={changeSelectedTeacher()} placeholder="Select teacher" fluid selection />
-          </Grid.Column>
-          <Grid.Column>
-            <Button onClick={() => bulkUpdateTeacher()} size="small">
-              Change instructor
-            </Button>
-          </Grid.Column>
-        </Grid>
-        <hr />
-        <Grid columns="equal">
-          <Grid.Column>
-            <Segment>Dropped status</Segment>
-          </Grid.Column>
-          <Grid.Column>
-            <Button onClick={() => bulkMarkNotDropped()}>Mark as non-dropped</Button>
-          </Grid.Column>
-          <Grid.Column>
-            <Button color="red" onClick={() => bulkMarkDropped()}>
-              Mark as dropped
-            </Button>
-          </Grid.Column>
+        <Grid columns={3} divided style={{ width: '90%' }}>
+          <Grid.Row>
+            <Grid.Column>
+              <Segment>Add/remove tag</Segment>
+            </Grid.Column>
+            <Grid.Column>
+              <Dropdown id="tagDropdown" style={{ float: 'left' }} options={dropDownTags} onChange={changeSelectedTag()} placeholder="Choose tag" fluid selection />
+            </Grid.Column>
+            <Grid.Column>
+              <div className="two ui buttons" style={{ float: 'left' }}>
+                <button className="ui icon positive button" onClick={() => bulkAddTag()} size="mini">
+                  <i className="plus icon" />
+                </button>
+                <div className="or" />
+                <button className="ui icon button" onClick={() => bulkRemoveTag()} size="mini">
+                  <i className="trash icon" />
+                </button>
+              </div>
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row>
+            <Grid.Column>
+              <Segment>Assign instructor</Segment>
+            </Grid.Column>
+            <Grid.Column>
+              <Dropdown id="assistantDropdown" options={dropDownTeachers} onChange={changeSelectedTeacher()} placeholder="Select teacher" fluid selection />
+            </Grid.Column>
+            <Grid.Column>
+              <Button onClick={() => bulkUpdateTeacher()} size="small">
+                Change instructor
+              </Button>
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row>
+            <Grid.Column>
+              <Segment>Dropped status</Segment>
+            </Grid.Column>
+            <Grid.Column>
+              <Button onClick={() => bulkMarkNotDropped()}>Mark as non-dropped</Button>
+            </Grid.Column>
+            <Grid.Column>
+              <Button color="red" onClick={() => bulkMarkDropped()}>
+                Mark as dropped
+              </Button>
+            </Grid.Column>
+          </Grid.Row>
         </Grid>
         <br />
       </div>

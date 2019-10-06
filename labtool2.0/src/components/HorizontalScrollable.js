@@ -6,56 +6,51 @@ export const HorizontalScrollable = props => {
   let container = null
   let content = null
   let scrollbar = null
-  let lastContentWidth = null
-  let lastViewWidth = null
   const antibounce = {}
 
   const mainElementReady = element => {
     content = element
-    maybeResizeBar()
+    resizeBar()
   }
   const scrollBarReady = element => {
     scrollbar = element
-    maybeResizeBar()
+    resizeBar()
   }
   const containerReady = element => {
     container = element
   }
   const onResize = () => {
-    maybeResizeBar()
+    resizeBar()
     updateSticky()
   }
 
   useEffect(() => {
     window.addEventListener('scroll', updateSticky)
     window.addEventListener('resize', onResize)
+    document.documentElement.addEventListener('resize', onResize)
     onResize()
 
     return () => {
       window.removeEventListener('scroll', updateSticky)
       window.removeEventListener('resize', onResize)
+      document.documentElement.removeEventListener('resize', onResize)
     }
-  }, [])
+  })
 
-  const maybeResizeBar = () => {
+  const resizeBar = () => {
     if (container && content && scrollbar) {
       const viewWidth = container.offsetWidth
       const contentWidth = content.scrollWidth
-      if (lastContentWidth === null || lastContentWidth !== contentWidth || lastViewWidth === null || lastViewWidth !== viewWidth) {
-        // make scrollable range as wide as table itself, but keep the
-        // scroll bar width as the viewable width of the table
-        const oldScrollLeft = scrollbar.scrollLeft
+      // make scrollable range as wide as table itself, but keep the
+      // scroll bar width as the viewable width of the table
+      const oldScrollLeft = scrollbar.scrollLeft
 
-        scrollbar.style.width = scrollbar.style.maxWidth = `${viewWidth}px`
-        scrollbar.children[0].style.width = `${contentWidth}px`
-        scrollbar.children[0].style.height = '1px'
+      scrollbar.style.width = scrollbar.style.maxWidth = `${viewWidth}px`
+      scrollbar.children[0].style.width = `${contentWidth}px`
+      scrollbar.children[0].style.height = '1px'
 
-        scrollbar.style.overflowX = contentWidth > viewWidth ? 'scroll' : 'auto'
-        scrollbar.scrollLeft = oldScrollLeft
-
-        lastViewWidth = viewWidth
-        lastContentWidth = contentWidth
-      }
+      scrollbar.style.overflowX = contentWidth > viewWidth ? 'scroll' : 'auto'
+      scrollbar.scrollLeft = oldScrollLeft
     }
   }
 
