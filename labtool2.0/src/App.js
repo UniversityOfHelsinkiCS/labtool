@@ -38,7 +38,8 @@ const SHOW_VERSION = process.env.REACT_APP_SHOW_VERSION
 if (SHOW_VERSION) {
   console.log(`[Debug version] Built on: ` + preval`module.exports = new Date().toLocaleString()`)
   console.log(
-    `[Debug version] Git commit: ` + preval`module.exports = (git => git.branch() + ':' + git.long() + ', ' + git.date().toLocaleString() + '\\n"' + git.message() + '"')(require('git-rev-sync'))`
+    `[Debug version] Git commit: ` +
+      preval`module.exports = (git => { try { return git.branch() + ':' + git.long() + ', ' + git.date().toLocaleString() + '\\n"' + git.message() + '"' } catch (e) { return '(no repository available)' } })(require('git-rev-sync'))`
   )
 }
 if (USE_FAKE_LOGIN) {
