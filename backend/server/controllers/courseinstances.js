@@ -428,7 +428,7 @@ module.exports = {
             })
             StudentInstance.find({
               where: {
-                userId: userId,
+                userId,
                 courseInstanceId: course.id
               }
             }).then((targetStudent) => {
@@ -512,8 +512,8 @@ module.exports = {
                 currentWeek: req.body.currentWeek || courseInstance.currentWeek,
                 finalReview: req.body.finalReview,
                 currentCodeReview: req.body.newCr.length === 0 ? '{}' : req.body.newCr,
-                coursesPage: req.body.coursesPage || courseInstance.coursesPage,
-                courseMaterial: req.body.courseMaterial || courseInstance.courseMaterial
+                coursesPage: typeof req.body.coursesPage === 'string' ? req.body.coursesPage : courseInstance.coursesPage,
+                courseMaterial: typeof req.body.courseMaterial === 'string' ? req.body.coursesMaterial : courseInstance.courseMaterial
               })
               .then(updatedCourseInstance => res.status(200).send(updatedCourseInstance))
               .catch((error) => {
