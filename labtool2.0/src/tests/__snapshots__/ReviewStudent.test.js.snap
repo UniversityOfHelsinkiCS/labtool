@@ -80,6 +80,7 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
           Code review points: 
           0
         </div>
+        <PreviousWeekDetails />
         <h2>
           Review
         </h2>
