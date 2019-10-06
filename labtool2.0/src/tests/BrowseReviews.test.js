@@ -226,9 +226,13 @@ describe('<BrowseReviews />', () => {
             start: '2017-03-11T21:00:00.000Z',
             end: '2017-04-29T21:00:00.000Z',
             active: false,
-            ohid: 'TKT20010.2017.K.A.1'
+            ohid: 'TKT20010.2017.K.A.1',
+            courseInstances: [{ id: 1 }]
           },
-          coursePage
+          {
+            ...coursePage,
+            courseInstances: [{ id: 10011 }]
+          }
         ]
         wrapper = shallow(
           <BrowseReviews
@@ -251,7 +255,11 @@ describe('<BrowseReviews />', () => {
           />
         )
         expect(wrapper.find('.hasPrevious').text()).toContain('Has taken this course before')
-        expect(wrapper.find('.hasPrevious').text()).toContain('TKT20010 16-17 4.period')
+        const popup = wrapper
+          .find('.hasPrevious')
+          .find('Link')
+          .find('Popup')
+        expect(popup.props()).toHaveProperty('trigger', <p>TKT20010 16-17 4.period</p>)
       })
       it('student can be marked as dropped and non-dropped', () => {
         wrapper.find({ children: 'Mark as dropped' }).simulate('click')
