@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
-import { getOneCI } from '../../services/courseInstance'
+// import { Link } from 'react-router-dom'
+import { getOneCI, modifyOneCI } from '../../services/courseInstance'
 import { coursePageInformation } from '../../services/courseInstance'
 import { bulkinsertCodeReviews, removeOneCodeReview } from '../../services/codeReview'
 import {
@@ -21,8 +21,8 @@ import {
 } from '../../reducers/codeReviewReducer'
 import { filterByTag } from '../../reducers/coursePageLogicReducer'
 import { clearNotifications, showNotification } from '../../reducers/notificationReducer'
-import { Button, Table, Checkbox, Loader, Dropdown, Label, Popup, Modal, Icon } from 'semantic-ui-react'
-import Notification from '../../components/pages/Notification'
+import { Button, Table, Checkbox, Loader, Dropdown, Label, Popup, Modal, Icon, Message } from 'semantic-ui-react'
+//import Notification from '../../components/pages/Notification'
 import { resetLoading } from '../../reducers/loadingReducer'
 import useLegacyState from '../../hooks/legacyState'
 import { usePersistedState } from '../../hooks/persistedState'
@@ -239,20 +239,44 @@ export const ModifyCourseInstanceReview = props => {
     state.open = s
   }
 
+  const handleActivateCr = crToActivate => async e => {
+    try {
+      e.preventDefault()
+      let newCr = props.selectedInstance.currentCodeReview
+      newCr = newCr.concat(crToActivate)
+      const content = {
+        ...props.selectedInstance,
+        newCr
+      }
+      await props.modifyOneCI(content, props.selectedInstance.ohid)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   const VisibilityReminder = () =>
     props.selectedInstance.currentCodeReview && props.codeReviewLogic.selectedDropdown ? (
       props.selectedInstance.currentCodeReview.findIndex(cr => cr === props.codeReviewLogic.selectedDropdown) === -1 ? (
-        <Popup
-          trigger={<Icon name="eye" size="large" color="red" />}
-          content={
-            <span>
-              <span>This code review is currently not visible to students. You can make it visible on the </span>
-              <Link to={`/labtool/ModifyCourseInstancePage/${props.selectedInstance.ohid}`}>course editing page</Link>
-              <span>.</span>
-            </span>
-          }
-          hoverable
-        />
+        // <Popup
+        //   trigger={<Icon name="eye" size="large" color="red" />}
+        //   content={
+        //     <span>
+        //       <span>This code review is currently not visible to students. You can make it visible on the </span>
+        //       <Link to={`/labtool/ModifyCourseInstancePage/${props.selectedInstance.ohid}`}>course editing page</Link>
+        //       <span>.</span>
+        //     </span>
+        //   }
+        //   hoverable
+        // />
+        <Message warning>
+          <span>
+            <span>This code review is currently not visible to students.</span>
+            <Button color="green" size="small" onClick={handleActivateCr(props.codeReviewLogic.selectedDropdown)}>
+              Activate the code review
+            </Button>
+            {/* <Link to={`/labtool/ModifyCourseInstancePage/${props.selectedInstance.ohid}`}>course editing page</Link> */}
+          </span>
+        </Message>
       ) : null
     ) : null
 
@@ -293,6 +317,7 @@ export const ModifyCourseInstanceReview = props => {
             Tag filters: <Label>none</Label>
           </div>
         )}
+        <VisibilityReminder />
         <Table celled>
           <Table.Header>
             <Table.Row>
@@ -309,7 +334,7 @@ export const ModifyCourseInstanceReview = props => {
               <Table.HeaderCell>Project Info</Table.HeaderCell>
               <Table.HeaderCell key={1}>
                 <div style={{ display: 'flex' }}>
-                  <VisibilityReminder />
+                  {/* <VisibilityReminder /> */}
                   <Dropdown
                     onChange={createDropdown()}
                     defaultValue={props.codeReviewLogic.selectedDropdown}
@@ -428,16 +453,18 @@ export const ModifyCourseInstanceReview = props => {
                                 )
                               ) : null}
                             </p>
-                            <select
-                              className="toReviewDropdown"
-                              onChange={addCodeReview(props.codeReviewLogic.selectedDropdown, data.id)}
-                              value={props.codeReviewLogic.currentSelections[props.codeReviewLogic.selectedDropdown][data.id]}
-                            >
+                            <select className="toReviewDropdown" onChange={addCodeReview(props.codeReviewLogic.selectedDropdown, data.id)}>
                               {props.dropdownUsers.map(d =>
                                 d.value !== data.id ? (
-                                  <option key={d.value} value={d.value}>
-                                    {d.text}
-                                  </option>
+                                  props.codeReviewLogic.currentSelections[props.codeReviewLogic.selectedDropdown][data.id] === d.value ? (
+                                    <option selected="selected" key={d.value} value={d.value}>
+                                      {d.text}
+                                    </option>
+                                  ) : (
+                                    <option key={d.value} value={d.value}>
+                                      {d.text}
+                                    </option>
+                                  )
                                 ) : null
                               )}
                             </select>
@@ -446,14 +473,21 @@ export const ModifyCourseInstanceReview = props => {
                       </Table.Cell>
                       <Table.Cell>
                         {props.codeReviewLogic.showCreate ? (
-                          <select className="toReviewDropdown" onChange={addCodeReview('create', data.id)} value={props.codeReviewLogic.currentSelections['create'][data.id]}>
+                          <select className="toReviewDropdown" onChange={addCodeReview('create', data.id)}>
                             {props.dropdownUsers.map(d =>
                               d.value !== data.id ? (
-                                <option key={d.value} value={d.value}>
-                                  {d.text}
-                                </option>
+                                props.codeReviewLogic.currentSelections['create'][data.id] === d.value ? (
+                                  <option selected="selected" key={d.value} value={d.value}>
+                                    {d.text}
+                                  </option>
+                                ) : (
+                                  <option key={d.value} value={d.value}>
+                                    {d.text}
+                                  </option>
+                                )
                               ) : null
                             )}
+                            ))
                           </select>
                         ) : null}
                       </Table.Cell>
@@ -486,14 +520,14 @@ export const ModifyCourseInstanceReview = props => {
                   Assign selected randomly
                 </Button>
                 <Button compact size="small" style={{ float: 'right' }} onClick={handleSubmit('create')}>
-                  Create
+                  Create and Save
                 </Button>
               </Table.HeaderCell>
             </Table.Row>
           </Table.Footer>
         </Table>
       </div>
-      <Notification />
+      {/* <Notification /> */}
     </div>
   )
 }
@@ -544,6 +578,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = {
   getOneCI,
+  modifyOneCI,
   clearNotifications,
   coursePageInformation,
   initOneReview,
@@ -577,6 +612,7 @@ ModifyCourseInstanceReview.propTypes = {
   loading: PropTypes.object.isRequired,
 
   getOneCI: PropTypes.func.isRequired,
+  modifyOneCI: PropTypes.func.isRequired,
   clearNotifications: PropTypes.func.isRequired,
   coursePageInformation: PropTypes.func.isRequired,
   initOneReview: PropTypes.func.isRequired,
