@@ -3,9 +3,11 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
 export const HorizontalScrollable = props => {
+  let container = null
   let content = null
   let scrollbar = null
-  let lastWidth = null
+  let lastContentWidth = null
+  let lastViewWidth = null
   const antibounce = {}
 
   const mainElementReady = element => {
@@ -15,6 +17,9 @@ export const HorizontalScrollable = props => {
   const scrollBarReady = element => {
     scrollbar = element
     maybeResizeBar()
+  }
+  const containerReady = element => {
+    container = element
   }
   const onResize = () => {
     maybeResizeBar()
@@ -33,16 +38,24 @@ export const HorizontalScrollable = props => {
   }, [])
 
   const maybeResizeBar = () => {
-    if (content && scrollbar && (lastWidth === null || lastWidth !== content.offsetWidth)) {
-      // make scrollable range as wide as table itself, but keep the
-      // scroll bar width as the viewable width of the table
-      const oldScrollLeft = scrollbar.scrollLeft
-      scrollbar.style.width = scrollbar.style.maxWidth = `${content.offsetWidth}px`
-      scrollbar.children[0].style.width = `${content.scrollWidth}px`
-      scrollbar.children[0].style.height = '1px'
-      scrollbar.scrollLeft = oldScrollLeft
-      scrollbar.style.overflowX = content.scrollWidth > content.offsetWidth ? 'scroll' : 'auto'
-      lastWidth = content.offsetWidth
+    if (container && content && scrollbar) {
+      const viewWidth = container.offsetWidth
+      const contentWidth = content.scrollWidth
+      if (lastContentWidth === null || lastContentWidth !== contentWidth || lastViewWidth === null || lastViewWidth !== viewWidth) {
+        // make scrollable range as wide as table itself, but keep the
+        // scroll bar width as the viewable width of the table
+        const oldScrollLeft = scrollbar.scrollLeft
+
+        scrollbar.style.width = scrollbar.style.maxWidth = `${viewWidth}px`
+        scrollbar.children[0].style.width = `${contentWidth}px`
+        scrollbar.children[0].style.height = '1px'
+
+        scrollbar.style.overflowX = contentWidth > viewWidth ? 'scroll' : 'auto'
+        scrollbar.scrollLeft = oldScrollLeft
+
+        lastViewWidth = viewWidth
+        lastContentWidth = contentWidth
+      }
     }
   }
 
@@ -116,7 +129,7 @@ export const HorizontalScrollable = props => {
   // the parent page should define overflowY: hidden and add some extra
   // <br />s to the bottom
   return (
-    <div style={{ overflow: 'hidden', boxSizing: 'border-box', marginBottom: '-50vh', paddingBottom: '50vh' }}>
+    <div ref={containerReady} style={{ overflow: 'hidden', boxSizing: 'border-box', marginBottom: '-50vh', paddingBottom: '50vh' }}>
       <div ref={mainElementReady} onScroll={updateScrollX('content')} style={{ overflowX: 'visible', overflowY: 'visible' }}>
         {props.children}
       </div>
