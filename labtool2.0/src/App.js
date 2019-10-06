@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import { Switch, Route, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { Container } from 'semantic-ui-react'
+import preval from 'preval.macro'
 
 // Component (pages) imports
 import Courses from './components/pages/Courses'
@@ -32,7 +33,14 @@ import { resetLoading, forceSetLoading } from './reducers/loadingReducer'
 import { clearAllPersistedStates } from './hooks/persistedState'
 
 const USE_FAKE_LOGIN = process.env.REACT_APP_USE_FAKE_LOGIN === 'ThisIsNotProduction'
+const SHOW_VERSION = process.env.REACT_APP_SHOW_VERSION
 
+if (SHOW_VERSION) {
+  console.log(`[Debug version] Built on: ` + preval`module.exports = new Date().toLocaleString()`)
+  console.log(
+    `[Debug version] Git commit: ` + preval`module.exports = (git => git.branch() + ':' + git.long() + ', ' + git.date().toLocaleString() + '\\n"' + git.message() + '"')(require('git-rev-sync'))`
+  )
+}
 if (USE_FAKE_LOGIN) {
   console.log('USING FAKE LOGIN!!! DISABLE ON PRODUCTION!!!')
 }

@@ -84,12 +84,12 @@ export const handleRequest = store => next => action => {
         // as the browser will just follow the 302 and tell *nothing* to
         // any AJAX library, like axios.
 
-        // instead we have to rely on err.response being available on all
-        // valid responses from the backend. if there is no err.response,
-        // we assume the browser tried to make an AJAX request to Shibbo
-        // and we will instead refresh the window.
+        // instead we'll check for a network error which will occur when
+        // AJAX fails to send a request to Shibbo, as the SOP prevents
+        // us from making such a request.
 
-        if (!err.response) {
+        if (err.message.toLowerCase() === 'network error') {
+          console.warn('Session expired, reloading...')
           window.location.reload(true)
           return
         }
