@@ -500,6 +500,8 @@ module.exports = {
               res.status(400).send('You have to be a teacher to update course info')
               return
             }
+            console.log(typeof req.body.coursesPage, ':', req.body.coursesPage)
+            console.log(typeof req.body.courseMaterial, ':', req.body.courseMaterial)
             courseInstance
               .update({
                 name: req.body.name || courseInstance.name,
@@ -513,7 +515,7 @@ module.exports = {
                 finalReview: req.body.finalReview,
                 currentCodeReview: req.body.newCr.length === 0 ? '{}' : req.body.newCr,
                 coursesPage: typeof req.body.coursesPage === 'string' ? req.body.coursesPage : courseInstance.coursesPage,
-                courseMaterial: typeof req.body.courseMaterial === 'string' ? req.body.coursesMaterial : courseInstance.courseMaterial
+                courseMaterial: typeof req.body.courseMaterial === 'string' ? req.body.courseMaterial : courseInstance.courseMaterial
               })
               .then(updatedCourseInstance => res.status(200).send(updatedCourseInstance))
               .catch((error) => {
