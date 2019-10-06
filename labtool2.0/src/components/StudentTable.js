@@ -232,7 +232,7 @@ export const StudentTable = props => {
       {/* Select Check Box */}
       {showColumn('select') && (
         <Table.Cell key="select">
-          <Checkbox id={'select' + data.id} checked={props.coursePageLogic.selectedStudents[data.id]} onChange={handleSelectCheck(data.id)} />
+          <Checkbox id={'select' + data.id} checked={props.coursePageLogic.selectedStudents[data.id] || false} onChange={handleSelectCheck(data.id)} />
         </Table.Cell>
       )}
 
