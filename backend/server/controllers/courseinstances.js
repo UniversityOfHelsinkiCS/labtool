@@ -500,8 +500,6 @@ module.exports = {
               res.status(400).send('You have to be a teacher to update course info')
               return
             }
-            console.log(typeof req.body.coursesPage, ':', req.body.coursesPage)
-            console.log(typeof req.body.courseMaterial, ':', req.body.courseMaterial)
             courseInstance
               .update({
                 name: req.body.name || courseInstance.name,
