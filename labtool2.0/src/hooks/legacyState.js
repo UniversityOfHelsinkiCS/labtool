@@ -6,6 +6,10 @@ import { useState } from 'react'
 /*
  * useLegacyState({ stateVariable: defaultValue })
  */
+
+// note: if you destructure one of these states, only use const -
+//       assigning to destructured values will not work
+
 const useLegacyState = vars => {
   const _get = {}
   const _set = {}

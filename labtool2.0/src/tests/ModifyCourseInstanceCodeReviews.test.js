@@ -239,6 +239,7 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
         filterByReview={mockFn}
         showNotification={mockFn}
         removeOneCodeReview={mockFn}
+        restoreData={mockFn}
       />
     )
   })
@@ -261,13 +262,7 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
           10031: 0
         }
         dropdowns.forEach(dropdown => {
-          dropdown.props().children.forEach(child => {
-            if (child) {
-              if (child.props['selected']) {
-                values[child['key']]++
-              }
-            }
-          })
+          values[dropdown.props().value]++
         })
         expect(values[10011]).toEqual(0)
         expect(values[10012]).toEqual(2)

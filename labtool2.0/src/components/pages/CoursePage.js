@@ -14,8 +14,8 @@ import { coursePageReset, updateActiveIndex, toggleCodeReview, selectTag, select
 import { updateStudentProjectInfo } from '../../services/studentinstances'
 import { resetLoading } from '../../reducers/loadingReducer'
 
-import { LabtoolComment } from '../LabtoolComment'
-import { FormMarkdownTextArea } from '../MarkdownTextArea'
+import LabtoolComment from '../LabtoolComment'
+import LabtoolAddComment from '../LabtoolAddComment'
 import StudentTable from '../StudentTable'
 import { createDropdownTeachers, createDropdownTags } from '../../util/dropdown'
 
@@ -30,6 +30,10 @@ const CoursePageHeader = ({ courseInstance }) => (
     </Header.Content>
   </Header>
 )
+
+CoursePageHeader.propTypes = {
+  courseInstance: PropTypes.object.isRequired
+}
 
 export const CoursePage = props => {
   useEffect(() => {
@@ -236,10 +240,7 @@ export const CoursePage = props => {
         </Card>
         <h4> Comments </h4>
         <Comment.Group>{week ? sortArrayAscendingByDate(week.comments).map(renderComment) : <h4> No comments </h4>}</Comment.Group>
-        <Form reply onSubmit={handleSubmit} name={week.id} id={week.id}>
-          <FormMarkdownTextArea name="content" placeholder="Your comment..." defaultValue="" />
-          <Button content="Add Reply" labelPosition="left" icon="edit" primary />
-        </Form>
+        <LabtoolAddComment weekId={week.id} handleSubmit={handleSubmit} />
       </Accordion.Content>
     </Accordion>
   )
@@ -629,6 +630,37 @@ export const CoursePage = props => {
   }
 }
 
+CoursePage.propTypes = {
+  courseId: PropTypes.string.isRequired,
+
+  user: PropTypes.object.isRequired,
+  studentInstance: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+  teacherInstance: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+  selectedInstance: PropTypes.object.isRequired,
+  courseInstance: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+  courseData: PropTypes.object.isRequired,
+  coursePageLogic: PropTypes.object.isRequired,
+  tags: PropTypes.object.isRequired,
+  loading: PropTypes.object.isRequired,
+
+  createOneComment: PropTypes.func.isRequired,
+  getOneCI: PropTypes.func.isRequired,
+  coursePageInformation: PropTypes.func.isRequired,
+  addLinkToCodeReview: PropTypes.func.isRequired,
+  coursePageReset: PropTypes.func.isRequired,
+  toggleCodeReview: PropTypes.func.isRequired,
+  getAllTags: PropTypes.func.isRequired,
+  tagStudent: PropTypes.func.isRequired,
+  sendEmail: PropTypes.func.isRequired,
+  updateActiveIndex: PropTypes.func.isRequired,
+  unTagStudent: PropTypes.func.isRequired,
+  resetLoading: PropTypes.func.isRequired,
+  updateStudentProjectInfo: PropTypes.func.isRequired,
+  associateTeacherToStudent: PropTypes.func.isRequired,
+  selectTag: PropTypes.func.isRequired,
+  selectTeacher: PropTypes.func.isRequired
+}
+
 const mapStateToProps = (state, ownProps) => {
   return {
     user: state.user,
@@ -661,37 +693,6 @@ const mapDispatchToProps = {
   associateTeacherToStudent,
   selectTag,
   selectTeacher
-}
-
-CoursePage.propTypes = {
-  courseId: PropTypes.string.isRequired,
-
-  user: PropTypes.object.isRequired,
-  studentInstance: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
-  teacherInstance: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
-  selectedInstance: PropTypes.object.isRequired,
-  courseInstance: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
-  courseData: PropTypes.object.isRequired,
-  coursePageLogic: PropTypes.object.isRequired,
-  tags: PropTypes.object.isRequired,
-  loading: PropTypes.object.isRequired,
-
-  createOneComment: PropTypes.func.isRequired,
-  getOneCI: PropTypes.func.isRequired,
-  coursePageInformation: PropTypes.func.isRequired,
-  addLinkToCodeReview: PropTypes.func.isRequired,
-  coursePageReset: PropTypes.func.isRequired,
-  toggleCodeReview: PropTypes.func.isRequired,
-  getAllTags: PropTypes.func.isRequired,
-  tagStudent: PropTypes.func.isRequired,
-  sendEmail: PropTypes.func.isRequired,
-  updateActiveIndex: PropTypes.func.isRequired,
-  unTagStudent: PropTypes.func.isRequired,
-  resetLoading: PropTypes.func.isRequired,
-  updateStudentProjectInfo: PropTypes.func.isRequired,
-  associateTeacherToStudent: PropTypes.func.isRequired,
-  selectTag: PropTypes.func.isRequired,
-  selectTeacher: PropTypes.func.isRequired
 }
 
 export default connect(

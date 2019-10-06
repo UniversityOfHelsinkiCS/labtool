@@ -6,7 +6,7 @@ import { Button, Icon } from 'semantic-ui-react'
 
 const BackButton = props => (
   <Link to={props.to}>
-    <Button compact disabled={!props.enabled}>
+    <Button compact disabled={!props.enabled} onClick={props.cleanup || (() => {})}>
       <Icon name="angle left" />
       <span>{props.text}</span>
     </Button>
@@ -16,7 +16,8 @@ const BackButton = props => (
 BackButton.propTypes = {
   to: PropTypes.string,
   enabled: PropTypes.bool.isRequired,
-  text: PropTypes.string.isRequired
+  text: PropTypes.string.isRequired,
+  cleanup: PropTypes.func
 }
 
 const presets = {

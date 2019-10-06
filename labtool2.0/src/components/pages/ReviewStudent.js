@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { Button, Form, Input, Grid, Card, Loader } from 'semantic-ui-react'
 import { Link, Redirect } from 'react-router-dom'
@@ -6,10 +6,11 @@ import { connect } from 'react-redux'
 import { createOneWeek, getWeekDraft, saveWeekDraft } from '../../services/week'
 import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import { clearNotifications } from '../../reducers/notificationReducer'
-import { toggleCheck, resetChecklist } from '../../reducers/weekReviewReducer'
+import { toggleCheck, resetChecklist, restoreChecks } from '../../reducers/weekReviewReducer'
 import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 import store from '../../store'
 import { trimDate } from '../../util/format'
+import { usePersistedState } from '../../hooks/persistedState'
 
 import { FormMarkdownTextArea } from '../MarkdownTextArea'
 
@@ -17,6 +18,14 @@ import { FormMarkdownTextArea } from '../MarkdownTextArea'
  *  The page which is used by teacher to review submissions,.
  */
 export const ReviewStudent = props => {
+  const [loadedWeekData, setLoadedWeekData] = useState(false)
+  const [allowChecksCopy, setAllowChecksCopy] = useState(false)
+  const pstate = usePersistedState('ReviewStudent', {
+    points: '',
+    feedback: '',
+    instructorNotes: '',
+    checks: null
+  })
   const reviewPointsRef = useRef(null)
   const reviewTextRef = useRef(null)
 
@@ -33,6 +42,12 @@ export const ReviewStudent = props => {
       props.resetChecklist()
     }
   }, [])
+
+  useEffect(() => {
+    if (allowChecksCopy) {
+      pstate.checks = { ...props.weekReview.checks }
+    }
+  }, [props.weekReview.checks])
 
   const handleSubmit = async e => {
     try {
@@ -59,6 +74,7 @@ export const ReviewStudent = props => {
   }
 
   const toggleCheckbox = (name, studentId, weekNbr) => async () => {
+    setAllowChecksCopy(true)
     props.toggleCheck(name, studentId, weekNbr)
   }
 
@@ -96,17 +112,15 @@ export const ReviewStudent = props => {
 
   const copyChecklistOutput = async e => {
     e.preventDefault()
-    reviewPointsRef.current.inputRef.value = Number(e.target.points.value).toFixed(2)
-    /* The below line is as hacky as it is because functional elements cannot directly have refs.
-     * This abomination somehow accesses a textarea that is a child of a div that holds the ref.
-     */
-    reviewTextRef.current.getElementsByTagName('textarea')[0].value = e.target.text.value
+    pstate.points = e.target.points.value
+    pstate.feedback = e.target.text.value
   }
 
   if (props.loading.loading) {
     return <Loader active />
   }
   if (props.loading.redirect) {
+    pstate.clear()
     return <Redirect to={`/labtool/courses/${props.selectedInstance.ohid}`} />
   }
   if (Array.isArray(props.weekReview.data)) {
@@ -116,7 +130,7 @@ export const ReviewStudent = props => {
     const loadedFromDraft = !!props.weekReview.draftCreatedAt
     // props.weekNumber is a string, therefore casting to number.
     const weekData = loadedFromDraft ? props.weekReview.draftData : studentData[0].weeks.filter(theWeek => theWeek.weekNumber === Number(props.ownProps.weekNumber))[0]
-    const checks = weekData ? weekData.checks || {} : {}
+    const checks = pstate.checks || (weekData ? weekData.checks || {} : {})
     const weekPoints = studentData[0].weeks
       .filter(week => week.weekNumber < props.weekNumber)
       .map(week => week.points)
@@ -152,6 +166,20 @@ export const ReviewStudent = props => {
         checklistPoints = props.selectedInstance.weekMaxPoints
       }
     }
+
+    if (!loadedWeekData) {
+      if (weekData) {
+        if (pstate.checks) {
+          props.restoreChecks(pstate.checks)
+        }
+
+        pstate.points = pstate.points || weekData.points
+        pstate.feedback = pstate.feedback || weekData.feedback
+        pstate.instructorNotes = pstate.instructorNotes || weekData.instructorNotes
+        setLoadedWeekData(true)
+      }
+    }
+
     return (
       <div className="ReviewStudent" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
         <h2> {props.selectedInstance.name}</h2>
@@ -197,14 +225,21 @@ export const ReviewStudent = props => {
                   <Form.Field>
                     <label>Points 0-{props.selectedInstance.weekMaxPoints}</label>
 
-                    <Input ref={reviewPointsRef} name="points" defaultValue={weekData ? weekData.points : ''} type="number" step="0.01" style={{ width: '150px', align: 'center' }} />
+                    <Input
+                      ref={reviewPointsRef}
+                      name="points"
+                      value={pstate.points}
+                      onChange={(e, { value }) => (pstate.points = value)}
+                      type="number"
+                      step="0.01"
+                      style={{ width: '150px', align: 'center' }}
+                    />
                   </Form.Field>
                 </Form.Group>
                 <h4>Feedback</h4>
                 <Form.Group inline unstackable style={{ textAlignVertical: 'top' }}>
                   <div ref={reviewTextRef}>
-                    {/*Do not add any other textareas to this div. If you do, you'll break copyChecklistOutput.*/}
-                    <FormMarkdownTextArea defaultValue={weekData ? weekData.feedback : ''} name="comment" style={{ width: '500px', height: '250px' }} />
+                    <FormMarkdownTextArea value={pstate.feedback} onChange={(e, { value }) => (pstate.feedback = value)} name="comment" style={{ width: '500px', height: '250px' }} />
                   </div>
                 </Form.Group>
                 <h4>Review notes</h4>
@@ -213,7 +248,12 @@ export const ReviewStudent = props => {
                 </p>
                 <Form.Group inline unstackable style={{ textAlignVertical: 'top' }}>
                   <div>
-                    <FormMarkdownTextArea defaultValue={weekData ? weekData.instructorNotes : ''} name="instructorNotes" style={{ width: '500px', height: '150px' }} />
+                    <FormMarkdownTextArea
+                      value={pstate.instructorNotes}
+                      onChange={(e, { value }) => (pstate.instructorNotes = value)}
+                      name="instructorNotes"
+                      style={{ width: '500px', height: '150px' }}
+                    />
                   </div>
                 </Form.Group>
                 <Form.Field>
@@ -224,7 +264,7 @@ export const ReviewStudent = props => {
                     Save as draft
                   </Button>
                   <Link to={`/labtool/browsereviews/${props.selectedInstance.ohid}/${studentData[0].id}`} type="Cancel">
-                    <Button className="ui center floated button" type="cancel">
+                    <Button className="ui center floated button" type="cancel" onClick={pstate.clear}>
                       Cancel
                     </Button>
                   </Link>
@@ -307,6 +347,7 @@ const mapDispatchToProps = {
   getOneCI,
   clearNotifications,
   toggleCheck,
+  restoreChecks,
   resetChecklist,
   coursePageInformation,
   resetLoading,
@@ -330,6 +371,7 @@ ReviewStudent.propTypes = {
   getOneCI: PropTypes.func.isRequired,
   clearNotifications: PropTypes.func.isRequired,
   toggleCheck: PropTypes.func.isRequired,
+  restoreChecks: PropTypes.func.isRequired,
   resetChecklist: PropTypes.func.isRequired,
   coursePageInformation: PropTypes.func.isRequired,
   resetLoading: PropTypes.func.isRequired,

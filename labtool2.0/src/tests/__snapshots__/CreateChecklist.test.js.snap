@@ -5,6 +5,7 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
   className="CreateChecklist"
 >
   <Connect(BackButton)
+    cleanup={[Function]}
     preset="modifyCIPage"
   />
   <Header>
@@ -61,7 +62,14 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
           noResultsMessage="No results found."
           onChange={[Function]}
           openOnFocus={true}
-          options={Array []}
+          options={
+            Array [
+              Object {
+                "text": "Ohjelmistotekniikan menetelmät (11.03.2018)",
+                "value": 10012,
+              },
+            ]
+          }
           placeholder="Copy checklist from another course"
           renderLabel={[Function]}
           searchInput="text"

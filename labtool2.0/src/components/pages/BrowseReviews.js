@@ -16,7 +16,7 @@ import useLegacyState from '../../hooks/legacyState'
 
 import BackButton from '../BackButton'
 import LabtoolComment from '../LabtoolComment'
-import { FormMarkdownTextArea } from '../MarkdownTextArea'
+import LabtoolAddComment from '../LabtoolAddComment'
 import { getAcademicYear } from '../../util/format'
 
 /**
@@ -248,11 +248,7 @@ export const BrowseReviews = props => {
             </Card>
             <h4> Comments </h4>
             <Comment.Group>{week ? sortCommentsByDate(week.comments).map(c => renderComment(isFinalWeek, c)) : <h4> No comments </h4>}</Comment.Group>
-            <Form reply onSubmit={handleSubmit} name={week.id} id={week.id}>
-              <FormMarkdownTextArea name="content" placeholder="Your comment..." defaultValue="" />
-              <Form.Checkbox label="Add comment for instructors only" name="hidden" />
-              <Button content="Add Reply" labelPosition="left" icon="edit" primary />
-            </Form>
+            <LabtoolAddComment weekId={week.id} handleSubmit={handleSubmit} allowHidden={true} />
           </Accordion.Content>
         </Accordion>
       )
