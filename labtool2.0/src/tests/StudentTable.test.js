@@ -165,7 +165,8 @@ describe('<StudentTable />', () => {
     showDropdown: '',
     selectedTeacher: '',
     filterByAssistant: 0,
-    filterByTag: []
+    filterByTag: [],
+    selectedStudents: {}
   }
 
   const loading = {
@@ -182,7 +183,7 @@ describe('<StudentTable />', () => {
     wrapper = shallow(
       <StudentTable
         columns={[]}
-        courseData={coursePage}
+        studentInstances={coursePage.data}
         selectedInstance={coursePage}
         coursePageLogic={coursePageLogic}
         associateTeacherToStudent={mockFn}
@@ -190,6 +191,18 @@ describe('<StudentTable />', () => {
         tags={tags}
         loading={loading}
         resetLoading={mockFn}
+        showAssistantDropdown={mockFn}
+        showTagDropdown={mockFn}
+        selectTeacher={mockFn}
+        selectTag={mockFn}
+        filterByAssistant={mockFn}
+        filterByTag={mockFn}
+        tagStudent={mockFn}
+        unTagStudent={mockFn}
+        selectStudent={mockFn}
+        unselectStudent={mockFn}
+        selectAllStudents={mockFn}
+        unselectAllStudents={mockFn}
         rowClassName="StudentRow"
       />
     )

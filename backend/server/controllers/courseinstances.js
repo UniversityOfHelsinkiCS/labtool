@@ -389,6 +389,7 @@ module.exports = {
       })
     } else {
       helper.findByUserStudentInstance(req, res)
+      return res.status(200).json(student)
     }
   },
 
@@ -427,7 +428,7 @@ module.exports = {
             })
             StudentInstance.find({
               where: {
-                userId: userId,
+                userId,
                 courseInstanceId: course.id
               }
             }).then((targetStudent) => {
@@ -510,7 +511,9 @@ module.exports = {
                 weekMaxPoints: req.body.weekMaxPoints || courseInstance.weekMaxPoints,
                 currentWeek: req.body.currentWeek || courseInstance.currentWeek,
                 finalReview: req.body.finalReview,
-                currentCodeReview: req.body.newCr.length === 0 ? '{}' : req.body.newCr
+                currentCodeReview: req.body.newCr.length === 0 ? '{}' : req.body.newCr,
+                coursesPage: typeof req.body.coursesPage === 'string' ? req.body.coursesPage : courseInstance.coursesPage,
+                courseMaterial: typeof req.body.courseMaterial === 'string' ? req.body.coursesMaterial : courseInstance.courseMaterial
               })
               .then(updatedCourseInstance => res.status(200).send(updatedCourseInstance))
               .catch((error) => {

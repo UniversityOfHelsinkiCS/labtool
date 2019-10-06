@@ -25,7 +25,7 @@ exports[`<MassEmailPage /> MassEmailPage Component should render correctly 1`] =
         allowModify={false}
         columns={
           Array [
-            "sendcheck",
+            "select",
           ]
         }
         courseData={
@@ -231,6 +231,99 @@ exports[`<MassEmailPage /> MassEmailPage Component should render correctly 1`] =
             "role": "teacher",
           }
         }
+        studentInstances={
+          Array [
+            Object {
+              "Tags": Array [
+                Object {
+                  "color": "red",
+                  "id": 20001,
+                  "name": "Javascript",
+                },
+              ],
+              "User": Object {
+                "admin": false,
+                "createdAt": "2018-03-26T00:00:00.000Z",
+                "email": "johan.studerande@helsinki.fi",
+                "firsts": "Johan Wilhelm",
+                "id": 10012,
+                "lastname": "Studerande",
+                "studentNumber": "014553242",
+                "updatedAt": "2018-03-26T00:00:00.000Z",
+                "username": "tiraopiskelija2",
+              },
+              "codeReviews": Array [],
+              "courseInstanceId": 10011,
+              "createdAt": "2018-03-26T00:00:00.000Z",
+              "github": "http://github.com/tiralabra2",
+              "id": 10012,
+              "projectName": "Tiran toinen labraprojekti",
+              "teacherInstanceId": 10011,
+              "updatedAt": "2018-03-26T00:00:00.000Z",
+              "userId": 10012,
+              "weeks": Array [],
+            },
+            Object {
+              "Tags": Array [
+                Object {
+                  "color": "grey",
+                  "id": 20008,
+                  "name": "DROPPED",
+                },
+                Object {
+                  "color": "yellow",
+                  "id": 20002,
+                  "name": "HTML",
+                },
+              ],
+              "User": Object {
+                "admin": false,
+                "createdAt": "2018-03-26T00:00:00.000Z",
+                "email": "teras.henkilo@helsinki.fi",
+                "firsts": "Teräs",
+                "id": 10031,
+                "lastname": "Henkilö",
+                "studentNumber": "014666666",
+                "updatedAt": "2018-03-26T00:00:00.000Z",
+                "username": "superopiskelija",
+              },
+              "codeReviews": Array [],
+              "courseInstanceId": 10011,
+              "createdAt": "2018-03-26T00:00:00.000Z",
+              "github": "http://github.com/superprojekti",
+              "id": 10031,
+              "projectName": "Tira super projekti",
+              "teacherInstanceId": 10011,
+              "updatedAt": "2018-06-05T07:12:28.603Z",
+              "userId": 10031,
+              "weeks": Array [],
+            },
+            Object {
+              "Tags": Array [],
+              "User": Object {
+                "admin": false,
+                "createdAt": "2018-03-26T00:00:00.000Z",
+                "email": "maarit.opiskelija@helsinki.fi",
+                "firsts": "Maarit Mirja",
+                "id": 10011,
+                "lastname": "Opiskelija",
+                "studentNumber": "014578343",
+                "updatedAt": "2018-03-26T00:00:00.000Z",
+                "username": "tiraopiskelija1",
+              },
+              "codeReviews": Array [],
+              "courseInstanceId": 10011,
+              "createdAt": "2018-03-26T00:00:00.000Z",
+              "github": "http://github.com/tiralabra1",
+              "id": 10011,
+              "projectName": "Tiran labraprojekti",
+              "teacherInstanceId": 10011,
+              "updatedAt": "2018-03-26T00:00:00.000Z",
+              "userId": 10011,
+              "weeks": Array [],
+            },
+          ]
+        }
         tags={
           Object {
             "tags": Array [
@@ -299,35 +392,35 @@ exports[`<MassEmailPage /> MassEmailPage Component should render correctly 1`] =
       <FormTextArea
         as={[Function]}
         control={[Function]}
-        defaultValue=""
         name="content"
+        onChange={[Function]}
         placeholder="Type email here..."
         required={true}
+        value=""
       />
       <FormCheckbox
         as={[Function]}
+        checked={true}
         control={[Function]}
-        defaultChecked={true}
         label="Send a copy to all instructors"
         name="sendToInstructors"
+        onChange={[Function]}
       />
       <Button
         as="button"
         className="ui green button"
         content="Send"
-        role="button"
         type="submit"
       />
       <br />
       <br />
       <Link
-        replace={false}
         to="/labtool/courses/undefined"
       >
         <Button
           as="button"
           className="ui button"
-          role="button"
+          onClick={[Function]}
           type="cancel"
         >
           Cancel

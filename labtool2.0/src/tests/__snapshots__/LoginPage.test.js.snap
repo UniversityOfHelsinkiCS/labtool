@@ -83,7 +83,6 @@ exports[`<Login /> LoginPage Component should render correctly 1`] = `
           <Button
             as="button"
             color="blue"
-            role="button"
             type="submit"
           >
             Login

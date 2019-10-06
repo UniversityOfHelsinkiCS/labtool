@@ -16,7 +16,7 @@ describe('<Login />', () => {
   const mockFn = jest.fn()
 
   beforeEach(() => {
-    wrapper = shallow(<LoginPage user={{}} loading={loading} resetLoading={mockFn} forceSetLoading={mockFn} />)
+    wrapper = shallow(<LoginPage user={{}} loading={loading} resetLoading={mockFn} forceSetLoading={mockFn} login={mockFn} />)
   })
 
   describe('LoginPage Component', () => {
@@ -25,7 +25,7 @@ describe('<Login />', () => {
     })
 
     it('should render without throwing an error', () => {
-      expect(wrapper.exists(<form className="LoginPage" />)).toBe(true)
+      expect(wrapper.find('.LoginPage').length).toEqual(1)
     })
 
     it('should render correctly', () => {

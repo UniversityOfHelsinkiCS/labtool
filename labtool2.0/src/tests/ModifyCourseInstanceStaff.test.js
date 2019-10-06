@@ -84,7 +84,7 @@ describe('<ModifyCourseInstanceStaff />', () => {
   beforeEach(() => {
     wrapper = shallow(
       <ModifyCourseInstanceStaff
-        courseId={5}
+        courseId={'5'}
         users={users}
         selectedInstance={selectedI}
         loading={loading}
@@ -93,6 +93,7 @@ describe('<ModifyCourseInstanceStaff />', () => {
         createOne={mockFn}
         clearNotifications={mockFn}
         resetLoading={mockFn}
+        removeOne={mockFn}
       />
     )
   })

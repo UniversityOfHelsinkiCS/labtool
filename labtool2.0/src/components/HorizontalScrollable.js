@@ -1,54 +1,65 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
-export class HorizontalScrollable extends React.Component {
-  constructor(props) {
-    super(props)
-    this.content = null
-    this.scrollbar = null
-    this.lastWidth = null
-    this.antibounce = {}
+export const HorizontalScrollable = props => {
+  let container = null
+  let content = null
+  let scrollbar = null
+  let lastContentWidth = null
+  let lastViewWidth = null
+  const antibounce = {}
 
-    this.mainElementReady = element => {
-      this.content = element
-      this.maybeResizeBar()
+  const mainElementReady = element => {
+    content = element
+    maybeResizeBar()
+  }
+  const scrollBarReady = element => {
+    scrollbar = element
+    maybeResizeBar()
+  }
+  const containerReady = element => {
+    container = element
+  }
+  const onResize = () => {
+    maybeResizeBar()
+    updateSticky()
+  }
+
+  useEffect(() => {
+    window.addEventListener('scroll', updateSticky)
+    window.addEventListener('resize', onResize)
+    onResize()
+
+    return () => {
+      window.removeEventListener('scroll', updateSticky)
+      window.removeEventListener('resize', onResize)
     }
-    this.scrollBarReady = element => {
-      this.scrollbar = element
-      this.maybeResizeBar()
+  }, [])
+
+  const maybeResizeBar = () => {
+    if (container && content && scrollbar) {
+      const viewWidth = container.offsetWidth
+      const contentWidth = content.scrollWidth
+      if (lastContentWidth === null || lastContentWidth !== contentWidth || lastViewWidth === null || lastViewWidth !== viewWidth) {
+        // make scrollable range as wide as table itself, but keep the
+        // scroll bar width as the viewable width of the table
+        const oldScrollLeft = scrollbar.scrollLeft
+
+        scrollbar.style.width = scrollbar.style.maxWidth = `${viewWidth}px`
+        scrollbar.children[0].style.width = `${contentWidth}px`
+        scrollbar.children[0].style.height = '1px'
+
+        scrollbar.style.overflowX = contentWidth > viewWidth ? 'scroll' : 'auto'
+        scrollbar.scrollLeft = oldScrollLeft
+
+        lastViewWidth = viewWidth
+        lastContentWidth = contentWidth
+      }
     }
   }
 
-  componentDidMount() {
-    window.addEventListener('scroll', this.updateSticky)
-    window.addEventListener('resize', this.onResize)
-    this.onResize()
-  }
-  componentWillUnmount() {
-    window.removeEventListener('scroll', this.updateSticky)
-    window.removeEventListener('resize', this.onResize)
-  }
-
-  onResize = () => {
-    this.maybeResizeBar()
-    this.updateSticky()
-  }
-
-  maybeResizeBar = () => {
-    if (this.content && this.scrollbar && (this.lastWidth === null || this.lastWidth !== this.content.offsetWidth)) {
-      // make scrollable range as wide as table itself, but keep the
-      // scroll bar width as the viewable width of the table
-      const oldScrollLeft = this.scrollbar.scrollLeft
-      this.scrollbar.style.width = this.scrollbar.style.maxWidth = `${this.content.offsetWidth}px`
-      this.scrollbar.children[0].style.width = `${this.content.scrollWidth}px`
-      this.scrollbar.children[0].style.height = '1px'
-      this.scrollbar.scrollLeft = oldScrollLeft
-      this.scrollbar.style.overflowX = this.content.scrollWidth > this.content.offsetWidth ? 'scroll' : 'auto'
-      this.lastWidth = this.content.offsetWidth
-    }
-  }
-
-  updateScrollX = doNotUpdate => e => {
+  const updateScrollX = doNotUpdate => e => {
     // synchronize scroll positions
     const newX = e.target.scrollLeft
 
@@ -67,30 +78,30 @@ export class HorizontalScrollable extends React.Component {
 
     by preventing bouncing of the event, we let either scroll freely at a time.
     */
-    if (this.antibounce[doNotUpdate]) {
-      this.antibounce[doNotUpdate] = false
+    if (antibounce[doNotUpdate]) {
+      antibounce[doNotUpdate] = false
       return
     }
 
-    if (doNotUpdate !== 'content' && this.content) {
-      this.antibounce.content = true
-      this.content.style.marginLeft = `-${newX}px`
+    if (doNotUpdate !== 'content' && content) {
+      antibounce.content = true
+      content.style.marginLeft = `-${newX}px`
     }
-    if (doNotUpdate !== 'scrollbar' && this.scrollbar) {
-      this.antibounce.scrollbar = true
-      this.scrollbar.scrollLeft = newX
+    if (doNotUpdate !== 'scrollbar' && scrollbar) {
+      antibounce.scrollbar = true
+      scrollbar.scrollLeft = newX
     }
   }
 
-  updateSticky = () => {
-    if (this.content && this.scrollbar) {
+  const updateSticky = () => {
+    if (content && scrollbar) {
       // viewport viewable range of Y: [windowTop, windowBottom[
       const windowTop = document.documentElement.scrollTop
       const windowBottom = windowTop + window.innerHeight
 
       // top and bottom Y coordinates of table
-      const contentTop = this.content.offsetTop
-      const contentBottom = contentTop + this.content.clientHeight
+      const contentTop = content.offsetTop
+      const contentBottom = contentTop + content.clientHeight
 
       // the table is visible on or above the viewport?
       const pastTableTop = windowBottom >= contentTop
@@ -103,32 +114,34 @@ export class HorizontalScrollable extends React.Component {
       const makeSticky = pastTableTop && !pastTableBottom
       if (makeSticky) {
         // sticky: fix to bottom of viewport
-        this.scrollbar.style.position = 'fixed'
-        this.scrollbar.style.bottom = '0px'
+        scrollbar.style.position = 'fixed'
+        scrollbar.style.bottom = '0px'
       } else {
         // relative: display where it would be otherwise
-        this.scrollbar.style.position = 'relative'
-        this.scrollbar.style.bottom = 'none'
+        scrollbar.style.position = 'relative'
+        scrollbar.style.bottom = 'none'
       }
     }
   }
 
-  render() {
-    // marginBottom, paddingBottom hack adds unused "overflowable" space
-    // this causes issues in Firefox (it shows up as scrollable), so
-    // the parent page should define overflowY: hidden and add some extra
-    // <br />s to the bottom
-    return (
-      <div style={{ overflow: 'hidden', boxSizing: 'border-box', marginBottom: '-50vh', paddingBottom: '50vh' }}>
-        <div ref={this.mainElementReady} onScroll={this.updateScrollX('content')} style={{ overflowX: 'visible', overflowY: 'visible' }}>
-          {this.props.children}
-        </div>
-        <div ref={this.scrollBarReady} onScroll={this.updateScrollX('scrollbar')} style={{ overflowX: 'scroll', bottom: '0', position: 'sticky' }}>
-          <div />
-        </div>
+  // marginBottom, paddingBottom hack adds unused "overflowable" space
+  // this causes issues in Firefox (it shows up as scrollable), so
+  // the parent page should define overflowY: hidden and add some extra
+  // <br />s to the bottom
+  return (
+    <div ref={containerReady} style={{ overflow: 'hidden', boxSizing: 'border-box', marginBottom: '-50vh', paddingBottom: '50vh' }}>
+      <div ref={mainElementReady} onScroll={updateScrollX('content')} style={{ overflowX: 'visible', overflowY: 'visible' }}>
+        {props.children}
       </div>
-    )
-  }
+      <div ref={scrollBarReady} onScroll={updateScrollX('scrollbar')} style={{ overflowX: 'scroll', bottom: '0', position: 'sticky' }}>
+        <div />
+      </div>
+    </div>
+  )
+}
+
+HorizontalScrollable.propTypes = {
+  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node])
 }
 
 export default connect(

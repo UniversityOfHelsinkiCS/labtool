@@ -72,7 +72,7 @@ describe('<Courses />', () => {
   let mockFn = jest.fn()
 
   beforeEach(() => {
-    wrapper = shallow(<Courses getAllCI={mockFn} courseInstance={props.courseInstance} loading={loading} resetLoading={mockFn} getIsAllowedToImport={mockFn} />)
+    wrapper = shallow(<Courses history={{}} getAllCI={mockFn} courseInstance={props.courseInstance} loading={loading} resetLoading={mockFn} getIsAllowedToImport={mockFn} />)
   })
 
   describe('Courses Component', () => {

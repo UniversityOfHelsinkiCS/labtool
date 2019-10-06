@@ -493,6 +493,16 @@ describe('<ReviewStudent />', () => {
         loading={props.loading}
         resetLoading={mockFn}
         coursePageInformation={mockFn}
+        courseId={''}
+        studentInstance={''}
+        weekNumber={''}
+        notification={{}}
+        createOneWeek={mockFn}
+        saveWeekDraft={mockFn}
+        toggleCheck={mockFn}
+        restoreChecks={mockFn}
+        resetChecklist={mockFn}
+        addRedirectHook={mockFn}
       />
     )
   })

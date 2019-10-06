@@ -36,7 +36,10 @@ module.exports = {
         return
       }
       if (!teacherInsId) {
-        res.status(404).send('Can\'t assign null teacher!')
+        studentInstance.updateAttributes({
+          teacherInstanceId: null
+        })
+        res.status(200).send(studentInstance)
         return
       }
       const requestMakerAsTeacher = await TeacherInstance.findOne({

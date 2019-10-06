@@ -22,14 +22,13 @@ const weekReviewReducer = (state = INITIAL_STATE, action) => {
       const thisWeek = state.data.filter(student => student.id === Number(action.studentId, 10))[0].weeks.filter(week => week.weekNumber === Number(action.weekNbr, 10))[0]
       return {
         ...state,
-        data: state.data.map(
-          student =>
-            student.id === Number(action.studentId, 10)
-              ? {
-                  ...student,
-                  weeks: student.weeks.map(week => (week.weekNumber === Number(action.weekNbr, 10) ? { ...week, checks: { ...week.checks, [action.name]: !week.checks[action.name] } } : week))
-                }
-              : student
+        data: state.data.map(student =>
+          student.id === Number(action.studentId, 10)
+            ? {
+                ...student,
+                weeks: student.weeks.map(week => (week.weekNumber === Number(action.weekNbr, 10) ? { ...week, checks: { ...week.checks, [action.name]: !week.checks[action.name] } } : week))
+              }
+            : student
         ),
         checks: {
           ...state.checks,
@@ -39,6 +38,21 @@ const weekReviewReducer = (state = INITIAL_STATE, action) => {
     }
     case 'WEEK_REVIEW_RESET':
       return INITIAL_STATE
+    case 'WEEK_REVIEW_CHECKS_RESTORE':
+      return {
+        ...state,
+        data: state.data.map(student =>
+          student.id === Number(action.studentId, 10)
+            ? {
+                ...student,
+                weeks: student.weeks.map(week => (week.weekNumber === Number(action.weekNbr, 10) ? { ...week, checks: { ...action.checks } } : week))
+              }
+            : student
+        ),
+        checks: {
+          ...action.checks
+        }
+      }
     case 'WEEKDRAFTS_GET_ONE_SUCCESS':
       if (!action.response || !action.response.data) {
         return {
@@ -75,6 +89,17 @@ export const toggleCheck = (name, studentId, weekNbr) => {
       name,
       studentId,
       weekNbr
+    })
+  }
+}
+
+export const restoreChecks = (studentId, weekNbr, checks) => {
+  return async dispatch => {
+    dispatch({
+      type: 'WEEK_REVIEW_CHECKS_RESTORE',
+      studentId,
+      weekNbr,
+      checks
     })
   }
 }

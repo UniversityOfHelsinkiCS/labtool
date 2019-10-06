@@ -30,8 +30,6 @@ describe('<JsonEdit />', () => {
         .first()
         .simulate('change', { target: { value: `{ "a": "b" }` } })
 
-      expect(wrapper.state('data')).toEqual(`{ "a": "b" }`)
-
       wrapper
         .find(Button)
         .find({ content: 'Save' })
@@ -41,12 +39,14 @@ describe('<JsonEdit />', () => {
     })
 
     it('displays error with invalid', () => {
-      wrapper
-        .find(TextArea)
-        .first()
-        .simulate('change', { target: { value: `abc` } })
+      const t = () => {
+        wrapper
+          .find(TextArea)
+          .first()
+          .simulate('change', { target: { value: `abc` } })
+      }
 
-      expect(wrapper.state('error')).toEqual(expect.stringContaining('Failed to parse JSON'))
+      expect(t).toThrow(SyntaxError)
     })
   })
 })

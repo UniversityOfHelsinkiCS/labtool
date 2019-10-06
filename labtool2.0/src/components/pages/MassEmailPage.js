@@ -1,135 +1,151 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { Button, Form, Header, Loader } from 'semantic-ui-react'
 import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { createOneComment } from '../../services/comment'
 import { getOneCI, coursePageInformation } from '../../services/courseInstance'
-import { associateTeacherToStudent } from '../../services/assistant'
-import { getAllTags, tagStudent, unTagStudent } from '../../services/tags'
-import { addLinkToCodeReview } from '../../services/codeReview'
+import { getAllTags } from '../../services/tags'
 import { sendMassEmail } from '../../services/email'
-import {
-  showAssistantDropdown,
-  showTagDropdown,
-  filterByTag,
-  filterByAssistant,
-  updateActiveIndex,
-  selectTeacher,
-  selectTag,
-  coursePageReset,
-  toggleCodeReview
-} from '../../reducers/coursePageLogicReducer'
+import { coursePageReset, restoreStudentSelection } from '../../reducers/coursePageLogicReducer'
 import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 import store from '../../store'
 import StudentTable from '../StudentTable'
+import { usePersistedState } from '../../hooks/persistedState'
 
-export class MassEmailPage extends React.Component {
-  handleClick = (e, titleProps) => {
-    const { index } = titleProps
-    const theNewIndex = this.props.coursePageLogic.activeIndex === index ? -1 : index
-    this.props.updateActiveIndex(theNewIndex)
-  }
+export const MassEmailPage = props => {
+  const pstate = usePersistedState('MassEmailPage', {
+    value: '',
+    checked: true
+  })
 
-  componentWillMount = async () => {
-    await this.props.resetLoading()
-    this.props.getOneCI(this.props.courseId)
-    this.props.coursePageInformation(this.props.courseId)
-    this.props.getAllTags()
-  }
+  useEffect(() => {
+    // run on component mount
+    props.resetLoading()
+    props.getOneCI(props.courseId)
+    props.coursePageInformation(props.courseId)
+    props.getAllTags()
 
-  componentWillUnmount() {
-    this.props.coursePageReset()
-  }
+    // do not carry over selection changes back to main student table
+    const oldSelectedStudents = { ...props.coursePageLogic.selectedStudents }
+    return () => {
+      // run on component unmount
+      props.coursePageReset()
+      props.restoreStudentSelection(oldSelectedStudents)
+    }
+  }, [])
 
-  handleSubmit = async e => {
+  const handleSubmit = async e => {
     e.preventDefault()
-    const data = this.props.courseData && this.props.courseData.data
+    const data = props.courseData && props.courseData.data
     if (data) {
-      const sendingTo = data.filter(entry => e.target['send' + entry.id] && e.target['send' + entry.id].checked).map(entry => ({ id: entry.id }))
+      const sendingTo = data.filter(entry => props.coursePageLogic.selectedStudents[entry.id]).map(entry => ({ id: entry.id }))
 
       if (!sendingTo.length) {
         store.dispatch({ type: 'MASS_EMAIL_SENDFAILURE' })
       } else {
-        this.props.addRedirectHook({
+        props.addRedirectHook({
           hook: 'MASS_EMAIL_SEND'
         })
-        await this.props.sendMassEmail({ students: sendingTo, content: e.target.content.value, sendToInstructors: e.target.sendToInstructors.checked }, this.props.selectedInstance.ohid)
+        await props.sendMassEmail({ students: sendingTo, content: e.target.content.value, sendToInstructors: e.target.sendToInstructors.checked }, props.selectedInstance.ohid)
       }
     }
   }
 
-  render() {
-    if (this.props.loading.loading) {
-      return <Loader active />
-    }
-    if (this.props.loading.redirect) {
-      return <Redirect to={`/labtool/courses/${this.props.selectedInstance.ohid}`} />
-    }
-
-    /**
-     * Function that returns what teachers should see at this page
-     * We will use a form to decide which students to send an email
-     * and what exactly to send
-     */
-    let renderTeacherPart = () => {
-      return (
-        <div className="TeacherMassEmailPart">
-          <Header as="h2">Send email to students </Header>
-
-          <Form onSubmit={this.handleSubmit}>
-            <StudentTable
-              rowClassName="TableRowForActiveStudents"
-              columns={['sendcheck']}
-              allowModify={false}
-              filterStudents={data => data.User.email}
-              disableDefaultFilter={false}
-              selectedInstance={this.props.selectedInstance}
-              courseData={this.props.courseData}
-              coursePageLogic={this.props.coursePageLogic}
-              tags={this.props.tags}
-            />
-
-            <br />
-            <br />
-
-            <Form.TextArea name="content" placeholder="Type email here..." defaultValue="" required />
-            <Form.Checkbox name="sendToInstructors" defaultChecked={true} label="Send a copy to all instructors" />
-            <Button type="submit" className="ui green button" content="Send" />
-
-            <br />
-            <br />
-
-            <Link to={`/labtool/courses/${this.props.selectedInstance.ohid}`}>
-              <Button className="ui button" type="cancel">
-                Cancel
-              </Button>
-            </Link>
-          </Form>
-          <br />
-        </div>
-      )
-    }
-
-    /**
-     * This part actually tells what to show to the user
-     */
-    if (this.props.courseData.role === 'teacher') {
-      return (
-        <div style={{ overflowX: 'auto', overflowY: 'hidden' }}>
-          {renderTeacherPart()}
-          <br />
-          <br />
-          <br />
-          <br />
-          <br />
-          <br />
-          <br />
-        </div>
-      )
-    } else {
-      return <div />
-    }
+  if (props.loading.loading) {
+    return <Loader active />
   }
+  if (props.loading.redirect) {
+    pstate.clear()
+    return <Redirect to={`/labtool/courses/${props.selectedInstance.ohid}`} />
+  }
+
+  /**
+   * Function that returns what teachers should see at this page
+   * We will use a form to decide which students to send an email
+   * and what exactly to send
+   */
+  const renderTeacherPart = () => {
+    return (
+      <div className="TeacherMassEmailPart">
+        <Header as="h2">Send email to students </Header>
+
+        <Form onSubmit={handleSubmit}>
+          <StudentTable
+            rowClassName="TableRowForActiveStudents"
+            columns={['select']}
+            allowModify={false}
+            filterStudents={data => data.User.email}
+            disableDefaultFilter={false}
+            studentInstances={props.courseData.data}
+            selectedInstance={props.selectedInstance}
+            courseData={props.courseData}
+            coursePageLogic={props.coursePageLogic}
+            tags={props.tags}
+          />
+
+          <br />
+          <br />
+
+          <Form.TextArea name="content" placeholder="Type email here..." value={pstate.value} onChange={(e, { value }) => (pstate.value = value)} required />
+          <Form.Checkbox name="sendToInstructors" checked={pstate.checked} onChange={(e, { checked }) => (pstate.checked = checked)} label="Send a copy to all instructors" />
+          <Button type="submit" className="ui green button" content="Send" />
+
+          <br />
+          <br />
+
+          <Link to={`/labtool/courses/${props.selectedInstance.ohid}`}>
+            <Button className="ui button" type="cancel" onClick={pstate.clear}>
+              Cancel
+            </Button>
+          </Link>
+        </Form>
+        <br />
+      </div>
+    )
+  }
+
+  /**
+   * This part actually tells what to show to the user
+   */
+  if (props.courseData.role === 'teacher') {
+    return (
+      <div style={{ overflowX: 'auto', overflowY: 'hidden' }}>
+        {renderTeacherPart()}
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+      </div>
+    )
+  } else {
+    return <div />
+  }
+}
+
+MassEmailPage.propTypes = {
+  courseId: PropTypes.string.isRequired,
+
+  user: PropTypes.object.isRequired,
+  studentInstance: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+  teacherInstance: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+  selectedInstance: PropTypes.object.isRequired,
+  courseInstance: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+  courseData: PropTypes.object.isRequired,
+  coursePageLogic: PropTypes.object.isRequired,
+  tags: PropTypes.object.isRequired,
+  loading: PropTypes.object.isRequired,
+
+  getOneCI: PropTypes.func.isRequired,
+  coursePageInformation: PropTypes.func.isRequired,
+  coursePageReset: PropTypes.func.isRequired,
+  getAllTags: PropTypes.func.isRequired,
+  sendMassEmail: PropTypes.func.isRequired,
+  resetLoading: PropTypes.func.isRequired,
+  addRedirectHook: PropTypes.func.isRequired,
+  restoreStudentSelection: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -148,26 +164,14 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 const mapDispatchToProps = {
-  createOneComment,
   getOneCI,
   coursePageInformation,
-  associateTeacherToStudent,
-  addLinkToCodeReview,
-  showAssistantDropdown,
-  showTagDropdown,
-  selectTeacher,
-  selectTag,
-  filterByAssistant,
-  filterByTag,
   coursePageReset,
-  toggleCodeReview,
   getAllTags,
-  tagStudent,
   sendMassEmail,
-  updateActiveIndex,
-  unTagStudent,
   resetLoading,
-  addRedirectHook
+  addRedirectHook,
+  restoreStudentSelection
 }
 
 export default connect(

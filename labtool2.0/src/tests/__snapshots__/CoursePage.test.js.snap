@@ -13,14 +13,77 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
       }
     }
   >
+    <CoursePageHeader
+      courseInstance={
+        Object {
+          "data": Object {
+            "Tags": Array [],
+            "User": Object {
+              "admin": false,
+              "createdAt": "2018-03-26T00:00:00.000Z",
+              "email": "maarit.opiskelija@helsinki.fi",
+              "firsts": "Maarit Mirja",
+              "id": 10011,
+              "lastname": "Opiskelija",
+              "studentNumber": "014578343",
+              "updatedAt": "2018-03-26T00:00:00.000Z",
+              "username": "tiraopiskelija1",
+            },
+            "codeReviews": Array [
+              Object {
+                "points": 2,
+                "reviewNumber": 1,
+                "reviewer": Object {
+                  "github": "http://github.com/superprojekti",
+                  "projectName": "Tira super projekti",
+                },
+                "toReview": Object {
+                  "github": "http://github.com/tiralabra2",
+                  "projectName": "Tiran toinen labraprojekti",
+                },
+              },
+              Object {
+                "points": 1,
+                "reviewNumber": 2,
+                "reviewer": Object {
+                  "github": "http://github.com/tiralabra2",
+                  "projectName": "Tiran toinen labraprojekti",
+                },
+                "toReview": Object {
+                  "github": "http://github.com/superprojekti",
+                  "projectName": "Tira super projekti",
+                },
+              },
+              Object {
+                "points": null,
+                "reviewNumber": 3,
+                "reviewer": Object {
+                  "github": "http://github.com/tiralabra2",
+                  "projectName": "Tiran toinen labraprojekti",
+                },
+                "toReview": Object {
+                  "github": "http://github.com/superprojekti",
+                  "projectName": "Tira super projekti",
+                },
+              },
+            ],
+            "courseInstanceId": 10011,
+            "createdAt": "2018-03-26T00:00:00.000Z",
+            "github": "http://github.com/tiralabra1",
+            "id": 10011,
+            "projectName": "Tiran labraprojekti",
+            "teacherInstanceId": 10011,
+            "updatedAt": "2018-03-26T00:00:00.000Z",
+            "userId": 10011,
+            "weeks": Array [],
+          },
+          "role": "student",
+        }
+      }
+    />
     <div
-      className="ui grid"
+      className="grid"
     >
-      <div
-        className="sixteen wide column"
-      >
-        <h2 />
-      </div>
       <div
         className="sixteen wide column"
       >
@@ -63,7 +126,6 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
           </a>
            
           <Link
-            replace={false}
             to="/labtool/courseregistration/undefined"
           >
             <Button
@@ -77,7 +139,6 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
                   "size": "large",
                 }
               }
-              role="button"
               size="large"
             />
           </Link>
@@ -223,7 +284,7 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
                   iconPosition="left"
                   name="reviewLink"
                   placeholder="https://github.com/account/repo/issues/number"
-                  required="true"
+                  required={true}
                   style={
                     Object {
                       "minWidth": "25em",
@@ -237,7 +298,6 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
                   as="button"
                   color="blue"
                   compact={true}
-                  role="button"
                   type="submit"
                 >
                   Submit
@@ -354,100 +414,8 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
       }
     }
   >
-    <div>
-      <div>
-        <h2 />
-      </div>
-      <p />
-    </div>
-    <div>
-      <Table
-        as="table"
-      >
-        <TableHeader
-          as="thead"
-        >
-          <TableRow
-            as="tr"
-            cellAs="td"
-          >
-            <TableCell
-              as="td"
-            >
-              <div>
-                <div />
-              </div>
-            </TableCell>
-            <TableCell
-              as="td"
-            >
-              Week amount: 
-            </TableCell>
-            <TableCell
-              as="td"
-            >
-              Current week: 
-            </TableCell>
-            <TableCell
-              as="td"
-            >
-              Week max points: 
-            </TableCell>
-            <TableCell
-              as="td"
-              textAlign="right"
-            >
-               
-              <Link
-                replace={false}
-                to="/labtool/ModifyCourseInstancePage/undefined"
-              >
-                <Popup
-                  content="Edit course"
-                  keepInViewPort={true}
-                  on="hover"
-                  position="top left"
-                  trigger={
-                    <Button
-                      as="button"
-                      circular={true}
-                      icon={
-                        Object {
-                          "color": "orange",
-                          "name": "edit",
-                          "size": "large",
-                        }
-                      }
-                      role="button"
-                      size="tiny"
-                    />
-                  }
-                />
-              </Link>
-            </TableCell>
-          </TableRow>
-        </TableHeader>
-      </Table>
-    </div>
-  </div>
-  <div
-    className="TeachersBottomViewForActiveStudents"
-  >
-    <Header
-      as="h2"
-    >
-      Students
-       
-    </Header>
-    <Connect(StudentTable)
-      allowModify={true}
-      columns={
-        Array [
-          "points",
-          "review",
-        ]
-      }
-      courseData={
+    <CoursePageHeader
+      courseInstance={
         Object {
           "data": Array [
             Object {
@@ -546,16 +514,111 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           "role": "teacher",
         }
       }
+    />
+    <Table
+      as="table"
+    >
+      <TableHeader
+        as="thead"
+      >
+        <TableRow
+          as="tr"
+          cellAs="td"
+        >
+          <TableCell
+            as="td"
+          >
+            <div>
+              <div />
+            </div>
+          </TableCell>
+          <TableCell
+            as="td"
+          >
+            Week amount: 
+          </TableCell>
+          <TableCell
+            as="td"
+          >
+            Current week: 
+          </TableCell>
+          <TableCell
+            as="td"
+          >
+            Week max points: 
+          </TableCell>
+          <TableCell
+            as="td"
+            textAlign="right"
+          >
+             
+            <Link
+              to="/labtool/ModifyCourseInstancePage/undefined"
+            >
+              <Popup
+                content="Edit course"
+                disabled={false}
+                eventsEnabled={true}
+                offset={0}
+                on={
+                  Array [
+                    "click",
+                    "hover",
+                  ]
+                }
+                pinned={false}
+                position="top left"
+                trigger={
+                  <Button
+                    as="button"
+                    circular={true}
+                    icon={
+                      Object {
+                        "color": "orange",
+                        "name": "edit",
+                        "size": "large",
+                      }
+                    }
+                    size="tiny"
+                  />
+                }
+              />
+            </Link>
+          </TableCell>
+        </TableRow>
+      </TableHeader>
+    </Table>
+  </div>
+  <div
+    className="TeachersBottomViewForActiveStudents"
+  >
+    <Header
+      as="h2"
+    >
+      Students
+       
+    </Header>
+    <Connect(StudentTable)
+      allowModify={true}
+      columns={
+        Array [
+          "select",
+          "points",
+          "review",
+        ]
+      }
       coursePageLogic={
         Object {
           "filterByAssistant": 0,
           "filterByTag": Array [],
+          "selectedStudents": Object {
+            "10011": true,
+          },
           "selectedTeacher": "",
           "showDropdown": "",
         }
       }
       disableDefaultFilter={false}
-      filterStudents={[Function]}
       rowClassName="TableRowForActiveStudents"
       selectedInstance={
         Object {
@@ -656,6 +719,66 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           "role": "teacher",
         }
       }
+      studentInstances={
+        Array [
+          Object {
+            "Tags": Array [
+              Object {
+                "color": "red",
+                "id": 20001,
+                "name": "Javascript",
+              },
+            ],
+            "User": Object {
+              "admin": false,
+              "createdAt": "2018-03-26T00:00:00.000Z",
+              "email": "johan.studerande@helsinki.fi",
+              "firsts": "Johan Wilhelm",
+              "id": 10012,
+              "lastname": "Studerande",
+              "studentNumber": "014553242",
+              "updatedAt": "2018-03-26T00:00:00.000Z",
+              "username": "tiraopiskelija2",
+            },
+            "codeReviews": Array [],
+            "courseInstanceId": 10011,
+            "createdAt": "2018-03-26T00:00:00.000Z",
+            "dropped": false,
+            "github": "http://github.com/tiralabra2",
+            "id": 10012,
+            "projectName": "Tiran toinen labraprojekti",
+            "teacherInstanceId": 10011,
+            "updatedAt": "2018-03-26T00:00:00.000Z",
+            "userId": 10012,
+            "weeks": Array [],
+          },
+          Object {
+            "Tags": Array [],
+            "User": Object {
+              "admin": false,
+              "createdAt": "2018-03-26T00:00:00.000Z",
+              "email": "maarit.opiskelija@helsinki.fi",
+              "firsts": "Maarit Mirja",
+              "id": 10011,
+              "lastname": "Opiskelija",
+              "studentNumber": "014578343",
+              "updatedAt": "2018-03-26T00:00:00.000Z",
+              "username": "tiraopiskelija1",
+            },
+            "codeReviews": Array [],
+            "courseInstanceId": 10011,
+            "createdAt": "2018-03-26T00:00:00.000Z",
+            "dropped": false,
+            "github": "http://github.com/tiralabra1",
+            "id": 10011,
+            "projectName": "Tiran labraprojekti",
+            "teacherInstanceId": 10011,
+            "updatedAt": "2018-03-26T00:00:00.000Z",
+            "userId": 10011,
+            "weeks": Array [],
+          },
+        ]
+      }
       tags={
         Object {
           "tags": Array [
@@ -723,25 +846,20 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
     <Button
       as="button"
       onClick={[Function]}
-      role="button"
       size="small"
     >
       Mark all with dropped tag as dropped out
     </Button>
     <Link
-      replace={false}
       to="/labtool/massemail/undefined"
     >
       <Button
         as="button"
-        role="button"
         size="small"
       >
         Send email to multiple students
       </Button>
     </Link>
-    <br />
-    <br />
   </div>
   <div
     className="TeachersBottomViewForDroppedOutStudents"
@@ -756,119 +874,23 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
       allowModify={true}
       columns={
         Array [
+          "select",
           "points",
           "review",
         ]
-      }
-      courseData={
-        Object {
-          "data": Array [
-            Object {
-              "Tags": Array [
-                Object {
-                  "color": "red",
-                  "id": 20001,
-                  "name": "Javascript",
-                },
-              ],
-              "User": Object {
-                "admin": false,
-                "createdAt": "2018-03-26T00:00:00.000Z",
-                "email": "johan.studerande@helsinki.fi",
-                "firsts": "Johan Wilhelm",
-                "id": 10012,
-                "lastname": "Studerande",
-                "studentNumber": "014553242",
-                "updatedAt": "2018-03-26T00:00:00.000Z",
-                "username": "tiraopiskelija2",
-              },
-              "codeReviews": Array [],
-              "courseInstanceId": 10011,
-              "createdAt": "2018-03-26T00:00:00.000Z",
-              "dropped": false,
-              "github": "http://github.com/tiralabra2",
-              "id": 10012,
-              "projectName": "Tiran toinen labraprojekti",
-              "teacherInstanceId": 10011,
-              "updatedAt": "2018-03-26T00:00:00.000Z",
-              "userId": 10012,
-              "weeks": Array [],
-            },
-            Object {
-              "Tags": Array [
-                Object {
-                  "color": "grey",
-                  "id": 20008,
-                  "name": "DROPPED",
-                },
-                Object {
-                  "color": "yellow",
-                  "id": 20002,
-                  "name": "HTML",
-                },
-              ],
-              "User": Object {
-                "admin": false,
-                "createdAt": "2018-03-26T00:00:00.000Z",
-                "email": "teras.henkilo@helsinki.fi",
-                "firsts": "Teräs",
-                "id": 10031,
-                "lastname": "Henkilö",
-                "studentNumber": "014666666",
-                "updatedAt": "2018-03-26T00:00:00.000Z",
-                "username": "superopiskelija",
-              },
-              "codeReviews": Array [],
-              "courseInstanceId": 10011,
-              "createdAt": "2018-03-26T00:00:00.000Z",
-              "dropped": true,
-              "github": "http://github.com/superprojekti",
-              "id": 10031,
-              "projectName": "Tira super projekti",
-              "teacherInstanceId": 10011,
-              "updatedAt": "2018-06-05T07:12:28.603Z",
-              "userId": 10031,
-              "weeks": Array [],
-            },
-            Object {
-              "Tags": Array [],
-              "User": Object {
-                "admin": false,
-                "createdAt": "2018-03-26T00:00:00.000Z",
-                "email": "maarit.opiskelija@helsinki.fi",
-                "firsts": "Maarit Mirja",
-                "id": 10011,
-                "lastname": "Opiskelija",
-                "studentNumber": "014578343",
-                "updatedAt": "2018-03-26T00:00:00.000Z",
-                "username": "tiraopiskelija1",
-              },
-              "codeReviews": Array [],
-              "courseInstanceId": 10011,
-              "createdAt": "2018-03-26T00:00:00.000Z",
-              "dropped": false,
-              "github": "http://github.com/tiralabra1",
-              "id": 10011,
-              "projectName": "Tiran labraprojekti",
-              "teacherInstanceId": 10011,
-              "updatedAt": "2018-03-26T00:00:00.000Z",
-              "userId": 10011,
-              "weeks": Array [],
-            },
-          ],
-          "role": "teacher",
-        }
       }
       coursePageLogic={
         Object {
           "filterByAssistant": 0,
           "filterByTag": Array [],
+          "selectedStudents": Object {
+            "10011": true,
+          },
           "selectedTeacher": "",
           "showDropdown": "",
         }
       }
       disableDefaultFilter={true}
-      filterStudents={[Function]}
       rowClassName="TableRowForDroppedOutStudents active"
       selectedInstance={
         Object {
@@ -969,6 +991,46 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           "role": "teacher",
         }
       }
+      studentInstances={
+        Array [
+          Object {
+            "Tags": Array [
+              Object {
+                "color": "grey",
+                "id": 20008,
+                "name": "DROPPED",
+              },
+              Object {
+                "color": "yellow",
+                "id": 20002,
+                "name": "HTML",
+              },
+            ],
+            "User": Object {
+              "admin": false,
+              "createdAt": "2018-03-26T00:00:00.000Z",
+              "email": "teras.henkilo@helsinki.fi",
+              "firsts": "Teräs",
+              "id": 10031,
+              "lastname": "Henkilö",
+              "studentNumber": "014666666",
+              "updatedAt": "2018-03-26T00:00:00.000Z",
+              "username": "superopiskelija",
+            },
+            "codeReviews": Array [],
+            "courseInstanceId": 10011,
+            "createdAt": "2018-03-26T00:00:00.000Z",
+            "dropped": true,
+            "github": "http://github.com/superprojekti",
+            "id": 10031,
+            "projectName": "Tira super projekti",
+            "teacherInstanceId": 10011,
+            "updatedAt": "2018-06-05T07:12:28.603Z",
+            "userId": 10031,
+            "weeks": Array [],
+          },
+        ]
+      }
       tags={
         Object {
           "tags": Array [
@@ -1033,19 +1095,197 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
       }
     />
     <br />
-    <Link
-      replace={false}
-      to="/labtool/massemail/undefined"
-    >
-      <Button
-        as="button"
-        role="button"
-        size="small"
-      >
-        Send email to multiple students
-      </Button>
-    </Link>
+  </div>
+  <div
+    className="TeacherBulkForm"
+  >
     <br />
+    <h2>
+      Modify selected students
+    </h2>
+    <Grid
+      columns="equal"
+    >
+      <GridColumn>
+        <Segment>
+          Add/remove tag
+        </Segment>
+      </GridColumn>
+      <GridColumn>
+        <Dropdown
+          additionLabel="Add "
+          additionPosition="top"
+          closeOnBlur={true}
+          closeOnEscape={true}
+          deburr={false}
+          fluid={true}
+          icon="dropdown"
+          id="tagDropdown"
+          minCharacters={1}
+          noResultsMessage="No results found."
+          onChange={[Function]}
+          openOnFocus={true}
+          options={
+            Array [
+              Object {
+                "key": 20001,
+                "text": "Javascript",
+                "value": 20001,
+              },
+              Object {
+                "key": 20002,
+                "text": "HTML",
+                "value": 20002,
+              },
+              Object {
+                "key": 20003,
+                "text": "game",
+                "value": 20003,
+              },
+              Object {
+                "key": 20004,
+                "text": "React",
+                "value": 20004,
+              },
+              Object {
+                "key": 20005,
+                "text": "Node.js",
+                "value": 20005,
+              },
+              Object {
+                "key": 20006,
+                "text": "Java",
+                "value": 20006,
+              },
+              Object {
+                "key": 20007,
+                "text": "FORTRAN",
+                "value": 20007,
+              },
+              Object {
+                "key": 20008,
+                "text": "DROPPED",
+                "value": 20008,
+              },
+            ]
+          }
+          placeholder="Choose tag"
+          renderLabel={[Function]}
+          searchInput="text"
+          selectOnBlur={true}
+          selectOnNavigation={true}
+          selection={true}
+          style={
+            Object {
+              "float": "left",
+            }
+          }
+          wrapSelection={true}
+        />
+      </GridColumn>
+      <GridColumn>
+        <div
+          className="two ui buttons"
+          style={
+            Object {
+              "float": "left",
+            }
+          }
+        >
+          <button
+            className="ui icon positive button"
+            onClick={[Function]}
+            size="mini"
+          >
+            <i
+              className="plus icon"
+            />
+          </button>
+          <div
+            className="or"
+          />
+          <button
+            className="ui icon button"
+            onClick={[Function]}
+            size="mini"
+          >
+            <i
+              className="trash icon"
+            />
+          </button>
+        </div>
+      </GridColumn>
+    </Grid>
+    <hr />
+    <Grid
+      columns="equal"
+    >
+      <GridColumn>
+        <Segment>
+          Assign instructor
+        </Segment>
+      </GridColumn>
+      <GridColumn>
+        <Dropdown
+          additionLabel="Add "
+          additionPosition="top"
+          closeOnBlur={true}
+          closeOnEscape={true}
+          deburr={false}
+          fluid={true}
+          icon="dropdown"
+          id="assistantDropdown"
+          minCharacters={1}
+          noResultsMessage="No results found."
+          onChange={[Function]}
+          openOnFocus={true}
+          options={Array []}
+          placeholder="Select teacher"
+          renderLabel={[Function]}
+          searchInput="text"
+          selectOnBlur={true}
+          selectOnNavigation={true}
+          selection={true}
+          wrapSelection={true}
+        />
+      </GridColumn>
+      <GridColumn>
+        <Button
+          as="button"
+          onClick={[Function]}
+          size="small"
+        >
+          Change instructor
+        </Button>
+      </GridColumn>
+    </Grid>
+    <hr />
+    <Grid
+      columns="equal"
+    >
+      <GridColumn>
+        <Segment>
+          Dropped status
+        </Segment>
+      </GridColumn>
+      <GridColumn>
+        <Button
+          as="button"
+          onClick={[Function]}
+        >
+          Mark as non-dropped
+        </Button>
+      </GridColumn>
+      <GridColumn>
+        <Button
+          as="button"
+          color="red"
+          onClick={[Function]}
+        >
+          Mark as dropped
+        </Button>
+      </GridColumn>
+    </Grid>
     <br />
   </div>
   <br />
