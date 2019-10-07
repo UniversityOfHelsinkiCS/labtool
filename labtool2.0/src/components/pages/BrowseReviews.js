@@ -144,8 +144,9 @@ export const BrowseReviews = props => {
 
   //get student's other participations in the same course
   const renderStudentPreviousParticipation = () => {
-    const previousParticipations = props.studentInstanceToBeReviewed.filter(courseInstance => courseInstance.ohid.includes(props.courseId.substring(0, 8)) && courseInstance.ohid !== props.courseId)
-
+    const previousParticipations = props.studentInstanceToBeReviewed.filter(
+      courseInstance => courseInstance.ohid.includes(props.courseId.substring(0, 8)) && new Date(courseInstance.start) < new Date(props.selectedInstance.start)
+    )
     if (previousParticipations.length === 0) {
       return <p className="noPrevious">Has not taken part in this course before</p>
     }
