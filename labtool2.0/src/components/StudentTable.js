@@ -122,6 +122,12 @@ export const StudentTable = props => {
     }
   }
 
+  const changeFilterTag = (e, data) => {
+    const { value } = data
+    const tag = props.tags.tags.find(tag => tag.id === value)
+    props.filterByTag(tag)
+  }
+
   const addFilterTag = tag => {
     return () => {
       props.filterByTag(tag)
@@ -388,7 +394,7 @@ export const StudentTable = props => {
   return (
     <Fragment>
       <div style={{ textAlign: 'left' }}>
-        <span>Filter by instructor </span>
+        <span>Filter by instructor: </span>
         <Dropdown
           scrolling
           options={dropDownFilterTeachers}
@@ -398,8 +404,9 @@ export const StudentTable = props => {
           selection
           style={{ width: `${getBiggestWidthInDropdown(dropDownFilterTeachers)}em` }}
         />
+        <span> Add filtering tag: </span>
+        <Dropdown scrolling options={dropDownTags} onChange={changeFilterTag} placeholder="Select Tag" value="" selection style={{ width: `${getBiggestWidthInDropdown(dropDownTags)}em` }} />
         <span> Tag filters: </span>
-
         {props.coursePageLogic.filterByTag.length === 0 ? (
           <span>
             <Label>none</Label>

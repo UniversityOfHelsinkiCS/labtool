@@ -26,6 +26,8 @@ import Notification from '../../components/pages/Notification'
 import { resetLoading } from '../../reducers/loadingReducer'
 import useLegacyState from '../../hooks/legacyState'
 import { usePersistedState } from '../../hooks/persistedState'
+import { createDropdownTags } from '../../util/dropdown'
+import { getAllTags } from '../../services/tags'
 
 import BackButton from '../BackButton'
 
@@ -41,6 +43,7 @@ export const ModifyCourseInstanceReview = props => {
     // run on component mount
     props.resetLoading()
     props.getOneCI(props.courseId)
+    props.getAllTags()
     props.coursePageInformation(props.courseId)
     if (pstate.codeReviewData) {
       props.restoreData(pstate.codeReviewData)
@@ -179,6 +182,13 @@ export const ModifyCourseInstanceReview = props => {
     return Array.isArray(studentReviewWeeks) && !studentReviewWeeks.length
   }
 
+  const changeFilterTag = async (e, data) => {
+    const { value } = data
+    const tag = props.tags.tags.find(tag => tag.id === value)
+    await props.filterByTag(tag)
+    props.filterStatesByTags({ tags: props.coursePageLogic.filterByTag, students: props.courseData.data })
+  }
+
   const addFilterTag = tag => {
     return async () => {
       await props.filterByTag(tag)
@@ -259,6 +269,19 @@ export const ModifyCourseInstanceReview = props => {
   if (props.loading.loading) {
     return <Loader active />
   }
+
+  let dropDownTags = []
+  dropDownTags = createDropdownTags(props.tags.tags, dropDownTags)
+
+  // calculate the length of the longest text in a drop down
+  const getBiggestWidthInDropdown = dropdownList => {
+    if (dropdownList.length === 0) {
+      return 3
+    }
+    const lengths = dropdownList.map(dp => dp.text.length)
+    return lengths.reduce((longest, comp) => (longest > comp ? longest : comp), lengths[0])
+  }
+
   return (
     <div className="ModifyCourseInstanceCodeReviews" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
       <div className="ui grid">
@@ -277,6 +300,8 @@ export const ModifyCourseInstanceReview = props => {
             </Button>
           )}
         </div>
+        <span> Add filtering tag: </span>
+        <Dropdown scrolling options={dropDownTags} onChange={changeFilterTag} placeholder="Select Tag" value="" selection style={{ width: `${getBiggestWidthInDropdown(dropDownTags)}em` }} />
         {props.coursePageLogic.filterByTag.length > 0 ? (
           <div>
             <span> Tag filters: </span>
@@ -538,6 +563,7 @@ const mapStateToProps = (state, ownProps) => {
     dropdownUsers: userHelper(state.coursePage.data),
     dropdownCodeReviews: codeReviewHelper(state.selectedInstance.amountOfCodeReviews),
     coursePageLogic: state.coursePageLogic,
+    tags: state.tags,
     loading: state.loading
   }
 }
@@ -562,7 +588,8 @@ const mapDispatchToProps = {
   filterStatesByTags,
   filterByReview,
   showNotification,
-  removeOneCodeReview
+  removeOneCodeReview,
+  getAllTags
 }
 
 ModifyCourseInstanceReview.propTypes = {
@@ -575,6 +602,7 @@ ModifyCourseInstanceReview.propTypes = {
   dropdownCodeReviews: PropTypes.array,
   coursePageLogic: PropTypes.object.isRequired,
   loading: PropTypes.object.isRequired,
+  tags: PropTypes.object.isRequired,
 
   getOneCI: PropTypes.func.isRequired,
   clearNotifications: PropTypes.func.isRequired,
@@ -595,7 +623,8 @@ ModifyCourseInstanceReview.propTypes = {
   filterStatesByTags: PropTypes.func.isRequired,
   filterByReview: PropTypes.func.isRequired,
   showNotification: PropTypes.func.isRequired,
-  removeOneCodeReview: PropTypes.func.isRequired
+  removeOneCodeReview: PropTypes.func.isRequired,
+  getAllTags: PropTypes.func.isRequired
 }
 
 export default connect(

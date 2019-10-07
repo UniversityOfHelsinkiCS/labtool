@@ -10,7 +10,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
     }
   >
     <span>
-      Filter by instructor 
+      Filter by instructor: 
     </span>
     <Dropdown
       additionLabel="Add "
@@ -37,6 +37,79 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
           "width": "3em",
         }
       }
+      wrapSelection={true}
+    />
+    <span>
+       Add filtering tag: 
+    </span>
+    <Dropdown
+      additionLabel="Add "
+      additionPosition="top"
+      closeOnBlur={true}
+      closeOnEscape={true}
+      deburr={false}
+      icon="dropdown"
+      minCharacters={1}
+      noResultsMessage="No results found."
+      onChange={[Function]}
+      openOnFocus={true}
+      options={
+        Array [
+          Object {
+            "key": 20001,
+            "text": "Javascript",
+            "value": 20001,
+          },
+          Object {
+            "key": 20002,
+            "text": "HTML",
+            "value": 20002,
+          },
+          Object {
+            "key": 20003,
+            "text": "game",
+            "value": 20003,
+          },
+          Object {
+            "key": 20004,
+            "text": "React",
+            "value": 20004,
+          },
+          Object {
+            "key": 20005,
+            "text": "Node.js",
+            "value": 20005,
+          },
+          Object {
+            "key": 20006,
+            "text": "Java",
+            "value": 20006,
+          },
+          Object {
+            "key": 20007,
+            "text": "FORTRAN",
+            "value": 20007,
+          },
+          Object {
+            "key": 20008,
+            "text": "DROPPED",
+            "value": 20008,
+          },
+        ]
+      }
+      placeholder="Select Tag"
+      renderLabel={[Function]}
+      scrolling={true}
+      searchInput="text"
+      selectOnBlur={true}
+      selectOnNavigation={true}
+      selection={true}
+      style={
+        Object {
+          "width": "10em",
+        }
+      }
+      value=""
       wrapSelection={true}
     />
     <span>
