@@ -182,13 +182,11 @@ export const ModifyCourseInstanceReview = props => {
     return Array.isArray(studentReviewWeeks) && !studentReviewWeeks.length
   }
 
-  const changeFilterTag = () => {
-    return async (e, data) => {
-      const { value } = data
-      const tag = props.tags.tags.find(tag => tag.id === value)
-      await props.filterByTag(tag)
-      props.filterStatesByTags({ tags: props.coursePageLogic.filterByTag, students: props.courseData.data })
-    }
+  const changeFilterTag = async (e, data) => {
+    const { value } = data
+    const tag = props.tags.tags.find(tag => tag.id === value)
+    await props.filterByTag(tag)
+    props.filterStatesByTags({ tags: props.coursePageLogic.filterByTag, students: props.courseData.data })
   }
 
   const addFilterTag = tag => {
@@ -303,7 +301,7 @@ export const ModifyCourseInstanceReview = props => {
           )}
         </div>
         <span> Add filtering tag: </span>
-        <Dropdown scrolling options={dropDownTags} onChange={changeFilterTag()} placeholder="Select Tag" value="" selection style={{ width: `${getBiggestWidthInDropdown(dropDownTags)}em` }} />
+        <Dropdown scrolling options={dropDownTags} onChange={changeFilterTag} placeholder="Select Tag" value="" selection style={{ width: `${getBiggestWidthInDropdown(dropDownTags)}em` }} />
         {props.coursePageLogic.filterByTag.length > 0 ? (
           <div>
             <span> Tag filters: </span>
