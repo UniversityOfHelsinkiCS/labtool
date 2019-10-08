@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import { Switch, Route, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { Container } from 'semantic-ui-react'
+import preval from 'preval.macro'
 
 // Component (pages) imports
 import Courses from './components/pages/Courses'
@@ -29,8 +30,18 @@ import { tokenLogin } from './reducers/loginReducer'
 import { login, logout, fakeShibboLogin } from './services/login'
 import { resetLoading, forceSetLoading } from './reducers/loadingReducer'
 
-const USE_FAKE_LOGIN = process.env.REACT_APP_USE_FAKE_LOGIN === 'ThisIsNotProduction'
+import { clearAllPersistedStates } from './hooks/persistedState'
 
+const USE_FAKE_LOGIN = process.env.REACT_APP_USE_FAKE_LOGIN === 'ThisIsNotProduction'
+const SHOW_VERSION = process.env.REACT_APP_SHOW_VERSION
+
+if (SHOW_VERSION) {
+  console.log(`[Debug version] Built on: ` + preval`module.exports = new Date().toLocaleString()`)
+  console.log(
+    `[Debug version] Git commit: ` +
+      preval`module.exports = (git => { try { return git.branch() + ':' + git.long() + ', ' + git.date().toLocaleString() + '\\n"' + git.message() + '"' } catch (e) { return '(no repository available)' } })(require('git-rev-sync'))`
+  )
+}
 if (USE_FAKE_LOGIN) {
   console.log('USING FAKE LOGIN!!! DISABLE ON PRODUCTION!!!')
 }
@@ -134,6 +145,7 @@ const App = props => {
    * Logout code.
    */
   const doLogout = () => {
+    clearAllPersistedStates()
     window.localStorage.removeItem('loggedLabtool')
     props.logout()
   }

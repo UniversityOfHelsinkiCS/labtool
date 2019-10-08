@@ -10,6 +10,7 @@ ADD ./labtool2.0 /code
 WORKDIR /code
 COPY ./labtool2.0/package.json ../
 ENV REACT_APP_USE_FAKE_LOGIN=ThisIsNotProduction
+ENV REACT_APP_SHOW_VERSION=1
 RUN npm ci
 RUN npm run build
 RUN npm install -g serve@6.5.8

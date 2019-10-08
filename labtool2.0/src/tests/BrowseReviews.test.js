@@ -234,26 +234,8 @@ describe('<BrowseReviews />', () => {
             courseInstances: [{ id: 10011 }]
           }
         ]
-        wrapper = shallow(
-          <BrowseReviews
-            getOneCI={mockFn}
-            coursePageInformation={mockFn}
-            getCoursesByStudentId={mockFn}
-            courseData={courseData}
-            selectedInstance={coursePage}
-            studentInstanceToBeReviewed={studentWithPreviousParticipation}
-            courseId={coursePage.ohid}
-            studentInstance={'10011'}
-            loading={loading}
-            resetLoading={mockFn}
-            initialLoading={false}
-            updateStudentProjectInfo={mockFn}
-            user={{}}
-            createOneComment={mockFn}
-            gradeCodeReview={mockFn}
-            sendEmail={mockFn}
-          />
-        )
+
+        wrapper.setProps({ studentInstanceToBeReviewed: studentWithPreviousParticipation, studentInstanceId: '10011' })
         expect(wrapper.find('.hasPrevious').text()).toContain('Has taken this course before')
         const popup = wrapper
           .find('.hasPrevious')

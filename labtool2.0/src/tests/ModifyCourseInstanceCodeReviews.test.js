@@ -174,6 +174,60 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
     ]
   }
 
+  const tags = {
+    tags: [
+      {
+        id: 20001,
+        name: 'Javascript',
+        color: 'red',
+        createdAt: '2018-06-13T00:00:00.000Z',
+        updatedAt: '2018-06-13T00:00:00.000Z'
+      },
+      {
+        id: 20002,
+        name: 'HTML',
+        color: 'yellow',
+        createdAt: '2018-06-13T00:00:00.000Z',
+        updatedAt: '2018-06-13T00:00:00.000Z'
+      },
+      {
+        id: 20003,
+        name: 'game',
+        color: 'black',
+        createdAt: '2018-06-13T00:00:00.000Z',
+        updatedAt: '2018-06-13T00:00:00.000Z'
+      },
+      {
+        id: 20004,
+        name: 'React',
+        color: 'green',
+        createdAt: '2018-06-13T00:00:00.000Z',
+        updatedAt: '2018-06-13T00:00:00.000Z'
+      },
+      {
+        id: 20005,
+        name: 'Node.js',
+        color: 'blue',
+        createdAt: '2018-06-13T00:00:00.000Z',
+        updatedAt: '2018-06-13T00:00:00.000Z'
+      },
+      {
+        id: 20006,
+        name: 'Java',
+        color: 'orange',
+        createdAt: '2018-06-13T00:00:00.000Z',
+        updatedAt: '2018-06-13T00:00:00.000Z'
+      },
+      {
+        id: 20007,
+        name: 'FORTRAN',
+        color: 'pink',
+        createdAt: '2018-06-13T00:00:00.000Z',
+        updatedAt: '2018-06-13T00:00:00.000Z'
+      }
+    ]
+  }
+
   const codeReviewLogic = {
     randomizedCodeReview: [],
     selectedDropdown: 1,
@@ -239,6 +293,9 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
         filterByReview={mockFn}
         showNotification={mockFn}
         removeOneCodeReview={mockFn}
+        restoreData={mockFn}
+        getAllTags={mockFn}
+        tags={tags}
       />
     )
   })
@@ -261,13 +318,7 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
           10031: 0
         }
         dropdowns.forEach(dropdown => {
-          dropdown.props().children.forEach(child => {
-            if (child) {
-              if (child.props['selected']) {
-                values[child['key']]++
-              }
-            }
-          })
+          values[dropdown.props().value]++
         })
         expect(values[10011]).toEqual(0)
         expect(values[10012]).toEqual(2)

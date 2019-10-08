@@ -98,8 +98,8 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
                 3
               </label>
               <Input
-                defaultValue={3}
                 name="points"
+                onChange={[Function]}
                 step="0.01"
                 style={
                   Object {
@@ -108,6 +108,7 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
                   }
                 }
                 type="number"
+                value={3}
               />
             </FormField>
           </FormGroup>
@@ -125,14 +126,15 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
           >
             <div>
               <FormMarkdownTextArea
-                defaultValue="Hienoa työtä!"
                 name="comment"
+                onChange={[Function]}
                 style={
                   Object {
                     "height": "250px",
                     "width": "500px",
                   }
                 }
+                value="Hienoa työtä!"
               />
             </div>
           </FormGroup>
@@ -156,6 +158,7 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
             <div>
               <FormMarkdownTextArea
                 name="instructorNotes"
+                onChange={[Function]}
                 style={
                   Object {
                     "height": "150px",
@@ -188,6 +191,7 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
               <Button
                 as="button"
                 className="ui center floated button"
+                onClick={[Function]}
                 type="cancel"
               >
                 Cancel

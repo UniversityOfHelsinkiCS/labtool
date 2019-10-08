@@ -79,6 +79,17 @@ export const changeField = data => {
   }
 }
 
+export const restoreChecklist = data => {
+  return async dispatch => {
+    dispatch({
+      type: 'CHECKLIST_GET_ONE_SUCCESS',
+      response: {
+        list: data
+      }
+    })
+  }
+}
+
 export const addTopic = data => {
   return async dispatch => {
     dispatch({

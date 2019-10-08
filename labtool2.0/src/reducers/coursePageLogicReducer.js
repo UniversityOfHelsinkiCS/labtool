@@ -46,17 +46,15 @@ const coursePageLogicReducer = (state = INITIAL_STATE, action) => {
     }
     case 'COURSE_PAGE_SELECT_MANY_STUDENTS': {
       const newSelectedStudents = state.selectedStudents
-      action.ids.map(id => {
+      action.ids.forEach(id => {
         newSelectedStudents[id] = true
-        return id
       })
       return { ...state, selectedStudents: newSelectedStudents }
     }
     case 'COURSE_PAGE_UNSELECT_MANY_STUDENTS': {
       const newSelectedStudents = state.selectedStudents
-      action.ids.map(id => {
+      action.ids.forEach(id => {
         delete newSelectedStudents[id]
-        return id
       })
       return { ...state, selectedStudents: newSelectedStudents }
     }

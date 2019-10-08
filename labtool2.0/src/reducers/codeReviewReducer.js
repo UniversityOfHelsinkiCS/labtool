@@ -39,6 +39,8 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case 'LOGOUT_SUCCESS':
       return {}
+    case 'CODE_REVIEW_RESTORE':
+      return action.data
     case 'CREATE_STATES_FOR_CODE_REVIEWS': {
       let i = 1
       let codeReviewStates = {}
@@ -196,6 +198,15 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
       return INITIAL_STATE
     default:
       return state
+  }
+}
+
+export const restoreData = data => {
+  return async dispatch => {
+    dispatch({
+      type: 'CODE_REVIEW_RESTORE',
+      data
+    })
   }
 }
 
