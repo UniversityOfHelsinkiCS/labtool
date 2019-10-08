@@ -11,7 +11,7 @@ describe('<Notification /> without error', () => {
   }
 
   beforeEach(() => {
-    wrapper = shallow(<Notification notification={notification} />)
+    wrapper = shallow(<Notification notification={notification} clearNotifications={jest.fn()} />)
   })
 
   describe('Notification Component', () => {
@@ -21,6 +21,7 @@ describe('<Notification /> without error', () => {
 
     it('should render without throwing an error', () => {
       expect(wrapper.find('.success').exists()).toEqual(true)
+      expect(wrapper.find('Transition[visible=false]').exists()).toEqual(false)
     })
 
     it('should render correctly', () => {
@@ -38,7 +39,7 @@ describe('<Notification /> with error', () => {
   }
 
   beforeEach(() => {
-    wrapper = shallow(<Notification notification={notification} />)
+    wrapper = shallow(<Notification notification={notification} clearNotifications={jest.fn()} />)
   })
 
   describe('Notification Component', () => {
@@ -48,6 +49,7 @@ describe('<Notification /> with error', () => {
 
     it('should render without throwing an error', () => {
       expect(wrapper.find('.error').exists()).toEqual(true)
+      expect(wrapper.find('Transition[visible=false]').exists()).toEqual(false)
     })
 
     it('should render correctly', () => {
@@ -65,7 +67,7 @@ describe('<Notification /> without content', () => {
   }
 
   beforeEach(() => {
-    wrapper = shallow(<Notification notification={notification} />)
+    wrapper = shallow(<Notification notification={notification} clearNotifications={jest.fn()} />)
   })
 
   describe('Notification Component', () => {
@@ -74,7 +76,7 @@ describe('<Notification /> without content', () => {
     })
 
     it('should not show the message', () => {
-      expect(wrapper.find('.success').exists()).toEqual(false)
+      expect(wrapper.find('Transition[visible=false]').exists()).toEqual(true)
     })
 
     it('should not give an error', () => {

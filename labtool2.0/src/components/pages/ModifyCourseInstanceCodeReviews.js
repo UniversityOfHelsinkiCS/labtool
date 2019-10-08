@@ -1,28 +1,23 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
-import { getOneCI } from '../../services/courseInstance'
+import { getOneCI, modifyOneCI } from '../../services/courseInstance'
 import { coursePageInformation } from '../../services/courseInstance'
 import { bulkinsertCodeReviews, removeOneCodeReview } from '../../services/codeReview'
 import { filterByReview, initOneReview, randomAssign, codeReviewReset, selectDropdown, toggleCreate, createStates, restoreData } from '../../reducers/codeReviewReducer'
 import { filterByTag } from '../../reducers/coursePageLogicReducer'
 import { clearNotifications, showNotification } from '../../reducers/notificationReducer'
-import { Button, Table, Loader, Dropdown, Popup, Modal, Icon } from 'semantic-ui-react'
-import Notification from '../../components/pages/Notification'
+import { Button, Table, Loader, Dropdown, Popup, Icon, Message } from 'semantic-ui-react'
 import StudentTable from '../StudentTable'
 import { resetLoading } from '../../reducers/loadingReducer'
-import useLegacyState from '../../hooks/legacyState'
 import { usePersistedState } from '../../hooks/persistedState'
 import { getAllTags } from '../../services/tags'
 import { objectKeyFilter } from '../../util/objectKeyFilter'
 
 import BackButton from '../BackButton'
+import ConfirmationModal from '../ConfirmationModal'
 
 export const ModifyCourseInstanceReview = props => {
-  const state = useLegacyState({
-    open: {}
-  })
   const pstate = usePersistedState('ModifyCourseInstanceCodeReviews', {
     codeReviewData: null
   })
@@ -124,6 +119,9 @@ export const ModifyCourseInstanceReview = props => {
   }
 
   const assignRandomly = reviewNumber => {
+    if (props.codeReviewLogic.selectedDropdown === null) {
+      return () => props.showNotification({ message: 'Please select a code review first!', error: true })
+    }
     return () => {
       const selected = objectKeyFilter(props.coursePageLogic.selectedStudents, filterSelected)
       Object.keys(selected).length > 1 ? props.randomAssign({ reviewNumber: reviewNumber }, selected) : props.showNotification({ message: 'Select at least two persons to randomize!', error: true })
@@ -147,44 +145,95 @@ export const ModifyCourseInstanceReview = props => {
         const cr = user.codeReviews.find(cr => cr.reviewNumber === props.codeReviewLogic.selectedDropdown)
         if (cr.points) {
           props.showNotification({ message: `Can't delete a graded code review!`, error: true })
-          toggleModal(id)
           return
         }
         props.removeOneCodeReview({ reviewer: cr.studentInstanceId, codeReviewRound: cr.reviewNumber })
-        toggleModal(id)
       } catch (e) {
         console.error(e)
       }
     }
   }
 
-  const toggleModal = id => {
-    let s = state.open
-    s[id] = !s[id]
-    state.open = s
+  const handleActivateCr = async crToActivate => {
+    try {
+      let newCr = props.selectedInstance.currentCodeReview
+      newCr = newCr.concat(crToActivate)
+      const content = {
+        ...props.selectedInstance,
+        newCr
+      }
+      await props.modifyOneCI(content, props.selectedInstance.ohid)
+    } catch (error) {
+      console.error(error)
+    }
   }
 
-  const VisibilityReminder = () =>
-    props.selectedInstance.currentCodeReview && props.codeReviewLogic.selectedDropdown ? (
-      props.selectedInstance.currentCodeReview.findIndex(cr => cr === props.codeReviewLogic.selectedDropdown) === -1 ? (
-        <Popup
-          trigger={<Icon name="eye" size="large" color="red" />}
-          content={
-            <span>
-              <span>This code review is currently not visible to students. You can make it visible on the </span>
-              <Link to={`/labtool/ModifyCourseInstancePage/${props.selectedInstance.ohid}`}>course editing page</Link>
-              <span>.</span>
-            </span>
-          }
-          hoverable
-        />
-      ) : null
-    ) : null
+  const showVisibilityReminder = () => {
+    if (!props.selectedInstance.currentCodeReview || !props.codeReviewLogic.selectedDropdown) {
+      return null
+    }
+    if (props.selectedInstance.currentCodeReview.find(cr => cr === props.codeReviewLogic.selectedDropdown)) {
+      return null
+    }
+    return (
+      <Message className="visibilityReminder" warning>
+        <span>This code review is currently not visible to students.</span>
+        <Button color="green" size="small" onClick={() => handleActivateCr(props.codeReviewLogic.selectedDropdown)}>
+          Activate the code review
+        </Button>
+      </Message>
+    )
+  }
+
+  const showCurrentReview = data => {
+    if (!props.codeReviewLogic.selectedDropdown) {
+      return null
+    }
+
+    const currentReviewee = <p style={{ display: 'inline' }}>Current riview: {getCurrentReviewer(props.codeReviewLogic.selectedDropdown, data.id)}</p>
+    if (!data.codeReviews.find(cr => cr.reviewNumber === props.codeReviewLogic.selectedDropdown)) {
+      return <div>{currentReviewee}</div>
+    }
+    if (data.codeReviews.find(cr => cr.reviewNumber === props.codeReviewLogic.selectedDropdown).points) {
+      return (
+        <div>
+          {currentReviewee}
+          <Popup content="Cannot remove a graded code review" trigger={<Icon id="tag" name="window close" size="large" color="red" style={{ float: 'right' }} />} />
+        </div>
+      )
+    }
+    return (
+      <div>
+        {currentReviewee}
+        <ConfirmationModal canRemove={true} data={data} getCurrentReviewer={getCurrentReviewer} removeOne={removeOne} selectedDropdown={props.codeReviewLogic.selectedDropdown} />
+      </div>
+    )
+  }
+
+  const showRevieweeDropdown = data => {
+    if (!props.codeReviewLogic.selectedDropdown) {
+      return null
+    }
+    return (
+      <select
+        className="toReviewDropdown"
+        value={props.codeReviewLogic.currentSelections[props.codeReviewLogic.selectedDropdown][data.id]}
+        onChange={addCodeReview(props.codeReviewLogic.selectedDropdown, data.id)}
+      >
+        {props.dropdownUsers
+          .filter(d => d.value !== data.id)
+          .map(d => (
+            <option key={d.value} value={d.value}>
+              {d.text}
+            </option>
+          ))}
+      </select>
+    )
+  }
 
   const makeCodeReviewSelectorHeader = () => (
     <Table.HeaderCell key="selectorHeader">
       <div style={{ display: 'flex' }}>
-        <VisibilityReminder />
         <Dropdown
           onChange={createDropdown()}
           defaultValue={props.codeReviewLogic.selectedDropdown}
@@ -199,70 +248,8 @@ export const ModifyCourseInstanceReview = props => {
 
   const makeCodeReviewSelectorCell = data => (
     <Table.Cell key="CodeReviewSelector">
-      {props.codeReviewLogic.selectedDropdown ? (
-        <div>
-          <p>
-            Current review: {getCurrentReviewer(props.codeReviewLogic.selectedDropdown, data.id)}
-            {data.codeReviews.find(cr => cr.reviewNumber === props.codeReviewLogic.selectedDropdown) ? (
-              !data.codeReviews.find(cr => cr.reviewNumber === props.codeReviewLogic.selectedDropdown).points ? (
-                <Modal
-                  size="tiny"
-                  open={state.open[data.id]}
-                  onClose={() => toggleModal(data.id)}
-                  trigger={
-                    <Popup trigger={<Icon id="tag" onClick={() => toggleModal(data.id)} name="window close" size="large" color="red" style={{ float: 'right' }} />} content="Remove code review" />
-                  }
-                >
-                  <Modal.Content image>
-                    <Modal.Description>
-                      <p>Do you wish to remove the following code review:</p>
-                      <p>
-                        {data.User.firsts} {data.User.lastname} reviewing {getCurrentReviewer(props.codeReviewLogic.selectedDropdown, data.id)}
-                      </p>
-                    </Modal.Description>
-                  </Modal.Content>
-                  <Modal.Actions>
-                    <Button negative icon="close" labelPosition="right" color="red" content="No" onClick={() => toggleModal(data.id)} />
-                    <Button positive icon="checkmark" labelPosition="right" content="Yes" onClick={removeOne(data.id)} />
-                  </Modal.Actions>
-                </Modal>
-              ) : (
-                <Modal
-                  size="tiny"
-                  open={state.open[data.id]}
-                  onClose={() => toggleModal(data.id)}
-                  trigger={
-                    <Popup trigger={<Icon id="tag" onClick={() => toggleModal(data.id)} name="window close" size="large" color="red" style={{ float: 'right' }} />} content="Remove code review" />
-                  }
-                >
-                  <Modal.Content image>
-                    <Modal.Description>
-                      <p>Can not remove a code review that is graded.</p>
-                      <p> Grade: {data.codeReviews.find(cr => cr.reviewNumber === props.codeReviewLogic.selectedDropdown).points} points</p>
-                    </Modal.Description>
-                  </Modal.Content>
-                  <Modal.Actions>
-                    <Button positive icon="checkmark" labelPosition="right" color="green" content="Ok" onClick={() => toggleModal(data.id)} />
-                  </Modal.Actions>
-                </Modal>
-              )
-            ) : null}
-          </p>
-          <select
-            className="toReviewDropdown"
-            onChange={addCodeReview(props.codeReviewLogic.selectedDropdown, data.id)}
-            value={props.codeReviewLogic.currentSelections[props.codeReviewLogic.selectedDropdown][data.id]}
-          >
-            {props.dropdownUsers.map(d =>
-              d.value !== data.id ? (
-                <option key={d.value} value={d.value}>
-                  {d.text}
-                </option>
-              ) : null
-            )}
-          </select>
-        </div>
-      ) : null}
+      {showCurrentReview(data)}
+      {showRevieweeDropdown(data)}
     </Table.Cell>
   )
 
@@ -319,8 +306,8 @@ export const ModifyCourseInstanceReview = props => {
           <Button compact onClick={assignRandomly('create')} size="small" style={{ float: 'left' }}>
             Assign selected randomly
           </Button>
-          <Button compact size="small" style={{ float: 'right' }} onClick={handleSubmit('create')}>
-            Create
+          <Button compact size="small" style={{ marginLeft: '6em', float: 'right' }} onClick={handleSubmit('create')}>
+            Create and save
           </Button>
         </span>
       ) : null}
@@ -367,6 +354,7 @@ export const ModifyCourseInstanceReview = props => {
           <h2>{props.selectedInstance.name}</h2> <br />
         </div>
 
+        {showVisibilityReminder()}
         <StudentTable
           rowClassName="CodeReviewStudentRow"
           extraButtons={[makeFilterButton]}
@@ -383,8 +371,15 @@ export const ModifyCourseInstanceReview = props => {
           tags={props.tags}
           onFilter={filtered => (filterSelected = id => filtered.includes(Number(id)))}
         />
+
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
       </div>
-      <Notification />
     </div>
   )
 }
@@ -436,6 +431,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = {
   getOneCI,
+  modifyOneCI,
   clearNotifications,
   coursePageInformation,
   initOneReview,
@@ -467,6 +463,7 @@ ModifyCourseInstanceReview.propTypes = {
   tags: PropTypes.object.isRequired,
 
   getOneCI: PropTypes.func.isRequired,
+  modifyOneCI: PropTypes.func.isRequired,
   clearNotifications: PropTypes.func.isRequired,
   coursePageInformation: PropTypes.func.isRequired,
   initOneReview: PropTypes.func.isRequired,

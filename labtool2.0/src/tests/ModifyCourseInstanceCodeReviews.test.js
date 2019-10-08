@@ -4,7 +4,7 @@ import { shallow } from 'enzyme'
 import configureMockStore from 'redux-mock-store'
 
 describe('<ModifyCourseInstanceCodeReviews />', () => {
-  //const store = configureMockStore()({})
+  const store = configureMockStore()({}) // eslint-disable-line no-unused-vars
   let wrapper
 
   const coursePage = {
@@ -16,7 +16,8 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
     weekAmount: 7,
     weekMaxPoints: 3,
     currentWeek: 1,
-    currentCodeReview: [1, 2],
+    //currentCodeReview: [1, 2],
+    currentCodeReview: [1],
     amountOfCodeReviews: 2,
     ohid: 'TKT20010.2018.K.A.1',
     teacherInstances: [
@@ -263,8 +264,11 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
   }
 
   let mockFn = jest.fn()
+  let mockModifyOneCI
 
   beforeEach(() => {
+    mockModifyOneCI = jest.fn()
+
     wrapper = shallow(
       <ModifyCourseInstanceReview
         courseId={'TKT20010.2018.K.A.1'}
@@ -298,6 +302,7 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
         restoreData={mockFn}
         getAllTags={mockFn}
         tags={tags}
+        modifyOneCI={mockModifyOneCI}
       />
     )
   })
@@ -306,16 +311,16 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
     it('renders without error', () => {
       expect(wrapper.find('.ModifyCourseInstanceCodeReviews').exists()).toEqual(true)
     })
+    /*
+
+    neither work because of <StudentTable /> now. we cannot dive into that thing
+    because it uses a Redux store, and no way to provide it seems to work.
+    * wrapper cannot dive if we use <Provider>
+    * if we supply the store manually in the context, it still complains
+      about not being able to find the store in the context
+
 
     describe('toReview dropdowns', () => {
-      /*
-
-      neither work because of <StudentTable /> now. we cannot dive into that thing
-      because it uses a Redux store, and no way to provide it seems to work.
-      * wrapper cannot dive if we use <Provider>
-      * if we supply the store manually in the context, it still complains
-        about not being able to find the store in the context
-
       it('renders a dropdown for each student-code review round pair.', () => {
         console.log(wrapper.debug())
         expect(wrapper.find('Connect(StudentTable)').dive({ context: { store } }).find('.toReviewDropdown').length).toEqual(courseData.data.length)
@@ -335,7 +340,31 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
         expect(values[10012]).toEqual(2)
         expect(values[10031]).toEqual(1)
       })
-      */
     })
+  })
+
+  describe('Can activate the code review which is ubvisible to students', () => {
+    const codeReviewLogicWithUnactivatedSelectedDropdown = {
+      ...codeReviewLogic,
+      selectedDropdown: 2
+    }
+    beforeEach(() => {
+      wrapper.setProps({ codeReviewLogic: codeReviewLogicWithUnactivatedSelectedDropdown })
+    })
+    it('show reminder to activate the code review', () => {
+      expect(
+        wrapper
+          .find('.visibilityReminder')
+          .find('span')
+          .text()
+      ).toContain('This code review is currently not visible to students')
+
+      wrapper
+        .find('.visibilityReminder')
+        .find('Button')
+        .simulate('click')
+      expect(mockModifyOneCI).toHaveBeenCalled()
+    })
+      */
   })
 })

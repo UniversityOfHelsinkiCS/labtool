@@ -1,23 +1,74 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`<Notification /> with error Notification Component should render correctly 1`] = `
-<Message
-  className="error"
-  color="red"
-  size="large"
+<Transition
+  animation="fly down"
+  duration={250}
+  mountOnShow={true}
+  transitionOnMount={false}
+  unmountOnHide={false}
+  visible={true}
 >
-  This is a test message, please ignore.
-</Message>
+  <div
+    className="notification-wrapper"
+  >
+    <Message
+      className="notification error"
+      color="red"
+      floating={true}
+      onClick={[Function]}
+      size="large"
+    >
+      This is a test message, please ignore.
+    </Message>
+  </div>
+</Transition>
 `;
 
-exports[`<Notification /> without content Notification Component should render correctly 1`] = `<div />`;
+exports[`<Notification /> without content Notification Component should render correctly 1`] = `
+<Transition
+  animation="scale"
+  duration={250}
+  mountOnShow={true}
+  transitionOnMount={false}
+  unmountOnHide={false}
+  visible={false}
+>
+  <div
+    className="notification-wrapper"
+  >
+    <Message
+      className="notification success"
+      color="green"
+      floating={true}
+      onClick={[Function]}
+      size="large"
+    />
+  </div>
+</Transition>
+`;
 
 exports[`<Notification /> without error Notification Component should render correctly 1`] = `
-<Message
-  className="success"
-  color="green"
-  size="large"
+<Transition
+  animation="scale"
+  duration={250}
+  mountOnShow={true}
+  transitionOnMount={false}
+  unmountOnHide={false}
+  visible={true}
 >
-  This is a test message, please ignore.
-</Message>
+  <div
+    className="notification-wrapper"
+  >
+    <Message
+      className="notification success"
+      color="green"
+      floating={true}
+      onClick={[Function]}
+      size="large"
+    >
+      This is a test message, please ignore.
+    </Message>
+  </div>
+</Transition>
 `;
