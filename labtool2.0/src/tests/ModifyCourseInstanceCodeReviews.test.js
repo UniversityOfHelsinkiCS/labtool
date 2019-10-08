@@ -313,11 +313,20 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
     })
     /*
 
-    neither work because of <StudentTable /> now. we cannot dive into that thing
+    doesn't work because of <StudentTable /> now. we cannot dive into that thing
     because it uses a Redux store, and no way to provide it seems to work.
     * wrapper cannot dive if we use <Provider>
     * if we supply the store manually in the context, it still complains
       about not being able to find the store in the context
+    
+    alternatively we could use mount(), but that also takes in everything else
+    and fixing all of the errors that result would be a pain.
+
+
+
+    apparently react-redux just won't work with enzyme.
+    https://github.com/airbnb/enzyme/issues/2202
+
 
 
     describe('toReview dropdowns', () => {
@@ -341,6 +350,7 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
         expect(values[10031]).toEqual(1)
       })
     })
+*/
   })
 
   describe('Can activate the code review which is ubvisible to students', () => {
@@ -365,6 +375,5 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
         .simulate('click')
       expect(mockModifyOneCI).toHaveBeenCalled()
     })
-      */
   })
 })
