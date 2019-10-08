@@ -233,7 +233,7 @@ export const StudentTable = props => {
     return indents
   }
 
-  const createStudentTableRow = (showColumn, data, rowClassName, dropDownTags, dropDownTeachers) => (
+  const createStudentTableRow = (showColumn, data, rowClassName, dropDownTags, dropDownTeachers, extraColumns) => (
     <Table.Row key={data.id} className={rowClassName}>
       {/* Select Check Box */}
       {showColumn('select') && (
@@ -302,7 +302,7 @@ export const StudentTable = props => {
       )}
 
       {/* Instructor */}
-      {!shouldHideInstructor(props.studentInstances) && (
+      {showColumn('instructor') && !shouldHideInstructor(props.studentInstances) && (
         <Table.Cell key="instructor">
           {data.teacherInstanceId && props.selectedInstance.teacherInstances ? (
             props.selectedInstance.teacherInstances
@@ -336,9 +336,9 @@ export const StudentTable = props => {
         </Table.Cell>
       )}
 
+      {/* Review */}
       {showColumn('review') && (
         <Fragment>
-          {/* Review */}
           <Table.Cell key="reviewbutton" textAlign="right">
             <Link to={`/labtool/browsereviews/${props.selectedInstance.ohid}/${data.id}`}>
               <Popup trigger={<Button circular size="tiny" icon={{ name: 'star', size: 'large', color: 'orange' }} />} content="Review student" />
@@ -346,12 +346,16 @@ export const StudentTable = props => {
           </Table.Cell>
         </Fragment>
       )}
+
+      {extraColumns.map(([, cell, ]) => cell(data))}
     </Table.Row>
   )
 
-  const { columns, rowClassName, disableDefaultFilter } = props
+  const { columns, rowClassName, disableDefaultFilter, studentColumnName, showFooter } = props
 
   const showColumn = column => columns.indexOf(column) >= 0
+  const nullFunc = () => nullFunc
+  const extraColumns = columns.filter(column => Array.isArray(column) && column.length === 3).map(([header, cell, footer]) => [header || nullFunc, cell || nullFunc, footer || nullFunc])
 
   let dropDownTeachers = []
   dropDownTeachers = createDropdownTeachers(props.selectedInstance.teacherInstances, dropDownTeachers)
@@ -394,16 +398,21 @@ export const StudentTable = props => {
   return (
     <Fragment>
       <div style={{ textAlign: 'left' }}>
-        <span>Filter by instructor: </span>
-        <Dropdown
-          scrolling
-          options={dropDownFilterTeachers}
-          onChange={changeFilterAssistant()}
-          placeholder="Select Teacher"
-          defaultValue={props.coursePageLogic.filterByAssistant}
-          selection
-          style={{ width: `${getBiggestWidthInDropdown(dropDownFilterTeachers)}em` }}
-        />
+        {(props.extraButtons || []).map(f => f())}
+        {showColumn('instructor') && (
+          <span>
+            <span>Filter by instructor: </span>
+            <Dropdown
+              scrolling
+              options={dropDownFilterTeachers}
+              onChange={changeFilterAssistant()}
+              placeholder="Select Teacher"
+              defaultValue={props.coursePageLogic.filterByAssistant}
+              selection
+              style={{ width: `${getBiggestWidthInDropdown(dropDownFilterTeachers)}em` }}
+            />
+          </span>
+        )}
         <span> Add filtering tag: </span>
         <Dropdown scrolling options={dropDownTags} onChange={changeFilterTag} placeholder="Select Tag" value="" selection style={{ width: `${getBiggestWidthInDropdown(dropDownTags)}em` }} />
         <span> Tag filters: </span>
@@ -433,7 +442,7 @@ export const StudentTable = props => {
                   <Checkbox id="selectAll" checked={allSelected} onChange={handleSelectAll(filteredData)} />
                 </Table.HeaderCell>
               )}
-              <Table.HeaderCell key={-1}>Student</Table.HeaderCell>
+              <Table.HeaderCell key={-1}>{studentColumnName || 'Student'}</Table.HeaderCell>
               <Table.HeaderCell>Project Info</Table.HeaderCell>
               {showColumn('points') && (
                 <Fragment>
@@ -441,11 +450,30 @@ export const StudentTable = props => {
                   <Table.HeaderCell>Sum</Table.HeaderCell>
                 </Fragment>
               )}
-              {!shouldHideInstructor(props.studentInstances) && <Table.HeaderCell width="six">Instructor</Table.HeaderCell>}
+              {showColumn('instructor') && !shouldHideInstructor(props.studentInstances) && <Table.HeaderCell width="six">Instructor</Table.HeaderCell>}
               {showColumn('review') && <Table.HeaderCell>Review</Table.HeaderCell>}
+              {extraColumns.map(([header, , ]) => header())}
             </Table.Row>
           </Table.Header>
-          <Table.Body>{filteredData.map(data => createStudentTableRow(showColumn, data, rowClassName, dropDownTags, dropDownTeachers))}</Table.Body>
+          <Table.Body>{filteredData.map(data => createStudentTableRow(showColumn, data, rowClassName, dropDownTags, dropDownTeachers, extraColumns))}</Table.Body>
+          {showFooter && (
+            <Table.Footer>
+              <Table.Row>
+                {showColumn('select') && (
+                  <Table.HeaderCell key={-2}>
+                    <Checkbox id="selectAllBottom" checked={allSelected} onChange={handleSelectAll(filteredData)} />
+                  </Table.HeaderCell>
+                )}
+                <Table.HeaderCell />
+                <Table.HeaderCell />
+                {showColumn('points') && (
+                  <Table.HeaderCell />
+                )}
+                {showColumn('instructor') && !shouldHideInstructor(props.studentInstances) && <Table.HeaderCell />}
+                {showColumn('review') && <Table.HeaderCell />}
+                {extraColumns.map(([, , footer]) => footer())}
+              </Table.Row>
+            </Table.Footer>)}
         </Table>
       </HorizontalScrollable>
     </Fragment>
@@ -474,6 +502,9 @@ StudentTable.propTypes = {
   columns: PropTypes.array,
   allowModify: PropTypes.bool,
   disableDefaultFilter: PropTypes.bool,
+  showFooter: PropTypes.bool,
+  studentColumnName: PropTypes.string,
+  extraButtons: PropTypes.array,
 
   studentInstances: PropTypes.array.isRequired,
   selectedInstance: PropTypes.object.isRequired,

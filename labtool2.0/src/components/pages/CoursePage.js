@@ -465,7 +465,7 @@ export const CoursePage = props => {
 
         <StudentTable
           rowClassName={rowClassName + (droppedOut ? ' active' : '')}
-          columns={['select', 'points', 'review']}
+          columns={['select', 'points', 'instructor', 'review']}
           allowModify={true}
           disableDefaultFilter={droppedOut}
           selectedInstance={props.selectedInstance}
