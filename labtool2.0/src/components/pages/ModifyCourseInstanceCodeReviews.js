@@ -190,7 +190,7 @@ export const ModifyCourseInstanceReview = props => {
       return null
     }
 
-    const currentReviewee = <p style={{ display: 'inline' }}>Current riview: {getCurrentReviewer(props.codeReviewLogic.selectedDropdown, data.id)}</p>
+    const currentReviewee = <p style={{ display: 'inline' }}>Current review: {getCurrentReviewer(props.codeReviewLogic.selectedDropdown, data.id)}</p>
     if (!data.codeReviews.find(cr => cr.reviewNumber === props.codeReviewLogic.selectedDropdown)) {
       return <div>{currentReviewee}</div>
     }
