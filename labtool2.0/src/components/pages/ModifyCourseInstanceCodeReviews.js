@@ -5,16 +5,7 @@ import { Link } from 'react-router-dom'
 import { getOneCI } from '../../services/courseInstance'
 import { coursePageInformation } from '../../services/courseInstance'
 import { bulkinsertCodeReviews, removeOneCodeReview } from '../../services/codeReview'
-import {
-  filterByReview,
-  initOneReview,
-  randomAssign,
-  codeReviewReset,
-  selectDropdown,
-  toggleCreate,
-  createStates,
-  restoreData
-} from '../../reducers/codeReviewReducer'
+import { filterByReview, initOneReview, randomAssign, codeReviewReset, selectDropdown, toggleCreate, createStates, restoreData } from '../../reducers/codeReviewReducer'
 import { filterByTag } from '../../reducers/coursePageLogicReducer'
 import { clearNotifications, showNotification } from '../../reducers/notificationReducer'
 import { Button, Table, Loader, Dropdown, Popup, Modal, Icon } from 'semantic-ui-react'
@@ -24,6 +15,7 @@ import { resetLoading } from '../../reducers/loadingReducer'
 import useLegacyState from '../../hooks/legacyState'
 import { usePersistedState } from '../../hooks/persistedState'
 import { getAllTags } from '../../services/tags'
+import { objectKeyFilter } from '../../util/objectKeyFilter'
 
 import BackButton from '../BackButton'
 
@@ -34,6 +26,7 @@ export const ModifyCourseInstanceReview = props => {
   const pstate = usePersistedState('ModifyCourseInstanceCodeReviews', {
     codeReviewData: null
   })
+  let filterSelected = () => true
 
   useEffect(() => {
     // run on component mount
@@ -132,9 +125,8 @@ export const ModifyCourseInstanceReview = props => {
 
   const assignRandomly = reviewNumber => {
     return () => {
-      Object.keys(props.coursePageLogic.selectedStudents).length > 1
-        ? props.randomAssign({ reviewNumber: reviewNumber }, props.coursePageLogic.selectedStudents)
-        : props.showNotification({ message: 'Select at least two persons to randomize!', error: true })
+      const selected = objectKeyFilter(props.coursePageLogic.selectedStudents, filterSelected)
+      Object.keys(selected).length > 1 ? props.randomAssign({ reviewNumber: reviewNumber }, selected) : props.showNotification({ message: 'Select at least two persons to randomize!', error: true })
     }
   }
 
@@ -218,10 +210,7 @@ export const ModifyCourseInstanceReview = props => {
                   open={state.open[data.id]}
                   onClose={() => toggleModal(data.id)}
                   trigger={
-                    <Popup
-                      trigger={<Icon id="tag" onClick={() => toggleModal(data.id)} name="window close" size="large" color="red" style={{ float: 'right' }} />}
-                      content="Remove code review"
-                    />
+                    <Popup trigger={<Icon id="tag" onClick={() => toggleModal(data.id)} name="window close" size="large" color="red" style={{ float: 'right' }} />} content="Remove code review" />
                   }
                 >
                   <Modal.Content image>
@@ -243,10 +232,7 @@ export const ModifyCourseInstanceReview = props => {
                   open={state.open[data.id]}
                   onClose={() => toggleModal(data.id)}
                   trigger={
-                    <Popup
-                      trigger={<Icon id="tag" onClick={() => toggleModal(data.id)} name="window close" size="large" color="red" style={{ float: 'right' }} />}
-                      content="Remove code review"
-                    />
+                    <Popup trigger={<Icon id="tag" onClick={() => toggleModal(data.id)} name="window close" size="large" color="red" style={{ float: 'right' }} />} content="Remove code review" />
                   }
                 >
                   <Modal.Content image>
@@ -320,7 +306,9 @@ export const ModifyCourseInstanceReview = props => {
             ) : null
           )}
         </select>
-      ) : <div />}
+      ) : (
+        <div />
+      )}
     </Table.Cell>
   )
 
@@ -339,17 +327,31 @@ export const ModifyCourseInstanceReview = props => {
     </Table.HeaderCell>
   )
 
-  const makeFilterButton = () => (
+  const makeFilterButton = () =>
     props.codeReviewLogic.selectedDropdown === null ? (
-      <Button key="CodeReviewUnassignedStudents" disabled toggle compact className={`tiny ui button`} active={props.codeReviewLogic.filterActive} onClick={filterUnassigned(props.codeReviewLogic.selectedDropdown)}>
+      <Button
+        key="CodeReviewUnassignedStudents"
+        disabled
+        toggle
+        compact
+        className={`tiny ui button`}
+        active={props.codeReviewLogic.filterActive}
+        onClick={filterUnassigned(props.codeReviewLogic.selectedDropdown)}
+      >
         Show unassigned students
       </Button>
     ) : (
-      <Button key="CodeReviewUnassignedStudents" toggle compact className={`tiny ui button`} active={props.codeReviewLogic.filterActive} onClick={filterUnassigned(props.codeReviewLogic.selectedDropdown)}>
+      <Button
+        key="CodeReviewUnassignedStudents"
+        toggle
+        compact
+        className={`tiny ui button`}
+        active={props.codeReviewLogic.filterActive}
+        onClick={filterUnassigned(props.codeReviewLogic.selectedDropdown)}
+      >
         Show unassigned students
       </Button>
     )
-  )
 
   if (props.loading.loading) {
     return <Loader active />
@@ -368,15 +370,18 @@ export const ModifyCourseInstanceReview = props => {
         <StudentTable
           rowClassName="CodeReviewStudentRow"
           extraButtons={[makeFilterButton]}
-          columns={['select',
-          [makeCodeReviewSelectorHeader, makeCodeReviewSelectorCell, makeCodeReviewSelectorFooter],
-          [makeCodeReviewCreatorHeader, makeCodeReviewCreatorCell, makeCodeReviewCreatorFooter]]}
+          columns={[
+            'select',
+            [makeCodeReviewSelectorHeader, makeCodeReviewSelectorCell, makeCodeReviewSelectorFooter],
+            [makeCodeReviewCreatorHeader, makeCodeReviewCreatorCell, makeCodeReviewCreatorFooter]
+          ]}
           showFooter={true}
           allowModify={false}
           selectedInstance={props.selectedInstance}
           studentInstances={props.courseData.data.filter(studentInstance => !studentInstance.dropped && unassignedFilter(studentInstance))}
           coursePageLogic={props.coursePageLogic}
           tags={props.tags}
+          onFilter={filtered => (filterSelected = id => filtered.includes(Number(id)))}
         />
       </div>
       <Notification />

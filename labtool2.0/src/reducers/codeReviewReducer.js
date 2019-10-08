@@ -190,7 +190,7 @@ export const initOneReview = data => {
 }
 
 export const randomAssign = (data, selected) => {
-  return async (dispatch, getState) => {
+  return async dispatch => {
     dispatch({
       type: 'CODE_REVIEW_RANDOMIZE',
       data: {

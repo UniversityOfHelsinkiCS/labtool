@@ -604,6 +604,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
         Array [
           "select",
           "points",
+          "instructor",
           "review",
         ]
       }
@@ -876,6 +877,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
         Array [
           "select",
           "points",
+          "instructor",
           "review",
         ]
       }

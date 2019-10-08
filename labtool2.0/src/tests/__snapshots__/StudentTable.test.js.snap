@@ -10,35 +10,37 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
     }
   >
     <span>
-      Filter by instructor: 
-    </span>
-    <Dropdown
-      additionLabel="Add "
-      additionPosition="top"
-      closeOnBlur={true}
-      closeOnEscape={true}
-      deburr={false}
-      defaultValue={0}
-      icon="dropdown"
-      minCharacters={1}
-      noResultsMessage="No results found."
-      onChange={[Function]}
-      openOnFocus={true}
-      options={Array []}
-      placeholder="Select Teacher"
-      renderLabel={[Function]}
-      scrolling={true}
-      searchInput="text"
-      selectOnBlur={true}
-      selectOnNavigation={true}
-      selection={true}
-      style={
-        Object {
-          "width": "3em",
+      <span>
+        Filter by instructor: 
+      </span>
+      <Dropdown
+        additionLabel="Add "
+        additionPosition="top"
+        closeOnBlur={true}
+        closeOnEscape={true}
+        deburr={false}
+        defaultValue={0}
+        icon="dropdown"
+        minCharacters={1}
+        noResultsMessage="No results found."
+        onChange={[Function]}
+        openOnFocus={true}
+        options={Array []}
+        placeholder="Select Teacher"
+        renderLabel={[Function]}
+        scrolling={true}
+        searchInput="text"
+        selectOnBlur={true}
+        selectOnNavigation={true}
+        selection={true}
+        style={
+          Object {
+            "width": "3em",
+          }
         }
-      }
-      wrapSelection={true}
-    />
+        wrapSelection={true}
+      />
+    </span>
     <span>
        Add filtering tag: 
     </span>
@@ -55,6 +57,11 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
       openOnFocus={true}
       options={
         Array [
+          Object {
+            "key": "-",
+            "text": "Select a tag",
+            "value": "",
+          },
           Object {
             "key": 20001,
             "text": "Javascript",
@@ -97,7 +104,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
           },
         ]
       }
-      placeholder="Select Tag"
+      placeholder="Select a tag"
       renderLabel={[Function]}
       scrolling={true}
       searchInput="text"
