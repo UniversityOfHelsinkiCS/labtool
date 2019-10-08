@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
-import { Button, Form, Input, Grid, Card, Loader, Header, Segment } from 'semantic-ui-react'
+import { Button, Form, Input, Grid, Card, Loader, Header, Segment, Icon } from 'semantic-ui-react'
 import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createOneWeek, getWeekDraft, saveWeekDraft } from '../../services/week'
@@ -15,6 +15,11 @@ import { usePersistedState } from '../../hooks/persistedState'
 import { FormMarkdownTextArea } from '../MarkdownTextArea'
 
 const PreviousWeekDetails = ({ weekData }) => {
+  if (!weekData) {
+    // The student doesn't have a review from the previous week (or the previous week doesn't exist),
+    // so we don't show this component.
+    return null
+  }
   if (!weekData.feedback && !weekData.instructorNotes) {
     return null
   }
@@ -213,6 +218,12 @@ export const ReviewStudent = props => {
         <h3>
           {' '}
           {studentData.User.firsts} {studentData.User.lastname}{' '}
+          <div style={{ display: 'inline-block', padding: '0px 0px 0px 25px' }}>
+            <a href={studentData.github} target="_blank" rel="noopener noreferrer">
+              <Icon name="github" color="black" />
+              {studentData.projectName}
+            </a>
+          </div>
           {studentData.Tags.map(tag => (
             <div key={tag.id}>
               <Button compact floated="right" className={`mini ui ${tag.color} button`}>
