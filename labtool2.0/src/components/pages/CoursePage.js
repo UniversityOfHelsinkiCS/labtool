@@ -467,7 +467,6 @@ export const CoursePage = props => {
           rowClassName={rowClassName + (droppedOut ? ' active' : '')}
           columns={['select', 'points', 'review']}
           allowModify={true}
-          disableDefaultFilter={droppedOut}
           selectedInstance={props.selectedInstance}
           studentInstances={props.courseData.data.filter(studentInstance => droppedOut === studentInstance.dropped)}
           coursePageLogic={props.coursePageLogic}
