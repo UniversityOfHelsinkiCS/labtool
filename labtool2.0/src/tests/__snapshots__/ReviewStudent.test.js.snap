@@ -21,6 +21,27 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
     Opiskelija
      
     <div
+      style={
+        Object {
+          "display": "inline-block",
+          "padding": "0px 0px 0px 25px",
+        }
+      }
+    >
+      <a
+        href="http://github.com/tiraopi1/tiralabra1"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        <Icon
+          as="i"
+          color="black"
+          name="github"
+        />
+        Tiran labraprojekti
+      </a>
+    </div>
+    <div
       key="20003"
     >
       <Button
@@ -191,7 +212,6 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
               <Button
                 as="button"
                 className="ui center floated button"
-                onClick={[Function]}
                 type="cancel"
               >
                 Cancel
