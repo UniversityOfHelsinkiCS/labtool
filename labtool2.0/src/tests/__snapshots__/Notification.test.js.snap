@@ -1,23 +1,81 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`<Notification /> with error Notification Component should render correctly 1`] = `
-<Message
-  className="error"
-  color="red"
-  size="large"
->
-  This is a test message, please ignore.
-</Message>
+<div>
+  <Modal
+    basic={true}
+    centered={true}
+    closeOnDimmerClick={true}
+    closeOnDocumentClick={false}
+    dimmer={true}
+    eventPool="Modal"
+    open={false}
+    size="small"
+  >
+    <ModalContent>
+      <Message
+        className="error"
+        color="red"
+        size="large"
+      >
+        This is a test message, please ignore.
+      </Message>
+    </ModalContent>
+    <ModalActions>
+      <Button
+        as="button"
+        color="grey"
+        inverted={true}
+        onClick={[Function]}
+      >
+        <Icon
+          as="i"
+          name="checkmark"
+        />
+         Got it
+      </Button>
+    </ModalActions>
+  </Modal>
+</div>
 `;
 
 exports[`<Notification /> without content Notification Component should render correctly 1`] = `<div />`;
 
 exports[`<Notification /> without error Notification Component should render correctly 1`] = `
-<Message
-  className="success"
-  color="green"
-  size="large"
->
-  This is a test message, please ignore.
-</Message>
+<div>
+  <Modal
+    basic={true}
+    centered={true}
+    closeOnDimmerClick={true}
+    closeOnDocumentClick={false}
+    dimmer={true}
+    eventPool="Modal"
+    open={false}
+    size="small"
+  >
+    <ModalContent>
+      <Message
+        className="success"
+        color="green"
+        size="large"
+      >
+        This is a test message, please ignore.
+      </Message>
+    </ModalContent>
+    <ModalActions>
+      <Button
+        as="button"
+        color="grey"
+        inverted={true}
+        onClick={[Function]}
+      >
+        <Icon
+          as="i"
+          name="checkmark"
+        />
+         Got it
+      </Button>
+    </ModalActions>
+  </Modal>
+</div>
 `;

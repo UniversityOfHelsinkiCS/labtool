@@ -11,7 +11,7 @@ describe('<Notification /> without error', () => {
   }
 
   beforeEach(() => {
-    wrapper = shallow(<Notification notification={notification} />)
+    wrapper = shallow(<Notification notification={notification} clearNotifications={jest.fn()} />)
   })
 
   describe('Notification Component', () => {
@@ -38,7 +38,7 @@ describe('<Notification /> with error', () => {
   }
 
   beforeEach(() => {
-    wrapper = shallow(<Notification notification={notification} />)
+    wrapper = shallow(<Notification notification={notification} clearNotifications={jest.fn()} />)
   })
 
   describe('Notification Component', () => {
@@ -65,7 +65,7 @@ describe('<Notification /> without content', () => {
   }
 
   beforeEach(() => {
-    wrapper = shallow(<Notification notification={notification} />)
+    wrapper = shallow(<Notification notification={notification} clearNotifications={jest.fn()} />)
   })
 
   describe('Notification Component', () => {

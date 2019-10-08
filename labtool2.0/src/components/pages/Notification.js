@@ -4,8 +4,6 @@ import { connect } from 'react-redux'
 import { clearNotifications } from '../../reducers/notificationReducer'
 import { Message, Modal, Button, Icon } from 'semantic-ui-react'
 
-let timeout
-
 /**
  *  Notification, that clears itself after a set of time.
  */
@@ -14,20 +12,7 @@ export const Notification = props => {
 
   useEffect(() => {
     setOpen(true)
-    // const { message } = props.notification
-    // if (message !== undefined) {
-    //   clearTimeout(timeout)
-    //   timeout = setTimeout(() => {
-    //     props.clearNotifications()
-    //   }, 5000)
-    // }
   }, [props.notification.message])
-
-  // const handleOpen = () => {
-  //   if (message) {
-  //     setOpen(true)
-  //   }
-  // }
 
   const handleClose = () => {
     props.clearNotifications()
@@ -54,47 +39,8 @@ export const Notification = props => {
 
   if (message === undefined) {
     return <div />
-  } else {
-    return <div>{createNotification()}</div>
-    // <Modal open={open} basic size="small">
-    //   {console.log('open', open)}
-    //   {console.log('message', props.notification.message)}
-    //   <Modal.Content>
-    //     <Message className="error" color="red" size="large">
-    //       {message}
-    //     </Message>
-    //   </Modal.Content>
-    //   <Modal.Actions>
-    //     <Button color="grey" onClick={handleClose} inverted>
-    //       <Icon name="checkmark" /> Got it
-    //     </Button>
-    //   </Modal.Actions>
-    // </Modal>
-    // // <Message className="error" color="red" size="large">
-    // //   {message}
-    // // </Message>
   }
-  // else {
-  //   return (
-  //     <Modal open={open} basic size="small">
-  //       {console.log('open', open)}
-  //       {console.log('message', props.notification.message)}
-  //       <Modal.Content>
-  //         <Message className="success" color="green" size="large">
-  //           {message}
-  //         </Message>
-  //       </Modal.Content>
-  //       <Modal.Actions>
-  //         <Button color="grey" onClick={handleClose} inverted>
-  //           <Icon name="checkmark" /> Got it
-  //         </Button>
-  //       </Modal.Actions>
-  //     </Modal>
-  //     // <Message className="success" color="green" size="large">
-  //     //   {message}
-  //     // </Message>
-  //   )
-  // }
+  return <div>{createNotification()}</div>
 }
 
 const mapStateToProps = state => {
@@ -104,7 +50,8 @@ const mapStateToProps = state => {
 }
 
 Notification.propTypes = {
-  notification: PropTypes.object.isRequired
+  notification: PropTypes.object.isRequired,
+  clearNotifications: PropTypes.func.isRequired
 }
 
 export default connect(
