@@ -14,7 +14,8 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
     weekAmount: 7,
     weekMaxPoints: 3,
     currentWeek: 1,
-    currentCodeReview: [1, 2],
+    //currentCodeReview: [1, 2],
+    currentCodeReview: [1],
     amountOfCodeReviews: 2,
     ohid: 'TKT20010.2018.K.A.1',
     teacherInstances: [
@@ -261,8 +262,11 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
   }
 
   let mockFn = jest.fn()
+  let mockModifyOneCI
 
   beforeEach(() => {
+    mockModifyOneCI = jest.fn()
+
     wrapper = shallow(
       <ModifyCourseInstanceReview
         courseId={'TKT20010.2018.K.A.1'}
@@ -296,6 +300,7 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
         restoreData={mockFn}
         getAllTags={mockFn}
         tags={tags}
+        modifyOneCI={mockModifyOneCI}
       />
     )
   })
@@ -324,6 +329,30 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
         expect(values[10012]).toEqual(2)
         expect(values[10031]).toEqual(1)
       })
+    })
+  })
+
+  describe('Can activate the code review which is ubvisible to students', () => {
+    const codeReviewLogicWithUnactivatedSelectedDropdown = {
+      ...codeReviewLogic,
+      selectedDropdown: 2
+    }
+    beforeEach(() => {
+      wrapper.setProps({ codeReviewLogic: codeReviewLogicWithUnactivatedSelectedDropdown })
+    })
+    it('show reminder to activate the code review', () => {
+      expect(
+        wrapper
+          .find('.visibilityReminder')
+          .find('span')
+          .text()
+      ).toContain('This code review is currently not visible to students')
+
+      wrapper
+        .find('.visibilityReminder')
+        .find('Button')
+        .simulate('click')
+      expect(mockModifyOneCI).toHaveBeenCalled()
     })
   })
 })
