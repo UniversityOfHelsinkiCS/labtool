@@ -16,7 +16,10 @@ const notificationReducer = (state = {}, action) => {
     //    error: false
     //  }
     case 'NOTIFICATION_CLEAR':
-      return {}
+      return {
+        lastMessage: state.message,
+        error: state.error
+      }
     //case 'LOGIN_FAILURE':
     //  return {
     //    message: 'Wrong username or password',

@@ -1,0 +1,13 @@
+.notification-wrapper {
+  position: fixed !important;
+  top: 32px;
+  right: 0;
+  left: 0;
+  text-align: center;
+}
+.notification {
+  display: inline-block !important;
+}
+.notification:hover {
+  opacity: 0.7;
+}

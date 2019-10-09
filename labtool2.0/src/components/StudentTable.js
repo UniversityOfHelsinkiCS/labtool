@@ -125,7 +125,9 @@ export const StudentTable = props => {
   const changeFilterTag = (e, data) => {
     const { value } = data
     const tag = props.tags.tags.find(tag => tag.id === value)
-    props.filterByTag(tag)
+    if (tag) {
+      props.filterByTag(tag)
+    }
   }
 
   const addFilterTag = tag => {
@@ -233,7 +235,7 @@ export const StudentTable = props => {
     return indents
   }
 
-  const createStudentTableRow = (showColumn, data, rowClassName, dropDownTags, dropDownTeachers) => (
+  const createStudentTableRow = (showColumn, data, rowClassName, dropDownTags, dropDownTeachers, extraColumns) => (
     <Table.Row key={data.id} className={rowClassName}>
       {/* Select Check Box */}
       {showColumn('select') && (
@@ -302,7 +304,7 @@ export const StudentTable = props => {
       )}
 
       {/* Instructor */}
-      {!shouldHideInstructor(props.studentInstances) && (
+      {showColumn('instructor') && !shouldHideInstructor(props.studentInstances) && (
         <Table.Cell key="instructor">
           {data.teacherInstanceId && props.selectedInstance.teacherInstances ? (
             props.selectedInstance.teacherInstances
@@ -336,9 +338,9 @@ export const StudentTable = props => {
         </Table.Cell>
       )}
 
+      {/* Review */}
       {showColumn('review') && (
         <Fragment>
-          {/* Review */}
           <Table.Cell key="reviewbutton" textAlign="right">
             <Link to={`/labtool/browsereviews/${props.selectedInstance.ohid}/${data.id}`}>
               <Popup trigger={<Button circular size="tiny" icon={{ name: 'star', size: 'large', color: 'orange' }} />} content="Review student" />
@@ -346,12 +348,16 @@ export const StudentTable = props => {
           </Table.Cell>
         </Fragment>
       )}
+
+      {extraColumns.map(([, cell]) => cell(data))}
     </Table.Row>
   )
 
-  const { columns, rowClassName, disableDefaultFilter } = props
+  const { columns, rowClassName, disableDefaultFilter, studentColumnName, showFooter } = props
 
   const showColumn = column => columns.indexOf(column) >= 0
+  const nullFunc = () => nullFunc
+  const extraColumns = columns.filter(column => Array.isArray(column) && column.length === 3).map(([header, cell, footer]) => [header || nullFunc, cell || nullFunc, footer || nullFunc])
 
   let dropDownTeachers = []
   dropDownTeachers = createDropdownTeachers(props.selectedInstance.teacherInstances, dropDownTeachers)
@@ -366,21 +372,32 @@ export const StudentTable = props => {
 
   let dropDownTags = []
   dropDownTags = createDropdownTags(props.tags.tags, dropDownTags)
+  let dropDownFilterTags = [
+    {
+      key: '-',
+      text: 'Select a tag',
+      value: ''
+    }
+  ]
+  dropDownFilterTags = createDropdownTags(props.tags.tags, dropDownFilterTags)
 
-  const filteredData = (props.studentInstances || [])
+  const dataFilter = data =>
+    disableDefaultFilter ||
     // remove students when filtering assistants and it doesn't match
-    .filter(
-      data =>
-        disableDefaultFilter ||
-        props.coursePageLogic.filterByAssistant === 0 ||
-        props.coursePageLogic.filterByAssistant === data.teacherInstanceId ||
-        (props.coursePageLogic.filterByAssistant === '-' && data.teacherInstanceId === null) // unassign = -
-    )
-    // remove students when filtering tags and they don't match
-    .filter(data => disableDefaultFilter || props.coursePageLogic.filterByTag.length === 0 || hasFilteringTags(data.Tags, props.coursePageLogic.filterByTag))
+    ((props.coursePageLogic.filterByAssistant === 0 ||
+      props.coursePageLogic.filterByAssistant === data.teacherInstanceId ||
+      (props.coursePageLogic.filterByAssistant === '-' && data.teacherInstanceId === null)) && // unassign = -
+      // remove students when filtering tags and they don't match
+      (props.coursePageLogic.filterByTag.length === 0 || hasFilteringTags(data.Tags, props.coursePageLogic.filterByTag)))
+
+  const filteredData = (props.studentInstances || []).filter(dataFilter)
+
+  if (props.onFilter) {
+    props.onFilter(filteredData.map(data => data.id))
+  }
 
   // all students currently visible selected?
-  const allSelected = filteredData.map(data => data.id).every(id => props.coursePageLogic.selectedStudents[id])
+  const allSelected = filteredData.length && filteredData.map(data => data.id).every(id => props.coursePageLogic.selectedStudents[id])
 
   // calculate the length of the longest text in a drop down
   const getBiggestWidthInDropdown = dropdownList => {
@@ -394,18 +411,23 @@ export const StudentTable = props => {
   return (
     <Fragment>
       <div style={{ textAlign: 'left' }}>
-        <span>Filter by instructor: </span>
-        <Dropdown
-          scrolling
-          options={dropDownFilterTeachers}
-          onChange={changeFilterAssistant()}
-          placeholder="Select Teacher"
-          defaultValue={props.coursePageLogic.filterByAssistant}
-          selection
-          style={{ width: `${getBiggestWidthInDropdown(dropDownFilterTeachers)}em` }}
-        />
+        {(props.extraButtons || []).map(f => f())}
+        {showColumn('instructor') && (
+          <span>
+            <span>Filter by instructor: </span>
+            <Dropdown
+              scrolling
+              options={dropDownFilterTeachers}
+              onChange={changeFilterAssistant()}
+              placeholder="Select Teacher"
+              defaultValue={props.coursePageLogic.filterByAssistant}
+              selection
+              style={{ width: `${getBiggestWidthInDropdown(dropDownFilterTeachers)}em` }}
+            />
+          </span>
+        )}
         <span> Add filtering tag: </span>
-        <Dropdown scrolling options={dropDownTags} onChange={changeFilterTag} placeholder="Select Tag" value="" selection style={{ width: `${getBiggestWidthInDropdown(dropDownTags)}em` }} />
+        <Dropdown scrolling options={dropDownFilterTags} onChange={changeFilterTag} placeholder="Select a tag" value="" selection style={{ width: `${getBiggestWidthInDropdown(dropDownTags)}em` }} />
         <span> Tag filters: </span>
         {props.coursePageLogic.filterByTag.length === 0 ? (
           <span>
@@ -430,10 +452,10 @@ export const StudentTable = props => {
             <Table.Row>
               {showColumn('select') && (
                 <Table.HeaderCell key={-2}>
-                  <Checkbox id="selectAll" checked={allSelected} onChange={handleSelectAll(filteredData)} />
+                  <Checkbox id="selectAll" disabled={filteredData.length < 1} checked={allSelected} onChange={handleSelectAll(filteredData)} />
                 </Table.HeaderCell>
               )}
-              <Table.HeaderCell key={-1}>Student</Table.HeaderCell>
+              <Table.HeaderCell key={-1}>{studentColumnName || 'Student'}</Table.HeaderCell>
               <Table.HeaderCell>Project Info</Table.HeaderCell>
               {showColumn('points') && (
                 <Fragment>
@@ -441,11 +463,29 @@ export const StudentTable = props => {
                   <Table.HeaderCell>Sum</Table.HeaderCell>
                 </Fragment>
               )}
-              {!shouldHideInstructor(props.studentInstances) && <Table.HeaderCell width="six">Instructor</Table.HeaderCell>}
+              {showColumn('instructor') && !shouldHideInstructor(props.studentInstances) && <Table.HeaderCell width="six">Instructor</Table.HeaderCell>}
               {showColumn('review') && <Table.HeaderCell>Review</Table.HeaderCell>}
+              {extraColumns.map(([header, ,]) => header())}
             </Table.Row>
           </Table.Header>
-          <Table.Body>{filteredData.map(data => createStudentTableRow(showColumn, data, rowClassName, dropDownTags, dropDownTeachers))}</Table.Body>
+          <Table.Body>{filteredData.map(data => createStudentTableRow(showColumn, data, rowClassName, dropDownTags, dropDownTeachers, extraColumns))}</Table.Body>
+          {showFooter && (
+            <Table.Footer>
+              <Table.Row>
+                {showColumn('select') && (
+                  <Table.HeaderCell key={-2}>
+                    <Checkbox id="selectAllBottom" disabled={!filteredData.length} checked={allSelected} onChange={handleSelectAll(filteredData)} />
+                  </Table.HeaderCell>
+                )}
+                <Table.HeaderCell />
+                <Table.HeaderCell />
+                {showColumn('points') && <Table.HeaderCell />}
+                {showColumn('instructor') && !shouldHideInstructor(props.studentInstances) && <Table.HeaderCell />}
+                {showColumn('review') && <Table.HeaderCell />}
+                {extraColumns.map(([, , footer]) => footer())}
+              </Table.Row>
+            </Table.Footer>
+          )}
         </Table>
       </HorizontalScrollable>
     </Fragment>
@@ -474,6 +514,10 @@ StudentTable.propTypes = {
   columns: PropTypes.array,
   allowModify: PropTypes.bool,
   disableDefaultFilter: PropTypes.bool,
+  showFooter: PropTypes.bool,
+  studentColumnName: PropTypes.string,
+  extraButtons: PropTypes.array,
+  onFilter: PropTypes.func,
 
   studentInstances: PropTypes.array.isRequired,
   selectedInstance: PropTypes.object.isRequired,

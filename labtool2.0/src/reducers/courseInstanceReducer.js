@@ -32,8 +32,8 @@ const courseInstancereducer = (store = INITIAL_STATE, action) => {
         return { ...m, europeanStart: createEuropeanDate(m.start), europeanEnd: createEuropeanDate(m.end), shorterId: createShorterCourseid(m.ohid) }
       })
     }
-    case 'CI_MODIFY_ONE_SUCCESS':
-      return action.response
+    // case 'CI_MODIFY_ONE_SUCCESS':
+    //   return action.response
     default:
       return store
   }

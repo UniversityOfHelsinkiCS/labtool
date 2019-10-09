@@ -26,6 +26,7 @@ exports[`<MassEmailPage /> MassEmailPage Component should render correctly 1`] =
         columns={
           Array [
             "select",
+            "instructor",
           ]
         }
         courseData={

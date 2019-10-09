@@ -2,7 +2,9 @@ import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { clearNotifications } from '../../reducers/notificationReducer'
-import { Message } from 'semantic-ui-react'
+import { Message, Transition } from 'semantic-ui-react'
+
+import './Notification.css'
 
 let timeout
 
@@ -16,28 +18,32 @@ export const Notification = props => {
       clearTimeout(timeout)
       timeout = setTimeout(() => {
         props.clearNotifications()
-      }, 5000)
+      }, 5000 + Math.max(0, 10 * message.length - 40))
     }
   }, [props.notification.message])
 
-  const message = props.notification.message
-  const error = props.notification.error
-
-  if (message === undefined) {
-    return <div />
-  } else if (error) {
-    return (
-      <Message className="error" color="red" size="large">
-        {message}
-      </Message>
-    )
-  } else {
-    return (
-      <Message className="success" color="green" size="large">
-        {message}
-      </Message>
-    )
+  const closeNotification = () => {
+    clearTimeout(timeout)
+    props.clearNotifications()
   }
+
+  const { message, lastMessage, error } = props.notification
+
+  return (
+    <Transition visible={!!message} animation={!error ? 'scale' : 'fly down'} duration={250}>
+      <div className="notification-wrapper">
+        {!error ? (
+          <Message floating className="notification success" color="green" size="large" onClick={closeNotification}>
+            {message || lastMessage}
+          </Message>
+        ) : (
+          <Message floating className="notification error" color="red" size="large" onClick={closeNotification}>
+            {message || lastMessage}
+          </Message>
+        )}
+      </div>
+    </Transition>
+  )
 }
 
 const mapStateToProps = state => {
@@ -47,7 +53,8 @@ const mapStateToProps = state => {
 }
 
 Notification.propTypes = {
-  notification: PropTypes.object.isRequired
+  notification: PropTypes.object.isRequired,
+  clearNotifications: PropTypes.func.isRequired
 }
 
 export default connect(
