@@ -13,11 +13,9 @@ const INITIAL_STATE = {
   showTagDropdown: '',
   selectedTeacher: '',
   selectedTag: '',
-  filterByAssistant: 0,
   activeIndex: 0,
   lastReviewedWeek: 1,
   lastReviewedIsShownAlready: false,
-  filterByTag: [],
   showCodeReviews: [],
   selectedStudents: {}
 }
@@ -58,16 +56,6 @@ const coursePageLogicReducer = (state = INITIAL_STATE, action) => {
       })
       return { ...state, selectedStudents: newSelectedStudents }
     }
-    case 'COURSE_PAGE_FILTER_BY_ASSISTANT':
-      return { ...state, filterByAssistant: action.assistant }
-    case 'COURSE_PAGE_FILTER_BY_TAG':
-      if (action.tag === 0) {
-        return { ...state, filterByTag: [] }
-      } else if (state.filterByTag.map(tag => tag.id).includes(action.tag.id)) {
-        return { ...state, filterByTag: state.filterByTag.filter(tag => tag.id !== action.tag.id) }
-      } else {
-        return { ...state, filterByTag: [...state.filterByTag, action.tag] }
-      }
     case 'ASSOCIATE_TEACHER_AND_STUDENT_SUCCESS':
       return INITIAL_STATE
     case 'COURSE_PAGE_RESET':
@@ -212,24 +200,6 @@ export const restoreStudentSelection = selection => {
     dispatch({
       type: 'COURSE_PAGE_SET_SELECTED_STUDENTS',
       selection
-    })
-  }
-}
-
-export const filterByAssistant = assistant => {
-  return async dispatch => {
-    dispatch({
-      type: 'COURSE_PAGE_FILTER_BY_ASSISTANT',
-      assistant
-    })
-  }
-}
-
-export const filterByTag = tag => {
-  return async dispatch => {
-    dispatch({
-      type: 'COURSE_PAGE_FILTER_BY_TAG',
-      tag
     })
   }
 }
