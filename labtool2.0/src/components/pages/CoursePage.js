@@ -466,8 +466,9 @@ export const CoursePage = props => {
         <StudentTable
           key={rowClassName}
           rowClassName={rowClassName + (droppedOut ? ' active' : '')}
-          columns={['select', 'points', 'instructor', 'review']}
+          columns={['select', 'points', 'instructor']}
           allowModify={true}
+          allowReview={true}
           selectedInstance={props.selectedInstance}
           studentInstances={props.courseData.data.filter(studentInstance => droppedOut === studentInstance.dropped)}
           coursePageLogic={props.coursePageLogic}

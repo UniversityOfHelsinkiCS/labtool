@@ -4,9 +4,11 @@
   right: 0;
   left: 0;
   text-align: center;
+  pointer-events: none;
 }
 .notification {
   display: inline-block !important;
+  pointer-events: all;
 }
 .notification:hover {
   opacity: 0.7;

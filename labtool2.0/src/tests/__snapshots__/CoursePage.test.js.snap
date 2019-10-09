@@ -600,12 +600,12 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
     </Header>
     <Connect(StudentTable)
       allowModify={true}
+      allowReview={true}
       columns={
         Array [
           "select",
           "points",
           "instructor",
-          "review",
         ]
       }
       coursePageLogic={
@@ -874,12 +874,12 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
     </Header>
     <Connect(StudentTable)
       allowModify={true}
+      allowReview={true}
       columns={
         Array [
           "select",
           "points",
           "instructor",
-          "review",
         ]
       }
       coursePageLogic={
