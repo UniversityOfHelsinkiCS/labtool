@@ -20,6 +20,10 @@ export const FormMarkdownTextArea = props => {
     state.textValue = data.value
   }
 
+  const handlePreviewChange = (e, data) => {
+    state.textValue = props.value
+  }
+
   const { previewOpen, textValue } = state
 
   return (
@@ -35,7 +39,13 @@ export const FormMarkdownTextArea = props => {
       </p>
       <Form.TextArea onInput={handleChange} {...props} />
       <Accordion key fluid styled style={{ textAlign: 'start' }}>
-        <Accordion.Title active={previewOpen} onClick={handleClick}>
+        <Accordion.Title
+          active={previewOpen}
+          onClick={() => {
+            handleClick()
+            handlePreviewChange()
+          }}
+        >
           <Icon name="dropdown" />
           Preview Markdown
         </Accordion.Title>
