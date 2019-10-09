@@ -6,23 +6,18 @@ import { connect } from 'react-redux'
 import HorizontalScrollable from './HorizontalScrollable'
 import { getAllTags, tagStudent, unTagStudent } from '../services/tags'
 import { associateTeacherToStudent } from '../services/assistant'
-import {
-  showAssistantDropdown,
-  showTagDropdown,
-  filterByTag,
-  filterByAssistant,
-  selectTeacher,
-  selectTag,
-  selectStudent,
-  unselectStudent,
-  selectAllStudents,
-  unselectAllStudents
-} from '../reducers/coursePageLogicReducer'
+import { showAssistantDropdown, showTagDropdown, selectTeacher, selectTag, selectStudent, unselectStudent, selectAllStudents, unselectAllStudents } from '../reducers/coursePageLogicReducer'
 import { createDropdownTeachers, createDropdownTags } from '../util/dropdown'
+import useLegacyState from '../hooks/legacyState'
 
 const { Fragment } = React
 
 export const StudentTable = props => {
+  const state = useLegacyState({
+    filterByAssistant: 0,
+    filterByTag: []
+  })
+
   const updateTeacher = id => async e => {
     try {
       e.preventDefault()
@@ -51,7 +46,8 @@ export const StudentTable = props => {
     }
   }
 
-  const handleSelectAll = filteredData => (e, data) => {
+  const handleSelectAll = (e, data) => {
+    console.log(rowClassName, filteredData)
     const { checked } = data
     // we use filteredData so that we only select or deselect
     // only the filtered entries. sneaky!
@@ -118,7 +114,7 @@ export const StudentTable = props => {
   const changeFilterAssistant = () => {
     return (e, data) => {
       const { value } = data
-      props.filterByAssistant(value)
+      filterByAssistant(value)
     }
   }
 
@@ -126,13 +122,27 @@ export const StudentTable = props => {
     const { value } = data
     const tag = props.tags.tags.find(tag => tag.id === value)
     if (tag) {
-      props.filterByTag(tag)
+      filterByTag(tag)
     }
   }
 
   const addFilterTag = tag => {
     return () => {
-      props.filterByTag(tag)
+      filterByTag(tag)
+    }
+  }
+
+  const filterByAssistant = assistant => {
+    state.filterByAssistant = assistant
+  }
+
+  const filterByTag = tag => {
+    if (tag === 0) {
+      state.filterByTag = []
+    } else if (state.filterByTag.map(tag => tag.id).includes(tag.id)) {
+      state.filterByTag = state.filterByTag.filter(t => t.id !== tag.id)
+    } else {
+      state.filterByTag = [...state.filterByTag, tag]
     }
   }
 
@@ -240,7 +250,7 @@ export const StudentTable = props => {
       {/* Select Check Box */}
       {showColumn('select') && (
         <Table.Cell key="select">
-          <Checkbox id={'select' + data.id} checked={props.coursePageLogic.selectedStudents[data.id] || false} onChange={handleSelectCheck(data.id)} />
+          <Checkbox id={'select' + data.id + '-' + rowClassName} checked={props.coursePageLogic.selectedStudents[data.id] || false} onChange={handleSelectCheck(data.id)} />
         </Table.Cell>
       )}
 
@@ -265,14 +275,17 @@ export const StudentTable = props => {
             </div>
           ))}
           {props.allowModify && (
-            <Popup trigger={<Icon id="tag" onClick={changeHiddenTagDropdown(data.id)} name="pencil" color="green" style={{ float: 'right', fontSize: '1.25em' }} />} content="Add or remove tag" />
+            <Popup
+              trigger={<Icon id={'tagModify-' + rowClassName} onClick={changeHiddenTagDropdown(data.id)} name="pencil" color="green" style={{ float: 'right', fontSize: '1.25em' }} />}
+              content="Add or remove tag"
+            />
           )}
         </span>
         {props.allowModify && (
           <div>
             {props.coursePageLogic.showTagDropdown === data.id ? (
               <div>
-                <Dropdown id="tagDropdown" style={{ float: 'left' }} options={dropDownTags} onChange={changeSelectedTag()} placeholder="Choose tag" fluid selection />
+                <Dropdown id={'tagDropdown-' + rowClassName} style={{ float: 'left' }} options={dropDownTags} onChange={changeSelectedTag()} placeholder="Choose tag" fluid selection />
                 <br />
                 <div className="two ui buttons" style={{ float: 'left' }}>
                   <button className="ui icon positive button" onClick={addTag(data.id)} size="mini">
@@ -325,7 +338,7 @@ export const StudentTable = props => {
               />
               {props.coursePageLogic.showAssistantDropdown === data.id ? (
                 <div>
-                  <Dropdown id="assistantDropdown" options={dropDownTeachers} onChange={changeSelectedTeacher()} placeholder="Select teacher" fluid selection />
+                  <Dropdown id={'assistantDropdown-' + rowClassName} options={dropDownTeachers} onChange={changeSelectedTeacher()} placeholder="Select teacher" fluid selection />
                   <Button onClick={updateTeacher(data.id, data.teacherInstanceId)} size="small">
                     Change instructor
                   </Button>
@@ -384,11 +397,9 @@ export const StudentTable = props => {
   const dataFilter = data =>
     disableDefaultFilter ||
     // remove students when filtering assistants and it doesn't match
-    ((props.coursePageLogic.filterByAssistant === 0 ||
-      props.coursePageLogic.filterByAssistant === data.teacherInstanceId ||
-      (props.coursePageLogic.filterByAssistant === '-' && data.teacherInstanceId === null)) && // unassign = -
+    ((state.filterByAssistant === 0 || state.filterByAssistant === data.teacherInstanceId || (state.filterByAssistant === '-' && data.teacherInstanceId === null)) && // unassign = -
       // remove students when filtering tags and they don't match
-      (props.coursePageLogic.filterByTag.length === 0 || hasFilteringTags(data.Tags, props.coursePageLogic.filterByTag)))
+      (state.filterByTag.length === 0 || hasFilteringTags(data.Tags, state.filterByTag)))
 
   const filteredData = (props.studentInstances || []).filter(dataFilter)
 
@@ -420,7 +431,7 @@ export const StudentTable = props => {
               options={dropDownFilterTeachers}
               onChange={changeFilterAssistant()}
               placeholder="Select Teacher"
-              defaultValue={props.coursePageLogic.filterByAssistant}
+              defaultValue={state.filterByAssistant}
               selection
               style={{ width: `${getBiggestWidthInDropdown(dropDownFilterTeachers)}em` }}
             />
@@ -429,13 +440,13 @@ export const StudentTable = props => {
         <span> Add filtering tag: </span>
         <Dropdown scrolling options={dropDownFilterTags} onChange={changeFilterTag} placeholder="Select a tag" value="" selection style={{ width: `${getBiggestWidthInDropdown(dropDownTags)}em` }} />
         <span> Tag filters: </span>
-        {props.coursePageLogic.filterByTag.length === 0 ? (
+        {state.filterByTag.length === 0 ? (
           <span>
             <Label>none</Label>
           </span>
         ) : (
           <span>
-            {props.coursePageLogic.filterByTag.map(tag => (
+            {state.filterByTag.map(tag => (
               <span key={tag.id}>
                 <Button compact className={`mini ui ${tag.color} button`} onClick={addFilterTag(tag)}>
                   {tag.name}
@@ -452,7 +463,7 @@ export const StudentTable = props => {
             <Table.Row>
               {showColumn('select') && (
                 <Table.HeaderCell key={-2}>
-                  <Checkbox id="selectAll" disabled={filteredData.length < 1} checked={allSelected} onChange={handleSelectAll(filteredData)} />
+                  <Checkbox id={'selectAll-' + rowClassName} disabled={filteredData.length < 1} checked={allSelected} onChange={handleSelectAll} />
                 </Table.HeaderCell>
               )}
               <Table.HeaderCell key={-1}>{studentColumnName || 'Student'}</Table.HeaderCell>
@@ -474,7 +485,7 @@ export const StudentTable = props => {
               <Table.Row>
                 {showColumn('select') && (
                   <Table.HeaderCell key={-2}>
-                    <Checkbox id="selectAllBottom" disabled={!filteredData.length} checked={allSelected} onChange={handleSelectAll(filteredData)} />
+                    <Checkbox id={'selectAllBottom-' + rowClassName} disabled={!filteredData.length} checked={allSelected} onChange={handleSelectAll(filteredData)} />
                   </Table.HeaderCell>
                 )}
                 <Table.HeaderCell />
@@ -498,8 +509,6 @@ const mapDispatchToProps = {
   showTagDropdown,
   selectTeacher,
   selectTag,
-  filterByAssistant,
-  filterByTag,
   getAllTags,
   tagStudent,
   unTagStudent,
@@ -529,8 +538,6 @@ StudentTable.propTypes = {
   showTagDropdown: PropTypes.func.isRequired,
   selectTeacher: PropTypes.func.isRequired,
   selectTag: PropTypes.func.isRequired,
-  filterByAssistant: PropTypes.func.isRequired,
-  filterByTag: PropTypes.func.isRequired,
   getAllTags: PropTypes.func.isRequired,
   tagStudent: PropTypes.func.isRequired,
   unTagStudent: PropTypes.func.isRequired,

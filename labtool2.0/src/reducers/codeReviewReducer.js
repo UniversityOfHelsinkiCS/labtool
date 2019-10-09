@@ -106,7 +106,6 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
     case 'CODE_REVIEW_RANDOMIZE': {
       const newCodeReviewStates = { ...state.codeReviewStates }
       const selectedForRandom = action.data.selected
-      console.log(selectedForRandom)
 
       let codeReviews = newCodeReviewStates[action.data.reviewNumber]
       //Do not assign code review to students who have not been selected

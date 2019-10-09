@@ -5,7 +5,6 @@ import { getOneCI, modifyOneCI } from '../../services/courseInstance'
 import { coursePageInformation } from '../../services/courseInstance'
 import { bulkinsertCodeReviews, removeOneCodeReview } from '../../services/codeReview'
 import { filterByReview, initOneReview, randomAssign, codeReviewReset, selectDropdown, toggleCreate, createStates, restoreData } from '../../reducers/codeReviewReducer'
-import { filterByTag } from '../../reducers/coursePageLogicReducer'
 import { clearNotifications, showNotification } from '../../reducers/notificationReducer'
 import { Button, Table, Loader, Dropdown, Popup, Icon, Message } from 'semantic-ui-react'
 import StudentTable from '../StudentTable'
@@ -438,7 +437,6 @@ const mapDispatchToProps = {
   bulkinsertCodeReviews,
   randomAssign,
   codeReviewReset,
-  filterByTag,
   resetLoading,
   selectDropdown,
   toggleCreate,
@@ -470,7 +468,6 @@ ModifyCourseInstanceReview.propTypes = {
   bulkinsertCodeReviews: PropTypes.func.isRequired,
   randomAssign: PropTypes.func.isRequired,
   codeReviewReset: PropTypes.func.isRequired,
-  filterByTag: PropTypes.func.isRequired,
   resetLoading: PropTypes.func.isRequired,
   selectDropdown: PropTypes.func.isRequired,
   toggleCreate: PropTypes.func.isRequired,
