@@ -12,7 +12,7 @@ export const FormMarkdownTextArea = props => {
   const { defaultValue } = props
   const state = useLegacyState({ previewOpen: false, textValue: defaultValue ? defaultValue : '' })
 
-  const handleClick = e => {
+  const handleClick = () => {
     state.previewOpen = !state.previewOpen
   }
 

@@ -182,7 +182,7 @@ describe('<StudentTable />', () => {
   beforeEach(() => {
     wrapper = shallow(
       <StudentTable
-        columns={[]}
+        columns={['instructor']}
         studentInstances={coursePage.data}
         selectedInstance={coursePage}
         coursePageLogic={coursePageLogic}

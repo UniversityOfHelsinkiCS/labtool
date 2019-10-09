@@ -22,6 +22,8 @@ export const HorizontalScrollable = props => {
   const onResize = () => {
     resizeBar()
     updateSticky()
+
+    setTimeout(() => resizeBar(), 100)
   }
 
   useEffect(() => {
@@ -80,7 +82,8 @@ export const HorizontalScrollable = props => {
 
     if (doNotUpdate !== 'content' && content) {
       antibounce.content = true
-      content.style.marginLeft = `-${newX}px`
+      content.style.position = 'relative'
+      content.style.left = `-${newX}px`
     }
     if (doNotUpdate !== 'scrollbar' && scrollbar) {
       antibounce.scrollbar = true
