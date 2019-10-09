@@ -70,6 +70,12 @@ exports[`<ModifyCourseInstanceStaff /> Components renders correctly 1`] = `
             Pää
              
             Opettaja
+            <br />
+            <a
+              href="mailto:paa.opettaja@helsinki.fi"
+            >
+              paa.opettaja@helsinki.fi
+            </a>
           </TableCell>
           <TableCell
             as="td"
@@ -95,6 +101,12 @@ exports[`<ModifyCourseInstanceStaff /> Components renders correctly 1`] = `
             Aimo
              
             Assistentti
+            <br />
+            <a
+              href="mailto:aimo.assistentti@helsinki.fi"
+            >
+              aimo.assistentti@helsinki.fi
+            </a>
           </TableCell>
           <TableCell
             as="td"
@@ -128,6 +140,12 @@ exports[`<ModifyCourseInstanceStaff /> Components renders correctly 1`] = `
             Sivu
              
             Opiskelija
+            <br />
+            <a
+              href="mailto:paa.opettaja@helsinki.fi"
+            >
+              paa.opettaja@helsinki.fi
+            </a>
           </TableCell>
           <TableCell
             as="td"
