@@ -20,7 +20,7 @@ export const FormMarkdownTextArea = props => {
     state.textValue = data.value
   }
 
-  const handlePreviewChange = (e, data) => {
+  const handlePreviewChange = () => {
     state.textValue = props.value
   }
 
