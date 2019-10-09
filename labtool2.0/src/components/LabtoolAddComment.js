@@ -30,11 +30,10 @@ export const LabtoolAddComment = ({ weekId, handleSubmit, allowHidden }) => {
       <Accordion.Content active={state.commentOpen}>
         <Form reply onSubmit={doSubmit} name={weekId} id={weekId}>
           <FormMarkdownTextArea name="content" placeholder="Your comment..." value={state.comment} onChange={(e, { value }) => (state.comment = value)} />
+          <br></br>
           {allowHidden && (
-            <div>
-              <br />
+            <div style={{ display: 'inline-block', marginRight: '10px' }}>
               <Form.Checkbox label="Add comment for instructors only" name="hidden" />
-              <br />
             </div>
           )}
           <Button content="Add Reply" labelPosition="left" icon="edit" primary />

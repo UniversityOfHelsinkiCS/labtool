@@ -24,7 +24,6 @@ export const FormMarkdownTextArea = props => {
 
   return (
     <div>
-      <Form.TextArea onInput={handleChange} {...props} />
       <p>
         <i>
           This field supports{' '}
@@ -34,6 +33,7 @@ export const FormMarkdownTextArea = props => {
           .
         </i>
       </p>
+      <Form.TextArea onInput={handleChange} {...props} />
       <Accordion key fluid styled style={{ textAlign: 'start' }}>
         <Accordion.Title active={previewOpen} onClick={handleClick}>
           <Icon name="dropdown" />
