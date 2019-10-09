@@ -112,6 +112,7 @@ exports[`<BrowseReviews /> BrowseReviews Component should render correctly 1`] =
     </span>
     <Accordion
       fluid={true}
+      id="review0"
       key="2"
       styled={true}
     >
@@ -224,6 +225,7 @@ exports[`<BrowseReviews /> BrowseReviews Component should render correctly 1`] =
     </Accordion>
     <Accordion
       fluid={true}
+      id="review1"
       key="3"
       styled={true}
     >
@@ -355,6 +357,7 @@ exports[`<BrowseReviews /> BrowseReviews Component should render correctly 1`] =
     </Accordion>
     <Accordion
       fluid={true}
+      id="review2"
       key="4"
       styled={true}
     >
@@ -467,6 +470,7 @@ exports[`<BrowseReviews /> BrowseReviews Component should render correctly 1`] =
     </Accordion>
     <Accordion
       fluid={true}
+      id="review3"
       key="5"
       styled={true}
     >
@@ -579,6 +583,7 @@ exports[`<BrowseReviews /> BrowseReviews Component should render correctly 1`] =
     </Accordion>
     <Accordion
       fluid={true}
+      id="review4"
       key="6"
       styled={true}
     >
@@ -641,6 +646,7 @@ exports[`<BrowseReviews /> BrowseReviews Component should render correctly 1`] =
     </Accordion>
     <Accordion
       fluid={true}
+      id="review5"
       key="7"
       styled={true}
     >
@@ -703,6 +709,7 @@ exports[`<BrowseReviews /> BrowseReviews Component should render correctly 1`] =
     </Accordion>
     <Accordion
       fluid={true}
+      id="review6"
       key="8"
       styled={true}
     >

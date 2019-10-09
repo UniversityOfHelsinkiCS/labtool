@@ -212,7 +212,14 @@ export const StudentTable = props => {
     for (; i < props.selectedInstance.weekAmount; i++) {
       indents.push(
         <Table.Cell key={'week' + i} textAlign="center">
-          <Link to={`/labtool/reviewstudent/${props.selectedInstance.ohid}/${siId}/${i + 1}`}>
+          <Link
+            key={'week' + i + 'link'}
+            to={
+              weekPoints[i + 1] === undefined
+                ? `/labtool/reviewstudent/${props.selectedInstance.ohid}/${siId}/${i + 1}`
+                : { pathname: `/labtool/browsereviews/${props.selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: i } }
+            }
+          >
             <div style={{ width: '100%', height: '100%' }}>
               <br />
               <p style={{ margin: 0 }}>{weekPoints[i + 1] !== undefined ? weekPoints[i + 1] : '-'}</p>
@@ -229,16 +236,26 @@ export const StudentTable = props => {
       for (let index = 1; index <= amountOfCodeReviews; index++) {
         indents.push(
           <Table.Cell key={siId + index} textAlign="center">
-            {cr[index] || cr[index] === 0 ? <p className="codeReviewPoints">{cr[index]}</p> : <p>-</p>}
+            <Link key={'codeReview' + i + ii + 'link'} to={{ pathname: `/labtool/browsereviews/${props.selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: i + ii } }}>
+              <div style={{ width: '100%', height: '100%' }}>{cr[index] || cr[index] === 0 ? <p className="codeReviewPoints">{cr[index]}</p> : <p>-</p>}</div>
+            </Link>
           </Table.Cell>
         )
+        ++ii
       }
     }
 
     if (props.selectedInstance.finalReview) {
       let finalReviewPointsCell = (
         <Table.Cell key={i + ii + 1} textAlign="center">
-          <Link to={`/labtool/reviewstudent/${props.selectedInstance.ohid}/${siId}/${i + ii + 1}`}>
+          <Link
+            key={'finalReviewlink'}
+            to={
+              finalPoints === undefined
+                ? `/labtool/reviewstudent/${props.selectedInstance.ohid}/${siId}/${i + 1}`
+                : { pathname: `/labtool/browsereviews/${props.selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: i + ii } }
+            }
+          >
             <div style={{ width: '100%', height: '100%' }}>
               <br />
               <p style={{ margin: 0 }}>{finalPoints === undefined ? '-' : finalPoints}</p>
