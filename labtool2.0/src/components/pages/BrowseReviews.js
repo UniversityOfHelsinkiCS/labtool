@@ -28,6 +28,7 @@ export const BrowseReviews = props => {
     openWeeks: {},
     initialLoading: props.initialLoading !== undefined ? props.initialLoading : true
   })
+  let jumpTimer = null
 
   useEffect(() => {
     // run on component mount
@@ -38,13 +39,20 @@ export const BrowseReviews = props => {
     if (!props.loading.loading && !state.openWeeks[props.selectedInstance.currentWeek - 1]) {
       state.openWeeks = { [props.selectedInstance.currentWeek - 1]: true }
     }
-    if (props.location.state.jumpToReview) {
+
+    if (props.location.state && props.location.state.jumpToReview !== undefined) {
+      // jumpToReview from <Link state={...}>: scrolls to review
       const tryJumpLoop = () => {
         if (!tryJumpToReview()) {
-          setTimeout(tryJumpLoop, 200)
+          // not loaded yet? try again later
+          jumpTimer = setTimeout(tryJumpLoop, 200)
         }
       }
-      setTimeout(tryJumpLoop, 200)
+      jumpTimer = setTimeout(tryJumpLoop, 200)
+    }
+
+    return () => {
+      clearTimeout(jumpTimer)
     }
   }, [])
 
@@ -61,7 +69,9 @@ export const BrowseReviews = props => {
   }, [props.courseData.data])
 
   const tryJumpToReview = () => {
+    // Try scroll to review
     const element = document.getElementById(`review${props.location.state.jumpToReview}`)
+    console.log(props.location.state.jumpToReview)
 
     if (element) {
       window.scrollTo(0, element.offsetTop)
@@ -310,7 +320,7 @@ export const BrowseReviews = props => {
     const { openWeeks } = state
 
     return (
-      <Accordion fluid styled id={`review${i}`}>
+      <Accordion fluid styled id={`review${i - 1}`}>
         {' '}
         <Accordion.Title active={openWeeks[i]} index={i} onClick={handleClick}>
           <Icon name="dropdown" /> Code Review {cr.reviewNumber} {cr.points !== null ? ', points ' + cr.points : ''}

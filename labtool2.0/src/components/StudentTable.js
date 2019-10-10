@@ -202,6 +202,10 @@ export const StudentTable = props => {
     let i = 0
     let weekPoints = {}
     let finalPoints = undefined
+
+    const tableCellLinkStyle = { position: 'absolute', display: 'inline-block', top: 0, left: 0, right: 0, bottom: 0 }
+    const flexCenter = { display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }
+
     for (var j = 0; j < weeks.length; j++) {
       if (weeks[j].weekNumber === props.selectedInstance.weekAmount + 1) {
         finalPoints = weeks[j].points
@@ -210,9 +214,14 @@ export const StudentTable = props => {
       }
     }
     for (; i < props.selectedInstance.weekAmount; i++) {
+      // we have <br /> to make this easier to click, but it'd be better
+      // if we could Link an entire Table.Cell, this however breaks formatting
+      // completely.
+
       indents.push(
-        <Table.Cell key={'week' + i} textAlign="center">
+        <Table.Cell selectable key={'week' + i} textAlign="center" style={{ position: 'relative' }}>
           <Link
+            style={tableCellLinkStyle}
             key={'week' + i + 'link'}
             to={
               weekPoints[i + 1] === undefined
@@ -220,11 +229,7 @@ export const StudentTable = props => {
                 : { pathname: `/labtool/browsereviews/${props.selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: i } }
             }
           >
-            <div style={{ width: '100%', height: '100%' }}>
-              <br />
-              <p style={{ margin: 0 }}>{weekPoints[i + 1] !== undefined ? weekPoints[i + 1] : '-'}</p>
-              <br />
-            </div>
+            <p style={flexCenter}>{weekPoints[i + 1] !== undefined ? weekPoints[i + 1] : '-'}</p>
           </Link>
         </Table.Cell>
       )
@@ -235,9 +240,14 @@ export const StudentTable = props => {
     if (amountOfCodeReviews) {
       for (let index = 1; index <= amountOfCodeReviews; index++) {
         indents.push(
-          <Table.Cell key={siId + index} textAlign="center">
-            <Link key={'codeReview' + i + ii + 'link'} to={{ pathname: `/labtool/browsereviews/${props.selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: i + ii } }}>
-              <div style={{ width: '100%', height: '100%' }}>{cr[index] || cr[index] === 0 ? <p className="codeReviewPoints">{cr[index]}</p> : <p>-</p>}</div>
+          <Table.Cell selectable key={siId + index} textAlign="center" style={{ position: 'relative' }}>
+            <Link
+              className="codeReviewPoints"
+              style={tableCellLinkStyle}
+              key={'codeReview' + i + ii + 'link'}
+              to={{ pathname: `/labtool/browsereviews/${props.selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: i + ii } }}
+            >
+              <p style={flexCenter}>{cr[index] || cr[index] === 0 ? cr[index] : '-'}</p>
             </Link>
           </Table.Cell>
         )
@@ -247,8 +257,9 @@ export const StudentTable = props => {
 
     if (props.selectedInstance.finalReview) {
       let finalReviewPointsCell = (
-        <Table.Cell key={i + ii + 1} textAlign="center">
+        <Table.Cell selectable key={i + ii + 1} textAlign="center" style={{ position: 'relative' }}>
           <Link
+            style={tableCellLinkStyle}
             key={'finalReviewlink'}
             to={
               finalPoints === undefined
@@ -257,9 +268,7 @@ export const StudentTable = props => {
             }
           >
             <div style={{ width: '100%', height: '100%' }}>
-              <br />
-              <p style={{ margin: 0 }}>{finalPoints === undefined ? '-' : finalPoints}</p>
-              <br />
+              <p style={flexCenter}>{finalPoints === undefined ? '-' : finalPoints}</p>
             </div>
           </Link>
         </Table.Cell>
