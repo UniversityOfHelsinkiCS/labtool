@@ -47,7 +47,10 @@ export const StudentTable = props => {
   }
 
   const handleSelectAll = (e, data) => {
-    console.log(rowClassName, filteredData)
+    if (!data) {
+      return
+    }
+
     const { checked } = data
     // we use filteredData so that we only select or deselect
     // only the filtered entries. sneaky!
@@ -164,13 +167,7 @@ export const StudentTable = props => {
     const headers = []
     let i = 0
     for (; i < props.selectedInstance.weekAmount; i++) {
-      headers.push(
-        <Table.HeaderCell key={i}>
-          Week
-          <br />
-          {i + 1}{' '}
-        </Table.HeaderCell>
-      )
+      headers.push(<Table.HeaderCell key={i}>Wk {i + 1}</Table.HeaderCell>)
     }
     for (var ii = 1; ii <= props.selectedInstance.amountOfCodeReviews; ii++) {
       headers.push(
@@ -203,40 +200,77 @@ export const StudentTable = props => {
       }, {})
     const indents = []
     let i = 0
+    let weekPoints = {}
     let finalPoints = undefined
+
+    const tableCellLinkStyle = { position: 'absolute', display: 'inline-block', top: 0, left: 0, right: 0, bottom: 0 }
+    const flexCenter = { display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }
+
+    for (var j = 0; j < weeks.length; j++) {
+      if (weeks[j].weekNumber === props.selectedInstance.weekAmount + 1) {
+        finalPoints = weeks[j].points
+      } else if (weeks[j].weekNumber) {
+        weekPoints[weeks[j].weekNumber] = weeks[j].points
+      }
+    }
     for (; i < props.selectedInstance.weekAmount; i++) {
-      let pushattava = (
-        <Table.Cell key={'week' + i}>
-          <p>-</p>
+      // we have <br /> to make this easier to click, but it'd be better
+      // if we could Link an entire Table.Cell, this however breaks formatting
+      // completely.
+
+      indents.push(
+        <Table.Cell selectable key={'week' + i} textAlign="center" style={{ position: 'relative' }}>
+          <Link
+            style={tableCellLinkStyle}
+            key={'week' + i + 'link'}
+            to={
+              weekPoints[i + 1] === undefined
+                ? `/labtool/reviewstudent/${props.selectedInstance.ohid}/${siId}/${i + 1}`
+                : { pathname: `/labtool/browsereviews/${props.selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: i } }
+            }
+          >
+            <p style={flexCenter}>{weekPoints[i + 1] !== undefined ? weekPoints[i + 1] : '-'}</p>
+          </Link>
         </Table.Cell>
       )
-
-      for (var j = 0; j < weeks.length; j++) {
-        if (i + 1 === weeks[j].weekNumber) {
-          pushattava = (
-            <Table.Cell key={i + ':' + j}>
-              <p>{weeks[j].points}</p>
-            </Table.Cell>
-          )
-        } else if (weeks[j].weekNumber === props.selectedInstance.weekAmount + 1) {
-          finalPoints = weeks[j].points
-        }
-      }
-      indents.push(pushattava)
     }
 
     let ii = 0
     const { amountOfCodeReviews } = props.selectedInstance
     if (amountOfCodeReviews) {
       for (let index = 1; index <= amountOfCodeReviews; index++) {
-        indents.push(<Table.Cell key={siId + index}>{cr[index] || cr[index] === 0 ? <p className="codeReviewPoints">{cr[index]}</p> : <p>-</p>}</Table.Cell>)
+        indents.push(
+          <Table.Cell selectable key={siId + index} textAlign="center" style={{ position: 'relative' }}>
+            <Link
+              className="codeReviewPoints"
+              style={tableCellLinkStyle}
+              key={'codeReview' + i + ii + 'link'}
+              to={{ pathname: `/labtool/browsereviews/${props.selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: i + ii } }}
+            >
+              <p style={flexCenter}>{cr[index] || cr[index] === 0 ? cr[index] : '-'}</p>
+            </Link>
+          </Table.Cell>
+        )
+        ++ii
       }
     }
 
     if (props.selectedInstance.finalReview) {
       let finalReviewPointsCell = (
-        <Table.Cell key={i + ii + 1}>
-          <p>{finalPoints === undefined ? '-' : finalPoints}</p>
+        <Table.Cell selectable key={i + ii + 1} textAlign="center" style={{ position: 'relative' }}>
+          <Link
+            style={tableCellLinkStyle}
+            key={'finalReviewlink'}
+            to={
+              finalPoints === undefined
+                ? `/labtool/reviewstudent/${props.selectedInstance.ohid}/${siId}/${i + 1}`
+                : { pathname: `/labtool/browsereviews/${props.selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: i + ii } }
+            }
+          >
+            <div style={{ width: '100%', height: '100%' }}>
+              <p style={flexCenter}>{finalPoints === undefined ? '-' : finalPoints}</p>
+            </div>
+          </Link>
         </Table.Cell>
       )
       indents.push(finalReviewPointsCell)
@@ -245,7 +279,28 @@ export const StudentTable = props => {
     return indents
   }
 
-  const createStudentTableRow = (showColumn, data, rowClassName, dropDownTags, dropDownTeachers, extraColumns) => (
+  const createRepositoryLink = url => {
+    let cleanUrl = url
+    cleanUrl = cleanUrl.replace(/^https?:\/\//, '')
+
+    if (cleanUrl.startsWith('github.com/')) {
+      const cleanUrlNoGithub = cleanUrl.substring('github.com/'.length)
+      cleanUrl = (
+        <Fragment>
+          <Icon name="github" color="black" />
+          {cleanUrlNoGithub}
+        </Fragment>
+      )
+    }
+
+    return (
+      <a href={url} target="_blank" rel="noopener noreferrer">
+        {cleanUrl}
+      </a>
+    )
+  }
+
+  const createStudentTableRow = (showColumn, data, extraColumns, dropDownTags, dropDownTeachers, { rowClassName, allowReview }) => (
     <Table.Row key={data.id} className={rowClassName}>
       {/* Select Check Box */}
       {showColumn('select') && (
@@ -256,7 +311,24 @@ export const StudentTable = props => {
 
       {/* Student */}
       <Table.Cell key="studentinfo">
-        {data.User.firsts} {data.User.lastname} ({data.User.studentNumber})
+        {allowReview ? (
+          <Link to={`/labtool/browsereviews/${props.selectedInstance.ohid}/${data.id}`}>
+            <Popup
+              trigger={
+                <span>
+                  {data.User.firsts} {data.User.lastname}
+                  <br />({data.User.studentNumber})
+                </span>
+              }
+              content="Review student"
+            />
+          </Link>
+        ) : (
+          <span>
+            {data.User.firsts} {data.User.lastname}
+            <br />({data.User.studentNumber})
+          </span>
+        )}
       </Table.Cell>
 
       {/* Project Info */}
@@ -264,9 +336,7 @@ export const StudentTable = props => {
         <span>
           {data.projectName}
           <br />
-          <a href={data.github} target="_blank" rel="noopener noreferrer">
-            {data.github}
-          </a>
+          {createRepositoryLink(data.github)}
           {data.Tags.map(tag => (
             <div key={data.id + ':' + tag.id}>
               <Button compact floated="left" className={`mini ui ${tag.color} button`} onClick={addFilterTag(tag)}>
@@ -310,7 +380,7 @@ export const StudentTable = props => {
           {createIndents(data.weeks, data.codeReviews, data.id)}
 
           {/* Sum */}
-          <Table.Cell key="pointssum">
+          <Table.Cell key="pointssum" textAlign="center">
             {(data.weeks.map(week => week.points).reduce((a, b) => a + b, 0) + data.codeReviews.map(cr => cr.points).reduce((a, b) => a + b, 0)).toFixed(2).replace(/[.,]00$/, '')}
           </Table.Cell>
         </Fragment>
@@ -351,18 +421,7 @@ export const StudentTable = props => {
         </Table.Cell>
       )}
 
-      {/* Review */}
-      {showColumn('review') && (
-        <Fragment>
-          <Table.Cell key="reviewbutton" textAlign="right">
-            <Link to={`/labtool/browsereviews/${props.selectedInstance.ohid}/${data.id}`}>
-              <Popup trigger={<Button circular size="tiny" icon={{ name: 'star', size: 'large', color: 'orange' }} />} content="Review student" />
-            </Link>
-          </Table.Cell>
-        </Fragment>
-      )}
-
-      {extraColumns.map(([, cell]) => cell(data))}
+      {(extraColumns || []).map(([, cell]) => cell(data))}
     </Table.Row>
   )
 
@@ -475,17 +534,16 @@ export const StudentTable = props => {
                 </Fragment>
               )}
               {showColumn('instructor') && !shouldHideInstructor(props.studentInstances) && <Table.HeaderCell width="six">Instructor</Table.HeaderCell>}
-              {showColumn('review') && <Table.HeaderCell>Review</Table.HeaderCell>}
               {extraColumns.map(([header, ,]) => header())}
             </Table.Row>
           </Table.Header>
-          <Table.Body>{filteredData.map(data => createStudentTableRow(showColumn, data, rowClassName, dropDownTags, dropDownTeachers, extraColumns))}</Table.Body>
+          <Table.Body>{filteredData.map(data => createStudentTableRow(showColumn, data, extraColumns, dropDownTags, dropDownTeachers, props))}</Table.Body>
           {showFooter && (
             <Table.Footer>
               <Table.Row>
                 {showColumn('select') && (
                   <Table.HeaderCell key={-2}>
-                    <Checkbox id={'selectAllBottom-' + rowClassName} disabled={!filteredData.length} checked={allSelected} onChange={handleSelectAll(filteredData)} />
+                    <Checkbox id={'selectAllBottom-' + rowClassName} disabled={!filteredData.length} checked={allSelected} onChange={handleSelectAll} />
                   </Table.HeaderCell>
                 )}
                 <Table.HeaderCell />
@@ -522,6 +580,7 @@ StudentTable.propTypes = {
   rowClassName: PropTypes.string,
   columns: PropTypes.array,
   allowModify: PropTypes.bool,
+  allowReview: PropTypes.bool,
   disableDefaultFilter: PropTypes.bool,
   showFooter: PropTypes.bool,
   studentColumnName: PropTypes.string,

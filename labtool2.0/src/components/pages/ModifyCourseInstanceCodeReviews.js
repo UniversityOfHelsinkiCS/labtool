@@ -169,7 +169,18 @@ export const ModifyCourseInstanceReview = props => {
 
   const showVisibilityReminder = () => {
     if (!props.selectedInstance.currentCodeReview || !props.codeReviewLogic.selectedDropdown) {
-      return null
+      if (Object.keys(props.dropdownCodeReviews).length == 0) {
+        return (
+          <Message className="visibilityReminder" info>
+            <span>Please create a code review by clicking the + button.</span>
+          </Message>
+        )
+      }
+      return (
+        <Message className="visibilityReminder" info>
+          <span>Please select a code review.</span>
+        </Message>
+      )
     }
     if (props.selectedInstance.currentCodeReview.find(cr => cr === props.codeReviewLogic.selectedDropdown)) {
       return null
@@ -238,6 +249,7 @@ export const ModifyCourseInstanceReview = props => {
           defaultValue={props.codeReviewLogic.selectedDropdown}
           noResultsMessage={'Try another search.'}
           placeholder={Object.keys(props.dropdownCodeReviews).length > 0 ? 'SELECT A CODE REVIEW HERE!' : 'No code reviews'}
+          disabled={Object.keys(props.dropdownCodeReviews).length == 0}
           fluid
           options={props.dropdownCodeReviews}
         />
@@ -354,6 +366,8 @@ export const ModifyCourseInstanceReview = props => {
         </div>
 
         {showVisibilityReminder()}
+        <br />
+
         <StudentTable
           rowClassName="CodeReviewStudentRow"
           extraButtons={[makeFilterButton]}

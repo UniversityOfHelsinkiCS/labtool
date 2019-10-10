@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
+import { withRouter } from 'react-router'
 import { Button, Card, Accordion, Icon, Form, Comment, Input, Popup, Loader, Label, Header } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
@@ -27,6 +28,7 @@ export const BrowseReviews = props => {
     openWeeks: {},
     initialLoading: props.initialLoading !== undefined ? props.initialLoading : true
   })
+  let jumpTimer = null
 
   useEffect(() => {
     // run on component mount
@@ -37,6 +39,21 @@ export const BrowseReviews = props => {
     if (!props.loading.loading && !state.openWeeks[props.selectedInstance.currentWeek - 1]) {
       state.openWeeks = { [props.selectedInstance.currentWeek - 1]: true }
     }
+
+    if (props.location.state && props.location.state.jumpToReview !== undefined) {
+      // jumpToReview from <Link state={...}>: scrolls to review
+      const tryJumpLoop = () => {
+        if (!tryJumpToReview()) {
+          // not loaded yet? try again later
+          jumpTimer = setTimeout(tryJumpLoop, 200)
+        }
+      }
+      jumpTimer = setTimeout(tryJumpLoop, 200)
+    }
+
+    return () => {
+      clearTimeout(jumpTimer)
+    }
   }, [])
 
   useEffect(() => {
@@ -44,6 +61,24 @@ export const BrowseReviews = props => {
       state.initialLoading = false
     }
   }, [props.loading.loading, state.initialLoading])
+
+  useEffect(() => {
+    if (props.location.state && props.location.state.openAllWeeks) {
+      handleClickShowAllCurrent()
+    }
+  }, [props.courseData.data])
+
+  const tryJumpToReview = () => {
+    // Try scroll to review
+    const element = document.getElementById(`review${props.location.state.jumpToReview}`)
+    console.log(props.location.state.jumpToReview)
+
+    if (element) {
+      window.scrollTo(0, element.offsetTop)
+      return true
+    }
+    return false
+  }
 
   const handleClick = (e, titleProps) => {
     const { index } = titleProps
@@ -79,6 +114,15 @@ export const BrowseReviews = props => {
       openWeeks[i] = true
     }
     state.openWeeks = openWeeks
+  }
+
+  const handleClickShowAllCurrent = () => {
+    if (props.courseData.data && props.studentInstance) {
+      const student = props.courseData.data.find(student => student.id === Number(props.studentInstance))
+      if (student) {
+        handleClickShowAll(student)()
+      }
+    }
   }
 
   const handleClickHideAll = () => {
@@ -207,7 +251,7 @@ export const BrowseReviews = props => {
 
     if (week) {
       return (
-        <Accordion fluid styled>
+        <Accordion fluid styled id={`review${i}`}>
           <Accordion.Title active={openWeeks[i]} index={i} onClick={handleClick}>
             <Icon name="dropdown" /> {isFinalWeek ? 'Final Review' : `Week ${i + 1}`}, points {week.points}
           </Accordion.Title>
@@ -255,7 +299,7 @@ export const BrowseReviews = props => {
       )
     } else {
       return (
-        <Accordion fluid styled>
+        <Accordion fluid styled id={`review${i}`}>
           <Accordion.Title active={openWeeks[i]} index={i} onClick={handleClick}>
             <Icon name="dropdown" /> {isFinalWeek ? 'Final Review' : `Week ${i + 1}`}{' '}
           </Accordion.Title>
@@ -276,7 +320,7 @@ export const BrowseReviews = props => {
     const { openWeeks } = state
 
     return (
-      <Accordion fluid styled>
+      <Accordion fluid styled id={`review${i - 1}`}>
         {' '}
         <Accordion.Title active={openWeeks[i]} index={i} onClick={handleClick}>
           <Icon name="dropdown" /> Code Review {cr.reviewNumber} {cr.points !== null ? ', points ' + cr.points : ''}
@@ -315,46 +359,44 @@ export const BrowseReviews = props => {
   const createHeaders = (studhead, studentInstance) => {
     let headers = []
     const weekMatcher = i => week => week.weekNumber === i + 1
-    studhead.data.map(student => {
-      // studentInstance is id of student. Type: String
-      // Tämä pitää myös korjata.
-      if (student.id === Number(studentInstance)) {
-        headers.push(renderStudentCard(student))
-        headers.push(
-          <span>
-            {hasAllReviewsOpen(student) ? (
-              <Button type="button" onClick={handleClickHideAll} size="small">
-                Hide all reviews
-              </Button>
-            ) : (
-              <Button type="button" onClick={handleClickShowAll(student)} size="small">
-                Show all reviews
-              </Button>
-            )}
-            <br />
-          </span>
-        )
-        let i = 0
-        let ii = 0
-        for (; i < props.selectedInstance.weekAmount; i++) {
-          const weeks = student.weeks.find(weekMatcher(i))
-          headers.push(renderWeek(i, weeks, studentInstance, false))
-        }
-        student.codeReviews
-          .sort((a, b) => {
-            return a.reviewNumber - b.reviewNumber
-          })
-          .forEach(cr => {
-            headers.push(renderCodeReview(i + ii + 1, cr, studentInstance))
-            ii++
-          })
-        if (props.selectedInstance.finalReview) {
-          const finalWeek = student.weeks.find(week => week.weekNumber === props.selectedInstance.weekAmount + 1)
-          headers.push(renderWeek(i + ii, finalWeek, studentInstance, true))
-        }
+    // studentInstance is id of student. Type: String
+    // Tämä pitää myös korjata.
+    const student = studhead.data.find(student => student.id === Number(studentInstance))
+    if (student) {
+      headers.push(renderStudentCard(student))
+      headers.push(
+        <span>
+          {hasAllReviewsOpen(student) ? (
+            <Button type="button" onClick={handleClickHideAll} size="small">
+              Hide all reviews
+            </Button>
+          ) : (
+            <Button type="button" onClick={handleClickShowAll(student)} size="small">
+              Show all reviews
+            </Button>
+          )}
+          <br />
+        </span>
+      )
+      let i = 0
+      let ii = 0
+      for (; i < props.selectedInstance.weekAmount; i++) {
+        const weeks = student.weeks.find(weekMatcher(i))
+        headers.push(renderWeek(i, weeks, studentInstance, false))
       }
-      return student
-    })
+      student.codeReviews
+        .sort((a, b) => {
+          return a.reviewNumber - b.reviewNumber
+        })
+        .forEach(cr => {
+          headers.push(renderCodeReview(i + ii + 1, cr, studentInstance))
+          ii++
+        })
+      if (props.selectedInstance.finalReview) {
+        const finalWeek = student.weeks.find(week => week.weekNumber === props.selectedInstance.weekAmount + 1)
+        headers.push(renderWeek(i + ii, finalWeek, studentInstance, true))
+      }
+    }
     return headers.map((header, index) => React.cloneElement(header, { key: index }))
   }
 
@@ -422,7 +464,9 @@ BrowseReviews.propTypes = {
   updateStudentProjectInfo: PropTypes.func.isRequired
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(BrowseReviews)
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(BrowseReviews)
+)
