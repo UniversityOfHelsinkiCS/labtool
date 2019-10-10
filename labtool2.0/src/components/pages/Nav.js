@@ -57,6 +57,13 @@ const Nav = props => {
         ) : (
           <p />
         )}
+
+        {props.courseImport.canImport && (
+          <Menu.Item name="CourseImport" as={Link} to="/labtool/courseimport">
+            <Icon name="cloud download" />
+            Import
+          </Menu.Item>
+        )}
       </Menu.Menu>
 
       {user && (
@@ -70,7 +77,8 @@ const Nav = props => {
 
 const mapStateToProps = state => {
   return {
-    user: state.user
+    user: state.user,
+    courseImport: state.courseImport
   }
 }
 

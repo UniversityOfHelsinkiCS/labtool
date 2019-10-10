@@ -10,339 +10,341 @@ exports[`<Courses /> Courses Component should render correctly 1`] = `
     >
       Courses
     </Header>
-    <HorizontalScrollable>
-      <Table
-        as="table"
-        color="yellow"
-        singleLine={true}
-        style={
-          Object {
-            "overflowX": "visible",
+    <div>
+      <HorizontalScrollable>
+        <Table
+          as="table"
+          color="yellow"
+          singleLine={true}
+          style={
+            Object {
+              "overflowX": "visible",
+            }
           }
-        }
-      >
-        <TableHeader
-          as="thead"
         >
-          <TableRow
-            as="tr"
-            cellAs="td"
+          <TableHeader
+            as="thead"
           >
-            <TableHeaderCell
-              as="th"
-              colSpan="1"
+            <TableRow
+              as="tr"
+              cellAs="td"
             >
-               
-            </TableHeaderCell>
-            <TableHeaderCell
-              as="th"
-              colSpan="1"
-            >
-              Course ID
-            </TableHeaderCell>
-            <TableHeaderCell
-              as="th"
-              colSpan="1"
-            >
-              Course name
-            </TableHeaderCell>
-            <TableHeaderCell
-              as="th"
-              colSpan="1"
-            >
-              Course start date
-            </TableHeaderCell>
-            <TableHeaderCell
-              as="th"
-              colSpan="2"
-            >
-               
-            </TableHeaderCell>
-          </TableRow>
-        </TableHeader>
-        <TableBody
-          as="tbody"
-        >
-          <TableRow
-            as="tr"
-            cellAs="td"
-            key="10011"
+              <TableHeaderCell
+                as="th"
+                colSpan="1"
+              >
+                 
+              </TableHeaderCell>
+              <TableHeaderCell
+                as="th"
+                colSpan="1"
+              >
+                Course ID
+              </TableHeaderCell>
+              <TableHeaderCell
+                as="th"
+                colSpan="1"
+              >
+                Course name
+              </TableHeaderCell>
+              <TableHeaderCell
+                as="th"
+                colSpan="1"
+              >
+                Course start date
+              </TableHeaderCell>
+              <TableHeaderCell
+                as="th"
+                colSpan="2"
+              >
+                 
+              </TableHeaderCell>
+            </TableRow>
+          </TableHeader>
+          <TableBody
+            as="tbody"
           >
-            <TableCell
-              as="td"
+            <TableRow
+              as="tr"
+              cellAs="td"
+              key="10011"
             >
-              <div>
-                <Label
-                  ribbon={true}
-                  style={
-                    Object {
-                      "backgroundColor": "#21ba45",
-                    }
-                  }
-                >
-                  Active registration
-                </Label>
-              </div>
-            </TableCell>
-            <TableCell
-              as="td"
-            >
-              TKT20010
-               
-            </TableCell>
-            <TableCell
-              as="td"
-            >
-              <strong>
-                <Link
-                  to="/labtool/courses/TKT20010.2018.K.A.1"
-                >
-                  Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit (periodi IV)
-                   (
-                  17-18
-                  )
-                </Link>
-              </strong>
-            </TableCell>
-            <TableCell
-              as="td"
-            >
-               
-              11.03.2018
-               
-            </TableCell>
-            <TableCell
-              as="td"
-              textAlign="center"
-            >
-              <Popup
-                content="View course"
-                disabled={false}
-                eventsEnabled={true}
-                offset={0}
-                on={
-                  Array [
-                    "click",
-                    "hover",
-                  ]
-                }
-                pinned={false}
-                position="top left"
-                trigger={
-                  <Button
-                    as={
+              <TableCell
+                as="td"
+              >
+                <div>
+                  <Label
+                    ribbon={true}
+                    style={
                       Object {
-                        "$$typeof": Symbol(react.forward_ref),
-                        "displayName": "Link",
-                        "propTypes": Object {
-                          "innerRef": [Function],
-                          "onClick": [Function],
-                          "replace": [Function],
-                          "target": [Function],
-                          "to": [Function],
-                        },
-                        "render": [Function],
+                        "backgroundColor": "#21ba45",
                       }
                     }
-                    circular={true}
-                    icon={
-                      Object {
-                        "color": "blue",
-                        "name": "eye",
-                        "size": "large",
-                      }
-                    }
-                    size="tiny"
+                  >
+                    Active registration
+                  </Label>
+                </div>
+              </TableCell>
+              <TableCell
+                as="td"
+              >
+                TKT20010
+                 
+              </TableCell>
+              <TableCell
+                as="td"
+              >
+                <strong>
+                  <Link
                     to="/labtool/courses/TKT20010.2018.K.A.1"
-                  />
-                }
-              />
-            </TableCell>
-          </TableRow>
-          <TableRow
-            as="tr"
-            cellAs="td"
-            key="10012"
-          >
-            <TableCell
-              as="td"
-            >
-              <div>
-                <Label
-                  ribbon={true}
-                  style={
-                    Object {
-                      "backgroundColor": "#21ba45",
-                    }
+                  >
+                    Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit (periodi IV)
+                     (
+                    17-18
+                    )
+                  </Link>
+                </strong>
+              </TableCell>
+              <TableCell
+                as="td"
+              >
+                 
+                11.03.2018
+                 
+              </TableCell>
+              <TableCell
+                as="td"
+                textAlign="center"
+              >
+                <Popup
+                  content="View course"
+                  disabled={false}
+                  eventsEnabled={true}
+                  offset={0}
+                  on={
+                    Array [
+                      "click",
+                      "hover",
+                    ]
                   }
-                >
-                  Active registration
-                </Label>
-              </div>
-            </TableCell>
-            <TableCell
-              as="td"
+                  pinned={false}
+                  position="top left"
+                  trigger={
+                    <Button
+                      as={
+                        Object {
+                          "$$typeof": Symbol(react.forward_ref),
+                          "displayName": "Link",
+                          "propTypes": Object {
+                            "innerRef": [Function],
+                            "onClick": [Function],
+                            "replace": [Function],
+                            "target": [Function],
+                            "to": [Function],
+                          },
+                          "render": [Function],
+                        }
+                      }
+                      circular={true}
+                      icon={
+                        Object {
+                          "color": "blue",
+                          "name": "eye",
+                          "size": "large",
+                        }
+                      }
+                      size="tiny"
+                      to="/labtool/courses/TKT20010.2018.K.A.1"
+                    />
+                  }
+                />
+              </TableCell>
+            </TableRow>
+            <TableRow
+              as="tr"
+              cellAs="td"
+              key="10012"
             >
-              TKT20002
-               
-            </TableCell>
-            <TableCell
-              as="td"
-            >
-              <strong>
-                <Link
-                  to="/labtool/courses/TKT20002.2018.K.K.1"
-                >
-                  Ohjelmistotekniikan menetelmät
-                   (
-                  17-18
-                  )
-                </Link>
-              </strong>
-            </TableCell>
-            <TableCell
-              as="td"
-            >
-               
-              11.03.2018
-               
-            </TableCell>
-            <TableCell
-              as="td"
-              textAlign="center"
-            >
-              <Popup
-                content="View course"
-                disabled={false}
-                eventsEnabled={true}
-                offset={0}
-                on={
-                  Array [
-                    "click",
-                    "hover",
-                  ]
-                }
-                pinned={false}
-                position="top left"
-                trigger={
-                  <Button
-                    as={
+              <TableCell
+                as="td"
+              >
+                <div>
+                  <Label
+                    ribbon={true}
+                    style={
                       Object {
-                        "$$typeof": Symbol(react.forward_ref),
-                        "displayName": "Link",
-                        "propTypes": Object {
-                          "innerRef": [Function],
-                          "onClick": [Function],
-                          "replace": [Function],
-                          "target": [Function],
-                          "to": [Function],
-                        },
-                        "render": [Function],
+                        "backgroundColor": "#21ba45",
                       }
                     }
-                    circular={true}
-                    icon={
-                      Object {
-                        "color": "blue",
-                        "name": "eye",
-                        "size": "large",
-                      }
-                    }
-                    size="tiny"
+                  >
+                    Active registration
+                  </Label>
+                </div>
+              </TableCell>
+              <TableCell
+                as="td"
+              >
+                TKT20002
+                 
+              </TableCell>
+              <TableCell
+                as="td"
+              >
+                <strong>
+                  <Link
                     to="/labtool/courses/TKT20002.2018.K.K.1"
-                  />
-                }
-              />
-            </TableCell>
-          </TableRow>
-          <TableRow
-            as="tr"
-            cellAs="td"
-            key="10013"
-          >
-            <TableCell
-              as="td"
-            >
-              <div />
-            </TableCell>
-            <TableCell
-              as="td"
-            >
-              TKT20011
-               
-            </TableCell>
-            <TableCell
-              as="td"
-            >
-              <strong>
-                <Link
-                  to="/labtool/courses/TKT20011.2018.K.A.1"
-                >
-                  Aineopintojen harjoitustyö: Tietokantasovellus (periodi III)
-                   (
-                  17-18
-                  )
-                </Link>
-              </strong>
-            </TableCell>
-            <TableCell
-              as="td"
-            >
-               
-              16.01.2018
-               
-            </TableCell>
-            <TableCell
-              as="td"
-              textAlign="center"
-            >
-              <Popup
-                content="View course"
-                disabled={false}
-                eventsEnabled={true}
-                offset={0}
-                on={
-                  Array [
-                    "click",
-                    "hover",
-                  ]
-                }
-                pinned={false}
-                position="top left"
-                trigger={
-                  <Button
-                    as={
-                      Object {
-                        "$$typeof": Symbol(react.forward_ref),
-                        "displayName": "Link",
-                        "propTypes": Object {
-                          "innerRef": [Function],
-                          "onClick": [Function],
-                          "replace": [Function],
-                          "target": [Function],
-                          "to": [Function],
-                        },
-                        "render": [Function],
+                  >
+                    Ohjelmistotekniikan menetelmät
+                     (
+                    17-18
+                    )
+                  </Link>
+                </strong>
+              </TableCell>
+              <TableCell
+                as="td"
+              >
+                 
+                11.03.2018
+                 
+              </TableCell>
+              <TableCell
+                as="td"
+                textAlign="center"
+              >
+                <Popup
+                  content="View course"
+                  disabled={false}
+                  eventsEnabled={true}
+                  offset={0}
+                  on={
+                    Array [
+                      "click",
+                      "hover",
+                    ]
+                  }
+                  pinned={false}
+                  position="top left"
+                  trigger={
+                    <Button
+                      as={
+                        Object {
+                          "$$typeof": Symbol(react.forward_ref),
+                          "displayName": "Link",
+                          "propTypes": Object {
+                            "innerRef": [Function],
+                            "onClick": [Function],
+                            "replace": [Function],
+                            "target": [Function],
+                            "to": [Function],
+                          },
+                          "render": [Function],
+                        }
                       }
-                    }
-                    circular={true}
-                    icon={
-                      Object {
-                        "color": "blue",
-                        "name": "eye",
-                        "size": "large",
+                      circular={true}
+                      icon={
+                        Object {
+                          "color": "blue",
+                          "name": "eye",
+                          "size": "large",
+                        }
                       }
-                    }
-                    size="tiny"
+                      size="tiny"
+                      to="/labtool/courses/TKT20002.2018.K.K.1"
+                    />
+                  }
+                />
+              </TableCell>
+            </TableRow>
+            <TableRow
+              as="tr"
+              cellAs="td"
+              key="10013"
+            >
+              <TableCell
+                as="td"
+              >
+                <div />
+              </TableCell>
+              <TableCell
+                as="td"
+              >
+                TKT20011
+                 
+              </TableCell>
+              <TableCell
+                as="td"
+              >
+                <strong>
+                  <Link
                     to="/labtool/courses/TKT20011.2018.K.A.1"
-                  />
-                }
-              />
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-    </HorizontalScrollable>
+                  >
+                    Aineopintojen harjoitustyö: Tietokantasovellus (periodi III)
+                     (
+                    17-18
+                    )
+                  </Link>
+                </strong>
+              </TableCell>
+              <TableCell
+                as="td"
+              >
+                 
+                16.01.2018
+                 
+              </TableCell>
+              <TableCell
+                as="td"
+                textAlign="center"
+              >
+                <Popup
+                  content="View course"
+                  disabled={false}
+                  eventsEnabled={true}
+                  offset={0}
+                  on={
+                    Array [
+                      "click",
+                      "hover",
+                    ]
+                  }
+                  pinned={false}
+                  position="top left"
+                  trigger={
+                    <Button
+                      as={
+                        Object {
+                          "$$typeof": Symbol(react.forward_ref),
+                          "displayName": "Link",
+                          "propTypes": Object {
+                            "innerRef": [Function],
+                            "onClick": [Function],
+                            "replace": [Function],
+                            "target": [Function],
+                            "to": [Function],
+                          },
+                          "render": [Function],
+                        }
+                      }
+                      circular={true}
+                      icon={
+                        Object {
+                          "color": "blue",
+                          "name": "eye",
+                          "size": "large",
+                        }
+                      }
+                      size="tiny"
+                      to="/labtool/courses/TKT20011.2018.K.A.1"
+                    />
+                  }
+                />
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </HorizontalScrollable>
+    </div>
   </Container>
 </div>
 `;
