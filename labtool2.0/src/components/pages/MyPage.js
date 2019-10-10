@@ -6,6 +6,7 @@ import './MyPage.css'
 import { Link } from 'react-router-dom'
 import { getAllStudentCourses } from '../../services/studentinstances'
 import { getAllTeacherCourses } from '../../services/teacherinstances'
+import { getIsAllowedToImport } from '../../services/courseImport'
 import { HorizontalScrollable } from '../HorizontalScrollable'
 import { getAcademicYear } from '../../util/format'
 
@@ -18,6 +19,7 @@ export const MyPage = props => {
     // run on component mount
     props.getAllStudentCourses()
     props.getAllTeacherCourses()
+    props.getIsAllowedToImport()
   }, [])
 
   const renderCourseRow = instance => (
@@ -134,10 +136,11 @@ MyPage.propTypes = {
   teacherInstance: PropTypes.array.isRequired,
 
   getAllStudentCourses: PropTypes.func.isRequired,
-  getAllTeacherCourses: PropTypes.func.isRequired
+  getAllTeacherCourses: PropTypes.func.isRequired,
+  getIsAllowedToImport: PropTypes.func.isRequired
 }
 
 export default connect(
   mapStateToProps,
-  { getAllStudentCourses, getAllTeacherCourses }
+  { getAllStudentCourses, getAllTeacherCourses, getIsAllowedToImport }
 )(MyPage)
