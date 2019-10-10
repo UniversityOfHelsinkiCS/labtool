@@ -534,7 +534,7 @@ export const StudentTable = props => {
               <Table.Row>
                 {showColumn('select') && (
                   <Table.HeaderCell key={-2}>
-                    <Checkbox id={'selectAllBottom-' + rowClassName} disabled={!filteredData.length} checked={allSelected} onChange={handleSelectAll(filteredData)} />
+                    <Checkbox id={'selectAllBottom-' + rowClassName} disabled={!filteredData.length} checked={allSelected} onChange={handleSelectAll} />
                   </Table.HeaderCell>
                 )}
                 <Table.HeaderCell />
