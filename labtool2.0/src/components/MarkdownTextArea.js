@@ -37,8 +37,8 @@ export const FormMarkdownTextArea = props => {
           .
         </i>
       </p>
-      <Form.TextArea onInput={handleChange} {...props} />
-      <Accordion key fluid styled style={{ textAlign: 'start' }}>
+      <Form.TextArea onInput={handleChange} {...props} style={{ float: 'left', width: '49%', height: '120px', marginBottom: '15px' }} />
+      <Accordion key fluid styled style={{ textAlign: 'start', float: 'right', width: '49%', marginBottom: '15px', overflowY: 'auto' }}>
         <Accordion.Title
           active={previewOpen}
           onClick={() => {
@@ -49,7 +49,7 @@ export const FormMarkdownTextArea = props => {
           <Icon name="dropdown" />
           Preview Markdown
         </Accordion.Title>
-        <Accordion.Content active={previewOpen}>
+        <Accordion.Content active={previewOpen} style={{ height: '80px' }}>
           <ReactMarkdown source={textValue} />
         </Accordion.Content>
       </Accordion>

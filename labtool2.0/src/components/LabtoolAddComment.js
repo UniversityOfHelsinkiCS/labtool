@@ -22,7 +22,7 @@ export const LabtoolAddComment = ({ weekId, handleSubmit, allowHidden }) => {
   }
 
   return (
-    <Accordion key fluid styled style={{ textAlign: 'start' }}>
+    <Accordion key fluid styled style={{ textAlign: 'start', overflow: 'auto' }}>
       <Accordion.Title active={state.commentOpen} onClick={toggleOpen}>
         <Icon name="dropdown" />
         Add comment
@@ -30,13 +30,15 @@ export const LabtoolAddComment = ({ weekId, handleSubmit, allowHidden }) => {
       <Accordion.Content active={state.commentOpen}>
         <Form reply onSubmit={doSubmit} name={weekId} id={weekId}>
           <FormMarkdownTextArea name="content" placeholder="Your comment..." value={state.comment} onChange={(e, { value }) => (state.comment = value)} />
-          <br></br>
-          {allowHidden && (
-            <div style={{ display: 'inline-block', marginRight: '10px' }}>
-              <Form.Checkbox label="Add comment for instructors only" name="hidden" />
-            </div>
-          )}
-          <Button content="Add Reply" labelPosition="left" icon="edit" primary />
+          <br />
+          <div style={{ display: 'flex', direction: 'row', alignItems: 'baseline', clear: 'both' }}>
+            {allowHidden && (
+              <div style={{ marginRight: '10px' }}>
+                <Form.Checkbox label="Add comment for instructors only" name="hidden" />
+              </div>
+            )}
+            <Button content="Add Reply" labelPosition="left" icon="edit" primary />
+          </div>
         </Form>
       </Accordion.Content>
     </Accordion>
