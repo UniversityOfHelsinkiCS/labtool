@@ -24,7 +24,14 @@ export const FormMarkdownTextArea = props => {
     state.textValue = props.value
   }
 
-  const { previewOpen, textValue } = state
+  const changeWidth = () => {
+    if (window.innerWidth >= 800) {
+      return (state.width = '49%')
+    }
+    return (state.width = '100%')
+  }
+
+  const { previewOpen, textValue, width } = state
 
   return (
     <div>
@@ -37,8 +44,8 @@ export const FormMarkdownTextArea = props => {
           .
         </i>
       </p>
-      <Form.TextArea onInput={handleChange} {...props} style={{ float: 'left', width: '49%', height: '120px', marginBottom: '15px' }} />
-      <Accordion key fluid styled style={{ textAlign: 'start', float: 'right', width: '49%', marginBottom: '15px', overflowY: 'auto' }}>
+      <Form.TextArea onInput={handleChange} {...props} style={{ float: 'left', width: changeWidth(), height: '120px', marginBottom: '15px' }} />
+      <Accordion key fluid styled style={{ textAlign: 'start', float: 'right', width: changeWidth(), marginBottom: '15px', overflowY: 'auto' }}>
         <Accordion.Title
           active={previewOpen}
           onClick={() => {
