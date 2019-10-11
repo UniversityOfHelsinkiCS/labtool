@@ -26,12 +26,12 @@ export const FormMarkdownTextArea = props => {
 
   const changeWidth = () => {
     if (window.innerWidth >= 800) {
-      return (state.width = '49%')
+      return '49%'
     }
-    return (state.width = '100%')
+    return '100%'
   }
 
-  const { previewOpen, textValue, width } = state
+  const { previewOpen, textValue } = state
 
   return (
     <div>
