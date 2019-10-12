@@ -27,14 +27,22 @@ export const FormMarkdownTextArea = props => {
   const isWide = () => state.width >= 800
 
   const changeDirection = () => (isWide() ? 'row' : 'column')
-  const getMargin = () => (isWide() ? '0.5em' : 0)
-  const getPreviewHeight = () => (isWide() ? '80px' : '200px')
+  const getHorizontalMargin = () => (isWide() ? '0.5em' : 0)
+  const getPreviewHeight = () => (isWide() ? '280px' : '200px')
 
   const onResize = () => {
     state.width = window.innerWidth
   }
 
   useEffect(() => {
+    if (props.value || props.defaultValue) {
+      state.textValue = props.value || props.defaultValue
+    }
+  }, [])
+
+  useEffect(() => {
+    // make sure the width stays up to date by subscribing to resize events
+
     window.addEventListener('resize', onResize)
     document.documentElement.addEventListener('resize', onResize)
 
@@ -58,10 +66,11 @@ export const FormMarkdownTextArea = props => {
         </i>
       </p>
       <div style={{ display: 'flex', flexDirection: changeDirection() }}>
-        <Form.Field style={{ flex: '50%', marginRight: getMargin() }}>
-          <TextArea onInput={handleChange} {...props} style={{ height: '120px', marginBottom: '15px' }} />
+        <Form.Field style={{ flex: '50%', marginRight: getHorizontalMargin() }}>
+          {/* resize: none -- we cannot allow resizing the area because the Markdown preview cannot resize with it */}
+          <TextArea onInput={handleChange} {...props} style={{ height: '320px', marginBottom: '15px', resize: 'none' }} />
         </Form.Field>
-        <Accordion key fluid styled style={{ flex: '50%', textAlign: 'start', marginBottom: '2em', overflowY: 'auto', marginTop: 0, marginLeft: getMargin() }}>
+        <Accordion key fluid styled style={{ flex: '50%', textAlign: 'start', marginBottom: '2em', marginTop: 0, marginLeft: getHorizontalMargin() }}>
           <Accordion.Title
             active={isWide() || previewOpen}
             onClick={() => {
@@ -72,7 +81,7 @@ export const FormMarkdownTextArea = props => {
             <Icon name="dropdown" />
             Preview Markdown
           </Accordion.Title>
-          <Accordion.Content active={isWide() || previewOpen} style={{ height: getPreviewHeight() }}>
+          <Accordion.Content active={isWide() || previewOpen} style={{ height: getPreviewHeight(), overflowY: 'auto' }}>
             <ReactMarkdown source={textValue} />
           </Accordion.Content>
         </Accordion>
