@@ -15,6 +15,8 @@ import { objectKeyFilter } from '../../util/objectKeyFilter'
 
 import BackButton from '../BackButton'
 import ConfirmationModal from '../ConfirmationModal'
+import RevieweeDropdown from '../RevieweeDropdown'
+import { createRepositoryLink } from '../../util/format'
 
 export const ModifyCourseInstanceReview = props => {
   const pstate = usePersistedState('ModifyCourseInstanceCodeReviews', {
@@ -70,19 +72,32 @@ export const ModifyCourseInstanceReview = props => {
       }
 
       await props.bulkinsertCodeReviews(data)
+      //await props.coursePageInformation(props.courseId)
     } catch (error) {
       props.showNotification({ message: 'Select a code review!', error: true })
     }
   }
 
   const addCodeReview = (reviewRound, id) => {
-    return e => {
-      const toReviewId = parseInt(e.target.value, 10)
-      const crData = {
-        round: reviewRound,
-        reviewer: id,
-        toReview: toReviewId
+    return (e, { value }) => {
+      let crData = { round: reviewRound, reviewer: id }
+      if (Number.isInteger(value)) {
+        const toReviewId = parseInt(value, 10)
+        crData = {
+          ...crData,
+          toReview: toReviewId
+        }
+      } else if (value !== null) {
+        if (!value.includes('http')) {
+          props.showNotification({ message: 'Your link should start with http/https', error: true })
+          return
+        }
+        crData = {
+          ...crData,
+          repoToReview: value
+        }
       }
+
       props.initOneReview(crData)
     }
   }
@@ -127,13 +142,21 @@ export const ModifyCourseInstanceReview = props => {
     }
   }
 
-  const getCurrentReviewer = (codeReviewRound, id) => {
+  const getCurrentReviewee = (codeReviewRound, id) => {
     let reviewer = props.courseData.data.find(studentId => studentId.id === id)
     let reviewInstance = reviewer.codeReviews.find(cd => cd.reviewNumber === codeReviewRound && cd.studentInstanceId === id)
     if (!reviewInstance) {
+      console.log('rr', reviewInstance)
       return 'None'
     }
+    if (reviewInstance.repoToReview) {
+      //return createRepositoryLink(reviewInstance.repoToReview)
+      console.log('repotoreview')
+      return reviewInstance.repoToReview
+    }
+
     let reviewee = props.dropdownUsers.find(dropDownStudent => dropDownStudent.value === reviewInstance.toReview)
+    console.log('toReview')
     return reviewee.text
   }
 
@@ -169,7 +192,7 @@ export const ModifyCourseInstanceReview = props => {
 
   const showVisibilityReminder = () => {
     if (!props.selectedInstance.currentCodeReview || !props.codeReviewLogic.selectedDropdown) {
-      if (Object.keys(props.dropdownCodeReviews).length == 0) {
+      if (Object.keys(props.dropdownCodeReviews).length === 0) {
         return (
           <Message className="visibilityReminder" info>
             <span>Please create a code review by clicking the + button.</span>
@@ -195,51 +218,77 @@ export const ModifyCourseInstanceReview = props => {
     )
   }
 
+  // const createRepositoryLink = url => {
+  //   const { Fragment } = React
+  //   let cleanUrl = url
+  //   cleanUrl = cleanUrl.replace(/^https?:\/\//, '')
+
+  //   if (cleanUrl.startsWith('github.com/')) {
+  //     const cleanUrlNoGithub = cleanUrl.substring('github.com/'.length)
+  //     cleanUrl = (
+  //       <Fragment>
+  //         <Icon name="github" color="black" />
+  //         {cleanUrlNoGithub}
+  //       </Fragment>
+  //     )
+  //   }
+
+  //   return (
+  //     <a href={url} target="_blank" rel="noopener noreferrer">
+  //       {cleanUrl}
+  //     </a>
+  //   )
+  // }
+
   const showCurrentReview = data => {
     if (!props.codeReviewLogic.selectedDropdown) {
       return null
     }
-
-    const currentReviewee = <p style={{ display: 'inline' }}>Current review: {getCurrentReviewer(props.codeReviewLogic.selectedDropdown, data.id)}</p>
+    const currentReviewee = getCurrentReviewee(props.codeReviewLogic.selectedDropdown, data.id)
+    const showCurrentReviewee = currentReviewee.includes('http') ? (
+      <p style={{ display: 'inline' }}>Current review: {createRepositoryLink(currentReviewee)}</p>
+    ) : (
+      <p style={{ display: 'inline' }}>Current review: {currentReviewee}</p>
+    )
     if (!data.codeReviews.find(cr => cr.reviewNumber === props.codeReviewLogic.selectedDropdown)) {
-      return <div>{currentReviewee}</div>
+      return <div>{showCurrentReviewee}</div>
     }
     if (data.codeReviews.find(cr => cr.reviewNumber === props.codeReviewLogic.selectedDropdown).points) {
       return (
         <div>
-          {currentReviewee}
+          {showCurrentReviewee}
           <Popup content="Cannot remove a graded code review" trigger={<Icon id="tag" name="window close" size="large" color="red" style={{ float: 'right' }} />} />
         </div>
       )
     }
     return (
       <div>
-        {currentReviewee}
-        <ConfirmationModal canRemove={true} data={data} getCurrentReviewer={getCurrentReviewer} removeOne={removeOne} selectedDropdown={props.codeReviewLogic.selectedDropdown} />
+        {showCurrentReviewee}
+        <ConfirmationModal canRemove={true} data={data} getCurrentReviewee={getCurrentReviewee} removeOne={removeOne} selectedDropdown={props.codeReviewLogic.selectedDropdown} />
       </div>
     )
   }
 
-  const showRevieweeDropdown = data => {
-    if (!props.codeReviewLogic.selectedDropdown) {
-      return null
-    }
-    return (
-      <select
-        className="toReviewDropdown"
-        value={props.codeReviewLogic.currentSelections[props.codeReviewLogic.selectedDropdown][data.id]}
-        onChange={addCodeReview(props.codeReviewLogic.selectedDropdown, data.id)}
-      >
-        {props.dropdownUsers
-          .filter(d => d.value !== data.id)
-          .map(d => (
-            <option key={d.value} value={d.value}>
-              {d.text}
-            </option>
-          ))}
-      </select>
-    )
-  }
+  // const showRevieweeDropdown = data => {
+  //   if (!props.codeReviewLogic.selectedDropdown) {
+  //     return null
+  //   }
+  //   return (
+  //     <select
+  //       className="toReviewDropdown"
+  //       value={props.codeReviewLogic.currentSelections[props.codeReviewLogic.selectedDropdown][data.id]}
+  //       onChange={addCodeReview(props.codeReviewLogic.selectedDropdown, data.id)}
+  //     >
+  //       {props.dropdownUsers
+  //         .filter(d => d.value !== data.id)
+  //         .map(d => (
+  //           <option key={d.value} value={d.value}>
+  //             {d.text}
+  //           </option>
+  //         ))}
+  //     </select>
+  //   )
+  // }
 
   const makeCodeReviewSelectorHeader = () => (
     <Table.HeaderCell key="selectorHeader">
@@ -249,7 +298,7 @@ export const ModifyCourseInstanceReview = props => {
           defaultValue={props.codeReviewLogic.selectedDropdown}
           noResultsMessage={'Try another search.'}
           placeholder={Object.keys(props.dropdownCodeReviews).length > 0 ? 'SELECT A CODE REVIEW HERE!' : 'No code reviews'}
-          disabled={Object.keys(props.dropdownCodeReviews).length == 0}
+          disabled={Object.keys(props.dropdownCodeReviews).length === 0}
           fluid
           options={props.dropdownCodeReviews}
         />
@@ -260,7 +309,8 @@ export const ModifyCourseInstanceReview = props => {
   const makeCodeReviewSelectorCell = data => (
     <Table.Cell key="CodeReviewSelector">
       {showCurrentReview(data)}
-      {showRevieweeDropdown(data)}
+      {/* {showRevieweeDropdown(data)} */}
+      <RevieweeDropdown create={false} dropdownUsers={props.dropdownUsers} data={data} codeReviewLogic={props.codeReviewLogic} addCodeReview={addCodeReview} />
     </Table.Cell>
   )
 
@@ -295,15 +345,7 @@ export const ModifyCourseInstanceReview = props => {
   const makeCodeReviewCreatorCell = data => (
     <Table.Cell key="CodeReviewCreator">
       {props.codeReviewLogic.showCreate ? (
-        <select className="toReviewDropdown" onChange={addCodeReview('create', data.id)} value={props.codeReviewLogic.currentSelections['create'][data.id]}>
-          {props.dropdownUsers.map(d =>
-            d.value !== data.id ? (
-              <option key={d.value} value={d.value}>
-                {d.text}
-              </option>
-            ) : null
-          )}
-        </select>
+        <RevieweeDropdown create={true} dropdownUsers={props.dropdownUsers} data={data} codeReviewLogic={props.codeReviewLogic} addCodeReview={addCodeReview} />
       ) : (
         <div />
       )}
@@ -402,7 +444,7 @@ export const userHelper = data => {
   if (data) {
     users.push({
       value: null,
-      text: 'Select student to be reviewed'
+      text: 'select a student or add a repo link'
     })
     data.map(d =>
       users.push({
