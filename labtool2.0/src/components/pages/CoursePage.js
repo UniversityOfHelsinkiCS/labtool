@@ -266,13 +266,13 @@ export const CoursePage = props => {
         <div className="codeReviewExpanded">
           <div className="codeReviewPoints">
             <strong>Points: </strong> {cr.points !== null ? cr.points : 'Not graded yet'}
-            <br /> <br />
-            <strong>Project to review: </strong>
-            {cr.toReview.projectName}
+            {/* <br /> <br /> */}
+            {/* <strong>Project to review: </strong>
+            {cr.toReview.projectName || } */}
             <br />
             <strong>GitHub: </strong>
             <a href={cr.toReview.github} target="_blank" rel="noopener noreferrer">
-              {cr.toReview.github}
+              {cr.toReview.github || cr.repoToReview}
             </a>
             <br /> <br />
             {cr.linkToReview ? (
