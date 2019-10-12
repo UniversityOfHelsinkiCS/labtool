@@ -28,6 +28,7 @@ export const FormMarkdownTextArea = props => {
 
   const changeDirection = () => (isWide() ? 'row' : 'column')
   const getHorizontalMargin = () => (isWide() ? '0.5em' : 0)
+  const getTextHeight = () => (isWide() ? '320px' : '160px')
   const getPreviewHeight = () => (isWide() ? '280px' : '200px')
 
   const onResize = () => {
@@ -68,7 +69,7 @@ export const FormMarkdownTextArea = props => {
       <div style={{ display: 'flex', flexDirection: changeDirection() }}>
         <Form.Field style={{ flex: '50%', marginRight: getHorizontalMargin() }}>
           {/* resize: none -- we cannot allow resizing the area because the Markdown preview cannot resize with it */}
-          <TextArea onInput={handleChange} {...props} style={{ height: '320px', marginBottom: '15px', resize: 'none' }} />
+          <TextArea onInput={handleChange} {...props} style={{ height: getTextHeight(), marginBottom: '15px', resize: 'none' }} />
         </Form.Field>
         <Accordion key fluid styled style={{ flex: '50%', textAlign: 'start', marginBottom: '2em', marginTop: 0, marginLeft: getHorizontalMargin() }}>
           <Accordion.Title
