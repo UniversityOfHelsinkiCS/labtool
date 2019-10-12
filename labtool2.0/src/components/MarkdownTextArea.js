@@ -79,7 +79,7 @@ export const FormMarkdownTextArea = props => {
               handlePreviewChange()
             }}
           >
-            <Icon name="dropdown" />
+            {!isWide() && <Icon name="dropdown" />}
             Preview Markdown
           </Accordion.Title>
           <Accordion.Content active={isWide() || previewOpen} style={{ height: getPreviewHeight(), overflowY: 'auto' }}>

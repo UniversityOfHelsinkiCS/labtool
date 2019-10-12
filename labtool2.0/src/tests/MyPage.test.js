@@ -54,7 +54,16 @@ describe('<MyPage />', () => {
   let mockFn = jest.fn()
 
   beforeEach(() => {
-    wrapper = shallow(<MyPage getAllStudentCourses={mockFn} getAllTeacherCourses={mockFn} user={props.user} studentInstance={props.studentInstance} teacherInstance={props.teacherInstance} getIsAllowedToImport={mockFn} />)
+    wrapper = shallow(
+      <MyPage
+        getAllStudentCourses={mockFn}
+        getAllTeacherCourses={mockFn}
+        user={props.user}
+        studentInstance={props.studentInstance}
+        teacherInstance={props.teacherInstance}
+        getIsAllowedToImport={mockFn}
+      />
+    )
   })
 
   describe('MyPage Component', () => {
