@@ -181,13 +181,6 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
            
           2
           <br />
-           
-          <br />
-          <strong>
-            Project to review: 
-          </strong>
-          Tiran toinen labraprojekti
-          <br />
           <strong>
             GitHub: 
           </strong>
@@ -241,13 +234,6 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
           </strong>
            
           1
-          <br />
-           
-          <br />
-          <strong>
-            Project to review: 
-          </strong>
-          Tira super projekti
           <br />
           <strong>
             GitHub: 
@@ -342,13 +328,6 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
           </strong>
            
           Not graded yet
-          <br />
-           
-          <br />
-          <strong>
-            Project to review: 
-          </strong>
-          Tira super projekti
           <br />
           <strong>
             GitHub: 
