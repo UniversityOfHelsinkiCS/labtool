@@ -35,6 +35,8 @@ const selectedInstanceReducer = (store = INITIAL_STATE, action) => {
       return newStore
     case 'SET_FINAL_REVIEW':
       return { ...store, finalReview: action.value }
+    case 'CI_MODIFY_ONE_SUCCESS':
+      return action.response
     default:
       return store
   }

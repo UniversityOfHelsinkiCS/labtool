@@ -29,6 +29,7 @@ import CourseImport from './components/pages/CourseImport'
 import { tokenLogin } from './reducers/loginReducer'
 import { login, logout, fakeShibboLogin } from './services/login'
 import { resetLoading, forceSetLoading } from './reducers/loadingReducer'
+import { getIsAllowedToImport } from './services/courseImport'
 
 import { clearAllPersistedStates } from './hooks/persistedState'
 
@@ -71,6 +72,7 @@ const App = props => {
     } else {
       props.login()
     }
+    props.getIsAllowedToImport()
 
     /**
      * After mounting, it checks from the localstorage if user is logged in.
@@ -182,7 +184,8 @@ App.propTypes = {
   logout: PropTypes.func.isRequired,
   login: PropTypes.func.isRequired,
   resetLoading: PropTypes.func.isRequired,
-  forceSetLoading: PropTypes.func.isRequired
+  forceSetLoading: PropTypes.func.isRequired,
+  getIsAllowedToImport: PropTypes.func.isRequired
 }
 
 export default withRouter(
@@ -193,7 +196,8 @@ export default withRouter(
       logout,
       login: USE_FAKE_LOGIN ? fakeShibboLogin : login,
       resetLoading,
-      forceSetLoading
+      forceSetLoading,
+      getIsAllowedToImport
     }
   )(App)
 )
