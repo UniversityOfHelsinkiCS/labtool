@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { Accordion, Form, Icon } from 'semantic-ui-react'
+import { Accordion, Form, Icon, TextArea } from 'semantic-ui-react'
 import ReactMarkdown from 'react-markdown'
 
 import useLegacyState from '../hooks/legacyState'
@@ -10,7 +10,7 @@ import useLegacyState from '../hooks/legacyState'
 // viewing the text outside the text area
 export const FormMarkdownTextArea = props => {
   const { defaultValue } = props
-  const state = useLegacyState({ previewOpen: false, textValue: defaultValue ? defaultValue : '' })
+  const state = useLegacyState({ previewOpen: false, textValue: defaultValue ? defaultValue : '', width: window.innerWidth })
 
   const handleClick = e => {
     state.previewOpen = !state.previewOpen
@@ -24,12 +24,25 @@ export const FormMarkdownTextArea = props => {
     state.textValue = props.value
   }
 
-  const changeWidth = () => {
-    if (window.innerWidth >= 800) {
-      return '49%'
-    }
-    return '100%'
+  const isWide = () => state.width >= 800
+
+  const changeDirection = () => (isWide() ? 'row' : 'column')
+  const getMargin = () => (isWide() ? '0.5em' : 0)
+  const getPreviewHeight = () => (isWide() ? '80px' : '200px')
+
+  const onResize = () => {
+    state.width = window.innerWidth
   }
+
+  useEffect(() => {
+    window.addEventListener('resize', onResize)
+    document.documentElement.addEventListener('resize', onResize)
+
+    return () => {
+      window.removeEventListener('resize', onResize)
+      document.documentElement.removeEventListener('resize', onResize)
+    }
+  })
 
   const { previewOpen, textValue } = state
 
@@ -44,22 +57,26 @@ export const FormMarkdownTextArea = props => {
           .
         </i>
       </p>
-      <Form.TextArea onInput={handleChange} {...props} style={{ float: 'left', width: changeWidth(), height: '120px', marginBottom: '15px' }} />
-      <Accordion key fluid styled style={{ textAlign: 'start', float: 'right', width: changeWidth(), marginBottom: '15px', overflowY: 'auto' }}>
-        <Accordion.Title
-          active={previewOpen}
-          onClick={() => {
-            handleClick()
-            handlePreviewChange()
-          }}
-        >
-          <Icon name="dropdown" />
-          Preview Markdown
-        </Accordion.Title>
-        <Accordion.Content active={previewOpen} style={{ height: '80px' }}>
-          <ReactMarkdown source={textValue} />
-        </Accordion.Content>
-      </Accordion>
+      <div style={{ display: 'flex', flexDirection: changeDirection() }}>
+        <Form.Field style={{ flex: '50%', marginRight: getMargin() }}>
+          <TextArea onInput={handleChange} {...props} style={{ height: '120px', marginBottom: '15px' }} />
+        </Form.Field>
+        <Accordion key fluid styled style={{ flex: '50%', textAlign: 'start', marginBottom: '2em', overflowY: 'auto', marginTop: 0, marginLeft: getMargin() }}>
+          <Accordion.Title
+            active={isWide() || previewOpen}
+            onClick={() => {
+              handleClick()
+              handlePreviewChange()
+            }}
+          >
+            <Icon name="dropdown" />
+            Preview Markdown
+          </Accordion.Title>
+          <Accordion.Content active={isWide() || previewOpen} style={{ height: getPreviewHeight() }}>
+            <ReactMarkdown source={textValue} />
+          </Accordion.Content>
+        </Accordion>
+      </div>
     </div>
   )
 }
