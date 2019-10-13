@@ -32,11 +32,8 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
             "codeReviews": Array [
               Object {
                 "points": 2,
+                "repoToReview": null,
                 "reviewNumber": 1,
-                "reviewer": Object {
-                  "github": "http://github.com/superprojekti",
-                  "projectName": "Tira super projekti",
-                },
                 "toReview": Object {
                   "github": "http://github.com/tiralabra2",
                   "projectName": "Tiran toinen labraprojekti",
@@ -44,11 +41,8 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
               },
               Object {
                 "points": 1,
+                "repoToReview": null,
                 "reviewNumber": 2,
-                "reviewer": Object {
-                  "github": "http://github.com/tiralabra2",
-                  "projectName": "Tiran toinen labraprojekti",
-                },
                 "toReview": Object {
                   "github": "http://github.com/superprojekti",
                   "projectName": "Tira super projekti",
@@ -56,14 +50,11 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
               },
               Object {
                 "points": null,
+                "repoToReview": "https://github.com/userName/arbitraryRepo",
                 "reviewNumber": 3,
-                "reviewer": Object {
-                  "github": "http://github.com/tiralabra2",
-                  "projectName": "Tiran toinen labraprojekti",
-                },
                 "toReview": Object {
-                  "github": "http://github.com/superprojekti",
-                  "projectName": "Tira super projekti",
+                  "github": null,
+                  "projectName": null,
                 },
               },
             ],
@@ -333,11 +324,11 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
             GitHub: 
           </strong>
           <a
-            href="http://github.com/superprojekti"
+            href="https://github.com/userName/arbitraryRepo"
             rel="noopener noreferrer"
             target="_blank"
           >
-            http://github.com/superprojekti
+            https://github.com/userName/arbitraryRepo
           </a>
           <br />
            

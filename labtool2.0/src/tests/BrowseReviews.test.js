@@ -140,7 +140,26 @@ describe('<BrowseReviews />', () => {
             comments: []
           }
         ],
-        codeReviews: [],
+        codeReviews: [
+          {
+            id: 272,
+            points: null,
+            revieweNumber: 1,
+            linkToReview: 'https:github.com/toReview/repo/pull/1',
+            repoToReview: null,
+            studentInstanceId: 10011,
+            toReview: 10031
+          },
+          {
+            d: 273,
+            points: null,
+            revieweNumber: 2,
+            linkToReview: null,
+            repoToReview: 'https://github.com/userName/arbitraryRepo',
+            studentInstanceId: 10011,
+            toReview: null
+          }
+        ],
         User: {
           id: 10011,
           username: 'tiraopiskelija1',
