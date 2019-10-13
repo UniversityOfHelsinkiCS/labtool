@@ -146,17 +146,13 @@ export const ModifyCourseInstanceReview = props => {
     let reviewer = props.courseData.data.find(studentId => studentId.id === id)
     let reviewInstance = reviewer.codeReviews.find(cd => cd.reviewNumber === codeReviewRound && cd.studentInstanceId === id)
     if (!reviewInstance) {
-      console.log('rr', reviewInstance)
       return 'None'
     }
     if (reviewInstance.repoToReview) {
-      //return createRepositoryLink(reviewInstance.repoToReview)
-      console.log('repotoreview')
       return reviewInstance.repoToReview
     }
 
     let reviewee = props.dropdownUsers.find(dropDownStudent => dropDownStudent.value === reviewInstance.toReview)
-    console.log('toReview')
     return reviewee.text
   }
 
