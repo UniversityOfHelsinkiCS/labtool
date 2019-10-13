@@ -20,9 +20,8 @@ const RevieweeDropdown = props => {
     if (props.create) {
       return props.codeReviewLogic.currentSelections['create'][props.data.id]
     }
-    return props.codeReviewLogic.currentSelections[props.codeReviewLogic.selectedDropdown][props.data.id]
-      ? props.codeReviewLogic.currentSelections[props.codeReviewLogic.selectedDropdown][props.data.id]
-      : ''
+    const codeReview = props.codeReviewLogic.codeReviewStates[props.codeReviewLogic.selectedDropdown].find(cr => cr.reviewer === props.data.id)
+    return codeReview ? codeReview.toReview || codeReview.repoToReview : null
   }
 
   const codeReviewRound = props.create ? 'create' : props.codeReviewLogic.selectedDropdown
