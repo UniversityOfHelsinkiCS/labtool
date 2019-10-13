@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { Button, Form, Input, Grid, Card, Loader } from 'semantic-ui-react'
+import { Button, Form, Input, Grid, Card, Loader, Header, Segment, Icon } from 'semantic-ui-react'
 import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createOneWeek, getWeekDraft, saveWeekDraft } from '../../services/week'
@@ -14,6 +14,37 @@ import { usePersistedState } from '../../hooks/persistedState'
 
 import { FormMarkdownTextArea } from '../MarkdownTextArea'
 
+const PreviousWeekDetails = ({ weekData }) => {
+  if (!weekData) {
+    // The student doesn't have a review from the previous week (or the previous week doesn't exist),
+    // so we don't show this component.
+    return null
+  }
+  if (!weekData.feedback && !weekData.instructorNotes) {
+    return null
+  }
+
+  return (
+    <Segment align="left" style={{ marginTop: 20 }}>
+      <Header as="h3">Previous week</Header>
+      {weekData.feedback && (
+        <>
+          <Header as="h4">Feedback</Header>
+          <p>{weekData.feedback}</p>
+        </>
+      )}
+      {weekData.instructorNotes && (
+        <>
+          <Header as="h4">Instructor notes</Header>
+          <p>{weekData.instructorNotes}</p>
+        </>
+      )}
+    </Segment>
+  )
+}
+
+const isFinalReview = props => props.weekNumber > props.selectedInstance.weekAmount
+
 /**
  *  The page which is used by teacher to review submissions,.
  */
@@ -26,8 +57,6 @@ export const ReviewStudent = props => {
     instructorNotes: '',
     checks: null
   })
-  const reviewPointsRef = useRef(null)
-  const reviewTextRef = useRef(null)
 
   useEffect(() => {
     // run on component mount
@@ -125,19 +154,20 @@ export const ReviewStudent = props => {
   }
   if (Array.isArray(props.weekReview.data)) {
     // props.ownProps.studentInstance is a string, therefore casting to number.
-    const studentData = props.weekReview.data.filter(dataArray => dataArray.id === Number(props.ownProps.studentInstance))
+    const studentData = props.weekReview.data.find(dataArray => dataArray.id === Number(props.ownProps.studentInstance))
     // do we have a draft?
     const loadedFromDraft = !!props.weekReview.draftCreatedAt
     // props.weekNumber is a string, therefore casting to number.
-    const weekData = loadedFromDraft ? props.weekReview.draftData : studentData[0].weeks.filter(theWeek => theWeek.weekNumber === Number(props.ownProps.weekNumber))[0]
-    const checks = pstate.checks || (weekData ? weekData.checks || {} : {})
-    const weekPoints = studentData[0].weeks
+    const weekData = loadedFromDraft ? props.weekReview.draftData : studentData.weeks.find(theWeek => theWeek.weekNumber === Number(props.ownProps.weekNumber))
+    const previousWeekData = studentData.weeks.find(week => week.weekNumber === Number(props.ownProps.weekNumber) - 1)
+    const checks = weekData ? weekData.checks || {} : {}
+    const weekPoints = studentData.weeks
       .filter(week => week.weekNumber < props.weekNumber)
       .map(week => week.points)
       .reduce((a, b) => {
         return a + b
       }, 0)
-    const codeReviewPoints = studentData[0].codeReviews
+    const codeReviewPoints = studentData.codeReviews
       .map(review => review.points)
       .reduce((a, b) => {
         return a + b
@@ -185,8 +215,14 @@ export const ReviewStudent = props => {
         <h2> {props.selectedInstance.name}</h2>
         <h3>
           {' '}
-          {studentData[0].User.firsts} {studentData[0].User.lastname}{' '}
-          {studentData[0].Tags.map(tag => (
+          {studentData.User.firsts} {studentData.User.lastname}{' '}
+          <div style={{ display: 'inline-block', padding: '0px 0px 0px 25px' }}>
+            <a href={studentData.github} target="_blank" rel="noopener noreferrer">
+              <Icon name="github" color="black" />
+              {studentData.projectName}
+            </a>
+          </div>
+          {studentData.Tags.map(tag => (
             <div key={tag.id}>
               <Button compact floated="right" className={`mini ui ${tag.color} button`}>
                 {tag.name}
@@ -194,11 +230,11 @@ export const ReviewStudent = props => {
             </div>
           ))}
         </h3>
-        {props.weekNumber > props.selectedInstance.weekAmount ? <h3>Final Review</h3> : <h3>Week {props.weekNumber}</h3>}
+        {isFinalReview(props) ? <h3>Final Review</h3> : <h3>Week {props.weekNumber}</h3>}
         <Grid>
           <Grid.Row columns={2}>
             <Grid.Column>
-              {props.weekNumber > props.selectedInstance.weekAmount ? (
+              {isFinalReview(props) ? (
                 <div align="left">
                   <h3>Points before final review: {weekPoints + codeReviewPoints} </h3>
                   Week points: {weekPoints} <br />
@@ -211,7 +247,8 @@ export const ReviewStudent = props => {
                   Code review points: {codeReviewPoints}
                 </div>
               )}
-              {props.weekNumber > props.selectedInstance.weekAmount ? <h2>Final Review Points</h2> : <h2>Review</h2>}
+              <PreviousWeekDetails weekData={previousWeekData} />
+              {isFinalReview(props) ? <h2>Final Review Points</h2> : <h2>Review</h2>}
               {loadedFromDraft && (
                 <div>
                   <p>
@@ -225,20 +262,12 @@ export const ReviewStudent = props => {
                   <Form.Field>
                     <label>Points 0-{props.selectedInstance.weekMaxPoints}</label>
 
-                    <Input
-                      ref={reviewPointsRef}
-                      name="points"
-                      value={pstate.points}
-                      onChange={(e, { value }) => (pstate.points = value)}
-                      type="number"
-                      step="0.01"
-                      style={{ width: '150px', align: 'center' }}
-                    />
+                    <Input name="points" value={pstate.points} onChange={(e, { value }) => (pstate.points = value)} type="number" step="0.01" style={{ width: '150px', align: 'center' }} />
                   </Form.Field>
                 </Form.Group>
                 <h4>Feedback</h4>
                 <Form.Group inline unstackable style={{ textAlignVertical: 'top' }}>
-                  <div ref={reviewTextRef}>
+                  <div style={{ width: '100%' }}>
                     <FormMarkdownTextArea value={pstate.feedback} onChange={(e, { value }) => (pstate.feedback = value)} name="comment" style={{ width: '500px', height: '250px' }} />
                   </div>
                 </Form.Group>
@@ -247,7 +276,7 @@ export const ReviewStudent = props => {
                   <em>Only shown to instructors on this course</em>
                 </p>
                 <Form.Group inline unstackable style={{ textAlignVertical: 'top' }}>
-                  <div>
+                  <div style={{ width: '100%' }}>
                     <FormMarkdownTextArea
                       value={pstate.instructorNotes}
                       onChange={(e, { value }) => (pstate.instructorNotes = value)}
@@ -263,8 +292,8 @@ export const ReviewStudent = props => {
                   <Button className="ui center floated button" type="button" onClick={onClickSaveDraft}>
                     Save as draft
                   </Button>
-                  <Link to={`/labtool/browsereviews/${props.selectedInstance.ohid}/${studentData[0].id}`} type="Cancel">
-                    <Button className="ui center floated button" type="cancel" onClick={pstate.clear}>
+                  <Link to={`/labtool/browsereviews/${props.selectedInstance.ohid}/${studentData.id}`} type="Cancel">
+                    <Button className="ui center floated button" type="cancel">
                       Cancel
                     </Button>
                   </Link>

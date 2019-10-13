@@ -464,10 +464,11 @@ export const CoursePage = props => {
         <Header as="h2">{heading} </Header>
 
         <StudentTable
+          key={rowClassName}
           rowClassName={rowClassName + (droppedOut ? ' active' : '')}
-          columns={['select', 'points', 'review']}
+          columns={['select', 'points', 'instructor']}
           allowModify={true}
-          disableDefaultFilter={droppedOut}
+          allowReview={true}
           selectedInstance={props.selectedInstance}
           studentInstances={props.courseData.data.filter(studentInstance => droppedOut === studentInstance.dropped)}
           coursePageLogic={props.coursePageLogic}
@@ -614,6 +615,7 @@ export const CoursePage = props => {
       <div style={{ overflowX: 'auto', overflowY: 'hidden' }}>
         {renderTeacherTopPart()}
         {renderTeacherBottomPartForActiveStudents()}
+        <br />
         {renderTeacherBottomPartForDroppedOutStudents()}
         {renderTeacherBulkForm()}
         <br />

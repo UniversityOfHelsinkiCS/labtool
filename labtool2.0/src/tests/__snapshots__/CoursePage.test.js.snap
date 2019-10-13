@@ -600,11 +600,12 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
     </Header>
     <Connect(StudentTable)
       allowModify={true}
+      allowReview={true}
       columns={
         Array [
           "select",
           "points",
-          "review",
+          "instructor",
         ]
       }
       coursePageLogic={
@@ -618,7 +619,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           "showDropdown": "",
         }
       }
-      disableDefaultFilter={false}
+      key="TableRowForActiveStudents"
       rowClassName="TableRowForActiveStudents"
       selectedInstance={
         Object {
@@ -861,6 +862,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
       </Button>
     </Link>
   </div>
+  <br />
   <div
     className="TeachersBottomViewForDroppedOutStudents"
   >
@@ -872,11 +874,12 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
     </Header>
     <Connect(StudentTable)
       allowModify={true}
+      allowReview={true}
       columns={
         Array [
           "select",
           "points",
-          "review",
+          "instructor",
         ]
       }
       coursePageLogic={
@@ -890,7 +893,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           "showDropdown": "",
         }
       }
-      disableDefaultFilter={true}
+      key="TableRowForDroppedOutStudents"
       rowClassName="TableRowForDroppedOutStudents active"
       selectedInstance={
         Object {

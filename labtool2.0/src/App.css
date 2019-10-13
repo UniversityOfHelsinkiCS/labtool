@@ -30,7 +30,6 @@
 .error {
   background-color: red;
   padding: 1em;
-  clear: left;
   text-align: center;
   color: white;
   font-size: 20;
@@ -39,7 +38,6 @@
 .success {
   background-color: green;
   padding: 1em;
-  clear: left;
   text-align: center;
   color: white;
   font-size: 20;
