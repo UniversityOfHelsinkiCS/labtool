@@ -271,7 +271,7 @@ export const CoursePage = props => {
             {cr.toReview.projectName || } */}
             <br />
             <strong>GitHub: </strong>
-            <a href={cr.toReview.github} target="_blank" rel="noopener noreferrer">
+            <a href={cr.toReview.github || cr.repoToReview} target="_blank" rel="noopener noreferrer">
               {cr.toReview.github || cr.repoToReview}
             </a>
             <br /> <br />
