@@ -280,27 +280,6 @@ export const StudentTable = props => {
     return indents
   }
 
-  // const createRepositoryLink = url => {
-  //   let cleanUrl = url
-  //   cleanUrl = cleanUrl.replace(/^https?:\/\//, '')
-
-  //   if (cleanUrl.startsWith('github.com/')) {
-  //     const cleanUrlNoGithub = cleanUrl.substring('github.com/'.length)
-  //     cleanUrl = (
-  //       <Fragment>
-  //         <Icon name="github" color="black" />
-  //         {cleanUrlNoGithub}
-  //       </Fragment>
-  //     )
-  //   }
-
-  //   return (
-  //     <a href={url} target="_blank" rel="noopener noreferrer">
-  //       {cleanUrl}
-  //     </a>
-  //   )
-  // }
-
   const createStudentTableRow = (showColumn, data, extraColumns, dropDownTags, dropDownTeachers, { rowClassName, allowReview }) => (
     <Table.Row key={data.id} className={rowClassName}>
       {/* Select Check Box */}

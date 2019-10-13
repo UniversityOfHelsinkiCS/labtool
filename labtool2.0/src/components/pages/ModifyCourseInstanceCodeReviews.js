@@ -214,28 +214,6 @@ export const ModifyCourseInstanceReview = props => {
     )
   }
 
-  // const createRepositoryLink = url => {
-  //   const { Fragment } = React
-  //   let cleanUrl = url
-  //   cleanUrl = cleanUrl.replace(/^https?:\/\//, '')
-
-  //   if (cleanUrl.startsWith('github.com/')) {
-  //     const cleanUrlNoGithub = cleanUrl.substring('github.com/'.length)
-  //     cleanUrl = (
-  //       <Fragment>
-  //         <Icon name="github" color="black" />
-  //         {cleanUrlNoGithub}
-  //       </Fragment>
-  //     )
-  //   }
-
-  //   return (
-  //     <a href={url} target="_blank" rel="noopener noreferrer">
-  //       {cleanUrl}
-  //     </a>
-  //   )
-  // }
-
   const showCurrentReview = data => {
     if (!props.codeReviewLogic.selectedDropdown) {
       return null
@@ -264,27 +242,6 @@ export const ModifyCourseInstanceReview = props => {
       </div>
     )
   }
-
-  // const showRevieweeDropdown = data => {
-  //   if (!props.codeReviewLogic.selectedDropdown) {
-  //     return null
-  //   }
-  //   return (
-  //     <select
-  //       className="toReviewDropdown"
-  //       value={props.codeReviewLogic.currentSelections[props.codeReviewLogic.selectedDropdown][data.id]}
-  //       onChange={addCodeReview(props.codeReviewLogic.selectedDropdown, data.id)}
-  //     >
-  //       {props.dropdownUsers
-  //         .filter(d => d.value !== data.id)
-  //         .map(d => (
-  //           <option key={d.value} value={d.value}>
-  //             {d.text}
-  //           </option>
-  //         ))}
-  //     </select>
-  //   )
-  // }
 
   const makeCodeReviewSelectorHeader = () => (
     <Table.HeaderCell key="selectorHeader">
