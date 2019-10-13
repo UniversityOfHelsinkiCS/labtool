@@ -31,7 +31,7 @@ module.exports = {
           studentInstanceId: codeReview.reviewer,
           reviewNumber: req.body.reviewNumber,
           toReview: Number.isInteger(codeReview.toReview) ? codeReview.toReview : null,
-          repoToReview: Number.isInteger(codeReview) ? null : codeReview.repoToReview
+          repoToReview: Number.isInteger(codeReview.toReview) ? null : codeReview.repoToReview
         }
       })
       if (values.indexOf(null) !== -1) {
