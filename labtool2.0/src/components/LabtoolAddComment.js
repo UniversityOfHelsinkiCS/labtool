@@ -29,7 +29,7 @@ export const LabtoolAddComment = ({ weekId, handleSubmit, allowHidden }) => {
       </Accordion.Title>
       <Accordion.Content active={state.commentOpen}>
         <Form reply onSubmit={doSubmit} name={weekId} id={weekId}>
-          <FormMarkdownTextArea name="content" placeholder="Your comment..." value={state.comment} onChange={(e, { value }) => (state.comment = value)} />
+          <FormMarkdownTextArea name="content" placeholder="Your comment..." value={state.comment} onChange={(e, { value }) => (state.comment = value)} scalable={true} />
           <br />
           <div style={{ display: 'flex', direction: 'row', alignItems: 'baseline', clear: 'both' }}>
             {allowHidden && (
