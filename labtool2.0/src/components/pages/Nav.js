@@ -84,6 +84,7 @@ const mapStateToProps = state => {
 
 Nav.propTypes = {
   user: PropTypes.object.isRequired,
+  courseImport: PropTypes.object.isRequired,
 
   logout: PropTypes.func.isRequired
 }

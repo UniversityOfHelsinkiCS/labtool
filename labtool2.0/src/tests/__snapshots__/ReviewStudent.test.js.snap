@@ -145,7 +145,13 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
             }
             unstackable={true}
           >
-            <div>
+            <div
+              style={
+                Object {
+                  "width": "100%",
+                }
+              }
+            >
               <FormMarkdownTextArea
                 name="comment"
                 onChange={[Function]}
@@ -176,7 +182,13 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
             }
             unstackable={true}
           >
-            <div>
+            <div
+              style={
+                Object {
+                  "width": "100%",
+                }
+              }
+            >
               <FormMarkdownTextArea
                 name="instructorNotes"
                 onChange={[Function]}
