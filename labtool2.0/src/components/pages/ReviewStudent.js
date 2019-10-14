@@ -103,11 +103,7 @@ export const ReviewStudent = props => {
     }
   }
 
-  const toggleCheckbox = (cl, name, studentId, weekNbr) => async () => {
-    console.log(cl)
-    console.log(props)
-    props.weekReview.checks[cl] = true
-    console.log(props.weekReview.checks)
+  const toggleCheckbox = (name, studentId, weekNbr) => async () => {
     setAllowChecksCopy(true)
     props.toggleCheck(name, studentId, weekNbr)
   }
@@ -150,6 +146,10 @@ export const ReviewStudent = props => {
     pstate.feedback = e.target.text.value
   }
 
+  const isChecked = (checks, rowName) => (
+    props.weekReview.checks[rowName] === undefined ? (checks[rowName] !== undefined ? checks[rowName] : false) : props.weekReview.checks[rowName]
+  )
+
   if (props.loading.loading) {
     return <Loader active />
   }
@@ -183,12 +183,11 @@ export const ReviewStudent = props => {
     if (checkList) {
       Object.keys(checkList.list).forEach(cl => {
         checkList.list[cl].forEach(row => {
-          const isChecked = props.weekReview.checks[row.name] === undefined ? (checks[row.name] !== undefined ? checks[row.name] : false) : props.weekReview.checks[row.name]
-
-          const addition = isChecked ? row.textWhenOn : row.textWhenOff
+          const checked = isChecked(checks, row.name)
+          const addition = checked ? row.textWhenOn : row.textWhenOff
           if (addition) checklistOutput += addition + '\n\n'
 
-          if (isChecked) {
+          if (checked) {
             checklistPoints += row.checkedPoints
           } else {
             checklistPoints += row.uncheckedPoints
@@ -314,13 +313,12 @@ export const ReviewStudent = props => {
                       <Card className="checklistCard" fluid color="red" key={cl}>
                         <Card.Content header={cl} />
                         {checkList.list[cl].map(row => (
-                          <Card.Content className="checklistCardRow" key={row.name} onClick={toggleCheckbox(cl, row.name, props.ownProps.studentInstance, props.ownProps.weekNumber)}>
+                          <Card.Content className="checklistCardRow" key={row.name} onClick={toggleCheckbox(row.name, props.ownProps.studentInstance, props.ownProps.weekNumber)}>
                             <Form.Field>
                               <Grid>
                                 <Grid.Row>
-                                  <Grid.Column width={3}>
-                                    {/*<Input style={{ size: 30 }} size="large" type="checkbox" defaultChecked={checks[row.name] !== undefined ? checks[row.name] : false} />*/}
-                                    <Icon name={checks[row.name] === undefined || checks[row.name] === false ? 'circle outline' : 'circle check outline'} />
+                                  <Grid.Column width={3} style={{ cursor: 'pointer' }}>
+                                    <Icon size="large" name={isChecked(checks, row.name) ? 'circle check outline' : 'circle outline'} />
                                   </Grid.Column>
                                   <Grid.Column width={10}>
                                     <span style={{ flexGrow: 1, textAlign: 'center' }}>{row.name}</span>
