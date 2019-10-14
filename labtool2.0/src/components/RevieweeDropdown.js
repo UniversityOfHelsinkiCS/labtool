@@ -3,7 +3,9 @@ import { Dropdown } from 'semantic-ui-react'
 import PropTypes from 'prop-types'
 
 const RevieweeDropdown = props => {
-  const [options, setOptions] = useState(props.dropdownUsers.filter(d => d.value !== props.data.id))
+  const reviewee = props.codeReviewLogic.currentSelections[props.codeReviewLogic.selectedDropdown][props.data.id]
+  const initialOptions = props.dropdownUsers.filter(d => d.value !== props.data.id)
+  const [options, setOptions] = useState(Number.isInteger(reviewee) ? initialOptions : [...initialOptions, { value: reviewee, text: reviewee }])
 
   const handleAdditions = (e, { value }) => {
     if (value.includes('http')) {
