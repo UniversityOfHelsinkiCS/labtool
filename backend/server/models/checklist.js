@@ -6,7 +6,8 @@ module.exports = (sequelize, DataTypes) => {
       week: DataTypes.INTEGER,
       list: DataTypes.JSONB,
       courseName: DataTypes.STRING,
-      master: DataTypes.BOOLEAN
+      master: DataTypes.BOOLEAN,
+      maxPoints: DataTypes.DOUBLE
     },
     {
       hooks: {
