@@ -13,6 +13,7 @@ import { trimDate } from '../../util/format'
 import { usePersistedState } from '../../hooks/persistedState'
 
 import { FormMarkdownTextArea } from '../MarkdownTextArea'
+import { withSetStateAllowed } from 'enzyme/src/Utils'
 
 const PreviousWeekDetails = ({ weekData }) => {
   if (!weekData) {
@@ -106,6 +107,7 @@ export const ReviewStudent = props => {
     console.log(cl)
     console.log(props)
     props.weekReview.checks[cl] = true
+    console.log(props.weekReview.checks)
     setAllowChecksCopy(true)
     props.toggleCheck(name, studentId, weekNbr)
   }
@@ -312,12 +314,13 @@ export const ReviewStudent = props => {
                       <Card className="checklistCard" fluid color="red" key={cl}>
                         <Card.Content header={cl} />
                         {checkList.list[cl].map(row => (
-                          <Card.Content className="checklistCardRow" key={row.name}>
-                            <Form.Field onClick={toggleCheckbox(cl, row.name, props.ownProps.studentInstance, props.ownProps.weekNumber)}>
+                          <Card.Content className="checklistCardRow" key={row.name} onClick={toggleCheckbox(cl, row.name, props.ownProps.studentInstance, props.ownProps.weekNumber)}>
+                            <Form.Field>
                               <Grid>
                                 <Grid.Row>
                                   <Grid.Column width={3}>
-                                    <Input type="checkbox" defaultChecked={checks[row.name] !== undefined ? checks[row.name] : false} />
+                                    {/*<Input style={{ size: 30 }} size="large" type="checkbox" defaultChecked={checks[row.name] !== undefined ? checks[row.name] : false} />*/}
+                                    <Icon name={checks[row.name] === undefined || checks[row.name] === false ? 'circle outline' : 'circle check outline'} />
                                   </Grid.Column>
                                   <Grid.Column width={10}>
                                     <span style={{ flexGrow: 1, textAlign: 'center' }}>{row.name}</span>
