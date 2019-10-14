@@ -102,7 +102,10 @@ export const ReviewStudent = props => {
     }
   }
 
-  const toggleCheckbox = (name, studentId, weekNbr) => async () => {
+  const toggleCheckbox = (cl, name, studentId, weekNbr) => async () => {
+    console.log(cl)
+    console.log(props)
+    props.weekReview.checks[cl] = true
     setAllowChecksCopy(true)
     props.toggleCheck(name, studentId, weekNbr)
   }
@@ -310,15 +313,11 @@ export const ReviewStudent = props => {
                         <Card.Content header={cl} />
                         {checkList.list[cl].map(row => (
                           <Card.Content className="checklistCardRow" key={row.name}>
-                            <Form.Field>
+                            <Form.Field onClick={toggleCheckbox(cl, row.name, props.ownProps.studentInstance, props.ownProps.weekNumber)}>
                               <Grid>
                                 <Grid.Row>
                                   <Grid.Column width={3}>
-                                    <Input
-                                      type="checkbox"
-                                      defaultChecked={checks[row.name] !== undefined ? checks[row.name] : false}
-                                      onChange={toggleCheckbox(row.name, props.ownProps.studentInstance, props.ownProps.weekNumber)}
-                                    />
+                                    <Input type="checkbox" defaultChecked={checks[row.name] !== undefined ? checks[row.name] : false} />
                                   </Grid.Column>
                                   <Grid.Column width={10}>
                                     <span style={{ flexGrow: 1, textAlign: 'center' }}>{row.name}</span>
