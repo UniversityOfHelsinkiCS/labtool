@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Button, Form, Input, Grid, Card, Loader, Header, Segment, Icon } from 'semantic-ui-react'
 import { Link, Redirect } from 'react-router-dom'
@@ -57,8 +57,6 @@ export const ReviewStudent = props => {
     instructorNotes: '',
     checks: null
   })
-  const reviewPointsRef = useRef(null)
-  const reviewTextRef = useRef(null)
 
   useEffect(() => {
     // run on component mount
@@ -264,20 +262,12 @@ export const ReviewStudent = props => {
                   <Form.Field>
                     <label>Points 0-{props.selectedInstance.weekMaxPoints}</label>
 
-                    <Input
-                      ref={reviewPointsRef}
-                      name="points"
-                      value={pstate.points}
-                      onChange={(e, { value }) => (pstate.points = value)}
-                      type="number"
-                      step="0.01"
-                      style={{ width: '150px', align: 'center' }}
-                    />
+                    <Input name="points" value={pstate.points} onChange={(e, { value }) => (pstate.points = value)} type="number" step="0.01" style={{ width: '150px', align: 'center' }} />
                   </Form.Field>
                 </Form.Group>
                 <h4>Feedback</h4>
                 <Form.Group inline unstackable style={{ textAlignVertical: 'top' }}>
-                  <div ref={reviewTextRef}>
+                  <div style={{ width: '100%' }}>
                     <FormMarkdownTextArea value={pstate.feedback} onChange={(e, { value }) => (pstate.feedback = value)} name="comment" style={{ width: '500px', height: '250px' }} />
                   </div>
                 </Form.Group>
@@ -286,7 +276,7 @@ export const ReviewStudent = props => {
                   <em>Only shown to instructors on this course</em>
                 </p>
                 <Form.Group inline unstackable style={{ textAlignVertical: 'top' }}>
-                  <div>
+                  <div style={{ width: '100%' }}>
                     <FormMarkdownTextArea
                       value={pstate.instructorNotes}
                       onChange={(e, { value }) => (pstate.instructorNotes = value)}

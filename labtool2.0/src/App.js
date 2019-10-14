@@ -72,7 +72,6 @@ const App = props => {
     } else {
       props.login()
     }
-    props.getIsAllowedToImport()
 
     /**
      * After mounting, it checks from the localstorage if user is logged in.
@@ -103,6 +102,7 @@ const App = props => {
       created: props.created
     }
     window.localStorage.setItem('loggedLabtool', JSON.stringify(userAndToken))
+    props.getIsAllowedToImport()
   }, [props.user, props.token, props.created])
 
   /**

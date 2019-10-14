@@ -9,7 +9,7 @@ import useLegacyState from '../hooks/legacyState'
 // only adds preview and info line, Markdown needs to be supported by code
 // viewing the text outside the text area
 export const FormMarkdownTextArea = props => {
-  const { defaultValue } = props
+  const { defaultValue, scalable } = props
   const state = useLegacyState({ previewOpen: false, textValue: defaultValue ? defaultValue : '', width: window.innerWidth })
 
   const handleClick = () => {
@@ -24,12 +24,16 @@ export const FormMarkdownTextArea = props => {
     state.textValue = props.value
   }
 
-  const isWide = () => state.width >= 800
+  const getNonScalableRightPadding = () => (scalable ? null : '0')
+  const getContainerWidth = () => (scalable ? null : '100%')
+
+  const isWide = () => scalable && state.width >= 800
 
   const changeDirection = () => (isWide() ? 'row' : 'column')
   const getHorizontalMargin = () => (isWide() ? '0.5em' : 0)
   const getTextHeight = () => (isWide() ? '320px' : '160px')
   const getPreviewHeight = () => (isWide() ? '280px' : '200px')
+  const getFlexPercentage = () => (isWide() ? '50%' : null)
 
   const onResize = () => {
     state.width = window.innerWidth
@@ -42,6 +46,10 @@ export const FormMarkdownTextArea = props => {
   }, [])
 
   useEffect(() => {
+    if (!scalable) {
+      return
+    }
+
     // make sure the width stays up to date by subscribing to resize events
 
     window.addEventListener('resize', onResize)
@@ -56,7 +64,7 @@ export const FormMarkdownTextArea = props => {
   const { previewOpen, textValue } = state
 
   return (
-    <div>
+    <div style={{ width: getContainerWidth() }}>
       <p>
         <i>
           This field supports{' '}
@@ -67,11 +75,11 @@ export const FormMarkdownTextArea = props => {
         </i>
       </p>
       <div style={{ display: 'flex', flexDirection: changeDirection() }}>
-        <Form.Field style={{ flex: '50%', marginRight: getHorizontalMargin() }}>
+        <Form.Field style={{ flex: getFlexPercentage(), marginRight: getHorizontalMargin(), paddingRight: getNonScalableRightPadding() }}>
           {/* resize: none -- we cannot allow resizing the area because the Markdown preview cannot resize with it */}
           <TextArea onInput={handleChange} {...props} style={{ height: getTextHeight(), marginBottom: '15px', resize: 'none' }} />
         </Form.Field>
-        <Accordion key fluid styled style={{ flex: '50%', textAlign: 'start', marginBottom: '2em', marginTop: 0, marginLeft: getHorizontalMargin() }}>
+        <Accordion key fluid styled style={{ flex: getFlexPercentage(), textAlign: 'start', marginBottom: '2em', marginTop: 0, marginLeft: getHorizontalMargin() }}>
           <Accordion.Title
             active={isWide() || previewOpen}
             onClick={() => {
@@ -93,5 +101,6 @@ export const FormMarkdownTextArea = props => {
 
 FormMarkdownTextArea.propTypes = {
   value: PropTypes.any,
-  defaultValue: PropTypes.string
+  defaultValue: PropTypes.string,
+  scalable: PropTypes.bool
 }
