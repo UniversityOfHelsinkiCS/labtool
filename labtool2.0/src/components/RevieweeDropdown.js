@@ -3,9 +3,20 @@ import { Dropdown } from 'semantic-ui-react'
 import PropTypes from 'prop-types'
 
 const RevieweeDropdown = props => {
-  const reviewee = props.codeReviewLogic.currentSelections[props.codeReviewLogic.selectedDropdown][props.data.id]
+  const reviewee = props.create
+    ? //if the code round is a new created one
+      props.codeReviewLogic.currentSelections['create'][props.data.id]
+      ? props.codeReviewLogic.currentSelections['create'][props.data.id]
+      : null
+    : // otherwise check if a code round has been selected
+    props.codeReviewLogic.selectedDropdown !== null
+    ? props.codeReviewLogic.currentSelections[props.codeReviewLogic.selectedDropdown][props.data.id]
+      ? props.codeReviewLogic.currentSelections[props.codeReviewLogic.selectedDropdown][props.data.id]
+      : null
+    : null
+
   const initialOptions = props.dropdownUsers.filter(d => d.value !== props.data.id)
-  const [options, setOptions] = useState(Number.isInteger(reviewee) ? initialOptions : [...initialOptions, { value: reviewee, text: reviewee }])
+  const [options, setOptions] = useState(!Number.isInteger(reviewee) && reviewee !== null ? [...initialOptions, { value: reviewee, text: reviewee }] : initialOptions)
 
   const handleAdditions = (e, { value }) => {
     if (value.includes('http')) {
@@ -14,7 +25,7 @@ const RevieweeDropdown = props => {
     }
   }
 
-  if (!props.codeReviewLogic.selectedDropdown) {
+  if (!props.codeReviewLogic.selectedDropdown && !props.create) {
     return null
   }
 
