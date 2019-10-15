@@ -440,7 +440,9 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
           <div />
         </form>
       </div>
-      <div>
+      <div
+        classname="maxPointsField"
+      >
         <Label>
           Maximum points
         </Label>
@@ -450,6 +452,27 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
           step="0.01"
           type="number"
           value=""
+        />
+        <Popup
+          className="infoText"
+          content="Defining maximum points yourself is not mandatory. If no value is given, default points remain valid."
+          disabled={false}
+          eventsEnabled={true}
+          offset={0}
+          on={
+            Array [
+              "click",
+              "hover",
+            ]
+          }
+          pinned={false}
+          position="top left"
+          trigger={
+            <Icon
+              as="i"
+              name="question circle"
+            />
+          }
         />
       </div>
       <Card
