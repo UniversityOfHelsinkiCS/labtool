@@ -458,7 +458,7 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
         />
         <Popup
           className="infoText"
-          content="Defining maximum points yourself is not mandatory. If no value is given, default points remain valid."
+          content="Defining maximum points yourself is not mandatory. If no value is given, default weekly points remain valid."
           disabled={false}
           eventsEnabled={true}
           offset={0}
