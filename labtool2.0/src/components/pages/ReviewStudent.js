@@ -313,9 +313,13 @@ export const ReviewStudent = props => {
                           <Card.Content className="checklistCardRow" key={row.name} onClick={toggleCheckbox(row.name, props.ownProps.studentInstance, props.ownProps.weekNumber)}>
                             <Form.Field>
                               <Grid>
-                                <Grid.Row>
-                                  <Grid.Column width={3} style={{ cursor: 'pointer' }}>
-                                    <Icon size="large" name={isChecked(checks, row.name) ? 'circle check outline' : 'circle outline'} />
+                                <Grid.Row style={{ cursor: 'pointer', userSelect: 'none' }}>
+                                  <Grid.Column width={3}>
+                                    <Icon
+                                      size="large"
+                                      name={isChecked(checks, row.name) ? 'circle check outline' : 'circle outline'}
+                                      style={{ color: isChecked(checks, row.name) ? 'green' : 'black' }}
+                                    />
                                   </Grid.Column>
                                   <Grid.Column width={10}>
                                     <span style={{ flexGrow: 1, textAlign: 'center' }}>{row.name}</span>
