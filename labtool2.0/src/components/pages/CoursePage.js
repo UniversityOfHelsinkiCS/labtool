@@ -403,6 +403,10 @@ export const CoursePage = props => {
     return headers
   }
 
+  const activateCourse = () => {
+    console.log('WIP!')
+  }
+
   /**
    * Returns what teachers should see at the top of this page
    */
