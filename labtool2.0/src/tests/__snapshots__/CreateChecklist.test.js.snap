@@ -440,6 +440,18 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
           <div />
         </form>
       </div>
+      <div>
+        <Label>
+          Maximum points
+        </Label>
+        <Input
+          className="numberField"
+          onChange={[Function]}
+          step="0.01"
+          type="number"
+          value=""
+        />
+      </div>
       <Card
         className="maxPointsCard"
       >
