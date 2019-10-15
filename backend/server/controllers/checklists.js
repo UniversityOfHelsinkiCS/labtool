@@ -17,6 +17,10 @@ module.exports = {
         res.status(400).send('Missing or malformed inputs.')
         return
       }
+      if (req.body.maxPoints < 0) {
+        res.status(400).send('Invalid maximum points.')
+        return
+      }
       try {
         Object.keys(req.body.checklist).forEach((cl) => {
           if (!Array.isArray(req.body.checklist[cl])) {
