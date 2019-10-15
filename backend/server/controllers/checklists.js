@@ -81,7 +81,8 @@ module.exports = {
         week: req.body.week,
         courseName: 'doot',
         list: req.body.checklist,
-        courseInstanceId: req.body.courseInstanceId
+        courseInstanceId: req.body.courseInstanceId,
+        maxPoints: req.body.maxPoints
       })
       res.status(200).send({
         message: `checklist saved successfully for week ${req.body.week}.`,
