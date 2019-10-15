@@ -25,11 +25,10 @@ describe('<ReviewStudent />', () => {
       checklists: [
         {
           id: 10002,
-          week: 1,
+          week: 2,
           list: {},
           courseName: 'Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit',
           master: false,
-          maxPoints: 4,
           createdAt: '2018-03-26T00:00:00.000Z',
           updatedAt: '2018-03-26T00:00:00.000Z',
           courseInstanceId: 10011
@@ -77,6 +76,7 @@ describe('<ReviewStudent />', () => {
           },
           courseName: 'Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit',
           master: false,
+          maxPoints: 4,
           createdAt: '2018-03-26T00:00:00.000Z',
           updatedAt: '2018-03-26T00:00:00.000Z',
           courseInstanceId: 10011
