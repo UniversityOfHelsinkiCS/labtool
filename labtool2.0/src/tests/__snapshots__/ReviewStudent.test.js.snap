@@ -114,9 +114,11 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
             unstackable={true}
           >
             <FormField>
-              <label>
+              <label
+                className="showMaxPoints"
+              >
                 Points 0-
-                3
+                4
               </label>
               <Input
                 name="points"
@@ -239,241 +241,6 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
         <div
           className="checklist"
         >
-          <Card
-            className="checklistCard"
-            color="red"
-            fluid={true}
-            key="Koodi"
-          >
-            <CardContent
-              header="Koodi"
-            />
-            <CardContent
-              className="checklistCardRow"
-              key="Koodin laatu"
-            >
-              <FormField>
-                <Grid>
-                  <GridRow>
-                    <GridColumn
-                      width={3}
-                    >
-                      <Input
-                        defaultChecked={false}
-                        onChange={[Function]}
-                        type="checkbox"
-                      />
-                    </GridColumn>
-                    <GridColumn
-                      width={10}
-                    >
-                      <span
-                        style={
-                          Object {
-                            "flexGrow": 1,
-                            "textAlign": "center",
-                          }
-                        }
-                      >
-                        Koodin laatu
-                      </span>
-                    </GridColumn>
-                    <GridColumn
-                      width={3}
-                    >
-                      <span>
-                        undefined p / undefined p
-                      </span>
-                    </GridColumn>
-                  </GridRow>
-                </Grid>
-              </FormField>
-            </CardContent>
-          </Card>
-          <Card
-            className="checklistCard"
-            color="red"
-            fluid={true}
-            key="Algoritmit"
-          >
-            <CardContent
-              header="Algoritmit"
-            />
-            <CardContent
-              className="checklistCardRow"
-              key="Algoritmin runko"
-            >
-              <FormField>
-                <Grid>
-                  <GridRow>
-                    <GridColumn
-                      width={3}
-                    >
-                      <Input
-                        defaultChecked={false}
-                        onChange={[Function]}
-                        type="checkbox"
-                      />
-                    </GridColumn>
-                    <GridColumn
-                      width={10}
-                    >
-                      <span
-                        style={
-                          Object {
-                            "flexGrow": 1,
-                            "textAlign": "center",
-                          }
-                        }
-                      >
-                        Algoritmin runko
-                      </span>
-                    </GridColumn>
-                    <GridColumn
-                      width={3}
-                    >
-                      <span>
-                        undefined p / undefined p
-                      </span>
-                    </GridColumn>
-                  </GridRow>
-                </Grid>
-              </FormField>
-            </CardContent>
-            <CardContent
-              className="checklistCardRow"
-              key="Tietorakenteita luotu"
-            >
-              <FormField>
-                <Grid>
-                  <GridRow>
-                    <GridColumn
-                      width={3}
-                    >
-                      <Input
-                        defaultChecked={false}
-                        onChange={[Function]}
-                        type="checkbox"
-                      />
-                    </GridColumn>
-                    <GridColumn
-                      width={10}
-                    >
-                      <span
-                        style={
-                          Object {
-                            "flexGrow": 1,
-                            "textAlign": "center",
-                          }
-                        }
-                      >
-                        Tietorakenteita luotu
-                      </span>
-                    </GridColumn>
-                    <GridColumn
-                      width={3}
-                    >
-                      <span>
-                        undefined p / undefined p
-                      </span>
-                    </GridColumn>
-                  </GridRow>
-                </Grid>
-              </FormField>
-            </CardContent>
-          </Card>
-          <Card
-            className="checklistCard"
-            color="red"
-            fluid={true}
-            key="Dokumentaatio"
-          >
-            <CardContent
-              header="Dokumentaatio"
-            />
-            <CardContent
-              className="checklistCardRow"
-              key="Readme"
-            >
-              <FormField>
-                <Grid>
-                  <GridRow>
-                    <GridColumn
-                      width={3}
-                    >
-                      <Input
-                        defaultChecked={false}
-                        onChange={[Function]}
-                        type="checkbox"
-                      />
-                    </GridColumn>
-                    <GridColumn
-                      width={10}
-                    >
-                      <span
-                        style={
-                          Object {
-                            "flexGrow": 1,
-                            "textAlign": "center",
-                          }
-                        }
-                      >
-                        Readme
-                      </span>
-                    </GridColumn>
-                    <GridColumn
-                      width={3}
-                    >
-                      <span>
-                        undefined p / undefined p
-                      </span>
-                    </GridColumn>
-                  </GridRow>
-                </Grid>
-              </FormField>
-            </CardContent>
-            <CardContent
-              className="checklistCardRow"
-              key="Tuntikirjanpito"
-            >
-              <FormField>
-                <Grid>
-                  <GridRow>
-                    <GridColumn
-                      width={3}
-                    >
-                      <Input
-                        defaultChecked={false}
-                        onChange={[Function]}
-                        type="checkbox"
-                      />
-                    </GridColumn>
-                    <GridColumn
-                      width={10}
-                    >
-                      <span
-                        style={
-                          Object {
-                            "flexGrow": 1,
-                            "textAlign": "center",
-                          }
-                        }
-                      >
-                        Tuntikirjanpito
-                      </span>
-                    </GridColumn>
-                    <GridColumn
-                      width={3}
-                    >
-                      <span>
-                        undefined p / undefined p
-                      </span>
-                    </GridColumn>
-                  </GridRow>
-                </Grid>
-              </FormField>
-            </CardContent>
-          </Card>
           <div>
             <Form
               as="form"
@@ -491,28 +258,18 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
                     "width": "100%",
                   }
                 }
-                value="Koodin laadussa parantamisen varaa
-
-Algoritmin runko puuttuu
-
-Tietorakenteita ei ole luotu
-
-README puuttuu
-
-Tuntikirjanpito puuttuu
-
-"
+                value=""
               />
               <p
                 className="checklistOutputPoints"
               >
                 points: 
-                NaN
+                0.00
               </p>
               <input
                 name="points"
                 type="hidden"
-                value={NaN}
+                value={0}
               />
               <Button
                 as="button"

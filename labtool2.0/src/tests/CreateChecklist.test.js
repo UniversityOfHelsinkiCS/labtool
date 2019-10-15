@@ -176,8 +176,18 @@ describe('<CreateChecklist /> component', () => {
     })
 
     describe('maximum points', () => {
+      it('renders a maximum points input field', () => {
+        expect(wrapper.find('.maxPointsInput').exists()).toEqual(true)
+      })
+
       it('renders a maximum points card', () => {
         expect(wrapper.find('.maxPointsCard').exists()).toEqual(true)
+      })
+
+      it('if user adds maximum points, the given points are shown', () => {
+        wrapper.find('.maxPointsInput').simulate('change', { target: { value: '5' } })
+        expect(wrapper.find('.maxPointsNumber').text()).toEqual(String(5))
+        wrapper.find('.maxPointsInput').simulate('change', { target: { value: '' } })
       })
 
       it('renders correct value for max points', () => {

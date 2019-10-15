@@ -410,7 +410,7 @@ export const CreateChecklist = props => {
             </div>
             <div>
               <Label>Maximum points</Label>
-              <Input className="numberField" type="number" step="0.01" value={state.maximumPoints} onChange={changeMaximumPoints} />
+              <Input className="maxPointsInput" type="number" step="0.01" style={{ width: '100px' }} value={state.maximumPoints} onChange={changeMaximumPoints} />
               <Popup className="infoText" trigger={<Icon name="question circle" />} content="Defining maximum points yourself is not mandatory. If no value is given, default points remain valid." />
             </div>
             <Card className="maxPointsCard">

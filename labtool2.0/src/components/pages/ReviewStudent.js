@@ -268,7 +268,7 @@ export const ReviewStudent = props => {
               <Form onSubmit={handleSubmit}>
                 <Form.Group inline unstackable>
                   <Form.Field>
-                    <label>Points 0-{getMaximumPoints()}</label>
+                    <label className="showMaxPoints">Points 0-{getMaximumPoints()}</label>
 
                     <Input name="points" value={pstate.points} onChange={(e, { value }) => (pstate.points = value)} type="number" step="0.01" style={{ width: '150px', align: 'center' }} />
                   </Form.Field>
