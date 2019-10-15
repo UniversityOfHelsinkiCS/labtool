@@ -330,10 +330,7 @@ describe('<CoursePage /> as student', () => {
             github: 'http://github.com/tiralabra2',
             projectName: 'Tiran toinen labraprojekti'
           },
-          reviewer: {
-            github: 'http://github.com/superprojekti',
-            projectName: 'Tira super projekti'
-          },
+          repoToReview: null,
           reviewNumber: 1,
           points: 2.0
         },
@@ -342,22 +339,16 @@ describe('<CoursePage /> as student', () => {
             github: 'http://github.com/superprojekti',
             projectName: 'Tira super projekti'
           },
-          reviewer: {
-            github: 'http://github.com/tiralabra2',
-            projectName: 'Tiran toinen labraprojekti'
-          },
+          repoToReview: null,
           reviewNumber: 2,
           points: 1.0
         },
         {
           toReview: {
-            github: 'http://github.com/superprojekti',
-            projectName: 'Tira super projekti'
+            github: null,
+            projectName: null
           },
-          reviewer: {
-            github: 'http://github.com/tiralabra2',
-            projectName: 'Tiran toinen labraprojekti'
-          },
+          repoToReview: 'https://github.com/userName/arbitraryRepo',
           reviewNumber: 3,
           points: null
         }
