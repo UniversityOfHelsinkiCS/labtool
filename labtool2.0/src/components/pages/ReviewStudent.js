@@ -13,7 +13,6 @@ import { trimDate } from '../../util/format'
 import { usePersistedState } from '../../hooks/persistedState'
 
 import { FormMarkdownTextArea } from '../MarkdownTextArea'
-import { withSetStateAllowed } from 'enzyme/src/Utils'
 
 const PreviousWeekDetails = ({ weekData }) => {
   if (!weekData) {
@@ -146,9 +145,7 @@ export const ReviewStudent = props => {
     pstate.feedback = e.target.text.value
   }
 
-  const isChecked = (checks, rowName) => (
-    props.weekReview.checks[rowName] === undefined ? (checks[rowName] !== undefined ? checks[rowName] : false) : props.weekReview.checks[rowName]
-  )
+  const isChecked = (checks, rowName) => (props.weekReview.checks[rowName] === undefined ? (checks[rowName] !== undefined ? checks[rowName] : false) : props.weekReview.checks[rowName])
 
   if (props.loading.loading) {
     return <Loader active />
