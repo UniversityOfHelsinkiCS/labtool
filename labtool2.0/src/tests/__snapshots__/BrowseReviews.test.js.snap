@@ -51,9 +51,9 @@ exports[`<BrowseReviews /> BrowseReviews Component should render correctly 1`] =
           )
           <HeaderSubheader>
             <a
-              href="mailto:maarit.opiskelija@helsinki.fi"
+              href="mailto:maarit.opiskelija@helsinki.invalid"
             >
-              maarit.opiskelija@helsinki.fi
+              maarit.opiskelija@helsinki.invalid
             </a>
           </HeaderSubheader>
         </Header>
