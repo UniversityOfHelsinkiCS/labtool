@@ -114,9 +114,11 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
             unstackable={true}
           >
             <FormField>
-              <label>
+              <label
+                className="showMaxPoints"
+              >
                 Points 0-
-                3
+                4
               </label>
               <Input
                 name="points"
@@ -224,6 +226,7 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
               <Button
                 as="button"
                 className="ui center floated button"
+                onClick={[Function]}
                 type="cancel"
               >
                 Cancel
@@ -251,17 +254,30 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
             <CardContent
               className="checklistCardRow"
               key="Koodin laatu"
+              onClick={[Function]}
             >
               <FormField>
                 <Grid>
-                  <GridRow>
+                  <GridRow
+                    style={
+                      Object {
+                        "cursor": "pointer",
+                        "userSelect": "none",
+                      }
+                    }
+                  >
                     <GridColumn
                       width={3}
                     >
-                      <Input
-                        defaultChecked={false}
-                        onChange={[Function]}
-                        type="checkbox"
+                      <Icon
+                        as="i"
+                        name="circle outline"
+                        size="large"
+                        style={
+                          Object {
+                            "color": "black",
+                          }
+                        }
                       />
                     </GridColumn>
                     <GridColumn
@@ -302,17 +318,30 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
             <CardContent
               className="checklistCardRow"
               key="Algoritmin runko"
+              onClick={[Function]}
             >
               <FormField>
                 <Grid>
-                  <GridRow>
+                  <GridRow
+                    style={
+                      Object {
+                        "cursor": "pointer",
+                        "userSelect": "none",
+                      }
+                    }
+                  >
                     <GridColumn
                       width={3}
                     >
-                      <Input
-                        defaultChecked={false}
-                        onChange={[Function]}
-                        type="checkbox"
+                      <Icon
+                        as="i"
+                        name="circle outline"
+                        size="large"
+                        style={
+                          Object {
+                            "color": "black",
+                          }
+                        }
                       />
                     </GridColumn>
                     <GridColumn
@@ -343,17 +372,30 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
             <CardContent
               className="checklistCardRow"
               key="Tietorakenteita luotu"
+              onClick={[Function]}
             >
               <FormField>
                 <Grid>
-                  <GridRow>
+                  <GridRow
+                    style={
+                      Object {
+                        "cursor": "pointer",
+                        "userSelect": "none",
+                      }
+                    }
+                  >
                     <GridColumn
                       width={3}
                     >
-                      <Input
-                        defaultChecked={false}
-                        onChange={[Function]}
-                        type="checkbox"
+                      <Icon
+                        as="i"
+                        name="circle outline"
+                        size="large"
+                        style={
+                          Object {
+                            "color": "black",
+                          }
+                        }
                       />
                     </GridColumn>
                     <GridColumn
@@ -394,17 +436,30 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
             <CardContent
               className="checklistCardRow"
               key="Readme"
+              onClick={[Function]}
             >
               <FormField>
                 <Grid>
-                  <GridRow>
+                  <GridRow
+                    style={
+                      Object {
+                        "cursor": "pointer",
+                        "userSelect": "none",
+                      }
+                    }
+                  >
                     <GridColumn
                       width={3}
                     >
-                      <Input
-                        defaultChecked={false}
-                        onChange={[Function]}
-                        type="checkbox"
+                      <Icon
+                        as="i"
+                        name="circle outline"
+                        size="large"
+                        style={
+                          Object {
+                            "color": "black",
+                          }
+                        }
                       />
                     </GridColumn>
                     <GridColumn
@@ -435,17 +490,30 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
             <CardContent
               className="checklistCardRow"
               key="Tuntikirjanpito"
+              onClick={[Function]}
             >
               <FormField>
                 <Grid>
-                  <GridRow>
+                  <GridRow
+                    style={
+                      Object {
+                        "cursor": "pointer",
+                        "userSelect": "none",
+                      }
+                    }
+                  >
                     <GridColumn
                       width={3}
                     >
-                      <Input
-                        defaultChecked={false}
-                        onChange={[Function]}
-                        type="checkbox"
+                      <Icon
+                        as="i"
+                        name="circle outline"
+                        size="large"
+                        style={
+                          Object {
+                            "color": "black",
+                          }
+                        }
                       />
                     </GridColumn>
                     <GridColumn

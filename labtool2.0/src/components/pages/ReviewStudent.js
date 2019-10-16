@@ -73,8 +73,9 @@ export const ReviewStudent = props => {
   }, [])
 
   useEffect(() => {
-    if (allowChecksCopy) {
-      pstate.checks = { ...props.weekReview.checks }
+    if (allowChecksCopy && props.weekReview.checks !== null) {
+      const d = { ...props.weekReview.checks }
+      pstate.checks = d
     }
   }, [props.weekReview.checks])
 
@@ -89,7 +90,8 @@ export const ReviewStudent = props => {
         weekNumber: props.weekNumber,
         checks: props.weekReview.checks
       }
-      if (e.target.points.value < 0 || e.target.points.value > props.selectedInstance.weekMaxPoints) {
+      pstate.clear()
+      if (e.target.points.value < 0 || e.target.points.value > getMaximumPoints()) {
         store.dispatch({ type: 'WEEKS_CREATE_ONEFAILURE' })
       } else {
         props.addRedirectHook({
@@ -102,13 +104,21 @@ export const ReviewStudent = props => {
     }
   }
 
+  const getMaximumPoints = () => {
+    const checklist = props.selectedInstance.checklists.find(checkl => checkl.week === Number(props.ownProps.weekNumber))
+    if (checklist === undefined || !checklist.maxPoints) {
+      return props.selectedInstance.weekMaxPoints
+    }
+    return checklist.maxPoints
+  }
+
   const toggleCheckbox = (name, studentId, weekNbr) => async () => {
     setAllowChecksCopy(true)
     props.toggleCheck(name, studentId, weekNbr)
   }
 
-  const importWeekDataFromDraft = async () => {
-    await props.getWeekDraft({
+  const importWeekDataFromDraft = () => {
+    props.getWeekDraft({
       studentInstanceId: props.studentInstance,
       weekNumber: props.weekNumber
     })
@@ -132,7 +142,7 @@ export const ReviewStudent = props => {
       weekNumber: props.weekNumber,
       reviewData: exportToDraft(e.target.form)
     }
-    console.error(content)
+    pstate.clear()
     props.addRedirectHook({
       hook: 'WEEKDRAFTS_CREATE_ONE'
     })
@@ -144,6 +154,9 @@ export const ReviewStudent = props => {
     pstate.points = e.target.points.value
     pstate.feedback = e.target.text.value
   }
+
+  const isChecked = (checks, rowName) =>
+    checks !== null && checks[rowName] !== undefined ? checks[rowName] : props.weekReview.checks !== null && props.weekReview.checks[rowName] !== undefined ? props.weekReview.checks[rowName] : false
 
   if (props.loading.loading) {
     return <Loader active />
@@ -160,7 +173,7 @@ export const ReviewStudent = props => {
     // props.weekNumber is a string, therefore casting to number.
     const weekData = loadedFromDraft ? props.weekReview.draftData : studentData.weeks.find(theWeek => theWeek.weekNumber === Number(props.ownProps.weekNumber))
     const previousWeekData = studentData.weeks.find(week => week.weekNumber === Number(props.ownProps.weekNumber) - 1)
-    const checks = weekData ? weekData.checks || {} : {}
+    const checks = props.weekReview.checks !== null ? props.weekReview.checks : weekData ? weekData.checks || {} : {}
     const weekPoints = studentData.weeks
       .filter(week => week.weekNumber < props.weekNumber)
       .map(week => week.points)
@@ -178,12 +191,11 @@ export const ReviewStudent = props => {
     if (checkList) {
       Object.keys(checkList.list).forEach(cl => {
         checkList.list[cl].forEach(row => {
-          const isChecked = props.weekReview.checks[row.name] === undefined ? (checks[row.name] !== undefined ? checks[row.name] : false) : props.weekReview.checks[row.name]
-
-          const addition = isChecked ? row.textWhenOn : row.textWhenOff
+          const checked = isChecked(checks, row.name)
+          const addition = checked ? row.textWhenOn : row.textWhenOff
           if (addition) checklistOutput += addition + '\n\n'
 
-          if (isChecked) {
+          if (checked) {
             checklistPoints += row.checkedPoints
           } else {
             checklistPoints += row.uncheckedPoints
@@ -200,7 +212,7 @@ export const ReviewStudent = props => {
     if (!loadedWeekData) {
       if (weekData) {
         if (pstate.checks) {
-          props.restoreChecks(pstate.checks)
+          props.restoreChecks(props.ownProps.studentInstance, props.ownProps.weekNumber, pstate.checks)
         }
 
         pstate.points = pstate.points || weekData.points
@@ -260,7 +272,7 @@ export const ReviewStudent = props => {
               <Form onSubmit={handleSubmit}>
                 <Form.Group inline unstackable>
                   <Form.Field>
-                    <label>Points 0-{props.selectedInstance.weekMaxPoints}</label>
+                    <label className="showMaxPoints">Points 0-{getMaximumPoints()}</label>
 
                     <Input name="points" value={pstate.points} onChange={(e, { value }) => (pstate.points = value)} type="number" step="0.01" style={{ width: '150px', align: 'center' }} />
                   </Form.Field>
@@ -293,7 +305,7 @@ export const ReviewStudent = props => {
                     Save as draft
                   </Button>
                   <Link to={`/labtool/browsereviews/${props.selectedInstance.ohid}/${studentData.id}`} type="Cancel">
-                    <Button className="ui center floated button" type="cancel">
+                    <Button className="ui center floated button" type="cancel" onClick={pstate.clear}>
                       Cancel
                     </Button>
                   </Link>
@@ -309,15 +321,15 @@ export const ReviewStudent = props => {
                       <Card className="checklistCard" fluid color="red" key={cl}>
                         <Card.Content header={cl} />
                         {checkList.list[cl].map(row => (
-                          <Card.Content className="checklistCardRow" key={row.name}>
+                          <Card.Content className="checklistCardRow" key={row.name} onClick={toggleCheckbox(row.name, props.ownProps.studentInstance, props.ownProps.weekNumber)}>
                             <Form.Field>
                               <Grid>
-                                <Grid.Row>
+                                <Grid.Row style={{ cursor: 'pointer', userSelect: 'none' }}>
                                   <Grid.Column width={3}>
-                                    <Input
-                                      type="checkbox"
-                                      defaultChecked={checks[row.name] !== undefined ? checks[row.name] : false}
-                                      onChange={toggleCheckbox(row.name, props.ownProps.studentInstance, props.ownProps.weekNumber)}
+                                    <Icon
+                                      size="large"
+                                      name={isChecked(checks, row.name) ? 'circle check outline' : 'circle outline'}
+                                      style={{ color: isChecked(checks, row.name) ? 'green' : 'black' }}
                                     />
                                   </Grid.Column>
                                   <Grid.Column width={10}>

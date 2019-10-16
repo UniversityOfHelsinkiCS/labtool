@@ -132,7 +132,7 @@ module.exports = {
           },
           {
             model: CodeReview,
-            attributes: ['toReview', 'reviewNumber', 'points', 'linkToReview'],
+            attributes: ['toReview', 'reviewNumber', 'points', 'linkToReview', 'repoToReview'],
             as: 'codeReviews',
             where: {
               [Op.or]: [
@@ -158,33 +158,6 @@ module.exports = {
             ]
           },
           {
-            model: CodeReview,
-            attributes: ['studentInstanceId', 'reviewNumber'],
-            as: 'toReviews',
-            where: {
-              [Op.or]: [
-                {
-                  reviewNumber: {
-                    [Op.in]: course.currentCodeReview
-                  }
-                },
-                {
-                  points: {
-                    [Op.ne]: null
-                  }
-                }
-              ]
-            },
-            required: false,
-            include: [
-              {
-                model: StudentInstance,
-                attributes: ['github', 'projectName'],
-                as: 'codeReviews'
-              }
-            ]
-          },
-          {
             model: User,
             attributes: {
               exclude: ['createdAt', 'updatedAt']
@@ -196,26 +169,18 @@ module.exports = {
       try {
         if (student) {
           palautus.data = student.dataValues
-
           // Here we splice together the codeReviews field
           if (palautus.data.codeReviews) {
-            const reviewers = {} // Map reviewers here using the reviewNumber as a key.
-            palautus.data.toReviews.forEach((cr) => {
-              reviewers[cr.dataValues.reviewNumber] = {
-                github: cr.dataValues.codeReviews.github,
-                projectName: cr.dataValues.codeReviews.projectName
-              }
-            })
             palautus.data.codeReviews = palautus.data.codeReviews.map(cr => cr.dataValues)
             palautus.data.codeReviews = palautus.data.codeReviews.map(cr => ({
               toReview: {
-                github: cr.toReviews.github,
-                projectName: cr.toReviews.projectName
+                github: cr.toReviews ? cr.toReviews.github : null,
+                projectName: cr.toReviews ? cr.toReviews.projectName : null
               },
               reviewNumber: cr.reviewNumber,
               points: cr.points,
               linkToReview: cr.linkToReview,
-              reviewer: reviewers[cr.reviewNumber]
+              repoToReview: cr.repoToReview
             })
             )
             // This was only ever included to be spliced into the codeReviews filed above.
@@ -421,7 +386,7 @@ module.exports = {
               res.status(404).send('course not found')
               return
             }
-            helper.checkHasPermissionToViewStudentInstance(req, course.id, userId).then(isAllowedToUpdate => {
+            helper.checkHasPermissionToViewStudentInstance(req, course.id, userId).then((isAllowedToUpdate) => {
               if (!isAllowedToUpdate) {
                 res.status(401).send(`Not allowed to update student instance for user ${userId}`)
               }
@@ -722,7 +687,7 @@ module.exports = {
           return res.status(404).send('Course not found')
         }
 
-        let teachers = await TeacherInstance.findAll({
+        const teachers = await TeacherInstance.findAll({
           where: {
             courseInstanceId: course.id
           }
@@ -806,8 +771,6 @@ module.exports = {
         } else {
           res.status(200).send(comment)
         }
-
-
       } catch (e) {
         res.status(400).send(e)
         logger.error(e)

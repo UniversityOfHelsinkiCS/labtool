@@ -104,7 +104,7 @@ exports[`<MyPage /> MyPage Component should render correctly 1`] = `
                 }
                 tooltip="Add users to your feed"
               />
-              maarit.opiskelija@helsinki.fi
+              maarit.opiskelija@helsinki.invalid
               <br />
             </TableCell>
             <TableCell

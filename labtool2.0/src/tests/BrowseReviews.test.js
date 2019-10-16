@@ -52,7 +52,7 @@ describe('<BrowseReviews />', () => {
         User: {
           id: 10012,
           username: 'tiraopiskelija2',
-          email: 'johan.studerande@helsinki.fi',
+          email: 'johan.studerande@helsinki.invalid',
           firsts: 'Johan Wilhelm',
           lastname: 'Studerande',
           studentNumber: '014553242',
@@ -75,7 +75,7 @@ describe('<BrowseReviews />', () => {
         User: {
           id: 10031,
           username: 'superopiskelija',
-          email: 'teras.henkilo@helsinki.fi',
+          email: 'teras.henkilo@helsinki.invalid',
           firsts: 'Teräs',
           lastname: 'Henkilö',
           studentNumber: '014666666',
@@ -140,11 +140,30 @@ describe('<BrowseReviews />', () => {
             comments: []
           }
         ],
-        codeReviews: [],
+        codeReviews: [
+          {
+            id: 272,
+            points: null,
+            revieweNumber: 1,
+            linkToReview: 'https:github.com/toReview/repo/pull/1',
+            repoToReview: null,
+            studentInstanceId: 10011,
+            toReview: 10031
+          },
+          {
+            d: 273,
+            points: null,
+            revieweNumber: 2,
+            linkToReview: null,
+            repoToReview: 'https://github.com/userName/arbitraryRepo',
+            studentInstanceId: 10011,
+            toReview: null
+          }
+        ],
         User: {
           id: 10011,
           username: 'tiraopiskelija1',
-          email: 'maarit.opiskelija@helsinki.fi',
+          email: 'maarit.opiskelija@helsinki.invalid',
           firsts: 'Maarit Mirja',
           lastname: 'Opiskelija',
           studentNumber: '014578343',

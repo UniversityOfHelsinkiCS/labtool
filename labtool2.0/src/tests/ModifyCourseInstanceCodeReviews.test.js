@@ -1,5 +1,6 @@
 import React from 'react'
 import { ModifyCourseInstanceReview, userHelper } from '../components/pages/ModifyCourseInstanceCodeReviews'
+import RevieweeDropdown from '../components/RevieweeDropdown'
 import { shallow } from 'enzyme'
 import configureMockStore from 'redux-mock-store'
 
@@ -16,7 +17,6 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
     weekAmount: 7,
     weekMaxPoints: 3,
     currentWeek: 1,
-    //currentCodeReview: [1, 2],
     currentCodeReview: [1],
     amountOfCodeReviews: 2,
     ohid: 'TKT20010.2018.K.A.1',
@@ -57,7 +57,7 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
         User: {
           id: 10012,
           username: 'tiraopiskelija2',
-          email: 'johan.studerande@helsinki.fi',
+          email: 'johan.studerande@helsinki.invalid',
           firsts: 'Johan Wilhelm',
           lastname: 'Studerande',
           studentNumber: '014553242',
@@ -87,7 +87,7 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
         User: {
           id: 10031,
           username: 'superopiskelija',
-          email: 'teras.henkilo@helsinki.fi',
+          email: 'teras.henkilo@helsinki.invalid',
           firsts: 'Teräs',
           lastname: 'Henkilö',
           studentNumber: '014666666',
@@ -158,7 +158,7 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
         User: {
           id: 10011,
           username: 'tiraopiskelija1',
-          email: 'maarit.opiskelija@helsinki.fi',
+          email: 'maarit.opiskelija@helsinki.invalid',
           firsts: 'Maarit Mirja',
           lastname: 'Opiskelija',
           studentNumber: '014578343',
@@ -374,6 +374,40 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
         .find('Button')
         .simulate('click')
       expect(mockModifyOneCI).toHaveBeenCalled()
+    })
+  })
+
+  describe('<RvieweeDropdown />', () => {
+    let dropdownWrapper
+    const mockAddCodeReview = jest.fn()
+    beforeEach(() => {
+      dropdownWrapper = shallow(
+        <RevieweeDropdown dropdownUsers={userHelper(courseData.data)} data={courseData.data[0]} codeReviewLogic={codeReviewLogic} addCodeReview={mockAddCodeReview} create={false} />
+      )
+    })
+
+    it('dropdown has correct options', () => {
+      const expectedOptions = [
+        {
+          text: 'select a student or add a repo link',
+          value: null
+        },
+        {
+          text: 'Teräs Henkilö',
+          value: 10031
+        },
+        {
+          text: 'Maarit Mirja Opiskelija',
+          value: 10011
+        }
+      ]
+      expect(dropdownWrapper.props()).toHaveProperty('options', expectedOptions)
+    })
+
+    it('Reviewee dropdown allows to add an arbitrary repository link', () => {
+      expect(dropdownWrapper.props()).toHaveProperty('allowAdditions', true)
+      dropdownWrapper.simulate('change', { target: { value: 'https://github.com/userName/repo' } })
+      expect(mockAddCodeReview).toHaveBeenCalled()
     })
   })
 })

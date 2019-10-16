@@ -42,7 +42,7 @@ describe('<ModifyCourseInstanceStaff />', () => {
     {
       id: 10010,
       username: 'paaopettaja',
-      email: 'paa.opettaja@helsinki.fi',
+      email: 'paa.opettaja@helsinki.invalid',
       firsts: 'Pää',
       lastname: 'Opettaja',
       admin: true,
@@ -52,7 +52,7 @@ describe('<ModifyCourseInstanceStaff />', () => {
     {
       id: 10011,
       username: 'paaopettaja',
-      email: 'paa.opettaja@helsinki.fi',
+      email: 'paa.opettaja@helsinki.invalid',
       firsts: 'Sivu',
       lastname: 'Opiskelija',
       studentNumber: '014822548',
@@ -63,7 +63,7 @@ describe('<ModifyCourseInstanceStaff />', () => {
     {
       id: 10012,
       username: 'aimoassis',
-      email: 'aimo.assistentti@helsinki.fi',
+      email: 'aimo.assistentti@helsinki.invalid',
       firsts: 'Aimo',
       lastname: 'Assistentti',
       studentNumber: '014666666',

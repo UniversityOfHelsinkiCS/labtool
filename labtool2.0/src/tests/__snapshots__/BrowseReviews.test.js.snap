@@ -51,9 +51,9 @@ exports[`<BrowseReviews /> BrowseReviews Component should render correctly 1`] =
           )
           <HeaderSubheader>
             <a
-              href="mailto:maarit.opiskelija@helsinki.fi"
+              href="mailto:maarit.opiskelija@helsinki.invalid"
             >
-              maarit.opiskelija@helsinki.fi
+              maarit.opiskelija@helsinki.invalid
             </a>
           </HeaderSubheader>
         </Header>
@@ -768,6 +768,153 @@ exports[`<BrowseReviews /> BrowseReviews Component should render correctly 1`] =
         <h4>
            No comments 
         </h4>
+      </AccordionContent>
+    </Accordion>
+    <Accordion
+      fluid={true}
+      id="review7"
+      key="9"
+      styled={true}
+    >
+       
+      <AccordionTitle
+        index={8}
+        onClick={[Function]}
+      >
+        <Icon
+          as="i"
+          name="dropdown"
+        />
+         Code Review 
+         
+      </AccordionTitle>
+      <AccordionContent>
+        <p>
+          <strong>
+            Project to review:
+          </strong>
+           
+          Tira super projekti
+           
+          <br />
+          <strong>
+            GitHub:
+          </strong>
+           
+          <a
+            href="http://github.com/superprojekti"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            http://github.com/superprojekti
+          </a>
+        </p>
+        <strong>
+          Code review:
+        </strong>
+         
+        <a
+          href="https:github.com/toReview/repo/pull/1"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          https:github.com/toReview/repo/pull/1
+        </a>
+        <h4>
+          Not graded yet
+        </h4>
+        <Form
+          as="form"
+          onSubmit={[Function]}
+        >
+          <label>
+            Points 
+          </label>
+          <Input
+            defaultValue=""
+            name="points"
+            step="0.01"
+            style={
+              Object {
+                "width": "100px",
+              }
+            }
+            type="number"
+          />
+          <Input
+            type="submit"
+            value="Grade"
+          />
+        </Form>
+      </AccordionContent>
+    </Accordion>
+    <Accordion
+      fluid={true}
+      id="review8"
+      key="10"
+      styled={true}
+    >
+       
+      <AccordionTitle
+        index={9}
+        onClick={[Function]}
+      >
+        <Icon
+          as="i"
+          name="dropdown"
+        />
+         Code Review 
+         
+      </AccordionTitle>
+      <AccordionContent>
+        <p>
+          <span>
+            This student is assigned a repo that doesn't belong to this course to review
+          </span>
+          <br />
+          <strong>
+            GitHub:
+          </strong>
+           
+          <a
+            href="https://github.com/userName/arbitraryRepo"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            https://github.com/userName/arbitraryRepo
+          </a>
+        </p>
+        <strong>
+          Code review:
+        </strong>
+         
+        No review linked yet
+        <h4>
+          Not graded yet
+        </h4>
+        <Form
+          as="form"
+          onSubmit={[Function]}
+        >
+          <label>
+            Points 
+          </label>
+          <Input
+            defaultValue=""
+            name="points"
+            step="0.01"
+            style={
+              Object {
+                "width": "100px",
+              }
+            }
+            type="number"
+          />
+          <Input
+            type="submit"
+            value="Grade"
+          />
+        </Form>
       </AccordionContent>
     </Accordion>
   </div>
