@@ -404,20 +404,27 @@ export const CoursePage = props => {
     return headers
   }
 
+  // This function activates the course, leaving other data intact.
   const activateCourse = () => {
-    //console.log(props.selectedInstance.active)
     props.changeCourseField({
       field: 'active',
       value: true
     })
-    //props.modifyOneCI('active', true)
-    //console.log(props.selectedInstance.active)
 
-    const active = true
+    const { weekAmount, weekMaxPoints, currentWeek, ohid, finalReview, coursesPage, courseMaterial, currentCodeReview } = props.selectedInstance
+
     const content = {
-      active
+      weekAmount,
+      weekMaxPoints,
+      currentWeek,
+      active: true,
+      ohid,
+      finalReview,
+      newCr: currentCodeReview,
+      coursesPage,
+      courseMaterial
     }
-    console.log(props.selectedInstance.ohid)
+
     props.modifyOneCI(content, props.selectedInstance.ohid)
   }
 
