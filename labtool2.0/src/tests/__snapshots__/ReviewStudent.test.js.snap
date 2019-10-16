@@ -224,6 +224,7 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
               <Button
                 as="button"
                 className="ui center floated button"
+                onClick={[Function]}
                 type="cancel"
               >
                 Cancel

@@ -500,6 +500,7 @@ describe('<ReviewStudent />', () => {
         createOneWeek={mockFn}
         saveWeekDraft={mockFn}
         toggleCheck={mockFn}
+        initChecks={mockFn}
         restoreChecks={mockFn}
         resetChecklist={mockFn}
         addRedirectHook={mockFn}

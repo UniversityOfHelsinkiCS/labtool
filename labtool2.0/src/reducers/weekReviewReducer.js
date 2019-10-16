@@ -5,10 +5,11 @@
  */
 
 const INITIAL_STATE = {
-  checks: {},
+  checks: null,
   data: {},
   draftData: {},
-  draftCreatedAt: null
+  draftCreatedAt: null,
+  allowDraftLoad: true
 }
 
 const weekReviewReducer = (state = INITIAL_STATE, action) => {
@@ -20,19 +21,12 @@ const weekReviewReducer = (state = INITIAL_STATE, action) => {
       return INITIAL_STATE
     case 'WEEK_REVIEW_TOGGLE': {
       const thisWeek = state.data.filter(student => student.id === Number(action.studentId, 10))[0].weeks.filter(week => week.weekNumber === Number(action.weekNbr, 10))[0]
+      const baseChecks = state.checks ? state.checks : thisWeek ? thisWeek.checks : {}
       return {
         ...state,
-        data: state.data.map(student =>
-          student.id === Number(action.studentId, 10)
-            ? {
-                ...student,
-                weeks: student.weeks.map(week => (week.weekNumber === Number(action.weekNbr, 10) ? { ...week, checks: { ...week.checks, [action.name]: !week.checks[action.name] } } : week))
-              }
-            : student
-        ),
         checks: {
-          ...state.checks,
-          [action.name]: state.checks[action.name] !== undefined ? !state.checks[action.name] : thisWeek ? !thisWeek.checks[action.name] : !state.checks[action.name]
+          ...baseChecks,
+          [action.name]: baseChecks[action.name] !== undefined ? !baseChecks[action.name] : thisWeek ? !thisWeek.checks[action.name] : !baseChecks[action.name]
         }
       }
     }
@@ -41,17 +35,10 @@ const weekReviewReducer = (state = INITIAL_STATE, action) => {
     case 'WEEK_REVIEW_CHECKS_RESTORE':
       return {
         ...state,
-        data: state.data.map(student =>
-          student.id === Number(action.studentId, 10)
-            ? {
-                ...student,
-                weeks: student.weeks.map(week => (week.weekNumber === Number(action.weekNbr, 10) ? { ...week, checks: { ...action.checks } } : week))
-              }
-            : student
-        ),
         checks: {
           ...action.checks
-        }
+        },
+        allowDraftLoad: false
       }
     case 'WEEKDRAFTS_GET_ONE_SUCCESS':
       if (!action.response || !action.response.data) {
@@ -65,7 +52,7 @@ const weekReviewReducer = (state = INITIAL_STATE, action) => {
         ...state,
         draftData: action.response.data,
         draftCreatedAt: action.response.updatedAt,
-        checks: action.response.data.checks
+        checks: state.allowDraftLoad ? action.response.data.checks : state.checks
       }
     case 'WEEKDRAFTS_GET_ONE_FAILURE':
       return state

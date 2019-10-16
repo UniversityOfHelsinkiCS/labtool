@@ -73,8 +73,9 @@ export const ReviewStudent = props => {
   }, [])
 
   useEffect(() => {
-    if (allowChecksCopy) {
-      pstate.checks = { ...props.weekReview.checks }
+    if (allowChecksCopy && props.weekReview.checks !== null) {
+      const d = { ...props.weekReview.checks }
+      pstate.checks = d
     }
   }, [props.weekReview.checks])
 
@@ -89,6 +90,7 @@ export const ReviewStudent = props => {
         weekNumber: props.weekNumber,
         checks: props.weekReview.checks
       }
+      pstate.clear()
       if (e.target.points.value < 0 || e.target.points.value > props.selectedInstance.weekMaxPoints) {
         store.dispatch({ type: 'WEEKS_CREATE_ONEFAILURE' })
       } else {
@@ -107,8 +109,8 @@ export const ReviewStudent = props => {
     props.toggleCheck(name, studentId, weekNbr)
   }
 
-  const importWeekDataFromDraft = async () => {
-    await props.getWeekDraft({
+  const importWeekDataFromDraft = () => {
+    props.getWeekDraft({
       studentInstanceId: props.studentInstance,
       weekNumber: props.weekNumber
     })
@@ -132,7 +134,7 @@ export const ReviewStudent = props => {
       weekNumber: props.weekNumber,
       reviewData: exportToDraft(e.target.form)
     }
-    console.error(content)
+    pstate.clear()
     props.addRedirectHook({
       hook: 'WEEKDRAFTS_CREATE_ONE'
     })
@@ -145,7 +147,8 @@ export const ReviewStudent = props => {
     pstate.feedback = e.target.text.value
   }
 
-  const isChecked = (checks, rowName) => (props.weekReview.checks[rowName] === undefined ? (checks[rowName] !== undefined ? checks[rowName] : false) : props.weekReview.checks[rowName])
+  const isChecked = (checks, rowName) =>
+    checks !== null && checks[rowName] !== undefined ? checks[rowName] : props.weekReview.checks !== null && props.weekReview.checks[rowName] !== undefined ? props.weekReview.checks[rowName] : false
 
   if (props.loading.loading) {
     return <Loader active />
@@ -162,7 +165,7 @@ export const ReviewStudent = props => {
     // props.weekNumber is a string, therefore casting to number.
     const weekData = loadedFromDraft ? props.weekReview.draftData : studentData.weeks.find(theWeek => theWeek.weekNumber === Number(props.ownProps.weekNumber))
     const previousWeekData = studentData.weeks.find(week => week.weekNumber === Number(props.ownProps.weekNumber) - 1)
-    const checks = weekData ? weekData.checks || {} : {}
+    const checks = props.weekReview.checks !== null ? props.weekReview.checks : weekData ? weekData.checks || {} : {}
     const weekPoints = studentData.weeks
       .filter(week => week.weekNumber < props.weekNumber)
       .map(week => week.points)
@@ -201,7 +204,7 @@ export const ReviewStudent = props => {
     if (!loadedWeekData) {
       if (weekData) {
         if (pstate.checks) {
-          props.restoreChecks(pstate.checks)
+          props.restoreChecks(props.ownProps.studentInstance, props.ownProps.weekNumber, pstate.checks)
         }
 
         pstate.points = pstate.points || weekData.points
@@ -294,7 +297,7 @@ export const ReviewStudent = props => {
                     Save as draft
                   </Button>
                   <Link to={`/labtool/browsereviews/${props.selectedInstance.ohid}/${studentData.id}`} type="Cancel">
-                    <Button className="ui center floated button" type="cancel">
+                    <Button className="ui center floated button" type="cancel" onClick={pstate.clear}>
                       Cancel
                     </Button>
                   </Link>
