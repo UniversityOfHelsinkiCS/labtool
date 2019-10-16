@@ -17,6 +17,10 @@ module.exports = {
         res.status(400).send('Missing or malformed inputs.')
         return
       }
+      if (req.body.maxPoints < 0) {
+        res.status(400).send('Invalid maximum points.')
+        return
+      }
       try {
         Object.keys(req.body.checklist).forEach((cl) => {
           if (!Array.isArray(req.body.checklist[cl])) {
@@ -81,7 +85,8 @@ module.exports = {
         week: req.body.week,
         courseName: 'doot',
         list: req.body.checklist,
-        courseInstanceId: req.body.courseInstanceId
+        courseInstanceId: req.body.courseInstanceId,
+        maxPoints: req.body.maxPoints
       })
       res.status(200).send({
         message: `checklist saved successfully for week ${req.body.week}.`,

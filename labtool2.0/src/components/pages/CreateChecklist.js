@@ -21,7 +21,8 @@ export const CreateChecklist = props => {
     rowName: '', // tracks value inputted into row creation dialog box.
     openAdd: '', // which addForm is currently open. '' denotes no open addForms. Only one addForm can be open at one time.
     courseDropdowns: [], // Dropdown options to show for copying checklist.
-    checklistData: null
+    checklistData: null,
+    maximumPoints: ''
   })
 
   useEffect(() => {
@@ -59,7 +60,8 @@ export const CreateChecklist = props => {
       props.createChecklist({
         courseInstanceId: props.selectedInstance.id,
         week: state.week,
-        checklist: props.checklist.data
+        checklist: props.checklist.data,
+        maxPoints: Number(state.maximumPoints)
       })
     } catch (e) {
       props.showNotification({
@@ -213,6 +215,17 @@ export const CreateChecklist = props => {
 
   const changeRowName = async e => {
     state.rowName = e.target.value
+  }
+
+  const changeMaximumPoints = async e => {
+    state.maximumPoints = e.target.value
+  }
+
+  const getMaximumPoints = maximumPoints => {
+    if (!state.maximumPoints) {
+      return maximumPoints
+    }
+    return Number(state.maximumPoints)
   }
 
   const removeTopic = key => async () => {
@@ -395,16 +408,25 @@ export const CreateChecklist = props => {
                 )}
               </form>
             </div>
+            <div>
+              <Label>Maximum points</Label>
+              <Input className="maxPointsInput" type="number" step="0.01" style={{ width: '100px' }} value={state.maximumPoints} onChange={changeMaximumPoints} />
+              <Popup
+                className="infoText"
+                trigger={<Icon name="question circle" />}
+                content="Defining maximum points yourself is not mandatory. If no value is given, default weekly points remain valid."
+              />
+            </div>
             <Card className="maxPointsCard">
               <Card.Content>
                 <p>
-                  Total max points: <strong className="maxPointsNumber">{maxPoints}</strong>
+                  Total max points: <strong className="maxPointsNumber">{getMaximumPoints(maxPoints)}</strong>
                   {state.week > props.selectedInstance.weekAmount ? (
                     <span />
                   ) : (
                     <span>
                       {' '}
-                      {props.selectedInstance.weekMaxPoints === maxPoints ? (
+                      {props.selectedInstance.weekMaxPoints === getMaximumPoints(maxPoints) ? (
                         <Popup className="maxPointsIcon" trigger={<Icon name="check" size="large" color="green" />} content="The total matches maximum weekly points for this course." />
                       ) : (
                         <Popup className="maxPointsIcon" trigger={<Icon name="delete" size="large" color="red" />} content="The total does not match maximum weekly points for this course." />
