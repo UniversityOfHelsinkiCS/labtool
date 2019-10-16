@@ -71,7 +71,6 @@ export const BrowseReviews = props => {
   const tryJumpToReview = () => {
     // Try scroll to review
     const element = document.getElementById(`review${props.location.state.jumpToReview}`)
-    console.log(props.location.state.jumpToReview)
 
     if (element) {
       window.scrollTo(0, element.offsetTop)
