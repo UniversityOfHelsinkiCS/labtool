@@ -125,7 +125,7 @@ describe('<ReviewStudent />', () => {
           User: {
             id: 10012,
             username: 'tiraopiskelija2',
-            email: 'johan.studerande@helsinki.fi',
+            email: 'johan.studerande@helsinki.invalid',
             firsts: 'Johan Wilhelm',
             lastname: 'Studerande',
             studentNumber: '014553242',
@@ -148,7 +148,7 @@ describe('<ReviewStudent />', () => {
           User: {
             id: 10031,
             username: 'superopiskelija',
-            email: 'teras.henkilo@helsinki.fi',
+            email: 'teras.henkilo@helsinki.invalid',
             firsts: 'Teräs',
             lastname: 'Henkilö',
             studentNumber: '014666666',
@@ -212,7 +212,7 @@ describe('<ReviewStudent />', () => {
           User: {
             id: 10011,
             username: 'tiraopiskelija1',
-            email: 'maarit.opiskelija@helsinki.fi',
+            email: 'maarit.opiskelija@helsinki.invalid',
             firsts: 'Maarit Mirja',
             lastname: 'Opiskelija',
             studentNumber: '014578343',
@@ -269,7 +269,7 @@ describe('<ReviewStudent />', () => {
           User: {
             id: 10031,
             username: 'superopiskelija',
-            email: 'teras.henkilo@helsinki.fi',
+            email: 'teras.henkilo@helsinki.invalid',
             firsts: 'Teräs',
             lastname: 'Henkilö',
             studentNumber: '014666666',
@@ -360,7 +360,7 @@ describe('<ReviewStudent />', () => {
           User: {
             id: 10011,
             username: 'tiraopiskelija1',
-            email: 'maarit.opiskelija@helsinki.fi',
+            email: 'maarit.opiskelija@helsinki.invalid',
             firsts: 'Maarit Mirja',
             lastname: 'Opiskelija',
             studentNumber: '014578343',
@@ -434,7 +434,7 @@ describe('<ReviewStudent />', () => {
           User: {
             id: 10012,
             username: 'tiraopiskelija2',
-            email: 'johan.studerande@helsinki.fi',
+            email: 'johan.studerande@helsinki.invalid',
             firsts: 'Johan Wilhelm',
             lastname: 'Studerande',
             studentNumber: '014553242',

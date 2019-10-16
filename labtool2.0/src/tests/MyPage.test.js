@@ -10,7 +10,7 @@ describe('<MyPage />', () => {
     user: {
       user: {
         id: 10011,
-        email: 'maarit.opiskelija@helsinki.fi',
+        email: 'maarit.opiskelija@helsinki.invalid',
         firsts: 'Maarit Mirja',
         lastname: 'Opiskelija',
         studentNumber: '014578343',
