@@ -403,8 +403,14 @@ export const CoursePage = props => {
     return headers
   }
 
-  const activateCourse = () => {
-    console.log('WIP!')
+  const activateCourse = async () => {
+    //console.log(props.selectedInstance.active)
+    //props.selectedInstance.active = true
+    //((props.courseInstance.active = true
+    props.changeCourseField({
+      field: 'active',
+      value: (props.selectedInstance.active = true)
+    })
   }
 
   /**
@@ -421,6 +427,10 @@ export const CoursePage = props => {
               <Message compact>
                 <Message.Header>You have not activated this course.</Message.Header>
               </Message>
+
+              <Button color="green" style={{ marginLeft: '25px' }} onClick={activateCourse}>
+                Activate course now
+              </Button>
               <br />
             </div>
           ))}
@@ -664,7 +674,8 @@ CoursePage.propTypes = {
   updateStudentProjectInfo: PropTypes.func.isRequired,
   associateTeacherToStudent: PropTypes.func.isRequired,
   selectTag: PropTypes.func.isRequired,
-  selectTeacher: PropTypes.func.isRequired
+  selectTeacher: PropTypes.func.isRequired,
+  changeCourseField: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state, ownProps) => {
