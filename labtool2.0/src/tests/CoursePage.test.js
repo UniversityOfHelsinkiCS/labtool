@@ -454,6 +454,7 @@ describe('<CoursePage /> as student', () => {
       <CoursePage
         courseData={coursePage}
         getOneCI={mockFn}
+        changeCourseField={mockFn}
         coursePageInformation={mockFn}
         associateTeacherToStudent={mockFn}
         selectedInstance={coursePage}

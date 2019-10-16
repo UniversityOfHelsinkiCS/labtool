@@ -4,13 +4,14 @@ import { Accordion, Button, Table, Card, Input, Form, Comment, Header, Label, Me
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createOneComment } from '../../services/comment'
-import { getOneCI, coursePageInformation } from '../../services/courseInstance'
+import { getOneCI, coursePageInformation, modifyOneCI } from '../../services/courseInstance'
 import ReactMarkdown from 'react-markdown'
 import { getAllTags, tagStudent, unTagStudent } from '../../services/tags'
 import { associateTeacherToStudent } from '../../services/assistant'
 import { addLinkToCodeReview } from '../../services/codeReview'
 import { sendEmail } from '../../services/email'
 import { coursePageReset, updateActiveIndex, toggleCodeReview, selectTag, selectTeacher } from '../../reducers/coursePageLogicReducer'
+import { changeCourseField } from '../../reducers/selectedInstanceReducer'
 import { updateStudentProjectInfo } from '../../services/studentinstances'
 import { resetLoading } from '../../reducers/loadingReducer'
 
@@ -403,14 +404,21 @@ export const CoursePage = props => {
     return headers
   }
 
-  const activateCourse = async () => {
+  const activateCourse = () => {
     //console.log(props.selectedInstance.active)
-    //props.selectedInstance.active = true
-    //((props.courseInstance.active = true
     props.changeCourseField({
       field: 'active',
-      value: (props.selectedInstance.active = true)
+      value: true
     })
+    //props.modifyOneCI('active', true)
+    //console.log(props.selectedInstance.active)
+
+    const active = true
+    const content = {
+      active
+    }
+    console.log(props.selectedInstance.ohid)
+    props.modifyOneCI(content, props.selectedInstance.ohid)
   }
 
   /**
@@ -428,7 +436,7 @@ export const CoursePage = props => {
                 <Message.Header>You have not activated this course.</Message.Header>
               </Message>
 
-              <Button color="green" style={{ marginLeft: '25px' }} onClick={activateCourse}>
+              <Button color="green" style={{ marginLeft: '25px' }} onClick={() => activateCourse()}>
                 Activate course now
               </Button>
               <br />
@@ -675,7 +683,8 @@ CoursePage.propTypes = {
   associateTeacherToStudent: PropTypes.func.isRequired,
   selectTag: PropTypes.func.isRequired,
   selectTeacher: PropTypes.func.isRequired,
-  changeCourseField: PropTypes.func.isRequired
+  changeCourseField: PropTypes.func.isRequired,
+  modifyOneCI: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -709,7 +718,9 @@ const mapDispatchToProps = {
   updateStudentProjectInfo,
   associateTeacherToStudent,
   selectTag,
-  selectTeacher
+  selectTeacher,
+  changeCourseField,
+  modifyOneCI
 }
 
 export default connect(
