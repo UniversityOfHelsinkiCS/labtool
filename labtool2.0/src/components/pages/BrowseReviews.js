@@ -315,6 +315,31 @@ export const BrowseReviews = props => {
     }
   }
 
+  // render link of the repo which is assigned to the student to review
+  const renderAssignedCodeReviewLink = cr => {
+    if (cr.toReview) {
+      return (
+        <p>
+          <strong>Project to review:</strong> {props.courseData.data.find(data => data.id === cr.toReview).projectName} <br />
+          <strong>GitHub:</strong>{' '}
+          <a href={props.courseData.data.find(data => data.id === cr.toReview).github} target="_blank" rel="noopener noreferrer">
+            {props.courseData.data.find(data => data.id === cr.toReview).github}
+          </a>
+        </p>
+      )
+    }
+    return (
+      <p>
+        <span>This student is assigned a repo that doesn't belong to this course to review</span>
+        <br />
+        <strong>GitHub:</strong>{' '}
+        <a href={cr.repoToReview} target="_blank" rel="noopener noreferrer">
+          {cr.repoToReview}
+        </a>
+      </p>
+    )
+  }
+
   const renderCodeReview = (i, cr, studentInstance) => {
     const { openWeeks } = state
 
@@ -325,13 +350,7 @@ export const BrowseReviews = props => {
           <Icon name="dropdown" /> Code Review {cr.reviewNumber} {cr.points !== null ? ', points ' + cr.points : ''}
         </Accordion.Title>
         <Accordion.Content active={openWeeks[i]}>
-          <p>
-            <strong>Project to review:</strong> {props.courseData.data.find(data => data.id === cr.toReview).projectName} <br />
-            <strong>GitHub:</strong>{' '}
-            <a href={props.courseData.data.find(data => data.id === cr.toReview).github} target="_blank" rel="noopener noreferrer">
-              {props.courseData.data.find(data => data.id === cr.toReview).github}
-            </a>
-          </p>
+          {renderAssignedCodeReviewLink(cr)}
           <strong>Code review:</strong>{' '}
           {cr.linkToReview ? (
             <a href={cr.linkToReview} target="_blank" rel="noopener noreferrer">

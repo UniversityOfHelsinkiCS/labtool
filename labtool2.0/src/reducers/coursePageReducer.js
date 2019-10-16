@@ -69,14 +69,14 @@ const courseInstancereducer = (store = INITIAL_STATE, action) => {
       return { ...store, data: mappedData }
     }
     case 'CODE_REVIEW_BULKINSERT_SUCCESS':
-      var assignedReviews = {}
-      var reviewNumber = action.response.data.reviewNumber
+      let assignedReviews = {}
+      let reviewNumber = action.response.data.reviewNumber
       action.response.data.codeReviews.forEach(cr => {
-        assignedReviews[cr.reviewer] = cr.toReview
+        assignedReviews[cr.reviewer] = cr.toReview || cr.repoToReview
       })
-      var newData = store.data.map(student => {
-        const sId = assignedReviews[student.id]
-        if (!sId) {
+      let newData = store.data.map(student => {
+        const reviewee = assignedReviews[student.id]
+        if (!reviewee) {
           return student
         }
         const index = student.codeReviews.map(cr => cr.reviewNumber).indexOf(reviewNumber)
@@ -85,10 +85,17 @@ const courseInstancereducer = (store = INITIAL_STATE, action) => {
             points: null,
             reviewNumber: reviewNumber,
             studentInstanceId: student.id,
-            toReview: sId
+            toReview: Number.isInteger(reviewee) ? reviewee : null,
+            repoToReview: Number.isInteger(reviewee) ? null : reviewee
           })
         } else {
-          student.codeReviews[index].toReview = sId
+          if (Number.isInteger(reviewee)) {
+            student.codeReviews[index].toReview = reviewee
+            student.codeReviews[index].repoToReview = null
+          } else {
+            student.codeReviews[index].toReview = null
+            student.codeReviews[index].repoToReview = reviewee
+          }
         }
         return student
       })
@@ -166,7 +173,7 @@ const courseInstancereducer = (store = INITIAL_STATE, action) => {
 export default courseInstancereducer
 
 /**
- 
+
 {
   "role": String, tells if the user is a student or a teacher on this course.
   "data": {

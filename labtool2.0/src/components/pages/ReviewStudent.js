@@ -91,7 +91,7 @@ export const ReviewStudent = props => {
         checks: props.weekReview.checks
       }
       pstate.clear()
-      if (e.target.points.value < 0 || e.target.points.value > props.selectedInstance.weekMaxPoints) {
+      if (e.target.points.value < 0 || e.target.points.value > getMaximumPoints()) {
         store.dispatch({ type: 'WEEKS_CREATE_ONEFAILURE' })
       } else {
         props.addRedirectHook({
@@ -102,6 +102,14 @@ export const ReviewStudent = props => {
     } catch (error) {
       console.error(error)
     }
+  }
+
+  const getMaximumPoints = () => {
+    const checklist = props.selectedInstance.checklists.find(checkl => checkl.week === Number(props.ownProps.weekNumber))
+    if (checklist === undefined || !checklist.maxPoints) {
+      return props.selectedInstance.weekMaxPoints
+    }
+    return checklist.maxPoints
   }
 
   const toggleCheckbox = (name, studentId, weekNbr) => async () => {
@@ -264,7 +272,7 @@ export const ReviewStudent = props => {
               <Form onSubmit={handleSubmit}>
                 <Form.Group inline unstackable>
                   <Form.Field>
-                    <label>Points 0-{props.selectedInstance.weekMaxPoints}</label>
+                    <label className="showMaxPoints">Points 0-{getMaximumPoints()}</label>
 
                     <Input name="points" value={pstate.points} onChange={(e, { value }) => (pstate.points = value)} type="number" step="0.01" style={{ width: '150px', align: 'center' }} />
                   </Form.Field>

@@ -76,6 +76,7 @@ describe('<ReviewStudent />', () => {
           },
           courseName: 'Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit',
           master: false,
+          maxPoints: 4,
           createdAt: '2018-03-26T00:00:00.000Z',
           updatedAt: '2018-03-26T00:00:00.000Z',
           courseInstanceId: 10011
@@ -519,6 +520,11 @@ describe('<ReviewStudent />', () => {
 
     it('should render correctly', () => {
       expect(wrapper).toMatchSnapshot()
+    })
+
+    it('should render maximum points correctly', () => {
+      const maxPoints = props.selectedInstance.checklists.find(cl => cl.week === props.selectedInstance.currentWeek).maxPoints
+      expect(wrapper.find('.showMaxPoints').text()).toEqual('Points 0-' + maxPoints)
     })
 
     describe('Checklist', () => {
