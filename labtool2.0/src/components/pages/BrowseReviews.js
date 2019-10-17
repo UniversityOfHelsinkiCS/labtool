@@ -330,7 +330,7 @@ export const BrowseReviews = props => {
     }
     return (
       <p>
-        <span>This student is assigned a repo that doesn&quot;t belong to this course to review</span>
+        <span>This student is assigned a repo that doesn&#39;t belong to this course to review</span>
         <br />
         <strong>GitHub:</strong>{' '}
         <a href={cr.repoToReview} target="_blank" rel="noopener noreferrer">
