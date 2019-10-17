@@ -19,6 +19,18 @@ export const RegisterPage = props => {
     props.getOneCI(props.courseId)
   }, [])
 
+  const getExistingData = () => {
+    let projectName = null
+    let projectLink = null
+
+    if (props.coursePage && props.coursePage.data) {
+      projectName = props.coursePage.data.projectName
+      projectLink = props.coursePage.data.github
+    }
+
+    return { projectName, projectLink }
+  }
+
   const handleSubmit = async e => {
     try {
       e.preventDefault()
@@ -52,6 +64,8 @@ export const RegisterPage = props => {
     return <Redirect to={`/labtool/courses/${props.selectedInstance.ohid}`} />
   }
 
+  const existing = getExistingData()
+
   return (
     <div
       className="RegisterPage"
@@ -80,12 +94,31 @@ export const RegisterPage = props => {
           <Form onSubmit={handleSubmit} className="Register">
             <Form.Group inline>
               <label style={{ width: '100px', textAlign: 'left' }}>Project name</label>
-              <Input icon="rocket" iconPosition="left" type="text" className="form-control1" name="projectName" placeholder="MyProjectName" required style={{ minWidth: '30em' }} />
+              <Input
+                icon="rocket"
+                iconPosition="left"
+                type="text"
+                className="form-control1"
+                name="projectName"
+                placeholder="MyProjectName"
+                defaultValue={existing.projectName || ''}
+                required
+                style={{ minWidth: '30em' }}
+              />
             </Form.Group>
 
             <Form.Group inline>
               <label style={{ width: '100px', textAlign: 'left' }}>GitHub link</label>
-              <Input icon="github" iconPosition="left" type="url" className="form-control2" name="github" defaultValue="https://github.com/" required style={{ minWidth: '30em' }} />
+              <Input
+                icon="github"
+                iconPosition="left"
+                type="url"
+                className="form-control2"
+                name="github"
+                defaultValue={existing.projectLink || 'https://github.com/'}
+                required
+                style={{ minWidth: '30em' }}
+              />
             </Form.Group>
 
             <Form.Field>

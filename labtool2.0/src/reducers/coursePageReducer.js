@@ -68,7 +68,7 @@ const courseInstancereducer = (store = INITIAL_STATE, action) => {
       const mappedData = store.data.map(st => (st.id !== id ? st : changedStudent))
       return { ...store, data: mappedData }
     }
-    case 'CODE_REVIEW_BULKINSERT_SUCCESS':
+    case 'CODE_REVIEW_BULKINSERT_SUCCESS': {
       let assignedReviews = {}
       let reviewNumber = action.response.data.reviewNumber
       action.response.data.codeReviews.forEach(cr => {
@@ -100,6 +100,7 @@ const courseInstancereducer = (store = INITIAL_STATE, action) => {
         return student
       })
       return { ...store, data: newData }
+    }
     case 'CODE_REVIEW_GRADE_SUCCESS': {
       const newData = store.data.map(student => {
         if (student.id !== action.response.data.studentInstanceId) {
@@ -160,10 +161,14 @@ const courseInstancereducer = (store = INITIAL_STATE, action) => {
       return { ...store, data: newData }
     }
     case 'STUDENT_PROJECT_INFO_UPDATE_SUCCESS': {
-      let studentToChange = store.data.find(student => student.id === action.response.id)
-      studentToChange.dropped = action.response.dropped
-      const newData = store.data.map(student => (student.id !== action.response.id ? student : studentToChange))
-      return { ...store, data: newData }
+      if (store.data.find) {
+        // don't do this student changing stuff if we are a student
+        let studentToChange = store.data.find(student => student.id === action.response.id)
+        studentToChange.dropped = action.response.dropped
+        const newData = store.data.map(student => (student.id !== action.response.id ? student : studentToChange))
+        return { ...store, data: newData }
+      }
+      return store
     }
     default:
       return store
