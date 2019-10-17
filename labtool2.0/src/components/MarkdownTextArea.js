@@ -77,7 +77,7 @@ export const FormMarkdownTextArea = props => {
       <div style={{ display: 'flex', flexDirection: changeDirection() }}>
         <Form.Field style={{ flex: getFlexPercentage(), marginRight: getHorizontalMargin(), paddingRight: getNonScalableRightPadding() }}>
           {/* resize: none -- we cannot allow resizing the area because the Markdown preview cannot resize with it */}
-          <TextArea onInput={handleChange} {...props} style={{ height: getTextHeight(), marginBottom: '15px', resize: 'none' }} />
+          <TextArea onInput={handleChange} {...props} scalable={null} style={{ height: getTextHeight(), marginBottom: '15px', resize: 'none' }} />
         </Form.Field>
         <Accordion key fluid styled style={{ flex: getFlexPercentage(), textAlign: 'start', marginBottom: '2em', marginTop: 0, marginLeft: getHorizontalMargin() }}>
           <Accordion.Title
