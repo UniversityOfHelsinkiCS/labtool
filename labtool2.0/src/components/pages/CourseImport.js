@@ -6,6 +6,7 @@ import { Link, Redirect } from 'react-router-dom'
 import { getIsAllowedToImport, getImportableCourses, importCourses } from '../../services/courseImport'
 import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 import { HorizontalScrollable } from '../HorizontalScrollable'
+import { formatCourseName } from '../../util/format'
 
 /**
  *  Show all the courses in a single list.
@@ -36,7 +37,7 @@ export const CourseImport = props => {
         <Form.Checkbox name={'import' + instance.hid} />
       </Table.Cell>
       <Table.Cell>{instance.shorterId}</Table.Cell>
-      <Table.Cell>{instance.cname}</Table.Cell>
+      <Table.Cell>{formatCourseName(instance.cname, instance.hid, instance.starts)}</Table.Cell>
       <Table.Cell>{instance.europeanStart}</Table.Cell>
       <Table.Cell>{instance.europeanEnd}</Table.Cell>
     </Table.Row>
@@ -44,7 +45,7 @@ export const CourseImport = props => {
 
   return (
     <div className="CourseImport">
-      <Container>
+      <div className="mainContainer">
         <Header as="h2">Import courses</Header>
         {props.loading.loading || !Array.isArray(props.importable) || !props.canImport ? (
           <Loader active />
@@ -95,7 +96,7 @@ export const CourseImport = props => {
             </Link>
           </div>
         )}
-      </Container>
+      </div>
     </div>
   )
 }

@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { Button, Container, Header, Table, Label, Popup, Loader } from 'semantic-ui-react'
+import { Button, Header, Table, Label, Popup, Loader } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { getAllCI } from '../../services/courseInstance'
 import { getIsAllowedToImport } from '../../services/courseImport'
 import { resetLoading } from '../../reducers/loadingReducer'
 import { HorizontalScrollable } from '../HorizontalScrollable'
-import { getAcademicYear } from '../../util/format'
+import { formatCourseName } from '../../util/format'
 
 /**
  *  Show all the courses in a single list.
@@ -22,7 +22,7 @@ export const Courses = props => {
 
   return (
     <div className="Courses">
-      <Container>
+      <div className="mainContainer">
         <Header as="h2">Courses</Header>
         {props.loading.loading || !Array.isArray(props.courseInstance) ? (
           <Loader active />
@@ -58,7 +58,7 @@ export const Courses = props => {
                       <Table.Cell>
                         <strong>
                           <Link to={`/labtool/courses/${instance.ohid}`}>
-                            {instance.name} ({getAcademicYear(instance.start)})
+                            {formatCourseName(instance.name, instance.ohid, instance.start)}
                           </Link>
                         </strong>
                       </Table.Cell>
@@ -83,7 +83,7 @@ export const Courses = props => {
             )}
           </div>
         )}
-      </Container>
+      </div>
     </div>
   )
 }

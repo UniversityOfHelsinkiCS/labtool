@@ -8,7 +8,7 @@ import { getAllStudentCourses } from '../../services/studentinstances'
 import { getAllTeacherCourses } from '../../services/teacherinstances'
 import { getIsAllowedToImport } from '../../services/courseImport'
 import { HorizontalScrollable } from '../HorizontalScrollable'
-import { getAcademicYear } from '../../util/format'
+import { formatCourseName } from '../../util/format'
 
 /**
  * The main page that is shown after user has logged in.
@@ -26,7 +26,7 @@ export const MyPage = props => {
     <Table.Row key={instance.id}>
       <Table.Cell>
         <Link to={`/labtool/courses/${instance.ohid}`}>
-          {instance.name} ({getAcademicYear(instance.start)})
+          {formatCourseName(instance.name, instance.ohid, instance.start)}
         </Link>
       </Table.Cell>
       <Table.Cell textAlign="right">

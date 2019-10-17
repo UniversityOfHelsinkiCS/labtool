@@ -10,6 +10,9 @@ export const HorizontalScrollable = props => {
 
   const mainElementReady = element => {
     content = element
+    if (content) {
+      content.style.position = 'relative'
+    }
     resizeBar()
   }
   const scrollBarReady = element => {
@@ -82,8 +85,7 @@ export const HorizontalScrollable = props => {
 
     if (doNotUpdate !== 'content' && content) {
       antibounce.content = true
-      content.style.position = 'relative'
-      content.style.left = `-${newX}px`
+      window.requestAnimationFrame(() => content.style.left = `-${newX}px`)
     }
     if (doNotUpdate !== 'scrollbar' && scrollbar) {
       antibounce.scrollbar = true
