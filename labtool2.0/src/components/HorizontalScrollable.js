@@ -85,7 +85,7 @@ export const HorizontalScrollable = props => {
 
     if (doNotUpdate !== 'content' && content) {
       antibounce.content = true
-      window.requestAnimationFrame(() => content.style.left = `-${newX}px`)
+      window.requestAnimationFrame(() => (content.style.left = `-${newX}px`))
     }
     if (doNotUpdate !== 'scrollbar' && scrollbar) {
       antibounce.scrollbar = true

@@ -91,7 +91,7 @@ export const CreateChecklist = props => {
     state.courseDropdowns = createCourseDropdowns()
     loadChecklist(week)
   }
-  
+
   useEffect(() => {
     // get maximum points from the checklist if not already in persistent state
     const hasMaxPoints = props.checklist.maxPoints !== '' && props.checklist.maxPoints !== undefined

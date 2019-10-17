@@ -4,7 +4,9 @@ exports[`<CourseImport /> CourseImport Component should render correctly 1`] = `
 <div
   className="CourseImport"
 >
-  <Container>
+  <div
+    className="mainContainer"
+  >
     <Header
       as="h2"
     >
@@ -13,6 +15,6 @@ exports[`<CourseImport /> CourseImport Component should render correctly 1`] = `
     <Loader
       active={true}
     />
-  </Container>
+  </div>
 </div>
 `;

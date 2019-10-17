@@ -260,7 +260,7 @@ describe('<BrowseReviews />', () => {
           .find('.hasPrevious')
           .find('Link')
           .find('Popup')
-        expect(popup.props()).toHaveProperty('trigger', <p>TKT20010 16-17 4.period</p>)
+        expect(popup.props()).toHaveProperty('trigger', <p>TKT20010 2016-2017 P.IV</p>)
       })
       it('student can be marked as dropped and non-dropped', () => {
         wrapper.find({ children: 'Mark as dropped' }).simulate('click')

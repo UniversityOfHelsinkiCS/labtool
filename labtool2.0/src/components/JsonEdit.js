@@ -53,7 +53,7 @@ const JsonEdit = props => {
             </Message>
           )}
           <Form>
-            <TextArea style={{ padding: 15 }} rows={40} onChange={onChange} style={{ fontFamily: 'monospace' }} value={data} />
+            <TextArea rows={40} onChange={onChange} style={{ padding: 15, fontFamily: 'monospace' }} value={data} />
           </Form>
         </Modal.Description>
         <Modal.Actions>

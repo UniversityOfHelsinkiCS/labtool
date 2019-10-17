@@ -246,6 +246,8 @@ describe('<CoursePage /> as teacher', () => {
         unTagStudent={mockFn}
         selectTag={mockFn}
         selectTeacher={mockFn}
+        changeCourseField={mockFn}
+        modifyOneCI={mockFn}
       />
     )
   })
@@ -469,6 +471,7 @@ describe('<CoursePage /> as student', () => {
         updateStudentProjectInfo={mockFn}
         selectTag={mockFn}
         selectTeacher={mockFn}
+        modifyOneCI={mockFn}
       />
     )
   })

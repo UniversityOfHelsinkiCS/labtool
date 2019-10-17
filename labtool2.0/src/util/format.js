@@ -51,7 +51,7 @@ const getPeriod = startDate => {
 }
 
 export const getSemesterAndYear = ohid => {
-  const semesters = { 'S': 'autumn ', 'K': 'spring ', 'V': 'summer ' }
+  const semesters = { S: 'autumn ', K: 'spring ', V: 'summer ' }
   const tokens = ohid.split('.')
   const year = tokens[1]
   const semester = semesters[tokens[2]] || tokens[2]

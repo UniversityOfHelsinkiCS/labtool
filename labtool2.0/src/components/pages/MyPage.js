@@ -25,9 +25,7 @@ export const MyPage = props => {
   const renderCourseRow = instance => (
     <Table.Row key={instance.id}>
       <Table.Cell>
-        <Link to={`/labtool/courses/${instance.ohid}`}>
-          {formatCourseName(instance.name, instance.ohid, instance.start)}
-        </Link>
+        <Link to={`/labtool/courses/${instance.ohid}`}>{formatCourseName(instance.name, instance.ohid, instance.start)}</Link>
       </Table.Cell>
       <Table.Cell textAlign="right">
         <Link to={`/labtool/courses/${instance.ohid}`}>

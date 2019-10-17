@@ -6,7 +6,6 @@ import { coursePageInformation } from '../../services/courseInstance'
 import { bulkinsertCodeReviews, removeOneCodeReview } from '../../services/codeReview'
 import { filterByReview, initOneReview, randomAssign, codeReviewReset, selectDropdown, toggleCreate, createStates, restoreData } from '../../reducers/codeReviewReducer'
 import { clearNotifications, showNotification } from '../../reducers/notificationReducer'
-import { forceRedirect } from '../../reducers/redirectReducer'
 import { Button, Table, Loader, Dropdown, Popup, Icon, Message } from 'semantic-ui-react'
 import StudentTable from '../StudentTable'
 import { resetLoading } from '../../reducers/loadingReducer'
@@ -455,8 +454,7 @@ const mapDispatchToProps = {
   filterByReview,
   showNotification,
   removeOneCodeReview,
-  getAllTags,
-  forceRedirect
+  getAllTags
 }
 
 ModifyCourseInstanceReview.propTypes = {
@@ -487,8 +485,7 @@ ModifyCourseInstanceReview.propTypes = {
   filterByReview: PropTypes.func.isRequired,
   showNotification: PropTypes.func.isRequired,
   removeOneCodeReview: PropTypes.func.isRequired,
-  getAllTags: PropTypes.func.isRequired,
-  forceRedirect: PropTypes.func.isRequired
+  getAllTags: PropTypes.func.isRequired
 }
 
 export default connect(

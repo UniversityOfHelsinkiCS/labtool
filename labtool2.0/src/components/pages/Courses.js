@@ -57,9 +57,7 @@ export const Courses = props => {
                       <Table.Cell>{instance.shorterId} </Table.Cell>
                       <Table.Cell>
                         <strong>
-                          <Link to={`/labtool/courses/${instance.ohid}`}>
-                            {formatCourseName(instance.name, instance.ohid, instance.start)}
-                          </Link>
+                          <Link to={`/labtool/courses/${instance.ohid}`}>{formatCourseName(instance.name, instance.ohid, instance.start)}</Link>
                         </strong>
                       </Table.Cell>
 
