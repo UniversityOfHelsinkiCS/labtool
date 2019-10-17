@@ -115,5 +115,5 @@ module.exports = {
     }
   ]),
 
-  down: (queryInterface, Sequelize) => queryInterface.bulkDelete('CheckLists', null, {})
+  down: (queryInterface, Sequelize) => queryInterface.bulkDelete('Checklists', null, {})
 }

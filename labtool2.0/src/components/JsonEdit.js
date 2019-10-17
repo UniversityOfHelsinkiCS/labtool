@@ -46,14 +46,14 @@ const JsonEdit = props => {
       <Modal onClose={closeDialog} open={open}>
         <Modal.Header>JSON</Modal.Header>
         <Modal.Description style={{ padding: 15 }}>Pressing &quot;Save&quot; saves immediately and overwrites the current checklist.</Modal.Description>
-        <Modal.Description style={{ padding: 15 }}>
+        <Modal.Description>
           {state.error && (
-            <Message error>
+            <Message style={{ padding: 15 }} error>
               <p>{state.error}</p>
             </Message>
           )}
           <Form>
-            <TextArea rows={40} onChange={onChange} style={{ fontFamily: 'monospace' }} value={data} />
+            <TextArea style={{ padding: 15 }} rows={40} onChange={onChange} style={{ fontFamily: 'monospace' }} value={data} />
           </Form>
         </Modal.Description>
         <Modal.Actions>
@@ -88,6 +88,9 @@ const JsonEdit = props => {
             }}
           />
         </Modal.Actions>
+        <br />
+        <br />
+        <br />
       </Modal>
     </React.Fragment>
   )

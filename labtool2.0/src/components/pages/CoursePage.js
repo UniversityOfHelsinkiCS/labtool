@@ -425,6 +425,7 @@ export const CoursePage = props => {
       courseMaterial
     }
 
+    props.resetLoading()
     props.modifyOneCI(content, props.selectedInstance.ohid)
   }
 
