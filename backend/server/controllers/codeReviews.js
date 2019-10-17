@@ -23,15 +23,15 @@ module.exports = {
       }
       const allStudentInstancesIds = [] // Gather all student instance ids for future query
       const values = req.body.codeReviews.map((codeReview) => {
-        if (typeof codeReview.reviewer !== 'number' || typeof codeReview.toReview !== 'number') {
+        if (typeof codeReview.reviewer !== 'number' || (typeof codeReview.toReview !== 'number' && !codeReview.repoToReview.includes('http'))) {
           return null // This will lead to rejection later.
         }
         allStudentInstancesIds.push(codeReview.reviewer)
-        allStudentInstancesIds.push(codeReview.toReview)
         return {
           studentInstanceId: codeReview.reviewer,
           reviewNumber: req.body.reviewNumber,
-          toReview: codeReview.toReview
+          toReview: Number.isInteger(codeReview.toReview) ? codeReview.toReview : null,
+          repoToReview: Number.isInteger(codeReview.toReview) ? null : codeReview.repoToReview
         }
       })
       if (values.indexOf(null) !== -1) {
@@ -65,6 +65,7 @@ module.exports = {
         return
       }
       await CodeReview.bulkCreate(values, { individualHooks: true }) // This is where the magic happens.
+
       const courseToUpdate = await CourseInstance.findOne({
         where: { id: req.body.courseId }
       })

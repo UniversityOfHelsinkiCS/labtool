@@ -46,3 +46,10 @@
 .TableRowForDroppedOutStudents {
   background-color: lightgray;
 }
+
+@media (min-width: 1000px) {
+  .mainContainer {
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+}

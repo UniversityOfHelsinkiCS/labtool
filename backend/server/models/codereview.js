@@ -9,6 +9,12 @@ module.exports = (sequelize, DataTypes) => {
         validate: {
           isUrl: true
         }
+      },
+      repoToReview: {
+        type: DataTypes.STRING,
+        validate: {
+          isUrl: true
+        }
       }
     },
     {

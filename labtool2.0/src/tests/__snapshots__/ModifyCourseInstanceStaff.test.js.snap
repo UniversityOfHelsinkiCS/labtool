@@ -72,9 +72,9 @@ exports[`<ModifyCourseInstanceStaff /> Components renders correctly 1`] = `
             Opettaja
             <br />
             <a
-              href="mailto:paa.opettaja@helsinki.fi"
+              href="mailto:paa.opettaja@helsinki.invalid"
             >
-              paa.opettaja@helsinki.fi
+              paa.opettaja@helsinki.invalid
             </a>
           </TableCell>
           <TableCell
@@ -103,9 +103,9 @@ exports[`<ModifyCourseInstanceStaff /> Components renders correctly 1`] = `
             Assistentti
             <br />
             <a
-              href="mailto:aimo.assistentti@helsinki.fi"
+              href="mailto:aimo.assistentti@helsinki.invalid"
             >
-              aimo.assistentti@helsinki.fi
+              aimo.assistentti@helsinki.invalid
             </a>
           </TableCell>
           <TableCell
@@ -142,9 +142,9 @@ exports[`<ModifyCourseInstanceStaff /> Components renders correctly 1`] = `
             Opiskelija
             <br />
             <a
-              href="mailto:paa.opettaja@helsinki.fi"
+              href="mailto:paa.opettaja@helsinki.invalid"
             >
-              paa.opettaja@helsinki.fi
+              paa.opettaja@helsinki.invalid
             </a>
           </TableCell>
           <TableCell

@@ -3,7 +3,6 @@ import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Switch, Route, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { Container } from 'semantic-ui-react'
 import preval from 'preval.macro'
 
 // Component (pages) imports
@@ -156,11 +155,11 @@ const App = props => {
     /**
      * Nav is the component for the navbar, that is always displayed.
      */
-    <Container>
+    <div className="mainContainer">
       <Nav logout={doLogout} />
       <Notification />
       {props.user ? EmailChecker() : USE_FAKE_LOGIN ? <FakeLoginPage /> : null}
-    </Container>
+    </div>
   )
 }
 

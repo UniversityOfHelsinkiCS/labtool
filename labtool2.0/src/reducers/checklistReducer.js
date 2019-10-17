@@ -6,7 +6,8 @@
  */
 
 const INITIAL_STATE = {
-  data: {}
+  data: {},
+  maxPoints: ''
 }
 
 const checklistReducer = (state = INITIAL_STATE, action) => {
@@ -14,9 +15,9 @@ const checklistReducer = (state = INITIAL_STATE, action) => {
     case 'LOGOUT_SUCCESS':
       return {}
     case 'CHECKLIST_GET_ONE_SUCCESS':
-      return { data: action.response.list }
+      return { data: action.response.list, maxPoints: action.response.maxPoints || '' }
     case 'CHECKLIST_GET_ONE_FAILURE':
-      return { data: {} }
+      return { data: {}, maxPoints: '' }
     case 'CHECKLIST_CHANGE_FIELD': {
       const newData = state.data
       newData[action.data.key].find(row => row.name === action.data.name)[action.data.field] = action.data.value
@@ -79,12 +80,13 @@ export const changeField = data => {
   }
 }
 
-export const restoreChecklist = data => {
+export const restoreChecklist = (data, maxPoints) => {
   return async dispatch => {
     dispatch({
       type: 'CHECKLIST_GET_ONE_SUCCESS',
       response: {
-        list: data
+        list: data,
+        maxPoints: maxPoints
       }
     })
   }

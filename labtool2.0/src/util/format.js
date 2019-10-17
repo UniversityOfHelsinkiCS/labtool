@@ -1,3 +1,5 @@
+import React from 'react'
+import { Icon } from 'semantic-ui-react'
 const zeros = number => {
   const stringForm = number.toString()
   return stringForm.length === 1 ? `0${stringForm}` : stringForm
@@ -18,7 +20,7 @@ export const createShorterCourseid = ohid => {
 }
 
 export const getAcademicYear = startDate => {
-  let year = Number(startDate.substring(2, 4))
+  let year = Number(startDate.substring(0, 4))
   const month = Number(startDate.split('-')[1])
   if (1 <= month && month <= 4) {
     return year - 1 + '-' + year
@@ -33,21 +35,35 @@ export const getAcademicYear = startDate => {
 
 const getPeriod = startDate => {
   const month = Number(startDate.split('-')[1])
-  let term
   if (month === 9) {
-    term = 1
-  } else if (month === 10) {
-    term = 2
-  } else if (month === 1) {
-    term = 3
-  } else if (month === 3) {
-    term = 4
+    return 'P.I'
+  } else if (month === 10 || month === 11 || month === 12) {
+    return 'P.II'
+  } else if (month === 1 || month === 2) {
+    return 'P.III'
+  } else if (month === 3 || month == 4) {
+    return 'P.IV'
   } else if (month === 5) {
-    term = 'early Summer'
+    return 'early Summer'
   } else {
-    term = 'late Summer'
+    return 'late Summer'
   }
-  return Number.isInteger(term) ? term + '.period' : term
+}
+
+export const getSemesterAndYear = ohid => {
+  const semesters = { S: 'autumn ', K: 'spring ', V: 'summer ' }
+  const tokens = ohid.split('.')
+  const year = tokens[1]
+  const semester = semesters[tokens[2]] || tokens[2]
+  return `${semester}${year}`
+}
+
+export const formatCourseName = (name, ohid, startDate) => {
+  if (name.toLowerCase().includes('period')) {
+    return `${name} (${getAcademicYear(startDate)})`.replace(/\) \(/g, ', ')
+  } else {
+    return `${name} (${getSemesterAndYear(ohid)})`.replace(/\) \(/g, ', ')
+  }
 }
 
 /**
@@ -65,4 +81,26 @@ export const capitalize = text => {
   } else {
     return text.slice(0, 1).toUpperCase() + text.slice(1).toLowerCase()
   }
+}
+
+export const createRepositoryLink = url => {
+  const { Fragment } = React
+  let cleanUrl = url
+  cleanUrl = cleanUrl.replace(/^https?:\/\//, '')
+
+  if (cleanUrl.startsWith('github.com/')) {
+    const cleanUrlNoGithub = cleanUrl.substring('github.com/'.length)
+    cleanUrl = (
+      <Fragment>
+        <Icon name="github" color="black" />
+        {cleanUrlNoGithub}
+      </Fragment>
+    )
+  }
+
+  return (
+    <a href={url} target="_blank" rel="noopener noreferrer">
+      {cleanUrl}
+    </a>
+  )
 }

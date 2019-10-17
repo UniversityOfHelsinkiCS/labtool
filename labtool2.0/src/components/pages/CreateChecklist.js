@@ -21,14 +21,16 @@ export const CreateChecklist = props => {
     rowName: '', // tracks value inputted into row creation dialog box.
     openAdd: '', // which addForm is currently open. '' denotes no open addForms. Only one addForm can be open at one time.
     courseDropdowns: [], // Dropdown options to show for copying checklist.
-    checklistData: null
+    checklistData: null,
+    maximumPoints: '',
+    canSave: false
   })
 
   useEffect(() => {
     // run on component mount
     props.resetLoading()
     if (state.checklistData) {
-      props.restoreChecklist(state.checklistData)
+      props.restoreChecklist(state.checklistData, state.maximumPoints)
     } else {
       props.resetChecklist()
     }
@@ -59,8 +61,10 @@ export const CreateChecklist = props => {
       props.createChecklist({
         courseInstanceId: props.selectedInstance.id,
         week: state.week,
-        checklist: props.checklist.data
+        checklist: props.checklist.data,
+        maxPoints: Number(state.maximumPoints)
       })
+      state.canSave = false
     } catch (e) {
       props.showNotification({
         message: 'Could not parse JSON.',
@@ -81,11 +85,18 @@ export const CreateChecklist = props => {
     } else {
       copyCourse = undefined
     }
+    state.maximumPoints = ''
     state.week = week
     state.copyCourse = copyCourse
     state.courseDropdowns = createCourseDropdowns()
     loadChecklist(week)
   }
+
+  useEffect(() => {
+    // get maximum points from the checklist if not already in persistent state
+    const hasMaxPoints = props.checklist.maxPoints !== '' && props.checklist.maxPoints !== undefined
+    state.maximumPoints = state.maximumPoints || (hasMaxPoints ? '' + props.checklist.maxPoints : '')
+  }, [props.checklist.maxPoints])
 
   const changeCopyCourse = async (e, { value }) => {
     state.copyCourse = value
@@ -98,10 +109,12 @@ export const CreateChecklist = props => {
       field,
       value: e.target.value
     })
+    state.canSave = true
   }
 
   // Make api call to receive checklist from database.
   const loadChecklist = async week => {
+    state.canSave = false
     props.getOneChecklist({
       week,
       courseInstanceId: props.selectedInstance.id
@@ -111,6 +124,7 @@ export const CreateChecklist = props => {
   const copyChecklist = async () => {
     if (!state.copyCourse) return
     const week = state.week > props.selectedInstance.weekAmount ? props.courses.find(course => course.id === state.copyCourse).weekAmount + 1 : state.week
+    state.canSave = true
     props.getOneChecklist({
       week,
       courseInstanceId: state.copyCourse,
@@ -144,6 +158,7 @@ export const CreateChecklist = props => {
         const checklist = props.checklist
         checklist.data = checklistForWeek
         state.checklist = checklist
+        state.canSave = true
       } catch (e) {
         props.showNotification({
           message: 'Could not save JSON.',
@@ -180,6 +195,7 @@ export const CreateChecklist = props => {
     })
     state.topicName = ''
     state.openAdd = ''
+    state.canSave = true
   }
 
   /**
@@ -205,6 +221,7 @@ export const CreateChecklist = props => {
     })
     state.rowName = ''
     state.openAdd = 'newTopic'
+    state.canSave = true
   }
 
   const changeTopicName = async e => {
@@ -215,10 +232,23 @@ export const CreateChecklist = props => {
     state.rowName = e.target.value
   }
 
+  const changeMaximumPoints = async e => {
+    state.maximumPoints = e.target.value
+    state.canSave = true
+  }
+
+  const getMaximumPoints = maximumPoints => {
+    if (!state.maximumPoints) {
+      return maximumPoints
+    }
+    return Number(state.maximumPoints)
+  }
+
   const removeTopic = key => async () => {
     props.removeTopic({
       key
     })
+    state.canSave = true
   }
 
   const removeRow = (key, name) => async () => {
@@ -226,6 +256,7 @@ export const CreateChecklist = props => {
       key,
       name
     })
+    state.canSave = true
   }
 
   const cancelAdd = async () => {
@@ -377,6 +408,13 @@ export const CreateChecklist = props => {
           <Loader active />
         ) : state.week !== undefined ? (
           <div>
+            <form onSubmit={handleSubmit}>
+              <Button className="saveButton" type="submit" color="green" size="large" disabled={!state.canSave}>
+                <div className="saveButtonText">Save</div>
+              </Button>
+              <br />
+              <br />
+            </form>
             <div>
               {checklistJsx /* This block of jsx is defined in renderChecklist */}
               <form className="addForm" onSubmit={newTopic}>
@@ -395,16 +433,25 @@ export const CreateChecklist = props => {
                 )}
               </form>
             </div>
+            <div>
+              <Label>Maximum points</Label>
+              <Input className="maxPointsInput" type="number" step="0.01" style={{ width: '100px' }} value={state.maximumPoints} onChange={changeMaximumPoints} />
+              <Popup
+                className="infoText"
+                trigger={<Icon name="question circle" />}
+                content="Defining maximum points yourself is not mandatory. If no value is given, default weekly points remain valid."
+              />
+            </div>
             <Card className="maxPointsCard">
               <Card.Content>
                 <p>
-                  Total max points: <strong className="maxPointsNumber">{maxPoints}</strong>
+                  Total max points: <strong className="maxPointsNumber">{getMaximumPoints(maxPoints)}</strong>
                   {state.week > props.selectedInstance.weekAmount ? (
                     <span />
                   ) : (
                     <span>
                       {' '}
-                      {props.selectedInstance.weekMaxPoints === maxPoints ? (
+                      {props.selectedInstance.weekMaxPoints === getMaximumPoints(maxPoints) ? (
                         <Popup className="maxPointsIcon" trigger={<Icon name="check" size="large" color="green" />} content="The total matches maximum weekly points for this course." />
                       ) : (
                         <Popup className="maxPointsIcon" trigger={<Icon name="delete" size="large" color="red" />} content="The total does not match maximum weekly points for this course." />
@@ -417,9 +464,11 @@ export const CreateChecklist = props => {
             <form onSubmit={handleSubmit}>
               {/*This is a form with a single button instead of just a button because it doesn't work 
                 (doesn't call the function) as just a button with onClick.*/}
-              <Button className="saveButton" type="submit" color="green" size="large">
+              <Button className="saveButton" type="submit" color="green" size="large" disabled={!state.canSave}>
                 <div className="saveButtonText">Save</div>
               </Button>
+              <br />
+              <br />
             </form>
           </div>
         ) : (

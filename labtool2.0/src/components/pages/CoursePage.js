@@ -4,13 +4,14 @@ import { Accordion, Button, Table, Card, Input, Form, Comment, Header, Label, Me
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createOneComment } from '../../services/comment'
-import { getOneCI, coursePageInformation } from '../../services/courseInstance'
+import { getOneCI, coursePageInformation, modifyOneCI } from '../../services/courseInstance'
 import ReactMarkdown from 'react-markdown'
 import { getAllTags, tagStudent, unTagStudent } from '../../services/tags'
 import { associateTeacherToStudent } from '../../services/assistant'
 import { addLinkToCodeReview } from '../../services/codeReview'
 import { sendEmail } from '../../services/email'
 import { coursePageReset, updateActiveIndex, toggleCodeReview, selectTag, selectTeacher } from '../../reducers/coursePageLogicReducer'
+import { changeCourseField } from '../../reducers/selectedInstanceReducer'
 import { updateStudentProjectInfo } from '../../services/studentinstances'
 import { resetLoading } from '../../reducers/loadingReducer'
 
@@ -266,13 +267,13 @@ export const CoursePage = props => {
         <div className="codeReviewExpanded">
           <div className="codeReviewPoints">
             <strong>Points: </strong> {cr.points !== null ? cr.points : 'Not graded yet'}
-            <br /> <br />
-            <strong>Project to review: </strong>
-            {cr.toReview.projectName}
+            {/* <br /> <br /> */}
+            {/* <strong>Project to review: </strong>
+            {cr.toReview.projectName || } */}
             <br />
             <strong>GitHub: </strong>
-            <a href={cr.toReview.github} target="_blank" rel="noopener noreferrer">
-              {cr.toReview.github}
+            <a href={cr.toReview.github || cr.repoToReview} target="_blank" rel="noopener noreferrer">
+              {cr.toReview.github || cr.repoToReview}
             </a>
             <br /> <br />
             {cr.linkToReview ? (
@@ -403,6 +404,31 @@ export const CoursePage = props => {
     return headers
   }
 
+  // This function activates the course, leaving other data intact.
+  const activateCourse = () => {
+    props.changeCourseField({
+      field: 'active',
+      value: true
+    })
+
+    const { weekAmount, weekMaxPoints, currentWeek, ohid, finalReview, coursesPage, courseMaterial, currentCodeReview } = props.selectedInstance
+
+    const content = {
+      weekAmount,
+      weekMaxPoints,
+      currentWeek,
+      active: true,
+      ohid,
+      finalReview,
+      newCr: currentCodeReview,
+      coursesPage,
+      courseMaterial
+    }
+
+    props.resetLoading()
+    props.modifyOneCI(content, props.selectedInstance.ohid)
+  }
+
   /**
    * Returns what teachers should see at the top of this page
    */
@@ -417,6 +443,10 @@ export const CoursePage = props => {
               <Message compact>
                 <Message.Header>You have not activated this course.</Message.Header>
               </Message>
+
+              <Button color="green" style={{ marginLeft: '25px' }} onClick={() => activateCourse()}>
+                Activate course now
+              </Button>
               <br />
             </div>
           ))}
@@ -660,7 +690,9 @@ CoursePage.propTypes = {
   updateStudentProjectInfo: PropTypes.func.isRequired,
   associateTeacherToStudent: PropTypes.func.isRequired,
   selectTag: PropTypes.func.isRequired,
-  selectTeacher: PropTypes.func.isRequired
+  selectTeacher: PropTypes.func.isRequired,
+  changeCourseField: PropTypes.func.isRequired,
+  modifyOneCI: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -694,7 +726,9 @@ const mapDispatchToProps = {
   updateStudentProjectInfo,
   associateTeacherToStudent,
   selectTag,
-  selectTeacher
+  selectTeacher,
+  changeCourseField,
+  modifyOneCI
 }
 
 export default connect(

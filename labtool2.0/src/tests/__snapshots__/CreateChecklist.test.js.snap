@@ -111,6 +111,26 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
       </div>
     </div>
     <div>
+      <form
+        onSubmit={[Function]}
+      >
+        <Button
+          as="button"
+          className="saveButton"
+          color="green"
+          disabled={true}
+          size="large"
+          type="submit"
+        >
+          <div
+            className="saveButtonText"
+          >
+            Save
+          </div>
+        </Button>
+        <br />
+        <br />
+      </form>
       <div>
         <Card
           color="red"
@@ -440,6 +460,44 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
           <div />
         </form>
       </div>
+      <div>
+        <Label>
+          Maximum points
+        </Label>
+        <Input
+          className="maxPointsInput"
+          onChange={[Function]}
+          step="0.01"
+          style={
+            Object {
+              "width": "100px",
+            }
+          }
+          type="number"
+          value=""
+        />
+        <Popup
+          className="infoText"
+          content="Defining maximum points yourself is not mandatory. If no value is given, default weekly points remain valid."
+          disabled={false}
+          eventsEnabled={true}
+          offset={0}
+          on={
+            Array [
+              "click",
+              "hover",
+            ]
+          }
+          pinned={false}
+          position="top left"
+          trigger={
+            <Icon
+              as="i"
+              name="question circle"
+            />
+          }
+        />
+      </div>
       <Card
         className="maxPointsCard"
       >
@@ -487,6 +545,7 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
           as="button"
           className="saveButton"
           color="green"
+          disabled={true}
           size="large"
           type="submit"
         >
@@ -496,6 +555,8 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
             Save
           </div>
         </Button>
+        <br />
+        <br />
       </form>
     </div>
   </div>

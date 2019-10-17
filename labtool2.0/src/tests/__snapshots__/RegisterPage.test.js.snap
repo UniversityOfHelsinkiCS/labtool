@@ -49,6 +49,7 @@ exports[`<Register /> RegisterPage Component should render correctly 1`] = `
           </label>
           <Input
             className="form-control1"
+            defaultValue=""
             icon="rocket"
             iconPosition="left"
             name="projectName"

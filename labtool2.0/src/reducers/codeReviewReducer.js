@@ -63,7 +63,7 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
       let updatedReviews = {}
       let codeReviewRoundsToUpdate = state.codeReviewStates
 
-      if (!action.data.toReview) {
+      if (!action.data.toReview && !action.data.repoToReview) {
         delete selections[action.data.round][action.data.reviewer]
         updatedReviews = oldReviews.filter(cr => cr.reviewer !== action.data.reviewer)
         codeReviewRoundsToUpdate[action.data.round] = updatedReviews
@@ -73,14 +73,16 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
       if (toUpdate) {
         toUpdate.reviewer = action.data.reviewer
         toUpdate.toReview = action.data.toReview
+        toUpdate.repoToReview = action.data.repoToReview
+
         updatedReviews = oldReviews.filter(review => (review.reviewer !== action.data.reviewer ? review : toUpdate))
       } else {
-        updatedReviews = [...oldReviews, { reviewer: action.data.reviewer, toReview: action.data.toReview }]
+        updatedReviews = [...oldReviews, { reviewer: action.data.reviewer, toReview: action.data.toReview, repoToReview: action.data.repoToReview }]
       }
       codeReviewRoundsToUpdate[action.data.round] = updatedReviews
 
       const newCurrentSelections = state.currentSelections
-      newCurrentSelections[action.data.round][action.data.reviewer] = action.data.toReview
+      newCurrentSelections[action.data.round][action.data.reviewer] = action.data.toReview || action.data.repoToReview
       return { ...state, codeReviewStates: codeReviewRoundsToUpdate, currentSelections: newCurrentSelections }
     }
     case 'CODE_REVIEW_BULKINSERT_SUCCESS': {
