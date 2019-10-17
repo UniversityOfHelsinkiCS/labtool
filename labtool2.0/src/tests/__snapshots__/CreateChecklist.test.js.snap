@@ -111,6 +111,26 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
       </div>
     </div>
     <div>
+      <form
+        onSubmit={[Function]}
+      >
+        <Button
+          as="button"
+          className="saveButton"
+          color="green"
+          disabled={true}
+          size="large"
+          type="submit"
+        >
+          <div
+            className="saveButtonText"
+          >
+            Save
+          </div>
+        </Button>
+        <br />
+        <br />
+      </form>
       <div>
         <Card
           color="red"
@@ -525,6 +545,7 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
           as="button"
           className="saveButton"
           color="green"
+          disabled={true}
           size="large"
           type="submit"
         >
@@ -534,6 +555,8 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
             Save
           </div>
         </Button>
+        <br />
+        <br />
       </form>
     </div>
   </div>

@@ -4,7 +4,9 @@ exports[`<Courses /> Courses Component should render correctly 1`] = `
 <div
   className="Courses"
 >
-  <Container>
+  <div
+    className="mainContainer"
+  >
     <Header
       as="h2"
     >
@@ -98,10 +100,7 @@ exports[`<Courses /> Courses Component should render correctly 1`] = `
                   <Link
                     to="/labtool/courses/TKT20010.2018.K.A.1"
                   >
-                    Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit (periodi IV)
-                     (
-                    17-18
-                    )
+                    Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit (periodi IV, 2017-2018)
                   </Link>
                 </strong>
               </TableCell>
@@ -194,10 +193,7 @@ exports[`<Courses /> Courses Component should render correctly 1`] = `
                   <Link
                     to="/labtool/courses/TKT20002.2018.K.K.1"
                   >
-                    Ohjelmistotekniikan menetelmät
-                     (
-                    17-18
-                    )
+                    Ohjelmistotekniikan menetelmät (spring 2018)
                   </Link>
                 </strong>
               </TableCell>
@@ -279,10 +275,7 @@ exports[`<Courses /> Courses Component should render correctly 1`] = `
                   <Link
                     to="/labtool/courses/TKT20011.2018.K.A.1"
                   >
-                    Aineopintojen harjoitustyö: Tietokantasovellus (periodi III)
-                     (
-                    17-18
-                    )
+                    Aineopintojen harjoitustyö: Tietokantasovellus (periodi III, 2017-2018)
                   </Link>
                 </strong>
               </TableCell>
@@ -345,6 +338,6 @@ exports[`<Courses /> Courses Component should render correctly 1`] = `
         </Table>
       </HorizontalScrollable>
     </div>
-  </Container>
+  </div>
 </div>
 `;

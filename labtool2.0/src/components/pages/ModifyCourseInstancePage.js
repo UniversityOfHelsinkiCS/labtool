@@ -9,6 +9,7 @@ import { Redirect } from 'react-router'
 import { clearNotifications } from '../../reducers/notificationReducer'
 import { changeCourseField } from '../../reducers/selectedInstanceReducer'
 import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
+import { forceRedirect } from '../../reducers/redirectReducer'
 import useLegacyState from '../../hooks/legacyState'
 
 import BackButton from '../BackButton'
@@ -79,7 +80,12 @@ export const ModifyCourseInstancePage = props => {
       props.addRedirectHook({
         hook: 'CI_MODIFY_ONE_'
       })
+      props.changeCourseField({
+        field: 'active',
+        value: active
+      })
       props.modifyOneCI(content, props.selectedInstance.ohid)
+      props.forceRedirect()
     } catch (error) {
       console.error(error)
     }
@@ -143,7 +149,7 @@ export const ModifyCourseInstancePage = props => {
 
               <Form.Group inline>
                 <label style={{ width: '125px', textAlign: 'left' }}>Currently visible code reviews</label>
-                {props.selectedInstance.currentCodeReview
+                {props.selectedInstance.currentCodeReview && props.selectedInstance.currentCodeReview.sort
                   ? props.selectedInstance.currentCodeReview
                       .sort((a, b) => {
                         return a - b
@@ -273,7 +279,8 @@ const mapDispatchToProps = {
   changeCourseField,
   resetLoading,
   addRedirectHook,
-  setFinalReview
+  setFinalReview,
+  forceRedirect
 }
 
 ModifyCourseInstancePage.propTypes = {
@@ -291,7 +298,8 @@ ModifyCourseInstancePage.propTypes = {
   changeCourseField: PropTypes.func.isRequired,
   resetLoading: PropTypes.func.isRequired,
   addRedirectHook: PropTypes.func.isRequired,
-  setFinalReview: PropTypes.func.isRequired
+  setFinalReview: PropTypes.func.isRequired,
+  forceRedirect: PropTypes.func.isRequired
 }
 
 export default connect(
