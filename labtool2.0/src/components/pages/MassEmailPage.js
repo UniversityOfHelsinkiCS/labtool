@@ -14,22 +14,13 @@ import { usePersistedState, clearOnePersistedState } from '../../hooks/persisted
 
 export const MassEmailPage = props => {
   const myCourseId = props.courseId
+  const persistentKey = `MassEmailPage_${myCourseId}`
 
   const MassEmailInput = () => {
-    const pstate = usePersistedState('MassEmailPage', {
-      courseId: null,
+    const pstate = usePersistedState(persistentKey, {
       value: '',
       checked: true
     })
-
-    useEffect(() => {
-      if (myCourseId) {
-        if (pstate.courseId !== null && pstate.courseId !== myCourseId) {
-          pstate.reset()
-        }
-        pstate.courseId = myCourseId
-      }
-    }, [])
 
     return (
       <>
@@ -41,7 +32,7 @@ export const MassEmailPage = props => {
   }
 
   const clearState = () => {
-    clearOnePersistedState('MassEmailPage')
+    clearOnePersistedState(persistentKey)
   }
 
   useEffect(() => {

@@ -292,7 +292,7 @@ export const BrowseReviews = props => {
             </Card>
             <h4> Comments </h4>
             <Comment.Group>{week ? sortCommentsByDate(week.comments).map(c => renderComment(isFinalWeek, c)) : <h4> No comments </h4>}</Comment.Group>
-            <LabtoolAddComment weekId={week.id} handleSubmit={handleSubmit} allowHidden={true} />
+            <LabtoolAddComment weekId={week.id} commentFieldId={`${props.courseId}:${week.id}`} handleSubmit={handleSubmit} allowHidden={true} />
           </Accordion.Content>
         </Accordion>
       )

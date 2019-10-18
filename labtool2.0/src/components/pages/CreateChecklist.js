@@ -14,8 +14,7 @@ import BackButton from '../BackButton'
 import JsonEdit from '../JsonEdit'
 
 export const CreateChecklist = props => {
-  const state = usePersistedState('CreateChecklist', {
-    courseId: null, // reset state if we're editing another course than in state
+  const state = usePersistedState(`CreateChecklist_${props.courseId}`, {
     week: undefined, // tracks value of week dropdown.
     copyCourse: undefined, // tracks value of course dropdown.
     topicName: '', // tracks value inputted into topic creation dialog box.
@@ -31,17 +30,7 @@ export const CreateChecklist = props => {
     // run on component mount
     props.resetLoading()
 
-    let willResetState = false
-    const myCourseId = props.courseId
-    if (state.courseId !== null && state.courseId !== myCourseId) {
-      state.reset()
-      willResetState = true
-      state.week = null
-      state.copyCourse = null
-    }
-    state.courseId = myCourseId
-
-    if (!willResetState && state.checklistData) {
+    if (state.checklistData) {
       props.restoreChecklist(state.checklistData, state.maximumPoints)
     } else {
       props.resetChecklist()

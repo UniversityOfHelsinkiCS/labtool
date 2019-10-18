@@ -218,7 +218,7 @@ export const CoursePage = props => {
     return <Loader active />
   }
 
-  const { user, courseData, coursePageLogic, courseInstance, selectedInstance, tags } = props
+  const { courseId, user, courseData, coursePageLogic, courseInstance, selectedInstance, tags } = props
 
   const renderComment = comment => {
     /* This hack compares user's name to comment.from and hides the email notification button when they don't match. */
@@ -243,7 +243,7 @@ export const CoursePage = props => {
         </Card>
         <h4> Comments </h4>
         <Comment.Group>{week ? sortArrayAscendingByDate(week.comments).map(renderComment) : <h4> No comments </h4>}</Comment.Group>
-        <LabtoolAddComment weekId={week.id} handleSubmit={handleSubmit} />
+        <LabtoolAddComment weekId={week.id} commentFieldId={`${courseId}:${week.id}`} handleSubmit={handleSubmit} />
       </Accordion.Content>
     </Accordion>
   )
@@ -494,6 +494,7 @@ export const CoursePage = props => {
     return (
       <div className={tableClassName}>
         <Header as="h2">{heading} </Header>
+        <br />
 
         <StudentTable
           key={rowClassName}
@@ -505,6 +506,7 @@ export const CoursePage = props => {
           studentInstances={courseData.data.filter(studentInstance => droppedOut === studentInstance.dropped)}
           coursePageLogic={coursePageLogic}
           tags={tags}
+          persistentFilterKey={`CoursePage_filters_${courseId}`}
         />
         <br />
         {dropConvertButton}
@@ -588,7 +590,7 @@ export const CoursePage = props => {
         <br />
       </div>
     ) : (
-      <p>You can select students to modify their information.</p>
+      <div />
     )
   }
 

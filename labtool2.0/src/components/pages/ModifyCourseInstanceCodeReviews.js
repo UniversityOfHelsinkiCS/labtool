@@ -19,8 +19,7 @@ import RevieweeDropdown from '../RevieweeDropdown'
 import { createRepositoryLink } from '../../util/format'
 
 export const ModifyCourseInstanceReview = props => {
-  const pstate = usePersistedState('ModifyCourseInstanceCodeReviews', {
-    courseId: null,
+  const pstate = usePersistedState(`ModifyCourseInstanceCodeReviews_${props.courseId}`, {
     codeReviewData: null
   })
   let filterSelected = () => true
@@ -28,13 +27,6 @@ export const ModifyCourseInstanceReview = props => {
   useEffect(() => {
     // run on component mount
     props.resetLoading()
-
-    const myCourseId = props.courseId
-    if (pstate.courseId !== null && pstate.courseId !== myCourseId) {
-      pstate.reset()
-    }
-    pstate.courseId = myCourseId
-
     props.getOneCI(props.courseId)
     props.getAllTags()
     props.coursePageInformation(props.courseId)

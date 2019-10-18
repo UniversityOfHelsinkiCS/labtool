@@ -54,8 +54,7 @@ const isFinalReview = props => props.weekNumber > props.selectedInstance.weekAmo
 export const ReviewStudent = props => {
   const [loadedWeekData, setLoadedWeekData] = useState(false)
   const [allowChecksCopy, setAllowChecksCopy] = useState(false)
-  const pstate = usePersistedState('ReviewStudent', {
-    weekId: null,
+  const pstate = usePersistedState(`ReviewStudent_${props.studentInstance}:${props.weekNumber}`, {
     points: '',
     feedback: '',
     instructorNotes: '',
@@ -65,14 +64,6 @@ export const ReviewStudent = props => {
   useEffect(() => {
     // run on component mount
     props.resetLoading()
-
-    const myWeekId = `${props.studentInstance}:${props.weekNumber}`
-    if (pstate.weekId !== null && pstate.weekId != pstate.myWeekId) {
-      pstate.reset()
-      setLoadedWeekData(false)
-    }
-    pstate.weekId = myWeekId
-
     props.getOneCI(props.courseId)
     props.coursePageInformation(props.courseId)
     props.clearNotifications()

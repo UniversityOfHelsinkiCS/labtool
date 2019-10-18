@@ -568,6 +568,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
       Students
        
     </Header>
+    <br />
     <Connect(StudentTable)
       allowModify={true}
       allowReview={true}
@@ -590,6 +591,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
         }
       }
       key="TableRowForActiveStudents"
+      persistentFilterKey="CoursePage_filters_"
       rowClassName="TableRowForActiveStudents"
       selectedInstance={
         Object {
@@ -842,6 +844,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
       Dropped out students
        
     </Header>
+    <br />
     <Connect(StudentTable)
       allowModify={true}
       allowReview={true}
@@ -864,6 +867,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
         }
       }
       key="TableRowForDroppedOutStudents"
+      persistentFilterKey="CoursePage_filters_"
       rowClassName="TableRowForDroppedOutStudents active"
       selectedInstance={
         Object {

@@ -8,13 +8,13 @@ import { getAllTags, tagStudent, unTagStudent } from '../services/tags'
 import { associateTeacherToStudent } from '../services/assistant'
 import { showAssistantDropdown, showTagDropdown, selectTeacher, selectTag, selectStudent, unselectStudent, selectAllStudents, unselectAllStudents } from '../reducers/coursePageLogicReducer'
 import { createDropdownTeachers, createDropdownTags } from '../util/dropdown'
-import useLegacyState from '../hooks/legacyState'
 import { createRepositoryLink } from '../util/format'
+import { usePersistedState } from '../hooks/persistedState'
 
 const { Fragment } = React
 
 export const StudentTable = props => {
-  const state = useLegacyState({
+  const state = usePersistedState(props.persistentFilterKey || null, {
     filterByAssistant: 0,
     filterByTag: []
   })
@@ -496,6 +496,7 @@ export const StudentTable = props => {
           </span>
         )}
       </div>
+      <br />
 
       <HorizontalScrollable>
         <Table celled compact unstackable singleLine style={{ overflowX: 'visible' }}>
@@ -569,6 +570,7 @@ StudentTable.propTypes = {
   studentColumnName: PropTypes.string,
   extraButtons: PropTypes.array,
   onFilter: PropTypes.func,
+  persistentFilterKey: PropTypes.string,
 
   studentInstances: PropTypes.array.isRequired,
   selectedInstance: PropTypes.object.isRequired,
