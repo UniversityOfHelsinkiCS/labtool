@@ -20,6 +20,7 @@ import { createRepositoryLink } from '../../util/format'
 
 export const ModifyCourseInstanceReview = props => {
   const pstate = usePersistedState('ModifyCourseInstanceCodeReviews', {
+    courseId: null,
     codeReviewData: null
   })
   let filterSelected = () => true
@@ -27,6 +28,13 @@ export const ModifyCourseInstanceReview = props => {
   useEffect(() => {
     // run on component mount
     props.resetLoading()
+
+    const myCourseId = props.courseId
+    if (pstate.courseId !== null && pstate.courseId !== myCourseId) {
+      pstate.reset()
+    }
+    pstate.courseId = myCourseId
+
     props.getOneCI(props.courseId)
     props.getAllTags()
     props.coursePageInformation(props.courseId)
@@ -353,42 +361,44 @@ export const ModifyCourseInstanceReview = props => {
   const unassignedFilter = data => props.codeReviewLogic.filterByReview === 0 || isAssignedToReview(data, props.codeReviewLogic.selectedDropdown)
 
   return (
-    <div className="ModifyCourseInstanceCodeReviews" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
-      <div style={{ overflowX: 'auto', overflowY: 'hidden' }}>
-        <BackButton preset="modifyCIPage" cleanup={pstate.clear} />
-        <div className="sixteen wide column">
-          <h2>{props.selectedInstance.name}</h2> <br />
+    <>
+      <BackButton preset="modifyCIPage" cleanup={pstate.clear} />
+      <div className="ModifyCourseInstanceCodeReviews" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
+        <div style={{ overflowX: 'auto', overflowY: 'hidden' }}>
+          <div className="sixteen wide column">
+            <h2>{props.selectedInstance.name}</h2> <br />
+          </div>
+
+          {showVisibilityReminder()}
+          <br />
+
+          <StudentTable
+            rowClassName="CodeReviewStudentRow"
+            extraButtons={[makeFilterButton]}
+            columns={[
+              'select',
+              [makeCodeReviewSelectorHeader, makeCodeReviewSelectorCell, makeCodeReviewSelectorFooter],
+              [makeCodeReviewCreatorHeader, makeCodeReviewCreatorCell, makeCodeReviewCreatorFooter]
+            ]}
+            showFooter={true}
+            allowModify={false}
+            selectedInstance={props.selectedInstance}
+            studentInstances={props.courseData.data.filter(studentInstance => !studentInstance.dropped && unassignedFilter(studentInstance))}
+            coursePageLogic={props.coursePageLogic}
+            tags={props.tags}
+            onFilter={filtered => (filterSelected = id => filtered.includes(Number(id)))}
+          />
+
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
         </div>
-
-        {showVisibilityReminder()}
-        <br />
-
-        <StudentTable
-          rowClassName="CodeReviewStudentRow"
-          extraButtons={[makeFilterButton]}
-          columns={[
-            'select',
-            [makeCodeReviewSelectorHeader, makeCodeReviewSelectorCell, makeCodeReviewSelectorFooter],
-            [makeCodeReviewCreatorHeader, makeCodeReviewCreatorCell, makeCodeReviewCreatorFooter]
-          ]}
-          showFooter={true}
-          allowModify={false}
-          selectedInstance={props.selectedInstance}
-          studentInstances={props.courseData.data.filter(studentInstance => !studentInstance.dropped && unassignedFilter(studentInstance))}
-          coursePageLogic={props.coursePageLogic}
-          tags={props.tags}
-          onFilter={filtered => (filterSelected = id => filtered.includes(Number(id)))}
-        />
-
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
       </div>
-    </div>
+    </>
   )
 }
 

@@ -218,20 +218,22 @@ export const CoursePage = props => {
     return <Loader active />
   }
 
+  const { user, courseData, coursePageLogic, courseInstance, selectedInstance, tags } = props
+
   const renderComment = comment => {
     /* This hack compares user's name to comment.from and hides the email notification button when they don't match. */
-    const userIsCommandSender = comment.from.includes(props.user.user.firsts) && comment.from.includes(props.user.user.lastname)
+    const userIsCommandSender = comment.from.includes(user.user.firsts) && comment.from.includes(user.user.lastname)
 
     return <LabtoolComment key={comment.id} comment={comment} allowNotify={userIsCommandSender} sendCommentEmail={sendEmail(comment.id)} />
   }
 
   const createStudentGradedWeek = (i, week) => (
     <Accordion key={i} fluid styled>
-      <Accordion.Title active={i === props.coursePageLogic.activeIndex} index={i} onClick={handleClick}>
+      <Accordion.Title active={i === coursePageLogic.activeIndex} index={i} onClick={handleClick}>
         <Icon name="dropdown" />
-        {i + 1 > props.selectedInstance.weekAmount ? <span>Final Review</span> : <span>Week {week.weekNumber}</span>}, points {week.points}
+        {i + 1 > selectedInstance.weekAmount ? <span>Final Review</span> : <span>Week {week.weekNumber}</span>}, points {week.points}
       </Accordion.Title>
-      <Accordion.Content active={i === props.coursePageLogic.activeIndex}>
+      <Accordion.Content active={i === coursePageLogic.activeIndex}>
         <Card fluid color="yellow">
           <Card.Content>
             <h4> Points {week.points} </h4>
@@ -248,10 +250,10 @@ export const CoursePage = props => {
 
   const createStudentUngradedWeek = i => (
     <Accordion key={i} fluid styled>
-      <Accordion.Title active={props.coursePageLogic.activeIndex === i} index={i} onClick={handleClick}>
-        <Icon name="dropdown" /> {i + 1 > props.selectedInstance.weekAmount ? <span>Final Review</span> : <span>Week {i + 1}</span>}
+      <Accordion.Title active={coursePageLogic.activeIndex === i} index={i} onClick={handleClick}>
+        <Icon name="dropdown" /> {i + 1 > selectedInstance.weekAmount ? <span>Final Review</span> : <span>Week {i + 1}</span>}
       </Accordion.Title>
-      <Accordion.Content active={props.coursePageLogic.activeIndex === i}>
+      <Accordion.Content active={coursePageLogic.activeIndex === i}>
         <h4> Not Graded </h4>
         <h4> No comments </h4>
       </Accordion.Content>
@@ -260,10 +262,10 @@ export const CoursePage = props => {
 
   const createStudentCodeReview = (i, cr) => (
     <Accordion key={i} fluid styled>
-      <Accordion.Title className="codeReview" active={props.coursePageLogic.activeIndex === i || cr.points === null} index={i} onClick={handleClick}>
+      <Accordion.Title className="codeReview" active={coursePageLogic.activeIndex === i || cr.points === null} index={i} onClick={handleClick}>
         <Icon name="dropdown" /> Code Review {cr.reviewNumber} {cr.points !== null ? ', points ' + cr.points : ''}
       </Accordion.Title>
-      <Accordion.Content active={props.coursePageLogic.activeIndex === i || cr.points === null}>
+      <Accordion.Content active={coursePageLogic.activeIndex === i || cr.points === null}>
         <div className="codeReviewExpanded">
           <div className="codeReviewPoints">
             <strong>Points: </strong> {cr.points !== null ? cr.points : 'Not graded yet'}
@@ -288,14 +290,14 @@ export const CoursePage = props => {
             )}
           </div>
 
-          {props.coursePageLogic.showCodeReviews.indexOf(cr.reviewNumber) !== -1 ? (
+          {coursePageLogic.showCodeReviews.indexOf(cr.reviewNumber) !== -1 ? (
             <div>
               {cr.linkToReview ? (
                 <div />
               ) : (
                 <div>
                   <strong>Link your review here:</strong> <br />
-                  <Form onSubmit={handleAddingIssueLink(cr.reviewNumber, props.courseData.data.id)}>
+                  <Form onSubmit={handleAddingIssueLink(cr.reviewNumber, courseData.data.id)}>
                     <Form.Group inline>
                       <Input
                         type="text"
@@ -333,18 +335,18 @@ export const CoursePage = props => {
     // student's own details.
     headers.push(
       <div key="student info">
-        {props.courseData && props.courseData.data && props.courseData.data.User ? (
+        {courseData && courseData.data && courseData.data.User ? (
           <Card key="card" fluid color="yellow">
             <Card.Content>
               <h2>
-                {props.courseData.data.User.firsts} {props.courseData.data.User.lastname}
+                {courseData.data.User.firsts} {courseData.data.User.lastname}
               </h2>
-              <h3> {props.courseData.data.projectName} </h3>
+              <h3> {courseData.data.projectName} </h3>
               <h3>
-                <a href={props.courseData.data.github} target="_blank" rel="noopener noreferrer">
-                  {props.courseData.data.github}
+                <a href={courseData.data.github} target="_blank" rel="noopener noreferrer">
+                  {courseData.data.github}
                 </a>{' '}
-                <Link to={`/labtool/courseregistration/${props.selectedInstance.ohid}`}>
+                <Link to={`/labtool/courseregistration/${selectedInstance.ohid}`}>
                   <Button circular floated="right" size="large" icon={{ name: 'edit', color: 'orange', size: 'large' }} />
                 </Link>
               </h3>
@@ -357,18 +359,18 @@ export const CoursePage = props => {
     )
 
     // student's week and code reviews
-    if (props.selectedInstance && props.courseData && props.courseData.data && props.courseData.data.weeks) {
+    if (selectedInstance && courseData && courseData.data && courseData.data.weeks) {
       let i = 0
       let week = null
       const weekMatcher = i => week => week.weekNumber === i + 1
 
-      const howManyWeeks = props.selectedInstance.finalReview ? props.selectedInstance.weekAmount + 1 : props.selectedInstance.weekAmount
+      const howManyWeeks = selectedInstance.finalReview ? selectedInstance.weekAmount + 1 : selectedInstance.weekAmount
       for (; i < howManyWeeks; i++) {
-        week = props.courseData.data.weeks.find(weekMatcher(i))
+        week = courseData.data.weeks.find(weekMatcher(i))
         headers.push(week !== undefined ? createStudentGradedWeek(i, week) : createStudentUngradedWeek(i))
       }
 
-      props.courseData.data.codeReviews
+      courseData.data.codeReviews
         .sort((a, b) => {
           return a.reviewNumber - b.reviewNumber
         })
@@ -383,12 +385,12 @@ export const CoursePage = props => {
             <Icon name="check" />
             <strong> Total Points: </strong>
             {(
-              props.courseData.data.weeks
+              courseData.data.weeks
                 .map(week => week.points)
                 .reduce((a, b) => {
                   return a + b
                 }, 0) +
-              props.courseData.data.codeReviews
+              courseData.data.codeReviews
                 .map(cr => cr.points)
                 .reduce((a, b) => {
                   return a + b
@@ -411,7 +413,7 @@ export const CoursePage = props => {
       value: true
     })
 
-    const { weekAmount, weekMaxPoints, currentWeek, ohid, finalReview, coursesPage, courseMaterial, currentCodeReview } = props.selectedInstance
+    const { weekAmount, weekMaxPoints, currentWeek, ohid, finalReview, coursesPage, courseMaterial, currentCodeReview } = selectedInstance
 
     const content = {
       weekAmount,
@@ -426,7 +428,7 @@ export const CoursePage = props => {
     }
 
     props.resetLoading()
-    props.modifyOneCI(content, props.selectedInstance.ohid)
+    props.modifyOneCI(content, selectedInstance.ohid)
   }
 
   /**
@@ -435,10 +437,10 @@ export const CoursePage = props => {
   let renderTeacherTopPart = () => {
     return (
       <div className="TeachersTopView" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
-        <CoursePageHeader courseInstance={props.selectedInstance} />
-        {props.courseInstance &&
-          props.courseInstance.active !== true &&
-          (!props.selectedInstance.active && (
+        <CoursePageHeader courseInstance={selectedInstance} />
+        {courseInstance &&
+          courseInstance.active !== true &&
+          (!selectedInstance.active && (
             <div>
               <Message compact>
                 <Message.Header>You have not activated this course.</Message.Header>
@@ -455,7 +457,7 @@ export const CoursePage = props => {
             <Table.Row>
               <Table.Cell>
                 <div>
-                  {props.selectedInstance.active === true ? (
+                  {selectedInstance.active === true ? (
                     <Label ribbon style={{ backgroundColor: '#21ba45' }}>
                       Active registration
                     </Label>
@@ -464,12 +466,12 @@ export const CoursePage = props => {
                   )}
                 </div>
               </Table.Cell>
-              <Table.Cell>Week amount: {props.selectedInstance.weekAmount}</Table.Cell>
-              <Table.Cell>Current week: {props.selectedInstance.currentWeek}</Table.Cell>
-              <Table.Cell>Week max points: {props.selectedInstance.weekMaxPoints}</Table.Cell>
+              <Table.Cell>Week amount: {selectedInstance.weekAmount}</Table.Cell>
+              <Table.Cell>Current week: {selectedInstance.currentWeek}</Table.Cell>
+              <Table.Cell>Week max points: {selectedInstance.weekMaxPoints}</Table.Cell>
               <Table.Cell textAlign="right">
                 {' '}
-                <Link to={`/labtool/ModifyCourseInstancePage/${props.selectedInstance.ohid}`}>
+                <Link to={`/labtool/ModifyCourseInstancePage/${selectedInstance.ohid}`}>
                   <Popup trigger={<Button circular size="tiny" icon={{ name: 'edit', size: 'large', color: 'orange' }} />} content="Edit course" />
                 </Link>
               </Table.Cell>
@@ -485,7 +487,7 @@ export const CoursePage = props => {
     const tableClassName = droppedOut ? 'TeachersBottomViewForDroppedOutStudents' : 'TeachersBottomViewForActiveStudents'
     const rowClassName = droppedOut ? 'TableRowForDroppedOutStudents' : 'TableRowForActiveStudents'
     const dropConvertButton = !droppedOut && droppedTagExists() && (
-      <Button onClick={() => markAllWithDroppedTagAsDropped(props.courseData)} size="small">
+      <Button onClick={() => markAllWithDroppedTagAsDropped(courseData)} size="small">
         Mark all with dropped tag as dropped out
       </Button>
     )
@@ -499,15 +501,15 @@ export const CoursePage = props => {
           columns={['select', 'points', 'instructor']}
           allowModify={true}
           allowReview={true}
-          selectedInstance={props.selectedInstance}
-          studentInstances={props.courseData.data.filter(studentInstance => droppedOut === studentInstance.dropped)}
-          coursePageLogic={props.coursePageLogic}
-          tags={props.tags}
+          selectedInstance={selectedInstance}
+          studentInstances={courseData.data.filter(studentInstance => droppedOut === studentInstance.dropped)}
+          coursePageLogic={coursePageLogic}
+          tags={tags}
         />
         <br />
         {dropConvertButton}
         {!droppedOut && (
-          <Link to={`/labtool/massemail/${props.selectedInstance.ohid}`}>
+          <Link to={`/labtool/massemail/${selectedInstance.ohid}`}>
             <Button size="small">Send email to multiple students</Button>
           </Link>
         )}
@@ -530,7 +532,7 @@ export const CoursePage = props => {
 
   const renderTeacherBulkForm = () => {
     // if any selected, even if outside filters
-    const showMassAssign = Object.keys(props.coursePageLogic.selectedStudents).length
+    const showMassAssign = Object.keys(coursePageLogic.selectedStudents).length
 
     return showMassAssign ? (
       <div className="TeacherBulkForm">
@@ -586,7 +588,7 @@ export const CoursePage = props => {
         <br />
       </div>
     ) : (
-      <br />
+      <p>You can select students to modify their information.</p>
     )
   }
 
@@ -596,12 +598,12 @@ export const CoursePage = props => {
   let renderStudentTopPart = () => {
     return (
       <div className="StudentsView" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
-        <CoursePageHeader courseInstance={props.selectedInstance} />
+        <CoursePageHeader courseInstance={selectedInstance} />
         <div className="grid">
-          {props.selectedInstance.active === true ? (
-            props.courseData.data !== null ? (
+          {selectedInstance.active === true ? (
+            courseData.data !== null ? (
               <p />
-            ) : props.selectedInstance.registrationAtWebOodi === 'notfound' ? (
+            ) : selectedInstance.registrationAtWebOodi === 'notfound' ? (
               <div className="sixteen wide column">
                 <Message compact>
                   <Message.Header>No registration found at WebOodi.</Message.Header>
@@ -610,7 +612,7 @@ export const CoursePage = props => {
               </div>
             ) : (
               <div className="sixteen wide column">
-                <Link to={`/labtool/courseregistration/${props.selectedInstance.ohid}`}>
+                <Link to={`/labtool/courseregistration/${selectedInstance.ohid}`}>
                   {' '}
                   <Button color="blue" size="large">
                     Register

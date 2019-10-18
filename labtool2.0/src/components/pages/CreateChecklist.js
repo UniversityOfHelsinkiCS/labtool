@@ -15,6 +15,7 @@ import JsonEdit from '../JsonEdit'
 
 export const CreateChecklist = props => {
   const state = usePersistedState('CreateChecklist', {
+    courseId: null, // reset state if we're editing another course than in state
     week: undefined, // tracks value of week dropdown.
     copyCourse: undefined, // tracks value of course dropdown.
     topicName: '', // tracks value inputted into topic creation dialog box.
@@ -29,7 +30,18 @@ export const CreateChecklist = props => {
   useEffect(() => {
     // run on component mount
     props.resetLoading()
-    if (state.checklistData) {
+
+    let willResetState = false
+    const myCourseId = props.courseId
+    if (state.courseId !== null && state.courseId !== myCourseId) {
+      state.reset()
+      willResetState = true
+      state.week = null
+      state.copyCourse = null
+    }
+    state.courseId = myCourseId
+
+    if (!willResetState && state.checklistData) {
       props.restoreChecklist(state.checklistData, state.maximumPoints)
     } else {
       props.resetChecklist()
@@ -396,7 +408,7 @@ export const CreateChecklist = props => {
             </Button>
             <Dropdown className="courseDropdown" placeholder="Copy checklist from another course" selection value={state.copyCourse} onChange={changeCopyCourse} options={state.courseDropdowns} />
           </div>
-          {state.week !== undefined ? (
+          {state.week !== undefined && state.week !== null ? (
             <div className="jsonButtons">
               <JsonEdit onImport={importChecklist} initialData={props.checklist.data} downloadName={`${props.selectedInstance.ohid}_week_${state.week}.json`} />
             </div>
@@ -406,7 +418,7 @@ export const CreateChecklist = props => {
         </div>
         {props.loading.loading ? (
           <Loader active />
-        ) : state.week !== undefined ? (
+        ) : state.week !== undefined && state.week !== null ? (
           <div>
             <form onSubmit={handleSubmit}>
               <Button className="saveButton" type="submit" color="green" size="large" disabled={!state.canSave}>

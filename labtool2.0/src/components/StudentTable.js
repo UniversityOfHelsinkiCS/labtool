@@ -367,19 +367,20 @@ export const StudentTable = props => {
       )}
 
       {/* Instructor */}
-      {showColumn('instructor') && !shouldHideInstructor(props.studentInstances) && (
+      {showColumn('instructor') && (!shouldHideInstructor(props.studentInstances) || props.allowModify) && (
         <Table.Cell key="instructor">
-          {data.teacherInstanceId && props.selectedInstance.teacherInstances ? (
-            props.selectedInstance.teacherInstances
-              .filter(teacher => teacher.id === data.teacherInstanceId)
-              .map(teacher => (
-                <span key={data.id + ':' + teacher.id}>
-                  {teacher.firsts} {teacher.lastname}
-                </span>
-              ))
-          ) : (
-            <span>not assigned</span>
-          )}
+          {!shouldHideInstructor(props.studentInstances) &&
+            (data.teacherInstanceId && props.selectedInstance.teacherInstances ? (
+              props.selectedInstance.teacherInstances
+                .filter(teacher => teacher.id === data.teacherInstanceId)
+                .map(teacher => (
+                  <span key={data.id + ':' + teacher.id}>
+                    {teacher.firsts} {teacher.lastname}
+                  </span>
+                ))
+            ) : (
+              <span>not assigned</span>
+            ))}
           {props.allowModify && (
             <Fragment>
               <Popup
@@ -513,7 +514,9 @@ export const StudentTable = props => {
                   <Table.HeaderCell>Sum</Table.HeaderCell>
                 </Fragment>
               )}
-              {showColumn('instructor') && !shouldHideInstructor(props.studentInstances) && <Table.HeaderCell width="six">Instructor</Table.HeaderCell>}
+              {showColumn('instructor') && (!shouldHideInstructor(props.studentInstances) || props.allowModify) && (
+                <Table.HeaderCell width={shouldHideInstructor(props.studentInstances) ? null : 'six'}>Instructor</Table.HeaderCell>
+              )}
               {extraColumns.map(([header, ,]) => header())}
             </Table.Row>
           </Table.Header>

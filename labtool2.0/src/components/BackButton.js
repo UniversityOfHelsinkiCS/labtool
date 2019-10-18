@@ -5,12 +5,16 @@ import { Link } from 'react-router-dom'
 import { Button, Icon } from 'semantic-ui-react'
 
 const BackButton = props => (
-  <Link to={props.to}>
-    <Button compact disabled={!props.enabled} onClick={props.cleanup || (() => {})}>
-      <Icon name="angle left" />
-      <span>{props.text}</span>
-    </Button>
-  </Link>
+  <>
+    <Link to={props.to}>
+      <Button compact disabled={!props.enabled} onClick={props.cleanup || (() => {})}>
+        <Icon name="angle left" />
+        <span>{props.text}</span>
+      </Button>
+    </Link>
+    <br />
+    <br />
+  </>
 )
 
 BackButton.propTypes = {

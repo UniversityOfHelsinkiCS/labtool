@@ -51,7 +51,21 @@ const usePersistedState = (prefix, vars) => {
     }
   }
 
+  result.reset = () => {
+    for (const key of keys) {
+      store.removeItem(lsprefix + key)
+      _set[key](vars[key]) // revert to default value
+    }
+  }
+
   return result
+}
+
+const clearOnePersistedState = stateKey => {
+  Array.from(Array(store.length).keys()) // this generates a range [0, store.length[
+    .map(i => store.key(i))
+    .filter(key => key.startsWith(`${myPrefix}${stateKey}_`))
+    .forEach(key => store.removeItem(key))
 }
 
 const clearAllPersistedStates = () => {
@@ -61,4 +75,4 @@ const clearAllPersistedStates = () => {
     .forEach(key => store.removeItem(key))
 }
 
-export { usePersistedState, clearAllPersistedStates }
+export { usePersistedState, clearOnePersistedState, clearAllPersistedStates }

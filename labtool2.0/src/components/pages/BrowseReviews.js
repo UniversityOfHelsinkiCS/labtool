@@ -99,7 +99,7 @@ export const BrowseReviews = props => {
 
   const getMaximumIndexForStudent = student => {
     // how many reviews will there be?
-    return props.selectedInstance.weekAmount + student.codeReviews.length + 1
+    return props.selectedInstance.weekAmount + student.codeReviews.length + (props.selectedInstance.finalReview ? 2 : 1)
   }
 
   const hasAllReviewsOpen = student => {
@@ -412,7 +412,7 @@ export const BrowseReviews = props => {
         })
       if (props.selectedInstance.finalReview) {
         const finalWeek = student.weeks.find(week => week.weekNumber === props.selectedInstance.weekAmount + 1)
-        headers.push(renderWeek(i + ii, finalWeek, studentInstance, true))
+        headers.push(renderWeek(i + ii + 1, finalWeek, studentInstance, true))
       }
     }
     return headers.map((header, index) => React.cloneElement(header, { key: index }))
@@ -465,6 +465,7 @@ BrowseReviews.propTypes = {
   courseId: PropTypes.string.isRequired,
   studentInstance: PropTypes.string.isRequired,
   initialLoading: PropTypes.bool,
+  location: PropTypes.object,
 
   user: PropTypes.object.isRequired,
   selectedInstance: PropTypes.object.isRequired,

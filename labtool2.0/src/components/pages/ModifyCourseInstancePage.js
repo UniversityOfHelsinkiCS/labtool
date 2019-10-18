@@ -209,7 +209,7 @@ export const ModifyCourseInstancePage = props => {
                   Save
                 </Button>
 
-                <Link to="/labtool/courses">
+                <Link to={`/labtool/courses/${props.selectedInstance.ohid}`}>
                   <Button type="Cancel" color="red" size="huge">
                     Cancel
                   </Button>

@@ -5,7 +5,7 @@ import { getAllUsers } from '../../services/user'
 import { createOne, removeOne } from '../../services/teacherinstances'
 import { connect } from 'react-redux'
 import { clearNotifications } from '../../reducers/notificationReducer'
-import { Table, Container, Header, Button, Label, Form, Loader } from 'semantic-ui-react'
+import { Table, Header, Button, Label, Form, Loader } from 'semantic-ui-react'
 import { resetLoading } from '../../reducers/loadingReducer'
 import { sortUsersByAdminAssistantLastname } from '../../util/sort'
 
@@ -58,7 +58,7 @@ export const ModifyCourseInstanceStaff = props => {
     sortedUsers = sortUsersByAdminAssistantLastname(props.users, props.selectedInstance.teacherInstances)
   }
   return (
-    <Container>
+    <div>
       <BackButton preset="modifyCIPage" />
       <div className="sixteen wide column" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
         <h2>Add and remove assistants</h2>
@@ -116,7 +116,7 @@ export const ModifyCourseInstanceStaff = props => {
           </Table>
         )}
       </Form>
-    </Container>
+    </div>
   )
 }
 

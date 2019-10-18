@@ -42,6 +42,9 @@ const PreviousWeekDetails = ({ weekData }) => {
     </Segment>
   )
 }
+PreviousWeekDetails.propTypes = {
+  weekData: PropTypes.object
+}
 
 const isFinalReview = props => props.weekNumber > props.selectedInstance.weekAmount
 
@@ -52,6 +55,7 @@ export const ReviewStudent = props => {
   const [loadedWeekData, setLoadedWeekData] = useState(false)
   const [allowChecksCopy, setAllowChecksCopy] = useState(false)
   const pstate = usePersistedState('ReviewStudent', {
+    weekId: null,
     points: '',
     feedback: '',
     instructorNotes: '',
@@ -61,11 +65,18 @@ export const ReviewStudent = props => {
   useEffect(() => {
     // run on component mount
     props.resetLoading()
+
+    const myWeekId = `${props.studentInstance}:${props.weekNumber}`
+    if (pstate.weekId !== null && pstate.weekId != pstate.myWeekId) {
+      pstate.reset()
+      setLoadedWeekData(false)
+    }
+    pstate.weekId = myWeekId
+
     props.getOneCI(props.courseId)
     props.coursePageInformation(props.courseId)
     props.clearNotifications()
     importWeekDataFromDraft()
-
     return () => {
       // run on component unmount
       props.resetChecklist()
