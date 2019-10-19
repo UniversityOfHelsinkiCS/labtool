@@ -12,12 +12,12 @@ export const LabtoolAddComment = ({ commentFieldId, weekId, handleSubmit, allowH
   const toggleOpen = () => {
     state.commentOpen = !state.commentOpen
     if (!state.commentOpen) {
-      state.clear()
+      state.reset()
     }
   }
 
   const doSubmit = (...args) => {
-    state.clear()
+    state.reset()
     handleSubmit(...args)
   }
 
