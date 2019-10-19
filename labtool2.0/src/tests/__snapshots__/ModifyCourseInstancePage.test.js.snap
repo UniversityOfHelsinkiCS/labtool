@@ -286,7 +286,7 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
           >
             <Checkbox
               checked={true}
-              label="Course is active"
+              label="Course registration is active"
               name="courseActive"
               onChange={[Function]}
               style={

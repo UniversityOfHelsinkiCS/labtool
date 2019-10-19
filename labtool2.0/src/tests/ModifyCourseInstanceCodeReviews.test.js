@@ -353,7 +353,7 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
 */
   })
 
-  describe('Can activate the code review which is ubvisible to students', () => {
+  describe('Can activate the code review which is invisible to students', () => {
     const codeReviewLogicWithUnactivatedSelectedDropdown = {
       ...codeReviewLogic,
       selectedDropdown: 2

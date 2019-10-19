@@ -82,7 +82,7 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
           compact={true}
         >
           <MessageHeader>
-            This course has not been activated.
+            This course does not have active registration.
           </MessageHeader>
         </Message>
       </div>

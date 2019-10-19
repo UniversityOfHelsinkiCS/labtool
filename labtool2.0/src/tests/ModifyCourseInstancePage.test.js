@@ -96,7 +96,7 @@ describe('<ModifyCourseInstancePage />', () => {
     it('renders active course checkbox', () => {
       const checkbox = wrapper.find(Checkbox).find({ name: 'courseActive' })
 
-      expect(checkbox.prop('label')).toEqual('Course is active')
+      expect(checkbox.prop('label')).toEqual('Course registration is active')
     })
   })
 })

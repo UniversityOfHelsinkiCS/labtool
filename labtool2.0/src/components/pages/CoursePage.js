@@ -443,11 +443,11 @@ export const CoursePage = props => {
           (!selectedInstance.active && (
             <div>
               <Message compact>
-                <Message.Header>You have not activated this course.</Message.Header>
+                <Message.Header>The registration is not active on this course.</Message.Header>
               </Message>
 
               <Button color="green" style={{ marginLeft: '25px' }} onClick={() => activateCourse()}>
-                Activate course now
+                Activate now
               </Button>
               <br />
             </div>
@@ -625,7 +625,7 @@ export const CoursePage = props => {
           ) : (
             <div className="sixteen wide column">
               <Message compact>
-                <Message.Header>This course has not been activated.</Message.Header>
+                <Message.Header>This course does not have active registration.</Message.Header>
               </Message>
             </div>
           )}
