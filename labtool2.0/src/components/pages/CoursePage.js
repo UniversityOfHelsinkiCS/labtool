@@ -311,7 +311,7 @@ export const CoursePage = props => {
                       />
                     </Form.Group>
                     <Form.Group>
-                      <Button compact type="submit" color="blue">
+                      <Button compact type="submit" color="blue" style={{ marginLeft: '0.5em' }}>
                         Submit
                       </Button>
                     </Form.Group>
@@ -493,8 +493,8 @@ export const CoursePage = props => {
     )
     return (
       <div className={tableClassName}>
-        <Header as="h2">{heading} </Header>
         <br />
+        <Header as="h2">{heading} </Header>
 
         <StudentTable
           key={rowClassName}

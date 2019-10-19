@@ -275,6 +275,11 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
                   as="button"
                   color="blue"
                   compact={true}
+                  style={
+                    Object {
+                      "marginLeft": "0.5em",
+                    }
+                  }
                   type="submit"
                 >
                   Submit
@@ -562,13 +567,13 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
   <div
     className="TeachersBottomViewForActiveStudents"
   >
+    <br />
     <Header
       as="h2"
     >
       Students
        
     </Header>
-    <br />
     <Connect(StudentTable)
       allowModify={true}
       allowReview={true}
@@ -838,13 +843,13 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
   <div
     className="TeachersBottomViewForDroppedOutStudents"
   >
+    <br />
     <Header
       as="h2"
     >
       Dropped out students
        
     </Header>
-    <br />
     <Connect(StudentTable)
       allowModify={true}
       allowReview={true}
