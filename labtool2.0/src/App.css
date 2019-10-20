@@ -27,7 +27,7 @@
   to { transform: rotate(360deg); }
 }
 
-.message, .error {
+.success, .error {
   padding: 1em;
   text-align: center;
   color: white;
