@@ -456,7 +456,7 @@ const sendMass = async (req, res) => {
       <p>course: ${courseInstance.name}</p>
       <p><i>This is an automated message sent using the Labtool email tool. Please do not reply to this email.</i></p>
       <h2>Message content</h2>
-      <p>${escape(req.body.content)}</p>
+      <p style="white-space: pre-line;">${escape(req.body.content)}</p>
     `
 
     const { success, simulated } = await trySendEmail({
