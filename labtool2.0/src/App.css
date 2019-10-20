@@ -28,7 +28,6 @@
 }
 
 .message, .error {
-  background-color: red;
   padding: 1em;
   text-align: center;
   color: white;
