@@ -102,12 +102,12 @@ export const StudentTable = props => {
     }
   }
 
-  const removeTag = id => async e => {
+  const removeTag = (id, tag) => async e => {
     try {
       e.preventDefault()
       const data = {
         studentId: id,
-        tagId: props.coursePageLogic.selectedTag
+        tagId: tag || props.coursePageLogic.selectedTag
       }
       await props.unTagStudent(data)
     } catch (error) {
@@ -119,14 +119,6 @@ export const StudentTable = props => {
     return (e, data) => {
       const { value } = data
       filterByAssistant(value)
-    }
-  }
-
-  const changeFilterTag = (e, data) => {
-    const { value } = data
-    const tag = props.tags.tags.find(tag => tag.id === value)
-    if (tag) {
-      filterByTag(tag)
     }
   }
 
@@ -160,6 +152,16 @@ export const StudentTable = props => {
       }
     }
     return hasRequiredTags
+  }
+
+  const countStudentsWithTag = (studentInstances, tagId) => {
+    let count = 0
+    studentInstances.forEach(studentInstance => {
+      if (studentInstance.Tags.find(tag => tag.id === tagId)) {
+        ++count
+      }
+    })
+    return count
   }
 
   const shouldHideInstructor = studentInstances => studentInstances.every(studentInstance => studentInstance.teacherInstanceId === null)
@@ -319,9 +321,16 @@ export const StudentTable = props => {
           {createRepositoryLink(data.github)}
           {data.Tags.map(tag => (
             <div key={data.id + ':' + tag.id}>
-              <Button compact floated="left" className={`mini ui ${tag.color} button`} onClick={addFilterTag(tag)}>
-                {tag.name}
-              </Button>
+              <Button.Group className={'mini'}>
+                <Button compact floated="left" className={`mini ui ${tag.color} button`} onClick={addFilterTag(tag)}>
+                  {tag.name}
+                </Button>
+                {props.allowModify && (
+                  <Button compact icon attached="right" className={`mini ui ${tag.color} button`} style={{ paddingLeft: 0, paddingRight: 0 }} onClick={removeTag(data.id, tag.id)}>
+                    <Icon name="remove" />
+                  </Button>
+                )}
+              </Button.Group>
             </div>
           ))}
           {props.allowModify && (
@@ -342,7 +351,7 @@ export const StudentTable = props => {
                     <i className="plus icon" />
                   </button>
                   <div className="or" />
-                  <button className="ui icon button" onClick={removeTag(data.id)} size="mini">
+                  <button className="ui icon button" onClick={removeTag(data.id, null)} size="mini">
                     <i className="trash icon" />
                   </button>
                 </div>
@@ -425,14 +434,10 @@ export const StudentTable = props => {
 
   let dropDownTags = []
   dropDownTags = createDropdownTags(props.tags.tags, dropDownTags)
-  let dropDownFilterTags = [
-    {
-      key: '-',
-      text: 'Select a tag',
-      value: ''
-    }
-  ]
-  dropDownFilterTags = createDropdownTags(props.tags.tags, dropDownFilterTags)
+  let dropDownFilterTags = createDropdownTags(props.tags.tags, []).filter(
+    tag => state.filterByTag.find(t => t.id === tag.value) || (props.studentInstances && countStudentsWithTag(props.studentInstances, tag.value) > 0)
+  )
+  dropDownFilterTags = dropDownFilterTags.map(tag => props.tags.tags.find(t => t.id === tag.value))
 
   const dataFilter = data =>
     disableDefaultFilter ||
@@ -477,18 +482,16 @@ export const StudentTable = props => {
             />
           </span>
         )}
-        <span> Add filtering tag: </span>
-        <Dropdown scrolling options={dropDownFilterTags} onChange={changeFilterTag} placeholder="Select a tag" value="" selection style={{ width: `${getBiggestWidthInDropdown(dropDownTags)}em` }} />
         <span> Tag filters: </span>
-        {state.filterByTag.length === 0 ? (
+        {dropDownFilterTags.length === 0 ? (
           <span>
             <Label>none</Label>
           </span>
         ) : (
           <span>
-            {state.filterByTag.map(tag => (
+            {dropDownFilterTags.map(tag => (
               <span key={tag.id}>
-                <Button compact className={`mini ui ${tag.color} button`} onClick={addFilterTag(tag)}>
+                <Button compact className={`mini ui ${tag.color} button ${!state.filterByTag.find(t => t.id === tag.id) ? 'basic' : ''}`} onClick={addFilterTag(tag)}>
                   {tag.name}
                 </Button>
               </span>
