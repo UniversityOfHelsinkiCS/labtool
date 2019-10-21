@@ -26,11 +26,7 @@ exports[`<BrowseReviews /> BrowseReviews Component should render correctly 1`] =
     >
       <h2>
          
-        Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit
-         (
-        2017-2018
-        )
-         
+        Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit (periodi IV, 2017-2018)
       </h2>
     </Link>
     <Card

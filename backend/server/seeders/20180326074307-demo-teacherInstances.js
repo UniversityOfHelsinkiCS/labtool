@@ -123,6 +123,30 @@ module.exports = {
         admin: false,
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01'
+      },
+      {
+        id: 10111,
+        userId: 10010,
+        courseInstanceId: 10014,
+        admin: true,
+        createdAt: '2018-03-26',
+        updatedAt: '2018-03-26'
+      },
+      {
+        id: 10112,
+        userId: 10010,
+        courseInstanceId: 10015,
+        admin: true,
+        createdAt: '2018-03-26',
+        updatedAt: '2018-03-26'
+      },
+      {
+        id: 10113,
+        userId: 10010,
+        courseInstanceId: 10016,
+        admin: true,
+        createdAt: '2018-03-26',
+        updatedAt: '2018-03-26'
       }
     ],
     {}

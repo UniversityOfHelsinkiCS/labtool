@@ -7,7 +7,7 @@ describe('<BrowseReviews />', () => {
 
   const coursePage = {
     id: 10011,
-    name: 'Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit',
+    name: 'Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit (periodi IV)',
     start: '2018-03-11T21:00:00.000Z',
     end: '2018-04-29T21:00:00.000Z',
     active: true,

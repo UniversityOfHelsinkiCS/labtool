@@ -48,6 +48,51 @@ module.exports = {
         ohid: 'TKT20011.2018.K.A.1',
         createdAt: '2018-03-26',
         updatedAt: '2018-03-26'
+      },
+      {
+        id: 10014,
+        name: 'Aineopintojen harjoitustyö: Tietokantasovellus (alkukesä)',
+        start: '2018-05-16T21:00:00.000Z',
+        end: '2018-06-30T21:00:00.000Z',
+        active: false,
+        weekAmount: 7,
+        weekMaxPoints: 3,
+        currentWeek: 1,
+        currentCodeReview: '{}',
+        amountOfCodeReviews: 0,
+        ohid: 'TKT20011.2018.V.K.1',
+        createdAt: '2018-03-26',
+        updatedAt: '2018-03-26'
+      },
+      {
+        id: 10015,
+        name: 'Aineopintojen harjoitustyö: Tietokantasovellus (loppukesä)',
+        start: '2018-07-22T21:00:00.000Z',
+        end: '2018-08-31T21:00:00.000Z',
+        active: false,
+        weekAmount: 7,
+        weekMaxPoints: 3,
+        currentWeek: 1,
+        currentCodeReview: '{}',
+        amountOfCodeReviews: 0,
+        ohid: 'TKT20011.2018.V.K.2',
+        createdAt: '2018-03-26',
+        updatedAt: '2018-03-26'
+      },
+      {
+        id: 10016,
+        name: 'Aineopintojen harjoitustyö: Tietokantasovellus (vuodenvaihde)',
+        start: '2018-12-16T21:00:00.000Z',
+        end: '2018-01-31T21:00:00.000Z',
+        active: false,
+        weekAmount: 7,
+        weekMaxPoints: 3,
+        currentWeek: 1,
+        currentCodeReview: '{}',
+        amountOfCodeReviews: 0,
+        ohid: 'TKT20011.2018.V.V.1',
+        createdAt: '2018-03-26',
+        updatedAt: '2018-03-26'
       }
     ],
     {}
