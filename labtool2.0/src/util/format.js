@@ -62,7 +62,7 @@ export const getSemesterAndYear = ohid => {
 
 export const formatCourseName = (name, ohid, startDate) => {
   const lowerCaseName = name.toLowerCase()
-  if (lowerCaseName.includes('period') || lowerCaseName.includes('kesä') || lowerCaseName.includes('vuodenvaihde')) {
+  if (lowerCaseName.includes('period') || lowerCaseName.includes('kesä') || lowerCaseName.includes('vuodenvaihde') || lowerCaseName.includes('summer')) {
     return `${name} (${getAcademicYear(startDate)})`.replace(/\) \(/g, ', ')
   } else {
     return `${name} (${getSemesterAndYear(ohid)})`
