@@ -17,7 +17,8 @@ const INITIAL_STATE = {
   lastReviewedWeek: 1,
   lastReviewedIsShownAlready: false,
   showCodeReviews: [],
-  selectedStudents: {}
+  selectedStudents: {},
+  showMassAssignForm: false
 }
 
 const coursePageLogicReducer = (state = INITIAL_STATE, action) => {
@@ -32,6 +33,8 @@ const coursePageLogicReducer = (state = INITIAL_STATE, action) => {
       return { ...state, selectedTag: action.selection }
     case 'COURSE_PAGE_SET_SELECTED_STUDENTS':
       return { ...state, selectedStudents: action.selection }
+    case 'COURSE_PAGE_TOGGLE_MASS_ASSIGN':
+      return { ...state, showMassAssignForm: !state.showMassAssignForm }
     case 'COURSE_PAGE_SELECT_STUDENT': {
       const newSelectedStudents = state.selectedStudents
       newSelectedStudents[action.id] = true
@@ -226,6 +229,14 @@ export const toggleCodeReview = reviewNumber => {
     dispatch({
       type: 'COURSE_PAGE_TOGGLE_CODE_REVIEW',
       reviewNumber
+    })
+  }
+}
+
+export const toggleMassAssign = () => {
+  return async dispatch => {
+    dispatch({
+      type: 'COURSE_PAGE_TOGGLE_MASS_ASSIGN'
     })
   }
 }

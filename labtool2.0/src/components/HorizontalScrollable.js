@@ -133,7 +133,7 @@ export const HorizontalScrollable = props => {
       <div ref={mainElementReady} onScroll={updateScrollX('content')} style={{ overflowX: 'visible', overflowY: 'visible' }}>
         {props.children}
       </div>
-      <div ref={scrollBarReady} onScroll={updateScrollX('scrollbar')} style={{ overflowX: 'scroll', bottom: '0', position: 'sticky' }}>
+      <div ref={scrollBarReady} onScroll={updateScrollX('scrollbar')} style={{ overflowX: 'scroll', bottom: '0', position: 'sticky', zIndex: 1000 }}>
         <div />
       </div>
     </div>
