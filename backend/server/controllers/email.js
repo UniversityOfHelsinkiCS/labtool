@@ -284,7 +284,7 @@ const send = async (req, res) => {
         const link = req.body.role === 'teacher'
           ? `${frontendUrl}/courses/${message.content.course.ohid}`
           : `${frontendUrl}/browsereviews/${message.content.course.ohid}/${message.studentId}`
-        html = buildEmail(`You've received a message in Labtool`, link, message.content.course.name, null, 'Message content', message.content.text)
+        html = buildEmail(`You've received a message from Labtool`, link, message.content.course.name, null, 'Message content', message.content.text)
       }
     } else {
       // commentId was not supplied, so use weekId instead.
