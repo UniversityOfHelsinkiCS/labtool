@@ -19,11 +19,12 @@ import LabtoolComment from '../LabtoolComment'
 import LabtoolAddComment from '../LabtoolAddComment'
 import StudentTable from '../StudentTable'
 import { createDropdownTeachers, createDropdownTags } from '../../util/dropdown'
+import { formatCourseName } from '../../util/format'
 
 const CoursePageHeader = ({ courseInstance }) => (
   <Header as="h2" style={{ marginBottom: '1em' }}>
     <Header.Content>
-      {courseInstance.name}
+      {formatCourseName(courseInstance.name, courseInstance.ohid, courseInstance.start)}
       <Header.Subheader>
         {courseInstance.coursesPage && <a href={courseInstance.coursesPage}>courses.helsinki.fi</a>} {courseInstance.coursesPage && courseInstance.courseMaterial && '|'}{' '}
         {courseInstance.courseMaterial && <a href={courseInstance.courseMaterial}>Course material</a>}

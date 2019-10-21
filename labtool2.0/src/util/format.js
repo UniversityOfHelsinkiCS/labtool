@@ -37,7 +37,7 @@ const getPeriod = startDate => {
   const month = Number(startDate.split('-')[1])
   if (month === 9) {
     return 'P.I'
-  } else if (month === 10 || month === 11 || month === 12) {
+  } else if (month === 10 || month === 11) {
     return 'P.II'
   } else if (month === 1 || month === 2) {
     return 'P.III'
@@ -45,24 +45,27 @@ const getPeriod = startDate => {
     return 'P.IV'
   } else if (month === 5) {
     return 'early Summer'
-  } else {
+  } else if (month === 7) {
     return 'late Summer'
+  } else {
+    return 'turn of the year'
   }
 }
 
 export const getSemesterAndYear = ohid => {
-  const semesters = { S: 'autumn ', K: 'spring ', V: 'summer ' }
+  const semesters = { S: 'autumn', K: 'spring', V: 'summer' }
   const tokens = ohid.split('.')
   const year = tokens[1]
   const semester = semesters[tokens[2]] || tokens[2]
-  return `${semester}${year}`
+  return `${semester}, ${year}`
 }
 
 export const formatCourseName = (name, ohid, startDate) => {
-  if (name.toLowerCase().includes('period')) {
+  const lowerCaseName = name.toLowerCase()
+  if (lowerCaseName.includes('period') || lowerCaseName.includes('kesä') || lowerCaseName.includes('vuodenvaihde')) {
     return `${name} (${getAcademicYear(startDate)})`.replace(/\) \(/g, ', ')
   } else {
-    return `${name} (${getSemesterAndYear(ohid)})`.replace(/\) \(/g, ', ')
+    return `${name} (${getSemesterAndYear(ohid)})`
   }
 }
 

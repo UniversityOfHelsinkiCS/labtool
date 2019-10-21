@@ -18,7 +18,7 @@ import useLegacyState from '../../hooks/legacyState'
 import BackButton from '../BackButton'
 import LabtoolComment from '../LabtoolComment'
 import LabtoolAddComment from '../LabtoolAddComment'
-import { getAcademicYear } from '../../util/format'
+import { formatCourseName } from '../../util/format'
 
 /**
  * Maps all comments from a single instance from coursePage reducer
@@ -425,10 +425,7 @@ export const BrowseReviews = props => {
         <div>
           <BackButton preset="coursePage" />
           <Link to={`/labtool/courses/${props.selectedInstance.ohid}`} style={{ textAlign: 'center' }}>
-            <h2>
-              {' '}
-              {props.selectedInstance.name} ({getAcademicYear(props.selectedInstance.start)}){' '}
-            </h2>
+            <h2> {formatCourseName(props.selectedInstance.name, props.selectedInstance.ohid, props.selectedInstance.start)}</h2>
           </Link>
           {createHeaders(props.courseData, props.studentInstance)}
         </div>
