@@ -135,7 +135,6 @@ exports[`<MassEmailPage /> MassEmailPage Component should render correctly 1`] =
         }
         disableDefaultFilter={false}
         filterStudents={[Function]}
-        rowClassName="TableRowForActiveStudents"
         selectedInstance={
           Object {
             "data": Array [

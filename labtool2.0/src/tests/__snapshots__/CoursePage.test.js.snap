@@ -425,6 +425,31 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
               "weeks": Array [],
             },
             Object {
+              "Tags": Array [],
+              "User": Object {
+                "admin": false,
+                "createdAt": "2018-03-26T00:00:00.000Z",
+                "email": "maarit.opiskelija@helsinki.invalid",
+                "firsts": "Maarit Mirja",
+                "id": 10011,
+                "lastname": "Opiskelija",
+                "studentNumber": "014578343",
+                "updatedAt": "2018-03-26T00:00:00.000Z",
+                "username": "tiraopiskelija1",
+              },
+              "codeReviews": Array [],
+              "courseInstanceId": 10011,
+              "createdAt": "2018-03-26T00:00:00.000Z",
+              "dropped": false,
+              "github": "http://github.com/tiralabra1",
+              "id": 10011,
+              "projectName": "Tiran labraprojekti",
+              "teacherInstanceId": 10011,
+              "updatedAt": "2018-03-26T00:00:00.000Z",
+              "userId": 10011,
+              "weeks": Array [],
+            },
+            Object {
               "Tags": Array [
                 Object {
                   "color": "grey",
@@ -458,31 +483,6 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
               "teacherInstanceId": 10011,
               "updatedAt": "2018-06-05T07:12:28.603Z",
               "userId": 10031,
-              "weeks": Array [],
-            },
-            Object {
-              "Tags": Array [],
-              "User": Object {
-                "admin": false,
-                "createdAt": "2018-03-26T00:00:00.000Z",
-                "email": "maarit.opiskelija@helsinki.invalid",
-                "firsts": "Maarit Mirja",
-                "id": 10011,
-                "lastname": "Opiskelija",
-                "studentNumber": "014578343",
-                "updatedAt": "2018-03-26T00:00:00.000Z",
-                "username": "tiraopiskelija1",
-              },
-              "codeReviews": Array [],
-              "courseInstanceId": 10011,
-              "createdAt": "2018-03-26T00:00:00.000Z",
-              "dropped": false,
-              "github": "http://github.com/tiralabra1",
-              "id": 10011,
-              "projectName": "Tiran labraprojekti",
-              "teacherInstanceId": 10011,
-              "updatedAt": "2018-03-26T00:00:00.000Z",
-              "userId": 10011,
               "weeks": Array [],
             },
           ],
@@ -565,14 +565,13 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
     </Table>
   </div>
   <div
-    className="TeachersBottomViewForActiveStudents"
+    className="TeachersBottomView"
   >
     <br />
     <Header
       as="h2"
     >
-      Students
-       
+      Students 
     </Header>
     <Connect(StudentTable)
       allowModify={true}
@@ -595,9 +594,8 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           "showDropdown": "",
         }
       }
-      key="TableRowForActiveStudents"
+      key="studentTable"
       persistentFilterKey="CoursePage_filters_"
-      rowClassName="TableRowForActiveStudents"
       selectedInstance={
         Object {
           "data": Array [
@@ -630,6 +628,31 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
               "teacherInstanceId": 10011,
               "updatedAt": "2018-03-26T00:00:00.000Z",
               "userId": 10012,
+              "weeks": Array [],
+            },
+            Object {
+              "Tags": Array [],
+              "User": Object {
+                "admin": false,
+                "createdAt": "2018-03-26T00:00:00.000Z",
+                "email": "maarit.opiskelija@helsinki.invalid",
+                "firsts": "Maarit Mirja",
+                "id": 10011,
+                "lastname": "Opiskelija",
+                "studentNumber": "014578343",
+                "updatedAt": "2018-03-26T00:00:00.000Z",
+                "username": "tiraopiskelija1",
+              },
+              "codeReviews": Array [],
+              "courseInstanceId": 10011,
+              "createdAt": "2018-03-26T00:00:00.000Z",
+              "dropped": false,
+              "github": "http://github.com/tiralabra1",
+              "id": 10011,
+              "projectName": "Tiran labraprojekti",
+              "teacherInstanceId": 10011,
+              "updatedAt": "2018-03-26T00:00:00.000Z",
+              "userId": 10011,
               "weeks": Array [],
             },
             Object {
@@ -666,31 +689,6 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
               "teacherInstanceId": 10011,
               "updatedAt": "2018-06-05T07:12:28.603Z",
               "userId": 10031,
-              "weeks": Array [],
-            },
-            Object {
-              "Tags": Array [],
-              "User": Object {
-                "admin": false,
-                "createdAt": "2018-03-26T00:00:00.000Z",
-                "email": "maarit.opiskelija@helsinki.invalid",
-                "firsts": "Maarit Mirja",
-                "id": 10011,
-                "lastname": "Opiskelija",
-                "studentNumber": "014578343",
-                "updatedAt": "2018-03-26T00:00:00.000Z",
-                "username": "tiraopiskelija1",
-              },
-              "codeReviews": Array [],
-              "courseInstanceId": 10011,
-              "createdAt": "2018-03-26T00:00:00.000Z",
-              "dropped": false,
-              "github": "http://github.com/tiralabra1",
-              "id": 10011,
-              "projectName": "Tiran labraprojekti",
-              "teacherInstanceId": 10011,
-              "updatedAt": "2018-03-26T00:00:00.000Z",
-              "userId": 10011,
               "weeks": Array [],
             },
           ],
@@ -755,226 +753,6 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             "userId": 10011,
             "weeks": Array [],
           },
-        ]
-      }
-      tags={
-        Object {
-          "tags": Array [
-            Object {
-              "color": "red",
-              "createdAt": "2018-06-13T00:00:00.000Z",
-              "id": 20001,
-              "name": "Javascript",
-              "updatedAt": "2018-06-13T00:00:00.000Z",
-            },
-            Object {
-              "color": "yellow",
-              "createdAt": "2018-06-13T00:00:00.000Z",
-              "id": 20002,
-              "name": "HTML",
-              "updatedAt": "2018-06-13T00:00:00.000Z",
-            },
-            Object {
-              "color": "black",
-              "createdAt": "2018-06-13T00:00:00.000Z",
-              "id": 20003,
-              "name": "game",
-              "updatedAt": "2018-06-13T00:00:00.000Z",
-            },
-            Object {
-              "color": "green",
-              "createdAt": "2018-06-13T00:00:00.000Z",
-              "id": 20004,
-              "name": "React",
-              "updatedAt": "2018-06-13T00:00:00.000Z",
-            },
-            Object {
-              "color": "blue",
-              "createdAt": "2018-06-13T00:00:00.000Z",
-              "id": 20005,
-              "name": "Node.js",
-              "updatedAt": "2018-06-13T00:00:00.000Z",
-            },
-            Object {
-              "color": "orange",
-              "createdAt": "2018-06-13T00:00:00.000Z",
-              "id": 20006,
-              "name": "Java",
-              "updatedAt": "2018-06-13T00:00:00.000Z",
-            },
-            Object {
-              "color": "pink",
-              "createdAt": "2018-06-13T00:00:00.000Z",
-              "id": 20007,
-              "name": "FORTRAN",
-              "updatedAt": "2018-06-13T00:00:00.000Z",
-            },
-            Object {
-              "color": "grey",
-              "createdAt": "2018-06-13T00:00:00.000Z",
-              "id": 20008,
-              "name": "DROPPED",
-              "updatedAt": "2018-06-13T00:00:00.000Z",
-            },
-          ],
-        }
-      }
-    />
-    <br />
-    <Button
-      as="button"
-      onClick={[Function]}
-      size="small"
-    >
-      Mark all with dropped tag as dropped out
-    </Button>
-    <Link
-      to="/labtool/massemail/undefined"
-    >
-      <Button
-        as="button"
-        size="small"
-      >
-        Send email to multiple students
-      </Button>
-    </Link>
-  </div>
-  <br />
-  <div
-    className="TeachersBottomViewForDroppedOutStudents"
-  >
-    <br />
-    <Header
-      as="h2"
-    >
-      Dropped out students
-       
-    </Header>
-    <Connect(StudentTable)
-      allowModify={true}
-      allowReview={true}
-      columns={
-        Array [
-          "select",
-          "points",
-          "instructor",
-        ]
-      }
-      coursePageLogic={
-        Object {
-          "filterByAssistant": 0,
-          "filterByTag": Array [],
-          "selectedStudents": Object {
-            "10011": true,
-          },
-          "selectedTeacher": "",
-          "showDropdown": "",
-        }
-      }
-      key="TableRowForDroppedOutStudents"
-      persistentFilterKey="CoursePage_filters_"
-      rowClassName="TableRowForDroppedOutStudents active"
-      selectedInstance={
-        Object {
-          "data": Array [
-            Object {
-              "Tags": Array [
-                Object {
-                  "color": "red",
-                  "id": 20001,
-                  "name": "Javascript",
-                },
-              ],
-              "User": Object {
-                "admin": false,
-                "createdAt": "2018-03-26T00:00:00.000Z",
-                "email": "johan.studerande@helsinki.invalid",
-                "firsts": "Johan Wilhelm",
-                "id": 10012,
-                "lastname": "Studerande",
-                "studentNumber": "014553242",
-                "updatedAt": "2018-03-26T00:00:00.000Z",
-                "username": "tiraopiskelija2",
-              },
-              "codeReviews": Array [],
-              "courseInstanceId": 10011,
-              "createdAt": "2018-03-26T00:00:00.000Z",
-              "dropped": false,
-              "github": "http://github.com/tiralabra2",
-              "id": 10012,
-              "projectName": "Tiran toinen labraprojekti",
-              "teacherInstanceId": 10011,
-              "updatedAt": "2018-03-26T00:00:00.000Z",
-              "userId": 10012,
-              "weeks": Array [],
-            },
-            Object {
-              "Tags": Array [
-                Object {
-                  "color": "grey",
-                  "id": 20008,
-                  "name": "DROPPED",
-                },
-                Object {
-                  "color": "yellow",
-                  "id": 20002,
-                  "name": "HTML",
-                },
-              ],
-              "User": Object {
-                "admin": false,
-                "createdAt": "2018-03-26T00:00:00.000Z",
-                "email": "teras.henkilo@helsinki.invalid",
-                "firsts": "Teräs",
-                "id": 10031,
-                "lastname": "Henkilö",
-                "studentNumber": "014666666",
-                "updatedAt": "2018-03-26T00:00:00.000Z",
-                "username": "superopiskelija",
-              },
-              "codeReviews": Array [],
-              "courseInstanceId": 10011,
-              "createdAt": "2018-03-26T00:00:00.000Z",
-              "dropped": true,
-              "github": "http://github.com/superprojekti",
-              "id": 10031,
-              "projectName": "Tira super projekti",
-              "teacherInstanceId": 10011,
-              "updatedAt": "2018-06-05T07:12:28.603Z",
-              "userId": 10031,
-              "weeks": Array [],
-            },
-            Object {
-              "Tags": Array [],
-              "User": Object {
-                "admin": false,
-                "createdAt": "2018-03-26T00:00:00.000Z",
-                "email": "maarit.opiskelija@helsinki.invalid",
-                "firsts": "Maarit Mirja",
-                "id": 10011,
-                "lastname": "Opiskelija",
-                "studentNumber": "014578343",
-                "updatedAt": "2018-03-26T00:00:00.000Z",
-                "username": "tiraopiskelija1",
-              },
-              "codeReviews": Array [],
-              "courseInstanceId": 10011,
-              "createdAt": "2018-03-26T00:00:00.000Z",
-              "dropped": false,
-              "github": "http://github.com/tiralabra1",
-              "id": 10011,
-              "projectName": "Tiran labraprojekti",
-              "teacherInstanceId": 10011,
-              "updatedAt": "2018-03-26T00:00:00.000Z",
-              "userId": 10011,
-              "weeks": Array [],
-            },
-          ],
-          "role": "teacher",
-        }
-      }
-      studentInstances={
-        Array [
           Object {
             "Tags": Array [
               Object {
@@ -1077,6 +855,23 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
       }
     />
     <br />
+    <Button
+      as="button"
+      onClick={[Function]}
+      size="small"
+    >
+      Mark all with dropped tag as dropped out
+    </Button>
+    <Link
+      to="/labtool/massemail/undefined"
+    >
+      <Button
+        as="button"
+        size="small"
+      >
+        Send email to multiple students
+      </Button>
+    </Link>
   </div>
   <span
     className="TeacherBulkForm"

@@ -269,12 +269,8 @@ describe('<CoursePage /> as teacher', () => {
       expect(wrapper.find('.TeachersTopView').length).toEqual(1)
     })
 
-    it('renders teachers bottom view for active students', () => {
-      expect(wrapper.find('.TeachersBottomViewForActiveStudents').length).toEqual(1)
-    })
-
-    it('renders teachers bottom view for dropped out students', () => {
-      expect(wrapper.find('.TeachersBottomViewForDroppedOutStudents').length).toEqual(1)
+    it('renders teachers bottom view for all students', () => {
+      expect(wrapper.find('.TeachersBottomView').length).toEqual(1)
     })
 
     it('doesnt render students top view when role is teacher', () => {
