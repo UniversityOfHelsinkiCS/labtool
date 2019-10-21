@@ -27,20 +27,19 @@
   to { transform: rotate(360deg); }
 }
 
-.error {
-  background-color: red;
+.success, .error {
   padding: 1em;
   text-align: center;
   color: white;
-  font-size: 20;
+  font-size: 20px;
 }
 
 .success {
   background-color: green;
-  padding: 1em;
-  text-align: center;
-  color: white;
-  font-size: 20;
+}
+
+.error {
+  background-color: red;
 }
 
 .TableRowForDroppedOutStudents {
