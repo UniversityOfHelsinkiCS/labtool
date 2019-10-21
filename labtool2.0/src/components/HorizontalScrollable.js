@@ -116,10 +116,12 @@ export const HorizontalScrollable = props => {
         // sticky: fix to bottom of viewport
         scrollbar.style.position = 'fixed'
         scrollbar.style.bottom = '0px'
+        scrollbar.style.zIndex = '1000'
       } else {
         // relative: display where it would be otherwise
         scrollbar.style.position = 'relative'
         scrollbar.style.bottom = 'none'
+        scrollbar.style.zIndex = 'auto'
       }
     }
   }
@@ -133,7 +135,7 @@ export const HorizontalScrollable = props => {
       <div ref={mainElementReady} onScroll={updateScrollX('content')} style={{ overflowX: 'visible', overflowY: 'visible' }}>
         {props.children}
       </div>
-      <div ref={scrollBarReady} onScroll={updateScrollX('scrollbar')} style={{ overflowX: 'scroll', bottom: '0', position: 'sticky', zIndex: 1000 }}>
+      <div ref={scrollBarReady} onScroll={updateScrollX('scrollbar')} style={{ overflowX: 'scroll', bottom: '0', position: 'sticky' }}>
         <div />
       </div>
     </div>
