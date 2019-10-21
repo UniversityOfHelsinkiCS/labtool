@@ -104,11 +104,6 @@ export const CoursePage = props => {
     return props.tags.tags && props.tags.tags.map(tag => tag.name.toUpperCase()).includes('DROPPED')
   }
 
-  const droppedStudentExists = () => {
-    let dropped = props.courseData.data.map(student => student.dropped)
-    return dropped.includes(true)
-  }
-
   const hasDroppedTag = studentTagsData => {
     let studentInstanceTagNames = studentTagsData.map(tag => tag.name.toUpperCase())
     return studentInstanceTagNames.includes('DROPPED')
