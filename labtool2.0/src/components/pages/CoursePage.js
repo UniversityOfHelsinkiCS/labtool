@@ -56,6 +56,16 @@ export const CoursePage = props => {
     })
   }
 
+  const sortStudentArrayAlphabeticallyByDroppedValue = theArray => {
+    return theArray.sort((a, b) => {
+      if (a.dropped !== b.dropped) {
+        return Number(a.dropped) - Number(b.dropped)
+      } else {
+        return a.lastname > b.lastname ? -1 : 1
+      }
+    })
+  }
+
   const handleClick = (e, titleProps) => {
     const { index } = titleProps
     const theNewIndex = props.coursePageLogic.activeIndex === index ? -1 : index
@@ -482,54 +492,38 @@ export const CoursePage = props => {
     )
   }
 
-  let renderTeacherBottomPartForStudents = droppedOut => {
-    const heading = droppedOut ? 'Dropped out students' : 'Students'
-    const tableClassName = droppedOut ? 'TeachersBottomViewForDroppedOutStudents' : 'TeachersBottomViewForActiveStudents'
-    const rowClassName = droppedOut ? 'TableRowForDroppedOutStudents' : 'TableRowForActiveStudents'
-    const dropConvertButton = !droppedOut && droppedTagExists() && (
+  let renderTeacherBottomPart = () => {
+    console.log(droppedTagExists())
+    const dropConvertButton = droppedTagExists() && (
       <Button onClick={() => markAllWithDroppedTagAsDropped(courseData)} size="small">
         Mark all with dropped tag as dropped out
       </Button>
     )
     return (
-      <div className={tableClassName}>
+      <div className="TeachersBottomView">
         <br />
-        <Header as="h2">{heading} </Header>
+        <Header as="h2">Students </Header>
 
         <StudentTable
-          key={rowClassName}
-          rowClassName={rowClassName + (droppedOut ? ' active' : '')}
+          key={'studentTable'}
           columns={['select', 'points', 'instructor']}
           allowModify={true}
           allowReview={true}
           selectedInstance={selectedInstance}
-          studentInstances={courseData.data.filter(studentInstance => droppedOut === studentInstance.dropped)}
+          studentInstances={sortStudentArrayAlphabeticallyByDroppedValue(courseData.data)}
           coursePageLogic={coursePageLogic}
           tags={tags}
           persistentFilterKey={`CoursePage_filters_${courseId}`}
         />
         <br />
         {dropConvertButton}
-        {!droppedOut && (
+        {
           <Link to={`/labtool/massemail/${selectedInstance.ohid}`}>
             <Button size="small">Send email to multiple students</Button>
           </Link>
-        )}
+        }
       </div>
     )
-  }
-
-  /**
-   * Function that returns what teachers should see at the bottom of this page
-   */
-  let renderTeacherBottomPartForActiveStudents = () => {
-    return renderTeacherBottomPartForStudents(false)
-  }
-
-  let renderTeacherBottomPartForDroppedOutStudents = () => {
-    if (droppedStudentExists()) {
-      return renderTeacherBottomPartForStudents(true)
-    }
   }
 
   const renderTeacherBulkForm = () => {
@@ -648,9 +642,8 @@ export const CoursePage = props => {
     return (
       <div style={{ overflowX: 'auto', overflowY: 'hidden' }}>
         {renderTeacherTopPart()}
-        {renderTeacherBottomPartForActiveStudents()}
+        {renderTeacherBottomPart()}
         <br />
-        {renderTeacherBottomPartForDroppedOutStudents()}
         {renderTeacherBulkForm()}
         <br />
         <br />
