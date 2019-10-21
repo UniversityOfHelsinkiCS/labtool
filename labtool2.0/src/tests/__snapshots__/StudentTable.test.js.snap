@@ -129,7 +129,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
         <TableRow
           as="tr"
           cellAs="td"
-          className="StudentRow"
+          className="TableRowForActiveStudent"
           key="10012"
         >
           <TableCell
@@ -196,7 +196,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
         <TableRow
           as="tr"
           cellAs="td"
-          className="StudentRow"
+          className="TableRowForActiveStudent"
           key="10031"
         >
           <TableCell
@@ -280,7 +280,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
         <TableRow
           as="tr"
           cellAs="td"
-          className="StudentRow"
+          className="TableRowForActiveStudent"
           key="10011"
         >
           <TableCell

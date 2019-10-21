@@ -365,7 +365,6 @@ export const ModifyCourseInstanceReview = props => {
           <br />
 
           <StudentTable
-            rowClassName="CodeReviewStudentRow"
             extraButtons={[makeFilterButton]}
             columns={[
               'select',

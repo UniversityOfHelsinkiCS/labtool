@@ -282,12 +282,12 @@ export const StudentTable = props => {
     return indents
   }
 
-  const createStudentTableRow = (showColumn, data, extraColumns, dropDownTags, dropDownTeachers, { rowClassName, allowReview }) => (
-    <Table.Row key={data.id} className={rowClassName}>
+  const createStudentTableRow = (showColumn, data, extraColumns, dropDownTags, dropDownTeachers, { allowReview }) => (
+    <Table.Row key={data.id} className={data.dropped ? 'TableRowForDroppedOutStudent' : 'TableRowForActiveStudent'}>
       {/* Select Check Box */}
       {showColumn('select') && (
         <Table.Cell key="select">
-          <Checkbox id={'select' + data.id + '-' + rowClassName} checked={props.coursePageLogic.selectedStudents[data.id] || false} onChange={handleSelectCheck(data.id)} />
+          <Checkbox id={'select' + data.id} checked={props.coursePageLogic.selectedStudents[data.id] || false} onChange={handleSelectCheck(data.id)} />
         </Table.Cell>
       )}
 
@@ -335,7 +335,7 @@ export const StudentTable = props => {
           ))}
           {props.allowModify && (
             <Popup
-              trigger={<Icon id={'tagModify-' + rowClassName} onClick={changeHiddenTagDropdown(data.id)} name="pencil" color="green" style={{ float: 'right', fontSize: '1.25em' }} />}
+              trigger={<Icon id={'tagModify'} onClick={changeHiddenTagDropdown(data.id)} name="pencil" color="green" style={{ float: 'right', fontSize: '1.25em' }} />}
               content="Add or remove tag"
             />
           )}
@@ -344,7 +344,7 @@ export const StudentTable = props => {
           <div>
             {props.coursePageLogic.showTagDropdown === data.id ? (
               <div>
-                <Dropdown id={'tagDropdown-' + rowClassName} style={{ float: 'left' }} options={dropDownTags} onChange={changeSelectedTag()} placeholder="Choose tag" fluid selection />
+                <Dropdown id={'tagDropdown'} style={{ float: 'left' }} options={dropDownTags} onChange={changeSelectedTag()} placeholder="Choose tag" fluid selection />
                 <br />
                 <div className="two ui buttons" style={{ float: 'left' }}>
                   <button className="ui icon positive button" onClick={addTag(data.id)} size="mini">
@@ -398,7 +398,7 @@ export const StudentTable = props => {
               />
               {props.coursePageLogic.showAssistantDropdown === data.id ? (
                 <div>
-                  <Dropdown id={'assistantDropdown-' + rowClassName} options={dropDownTeachers} onChange={changeSelectedTeacher()} placeholder="Select teacher" fluid selection />
+                  <Dropdown id={'assistantDropdown'} options={dropDownTeachers} onChange={changeSelectedTeacher()} placeholder="Select teacher" fluid selection />
                   <Button onClick={updateTeacher(data.id, data.teacherInstanceId)} size="small">
                     Change instructor
                   </Button>
@@ -415,7 +415,7 @@ export const StudentTable = props => {
     </Table.Row>
   )
 
-  const { columns, rowClassName, disableDefaultFilter, studentColumnName, showFooter } = props
+  const { columns, disableDefaultFilter, studentColumnName, showFooter } = props
 
   const showColumn = column => columns.indexOf(column) >= 0
   const nullFunc = () => nullFunc
@@ -507,7 +507,7 @@ export const StudentTable = props => {
             <Table.Row>
               {showColumn('select') && (
                 <Table.HeaderCell key={-2}>
-                  <Checkbox id={'selectAll-' + rowClassName} disabled={filteredData.length < 1} checked={allSelected} onChange={handleSelectAll} />
+                  <Checkbox id={'selectAll'} disabled={filteredData.length < 1} checked={allSelected} onChange={handleSelectAll} />
                 </Table.HeaderCell>
               )}
               <Table.HeaderCell key={-1}>{studentColumnName || 'Student'}</Table.HeaderCell>
@@ -530,7 +530,7 @@ export const StudentTable = props => {
               <Table.Row>
                 {showColumn('select') && (
                   <Table.HeaderCell key={-2}>
-                    <Checkbox id={'selectAllBottom-' + rowClassName} disabled={!filteredData.length} checked={allSelected} onChange={handleSelectAll} />
+                    <Checkbox id={'selectAllBottom'} disabled={!filteredData.length} checked={allSelected} onChange={handleSelectAll} />
                   </Table.HeaderCell>
                 )}
                 <Table.HeaderCell />
@@ -564,7 +564,6 @@ const mapDispatchToProps = {
 }
 
 StudentTable.propTypes = {
-  rowClassName: PropTypes.string,
   columns: PropTypes.array,
   allowModify: PropTypes.bool,
   allowReview: PropTypes.bool,
