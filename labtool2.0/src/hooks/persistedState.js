@@ -13,12 +13,16 @@ const myPrefix = 'labtoolPersistedState_'
 
 // note: if you destructure one of these states, only use const -
 //       assigning to destructured values will not work
+// note: do not use mutable methods (such as Array.push) for legacy
+//       states, much like you wouldn't for real states!
+// note: passing a null prefix will disable persistence
 
 const usePersistedState = (prefix, vars) => {
   const _get = {}
   const _set = {}
   const keys = Object.keys(vars)
   const result = {}
+  const isPersistent = !!prefix
   const lsprefix = `${myPrefix}${prefix}_`
 
   for (const key of keys) {
@@ -30,7 +34,7 @@ const usePersistedState = (prefix, vars) => {
         storeValue = null
       }
     }
-    const [g, s] = useState(storeValue !== null ? storeValue : vars[key])
+    const [g, s] = useState(isPersistent && storeValue !== null ? storeValue : vars[key])
     _get[key] = g
     _set[key] = s
 
@@ -40,7 +44,9 @@ const usePersistedState = (prefix, vars) => {
       get: () => _get[key],
       set: val => {
         _set[key](val)
-        store.setItem(lsprefix + key, JSON.stringify(val))
+        if (isPersistent) {
+          store.setItem(lsprefix + key, JSON.stringify(val))
+        }
       }
     })
   }
@@ -51,7 +57,21 @@ const usePersistedState = (prefix, vars) => {
     }
   }
 
+  result.reset = () => {
+    for (const key of keys) {
+      store.removeItem(lsprefix + key)
+      _set[key](vars[key]) // revert to default value
+    }
+  }
+
   return result
+}
+
+const clearOnePersistedState = stateKey => {
+  Array.from(Array(store.length).keys()) // this generates a range [0, store.length[
+    .map(i => store.key(i))
+    .filter(key => key.startsWith(`${myPrefix}${stateKey}_`))
+    .forEach(key => store.removeItem(key))
 }
 
 const clearAllPersistedStates = () => {
@@ -61,4 +81,4 @@ const clearAllPersistedStates = () => {
     .forEach(key => store.removeItem(key))
 }
 
-export { usePersistedState, clearAllPersistedStates }
+export { usePersistedState, clearOnePersistedState, clearAllPersistedStates }

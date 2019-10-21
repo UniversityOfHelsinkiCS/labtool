@@ -10,17 +10,35 @@ import { coursePageReset, restoreStudentSelection } from '../../reducers/courseP
 import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 import store from '../../store'
 import StudentTable from '../StudentTable'
-import { usePersistedState } from '../../hooks/persistedState'
+import { usePersistedState, clearOnePersistedState } from '../../hooks/persistedState'
 
 export const MassEmailPage = props => {
-  const pstate = usePersistedState('MassEmailPage', {
-    value: '',
-    checked: true
-  })
+  const myCourseId = props.courseId
+  const persistentKey = `MassEmailPage_${myCourseId}`
+
+  const MassEmailInput = () => {
+    const pstate = usePersistedState(persistentKey, {
+      value: '',
+      checked: true
+    })
+
+    return (
+      <>
+        <Form.TextArea name="content" placeholder="Type email here..." value={pstate.value} onChange={(e, { value }) => (pstate.value = value)} required />
+        <Form.Checkbox name="sendToInstructors" checked={pstate.checked} onChange={(e, { checked }) => (pstate.checked = checked)} label="Send a copy to all instructors" />
+        <Button type="submit" className="ui green button" content="Send" />
+      </>
+    )
+  }
+
+  const clearState = () => {
+    clearOnePersistedState(persistentKey)
+  }
 
   useEffect(() => {
     // run on component mount
     props.resetLoading()
+
     props.getOneCI(props.courseId)
     props.coursePageInformation(props.courseId)
     props.getAllTags()
@@ -55,7 +73,7 @@ export const MassEmailPage = props => {
     return <Loader active />
   }
   if (props.loading.redirect) {
-    pstate.clear()
+    clearState()
     return <Redirect to={`/labtool/courses/${props.selectedInstance.ohid}`} />
   }
 
@@ -64,6 +82,7 @@ export const MassEmailPage = props => {
    * We will use a form to decide which students to send an email
    * and what exactly to send
    */
+  const { courseData, selectedInstance, coursePageLogic, tags } = props
   const renderTeacherPart = () => {
     return (
       <div className="TeacherMassEmailPart">
@@ -76,25 +95,23 @@ export const MassEmailPage = props => {
             allowModify={false}
             filterStudents={data => data.User.email}
             disableDefaultFilter={false}
-            studentInstances={props.courseData.data}
-            selectedInstance={props.selectedInstance}
-            courseData={props.courseData}
-            coursePageLogic={props.coursePageLogic}
-            tags={props.tags}
+            studentInstances={courseData.data}
+            selectedInstance={selectedInstance}
+            courseData={courseData}
+            coursePageLogic={coursePageLogic}
+            tags={tags}
           />
 
           <br />
           <br />
 
-          <Form.TextArea name="content" placeholder="Type email here..." value={pstate.value} onChange={(e, { value }) => (pstate.value = value)} required />
-          <Form.Checkbox name="sendToInstructors" checked={pstate.checked} onChange={(e, { checked }) => (pstate.checked = checked)} label="Send a copy to all instructors" />
-          <Button type="submit" className="ui green button" content="Send" />
+          <MassEmailInput />
 
           <br />
           <br />
 
-          <Link to={`/labtool/courses/${props.selectedInstance.ohid}`}>
-            <Button className="ui button" type="cancel" onClick={pstate.clear}>
+          <Link to={`/labtool/courses/${selectedInstance.ohid}`}>
+            <Button className="ui button" type="cancel" onClick={clearState}>
               Cancel
             </Button>
           </Link>

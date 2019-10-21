@@ -73,12 +73,6 @@ export const Courses = props => {
                 </Table.Body>
               </Table>
             </HorizontalScrollable>
-            {props.canImport && (
-              <Link to="/labtool/courseimport">
-                <br />
-                <Button size="small">Import courses to Labtool</Button>
-              </Link>
-            )}
           </div>
         )}
       </div>

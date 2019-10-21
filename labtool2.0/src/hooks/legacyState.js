@@ -9,6 +9,8 @@ import { useState } from 'react'
 
 // note: if you destructure one of these states, only use const -
 //       assigning to destructured values will not work
+// note: do not use mutable methods (such as Array.push) for legacy
+//       states, much like you wouldn't for real states!
 
 const useLegacyState = vars => {
   const _get = {}

@@ -38,8 +38,8 @@ export const MyPage = props => {
   const user = { ...props.user.user }
   return (
     <div className="MyPage">
-      <Segment padded>
-        <Container>
+      <Container>
+        <Segment padded>
           <Header as="h2">
             {user.lastname}, {user.firsts}
           </Header>
@@ -78,16 +78,16 @@ export const MyPage = props => {
               </Table.Row>
             </Table.Body>
           </Table>
-        </Container>
-      </Segment>
+        </Segment>
+      </Container>
 
       <br />
       <br />
       <br />
       <br />
 
-      <Segment padded>
-        <Container>
+      <Container>
+        <Segment padded>
           <Header as="h2" className="CoursesHeader">
             My Courses (Student){' '}
           </Header>
@@ -114,8 +114,8 @@ export const MyPage = props => {
               </HorizontalScrollable>
             </Container>
           </div>
-        </Container>
-      </Segment>
+        </Segment>
+      </Container>
     </div>
   )
 }

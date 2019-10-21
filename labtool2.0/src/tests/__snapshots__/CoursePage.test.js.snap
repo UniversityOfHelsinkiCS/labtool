@@ -82,7 +82,7 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
           compact={true}
         >
           <MessageHeader>
-            This course has not been activated.
+            This course does not have active registration.
           </MessageHeader>
         </Message>
       </div>
@@ -275,6 +275,11 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
                   as="button"
                   color="blue"
                   compact={true}
+                  style={
+                    Object {
+                      "marginLeft": "0.5em",
+                    }
+                  }
                   type="submit"
                 >
                   Submit
@@ -562,6 +567,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
   <div
     className="TeachersBottomViewForActiveStudents"
   >
+    <br />
     <Header
       as="h2"
     >
@@ -590,6 +596,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
         }
       }
       key="TableRowForActiveStudents"
+      persistentFilterKey="CoursePage_filters_"
       rowClassName="TableRowForActiveStudents"
       selectedInstance={
         Object {
@@ -836,6 +843,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
   <div
     className="TeachersBottomViewForDroppedOutStudents"
   >
+    <br />
     <Header
       as="h2"
     >
@@ -864,6 +872,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
         }
       }
       key="TableRowForDroppedOutStudents"
+      persistentFilterKey="CoursePage_filters_"
       rowClassName="TableRowForDroppedOutStudents active"
       selectedInstance={
         Object {

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { Button, Container, Header, Table, Loader, Form } from 'semantic-ui-react'
+import { Button, Header, Table, Loader, Form } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { Link, Redirect } from 'react-router-dom'
 import { getIsAllowedToImport, getImportableCourses, importCourses } from '../../services/courseImport'

@@ -218,6 +218,7 @@ exports[`<BrowseReviews /> BrowseReviews Component should render correctly 1`] =
         <CommentGroup />
         <withRouter(Connect(LabtoolAddComment))
           allowHidden={true}
+          commentFieldId="TKT20010.2018.K.A.1:10001"
           handleSubmit={[Function]}
           weekId={10001}
         />
@@ -350,6 +351,7 @@ exports[`<BrowseReviews /> BrowseReviews Component should render correctly 1`] =
         <CommentGroup />
         <withRouter(Connect(LabtoolAddComment))
           allowHidden={true}
+          commentFieldId="TKT20010.2018.K.A.1:10002"
           handleSubmit={[Function]}
           weekId={10002}
         />
@@ -463,6 +465,7 @@ exports[`<BrowseReviews /> BrowseReviews Component should render correctly 1`] =
         <CommentGroup />
         <withRouter(Connect(LabtoolAddComment))
           allowHidden={true}
+          commentFieldId="TKT20010.2018.K.A.1:10003"
           handleSubmit={[Function]}
           weekId={10003}
         />
@@ -576,6 +579,7 @@ exports[`<BrowseReviews /> BrowseReviews Component should render correctly 1`] =
         <CommentGroup />
         <withRouter(Connect(LabtoolAddComment))
           allowHidden={true}
+          commentFieldId="TKT20010.2018.K.A.1:10004"
           handleSubmit={[Function]}
           weekId={10004}
         />

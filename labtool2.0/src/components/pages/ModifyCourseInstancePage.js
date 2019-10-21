@@ -201,7 +201,7 @@ export const ModifyCourseInstancePage = props => {
               </Form.Group>
 
               <Form.Group inline>
-                <Checkbox name="courseActive" label="Course is active" checked={selectedInstance.active} onChange={handleChange} style={{ width: '150px', textAlign: 'left' }} />
+                <Checkbox name="courseActive" label="Course registration is active" checked={selectedInstance.active} onChange={handleChange} style={{ width: '150px', textAlign: 'left' }} />
               </Form.Group>
 
               <Form.Group style={{ display: 'inline-block', marginLeft: 'auto', marginRight: 'auto' }}>
@@ -209,7 +209,7 @@ export const ModifyCourseInstancePage = props => {
                   Save
                 </Button>
 
-                <Link to="/labtool/courses">
+                <Link to={`/labtool/courses/${props.selectedInstance.ohid}`}>
                   <Button type="Cancel" color="red" size="huge">
                     Cancel
                   </Button>

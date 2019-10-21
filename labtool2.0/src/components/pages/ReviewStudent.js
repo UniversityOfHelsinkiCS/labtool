@@ -42,6 +42,9 @@ const PreviousWeekDetails = ({ weekData }) => {
     </Segment>
   )
 }
+PreviousWeekDetails.propTypes = {
+  weekData: PropTypes.object
+}
 
 const isFinalReview = props => props.weekNumber > props.selectedInstance.weekAmount
 
@@ -51,7 +54,7 @@ const isFinalReview = props => props.weekNumber > props.selectedInstance.weekAmo
 export const ReviewStudent = props => {
   const [loadedWeekData, setLoadedWeekData] = useState(false)
   const [allowChecksCopy, setAllowChecksCopy] = useState(false)
-  const pstate = usePersistedState('ReviewStudent', {
+  const pstate = usePersistedState(`ReviewStudent_${props.studentInstance}:${props.weekNumber}`, {
     points: '',
     feedback: '',
     instructorNotes: '',
@@ -65,7 +68,6 @@ export const ReviewStudent = props => {
     props.coursePageInformation(props.courseId)
     props.clearNotifications()
     importWeekDataFromDraft()
-
     return () => {
       // run on component unmount
       props.resetChecklist()
