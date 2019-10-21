@@ -561,7 +561,6 @@ const mapDispatchToProps = {
 }
 
 StudentTable.propTypes = {
-  rowClassName: PropTypes.string,
   columns: PropTypes.array,
   allowModify: PropTypes.bool,
   allowReview: PropTypes.bool,
