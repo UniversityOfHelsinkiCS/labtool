@@ -90,7 +90,6 @@ export const MassEmailPage = props => {
 
         <Form onSubmit={handleSubmit}>
           <StudentTable
-            rowClassName="TableRowForActiveStudents"
             columns={['select', 'instructor']}
             allowModify={false}
             filterStudents={data => data.User.email}
