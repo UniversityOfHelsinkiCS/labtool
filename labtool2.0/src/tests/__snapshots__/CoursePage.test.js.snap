@@ -375,6 +375,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
 <div
   style={
     Object {
+      "marginBottom": "20em",
       "overflowX": "auto",
       "overflowY": "hidden",
     }
@@ -1106,21 +1107,5 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
     </Accordion>
     <br />
   </span>
-  <br />
-  <br />
-  <br />
-  <br />
-  <br />
-  <br />
-  <br />
-  <br />
-  <br />
-  <br />
-  <br />
-  <br />
-  <br />
-  <br />
-  <br />
-  <br />
 </div>
 `;

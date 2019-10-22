@@ -233,12 +233,4 @@ export const toggleCodeReview = reviewNumber => {
   }
 }
 
-export const toggleMassAssign = () => {
-  return async dispatch => {
-    dispatch({
-      type: 'COURSE_PAGE_TOGGLE_MASS_ASSIGN'
-    })
-  }
-}
-
 export default coursePageLogicReducer
