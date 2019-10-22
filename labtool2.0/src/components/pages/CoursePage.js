@@ -521,6 +521,8 @@ export const CoursePage = props => {
     )
   }
 
+  // Code goes here.
+
   const renderTeacherBulkForm = () => {
     // if any selected, even if outside filters
     const showMassAssign = Object.keys(coursePageLogic.selectedStudents).length
