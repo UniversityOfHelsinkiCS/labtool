@@ -187,18 +187,16 @@ export const BrowseReviews = props => {
 
   //get student's other participations in the same course
   const renderStudentPreviousParticipation = () => {
-    const previousParticipations = props.studentInstanceToBeReviewed.filter(
-      courseInstance => courseInstance.ohid.includes(props.courseId.substring(0, 8)) && new Date(courseInstance.start) < new Date(props.selectedInstance.start)
-    )
+    const previousParticipations = props.studentInstanceToBeReviewed.filter(courseInstance => courseInstance.ohid.includes(props.courseId.substring(0, 8)) && courseInstance.ohid !== props.courseId)
     if (previousParticipations.length === 0) {
-      return <p className="noPrevious">Has not taken part in this course before</p>
+      return <p className="noOther">Has no other participation in this course</p>
     }
     return (
-      <div className="hasPrevious">
-        <p style={{ color: 'red' }}>Has taken this course before</p>
+      <div className="hasOther">
+        <p style={{ color: 'red' }}>Has taken this course in other periods</p>
         {previousParticipations.map(participation => (
-          <Link key={participation.id} to={`/labtool/browsereviews/${participation.ohid}/${participation.courseInstances[0].id}`} target="_blank">
-            <Popup content="click to open a new tab to see the details" trigger={<p>{createCourseIdWithYearAndTerm(participation.ohid, participation.start)}</p>} />
+          <Link key={participation.id} to={`/labtool/browsereviews/${participation.ohid}/${participation.courseInstances[0].id}`}>
+            <Popup content="click to see the details" trigger={<p>{createCourseIdWithYearAndTerm(participation.ohid, participation.start)}</p>} />
           </Link>
         ))}
       </div>
