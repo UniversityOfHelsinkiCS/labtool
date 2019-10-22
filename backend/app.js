@@ -7,6 +7,8 @@ const Raven = require('raven')
 const headerMiddleware = require('unfuck-utf8-headers-middleware')
 const logger = require('./server/utils/logger')
 
+// I'll need to see where to remove the necessary thing.
+
 Raven.config(process.env.SENTRY_ADDR).install()
 
 require('dotenv').config()
