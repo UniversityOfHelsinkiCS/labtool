@@ -21,6 +21,8 @@ import StudentTable from '../StudentTable'
 import { createDropdownTeachers, createDropdownTags } from '../../util/dropdown'
 import { formatCourseName } from '../../util/format'
 
+// I'll add the necessary changes here.
+
 const CoursePageHeader = ({ courseInstance }) => (
   <Header as="h2" style={{ marginBottom: '1em' }}>
     <Header.Content>
