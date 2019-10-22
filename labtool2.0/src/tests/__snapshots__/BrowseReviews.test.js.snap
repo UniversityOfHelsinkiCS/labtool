@@ -74,9 +74,9 @@ exports[`<BrowseReviews /> BrowseReviews Component should render correctly 1`] =
           </a>
           <br />
           <p
-            className="noPrevious"
+            className="noOther"
           >
-            Has not taken part in this course before
+            Has no other participation in this course
           </p>
         </div>
         <Button
