@@ -63,9 +63,9 @@ module.exports = {
   },
   down: async (queryInterface, Sequelize) => {
     try {
-      /*await queryInterface.addColumn('Checklists', 'list', {
+      await queryInterface.addColumn('Checklists', 'list', {
         type: Sequelize.JSONB
-      })*/
+      })
 
       const promises = []
 
