@@ -437,6 +437,8 @@ export const CoursePage = props => {
     props.modifyOneCI(content, selectedInstance.ohid)
   }
 
+  // The button will be implemented somewhere around here.
+
   /**
    * Returns what teachers should see at the top of this page
    */
