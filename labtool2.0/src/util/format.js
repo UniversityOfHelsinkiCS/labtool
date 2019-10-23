@@ -1,5 +1,3 @@
-import React from 'react'
-import { Icon } from 'semantic-ui-react'
 const zeros = number => {
   const stringForm = number.toString()
   return stringForm.length === 1 ? `0${stringForm}` : stringForm
@@ -84,26 +82,4 @@ export const capitalize = text => {
   } else {
     return text.slice(0, 1).toUpperCase() + text.slice(1).toLowerCase()
   }
-}
-
-export const createRepositoryLink = url => {
-  const { Fragment } = React
-  let cleanUrl = url
-  cleanUrl = cleanUrl.replace(/^https?:\/\//, '')
-
-  if (cleanUrl.startsWith('github.com/')) {
-    const cleanUrlNoGithub = cleanUrl.substring('github.com/'.length)
-    cleanUrl = (
-      <Fragment>
-        <Icon name="github" color="black" />
-        {cleanUrlNoGithub}
-      </Fragment>
-    )
-  }
-
-  return (
-    <a href={url} target="_blank" rel="noopener noreferrer">
-      {cleanUrl}
-    </a>
-  )
 }

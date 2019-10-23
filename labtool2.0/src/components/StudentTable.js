@@ -10,6 +10,7 @@ import { showAssistantDropdown, showTagDropdown, selectTeacher, selectTag, selec
 import { createDropdownTeachers, createDropdownTags } from '../util/dropdown'
 import { createRepositoryLink } from '../util/format'
 import { usePersistedState } from '../hooks/persistedState'
+import RepoLink from './RepoLink'
 
 const { Fragment } = React
 
@@ -318,7 +319,7 @@ export const StudentTable = props => {
         <span>
           {data.projectName}
           <br />
-          {createRepositoryLink(data.github)}
+          <RepoLink url={data.github} />
           {data.Tags.map(tag => (
             <div key={data.id + ':' + tag.id}>
               <Button.Group className={'mini'}>

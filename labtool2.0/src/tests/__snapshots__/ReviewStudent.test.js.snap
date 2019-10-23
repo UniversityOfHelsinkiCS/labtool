@@ -28,18 +28,11 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
         }
       }
     >
-      <a
-        href="http://github.com/tiraopi1/tiralabra1"
-        rel="noopener noreferrer"
-        target="_blank"
-      >
-        <Icon
-          as="i"
-          color="black"
-          name="github"
-        />
-        Tiran labraprojekti
-      </a>
+      Tiran labraprojekti
+      : 
+      <RepoLink
+        url="http://github.com/tiraopi1/tiralabra1"
+      />
     </div>
     <div
       key="20003"
