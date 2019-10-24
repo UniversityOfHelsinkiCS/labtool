@@ -56,6 +56,9 @@ module.exports = {
       //Remove list field from Checklist
       await queryInterface.removeColumn('Checklists', 'list')
 
+      //Remove courseName field from Checklist
+      await queryInterface.removeColumn('Checklists', 'courseName')
+
       return Promise.resolve()
     } catch (e) {
       return Promise.reject(e)
@@ -63,6 +66,10 @@ module.exports = {
   },
   down: async (queryInterface, Sequelize) => {
     try {
+      await queryInterface.addColumn('Checklists', 'courseName', {
+        type: Sequelize.STRING
+      })
+
       await queryInterface.addColumn('Checklists', 'list', {
         type: Sequelize.JSONB
       })
