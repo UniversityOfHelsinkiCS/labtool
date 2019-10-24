@@ -286,7 +286,7 @@ export const BrowseReviews = props => {
             <Link to={`/labtool/reviewstudent/${props.selectedInstance.ohid}/${studentInstance}/${reviewIndex}`}>
               <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'edit', color: 'black', size: 'large' }} />} content={isFinalWeek ? 'Edit final review' : 'Edit review'} />
             </Link>
-            {week.comments.length === 0 ? '' : <h4> Comments </h4>}
+            {week.comments.length === 0 ? null : <h4> Comments </h4>}
             <Comment.Group>{week ? sortCommentsByDate(week.comments).map(c => renderComment(isFinalWeek, c)) : <h4> No comments </h4>}</Comment.Group>
             <LabtoolAddComment weekId={week.id} commentFieldId={`${props.courseId}:${week.id}`} handleSubmit={handleSubmit} allowHidden={true} />
           </Accordion.Content>
