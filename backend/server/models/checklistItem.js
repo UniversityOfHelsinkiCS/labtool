@@ -8,6 +8,9 @@ module.exports = (sequelize, DataTypes) => {
         checkedPoints: DataTypes.DOUBLE,
         uncheckedPoints: DataTypes.DOUBLE,
         category: DataTypes.STRING
+      },
+      {
+        timestamps: false
       }
     )
     ChecklistItem.associate = (models) => {
