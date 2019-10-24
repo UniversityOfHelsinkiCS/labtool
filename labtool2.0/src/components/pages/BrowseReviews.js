@@ -19,6 +19,7 @@ import BackButton from '../BackButton'
 import LabtoolComment from '../LabtoolComment'
 import LabtoolAddComment from '../LabtoolAddComment'
 import { formatCourseName } from '../../util/format'
+import RepoLink from '../RepoLink'
 
 /**
  * Maps all comments from a single instance from coursePage reducer
@@ -219,10 +220,7 @@ export const BrowseReviews = props => {
           </Header.Subheader>
         </Header>
         <div style={{ display: 'inline-block' }}>
-          <a href={student.github} target="_blank" rel="noopener noreferrer">
-            <Icon name="github" color="black" />
-            {student.projectName}
-          </a>
+          {student.projectName}: <RepoLink url={student.github} />
           <br />
           {renderStudentPreviousParticipation()}
         </div>
