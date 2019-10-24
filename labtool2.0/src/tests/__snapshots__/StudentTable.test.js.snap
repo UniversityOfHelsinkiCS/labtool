@@ -153,18 +153,9 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
             <span>
               Tiran toinen labraprojekti
               <br />
-              <a
-                href="http://github.com/tiralabra2"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                <Icon
-                  as="i"
-                  color="black"
-                  name="github"
-                />
-                tiralabra2
-              </a>
+              <RepoLink
+                url="http://github.com/tiralabra2"
+              />
               <div
                 key="10012:20001"
               >
@@ -220,18 +211,9 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
             <span>
               Tira super projekti
               <br />
-              <a
-                href="http://github.com/superprojekti"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                <Icon
-                  as="i"
-                  color="black"
-                  name="github"
-                />
-                superprojekti
-              </a>
+              <RepoLink
+                url="http://github.com/superprojekti"
+              />
               <div
                 key="10031:20008"
               >
@@ -304,18 +286,9 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
             <span>
               Tiran labraprojekti
               <br />
-              <a
-                href="http://github.com/tiralabra1"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                <Icon
-                  as="i"
-                  color="black"
-                  name="github"
-                />
-                tiralabra1
-              </a>
+              <RepoLink
+                url="http://github.com/tiralabra1"
+              />
             </span>
           </TableCell>
           <TableCell
