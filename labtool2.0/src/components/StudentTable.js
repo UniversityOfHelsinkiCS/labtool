@@ -303,7 +303,7 @@ export const StudentTable = props => {
                   <br />({data.User.studentNumber})
                 </span>
               }
-              content="Review student"
+              content={data.dropped ? 'Review student (this student has dropped out)' : 'Review student'}
             />
           </Link>
         ) : (
