@@ -31,13 +31,13 @@ const PreviousWeekDetails = ({ weekData }) => {
       {weekData.feedback && (
         <>
           <Header as="h4">Feedback</Header>
-          <p>{weekData.feedback}</p>
+          <p style={{ whiteSpace: 'pre-line' }}>{weekData.feedback}</p>
         </>
       )}
       {weekData.instructorNotes && (
         <>
           <Header as="h4">Instructor notes</Header>
-          <p>{weekData.instructorNotes}</p>
+          <p style={{ whiteSpace: 'pre-line' }}>{weekData.instructorNotes}</p>
         </>
       )}
     </Segment>
