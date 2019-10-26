@@ -14,7 +14,7 @@ import BackButton from '../BackButton'
 import JsonEdit from '../JsonEdit'
 
 export const CreateChecklist = props => {
-  const state = usePersistedState('CreateChecklist', {
+  const state = usePersistedState(`CreateChecklist_${props.courseId}`, {
     week: undefined, // tracks value of week dropdown.
     copyCourse: undefined, // tracks value of course dropdown.
     topicName: '', // tracks value inputted into topic creation dialog box.
@@ -29,6 +29,7 @@ export const CreateChecklist = props => {
   useEffect(() => {
     // run on component mount
     props.resetLoading()
+
     if (state.checklistData) {
       props.restoreChecklist(state.checklistData, state.maximumPoints)
     } else {
@@ -396,7 +397,7 @@ export const CreateChecklist = props => {
             </Button>
             <Dropdown className="courseDropdown" placeholder="Copy checklist from another course" selection value={state.copyCourse} onChange={changeCopyCourse} options={state.courseDropdowns} />
           </div>
-          {state.week !== undefined ? (
+          {state.week !== undefined && state.week !== null ? (
             <div className="jsonButtons">
               <JsonEdit onImport={importChecklist} initialData={props.checklist.data} downloadName={`${props.selectedInstance.ohid}_week_${state.week}.json`} />
             </div>
@@ -406,7 +407,7 @@ export const CreateChecklist = props => {
         </div>
         {props.loading.loading ? (
           <Loader active />
-        ) : state.week !== undefined ? (
+        ) : state.week !== undefined && state.week !== null ? (
           <div>
             <form onSubmit={handleSubmit}>
               <Button className="saveButton" type="submit" color="green" size="large" disabled={!state.canSave}>

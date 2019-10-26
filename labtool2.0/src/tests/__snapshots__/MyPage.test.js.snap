@@ -4,10 +4,10 @@ exports[`<MyPage /> MyPage Component should render correctly 1`] = `
 <div
   className="MyPage"
 >
-  <Segment
-    padded={true}
-  >
-    <Container>
+  <Container>
+    <Segment
+      padded={true}
+    >
       <Header
         as="h2"
       >
@@ -148,16 +148,16 @@ exports[`<MyPage /> MyPage Component should render correctly 1`] = `
           </TableRow>
         </TableBody>
       </Table>
-    </Container>
-  </Segment>
+    </Segment>
+  </Container>
   <br />
   <br />
   <br />
   <br />
-  <Segment
-    padded={true}
-  >
-    <Container>
+  <Container>
+    <Segment
+      padded={true}
+    >
       <Header
         as="h2"
         className="CoursesHeader"
@@ -266,7 +266,7 @@ exports[`<MyPage /> MyPage Component should render correctly 1`] = `
           </HorizontalScrollable>
         </Container>
       </div>
-    </Container>
-  </Segment>
+    </Segment>
+  </Container>
 </div>
 `;

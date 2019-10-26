@@ -284,13 +284,7 @@ const send = async (req, res) => {
         const link = req.body.role === 'teacher'
           ? `${frontendUrl}/courses/${message.content.course.ohid}`
           : `${frontendUrl}/browsereviews/${message.content.course.ohid}/${message.studentId}`
-        html = `
-          <h1>You've received a message in Labtool.</h1>
-          <p><a href="${link}">${link}</a></p>
-          <p>course: ${message.content.course.name}</p>
-          <h2>Message content</h2>
-          <p>${message.content.text}</p>
-        `
+        html = buildEmail(`You've received a message from Labtool`, link, message.content.course.name, null, 'Message content', message.content.text)
       }
     } else {
       // commentId was not supplied, so use weekId instead.
@@ -300,14 +294,7 @@ const send = async (req, res) => {
 
         // Email body defined as html
         const link = `${frontendUrl}/courses/${message.content.course.ohid}`
-        html = `
-          <h1>Your submission has been reviewed</h1>
-          <p><a href="${link}">${link}</a></p>
-          <p>course: ${message.content.course.name}</p>
-          <p>points awarded: ${message.content.points}</p>
-          <h2>Feedback</h2>
-          <p>${message.content.text}</p>
-        `
+        html = buildEmail(`Your submission has been reviewed`, link, message.content.course.name, message.content.points, 'Feedback', message.content.text)
       }
     }
 
@@ -450,14 +437,7 @@ const sendMass = async (req, res) => {
     // prepare email here
     const link = `${frontendUrl}/courses/${req.params.id}`
     const subject = `${courseInstance.name} new message from instructor`
-    const html = `
-      <h1>You've received a message in Labtool.</h1>
-      <p><a href="${link}">${link}</a></p>
-      <p>course: ${courseInstance.name}</p>
-      <p><i>This is an automated message sent using the Labtool email tool. Please do not reply to this email.</i></p>
-      <h2>Message content</h2>
-      <p>${escape(req.body.content)}</p>
-    `
+    const html = buildEmail(`You've received a message from Labtool`, link, courseInstance.name, null, `Message content`, req.body.content)
 
     const { success, simulated } = await trySendEmail({
       subject,
@@ -478,6 +458,16 @@ const sendMass = async (req, res) => {
     return reject(res, 500, 'Unexpected error')
   }
 }
+
+const buildEmail = (title, link, courseName, pointsAwarded, contentTitle, content) => `
+  <h1>${title}</h1>
+  <p><a href="${link}">${link}</a></p>
+  <p>course: ${courseName}</p>
+  ${pointsAwarded !== null && `<p>points awarded: ${pointsAwarded}</p>`}
+  <p><i>This is an automated message sent using the Labtool email tool. Please do not reply to this email.</i></p>
+  <h2>${contentTitle}</h2>
+  <p style="white-space: pre-line;">${escape(content)}</p>
+`
 
 module.exports = {
   send,

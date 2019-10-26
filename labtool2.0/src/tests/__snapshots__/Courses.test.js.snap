@@ -193,7 +193,7 @@ exports[`<Courses /> Courses Component should render correctly 1`] = `
                   <Link
                     to="/labtool/courses/TKT20002.2018.K.K.1"
                   >
-                    Ohjelmistotekniikan menetelmät (spring 2018)
+                    Ohjelmistotekniikan menetelmät (spring, 2018)
                   </Link>
                 </strong>
               </TableCell>

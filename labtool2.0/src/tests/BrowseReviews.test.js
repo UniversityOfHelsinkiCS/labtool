@@ -7,7 +7,7 @@ describe('<BrowseReviews />', () => {
 
   const coursePage = {
     id: 10011,
-    name: 'Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit',
+    name: 'Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit (periodi IV)',
     start: '2018-03-11T21:00:00.000Z',
     end: '2018-04-29T21:00:00.000Z',
     active: true,
@@ -234,9 +234,9 @@ describe('<BrowseReviews />', () => {
         expect(wrapper.find('.studentCard').exists()).toEqual(true)
       })
       it('when student participates the course first time', () => {
-        expect(wrapper.find('.noPrevious').text()).toEqual('Has not taken part in this course before')
+        expect(wrapper.find('.noOther').text()).toEqual('Has no other participation in this course')
       })
-      it('when student participate previous instances of the course', () => {
+      it('when student participate other instances of the course', () => {
         const studentWithPreviousParticipation = [
           {
             ...coursePage,
@@ -255,9 +255,9 @@ describe('<BrowseReviews />', () => {
         ]
 
         wrapper.setProps({ studentInstanceToBeReviewed: studentWithPreviousParticipation, studentInstanceId: '10011' })
-        expect(wrapper.find('.hasPrevious').text()).toContain('Has taken this course before')
+        expect(wrapper.find('.hasOther').text()).toContain('Has taken this course in other periods')
         const popup = wrapper
-          .find('.hasPrevious')
+          .find('.hasOther')
           .find('Link')
           .find('Popup')
         expect(popup.props()).toHaveProperty('trigger', <p>TKT20010 2016-2017 P.IV</p>)

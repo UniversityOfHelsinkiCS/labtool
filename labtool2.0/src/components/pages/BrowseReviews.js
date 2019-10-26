@@ -18,7 +18,8 @@ import useLegacyState from '../../hooks/legacyState'
 import BackButton from '../BackButton'
 import LabtoolComment from '../LabtoolComment'
 import LabtoolAddComment from '../LabtoolAddComment'
-import { getAcademicYear } from '../../util/format'
+import { formatCourseName } from '../../util/format'
+import RepoLink from '../RepoLink'
 
 /**
  * Maps all comments from a single instance from coursePage reducer
@@ -99,7 +100,7 @@ export const BrowseReviews = props => {
 
   const getMaximumIndexForStudent = student => {
     // how many reviews will there be?
-    return props.selectedInstance.weekAmount + student.codeReviews.length + 1
+    return props.selectedInstance.weekAmount + student.codeReviews.length + (props.selectedInstance.finalReview ? 2 : 1)
   }
 
   const hasAllReviewsOpen = student => {
@@ -187,18 +188,16 @@ export const BrowseReviews = props => {
 
   //get student's other participations in the same course
   const renderStudentPreviousParticipation = () => {
-    const previousParticipations = props.studentInstanceToBeReviewed.filter(
-      courseInstance => courseInstance.ohid.includes(props.courseId.substring(0, 8)) && new Date(courseInstance.start) < new Date(props.selectedInstance.start)
-    )
+    const previousParticipations = props.studentInstanceToBeReviewed.filter(courseInstance => courseInstance.ohid.includes(props.courseId.substring(0, 8)) && courseInstance.ohid !== props.courseId)
     if (previousParticipations.length === 0) {
-      return <p className="noPrevious">Has not taken part in this course before</p>
+      return <p className="noOther">Has no other participation in this course</p>
     }
     return (
-      <div className="hasPrevious">
-        <p style={{ color: 'red' }}>Has taken this course before</p>
+      <div className="hasOther">
+        <p style={{ color: 'red' }}>Has taken this course in other periods</p>
         {previousParticipations.map(participation => (
-          <Link key={participation.id} to={`/labtool/browsereviews/${participation.ohid}/${participation.courseInstances[0].id}`} target="_blank">
-            <Popup content="click to open a new tab to see the details" trigger={<p>{createCourseIdWithYearAndTerm(participation.ohid, participation.start)}</p>} />
+          <Link key={participation.id} to={`/labtool/browsereviews/${participation.ohid}/${participation.courseInstances[0].id}`}>
+            <Popup content="click to see the details" trigger={<p>{createCourseIdWithYearAndTerm(participation.ohid, participation.start)}</p>} />
           </Link>
         ))}
       </div>
@@ -221,10 +220,7 @@ export const BrowseReviews = props => {
           </Header.Subheader>
         </Header>
         <div style={{ display: 'inline-block' }}>
-          <a href={student.github} target="_blank" rel="noopener noreferrer">
-            <Icon name="github" color="black" />
-            {student.projectName}
-          </a>
+          {student.projectName}: <RepoLink url={student.github} />
           <br />
           {renderStudentPreviousParticipation()}
         </div>
@@ -256,9 +252,6 @@ export const BrowseReviews = props => {
           </Accordion.Title>
           <Accordion.Content active={openWeeks[i]}>
             <h3>Review</h3>
-            <Link to={`/labtool/reviewstudent/${props.selectedInstance.ohid}/${studentInstance}/${reviewIndex}`}>
-              <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'edit', color: 'black', size: 'large' }} />} content={isFinalWeek ? 'Edit final review' : 'Edit review'} />
-            </Link>
             <Card fluid color="yellow">
               <Card.Content>
                 <h4> Points {week.points} </h4>
@@ -290,9 +283,12 @@ export const BrowseReviews = props => {
                 <span />
               )}
             </Card>
-            <h4> Comments </h4>
+            <Link to={`/labtool/reviewstudent/${props.selectedInstance.ohid}/${studentInstance}/${reviewIndex}`}>
+              <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'edit', color: 'black', size: 'large' }} />} content={isFinalWeek ? 'Edit final review' : 'Edit review'} />
+            </Link>
+            {week.comments.length === 0 ? null : <h4> Comments </h4>}
             <Comment.Group>{week ? sortCommentsByDate(week.comments).map(c => renderComment(isFinalWeek, c)) : <h4> No comments </h4>}</Comment.Group>
-            <LabtoolAddComment weekId={week.id} handleSubmit={handleSubmit} allowHidden={true} />
+            <LabtoolAddComment weekId={week.id} commentFieldId={`${props.courseId}:${week.id}`} handleSubmit={handleSubmit} allowHidden={true} />
           </Accordion.Content>
         </Accordion>
       )
@@ -412,7 +408,7 @@ export const BrowseReviews = props => {
         })
       if (props.selectedInstance.finalReview) {
         const finalWeek = student.weeks.find(week => week.weekNumber === props.selectedInstance.weekAmount + 1)
-        headers.push(renderWeek(i + ii, finalWeek, studentInstance, true))
+        headers.push(renderWeek(i + ii + 1, finalWeek, studentInstance, true))
       }
     }
     return headers.map((header, index) => React.cloneElement(header, { key: index }))
@@ -425,10 +421,7 @@ export const BrowseReviews = props => {
         <div>
           <BackButton preset="coursePage" />
           <Link to={`/labtool/courses/${props.selectedInstance.ohid}`} style={{ textAlign: 'center' }}>
-            <h2>
-              {' '}
-              {props.selectedInstance.name} ({getAcademicYear(props.selectedInstance.start)}){' '}
-            </h2>
+            <h2> {formatCourseName(props.selectedInstance.name, props.selectedInstance.ohid, props.selectedInstance.start)}</h2>
           </Link>
           {createHeaders(props.courseData, props.studentInstance)}
         </div>
@@ -465,6 +458,7 @@ BrowseReviews.propTypes = {
   courseId: PropTypes.string.isRequired,
   studentInstance: PropTypes.string.isRequired,
   initialLoading: PropTypes.bool,
+  location: PropTypes.object,
 
   user: PropTypes.object.isRequired,
   selectedInstance: PropTypes.object.isRequired,

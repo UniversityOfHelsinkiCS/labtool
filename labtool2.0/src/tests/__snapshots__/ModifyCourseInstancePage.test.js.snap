@@ -286,7 +286,7 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
           >
             <Checkbox
               checked={true}
-              label="Course is active"
+              label="Course registration is active"
               name="courseActive"
               onChange={[Function]}
               style={
@@ -316,7 +316,7 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
               Save
             </Button>
             <Link
-              to="/labtool/courses"
+              to="/labtool/courses/TKT20011.2018.K.A.1"
             >
               <Button
                 as="button"

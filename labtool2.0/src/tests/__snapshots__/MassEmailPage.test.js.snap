@@ -135,7 +135,6 @@ exports[`<MassEmailPage /> MassEmailPage Component should render correctly 1`] =
         }
         disableDefaultFilter={false}
         filterStudents={[Function]}
-        rowClassName="TableRowForActiveStudents"
         selectedInstance={
           Object {
             "data": Array [
@@ -390,29 +389,7 @@ exports[`<MassEmailPage /> MassEmailPage Component should render correctly 1`] =
       />
       <br />
       <br />
-      <FormTextArea
-        as={[Function]}
-        control={[Function]}
-        name="content"
-        onChange={[Function]}
-        placeholder="Type email here..."
-        required={true}
-        value=""
-      />
-      <FormCheckbox
-        as={[Function]}
-        checked={true}
-        control={[Function]}
-        label="Send a copy to all instructors"
-        name="sendToInstructors"
-        onChange={[Function]}
-      />
-      <Button
-        as="button"
-        className="ui green button"
-        content="Send"
-        type="submit"
-      />
+      <MassEmailInput />
       <br />
       <br />
       <Link

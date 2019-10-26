@@ -8,13 +8,14 @@ import { getAllTags, tagStudent, unTagStudent } from '../services/tags'
 import { associateTeacherToStudent } from '../services/assistant'
 import { showAssistantDropdown, showTagDropdown, selectTeacher, selectTag, selectStudent, unselectStudent, selectAllStudents, unselectAllStudents } from '../reducers/coursePageLogicReducer'
 import { createDropdownTeachers, createDropdownTags } from '../util/dropdown'
-import useLegacyState from '../hooks/legacyState'
 import { createRepositoryLink } from '../util/format'
+import { usePersistedState } from '../hooks/persistedState'
+import RepoLink from './RepoLink'
 
 const { Fragment } = React
 
 export const StudentTable = props => {
-  const state = useLegacyState({
+  const state = usePersistedState(props.persistentFilterKey || null, {
     filterByAssistant: 0,
     filterByTag: []
   })
@@ -102,12 +103,12 @@ export const StudentTable = props => {
     }
   }
 
-  const removeTag = id => async e => {
+  const removeTag = (id, tag) => async e => {
     try {
       e.preventDefault()
       const data = {
         studentId: id,
-        tagId: props.coursePageLogic.selectedTag
+        tagId: tag || props.coursePageLogic.selectedTag
       }
       await props.unTagStudent(data)
     } catch (error) {
@@ -119,14 +120,6 @@ export const StudentTable = props => {
     return (e, data) => {
       const { value } = data
       filterByAssistant(value)
-    }
-  }
-
-  const changeFilterTag = (e, data) => {
-    const { value } = data
-    const tag = props.tags.tags.find(tag => tag.id === value)
-    if (tag) {
-      filterByTag(tag)
     }
   }
 
@@ -160,6 +153,16 @@ export const StudentTable = props => {
       }
     }
     return hasRequiredTags
+  }
+
+  const countStudentsWithTag = (studentInstances, tagId) => {
+    let count = 0
+    studentInstances.forEach(studentInstance => {
+      if (studentInstance.Tags.find(tag => tag.id === tagId)) {
+        ++count
+      }
+    })
+    return count
   }
 
   const shouldHideInstructor = studentInstances => studentInstances.every(studentInstance => studentInstance.teacherInstanceId === null)
@@ -222,7 +225,7 @@ export const StudentTable = props => {
       indents.push(
         <Table.Cell selectable key={'week' + i} textAlign="center" style={{ position: 'relative' }}>
           <Link
-            style={tableCellLinkStyle}
+            style={{ ...tableCellLinkStyle, ...flexCenter }}
             key={'week' + i + 'link'}
             to={
               weekPoints[i + 1] === undefined
@@ -230,7 +233,11 @@ export const StudentTable = props => {
                 : { pathname: `/labtool/browsereviews/${props.selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: i } }
             }
           >
-            <p style={flexCenter}>{weekPoints[i + 1] !== undefined ? weekPoints[i + 1] : '-'}</p>
+            {props.selectedInstance.currentWeek === i + 1 && weekPoints[i + 1] === undefined ? (
+              <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'star', color: 'white', size: 'large' }} />} content="Review" />
+            ) : (
+              <p>{weekPoints[i + 1] !== undefined ? weekPoints[i + 1] : '-'}</p>
+            )}
           </Link>
         </Table.Cell>
       )
@@ -280,12 +287,12 @@ export const StudentTable = props => {
     return indents
   }
 
-  const createStudentTableRow = (showColumn, data, extraColumns, dropDownTags, dropDownTeachers, { rowClassName, allowReview }) => (
-    <Table.Row key={data.id} className={rowClassName}>
+  const createStudentTableRow = (showColumn, data, extraColumns, dropDownTags, dropDownTeachers, { allowReview }) => (
+    <Table.Row key={data.id} className={data.dropped ? 'TableRowForDroppedOutStudent' : 'TableRowForActiveStudent'}>
       {/* Select Check Box */}
       {showColumn('select') && (
         <Table.Cell key="select">
-          <Checkbox id={'select' + data.id + '-' + rowClassName} checked={props.coursePageLogic.selectedStudents[data.id] || false} onChange={handleSelectCheck(data.id)} />
+          <Checkbox id={'select' + data.id} checked={props.coursePageLogic.selectedStudents[data.id] || false} onChange={handleSelectCheck(data.id)} />
         </Table.Cell>
       )}
 
@@ -300,7 +307,7 @@ export const StudentTable = props => {
                   <br />({data.User.studentNumber})
                 </span>
               }
-              content="Review student"
+              content={data.dropped ? 'Review student (this student has dropped out)' : 'Review student'}
             />
           </Link>
         ) : (
@@ -316,17 +323,24 @@ export const StudentTable = props => {
         <span>
           {data.projectName}
           <br />
-          {createRepositoryLink(data.github)}
+          <RepoLink url={data.github} />
           {data.Tags.map(tag => (
             <div key={data.id + ':' + tag.id}>
-              <Button compact floated="left" className={`mini ui ${tag.color} button`} onClick={addFilterTag(tag)}>
-                {tag.name}
-              </Button>
+              <Button.Group className={'mini'}>
+                <Button compact floated="left" className={`mini ui ${tag.color} button`} onClick={addFilterTag(tag)}>
+                  {tag.name}
+                </Button>
+                {props.allowModify && (
+                  <Button compact icon attached="right" className={`mini ui ${tag.color} button`} style={{ paddingLeft: 0, paddingRight: 0 }} onClick={removeTag(data.id, tag.id)}>
+                    <Icon name="remove" />
+                  </Button>
+                )}
+              </Button.Group>
             </div>
           ))}
           {props.allowModify && (
             <Popup
-              trigger={<Icon id={'tagModify-' + rowClassName} onClick={changeHiddenTagDropdown(data.id)} name="pencil" color="green" style={{ float: 'right', fontSize: '1.25em' }} />}
+              trigger={<Icon id={'tagModify'} onClick={changeHiddenTagDropdown(data.id)} name="pencil" color="green" style={{ float: 'right', fontSize: '1.25em' }} />}
               content="Add or remove tag"
             />
           )}
@@ -335,14 +349,14 @@ export const StudentTable = props => {
           <div>
             {props.coursePageLogic.showTagDropdown === data.id ? (
               <div>
-                <Dropdown id={'tagDropdown-' + rowClassName} style={{ float: 'left' }} options={dropDownTags} onChange={changeSelectedTag()} placeholder="Choose tag" fluid selection />
+                <Dropdown id={'tagDropdown'} style={{ float: 'left' }} options={dropDownTags} onChange={changeSelectedTag()} placeholder="Choose tag" fluid selection />
                 <br />
                 <div className="two ui buttons" style={{ float: 'left' }}>
                   <button className="ui icon positive button" onClick={addTag(data.id)} size="mini">
                     <i className="plus icon" />
                   </button>
                   <div className="or" />
-                  <button className="ui icon button" onClick={removeTag(data.id)} size="mini">
+                  <button className="ui icon button" onClick={removeTag(data.id, null)} size="mini">
                     <i className="trash icon" />
                   </button>
                 </div>
@@ -367,19 +381,20 @@ export const StudentTable = props => {
       )}
 
       {/* Instructor */}
-      {showColumn('instructor') && !shouldHideInstructor(props.studentInstances) && (
+      {showColumn('instructor') && (!shouldHideInstructor(props.studentInstances) || props.allowModify) && (
         <Table.Cell key="instructor">
-          {data.teacherInstanceId && props.selectedInstance.teacherInstances ? (
-            props.selectedInstance.teacherInstances
-              .filter(teacher => teacher.id === data.teacherInstanceId)
-              .map(teacher => (
-                <span key={data.id + ':' + teacher.id}>
-                  {teacher.firsts} {teacher.lastname}
-                </span>
-              ))
-          ) : (
-            <span>not assigned</span>
-          )}
+          {!shouldHideInstructor(props.studentInstances) &&
+            (data.teacherInstanceId && props.selectedInstance.teacherInstances ? (
+              props.selectedInstance.teacherInstances
+                .filter(teacher => teacher.id === data.teacherInstanceId)
+                .map(teacher => (
+                  <span key={data.id + ':' + teacher.id}>
+                    {teacher.firsts} {teacher.lastname}
+                  </span>
+                ))
+            ) : (
+              <span>not assigned</span>
+            ))}
           {props.allowModify && (
             <Fragment>
               <Popup
@@ -388,7 +403,7 @@ export const StudentTable = props => {
               />
               {props.coursePageLogic.showAssistantDropdown === data.id ? (
                 <div>
-                  <Dropdown id={'assistantDropdown-' + rowClassName} options={dropDownTeachers} onChange={changeSelectedTeacher()} placeholder="Select teacher" fluid selection />
+                  <Dropdown id={'assistantDropdown'} options={dropDownTeachers} onChange={changeSelectedTeacher()} placeholder="Select teacher" fluid selection />
                   <Button onClick={updateTeacher(data.id, data.teacherInstanceId)} size="small">
                     Change instructor
                   </Button>
@@ -405,7 +420,7 @@ export const StudentTable = props => {
     </Table.Row>
   )
 
-  const { columns, rowClassName, disableDefaultFilter, studentColumnName, showFooter } = props
+  const { columns, disableDefaultFilter, studentColumnName, showFooter } = props
 
   const showColumn = column => columns.indexOf(column) >= 0
   const nullFunc = () => nullFunc
@@ -424,14 +439,10 @@ export const StudentTable = props => {
 
   let dropDownTags = []
   dropDownTags = createDropdownTags(props.tags.tags, dropDownTags)
-  let dropDownFilterTags = [
-    {
-      key: '-',
-      text: 'Select a tag',
-      value: ''
-    }
-  ]
-  dropDownFilterTags = createDropdownTags(props.tags.tags, dropDownFilterTags)
+  let dropDownFilterTags = createDropdownTags(props.tags.tags, []).filter(
+    tag => state.filterByTag.find(t => t.id === tag.value) || (props.studentInstances && countStudentsWithTag(props.studentInstances, tag.value) > 0)
+  )
+  dropDownFilterTags = dropDownFilterTags.map(tag => props.tags.tags.find(t => t.id === tag.value))
 
   const dataFilter = data =>
     disableDefaultFilter ||
@@ -476,18 +487,16 @@ export const StudentTable = props => {
             />
           </span>
         )}
-        <span> Add filtering tag: </span>
-        <Dropdown scrolling options={dropDownFilterTags} onChange={changeFilterTag} placeholder="Select a tag" value="" selection style={{ width: `${getBiggestWidthInDropdown(dropDownTags)}em` }} />
         <span> Tag filters: </span>
-        {state.filterByTag.length === 0 ? (
+        {dropDownFilterTags.length === 0 ? (
           <span>
             <Label>none</Label>
           </span>
         ) : (
           <span>
-            {state.filterByTag.map(tag => (
+            {dropDownFilterTags.map(tag => (
               <span key={tag.id}>
-                <Button compact className={`mini ui ${tag.color} button`} onClick={addFilterTag(tag)}>
+                <Button compact className={`mini ui ${tag.color} button ${!state.filterByTag.find(t => t.id === tag.id) ? 'basic' : ''}`} onClick={addFilterTag(tag)}>
                   {tag.name}
                 </Button>
               </span>
@@ -495,6 +504,7 @@ export const StudentTable = props => {
           </span>
         )}
       </div>
+      <br />
 
       <HorizontalScrollable>
         <Table celled compact unstackable singleLine style={{ overflowX: 'visible' }}>
@@ -502,7 +512,7 @@ export const StudentTable = props => {
             <Table.Row>
               {showColumn('select') && (
                 <Table.HeaderCell key={-2}>
-                  <Checkbox id={'selectAll-' + rowClassName} disabled={filteredData.length < 1} checked={allSelected} onChange={handleSelectAll} />
+                  <Checkbox id={'selectAll'} disabled={filteredData.length < 1} checked={allSelected} onChange={handleSelectAll} />
                 </Table.HeaderCell>
               )}
               <Table.HeaderCell key={-1}>{studentColumnName || 'Student'}</Table.HeaderCell>
@@ -513,7 +523,9 @@ export const StudentTable = props => {
                   <Table.HeaderCell>Sum</Table.HeaderCell>
                 </Fragment>
               )}
-              {showColumn('instructor') && !shouldHideInstructor(props.studentInstances) && <Table.HeaderCell width="six">Instructor</Table.HeaderCell>}
+              {showColumn('instructor') && (!shouldHideInstructor(props.studentInstances) || props.allowModify) && (
+                <Table.HeaderCell width={shouldHideInstructor(props.studentInstances) ? null : 'six'}>Instructor</Table.HeaderCell>
+              )}
               {extraColumns.map(([header, ,]) => header())}
             </Table.Row>
           </Table.Header>
@@ -523,7 +535,7 @@ export const StudentTable = props => {
               <Table.Row>
                 {showColumn('select') && (
                   <Table.HeaderCell key={-2}>
-                    <Checkbox id={'selectAllBottom-' + rowClassName} disabled={!filteredData.length} checked={allSelected} onChange={handleSelectAll} />
+                    <Checkbox id={'selectAllBottom'} disabled={!filteredData.length} checked={allSelected} onChange={handleSelectAll} />
                   </Table.HeaderCell>
                 )}
                 <Table.HeaderCell />
@@ -557,7 +569,6 @@ const mapDispatchToProps = {
 }
 
 StudentTable.propTypes = {
-  rowClassName: PropTypes.string,
   columns: PropTypes.array,
   allowModify: PropTypes.bool,
   allowReview: PropTypes.bool,
@@ -566,6 +577,7 @@ StudentTable.propTypes = {
   studentColumnName: PropTypes.string,
   extraButtons: PropTypes.array,
   onFilter: PropTypes.func,
+  persistentFilterKey: PropTypes.string,
 
   studentInstances: PropTypes.array.isRequired,
   selectedInstance: PropTypes.object.isRequired,

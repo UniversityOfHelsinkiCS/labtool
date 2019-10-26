@@ -203,7 +203,6 @@ describe('<StudentTable />', () => {
         unselectStudent={mockFn}
         selectAllStudents={mockFn}
         unselectAllStudents={mockFn}
-        rowClassName="StudentRow"
       />
     )
   })
@@ -215,10 +214,6 @@ describe('<StudentTable />', () => {
 
     it('should render correctly', () => {
       expect(wrapper).toMatchSnapshot()
-    })
-
-    it('should include row class name', () => {
-      expect(wrapper.find('.StudentRow').length).toEqual(3)
     })
   })
 })

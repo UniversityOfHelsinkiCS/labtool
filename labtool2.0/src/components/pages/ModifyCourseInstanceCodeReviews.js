@@ -16,10 +16,10 @@ import { objectKeyFilter } from '../../util/objectKeyFilter'
 import BackButton from '../BackButton'
 import ConfirmationModal from '../ConfirmationModal'
 import RevieweeDropdown from '../RevieweeDropdown'
-import { createRepositoryLink } from '../../util/format'
+import RepoLink from '../RepoLink'
 
 export const ModifyCourseInstanceReview = props => {
-  const pstate = usePersistedState('ModifyCourseInstanceCodeReviews', {
+  const pstate = usePersistedState(`ModifyCourseInstanceCodeReviews_${props.courseId}`, {
     codeReviewData: null
   })
   let filterSelected = () => true
@@ -220,7 +220,9 @@ export const ModifyCourseInstanceReview = props => {
     }
     const currentReviewee = getCurrentReviewee(props.codeReviewLogic.selectedDropdown, data.id)
     const showCurrentReviewee = currentReviewee.includes('http') ? (
-      <p style={{ display: 'inline' }}>Current review: {createRepositoryLink(currentReviewee)}</p>
+      <p style={{ display: 'inline' }}>
+        Current review: <RepoLink url={currentReviewee} />
+      </p>
     ) : (
       <p style={{ display: 'inline' }}>Current review: {currentReviewee}</p>
     )
@@ -353,42 +355,43 @@ export const ModifyCourseInstanceReview = props => {
   const unassignedFilter = data => props.codeReviewLogic.filterByReview === 0 || isAssignedToReview(data, props.codeReviewLogic.selectedDropdown)
 
   return (
-    <div className="ModifyCourseInstanceCodeReviews" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
-      <div style={{ overflowX: 'auto', overflowY: 'hidden' }}>
-        <BackButton preset="modifyCIPage" cleanup={pstate.clear} />
-        <div className="sixteen wide column">
-          <h2>{props.selectedInstance.name}</h2> <br />
+    <>
+      <BackButton preset="modifyCIPage" cleanup={pstate.clear} />
+      <div className="ModifyCourseInstanceCodeReviews" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
+        <div style={{ overflowX: 'auto', overflowY: 'hidden' }}>
+          <div className="sixteen wide column">
+            <h2>{props.selectedInstance.name}</h2> <br />
+          </div>
+
+          {showVisibilityReminder()}
+          <br />
+
+          <StudentTable
+            extraButtons={[makeFilterButton]}
+            columns={[
+              'select',
+              [makeCodeReviewSelectorHeader, makeCodeReviewSelectorCell, makeCodeReviewSelectorFooter],
+              [makeCodeReviewCreatorHeader, makeCodeReviewCreatorCell, makeCodeReviewCreatorFooter]
+            ]}
+            showFooter={true}
+            allowModify={false}
+            selectedInstance={props.selectedInstance}
+            studentInstances={props.courseData.data.filter(studentInstance => !studentInstance.dropped && unassignedFilter(studentInstance))}
+            coursePageLogic={props.coursePageLogic}
+            tags={props.tags}
+            onFilter={filtered => (filterSelected = id => filtered.includes(Number(id)))}
+          />
+
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
         </div>
-
-        {showVisibilityReminder()}
-        <br />
-
-        <StudentTable
-          rowClassName="CodeReviewStudentRow"
-          extraButtons={[makeFilterButton]}
-          columns={[
-            'select',
-            [makeCodeReviewSelectorHeader, makeCodeReviewSelectorCell, makeCodeReviewSelectorFooter],
-            [makeCodeReviewCreatorHeader, makeCodeReviewCreatorCell, makeCodeReviewCreatorFooter]
-          ]}
-          showFooter={true}
-          allowModify={false}
-          selectedInstance={props.selectedInstance}
-          studentInstances={props.courseData.data.filter(studentInstance => !studentInstance.dropped && unassignedFilter(studentInstance))}
-          coursePageLogic={props.coursePageLogic}
-          tags={props.tags}
-          onFilter={filtered => (filterSelected = id => filtered.includes(Number(id)))}
-        />
-
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
       </div>
-    </div>
+    </>
   )
 }
 

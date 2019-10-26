@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Accordion, Button, Form, Icon } from 'semantic-ui-react'
 import { withRouter } from 'react-router'
@@ -6,18 +6,21 @@ import { connect } from 'react-redux'
 import { FormMarkdownTextArea } from './MarkdownTextArea'
 import { usePersistedState } from '../hooks/persistedState'
 
-export const LabtoolAddComment = ({ weekId, handleSubmit, allowHidden }) => {
-  const state = usePersistedState(`LabtoolAddComment_${weekId}`, { commentOpen: false, comment: '' })
+export const LabtoolAddComment = ({ commentFieldId, weekId, handleSubmit, allowHidden }) => {
+  const state = usePersistedState(`LabtoolAddComment_${commentFieldId}`, { commentOpen: false, comment: '' })
 
   const toggleOpen = () => {
     state.commentOpen = !state.commentOpen
-    if (!state.commentOpen) {
-      state.clear()
-    }
   }
 
+  useEffect(() => {
+    if (!state.commentOpen) {
+      state.reset()
+    }
+  }, [state.commentOpen])
+
   const doSubmit = (...args) => {
-    state.clear()
+    state.reset()
     handleSubmit(...args)
   }
 
@@ -46,6 +49,7 @@ export const LabtoolAddComment = ({ weekId, handleSubmit, allowHidden }) => {
 }
 
 LabtoolAddComment.propTypes = {
+  commentFieldId: PropTypes.string.isRequired,
   weekId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   handleSubmit: PropTypes.func.isRequired,
   allowHidden: PropTypes.bool
