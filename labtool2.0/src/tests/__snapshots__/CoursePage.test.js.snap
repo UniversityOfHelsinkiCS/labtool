@@ -572,8 +572,19 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
     <Header
       as="h2"
     >
-      Students 
+      Students
     </Header>
+    <p>
+      2
+       active student
+      s
+      , 
+      1
+       dropped student
+       (
+      3
+       in total)
+    </p>
     <Connect(StudentTable)
       allowModify={true}
       allowReview={true}
