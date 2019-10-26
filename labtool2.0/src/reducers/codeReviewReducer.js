@@ -18,7 +18,7 @@ const INITIAL_STATE = {
   filterActive: false
 }
 
-function shuffleArray(array) {
+const shuffleArray = array => {
   for (let i = 0; i < array.length - 1; i++) {
     const j = i + 1 + Math.floor(Math.random() * (array.length - i - 1))
     const temp = array[i]

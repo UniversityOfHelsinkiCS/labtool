@@ -92,6 +92,16 @@ export const ModifyCourseInstanceReview = props => {
           props.showNotification({ message: 'Your link should start with http/https', error: true })
           return
         }
+        if (
+          props.courseData.data
+            .find(student => student.id === id)
+            .codeReviews.filter(cr => (cr.reviewNumber < reviewRound === 'create' ? props.selectedInstance.amountOfCodeReviews + 1 : reviewRound))
+            .map(cr => cr.repoToReview)
+            .includes(value)
+        ) {
+          props.showNotification({ message: 'The student has reviewed the same repo before', error: true })
+          return
+        }
         crData = {
           ...crData,
           repoToReview: value
@@ -191,13 +201,13 @@ export const ModifyCourseInstanceReview = props => {
       if (Object.keys(props.dropdownCodeReviews).length === 0) {
         return (
           <Message className="visibilityReminder" info>
-            <span>Please create a code review by clicking the + button.</span>
+            <span>Please create a new round of code review by clicking the New code review-button.</span>
           </Message>
         )
       }
       return (
         <Message className="visibilityReminder" info>
-          <span>Please select a code review.</span>
+          <span>Please select a code review or create a new round of code review by clicking the New code review-button.</span>
         </Message>
       )
     }
@@ -264,8 +274,7 @@ export const ModifyCourseInstanceReview = props => {
   const makeCodeReviewSelectorCell = data => (
     <Table.Cell key="CodeReviewSelector">
       {showCurrentReview(data)}
-      {/* {showRevieweeDropdown(data)} */}
-      <RevieweeDropdown create={false} dropdownUsers={props.dropdownUsers} data={data} codeReviewLogic={props.codeReviewLogic} addCodeReview={addCodeReview} />
+      <RevieweeDropdown create={false} dropdownUsers={props.dropdownUsers} studentData={data} codeReviewLogic={props.codeReviewLogic} addCodeReview={addCodeReview} courseData={props.courseData} />
     </Table.Cell>
   )
 
@@ -290,9 +299,15 @@ export const ModifyCourseInstanceReview = props => {
           </Button>
         </div>
       ) : (
-        <Button size="tiny" onClick={() => toggleCreate()} compact>
-          +
-        </Button>
+        <Popup
+          content="Click to create a new round of code review"
+          trigger={
+            <Button size="tiny" onClick={() => toggleCreate()} compact>
+              New code review
+            </Button>
+          }
+          position="top right"
+        />
       )}
     </Table.HeaderCell>
   )
@@ -300,7 +315,15 @@ export const ModifyCourseInstanceReview = props => {
   const makeCodeReviewCreatorCell = data => (
     <Table.Cell key="CodeReviewCreator">
       {props.codeReviewLogic.showCreate ? (
-        <RevieweeDropdown create={true} dropdownUsers={props.dropdownUsers} data={data} codeReviewLogic={props.codeReviewLogic} addCodeReview={addCodeReview} />
+        <RevieweeDropdown
+          create={true}
+          dropdownUsers={props.dropdownUsers}
+          studentData={data}
+          codeReviewLogic={props.codeReviewLogic}
+          addCodeReview={addCodeReview}
+          courseData={props.courseData}
+          amountOfCodeReviews={props.selectedInstance.amountOfCodeReviews}
+        />
       ) : (
         <div />
       )}
