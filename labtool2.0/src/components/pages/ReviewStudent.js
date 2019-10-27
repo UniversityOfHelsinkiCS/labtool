@@ -13,6 +13,7 @@ import { trimDate } from '../../util/format'
 import { usePersistedState } from '../../hooks/persistedState'
 
 import { FormMarkdownTextArea } from '../MarkdownTextArea'
+import RepoLink from '../RepoLink'
 
 const PreviousWeekDetails = ({ weekData }) => {
   if (!weekData) {
@@ -30,13 +31,13 @@ const PreviousWeekDetails = ({ weekData }) => {
       {weekData.feedback && (
         <>
           <Header as="h4">Feedback</Header>
-          <p>{weekData.feedback}</p>
+          <p style={{ whiteSpace: 'pre-line' }}>{weekData.feedback}</p>
         </>
       )}
       {weekData.instructorNotes && (
         <>
           <Header as="h4">Instructor notes</Header>
-          <p>{weekData.instructorNotes}</p>
+          <p style={{ whiteSpace: 'pre-line' }}>{weekData.instructorNotes}</p>
         </>
       )}
     </Segment>
@@ -108,7 +109,7 @@ export const ReviewStudent = props => {
 
   const getMaximumPoints = () => {
     const checklist = props.selectedInstance.checklists.find(checkl => checkl.week === Number(props.ownProps.weekNumber))
-    if (checklist === undefined || !checklist.maxPoints) {
+    if (checklist === undefined || checklist.maxPoints === 0) {
       return props.selectedInstance.weekMaxPoints
     }
     return checklist.maxPoints
@@ -231,10 +232,7 @@ export const ReviewStudent = props => {
           {' '}
           {studentData.User.firsts} {studentData.User.lastname}{' '}
           <div style={{ display: 'inline-block', padding: '0px 0px 0px 25px' }}>
-            <a href={studentData.github} target="_blank" rel="noopener noreferrer">
-              <Icon name="github" color="black" />
-              {studentData.projectName}
-            </a>
+            {studentData.projectName}: <RepoLink url={studentData.github} />
           </div>
           {studentData.Tags.map(tag => (
             <div key={tag.id}>

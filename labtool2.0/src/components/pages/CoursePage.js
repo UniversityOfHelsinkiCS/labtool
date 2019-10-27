@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { Accordion, Button, Table, Card, Input, Form, Comment, Header, Label, Message, Icon, Popup, Loader, Dropdown, Grid, Segment } from 'semantic-ui-react'
+import { Accordion, Button, Table, Card, Input, Form, Comment, Header, Label, Message, Icon, Popup, Loader, Dropdown, Grid } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createOneComment } from '../../services/comment'
@@ -14,6 +14,7 @@ import { coursePageReset, updateActiveIndex, toggleCodeReview, selectTag, select
 import { changeCourseField } from '../../reducers/selectedInstanceReducer'
 import { updateStudentProjectInfo } from '../../services/studentinstances'
 import { resetLoading } from '../../reducers/loadingReducer'
+import { usePersistedState } from '../../hooks/persistedState'
 
 import LabtoolComment from '../LabtoolComment'
 import LabtoolAddComment from '../LabtoolAddComment'
@@ -38,6 +39,8 @@ CoursePageHeader.propTypes = {
 }
 
 export const CoursePage = props => {
+  const state = usePersistedState(`CoursePage-${props.courseId}`, { showMassAssignForm: false })
+
   useEffect(() => {
     // run on component mount
     props.resetLoading()
@@ -233,16 +236,27 @@ export const CoursePage = props => {
     return <LabtoolComment key={comment.id} comment={comment} allowNotify={userIsCommandSender} sendCommentEmail={sendEmail(comment.id)} />
   }
 
+  const getMaximumPoints = week => {
+    const checklist = props.selectedInstance.checklists.find(checkl => checkl.week === week)
+    if (checklist === undefined || checklist.maxPoints === 0) {
+      return selectedInstance.weekMaxPoints
+    }
+    return checklist.maxPoints
+  }
+
   const createStudentGradedWeek = (i, week) => (
     <Accordion key={i} fluid styled>
       <Accordion.Title active={i === coursePageLogic.activeIndex} index={i} onClick={handleClick}>
         <Icon name="dropdown" />
-        {i + 1 > selectedInstance.weekAmount ? <span>Final Review</span> : <span>Week {week.weekNumber}</span>}, points {week.points}
+        {i + 1 > selectedInstance.weekAmount ? <span>Final Review</span> : <span>Week {week.weekNumber}</span>}, points {week.points} / {getMaximumPoints(week.weekNumber)}
       </Accordion.Title>
       <Accordion.Content active={i === coursePageLogic.activeIndex}>
         <Card fluid color="yellow">
           <Card.Content>
-            <h4> Points {week.points} </h4>
+            <h4>
+              {' '}
+              Points {week.points} / {getMaximumPoints(week.weekNumber)}
+            </h4>
             <h4> Feedback </h4>
             <ReactMarkdown>{week.feedback}</ReactMarkdown>{' '}
           </Card.Content>
@@ -491,6 +505,22 @@ export const CoursePage = props => {
   }
 
   let renderTeacherBottomPart = () => {
+    // Fetched here because it's used in multiple occasions.
+    const students = sortStudentArrayAlphabeticallyByDroppedValue(courseData.data)
+
+    let droppedStudentCount = 0
+    let activeStudentCount = 0
+
+    students.forEach(student => {
+      if (student.dropped) {
+        droppedStudentCount++
+      } else {
+        activeStudentCount++
+      }
+    })
+
+    const totalStudentCount = activeStudentCount + droppedStudentCount
+
     const dropConvertButton = droppedTagExists() && (
       <Button onClick={() => markAllWithDroppedTagAsDropped(courseData)} size="small">
         Mark all with dropped tag as dropped out
@@ -499,7 +529,11 @@ export const CoursePage = props => {
     return (
       <div className="TeachersBottomView">
         <br />
-        <Header as="h2">Students </Header>
+        <Header as="h2">Students</Header>
+
+        <p>
+          {activeStudentCount} active student{activeStudentCount === 1 ? '' : 's'}, {droppedStudentCount} dropped student{droppedStudentCount === 1 ? '' : 's'} ({totalStudentCount} in total)
+        </p>
 
         <StudentTable
           key={'studentTable'}
@@ -507,7 +541,7 @@ export const CoursePage = props => {
           allowModify={true}
           allowReview={true}
           selectedInstance={selectedInstance}
-          studentInstances={sortStudentArrayAlphabeticallyByDroppedValue(courseData.data)}
+          studentInstances={students}
           coursePageLogic={coursePageLogic}
           tags={tags}
           persistentFilterKey={`CoursePage_filters_${courseId}`}
@@ -524,64 +558,64 @@ export const CoursePage = props => {
   }
 
   const renderTeacherBulkForm = () => {
-    // if any selected, even if outside filters
-    const showMassAssign = Object.keys(coursePageLogic.selectedStudents).length
+    const numSelected = Object.keys(coursePageLogic.selectedStudents).length
+    const disabled = numSelected < 1
 
-    return showMassAssign ? (
-      <div className="TeacherBulkForm">
+    return (
+      <span className="TeacherBulkForm" style={{ position: 'fixed', bottom: 0, background: 'rgba(255,255,255,0.9)', textAlign: 'center', left: 0, right: 0 }}>
+        <Accordion>
+          <Accordion.Title fluid style={{ background: '#f0f0f0' }} active={state.showMassAssignForm} index={0} onClick={() => (state.showMassAssignForm = !state.showMassAssignForm)}>
+            <Icon size="big" name={state.showMassAssignForm ? 'caret down' : 'caret up'} />
+            <h4 style={{ display: 'inline' }}>Modify selected students</h4> ({numSelected > 0 ? <b>{numSelected} selected</b> : <span>{numSelected} selected</span>})
+          </Accordion.Title>
+          <Accordion.Content active={state.showMassAssignForm}>
+            <br />
+            <Grid columns={2} divided style={{ width: '90%', display: 'inline-block' }}>
+              <Grid.Row>
+                <Grid.Column>
+                  <Dropdown id="tagDropdown" style={{ float: 'left' }} options={dropDownTags} onChange={changeSelectedTag()} placeholder="Choose tag" fluid selection />
+                </Grid.Column>
+                <Grid.Column>
+                  <div className="two ui buttons" style={{ float: 'left' }}>
+                    <button className="ui icon positive button" disabled={disabled} onClick={() => bulkAddTag()} size="mini">
+                      <i className="plus icon" />
+                    </button>
+                    <div className="or" />
+                    <button className="ui icon button" disabled={disabled} onClick={() => bulkRemoveTag()} size="mini">
+                      <i className="trash icon" />
+                    </button>
+                  </div>
+                </Grid.Column>
+              </Grid.Row>
+              <Grid.Row>
+                <Grid.Column>
+                  <Dropdown id="assistantDropdown" options={dropDownTeachers} onChange={changeSelectedTeacher()} placeholder="Select teacher" fluid selection />
+                </Grid.Column>
+                <Grid.Column>
+                  <Button disabled={disabled} onClick={() => bulkUpdateTeacher()} size="small">
+                    Change instructor
+                  </Button>
+                </Grid.Column>
+              </Grid.Row>
+              <Grid.Row>
+                <Grid.Column>
+                  <Button disabled={disabled} onClick={() => bulkMarkNotDropped()}>
+                    Mark as non-dropped
+                  </Button>
+                </Grid.Column>
+                <Grid.Column>
+                  <Button disabled={disabled} color="red" onClick={() => bulkMarkDropped()}>
+                    Mark as dropped
+                  </Button>
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
+            <br />
+            <br />
+          </Accordion.Content>
+        </Accordion>
         <br />
-        <h2>Modify selected students</h2>
-        <Grid columns={3} divided style={{ width: '90%' }}>
-          <Grid.Row>
-            <Grid.Column>
-              <Segment>Add/remove tag</Segment>
-            </Grid.Column>
-            <Grid.Column>
-              <Dropdown id="tagDropdown" style={{ float: 'left' }} options={dropDownTags} onChange={changeSelectedTag()} placeholder="Choose tag" fluid selection />
-            </Grid.Column>
-            <Grid.Column>
-              <div className="two ui buttons" style={{ float: 'left' }}>
-                <button className="ui icon positive button" onClick={() => bulkAddTag()} size="mini">
-                  <i className="plus icon" />
-                </button>
-                <div className="or" />
-                <button className="ui icon button" onClick={() => bulkRemoveTag()} size="mini">
-                  <i className="trash icon" />
-                </button>
-              </div>
-            </Grid.Column>
-          </Grid.Row>
-          <Grid.Row>
-            <Grid.Column>
-              <Segment>Assign instructor</Segment>
-            </Grid.Column>
-            <Grid.Column>
-              <Dropdown id="assistantDropdown" options={dropDownTeachers} onChange={changeSelectedTeacher()} placeholder="Select teacher" fluid selection />
-            </Grid.Column>
-            <Grid.Column>
-              <Button onClick={() => bulkUpdateTeacher()} size="small">
-                Change instructor
-              </Button>
-            </Grid.Column>
-          </Grid.Row>
-          <Grid.Row>
-            <Grid.Column>
-              <Segment>Dropped status</Segment>
-            </Grid.Column>
-            <Grid.Column>
-              <Button onClick={() => bulkMarkNotDropped()}>Mark as non-dropped</Button>
-            </Grid.Column>
-            <Grid.Column>
-              <Button color="red" onClick={() => bulkMarkDropped()}>
-                Mark as dropped
-              </Button>
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
-        <br />
-      </div>
-    ) : (
-      <div />
+      </span>
     )
   }
 
@@ -637,18 +671,11 @@ export const CoursePage = props => {
     )
   } else if (props.courseData.role === 'teacher') {
     return (
-      <div style={{ overflowX: 'auto', overflowY: 'hidden' }}>
+      <div style={{ overflowX: 'auto', overflowY: 'hidden', marginBottom: '20em' }}>
         {renderTeacherTopPart()}
         {renderTeacherBottomPart()}
         <br />
         {renderTeacherBulkForm()}
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
       </div>
     )
   } else {

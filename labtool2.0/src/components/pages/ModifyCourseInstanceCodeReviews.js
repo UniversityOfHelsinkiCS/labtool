@@ -16,7 +16,7 @@ import { objectKeyFilter } from '../../util/objectKeyFilter'
 import BackButton from '../BackButton'
 import ConfirmationModal from '../ConfirmationModal'
 import RevieweeDropdown from '../RevieweeDropdown'
-import { createRepositoryLink } from '../../util/format'
+import RepoLink from '../RepoLink'
 
 export const ModifyCourseInstanceReview = props => {
   const pstate = usePersistedState(`ModifyCourseInstanceCodeReviews_${props.courseId}`, {
@@ -220,7 +220,9 @@ export const ModifyCourseInstanceReview = props => {
     }
     const currentReviewee = getCurrentReviewee(props.codeReviewLogic.selectedDropdown, data.id)
     const showCurrentReviewee = currentReviewee.includes('http') ? (
-      <p style={{ display: 'inline' }}>Current review: {createRepositoryLink(currentReviewee)}</p>
+      <p style={{ display: 'inline' }}>
+        Current review: <RepoLink url={currentReviewee} />
+      </p>
     ) : (
       <p style={{ display: 'inline' }}>Current review: {currentReviewee}</p>
     )

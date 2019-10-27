@@ -10,6 +10,7 @@ import { showAssistantDropdown, showTagDropdown, selectTeacher, selectTag, selec
 import { createDropdownTeachers, createDropdownTags } from '../util/dropdown'
 import { createRepositoryLink } from '../util/format'
 import { usePersistedState } from '../hooks/persistedState'
+import RepoLink from './RepoLink'
 
 const { Fragment } = React
 
@@ -224,7 +225,7 @@ export const StudentTable = props => {
       indents.push(
         <Table.Cell selectable key={'week' + i} textAlign="center" style={{ position: 'relative' }}>
           <Link
-            style={tableCellLinkStyle}
+            style={{ ...tableCellLinkStyle, ...flexCenter }}
             key={'week' + i + 'link'}
             to={
               weekPoints[i + 1] === undefined
@@ -232,7 +233,11 @@ export const StudentTable = props => {
                 : { pathname: `/labtool/browsereviews/${props.selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: i } }
             }
           >
-            <p style={flexCenter}>{weekPoints[i + 1] !== undefined ? weekPoints[i + 1] : '-'}</p>
+            {props.selectedInstance.currentWeek === i + 1 && weekPoints[i + 1] === undefined ? (
+              <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'star', color: 'white', size: 'large' }} />} content="Review" />
+            ) : (
+              <p>{weekPoints[i + 1] !== undefined ? weekPoints[i + 1] : '-'}</p>
+            )}
           </Link>
         </Table.Cell>
       )
@@ -302,7 +307,7 @@ export const StudentTable = props => {
                   <br />({data.User.studentNumber})
                 </span>
               }
-              content="Review student"
+              content={data.dropped ? 'Review student (this student has dropped out)' : 'Review student'}
             />
           </Link>
         ) : (
@@ -318,7 +323,7 @@ export const StudentTable = props => {
         <span>
           {data.projectName}
           <br />
-          {createRepositoryLink(data.github)}
+          <RepoLink url={data.github} />
           {data.Tags.map(tag => (
             <div key={data.id + ':' + tag.id}>
               <Button.Group className={'mini'}>
