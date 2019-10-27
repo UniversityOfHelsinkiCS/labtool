@@ -503,6 +503,22 @@ export const CoursePage = props => {
   }
 
   let renderTeacherBottomPart = () => {
+    // Fetched here because it's used in multiple occasions.
+    const students = sortStudentArrayAlphabeticallyByDroppedValue(courseData.data)
+
+    let droppedStudentCount = 0
+    let activeStudentCount = 0
+
+    students.forEach(student => {
+      if (student.dropped) {
+        droppedStudentCount++
+      } else {
+        activeStudentCount++
+      }
+    })
+
+    const totalStudentCount = activeStudentCount + droppedStudentCount
+
     const dropConvertButton = droppedTagExists() && (
       <Button onClick={() => markAllWithDroppedTagAsDropped(courseData)} size="small">
         Mark all with dropped tag as dropped out
@@ -511,7 +527,11 @@ export const CoursePage = props => {
     return (
       <div className="TeachersBottomView">
         <br />
-        <Header as="h2">Students </Header>
+        <Header as="h2">Students</Header>
+
+        <p>
+          {activeStudentCount} active student{activeStudentCount === 1 ? '' : 's'}, {droppedStudentCount} dropped student{droppedStudentCount === 1 ? '' : 's'} ({totalStudentCount} in total)
+        </p>
 
         <StudentTable
           key={'studentTable'}
@@ -519,7 +539,7 @@ export const CoursePage = props => {
           allowModify={true}
           allowReview={true}
           selectedInstance={selectedInstance}
-          studentInstances={sortStudentArrayAlphabeticallyByDroppedValue(courseData.data)}
+          studentInstances={students}
           coursePageLogic={coursePageLogic}
           tags={tags}
           persistentFilterKey={`CoursePage_filters_${courseId}`}
