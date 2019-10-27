@@ -1,6 +1,41 @@
+const Sequelize = require('sequelize')
 const { CodeReview, StudentInstance, TeacherInstance, CourseInstance } = require('../models')
 const helper = require('../helpers/codeReviewHelper')
 const logger = require('../utils/logger')
+
+const { Op } = Sequelize
+
+async function formatCodeReview(codeReview, allStudentInstancesIds, reviewNumber) {
+  if (typeof codeReview.reviewer !== 'number') {
+    return null// This will lead to rejection later.
+  }
+  if (typeof codeReview.toReview !== 'number') {
+    if (!codeReview.repoToReview || !codeReview.repoToReview.includes('http')) {
+      return null
+    }
+  }
+  const reviewed = await CodeReview.findAll({
+    raw: true,
+    attributes: ['toReview', 'repoToReview'],
+    where: {
+      reviewNumber: { [Op.lt]: reviewNumber },
+      studentInstanceId: codeReview.reviewer
+    }
+  }).then(r => r)
+  const repeated = reviewed.filter(r => r.toReview === codeReview.toReview || r.repoToReview === codeReview.repoToReview).length > 0
+  if (repeated) {
+    return null
+  }
+
+  allStudentInstancesIds.push(codeReview.reviewer)
+  return {
+    studentInstanceId: codeReview.reviewer,
+    reviewNumber,
+    toReview: Number.isInteger(codeReview.toReview) ? codeReview.toReview : null,
+    repoToReview: Number.isInteger(codeReview.toReview) ? null : codeReview.repoToReview
+  }
+}
+
 
 module.exports = {
   async bulkInsert(req, res) {
@@ -22,21 +57,14 @@ module.exports = {
         return
       }
       const allStudentInstancesIds = [] // Gather all student instance ids for future query
-      const values = req.body.codeReviews.map((codeReview) => {
-        if (typeof codeReview.reviewer !== 'number' || (typeof codeReview.toReview !== 'number' && !codeReview.repoToReview.includes('http'))) {
-          return null // This will lead to rejection later.
-        }
-        allStudentInstancesIds.push(codeReview.reviewer)
-        return {
-          studentInstanceId: codeReview.reviewer,
-          reviewNumber: req.body.reviewNumber,
-          toReview: Number.isInteger(codeReview.toReview) ? codeReview.toReview : null,
-          repoToReview: Number.isInteger(codeReview.toReview) ? null : codeReview.repoToReview
-        }
-      })
+      const values = await Promise.all(
+        req.body.codeReviews.map(
+          codeReview => formatCodeReview(codeReview, allStudentInstancesIds, req.body.reviewNumber)
+        )
+      )
       if (values.indexOf(null) !== -1) {
         // Malformed items in codeReviews are replaced by null.
-        res.status(400).send('Malformed codeReview.')
+        res.status(400).send('Malformed codeReview or code review is repeated.')
         return
       }
       // Get all studentInstances that have been referenced for validation purposes.

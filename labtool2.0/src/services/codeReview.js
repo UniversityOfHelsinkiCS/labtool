@@ -5,7 +5,7 @@ import { callController } from '../util/apiConnection'
  * The data comes in the following form
  * {reviewNumber: the round of code review,
  * codeReviews: [
- *      {reviewer: student id, toReview: student id}
+ *      {reviewer: student id, toReview: student id or repoToReview:arbitrary link}
  * ]
  */
 
