@@ -451,6 +451,37 @@ export const CoursePage = props => {
     props.modifyOneCI(content, selectedInstance.ohid)
   }
 
+  // This function advances the current week by 1, leaving other data intact.
+  const moveToNextWeek = () => {
+    const { weekAmount, weekMaxPoints, currentWeek, active, ohid, finalReview, coursesPage, courseMaterial, currentCodeReview } = selectedInstance
+
+    if (currentWeek === weekAmount) {
+      return
+    }
+
+    const nextWeek = currentWeek + 1
+
+    const content = {
+      weekAmount,
+      weekMaxPoints,
+      currentWeek: nextWeek,
+      active,
+      ohid,
+      finalReview,
+      newCr: currentCodeReview,
+      coursesPage,
+      courseMaterial
+    }
+
+    props.changeCourseField({
+      field: 'currentWeek',
+      value: nextWeek
+    })
+
+    props.resetLoading()
+    props.modifyOneCI(content, selectedInstance.ohid)
+  }
+
   /**
    * Returns what teachers should see at the top of this page
    */
@@ -487,7 +518,15 @@ export const CoursePage = props => {
                 </div>
               </Table.Cell>
               <Table.Cell>Week amount: {selectedInstance.weekAmount}</Table.Cell>
-              <Table.Cell>Current week: {selectedInstance.currentWeek}</Table.Cell>
+              <Table.Cell>
+                Current week: {selectedInstance.currentWeek}
+                {selectedInstance.currentWeek !== selectedInstance.weekAmount ? (
+                  <Button onClick={() => moveToNextWeek()} labelPosition="right" style={{ marginLeft: '10px' }}>
+                    Advance
+                    <Icon name="right arrow" />
+                  </Button>
+                ) : null}
+              </Table.Cell>
               <Table.Cell>Week max points: {selectedInstance.weekMaxPoints}</Table.Cell>
               <Table.Cell textAlign="right">
                 {' '}
