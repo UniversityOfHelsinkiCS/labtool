@@ -1,4 +1,4 @@
-'use strict';
+
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -10,4 +10,4 @@ module.exports = {
   down: (queryInterface, Sequelize) => {
     queryInterface.removeColumn('Checklists', 'maxPoints')
   }
-};
+}
