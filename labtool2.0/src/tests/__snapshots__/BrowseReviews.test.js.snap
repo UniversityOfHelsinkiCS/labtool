@@ -122,39 +122,6 @@ exports[`<BrowseReviews /> BrowseReviews Component should render correctly 1`] =
         <h3>
           Review
         </h3>
-        <Link
-          to="/labtool/reviewstudent/TKT20010.2018.K.A.1/10011/1"
-        >
-          <Popup
-            content="Edit review"
-            disabled={false}
-            eventsEnabled={true}
-            offset={0}
-            on={
-              Array [
-                "click",
-                "hover",
-              ]
-            }
-            pinned={false}
-            position="top left"
-            trigger={
-              <Button
-                as="button"
-                circular={true}
-                color="orange"
-                icon={
-                  Object {
-                    "color": "black",
-                    "name": "edit",
-                    "size": "large",
-                  }
-                }
-                size="tiny"
-              />
-            }
-          />
-        </Link>
         <Card
           color="yellow"
           fluid={true}
@@ -201,9 +168,39 @@ exports[`<BrowseReviews /> BrowseReviews Component should render correctly 1`] =
             </Button>
           </CardContent>
         </Card>
-        <h4>
-           Comments 
-        </h4>
+        <Link
+          to="/labtool/reviewstudent/TKT20010.2018.K.A.1/10011/1"
+        >
+          <Popup
+            content="Edit review"
+            disabled={false}
+            eventsEnabled={true}
+            offset={0}
+            on={
+              Array [
+                "click",
+                "hover",
+              ]
+            }
+            pinned={false}
+            position="top left"
+            trigger={
+              <Button
+                as="button"
+                circular={true}
+                color="orange"
+                icon={
+                  Object {
+                    "color": "black",
+                    "name": "edit",
+                    "size": "large",
+                  }
+                }
+                size="tiny"
+              />
+            }
+          />
+        </Link>
         <CommentGroup />
         <withRouter(Connect(LabtoolAddComment))
           allowHidden={true}
@@ -236,39 +233,6 @@ exports[`<BrowseReviews /> BrowseReviews Component should render correctly 1`] =
         <h3>
           Review
         </h3>
-        <Link
-          to="/labtool/reviewstudent/TKT20010.2018.K.A.1/10011/2"
-        >
-          <Popup
-            content="Edit review"
-            disabled={false}
-            eventsEnabled={true}
-            offset={0}
-            on={
-              Array [
-                "click",
-                "hover",
-              ]
-            }
-            pinned={false}
-            position="top left"
-            trigger={
-              <Button
-                as="button"
-                circular={true}
-                color="orange"
-                icon={
-                  Object {
-                    "color": "black",
-                    "name": "edit",
-                    "size": "large",
-                  }
-                }
-                size="tiny"
-              />
-            }
-          />
-        </Link>
         <Card
           color="yellow"
           fluid={true}
@@ -334,9 +298,39 @@ exports[`<BrowseReviews /> BrowseReviews Component should render correctly 1`] =
             </Button>
           </CardContent>
         </Card>
-        <h4>
-           Comments 
-        </h4>
+        <Link
+          to="/labtool/reviewstudent/TKT20010.2018.K.A.1/10011/2"
+        >
+          <Popup
+            content="Edit review"
+            disabled={false}
+            eventsEnabled={true}
+            offset={0}
+            on={
+              Array [
+                "click",
+                "hover",
+              ]
+            }
+            pinned={false}
+            position="top left"
+            trigger={
+              <Button
+                as="button"
+                circular={true}
+                color="orange"
+                icon={
+                  Object {
+                    "color": "black",
+                    "name": "edit",
+                    "size": "large",
+                  }
+                }
+                size="tiny"
+              />
+            }
+          />
+        </Link>
         <CommentGroup />
         <withRouter(Connect(LabtoolAddComment))
           allowHidden={true}
@@ -369,39 +363,6 @@ exports[`<BrowseReviews /> BrowseReviews Component should render correctly 1`] =
         <h3>
           Review
         </h3>
-        <Link
-          to="/labtool/reviewstudent/TKT20010.2018.K.A.1/10011/3"
-        >
-          <Popup
-            content="Edit review"
-            disabled={false}
-            eventsEnabled={true}
-            offset={0}
-            on={
-              Array [
-                "click",
-                "hover",
-              ]
-            }
-            pinned={false}
-            position="top left"
-            trigger={
-              <Button
-                as="button"
-                circular={true}
-                color="orange"
-                icon={
-                  Object {
-                    "color": "black",
-                    "name": "edit",
-                    "size": "large",
-                  }
-                }
-                size="tiny"
-              />
-            }
-          />
-        </Link>
         <Card
           color="yellow"
           fluid={true}
@@ -448,9 +409,39 @@ exports[`<BrowseReviews /> BrowseReviews Component should render correctly 1`] =
             </Button>
           </CardContent>
         </Card>
-        <h4>
-           Comments 
-        </h4>
+        <Link
+          to="/labtool/reviewstudent/TKT20010.2018.K.A.1/10011/3"
+        >
+          <Popup
+            content="Edit review"
+            disabled={false}
+            eventsEnabled={true}
+            offset={0}
+            on={
+              Array [
+                "click",
+                "hover",
+              ]
+            }
+            pinned={false}
+            position="top left"
+            trigger={
+              <Button
+                as="button"
+                circular={true}
+                color="orange"
+                icon={
+                  Object {
+                    "color": "black",
+                    "name": "edit",
+                    "size": "large",
+                  }
+                }
+                size="tiny"
+              />
+            }
+          />
+        </Link>
         <CommentGroup />
         <withRouter(Connect(LabtoolAddComment))
           allowHidden={true}
@@ -483,39 +474,6 @@ exports[`<BrowseReviews /> BrowseReviews Component should render correctly 1`] =
         <h3>
           Review
         </h3>
-        <Link
-          to="/labtool/reviewstudent/TKT20010.2018.K.A.1/10011/4"
-        >
-          <Popup
-            content="Edit review"
-            disabled={false}
-            eventsEnabled={true}
-            offset={0}
-            on={
-              Array [
-                "click",
-                "hover",
-              ]
-            }
-            pinned={false}
-            position="top left"
-            trigger={
-              <Button
-                as="button"
-                circular={true}
-                color="orange"
-                icon={
-                  Object {
-                    "color": "black",
-                    "name": "edit",
-                    "size": "large",
-                  }
-                }
-                size="tiny"
-              />
-            }
-          />
-        </Link>
         <Card
           color="yellow"
           fluid={true}
@@ -562,9 +520,39 @@ exports[`<BrowseReviews /> BrowseReviews Component should render correctly 1`] =
             </Button>
           </CardContent>
         </Card>
-        <h4>
-           Comments 
-        </h4>
+        <Link
+          to="/labtool/reviewstudent/TKT20010.2018.K.A.1/10011/4"
+        >
+          <Popup
+            content="Edit review"
+            disabled={false}
+            eventsEnabled={true}
+            offset={0}
+            on={
+              Array [
+                "click",
+                "hover",
+              ]
+            }
+            pinned={false}
+            position="top left"
+            trigger={
+              <Button
+                as="button"
+                circular={true}
+                color="orange"
+                icon={
+                  Object {
+                    "color": "black",
+                    "name": "edit",
+                    "size": "large",
+                  }
+                }
+                size="tiny"
+              />
+            }
+          />
+        </Link>
         <CommentGroup />
         <withRouter(Connect(LabtoolAddComment))
           allowHidden={true}

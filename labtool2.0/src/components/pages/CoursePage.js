@@ -236,16 +236,27 @@ export const CoursePage = props => {
     return <LabtoolComment key={comment.id} comment={comment} allowNotify={userIsCommandSender} sendCommentEmail={sendEmail(comment.id)} />
   }
 
+  const getMaximumPoints = week => {
+    const checklist = props.selectedInstance.checklists.find(checkl => checkl.week === week)
+    if (checklist === undefined || checklist.maxPoints === 0) {
+      return selectedInstance.weekMaxPoints
+    }
+    return checklist.maxPoints
+  }
+
   const createStudentGradedWeek = (i, week) => (
     <Accordion key={i} fluid styled>
       <Accordion.Title active={i === coursePageLogic.activeIndex} index={i} onClick={handleClick}>
         <Icon name="dropdown" />
-        {i + 1 > selectedInstance.weekAmount ? <span>Final Review</span> : <span>Week {week.weekNumber}</span>}, points {week.points}
+        {i + 1 > selectedInstance.weekAmount ? <span>Final Review</span> : <span>Week {week.weekNumber}</span>}, points {week.points} / {getMaximumPoints(week.weekNumber)}
       </Accordion.Title>
       <Accordion.Content active={i === coursePageLogic.activeIndex}>
         <Card fluid color="yellow">
           <Card.Content>
-            <h4> Points {week.points} </h4>
+            <h4>
+              {' '}
+              Points {week.points} / {getMaximumPoints(week.weekNumber)}
+            </h4>
             <h4> Feedback </h4>
             <ReactMarkdown>{week.feedback}</ReactMarkdown>{' '}
           </Card.Content>
@@ -492,6 +503,22 @@ export const CoursePage = props => {
   }
 
   let renderTeacherBottomPart = () => {
+    // Fetched here because it's used in multiple occasions.
+    const students = sortStudentArrayAlphabeticallyByDroppedValue(courseData.data)
+
+    let droppedStudentCount = 0
+    let activeStudentCount = 0
+
+    students.forEach(student => {
+      if (student.dropped) {
+        droppedStudentCount++
+      } else {
+        activeStudentCount++
+      }
+    })
+
+    const totalStudentCount = activeStudentCount + droppedStudentCount
+
     const dropConvertButton = droppedTagExists() && (
       <Button onClick={() => markAllWithDroppedTagAsDropped(courseData)} size="small">
         Mark all with dropped tag as dropped out
@@ -500,7 +527,11 @@ export const CoursePage = props => {
     return (
       <div className="TeachersBottomView">
         <br />
-        <Header as="h2">Students </Header>
+        <Header as="h2">Students</Header>
+
+        <p>
+          {activeStudentCount} active student{activeStudentCount === 1 ? '' : 's'}, {droppedStudentCount} dropped student{droppedStudentCount === 1 ? '' : 's'} ({totalStudentCount} in total)
+        </p>
 
         <StudentTable
           key={'studentTable'}
@@ -508,7 +539,7 @@ export const CoursePage = props => {
           allowModify={true}
           allowReview={true}
           selectedInstance={selectedInstance}
-          studentInstances={sortStudentArrayAlphabeticallyByDroppedValue(courseData.data)}
+          studentInstances={students}
           coursePageLogic={coursePageLogic}
           tags={tags}
           persistentFilterKey={`CoursePage_filters_${courseId}`}
