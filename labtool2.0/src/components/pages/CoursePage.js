@@ -455,6 +455,10 @@ export const CoursePage = props => {
   const moveToNextWeek = () => {
     const { weekAmount, weekMaxPoints, currentWeek, active, ohid, finalReview, coursesPage, courseMaterial, currentCodeReview } = selectedInstance
 
+    if (currentWeek === weekAmount) {
+      return
+    }
+
     const nextWeek = currentWeek + 1
 
     const content = {
