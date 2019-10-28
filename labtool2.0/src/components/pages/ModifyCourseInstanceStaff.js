@@ -86,7 +86,7 @@ export const ModifyCourseInstanceStaff = props => {
                   </Table.Cell>
                   <Table.Cell>
                     {getTeacherIds().includes(user.id) ? (
-                      user.admin === true ? (
+                      user.teacher ? (
                         <div>
                           <Label color="orange" horizontal>
                             Teacher
@@ -101,7 +101,7 @@ export const ModifyCourseInstanceStaff = props => {
                             Remove assistant
                           </Button>
                         </div>
-                      )
+                      ) 
                     ) : (
                       <div>
                         <Button onClick={handleSubmit(user.id)} size="tiny" color="green">

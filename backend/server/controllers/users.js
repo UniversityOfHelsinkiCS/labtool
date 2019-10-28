@@ -67,7 +67,7 @@ module.exports = {
           }
         })
 
-        if (!teacherInstances) {
+        if (!teacherInstances && !helper.isAuthUserAdmin(req.decoded.id)) {
           return res.status(401).send('Unauthorized')
         }
 
@@ -109,7 +109,7 @@ module.exports = {
             courseInstanceId: courseInstance.id
           }
         })
-        if (!teacherInstances) {
+        if (!teacherInstances && !helper.isAuthUserAdmin(req.decoded.id)) {
           return res.status(400).send('You must be a teacher on the course to add assistants.')
         }
 
@@ -133,7 +133,7 @@ module.exports = {
         const assistant = await TeacherInstance.create({
           userId: userToAssistant.id,
           courseInstanceId: courseToAssist.id,
-          admin: false
+          instructor: true
         })
         res.status(200).send(assistant)
       } catch (exception) {
@@ -173,7 +173,7 @@ module.exports = {
             courseInstanceId: courseInstance.id
           }
         })
-        if (!teacherInstances) {
+        if (!teacherInstances && !helper.isAuthUserAdmin(req.decoded.id)) {
           return res.status(400).send('You must teach or assist on the course to remove assistants.')
         }
 

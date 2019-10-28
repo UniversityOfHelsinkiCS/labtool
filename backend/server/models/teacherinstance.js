@@ -2,7 +2,7 @@ module.exports = (sequelize, DataTypes) => {
   const TeacherInstance = sequelize.define(
     'TeacherInstance',
     {
-      admin: {
+      instructor: {
         type: DataTypes.BOOLEAN
       }
     },

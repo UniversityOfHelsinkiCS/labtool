@@ -24,9 +24,9 @@ export const sortUsersByAdminAssistantLastname = (users, assistants) => {
   return users.sort((a, b) => {
     const aIsAssistant = assistants.find(ass => ass.userId === a.id)
     const bIsAssistant = assistants.find(ass => ass.userId === b.id)
-    if (a.admin && !b.admin) {
+    if (a.teacher && !b.teacher) {
       return -1
-    } else if (!a.admin && b.admin) {
+    } else if (!a.teacher && b.teacher) {
       return 1
     } else if (aIsAssistant && !bIsAssistant) {
       return -1

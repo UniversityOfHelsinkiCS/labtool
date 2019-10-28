@@ -19,7 +19,7 @@ describe('<ModifyCourseInstanceStaff />', () => {
     teacherInstances: [
       {
         id: 1003,
-        admin: 'true',
+        instructor: false,
         createdAt: '2018-01-16T21:00:00.000Z',
         updatedAt: '2018-01-16T21:00:00.000Z',
         userId: 10010,
@@ -27,7 +27,7 @@ describe('<ModifyCourseInstanceStaff />', () => {
       },
       {
         id: 1004,
-        admin: 'false',
+        instructor: true,
         createdAt: '2018-01-16T21:00:00.000Z',
         updatedAt: '2018-01-16T21:00:00.000Z',
         userId: 10012,
@@ -45,7 +45,8 @@ describe('<ModifyCourseInstanceStaff />', () => {
       email: 'paa.opettaja@helsinki.invalid',
       firsts: 'Pää',
       lastname: 'Opettaja',
-      admin: true,
+      teacher: true,
+      sysop: true,
       createdAt: '2018-03-26T00:00:00.000Z',
       updatedAt: '2018-03-26T00:00:00.000Z'
     },
@@ -56,7 +57,8 @@ describe('<ModifyCourseInstanceStaff />', () => {
       firsts: 'Sivu',
       lastname: 'Opiskelija',
       studentNumber: '014822548',
-      admin: false,
+      teacher: false,
+      sysop: false,
       createdAt: '2018-03-26T00:00:00.000Z',
       updatedAt: '2018-03-26T00:00:00.000Z'
     },
@@ -67,7 +69,8 @@ describe('<ModifyCourseInstanceStaff />', () => {
       firsts: 'Aimo',
       lastname: 'Assistentti',
       studentNumber: '014666666',
-      admin: false,
+      teacher: false,
+      sysop: false,
       createdAt: '2018-06-08T11:22:00.000Z',
       updatedAt: '2018-06-08T11:22:00.000Z'
     }

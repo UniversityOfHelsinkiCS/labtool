@@ -131,10 +131,10 @@ async function checkHasPermissionToViewStudentInstance(req, courseInstanceId, us
   const adminTeacherInstance = await TeacherInstance.findOne({ where: {
     userId: req.decoded.id,
     courseInstanceId,
-    admin: true
+    instructor: false
   } })
 
-  // Logged in user is admin on the course
+  // Logged in user is teacher (not instructor) on the course
   if (adminTeacherInstance) {
     return true
   }

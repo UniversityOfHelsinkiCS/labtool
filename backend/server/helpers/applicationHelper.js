@@ -8,6 +8,7 @@ exports.controllerBeforeAuthCheckAction = controllerBeforeAuthCheckAction
 exports.getCurrent = getCurrent
 exports.createCourse = createCourse
 exports.getTeacherId = getTeacherId
+exports.isAuthUserAdmin = isAuthUserAdmin
 
 const env = process.env.NODE_ENV || 'development'
 
@@ -28,6 +29,16 @@ function controllerBeforeAuthCheckAction(req, res) {
     res.status(401).send('you have to be authenticated').end()
   }
   return req.authenticated.success
+}
+
+function isAuthUserAdmin(id) {
+  const user = await User.findOne({
+    attributes: ['sysop'],
+    where: {
+      id
+    }
+  })
+  return user && user.sysop
 }
 
 /**
@@ -234,13 +245,13 @@ async function createCourse(body) {
           },
           defaults: {
             username: result.teachers[i],
-            admin: true
+            teacher: true
           }
         })
         TeacherInstance.build({
           userId: user[0].id,
           courseInstanceId: newCourse.id,
-          admin: true
+          instructor: false
         }).save()
       }
     }
