@@ -13,7 +13,7 @@ module.exports = {
    * @param res
    * @returns {*}
    */
-  update(req, res) {
+  updateSelf(req, res) {
     if (!helper.controllerBeforeAuthCheckAction(req, res)) {
       return
     }
@@ -45,6 +45,40 @@ module.exports = {
           })
       )
     }
+  },
+
+  /**
+   *
+   * @param req
+   * @param res
+   * @returns {*}
+   */
+  async updateAdmin(req, res) {
+    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
+    const isAdmin = await helper.isAuthUserAdmin(req.decoded.id)
+    if (!isAdmin) {
+      return res.status(403).send('You must be a sysop')
+    }
+    if (!req.body.id) {
+      return res.status(400).send('You must provide an user ID')
+    }
+
+    const user = await User.findOne({
+      where: {
+        id: req.body.id
+      }
+    })
+
+    if (!user) {
+      return res.status(404).send('User not found')
+    }
+  
+    const updatedUser = await user.update({
+      sysop: req.body.sysop !== undefined ? req.body.sysop : user.sysop
+    })
+    res.status(200).send(updatedUser)
   },
 
   /**

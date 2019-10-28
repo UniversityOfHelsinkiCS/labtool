@@ -97,6 +97,7 @@ describe('<ModifyCourseInstanceStaff />', () => {
         clearNotifications={mockFn}
         resetLoading={mockFn}
         removeOne={mockFn}
+        location={{}}
       />
     )
   })

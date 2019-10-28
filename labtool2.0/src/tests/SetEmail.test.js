@@ -28,7 +28,7 @@ describe('<Email/>', () => {
   let mockFn = jest.fn()
 
   beforeEach(() => {
-    wrapper = shallow(<Email loading={props.loading} user={props} resetLoading={mockFn} forceSetLoading={mockFn} updateUser={mockFn} addRedirectHook={mockFn} />)
+    wrapper = shallow(<Email loading={props.loading} user={props} resetLoading={mockFn} forceSetLoading={mockFn} updateSelf={mockFn} addRedirectHook={mockFn} />)
   })
 
   describe('Email Component', () => {

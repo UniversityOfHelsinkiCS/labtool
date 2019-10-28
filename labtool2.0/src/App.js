@@ -23,6 +23,7 @@ import CreateChecklist from './components/pages/CreateChecklist'
 import ManageTags from './components/pages/ManageTags'
 import FakeLoginPage from './components/pages/FakeLoginPage'
 import CourseImport from './components/pages/CourseImport'
+import AdminPage from './components/pages/AdminPage'
 
 // Reducer imports
 import { tokenLogin } from './reducers/loginReducer'
@@ -130,6 +131,7 @@ const App = props => {
           <Route path={'/labtool/ManageTags'} component={ManageTags} />
           <Route path={'/labtool/checklist/:id/create'} render={({ match }) => <CreateChecklist courseId={match.params.id} />} />
           <Route path={'/labtool/courseimport'} render={() => <CourseImport />} />
+          <Route path={`/labtool/admin`} component={AdminPage} />
           <Route path={`/`} render={() => <MyPage />} />
         </Switch>
       </main>

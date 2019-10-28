@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
+import { withRouter } from 'react-router'
 import { getOneCI } from '../../services/courseInstance'
 import { getAllUsers } from '../../services/user'
 import { createOne, removeOne } from '../../services/teacherinstances'
@@ -7,7 +8,7 @@ import { connect } from 'react-redux'
 import { clearNotifications } from '../../reducers/notificationReducer'
 import { Table, Header, Button, Label, Form, Loader } from 'semantic-ui-react'
 import { resetLoading } from '../../reducers/loadingReducer'
-import { sortUsersByAdminAssistantLastname } from '../../util/sort'
+import { sortUsersByTeacherAssistantLastname } from '../../util/sort'
 
 import BackButton from '../BackButton'
 
@@ -55,11 +56,11 @@ export const ModifyCourseInstanceStaff = props => {
 
   let sortedUsers = props.users
   if (props.selectedInstance && props.selectedInstance.teacherInstances && props.users) {
-    sortedUsers = sortUsersByAdminAssistantLastname(props.users, props.selectedInstance.teacherInstances)
+    sortedUsers = sortUsersByTeacherAssistantLastname(props.users, props.selectedInstance.teacherInstances)
   }
   return (
     <div>
-      <BackButton preset="modifyCIPage" />
+      <BackButton preset={props.location.state && props.location.state.fromAdmin ? 'sysopModifyCIPage' : 'modifyCIPage'} />
       <div className="sixteen wide column" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
         <h2>Add and remove assistants</h2>
         <h2>{props.selectedInstance.name}</h2>
@@ -101,7 +102,7 @@ export const ModifyCourseInstanceStaff = props => {
                             Remove assistant
                           </Button>
                         </div>
-                      ) 
+                      )
                     ) : (
                       <div>
                         <Button onClick={handleSubmit(user.id)} size="tiny" color="green">
@@ -140,6 +141,7 @@ const mapDispatchToProps = {
 
 ModifyCourseInstanceStaff.propTypes = {
   courseId: PropTypes.string.isRequired,
+  location: PropTypes.object,
 
   users: PropTypes.array.isRequired,
   selectedInstance: PropTypes.object.isRequired,
@@ -153,7 +155,9 @@ ModifyCourseInstanceStaff.propTypes = {
   resetLoading: PropTypes.func.isRequired
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ModifyCourseInstanceStaff)
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(ModifyCourseInstanceStaff)
+)

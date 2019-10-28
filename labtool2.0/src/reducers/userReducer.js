@@ -17,6 +17,10 @@ const userReducer = (store = INITIAL_STATE, action) => {
       })
       return users
     }
+    case 'USER_UPDATE_ADMIN_SUCCESS': {
+      const newUser = action.response
+      return store.map(user => (user.id === newUser.id ? newUser : user))
+    }
     default:
       return store
   }

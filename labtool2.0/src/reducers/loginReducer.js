@@ -30,6 +30,11 @@ const loginReducer = (state = INITIAL_STATE, action) => {
       return INITIAL_STATE
     case 'USER_UPDATE_SUCCESS':
       return { ...state, user: { ...state.user, email: action.response.email } }
+    case 'USER_UPDATE_ADMIN_SUCCESS':
+      if (action.response.id === state.user.id) {
+        return { ...state, user: action.response }
+      }
+      return state
     default:
       return state
   }
