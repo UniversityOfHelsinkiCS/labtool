@@ -528,7 +528,9 @@ export const CoursePage = props => {
                 Current week: {selectedInstance.currentWeek}
                 <Popup
                   content={weekAdvanceEnabled ? 'Advance course by 1 week' : 'Already at final week'}
-                  trigger={<Icon disabled={!weekAdvanceEnabled} name="right arrow" onClick={() => moveToNextWeek()} style={{ marginLeft: '15px', cursor: weekAdvanceEnabled ? 'pointer' : 'hand' }} />}
+                  trigger={
+                    <Icon disabled={!weekAdvanceEnabled} name="right arrow" onClick={() => moveToNextWeek()} style={{ marginLeft: '15px', cursor: weekAdvanceEnabled ? 'pointer' : 'not-allowed' }} />
+                  }
                 />
               </Table.Cell>
               <Table.Cell>Week max points: {selectedInstance.weekMaxPoints}</Table.Cell>
