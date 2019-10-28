@@ -5,7 +5,7 @@ const helper = require('../helpers/courseInstanceHelper')
 const logger = require('../utils/logger')
 
 const { Op } = Sequelize
-const { User, CourseInstance, StudentInstance, TeacherInstance, Week, CodeReview, Comment, Tag, Checklist } = db
+const { User, CourseInstance, StudentInstance, TeacherInstance, Week, CodeReview, Comment, Tag, Checklist, ChecklistItem } = db
 
 const env = process.env.NODE_ENV || 'development'
 const config = require('./../config/config.js')[env]
@@ -713,6 +713,25 @@ module.exports = {
             courseInstanceId: course.id
           }
         })
+        //Add checklist items to checklists
+        for (const checklist of checklists) {
+          const checklistJson = {}
+          const checklistItems = await ChecklistItem.findAll({ where: {
+            checklistId: checklist.id 
+          }})
+          checklistItems.forEach(({ dataValues: checklistItem }) => {
+            if (checklistJson[checklistItem.category] === undefined) {
+              checklistJson[checklistItem.category] = []
+            }
+            
+            const checklistItemCopy = { ...checklistItem }
+            delete checklistItemCopy.category
+            delete checklistItemCopy.checklistId
+            checklistJson[checklistItem.category].push(checklistItemCopy)
+          })
+
+          checklist.dataValues.list = checklistJson
+        }
 
         course.dataValues.teacherInstances = teachers
         course.dataValues.registrationAtWebOodi = registrationAtWebOodi
