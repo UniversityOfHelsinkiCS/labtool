@@ -490,6 +490,8 @@ export const CoursePage = props => {
    * Returns what teachers should see at the top of this page
    */
   let renderTeacherTopPart = () => {
+    const weekAdvanceEnabled = !(selectedInstance.currentWeek === selectedInstance.weekAmount)
+
     return (
       <div className="TeachersTopView" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
         <CoursePageHeader courseInstance={selectedInstance} />
@@ -524,9 +526,10 @@ export const CoursePage = props => {
               <Table.Cell>Week amount: {selectedInstance.weekAmount}</Table.Cell>
               <Table.Cell>
                 Current week: {selectedInstance.currentWeek}
-                {selectedInstance.currentWeek !== selectedInstance.weekAmount ? (
-                  <Popup content="Advance course by 1 week" trigger={<Icon name="right arrow" onClick={() => moveToNextWeek()} style={{ marginLeft: '15px', cursor: 'pointer' }} />} />
-                ) : null}
+                <Popup
+                  content={weekAdvanceEnabled ? 'Advance course by 1 week' : 'Already at final week'}
+                  trigger={<Icon disabled={!weekAdvanceEnabled} name="right arrow" onClick={() => moveToNextWeek()} style={{ marginLeft: '15px', cursor: weekAdvanceEnabled ? 'pointer' : 'hand' }} />}
+                />
               </Table.Cell>
               <Table.Cell>Week max points: {selectedInstance.weekMaxPoints}</Table.Cell>
               <Table.Cell textAlign="right">
