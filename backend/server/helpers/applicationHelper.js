@@ -31,7 +31,7 @@ function controllerBeforeAuthCheckAction(req, res) {
   return req.authenticated.success
 }
 
-function isAuthUserAdmin(id) {
+async function isAuthUserAdmin(id) {
   const user = await User.findOne({
     attributes: ['sysop'],
     where: {

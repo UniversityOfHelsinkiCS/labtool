@@ -66,8 +66,9 @@ module.exports = {
             userId: req.decoded.id
           }
         })
+        const isAdmin = await helper.isAuthUserAdmin(req.decoded.id)
 
-        if (!teacherInstances && !helper.isAuthUserAdmin(req.decoded.id)) {
+        if (!teacherInstances && !isAdmin) {
           return res.status(401).send('Unauthorized')
         }
 
@@ -109,7 +110,8 @@ module.exports = {
             courseInstanceId: courseInstance.id
           }
         })
-        if (!teacherInstances && !helper.isAuthUserAdmin(req.decoded.id)) {
+        const isAdmin = await helper.isAuthUserAdmin(req.decoded.id)
+        if (!teacherInstances && !isAdmin) {
           return res.status(400).send('You must be a teacher on the course to add assistants.')
         }
 
@@ -173,7 +175,8 @@ module.exports = {
             courseInstanceId: courseInstance.id
           }
         })
-        if (!teacherInstances && !helper.isAuthUserAdmin(req.decoded.id)) {
+        const isAdmin = await helper.isAuthUserAdmin(req.decoded.id)
+        if (!teacherInstances && !isAdmin) {
           return res.status(400).send('You must teach or assist on the course to remove assistants.')
         }
 
