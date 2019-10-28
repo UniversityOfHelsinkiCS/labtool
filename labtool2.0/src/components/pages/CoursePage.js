@@ -490,7 +490,7 @@ export const CoursePage = props => {
    * Returns what teachers should see at the top of this page
    */
   let renderTeacherTopPart = () => {
-    const weekAdvanceEnabled = !(selectedInstance.currentWeek === selectedInstance.weekAmount)
+    const weekAdvanceEnabled = selectedInstance.currentWeek !== selectedInstance.weekAmount
 
     return (
       <div className="TeachersTopView" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
