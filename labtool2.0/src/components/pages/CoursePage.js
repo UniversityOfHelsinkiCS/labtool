@@ -453,6 +453,10 @@ export const CoursePage = props => {
 
   // This function advances the current week by 1, leaving other data intact.
   const moveToNextWeek = () => {
+    if (!window.confirm('This will advance the course by 1 week. Confirm?')) {
+      return
+    }
+
     const { weekAmount, weekMaxPoints, currentWeek, active, ohid, finalReview, coursesPage, courseMaterial, currentCodeReview } = selectedInstance
 
     if (currentWeek === weekAmount) {
@@ -521,10 +525,7 @@ export const CoursePage = props => {
               <Table.Cell>
                 Current week: {selectedInstance.currentWeek}
                 {selectedInstance.currentWeek !== selectedInstance.weekAmount ? (
-                  <Button onClick={() => moveToNextWeek()} labelPosition="right" style={{ marginLeft: '10px' }}>
-                    Advance
-                    <Icon name="right arrow" />
-                  </Button>
+                  <Popup content="Advance course by 1 week" trigger={<Icon name="right arrow" onClick={() => moveToNextWeek()} style={{ marginLeft: '15px', cursor: 'pointer' }} />} />
                 ) : null}
               </Table.Cell>
               <Table.Cell>Week max points: {selectedInstance.weekMaxPoints}</Table.Cell>
