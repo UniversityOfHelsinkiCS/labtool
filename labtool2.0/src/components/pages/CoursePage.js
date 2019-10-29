@@ -453,6 +453,10 @@ export const CoursePage = props => {
 
   // This function advances the current week by 1, leaving other data intact.
   const moveToNextWeek = () => {
+    if (!window.confirm('This will advance the course by 1 week. Confirm?')) {
+      return
+    }
+
     const { weekAmount, weekMaxPoints, currentWeek, active, ohid, finalReview, coursesPage, courseMaterial, currentCodeReview } = selectedInstance
 
     if (currentWeek === weekAmount) {
@@ -486,6 +490,8 @@ export const CoursePage = props => {
    * Returns what teachers should see at the top of this page
    */
   let renderTeacherTopPart = () => {
+    const weekAdvanceEnabled = selectedInstance.currentWeek !== selectedInstance.weekAmount
+
     return (
       <div className="TeachersTopView" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
         <CoursePageHeader courseInstance={selectedInstance} />
@@ -520,12 +526,12 @@ export const CoursePage = props => {
               <Table.Cell>Week amount: {selectedInstance.weekAmount}</Table.Cell>
               <Table.Cell>
                 Current week: {selectedInstance.currentWeek}
-                {selectedInstance.currentWeek !== selectedInstance.weekAmount ? (
-                  <Button onClick={() => moveToNextWeek()} labelPosition="right" style={{ marginLeft: '10px' }}>
-                    Advance
-                    <Icon name="right arrow" />
-                  </Button>
-                ) : null}
+                <Popup
+                  content={weekAdvanceEnabled ? 'Advance course by 1 week' : 'Already at final week'}
+                  trigger={
+                    <Icon disabled={!weekAdvanceEnabled} name="right arrow" onClick={() => moveToNextWeek()} style={{ marginLeft: '15px', cursor: weekAdvanceEnabled ? 'pointer' : 'not-allowed' }} />
+                  }
+                />
               </Table.Cell>
               <Table.Cell>Week max points: {selectedInstance.weekMaxPoints}</Table.Cell>
               <Table.Cell textAlign="right">
