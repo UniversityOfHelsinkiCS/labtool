@@ -7,6 +7,10 @@ export default repo => {
   const [error, setError] = useState()
 
   useEffect(() => {
+    if (!repo) {
+      return
+    }
+
     const { result, cancel } = getGithubRepo(repo)
 
     result
