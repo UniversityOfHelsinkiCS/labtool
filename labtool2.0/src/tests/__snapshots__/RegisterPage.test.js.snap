@@ -82,6 +82,7 @@ exports[`<Register /> RegisterPage Component should render correctly 1`] = `
             icon="github"
             iconPosition="left"
             name="github"
+            onChange={[Function]}
             required={true}
             style={
               Object {

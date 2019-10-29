@@ -1,18 +1,31 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input, Grid, Loader } from 'semantic-ui-react'
+import { Form, Input, Grid, Loader, Message } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createStudentCourses, updateStudentProjectInfo } from '../../services/studentinstances'
 import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 import { Redirect } from 'react-router'
 import { getOneCI } from '../../services/courseInstance'
+import useDebounce from '../../hooks/useDebounce'
+import useGithubRepo from '../../hooks/useGithubRepo'
+
+const GithubRepoWarning = ({ githubRepo }) => {
+  if (!githubRepo) {
+    return <Message icon warning compact icon="warning sign" size="small" hidden={false} content="Your GitHub repository either is private or it does not exist" />
+  }
+  return null
+}
 
 /**
  * The page user uses to register to a course AS A STUDENT
  */
 
 export const RegisterPage = props => {
+  const [repo, setRepo] = useState()
+  const debouncedRepo = useDebounce(repo, 500)
+  const { githubRepo, error: githubRepoError } = useGithubRepo(debouncedRepo)
+
   useEffect(() => {
     // run on component mount
     props.resetLoading()
@@ -29,6 +42,13 @@ export const RegisterPage = props => {
     }
 
     return { projectName, projectLink }
+  }
+
+  const handleRepoChange = e => {
+    const repoLink = e.target.value.replace(/^https?:\/\//, '')
+    if (repoLink.startsWith('github.com')) {
+      setRepo(repoLink.substring(11))
+    }
   }
 
   const handleSubmit = async e => {
@@ -118,8 +138,11 @@ export const RegisterPage = props => {
                 defaultValue={existing.projectLink || 'https://github.com/'}
                 required
                 style={{ minWidth: '30em' }}
+                onChange={handleRepoChange}
               />
             </Form.Group>
+
+            {githubRepoError && <GithubRepoWarning githubRepo={githubRepo} />}
 
             <Form.Field>
               <button className="ui left floated blue button" type="submit">
