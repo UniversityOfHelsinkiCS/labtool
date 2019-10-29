@@ -160,14 +160,13 @@ export const AdminPage = props => {
   }, [state.usersList])
 
   if (!props.user.user.sysop) {
-    console.error('Nice try.')
     return <Redirect to={`/labtool`} />
   } else if (props.loading.loading) {
     return <Loader active />
   }
 
   return (
-    <div>
+    <div className="AdminPage">
       <h2>Welcome to the admin interface.</h2>
       <Button compact className={`ui button`} onClick={() => (state.coursesList = !state.coursesList)}>
         {state.coursesList ? 'Hide courses' : 'Manage courses'}
