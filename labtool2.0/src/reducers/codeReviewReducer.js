@@ -18,12 +18,63 @@ const INITIAL_STATE = {
   filterActive: false
 }
 
+/**
+ * Check if there is a repeated reviewer-toReview pair or the reviewer is same as toReview when code review round>1
+ */
+const checkRepeated = (currentSelections, reviewers, toReviews, round) => {
+  if (round === 'create') {
+    round = Object.keys(currentSelections).length
+  }
+  for (let i = 1; i < round; i++) {
+    for (let j = 0; j < reviewers.length; j++) {
+      if (currentSelections[i][reviewers[j]] === toReviews[j]) {
+        //repeated reviewer-toReview pair
+        return true
+      }
+      if (reviewers[j] === toReviews[j]) {
+        //reviewer is same as toReview
+        return true
+      }
+    }
+  }
+  return false
+}
+
+const swap = (array, i, j) => {
+  const temp = array[i]
+  array[i] = array[j]
+  array[j] = temp
+}
+
 const shuffleArray = array => {
   for (let i = 0; i < array.length - 1; i++) {
     const j = i + 1 + Math.floor(Math.random() * (array.length - i - 1))
-    const temp = array[i]
-    array[i] = array[j]
-    array[j] = temp
+    swap(array, i, j)
+  }
+}
+
+let shuffledArray
+let endRecursion = false
+/**
+ * find a permutation of reviwers-array which will not cause repeated review-toReview pair
+ * or the situation that review and toReview are same
+ */
+const findNonRepeatedPermutation = (currentSelections, reviewers, start, toReviews, round) => {
+  if (start === reviewers.length - 1) {
+    if (!checkRepeated(currentSelections, reviewers, toReviews, round)) {
+      shuffledArray = [...reviewers]
+      endRecursion = true
+    } else {
+      shuffleArray(reviewers)
+    }
+  }
+  for (let i = start; i < reviewers.length; i++) {
+    if (endRecursion) {
+      break
+    }
+    swap(reviewers, start, i)
+    findNonRepeatedPermutation(currentSelections, reviewers, start + 1, toReviews, round)
+    swap(reviewers, start, i)
   }
 }
 
@@ -37,9 +88,17 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
       let i = 1
       let codeReviewStates = {}
       let currentSelections = {}
-      while (i <= action.data) {
+      const studentData = action.data.studentData
+      while (i <= action.data.codeReviewAmount) {
         codeReviewStates[i] = []
         currentSelections[i] = {}
+
+        for (let j = 0; j < studentData.length; j++) {
+          const codeReview = studentData[j].codeReviews.find(cr => cr.reviewNumber === i)
+          if (codeReview) {
+            currentSelections[i][studentData[j].id] = codeReview.toReview || codeReview.repoToReview
+          }
+        }
         i++
       }
       codeReviewStates['create'] = []
@@ -113,16 +172,29 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
       //Do not assign code review to students who have not been selected
       codeReviews = codeReviews.filter(cr => !selectedForRandom['' + cr.reviewer])
 
-      const originalOrder = [...Object.keys(selectedForRandom).map(x => Number(x, 10))]
-      const randomizedOrder = [...originalOrder]
-      shuffleArray(randomizedOrder)
+      const toReviews = [...Object.keys(selectedForRandom).map(x => Number(x, 10))]
+      let reviewers = [...toReviews]
+
+      let shuffledReviewers
+
+      shuffleArray(reviewers)
+      if (action.data.reviewNumber === 1 || (action.data.reviewNumber === 'create' && Object.keys(state.currentSelections).length === 1)) {
+        //if the code review round is 1 or there is no code review and the first one will be created, we don't need to care about the repetition problem
+        shuffledReviewers = reviewers
+      } else {
+        shuffledArray = []
+        endRecursion = false
+        findNonRepeatedPermutation(state.currentSelections, reviewers, 0, toReviews, action.data.reviewNumber)
+        shuffledReviewers = shuffledArray
+      }
+
       const newCurrentSelections = { ...state.currentSelections }
-      for (let i = 0; i < randomizedOrder.length; i++) {
+      for (let i = 0; i < shuffledReviewers.length; i++) {
         codeReviews = codeReviews.concat({
-          reviewer: randomizedOrder[i],
-          toReview: originalOrder[i]
+          reviewer: shuffledReviewers[i],
+          toReview: toReviews[i]
         })
-        newCurrentSelections[action.data.reviewNumber][randomizedOrder[i]] = originalOrder[i]
+        newCurrentSelections[action.data.reviewNumber][shuffledReviewers[i]] = toReviews[i]
       }
       newCodeReviewStates[action.data.reviewNumber] = codeReviews
       return { ...state, codeReviewStates: newCodeReviewStates, currentSelections: newCurrentSelections }
@@ -172,11 +244,14 @@ export const toggleCreate = () => {
   }
 }
 
-export const createStates = data => {
+export const createStates = (codeReviewAmount, studentData) => {
   return async dispatch => {
     dispatch({
       type: 'CREATE_STATES_FOR_CODE_REVIEWS',
-      data: data
+      data: {
+        codeReviewAmount,
+        studentData
+      }
     })
   }
 }

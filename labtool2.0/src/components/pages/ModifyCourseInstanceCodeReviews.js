@@ -46,7 +46,7 @@ export const ModifyCourseInstanceReview = props => {
 
   const checkStates = () => {
     if (!props.codeReviewLogic.statesCreated) {
-      props.createStates(props.selectedInstance.amountOfCodeReviews)
+      props.createStates(props.selectedInstance.amountOfCodeReviews, props.courseData.data)
     }
   }
 
@@ -143,7 +143,7 @@ export const ModifyCourseInstanceReview = props => {
   }
 
   const assignRandomly = reviewNumber => {
-    if (props.codeReviewLogic.selectedDropdown === null) {
+    if (props.codeReviewLogic.selectedDropdown === null && !props.codeReviewLogic.showCreate) {
       return () => props.showNotification({ message: 'Please select a code review first!', error: true })
     }
     return () => {
