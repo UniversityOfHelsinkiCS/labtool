@@ -1,0 +1,16 @@
+PUT http://localhost:3001/api/codereviews/bulkinsert
+content-type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InBhYW9wZXR0YWphIiwiaWQiOjEwMDEwLCJpYXQiOjE1NzIxODExNDV9.2Sj9ijkw2oJJ6Um4SlF9O_2LR4iWQitHsj3x6EHFW6Y
+
+{
+  "reviewNumber": 3,
+  "codeReviews":[
+    {
+      "reviewer": 10031,
+      //"toReview": 13
+     "repoToReview":"https://github.com/aa/bb"
+    }
+  ],
+  "courseId": 10011,
+  "createTrue": false
+}
