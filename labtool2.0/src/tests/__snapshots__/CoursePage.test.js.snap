@@ -89,286 +89,115 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
       </div>
     </div>
   </div>
-  <div
-    key="student info"
-  >
-    <Card
-      color="yellow"
-      fluid={true}
-      key="card"
+  <div>
+    <div
+      key="student info"
     >
-      <CardContent>
-        <h2>
-          Maarit Mirja
-           
-          Opiskelija
-        </h2>
-        <h3>
-           
-          Tiran labraprojekti
-           
-        </h3>
-        <h3>
-          <a
-            href="http://github.com/tiralabra1"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            http://github.com/tiralabra1
-          </a>
-           
-          <Link
-            to="/labtool/courseregistration/undefined"
-          >
-            <Button
-              as="button"
-              circular={true}
-              floated="right"
-              icon={
-                Object {
-                  "color": "orange",
-                  "name": "edit",
-                  "size": "large",
-                }
-              }
-              size="large"
-            />
-          </Link>
-        </h3>
-      </CardContent>
-    </Card>
-  </div>
-  <Accordion
-    fluid={true}
-    key="0"
-    styled={true}
-  >
-    <AccordionTitle
-      active={false}
-      className="codeReview"
-      index={0}
-      onClick={[Function]}
-    >
-      <Icon
-        as="i"
-        name="dropdown"
-      />
-       Code Review 
-      1
-       
-      , points 2
-    </AccordionTitle>
-    <AccordionContent
-      active={false}
-    >
-      <div
-        className="codeReviewExpanded"
+      <Card
+        color="yellow"
+        fluid={true}
+        key="card"
       >
-        <div
-          className="codeReviewPoints"
-        >
-          <strong>
-            Points: 
-          </strong>
-           
-          2
-          <br />
-          <strong>
-            GitHub: 
-          </strong>
-          <a
-            href="http://github.com/tiralabra2"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            http://github.com/tiralabra2
-          </a>
-          <br />
-           
-          <br />
-          <div />
-        </div>
-        <p />
-      </div>
-    </AccordionContent>
-  </Accordion>
-  <Accordion
-    fluid={true}
-    key="1"
-    styled={true}
-  >
-    <AccordionTitle
-      active={false}
-      className="codeReview"
-      index={1}
-      onClick={[Function]}
-    >
-      <Icon
-        as="i"
-        name="dropdown"
-      />
-       Code Review 
-      2
-       
-      , points 1
-    </AccordionTitle>
-    <AccordionContent
-      active={false}
-    >
-      <div
-        className="codeReviewExpanded"
-      >
-        <div
-          className="codeReviewPoints"
-        >
-          <strong>
-            Points: 
-          </strong>
-           
-          1
-          <br />
-          <strong>
-            GitHub: 
-          </strong>
-          <a
-            href="http://github.com/superprojekti"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            http://github.com/superprojekti
-          </a>
-          <br />
-           
-          <br />
-          <div />
-        </div>
-        <div>
-          <div>
-            <strong>
-              Link your review here:
-            </strong>
+        <CardContent>
+          <h2>
+            Maarit Mirja
              
-            <br />
-            <Form
-              as="form"
-              onSubmit={[Function]}
+            Opiskelija
+          </h2>
+          <h3>
+             
+            Tiran labraprojekti
+             
+          </h3>
+          <h3>
+            <a
+              href="http://github.com/tiralabra1"
+              rel="noopener noreferrer"
+              target="_blank"
             >
-              <FormGroup
-                inline={true}
-              >
-                <Input
-                  className="form-control1"
-                  icon="github"
-                  iconPosition="left"
-                  name="reviewLink"
-                  placeholder="https://github.com/account/repo/issues/number"
-                  required={true}
-                  style={
-                    Object {
-                      "minWidth": "25em",
-                    }
+              http://github.com/tiralabra1
+            </a>
+             
+            <Link
+              to="/labtool/courseregistration/undefined"
+            >
+              <Button
+                as="button"
+                circular={true}
+                floated="right"
+                icon={
+                  Object {
+                    "color": "orange",
+                    "name": "edit",
+                    "size": "large",
                   }
-                  type="text"
-                />
-              </FormGroup>
-              <FormGroup>
-                <Button
-                  as="button"
-                  color="blue"
-                  compact={true}
-                  style={
-                    Object {
-                      "marginLeft": "0.5em",
-                    }
-                  }
-                  type="submit"
-                >
-                  Submit
-                </Button>
-              </FormGroup>
-            </Form>
-          </div>
-        </div>
-      </div>
-    </AccordionContent>
-  </Accordion>
-  <Accordion
-    fluid={true}
-    key="2"
-    styled={true}
-  >
-    <AccordionTitle
-      active={true}
-      className="codeReview"
-      index={2}
-      onClick={[Function]}
-    >
-      <Icon
-        as="i"
-        name="dropdown"
-      />
-       Code Review 
-      3
-       
-    </AccordionTitle>
-    <AccordionContent
-      active={true}
-    >
-      <div
-        className="codeReviewExpanded"
-      >
-        <div
-          className="codeReviewPoints"
-        >
-          <strong>
-            Points: 
-          </strong>
-           
-          Not graded yet
-          <br />
-          <strong>
-            GitHub: 
-          </strong>
-          <a
-            href="https://github.com/userName/arbitraryRepo"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            https://github.com/userName/arbitraryRepo
-          </a>
-          <br />
-           
-          <br />
-          <div />
-        </div>
-        <p />
-      </div>
-    </AccordionContent>
-  </Accordion>
-  <Accordion
-    fluid={true}
-    key="total"
-    style={
-      Object {
-        "marginBottom": "2em",
+                }
+                size="large"
+              />
+            </Link>
+          </h3>
+        </CardContent>
+      </Card>
+    </div>
+    <Connect(WeekReviews)
+      courseId=""
+      student={
+        Object {
+          "Tags": Array [],
+          "User": Object {
+            "createdAt": "2018-03-26T00:00:00.000Z",
+            "email": "maarit.opiskelija@helsinki.invalid",
+            "firsts": "Maarit Mirja",
+            "id": 10011,
+            "lastname": "Opiskelija",
+            "studentNumber": "014578343",
+            "sysop": false,
+            "teacher": false,
+            "updatedAt": "2018-03-26T00:00:00.000Z",
+            "username": "tiraopiskelija1",
+          },
+          "codeReviews": Array [
+            Object {
+              "points": 2,
+              "repoToReview": null,
+              "reviewNumber": 1,
+              "toReview": Object {
+                "github": "http://github.com/tiralabra2",
+                "projectName": "Tiran toinen labraprojekti",
+              },
+            },
+            Object {
+              "points": 1,
+              "repoToReview": null,
+              "reviewNumber": 2,
+              "toReview": Object {
+                "github": "http://github.com/superprojekti",
+                "projectName": "Tira super projekti",
+              },
+            },
+            Object {
+              "points": null,
+              "repoToReview": "https://github.com/userName/arbitraryRepo",
+              "reviewNumber": 3,
+              "toReview": Object {
+                "github": null,
+                "projectName": null,
+              },
+            },
+          ],
+          "courseInstanceId": 10011,
+          "createdAt": "2018-03-26T00:00:00.000Z",
+          "github": "http://github.com/tiralabra1",
+          "id": 10011,
+          "projectName": "Tiran labraprojekti",
+          "teacherInstanceId": 10011,
+          "updatedAt": "2018-03-26T00:00:00.000Z",
+          "userId": 10011,
+          "weeks": Array [],
+        }
       }
-    }
-    styled={true}
-  >
-    <AccordionTitle
-      active={true}
-      index="total"
-    >
-      <Icon
-        as="i"
-        name="check"
-      />
-      <strong>
-         Total Points: 
-      </strong>
-      3
-    </AccordionTitle>
-  </Accordion>
+    />
+  </div>
 </div>
 `;
 
@@ -395,6 +224,32 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
       courseInstance={
         Object {
           "data": Array [
+            Object {
+              "Tags": Array [],
+              "User": Object {
+                "createdAt": "2018-03-26T00:00:00.000Z",
+                "email": "maarit.opiskelija@helsinki.invalid",
+                "firsts": "Maarit Mirja",
+                "id": 10011,
+                "lastname": "Opiskelija",
+                "studentNumber": "014578343",
+                "sysop": false,
+                "teacher": false,
+                "updatedAt": "2018-03-26T00:00:00.000Z",
+                "username": "tiraopiskelija1",
+              },
+              "codeReviews": Array [],
+              "courseInstanceId": 10011,
+              "createdAt": "2018-03-26T00:00:00.000Z",
+              "dropped": false,
+              "github": "http://github.com/tiralabra1",
+              "id": 10011,
+              "projectName": "Tiran labraprojekti",
+              "teacherInstanceId": 10011,
+              "updatedAt": "2018-03-26T00:00:00.000Z",
+              "userId": 10011,
+              "weeks": Array [],
+            },
             Object {
               "Tags": Array [
                 Object {
@@ -425,32 +280,6 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
               "teacherInstanceId": 10011,
               "updatedAt": "2018-03-26T00:00:00.000Z",
               "userId": 10012,
-              "weeks": Array [],
-            },
-            Object {
-              "Tags": Array [],
-              "User": Object {
-                "createdAt": "2018-03-26T00:00:00.000Z",
-                "email": "maarit.opiskelija@helsinki.invalid",
-                "firsts": "Maarit Mirja",
-                "id": 10011,
-                "lastname": "Opiskelija",
-                "studentNumber": "014578343",
-                "sysop": false,
-                "teacher": false,
-                "updatedAt": "2018-03-26T00:00:00.000Z",
-                "username": "tiraopiskelija1",
-              },
-              "codeReviews": Array [],
-              "courseInstanceId": 10011,
-              "createdAt": "2018-03-26T00:00:00.000Z",
-              "dropped": false,
-              "github": "http://github.com/tiralabra1",
-              "id": 10011,
-              "projectName": "Tiran labraprojekti",
-              "teacherInstanceId": 10011,
-              "updatedAt": "2018-03-26T00:00:00.000Z",
-              "userId": 10011,
               "weeks": Array [],
             },
             Object {
@@ -644,6 +473,32 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
         Object {
           "data": Array [
             Object {
+              "Tags": Array [],
+              "User": Object {
+                "createdAt": "2018-03-26T00:00:00.000Z",
+                "email": "maarit.opiskelija@helsinki.invalid",
+                "firsts": "Maarit Mirja",
+                "id": 10011,
+                "lastname": "Opiskelija",
+                "studentNumber": "014578343",
+                "sysop": false,
+                "teacher": false,
+                "updatedAt": "2018-03-26T00:00:00.000Z",
+                "username": "tiraopiskelija1",
+              },
+              "codeReviews": Array [],
+              "courseInstanceId": 10011,
+              "createdAt": "2018-03-26T00:00:00.000Z",
+              "dropped": false,
+              "github": "http://github.com/tiralabra1",
+              "id": 10011,
+              "projectName": "Tiran labraprojekti",
+              "teacherInstanceId": 10011,
+              "updatedAt": "2018-03-26T00:00:00.000Z",
+              "userId": 10011,
+              "weeks": Array [],
+            },
+            Object {
               "Tags": Array [
                 Object {
                   "color": "red",
@@ -673,32 +528,6 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
               "teacherInstanceId": 10011,
               "updatedAt": "2018-03-26T00:00:00.000Z",
               "userId": 10012,
-              "weeks": Array [],
-            },
-            Object {
-              "Tags": Array [],
-              "User": Object {
-                "createdAt": "2018-03-26T00:00:00.000Z",
-                "email": "maarit.opiskelija@helsinki.invalid",
-                "firsts": "Maarit Mirja",
-                "id": 10011,
-                "lastname": "Opiskelija",
-                "studentNumber": "014578343",
-                "sysop": false,
-                "teacher": false,
-                "updatedAt": "2018-03-26T00:00:00.000Z",
-                "username": "tiraopiskelija1",
-              },
-              "codeReviews": Array [],
-              "courseInstanceId": 10011,
-              "createdAt": "2018-03-26T00:00:00.000Z",
-              "dropped": false,
-              "github": "http://github.com/tiralabra1",
-              "id": 10011,
-              "projectName": "Tiran labraprojekti",
-              "teacherInstanceId": 10011,
-              "updatedAt": "2018-03-26T00:00:00.000Z",
-              "userId": 10011,
               "weeks": Array [],
             },
             Object {
@@ -745,6 +574,32 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
       studentInstances={
         Array [
           Object {
+            "Tags": Array [],
+            "User": Object {
+              "createdAt": "2018-03-26T00:00:00.000Z",
+              "email": "maarit.opiskelija@helsinki.invalid",
+              "firsts": "Maarit Mirja",
+              "id": 10011,
+              "lastname": "Opiskelija",
+              "studentNumber": "014578343",
+              "sysop": false,
+              "teacher": false,
+              "updatedAt": "2018-03-26T00:00:00.000Z",
+              "username": "tiraopiskelija1",
+            },
+            "codeReviews": Array [],
+            "courseInstanceId": 10011,
+            "createdAt": "2018-03-26T00:00:00.000Z",
+            "dropped": false,
+            "github": "http://github.com/tiralabra1",
+            "id": 10011,
+            "projectName": "Tiran labraprojekti",
+            "teacherInstanceId": 10011,
+            "updatedAt": "2018-03-26T00:00:00.000Z",
+            "userId": 10011,
+            "weeks": Array [],
+          },
+          Object {
             "Tags": Array [
               Object {
                 "color": "red",
@@ -774,32 +629,6 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             "teacherInstanceId": 10011,
             "updatedAt": "2018-03-26T00:00:00.000Z",
             "userId": 10012,
-            "weeks": Array [],
-          },
-          Object {
-            "Tags": Array [],
-            "User": Object {
-              "createdAt": "2018-03-26T00:00:00.000Z",
-              "email": "maarit.opiskelija@helsinki.invalid",
-              "firsts": "Maarit Mirja",
-              "id": 10011,
-              "lastname": "Opiskelija",
-              "studentNumber": "014578343",
-              "sysop": false,
-              "teacher": false,
-              "updatedAt": "2018-03-26T00:00:00.000Z",
-              "username": "tiraopiskelija1",
-            },
-            "codeReviews": Array [],
-            "courseInstanceId": 10011,
-            "createdAt": "2018-03-26T00:00:00.000Z",
-            "dropped": false,
-            "github": "http://github.com/tiralabra1",
-            "id": 10011,
-            "projectName": "Tiran labraprojekti",
-            "teacherInstanceId": 10011,
-            "updatedAt": "2018-03-26T00:00:00.000Z",
-            "userId": 10011,
             "weeks": Array [],
           },
           Object {
@@ -940,7 +769,6 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
     <Accordion>
       <AccordionTitle
         active={false}
-        fluid={true}
         index={0}
         onClick={[Function]}
         style={

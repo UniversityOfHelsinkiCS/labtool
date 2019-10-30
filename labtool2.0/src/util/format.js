@@ -39,7 +39,7 @@ const getPeriod = startDate => {
     return 'P.II'
   } else if (month === 1 || month === 2) {
     return 'P.III'
-  } else if (month === 3 || month == 4) {
+  } else if (month === 3 || month === 4) {
     return 'P.IV'
   } else if (month === 5) {
     return 'early Summer'

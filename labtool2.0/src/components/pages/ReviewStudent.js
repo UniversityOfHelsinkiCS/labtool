@@ -168,206 +168,206 @@ export const ReviewStudent = props => {
     pstate.clear()
     return <Redirect to={`/labtool/courses/${props.selectedInstance.ohid}`} />
   }
-  if (Array.isArray(props.weekReview.data)) {
-    // props.ownProps.studentInstance is a string, therefore casting to number.
-    const studentData = props.weekReview.data.find(dataArray => dataArray.id === Number(props.ownProps.studentInstance))
-    // do we have a draft?
-    const loadedFromDraft = !!props.weekReview.draftCreatedAt
-    // props.weekNumber is a string, therefore casting to number.
-    const weekData = loadedFromDraft ? props.weekReview.draftData : studentData.weeks.find(theWeek => theWeek.weekNumber === Number(props.ownProps.weekNumber))
-    const previousWeekData = studentData.weeks.find(week => week.weekNumber === Number(props.ownProps.weekNumber) - 1)
-    const checks = props.weekReview.checks !== null ? props.weekReview.checks : weekData ? weekData.checks || {} : {}
-    const weekPoints = studentData.weeks
-      .filter(week => week.weekNumber < props.weekNumber)
-      .map(week => week.points)
-      .reduce((a, b) => {
-        return a + b
-      }, 0)
-    const codeReviewPoints = studentData.codeReviews
-      .map(review => review.points)
-      .reduce((a, b) => {
-        return a + b
-      }, 0)
-    const checkList = props.selectedInstance.checklists.find(checkl => checkl.week === Number(props.ownProps.weekNumber))
-    let checklistOutput = ''
-    let checklistPoints = 0
-    if (checkList) {
-      Object.keys(checkList.list).forEach(cl => {
-        checkList.list[cl].forEach(row => {
-          const checked = isChecked(checks, row.name)
-          const addition = checked ? row.textWhenOn : row.textWhenOff
-          if (addition) checklistOutput += addition + '\n\n'
-
-          if (checked) {
-            checklistPoints += row.checkedPoints
-          } else {
-            checklistPoints += row.uncheckedPoints
-          }
-        })
-      })
-      if (checklistPoints < 0) {
-        checklistPoints = 0
-      } else if (checklistPoints > props.selectedInstance.weekMaxPoints) {
-        checklistPoints = props.selectedInstance.weekMaxPoints
-      }
-    }
-
-    if (!loadedWeekData) {
-      if (weekData) {
-        if (pstate.checks) {
-          props.restoreChecks(props.ownProps.studentInstance, props.ownProps.weekNumber, pstate.checks)
-        }
-
-        pstate.points = pstate.points || weekData.points
-        pstate.feedback = pstate.feedback || weekData.feedback
-        pstate.instructorNotes = pstate.instructorNotes || weekData.instructorNotes
-        setLoadedWeekData(true)
-      }
-    }
-
-    return (
-      <div className="ReviewStudent" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
-        <h2> {props.selectedInstance.name}</h2>
-        <h3>
-          {' '}
-          {studentData.User.firsts} {studentData.User.lastname}{' '}
-          <div style={{ display: 'inline-block', padding: '0px 0px 0px 25px' }}>
-            {studentData.projectName}: <RepoLink url={studentData.github} />
-          </div>
-          {studentData.Tags.map(tag => (
-            <div key={tag.id}>
-              <Button compact floated="right" className={`mini ui ${tag.color} button`}>
-                {tag.name}
-              </Button>
-            </div>
-          ))}
-        </h3>
-        {isFinalReview(props) ? <h3>Final Review</h3> : <h3>Week {props.weekNumber}</h3>}
-        <Grid>
-          <Grid.Row columns={2}>
-            <Grid.Column>
-              {isFinalReview(props) ? (
-                <div align="left">
-                  <h3>Points before final review: {weekPoints + codeReviewPoints} </h3>
-                  Week points: {weekPoints} <br />
-                  Code review points: {codeReviewPoints}
-                </div>
-              ) : (
-                <div align="left">
-                  <h3>Points from previous weeks: {weekPoints + codeReviewPoints} </h3>
-                  Week points: {weekPoints} <br />
-                  Code review points: {codeReviewPoints}
-                </div>
-              )}
-              <PreviousWeekDetails weekData={previousWeekData} />
-              {isFinalReview(props) ? <h2>Final Review Points</h2> : <h2>Review</h2>}
-              {loadedFromDraft && (
-                <div>
-                  <p>
-                    <em>Loaded from draft saved at {trimDate(props.weekReview.draftCreatedAt)}</em>
-                  </p>
-                  <br />
-                </div>
-              )}
-              <Form onSubmit={handleSubmit}>
-                <Form.Group inline unstackable>
-                  <Form.Field>
-                    <label className="showMaxPoints">Points 0-{getMaximumPoints()}</label>
-
-                    <Input name="points" value={pstate.points} onChange={(e, { value }) => (pstate.points = value)} type="number" step="0.01" style={{ width: '150px', align: 'center' }} />
-                  </Form.Field>
-                </Form.Group>
-                <h4>Feedback</h4>
-                <Form.Group inline unstackable style={{ textAlignVertical: 'top' }}>
-                  <div style={{ width: '100%' }}>
-                    <FormMarkdownTextArea value={pstate.feedback} onChange={(e, { value }) => (pstate.feedback = value)} name="comment" style={{ width: '500px', height: '250px' }} />
-                  </div>
-                </Form.Group>
-                <h4>Review notes</h4>
-                <p>
-                  <em>Only shown to instructors on this course</em>
-                </p>
-                <Form.Group inline unstackable style={{ textAlignVertical: 'top' }}>
-                  <div style={{ width: '100%' }}>
-                    <FormMarkdownTextArea
-                      value={pstate.instructorNotes}
-                      onChange={(e, { value }) => (pstate.instructorNotes = value)}
-                      name="instructorNotes"
-                      style={{ width: '500px', height: '150px' }}
-                    />
-                  </div>
-                </Form.Group>
-                <Form.Field>
-                  <Button className="ui center floated green button" type="submit">
-                    Save
-                  </Button>
-                  <Button className="ui center floated button" type="button" onClick={onClickSaveDraft}>
-                    Save as draft
-                  </Button>
-                  <Link to={`/labtool/browsereviews/${props.selectedInstance.ohid}/${studentData.id}`} type="Cancel">
-                    <Button className="ui center floated button" type="cancel" onClick={pstate.clear}>
-                      Cancel
-                    </Button>
-                  </Link>
-                </Form.Field>
-              </Form>
-            </Grid.Column>
-            {checkList && checks !== undefined ? (
-              <Grid.Column>
-                <h2>Checklist</h2>
-                {checkList ? (
-                  <div className="checklist">
-                    {Object.keys(checkList.list).map(cl => (
-                      <Card className="checklistCard" fluid color="red" key={cl}>
-                        <Card.Content header={cl} />
-                        {checkList.list[cl].map(row => (
-                          <Card.Content className="checklistCardRow" key={row.name} onClick={toggleCheckbox(row.name, props.ownProps.studentInstance, props.ownProps.weekNumber)}>
-                            <Form.Field>
-                              <Grid>
-                                <Grid.Row style={{ cursor: 'pointer', userSelect: 'none' }}>
-                                  <Grid.Column width={3}>
-                                    <Icon
-                                      size="large"
-                                      name={isChecked(checks, row.name) ? 'circle check outline' : 'circle outline'}
-                                      style={{ color: isChecked(checks, row.name) ? 'green' : 'black' }}
-                                    />
-                                  </Grid.Column>
-                                  <Grid.Column width={10}>
-                                    <span style={{ flexGrow: 1, textAlign: 'center' }}>{row.name}</span>
-                                  </Grid.Column>
-                                  <Grid.Column width={3}>
-                                    <span>{`${row.checkedPoints} p / ${row.uncheckedPoints} p`}</span>
-                                  </Grid.Column>
-                                </Grid.Row>
-                              </Grid>
-                            </Form.Field>
-                          </Card.Content>
-                        ))}
-                      </Card>
-                    ))}
-                    <div>
-                      <Form className="checklistOutput" onSubmit={copyChecklistOutput}>
-                        <Form.TextArea className="checklistOutputText" name="text" value={checklistOutput} style={{ width: '100%', height: '250px' }} />
-                        <p className="checklistOutputPoints">points: {checklistPoints.toFixed(2)}</p>
-                        <input type="hidden" name="points" value={checklistPoints} />
-                        <Button type="submit">Copy to review fields</Button>
-                      </Form>
-                    </div>
-                  </div>
-                ) : (
-                  <p>There is no checklist for this week.</p>
-                )}
-              </Grid.Column>
-            ) : (
-              <div />
-            )}
-          </Grid.Row>
-        </Grid>
-      </div>
-    )
-  } else {
+  if (!Array.isArray(props.weekReview.data)) {
     return <Loader active />
   }
+
+  // props.ownProps.studentInstance is a string, therefore casting to number.
+  const studentData = props.weekReview.data.find(dataArray => dataArray.id === Number(props.ownProps.studentInstance))
+  // do we have a draft?
+  const loadedFromDraft = !!props.weekReview.draftCreatedAt
+  // props.weekNumber is a string, therefore casting to number.
+  const weekData = loadedFromDraft ? props.weekReview.draftData : studentData.weeks.find(theWeek => theWeek.weekNumber === Number(props.ownProps.weekNumber))
+  const previousWeekData = studentData.weeks.find(week => week.weekNumber === Number(props.ownProps.weekNumber) - 1)
+  const checks = props.weekReview.checks !== null ? props.weekReview.checks : weekData ? weekData.checks || {} : {}
+  const weekPoints = studentData.weeks
+    .filter(week => week.weekNumber < props.weekNumber)
+    .map(week => week.points)
+    .reduce((a, b) => {
+      return a + b
+    }, 0)
+  const codeReviewPoints = studentData.codeReviews
+    .map(review => review.points)
+    .reduce((a, b) => {
+      return a + b
+    }, 0)
+  const checkList = props.selectedInstance.checklists.find(checkl => checkl.week === Number(props.ownProps.weekNumber))
+  let checklistOutput = ''
+  let checklistPoints = 0
+  if (checkList) {
+    Object.keys(checkList.list).forEach(cl => {
+      checkList.list[cl].forEach(row => {
+        const checked = isChecked(checks, row.name)
+        const addition = checked ? row.textWhenOn : row.textWhenOff
+        if (addition) checklistOutput += addition + '\n\n'
+
+        if (checked) {
+          checklistPoints += row.checkedPoints
+        } else {
+          checklistPoints += row.uncheckedPoints
+        }
+      })
+    })
+    if (checklistPoints < 0) {
+      checklistPoints = 0
+    } else if (checklistPoints > props.selectedInstance.weekMaxPoints) {
+      checklistPoints = props.selectedInstance.weekMaxPoints
+    }
+  }
+
+  if (!loadedWeekData) {
+    if (weekData) {
+      if (pstate.checks) {
+        props.restoreChecks(props.ownProps.studentInstance, props.ownProps.weekNumber, pstate.checks)
+      }
+
+      pstate.points = pstate.points || weekData.points
+      pstate.feedback = pstate.feedback || weekData.feedback
+      pstate.instructorNotes = pstate.instructorNotes || weekData.instructorNotes
+      setLoadedWeekData(true)
+    }
+  }
+
+  return (
+    <div className="ReviewStudent" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
+      <h2> {props.selectedInstance.name}</h2>
+      <h3>
+        {' '}
+        {studentData.User.firsts} {studentData.User.lastname}{' '}
+        <div style={{ display: 'inline-block', padding: '0px 0px 0px 25px' }}>
+          {studentData.projectName}: <RepoLink url={studentData.github} />
+        </div>
+        {studentData.Tags.map(tag => (
+          <div key={tag.id}>
+            <Button compact floated="right" className={`mini ui ${tag.color} button`}>
+              {tag.name}
+            </Button>
+          </div>
+        ))}
+      </h3>
+      {isFinalReview(props) ? <h3>Final Review</h3> : <h3>Week {props.weekNumber}</h3>}
+      <Grid>
+        <Grid.Row columns={2}>
+          <Grid.Column>
+            {isFinalReview(props) ? (
+              <div align="left">
+                <h3>Points before final review: {weekPoints + codeReviewPoints} </h3>
+                Week points: {weekPoints} <br />
+                Code review points: {codeReviewPoints}
+              </div>
+            ) : (
+              <div align="left">
+                <h3>Points from previous weeks: {weekPoints + codeReviewPoints} </h3>
+                Week points: {weekPoints} <br />
+                Code review points: {codeReviewPoints}
+              </div>
+            )}
+            <PreviousWeekDetails weekData={previousWeekData} />
+            {isFinalReview(props) ? <h2>Final Review Points</h2> : <h2>Review</h2>}
+            {loadedFromDraft && (
+              <div>
+                <p>
+                  <em>Loaded from draft saved at {trimDate(props.weekReview.draftCreatedAt)}</em>
+                </p>
+                <br />
+              </div>
+            )}
+            <Form onSubmit={handleSubmit}>
+              <Form.Group inline unstackable>
+                <Form.Field>
+                  <label className="showMaxPoints">Points 0-{getMaximumPoints()}</label>
+
+                  <Input name="points" value={pstate.points} onChange={(e, { value }) => (pstate.points = value)} type="number" step="0.01" style={{ width: '150px', align: 'center' }} />
+                </Form.Field>
+              </Form.Group>
+              <h4>Feedback</h4>
+              <Form.Group inline unstackable style={{ textAlignVertical: 'top' }}>
+                <div style={{ width: '100%' }}>
+                  <FormMarkdownTextArea value={pstate.feedback} onChange={(e, { value }) => (pstate.feedback = value)} name="comment" style={{ width: '500px', height: '250px' }} />
+                </div>
+              </Form.Group>
+              <h4>Review notes</h4>
+              <p>
+                <em>Only shown to instructors on this course</em>
+              </p>
+              <Form.Group inline unstackable style={{ textAlignVertical: 'top' }}>
+                <div style={{ width: '100%' }}>
+                  <FormMarkdownTextArea
+                    value={pstate.instructorNotes}
+                    onChange={(e, { value }) => (pstate.instructorNotes = value)}
+                    name="instructorNotes"
+                    style={{ width: '500px', height: '150px' }}
+                  />
+                </div>
+              </Form.Group>
+              <Form.Field>
+                <Button className="ui center floated green button" type="submit">
+                  Save
+                </Button>
+                <Button className="ui center floated button" type="button" onClick={onClickSaveDraft}>
+                  Save as draft
+                </Button>
+                <Link to={`/labtool/browsereviews/${props.selectedInstance.ohid}/${studentData.id}`} type="Cancel">
+                  <Button className="ui center floated button" type="cancel" onClick={pstate.clear}>
+                    Cancel
+                  </Button>
+                </Link>
+              </Form.Field>
+            </Form>
+          </Grid.Column>
+          {checkList && checks !== undefined ? (
+            <Grid.Column>
+              <h2>Checklist</h2>
+              {checkList ? (
+                <div className="checklist">
+                  {Object.keys(checkList.list).map(cl => (
+                    <Card className="checklistCard" fluid color="red" key={cl}>
+                      <Card.Content header={cl} />
+                      {checkList.list[cl].map(row => (
+                        <Card.Content className="checklistCardRow" key={row.name} onClick={toggleCheckbox(row.name, props.ownProps.studentInstance, props.ownProps.weekNumber)}>
+                          <Form.Field>
+                            <Grid>
+                              <Grid.Row style={{ cursor: 'pointer', userSelect: 'none' }}>
+                                <Grid.Column width={3}>
+                                  <Icon
+                                    size="large"
+                                    name={isChecked(checks, row.name) ? 'circle check outline' : 'circle outline'}
+                                    style={{ color: isChecked(checks, row.name) ? 'green' : 'black' }}
+                                  />
+                                </Grid.Column>
+                                <Grid.Column width={10}>
+                                  <span style={{ flexGrow: 1, textAlign: 'center' }}>{row.name}</span>
+                                </Grid.Column>
+                                <Grid.Column width={3}>
+                                  <span>{`${row.checkedPoints} p / ${row.uncheckedPoints} p`}</span>
+                                </Grid.Column>
+                              </Grid.Row>
+                            </Grid>
+                          </Form.Field>
+                        </Card.Content>
+                      ))}
+                    </Card>
+                  ))}
+                  <div>
+                    <Form className="checklistOutput" onSubmit={copyChecklistOutput}>
+                      <Form.TextArea className="checklistOutputText" name="text" value={checklistOutput} style={{ width: '100%', height: '250px' }} />
+                      <p className="checklistOutputPoints">points: {checklistPoints.toFixed(2)}</p>
+                      <input type="hidden" name="points" value={checklistPoints} />
+                      <Button type="submit">Copy to review fields</Button>
+                    </Form>
+                  </div>
+                </div>
+              ) : (
+                <p>There is no checklist for this week.</p>
+              )}
+            </Grid.Column>
+          ) : (
+            <div />
+          )}
+        </Grid.Row>
+      </Grid>
+    </div>
+  )
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -396,6 +396,8 @@ const mapDispatchToProps = {
 }
 
 ReviewStudent.propTypes = {
+  ownProps: PropTypes.object.isRequired,
+
   courseId: PropTypes.string.isRequired,
   studentInstance: PropTypes.string.isRequired,
   weekNumber: PropTypes.string.isRequired,

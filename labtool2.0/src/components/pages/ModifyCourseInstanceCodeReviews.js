@@ -95,7 +95,7 @@ export const ModifyCourseInstanceReview = props => {
         if (
           props.courseData.data
             .find(student => student.id === id)
-            .codeReviews.filter(cr => (cr.reviewNumber < reviewRound === 'create' ? props.selectedInstance.amountOfCodeReviews + 1 : reviewRound))
+            .codeReviews.filter(cr => cr.reviewNumber < (reviewRound === 'create' ? props.selectedInstance.amountOfCodeReviews + 1 : reviewRound))
             .map(cr => cr.repoToReview)
             .includes(value)
         ) {
@@ -198,16 +198,13 @@ export const ModifyCourseInstanceReview = props => {
 
   const showVisibilityReminder = () => {
     if (!props.selectedInstance.currentCodeReview || !props.codeReviewLogic.selectedDropdown) {
-      if (Object.keys(props.dropdownCodeReviews).length === 0) {
-        return (
-          <Message className="visibilityReminder" info>
-            <span>Please create a new round of code review by clicking the New code review-button.</span>
-          </Message>
-        )
-      }
+      const message =
+        Object.keys(props.dropdownCodeReviews).length > 0
+          ? 'Please select a code review or create a new round of code review by clicking the New code review-button.'
+          : 'Please create a new round of code review by clicking the New code review-button.'
       return (
         <Message className="visibilityReminder" info>
-          <span>Please select a code review or create a new round of code review by clicking the New code review-button.</span>
+          <span>{message}</span>
         </Message>
       )
     }

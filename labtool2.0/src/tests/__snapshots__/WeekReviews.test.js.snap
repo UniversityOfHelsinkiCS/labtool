@@ -1,0 +1,219 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<WeekReviews /> as student WeekReviews Component should render correctly 1`] = `
+Array [
+  <Accordion
+    fluid={true}
+    id="reviewNaN"
+    key="codereviewNaN"
+    styled={true}
+  >
+     
+    <AccordionTitle
+      active={false}
+      className="codeReview"
+      index={NaN}
+      onClick={[Function]}
+    >
+      <Icon
+        as="i"
+        name="dropdown"
+      />
+       Code Review 
+      1
+       
+      , points 2
+    </AccordionTitle>
+    <AccordionContent
+      active={false}
+    >
+      <strong>
+        Points: 
+      </strong>
+       
+      2
+      <br />
+      <strong>
+        GitHub: 
+      </strong>
+      <a
+        href="http://github.com/tiralabra2"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        http://github.com/tiralabra2
+      </a>
+      <br />
+       
+      <br />
+      <div />
+      <p />
+    </AccordionContent>
+  </Accordion>,
+  <Accordion
+    fluid={true}
+    id="reviewNaN"
+    key="codereviewNaN"
+    styled={true}
+  >
+     
+    <AccordionTitle
+      active={false}
+      className="codeReview"
+      index={NaN}
+      onClick={[Function]}
+    >
+      <Icon
+        as="i"
+        name="dropdown"
+      />
+       Code Review 
+      2
+       
+      , points 1
+    </AccordionTitle>
+    <AccordionContent
+      active={false}
+    >
+      <strong>
+        Points: 
+      </strong>
+       
+      1
+      <br />
+      <strong>
+        GitHub: 
+      </strong>
+      <a
+        href="http://github.com/superprojekti"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        http://github.com/superprojekti
+      </a>
+      <br />
+       
+      <br />
+      <div />
+      <div>
+        <div>
+          <strong>
+            Link your review here:
+          </strong>
+           
+          <br />
+          <Form
+            as="form"
+            onSubmit={[Function]}
+          >
+            <FormGroup
+              inline={true}
+            >
+              <Input
+                className="form-control1"
+                icon="github"
+                iconPosition="left"
+                name="reviewLink"
+                placeholder="https://github.com/account/repo/issues/number"
+                required={true}
+                style={
+                  Object {
+                    "minWidth": "25em",
+                  }
+                }
+                type="text"
+              />
+            </FormGroup>
+            <FormGroup>
+              <Button
+                as="button"
+                color="blue"
+                compact={true}
+                style={
+                  Object {
+                    "marginLeft": "0.5em",
+                  }
+                }
+                type="submit"
+              >
+                Submit
+              </Button>
+            </FormGroup>
+          </Form>
+        </div>
+      </div>
+    </AccordionContent>
+  </Accordion>,
+  <Accordion
+    fluid={true}
+    id="reviewNaN"
+    key="codereviewNaN"
+    styled={true}
+  >
+     
+    <AccordionTitle
+      active={true}
+      className="codeReview"
+      index={NaN}
+      onClick={[Function]}
+    >
+      <Icon
+        as="i"
+        name="dropdown"
+      />
+       Code Review 
+      3
+       
+    </AccordionTitle>
+    <AccordionContent
+      active={true}
+    >
+      <strong>
+        Points: 
+      </strong>
+       
+      Not graded yet
+      <br />
+      <strong>
+        GitHub: 
+      </strong>
+      <a
+        href="https://github.com/userName/arbitraryRepo"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        https://github.com/userName/arbitraryRepo
+      </a>
+      <br />
+       
+      <br />
+      <div />
+      <p />
+    </AccordionContent>
+  </Accordion>,
+  <Accordion
+    fluid={true}
+    key="total"
+    style={
+      Object {
+        "marginBottom": "2em",
+      }
+    }
+    styled={true}
+  >
+    <AccordionTitle
+      active={true}
+      index="total"
+    >
+      <Icon
+        as="i"
+        name="check"
+      />
+      <strong>
+         Total Points: 
+      </strong>
+      3
+    </AccordionTitle>
+  </Accordion>,
+]
+`;

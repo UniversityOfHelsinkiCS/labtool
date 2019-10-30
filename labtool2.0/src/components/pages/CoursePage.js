@@ -1,24 +1,19 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { Accordion, Button, Table, Card, Input, Form, Comment, Header, Label, Message, Icon, Popup, Loader, Dropdown, Grid } from 'semantic-ui-react'
+import { Accordion, Button, Table, Card, Header, Label, Message, Icon, Popup, Loader, Dropdown, Grid } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { createOneComment } from '../../services/comment'
 import { getOneCI, coursePageInformation, modifyOneCI } from '../../services/courseInstance'
-import ReactMarkdown from 'react-markdown'
 import { getAllTags, tagStudent, unTagStudent } from '../../services/tags'
 import { associateTeacherToStudent } from '../../services/assistant'
-import { addLinkToCodeReview } from '../../services/codeReview'
-import { sendEmail } from '../../services/email'
-import { coursePageReset, updateActiveIndex, toggleCodeReview, selectTag, selectTeacher } from '../../reducers/coursePageLogicReducer'
+import { coursePageReset, selectTag, selectTeacher } from '../../reducers/coursePageLogicReducer'
 import { changeCourseField } from '../../reducers/selectedInstanceReducer'
 import { updateStudentProjectInfo } from '../../services/studentinstances'
 import { resetLoading } from '../../reducers/loadingReducer'
 import { usePersistedState } from '../../hooks/persistedState'
 
-import LabtoolComment from '../LabtoolComment'
-import LabtoolAddComment from '../LabtoolAddComment'
 import StudentTable from '../StudentTable'
+import WeekReviews from '../WeekReviews'
 import { createDropdownTeachers, createDropdownTags } from '../../util/dropdown'
 import { formatCourseName } from '../../util/format'
 
@@ -54,59 +49,10 @@ export const CoursePage = props => {
     }
   }, [])
 
-  const sortArrayAscendingByDate = theArray => {
-    return theArray.sort((a, b) => {
-      return new Date(a.createdAt) - new Date(b.createdAt)
-    })
-  }
+  const sortStudentArrayAlphabeticallyByDroppedValue = theArray =>
+    theArray.sort((a, b) => Number(a.dropped) - Number(b.dropped) || a.User.lastname.localeCompare(b.User.lastname) || a.User.firsts.localeCompare(b.User.firsts) || a.id - b.id)
 
-  const sortStudentArrayAlphabeticallyByDroppedValue = theArray => {
-    return theArray.sort((a, b) => {
-      if (a.dropped !== b.dropped) {
-        return Number(a.dropped) - Number(b.dropped)
-      } else {
-        return a.lastname > b.lastname ? 1 : -1
-      }
-    })
-  }
-
-  const handleClick = (e, titleProps) => {
-    const { index } = titleProps
-    const theNewIndex = props.coursePageLogic.activeIndex === index ? -1 : index
-    props.updateActiveIndex(theNewIndex)
-  }
-
-  const handleSubmit = async e => {
-    e.preventDefault()
-    const content = {
-      hidden: false,
-      comment: e.target.content.value,
-      week: parseInt(e.target.name, 10),
-      from: props.user.user.username
-    }
-    document.getElementById(e.target.name).reset()
-    try {
-      await props.createOneComment(content)
-      document.getElementById('comment').reset()
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  const handleAddingIssueLink = (reviewNumber, studentInstance) => async e => {
-    e.preventDefault()
-    const data = {
-      reviewNumber,
-      studentInstanceId: studentInstance,
-      linkToReview: e.target.reviewLink.value
-    }
-    e.target.reviewLink.value = ''
-    props.addLinkToCodeReview(data)
-  }
-
-  const droppedTagExists = () => {
-    return props.tags.tags && props.tags.tags.map(tag => tag.name.toUpperCase()).includes('DROPPED')
-  }
+  const droppedTagExists = () => props.tags.tags && props.tags.tags.find(tag => tag.name.toUpperCase() === 'DROPPED')
 
   const hasDroppedTag = studentTagsData => {
     let studentInstanceTagNames = studentTagsData.map(tag => tag.name.toUpperCase())
@@ -135,13 +81,6 @@ export const CoursePage = props => {
       ohid: props.selectedInstance.ohid,
       userId: id,
       dropped: dropped
-    })
-  }
-
-  const sendEmail = commentId => async () => {
-    props.sendEmail({
-      commentId,
-      role: 'student'
     })
   }
 
@@ -227,203 +166,41 @@ export const CoursePage = props => {
     return <Loader active />
   }
 
-  const { courseId, user, courseData, coursePageLogic, courseInstance, selectedInstance, tags } = props
-
-  const renderComment = comment => {
-    /* This hack compares user's name to comment.from and hides the email notification button when they don't match. */
-    const userIsCommandSender = comment.from.includes(user.user.firsts) && comment.from.includes(user.user.lastname)
-
-    return <LabtoolComment key={comment.id} comment={comment} allowNotify={userIsCommandSender} sendCommentEmail={sendEmail(comment.id)} />
-  }
-
-  const getMaximumPoints = week => {
-    const checklist = props.selectedInstance.checklists.find(checkl => checkl.week === week)
-    if (checklist === undefined || checklist.maxPoints === 0 || checklist.maxPoints === null) {
-      return selectedInstance.weekMaxPoints
-    }
-    return checklist.maxPoints
-  }
-
-  const createStudentGradedWeek = (i, week) => (
-    <Accordion key={i} fluid styled>
-      <Accordion.Title active={i === coursePageLogic.activeIndex} index={i} onClick={handleClick}>
-        <Icon name="dropdown" />
-        {i + 1 > selectedInstance.weekAmount ? <span>Final Review</span> : <span>Week {week.weekNumber}</span>}, points {week.points} / {getMaximumPoints(week.weekNumber)}
-      </Accordion.Title>
-      <Accordion.Content active={i === coursePageLogic.activeIndex}>
-        <Card fluid color="yellow">
-          <Card.Content>
-            <h4>
-              {' '}
-              Points {week.points} / {getMaximumPoints(week.weekNumber)}
-            </h4>
-            <h4> Feedback </h4>
-            <ReactMarkdown>{week.feedback}</ReactMarkdown>{' '}
-          </Card.Content>
-        </Card>
-        <h4> Comments </h4>
-        <Comment.Group>{week ? sortArrayAscendingByDate(week.comments).map(renderComment) : <h4> No comments </h4>}</Comment.Group>
-        <LabtoolAddComment weekId={week.id} commentFieldId={`${courseId}:${week.id}`} handleSubmit={handleSubmit} />
-      </Accordion.Content>
-    </Accordion>
-  )
-
-  const createStudentUngradedWeek = i => (
-    <Accordion key={i} fluid styled>
-      <Accordion.Title active={coursePageLogic.activeIndex === i} index={i} onClick={handleClick}>
-        <Icon name="dropdown" /> {i + 1 > selectedInstance.weekAmount ? <span>Final Review</span> : <span>Week {i + 1}</span>}
-      </Accordion.Title>
-      <Accordion.Content active={coursePageLogic.activeIndex === i}>
-        <h4> Not Graded </h4>
-        <h4> No comments </h4>
-      </Accordion.Content>
-    </Accordion>
-  )
-
-  const createStudentCodeReview = (i, cr) => (
-    <Accordion key={i} fluid styled>
-      <Accordion.Title className="codeReview" active={coursePageLogic.activeIndex === i || cr.points === null} index={i} onClick={handleClick}>
-        <Icon name="dropdown" /> Code Review {cr.reviewNumber} {cr.points !== null ? ', points ' + cr.points : ''}
-      </Accordion.Title>
-      <Accordion.Content active={coursePageLogic.activeIndex === i || cr.points === null}>
-        <div className="codeReviewExpanded">
-          <div className="codeReviewPoints">
-            <strong>Points: </strong> {cr.points !== null ? cr.points : 'Not graded yet'}
-            {/* <br /> <br /> */}
-            {/* <strong>Project to review: </strong>
-            {cr.toReview.projectName || } */}
-            <br />
-            <strong>GitHub: </strong>
-            <a href={cr.toReview.github || cr.repoToReview} target="_blank" rel="noopener noreferrer">
-              {cr.toReview.github || cr.repoToReview}
-            </a>
-            <br /> <br />
-            {cr.linkToReview ? (
-              <div>
-                <strong>Your review: </strong>
-                <a href={cr.linkToReview} target="_blank" rel="noopener noreferrer">
-                  {cr.linkToReview}
-                </a>
-              </div>
-            ) : (
-              <div />
-            )}
-          </div>
-
-          {coursePageLogic.showCodeReviews.indexOf(cr.reviewNumber) !== -1 ? (
-            <div>
-              {cr.linkToReview ? (
-                <div />
-              ) : (
-                <div>
-                  <strong>Link your review here:</strong> <br />
-                  <Form onSubmit={handleAddingIssueLink(cr.reviewNumber, courseData.data.id)}>
-                    <Form.Group inline>
-                      <Input
-                        type="text"
-                        name="reviewLink"
-                        icon="github"
-                        required={true}
-                        iconPosition="left"
-                        style={{ minWidth: '25em' }}
-                        placeholder="https://github.com/account/repo/issues/number"
-                        className="form-control1"
-                      />
-                    </Form.Group>
-                    <Form.Group>
-                      <Button compact type="submit" color="blue" style={{ marginLeft: '0.5em' }}>
-                        Submit
-                      </Button>
-                    </Form.Group>
-                  </Form>
-                </div>
-              )}
-            </div>
-          ) : (
-            <p />
-          )}
-        </div>
-      </Accordion.Content>
-    </Accordion>
-  )
+  const { courseId, courseData, coursePageLogic, courseInstance, selectedInstance, tags } = props
 
   const renderStudentBottomPart = () => {
-    let headers = []
-    // studentInstance is id of student. Type: String
-    // Tämä pitää myös korjata.
-
-    // student's own details.
-    headers.push(
-      <div key="student info">
-        {courseData && courseData.data && courseData.data.User ? (
-          <Card key="card" fluid color="yellow">
-            <Card.Content>
-              <h2>
-                {courseData.data.User.firsts} {courseData.data.User.lastname}
-              </h2>
-              <h3> {courseData.data.projectName} </h3>
-              <h3>
-                <a href={courseData.data.github} target="_blank" rel="noopener noreferrer">
-                  {courseData.data.github}
-                </a>{' '}
-                <Link to={`/labtool/courseregistration/${selectedInstance.ohid}`}>
-                  <Button circular floated="right" size="large" icon={{ name: 'edit', color: 'orange', size: 'large' }} />
-                </Link>
-              </h3>
-            </Card.Content>
-          </Card>
-        ) : (
-          <div />
-        )}
-      </div>
-    )
-
-    // student's week and code reviews
-    if (selectedInstance && courseData && courseData.data && courseData.data.weeks) {
-      let i = 0
-      let week = null
-      const weekMatcher = i => week => week.weekNumber === i + 1
-
-      const howManyWeeks = selectedInstance.finalReview ? selectedInstance.weekAmount + 1 : selectedInstance.weekAmount
-      for (; i < howManyWeeks; i++) {
-        week = courseData.data.weeks.find(weekMatcher(i))
-        headers.push(week !== undefined ? createStudentGradedWeek(i, week) : createStudentUngradedWeek(i))
-      }
-
-      courseData.data.codeReviews
-        .sort((a, b) => {
-          return a.reviewNumber - b.reviewNumber
-        })
-        .forEach(cr => {
-          headers.push(createStudentCodeReview(i, cr))
-          i++
-        })
-
-      headers.push(
-        <Accordion key="total" fluid styled style={{ marginBottom: '2em' }}>
-          <Accordion.Title active={true} index="total">
-            <Icon name="check" />
-            <strong> Total Points: </strong>
-            {(
-              courseData.data.weeks
-                .map(week => week.points)
-                .reduce((a, b) => {
-                  return a + b
-                }, 0) +
-              courseData.data.codeReviews
-                .map(cr => cr.points)
-                .reduce((a, b) => {
-                  return a + b
-                }, 0)
-            )
-              .toFixed(2)
-              .replace(/[.,]00$/, '')}
-          </Accordion.Title>
-        </Accordion>
-      )
+    if (!(courseData && courseData.data)) {
+      return <div />
     }
 
-    return headers
+    return (
+      <div>
+        <div key="student info">
+          {courseData.data.User ? (
+            <Card key="card" fluid color="yellow">
+              <Card.Content>
+                <h2>
+                  {courseData.data.User.firsts} {courseData.data.User.lastname}
+                </h2>
+                <h3> {courseData.data.projectName} </h3>
+                <h3>
+                  <a href={courseData.data.github} target="_blank" rel="noopener noreferrer">
+                    {courseData.data.github}
+                  </a>{' '}
+                  <Link to={`/labtool/courseregistration/${selectedInstance.ohid}`}>
+                    <Button circular floated="right" size="large" icon={{ name: 'edit', color: 'orange', size: 'large' }} />
+                  </Link>
+                </h3>
+              </Card.Content>
+            </Card>
+          ) : (
+            <div />
+          )}
+        </div>
+
+        {courseData.data.weeks && <WeekReviews courseId={courseId} student={props.courseData.data} />}
+      </div>
+    )
   }
 
   // This function activates the course, leaving other data intact.
@@ -607,7 +384,7 @@ export const CoursePage = props => {
     return (
       <span className="TeacherBulkForm" style={{ position: 'fixed', bottom: 0, background: 'rgba(255,255,255,0.9)', textAlign: 'center', left: 0, right: 0 }}>
         <Accordion>
-          <Accordion.Title fluid style={{ background: '#f0f0f0' }} active={state.showMassAssignForm} index={0} onClick={() => (state.showMassAssignForm = !state.showMassAssignForm)}>
+          <Accordion.Title style={{ background: '#f0f0f0' }} active={state.showMassAssignForm} index={0} onClick={() => (state.showMassAssignForm = !state.showMassAssignForm)}>
             <Icon size="big" name={state.showMassAssignForm ? 'caret down' : 'caret up'} />
             <h4 style={{ display: 'inline' }}>Modify selected students</h4> ({numSelected > 0 ? <b>{numSelected} selected</b> : <span>{numSelected} selected</span>})
           </Accordion.Title>
@@ -739,16 +516,11 @@ CoursePage.propTypes = {
   tags: PropTypes.object.isRequired,
   loading: PropTypes.object.isRequired,
 
-  createOneComment: PropTypes.func.isRequired,
   getOneCI: PropTypes.func.isRequired,
   coursePageInformation: PropTypes.func.isRequired,
-  addLinkToCodeReview: PropTypes.func.isRequired,
   coursePageReset: PropTypes.func.isRequired,
-  toggleCodeReview: PropTypes.func.isRequired,
   getAllTags: PropTypes.func.isRequired,
   tagStudent: PropTypes.func.isRequired,
-  sendEmail: PropTypes.func.isRequired,
-  updateActiveIndex: PropTypes.func.isRequired,
   unTagStudent: PropTypes.func.isRequired,
   resetLoading: PropTypes.func.isRequired,
   updateStudentProjectInfo: PropTypes.func.isRequired,
@@ -775,16 +547,11 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 const mapDispatchToProps = {
-  createOneComment,
   getOneCI,
   coursePageInformation,
-  addLinkToCodeReview,
   coursePageReset,
-  toggleCodeReview,
   getAllTags,
   tagStudent,
-  sendEmail,
-  updateActiveIndex,
   unTagStudent,
   resetLoading,
   updateStudentProjectInfo,

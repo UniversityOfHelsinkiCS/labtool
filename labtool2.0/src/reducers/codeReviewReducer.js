@@ -94,7 +94,7 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
         currentSelections[i] = {}
 
         for (let j = 0; j < studentData.length; j++) {
-          const codeReview = studentData[j].codeReviews.find(cr => cr.reviewNumber === i)
+          const codeReview = studentData[j].codeReviews.find(cr => cr.reviewNumber === i) // eslint-disable-line no-loop-func
           if (codeReview) {
             currentSelections[i][studentData[j].id] = codeReview.toReview || codeReview.repoToReview
           }

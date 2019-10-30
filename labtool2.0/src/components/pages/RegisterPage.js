@@ -10,11 +10,15 @@ import { getOneCI } from '../../services/courseInstance'
 import useDebounce from '../../hooks/useDebounce'
 import useGithubRepo from '../../hooks/useGithubRepo'
 
-const GithubRepoWarning = ({ githubRepo }) => {
+const GitHubRepoWarning = ({ githubRepo }) => {
   if (!githubRepo) {
-    return <Message icon warning compact icon="warning sign" size="small" hidden={false} content="Your GitHub repository either is private or it does not exist" />
+    return <Message warning compact icon="warning sign" size="small" hidden={false} content="Your GitHub repository either is private or it does not exist" />
   }
   return null
+}
+
+GitHubRepoWarning.propTypes = {
+  githubRepo: PropTypes.object
 }
 
 /**
@@ -142,7 +146,7 @@ export const RegisterPage = props => {
               />
             </Form.Group>
 
-            {githubRepoError && <GithubRepoWarning githubRepo={githubRepo} />}
+            {githubRepoError && <GitHubRepoWarning githubRepo={githubRepo} />}
 
             <Form.Field>
               <button className="ui left floated blue button" type="submit">
