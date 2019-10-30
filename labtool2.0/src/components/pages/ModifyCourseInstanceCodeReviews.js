@@ -292,13 +292,13 @@ export const ModifyCourseInstanceReview = props => {
     const selectedCount = Object.keys(selected).length
     const issueCheckButton = (
       <Button compact onClick={() => bulkCheckIssuesEnabled(selected)} size="small" disabled={selectedCount < 1 || selectedCount > MAXIMUM_CHECK_COUNT} style={{ float: 'left' }}>
-        Check if issues enabled
+        Check if issues enabled (select max {MAXIMUM_CHECK_COUNT})
       </Button>
     )
 
     return (
       <Table.HeaderCell singleLine key="selectorFooter">
-        {selectedCount > MAXIMUM_CHECK_COUNT ? <Popup trigger={issueCheckButton} content={`You can only select a maximum of ${MAXIMUM_CHECK_COUNT} students to check`} hoverable /> : issueCheckButton}
+        {issueCheckButton}
       </Table.HeaderCell>
     )
   }
