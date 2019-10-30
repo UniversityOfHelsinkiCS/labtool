@@ -238,7 +238,7 @@ export const CoursePage = props => {
 
   const getMaximumPoints = week => {
     const checklist = props.selectedInstance.checklists.find(checkl => checkl.week === week)
-    if (checklist === undefined || checklist.maxPoints === 0) {
+    if (checklist === undefined || checklist.maxPoints === 0 || checklist.maxPoints === null) {
       return selectedInstance.weekMaxPoints
     }
     return checklist.maxPoints
