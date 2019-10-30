@@ -10,7 +10,7 @@ describe('selectedInstanceRedurer', () => {
       teacherInstances: [
         {
           id: 1004,
-          admin: 'true',
+          instructor: 'false',
           createdAt: '2018-01-16T21:00:00.000Z',
           updatedAt: '2018-01-16T21:00:00.000Z',
           userId: 10011,
@@ -22,7 +22,7 @@ describe('selectedInstanceRedurer', () => {
       type: 'TEACHER_CREATE_SUCCESS',
       response: {
         id: 1003,
-        admin: 'true',
+        instructor: 'false',
         createdAt: '2018-01-16T21:00:00.000Z',
         updatedAt: '2018-01-16T21:00:00.000Z',
         userId: 10010,

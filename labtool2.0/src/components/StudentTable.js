@@ -8,7 +8,6 @@ import { getAllTags, tagStudent, unTagStudent } from '../services/tags'
 import { associateTeacherToStudent } from '../services/assistant'
 import { showAssistantDropdown, showTagDropdown, selectTeacher, selectTag, selectStudent, unselectStudent, selectAllStudents, unselectAllStudents } from '../reducers/coursePageLogicReducer'
 import { createDropdownTeachers, createDropdownTags } from '../util/dropdown'
-import { createRepositoryLink } from '../util/format'
 import { usePersistedState } from '../hooks/persistedState'
 import RepoLink from './RepoLink'
 

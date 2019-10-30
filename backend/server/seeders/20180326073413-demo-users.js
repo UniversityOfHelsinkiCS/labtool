@@ -13,7 +13,8 @@ module.exports = {
         studentNumber: '014822548',
         createdAt: '2018-03-26',
         updatedAt: '2018-03-26',
-        admin: true
+        teacher: true,
+        sysop: true
       },
       {
         id: 10011,
@@ -24,7 +25,8 @@ module.exports = {
         studentNumber: '014578343',
         createdAt: '2018-03-26',
         updatedAt: '2018-03-26',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 10012,
@@ -35,7 +37,8 @@ module.exports = {
         studentNumber: '014553242',
         createdAt: '2018-03-26',
         updatedAt: '2018-03-26',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 10015,
@@ -46,7 +49,8 @@ module.exports = {
         studentNumber: '013245662',
         createdAt: '2018-03-26',
         updatedAt: '2018-03-26',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 10021,
@@ -57,7 +61,8 @@ module.exports = {
         studentNumber: '014893873',
         createdAt: '2018-03-26',
         updatedAt: '2018-03-26',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 10022,
@@ -68,7 +73,8 @@ module.exports = {
         studentNumber: '014872455',
         createdAt: '2018-03-26',
         updatedAt: '2018-03-26',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 10025,
@@ -79,7 +85,8 @@ module.exports = {
         studentNumber: '012441578',
         createdAt: '2018-03-26',
         updatedAt: '2018-03-26',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 10031,
@@ -90,7 +97,8 @@ module.exports = {
         studentNumber: '014666666',
         createdAt: '2018-03-26',
         updatedAt: '2018-03-26',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 10101,
@@ -101,7 +109,8 @@ module.exports = {
         studentNumber: '014666666',
         createdAt: '2018-03-26',
         updatedAt: '2018-03-26',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 10102,
@@ -112,7 +121,8 @@ module.exports = {
         studentNumber: '014666666',
         createdAt: '2018-03-26',
         updatedAt: '2018-03-26',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 10103,
@@ -123,7 +133,8 @@ module.exports = {
         studentNumber: '014666666',
         createdAt: '2018-03-26',
         updatedAt: '2018-03-26',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 10104,
@@ -134,7 +145,8 @@ module.exports = {
         studentNumber: '014666666',
         createdAt: '2018-03-26',
         updatedAt: '2018-03-26',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 10105,
@@ -145,7 +157,8 @@ module.exports = {
         studentNumber: '014666666',
         createdAt: '2018-03-26',
         updatedAt: '2018-03-26',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 10106,
@@ -156,7 +169,8 @@ module.exports = {
         studentNumber: '014666666',
         createdAt: '2018-03-26',
         updatedAt: '2018-03-26',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 10107,
@@ -167,7 +181,8 @@ module.exports = {
         studentNumber: '014666666',
         createdAt: '2018-03-26',
         updatedAt: '2018-03-26',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 10108,
@@ -178,7 +193,8 @@ module.exports = {
         studentNumber: '014666666',
         createdAt: '2018-03-26',
         updatedAt: '2018-03-26',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 10109,
@@ -189,7 +205,8 @@ module.exports = {
         studentNumber: '014666666',
         createdAt: '2018-03-26',
         updatedAt: '2018-03-26',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 10110,
@@ -200,7 +217,8 @@ module.exports = {
         studentNumber: '014666666',
         createdAt: '2018-03-26',
         updatedAt: '2018-03-26',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       // tästä alkavat otm random käyttäjät
       {
@@ -212,7 +230,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20002,
@@ -223,7 +242,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20003,
@@ -234,7 +254,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20004,
@@ -245,7 +266,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20005,
@@ -256,7 +278,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20006,
@@ -267,7 +290,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20007,
@@ -278,7 +302,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20008,
@@ -289,7 +314,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20009,
@@ -300,7 +326,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20010,
@@ -311,7 +338,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20011,
@@ -322,7 +350,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20012,
@@ -333,7 +362,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20013,
@@ -344,7 +374,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20014,
@@ -355,7 +386,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20015,
@@ -366,7 +398,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20016,
@@ -377,7 +410,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20017,
@@ -388,7 +422,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20018,
@@ -399,7 +434,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20019,
@@ -410,7 +446,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20020,
@@ -421,7 +458,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20021,
@@ -432,7 +470,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20022,
@@ -443,7 +482,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20023,
@@ -454,7 +494,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20024,
@@ -465,7 +506,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20025,
@@ -476,7 +518,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20026,
@@ -487,7 +530,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20027,
@@ -498,7 +542,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20028,
@@ -509,7 +554,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20029,
@@ -520,7 +566,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20030,
@@ -531,7 +578,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20031,
@@ -542,7 +590,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20032,
@@ -553,7 +602,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20033,
@@ -564,7 +614,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20034,
@@ -575,7 +626,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20035,
@@ -586,7 +638,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20036,
@@ -597,7 +650,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20037,
@@ -608,7 +662,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20038,
@@ -619,7 +674,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20039,
@@ -630,7 +686,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20040,
@@ -641,7 +698,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20041,
@@ -652,7 +710,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20042,
@@ -663,7 +722,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20043,
@@ -674,7 +734,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20044,
@@ -685,7 +746,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20045,
@@ -696,7 +758,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20046,
@@ -707,7 +770,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20047,
@@ -718,7 +782,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20048,
@@ -729,7 +794,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20049,
@@ -740,7 +806,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20050,
@@ -751,7 +818,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20051,
@@ -762,7 +830,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20052,
@@ -773,7 +842,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20053,
@@ -784,7 +854,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20054,
@@ -795,7 +866,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20055,
@@ -806,7 +878,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20056,
@@ -817,7 +890,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20057,
@@ -828,7 +902,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20058,
@@ -839,7 +914,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20059,
@@ -850,7 +926,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20060,
@@ -861,7 +938,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20061,
@@ -872,7 +950,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20062,
@@ -883,7 +962,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20063,
@@ -894,7 +974,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20064,
@@ -905,7 +986,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20065,
@@ -916,7 +998,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20066,
@@ -927,7 +1010,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20067,
@@ -938,7 +1022,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20068,
@@ -949,7 +1034,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20069,
@@ -960,7 +1046,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20070,
@@ -971,7 +1058,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20071,
@@ -982,7 +1070,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20072,
@@ -993,7 +1082,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20073,
@@ -1004,7 +1094,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20074,
@@ -1015,7 +1106,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20075,
@@ -1026,7 +1118,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20076,
@@ -1037,7 +1130,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20077,
@@ -1048,7 +1142,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20078,
@@ -1059,7 +1154,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20079,
@@ -1070,7 +1166,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20080,
@@ -1081,7 +1178,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20081,
@@ -1092,7 +1190,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20082,
@@ -1103,7 +1202,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20083,
@@ -1114,7 +1214,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20084,
@@ -1125,7 +1226,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20085,
@@ -1136,7 +1238,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20086,
@@ -1147,7 +1250,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20087,
@@ -1158,7 +1262,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20088,
@@ -1169,7 +1274,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20089,
@@ -1180,7 +1286,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20090,
@@ -1191,7 +1298,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20091,
@@ -1202,7 +1310,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20092,
@@ -1213,7 +1322,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20093,
@@ -1224,7 +1334,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20094,
@@ -1235,7 +1346,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20095,
@@ -1246,7 +1358,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20096,
@@ -1257,7 +1370,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20097,
@@ -1268,7 +1382,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20098,
@@ -1279,7 +1394,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20099,
@@ -1290,7 +1406,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20100,
@@ -1301,7 +1418,8 @@ module.exports = {
         studentNumber: '015492103',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20101,
@@ -1312,7 +1430,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20102,
@@ -1323,7 +1442,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20103,
@@ -1334,7 +1454,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20104,
@@ -1345,7 +1466,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20105,
@@ -1356,7 +1478,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20106,
@@ -1367,7 +1490,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20107,
@@ -1378,7 +1502,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20108,
@@ -1389,7 +1514,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20109,
@@ -1400,7 +1526,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20110,
@@ -1411,7 +1538,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20111,
@@ -1422,7 +1550,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20112,
@@ -1433,7 +1562,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20113,
@@ -1444,7 +1574,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20114,
@@ -1455,7 +1586,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20115,
@@ -1466,7 +1598,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20116,
@@ -1477,7 +1610,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20117,
@@ -1488,7 +1622,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20118,
@@ -1499,7 +1634,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20119,
@@ -1510,7 +1646,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20120,
@@ -1521,7 +1658,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20121,
@@ -1532,7 +1670,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20122,
@@ -1543,7 +1682,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20123,
@@ -1554,7 +1694,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20124,
@@ -1565,7 +1706,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20125,
@@ -1576,7 +1718,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20126,
@@ -1587,7 +1730,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20127,
@@ -1598,7 +1742,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20128,
@@ -1609,7 +1754,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20129,
@@ -1620,7 +1766,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20130,
@@ -1631,7 +1778,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20131,
@@ -1642,7 +1790,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20132,
@@ -1653,7 +1802,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20133,
@@ -1664,7 +1814,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20134,
@@ -1675,7 +1826,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20135,
@@ -1686,7 +1838,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20136,
@@ -1697,7 +1850,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20137,
@@ -1708,7 +1862,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20138,
@@ -1719,7 +1874,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20139,
@@ -1730,7 +1886,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20140,
@@ -1741,7 +1898,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20141,
@@ -1752,7 +1910,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20142,
@@ -1763,7 +1922,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20143,
@@ -1774,7 +1934,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20144,
@@ -1785,7 +1946,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20145,
@@ -1796,7 +1958,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20146,
@@ -1807,7 +1970,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20147,
@@ -1818,7 +1982,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20148,
@@ -1829,7 +1994,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20149,
@@ -1840,7 +2006,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20150,
@@ -1851,7 +2018,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20151,
@@ -1862,7 +2030,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20152,
@@ -1873,7 +2042,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20153,
@@ -1884,7 +2054,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20154,
@@ -1895,7 +2066,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20155,
@@ -1906,7 +2078,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20156,
@@ -1917,7 +2090,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20157,
@@ -1928,7 +2102,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20158,
@@ -1939,7 +2114,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20159,
@@ -1950,7 +2126,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20160,
@@ -1961,7 +2138,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20161,
@@ -1972,7 +2150,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20162,
@@ -1983,7 +2162,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20163,
@@ -1994,7 +2174,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20164,
@@ -2005,7 +2186,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20165,
@@ -2016,7 +2198,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20166,
@@ -2027,7 +2210,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20167,
@@ -2038,7 +2222,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20168,
@@ -2049,7 +2234,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20169,
@@ -2060,7 +2246,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20170,
@@ -2071,7 +2258,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20171,
@@ -2082,7 +2270,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20172,
@@ -2093,7 +2282,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20173,
@@ -2104,7 +2294,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20174,
@@ -2115,7 +2306,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20175,
@@ -2126,7 +2318,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20176,
@@ -2137,7 +2330,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20177,
@@ -2148,7 +2342,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20178,
@@ -2159,7 +2354,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20179,
@@ -2170,7 +2366,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20180,
@@ -2181,7 +2378,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20181,
@@ -2192,7 +2390,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20182,
@@ -2203,7 +2402,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20183,
@@ -2214,7 +2414,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20184,
@@ -2225,7 +2426,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20185,
@@ -2236,7 +2438,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20186,
@@ -2247,7 +2450,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20187,
@@ -2258,7 +2462,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20188,
@@ -2269,7 +2474,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20189,
@@ -2280,7 +2486,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20190,
@@ -2291,7 +2498,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20191,
@@ -2302,7 +2510,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20192,
@@ -2313,7 +2522,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20193,
@@ -2324,7 +2534,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20194,
@@ -2335,7 +2546,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20195,
@@ -2346,7 +2558,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20196,
@@ -2357,7 +2570,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20197,
@@ -2368,7 +2582,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20198,
@@ -2379,7 +2594,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20199,
@@ -2390,7 +2606,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       },
       {
         id: 20200,
@@ -2401,7 +2618,8 @@ module.exports = {
         studentNumber: '015689338',
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01',
-        admin: false
+        teacher: false,
+        sysop: false
       }
     ],
     {}

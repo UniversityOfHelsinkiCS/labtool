@@ -15,12 +15,12 @@ exports.formatCoursesForList = formatCoursesForList
  */
 async function hasPermissionToImport(userId) {
   const user = await User.findOne({
-    attributes: ['admin'],
+    attributes: ['sysop'],
     where: {
       id: userId
     }
   })
-  if (user && user.admin) {
+  if (user && user.sysop) {
     return true
   }
 

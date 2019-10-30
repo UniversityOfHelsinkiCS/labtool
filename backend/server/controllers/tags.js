@@ -59,7 +59,7 @@ module.exports = {
       const teacher = await TeacherInstance.findOne({
         where: {
           userId: req.decoded.id,
-          admin: true
+          instructor: false
         }
       })
       if (!teacher) {

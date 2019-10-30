@@ -87,7 +87,7 @@ describe('<ReviewStudent />', () => {
       teacherInstances: [
         {
           id: 10001,
-          admin: true,
+          instructor: false,
           createdAt: '2018-03-26T00:00:00.000Z',
           updatedAt: '2018-03-26T00:00:00.000Z',
           userId: 10010,
@@ -97,7 +97,7 @@ describe('<ReviewStudent />', () => {
         },
         {
           id: 10011,
-          admin: true,
+          instructor: true,
           createdAt: '2018-03-26T00:00:00.000Z',
           updatedAt: '2018-03-26T00:00:00.000Z',
           userId: 10015,
@@ -129,7 +129,8 @@ describe('<ReviewStudent />', () => {
             firsts: 'Johan Wilhelm',
             lastname: 'Studerande',
             studentNumber: '014553242',
-            admin: false,
+            teacher: false,
+            sysop: false,
             createdAt: '2018-03-26T00:00:00.000Z',
             updatedAt: '2018-03-26T00:00:00.000Z'
           }
@@ -152,7 +153,8 @@ describe('<ReviewStudent />', () => {
             firsts: 'Teräs',
             lastname: 'Henkilö',
             studentNumber: '014666666',
-            admin: false,
+            teacher: false,
+            sysop: false,
             createdAt: '2018-03-26T00:00:00.000Z',
             updatedAt: '2018-03-26T00:00:00.000Z'
           }
@@ -216,7 +218,8 @@ describe('<ReviewStudent />', () => {
             firsts: 'Maarit Mirja',
             lastname: 'Opiskelija',
             studentNumber: '014578343',
-            admin: false,
+            teacher: false,
+            sysop: false,
             createdAt: '2018-03-26T00:00:00.000Z',
             updatedAt: '2018-03-26T00:00:00.000Z'
           }
@@ -273,7 +276,8 @@ describe('<ReviewStudent />', () => {
             firsts: 'Teräs',
             lastname: 'Henkilö',
             studentNumber: '014666666',
-            admin: false
+            teacher: false,
+            sysop: false
           },
           Tags: [
             {
@@ -364,7 +368,8 @@ describe('<ReviewStudent />', () => {
             firsts: 'Maarit Mirja',
             lastname: 'Opiskelija',
             studentNumber: '014578343',
-            admin: false
+            teacher: false,
+            sysop: false
           },
           Tags: [
             {
@@ -438,7 +443,8 @@ describe('<ReviewStudent />', () => {
             firsts: 'Johan Wilhelm',
             lastname: 'Studerande',
             studentNumber: '014553242',
-            admin: false
+            teacher: false,
+            sysop: false
           },
           Tags: [
             {

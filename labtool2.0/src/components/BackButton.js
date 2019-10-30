@@ -29,6 +29,10 @@ const presets = {
     to: state => (state.selectedInstance.ohid ? `/labtool/ModifyCourseInstancePage/${state.selectedInstance.ohid}` : `/labtool/courses`),
     text: 'Back to course editing'
   },
+  sysopModifyCIPage: {
+    to: () => '/labtool/admin',
+    text: 'Back to admin interface'
+  },
   coursePage: {
     to: state => (state.selectedInstance.ohid ? `/labtool/courses/${state.selectedInstance.ohid}` : `/labtool/courses`),
     text: 'Back to course page'

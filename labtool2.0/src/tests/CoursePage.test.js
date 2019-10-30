@@ -18,7 +18,7 @@ describe('<CoursePage /> as teacher', () => {
     teacherInstances: [
       {
         id: 10001,
-        admin: true,
+        instructor: false,
         userId: 10010,
         courseInstanceId: 10011,
         firsts: 'Pää',
@@ -26,7 +26,7 @@ describe('<CoursePage /> as teacher', () => {
       },
       {
         id: 10011,
-        admin: true,
+        instructor: true,
         userId: 10015,
         courseInstanceId: 10011,
         firsts: 'Ossi Ohjaaja',
@@ -57,7 +57,8 @@ describe('<CoursePage /> as teacher', () => {
           firsts: 'Johan Wilhelm',
           lastname: 'Studerande',
           studentNumber: '014553242',
-          admin: false,
+          teacher: false,
+          sysop: false,
           createdAt: '2018-03-26T00:00:00.000Z',
           updatedAt: '2018-03-26T00:00:00.000Z'
         },
@@ -88,7 +89,8 @@ describe('<CoursePage /> as teacher', () => {
           firsts: 'Teräs',
           lastname: 'Henkilö',
           studentNumber: '014666666',
-          admin: false,
+          teacher: false,
+          sysop: false,
           createdAt: '2018-03-26T00:00:00.000Z',
           updatedAt: '2018-03-26T00:00:00.000Z'
         },
@@ -124,7 +126,8 @@ describe('<CoursePage /> as teacher', () => {
           firsts: 'Maarit Mirja',
           lastname: 'Opiskelija',
           studentNumber: '014578343',
-          admin: false,
+          teacher: false,
+          sysop: false,
           createdAt: '2018-03-26T00:00:00.000Z',
           updatedAt: '2018-03-26T00:00:00.000Z'
         },
@@ -358,7 +361,8 @@ describe('<CoursePage /> as student', () => {
         firsts: 'Maarit Mirja',
         lastname: 'Opiskelija',
         studentNumber: '014578343',
-        admin: false,
+        teacher: false,
+        sysop: false,
         createdAt: '2018-03-26T00:00:00.000Z',
         updatedAt: '2018-03-26T00:00:00.000Z'
       },
