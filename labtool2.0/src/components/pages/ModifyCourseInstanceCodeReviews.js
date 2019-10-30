@@ -17,6 +17,7 @@ import BackButton from '../BackButton'
 import ConfirmationModal from '../ConfirmationModal'
 import RevieweeDropdown from '../RevieweeDropdown'
 import RepoLink from '../RepoLink'
+import IssuesDisabledWarning from '../IssuesDisabledWarning'
 
 export const ModifyCourseInstanceReview = props => {
   const pstate = usePersistedState(`ModifyCourseInstanceCodeReviews_${props.courseId}`, {
@@ -224,6 +225,25 @@ export const ModifyCourseInstanceReview = props => {
     )
   }
 
+  const areIssuesDisabledForStudent = student => {
+    // TODO
+    return !!student
+  }
+
+  const disableIssuesDisabledWarning = student => {
+    if (window.confirm('Hide this warning? (Perhaps the issues are enabled now?)')) {
+      // TODO
+      window.alert(`Disabling warning for ${student.id}`)
+    }
+  }
+
+  const displayIssuesDisabledIcon = student => {
+    if (areIssuesDisabledForStudent(student)) {
+      return <IssuesDisabledWarning onClick={() => disableIssuesDisabledWarning(student)} />
+    }
+    return null
+  }
+
   const showCurrentReview = data => {
     if (!props.codeReviewLogic.selectedDropdown) {
       return null
@@ -396,6 +416,7 @@ export const ModifyCourseInstanceReview = props => {
               [makeCodeReviewSelectorHeader, makeCodeReviewSelectorCell, makeCodeReviewSelectorFooter],
               [makeCodeReviewCreatorHeader, makeCodeReviewCreatorCell, makeCodeReviewCreatorFooter]
             ]}
+            extraStudentIcon={displayIssuesDisabledIcon}
             showFooter={true}
             allowModify={false}
             selectedInstance={props.selectedInstance}

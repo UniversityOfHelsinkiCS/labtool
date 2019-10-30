@@ -286,7 +286,7 @@ export const StudentTable = props => {
     return indents
   }
 
-  const createStudentTableRow = (showColumn, data, extraColumns, dropDownTags, dropDownTeachers, { allowReview }) => (
+  const createStudentTableRow = (showColumn, data, extraColumns, dropDownTags, dropDownTeachers, { allowReview, extraStudentIcon }) => (
     <Table.Row key={data.id} className={data.dropped ? 'TableRowForDroppedOutStudent' : 'TableRowForActiveStudent'}>
       {/* Select Check Box */}
       {showColumn('select') && (
@@ -302,6 +302,7 @@ export const StudentTable = props => {
             <Popup
               trigger={
                 <span>
+                  {extraStudentIcon && extraStudentIcon(data.User)}
                   {data.User.firsts} {data.User.lastname}
                   <br />({data.User.studentNumber})
                 </span>
@@ -311,6 +312,7 @@ export const StudentTable = props => {
           </Link>
         ) : (
           <span>
+            {extraStudentIcon && extraStudentIcon(data.User)}
             {data.User.firsts} {data.User.lastname}
             <br />({data.User.studentNumber})
           </span>
@@ -577,6 +579,7 @@ StudentTable.propTypes = {
   extraButtons: PropTypes.array,
   onFilter: PropTypes.func,
   persistentFilterKey: PropTypes.string,
+  extraStudentIcon: PropTypes.func,
 
   studentInstances: PropTypes.array.isRequired,
   selectedInstance: PropTypes.object.isRequired,
