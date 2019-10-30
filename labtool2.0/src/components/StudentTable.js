@@ -421,7 +421,7 @@ export const StudentTable = props => {
     </Table.Row>
   )
 
-  const { columns, disableDefaultFilter, studentColumnName, showFooter } = props
+  const { columns, disableDefaultFilter, studentColumnName, showFooter, studentFooter } = props
 
   const showColumn = column => columns.indexOf(column) >= 0
   const nullFunc = () => nullFunc
@@ -539,7 +539,7 @@ export const StudentTable = props => {
                     <Checkbox id={'selectAllBottom'} disabled={!filteredData.length} checked={allSelected} onChange={handleSelectAll} />
                   </Table.HeaderCell>
                 )}
-                <Table.HeaderCell />
+                {studentFooter ? studentFooter() : <Table.HeaderCell />}
                 <Table.HeaderCell />
                 {showColumn('points') && <Table.HeaderCell />}
                 {showColumn('instructor') && !shouldHideInstructor(props.studentInstances) && <Table.HeaderCell />}
@@ -580,6 +580,7 @@ StudentTable.propTypes = {
   onFilter: PropTypes.func,
   persistentFilterKey: PropTypes.string,
   extraStudentIcon: PropTypes.func,
+  studentFooter: PropTypes.func,
 
   studentInstances: PropTypes.array.isRequired,
   selectedInstance: PropTypes.object.isRequired,

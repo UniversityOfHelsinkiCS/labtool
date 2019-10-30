@@ -225,6 +225,17 @@ export const ModifyCourseInstanceReview = props => {
     )
   }
 
+  const bulkCheckIssuesEnabled = selected => {
+    const selectedStudents = Object.keys(selected)
+      .filter(s => selected[s])
+      .map(s => props.courseData.data.find(t => t.id.toString() === s))
+    // TODO
+    console.log(selectedStudents)
+    console.log(selectedStudents.map(student => `${student.id}=${student.github}`))
+    window.alert('Check here')
+    return
+  }
+
   const areIssuesDisabledForStudent = student => {
     // TODO
     return !!student
@@ -272,6 +283,23 @@ export const ModifyCourseInstanceReview = props => {
         {showCurrentReviewee}
         <ConfirmationModal canRemove={true} data={data} getCurrentReviewee={getCurrentReviewee} removeOne={removeOne} selectedDropdown={props.codeReviewLogic.selectedDropdown} />
       </div>
+    )
+  }
+
+  const makeStudentFooter = () => {
+    const MAXIMUM_CHECK_COUNT = 15
+    const selected = objectKeyFilter(props.coursePageLogic.selectedStudents, filterSelected)
+    const selectedCount = Object.keys(selected).length
+    const issueCheckButton = (
+      <Button compact onClick={() => bulkCheckIssuesEnabled(selected)} size="small" disabled={selectedCount < 1 || selectedCount > MAXIMUM_CHECK_COUNT} style={{ float: 'left' }}>
+        Check if issues enabled
+      </Button>
+    )
+
+    return (
+      <Table.HeaderCell singleLine key="selectorFooter">
+        {selectedCount > MAXIMUM_CHECK_COUNT ? <Popup trigger={issueCheckButton} content={`You can only select a maximum of ${MAXIMUM_CHECK_COUNT} students to check`} hoverable /> : issueCheckButton}
+      </Table.HeaderCell>
     )
   }
 
@@ -417,6 +445,7 @@ export const ModifyCourseInstanceReview = props => {
               [makeCodeReviewCreatorHeader, makeCodeReviewCreatorCell, makeCodeReviewCreatorFooter]
             ]}
             extraStudentIcon={displayIssuesDisabledIcon}
+            studentFooter={makeStudentFooter}
             showFooter={true}
             allowModify={false}
             selectedInstance={props.selectedInstance}
