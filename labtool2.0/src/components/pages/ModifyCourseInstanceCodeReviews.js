@@ -17,6 +17,7 @@ import BackButton from '../BackButton'
 import ConfirmationModal from '../ConfirmationModal'
 import RevieweeDropdown from '../RevieweeDropdown'
 import RepoLink from '../RepoLink'
+import IssuesDisabledWarning from '../IssuesDisabledWarning'
 
 export const ModifyCourseInstanceReview = props => {
   const pstate = usePersistedState(`ModifyCourseInstanceCodeReviews_${props.courseId}`, {
@@ -224,6 +225,36 @@ export const ModifyCourseInstanceReview = props => {
     )
   }
 
+  const bulkCheckIssuesEnabled = selected => {
+    const selectedStudents = Object.keys(selected)
+      .filter(s => selected[s])
+      .map(s => props.courseData.data.find(t => t.id.toString() === s))
+    // TODO
+    console.log(selectedStudents)
+    console.log(selectedStudents.map(student => `${student.id}=${student.github}`))
+    window.alert('Check here')
+    return
+  }
+
+  const areIssuesDisabledForStudent = student => {
+    // TODO
+    return !!student
+  }
+
+  const disableIssuesDisabledWarning = student => {
+    if (window.confirm('Hide this warning? (Perhaps the issues are enabled now?)')) {
+      // TODO
+      window.alert(`Disabling warning for ${student.id}`)
+    }
+  }
+
+  const displayIssuesDisabledIcon = student => {
+    if (areIssuesDisabledForStudent(student)) {
+      return <IssuesDisabledWarning onClick={() => disableIssuesDisabledWarning(student)} />
+    }
+    return null
+  }
+
   const showCurrentReview = data => {
     if (!props.codeReviewLogic.selectedDropdown) {
       return null
@@ -252,6 +283,23 @@ export const ModifyCourseInstanceReview = props => {
         {showCurrentReviewee}
         <ConfirmationModal canRemove={true} data={data} getCurrentReviewee={getCurrentReviewee} removeOne={removeOne} selectedDropdown={props.codeReviewLogic.selectedDropdown} />
       </div>
+    )
+  }
+
+  const makeStudentFooter = () => {
+    const MAXIMUM_CHECK_COUNT = 15
+    const selected = objectKeyFilter(props.coursePageLogic.selectedStudents, filterSelected)
+    const selectedCount = Object.keys(selected).length
+    const issueCheckButton = (
+      <Button compact onClick={() => bulkCheckIssuesEnabled(selected)} size="small" disabled={selectedCount < 1 || selectedCount > MAXIMUM_CHECK_COUNT} style={{ float: 'left' }}>
+        Check if issues enabled (select max {MAXIMUM_CHECK_COUNT})
+      </Button>
+    )
+
+    return (
+      <Table.HeaderCell singleLine key="selectorFooter">
+        {issueCheckButton}
+      </Table.HeaderCell>
     )
   }
 
@@ -396,6 +444,8 @@ export const ModifyCourseInstanceReview = props => {
               [makeCodeReviewSelectorHeader, makeCodeReviewSelectorCell, makeCodeReviewSelectorFooter],
               [makeCodeReviewCreatorHeader, makeCodeReviewCreatorCell, makeCodeReviewCreatorFooter]
             ]}
+            extraStudentIcon={displayIssuesDisabledIcon}
+            studentFooter={makeStudentFooter}
             showFooter={true}
             allowModify={false}
             selectedInstance={props.selectedInstance}
