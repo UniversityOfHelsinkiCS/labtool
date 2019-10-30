@@ -1,6 +1,23 @@
 import React from 'react'
 import { RegisterPage } from '../components/pages/RegisterPage'
 import { shallow } from 'enzyme'
+import { Input } from 'semantic-ui-react'
+
+jest.mock('../hooks/useDebounce', () => {
+  return jest.fn().mockImplementation(value => {
+    return value
+  })
+})
+
+jest.mock('../hooks/useGithubRepo', () => {
+  return jest.fn().mockImplementation(repo => {
+    if (!repo) {
+      return { githubRepo: null, error: null }
+    }
+
+    return { githubRepo: null, error: 'fake error' }
+  })
+})
 
 describe('<Register />', () => {
   let wrapper
@@ -87,6 +104,15 @@ describe('<Register />', () => {
 
     it('renders a GitHub link input', () => {
       expect(wrapper.find('.form-control2').length).toEqual(1)
+    })
+
+    it('renders a warning if github repo does not exist', () => {
+      wrapper
+        .find(Input)
+        .find({ name: 'github' })
+        .simulate('change', { target: { value: 'https://github.com/invalid_repo' } })
+
+      expect(wrapper.find('GithubRepoWarning').length).toEqual(1)
     })
   })
 })
