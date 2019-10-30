@@ -65,7 +65,7 @@ export const CoursePage = props => {
       if (a.dropped !== b.dropped) {
         return Number(a.dropped) - Number(b.dropped)
       } else {
-        return a.lastname > b.lastname ? -1 : 1
+        return a.lastname > b.lastname ? 1 : -1
       }
     })
   }
