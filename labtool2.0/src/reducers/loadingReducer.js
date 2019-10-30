@@ -6,7 +6,7 @@
  * redirectHooks: events that must happen before redirecting.
  */
 
-const INITITAL_STATE = {
+const INITIAL_STATE = {
   loading: true,
   loadingHooks: [],
   redirect: false,
@@ -40,7 +40,7 @@ const handleResponse = (state, hook, success) => {
   return { loading, redirect, loadingHooks, redirectHooks, redirectFailure }
 }
 
-const loadingReducer = (state = INITITAL_STATE, action) => {
+const loadingReducer = (state = INITIAL_STATE, action) => {
   if (action.type.includes('ATTEMPT')) {
     const prefix = action.type.split('ATTEMPT')[0]
     return { ...state, loading: true, loadingHooks: [...state.loadingHooks, prefix] }
@@ -53,7 +53,7 @@ const loadingReducer = (state = INITITAL_STATE, action) => {
   }
   switch (action.type) {
     case 'LOADING_RESET':
-      return INITITAL_STATE
+      return INITIAL_STATE
     case 'LOADING_ADD_REDIRECT_HOOK':
       return { ...state, redirectHooks: [...state.redirectHooks, action.data.hook], redirectFailure: false }
     case 'LOADING_FORCE_SET':

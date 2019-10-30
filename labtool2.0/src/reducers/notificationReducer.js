@@ -41,6 +41,16 @@ const notificationReducer = (state = {}, action) => {
         message: action.response.response.data.error,
         error: true
       }
+    case 'USER_UPDATE_ADMIN_SUCCESS':
+      return {
+        message: 'User updated',
+        error: false
+      }
+    case 'USER_UPDATE_ADMIN_FAILURE':
+      return {
+        message: 'Could not update user',
+        error: true
+      }
     case 'STUDENT_COURSE_CREATE_ONE_SUCCESS':
       return {
         message: 'Course registration successful!',

@@ -7,7 +7,12 @@ module.exports = (sequelize, DataTypes) => {
       firsts: DataTypes.STRING,
       lastname: DataTypes.STRING,
       studentNumber: DataTypes.STRING,
-      admin: {
+      teacher: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+      },
+      sysop: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false

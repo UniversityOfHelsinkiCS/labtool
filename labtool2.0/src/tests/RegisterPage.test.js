@@ -38,7 +38,7 @@ describe('<Register />', () => {
       teacherInstances: [
         {
           id: 10001,
-          admin: true,
+          instructor: false,
           createdAt: '2018-03-26T00:00:00.000Z',
           updatedAt: '2018-03-26T00:00:00.000Z',
           userId: 10010,
@@ -48,7 +48,7 @@ describe('<Register />', () => {
         },
         {
           id: 10011,
-          admin: true,
+          instructor: true,
           createdAt: '2018-03-26T00:00:00.000Z',
           updatedAt: '2018-03-26T00:00:00.000Z',
           userId: 10015,
