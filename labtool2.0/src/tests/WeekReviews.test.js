@@ -107,6 +107,9 @@ describe('<WeekReviews /> as student', () => {
         selectTag={mockFn}
         selectTeacher={mockFn}
         modifyOneCI={mockFn}
+        studentInstance={''}
+        gradeCodeReview={mockFn}
+        updateActiveIndex={mockFn}
       />
     )
   })
@@ -121,7 +124,7 @@ describe('<WeekReviews /> as student', () => {
     })
 
     it('renders code review cards', () => {
-      expect(wrapper.find('.codeReview').length).toEqual(coursePage.data.codeReviews.length)
+      expect(wrapper.find('WeekReviewCodeReview').length).toEqual(coursePage.data.codeReviews.length)
     })
   })
 })

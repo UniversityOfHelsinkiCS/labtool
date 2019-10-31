@@ -8,6 +8,7 @@ import { associateTeacherToStudent } from '../services/assistant'
 import { showAssistantDropdown, showTagDropdown, selectTeacher, selectTag, selectStudent, unselectStudent, selectAllStudents, unselectAllStudents } from '../reducers/coursePageLogicReducer'
 import { createDropdownTeachers, createDropdownTags } from '../util/dropdown'
 import { usePersistedState } from '../hooks/persistedState'
+
 import { StudentTableRow } from './StudentTable/StudentTableRow'
 
 export const StudentTable = props => {

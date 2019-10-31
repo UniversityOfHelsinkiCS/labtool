@@ -2,195 +2,279 @@
 
 exports[`<WeekReviews /> as student WeekReviews Component should render correctly 1`] = `
 Array [
-  <Accordion
-    fluid={true}
-    id="reviewNaN"
-    key="codereviewNaN"
-    styled={true}
-  >
-     
-    <AccordionTitle
-      active={false}
-      className="codeReview"
-      index={NaN}
-      onClick={[Function]}
-    >
-      <Icon
-        as="i"
-        name="dropdown"
-      />
-       Code Review 
-      1
-       
-      , points 2
-    </AccordionTitle>
-    <AccordionContent
-      active={false}
-    >
-      <strong>
-        Points: 
-      </strong>
-       
-      2
-      <br />
-      <strong>
-        GitHub: 
-      </strong>
-      <a
-        href="http://github.com/tiralabra2"
-        rel="noopener noreferrer"
-        target="_blank"
-      >
-        http://github.com/tiralabra2
-      </a>
-      <br />
-       
-      <br />
-      <div />
-      <p />
-    </AccordionContent>
-  </Accordion>,
-  <Accordion
-    fluid={true}
-    id="reviewNaN"
-    key="codereviewNaN"
-    styled={true}
-  >
-     
-    <AccordionTitle
-      active={false}
-      className="codeReview"
-      index={NaN}
-      onClick={[Function]}
-    >
-      <Icon
-        as="i"
-        name="dropdown"
-      />
-       Code Review 
-      2
-       
-      , points 1
-    </AccordionTitle>
-    <AccordionContent
-      active={false}
-    >
-      <strong>
-        Points: 
-      </strong>
-       
-      1
-      <br />
-      <strong>
-        GitHub: 
-      </strong>
-      <a
-        href="http://github.com/superprojekti"
-        rel="noopener noreferrer"
-        target="_blank"
-      >
-        http://github.com/superprojekti
-      </a>
-      <br />
-       
-      <br />
-      <div />
-      <div>
-        <div>
-          <strong>
-            Link your review here:
-          </strong>
-           
-          <br />
-          <Form
-            as="form"
-            onSubmit={[Function]}
-          >
-            <FormGroup
-              inline={true}
-            >
-              <Input
-                className="form-control1"
-                icon="github"
-                iconPosition="left"
-                name="reviewLink"
-                placeholder="https://github.com/account/repo/issues/number"
-                required={true}
-                style={
-                  Object {
-                    "minWidth": "25em",
-                  }
-                }
-                type="text"
-              />
-            </FormGroup>
-            <FormGroup>
-              <Button
-                as="button"
-                color="blue"
-                compact={true}
-                style={
-                  Object {
-                    "marginLeft": "0.5em",
-                  }
-                }
-                type="submit"
-              >
-                Submit
-              </Button>
-            </FormGroup>
-          </Form>
-        </div>
-      </div>
-    </AccordionContent>
-  </Accordion>,
-  <Accordion
-    fluid={true}
-    id="reviewNaN"
-    key="codereviewNaN"
-    styled={true}
-  >
-     
-    <AccordionTitle
-      active={true}
-      className="codeReview"
-      index={NaN}
-      onClick={[Function]}
-    >
-      <Icon
-        as="i"
-        name="dropdown"
-      />
-       Code Review 
-      3
-       
-    </AccordionTitle>
-    <AccordionContent
-      active={true}
-    >
-      <strong>
-        Points: 
-      </strong>
-       
-      Not graded yet
-      <br />
-      <strong>
-        GitHub: 
-      </strong>
-      <a
-        href="https://github.com/userName/arbitraryRepo"
-        rel="noopener noreferrer"
-        target="_blank"
-      >
-        https://github.com/userName/arbitraryRepo
-      </a>
-      <br />
-       
-      <br />
-      <div />
-      <p />
-    </AccordionContent>
-  </Accordion>,
+  <WeekReviewCodeReview
+    courseData={
+      Object {
+        "data": Object {
+          "Tags": Array [],
+          "User": Object {
+            "createdAt": "2018-03-26T00:00:00.000Z",
+            "email": "maarit.opiskelija@helsinki.invalid",
+            "firsts": "Maarit Mirja",
+            "id": 10011,
+            "lastname": "Opiskelija",
+            "studentNumber": "014578343",
+            "sysop": false,
+            "teacher": false,
+            "updatedAt": "2018-03-26T00:00:00.000Z",
+            "username": "tiraopiskelija1",
+          },
+          "codeReviews": Array [
+            Object {
+              "points": 2,
+              "repoToReview": null,
+              "reviewNumber": 1,
+              "toReview": Object {
+                "github": "http://github.com/tiralabra2",
+                "projectName": "Tiran toinen labraprojekti",
+              },
+            },
+            Object {
+              "points": 1,
+              "repoToReview": null,
+              "reviewNumber": 2,
+              "toReview": Object {
+                "github": "http://github.com/superprojekti",
+                "projectName": "Tira super projekti",
+              },
+            },
+            Object {
+              "points": null,
+              "repoToReview": "https://github.com/userName/arbitraryRepo",
+              "reviewNumber": 3,
+              "toReview": Object {
+                "github": null,
+                "projectName": null,
+              },
+            },
+          ],
+          "courseInstanceId": 10011,
+          "createdAt": "2018-03-26T00:00:00.000Z",
+          "github": "http://github.com/tiralabra1",
+          "id": 10011,
+          "projectName": "Tiran labraprojekti",
+          "teacherInstanceId": 10011,
+          "updatedAt": "2018-03-26T00:00:00.000Z",
+          "userId": 10011,
+          "weeks": Array [],
+        },
+        "role": "student",
+      }
+    }
+    courseId=""
+    coursePageLogic={
+      Object {
+        "filterByAssistant": 0,
+        "filterByTag": Array [],
+        "selectedTeacher": "",
+        "showCodeReviews": Array [
+          2,
+        ],
+        "showDropdown": "",
+      }
+    }
+    cr={
+      Object {
+        "points": 2,
+        "repoToReview": null,
+        "reviewNumber": 1,
+        "toReview": Object {
+          "github": "http://github.com/tiralabra2",
+          "projectName": "Tiran toinen labraprojekti",
+        },
+      }
+    }
+    gradeCodeReview={[Function]}
+    handleAddingIssueLink={[Function]}
+    handleClickWeek={[Function]}
+    index={NaN}
+    isTeacher={false}
+    key="weekReviewCodeReview0"
+    openWeeks={Object {}}
+    studentInstance=""
+  />,
+  <WeekReviewCodeReview
+    courseData={
+      Object {
+        "data": Object {
+          "Tags": Array [],
+          "User": Object {
+            "createdAt": "2018-03-26T00:00:00.000Z",
+            "email": "maarit.opiskelija@helsinki.invalid",
+            "firsts": "Maarit Mirja",
+            "id": 10011,
+            "lastname": "Opiskelija",
+            "studentNumber": "014578343",
+            "sysop": false,
+            "teacher": false,
+            "updatedAt": "2018-03-26T00:00:00.000Z",
+            "username": "tiraopiskelija1",
+          },
+          "codeReviews": Array [
+            Object {
+              "points": 2,
+              "repoToReview": null,
+              "reviewNumber": 1,
+              "toReview": Object {
+                "github": "http://github.com/tiralabra2",
+                "projectName": "Tiran toinen labraprojekti",
+              },
+            },
+            Object {
+              "points": 1,
+              "repoToReview": null,
+              "reviewNumber": 2,
+              "toReview": Object {
+                "github": "http://github.com/superprojekti",
+                "projectName": "Tira super projekti",
+              },
+            },
+            Object {
+              "points": null,
+              "repoToReview": "https://github.com/userName/arbitraryRepo",
+              "reviewNumber": 3,
+              "toReview": Object {
+                "github": null,
+                "projectName": null,
+              },
+            },
+          ],
+          "courseInstanceId": 10011,
+          "createdAt": "2018-03-26T00:00:00.000Z",
+          "github": "http://github.com/tiralabra1",
+          "id": 10011,
+          "projectName": "Tiran labraprojekti",
+          "teacherInstanceId": 10011,
+          "updatedAt": "2018-03-26T00:00:00.000Z",
+          "userId": 10011,
+          "weeks": Array [],
+        },
+        "role": "student",
+      }
+    }
+    courseId=""
+    coursePageLogic={
+      Object {
+        "filterByAssistant": 0,
+        "filterByTag": Array [],
+        "selectedTeacher": "",
+        "showCodeReviews": Array [
+          2,
+        ],
+        "showDropdown": "",
+      }
+    }
+    cr={
+      Object {
+        "points": 1,
+        "repoToReview": null,
+        "reviewNumber": 2,
+        "toReview": Object {
+          "github": "http://github.com/superprojekti",
+          "projectName": "Tira super projekti",
+        },
+      }
+    }
+    gradeCodeReview={[Function]}
+    handleAddingIssueLink={[Function]}
+    handleClickWeek={[Function]}
+    index={NaN}
+    isTeacher={false}
+    key="weekReviewCodeReview1"
+    openWeeks={Object {}}
+    studentInstance=""
+  />,
+  <WeekReviewCodeReview
+    courseData={
+      Object {
+        "data": Object {
+          "Tags": Array [],
+          "User": Object {
+            "createdAt": "2018-03-26T00:00:00.000Z",
+            "email": "maarit.opiskelija@helsinki.invalid",
+            "firsts": "Maarit Mirja",
+            "id": 10011,
+            "lastname": "Opiskelija",
+            "studentNumber": "014578343",
+            "sysop": false,
+            "teacher": false,
+            "updatedAt": "2018-03-26T00:00:00.000Z",
+            "username": "tiraopiskelija1",
+          },
+          "codeReviews": Array [
+            Object {
+              "points": 2,
+              "repoToReview": null,
+              "reviewNumber": 1,
+              "toReview": Object {
+                "github": "http://github.com/tiralabra2",
+                "projectName": "Tiran toinen labraprojekti",
+              },
+            },
+            Object {
+              "points": 1,
+              "repoToReview": null,
+              "reviewNumber": 2,
+              "toReview": Object {
+                "github": "http://github.com/superprojekti",
+                "projectName": "Tira super projekti",
+              },
+            },
+            Object {
+              "points": null,
+              "repoToReview": "https://github.com/userName/arbitraryRepo",
+              "reviewNumber": 3,
+              "toReview": Object {
+                "github": null,
+                "projectName": null,
+              },
+            },
+          ],
+          "courseInstanceId": 10011,
+          "createdAt": "2018-03-26T00:00:00.000Z",
+          "github": "http://github.com/tiralabra1",
+          "id": 10011,
+          "projectName": "Tiran labraprojekti",
+          "teacherInstanceId": 10011,
+          "updatedAt": "2018-03-26T00:00:00.000Z",
+          "userId": 10011,
+          "weeks": Array [],
+        },
+        "role": "student",
+      }
+    }
+    courseId=""
+    coursePageLogic={
+      Object {
+        "filterByAssistant": 0,
+        "filterByTag": Array [],
+        "selectedTeacher": "",
+        "showCodeReviews": Array [
+          2,
+        ],
+        "showDropdown": "",
+      }
+    }
+    cr={
+      Object {
+        "points": null,
+        "repoToReview": "https://github.com/userName/arbitraryRepo",
+        "reviewNumber": 3,
+        "toReview": Object {
+          "github": null,
+          "projectName": null,
+        },
+      }
+    }
+    gradeCodeReview={[Function]}
+    handleAddingIssueLink={[Function]}
+    handleClickWeek={[Function]}
+    index={NaN}
+    isTeacher={false}
+    key="weekReviewCodeReview2"
+    openWeeks={Object {}}
+    studentInstance=""
+  />,
   <Accordion
     fluid={true}
     key="total"
