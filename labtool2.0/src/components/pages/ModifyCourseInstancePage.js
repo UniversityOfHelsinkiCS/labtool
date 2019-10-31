@@ -77,21 +77,20 @@ export const ModifyCourseInstancePage = props => {
         coursesPage,
         courseMaterial
       }
-      props.addRedirectHook({
-        hook: 'CI_MODIFY_ONE_'
-      })
       props.changeCourseField({
         field: 'active',
         value: active
       })
+      props.addRedirectHook({
+        hook: 'CI_MODIFY_ONE_'
+      })
       props.modifyOneCI(content, props.selectedInstance.ohid)
-      props.forceRedirect()
     } catch (error) {
       console.error(error)
     }
   }
 
-  if (props.redirect && props.redirect.redirect) {
+  if ((props.redirect && props.redirect.redirect) || props.loading.redirect) {
     return <Redirect to={`/labtool/courses/${props.selectedInstance.ohid}`} />
   }
   const selectedInstance = { ...props.selectedInstance }
