@@ -246,7 +246,7 @@ export const ModifyCourseInstanceReview = props => {
         const studentInstances = githubRepos
           .filter(x => !!x)
           .map(githubRepo => {
-            return { userId: githubRepoSlugToStudent.get(githubRepo.full_name).userId, issuesDisabled: !githubRepo.has_issues }
+            return { userId: githubRepoSlugToStudent.get(githubRepo.full_name).userId, issuesDisabled: !githubRepo.has_issues || githubRepo.archived }
           })
 
         props.massUpdateStudentProjectInfo({ ohid: props.selectedInstance.ohid, studentInstances })
