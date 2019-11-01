@@ -60,15 +60,8 @@ export const CoursePage = props => {
     })
   }
 
-  const sortStudentArrayAlphabeticallyByDroppedValue = theArray => {
-    return theArray.sort((a, b) => {
-      if (a.dropped !== b.dropped) {
-        return Number(a.dropped) - Number(b.dropped)
-      } else {
-        return a.lastname > b.lastname ? 1 : -1
-      }
-    })
-  }
+  const sortStudentArrayAlphabeticallyByDroppedValue = theArray =>
+    theArray.sort((a, b) => Number(a.dropped) - Number(b.dropped) || a.User.lastname.localeCompare(b.User.lastname) || a.User.firsts.localeCompare(b.User.firsts) || a.id - b.id)
 
   const handleClick = (e, titleProps) => {
     const { index } = titleProps
@@ -238,7 +231,7 @@ export const CoursePage = props => {
 
   const getMaximumPoints = week => {
     const checklist = props.selectedInstance.checklists.find(checkl => checkl.week === week)
-    if (checklist === undefined || checklist.maxPoints === 0) {
+    if (checklist === undefined || checklist.maxPoints === 0 || checklist.maxPoints === null) {
       return selectedInstance.weekMaxPoints
     }
     return checklist.maxPoints

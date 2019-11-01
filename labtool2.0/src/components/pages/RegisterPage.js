@@ -12,9 +12,13 @@ import useGithubRepo from '../../hooks/useGithubRepo'
 
 const GithubRepoWarning = ({ githubRepo }) => {
   if (!githubRepo) {
-    return <Message icon warning compact icon="warning sign" size="small" hidden={false} content="Your GitHub repository either is private or it does not exist" />
+    return <Message warning compact icon="warning sign" size="small" hidden={false} content="Your GitHub repository either is private or it does not exist" />
   }
   return null
+}
+
+GithubRepoWarning.propTypes = {
+  githubRepo: PropTypes.object
 }
 
 /**

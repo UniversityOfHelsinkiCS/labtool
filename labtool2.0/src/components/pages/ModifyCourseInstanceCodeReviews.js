@@ -98,7 +98,7 @@ export const ModifyCourseInstanceReview = props => {
         if (
           props.courseData.data
             .find(student => student.id === id)
-            .codeReviews.filter(cr => (cr.reviewNumber < reviewRound === 'create' ? props.selectedInstance.amountOfCodeReviews + 1 : reviewRound))
+            .codeReviews.filter(cr => cr.reviewNumber < (reviewRound === 'create' ? props.selectedInstance.amountOfCodeReviews + 1 : reviewRound))
             .map(cr => cr.repoToReview)
             .includes(value)
         ) {
