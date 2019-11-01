@@ -163,10 +163,25 @@ const courseInstancereducer = (store = INITIAL_STATE, action) => {
     case 'STUDENT_PROJECT_INFO_UPDATE_SUCCESS': {
       if (store.data.find) {
         // don't do this student changing stuff if we are a student
-        let studentToChange = store.data.find(student => student.id === action.response.id)
-        studentToChange.dropped = action.response.dropped
-        const newData = store.data.map(student => (student.id !== action.response.id ? student : studentToChange))
-        return { ...store, data: newData }
+        return {
+          ...store,
+          data: store.data.map(student => {
+            return student.id === action.response.id ? { ...student, ...action.response } : student
+          })
+        }
+      }
+      return store
+    }
+    case 'STUDENT_PROJECT_INFO_MASS_UPDATE_SUCCESS': {
+      if (store.data.map) {
+        // don't do this student changing stuff if we are a student
+        return {
+          ...store,
+          data: store.data.map(student => {
+            const updatedStudent = action.response.find(responseStudent => responseStudent.id === student.id)
+            return !!updatedStudent ? { ...student, ...updatedStudent } : student
+          })
+        }
       }
       return store
     }
