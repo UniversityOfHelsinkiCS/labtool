@@ -241,18 +241,13 @@ export const ModifyCourseInstanceReview = props => {
           .result.then(result => result.data)
           .catch(error => (error.response && error.response.status === 404 ? Promise.resolve() : Promise.reject(error)))
       })
-    )
-      .then(githubRepos => {
-        const studentInstances = githubRepos
-          .filter(x => !!x)
-          .map(githubRepo => {
-            return { userId: githubRepoSlugToStudent.get(githubRepo.full_name).userId, issuesDisabled: !!githubRepo.has_issues }
-          })
-        props.massUpdateStudentProjectInfo({ ohid: props.selectedInstance.ohid, studentInstances })
-      })
-      .catch(() => {
-        props.showNotification({ message: 'Failed to fetch data from GitHub API. Most likely you have exceeded GitHub API ratelimit or your Internet connection is down.', error: true })
-      })
+    ).then(githubRepos => {
+      const studentInstances = githubRepos
+        .filter(x => !!x)
+        .map(githubRepo => {
+          return { userId: githubRepoSlugToStudent.get(githubRepo.full_name).userId, issuesDisabled: !githubRepo.has_issues }
+        })
+    })
   }
 
   const areIssuesDisabledForStudent = student => {
