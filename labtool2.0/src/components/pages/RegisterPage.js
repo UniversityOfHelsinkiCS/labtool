@@ -89,6 +89,9 @@ export const RegisterPage = props => {
   }
 
   const existing = getExistingData()
+  if (existing.projectLink && !repo) {
+    setRepo(existing.projectLink)
+  }
 
   return (
     <div
