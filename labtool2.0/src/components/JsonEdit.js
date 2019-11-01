@@ -45,7 +45,7 @@ const JsonEdit = props => {
 
       <Modal onClose={closeDialog} open={open}>
         <Modal.Header>JSON</Modal.Header>
-        <Modal.Description style={{ padding: 15 }}>Pressing &quot;Save&quot; saves immediately and overwrites the current checklist.</Modal.Description>
+        <Modal.Description style={{ padding: 15 }}>Pressing &quot;Save&quot; saves immediately and overwrites the current checklist. When copying checklists or adding new items, make sure to remove the IDs.</Modal.Description>
         <Modal.Description>
           {state.error && (
             <Message style={{ padding: 15 }} error>
