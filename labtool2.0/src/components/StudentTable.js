@@ -302,7 +302,7 @@ export const StudentTable = props => {
             <Popup
               trigger={
                 <span>
-                  {extraStudentIcon && extraStudentIcon(data.User)}
+                  {extraStudentIcon && extraStudentIcon(data)}
                   {data.User.firsts} {data.User.lastname}
                   <br />({data.User.studentNumber})
                 </span>
@@ -312,7 +312,7 @@ export const StudentTable = props => {
           </Link>
         ) : (
           <span>
-            {extraStudentIcon && extraStudentIcon(data.User)}
+            {extraStudentIcon && extraStudentIcon(data)}
             {data.User.firsts} {data.User.lastname}
             <br />({data.User.studentNumber})
           </span>

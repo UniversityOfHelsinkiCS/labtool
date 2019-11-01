@@ -12,12 +12,14 @@ import { resetLoading } from '../../reducers/loadingReducer'
 import { usePersistedState } from '../../hooks/persistedState'
 import { getAllTags } from '../../services/tags'
 import { objectKeyFilter } from '../../util/objectKeyFilter'
+import { getGithubRepo } from '../../util/github'
 
 import BackButton from '../BackButton'
 import ConfirmationModal from '../ConfirmationModal'
 import RevieweeDropdown from '../RevieweeDropdown'
 import RepoLink from '../RepoLink'
 import IssuesDisabledWarning from '../IssuesDisabledWarning'
+import { updateStudentProjectInfo, massUpdateStudentProjectInfo } from '../../services/studentinstances'
 
 export const ModifyCourseInstanceReview = props => {
   const pstate = usePersistedState(`ModifyCourseInstanceCodeReviews_${props.courseId}`, {
@@ -229,22 +231,37 @@ export const ModifyCourseInstanceReview = props => {
     const selectedStudents = Object.keys(selected)
       .filter(s => selected[s])
       .map(s => props.courseData.data.find(t => t.id.toString() === s))
-    // TODO
-    console.log(selectedStudents)
-    console.log(selectedStudents.map(student => `${student.id}=${student.github}`))
-    window.alert('Check here')
-    return
+
+    const githubRepoSlugToStudent = selectedStudents.reduce((map, student) => map.set(student.github.replace(/^https?:\/\/github.com\//, ''), student), new Map())
+
+    Promise.all(
+      Array.from(githubRepoSlugToStudent.keys()).map(repo => {
+        //Ignore nonexisting repos
+        return getGithubRepo(repo)
+          .result.then(result => result.data)
+          .catch(error => (error.response && error.response.status === 404 ? Promise.resolve() : Promise.reject(error)))
+      })
+    )
+      .then(githubRepos => {
+        const studentInstances = githubRepos
+          .filter(x => !!x)
+          .map(githubRepo => {
+            return { userId: githubRepoSlugToStudent.get(githubRepo.full_name).userId, issuesDisabled: !!githubRepo.has_issues }
+          })
+        props.massUpdateStudentProjectInfo({ ohid: props.selectedInstance.ohid, studentInstances })
+      })
+      .catch(() => {
+        props.showNotification({ message: 'Failed to fetch data from GitHub API. Most likely you have exceeded GitHub API ratelimit or your Internet connection is down.', error: true })
+      })
   }
 
   const areIssuesDisabledForStudent = student => {
-    // TODO
-    return !!student
+    return student.issuesDisabled
   }
 
   const disableIssuesDisabledWarning = student => {
     if (window.confirm('Hide this warning? (Perhaps the issues are enabled now?)')) {
-      // TODO
-      window.alert(`Disabling warning for ${student.id}`)
+      props.updateStudentProjectInfo({ ...student, ohid: props.selectedInstance.ohid, issuesDisabled: false })
     }
   }
 
@@ -530,7 +547,9 @@ const mapDispatchToProps = {
   filterByReview,
   showNotification,
   removeOneCodeReview,
-  getAllTags
+  getAllTags,
+  updateStudentProjectInfo,
+  massUpdateStudentProjectInfo
 }
 
 ModifyCourseInstanceReview.propTypes = {
@@ -561,7 +580,9 @@ ModifyCourseInstanceReview.propTypes = {
   filterByReview: PropTypes.func.isRequired,
   showNotification: PropTypes.func.isRequired,
   removeOneCodeReview: PropTypes.func.isRequired,
-  getAllTags: PropTypes.func.isRequired
+  getAllTags: PropTypes.func.isRequired,
+  updateStudentProjectInfo: PropTypes.func.isRequired,
+  massUpdateStudentProjectInfo: PropTypes.func.isRequired
 }
 
 export default connect(
