@@ -83,3 +83,11 @@ export const capitalize = text => {
     return text.slice(0, 1).toUpperCase() + text.slice(1).toLowerCase()
   }
 }
+
+export const roundNumber = (number, places) => {
+  // do not display fractional part if the number is an integer
+  if (number === Math.floor(number)) {
+    return number.toString()
+  }
+  return number.toFixed(places)
+}
