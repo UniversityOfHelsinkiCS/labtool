@@ -359,6 +359,79 @@ module.exports = {
   },
 
   /**
+   * req.body: {
+   *   ohid,
+   *   studentInstances: [
+   *     {
+   *       userId,
+   *       dropped,
+   *       ....
+   *     }
+   *   ]
+   * }
+   */
+  massUpdateStudentInstance(req, res) {
+    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
+
+    try {
+      CourseInstance.findOne({
+        ohid: req.body.ohid
+      }).then(course => {
+        if (!course) {
+          res.status(404).send('course not found')
+          return
+        }
+
+        const currentTime = new Date()
+
+        Promise.all(req.body.studentInstances.map(studentInstance => {
+          return helper.checkHasPermissionToViewStudentInstance(req, course.id, studentInstance.userId).then(isAllowedToUpdate => {
+            if (isAllowedToUpdate) {
+              const newStudentInstance = {}
+              if (studentInstance.github) {
+                newStudentInstance.github = studentInstance
+              }
+              if (studentInstance.projectName) {
+                newStudentInstance.projectName = studentInstance.projectName
+              }
+              if ('dropped' in studentInstance) {
+                newStudentInstance.dropped = studentInstance.dropped
+              }
+              if ('issuesDisabled' in studentInstance) {
+                newStudentInstance.issuesDisabled = studentInstance.issuesDisabled
+                newStudentInstance.issuesDisabledCheckedAt = currentTime.toISOString()
+              }
+
+              return StudentInstance.update(newStudentInstance, 
+              { returning: true,
+                where: {
+                  userId: studentInstance.userId,
+                  courseInstanceId: course.id
+                }
+              }).then(([ _, [updatedStudentInstance]]) => updatedStudentInstance)
+            } else {
+              return Promise.resolve()
+            }
+          })
+        })).then(updatedStudents => {
+          res.status(200).send(updatedStudents.filter(updatedStudent => !!updatedStudent).map(({ dataValues }) => dataValues))
+        }).catch(error => {
+          logger.error(error)
+          res.status(400).send(error)
+        })
+      }).catch(error => {
+        logger.error(error)
+        res.status(400).send(error)
+      })
+    } catch (e) {
+      logger.error(e)
+      res.status(400).send(e)
+    }
+  },
+
+  /**
    * req.body:
    *    {
    *      userId, //Only required if updating student instance of other user than the currently logged in
@@ -405,7 +478,9 @@ module.exports = {
                 .update({
                   github: req.body.github || targetStudent.github,
                   projectName: req.body.projectname || targetStudent.projectName,
-                  dropped: 'dropped' in req.body ? req.body.dropped : targetStudent.dropped
+                  dropped: 'dropped' in req.body ? req.body.dropped : targetStudent.dropped,
+                  issuesDisabled: 'issuesDisabled' in req.body ? req.body.issuesDisabled : targetStudent.issuesDisabled,
+                  issuesDisabledCheckedAt: 'issuesDisabled' in req.body ? new Date().toISOString() : targetStudent.issuesDisabledCheckedAt
                 })
                 .then((updatedStudentInstance) => {
                   res.status(200).send(updatedStudentInstance)

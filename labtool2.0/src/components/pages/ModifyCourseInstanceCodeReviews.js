@@ -12,11 +12,14 @@ import { resetLoading } from '../../reducers/loadingReducer'
 import { usePersistedState } from '../../hooks/persistedState'
 import { getAllTags } from '../../services/tags'
 import { objectKeyFilter } from '../../util/objectKeyFilter'
+import { getGithubRepo } from '../../util/github'
 
 import BackButton from '../BackButton'
 import ConfirmationModal from '../ConfirmationModal'
 import RevieweeDropdown from '../RevieweeDropdown'
 import RepoLink from '../RepoLink'
+import IssuesDisabledWarning from '../IssuesDisabledWarning'
+import { updateStudentProjectInfo, massUpdateStudentProjectInfo } from '../../services/studentinstances'
 
 export const ModifyCourseInstanceReview = props => {
   const pstate = usePersistedState(`ModifyCourseInstanceCodeReviews_${props.courseId}`, {
@@ -221,6 +224,52 @@ export const ModifyCourseInstanceReview = props => {
     )
   }
 
+  const bulkCheckIssuesEnabled = selected => {
+    const selectedStudents = Object.keys(selected)
+      .filter(s => selected[s])
+      .map(s => props.courseData.data.find(t => t.id.toString() === s))
+
+    const githubRepoSlugToStudent = selectedStudents.reduce((map, student) => map.set(student.github.replace(/^https?:\/\/github.com\//, ''), student), new Map())
+
+    Promise.all(
+      Array.from(githubRepoSlugToStudent.keys()).map(repo => {
+        //Ignore nonexisting repos
+        return getGithubRepo(repo)
+          .result.then(result => result.data)
+          .catch(error => (error.response && error.response.status === 404 ? Promise.resolve() : Promise.reject(error)))
+      })
+    )
+      .then(githubRepos => {
+        const studentInstances = githubRepos
+          .filter(x => !!x)
+          .map(githubRepo => {
+            return { userId: githubRepoSlugToStudent.get(githubRepo.full_name).userId, issuesDisabled: !githubRepo.has_issues || githubRepo.archived }
+          })
+
+        props.massUpdateStudentProjectInfo({ ohid: props.selectedInstance.ohid, studentInstances })
+      })
+      .catch(() => {
+        props.showNotification({ message: 'Failed to fetch data from GitHub API. Most likely you have exceeded GitHub API ratelimit or your Internet connection is down.', error: true })
+      })
+  }
+
+  const areIssuesDisabledForStudent = student => {
+    return student.issuesDisabled
+  }
+
+  const disableIssuesDisabledWarning = student => {
+    if (window.confirm('Hide this warning? (Perhaps the issues are enabled now?)')) {
+      props.updateStudentProjectInfo({ ...student, ohid: props.selectedInstance.ohid, issuesDisabled: false })
+    }
+  }
+
+  const displayIssuesDisabledIcon = student => {
+    if (areIssuesDisabledForStudent(student)) {
+      return <IssuesDisabledWarning onClick={() => disableIssuesDisabledWarning(student)} />
+    }
+    return null
+  }
+
   const showCurrentReview = data => {
     if (!props.codeReviewLogic.selectedDropdown) {
       return null
@@ -249,6 +298,23 @@ export const ModifyCourseInstanceReview = props => {
         {showCurrentReviewee}
         <ConfirmationModal canRemove={true} data={data} getCurrentReviewee={getCurrentReviewee} removeOne={removeOne} selectedDropdown={props.codeReviewLogic.selectedDropdown} />
       </div>
+    )
+  }
+
+  const makeStudentFooter = () => {
+    const MAXIMUM_CHECK_COUNT = 15
+    const selected = objectKeyFilter(props.coursePageLogic.selectedStudents, filterSelected)
+    const selectedCount = Object.keys(selected).length
+    const issueCheckButton = (
+      <Button compact onClick={() => bulkCheckIssuesEnabled(selected)} size="small" disabled={selectedCount < 1 || selectedCount > MAXIMUM_CHECK_COUNT} style={{ float: 'left' }}>
+        Check if issues enabled (select max {MAXIMUM_CHECK_COUNT})
+      </Button>
+    )
+
+    return (
+      <Table.HeaderCell singleLine key="selectorFooter">
+        {issueCheckButton}
+      </Table.HeaderCell>
     )
   }
 
@@ -393,6 +459,8 @@ export const ModifyCourseInstanceReview = props => {
               [makeCodeReviewSelectorHeader, makeCodeReviewSelectorCell, makeCodeReviewSelectorFooter],
               [makeCodeReviewCreatorHeader, makeCodeReviewCreatorCell, makeCodeReviewCreatorFooter]
             ]}
+            extraStudentIcon={displayIssuesDisabledIcon}
+            studentFooter={makeStudentFooter}
             showFooter={true}
             allowModify={false}
             selectedInstance={props.selectedInstance}
@@ -477,7 +545,9 @@ const mapDispatchToProps = {
   filterByReview,
   showNotification,
   removeOneCodeReview,
-  getAllTags
+  getAllTags,
+  updateStudentProjectInfo,
+  massUpdateStudentProjectInfo
 }
 
 ModifyCourseInstanceReview.propTypes = {
@@ -508,7 +578,9 @@ ModifyCourseInstanceReview.propTypes = {
   filterByReview: PropTypes.func.isRequired,
   showNotification: PropTypes.func.isRequired,
   removeOneCodeReview: PropTypes.func.isRequired,
-  getAllTags: PropTypes.func.isRequired
+  getAllTags: PropTypes.func.isRequired,
+  updateStudentProjectInfo: PropTypes.func.isRequired,
+  massUpdateStudentProjectInfo: PropTypes.func.isRequired
 }
 
 export default connect(

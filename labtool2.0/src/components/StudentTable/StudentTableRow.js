@@ -216,6 +216,7 @@ export const StudentTableRow = props => {
             <Popup
               trigger={
                 <span>
+                  {extraStudentIcon && extraStudentIcon(data)}
                   {data.User.firsts} {data.User.lastname}
                   <br />({data.User.studentNumber})
                 </span>
@@ -225,6 +226,7 @@ export const StudentTableRow = props => {
           </Link>
         ) : (
           <span>
+            {extraStudentIcon && extraStudentIcon(data)}
             {data.User.firsts} {data.User.lastname}
             <br />({data.User.studentNumber})
           </span>
@@ -344,6 +346,7 @@ StudentTableRow.propTypes = {
   allowReview: PropTypes.bool,
   allowModify: PropTypes.bool,
   addFilterTag: PropTypes.func.isRequired,
+  extraStudentIcon: PropTypes.func,
 
   studentInstances: PropTypes.array.isRequired,
   selectedInstance: PropTypes.object.isRequired,
