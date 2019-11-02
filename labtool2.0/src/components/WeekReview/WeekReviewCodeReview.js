@@ -113,7 +113,7 @@ WeekReviewCodeReview.propTypes = {
   openWeeks: PropTypes.object.isRequired,
   cr: PropTypes.object.isRequired,
   isTeacher: PropTypes.bool,
-  studentInstance: PropTypes.string.isRequired,
+  studentInstance: PropTypes.string,
   courseData: PropTypes.object.isRequired,
   coursePageLogic: PropTypes.object.isRequired,
   courseId: PropTypes.string.isRequired,

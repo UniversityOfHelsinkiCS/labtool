@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { Accordion, Button, Table, Card, Header, Label, Message, Icon, Popup, Loader, Dropdown, Grid } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
+import { Loader } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { getOneCI, coursePageInformation, modifyOneCI } from '../../services/courseInstance'
 import { getAllTags, tagStudent, unTagStudent } from '../../services/tags'
@@ -10,32 +9,16 @@ import { coursePageReset, selectTag, selectTeacher } from '../../reducers/course
 import { changeCourseField } from '../../reducers/selectedInstanceReducer'
 import { updateStudentProjectInfo } from '../../services/studentinstances'
 import { resetLoading } from '../../reducers/loadingReducer'
-import { usePersistedState } from '../../hooks/persistedState'
 
-import StudentTable from '../StudentTable'
-import WeekReviews from '../WeekReviews'
 import { createDropdownTeachers, createDropdownTags } from '../../util/dropdown'
-import { formatCourseName } from '../../util/format'
-
-const CoursePageHeader = ({ courseInstance }) => (
-  <Header as="h2" style={{ marginBottom: '1em' }}>
-    <Header.Content>
-      {formatCourseName(courseInstance.name, courseInstance.ohid, courseInstance.start)}
-      <Header.Subheader>
-        {courseInstance.coursesPage && <a href={courseInstance.coursesPage}>courses.helsinki.fi</a>} {courseInstance.coursesPage && courseInstance.courseMaterial && '|'}{' '}
-        {courseInstance.courseMaterial && <a href={courseInstance.courseMaterial}>Course material</a>}
-      </Header.Subheader>
-    </Header.Content>
-  </Header>
-)
-
-CoursePageHeader.propTypes = {
-  courseInstance: PropTypes.object.isRequired
-}
+import CoursePageStudentInfo from './CoursePage/StudentInfo'
+import CoursePageStudentRegister from './CoursePage/StudentRegister'
+import CoursePageStudentWeeks from './CoursePage/StudentWeeks'
+import CoursePageTeacherBulkForm from './CoursePage/TeacherBulkForm'
+import CoursePageTeacherHeader from './CoursePage/TeacherHeader'
+import CoursePageTeacherMain from './CoursePage/TeacherMain'
 
 export const CoursePage = props => {
-  const state = usePersistedState(`CoursePage-${props.courseId}`, { showMassAssignForm: false })
-
   useEffect(() => {
     // run on component mount
     props.resetLoading()
@@ -228,274 +211,42 @@ export const CoursePage = props => {
     props.modifyOneCI(content, selectedInstance.ohid)
   }
 
-  const renderStudentBottomPart = () => {
-    if (!(courseData && courseData.data)) {
-      return <div />
-    }
-
-    return (
-      <div>
-        <div key="student info">
-          {courseData.data.User ? (
-            <Card key="card" fluid color="yellow">
-              <Card.Content>
-                <h2>
-                  {courseData.data.User.firsts} {courseData.data.User.lastname}
-                </h2>
-                <h3> {courseData.data.projectName} </h3>
-                <h3>
-                  <a href={courseData.data.github} target="_blank" rel="noopener noreferrer">
-                    {courseData.data.github}
-                  </a>{' '}
-                  <Link to={`/labtool/courseregistration/${selectedInstance.ohid}`}>
-                    <Button circular floated="right" size="large" icon={{ name: 'edit', color: 'orange', size: 'large' }} />
-                  </Link>
-                </h3>
-              </Card.Content>
-            </Card>
-          ) : (
-            <div />
-          )}
-        </div>
-
-        {courseData.data.weeks && <WeekReviews courseId={courseId} student={props.courseData.data} />}
-      </div>
-    )
-  }
-
-  /**
-   * Returns what teachers should see at the top of this page
-   */
-  let renderTeacherTopPart = () => {
-    const weekAdvanceEnabled = selectedInstance.currentWeek !== selectedInstance.weekAmount
-
-    return (
-      <div className="TeachersTopView" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
-        <CoursePageHeader courseInstance={selectedInstance} />
-        {courseInstance &&
-          courseInstance.active !== true &&
-          (!selectedInstance.active && (
-            <div>
-              <Message compact>
-                <Message.Header>The registration is not active on this course.</Message.Header>
-              </Message>
-
-              <Button color="green" style={{ marginLeft: '25px' }} onClick={() => activateCourse()}>
-                Activate now
-              </Button>
-              <br />
-            </div>
-          ))}
-        <Table>
-          <Table.Header>
-            <Table.Row>
-              <Table.Cell>
-                <div>
-                  {selectedInstance.active === true ? (
-                    <Label ribbon style={{ backgroundColor: '#21ba45' }}>
-                      Active registration
-                    </Label>
-                  ) : (
-                    <div />
-                  )}
-                </div>
-              </Table.Cell>
-              <Table.Cell>Week amount: {selectedInstance.weekAmount}</Table.Cell>
-              <Table.Cell>
-                Current week: {selectedInstance.currentWeek}
-                <Popup
-                  content={weekAdvanceEnabled ? 'Advance course by 1 week' : 'Already at final week'}
-                  trigger={
-                    <Icon disabled={!weekAdvanceEnabled} name="right arrow" onClick={() => moveToNextWeek()} style={{ marginLeft: '15px', cursor: weekAdvanceEnabled ? 'pointer' : 'not-allowed' }} />
-                  }
-                />
-              </Table.Cell>
-              <Table.Cell>Week max points: {selectedInstance.weekMaxPoints}</Table.Cell>
-              <Table.Cell textAlign="right">
-                {' '}
-                <Link to={`/labtool/ModifyCourseInstancePage/${selectedInstance.ohid}`}>
-                  <Popup trigger={<Button circular size="tiny" icon={{ name: 'edit', size: 'large', color: 'orange' }} />} content="Edit course" />
-                </Link>
-              </Table.Cell>
-            </Table.Row>
-          </Table.Header>
-        </Table>
-      </div>
-    )
-  }
-
-  let renderTeacherBottomPart = () => {
-    // Fetched here because it's used in multiple occasions.
-    const students = sortStudentArrayAlphabeticallyByDroppedValue(courseData.data)
-
-    let droppedStudentCount = 0
-    let activeStudentCount = 0
-
-    students.forEach(student => {
-      if (student.dropped) {
-        droppedStudentCount++
-      } else {
-        activeStudentCount++
-      }
-    })
-
-    const totalStudentCount = activeStudentCount + droppedStudentCount
-
-    const dropConvertButton = droppedTagExists() && (
-      <Button onClick={() => markAllWithDroppedTagAsDropped(courseData)} size="small">
-        Mark all with dropped tag as dropped out
-      </Button>
-    )
-    return (
-      <div className="TeachersBottomView">
-        <br />
-        <Header as="h2">Students</Header>
-
-        <p>
-          {activeStudentCount} active student{activeStudentCount === 1 ? '' : 's'}, {droppedStudentCount} dropped student{droppedStudentCount === 1 ? '' : 's'} ({totalStudentCount} in total)
-        </p>
-
-        <StudentTable
-          key={'studentTable'}
-          columns={['select', 'points', 'instructor']}
-          allowModify={true}
-          allowReview={true}
-          selectedInstance={selectedInstance}
-          studentInstances={students}
-          coursePageLogic={coursePageLogic}
-          tags={tags}
-          persistentFilterKey={`CoursePage_filters_${courseId}`}
-        />
-        <br />
-        {dropConvertButton}
-        {
-          <Link to={`/labtool/massemail/${selectedInstance.ohid}`}>
-            <Button size="small">Send email to multiple students</Button>
-          </Link>
-        }
-      </div>
-    )
-  }
-
-  const renderTeacherBulkForm = () => {
-    const numSelected = Object.keys(coursePageLogic.selectedStudents).length
-    const disabled = numSelected < 1
-
-    return (
-      <span className="TeacherBulkForm" style={{ position: 'fixed', bottom: 0, background: 'rgba(255,255,255,0.9)', textAlign: 'center', left: 0, right: 0 }}>
-        <Accordion>
-          <Accordion.Title style={{ background: '#f0f0f0' }} active={state.showMassAssignForm} index={0} onClick={() => (state.showMassAssignForm = !state.showMassAssignForm)}>
-            <Icon size="big" name={state.showMassAssignForm ? 'caret down' : 'caret up'} />
-            <h4 style={{ display: 'inline' }}>Modify selected students</h4> ({numSelected > 0 ? <b>{numSelected} selected</b> : <span>{numSelected} selected</span>})
-          </Accordion.Title>
-          <Accordion.Content active={state.showMassAssignForm}>
-            <br />
-            <Grid columns={2} divided style={{ width: '90%', display: 'inline-block' }}>
-              <Grid.Row>
-                <Grid.Column>
-                  <Dropdown id="tagDropdown" style={{ float: 'left' }} options={dropDownTags} onChange={changeSelectedTag()} placeholder="Choose tag" fluid selection />
-                </Grid.Column>
-                <Grid.Column>
-                  <div className="two ui buttons" style={{ float: 'left' }}>
-                    <button className="ui icon positive button" disabled={disabled} onClick={() => bulkAddTag()} size="mini">
-                      <i className="plus icon" />
-                    </button>
-                    <div className="or" />
-                    <button className="ui icon button" disabled={disabled} onClick={() => bulkRemoveTag()} size="mini">
-                      <i className="trash icon" />
-                    </button>
-                  </div>
-                </Grid.Column>
-              </Grid.Row>
-              <Grid.Row>
-                <Grid.Column>
-                  <Dropdown id="assistantDropdown" options={dropDownTeachers} onChange={changeSelectedTeacher()} placeholder="Select teacher" fluid selection />
-                </Grid.Column>
-                <Grid.Column>
-                  <Button disabled={disabled} onClick={() => bulkUpdateTeacher()} size="small">
-                    Change instructor
-                  </Button>
-                </Grid.Column>
-              </Grid.Row>
-              <Grid.Row>
-                <Grid.Column>
-                  <Button disabled={disabled} onClick={() => bulkMarkNotDropped()}>
-                    Mark as non-dropped
-                  </Button>
-                </Grid.Column>
-                <Grid.Column>
-                  <Button disabled={disabled} color="red" onClick={() => bulkMarkDropped()}>
-                    Mark as dropped
-                  </Button>
-                </Grid.Column>
-              </Grid.Row>
-            </Grid>
-            <br />
-            <br />
-          </Accordion.Content>
-        </Accordion>
-        <br />
-      </span>
-    )
-  }
-
-  /**
-   * Function that returns what students should see at the top of this page
-   */
-  let renderStudentTopPart = () => {
-    return (
-      <div className="StudentsView" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
-        <CoursePageHeader courseInstance={selectedInstance} />
-        <div className="grid">
-          {selectedInstance.active === true ? (
-            courseData.data !== null ? (
-              <p />
-            ) : selectedInstance.registrationAtWebOodi === 'notfound' ? (
-              <div className="sixteen wide column">
-                <Message compact>
-                  <Message.Header>No registration found at WebOodi.</Message.Header>
-                  <p>If you have just registered, please try again in two hours.</p>
-                </Message>
-              </div>
-            ) : (
-              <div className="sixteen wide column">
-                <Link to={`/labtool/courseregistration/${selectedInstance.ohid}`}>
-                  {' '}
-                  <Button color="blue" size="large">
-                    Register
-                  </Button>
-                </Link>
-              </div>
-            )
-          ) : (
-            <div className="sixteen wide column">
-              <Message compact>
-                <Message.Header>This course does not have active registration.</Message.Header>
-              </Message>
-            </div>
-          )}
-        </div>
-      </div>
-    )
-  }
-
   /**
    * This part actually tells what to show to the user
    */
   if (props.courseData.role === 'student') {
     return (
       <div key>
-        {renderStudentTopPart()}
-        {renderStudentBottomPart()}
+        <CoursePageStudentRegister courseData={courseData} selectedInstance={selectedInstance} />
+        <CoursePageStudentInfo courseData={courseData} selectedInstance={selectedInstance} />
+        <CoursePageStudentWeeks courseId={courseId} courseData={courseData} />
       </div>
     )
   } else if (props.courseData.role === 'teacher') {
+    const coursePageBulkFormFunctions = {
+      changeSelectedTag,
+      changeSelectedTeacher,
+      bulkAddTag,
+      bulkRemoveTag,
+      bulkUpdateTeacher,
+      bulkMarkDropped,
+      bulkMarkNotDropped
+    }
     return (
       <div style={{ overflowX: 'auto', overflowY: 'hidden', marginBottom: '20em' }}>
-        {renderTeacherTopPart()}
-        {renderTeacherBottomPart()}
+        <CoursePageTeacherHeader selectedInstance={selectedInstance} courseInstance={courseInstance} activateCourse={activateCourse} moveToNextWeek={moveToNextWeek} />
+        <CoursePageTeacherMain
+          courseId={courseId}
+          courseData={courseData}
+          selectedInstance={selectedInstance}
+          coursePageLogic={coursePageLogic}
+          tags={tags}
+          droppedTagExists={droppedTagExists}
+          markAllWithDroppedTagAsDropped={markAllWithDroppedTagAsDropped}
+          students={sortStudentArrayAlphabeticallyByDroppedValue(courseData.data)}
+        />
         <br />
-        {renderTeacherBulkForm()}
+        <CoursePageTeacherBulkForm courseId={courseId} coursePageLogic={coursePageLogic} dropDownTags={dropDownTags} dropDownTeachers={dropDownTeachers} {...coursePageBulkFormFunctions} />
       </div>
     )
   } else {

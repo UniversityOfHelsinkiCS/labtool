@@ -126,10 +126,10 @@ export const WeekReviewWeek = props => {
 WeekReviewWeek.propTypes = {
   index: PropTypes.number.isRequired,
   openWeeks: PropTypes.object.isRequired,
-  week: PropTypes.object.isRequired,
+  week: PropTypes.object,
   isTeacher: PropTypes.bool,
   isFinalWeek: PropTypes.bool,
-  studentInstance: PropTypes.string.isRequired,
+  studentInstance: PropTypes.string,
   selectedInstance: PropTypes.object.isRequired,
   courseId: PropTypes.string.isRequired,
   user: PropTypes.object.isRequired,

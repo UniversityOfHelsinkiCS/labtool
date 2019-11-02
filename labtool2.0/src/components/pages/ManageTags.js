@@ -113,17 +113,29 @@ export const ManageTags = props => {
               <Form key="createOrModify" onSubmit={handleSubmit}>
                 {props.tags.modifyTag ? <h4>Editing tag: {props.tags.modifyTag}</h4> : <h4>You are creating a new tag.</h4>}
                 <div>
-                  Preview: <button className={`mini ui button ${validColors.includes(state.valueColor) ? state.valueColor : ''}`} style={{ display: state.valueText ? 'inline' : 'none' }}>{state.valueText}</button>
+                  Preview:{' '}
+                  <button className={`mini ui button ${validColors.includes(state.valueColor) ? state.valueColor : ''}`} style={{ display: state.valueText ? 'inline' : 'none' }}>
+                    {state.valueText}
+                  </button>
                   <br />
                   <br />
                 </div>{' '}
                 <Form.Field required inline>
                   <label style={{ width: '100px', textAlign: 'left' }}>Text</label>
-                  <Input type="text" value={state.valueText} className="form-control1" name="text" placeholder="Tag name" required style={{ minWidth: '30em' }} onChange={(e, { value }) => state.valueText = value} />
+                  <Input
+                    type="text"
+                    value={state.valueText}
+                    className="form-control1"
+                    name="text"
+                    placeholder="Tag name"
+                    required
+                    style={{ minWidth: '30em' }}
+                    onChange={(e, { value }) => (state.valueText = value)}
+                  />
                 </Form.Field>
                 <Form.Field required inline>
                   <label style={{ width: '100px', textAlign: 'left' }}>Color</label>
-                  <select className="ui dropdown" value={state.valueColor} name="color" style={{ minWidth: '30em' }} required  onChange={e => state.valueColor = e.target.value}>
+                  <select className="ui dropdown" value={state.valueColor} name="color" style={{ minWidth: '30em' }} required onChange={e => (state.valueColor = e.target.value)}>
                     <option value="" disabled>
                       Select a tag color
                     </option>
