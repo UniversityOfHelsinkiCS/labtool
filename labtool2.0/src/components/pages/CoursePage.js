@@ -168,41 +168,6 @@ export const CoursePage = props => {
 
   const { courseId, courseData, coursePageLogic, courseInstance, selectedInstance, tags } = props
 
-  const renderStudentBottomPart = () => {
-    if (!(courseData && courseData.data)) {
-      return <div />
-    }
-
-    return (
-      <div>
-        <div key="student info">
-          {courseData.data.User ? (
-            <Card key="card" fluid color="yellow">
-              <Card.Content>
-                <h2>
-                  {courseData.data.User.firsts} {courseData.data.User.lastname}
-                </h2>
-                <h3> {courseData.data.projectName} </h3>
-                <h3>
-                  <a href={courseData.data.github} target="_blank" rel="noopener noreferrer">
-                    {courseData.data.github}
-                  </a>{' '}
-                  <Link to={`/labtool/courseregistration/${selectedInstance.ohid}`}>
-                    <Button circular floated="right" size="large" icon={{ name: 'edit', color: 'orange', size: 'large' }} />
-                  </Link>
-                </h3>
-              </Card.Content>
-            </Card>
-          ) : (
-            <div />
-          )}
-        </div>
-
-        {courseData.data.weeks && <WeekReviews courseId={courseId} student={props.courseData.data} />}
-      </div>
-    )
-  }
-
   // This function activates the course, leaving other data intact.
   const activateCourse = () => {
     props.changeCourseField({
@@ -261,6 +226,41 @@ export const CoursePage = props => {
 
     props.resetLoading()
     props.modifyOneCI(content, selectedInstance.ohid)
+  }
+
+  const renderStudentBottomPart = () => {
+    if (!(courseData && courseData.data)) {
+      return <div />
+    }
+
+    return (
+      <div>
+        <div key="student info">
+          {courseData.data.User ? (
+            <Card key="card" fluid color="yellow">
+              <Card.Content>
+                <h2>
+                  {courseData.data.User.firsts} {courseData.data.User.lastname}
+                </h2>
+                <h3> {courseData.data.projectName} </h3>
+                <h3>
+                  <a href={courseData.data.github} target="_blank" rel="noopener noreferrer">
+                    {courseData.data.github}
+                  </a>{' '}
+                  <Link to={`/labtool/courseregistration/${selectedInstance.ohid}`}>
+                    <Button circular floated="right" size="large" icon={{ name: 'edit', color: 'orange', size: 'large' }} />
+                  </Link>
+                </h3>
+              </Card.Content>
+            </Card>
+          ) : (
+            <div />
+          )}
+        </div>
+
+        {courseData.data.weeks && <WeekReviews courseId={courseId} student={props.courseData.data} />}
+      </div>
+    )
   }
 
   /**

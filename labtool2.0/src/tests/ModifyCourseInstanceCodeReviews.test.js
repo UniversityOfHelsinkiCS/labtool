@@ -345,7 +345,7 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
         restoreData={mockFn}
         getAllTags={mockFn}
         updateStudentProjectInfo={mockFn}
-        massUpdateStudentProjectInfo={mockFN}
+        massUpdateStudentProjectInfo={mockFn}
         tags={tags}
         modifyOneCI={mockModifyOneCI}
       />

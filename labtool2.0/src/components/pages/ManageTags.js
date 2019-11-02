@@ -6,10 +6,14 @@ import { createTag, getAllTags, removeTag } from '../../services/tags'
 import { resetLoading } from '../../reducers/loadingReducer'
 import { willCreateNewTag, willModifyExistingTag } from '../../reducers/tagReducer'
 import { capitalize } from '../../util/format'
-
 import BackButton from '../BackButton'
+import useLegacyState from '../../hooks/legacyState'
 
 export const ManageTags = props => {
+  const state = useLegacyState({
+    valueText: '',
+    valueColor: ''
+  })
   const validColors = ['red', 'orange', 'yellow', 'olive', 'green', 'teal', 'blue', 'violet', 'purple', 'pink', 'brown', 'grey', 'black']
 
   useEffect(() => {
@@ -24,21 +28,20 @@ export const ManageTags = props => {
 
       props.resetLoading()
       const tag = {
-        text: props.tags.modifyTag || e.target.text.value,
-        newText: e.target.text.value,
-        color: e.target.color.value
+        text: props.tags.modifyTag || state.valueText,
+        newText: state.valueText,
+        color: state.valueColor
       }
 
       props.createTag(tag)
-      document.getElementById('tagText').value = ''
-      document.getElementById('tagColor').value = ''
+      state.valueText = ''
+      state.valueColor = ''
 
       if (props.tags.modifyTag) {
         modifyTag(tag.newText, tag.color)(e)
       } else {
         createNewTag(e)
       }
-      updateTagPreview()
     } catch (error) {
       console.error(error)
     }
@@ -59,9 +62,8 @@ export const ManageTags = props => {
       }
       props.removeTag(tag)
       props.willCreateNewTag()
-      document.getElementById('tagText').value = ''
-      document.getElementById('tagColor').value = ''
-      updateTagPreview()
+      state.valueText = ''
+      state.valueColor = ''
     } catch (error) {
       console.error(error)
     }
@@ -72,9 +74,8 @@ export const ManageTags = props => {
       e.preventDefault()
       props.willCreateNewTag()
 
-      document.getElementById('tagText').value = ''
-      document.getElementById('tagColor').value = ''
-      updateTagPreview()
+      state.valueText = ''
+      state.valueColor = ''
     } catch (error) {
       console.error(error)
     }
@@ -85,22 +86,11 @@ export const ManageTags = props => {
       e.preventDefault()
       props.willModifyExistingTag(text)
 
-      document.getElementById('tagText').value = text
-      document.getElementById('tagColor').value = validColors.includes(color) ? color : 'white'
-      updateTagPreview()
+      state.valueText = text
+      state.valueColor = validColors.includes(color) ? color : 'white'
     } catch (error) {
       console.error(error)
     }
-  }
-
-  const updateTagPreview = () => {
-    const tagPreview = document.getElementById('tagPreview')
-    const newText = document.getElementById('tagText').value
-    const newColor = document.getElementById('tagColor').value
-
-    tagPreview.style.display = newText ? 'inline' : 'none'
-    tagPreview.textContent = newText
-    tagPreview.className = validColors.includes(newColor) ? 'mini ui button ' + newColor : 'mini ui button'
   }
 
   return (
@@ -123,17 +113,17 @@ export const ManageTags = props => {
               <Form key="createOrModify" onSubmit={handleSubmit}>
                 {props.tags.modifyTag ? <h4>Editing tag: {props.tags.modifyTag}</h4> : <h4>You are creating a new tag.</h4>}
                 <div>
-                  Preview: <button id="tagPreview" className={`mini ui button`} style={{ display: 'none' }} />
+                  Preview: <button className={`mini ui button ${validColors.includes(state.valueColor) ? state.valueColor : ''}`} style={{ display: state.valueText ? 'inline' : 'none' }}>{state.valueText}</button>
                   <br />
                   <br />
                 </div>{' '}
                 <Form.Field required inline>
                   <label style={{ width: '100px', textAlign: 'left' }}>Text</label>
-                  <Input type="text" id="tagText" className="form-control1" name="text" placeholder="Tag name" required style={{ minWidth: '30em' }} onChange={updateTagPreview} />
+                  <Input type="text" value={state.valueText} className="form-control1" name="text" placeholder="Tag name" required style={{ minWidth: '30em' }} onChange={(e, { value }) => state.valueText = value} />
                 </Form.Field>
                 <Form.Field required inline>
                   <label style={{ width: '100px', textAlign: 'left' }}>Color</label>
-                  <select defaultValue="" className="ui dropdown" id="tagColor" name="color" style={{ minWidth: '30em' }} required onChange={updateTagPreview}>
+                  <select className="ui dropdown" value={state.valueColor} name="color" style={{ minWidth: '30em' }} required  onChange={e => state.valueColor = e.target.value}>
                     <option value="" disabled>
                       Select a tag color
                     </option>

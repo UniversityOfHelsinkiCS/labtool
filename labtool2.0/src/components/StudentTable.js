@@ -113,7 +113,7 @@ export const StudentTable = props => {
     return headers
   }
 
-  const { columns, disableDefaultFilter, studentColumnName, showFooter, extraStudentIcon } = props
+  const { columns, disableDefaultFilter, studentColumnName, showFooter, extraStudentIcon, studentFooter } = props
 
   const showColumn = column => columns.indexOf(column) >= 0
   const nullFunc = () => nullFunc
