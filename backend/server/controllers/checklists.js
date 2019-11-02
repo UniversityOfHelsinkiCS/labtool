@@ -87,11 +87,11 @@ module.exports = {
       }
       // No validation is done to prevent creating a checklist for a week that doesn't exist.
       // Arguably, this is a feature, since the number of weeks can change.
-      let result = await Checklist.findOrCreate({where: {
+      let result = await Checklist.findOrCreate({ where: {
         week: req.body.week,
         courseInstanceId: req.body.courseInstanceId
-      }})
-      //Update maxPoints. This cannot be done with findOrCreate as by default courses have null as maxPoints
+      } })
+      // Update maxPoints. This cannot be done with findOrCreate as by default courses have null as maxPoints
       result = await Checklist.update(
         { maxPoints: req.body.maxPoints },
         { where: { id: result[0].dataValues.id }, returning: true, plain: true }
@@ -102,18 +102,16 @@ module.exports = {
       for (const category in req.body.checklist) {
         const checklistForCategory = req.body.checklist[category]
 
-        const checklistItems = await Promise.all(checklistForCategory.map(checklistItem => {
-          return ChecklistItem.upsert({
-            id: checklistItem.id,
-            name: checklistItem.name,
-            textWhenOn: checklistItem.textWhenOn,
-            textWhenOff: checklistItem.textWhenOff,
-            checkedPoints: checklistItem.checkedPoints,
-            uncheckedPoints: checklistItem.uncheckedPoints,
-            category: category,
-            checklistId: result[1].dataValues.id
-          })
-        }))
+        const checklistItems = await Promise.all(checklistForCategory.map(checklistItem => ChecklistItem.upsert({
+          id: checklistItem.id,
+          name: checklistItem.name,
+          textWhenOn: checklistItem.textWhenOn,
+          textWhenOff: checklistItem.textWhenOff,
+          checkedPoints: checklistItem.checkedPoints,
+          uncheckedPoints: checklistItem.uncheckedPoints,
+          category,
+          checklistId: result[1].dataValues.id
+        })))
 
         checklistJson[category] = checklistItems.map(({ dataValues: checklistItem }) => {
           const checklistItemCopy = { ...checklistItem }
@@ -152,13 +150,13 @@ module.exports = {
       if (checklist) {
         const checklistJson = {}
         const checklistItems = await ChecklistItem.findAll({ where: {
-          checklistId: checklist.id 
-        }})
+          checklistId: checklist.id
+        } })
         checklistItems.forEach(({ dataValues: checklistItem }) => {
           if (checklistJson[checklistItem.category] === undefined) {
             checklistJson[checklistItem.category] = []
           }
-          
+
           const checklistItemCopy = { ...checklistItem }
           delete checklistItemCopy.category
           delete checklistItemCopy.checklistId

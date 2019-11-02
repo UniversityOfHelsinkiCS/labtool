@@ -713,17 +713,17 @@ module.exports = {
             courseInstanceId: course.id
           }
         })
-        //Add checklist items to checklists
+        // Add checklist items to checklists
         for (const checklist of checklists) {
           const checklistJson = {}
           const checklistItems = await ChecklistItem.findAll({ where: {
-            checklistId: checklist.id 
-          }})
+            checklistId: checklist.id
+          } })
           checklistItems.forEach(({ dataValues: checklistItem }) => {
             if (checklistJson[checklistItem.category] === undefined) {
               checklistJson[checklistItem.category] = []
             }
-            
+
             const checklistItemCopy = { ...checklistItem }
             delete checklistItemCopy.category
             delete checklistItemCopy.checklistId

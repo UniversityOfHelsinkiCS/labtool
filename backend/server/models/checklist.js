@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
       master: DataTypes.BOOLEAN,
       maxPoints: DataTypes.DOUBLE
     },
-    /*{
+    /* {
       hooks: {
         // This will automatically destroy any pre-existing row before inserting to avoid duplicates.
         // Updating happens by destroying the old, then inserting the new.
@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
           })
         }
       }
-    }*/
+    } */
   )
   Checklist.associate = function (models) {
     Checklist.belongsTo(models.CourseInstance, {
