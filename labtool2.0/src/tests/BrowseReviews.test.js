@@ -5,6 +5,9 @@ import { shallow } from 'enzyme'
 describe('<BrowseReviews />', () => {
   let wrapper
 
+  const currentCourseId = 10011
+  const otherParticipationId = 10000
+
   const coursePage = {
     id: 10011,
     name: 'Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit (periodi IV)',
@@ -194,6 +197,15 @@ describe('<BrowseReviews />', () => {
 
   const studentInstanceId = '10011'
 
+  const teacherCourses = [
+    {
+      id: otherParticipationId
+    },
+    {
+      id: currentCourseId
+    }
+  ]
+
   beforeEach(() => {
     mockUpdateStudentProjectInfo = jest.fn()
 
@@ -206,6 +218,8 @@ describe('<BrowseReviews />', () => {
         courseData={courseData}
         selectedInstance={coursePage}
         studentInstanceToBeReviewed={studentWithoutPreviousParticipation}
+        teacherInstance={teacherCourses}
+        getAllTeacherCourses={mockFn}
         courseId={coursePage.ohid}
         studentInstance={studentInstanceId} //studentInstance id which was chosen randomly from courseData
         loading={loading}
@@ -239,11 +253,11 @@ describe('<BrowseReviews />', () => {
       it('when student participates the course first time', () => {
         expect(wrapper.find('.noOther').text()).toEqual('Has no other participation in this course')
       })
-      it('when student participate other instances of the course', () => {
-        const studentWithPreviousParticipation = [
+      describe('when student participate other instances of the course', () => {
+        const studentWithOtherParticipation = [
           {
             ...coursePage,
-            id: 10000,
+            id: otherParticipationId,
             name: 'Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit',
             start: '2017-03-11T21:00:00.000Z',
             end: '2017-04-29T21:00:00.000Z',
@@ -256,14 +270,32 @@ describe('<BrowseReviews />', () => {
             courseInstances: [{ id: 10011 }]
           }
         ]
+        beforeEach(() => wrapper.setProps({ studentInstanceToBeReviewed: studentWithOtherParticipation, studentInstanceId: '10011' }))
 
-        wrapper.setProps({ studentInstanceToBeReviewed: studentWithPreviousParticipation, studentInstanceId: '10011' })
-        expect(wrapper.find('.hasOther').text()).toContain('Has taken this course in other periods')
-        const popup = wrapper
-          .find('.hasOther')
-          .find('Link')
-          .find('Popup')
-        expect(popup.props()).toHaveProperty('trigger', <p>TKT20010 2016-2017 P.IV</p>)
+        it('Teacher has access to other participation', () => {
+          expect(wrapper.find('.hasOther').text()).toContain('Has taken this course in other periods')
+          const popup = wrapper
+            .find('.hasOther')
+            .find('Link')
+            .find('Popup')
+          expect(popup.props()).toHaveProperty('trigger', <p>TKT20010 2016-2017 P.IV</p>)
+        })
+
+        it('Teacher has no access to other participation', () => {
+          wrapper.setProps({ teacherInstance: [{ id: currentCourseId }] })
+          expect(
+            wrapper
+              .find('.hasOther')
+              .find('Link')
+              .exists()
+          ).toBeFalsy()
+          expect(
+            wrapper
+              .find('.hasOther')
+              .find('.noAccess')
+              .text()
+          ).toContain('TKT20010 2016-2017 P.IV')
+        })
       })
       it('student can be marked as dropped and non-dropped', () => {
         wrapper.find({ children: 'Mark as dropped' }).simulate('click')
