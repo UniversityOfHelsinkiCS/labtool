@@ -9,6 +9,7 @@ import { getOneCI, getAllCI } from '../../services/courseInstance'
 import { resetChecklist, changeField, restoreChecklist, addTopic, addRow, removeTopic, removeRow, castPointsToNumber } from '../../reducers/checklistReducer'
 import './CreateChecklist.css'
 import { usePersistedState } from '../../hooks/persistedState'
+import { roundNumber } from '../../util/format'
 
 import BackButton from '../BackButton'
 import JsonEdit from '../JsonEdit'
@@ -454,7 +455,7 @@ export const CreateChecklist = props => {
             <Card className="maxPointsCard">
               <Card.Content>
                 <p>
-                  Total max points: <strong className="maxPointsNumber">{getMaximumPoints(maxPoints)}</strong>
+                  Total max points: <strong className="maxPointsNumber">{roundNumber(getMaximumPoints(maxPoints), 2)}</strong>
                   {state.week > props.selectedInstance.weekAmount ? (
                     <span />
                   ) : (

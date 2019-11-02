@@ -286,7 +286,7 @@ export const StudentTable = props => {
     return indents
   }
 
-  const createStudentTableRow = (showColumn, data, extraColumns, dropDownTags, dropDownTeachers, { allowReview }) => (
+  const createStudentTableRow = (showColumn, data, extraColumns, dropDownTags, dropDownTeachers, { allowReview, extraStudentIcon }) => (
     <Table.Row key={data.id} className={data.dropped ? 'TableRowForDroppedOutStudent' : 'TableRowForActiveStudent'}>
       {/* Select Check Box */}
       {showColumn('select') && (
@@ -302,6 +302,7 @@ export const StudentTable = props => {
             <Popup
               trigger={
                 <span>
+                  {extraStudentIcon && extraStudentIcon(data)}
                   {data.User.firsts} {data.User.lastname}
                   <br />({data.User.studentNumber})
                 </span>
@@ -311,6 +312,7 @@ export const StudentTable = props => {
           </Link>
         ) : (
           <span>
+            {extraStudentIcon && extraStudentIcon(data)}
             {data.User.firsts} {data.User.lastname}
             <br />({data.User.studentNumber})
           </span>
@@ -419,7 +421,7 @@ export const StudentTable = props => {
     </Table.Row>
   )
 
-  const { columns, disableDefaultFilter, studentColumnName, showFooter } = props
+  const { columns, disableDefaultFilter, studentColumnName, showFooter, studentFooter } = props
 
   const showColumn = column => columns.indexOf(column) >= 0
   const nullFunc = () => nullFunc
@@ -537,7 +539,7 @@ export const StudentTable = props => {
                     <Checkbox id={'selectAllBottom'} disabled={!filteredData.length} checked={allSelected} onChange={handleSelectAll} />
                   </Table.HeaderCell>
                 )}
-                <Table.HeaderCell />
+                {studentFooter ? studentFooter() : <Table.HeaderCell />}
                 <Table.HeaderCell />
                 {showColumn('points') && <Table.HeaderCell />}
                 {showColumn('instructor') && !shouldHideInstructor(props.studentInstances) && <Table.HeaderCell />}
@@ -577,6 +579,8 @@ StudentTable.propTypes = {
   extraButtons: PropTypes.array,
   onFilter: PropTypes.func,
   persistentFilterKey: PropTypes.string,
+  extraStudentIcon: PropTypes.func,
+  studentFooter: PropTypes.func,
 
   studentInstances: PropTypes.array.isRequired,
   selectedInstance: PropTypes.object.isRequired,

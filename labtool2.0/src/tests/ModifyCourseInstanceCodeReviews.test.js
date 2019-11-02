@@ -420,7 +420,7 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
     })
   })
 
-  describe('<RvieweeDropdown />', () => {
+  describe('<RevieweeDropdown />', () => {
     let dropdownWrapper
     const mockAddCodeReview = jest.fn()
     beforeEach(() => {
