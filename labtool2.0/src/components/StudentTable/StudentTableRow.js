@@ -12,6 +12,7 @@ export const StudentTableRow = props => {
     dropDownTags,
     dropDownTeachers,
     shouldHideInstructor,
+    extraStudentIcon,
     allowReview,
     allowModify,
     addFilterTag,

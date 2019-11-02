@@ -55,7 +55,7 @@ export const StudentCard = ({ student, otherParticipations, handleMarkAsDropped,
 
 StudentCard.propTypes = {
   student: PropTypes.object.isRequired,
-  teacherInstance: PropTypes.object.isRequired,
+  teacherInstance: PropTypes.array.isRequired,
   otherParticipations: PropTypes.array.isRequired,
   handleMarkAsDropped: PropTypes.func.isRequired
 }

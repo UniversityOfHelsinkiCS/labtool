@@ -31,7 +31,7 @@ exports[`<BrowseReviews /> BrowseReviews Component should render correctly 1`] =
     </Link>
     <StudentCard
       handleMarkAsDropped={[Function]}
-      previousParticipations={Array []}
+      otherParticipations={Array []}
       student={
         Object {
           "User": Object {
@@ -122,6 +122,16 @@ exports[`<BrowseReviews /> BrowseReviews Component should render correctly 1`] =
             },
           ],
         }
+      }
+      teacherInstance={
+        Array [
+          Object {
+            "id": 10000,
+          },
+          Object {
+            "id": 10011,
+          },
+        ]
       }
     />
     <span>
