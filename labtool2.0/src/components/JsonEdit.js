@@ -92,7 +92,7 @@ const JsonEdit = props => {
           Pressing &quot;Save&quot; saves immediately and overwrites the current checklist. Omit the ID when adding new items.
           <br />
           <br />
-          Not having an ID means points will get removed from that item.
+          Checklist items that do not have an ID will have the existing student scores reset for that item.
           <br />
           <br />
           When copying items from another week or course, IDs will be removed automatically when saving.
