@@ -22,5 +22,6 @@ module.exports = (app) => {
   app.post('/api/comment', courseInstanceController.addComment)
   app.post('/api/comments', courseInstanceController.getCommentsForWeek)
   app.post('/api/studentinstance/update', courseInstanceController.updateStudentInstance)
+  app.post('/api/studentinstance/massupdate', courseInstanceController.massUpdateStudentInstance)
   app.post('/api/courseinstances/:id', courseInstanceController.findByStudentInstanceId) // Get courses by studentInstanceId
 }
