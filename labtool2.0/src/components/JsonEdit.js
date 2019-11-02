@@ -18,12 +18,35 @@ const JsonEdit = props => {
       }
       JSON.parse(json)
       state.data = json
-      state.error = null
+      const conflictId = hasIdConflict(json)
+      state.error = conflictId !== null ? `There is a conflicting ID: ${conflictId}. Multiple checklist items should not have the same ID.` : null
     } catch (error) {
       if (error instanceof SyntaxError) {
         state.data = json
         state.error = `Failed to parse JSON: ${error.message}`
       }
+    }
+  }
+
+  const hasIdConflict = json => {
+    try {
+      const ids = []
+      const obj = JSON.parse(json)
+      for (const category of Object.keys(obj)) {
+        const items = obj[category]
+        if (Array.isArray(items)) {
+          for (const item of items) {
+            const { id } = item
+            if (ids.includes(id)) {
+              return id
+            }
+            ids.push(id)
+          }
+        }
+      }
+      return null
+    } catch (error) {
+      return null
     }
   }
 
@@ -66,8 +89,13 @@ const JsonEdit = props => {
       <Modal onClose={closeDialog} open={open}>
         <Modal.Header>JSON</Modal.Header>
         <Modal.Description style={{ padding: 15 }}>
-          Pressing &quot;Save&quot; saves immediately and overwrites the current checklist. When copying checklists or adding new items, make sure to remove the IDs (such as by clicking the button
-          below).
+          Pressing &quot;Save&quot; saves immediately and overwrites the current checklist. Omit the ID when adding new items.
+          <br />
+          <br />
+          Not having an ID means points will get removed from that item.
+          <br />
+          <br />
+          When copying items from another week or course, IDs will be removed automatically when saving.
         </Modal.Description>
         <Modal.Description>
           {state.error && (

@@ -98,11 +98,33 @@ module.exports = {
       )
 
       const checklistJson = {}
+      const checklistIdsNow = []
 
       for (const category in req.body.checklist) {
         const checklistForCategory = req.body.checklist[category]
 
-        const checklistItems = await Promise.all(checklistForCategory.map(checklistItem => {
+        const checklistForCategoryIdFiltered = await Promise.all(checklistForCategory.map(async checklistItem => {
+          // if the ID conflicts with an existing checklist item
+          // *on another checklist*, remove ID here. this makes
+          // copying a lot easier, since it won't overwrite the
+          // checklist items on another week/course
+
+          const checklistItemCopy = { ...checklistItem }
+          if (checklistItemCopy.id) {
+            const item = await ChecklistItem.findOne({
+              attributes: ['checklistId'],
+              where: {
+                id: checklistItemCopy.id
+              }
+            })
+            if (item.checklistId !== result[1].dataValues.id) {
+              delete checklistItemCopy.id
+            }
+          }
+          return checklistItemCopy
+        }))
+
+        const checklistItems = await Promise.all(checklistForCategoryIdFiltered.map(checklistItem => {
           return ChecklistItem.upsert({
             id: checklistItem.id,
             name: checklistItem.name,
@@ -112,14 +134,27 @@ module.exports = {
             uncheckedPoints: checklistItem.uncheckedPoints,
             category: category,
             checklistId: result[1].dataValues.id
-          })
+          }, { returning: true })
         }))
 
-        checklistJson[category] = checklistItems.map(({ dataValues: checklistItem }) => {
+        checklistJson[category] = checklistItems.map(item => {
+          const checklistItem = item[0].dataValues
           const checklistItemCopy = { ...checklistItem }
+          checklistIdsNow.push(checklistItemCopy.id)
           delete checklistItemCopy.category
+          delete checklistItemCopy.checklistId
+          return checklistItemCopy
         })
       }
+
+      // remove the other stuff that we do not want
+      const checklistWeekItems = await ChecklistItem.findAll({
+        where: {
+          checklistId: result[1].dataValues.id,
+        }
+      })
+      await Promise.all(checklistWeekItems.filter(item => !checklistIdsNow.includes(item.id)).map(item => item.destroy()))
+
       res.status(200).send({
         message: `checklist saved successfully for week ${req.body.week}.`,
         result: { ...result[1].dataValues, list: checklistJson },
