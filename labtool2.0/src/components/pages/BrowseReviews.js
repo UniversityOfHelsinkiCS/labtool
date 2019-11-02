@@ -13,6 +13,7 @@ import { sendEmail } from '../../services/email'
 import { resetLoading } from '../../reducers/loadingReducer'
 import { createCourseIdWithYearAndTerm } from '../../util/format'
 import { getCoursesByStudentId } from '../../services/studentinstances'
+import { getAllTeacherCourses } from '../../services/teacherinstances'
 import useLegacyState from '../../hooks/legacyState'
 
 import BackButton from '../BackButton'
@@ -36,6 +37,7 @@ export const BrowseReviews = props => {
     props.resetLoading()
     props.getOneCI(props.courseId)
     props.coursePageInformation(props.courseId)
+    props.getAllTeacherCourses()
     props.getCoursesByStudentId(Number(props.studentInstance))
     if (!props.loading.loading && !state.openWeeks[props.selectedInstance.currentWeek - 1]) {
       state.openWeeks = { [props.selectedInstance.currentWeek - 1]: true }
@@ -187,19 +189,26 @@ export const BrowseReviews = props => {
   }
 
   //get student's other participations in the same course
-  const renderStudentPreviousParticipation = () => {
-    const previousParticipations = props.studentInstanceToBeReviewed.filter(courseInstance => courseInstance.ohid.includes(props.courseId.substring(0, 8)) && courseInstance.ohid !== props.courseId)
-    if (previousParticipations.length === 0) {
+  const renderStudentOtherParticipation = () => {
+    const otherParticipations = props.studentInstanceToBeReviewed.filter(courseInstance => courseInstance.ohid.includes(props.courseId.substring(0, 8)) && courseInstance.ohid !== props.courseId)
+    if (otherParticipations.length === 0) {
       return <p className="noOther">Has no other participation in this course</p>
     }
     return (
       <div className="hasOther">
         <p style={{ color: 'red' }}>Has taken this course in other periods</p>
-        {previousParticipations.map(participation => (
-          <Link key={participation.id} to={`/labtool/browsereviews/${participation.ohid}/${participation.courseInstances[0].id}`}>
-            <Popup content="click to see the details" trigger={<p>{createCourseIdWithYearAndTerm(participation.ohid, participation.start)}</p>} />
-          </Link>
-        ))}
+        {otherParticipations.map(participation =>
+          props.teacherInstance.find(course => course.id === participation.id) ? (
+            //show link to participation if the teacher/assistant has been the instructor in that course, otherwise only text
+            <Link key={participation.id} to={`/labtool/browsereviews/${participation.ohid}/${participation.courseInstances[0].id}`}>
+              <Popup content="click to see the details" trigger={<p>{createCourseIdWithYearAndTerm(participation.ohid, participation.start)}</p>} />
+            </Link>
+          ) : (
+            <p className="noAccess" key={participation.id}>
+              {createCourseIdWithYearAndTerm(participation.ohid, participation.start)}
+            </p>
+          )
+        )}
       </div>
     )
   }
@@ -222,7 +231,7 @@ export const BrowseReviews = props => {
         <div style={{ display: 'inline-block' }}>
           {student.projectName}: <RepoLink url={student.github} />
           <br />
-          {renderStudentPreviousParticipation()}
+          {renderStudentOtherParticipation()}
         </div>
         {
           <Button color="red" style={{ float: 'right' }} onClick={() => handleMarkAsDropped(!student.dropped)}>
@@ -439,6 +448,7 @@ const mapStateToProps = (state, ownProps) => {
     selectedInstance: state.selectedInstance,
     courseData: state.coursePage,
     studentInstanceToBeReviewed: state.studentInstance,
+    teacherInstance: state.teacherInstance, //courses that the teacher has
     loading: state.loading
   }
 }
@@ -451,6 +461,7 @@ const mapDispatchToProps = {
   sendEmail,
   resetLoading,
   getCoursesByStudentId,
+  getAllTeacherCourses,
   updateStudentProjectInfo
 }
 
@@ -464,6 +475,7 @@ BrowseReviews.propTypes = {
   selectedInstance: PropTypes.object.isRequired,
   courseData: PropTypes.object.isRequired,
   studentInstanceToBeReviewed: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+  teacherInstance: PropTypes.array.isRequired,
   loading: PropTypes.object.isRequired,
 
   createOneComment: PropTypes.func.isRequired,
@@ -473,6 +485,7 @@ BrowseReviews.propTypes = {
   sendEmail: PropTypes.func.isRequired,
   resetLoading: PropTypes.func.isRequired,
   getCoursesByStudentId: PropTypes.func.isRequired,
+  getAllTeacherCourses: PropTypes.func.isRequired,
   updateStudentProjectInfo: PropTypes.func.isRequired
 }
 
