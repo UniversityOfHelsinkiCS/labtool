@@ -27,6 +27,26 @@ const JsonEdit = props => {
     }
   }
 
+  const removeIdsFromJson = () => {
+    try {
+      const obj = JSON.parse(state.data)
+      for (const category of Object.keys(obj)) {
+        const items = obj[category]
+        if (Array.isArray(items)) {
+          for (const item of items) {
+            delete item['id']
+          }
+        }
+      }
+      setData(JSON.stringify(obj, null, 4))
+    } catch (error) {
+      console.error(error)
+      if (error instanceof SyntaxError) {
+        state.error = `Failed to parse JSON: ${error.message}`
+      }
+    }
+  }
+
   const onChange = e => setData(e.target.value)
   const hasValidData = () => !!state.data && !state.error
 
@@ -45,7 +65,10 @@ const JsonEdit = props => {
 
       <Modal onClose={closeDialog} open={open}>
         <Modal.Header>JSON</Modal.Header>
-        <Modal.Description style={{ padding: 15 }}>Pressing &quot;Save&quot; saves immediately and overwrites the current checklist.</Modal.Description>
+        <Modal.Description style={{ padding: 15 }}>
+          Pressing &quot;Save&quot; saves immediately and overwrites the current checklist. When copying checklists or adding new items, make sure to remove the IDs (such as by clicking the button
+          below).
+        </Modal.Description>
         <Modal.Description>
           {state.error && (
             <Message style={{ padding: 15 }} error>
@@ -77,6 +100,7 @@ const JsonEdit = props => {
             floated="left"
             allowedFileTypes={['application/json']}
           />
+          <Button content="Remove all IDs" onClick={removeIdsFromJson} />
           <Button content="Close" negative onClick={closeDialog} />
           <Button
             content="Save"

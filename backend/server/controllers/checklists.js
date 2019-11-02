@@ -162,6 +162,9 @@ module.exports = {
           const checklistItemCopy = { ...checklistItem }
           delete checklistItemCopy.category
           delete checklistItemCopy.checklistId
+          if (req.body.copying) {
+            delete checklistItemCopy.id
+          }
           checklistJson[checklistItem.category].push(checklistItemCopy)
         })
 

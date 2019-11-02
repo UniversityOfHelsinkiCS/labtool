@@ -6,7 +6,7 @@ import { createCourseIdWithYearAndTerm } from '../../../util/format'
 
 import RepoLink from '../../RepoLink'
 
-export const StudentCard = ({ student, previousParticipations, handleMarkAsDropped }) => (
+export const StudentCard = ({ student, otherParticipations, handleMarkAsDropped, teacherInstance }) => (
   <Card key={student.id} fluid color="yellow" className="studentCard">
     <Card.Content>
       <Header as="h2">
@@ -24,14 +24,21 @@ export const StudentCard = ({ student, previousParticipations, handleMarkAsDropp
       <div style={{ display: 'inline-block' }}>
         {student.projectName}: <RepoLink url={student.github} />
         <br />
-        {previousParticipations.length > 0 ? (
+        {otherParticipations.length > 0 ? (
           <div className="hasOther">
             <p style={{ color: 'red' }}>Has taken this course in other periods</p>
-            {previousParticipations.map(participation => (
-              <Link key={participation.id} to={`/labtool/browsereviews/${participation.ohid}/${participation.courseInstances[0].id}`}>
-                <Popup content="click to see the details" trigger={<p>{createCourseIdWithYearAndTerm(participation.ohid, participation.start)}</p>} />
-              </Link>
-            ))}
+            {otherParticipations.map(participation =>
+              teacherInstance.find(course => course.id === participation.id) ? (
+                //show link to participation if the teacher/assistant has been the instructor in that course, otherwise only text
+                <Link key={participation.id} to={`/labtool/browsereviews/${participation.ohid}/${participation.courseInstances[0].id}`}>
+                  <Popup content="click to see the details" trigger={<p>{createCourseIdWithYearAndTerm(participation.ohid, participation.start)}</p>} />
+                </Link>
+              ) : (
+                <p className="noAccess" key={participation.id}>
+                  {createCourseIdWithYearAndTerm(participation.ohid, participation.start)}
+                </p>
+              )
+            )}
           </div>
         ) : (
           <p className="noOther">Has no other participation in this course</p>
@@ -48,7 +55,8 @@ export const StudentCard = ({ student, previousParticipations, handleMarkAsDropp
 
 StudentCard.propTypes = {
   student: PropTypes.object.isRequired,
-  previousParticipations: PropTypes.array.isRequired,
+  teacherInstance: PropTypes.object.isRequired,
+  otherParticipations: PropTypes.array.isRequired,
   handleMarkAsDropped: PropTypes.func.isRequired
 }
 

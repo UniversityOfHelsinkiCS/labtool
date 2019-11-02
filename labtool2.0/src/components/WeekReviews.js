@@ -47,10 +47,10 @@ export const WeekReviews = props => {
 
   const getMaximumPoints = week => {
     const checklist = props.selectedInstance.checklists.find(checkl => checkl.week === week)
-    if (checklist === undefined || checklist.maxPoints === 0 || checklist.maxPoints === null) {
-      return props.selectedInstance.weekMaxPoints
+    if (checklist && checklist.maxPoints) {
+      return checklist.maxPoints
     }
-    return checklist.maxPoints
+    return props.selectedInstance.weekMaxPoints
   }
 
   const sendCommentEmail = commentId => async () => {

@@ -9,6 +9,7 @@ import { updateStudentProjectInfo } from '../../services/studentinstances'
 import { sendEmail } from '../../services/email'
 import { resetLoading } from '../../reducers/loadingReducer'
 import { getCoursesByStudentId } from '../../services/studentinstances'
+import { getAllTeacherCourses } from '../../services/teacherinstances'
 import useLegacyState from '../../hooks/legacyState'
 
 import BackButton from '../BackButton'
@@ -31,6 +32,7 @@ export const BrowseReviews = props => {
     props.resetLoading()
     props.getOneCI(props.courseId)
     props.coursePageInformation(props.courseId)
+    props.getAllTeacherCourses()
     props.getCoursesByStudentId(Number(props.studentInstance))
     if (!Object.keys(state.openWeeks).length && !state.openWeeks[props.selectedInstance.currentWeek - 1]) {
       state.openWeeks = { [props.selectedInstance.currentWeek - 1]: true }
@@ -153,8 +155,9 @@ export const BrowseReviews = props => {
           </Link>
           <StudentCard
             student={student}
-            previousParticipations={props.studentInstanceToBeReviewed.filter(courseInstance => courseInstance.ohid.includes(props.courseId.substring(0, 8)) && courseInstance.ohid !== props.courseId)}
+            otherParticipations={props.studentInstanceToBeReviewed.filter(courseInstance => courseInstance.ohid.includes(props.courseId.substring(0, 8)) && courseInstance.ohid !== props.courseId)}
             handleMarkAsDropped={handleMarkAsDropped}
+            teacherInstance={props.teacherInstance}
           />
           <span>
             {hasAllReviewsOpen(student) ? (
@@ -184,6 +187,7 @@ const mapStateToProps = (state, ownProps) => {
     selectedInstance: state.selectedInstance,
     courseData: state.coursePage,
     studentInstanceToBeReviewed: state.studentInstance,
+    teacherInstance: state.teacherInstance, //courses that the teacher has
     loading: state.loading
   }
 }
@@ -194,6 +198,7 @@ const mapDispatchToProps = {
   sendEmail,
   resetLoading,
   getCoursesByStudentId,
+  getAllTeacherCourses,
   updateStudentProjectInfo
 }
 
@@ -207,6 +212,7 @@ BrowseReviews.propTypes = {
   selectedInstance: PropTypes.object.isRequired,
   courseData: PropTypes.object.isRequired,
   studentInstanceToBeReviewed: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+  teacherInstance: PropTypes.array.isRequired,
   loading: PropTypes.object.isRequired,
 
   getOneCI: PropTypes.func.isRequired,
@@ -214,6 +220,7 @@ BrowseReviews.propTypes = {
   sendEmail: PropTypes.func.isRequired,
   resetLoading: PropTypes.func.isRequired,
   getCoursesByStudentId: PropTypes.func.isRequired,
+  getAllTeacherCourses: PropTypes.func.isRequired,
   updateStudentProjectInfo: PropTypes.func.isRequired
 }
 
