@@ -69,6 +69,7 @@ export const ReviewStudent = props => {
     props.coursePageInformation(props.courseId)
     props.clearNotifications()
     importWeekDataFromDraft()
+
     return () => {
       // run on component unmount
       props.resetChecklist()
@@ -180,7 +181,10 @@ export const ReviewStudent = props => {
     // props.weekNumber is a string, therefore casting to number.
     const weekData = loadedFromDraft ? props.weekReview.draftData : studentData.weeks.find(theWeek => theWeek.weekNumber === Number(props.ownProps.weekNumber))
     const previousWeekData = studentData.weeks.find(week => week.weekNumber === Number(props.ownProps.weekNumber) - 1)
-    const checks = props.weekReview.checks !== null ? props.weekReview.checks : weekData ? weekData.checks || {} : {}
+
+    const savedChecks = weekData ? weekData.checks || {} : {}
+    const checks = props.weekReview.checks !== null ? props.weekReview.checks : savedChecks //weekData ? weekData.checks || {} : {}
+
     const weekPoints = studentData.weeks
       .filter(week => week.weekNumber < props.weekNumber)
       .map(week => week.points)
@@ -195,9 +199,16 @@ export const ReviewStudent = props => {
     const checkList = props.selectedInstance.checklists.find(checkl => checkl.week === Number(props.ownProps.weekNumber))
     let checklistOutput = ''
     let checklistPoints = 0
+
     if (checkList) {
-      Object.keys(checkList.list).forEach(cl => {
-        checkList.list[cl].forEach(clItem => {
+      Object.keys(checkList.list).forEach(category => {
+        checkList.list[category].forEach(clItem => {
+          //handle existing case where clItems were saved by name in weekData.checks
+          if (savedChecks[clItem.name]) {
+            savedChecks[clItem.id] = savedChecks[clItem.name]
+            delete savedChecks[clItem.name]
+          }
+
           const checked = isChecked(checks, clItem.id)
           const addition = checked ? clItem.textWhenOn : clItem.textWhenOff
           if (addition) checklistOutput += addition + '\n\n'

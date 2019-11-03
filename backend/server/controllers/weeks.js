@@ -40,6 +40,11 @@ module.exports = {
           let updatedChecks = {}
           if (req.body.checks) {
             Object.keys(week.checks).forEach((key) => {
+              //handle existing cases where clItems were saved by name in week.checks
+              if (!Number.isInteger(key)) {
+                return
+              }
+
               if (req.body.checks[key] !== undefined) {
                 updatedChecks[key] = req.body.checks[key]
               } else {
