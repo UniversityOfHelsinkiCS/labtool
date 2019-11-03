@@ -388,6 +388,7 @@ export const CreateChecklist = props => {
   }
 
   if (props.loading && props.loading.redirect) {
+    state.checklistData = props.checklist.data
     window.location.reload(true)
   }
 
