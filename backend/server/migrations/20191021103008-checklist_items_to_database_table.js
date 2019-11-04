@@ -12,13 +12,13 @@ module.exports = {
           type: Sequelize.INTEGER
         },
         name: {
-          type: Sequelize.STRING
+          type: Sequelize.TEXT
         },
         textWhenOff: {
-          type: Sequelize.STRING
+          type: Sequelize.TEXT
         },
         textWhenOn: {
-          type: Sequelize.STRING
+          type: Sequelize.TEXT
         },
         checkedPoints: {
           type: Sequelize.DOUBLE
