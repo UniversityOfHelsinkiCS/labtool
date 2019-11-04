@@ -3,12 +3,13 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Header, Input, Label, Button, Popup, Card, Dropdown, Loader, Icon } from 'semantic-ui-react'
 import { showNotification } from '../../reducers/notificationReducer'
-import { resetLoading } from '../../reducers/loadingReducer'
+import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 import { createChecklist, getOneChecklist } from '../../services/checklist'
 import { getOneCI, getAllCI } from '../../services/courseInstance'
 import { resetChecklist, changeField, restoreChecklist, addTopic, addRow, removeTopic, removeRow, castPointsToNumber } from '../../reducers/checklistReducer'
 import './CreateChecklist.css'
 import { usePersistedState } from '../../hooks/persistedState'
+import { roundNumber } from '../../util/format'
 
 import BackButton from '../BackButton'
 import JsonEdit from '../JsonEdit'
@@ -17,10 +18,12 @@ export const CreateChecklist = props => {
   const state = usePersistedState(`CreateChecklist_${props.courseId}`, {
     week: undefined, // tracks value of week dropdown.
     copyCourse: undefined, // tracks value of course dropdown.
+    copyWeek: undefined, // tracks value of week dropdown.
     topicName: '', // tracks value inputted into topic creation dialog box.
     rowName: '', // tracks value inputted into row creation dialog box.
     openAdd: '', // which addForm is currently open. '' denotes no open addForms. Only one addForm can be open at one time.
     courseDropdowns: [], // Dropdown options to show for copying checklist.
+    copyWeekDropdowns: [], // Dropdown options to show for copying from another week.
     checklistData: null,
     maximumPoints: '',
     canSave: false
@@ -40,6 +43,7 @@ export const CreateChecklist = props => {
 
   useEffect(() => {
     state.courseDropdowns = createCourseDropdowns()
+    state.copyWeekDropdowns = createCopyWeekDropdowns()
   }, [state.week])
 
   useEffect(() => {
@@ -79,17 +83,21 @@ export const CreateChecklist = props => {
     let copyCourse
     if (state.copyCourse) {
       if (week > props.selectedInstance.weekAmount) {
-        copyCourse = props.courses.find(course => course.id === state.copyCourse).finalReview ? state.copyCourse : undefined
+        copyCourse = props.courses.find(course => course.id === state.copyCourse).finalReview ? state.copyCourse : null
       } else {
-        copyCourse = props.courses.find(course => course.id === state.copyCourse).weekAmount >= week ? state.copyCourse : undefined
+        copyCourse = props.courses.find(course => course.id === state.copyCourse).weekAmount >= week ? state.copyCourse : null
       }
     } else {
-      copyCourse = undefined
+      copyCourse = null
     }
     state.maximumPoints = ''
     state.week = week
     state.copyCourse = copyCourse
+    if (state.copyWeek === week) {
+      state.copyWeek = null
+    }
     state.courseDropdowns = createCourseDropdowns()
+    state.copyWeekDropdowns = createCopyWeekDropdowns()
     loadChecklist(week)
   }
 
@@ -101,6 +109,15 @@ export const CreateChecklist = props => {
 
   const changeCopyCourse = async (e, { value }) => {
     state.copyCourse = value
+    if (value) {
+      state.copyWeek = null
+    }
+  }
+  const changeCopyWeek = async (e, { value }) => {
+    state.copyWeek = value
+    if (value) {
+      state.copyCourse = null
+    }
   }
 
   const changeField = (key, name, field) => async e => {
@@ -123,14 +140,22 @@ export const CreateChecklist = props => {
   }
 
   const copyChecklist = async () => {
-    if (!state.copyCourse) return
-    const week = state.week > props.selectedInstance.weekAmount ? props.courses.find(course => course.id === state.copyCourse).weekAmount + 1 : state.week
-    state.canSave = true
-    props.getOneChecklist({
-      week,
-      courseInstanceId: state.copyCourse,
-      copying: true
-    })
+    if (state.copyCourse) {
+      const week = state.week > props.selectedInstance.weekAmount ? props.courses.find(course => course.id === state.copyCourse).weekAmount + 1 : state.week
+      state.canSave = true
+      props.getOneChecklist({
+        week,
+        courseInstanceId: state.copyCourse,
+        copying: true
+      })
+    } else if (state.copyWeek) {
+      state.canSave = true
+      props.getOneChecklist({
+        week: state.copyWeek,
+        courseInstanceId: props.selectedInstance.id,
+        copying: true
+      })
+    }
   }
 
   const validateChecklist = checklist => {
@@ -151,15 +176,16 @@ export const CreateChecklist = props => {
   const importChecklist = checklistForWeek => {
     if (validateChecklist({ week: state.week, list: checklistForWeek })) {
       try {
+        props.addRedirectHook({
+          hook: 'CHECKLIST_CREATE_'
+        })
         props.createChecklist({
           courseInstanceId: props.selectedInstance.id,
           week: state.week,
           checklist: checklistForWeek
         })
-        const checklist = props.checklist
-        checklist.data = checklistForWeek
-        state.checklist = checklist
-        state.canSave = true
+        state.checklistData = checklistForWeek
+        state.canSave = false
       } catch (e) {
         props.showNotification({
           message: 'Could not save JSON.',
@@ -292,6 +318,10 @@ export const CreateChecklist = props => {
     return options
   }
 
+  const createCopyWeekDropdowns = () => {
+    return props.weekDropdowns.filter(option => option.value !== state.week)
+  }
+
   const renderChecklist = () => {
     let maxPoints = 0
     const checklistJsx = Object.keys(props.checklist.data || {}).map(key => {
@@ -383,6 +413,11 @@ export const CreateChecklist = props => {
     }
   }
 
+  if (props.loading && props.loading.redirect) {
+    window.location.reload(true)
+  }
+
+  const hasSelectedWeek = state.week !== undefined && state.week !== null
   const { checklistJsx, maxPoints } = props.loading.loading ? { checklistJsx: null, maxPoints: null } : renderChecklist()
   return (
     <div className="CreateChecklist">
@@ -392,12 +427,29 @@ export const CreateChecklist = props => {
         <div className="topOptions">
           <Dropdown id="weekDropdown" placeholder="Select Checklist" selection value={state.week} onChange={changeWeek} options={props.weekDropdowns} />
           <div className="copyForm">
-            <Button type="button" onClick={copyChecklist} disabled={!state.copyCourse}>
-              Copy
+            <Button type="button" onClick={copyChecklist} disabled={!hasSelectedWeek || (!state.copyCourse && !state.copyWeek)}>
+              Copy checklist
             </Button>
-            <Dropdown className="courseDropdown" placeholder="Copy checklist from another course" selection value={state.copyCourse} onChange={changeCopyCourse} options={state.courseDropdowns} />
+            <Dropdown
+              className="weekDropdown"
+              disabled={!hasSelectedWeek}
+              placeholder="...from another week"
+              selection
+              value={state.copyWeek}
+              onChange={changeCopyWeek}
+              options={state.copyWeekDropdowns}
+            />{' '}
+            <Dropdown
+              className="courseDropdown"
+              disabled={!hasSelectedWeek}
+              placeholder="...from another course"
+              selection
+              value={state.copyCourse}
+              onChange={changeCopyCourse}
+              options={state.courseDropdowns}
+            />
           </div>
-          {state.week !== undefined && state.week !== null ? (
+          {hasSelectedWeek ? (
             <div className="jsonButtons">
               <JsonEdit onImport={importChecklist} initialData={props.checklist.data} downloadName={`${props.selectedInstance.ohid}_week_${state.week}.json`} />
             </div>
@@ -407,7 +459,7 @@ export const CreateChecklist = props => {
         </div>
         {props.loading.loading ? (
           <Loader active />
-        ) : state.week !== undefined && state.week !== null ? (
+        ) : hasSelectedWeek ? (
           <div>
             <form onSubmit={handleSubmit}>
               <Button className="saveButton" type="submit" color="green" size="large" disabled={!state.canSave}>
@@ -446,7 +498,7 @@ export const CreateChecklist = props => {
             <Card className="maxPointsCard">
               <Card.Content>
                 <p>
-                  Total max points: <strong className="maxPointsNumber">{getMaximumPoints(maxPoints)}</strong>
+                  Total max points: <strong className="maxPointsNumber">{roundNumber(getMaximumPoints(maxPoints), 2)}</strong>
                   {state.week > props.selectedInstance.weekAmount ? (
                     <span />
                   ) : (
@@ -514,6 +566,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = {
   showNotification,
   resetLoading,
+  addRedirectHook,
   createChecklist,
   getOneCI,
   getAllCI,
@@ -539,6 +592,7 @@ CreateChecklist.propTypes = {
 
   showNotification: PropTypes.func.isRequired,
   resetLoading: PropTypes.func.isRequired,
+  addRedirectHook: PropTypes.func.isRequired,
   createChecklist: PropTypes.func.isRequired,
   getOneCI: PropTypes.func.isRequired,
   getAllCI: PropTypes.func.isRequired,

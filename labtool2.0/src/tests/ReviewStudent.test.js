@@ -39,6 +39,7 @@ describe('<ReviewStudent />', () => {
           list: {
             Koodi: [
               {
+                id: 1,
                 name: 'Koodin laatu',
                 points: 2,
                 textWhenOn: 'Koodi tehty laadukkaasti ja sisältää kommentteja',
@@ -47,12 +48,14 @@ describe('<ReviewStudent />', () => {
             ],
             Algoritmit: [
               {
+                id: 2,
                 name: 'Algoritmin runko',
                 points: 2,
                 textWhenOn: 'Algoritmin runko luotu',
                 textWhenOff: 'Algoritmin runko puuttuu'
               },
               {
+                id: 3,
                 name: 'Tietorakenteita luotu',
                 points: 2,
                 textWhenOn: 'Tietorakenteita luotu',
@@ -61,12 +64,14 @@ describe('<ReviewStudent />', () => {
             ],
             Dokumentaatio: [
               {
+                id: 4,
                 name: 'Readme',
                 points: 1,
                 textWhenOn: 'README kunnossa',
                 textWhenOff: 'README puuttuu'
               },
               {
+                id: 5,
                 name: 'Tuntikirjanpito',
                 points: 1,
                 textWhenOn: 'Tuntikirjanpito täytetty oikein',
@@ -87,7 +92,7 @@ describe('<ReviewStudent />', () => {
       teacherInstances: [
         {
           id: 10001,
-          admin: true,
+          instructor: false,
           createdAt: '2018-03-26T00:00:00.000Z',
           updatedAt: '2018-03-26T00:00:00.000Z',
           userId: 10010,
@@ -97,7 +102,7 @@ describe('<ReviewStudent />', () => {
         },
         {
           id: 10011,
-          admin: true,
+          instructor: true,
           createdAt: '2018-03-26T00:00:00.000Z',
           updatedAt: '2018-03-26T00:00:00.000Z',
           userId: 10015,
@@ -129,7 +134,8 @@ describe('<ReviewStudent />', () => {
             firsts: 'Johan Wilhelm',
             lastname: 'Studerande',
             studentNumber: '014553242',
-            admin: false,
+            teacher: false,
+            sysop: false,
             createdAt: '2018-03-26T00:00:00.000Z',
             updatedAt: '2018-03-26T00:00:00.000Z'
           }
@@ -152,7 +158,8 @@ describe('<ReviewStudent />', () => {
             firsts: 'Teräs',
             lastname: 'Henkilö',
             studentNumber: '014666666',
-            admin: false,
+            teacher: false,
+            sysop: false,
             createdAt: '2018-03-26T00:00:00.000Z',
             updatedAt: '2018-03-26T00:00:00.000Z'
           }
@@ -216,7 +223,8 @@ describe('<ReviewStudent />', () => {
             firsts: 'Maarit Mirja',
             lastname: 'Opiskelija',
             studentNumber: '014578343',
-            admin: false,
+            teacher: false,
+            sysop: false,
             createdAt: '2018-03-26T00:00:00.000Z',
             updatedAt: '2018-03-26T00:00:00.000Z'
           }
@@ -273,7 +281,8 @@ describe('<ReviewStudent />', () => {
             firsts: 'Teräs',
             lastname: 'Henkilö',
             studentNumber: '014666666',
-            admin: false
+            teacher: false,
+            sysop: false
           },
           Tags: [
             {
@@ -364,7 +373,8 @@ describe('<ReviewStudent />', () => {
             firsts: 'Maarit Mirja',
             lastname: 'Opiskelija',
             studentNumber: '014578343',
-            admin: false
+            teacher: false,
+            sysop: false
           },
           Tags: [
             {
@@ -438,7 +448,8 @@ describe('<ReviewStudent />', () => {
             firsts: 'Johan Wilhelm',
             lastname: 'Studerande',
             studentNumber: '014553242',
-            admin: false
+            teacher: false,
+            sysop: false
           },
           Tags: [
             {

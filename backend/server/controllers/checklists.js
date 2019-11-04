@@ -1,5 +1,5 @@
 const helper = require('../helpers/checklistHelper')
-const { TeacherInstance, Checklist } = require('../models')
+const { TeacherInstance, Checklist, ChecklistItem } = require('../models')
 const logger = require('../utils/logger')
 
 module.exports = {
@@ -28,6 +28,10 @@ module.exports = {
             return
           }
           req.body.checklist[cl].forEach((row) => {
+            if (row.id !== undefined && typeof row.id !== 'number') {
+              res.status(400).send('Field id must be numeric')
+              return
+            }
             if (typeof row.name !== 'string') {
               res.status(400).send('All objects in array must have field "name" with string value.')
               return
@@ -42,6 +46,8 @@ module.exports = {
             }
             Object.keys(row).forEach((key) => {
               switch (key) {
+                case 'id':
+                  break
                 case 'name':
                   break
                 case 'checkedPoints':
@@ -81,16 +87,77 @@ module.exports = {
       }
       // No validation is done to prevent creating a checklist for a week that doesn't exist.
       // Arguably, this is a feature, since the number of weeks can change.
-      const result = await Checklist.create({
+      let result = await Checklist.findOrCreate({where: {
         week: req.body.week,
-        courseName: 'doot',
-        list: req.body.checklist,
-        courseInstanceId: req.body.courseInstanceId,
-        maxPoints: req.body.maxPoints
+        courseInstanceId: req.body.courseInstanceId
+      }})
+      //Update maxPoints. This cannot be done with findOrCreate as by default courses have null as maxPoints
+      result = await Checklist.update(
+        { maxPoints: req.body.maxPoints },
+        { where: { id: result[0].dataValues.id }, returning: true, plain: true }
+      )
+
+      const checklistJson = {}
+      const checklistIdsNow = []
+
+      for (const category in req.body.checklist) {
+        const checklistForCategory = req.body.checklist[category]
+
+        const checklistForCategoryIdFiltered = await Promise.all(checklistForCategory.map(async checklistItem => {
+          // if the ID conflicts with an existing checklist item
+          // *on another checklist*, remove ID here. this makes
+          // copying a lot easier, since it won't overwrite the
+          // checklist items on another week/course
+
+          const checklistItemCopy = { ...checklistItem }
+          if (checklistItemCopy.id) {
+            const item = await ChecklistItem.findOne({
+              attributes: ['checklistId'],
+              where: {
+                id: checklistItemCopy.id
+              }
+            })
+            if (item.checklistId !== result[1].dataValues.id) {
+              delete checklistItemCopy.id
+            }
+          }
+          return checklistItemCopy
+        }))
+
+        const checklistItems = await Promise.all(checklistForCategoryIdFiltered.map(checklistItem => {
+          return ChecklistItem.upsert({
+            id: checklistItem.id,
+            name: checklistItem.name,
+            textWhenOn: checklistItem.textWhenOn,
+            textWhenOff: checklistItem.textWhenOff,
+            checkedPoints: checklistItem.checkedPoints,
+            uncheckedPoints: checklistItem.uncheckedPoints,
+            category: category,
+            checklistId: result[1].dataValues.id
+          }, { returning: true })
+        }))
+
+        checklistJson[category] = checklistItems.map(item => {
+          const checklistItem = item[0].dataValues
+          const checklistItemCopy = { ...checklistItem }
+          checklistIdsNow.push(checklistItemCopy.id)
+          delete checklistItemCopy.category
+          delete checklistItemCopy.checklistId
+          return checklistItemCopy
+        })
+      }
+
+      // remove the other stuff that we do not want
+      const checklistWeekItems = await ChecklistItem.findAll({
+        where: {
+          checklistId: result[1].dataValues.id,
+        }
       })
+      await Promise.all(checklistWeekItems.filter(item => !checklistIdsNow.includes(item.id)).map(item => item.destroy()))
+
       res.status(200).send({
         message: `checklist saved successfully for week ${req.body.week}.`,
-        result,
+        result: { ...result[1].dataValues, list: checklistJson },
         data: req.body
       })
     } catch (e) {
@@ -118,7 +185,25 @@ module.exports = {
         }
       })
       if (checklist) {
-        res.status(200).send(checklist)
+        const checklistJson = {}
+        const checklistItems = await ChecklistItem.findAll({ where: {
+          checklistId: checklist.id 
+        }})
+        checklistItems.forEach(({ dataValues: checklistItem }) => {
+          if (checklistJson[checklistItem.category] === undefined) {
+            checklistJson[checklistItem.category] = []
+          }
+          
+          const checklistItemCopy = { ...checklistItem }
+          delete checklistItemCopy.category
+          delete checklistItemCopy.checklistId
+          if (req.body.copying) {
+            delete checklistItemCopy.id
+          }
+          checklistJson[checklistItem.category].push(checklistItemCopy)
+        })
+
+        res.status(200).send({ ...checklist.dataValues, list: checklistJson })
       } else {
         res.status(404).send({
           message: 'No matching checklist found.',

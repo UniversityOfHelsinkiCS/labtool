@@ -60,15 +60,8 @@ export const CoursePage = props => {
     })
   }
 
-  const sortStudentArrayAlphabeticallyByDroppedValue = theArray => {
-    return theArray.sort((a, b) => {
-      if (a.dropped !== b.dropped) {
-        return Number(a.dropped) - Number(b.dropped)
-      } else {
-        return a.lastname > b.lastname ? -1 : 1
-      }
-    })
-  }
+  const sortStudentArrayAlphabeticallyByDroppedValue = theArray =>
+    theArray.sort((a, b) => Number(a.dropped) - Number(b.dropped) || a.User.lastname.localeCompare(b.User.lastname) || a.User.firsts.localeCompare(b.User.firsts) || a.id - b.id)
 
   const handleClick = (e, titleProps) => {
     const { index } = titleProps
@@ -89,7 +82,7 @@ export const CoursePage = props => {
       await props.createOneComment(content)
       document.getElementById('comment').reset()
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
   }
 
@@ -238,10 +231,10 @@ export const CoursePage = props => {
 
   const getMaximumPoints = week => {
     const checklist = props.selectedInstance.checklists.find(checkl => checkl.week === week)
-    if (checklist === undefined || checklist.maxPoints === 0) {
-      return selectedInstance.weekMaxPoints
+    if (checklist && checklist.maxPoints) {
+      return checklist.maxPoints
     }
-    return checklist.maxPoints
+    return selectedInstance.weekMaxPoints
   }
 
   const createStudentGradedWeek = (i, week) => (
@@ -451,10 +444,47 @@ export const CoursePage = props => {
     props.modifyOneCI(content, selectedInstance.ohid)
   }
 
+  // This function advances the current week by 1, leaving other data intact.
+  const moveToNextWeek = () => {
+    if (!window.confirm('This will advance the course by 1 week. Confirm?')) {
+      return
+    }
+
+    const { weekAmount, weekMaxPoints, currentWeek, active, ohid, finalReview, coursesPage, courseMaterial, currentCodeReview } = selectedInstance
+
+    if (currentWeek === weekAmount) {
+      return
+    }
+
+    const nextWeek = currentWeek + 1
+
+    const content = {
+      weekAmount,
+      weekMaxPoints,
+      currentWeek: nextWeek,
+      active,
+      ohid,
+      finalReview,
+      newCr: currentCodeReview,
+      coursesPage,
+      courseMaterial
+    }
+
+    props.changeCourseField({
+      field: 'currentWeek',
+      value: nextWeek
+    })
+
+    props.resetLoading()
+    props.modifyOneCI(content, selectedInstance.ohid)
+  }
+
   /**
    * Returns what teachers should see at the top of this page
    */
   let renderTeacherTopPart = () => {
+    const weekAdvanceEnabled = selectedInstance.currentWeek !== selectedInstance.weekAmount
+
     return (
       <div className="TeachersTopView" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
         <CoursePageHeader courseInstance={selectedInstance} />
@@ -487,7 +517,15 @@ export const CoursePage = props => {
                 </div>
               </Table.Cell>
               <Table.Cell>Week amount: {selectedInstance.weekAmount}</Table.Cell>
-              <Table.Cell>Current week: {selectedInstance.currentWeek}</Table.Cell>
+              <Table.Cell>
+                Current week: {selectedInstance.currentWeek}
+                <Popup
+                  content={weekAdvanceEnabled ? 'Advance course by 1 week' : 'Already at final week'}
+                  trigger={
+                    <Icon disabled={!weekAdvanceEnabled} name="right arrow" onClick={() => moveToNextWeek()} style={{ marginLeft: '15px', cursor: weekAdvanceEnabled ? 'pointer' : 'not-allowed' }} />
+                  }
+                />
+              </Table.Cell>
               <Table.Cell>Week max points: {selectedInstance.weekMaxPoints}</Table.Cell>
               <Table.Cell textAlign="right">
                 {' '}
@@ -503,6 +541,22 @@ export const CoursePage = props => {
   }
 
   let renderTeacherBottomPart = () => {
+    // Fetched here because it's used in multiple occasions.
+    const students = sortStudentArrayAlphabeticallyByDroppedValue(courseData.data)
+
+    let droppedStudentCount = 0
+    let activeStudentCount = 0
+
+    students.forEach(student => {
+      if (student.dropped) {
+        droppedStudentCount++
+      } else {
+        activeStudentCount++
+      }
+    })
+
+    const totalStudentCount = activeStudentCount + droppedStudentCount
+
     const dropConvertButton = droppedTagExists() && (
       <Button onClick={() => markAllWithDroppedTagAsDropped(courseData)} size="small">
         Mark all with dropped tag as dropped out
@@ -511,7 +565,11 @@ export const CoursePage = props => {
     return (
       <div className="TeachersBottomView">
         <br />
-        <Header as="h2">Students </Header>
+        <Header as="h2">Students</Header>
+
+        <p>
+          {activeStudentCount} active student{activeStudentCount === 1 ? '' : 's'}, {droppedStudentCount} dropped student{droppedStudentCount === 1 ? '' : 's'} ({totalStudentCount} in total)
+        </p>
 
         <StudentTable
           key={'studentTable'}
@@ -519,7 +577,7 @@ export const CoursePage = props => {
           allowModify={true}
           allowReview={true}
           selectedInstance={selectedInstance}
-          studentInstances={sortStudentArrayAlphabeticallyByDroppedValue(courseData.data)}
+          studentInstances={students}
           coursePageLogic={coursePageLogic}
           tags={tags}
           persistentFilterKey={`CoursePage_filters_${courseId}`}

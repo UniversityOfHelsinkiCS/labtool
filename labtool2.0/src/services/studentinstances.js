@@ -56,6 +56,20 @@ export const updateStudentProjectInfo = data => {
   return callController(route, prefix, data, method)
 }
 
+/**
+ * data :
+ * {
+ *   ohid,
+ *   studentInstances: []
+ * }
+ */
+export const massUpdateStudentProjectInfo = data => {
+  const route = `/studentinstance/massupdate`
+  const prefix = 'STUDENT_PROJECT_INFO_MASS_UPDATE_'
+  const method = 'post'
+  return callController(route, prefix, data, method)
+}
+
 /* Will probably need something like this to review students
 
 export const getOneSI = (id) => {

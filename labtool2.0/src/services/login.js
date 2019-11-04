@@ -32,7 +32,7 @@ export const fakeShibboLogin = loginInformation => {
  *   email: {string}
  * }
  */
-export const updateUser = content => {
+export const updateSelf = content => {
   const route = '/users/update'
   const prefix = 'USER_UPDATE_'
   const method = 'put'
@@ -46,4 +46,4 @@ export const logout = () => {
   return callController(route, prefix, { returnUrl: window.location.href }, method)
 }
 
-export default { login }
+export default { login, updateSelf }

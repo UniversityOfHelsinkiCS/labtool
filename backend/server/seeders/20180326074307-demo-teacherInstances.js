@@ -8,7 +8,7 @@ module.exports = {
         id: 10001,
         userId: 10010,
         courseInstanceId: 10011,
-        admin: true,
+        instructor: false,
         createdAt: '2018-03-26',
         updatedAt: '2018-03-26'
       },
@@ -16,7 +16,7 @@ module.exports = {
         id: 10002,
         userId: 10010,
         courseInstanceId: 10012,
-        admin: true,
+        instructor: false,
         createdAt: '2018-03-26',
         updatedAt: '2018-03-26'
       },
@@ -24,7 +24,7 @@ module.exports = {
         id: 10003,
         userId: 10010,
         courseInstanceId: 10013,
-        admin: true,
+        instructor: false,
         createdAt: '2018-03-26',
         updatedAt: '2018-03-26'
       },
@@ -32,7 +32,7 @@ module.exports = {
         id: 10011,
         userId: 10015,
         courseInstanceId: 10011,
-        admin: false,
+        instructor: true,
         createdAt: '2018-03-26',
         updatedAt: '2018-03-26'
       },
@@ -40,7 +40,7 @@ module.exports = {
         id: 10012,
         userId: 10025,
         courseInstanceId: 10012,
-        admin: false,
+        instructor: true,
         createdAt: '2018-03-26',
         updatedAt: '2018-03-26'
       },
@@ -48,7 +48,7 @@ module.exports = {
         id: 10101,
         userId: 10101,
         courseInstanceId: 10012,
-        admin: false,
+        instructor: true,
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01'
       },
@@ -56,7 +56,7 @@ module.exports = {
         id: 10102,
         userId: 10102,
         courseInstanceId: 10012,
-        admin: false,
+        instructor: true,
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01'
       },
@@ -64,7 +64,7 @@ module.exports = {
         id: 10103,
         userId: 10103,
         courseInstanceId: 10012,
-        admin: false,
+        instructor: true,
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01'
       },
@@ -72,7 +72,7 @@ module.exports = {
         id: 10104,
         userId: 10104,
         courseInstanceId: 10012,
-        admin: false,
+        instructor: true,
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01'
       },
@@ -80,7 +80,7 @@ module.exports = {
         id: 10105,
         userId: 10105,
         courseInstanceId: 10012,
-        admin: false,
+        instructor: true,
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01'
       },
@@ -88,7 +88,7 @@ module.exports = {
         id: 10106,
         userId: 10106,
         courseInstanceId: 10012,
-        admin: false,
+        instructor: true,
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01'
       },
@@ -96,7 +96,7 @@ module.exports = {
         id: 10107,
         userId: 10107,
         courseInstanceId: 10012,
-        admin: false,
+        instructor: true,
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01'
       },
@@ -104,7 +104,7 @@ module.exports = {
         id: 10108,
         userId: 10108,
         courseInstanceId: 10012,
-        admin: false,
+        instructor: true,
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01'
       },
@@ -112,7 +112,7 @@ module.exports = {
         id: 10109,
         userId: 10109,
         courseInstanceId: 10012,
-        admin: false,
+        instructor: true,
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01'
       },
@@ -120,7 +120,7 @@ module.exports = {
         id: 10110,
         userId: 10110,
         courseInstanceId: 10012,
-        admin: false,
+        instructor: true,
         createdAt: '1970-01-01',
         updatedAt: '1970-01-01'
       },
@@ -128,7 +128,7 @@ module.exports = {
         id: 10111,
         userId: 10010,
         courseInstanceId: 10014,
-        admin: true,
+        instructor: false,
         createdAt: '2018-03-26',
         updatedAt: '2018-03-26'
       },
@@ -136,7 +136,7 @@ module.exports = {
         id: 10112,
         userId: 10010,
         courseInstanceId: 10015,
-        admin: true,
+        instructor: false,
         createdAt: '2018-03-26',
         updatedAt: '2018-03-26'
       },
@@ -144,7 +144,7 @@ module.exports = {
         id: 10113,
         userId: 10010,
         courseInstanceId: 10016,
-        admin: true,
+        instructor: false,
         createdAt: '2018-03-26',
         updatedAt: '2018-03-26'
       }

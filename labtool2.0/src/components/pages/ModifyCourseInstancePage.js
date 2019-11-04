@@ -77,21 +77,20 @@ export const ModifyCourseInstancePage = props => {
         coursesPage,
         courseMaterial
       }
-      props.addRedirectHook({
-        hook: 'CI_MODIFY_ONE_'
-      })
       props.changeCourseField({
         field: 'active',
         value: active
       })
+      props.addRedirectHook({
+        hook: 'CI_MODIFY_ONE_'
+      })
       props.modifyOneCI(content, props.selectedInstance.ohid)
-      props.forceRedirect()
     } catch (error) {
       console.error(error)
     }
   }
 
-  if (props.redirect && props.redirect.redirect) {
+  if ((props.redirect && props.redirect.redirect) || props.loading.redirect) {
     return <Redirect to={`/labtool/courses/${props.selectedInstance.ohid}`} />
   }
   const selectedInstance = { ...props.selectedInstance }
@@ -244,7 +243,7 @@ export const ModifyCourseInstancePage = props => {
   )
 }
 
-const createDropdownCodereviews = (amount, current) => {
+const createDropdownCodeReviews = (amount, current) => {
   let ddCr = []
   let i = 1
   if (amount && current) {
@@ -252,7 +251,7 @@ const createDropdownCodereviews = (amount, current) => {
       if (!current.includes(i)) {
         ddCr.push({
           value: i,
-          text: `Codereview ${i}`
+          text: `Code Review ${i}`
         })
       }
       i++
@@ -266,7 +265,7 @@ const mapStateToProps = (state, ownProps) => {
     selectedInstance: state.selectedInstance,
     notification: state.notification,
     ownProps,
-    codeReviewDropdowns: createDropdownCodereviews(state.selectedInstance.amountOfCodeReviews, state.selectedInstance.currentCodeReview),
+    codeReviewDropdowns: createDropdownCodeReviews(state.selectedInstance.amountOfCodeReviews, state.selectedInstance.currentCodeReview),
     loading: state.loading,
     redirect: state.redirect
   }

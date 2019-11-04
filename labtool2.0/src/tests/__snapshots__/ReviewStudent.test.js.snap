@@ -246,7 +246,7 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
             />
             <CardContent
               className="checklistCardRow"
-              key="Koodin laatu"
+              key="1"
               onClick={[Function]}
             >
               <FormField>
@@ -310,7 +310,7 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
             />
             <CardContent
               className="checklistCardRow"
-              key="Algoritmin runko"
+              key="2"
               onClick={[Function]}
             >
               <FormField>
@@ -364,7 +364,7 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
             </CardContent>
             <CardContent
               className="checklistCardRow"
-              key="Tietorakenteita luotu"
+              key="3"
               onClick={[Function]}
             >
               <FormField>
@@ -428,7 +428,7 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
             />
             <CardContent
               className="checklistCardRow"
-              key="Readme"
+              key="4"
               onClick={[Function]}
             >
               <FormField>
@@ -482,7 +482,7 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
             </CardContent>
             <CardContent
               className="checklistCardRow"
-              key="Tuntikirjanpito"
+              key="5"
               onClick={[Function]}
             >
               <FormField>

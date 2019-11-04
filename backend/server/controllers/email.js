@@ -284,7 +284,7 @@ const send = async (req, res) => {
         const link = req.body.role === 'teacher'
           ? `${frontendUrl}/courses/${message.content.course.ohid}`
           : `${frontendUrl}/browsereviews/${message.content.course.ohid}/${message.studentId}`
-        html = buildEmail(`You've received a message from Labtool`, link, message.content.course.name, null, 'Message content', message.content.text)
+        html = buildEmail('You\'ve received a message from Labtool', link, message.content.course.name, null, 'Message content', message.content.text)
       }
     } else {
       // commentId was not supplied, so use weekId instead.
@@ -294,7 +294,7 @@ const send = async (req, res) => {
 
         // Email body defined as html
         const link = `${frontendUrl}/courses/${message.content.course.ohid}`
-        html = buildEmail(`Your submission has been reviewed`, link, message.content.course.name, message.content.points, 'Feedback', message.content.text)
+        html = buildEmail('Your submission has been reviewed', link, message.content.course.name, message.content.points, 'Feedback', message.content.text)
       }
     }
 
@@ -429,7 +429,7 @@ const sendMass = async (req, res) => {
         if (!user) {
           return null
         }
-  
+
         return user.email || ''
       }))).filter(email => email)
     }
@@ -437,7 +437,7 @@ const sendMass = async (req, res) => {
     // prepare email here
     const link = `${frontendUrl}/courses/${req.params.id}`
     const subject = `${courseInstance.name} new message from instructor`
-    const html = buildEmail(`You've received a message from Labtool`, link, courseInstance.name, null, `Message content`, req.body.content)
+    const html = buildEmail('You\'ve received a message from Labtool', link, courseInstance.name, null, 'Message content', req.body.content)
 
     const { success, simulated } = await trySendEmail({
       subject,

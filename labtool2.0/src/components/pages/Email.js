@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Form, Grid, Loader } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
-import { updateUser } from '../../services/login'
+import { updateSelf } from '../../services/login'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router'
 import { resetLoading, addRedirectHook, forceSetLoading } from '../../reducers/loadingReducer'
@@ -31,7 +31,7 @@ export const Email = props => {
     props.addRedirectHook({
       hook: 'USER_UPDATE_'
     })
-    await props.updateUser(content)
+    await props.updateSelf(content)
   }
 
   if (props.loading.redirect) {
@@ -100,7 +100,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = {
-  updateUser,
+  updateSelf,
   resetLoading,
   addRedirectHook,
   forceSetLoading
@@ -110,7 +110,7 @@ Email.propTypes = {
   user: PropTypes.object.isRequired,
   loading: PropTypes.object.isRequired,
 
-  updateUser: PropTypes.func.isRequired,
+  updateSelf: PropTypes.func.isRequired,
   resetLoading: PropTypes.func.isRequired,
   addRedirectHook: PropTypes.func.isRequired,
   forceSetLoading: PropTypes.func.isRequired

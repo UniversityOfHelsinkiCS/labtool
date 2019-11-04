@@ -19,13 +19,14 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
           "data": Object {
             "Tags": Array [],
             "User": Object {
-              "admin": false,
               "createdAt": "2018-03-26T00:00:00.000Z",
               "email": "maarit.opiskelija@helsinki.invalid",
               "firsts": "Maarit Mirja",
               "id": 10011,
               "lastname": "Opiskelija",
               "studentNumber": "014578343",
+              "sysop": false,
+              "teacher": false,
               "updatedAt": "2018-03-26T00:00:00.000Z",
               "username": "tiraopiskelija1",
             },
@@ -395,46 +396,16 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
         Object {
           "data": Array [
             Object {
-              "Tags": Array [
-                Object {
-                  "color": "red",
-                  "id": 20001,
-                  "name": "Javascript",
-                },
-              ],
-              "User": Object {
-                "admin": false,
-                "createdAt": "2018-03-26T00:00:00.000Z",
-                "email": "johan.studerande@helsinki.invalid",
-                "firsts": "Johan Wilhelm",
-                "id": 10012,
-                "lastname": "Studerande",
-                "studentNumber": "014553242",
-                "updatedAt": "2018-03-26T00:00:00.000Z",
-                "username": "tiraopiskelija2",
-              },
-              "codeReviews": Array [],
-              "courseInstanceId": 10011,
-              "createdAt": "2018-03-26T00:00:00.000Z",
-              "dropped": false,
-              "github": "http://github.com/tiralabra2",
-              "id": 10012,
-              "projectName": "Tiran toinen labraprojekti",
-              "teacherInstanceId": 10011,
-              "updatedAt": "2018-03-26T00:00:00.000Z",
-              "userId": 10012,
-              "weeks": Array [],
-            },
-            Object {
               "Tags": Array [],
               "User": Object {
-                "admin": false,
                 "createdAt": "2018-03-26T00:00:00.000Z",
                 "email": "maarit.opiskelija@helsinki.invalid",
                 "firsts": "Maarit Mirja",
                 "id": 10011,
                 "lastname": "Opiskelija",
                 "studentNumber": "014578343",
+                "sysop": false,
+                "teacher": false,
                 "updatedAt": "2018-03-26T00:00:00.000Z",
                 "username": "tiraopiskelija1",
               },
@@ -453,6 +424,38 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             Object {
               "Tags": Array [
                 Object {
+                  "color": "red",
+                  "id": 20001,
+                  "name": "Javascript",
+                },
+              ],
+              "User": Object {
+                "createdAt": "2018-03-26T00:00:00.000Z",
+                "email": "johan.studerande@helsinki.invalid",
+                "firsts": "Johan Wilhelm",
+                "id": 10012,
+                "lastname": "Studerande",
+                "studentNumber": "014553242",
+                "sysop": false,
+                "teacher": false,
+                "updatedAt": "2018-03-26T00:00:00.000Z",
+                "username": "tiraopiskelija2",
+              },
+              "codeReviews": Array [],
+              "courseInstanceId": 10011,
+              "createdAt": "2018-03-26T00:00:00.000Z",
+              "dropped": false,
+              "github": "http://github.com/tiralabra2",
+              "id": 10012,
+              "projectName": "Tiran toinen labraprojekti",
+              "teacherInstanceId": 10011,
+              "updatedAt": "2018-03-26T00:00:00.000Z",
+              "userId": 10012,
+              "weeks": Array [],
+            },
+            Object {
+              "Tags": Array [
+                Object {
                   "color": "grey",
                   "id": 20008,
                   "name": "DROPPED",
@@ -464,13 +467,14 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
                 },
               ],
               "User": Object {
-                "admin": false,
                 "createdAt": "2018-03-26T00:00:00.000Z",
                 "email": "teras.henkilo@helsinki.invalid",
                 "firsts": "Teräs",
                 "id": 10031,
                 "lastname": "Henkilö",
                 "studentNumber": "014666666",
+                "sysop": false,
+                "teacher": false,
                 "updatedAt": "2018-03-26T00:00:00.000Z",
                 "username": "superopiskelija",
               },
@@ -517,6 +521,34 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             as="td"
           >
             Current week: 
+            <Popup
+              content="Already at final week"
+              disabled={false}
+              eventsEnabled={true}
+              offset={0}
+              on={
+                Array [
+                  "click",
+                  "hover",
+                ]
+              }
+              pinned={false}
+              position="top left"
+              trigger={
+                <Icon
+                  as="i"
+                  disabled={true}
+                  name="right arrow"
+                  onClick={[Function]}
+                  style={
+                    Object {
+                      "cursor": "not-allowed",
+                      "marginLeft": "15px",
+                    }
+                  }
+                />
+              }
+            />
           </TableCell>
           <TableCell
             as="td"
@@ -572,8 +604,19 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
     <Header
       as="h2"
     >
-      Students 
+      Students
     </Header>
+    <p>
+      2
+       active student
+      s
+      , 
+      1
+       dropped student
+       (
+      3
+       in total)
+    </p>
     <Connect(StudentTable)
       allowModify={true}
       allowReview={true}
@@ -601,46 +644,16 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
         Object {
           "data": Array [
             Object {
-              "Tags": Array [
-                Object {
-                  "color": "red",
-                  "id": 20001,
-                  "name": "Javascript",
-                },
-              ],
-              "User": Object {
-                "admin": false,
-                "createdAt": "2018-03-26T00:00:00.000Z",
-                "email": "johan.studerande@helsinki.invalid",
-                "firsts": "Johan Wilhelm",
-                "id": 10012,
-                "lastname": "Studerande",
-                "studentNumber": "014553242",
-                "updatedAt": "2018-03-26T00:00:00.000Z",
-                "username": "tiraopiskelija2",
-              },
-              "codeReviews": Array [],
-              "courseInstanceId": 10011,
-              "createdAt": "2018-03-26T00:00:00.000Z",
-              "dropped": false,
-              "github": "http://github.com/tiralabra2",
-              "id": 10012,
-              "projectName": "Tiran toinen labraprojekti",
-              "teacherInstanceId": 10011,
-              "updatedAt": "2018-03-26T00:00:00.000Z",
-              "userId": 10012,
-              "weeks": Array [],
-            },
-            Object {
               "Tags": Array [],
               "User": Object {
-                "admin": false,
                 "createdAt": "2018-03-26T00:00:00.000Z",
                 "email": "maarit.opiskelija@helsinki.invalid",
                 "firsts": "Maarit Mirja",
                 "id": 10011,
                 "lastname": "Opiskelija",
                 "studentNumber": "014578343",
+                "sysop": false,
+                "teacher": false,
                 "updatedAt": "2018-03-26T00:00:00.000Z",
                 "username": "tiraopiskelija1",
               },
@@ -659,6 +672,38 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             Object {
               "Tags": Array [
                 Object {
+                  "color": "red",
+                  "id": 20001,
+                  "name": "Javascript",
+                },
+              ],
+              "User": Object {
+                "createdAt": "2018-03-26T00:00:00.000Z",
+                "email": "johan.studerande@helsinki.invalid",
+                "firsts": "Johan Wilhelm",
+                "id": 10012,
+                "lastname": "Studerande",
+                "studentNumber": "014553242",
+                "sysop": false,
+                "teacher": false,
+                "updatedAt": "2018-03-26T00:00:00.000Z",
+                "username": "tiraopiskelija2",
+              },
+              "codeReviews": Array [],
+              "courseInstanceId": 10011,
+              "createdAt": "2018-03-26T00:00:00.000Z",
+              "dropped": false,
+              "github": "http://github.com/tiralabra2",
+              "id": 10012,
+              "projectName": "Tiran toinen labraprojekti",
+              "teacherInstanceId": 10011,
+              "updatedAt": "2018-03-26T00:00:00.000Z",
+              "userId": 10012,
+              "weeks": Array [],
+            },
+            Object {
+              "Tags": Array [
+                Object {
                   "color": "grey",
                   "id": 20008,
                   "name": "DROPPED",
@@ -670,13 +715,14 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
                 },
               ],
               "User": Object {
-                "admin": false,
                 "createdAt": "2018-03-26T00:00:00.000Z",
                 "email": "teras.henkilo@helsinki.invalid",
                 "firsts": "Teräs",
                 "id": 10031,
                 "lastname": "Henkilö",
                 "studentNumber": "014666666",
+                "sysop": false,
+                "teacher": false,
                 "updatedAt": "2018-03-26T00:00:00.000Z",
                 "username": "superopiskelija",
               },
@@ -699,46 +745,16 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
       studentInstances={
         Array [
           Object {
-            "Tags": Array [
-              Object {
-                "color": "red",
-                "id": 20001,
-                "name": "Javascript",
-              },
-            ],
-            "User": Object {
-              "admin": false,
-              "createdAt": "2018-03-26T00:00:00.000Z",
-              "email": "johan.studerande@helsinki.invalid",
-              "firsts": "Johan Wilhelm",
-              "id": 10012,
-              "lastname": "Studerande",
-              "studentNumber": "014553242",
-              "updatedAt": "2018-03-26T00:00:00.000Z",
-              "username": "tiraopiskelija2",
-            },
-            "codeReviews": Array [],
-            "courseInstanceId": 10011,
-            "createdAt": "2018-03-26T00:00:00.000Z",
-            "dropped": false,
-            "github": "http://github.com/tiralabra2",
-            "id": 10012,
-            "projectName": "Tiran toinen labraprojekti",
-            "teacherInstanceId": 10011,
-            "updatedAt": "2018-03-26T00:00:00.000Z",
-            "userId": 10012,
-            "weeks": Array [],
-          },
-          Object {
             "Tags": Array [],
             "User": Object {
-              "admin": false,
               "createdAt": "2018-03-26T00:00:00.000Z",
               "email": "maarit.opiskelija@helsinki.invalid",
               "firsts": "Maarit Mirja",
               "id": 10011,
               "lastname": "Opiskelija",
               "studentNumber": "014578343",
+              "sysop": false,
+              "teacher": false,
               "updatedAt": "2018-03-26T00:00:00.000Z",
               "username": "tiraopiskelija1",
             },
@@ -757,6 +773,38 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           Object {
             "Tags": Array [
               Object {
+                "color": "red",
+                "id": 20001,
+                "name": "Javascript",
+              },
+            ],
+            "User": Object {
+              "createdAt": "2018-03-26T00:00:00.000Z",
+              "email": "johan.studerande@helsinki.invalid",
+              "firsts": "Johan Wilhelm",
+              "id": 10012,
+              "lastname": "Studerande",
+              "studentNumber": "014553242",
+              "sysop": false,
+              "teacher": false,
+              "updatedAt": "2018-03-26T00:00:00.000Z",
+              "username": "tiraopiskelija2",
+            },
+            "codeReviews": Array [],
+            "courseInstanceId": 10011,
+            "createdAt": "2018-03-26T00:00:00.000Z",
+            "dropped": false,
+            "github": "http://github.com/tiralabra2",
+            "id": 10012,
+            "projectName": "Tiran toinen labraprojekti",
+            "teacherInstanceId": 10011,
+            "updatedAt": "2018-03-26T00:00:00.000Z",
+            "userId": 10012,
+            "weeks": Array [],
+          },
+          Object {
+            "Tags": Array [
+              Object {
                 "color": "grey",
                 "id": 20008,
                 "name": "DROPPED",
@@ -768,13 +816,14 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
               },
             ],
             "User": Object {
-              "admin": false,
               "createdAt": "2018-03-26T00:00:00.000Z",
               "email": "teras.henkilo@helsinki.invalid",
               "firsts": "Teräs",
               "id": 10031,
               "lastname": "Henkilö",
               "studentNumber": "014666666",
+              "sysop": false,
+              "teacher": false,
               "updatedAt": "2018-03-26T00:00:00.000Z",
               "username": "superopiskelija",
             },

@@ -23,7 +23,7 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
     teacherInstances: [
       {
         id: 10001,
-        admin: true,
+        instructor: false,
         userId: 10010,
         courseInstanceId: 10011,
         firsts: 'Pää',
@@ -31,7 +31,7 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
       },
       {
         id: 10011,
-        admin: true,
+        instructor: true,
         userId: 10015,
         courseInstanceId: 10011,
         firsts: 'Ossi Ohjaaja',
@@ -53,7 +53,16 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
         userId: 10012,
         teacherInstanceId: 10011,
         weeks: [],
-        codeReviews: [],
+        codeReviews: [
+          {
+            id: 4,
+            points: 2,
+            reviewNumber: 1,
+            linkToReview: null,
+            studentInstanceId: 10012,
+            toReview: 10011
+          }
+        ],
         User: {
           id: 10012,
           username: 'tiraopiskelija2',
@@ -61,6 +70,38 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
           firsts: 'Johan Wilhelm',
           lastname: 'Studerande',
           studentNumber: '014553242',
+          teacher: false,
+          sysop: false,
+          createdAt: '2018-03-26T00:00:00.000Z',
+          updatedAt: '2018-03-26T00:00:00.000Z'
+        },
+        Tags: [
+          {
+            id: 30001,
+            name: 'Javascript',
+            color: 'red'
+          }
+        ]
+      },
+      {
+        id: 10015,
+        github: 'http://github.com/tiralabra5',
+        projectName: 'Tiran viides labraprojekti',
+        createdAt: '2018-03-26T00:00:00.000Z',
+        updatedAt: '2018-03-26T00:00:00.000Z',
+        courseInstanceId: 10011,
+        userId: 10015,
+        teacherInstanceId: 10011,
+        weeks: [],
+        codeReviews: [],
+        dropped: true,
+        User: {
+          id: 10015,
+          username: 'tiraopiskelija5',
+          email: 'tom.student@helsinki.invalid',
+          firsts: 'Tom Thomas',
+          lastname: 'Student',
+          studentNumber: '014553245',
           admin: false,
           createdAt: '2018-03-26T00:00:00.000Z',
           updatedAt: '2018-03-26T00:00:00.000Z'
@@ -91,7 +132,8 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
           firsts: 'Teräs',
           lastname: 'Henkilö',
           studentNumber: '014666666',
-          admin: false,
+          teacher: false,
+          sysop: false,
           createdAt: '2018-03-26T00:00:00.000Z',
           updatedAt: '2018-03-26T00:00:00.000Z'
         },
@@ -162,7 +204,8 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
           firsts: 'Maarit Mirja',
           lastname: 'Opiskelija',
           studentNumber: '014578343',
-          admin: false,
+          teacher: false,
+          sysop: false,
           createdAt: '2018-03-26T00:00:00.000Z',
           updatedAt: '2018-03-26T00:00:00.000Z'
         },
@@ -233,7 +276,7 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
 
   const codeReviewLogic = {
     randomizedCodeReview: [],
-    selectedDropdown: 1,
+    selectedDropdown: 2,
     codeReviewStates: { 1: [], 2: [] },
     currentSelections: {
       1: {
@@ -377,16 +420,23 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
     })
   })
 
-  describe('<RvieweeDropdown />', () => {
+  describe('<RevieweeDropdown />', () => {
     let dropdownWrapper
     const mockAddCodeReview = jest.fn()
     beforeEach(() => {
       dropdownWrapper = shallow(
-        <RevieweeDropdown dropdownUsers={userHelper(courseData.data)} data={courseData.data[0]} codeReviewLogic={codeReviewLogic} addCodeReview={mockAddCodeReview} create={false} />
+        <RevieweeDropdown
+          dropdownUsers={userHelper(courseData.data)}
+          studentData={courseData.data[0]}
+          codeReviewLogic={codeReviewLogic}
+          addCodeReview={mockAddCodeReview}
+          create={false}
+          courseData={courseData}
+        />
       )
     })
 
-    it('dropdown has correct options', () => {
+    it('dropdown options do not include options that the student reviewed previously and dropped out students', () => {
       const expectedOptions = [
         {
           text: 'select a student or add a repo link',
@@ -395,10 +445,6 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
         {
           text: 'Teräs Henkilö',
           value: 10031
-        },
-        {
-          text: 'Maarit Mirja Opiskelija',
-          value: 10011
         }
       ]
       expect(dropdownWrapper.props()).toHaveProperty('options', expectedOptions)

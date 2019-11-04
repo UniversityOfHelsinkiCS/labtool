@@ -18,10 +18,55 @@ const JsonEdit = props => {
       }
       JSON.parse(json)
       state.data = json
-      state.error = null
+      const conflictId = hasIdConflict(json)
+      state.error = conflictId !== null ? `There is a conflicting ID: ${conflictId}. Multiple checklist items should not have the same ID.` : null
     } catch (error) {
       if (error instanceof SyntaxError) {
         state.data = json
+        state.error = `Failed to parse JSON: ${error.message}`
+      }
+    }
+  }
+
+  const hasIdConflict = json => {
+    try {
+      const ids = []
+      const obj = JSON.parse(json)
+      for (const category of Object.keys(obj)) {
+        const items = obj[category]
+        if (Array.isArray(items)) {
+          for (const item of items) {
+            const { id } = item
+            if (id) {
+              if (ids.includes(id)) {
+                return id
+              }
+              ids.push(id)
+            }
+          }
+        }
+      }
+      return null
+    } catch (error) {
+      return null
+    }
+  }
+
+  const removeIdsFromJson = () => {
+    try {
+      const obj = JSON.parse(state.data)
+      for (const category of Object.keys(obj)) {
+        const items = obj[category]
+        if (Array.isArray(items)) {
+          for (const item of items) {
+            delete item['id']
+          }
+        }
+      }
+      setData(JSON.stringify(obj, null, 4))
+    } catch (error) {
+      console.error(error)
+      if (error instanceof SyntaxError) {
         state.error = `Failed to parse JSON: ${error.message}`
       }
     }
@@ -45,7 +90,15 @@ const JsonEdit = props => {
 
       <Modal onClose={closeDialog} open={open}>
         <Modal.Header>JSON</Modal.Header>
-        <Modal.Description style={{ padding: 15 }}>Pressing &quot;Save&quot; saves immediately and overwrites the current checklist.</Modal.Description>
+        <Modal.Description style={{ padding: 15 }}>
+          Pressing &quot;Save&quot; saves immediately and overwrites the current checklist. Omit the ID when adding new items.
+          <br />
+          <br />
+          Checklist items that do not have an ID will have the existing student scores reset for that item.
+          <br />
+          <br />
+          When copying items from another week or course, IDs will be removed automatically when saving.
+        </Modal.Description>
         <Modal.Description>
           {state.error && (
             <Message style={{ padding: 15 }} error>
@@ -77,6 +130,7 @@ const JsonEdit = props => {
             floated="left"
             allowedFileTypes={['application/json']}
           />
+          <Button content="Remove all IDs" onClick={removeIdsFromJson} />
           <Button content="Close" negative onClick={closeDialog} />
           <Button
             content="Save"

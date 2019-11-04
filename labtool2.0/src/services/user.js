@@ -13,4 +13,11 @@ export const getAllUsers = () => {
   return callController(route, prefix, null, method)
 }
 
-export default getAllUsers
+export const updateOtherUser = content => {
+  const route = '/users/updateAdmin'
+  const prefix = 'USER_UPDATE_ADMIN_'
+  const method = 'put'
+  return callController(route, prefix, content, method)
+}
+
+export default { getAllUsers, updateOtherUser }

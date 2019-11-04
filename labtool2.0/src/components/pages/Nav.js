@@ -66,11 +66,19 @@ const Nav = props => {
         )}
       </Menu.Menu>
 
-      {user && (
-        <Menu.Item position="right" style={{ margin: 'auto 0' }}>
-          <LogoutButton logout={props.logout} />
-        </Menu.Item>
-      )}
+      <Menu.Menu right="right">
+        {user.sysop && (
+          <Menu.Item name="AdminButton" as={Link} to="/labtool/admin">
+            <Icon name="database" />
+            Admin
+          </Menu.Item>
+        )}
+        {user && (
+          <Menu.Item style={{ margin: 'auto 0' }}>
+            <LogoutButton logout={props.logout} />
+          </Menu.Item>
+        )}
+      </Menu.Menu>
     </Menu>
   )
 }
