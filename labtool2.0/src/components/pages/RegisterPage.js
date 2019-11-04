@@ -48,11 +48,15 @@ export const RegisterPage = props => {
     return { projectName, projectLink }
   }
 
-  const handleRepoChange = e => {
-    const repoLink = e.target.value.replace(/^https?:\/\//, '')
+  const updateRepo = value => {
+    const repoLink = value.replace(/^https?:\/\//, '')
     if (repoLink.startsWith('github.com')) {
       setRepo(repoLink.substring(11))
     }
+  }
+
+  const handleRepoChange = e => {
+    updateRepo(e.target.value)
   }
 
   const handleSubmit = async e => {
@@ -90,7 +94,7 @@ export const RegisterPage = props => {
 
   const existing = getExistingData()
   if (existing.projectLink && !repo) {
-    setRepo(existing.projectLink)
+    updateRepo(existing.projectLink)
   }
 
   return (
