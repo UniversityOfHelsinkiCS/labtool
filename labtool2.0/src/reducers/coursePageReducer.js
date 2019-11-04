@@ -179,7 +179,7 @@ const courseInstancereducer = (store = INITIAL_STATE, action) => {
           ...store,
           data: store.data.map(student => {
             const updatedStudent = action.response.find(responseStudent => responseStudent.id === student.id)
-            return !!updatedStudent ? { ...student, ...updatedStudent } : student
+            return updatedStudent ? { ...student, ...updatedStudent } : student
           })
         }
       }

@@ -44,10 +44,11 @@ export const FileInput = props => {
 
   const { allowedFileTypes, style } = props
   const { open, uploading, uploadProgress, uploadError } = state
+  const cleanedProps = { ...props, onFileUploaded: null, allowedFileTypes: null }
 
   return (
     <React.Fragment>
-      <Button disabled={open} onClick={openDialog} style={style} {...props}>
+      <Button disabled={open} onClick={openDialog} style={style} {...cleanedProps}>
         Upload
       </Button>
 

@@ -37,10 +37,12 @@ const JsonEdit = props => {
         if (Array.isArray(items)) {
           for (const item of items) {
             const { id } = item
-            if (ids.includes(id)) {
-              return id
+            if (id) {
+              if (ids.includes(id)) {
+                return id
+              }
+              ids.push(id)
             }
-            ids.push(id)
           }
         }
       }
