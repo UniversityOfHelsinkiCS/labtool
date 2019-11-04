@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Header, Input, Label, Button, Popup, Card, Dropdown, Loader, Icon } from 'semantic-ui-react'
 import { showNotification } from '../../reducers/notificationReducer'
-import { resetLoading } from '../../reducers/loadingReducer'
+import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 import { createChecklist, getOneChecklist } from '../../services/checklist'
 import { getOneCI, getAllCI } from '../../services/courseInstance'
 import { resetChecklist, changeField, restoreChecklist, addTopic, addRow, removeTopic, removeRow, castPointsToNumber } from '../../reducers/checklistReducer'
@@ -176,6 +176,9 @@ export const CreateChecklist = props => {
   const importChecklist = checklistForWeek => {
     if (validateChecklist({ week: state.week, list: checklistForWeek })) {
       try {
+        props.addRedirectHook({
+          hook: 'CHECKLIST_CREATE_'
+        })
         props.createChecklist({
           courseInstanceId: props.selectedInstance.id,
           week: state.week,
@@ -410,6 +413,10 @@ export const CreateChecklist = props => {
     }
   }
 
+  if (props.loading && props.loading.redirect) {
+    window.location.reload(true)
+  }
+
   const hasSelectedWeek = state.week !== undefined && state.week !== null
   const { checklistJsx, maxPoints } = props.loading.loading ? { checklistJsx: null, maxPoints: null } : renderChecklist()
   return (
@@ -543,6 +550,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = {
   showNotification,
   resetLoading,
+  addRedirectHook,
   createChecklist,
   getOneCI,
   getAllCI,
@@ -568,6 +576,7 @@ CreateChecklist.propTypes = {
 
   showNotification: PropTypes.func.isRequired,
   resetLoading: PropTypes.func.isRequired,
+  addRedirectHook: PropTypes.func.isRequired,
   createChecklist: PropTypes.func.isRequired,
   getOneCI: PropTypes.func.isRequired,
   getAllCI: PropTypes.func.isRequired,
