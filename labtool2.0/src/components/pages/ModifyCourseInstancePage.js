@@ -243,7 +243,7 @@ export const ModifyCourseInstancePage = props => {
   )
 }
 
-const createDropdownCodereviews = (amount, current) => {
+const createDropdownCodeReviews = (amount, current) => {
   let ddCr = []
   let i = 1
   if (amount && current) {
@@ -251,7 +251,7 @@ const createDropdownCodereviews = (amount, current) => {
       if (!current.includes(i)) {
         ddCr.push({
           value: i,
-          text: `Codereview ${i}`
+          text: `Code Review ${i}`
         })
       }
       i++
@@ -265,7 +265,7 @@ const mapStateToProps = (state, ownProps) => {
     selectedInstance: state.selectedInstance,
     notification: state.notification,
     ownProps,
-    codeReviewDropdowns: createDropdownCodereviews(state.selectedInstance.amountOfCodeReviews, state.selectedInstance.currentCodeReview),
+    codeReviewDropdowns: createDropdownCodeReviews(state.selectedInstance.amountOfCodeReviews, state.selectedInstance.currentCodeReview),
     loading: state.loading,
     redirect: state.redirect
   }

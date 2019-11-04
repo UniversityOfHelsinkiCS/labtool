@@ -48,8 +48,31 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
           onClick={[Function]}
           type="button"
         >
-          Copy
+          Copy checklist
         </Button>
+        <Dropdown
+          additionLabel="Add "
+          additionPosition="top"
+          className="weekDropdown"
+          closeOnBlur={true}
+          closeOnEscape={true}
+          deburr={false}
+          disabled={false}
+          icon="dropdown"
+          minCharacters={1}
+          noResultsMessage="No results found."
+          onChange={[Function]}
+          openOnFocus={true}
+          options={Array []}
+          placeholder="...from another week"
+          renderLabel={[Function]}
+          searchInput="text"
+          selectOnBlur={true}
+          selectOnNavigation={true}
+          selection={true}
+          wrapSelection={true}
+        />
+         
         <Dropdown
           additionLabel="Add "
           additionPosition="top"
@@ -57,6 +80,7 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
           closeOnBlur={true}
           closeOnEscape={true}
           deburr={false}
+          disabled={false}
           icon="dropdown"
           minCharacters={1}
           noResultsMessage="No results found."
@@ -70,12 +94,13 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
               },
             ]
           }
-          placeholder="Copy checklist from another course"
+          placeholder="...from another course"
           renderLabel={[Function]}
           searchInput="text"
           selectOnBlur={true}
           selectOnNavigation={true}
           selection={true}
+          value={null}
           wrapSelection={true}
         />
       </div>
