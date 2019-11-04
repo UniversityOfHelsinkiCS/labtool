@@ -233,7 +233,7 @@ export const StudentTable = props => {
             }
           >
             {props.selectedInstance.currentWeek === i + 1 && weekPoints[i + 1] === undefined ? (
-              <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'star', color: 'white', size: 'large' }} />} content="Review" />
+              <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'star', size: 'large' }} />} content="Review" />
             ) : (
               <p>{weekPoints[i + 1] !== undefined ? weekPoints[i + 1] : '-'}</p>
             )}

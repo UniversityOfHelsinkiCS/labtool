@@ -82,7 +82,7 @@ export const CoursePage = props => {
       await props.createOneComment(content)
       document.getElementById('comment').reset()
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
   }
 

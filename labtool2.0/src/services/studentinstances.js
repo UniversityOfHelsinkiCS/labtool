@@ -67,7 +67,6 @@ export const massUpdateStudentProjectInfo = data => {
   const route = `/studentinstance/massupdate`
   const prefix = 'STUDENT_PROJECT_INFO_MASS_UPDATE_'
   const method = 'post'
-  console.log(data)
   return callController(route, prefix, data, method)
 }
 
