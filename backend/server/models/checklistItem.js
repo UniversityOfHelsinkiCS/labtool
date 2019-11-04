@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
       textWhenOn: DataTypes.TEXT,
       checkedPoints: DataTypes.DOUBLE,
       uncheckedPoints: DataTypes.DOUBLE,
-      category: DataTypes.STRING
+      category: DataTypes.TEXT
     },
     {
       timestamps: false

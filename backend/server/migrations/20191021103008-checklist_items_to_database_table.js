@@ -27,7 +27,7 @@ module.exports = {
           type: Sequelize.DOUBLE
         },
         category: {
-          type: Sequelize.STRING
+          type: Sequelize.TEXT
         },
         checklistId: {
           type: Sequelize.INTEGER,
