@@ -160,10 +160,8 @@ export const CreateChecklist = props => {
           week: state.week,
           checklist: checklistForWeek
         })
-        const checklist = props.checklist
-        checklist.data = checklistForWeek
-        state.checklist = checklist
-        state.canSave = true
+        state.checklistData = checklistForWeek
+        state.canSave = false
       } catch (e) {
         props.showNotification({
           message: 'Could not save JSON.',
@@ -388,7 +386,6 @@ export const CreateChecklist = props => {
   }
 
   if (props.loading && props.loading.redirect) {
-    state.checklistData = props.checklist.data
     window.location.reload(true)
   }
 
