@@ -430,8 +430,24 @@ export const CreateChecklist = props => {
             <Button type="button" onClick={copyChecklist} disabled={!hasSelectedWeek || (!state.copyCourse && !state.copyWeek)}>
               Copy checklist
             </Button>
-            <Dropdown className="weekDropdown" disabled={!hasSelectedWeek} placeholder="...from another week" selection value={state.copyWeek} onChange={changeCopyWeek} options={state.copyWeekDropdowns} />{' '}
-            <Dropdown className="courseDropdown" disabled={!hasSelectedWeek} placeholder="...from another course" selection value={state.copyCourse} onChange={changeCopyCourse} options={state.courseDropdowns} />
+            <Dropdown
+              className="weekDropdown"
+              disabled={!hasSelectedWeek}
+              placeholder="...from another week"
+              selection
+              value={state.copyWeek}
+              onChange={changeCopyWeek}
+              options={state.copyWeekDropdowns}
+            />{' '}
+            <Dropdown
+              className="courseDropdown"
+              disabled={!hasSelectedWeek}
+              placeholder="...from another course"
+              selection
+              value={state.copyCourse}
+              onChange={changeCopyCourse}
+              options={state.courseDropdowns}
+            />
           </div>
           {hasSelectedWeek ? (
             <div className="jsonButtons">
