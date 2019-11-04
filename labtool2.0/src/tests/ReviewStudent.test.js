@@ -39,6 +39,7 @@ describe('<ReviewStudent />', () => {
           list: {
             Koodi: [
               {
+                id: 1,
                 name: 'Koodin laatu',
                 points: 2,
                 textWhenOn: 'Koodi tehty laadukkaasti ja sisältää kommentteja',
@@ -47,12 +48,14 @@ describe('<ReviewStudent />', () => {
             ],
             Algoritmit: [
               {
+                id: 2,
                 name: 'Algoritmin runko',
                 points: 2,
                 textWhenOn: 'Algoritmin runko luotu',
                 textWhenOff: 'Algoritmin runko puuttuu'
               },
               {
+                id: 3,
                 name: 'Tietorakenteita luotu',
                 points: 2,
                 textWhenOn: 'Tietorakenteita luotu',
@@ -61,12 +64,14 @@ describe('<ReviewStudent />', () => {
             ],
             Dokumentaatio: [
               {
+                id: 4,
                 name: 'Readme',
                 points: 1,
                 textWhenOn: 'README kunnossa',
                 textWhenOff: 'README puuttuu'
               },
               {
+                id: 5,
                 name: 'Tuntikirjanpito',
                 points: 1,
                 textWhenOn: 'Tuntikirjanpito täytetty oikein',

@@ -38,6 +38,7 @@ export const ReviewStudent = props => {
     props.coursePageInformation(props.courseId)
     props.clearNotifications()
     importWeekDataFromDraft()
+
     return () => {
       // run on component unmount
       props.resetChecklist()
@@ -84,9 +85,9 @@ export const ReviewStudent = props => {
     return props.selectedInstance.weekMaxPoints
   }
 
-  const toggleCheckbox = (name, studentId, weekNbr) => async () => {
+  const toggleCheckbox = (checklistItemId, studentId, weekNbr) => async () => {
     setAllowChecksCopy(true)
-    props.toggleCheck(name, studentId, weekNbr)
+    props.toggleCheck(checklistItemId, studentId, weekNbr)
   }
 
   const importWeekDataFromDraft = () => {
@@ -127,8 +128,12 @@ export const ReviewStudent = props => {
     pstate.feedback = e.target.text.value
   }
 
-  const isChecked = (checks, rowName) =>
-    checks !== null && checks[rowName] !== undefined ? checks[rowName] : props.weekReview.checks !== null && props.weekReview.checks[rowName] !== undefined ? props.weekReview.checks[rowName] : false
+  const isChecked = (checks, checklistItemId) =>
+    checks !== null && checks[checklistItemId] !== undefined
+      ? checks[checklistItemId]
+      : props.weekReview.checks !== null && props.weekReview.checks[checklistItemId] !== undefined
+      ? props.weekReview.checks[checklistItemId]
+      : false
 
   if (props.loading.loading) {
     return <Loader active />
@@ -148,7 +153,8 @@ export const ReviewStudent = props => {
   // props.weekNumber is a string, therefore casting to number.
   const weekData = loadedFromDraft ? props.weekReview.draftData : studentData.weeks.find(theWeek => theWeek.weekNumber === Number(props.ownProps.weekNumber))
   const previousWeekData = studentData.weeks.find(week => week.weekNumber === Number(props.ownProps.weekNumber) - 1)
-  const checks = props.weekReview.checks !== null ? props.weekReview.checks : weekData ? weekData.checks || {} : {}
+  const savedChecks = weekData ? weekData.checks || {} : {}
+  const checks = props.weekReview.checks !== null ? props.weekReview.checks : savedChecks //weekData ? weekData.checks || {} : {}
   const weekPoints = studentData.weeks
     .filter(week => week.weekNumber < props.weekNumber)
     .map(week => week.points)
@@ -164,16 +170,22 @@ export const ReviewStudent = props => {
   let checklistOutput = ''
   let checklistPoints = 0
   if (checkList) {
-    Object.keys(checkList.list).forEach(cl => {
-      checkList.list[cl].forEach(row => {
-        const checked = isChecked(checks, row.name)
-        const addition = checked ? row.textWhenOn : row.textWhenOff
+    Object.keys(checkList.list).forEach(category => {
+      checkList.list[category].forEach(clItem => {
+        //handle existing case where clItems were saved by name in weekData.checks
+        if (savedChecks[clItem.name]) {
+          savedChecks[clItem.id] = savedChecks[clItem.name]
+          delete savedChecks[clItem.name]
+        }
+
+        const checked = isChecked(checks, clItem.name)
+        const addition = checked ? clItem.textWhenOn : clItem.textWhenOff
         if (addition) checklistOutput += addition + '\n\n'
 
         if (checked) {
-          checklistPoints += row.checkedPoints
+          checklistPoints += clItem.checkedPoints
         } else {
-          checklistPoints += row.uncheckedPoints
+          checklistPoints += clItem.uncheckedPoints
         }
       })
     })
@@ -289,26 +301,26 @@ export const ReviewStudent = props => {
               <h2>Checklist</h2>
               {checkList ? (
                 <div className="checklist">
-                  {Object.keys(checkList.list).map(cl => (
-                    <Card className="checklistCard" fluid color="red" key={cl}>
-                      <Card.Content header={cl} />
-                      {checkList.list[cl].map(row => (
-                        <Card.Content className="checklistCardRow" key={row.name} onClick={toggleCheckbox(row.name, props.ownProps.studentInstance, props.ownProps.weekNumber)}>
+                  {Object.keys(checkList.list).map(clItemCategory => (
+                    <Card className="checklistCard" fluid color="red" key={clItemCategory}>
+                      <Card.Content header={clItemCategory} />
+                      {checkList.list[clItemCategory].map(clItem => (
+                        <Card.Content className="checklistCardRow" key={clItem.id} onClick={toggleCheckbox(clItem.id, props.ownProps.studentInstance, props.ownProps.weekNumber)}>
                           <Form.Field>
                             <Grid>
                               <Grid.Row style={{ cursor: 'pointer', userSelect: 'none' }}>
                                 <Grid.Column width={3}>
                                   <Icon
                                     size="large"
-                                    name={isChecked(checks, row.name) ? 'circle check outline' : 'circle outline'}
-                                    style={{ color: isChecked(checks, row.name) ? 'green' : 'black' }}
+                                    name={isChecked(checks, clItem.id) ? 'circle check outline' : 'circle outline'}
+                                    style={{ color: isChecked(checks, clItem.id) ? 'green' : 'black' }}
                                   />
                                 </Grid.Column>
                                 <Grid.Column width={10}>
-                                  <span style={{ flexGrow: 1, textAlign: 'center' }}>{row.name}</span>
+                                  <span style={{ flexGrow: 1, textAlign: 'center' }}>{clItem.name}</span>
                                 </Grid.Column>
                                 <Grid.Column width={3}>
-                                  <span>{`${row.checkedPoints} p / ${row.uncheckedPoints} p`}</span>
+                                  <span>{`${clItem.checkedPoints} p / ${clItem.uncheckedPoints} p`}</span>
                                 </Grid.Column>
                               </Grid.Row>
                             </Grid>

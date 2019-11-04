@@ -270,11 +270,21 @@ describe('<CoursePage /> as teacher', () => {
     })
 
     it('renders teachers top view', () => {
-      expect(wrapper.find('CoursePageTeacherHeader').dive().find('.TeachersTopView').length).toEqual(1)
+      expect(
+        wrapper
+          .find('CoursePageTeacherHeader')
+          .dive()
+          .find('.TeachersTopView').length
+      ).toEqual(1)
     })
 
     it('renders teachers bottom view for all students', () => {
-      expect(wrapper.find('CoursePageTeacherMain').dive().find('.TeachersBottomView').length).toEqual(1)
+      expect(
+        wrapper
+          .find('CoursePageTeacherMain')
+          .dive()
+          .find('.TeachersBottomView').length
+      ).toEqual(1)
     })
 
     it('doesnt render students top view when role is teacher', () => {
@@ -287,7 +297,11 @@ describe('<CoursePage /> as teacher', () => {
 
     it('can mark all students with DROPPED tag as dropped', () => {
       window.confirm = jest.fn(() => true)
-      wrapper.find('CoursePageTeacherMain').dive().find({ children: 'Mark all with dropped tag as dropped out' }).simulate('click')
+      wrapper
+        .find('CoursePageTeacherMain')
+        .dive()
+        .find({ children: 'Mark all with dropped tag as dropped out' })
+        .simulate('click')
 
       expect(mockUpdateStudentProjectInfo).toBeCalledWith(expect.objectContaining({ userId: 10031, dropped: true }))
     })
