@@ -160,10 +160,9 @@ export const CreateChecklist = props => {
           week: state.week,
           checklist: checklistForWeek
         })
-        const checklist = props.checklist
-        checklist.data = checklistForWeek
-        state.checklist = checklist
-        state.canSave = true
+        props.checklist.data = checklistForWeek
+        state.checklistData = checklistForWeek
+        state.canSave = false
       } catch (e) {
         props.showNotification({
           message: 'Could not save JSON.',
