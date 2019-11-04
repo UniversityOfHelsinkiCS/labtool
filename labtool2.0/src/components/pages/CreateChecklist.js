@@ -160,7 +160,6 @@ export const CreateChecklist = props => {
           week: state.week,
           checklist: checklistForWeek
         })
-        props.checklist.data = checklistForWeek
         state.checklistData = checklistForWeek
         state.canSave = false
       } catch (e) {
@@ -387,7 +386,6 @@ export const CreateChecklist = props => {
   }
 
   if (props.loading && props.loading.redirect) {
-    state.checklistData = props.checklist.data
     window.location.reload(true)
   }
 
