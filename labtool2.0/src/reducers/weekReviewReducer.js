@@ -26,7 +26,8 @@ const weekReviewReducer = (state = INITIAL_STATE, action) => {
         ...state,
         checks: {
           ...baseChecks,
-          [action.name]: baseChecks[action.name] !== undefined ? !baseChecks[action.name] : thisWeek ? !thisWeek.checks[action.name] : !baseChecks[action.name]
+          [action.checklistItemId]:
+            baseChecks[action.checklistItemId] !== undefined ? !baseChecks[action.checklistItemId] : thisWeek ? !thisWeek.checks[action.checklistItemId] : !baseChecks[action.checklistItemId]
         }
       }
     }
@@ -69,11 +70,11 @@ export const resetChecklist = () => {
   }
 }
 
-export const toggleCheck = (name, studentId, weekNbr) => {
+export const toggleCheck = (checklistItemId, studentId, weekNbr) => {
   return async dispatch => {
     dispatch({
       type: 'WEEK_REVIEW_TOGGLE',
-      name,
+      checklistItemId,
       studentId,
       weekNbr
     })
