@@ -39,7 +39,7 @@ module.exports = {
           }
           return async () => {
             const ids = await queryInterface.sequelize.query(`SELECT cli.id AS id FROM "ChecklistItems" AS cli, "Checklists" AS cl, "CourseInstances" AS ci, "StudentInstances" as si, "Weeks" as week WHERE cli."name" = '${check}' AND cli."checklistId" = cl.id AND cl."courseInstanceId" = ci.id AND si."courseInstanceId" = ci.id AND week."studentInstanceId" = si.id AND week.id = ${week.id}`, { type: queryInterface.sequelize.QueryTypes.SELECT })
-            if (ids !== 1) {
+            if (ids.length !== 1) {
               console.log(`Failed to find checklist item for ${check} (week id: ${week.weekId})`)
               return
             }
