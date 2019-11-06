@@ -8,6 +8,8 @@ import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 import { HorizontalScrollable } from '../HorizontalScrollable'
 import { formatCourseName } from '../../util/format'
 
+// Changes will be made here.
+
 /**
  *  Show all the courses in a single list.
  */
