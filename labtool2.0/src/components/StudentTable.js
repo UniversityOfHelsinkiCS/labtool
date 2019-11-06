@@ -88,7 +88,11 @@ export const StudentTable = props => {
     const headers = []
     let i = 0
     for (; i < props.selectedInstance.weekAmount; i++) {
-      headers.push(<Table.HeaderCell key={i}>Wk {i + 1}</Table.HeaderCell>)
+      headers.push(
+        <Table.HeaderCell key={i}>
+          <abbr title="Week">Wk</abbr> {i + 1}
+        </Table.HeaderCell>
+      )
     }
     for (var ii = 1; ii <= props.selectedInstance.amountOfCodeReviews; ii++) {
       headers.push(
