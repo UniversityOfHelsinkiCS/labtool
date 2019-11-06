@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { getOneCI, coursePageInformation, modifyOneCI } from '../../services/courseInstance'
 import { getAllTags, tagStudent, unTagStudent } from '../../services/tags'
 import { associateTeacherToStudent } from '../../services/assistant'
-import { coursePageReset, selectTag, selectTeacher } from '../../reducers/coursePageLogicReducer'
+import { prepareForCourse, coursePageReset, selectTag, selectTeacher } from '../../reducers/coursePageLogicReducer'
 import { changeCourseField } from '../../reducers/selectedInstanceReducer'
 import { updateStudentProjectInfo } from '../../services/studentinstances'
 import { resetLoading } from '../../reducers/loadingReducer'
@@ -22,6 +22,7 @@ export const CoursePage = props => {
   useEffect(() => {
     // run on component mount
     props.resetLoading()
+    props.prepareForCourse(props.courseId)
     props.getOneCI(props.courseId)
     props.coursePageInformation(props.courseId)
     props.getAllTags()
@@ -270,6 +271,7 @@ CoursePage.propTypes = {
   getOneCI: PropTypes.func.isRequired,
   coursePageInformation: PropTypes.func.isRequired,
   coursePageReset: PropTypes.func.isRequired,
+  prepareForCourse: PropTypes.func.isRequired,
   getAllTags: PropTypes.func.isRequired,
   tagStudent: PropTypes.func.isRequired,
   unTagStudent: PropTypes.func.isRequired,
@@ -301,6 +303,7 @@ const mapDispatchToProps = {
   getOneCI,
   coursePageInformation,
   coursePageReset,
+  prepareForCourse,
   getAllTags,
   tagStudent,
   unTagStudent,
