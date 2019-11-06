@@ -1,0 +1,303 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<WeekReviews /> as student WeekReviews Component should render correctly 1`] = `
+Array [
+  <WeekReviewCodeReview
+    courseData={
+      Object {
+        "data": Object {
+          "Tags": Array [],
+          "User": Object {
+            "createdAt": "2018-03-26T00:00:00.000Z",
+            "email": "maarit.opiskelija@helsinki.invalid",
+            "firsts": "Maarit Mirja",
+            "id": 10011,
+            "lastname": "Opiskelija",
+            "studentNumber": "014578343",
+            "sysop": false,
+            "teacher": false,
+            "updatedAt": "2018-03-26T00:00:00.000Z",
+            "username": "tiraopiskelija1",
+          },
+          "codeReviews": Array [
+            Object {
+              "points": 2,
+              "repoToReview": null,
+              "reviewNumber": 1,
+              "toReview": Object {
+                "github": "http://github.com/tiralabra2",
+                "projectName": "Tiran toinen labraprojekti",
+              },
+            },
+            Object {
+              "points": 1,
+              "repoToReview": null,
+              "reviewNumber": 2,
+              "toReview": Object {
+                "github": "http://github.com/superprojekti",
+                "projectName": "Tira super projekti",
+              },
+            },
+            Object {
+              "points": null,
+              "repoToReview": "https://github.com/userName/arbitraryRepo",
+              "reviewNumber": 3,
+              "toReview": Object {
+                "github": null,
+                "projectName": null,
+              },
+            },
+          ],
+          "courseInstanceId": 10011,
+          "createdAt": "2018-03-26T00:00:00.000Z",
+          "github": "http://github.com/tiralabra1",
+          "id": 10011,
+          "projectName": "Tiran labraprojekti",
+          "teacherInstanceId": 10011,
+          "updatedAt": "2018-03-26T00:00:00.000Z",
+          "userId": 10011,
+          "weeks": Array [],
+        },
+        "role": "student",
+      }
+    }
+    courseId=""
+    coursePageLogic={
+      Object {
+        "filterByAssistant": 0,
+        "filterByTag": Array [],
+        "selectedTeacher": "",
+        "showCodeReviews": Array [
+          2,
+        ],
+        "showDropdown": "",
+      }
+    }
+    cr={
+      Object {
+        "points": 2,
+        "repoToReview": null,
+        "reviewNumber": 1,
+        "toReview": Object {
+          "github": "http://github.com/tiralabra2",
+          "projectName": "Tiran toinen labraprojekti",
+        },
+      }
+    }
+    gradeCodeReview={[Function]}
+    handleAddingIssueLink={[Function]}
+    handleClickWeek={[Function]}
+    index={NaN}
+    isTeacher={false}
+    key="weekReviewCodeReview0"
+    openWeeks={Object {}}
+    studentInstance=""
+  />,
+  <WeekReviewCodeReview
+    courseData={
+      Object {
+        "data": Object {
+          "Tags": Array [],
+          "User": Object {
+            "createdAt": "2018-03-26T00:00:00.000Z",
+            "email": "maarit.opiskelija@helsinki.invalid",
+            "firsts": "Maarit Mirja",
+            "id": 10011,
+            "lastname": "Opiskelija",
+            "studentNumber": "014578343",
+            "sysop": false,
+            "teacher": false,
+            "updatedAt": "2018-03-26T00:00:00.000Z",
+            "username": "tiraopiskelija1",
+          },
+          "codeReviews": Array [
+            Object {
+              "points": 2,
+              "repoToReview": null,
+              "reviewNumber": 1,
+              "toReview": Object {
+                "github": "http://github.com/tiralabra2",
+                "projectName": "Tiran toinen labraprojekti",
+              },
+            },
+            Object {
+              "points": 1,
+              "repoToReview": null,
+              "reviewNumber": 2,
+              "toReview": Object {
+                "github": "http://github.com/superprojekti",
+                "projectName": "Tira super projekti",
+              },
+            },
+            Object {
+              "points": null,
+              "repoToReview": "https://github.com/userName/arbitraryRepo",
+              "reviewNumber": 3,
+              "toReview": Object {
+                "github": null,
+                "projectName": null,
+              },
+            },
+          ],
+          "courseInstanceId": 10011,
+          "createdAt": "2018-03-26T00:00:00.000Z",
+          "github": "http://github.com/tiralabra1",
+          "id": 10011,
+          "projectName": "Tiran labraprojekti",
+          "teacherInstanceId": 10011,
+          "updatedAt": "2018-03-26T00:00:00.000Z",
+          "userId": 10011,
+          "weeks": Array [],
+        },
+        "role": "student",
+      }
+    }
+    courseId=""
+    coursePageLogic={
+      Object {
+        "filterByAssistant": 0,
+        "filterByTag": Array [],
+        "selectedTeacher": "",
+        "showCodeReviews": Array [
+          2,
+        ],
+        "showDropdown": "",
+      }
+    }
+    cr={
+      Object {
+        "points": 1,
+        "repoToReview": null,
+        "reviewNumber": 2,
+        "toReview": Object {
+          "github": "http://github.com/superprojekti",
+          "projectName": "Tira super projekti",
+        },
+      }
+    }
+    gradeCodeReview={[Function]}
+    handleAddingIssueLink={[Function]}
+    handleClickWeek={[Function]}
+    index={NaN}
+    isTeacher={false}
+    key="weekReviewCodeReview1"
+    openWeeks={Object {}}
+    studentInstance=""
+  />,
+  <WeekReviewCodeReview
+    courseData={
+      Object {
+        "data": Object {
+          "Tags": Array [],
+          "User": Object {
+            "createdAt": "2018-03-26T00:00:00.000Z",
+            "email": "maarit.opiskelija@helsinki.invalid",
+            "firsts": "Maarit Mirja",
+            "id": 10011,
+            "lastname": "Opiskelija",
+            "studentNumber": "014578343",
+            "sysop": false,
+            "teacher": false,
+            "updatedAt": "2018-03-26T00:00:00.000Z",
+            "username": "tiraopiskelija1",
+          },
+          "codeReviews": Array [
+            Object {
+              "points": 2,
+              "repoToReview": null,
+              "reviewNumber": 1,
+              "toReview": Object {
+                "github": "http://github.com/tiralabra2",
+                "projectName": "Tiran toinen labraprojekti",
+              },
+            },
+            Object {
+              "points": 1,
+              "repoToReview": null,
+              "reviewNumber": 2,
+              "toReview": Object {
+                "github": "http://github.com/superprojekti",
+                "projectName": "Tira super projekti",
+              },
+            },
+            Object {
+              "points": null,
+              "repoToReview": "https://github.com/userName/arbitraryRepo",
+              "reviewNumber": 3,
+              "toReview": Object {
+                "github": null,
+                "projectName": null,
+              },
+            },
+          ],
+          "courseInstanceId": 10011,
+          "createdAt": "2018-03-26T00:00:00.000Z",
+          "github": "http://github.com/tiralabra1",
+          "id": 10011,
+          "projectName": "Tiran labraprojekti",
+          "teacherInstanceId": 10011,
+          "updatedAt": "2018-03-26T00:00:00.000Z",
+          "userId": 10011,
+          "weeks": Array [],
+        },
+        "role": "student",
+      }
+    }
+    courseId=""
+    coursePageLogic={
+      Object {
+        "filterByAssistant": 0,
+        "filterByTag": Array [],
+        "selectedTeacher": "",
+        "showCodeReviews": Array [
+          2,
+        ],
+        "showDropdown": "",
+      }
+    }
+    cr={
+      Object {
+        "points": null,
+        "repoToReview": "https://github.com/userName/arbitraryRepo",
+        "reviewNumber": 3,
+        "toReview": Object {
+          "github": null,
+          "projectName": null,
+        },
+      }
+    }
+    gradeCodeReview={[Function]}
+    handleAddingIssueLink={[Function]}
+    handleClickWeek={[Function]}
+    index={NaN}
+    isTeacher={false}
+    key="weekReviewCodeReview2"
+    openWeeks={Object {}}
+    studentInstance=""
+  />,
+  <Accordion
+    fluid={true}
+    key="total"
+    style={
+      Object {
+        "marginBottom": "2em",
+      }
+    }
+    styled={true}
+  >
+    <AccordionTitle
+      active={true}
+      index="total"
+    >
+      <Icon
+        as="i"
+        name="check"
+      />
+      <strong>
+         Total Points: 
+      </strong>
+      3
+    </AccordionTitle>
+  </Accordion>,
+]
+`;

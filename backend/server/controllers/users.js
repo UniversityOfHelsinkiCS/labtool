@@ -74,7 +74,7 @@ module.exports = {
     if (!user) {
       return res.status(404).send('User not found')
     }
-  
+
     const updatedUser = await user.update({
       sysop: req.body.sysop !== undefined ? req.body.sysop : user.sysop
     })
