@@ -10,6 +10,8 @@ import { getIsAllowedToImport } from '../../services/courseImport'
 import { HorizontalScrollable } from '../HorizontalScrollable'
 import { formatCourseName } from '../../util/format'
 
+// The accessibility changes can require changes to many, many files.
+
 /**
  * The main page that is shown after user has logged in.
  */
