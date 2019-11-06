@@ -29,66 +29,112 @@ exports[`<BrowseReviews /> BrowseReviews Component should render correctly 1`] =
         Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit (periodi IV, 2017-2018)
       </h2>
     </Link>
-    <Card
-      className="studentCard"
-      color="yellow"
-      fluid={true}
-      key="0"
-    >
-      <CardContent>
-        <Header
-          as="h2"
-        >
-          Maarit Mirja
-           
-          Opiskelija
-           (
-          014578343
-          )
-          <HeaderSubheader>
-            <a
-              href="mailto:maarit.opiskelija@helsinki.invalid"
-            >
-              maarit.opiskelija@helsinki.invalid
-            </a>
-          </HeaderSubheader>
-        </Header>
-        <div
-          style={
+    <StudentCard
+      handleMarkAsDropped={[Function]}
+      otherParticipations={Array []}
+      student={
+        Object {
+          "User": Object {
+            "createdAt": "2018-03-26T00:00:00.000Z",
+            "email": "maarit.opiskelija@helsinki.invalid",
+            "firsts": "Maarit Mirja",
+            "id": 10011,
+            "lastname": "Opiskelija",
+            "studentNumber": "014578343",
+            "sysop": false,
+            "teacher": false,
+            "updatedAt": "2018-03-26T00:00:00.000Z",
+            "username": "tiraopiskelija1",
+          },
+          "codeReviews": Array [
             Object {
-              "display": "inline-block",
-            }
-          }
-        >
-          Tiran labraprojekti
-          : 
-          <RepoLink
-            url="http://github.com/tiralabra1"
-          />
-          <br />
-          <p
-            className="noOther"
-          >
-            Has no other participation in this course
-          </p>
-        </div>
-        <Button
-          as="button"
-          color="red"
-          onClick={[Function]}
-          style={
+              "id": 272,
+              "linkToReview": "https:github.com/toReview/repo/pull/1",
+              "points": null,
+              "repoToReview": null,
+              "revieweNumber": 1,
+              "studentInstanceId": 10011,
+              "toReview": 10031,
+            },
             Object {
-              "float": "right",
-            }
-          }
-        >
-          Mark as dropped
-        </Button>
-      </CardContent>
-    </Card>
-    <span
-      key="1"
-    >
+              "d": 273,
+              "linkToReview": null,
+              "points": null,
+              "repoToReview": "https://github.com/userName/arbitraryRepo",
+              "revieweNumber": 2,
+              "studentInstanceId": 10011,
+              "toReview": null,
+            },
+          ],
+          "courseInstanceId": 10011,
+          "createdAt": "2018-03-26T00:00:00.000Z",
+          "dropped": false,
+          "github": "http://github.com/tiralabra1",
+          "id": 10011,
+          "projectName": "Tiran labraprojekti",
+          "teacherInstanceId": 10011,
+          "updatedAt": "2018-03-26T00:00:00.000Z",
+          "userId": 10011,
+          "weeks": Array [
+            Object {
+              "comments": Array [],
+              "createdAt": "2018-03-26T00:00:00.000Z",
+              "feedback": "Melko hienoa työtä!",
+              "id": 10002,
+              "instructorNotes": "READMEssa ongelmia",
+              "points": 2,
+              "studentInstanceId": 10011,
+              "updatedAt": "2018-03-26T00:00:00.000Z",
+              "weekNumber": 2,
+            },
+            Object {
+              "comments": Array [],
+              "createdAt": "2018-03-26T00:00:00.000Z",
+              "feedback": "Hienoa työtä!",
+              "id": 10001,
+              "instructorNotes": "",
+              "points": 3,
+              "studentInstanceId": 10011,
+              "updatedAt": "2018-03-26T00:00:00.000Z",
+              "weekNumber": 1,
+            },
+            Object {
+              "comments": Array [],
+              "createdAt": "2018-03-26T00:00:00.000Z",
+              "feedback": "Erittäin hienoa työtä!",
+              "id": 10003,
+              "instructorNotes": "",
+              "points": 3,
+              "studentInstanceId": 10011,
+              "updatedAt": "2018-03-26T00:00:00.000Z",
+              "weekNumber": 3,
+            },
+            Object {
+              "comments": Array [],
+              "createdAt": "2018-03-26T00:00:00.000Z",
+              "feedback": "Hyvin menee!",
+              "id": 10004,
+              "instructorNotes": "",
+              "points": 3,
+              "studentInstanceId": 10011,
+              "updatedAt": "2018-03-26T00:00:00.000Z",
+              "weekNumber": 4,
+            },
+          ],
+        }
+      }
+      teacherInstance={
+        Array [
+          Object {
+            "id": 10000,
+          },
+          Object {
+            "id": 10011,
+          },
+        ]
+      }
+    />
+    <span>
       <Button
         as="button"
         onClick={[Function]}
@@ -99,805 +145,103 @@ exports[`<BrowseReviews /> BrowseReviews Component should render correctly 1`] =
       </Button>
       <br />
     </span>
-    <Accordion
-      fluid={true}
-      id="review0"
-      key="2"
-      styled={true}
-    >
-      <AccordionTitle
-        index={0}
-        onClick={[Function]}
-      >
-        <Icon
-          as="i"
-          name="dropdown"
-        />
-         
-        Week 1
-        , points 
-        3
-      </AccordionTitle>
-      <AccordionContent>
-        <h3>
-          Review
-        </h3>
-        <Card
-          color="yellow"
-          fluid={true}
-        >
-          <CardContent>
-            <h4>
-               Points 
-              3
-               
-            </h4>
-            <h4>
-               Feedback 
-            </h4>
-            <ReactMarkdown
-              astPlugins={Array []}
-              escapeHtml={true}
-              parserOptions={Object {}}
-              plugins={Array []}
-              rawSourcePos={false}
-              renderers={Object {}}
-              skipHtml={false}
-              sourcePos={false}
-              transformLinkUri={[Function]}
-            >
-              Hienoa työtä!
-            </ReactMarkdown>
-             
-            <span />
-          </CardContent>
-          <CardContent
-            style={
-              Object {
-                "paddingBottom": "5px",
-              }
-            }
-          >
-            <Button
-              as="button"
-              onClick={[Function]}
-              size="small"
-              type="button"
-            >
-              Send email notification
-            </Button>
-          </CardContent>
-        </Card>
-        <Link
-          to="/labtool/reviewstudent/TKT20010.2018.K.A.1/10011/1"
-        >
-          <Popup
-            content="Edit review"
-            disabled={false}
-            eventsEnabled={true}
-            offset={0}
-            on={
-              Array [
-                "click",
-                "hover",
-              ]
-            }
-            pinned={false}
-            position="top left"
-            trigger={
-              <Button
-                as="button"
-                circular={true}
-                color="orange"
-                icon={
-                  Object {
-                    "color": "black",
-                    "name": "edit",
-                    "size": "large",
-                  }
-                }
-                size="tiny"
-              />
-            }
-          />
-        </Link>
-        <CommentGroup />
-        <withRouter(Connect(LabtoolAddComment))
-          allowHidden={true}
-          commentFieldId="TKT20010.2018.K.A.1:10001"
-          handleSubmit={[Function]}
-          weekId={10001}
-        />
-      </AccordionContent>
-    </Accordion>
-    <Accordion
-      fluid={true}
-      id="review1"
-      key="3"
-      styled={true}
-    >
-      <AccordionTitle
-        index={1}
-        onClick={[Function]}
-      >
-        <Icon
-          as="i"
-          name="dropdown"
-        />
-         
-        Week 2
-        , points 
-        2
-      </AccordionTitle>
-      <AccordionContent>
-        <h3>
-          Review
-        </h3>
-        <Card
-          color="yellow"
-          fluid={true}
-        >
-          <CardContent>
-            <h4>
-               Points 
-              2
-               
-            </h4>
-            <h4>
-               Feedback 
-            </h4>
-            <ReactMarkdown
-              astPlugins={Array []}
-              escapeHtml={true}
-              parserOptions={Object {}}
-              plugins={Array []}
-              rawSourcePos={false}
-              renderers={Object {}}
-              skipHtml={false}
-              sourcePos={false}
-              transformLinkUri={[Function]}
-            >
-              Melko hienoa työtä!
-            </ReactMarkdown>
-             
-            <div>
-              <br />
-              <h4>
-                Review notes for instructors 
-              </h4>
-              <ReactMarkdown
-                astPlugins={Array []}
-                escapeHtml={true}
-                parserOptions={Object {}}
-                plugins={Array []}
-                rawSourcePos={false}
-                renderers={Object {}}
-                skipHtml={false}
-                sourcePos={false}
-                transformLinkUri={[Function]}
-              >
-                READMEssa ongelmia
-              </ReactMarkdown>
-               
-            </div>
-          </CardContent>
-          <CardContent
-            style={
-              Object {
-                "paddingBottom": "5px",
-              }
-            }
-          >
-            <Button
-              as="button"
-              onClick={[Function]}
-              size="small"
-              type="button"
-            >
-              Send email notification
-            </Button>
-          </CardContent>
-        </Card>
-        <Link
-          to="/labtool/reviewstudent/TKT20010.2018.K.A.1/10011/2"
-        >
-          <Popup
-            content="Edit review"
-            disabled={false}
-            eventsEnabled={true}
-            offset={0}
-            on={
-              Array [
-                "click",
-                "hover",
-              ]
-            }
-            pinned={false}
-            position="top left"
-            trigger={
-              <Button
-                as="button"
-                circular={true}
-                color="orange"
-                icon={
-                  Object {
-                    "color": "black",
-                    "name": "edit",
-                    "size": "large",
-                  }
-                }
-                size="tiny"
-              />
-            }
-          />
-        </Link>
-        <CommentGroup />
-        <withRouter(Connect(LabtoolAddComment))
-          allowHidden={true}
-          commentFieldId="TKT20010.2018.K.A.1:10002"
-          handleSubmit={[Function]}
-          weekId={10002}
-        />
-      </AccordionContent>
-    </Accordion>
-    <Accordion
-      fluid={true}
-      id="review2"
-      key="4"
-      styled={true}
-    >
-      <AccordionTitle
-        index={2}
-        onClick={[Function]}
-      >
-        <Icon
-          as="i"
-          name="dropdown"
-        />
-         
-        Week 3
-        , points 
-        3
-      </AccordionTitle>
-      <AccordionContent>
-        <h3>
-          Review
-        </h3>
-        <Card
-          color="yellow"
-          fluid={true}
-        >
-          <CardContent>
-            <h4>
-               Points 
-              3
-               
-            </h4>
-            <h4>
-               Feedback 
-            </h4>
-            <ReactMarkdown
-              astPlugins={Array []}
-              escapeHtml={true}
-              parserOptions={Object {}}
-              plugins={Array []}
-              rawSourcePos={false}
-              renderers={Object {}}
-              skipHtml={false}
-              sourcePos={false}
-              transformLinkUri={[Function]}
-            >
-              Erittäin hienoa työtä!
-            </ReactMarkdown>
-             
-            <span />
-          </CardContent>
-          <CardContent
-            style={
-              Object {
-                "paddingBottom": "5px",
-              }
-            }
-          >
-            <Button
-              as="button"
-              onClick={[Function]}
-              size="small"
-              type="button"
-            >
-              Send email notification
-            </Button>
-          </CardContent>
-        </Card>
-        <Link
-          to="/labtool/reviewstudent/TKT20010.2018.K.A.1/10011/3"
-        >
-          <Popup
-            content="Edit review"
-            disabled={false}
-            eventsEnabled={true}
-            offset={0}
-            on={
-              Array [
-                "click",
-                "hover",
-              ]
-            }
-            pinned={false}
-            position="top left"
-            trigger={
-              <Button
-                as="button"
-                circular={true}
-                color="orange"
-                icon={
-                  Object {
-                    "color": "black",
-                    "name": "edit",
-                    "size": "large",
-                  }
-                }
-                size="tiny"
-              />
-            }
-          />
-        </Link>
-        <CommentGroup />
-        <withRouter(Connect(LabtoolAddComment))
-          allowHidden={true}
-          commentFieldId="TKT20010.2018.K.A.1:10003"
-          handleSubmit={[Function]}
-          weekId={10003}
-        />
-      </AccordionContent>
-    </Accordion>
-    <Accordion
-      fluid={true}
-      id="review3"
-      key="5"
-      styled={true}
-    >
-      <AccordionTitle
-        index={3}
-        onClick={[Function]}
-      >
-        <Icon
-          as="i"
-          name="dropdown"
-        />
-         
-        Week 4
-        , points 
-        3
-      </AccordionTitle>
-      <AccordionContent>
-        <h3>
-          Review
-        </h3>
-        <Card
-          color="yellow"
-          fluid={true}
-        >
-          <CardContent>
-            <h4>
-               Points 
-              3
-               
-            </h4>
-            <h4>
-               Feedback 
-            </h4>
-            <ReactMarkdown
-              astPlugins={Array []}
-              escapeHtml={true}
-              parserOptions={Object {}}
-              plugins={Array []}
-              rawSourcePos={false}
-              renderers={Object {}}
-              skipHtml={false}
-              sourcePos={false}
-              transformLinkUri={[Function]}
-            >
-              Hyvin menee!
-            </ReactMarkdown>
-             
-            <span />
-          </CardContent>
-          <CardContent
-            style={
-              Object {
-                "paddingBottom": "5px",
-              }
-            }
-          >
-            <Button
-              as="button"
-              onClick={[Function]}
-              size="small"
-              type="button"
-            >
-              Send email notification
-            </Button>
-          </CardContent>
-        </Card>
-        <Link
-          to="/labtool/reviewstudent/TKT20010.2018.K.A.1/10011/4"
-        >
-          <Popup
-            content="Edit review"
-            disabled={false}
-            eventsEnabled={true}
-            offset={0}
-            on={
-              Array [
-                "click",
-                "hover",
-              ]
-            }
-            pinned={false}
-            position="top left"
-            trigger={
-              <Button
-                as="button"
-                circular={true}
-                color="orange"
-                icon={
-                  Object {
-                    "color": "black",
-                    "name": "edit",
-                    "size": "large",
-                  }
-                }
-                size="tiny"
-              />
-            }
-          />
-        </Link>
-        <CommentGroup />
-        <withRouter(Connect(LabtoolAddComment))
-          allowHidden={true}
-          commentFieldId="TKT20010.2018.K.A.1:10004"
-          handleSubmit={[Function]}
-          weekId={10004}
-        />
-      </AccordionContent>
-    </Accordion>
-    <Accordion
-      fluid={true}
-      id="review4"
-      key="6"
-      styled={true}
-    >
-      <AccordionTitle
-        index={4}
-        onClick={[Function]}
-      >
-        <Icon
-          as="i"
-          name="dropdown"
-        />
-         
-        Week 5
-         
-      </AccordionTitle>
-      <AccordionContent>
-        <h3>
-          Review
-        </h3>
-        <Link
-          to="/labtool/reviewstudent/TKT20010.2018.K.A.1/10011/5"
-        >
-          <Popup
-            content="Review week"
-            disabled={false}
-            eventsEnabled={true}
-            offset={0}
-            on={
-              Array [
-                "click",
-                "hover",
-              ]
-            }
-            pinned={false}
-            position="top left"
-            trigger={
-              <Button
-                as="button"
-                circular={true}
-                color="orange"
-                icon={
-                  Object {
-                    "color": "black",
-                    "name": "edit",
-                    "size": "large",
-                  }
-                }
-                size="tiny"
-              />
-            }
-          />
-        </Link>
-        <h4>
-           Not Graded 
-        </h4>
-        <h4>
-           No comments 
-        </h4>
-      </AccordionContent>
-    </Accordion>
-    <Accordion
-      fluid={true}
-      id="review5"
-      key="7"
-      styled={true}
-    >
-      <AccordionTitle
-        index={5}
-        onClick={[Function]}
-      >
-        <Icon
-          as="i"
-          name="dropdown"
-        />
-         
-        Week 6
-         
-      </AccordionTitle>
-      <AccordionContent>
-        <h3>
-          Review
-        </h3>
-        <Link
-          to="/labtool/reviewstudent/TKT20010.2018.K.A.1/10011/6"
-        >
-          <Popup
-            content="Review week"
-            disabled={false}
-            eventsEnabled={true}
-            offset={0}
-            on={
-              Array [
-                "click",
-                "hover",
-              ]
-            }
-            pinned={false}
-            position="top left"
-            trigger={
-              <Button
-                as="button"
-                circular={true}
-                color="orange"
-                icon={
-                  Object {
-                    "color": "black",
-                    "name": "edit",
-                    "size": "large",
-                  }
-                }
-                size="tiny"
-              />
-            }
-          />
-        </Link>
-        <h4>
-           Not Graded 
-        </h4>
-        <h4>
-           No comments 
-        </h4>
-      </AccordionContent>
-    </Accordion>
-    <Accordion
-      fluid={true}
-      id="review6"
-      key="8"
-      styled={true}
-    >
-      <AccordionTitle
-        index={6}
-        onClick={[Function]}
-      >
-        <Icon
-          as="i"
-          name="dropdown"
-        />
-         
-        Week 7
-         
-      </AccordionTitle>
-      <AccordionContent>
-        <h3>
-          Review
-        </h3>
-        <Link
-          to="/labtool/reviewstudent/TKT20010.2018.K.A.1/10011/7"
-        >
-          <Popup
-            content="Review week"
-            disabled={false}
-            eventsEnabled={true}
-            offset={0}
-            on={
-              Array [
-                "click",
-                "hover",
-              ]
-            }
-            pinned={false}
-            position="top left"
-            trigger={
-              <Button
-                as="button"
-                circular={true}
-                color="orange"
-                icon={
-                  Object {
-                    "color": "black",
-                    "name": "edit",
-                    "size": "large",
-                  }
-                }
-                size="tiny"
-              />
-            }
-          />
-        </Link>
-        <h4>
-           Not Graded 
-        </h4>
-        <h4>
-           No comments 
-        </h4>
-      </AccordionContent>
-    </Accordion>
-    <Accordion
-      fluid={true}
-      id="review7"
-      key="9"
-      styled={true}
-    >
-       
-      <AccordionTitle
-        index={8}
-        onClick={[Function]}
-      >
-        <Icon
-          as="i"
-          name="dropdown"
-        />
-         Code Review 
-         
-      </AccordionTitle>
-      <AccordionContent>
-        <p>
-          <strong>
-            Project to review:
-          </strong>
-           
-          Tira super projekti
-           
-          <br />
-          <strong>
-            GitHub:
-          </strong>
-           
-          <a
-            href="http://github.com/superprojekti"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            http://github.com/superprojekti
-          </a>
-        </p>
-        <strong>
-          Code review:
-        </strong>
-         
-        <a
-          href="https:github.com/toReview/repo/pull/1"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          https:github.com/toReview/repo/pull/1
-        </a>
-        <h4>
-          Not graded yet
-        </h4>
-        <Form
-          as="form"
-          onSubmit={[Function]}
-        >
-          <label>
-            Points 
-          </label>
-          <Input
-            defaultValue=""
-            name="points"
-            step="0.01"
-            style={
-              Object {
-                "width": "100px",
-              }
-            }
-            type="number"
-          />
-          <Input
-            type="submit"
-            value="Grade"
-          />
-        </Form>
-      </AccordionContent>
-    </Accordion>
-    <Accordion
-      fluid={true}
-      id="review8"
-      key="10"
-      styled={true}
-    >
-       
-      <AccordionTitle
-        index={9}
-        onClick={[Function]}
-      >
-        <Icon
-          as="i"
-          name="dropdown"
-        />
-         Code Review 
-         
-      </AccordionTitle>
-      <AccordionContent>
-        <p>
-          <span>
-            This student is assigned a repo that doesn't belong to this course to review
-          </span>
-          <br />
-          <strong>
-            GitHub:
-          </strong>
-           
-          <a
-            href="https://github.com/userName/arbitraryRepo"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            https://github.com/userName/arbitraryRepo
-          </a>
-        </p>
-        <strong>
-          Code review:
-        </strong>
-         
-        No review linked yet
-        <h4>
-          Not graded yet
-        </h4>
-        <Form
-          as="form"
-          onSubmit={[Function]}
-        >
-          <label>
-            Points 
-          </label>
-          <Input
-            defaultValue=""
-            name="points"
-            step="0.01"
-            style={
-              Object {
-                "width": "100px",
-              }
-            }
-            type="number"
-          />
-          <Input
-            type="submit"
-            value="Grade"
-          />
-        </Form>
-      </AccordionContent>
-    </Accordion>
+    <Connect(WeekReviews)
+      courseId="TKT20010.2018.K.A.1"
+      handleClickWeek={[Function]}
+      openWeeks={Object {}}
+      student={
+        Object {
+          "User": Object {
+            "createdAt": "2018-03-26T00:00:00.000Z",
+            "email": "maarit.opiskelija@helsinki.invalid",
+            "firsts": "Maarit Mirja",
+            "id": 10011,
+            "lastname": "Opiskelija",
+            "studentNumber": "014578343",
+            "sysop": false,
+            "teacher": false,
+            "updatedAt": "2018-03-26T00:00:00.000Z",
+            "username": "tiraopiskelija1",
+          },
+          "codeReviews": Array [
+            Object {
+              "id": 272,
+              "linkToReview": "https:github.com/toReview/repo/pull/1",
+              "points": null,
+              "repoToReview": null,
+              "revieweNumber": 1,
+              "studentInstanceId": 10011,
+              "toReview": 10031,
+            },
+            Object {
+              "d": 273,
+              "linkToReview": null,
+              "points": null,
+              "repoToReview": "https://github.com/userName/arbitraryRepo",
+              "revieweNumber": 2,
+              "studentInstanceId": 10011,
+              "toReview": null,
+            },
+          ],
+          "courseInstanceId": 10011,
+          "createdAt": "2018-03-26T00:00:00.000Z",
+          "dropped": false,
+          "github": "http://github.com/tiralabra1",
+          "id": 10011,
+          "projectName": "Tiran labraprojekti",
+          "teacherInstanceId": 10011,
+          "updatedAt": "2018-03-26T00:00:00.000Z",
+          "userId": 10011,
+          "weeks": Array [
+            Object {
+              "comments": Array [],
+              "createdAt": "2018-03-26T00:00:00.000Z",
+              "feedback": "Melko hienoa työtä!",
+              "id": 10002,
+              "instructorNotes": "READMEssa ongelmia",
+              "points": 2,
+              "studentInstanceId": 10011,
+              "updatedAt": "2018-03-26T00:00:00.000Z",
+              "weekNumber": 2,
+            },
+            Object {
+              "comments": Array [],
+              "createdAt": "2018-03-26T00:00:00.000Z",
+              "feedback": "Hienoa työtä!",
+              "id": 10001,
+              "instructorNotes": "",
+              "points": 3,
+              "studentInstanceId": 10011,
+              "updatedAt": "2018-03-26T00:00:00.000Z",
+              "weekNumber": 1,
+            },
+            Object {
+              "comments": Array [],
+              "createdAt": "2018-03-26T00:00:00.000Z",
+              "feedback": "Erittäin hienoa työtä!",
+              "id": 10003,
+              "instructorNotes": "",
+              "points": 3,
+              "studentInstanceId": 10011,
+              "updatedAt": "2018-03-26T00:00:00.000Z",
+              "weekNumber": 3,
+            },
+            Object {
+              "comments": Array [],
+              "createdAt": "2018-03-26T00:00:00.000Z",
+              "feedback": "Hyvin menee!",
+              "id": 10004,
+              "instructorNotes": "",
+              "points": 3,
+              "studentInstanceId": 10011,
+              "updatedAt": "2018-03-26T00:00:00.000Z",
+              "weekNumber": 4,
+            },
+          ],
+        }
+      }
+      studentInstance="10011"
+    />
   </div>
 </div>
 `;
