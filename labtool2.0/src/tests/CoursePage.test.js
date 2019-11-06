@@ -252,6 +252,7 @@ describe('<CoursePage /> as teacher', () => {
         selectTeacher={mockFn}
         changeCourseField={mockFn}
         modifyOneCI={mockFn}
+        courseInstance={{}}
       />
     )
   })
@@ -270,24 +271,38 @@ describe('<CoursePage /> as teacher', () => {
     })
 
     it('renders teachers top view', () => {
-      expect(wrapper.find('.TeachersTopView').length).toEqual(1)
+      expect(
+        wrapper
+          .find('CoursePageTeacherHeader')
+          .dive()
+          .find('.TeachersTopView').length
+      ).toEqual(1)
     })
 
     it('renders teachers bottom view for all students', () => {
-      expect(wrapper.find('.TeachersBottomView').length).toEqual(1)
+      expect(
+        wrapper
+          .find('CoursePageTeacherMain')
+          .dive()
+          .find('.TeachersBottomView').length
+      ).toEqual(1)
     })
 
     it('doesnt render students top view when role is teacher', () => {
-      expect(wrapper.find('.StudentsView').length).toEqual(0)
+      expect(wrapper.find('CoursePageStudentInfo').length).toEqual(0)
     })
 
-    it('renders bulk editing form when a student is selected', () => {
-      expect(wrapper.find('.TeacherBulkForm').length).toEqual(1)
+    it('renders bulk editing form', () => {
+      expect(wrapper.find('CoursePageTeacherBulkForm').length).toEqual(1)
     })
 
     it('can mark all students with DROPPED tag as dropped', () => {
       window.confirm = jest.fn(() => true)
-      wrapper.find({ children: 'Mark all with dropped tag as dropped out' }).simulate('click')
+      wrapper
+        .find('CoursePageTeacherMain')
+        .dive()
+        .find({ children: 'Mark all with dropped tag as dropped out' })
+        .simulate('click')
 
       expect(mockUpdateStudentProjectInfo).toBeCalledWith(expect.objectContaining({ userId: 10031, dropped: true }))
     })
@@ -496,15 +511,11 @@ describe('<CoursePage /> as student', () => {
     // })
 
     it('doesnt render teachers top view when role is student', () => {
-      expect(wrapper.find('.TeachersTopView').length).toEqual(0)
+      expect(wrapper.find('CoursePageTeacherHeader').length).toEqual(0)
     })
 
     it('doesnt render teachers bottom view when role is student', () => {
-      expect(wrapper.find('.TeachersBottomView').length).toEqual(0)
-    })
-
-    it('renders code review cards', () => {
-      expect(wrapper.find('.codeReview').length).toEqual(coursePage.data.codeReviews.length)
+      expect(wrapper.find('CoursePageTeacherMain').length).toEqual(0)
     })
 
     // it('renders collapsed code review points only if not null', () => {

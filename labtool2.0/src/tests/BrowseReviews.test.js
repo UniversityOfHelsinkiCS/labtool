@@ -248,9 +248,10 @@ describe('<BrowseReviews />', () => {
 
     describe('student card', () => {
       it('should render student card', () => {
-        expect(wrapper.find('.studentCard').exists()).toEqual(true)
+        expect(wrapper.find('StudentCard').exists()).toEqual(true)
       })
       it('when student participates the course first time', () => {
+        wrapper = wrapper.find('StudentCard').dive()
         expect(wrapper.find('.noOther').text()).toEqual('Has no other participation in this course')
       })
       describe('when student participate other instances of the course', () => {
@@ -270,7 +271,10 @@ describe('<BrowseReviews />', () => {
             courseInstances: [{ id: 10011 }]
           }
         ]
-        beforeEach(() => wrapper.setProps({ studentInstanceToBeReviewed: studentWithOtherParticipation, studentInstanceId: '10011' }))
+        beforeEach(() => {
+          wrapper.setProps({ studentInstanceToBeReviewed: studentWithOtherParticipation, studentInstanceId: '10011' })
+          wrapper = wrapper.find('StudentCard').dive()
+        })
 
         it('Teacher has access to other participation', () => {
           expect(wrapper.find('.hasOther').text()).toContain('Has taken this course in other periods')
@@ -298,6 +302,7 @@ describe('<BrowseReviews />', () => {
         })
       })
       it('student can be marked as dropped and non-dropped', () => {
+        wrapper = wrapper.find('StudentCard').dive()
         wrapper.find({ children: 'Mark as dropped' }).simulate('click')
 
         expect(mockUpdateStudentProjectInfo).toBeCalledWith(expect.objectContaining({ dropped: true }))
