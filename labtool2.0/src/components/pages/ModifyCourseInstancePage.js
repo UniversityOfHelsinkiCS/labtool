@@ -14,6 +14,8 @@ import useLegacyState from '../../hooks/legacyState'
 
 import BackButton from '../BackButton'
 
+// The dropdown feature will be implemented here ("Current week").
+
 /**
  *  Page used to modify a courseinstances information. Can only be accessed by teachers.
  */
