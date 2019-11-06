@@ -2,12 +2,12 @@ module.exports = (sequelize, DataTypes) => {
   const ChecklistItem = sequelize.define(
     'ChecklistItem',
     {
-      name: DataTypes.STRING,
-      textWhenOff: DataTypes.STRING,
-      textWhenOn: DataTypes.STRING,
+      name: DataTypes.TEXT,
+      textWhenOff: DataTypes.TEXT,
+      textWhenOn: DataTypes.TEXT,
       checkedPoints: DataTypes.DOUBLE,
       uncheckedPoints: DataTypes.DOUBLE,
-      category: DataTypes.STRING
+      category: DataTypes.TEXT
     },
     {
       timestamps: false

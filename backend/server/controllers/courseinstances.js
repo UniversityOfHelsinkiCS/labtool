@@ -377,7 +377,7 @@ module.exports = {
 
     try {
       CourseInstance.findOne({
-        ohid: req.body.ohid
+        where: { ohid: req.body.ohid }
       }).then(course => {
         if (!course) {
           res.status(404).send('course not found')
