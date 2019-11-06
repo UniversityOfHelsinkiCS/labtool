@@ -178,7 +178,7 @@ export const ReviewStudent = props => {
           delete savedChecks[clItem.name]
         }
 
-        const checked = isChecked(checks, clItem.name)
+        const checked = isChecked(checks, clItem.id)
         const addition = checked ? clItem.textWhenOn : clItem.textWhenOff
         if (addition) checklistOutput += addition + '\n\n'
 
