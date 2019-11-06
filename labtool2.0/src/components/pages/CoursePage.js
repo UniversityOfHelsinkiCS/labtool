@@ -10,7 +10,7 @@ import { getAllTags, tagStudent, unTagStudent } from '../../services/tags'
 import { associateTeacherToStudent } from '../../services/assistant'
 import { addLinkToCodeReview } from '../../services/codeReview'
 import { sendEmail } from '../../services/email'
-import { coursePageReset, updateActiveIndex, toggleCodeReview, selectTag, selectTeacher } from '../../reducers/coursePageLogicReducer'
+import { prepareForCourse, coursePageReset, updateActiveIndex, toggleCodeReview, selectTag, selectTeacher } from '../../reducers/coursePageLogicReducer'
 import { changeCourseField } from '../../reducers/selectedInstanceReducer'
 import { updateStudentProjectInfo } from '../../services/studentinstances'
 import { resetLoading } from '../../reducers/loadingReducer'
@@ -44,6 +44,7 @@ export const CoursePage = props => {
   useEffect(() => {
     // run on component mount
     props.resetLoading()
+    props.prepareForCourse(props.courseId)
     props.getOneCI(props.courseId)
     props.coursePageInformation(props.courseId)
     props.getAllTags()
@@ -737,6 +738,7 @@ CoursePage.propTypes = {
   coursePageInformation: PropTypes.func.isRequired,
   addLinkToCodeReview: PropTypes.func.isRequired,
   coursePageReset: PropTypes.func.isRequired,
+  prepareForCourse: PropTypes.func.isRequired,
   toggleCodeReview: PropTypes.func.isRequired,
   getAllTags: PropTypes.func.isRequired,
   tagStudent: PropTypes.func.isRequired,
@@ -773,6 +775,7 @@ const mapDispatchToProps = {
   coursePageInformation,
   addLinkToCodeReview,
   coursePageReset,
+  prepareForCourse,
   toggleCodeReview,
   getAllTags,
   tagStudent,
