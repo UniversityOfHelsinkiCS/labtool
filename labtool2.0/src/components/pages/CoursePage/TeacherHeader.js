@@ -68,7 +68,7 @@ export const CoursePageTeacherHeader = props => {
 
 CoursePageTeacherHeader.propTypes = {
   selectedInstance: PropTypes.object.isRequired,
-  courseInstance: PropTypes.object.isRequired,
+  courseInstance: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
   activateCourse: PropTypes.func.isRequired,
   moveToNextWeek: PropTypes.func.isRequired
 }
