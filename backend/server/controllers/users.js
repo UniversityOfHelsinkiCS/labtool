@@ -173,7 +173,7 @@ module.exports = {
         })
         res.status(200).send(assistant)
       } catch (exception) {
-        res.status(400).send('Error in creating teacher/assistant')
+        res.status(400).send('Error in creating teacher/assistant.')
       }
     }
   },
