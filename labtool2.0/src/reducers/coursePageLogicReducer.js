@@ -17,6 +17,7 @@ const INITIAL_STATE = {
   lastReviewedWeek: 1,
   lastReviewedIsShownAlready: false,
   showCodeReviews: [],
+  selectedStudentsCourse: '',
   selectedStudents: {},
   showMassAssignForm: false
 }
@@ -58,6 +59,13 @@ const coursePageLogicReducer = (state = INITIAL_STATE, action) => {
         delete newSelectedStudents[id]
       })
       return { ...state, selectedStudents: newSelectedStudents }
+    }
+    case 'COURSE_PAGE_RESET_FOR_COURSE': {
+      const newCourseId = action.courseId
+      if (state.selectedStudentsCourse !== newCourseId) {
+        return { ...state, selectedStudentsCourse: newCourseId, selectedStudents: {} }
+      }
+      return state
     }
     case 'ASSOCIATE_TEACHER_AND_STUDENT_SUCCESS':
       return INITIAL_STATE
@@ -123,6 +131,15 @@ const coursePageLogicReducer = (state = INITIAL_STATE, action) => {
 
     default:
       return state
+  }
+}
+
+export const prepareForCourse = courseId => {
+  return async dispatch => {
+    dispatch({
+      type: 'COURSE_PAGE_RESET_FOR_COURSE',
+      courseId
+    })
   }
 }
 
