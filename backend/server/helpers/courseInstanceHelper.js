@@ -56,7 +56,7 @@ function checkWebOodi(req, res, user, resolve) {
       resolve('notfound')
       return
     }
-    if (json.students.findOne(student => student === user.studentNumber)) {
+    if (json.students.find(student => student === user.studentNumber)) {
       resolve('found')
       return
     } else {
