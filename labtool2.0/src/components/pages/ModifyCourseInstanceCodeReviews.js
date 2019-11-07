@@ -463,7 +463,7 @@ export const ModifyCourseInstanceReview = props => {
             showFooter={true}
             allowModify={false}
             selectedInstance={props.selectedInstance}
-            studentInstances={props.courseData.data.filter(studentInstance => !studentInstance.dropped && unassignedFilter(studentInstance))}
+            studentInstances={props.courseData.data.filter(studentInstance => !studentInstance.dropped && studentInstance.valid && unassignedFilter(studentInstance))}
             coursePageLogic={props.coursePageLogic}
             tags={props.tags}
             onFilter={filtered => (filterSelected = id => filtered.includes(Number(id)))}
