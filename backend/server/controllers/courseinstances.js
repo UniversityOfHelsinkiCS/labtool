@@ -296,7 +296,7 @@ module.exports = {
         message: 'course is not active'
       })
     }
-    const user = await User.findById(req.decoded.id)
+    const user = await User.findByPk(req.decoded.id)
     if (!user) {
       overkillLogging(req, null)
       return res.status(400).send({
@@ -737,7 +737,7 @@ module.exports = {
 
     if (req.authenticated.success) {
       try {
-        const currentUser = await User.findById(req.decoded.id)
+        const currentUser = await User.findByPk(req.decoded.id)
 
         if (!currentUser) {
           return res.status(404).send('User not found')
@@ -835,7 +835,7 @@ module.exports = {
       try {
         const message = req.body
 
-        const user = await User.findById(userId)
+        const user = await User.findByPk(userId)
         if (!user) {
           res.status(400).send('you are not an user in the system')
           return
