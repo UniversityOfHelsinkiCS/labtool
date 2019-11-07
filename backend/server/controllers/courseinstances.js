@@ -551,7 +551,7 @@ module.exports = {
                 weekMaxPoints: req.body.weekMaxPoints || courseInstance.weekMaxPoints,
                 currentWeek: req.body.currentWeek || courseInstance.currentWeek,
                 finalReview: req.body.finalReview,
-                currentCodeReview: req.body.newCr.length === 0 ? '{}' : req.body.newCr,
+                currentCodeReview: req.body.newCr.length === 0 ? '{}' : `{${req.body.newCr.join(',')}}`,
                 coursesPage: typeof req.body.coursesPage === 'string' ? req.body.coursesPage : courseInstance.coursesPage,
                 courseMaterial: typeof req.body.courseMaterial === 'string' ? req.body.courseMaterial : courseInstance.courseMaterial
               })
