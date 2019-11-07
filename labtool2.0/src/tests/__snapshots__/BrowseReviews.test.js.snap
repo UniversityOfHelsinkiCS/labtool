@@ -31,6 +31,7 @@ exports[`<BrowseReviews /> BrowseReviews Component should render correctly 1`] =
     </Link>
     <StudentCard
       handleMarkAsDropped={[Function]}
+      handleMarkAsInvalid={[Function]}
       otherParticipations={Array []}
       student={
         Object {
