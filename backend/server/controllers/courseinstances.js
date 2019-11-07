@@ -479,6 +479,7 @@ module.exports = {
                   github: req.body.github || targetStudent.github,
                   projectName: req.body.projectname || targetStudent.projectName,
                   dropped: 'dropped' in req.body ? req.body.dropped : targetStudent.dropped,
+                  valid: 'valid' in req.body ? req.body.valid : targetStudent.valid,
                   issuesDisabled: 'issuesDisabled' in req.body ? req.body.issuesDisabled : targetStudent.issuesDisabled,
                   issuesDisabledCheckedAt: 'issuesDisabled' in req.body ? new Date().toISOString() : targetStudent.issuesDisabledCheckedAt
                 })
