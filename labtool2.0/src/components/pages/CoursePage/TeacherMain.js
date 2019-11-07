@@ -54,7 +54,7 @@ export const CoursePageTeacherMain = props => {
           <Button size="small">Send email to multiple students</Button>
         </Link>
       }
-      <Button size="small" onClick={() => exportCSV()}>
+      <Button size="small" onClick={exportCSV}>
         Export CSV of all students
       </Button>
     </div>
