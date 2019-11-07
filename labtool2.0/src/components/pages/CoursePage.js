@@ -59,10 +59,79 @@ export const CoursePage = props => {
       }
     }
   }
+  
+  const downloadFile = (filename, mime, data) => {
+    // create temporary element and use that to initiate download
+
+    const tempElement = document.createElement('a')
+    tempElement.setAttribute('href', `data:${mime},${encodeURIComponent(data)}`)
+    tempElement.setAttribute('download', filename)
+    tempElement.style.display = 'none'
+    
+    document.body.appendChild(tempElement)
+    tempElement.click()
+    document.body.removeChild(tempElement)
+  }
 
   const exportCSV = () => {
     const students = sortStudentArrayAlphabeticallyByDroppedValue(courseData.data)
-    
+    const nowDate = new Date()
+    const twoPad = number => `00${number}`.slice(-2)
+    const dateFormat = `${nowDate.getUTCFullYear()}-${twoPad(nowDate.getUTCMonth()+1)}-${twoPad(nowDate.getUTCDate())}_${twoPad(nowDate.getUTCHours())}-${twoPad(nowDate.getUTCMinutes())}-${twoPad(nowDate.getUTCSeconds())}`
+    const csvFilename = `${courseId}_${dateFormat}.csv`
+    const csvResult = []
+
+    const columns = ['Name', 'StudentNo', 'Email', 'ProjectName', 'ProjectURL']
+    for (let i = 1; i <= props.selectedInstance.weekAmount; ++i) {
+      columns.push(`Week${i}`)
+    }
+    for (let i = 1; i <= props.selectedInstance.amountOfCodeReviews; ++i) {
+      columns.push(`CodeReview${i}`)
+    }
+    if (props.selectedInstance.finalReview) {
+      columns.push('FinalReview')
+    }
+    columns.push('Sum')
+    csvResult.push(columns.join(','))
+
+    students.forEach(student => {
+      const values = [`${student.User.firsts} ${student.User.lastname}`, student.User.studentNumber, student.User.email, student.projectName, student.github]
+      let sum = 0
+      const cr =
+        student.codeReviews &&
+        student.codeReviews.reduce((a, b) => {
+          return { ...a, [b.reviewNumber]: b.points }
+        }, {})
+      let weekPoints = {}
+      let finalPoints = undefined
+  
+      for (var j = 0; j < student.weeks.length; j++) {
+        if (student.weeks[j].weekNumber === selectedInstance.weekAmount + 1) {
+          finalPoints = student.weeks[j].points
+        } else if (student.weeks[j].weekNumber) {
+          weekPoints[student.weeks[j].weekNumber] = student.weeks[j].points
+        }
+      }
+      for (let i = 1; i <= props.selectedInstance.weekAmount; ++i) {
+        const points = weekPoints[i]
+        values.push(points || points === 0 ? points : '-')
+        sum += points || 0
+      }
+      for (let i = 1; i <= props.selectedInstance.amountOfCodeReviews; ++i) {
+        const points = cr[i]
+        values.push(points || points === 0 ? points : '-')
+        sum += points || 0
+      }
+      if (props.selectedInstance.finalReview) {
+        const points = finalPoints
+        values.push(points || points === 0 ? points : '-')
+        sum += points || 0
+      }
+      values.push(sum)
+      csvResult.push(values.join(','))
+    })
+
+    downloadFile(csvFilename, 'text/csv;charset=utf-8', csvResult.join('\n'))
   }
 
   const handleMarkAsDropped = async (dropped, id) => {
