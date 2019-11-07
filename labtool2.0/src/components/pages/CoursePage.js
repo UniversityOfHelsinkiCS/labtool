@@ -34,7 +34,10 @@ export const CoursePage = props => {
   }, [])
 
   const sortStudentArrayAlphabeticallyByDroppedValue = theArray =>
-    theArray.sort((a, b) => Number(a.dropped) - Number(b.dropped) || a.User.lastname.localeCompare(b.User.lastname) || a.User.firsts.localeCompare(b.User.firsts) || a.id - b.id)
+    theArray.sort(
+      (a, b) =>
+        !Number(a.valid) - !Number(b.valid) || Number(a.dropped) - Number(b.dropped) || a.User.lastname.localeCompare(b.User.lastname) || a.User.firsts.localeCompare(b.User.firsts) || a.id - b.id
+    )
 
   const droppedTagExists = () => props.tags.tags && props.tags.tags.find(tag => tag.name.toUpperCase() === 'DROPPED')
 
@@ -65,6 +68,14 @@ export const CoursePage = props => {
       ohid: props.selectedInstance.ohid,
       userId: id,
       dropped: dropped
+    })
+  }
+
+  const handleMarkAsValid = async (valid, id) => {
+    props.updateStudentProjectInfo({
+      ohid: props.selectedInstance.ohid,
+      userId: id,
+      valid: valid
     })
   }
 
@@ -138,6 +149,23 @@ export const CoursePage = props => {
 
   const bulkMarkDropped = () => {
     bulkMarkDroppedBool(true)
+  }
+
+  const bulkMarkValidBool = valid => {
+    bulkDoAction(id => {
+      const student = props.courseData.data.find(data => data.id === Number(id))
+      if (student) {
+        handleMarkAsValid(valid, student.User.id)
+      }
+    })
+  }
+
+  const bulkMarkValid = () => {
+    bulkMarkValidBool(true)
+  }
+
+  const bulkMarkInvalid = () => {
+    bulkMarkValidBool(false)
   }
 
   let dropDownTeachers = []
@@ -231,7 +259,9 @@ export const CoursePage = props => {
       bulkRemoveTag,
       bulkUpdateTeacher,
       bulkMarkDropped,
-      bulkMarkNotDropped
+      bulkMarkNotDropped,
+      bulkMarkValid,
+      bulkMarkInvalid
     }
     return (
       <div style={{ overflowX: 'auto', overflowY: 'hidden', marginBottom: '20em' }}>
