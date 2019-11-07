@@ -62,7 +62,7 @@ module.exports = {
 
     const nonActive = await helper.getInactive(req, res)
     await Promise.all(req.body.courses.map(async (course) => {
-      if (nonActive.find(c => c.id === course.hid)) {
+      if (nonActive.findOne(c => c.id === course.hid)) {
         await helper.createCourse(course)
       }
     }))

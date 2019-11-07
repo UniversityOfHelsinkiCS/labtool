@@ -601,7 +601,7 @@ module.exports = {
       return
     }
 
-    CourseInstance.find(
+    CourseInstance.findOne(
       {
         attributes: {
           exclude: ['createdAt', 'updatedAt']
