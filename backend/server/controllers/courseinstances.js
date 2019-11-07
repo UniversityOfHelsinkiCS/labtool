@@ -5,7 +5,7 @@ const helper = require('../helpers/courseInstanceHelper')
 const logger = require('../utils/logger')
 
 const { Op } = Sequelize
-const { User, CourseInstance, StudentInstance, TeacherInstance, Week, CodeReview, Comment, Tag, Checklist, ChecklistItem } = db
+const { User, CourseInstance, StudentInstance, TeacherInstance, Week, WeekCheck, CodeReview, Comment, Tag, Checklist, ChecklistItem } = db
 
 const env = process.env.NODE_ENV || 'development'
 const config = require('./../config/config.js')[env]
@@ -127,6 +127,10 @@ module.exports = {
                   hidden: false
                 },
                 required: false
+              },
+              {
+                model: WeekCheck,
+                as: 'checks'
               }
             ]
           },
@@ -186,6 +190,9 @@ module.exports = {
             // This was only ever included to be spliced into the codeReviews filed above.
             delete palautus.data.toReviews
           }
+          palautus.data.weeks = palautus.data.weeks.map(week => ({ ...week.dataValues,
+            checks: week.checks.reduce((checksObject, weekCheck) => ({ ...checksObject, [weekCheck.checklistItemId]: weekCheck.checked }), {})
+          }))
         } else {
           palautus.data = null
         }
@@ -217,6 +224,10 @@ module.exports = {
                   exclude: ['updatedAt']
                 },
                 as: 'comments'
+              },
+              {
+                model: WeekCheck,
+                as: 'checks'
               }
             ]
           },
@@ -246,7 +257,9 @@ module.exports = {
         ]
       })
       try {
-        palautus.data = teacherPalautus
+        palautus.data = teacherPalautus.map(studentInstance => ({ ...studentInstance.dataValues,
+          weeks: studentInstance.dataValues.weeks.map(week => ({ ...week.dataValues,
+            checks: week.checks.reduce((checksObject, weekCheck) => ({ ...checksObject, [weekCheck.checklistItemId]: weekCheck.checked }), {}) })) }))
         palautus.role = 'teacher'
         res.status(200).send(palautus)
       } catch (e) {
@@ -378,7 +391,7 @@ module.exports = {
     try {
       CourseInstance.findOne({
         where: { ohid: req.body.ohid }
-      }).then(course => {
+      }).then((course) => {
         if (!course) {
           res.status(404).send('course not found')
           return
@@ -386,42 +399,39 @@ module.exports = {
 
         const currentTime = new Date()
 
-        Promise.all(req.body.studentInstances.map(studentInstance => {
-          return helper.checkHasPermissionToViewStudentInstance(req, course.id, studentInstance.userId).then(isAllowedToUpdate => {
-            if (isAllowedToUpdate) {
-              const newStudentInstance = {}
-              if (studentInstance.github) {
-                newStudentInstance.github = studentInstance
-              }
-              if (studentInstance.projectName) {
-                newStudentInstance.projectName = studentInstance.projectName
-              }
-              if ('dropped' in studentInstance) {
-                newStudentInstance.dropped = studentInstance.dropped
-              }
-              if ('issuesDisabled' in studentInstance) {
-                newStudentInstance.issuesDisabled = studentInstance.issuesDisabled
-                newStudentInstance.issuesDisabledCheckedAt = currentTime.toISOString()
-              }
+        Promise.all(req.body.studentInstances.map(studentInstance => helper.checkHasPermissionToViewStudentInstance(req, course.id, studentInstance.userId).then((isAllowedToUpdate) => {
+          if (isAllowedToUpdate) {
+            const newStudentInstance = {}
+            if (studentInstance.github) {
+              newStudentInstance.github = studentInstance
+            }
+            if (studentInstance.projectName) {
+              newStudentInstance.projectName = studentInstance.projectName
+            }
+            if ('dropped' in studentInstance) {
+              newStudentInstance.dropped = studentInstance.dropped
+            }
+            if ('issuesDisabled' in studentInstance) {
+              newStudentInstance.issuesDisabled = studentInstance.issuesDisabled
+              newStudentInstance.issuesDisabledCheckedAt = currentTime.toISOString()
+            }
 
-              return StudentInstance.update(newStudentInstance, 
+            return StudentInstance.update(newStudentInstance,
               { returning: true,
                 where: {
                   userId: studentInstance.userId,
                   courseInstanceId: course.id
                 }
-              }).then(([ _, [updatedStudentInstance]]) => updatedStudentInstance)
-            } else {
-              return Promise.resolve()
-            }
-          })
-        })).then(updatedStudents => {
+              }).then(([_, [updatedStudentInstance]]) => updatedStudentInstance)
+          }
+          return Promise.resolve()
+        }))).then((updatedStudents) => {
           res.status(200).send(updatedStudents.filter(updatedStudent => !!updatedStudent).map(({ dataValues }) => dataValues))
-        }).catch(error => {
+        }).catch((error) => {
           logger.error(error)
           res.status(400).send(error)
         })
-      }).catch(error => {
+      }).catch((error) => {
         logger.error(error)
         res.status(400).send(error)
       })
@@ -788,17 +798,17 @@ module.exports = {
             courseInstanceId: course.id
           }
         })
-        //Add checklist items to checklists
+        // Add checklist items to checklists
         for (const checklist of checklists) {
           const checklistJson = {}
           const checklistItems = await ChecklistItem.findAll({ where: {
-            checklistId: checklist.id 
-          }})
+            checklistId: checklist.id
+          } })
           checklistItems.forEach(({ dataValues: checklistItem }) => {
             if (checklistJson[checklistItem.category] === undefined) {
               checklistJson[checklistItem.category] = []
             }
-            
+
             const checklistItemCopy = { ...checklistItem }
             delete checklistItemCopy.category
             delete checklistItemCopy.checklistId
