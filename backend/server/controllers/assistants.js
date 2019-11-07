@@ -36,7 +36,7 @@ module.exports = {
         return
       }
       if (!teacherInsId) {
-        studentInstance.updateAttributes({
+        studentInstance.update({
           teacherInstanceId: null
         })
         res.status(200).send(studentInstance)
@@ -73,7 +73,7 @@ module.exports = {
         res.status(400).send('The teacher is not from the same course as this student.')
         return
       }
-      studentInstance.updateAttributes({
+      studentInstance.update({
         teacherInstanceId: teacherInsId
       })
       res.status(200).send(studentInstance)

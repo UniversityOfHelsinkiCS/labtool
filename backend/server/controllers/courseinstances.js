@@ -464,7 +464,7 @@ module.exports = {
                 res.status(401).send(`Not allowed to update student instance for user ${userId}`)
               }
             })
-            StudentInstance.find({
+            StudentInstance.findOne({
               where: {
                 userId,
                 courseInstanceId: course.id
@@ -601,7 +601,7 @@ module.exports = {
       return
     }
 
-    CourseInstance.find(
+    CourseInstance.findOne(
       {
         attributes: {
           exclude: ['createdAt', 'updatedAt']
