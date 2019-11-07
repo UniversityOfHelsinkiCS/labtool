@@ -175,7 +175,7 @@ module.exports = {
       return
     }
 
-    return Week.all()
+    return Week.findAll()
       .then(ui => res.status(200).send(ui))
       .catch((error) => {
         logger.error('list weeks error', { error: error.message })
