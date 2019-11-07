@@ -228,22 +228,21 @@ export const ModifyCourseInstanceReview = props => {
     const selectedStudents = Object.keys(selected)
       .filter(s => selected[s])
       .map(s => props.courseData.data.find(t => t.id.toString() === s))
-
-    const githubRepoSlugToStudent = selectedStudents.reduce((map, student) => map.set(student.github.replace(/^https?:\/\/github.com\//, ''), student), new Map())
+    const studentIdsSlugs = selectedStudents.map(student => [student.userId, student.github.replace(/^https?:\/\/github.com\//, '')])
 
     Promise.all(
-      Array.from(githubRepoSlugToStudent.keys()).map(repo => {
+      studentIdsSlugs.map(([userId, repo]) => {
         //Ignore nonexisting repos
         return getGithubRepo(repo)
-          .result.then(result => result.data)
-          .catch(error => (error.response && error.response.status === 404 ? Promise.resolve() : Promise.reject(error)))
+          .result.then(result => [userId, result.data])
+          .catch(error => (error.response && error.response.status === 404 ? Promise.resolve([userId, null]) : Promise.reject(error)))
       })
     )
       .then(githubRepos => {
         const studentInstances = githubRepos
-          .filter(x => !!x)
-          .map(githubRepo => {
-            return { userId: githubRepoSlugToStudent.get(githubRepo.full_name).userId, issuesDisabled: !githubRepo.has_issues || githubRepo.archived }
+          .filter(([, repo]) => !!repo)
+          .map(([userId, githubRepo]) => {
+            return { userId, issuesDisabled: !githubRepo.has_issues || githubRepo.archived }
           })
 
         props.massUpdateStudentProjectInfo({ ohid: props.selectedInstance.ohid, studentInstances })
