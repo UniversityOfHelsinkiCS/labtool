@@ -60,6 +60,11 @@ export const CoursePage = props => {
     }
   }
 
+  const exportCSV = () => {
+    const students = sortStudentArrayAlphabeticallyByDroppedValue(courseData.data)
+    
+  }
+
   const handleMarkAsDropped = async (dropped, id) => {
     props.updateStudentProjectInfo({
       ohid: props.selectedInstance.ohid,
@@ -245,6 +250,7 @@ export const CoursePage = props => {
           droppedTagExists={droppedTagExists}
           markAllWithDroppedTagAsDropped={markAllWithDroppedTagAsDropped}
           students={sortStudentArrayAlphabeticallyByDroppedValue(courseData.data)}
+          exportCSV={exportCSV}
         />
         <br />
         <CoursePageTeacherBulkForm courseId={courseId} coursePageLogic={coursePageLogic} dropDownTags={dropDownTags} dropDownTeachers={dropDownTeachers} {...coursePageBulkFormFunctions} />
