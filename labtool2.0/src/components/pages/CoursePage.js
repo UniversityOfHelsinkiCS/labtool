@@ -59,7 +59,7 @@ export const CoursePage = props => {
       }
     }
   }
-  
+
   const downloadFile = (filename, mime, data) => {
     // create temporary element and use that to initiate download
 
@@ -67,17 +67,21 @@ export const CoursePage = props => {
     tempElement.setAttribute('href', `data:${mime},${encodeURIComponent(data)}`)
     tempElement.setAttribute('download', filename)
     tempElement.style.display = 'none'
-    
+
     document.body.appendChild(tempElement)
     tempElement.click()
     document.body.removeChild(tempElement)
   }
 
   const exportCSV = () => {
+    const download = props.downloadFile || downloadFile
+    const twoPad = number => `00${number}`.slice(-2)
+
     const students = sortStudentArrayAlphabeticallyByDroppedValue(courseData.data)
     const nowDate = new Date()
-    const twoPad = number => `00${number}`.slice(-2)
-    const dateFormat = `${nowDate.getUTCFullYear()}-${twoPad(nowDate.getUTCMonth()+1)}-${twoPad(nowDate.getUTCDate())}_${twoPad(nowDate.getUTCHours())}-${twoPad(nowDate.getUTCMinutes())}-${twoPad(nowDate.getUTCSeconds())}`
+    const dateFormat = `${nowDate.getUTCFullYear()}-${twoPad(nowDate.getUTCMonth() + 1)}-${twoPad(nowDate.getUTCDate())}_${twoPad(nowDate.getUTCHours())}-${twoPad(nowDate.getUTCMinutes())}-${twoPad(
+      nowDate.getUTCSeconds()
+    )}`
     const csvFilename = `${courseId}_${dateFormat}.csv`
     const csvResult = []
 
@@ -104,7 +108,7 @@ export const CoursePage = props => {
         }, {})
       let weekPoints = {}
       let finalPoints = undefined
-  
+
       for (var j = 0; j < student.weeks.length; j++) {
         if (student.weeks[j].weekNumber === selectedInstance.weekAmount + 1) {
           finalPoints = student.weeks[j].points
@@ -130,8 +134,8 @@ export const CoursePage = props => {
       values.push(sum)
       csvResult.push(values.join(','))
     })
-
-    downloadFile(csvFilename, 'text/csv;charset=utf-8', csvResult.join('\n'))
+    
+    download(csvFilename, 'text/csv;charset=utf-8', csvResult.join('\n'))
   }
 
   const handleMarkAsDropped = async (dropped, id) => {
@@ -356,7 +360,8 @@ CoursePage.propTypes = {
   selectTag: PropTypes.func.isRequired,
   selectTeacher: PropTypes.func.isRequired,
   changeCourseField: PropTypes.func.isRequired,
-  modifyOneCI: PropTypes.func.isRequired
+  modifyOneCI: PropTypes.func.isRequired,
+  downloadFile: PropTypes.func
 }
 
 const mapStateToProps = (state, ownProps) => {
