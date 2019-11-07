@@ -1,4 +1,4 @@
-const { Week, WeekDraft, StudentInstance } = require('../models')
+const { Week, WeekCheck, WeekDraft, StudentInstance } = require('../models')
 const helper = require('../helpers/weeksControllerHelper')
 const logger = require('../utils/logger')
 
@@ -36,11 +36,16 @@ module.exports = {
             studentInstanceId: req.body.studentInstanceId
           }
         })
+
+        // Collect checklist checks from DB to this object
+        // This is to keep backend backwards compatible
+        const checksObject = {}
+
         if (week) {
           let updatedChecks = {}
           if (req.body.checks) {
             Object.keys(week.checks).forEach((key) => {
-              //handle existing cases where clItems were saved by name in week.checks
+              // handle existing cases where clItems were saved by name in week.checks
               if (!Number.isInteger(key)) {
                 return
               }
@@ -60,21 +65,36 @@ module.exports = {
           await week.update({
             points: req.body.points || week.points,
             feedback: req.body.feedback || week.feedback,
-            instructorNotes: req.body.instructorNotes || week.instructorNotes,
-            checks: updatedChecks
+            instructorNotes: req.body.instructorNotes || week.instructorNotes
           })
+          await Promise.all(Object.keys(updatedChecks).map(check => WeekCheck.findOrCreate({
+            where: {
+              checklistItemId: Number(check),
+              weekId: week.id
+            }
+          }).then(weekCheck => weekCheck.update({
+            checked: updatedChecks[check]
+          }).then((updatedWeekCheck) => {
+            checksObject[updatedWeekCheck.checklistItemId] = updatedWeekCheck.checked
+          }))))
         } else {
-          await Week.create({
+          const week = await Week.create({
             points: req.body.points,
             studentInstanceId: req.body.studentInstanceId,
             feedback: req.body.feedback,
             instructorNotes: req.body.instructorNotes,
             weekNumber: req.body.weekNumber,
-            notified: false,
-            checks: req.body.checks
+            notified: false
           })
+          await Promise.all(Object.keys(req.body.checks).map(check => WeekCheck.create({
+            checklistItemId: Number(check),
+            checked: req.body.checks[check],
+            weekId: week.id
+          }).then((weekCheck) => {
+            checksObject[weekCheck.checklistItemId] = weekCheck.checked
+          })))
         }
-        res.status(200).send(week)
+        res.status(200).send({ ...week, checks: checksObject })
       } else {
         res.status(400).send('token verific ation failed')
       }
@@ -175,8 +195,9 @@ module.exports = {
       return
     }
 
-    return Week.all()
-      .then(ui => res.status(200).send(ui))
+    return Week.findAll({ include: [WeekCheck] })
+      .then(ui => res.status(200).send(ui.map(week => ({ ...week,
+        checks: week.checks.reduce((checksObject, weekCheck) => ({ ...checksObject, [weekCheck.checklistItemId]: weekCheck.checked }), {}) }))))
       .catch((error) => {
         logger.error('list weeks error', { error: error.message })
         res.status(400).send(error)
@@ -200,7 +221,14 @@ module.exports = {
             message: 'Teacher Instance not Found'
           })
         }
-        return res.status(200).send(week)
+        return WeekCheck.findAll({
+          where: {
+            weekId: week.id
+          }
+        }).then((weekChecks) => {
+          res.status(200).send({ ...week,
+            checks: weekChecks.reduce((checksObject, weekCheck) => ({ ...checksObject, [weekCheck.checklistItemId]: weekCheck.checked }), {}) })
+        })
       })
       .catch((error) => {
         logger.error('retrieve weeks error', { error: error.message })
