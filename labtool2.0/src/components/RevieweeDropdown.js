@@ -42,7 +42,7 @@ const RevieweeDropdown = props => {
       : null
     : null
 
-  const initialOptions = dropdownUsers.filter(d => d.value !== studentData.id && !checkDropped(d.value) && !reviewedInPrevious(d.value))
+  const initialOptions = dropdownUsers.filter(d => d.value !== studentData.id && checkValidRegistration(d.value) && !checkDropped(d.value) && !reviewedInPrevious(d.value))
   const [options, setOptions] = useState(initialOptions)
 
   useEffect(() => {
