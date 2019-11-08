@@ -134,7 +134,7 @@ export const CoursePage = props => {
       values.push(sum)
       csvResult.push(values.join(','))
     })
-    
+
     download(csvFilename, 'text/csv;charset=utf-8', csvResult.join('\n'))
   }
 
@@ -146,18 +146,14 @@ export const CoursePage = props => {
     })
   }
 
-  const changeSelectedTeacher = () => {
-    return (e, data) => {
-      const { value } = data
-      props.selectTeacher(value)
-    }
+  const changeSelectedTeacher = (e, data) => {
+    const { value } = data
+    props.selectTeacher(value)
   }
 
-  const changeSelectedTag = () => {
-    return (e, data) => {
-      const { value } = data
-      props.selectTag(value)
-    }
+  const changeSelectedTag = (e, data) => {
+    const { value } = data
+    props.selectTag(value)
   }
 
   const bulkDoAction = action => {
