@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Button, Icon, Table, Popup, Dropdown, Checkbox } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import RepoLink from '../RepoLink'
+import comment from '../../services/comment'
 
 export const StudentTableRow = props => {
   const {
@@ -16,8 +17,10 @@ export const StudentTableRow = props => {
     allowReview,
     allowModify,
     addFilterTag,
+    loggedInUser,
     coursePageLogic,
     selectedInstance,
+    courseData,
     studentInstances,
     associateTeacherToStudent,
     selectStudent,
@@ -110,6 +113,33 @@ export const StudentTableRow = props => {
     }
   }
 
+  const loggedInUserSameAsSiInstructor = si => {
+    // If there's no instructor assigned to the student, the instructor is the teacher in charge(paaopettaja) by default.
+    // It means paaopettaja can see the notification if there are comments from students without instructor assinged
+    if (si.teacherInstanceId === null) {
+      return loggedInUser.user.id === selectedInstance.teacherInstances.find(ti => !ti.instructor).userId
+    }
+    const userIdOfInstructor = selectedInstance.teacherInstances.find(ti => ti.id === si.teacherInstanceId).userId
+    // return true if logged in user is same as the instructor of the student
+    return userIdOfInstructor === loggedInUser.user.id
+  }
+
+  const showNotificationForNewComment = (siId, week) => {
+    const si = courseData.data.find(si => si.id === siId)
+    if (!loggedInUserSameAsSiInstructor(si)) {
+      return false
+    }
+
+    const commentsForWeek = si.weeks.find(wk => wk.weekNumber === week).comments
+    console.log(siId, week, commentsForWeek)
+    if (commentsForWeek.length === 0) {
+      return false
+    }
+    const unreadComments = commentsForWeek.find(comment => comment.userId !== loggedInUser.user.id && !comment.readByInstructor)
+
+    return unreadComments ? true : false
+  }
+
   const createWeekHeaders = (weeks, codeReviews, siId) => {
     const cr =
       codeReviews &&
@@ -150,7 +180,16 @@ export const StudentTableRow = props => {
             {selectedInstance.currentWeek === i + 1 && weekPoints[i + 1] === undefined ? (
               <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'star', size: 'large' }} />} content="Review" />
             ) : (
-              <p>{weekPoints[i + 1] !== undefined ? weekPoints[i + 1] : '-'}</p>
+              <div>
+                {weekPoints[i + 1] === undefined ? (
+                  <p>-</p>
+                ) : (
+                  <div onClick={() => console.log('hehe')}>
+                    <p>{weekPoints[i + 1]}</p>
+                    {showNotificationForNewComment(data.id, i + 1) ? <Popup trigger={<Icon name="comment outline" size="small" />} content="You have new comments" /> : null}
+                  </div>
+                )}
+              </div>
             )}
           </Link>
         </Table.Cell>

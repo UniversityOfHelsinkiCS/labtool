@@ -240,8 +240,11 @@ export const StudentTable = props => {
                 extraStudentIcon={extraStudentIcon}
                 allowReview={props.allowReview}
                 allowModify={props.allowModify}
+                loggedInUser={props.loggedInUser}
                 coursePageLogic={props.coursePageLogic}
                 selectedInstance={props.selectedInstance}
+                //courePage={props.courePage}
+                courseData={props.courseData}
                 studentInstances={props.studentInstances}
                 associateTeacherToStudent={props.associateTeacherToStudent}
                 selectStudent={props.selectStudent}

@@ -1,0 +1,16 @@
+PUT http://localhost:3001/api/comments/update
+content-type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRpcmFvaGphYWphIiwiaWQiOjEwMDE1LCJpYXQiOjE1NzMyMTQxODh9.AgbA7aItq5g4vwq_3Oya3ksTt8HfXc7_2uQBMlOoPmY
+
+{
+  "comments":[
+    {
+      "id":1,
+      "weekId":10001
+    },
+    {
+      "id":22,
+      "weekId":10001
+    }
+  ]
+}

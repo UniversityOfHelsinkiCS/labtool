@@ -134,7 +134,7 @@ export const CoursePage = props => {
       values.push(sum)
       csvResult.push(values.join(','))
     })
-    
+
     download(csvFilename, 'text/csv;charset=utf-8', csvResult.join('\n'))
   }
 
@@ -228,7 +228,7 @@ export const CoursePage = props => {
     return <Loader active />
   }
 
-  const { courseId, courseData, coursePageLogic, courseInstance, selectedInstance, tags } = props
+  const { user, courseId, courseData, coursePageLogic, courseInstance, selectedInstance, tags } = props
 
   // This function activates the course, leaving other data intact.
   const activateCourse = () => {
@@ -318,6 +318,7 @@ export const CoursePage = props => {
           courseId={courseId}
           courseData={courseData}
           selectedInstance={selectedInstance}
+          loggedInUser={user}
           coursePageLogic={coursePageLogic}
           tags={tags}
           droppedTagExists={droppedTagExists}

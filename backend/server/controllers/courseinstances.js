@@ -911,7 +911,9 @@ module.exports = {
           hidden: message.hidden,
           comment: message.comment,
           from: name,
-          notified: false
+          notified: false,
+          isReadByInstructor: false,
+          userId
         })
 
         if (!comment) {
@@ -923,6 +925,32 @@ module.exports = {
         res.status(400).send(e)
         logger.error(e)
       }
+    }
+  },
+
+  async markCommentsAsRead(req, res) {
+    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
+    if (req.authenticated.success) {
+      const userId = req.decoded.id
+      const commentsToUpdate = req.body.comments
+      
+      // comments should have same weekId
+      if (commentsToUpdate.filter(comment => comment.weekId !== weekId).length > 0) {
+        res.status(400).end('the comments do not belong to the same week review')
+      }
+      // comments should exist
+      let arr = []
+      for (let i = 0; i < commentsToUpdate.length; i++) {
+        arr.push(Comment.findByPk(commentsToUpdate[i].id))
+      }
+      arr = await Promise.all(arr)
+      if (arr.includes(null)) {
+        res.status(400).end('comment not found')
+      }
+      const weekId = commentsToUpdate[0].weekId
+      res.status(200).end()
     }
   },
 

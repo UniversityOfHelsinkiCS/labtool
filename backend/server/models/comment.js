@@ -29,6 +29,14 @@ module.exports = (sequelize, DataTypes) => {
       notified: {
         type: DataTypes.BOOLEAN,
         allowNull: false
+      },
+      isReadByInstructor: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false
+      },
+      userId: {
+        type: DataTypes.INTEGER,
+        allowNull: true
       }
     },
     {}
