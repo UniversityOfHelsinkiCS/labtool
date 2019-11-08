@@ -38,6 +38,13 @@ async function formatCodeReview(codeReview, allStudentInstancesIds, reviewNumber
 
 
 module.exports = {
+  /**
+   * Assign code reviews to N students.
+   *   permissions: must be teacher/instructor on course
+   *
+   * @param {*} req
+   * @param {*} res
+   */
   async bulkInsert(req, res) {
     if (!helper.controllerBeforeAuthCheckAction(req, res)) {
       return
@@ -112,6 +119,13 @@ module.exports = {
     }
   },
 
+  /**
+   * Grade a code review submitted by a student.
+   *   permissions: must be teacher/instructor on course
+   *
+   * @param {*} req
+   * @param {*} res
+   */
   async grade(req, res) {
     if (!helper.controllerBeforeAuthCheckAction(req, res)) {
       return
@@ -176,6 +190,13 @@ module.exports = {
     }
   },
 
+  /**
+   * Add custom link to a student.
+   *   permissions: must be teacher/instructor on course
+   *
+   * @param {*} req
+   * @param {*} res
+   */
   async addLink(req, res) {
     if (!helper.controllerBeforeAuthCheckAction(req, res)) {
       return
@@ -204,6 +225,14 @@ module.exports = {
         return
       }
 
+      const courseInstance = await CourseInstance.findOne({
+        where: { id: studentInstance.courseInstanceId }
+      })
+      const isTeacher = await helper.getTeacherId(req.decoded.id, courseInstance.id)
+      if (!isTeacher) {
+        return res.status(403).send('must be teacher on the course')
+      }
+
       const modifiedRows = await CodeReview.update(
         {
           linkToReview: req.body.linkToReview
@@ -228,20 +257,37 @@ module.exports = {
     }
   },
 
+  /**
+   * Remove one code review from a student.
+   *   permissions: must be teacher/instructor on course
+   *
+   * @param {*} req
+   * @param {*} res
+   */
   async removeOne(req, res) {
     if (!helper.controllerBeforeAuthCheckAction(req, res)) {
       return
     }
 
     try {
-      if (!req.authenticated.success) {
-        res.status(403).send('You have to be authenticated to do this')
-        return
-      }
       if (!req.params.id) {
         res.status(403).send('Cant delete from null')
         return
       }
+      const studentInstance = await StudentInstance.findOne({
+        where: { id: req.body.reviewer }
+      })
+      if (!studentInstance) {
+        return res.status(404).send('no student with that ID found')
+      }
+      const courseInstance = await CourseInstance.findOne({
+        where: { id: studentInstance.courseInstanceId }
+      })
+      const isTeacher = await helper.getTeacherId(req.decoded.id, courseInstance.id)
+      if (!isTeacher) {
+        return res.status(403).send('must be teacher on the course')
+      }
+
       const deleteOne = await CodeReview.destroy({
         where: {
           studentInstanceId: req.body.reviewer,
