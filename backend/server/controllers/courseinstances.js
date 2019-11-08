@@ -912,8 +912,7 @@ module.exports = {
           comment: message.comment,
           from: name,
           notified: false,
-          isReadByInstructor: false,
-          userId
+          isRead: [userId]
         })
 
         if (!comment) {
@@ -935,10 +934,10 @@ module.exports = {
     if (req.authenticated.success) {
       const userId = req.decoded.id
       const commentsToUpdate = req.body.comments
-      
+      const weekId = commentsToUpdate[0].weekId
       // comments should have same weekId
       if (commentsToUpdate.filter(comment => comment.weekId !== weekId).length > 0) {
-        res.status(400).end('the comments do not belong to the same week review')
+        return res.status(400).send('the comments do not belong to the same week review')
       }
       // comments should exist
       let arr = []
@@ -947,10 +946,25 @@ module.exports = {
       }
       arr = await Promise.all(arr)
       if (arr.includes(null)) {
-        res.status(400).end('comment not found')
+        return res.status(400).send('comment not found')
       }
-      const weekId = commentsToUpdate[0].weekId
-      res.status(200).end()
+
+      const hasPermission = await helper.checkHasCommentPermission(userId, weekId)
+      if (!hasPermission) {
+        return res.status(403).send('you have no permission to update these comments')
+      }
+      commentsToUpdate.map((comment) => {
+        if (!comment.isRead.includes(userId)) {
+          comment.isRead.push(userId)
+        }
+      })
+      await Promise.all(commentsToUpdate.map(comment => Comment.update(
+        { isRead: comment.isRead },
+        { where: {
+          id: comment.id
+        } }
+      )))
+      res.status(200).send(commentsToUpdate)
     }
   },
 

@@ -30,12 +30,8 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN,
         allowNull: false
       },
-      isReadByInstructor: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false
-      },
-      userId: {
-        type: DataTypes.INTEGER,
+      isRead: {
+        type: DataTypes.ARRAY(DataTypes.INTEGER), // userIds who read the comment
         allowNull: true
       }
     },

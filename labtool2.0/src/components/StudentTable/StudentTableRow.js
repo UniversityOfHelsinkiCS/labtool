@@ -131,11 +131,11 @@ export const StudentTableRow = props => {
     }
 
     const commentsForWeek = si.weeks.find(wk => wk.weekNumber === week).comments
-    console.log(siId, week, commentsForWeek)
+
     if (commentsForWeek.length === 0) {
       return false
     }
-    const unreadComments = commentsForWeek.find(comment => comment.userId !== loggedInUser.user.id && !comment.readByInstructor)
+    const unreadComments = commentsForWeek.find(comment => !comment.isRead.includes(loggedInUser.user.id))
 
     return unreadComments ? true : false
   }

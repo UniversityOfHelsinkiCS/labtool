@@ -1,12 +1,12 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.addColumn('Comments', 'isReadByInstructor', {
-      type: Sequelize.BOOLEAN,
-      defaultValue: false
+    await queryInterface.addColumn('Comments', 'isRead', {
+      type: Sequelize.ARRAY(Sequelize.INTEGER),
+      defaultValue: null
     })
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.removeColumn('Comments', 'isReadByInstructor')
+    await queryInterface.removeColumn('Comments', 'isRead')
   }
 }
