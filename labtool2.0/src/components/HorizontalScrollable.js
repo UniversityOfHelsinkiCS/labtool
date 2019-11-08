@@ -7,7 +7,6 @@ export const HorizontalScrollable = props => {
   let content = null
   let scrollbar = null
   const antibounce = {}
-  let scrollBarLeftScrollTo = 0
 
   const isMobile = () => {
     return window.matchMedia('(max-width: 768px)').matches
@@ -22,6 +21,7 @@ export const HorizontalScrollable = props => {
 
     if (e.key == 'ArrowLeft' || e.key == 'ArrowRight') {
       // forward key event to target element to trigger scroll
+      // tabIndex necessary for focus, which is necessary for key events
       targetElement.tabIndex = 0
       targetElement.focus()
       targetElement.dispatchEvent(new KeyboardEvent('keydown', { key: e.key }))
@@ -30,12 +30,15 @@ export const HorizontalScrollable = props => {
 
   const mainElementReady = element => {
     if (content) {
+      // remove listener from outgoing element
       content.children[0].removeEventListener('keydown', onKeyDownScroll)
     }
     content = element
     if (content) {
       content.style.position = 'relative'
+      // tabIndex necessary for focus, which is necessary for key events
       content.children[0].tabIndex = 0
+      // add listener to incoming element
       content.children[0].addEventListener('keydown', onKeyDownScroll)
     }
     resizeBar()
@@ -80,7 +83,7 @@ export const HorizontalScrollable = props => {
       scrollbar.children[0].style.height = '1px'
 
       scrollbar.style.overflowX = contentWidth > viewWidth ? 'scroll' : 'auto'
-      scrollBarLeftScrollTo = scrollbar.scrollLeft = oldScrollLeft
+      scrollbar.scrollLeft = oldScrollLeft
     }
   }
 
@@ -114,7 +117,7 @@ export const HorizontalScrollable = props => {
     }
     if (doNotUpdate !== 'scrollbar' && scrollbar) {
       antibounce.scrollbar = true
-      scrollBarLeftScrollTo = scrollbar.scrollLeft = newX
+      scrollbar.scrollLeft = newX
     }
   }
 
@@ -151,7 +154,7 @@ export const HorizontalScrollable = props => {
     }
   }
 
-  // on mobile, we can flick scroll
+  // on mobile, we can flick scroll, so rely on native scrolling
   if (isMobile()) {
     return <div style={{ overflowX: 'scroll', overflowY: 'visible' }}>{props.children}</div>
   }
