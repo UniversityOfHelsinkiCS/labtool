@@ -7,11 +7,36 @@ export const HorizontalScrollable = props => {
   let content = null
   let scrollbar = null
   const antibounce = {}
+  let scrollBarLeftScrollTo = 0
+
+  const isMobile = () => {
+    return window.matchMedia('(max-width: 768px)').matches
+  }
+
+  const onKeyDownScroll = e => {
+    if (!scrollbar) {
+      return
+    }
+
+    const targetElement = scrollbar.children[0]
+
+    if (e.key == 'ArrowLeft' || e.key == 'ArrowRight') {
+      // forward key event to target element to trigger scroll
+      targetElement.tabIndex = 0
+      targetElement.focus()
+      targetElement.dispatchEvent(new KeyboardEvent('keydown', { key: e.key }))
+    }
+  }
 
   const mainElementReady = element => {
+    if (content) {
+      content.children[0].removeEventListener('keydown', onKeyDownScroll)
+    }
     content = element
     if (content) {
       content.style.position = 'relative'
+      content.children[0].tabIndex = 0
+      content.children[0].addEventListener('keydown', onKeyDownScroll)
     }
     resizeBar()
   }
@@ -55,7 +80,7 @@ export const HorizontalScrollable = props => {
       scrollbar.children[0].style.height = '1px'
 
       scrollbar.style.overflowX = contentWidth > viewWidth ? 'scroll' : 'auto'
-      scrollbar.scrollLeft = oldScrollLeft
+      scrollBarLeftScrollTo = scrollbar.scrollLeft = oldScrollLeft
     }
   }
 
@@ -89,7 +114,7 @@ export const HorizontalScrollable = props => {
     }
     if (doNotUpdate !== 'scrollbar' && scrollbar) {
       antibounce.scrollbar = true
-      scrollbar.scrollLeft = newX
+      scrollBarLeftScrollTo = scrollbar.scrollLeft = newX
     }
   }
 
@@ -124,6 +149,11 @@ export const HorizontalScrollable = props => {
         scrollbar.style.zIndex = 'auto'
       }
     }
+  }
+
+  // on mobile, we can flick scroll
+  if (isMobile()) {
+    return <div style={{ overflowX: 'scroll', overflowY: 'visible' }}>{props.children}</div>
   }
 
   // marginBottom, paddingBottom hack adds unused "overflowable" space
