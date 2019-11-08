@@ -5,7 +5,7 @@ module.exports = {
     queryInterface.addColumn('Comments', 'userId', {
       type: Sequelize.INTEGER,
       allowNull: true,
-      defaultValue: null // we cannot easily map these, just use null
+      defaultValue: null // we cannot easily map existing comments, just use null
     })
   },
 

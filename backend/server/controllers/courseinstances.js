@@ -572,6 +572,9 @@ module.exports = {
               res.status(400).send('You have to be a teacher to update course info')
               return
             }
+            const newCr = req.body.newCr || []
+            console.log(courseInstance)
+            console.log(req.body)
             courseInstance
               .update({
                 name: req.body.name || courseInstance.name,
@@ -583,7 +586,7 @@ module.exports = {
                 weekMaxPoints: req.body.weekMaxPoints || courseInstance.weekMaxPoints,
                 currentWeek: req.body.currentWeek || courseInstance.currentWeek,
                 finalReview: req.body.finalReview,
-                currentCodeReview: req.body.newCr.length === 0 ? '{}' : `{${req.body.newCr.join(',')}}`,
+                currentCodeReview: newCr.length === 0 ? [] : `{${newCr.join(',')}}`,
                 coursesPage: typeof req.body.coursesPage === 'string' ? req.body.coursesPage : courseInstance.coursesPage,
                 courseMaterial: typeof req.body.courseMaterial === 'string' ? req.body.courseMaterial : courseInstance.courseMaterial
               })
