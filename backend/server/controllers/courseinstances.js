@@ -573,8 +573,6 @@ module.exports = {
               return
             }
             const newCr = req.body.newCr || []
-            console.log(courseInstance)
-            console.log(req.body)
             courseInstance
               .update({
                 name: req.body.name || courseInstance.name,
