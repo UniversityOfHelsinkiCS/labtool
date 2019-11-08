@@ -10,9 +10,9 @@ const RevieweeDropdown = props => {
     return courseData.data.find(student => student.id === value).dropped
   }
 
-  const checkValid = value => {
+  const checkValidRegistration = value => {
     if (value === null) return false
-    return courseData.data.find(student => student.id === value).valid
+    return courseData.data.find(student => student.id === value).validRegistration
   }
 
   // Check if a reviewee was reviewed by the same reviewer in previous rounds of code reviews
@@ -42,7 +42,7 @@ const RevieweeDropdown = props => {
       : null
     : null
 
-  const initialOptions = dropdownUsers.filter(d => d.value !== studentData.id && checkValid(d.value) && !checkDropped(d.value) && !reviewedInPrevious(d.value))
+  const initialOptions = dropdownUsers.filter(d => d.value !== studentData.id && !checkDropped(d.value) && !reviewedInPrevious(d.value))
   const [options, setOptions] = useState(initialOptions)
 
   useEffect(() => {

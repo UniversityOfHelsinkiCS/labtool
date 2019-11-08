@@ -6,7 +6,7 @@ import { createCourseIdWithYearAndTerm } from '../../../util/format'
 
 import RepoLink from '../../RepoLink'
 
-export const StudentCard = ({ student, otherParticipations, handleMarkAsDropped, handleMarkAsInvalid, teacherInstance }) => (
+export const StudentCard = ({ student, otherParticipations, handleMarkAsDropped, handleMarkAsValidRegistration, teacherInstance }) => (
   <Card key={student.id} fluid color="yellow" className="studentCard">
     <Card.Content>
       <Header as="h2">
@@ -17,7 +17,7 @@ export const StudentCard = ({ student, otherParticipations, handleMarkAsDropped,
             Has dropped course
           </Label>
         )}
-        {!student.valid && (
+        {!student.validRegistration && (
           <Label style={{ marginTop: 5, float: 'right' }}>
             <Icon name="warning" color="red" />
             Invalid course registration
@@ -56,8 +56,8 @@ export const StudentCard = ({ student, otherParticipations, handleMarkAsDropped,
         </Button>
       }
       {
-        <Button basic color="red" style={{ float: 'right' }} onClick={() => handleMarkAsInvalid(!student.valid)}>
-          {student.valid ? 'Mark registration as invalid' : 'Mark registration as valid'}
+        <Button basic color="red" style={{ float: 'right' }} onClick={() => handleMarkAsValidRegistration(!student.validRegistration)}>
+          {student.validRegistration ? 'Mark registration as invalid' : 'Mark registration as valid'}
         </Button>
       }
     </Card.Content>
@@ -69,7 +69,7 @@ StudentCard.propTypes = {
   teacherInstance: PropTypes.array.isRequired,
   otherParticipations: PropTypes.array.isRequired,
   handleMarkAsDropped: PropTypes.func.isRequired,
-  handleMarkAsInvalid: PropTypes.func.isRequired
+  handleMarkAsValidRegistration: PropTypes.func.isRequired
 }
 
 export default StudentCard

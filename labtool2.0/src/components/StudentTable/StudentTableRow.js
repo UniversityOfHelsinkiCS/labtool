@@ -202,7 +202,7 @@ export const StudentTableRow = props => {
   }
 
   return (
-    <Table.Row key={data.id} className={data.dropped || !data.valid ? 'TableRowForDroppedOutStudent' : 'TableRowForActiveStudent'}>
+    <Table.Row key={data.id} className={data.dropped || !data.validRegistration ? 'TableRowForDroppedOutStudent' : 'TableRowForActiveStudent'}>
       {/* Select Check Box */}
       {showColumn('select') && (
         <Table.Cell key="select">
@@ -212,7 +212,7 @@ export const StudentTableRow = props => {
 
       {/* Student */}
       <Table.Cell key="studentinfo">
-        {data.valid ? null : <Popup trigger={<Icon name="warning" color="black" />} content="This student has invalid course registration" />}
+        {data.validRegistration ? null : <Popup trigger={<Icon name="warning" color="black" />} content="This student has invalid course registration" />}
         {allowReview ? (
           <Link to={`/labtool/browsereviews/${selectedInstance.ohid}/${data.id}`}>
             <Popup

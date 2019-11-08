@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: false
       },
-      valid: {
+      validRegistration: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: true
