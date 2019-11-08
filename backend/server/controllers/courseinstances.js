@@ -296,7 +296,7 @@ module.exports = {
         message: 'course is not active'
       })
     }
-    const user = await User.findById(req.decoded.id)
+    const user = await User.findByPk(req.decoded.id)
     if (!user) {
       overkillLogging(req, null)
       return res.status(400).send({
@@ -464,7 +464,7 @@ module.exports = {
                 res.status(401).send(`Not allowed to update student instance for user ${userId}`)
               }
             })
-            StudentInstance.find({
+            StudentInstance.findOne({
               where: {
                 userId,
                 courseInstanceId: course.id
@@ -551,7 +551,7 @@ module.exports = {
                 weekMaxPoints: req.body.weekMaxPoints || courseInstance.weekMaxPoints,
                 currentWeek: req.body.currentWeek || courseInstance.currentWeek,
                 finalReview: req.body.finalReview,
-                currentCodeReview: req.body.newCr.length === 0 ? '{}' : req.body.newCr,
+                currentCodeReview: req.body.newCr.length === 0 ? '{}' : `{${req.body.newCr.join(',')}}`,
                 coursesPage: typeof req.body.coursesPage === 'string' ? req.body.coursesPage : courseInstance.coursesPage,
                 courseMaterial: typeof req.body.courseMaterial === 'string' ? req.body.courseMaterial : courseInstance.courseMaterial
               })
@@ -601,7 +601,7 @@ module.exports = {
       return
     }
 
-    CourseInstance.find(
+    CourseInstance.findOne(
       {
         attributes: {
           exclude: ['createdAt', 'updatedAt']
@@ -737,7 +737,7 @@ module.exports = {
 
     if (req.authenticated.success) {
       try {
-        const currentUser = await User.findById(req.decoded.id)
+        const currentUser = await User.findByPk(req.decoded.id)
 
         if (!currentUser) {
           return res.status(404).send('User not found')
@@ -835,7 +835,7 @@ module.exports = {
       try {
         const message = req.body
 
-        const user = await User.findById(userId)
+        const user = await User.findByPk(userId)
         if (!user) {
           res.status(400).send('you are not an user in the system')
           return
