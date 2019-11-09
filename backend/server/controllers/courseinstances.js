@@ -24,7 +24,8 @@ const validationErrorMessages = {
 
 module.exports = {
   /**
-   *
+   * Find all courses in which the requesting user is a teacher
+   *   permissions: any user can call this endpoint
    * @param req
    * @param res
    */
@@ -51,6 +52,8 @@ module.exports = {
 
   /**
    * Gets courses of a user who has the studentInstance with id=req.params.id
+   *   permissions: must be an instructor on the course of that studentInstance
+   * (any ID, supplied by requesting user)
    * @param {*} req
    * @param {*} res
    */
@@ -63,6 +66,17 @@ module.exports = {
       const studentInstance = await StudentInstance.findOne({
         where: { id: req.params.id } // id is StudentInstance.id
       })
+      if (!studentInstance) {
+        return res.status(404).send('student instance not found')
+      }
+      const courseInstance = await CourseInstance.findOne({
+        where: { id: studentInstance.courseInstanceId }
+      })
+      const isTeacher = await helper.getTeacherId(req.decoded.id, courseInstance.id)
+      if (!isTeacher) {
+        return res.status(403).send('must be teacher on the course')
+      }
+
       await CourseInstance.findAll({
         include: [{
           model: StudentInstance,
@@ -77,8 +91,10 @@ module.exports = {
         })
     }
   },
+
   /**
-   *
+   * Return course page for user
+   *   permissions: any logged in user
    * @param req
    * @param res
    * @returns {Promise<void>}
@@ -256,6 +272,8 @@ module.exports = {
   },
 
   /**
+   * Find all courses on which the user is a student
+   *   permissions: any logged in user
    *
    * @param req
    * @param res
@@ -269,6 +287,8 @@ module.exports = {
   },
 
   /**
+   * Register as a student onto a course
+   *   permissions: any logged in user
    *
    * @param req
    * @param res
@@ -370,6 +390,13 @@ module.exports = {
    *   ]
    * }
    */
+  /**
+   * Update N student instances, used to changed issue disabled flag for one
+   *   permissions: must be teacher on course or assistant for edited students
+   *
+   * @param {*} req
+   * @param {*} res
+   */
   massUpdateStudentInstance(req, res) {
     if (!helper.controllerBeforeAuthCheckAction(req, res)) {
       return
@@ -378,7 +405,7 @@ module.exports = {
     try {
       CourseInstance.findOne({
         where: { ohid: req.body.ohid }
-      }).then(course => {
+      }).then((course) => {
         if (!course) {
           res.status(404).send('course not found')
           return
@@ -386,42 +413,39 @@ module.exports = {
 
         const currentTime = new Date()
 
-        Promise.all(req.body.studentInstances.map(studentInstance => {
-          return helper.checkHasPermissionToViewStudentInstance(req, course.id, studentInstance.userId).then(isAllowedToUpdate => {
-            if (isAllowedToUpdate) {
-              const newStudentInstance = {}
-              if (studentInstance.github) {
-                newStudentInstance.github = studentInstance
-              }
-              if (studentInstance.projectName) {
-                newStudentInstance.projectName = studentInstance.projectName
-              }
-              if ('dropped' in studentInstance) {
-                newStudentInstance.dropped = studentInstance.dropped
-              }
-              if ('issuesDisabled' in studentInstance) {
-                newStudentInstance.issuesDisabled = studentInstance.issuesDisabled
-                newStudentInstance.issuesDisabledCheckedAt = currentTime.toISOString()
-              }
+        Promise.all(req.body.studentInstances.map(studentInstance => helper.getRoleToViewStudentInstance(req, course.id, studentInstance.userId).then((isAllowedToUpdate) => {
+          if (isAllowedToUpdate && isAllowedToUpdate !== 'student') {
+            const newStudentInstance = {}
+            if (studentInstance.github) {
+              newStudentInstance.github = studentInstance
+            }
+            if (studentInstance.projectName) {
+              newStudentInstance.projectName = studentInstance.projectName
+            }
+            if ('dropped' in studentInstance) {
+              newStudentInstance.dropped = studentInstance.dropped
+            }
+            if ('issuesDisabled' in studentInstance) {
+              newStudentInstance.issuesDisabled = studentInstance.issuesDisabled
+              newStudentInstance.issuesDisabledCheckedAt = currentTime.toISOString()
+            }
 
-              return StudentInstance.update(newStudentInstance, 
+            return StudentInstance.update(newStudentInstance,
               { returning: true,
                 where: {
                   userId: studentInstance.userId,
                   courseInstanceId: course.id
                 }
-              }).then(([ _, [updatedStudentInstance]]) => updatedStudentInstance)
-            } else {
-              return Promise.resolve()
-            }
-          })
-        })).then(updatedStudents => {
+              }).then(([_, [updatedStudentInstance]]) => updatedStudentInstance)
+          }
+          return Promise.resolve()
+        }))).then((updatedStudents) => {
           res.status(200).send(updatedStudents.filter(updatedStudent => !!updatedStudent).map(({ dataValues }) => dataValues))
-        }).catch(error => {
+        }).catch((error) => {
           logger.error(error)
           res.status(400).send(error)
         })
-      }).catch(error => {
+      }).catch((error) => {
         logger.error(error)
         res.status(400).send(error)
       })
@@ -440,7 +464,17 @@ module.exports = {
    *      dropped
    *    }
    */
-  updateStudentInstance(req, res) {
+  /**
+   * Update one student instance; perhaps to change dropped status, repo etc.
+   *   permissions: must be teacher on course, the instructor of the student
+   *     or the student themselves
+   *   student cannot edit issues disabled or dropped status
+   *   instructor/assistant cannot edit student repository
+   *
+   * @param {*} req
+   * @param {*} res
+   */
+  async updateStudentInstance(req, res) {
     if (!helper.controllerBeforeAuthCheckAction(req, res)) {
       return
     }
@@ -449,56 +483,52 @@ module.exports = {
       if (req.authenticated.success) {
         const userId = req.body.userId || req.decoded.id
 
-        CourseInstance.findOne({
+        const course = await CourseInstance.findOne({
           where: {
             ohid: req.body.ohid
           }
         })
-          .then((course) => {
-            if (!course) {
-              res.status(404).send('course not found')
-              return
-            }
-            helper.checkHasPermissionToViewStudentInstance(req, course.id, userId).then((isAllowedToUpdate) => {
-              if (!isAllowedToUpdate) {
-                res.status(401).send(`Not allowed to update student instance for user ${userId}`)
-              }
-            })
-            StudentInstance.findOne({
-              where: {
-                userId,
-                courseInstanceId: course.id
-              }
-            }).then((targetStudent) => {
-              if (!targetStudent) {
-                res.status(404).send('Student not found')
-                return
-              }
-              targetStudent
-                .update({
-                  github: req.body.github || targetStudent.github,
-                  projectName: req.body.projectname || targetStudent.projectName,
-                  dropped: 'dropped' in req.body ? req.body.dropped : targetStudent.dropped,
-                  issuesDisabled: 'issuesDisabled' in req.body ? req.body.issuesDisabled : targetStudent.issuesDisabled,
-                  issuesDisabledCheckedAt: 'issuesDisabled' in req.body ? new Date().toISOString() : targetStudent.issuesDisabledCheckedAt
-                })
-                .then((updatedStudentInstance) => {
-                  res.status(200).send(updatedStudentInstance)
-                })
-                .catch((error) => {
-                  if (error.name === 'SequelizeValidationError') {
-                    const errorMessage = error.errors.map(
-                      e => validationErrorMessages[e.path] || 'Unknown validation error.')
-                    logger.error(error)
-                    return res.status(400).send({ message: errorMessage.join('\n') })
-                  }
-                })
-            })
+        if (!course) {
+          return res.status(404).send('course not found')
+        }
+        const isAllowedToUpdate = await helper.getRoleToViewStudentInstance(req, course.id, userId)
+        if (!isAllowedToUpdate) {
+          return res.status(403).send(`Not allowed to update student instance for user ${userId}`)
+        }
+        if (req.body.issuesDisabled && isAllowedToUpdate === 'student') {
+          return res.status(403).send('you cannot edit your issues disabled status as a student')
+        }
+        if (req.body.github && isAllowedToUpdate === 'assistant') {
+          return res.status(403).send('you cannot edit the repository URL as an assistant')
+        }
+        const targetStudent = await StudentInstance.findOne({
+          where: {
+            userId,
+            courseInstanceId: course.id
+          }
+        })
+        if (!targetStudent) {
+          res.status(404).send('Student not found')
+          return
+        }
+        try {
+          const updatedStudentInstance = await targetStudent.update({
+            github: req.body.github || targetStudent.github,
+            projectName: req.body.projectname || targetStudent.projectName,
+            dropped: 'dropped' in req.body ? req.body.dropped : targetStudent.dropped,
+            issuesDisabled: 'issuesDisabled' in req.body ? req.body.issuesDisabled : targetStudent.issuesDisabled,
+            issuesDisabledCheckedAt: 'issuesDisabled' in req.body ? new Date().toISOString() : targetStudent.issuesDisabledCheckedAt
           })
-          .catch((error) => {
+          res.status(200).send(updatedStudentInstance)
+        } catch (error) {
+          if (error.name === 'SequelizeValidationError') {
+            const errorMessage = error.errors.map(
+              e => validationErrorMessages[e.path] || 'Unknown validation error.')
             logger.error(error)
-            res.status(400).send('\n\n\n\ntuli joku error: ', error)
-          })
+            return res.status(400).send({ message: errorMessage.join('\n') })
+          }
+          res.status(400).send(error)
+        }
       }
     } catch (e) {
       logger.error(e)
@@ -507,6 +537,8 @@ module.exports = {
   },
 
   /**
+   * update course info
+   *   permissions: must be teacher or assistant on the course
    *
    * @param req
    * @param res
@@ -540,6 +572,7 @@ module.exports = {
               res.status(400).send('You have to be a teacher to update course info')
               return
             }
+            const newCr = req.body.newCr || []
             courseInstance
               .update({
                 name: req.body.name || courseInstance.name,
@@ -551,7 +584,7 @@ module.exports = {
                 weekMaxPoints: req.body.weekMaxPoints || courseInstance.weekMaxPoints,
                 currentWeek: req.body.currentWeek || courseInstance.currentWeek,
                 finalReview: req.body.finalReview,
-                currentCodeReview: req.body.newCr.length === 0 ? '{}' : `{${req.body.newCr.join(',')}}`,
+                currentCodeReview: newCr.length === 0 ? [] : `{${newCr.join(',')}}`,
                 coursesPage: typeof req.body.coursesPage === 'string' ? req.body.coursesPage : courseInstance.coursesPage,
                 courseMaterial: typeof req.body.courseMaterial === 'string' ? req.body.courseMaterial : courseInstance.courseMaterial
               })
@@ -573,6 +606,8 @@ module.exports = {
   },
 
   /**
+   * List all courses in the system
+   *   permissions: any logged in user
    *
    * @param req
    * @param res
@@ -592,6 +627,9 @@ module.exports = {
   },
 
   /**
+   * Get information for any course
+   *   permissions: any logged in user
+   * Not currently used by frontend, but there is a route
    *
    * @param req
    * @param res
@@ -625,7 +663,11 @@ module.exports = {
         res.status(400).send(error)
       })
   },
+
   /**
+   * Import a course from Kurki
+   *   permissions: user must be allowed to import courses
+   * This endpoint is not directly available to the frontend, and it should not be
    *
    * @param req
    * @param res
@@ -676,6 +718,9 @@ module.exports = {
   },
 
   /**
+   * Import a course from Kurki
+   *   permissions: user must be allowed to import courses
+   * This endpoint is not directly available to the frontend, and it should not be
    *
    * @param req
    * @param res
@@ -725,6 +770,10 @@ module.exports = {
   },
 
   /**
+   * Retrieves course info (registration status, list of instructors,
+   *   course checklists, other course details)
+   *   permissions: any logged in user
+   *     only teacher/instructor can get list of instructors
    *
    * @param req
    * @param res
@@ -735,40 +784,41 @@ module.exports = {
       return
     }
 
-    if (req.authenticated.success) {
-      try {
-        const currentUser = await User.findByPk(req.decoded.id)
+    try {
+      const currentUser = await User.findByPk(req.decoded.id)
 
-        if (!currentUser) {
-          return res.status(404).send('User not found')
+      if (!currentUser) {
+        return res.status(404).send('User not found')
+      }
+
+      const checkRegistrationStatus = new Promise((resolve, _reject) => {
+        helper.checkWebOodi(req, res, currentUser, resolve)
+        setTimeout(() => {
+          resolve('failure')
+        }, 5000)
+      })
+
+      const registrationAtWebOodi = await checkRegistrationStatus
+
+      const course = await CourseInstance.findOne({
+        where: {
+          ohid: req.params.ohid
         }
+      })
 
-        const checkRegistrationStatus = new Promise((resolve, _reject) => {
-          helper.checkWebOodi(req, res, currentUser, resolve)
-          setTimeout(() => {
-            resolve('failure')
-          }, 5000)
-        })
+      if (!course) {
+        return res.status(404).send('Course not found')
+      }
 
-        const registrationAtWebOodi = await checkRegistrationStatus
-
-        const course = await CourseInstance.findOne({
-          where: {
-            ohid: req.params.ohid
-          }
-        })
-
-        if (!course) {
-          return res.status(404).send('Course not found')
+      const isTeacher = await helper.getTeacherId(req.decoded.id, course.id)
+      const teachers = isTeacher ? await TeacherInstance.findAll({
+        where: {
+          courseInstanceId: course.id
         }
+      }) : []
 
-        const teachers = await TeacherInstance.findAll({
-          where: {
-            courseInstanceId: course.id
-          }
-        })
-
-        const names = {}
+      const names = {}
+      if (teachers.length > 0) {
         const users = await User.findAll()
         users.forEach((user) => {
           names[user.id] = {
@@ -782,44 +832,47 @@ module.exports = {
           teacher.dataValues.firsts = names[teacher.userId].firsts
           teacher.dataValues.lastname = names[teacher.userId].lastname
         }
-
-        const checklists = await Checklist.findAll({
-          where: {
-            courseInstanceId: course.id
-          }
-        })
-        // Add checklist items to checklists
-        for (const checklist of checklists) {
-          const checklistJson = {}
-          const checklistItems = await ChecklistItem.findAll({ where: {
-            checklistId: checklist.id
-          } })
-          checklistItems.forEach(({ dataValues: checklistItem }) => {
-            if (checklistJson[checklistItem.category] === undefined) {
-              checklistJson[checklistItem.category] = []
-            }
-
-            const checklistItemCopy = { ...checklistItem }
-            delete checklistItemCopy.category
-            delete checklistItemCopy.checklistId
-            checklistJson[checklistItem.category].push(checklistItemCopy)
-          })
-
-          checklist.dataValues.list = checklistJson
-        }
-
-        course.dataValues.teacherInstances = teachers
-        course.dataValues.registrationAtWebOodi = registrationAtWebOodi
-        course.dataValues.checklists = checklists
-
-        return res.status(200).send(course)
-      } catch (exception) {
-        return res.status(400).send(exception)
       }
+
+      const checklists = await Checklist.findAll({
+        where: {
+          courseInstanceId: course.id
+        }
+      })
+      // Add checklist items to checklists
+      for (const checklist of checklists) {
+        const checklistJson = {}
+        const checklistItems = await ChecklistItem.findAll({ where: {
+          checklistId: checklist.id
+        } })
+        checklistItems.forEach(({ dataValues: checklistItem }) => {
+          if (checklistJson[checklistItem.category] === undefined) {
+            checklistJson[checklistItem.category] = []
+          }
+
+          const checklistItemCopy = { ...checklistItem }
+          delete checklistItemCopy.category
+          delete checklistItemCopy.checklistId
+          checklistJson[checklistItem.category].push(checklistItemCopy)
+        })
+
+        checklist.dataValues.list = checklistJson
+      }
+
+      course.dataValues.teacherInstances = teachers
+      course.dataValues.registrationAtWebOodi = registrationAtWebOodi
+      course.dataValues.checklists = checklists
+
+      return res.status(200).send(course)
+    } catch (exception) {
+      return res.status(400).send(exception)
     }
   },
 
   /**
+   * Add a comment
+   *   permissions: must be a teacher/assistant on the course,
+   *     or be the student that we are commenting on
    *
    * @param req
    * @param res
@@ -840,7 +893,7 @@ module.exports = {
           res.status(400).send('you are not an user in the system')
           return
         }
-        const hasPermission = await helper.checkHasCommentPermission(user, message.week)
+        const hasPermission = await helper.checkHasCommentPermission(userId, message.week)
         if (!hasPermission) {
           res.status(403).send('you are not allowed to comment here')
           return
@@ -853,6 +906,7 @@ module.exports = {
         }
 
         const comment = await Comment.create({
+          userId,
           weekId: message.week,
           hidden: message.hidden,
           comment: message.comment,
@@ -873,28 +927,37 @@ module.exports = {
   },
 
   /**
+   * Get comments for week
+   *   permissions: must be a teacher/assistant on the course,
+   *     or be the student that we are commenting on
    *
    * @param req
    * @param res
    * @returns {Promise<Array<Model>>}
    */
-  getCommentsForWeek(req, res) {
+  async getCommentsForWeek(req, res) {
     if (!helper.controllerBeforeAuthCheckAction(req, res)) {
       return
     }
 
-    return Comment.findAll({
-      attributes: {
-        exclude: ['updatedAt']
-      },
-      where: {
-        weekId: req.body.week
-      }
-    })
-      .then(comment => res.status(200).send(comment))
-      .catch((error) => {
-        res.status(400).send(error)
-        logger.error(error)
+    const hasPermission = await helper.checkHasCommentPermission(req.decoded.id, req.body.week)
+    if (!hasPermission) {
+      return res.status(403).send('you cannot see the comments here')
+    }
+
+    try {
+      const comments = await Comment.findAll({
+        attributes: {
+          exclude: ['updatedAt']
+        },
+        where: {
+          weekId: req.body.week
+        }
       })
+      res.status(200).send(comments)
+    } catch (error) {
+      res.status(400).send(error)
+      logger.error(error)
+    }
   }
 }
