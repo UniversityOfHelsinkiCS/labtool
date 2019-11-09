@@ -2,6 +2,13 @@ const helper = require('../helpers/courseImportHelper')
 const logger = require('../utils/logger')
 
 module.exports = {
+  /**
+   * Check if user has permission to import courses.
+   *   permissions: any logged in user
+   *
+   * @param {*} req
+   * @param {*} res
+   */
   async hasPermission(req, res) {
     if (!helper.controllerBeforeAuthCheckAction(req, res)) {
       return
@@ -20,6 +27,13 @@ module.exports = {
     }
   },
 
+  /**
+   * List importable courses.
+   *   permissions: any logged in user that is allowed to import courses
+   *
+   * @param {*} req
+   * @param {*} res
+   */
   async list(req, res) {
     if (!helper.controllerBeforeAuthCheckAction(req, res)) {
       return
@@ -44,6 +58,13 @@ module.exports = {
     }
   },
 
+  /**
+   * Import N courses.
+   *   permissions: any logged in user that is allowed to import courses
+   *
+   * @param {*} req
+   * @param {*} res
+   */
   async import(req, res) {
     if (!helper.controllerBeforeAuthCheckAction(req, res)) {
       return

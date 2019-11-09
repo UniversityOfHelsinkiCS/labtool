@@ -220,8 +220,6 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
           getAllTags={[MockFunction]}
           key="tableRow10012"
           selectStudent={[MockFunction]}
-          selectTag={[MockFunction]}
-          selectTeacher={[MockFunction]}
           selectedInstance={
             Object {
               "data": Array [
@@ -524,8 +522,6 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
           getAllTags={[MockFunction]}
           key="tableRow10031"
           selectStudent={[MockFunction]}
-          selectTag={[MockFunction]}
-          selectTeacher={[MockFunction]}
           selectedInstance={
             Object {
               "data": Array [
@@ -817,8 +813,6 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
           getAllTags={[MockFunction]}
           key="tableRow10011"
           selectStudent={[MockFunction]}
-          selectTag={[MockFunction]}
-          selectTeacher={[MockFunction]}
           selectedInstance={
             Object {
               "data": Array [

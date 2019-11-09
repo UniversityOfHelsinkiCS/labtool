@@ -5,6 +5,7 @@ module.exports = {
   /**
    * This function sends data to be rendered in index.pug which renders courses not imported from Kurki
    * and courses which are already in Labtool.
+   *   permissions: must be auth as admin
    * @param req
    * @param res
    */
@@ -20,7 +21,8 @@ module.exports = {
 
 
   /**
-   *
+   * do stuff
+   *   permissions: must be auth as admin
    * @param req
    * @param res
    */
