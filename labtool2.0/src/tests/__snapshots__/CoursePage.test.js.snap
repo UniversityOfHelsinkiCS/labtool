@@ -807,7 +807,9 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
   <CoursePageTeacherBulkForm
     bulkAddTag={[Function]}
     bulkMarkDropped={[Function]}
+    bulkMarkInvalid={[Function]}
     bulkMarkNotDropped={[Function]}
+    bulkMarkValid={[Function]}
     bulkRemoveTag={[Function]}
     bulkUpdateTeacher={[Function]}
     changeSelectedTag={[Function]}
