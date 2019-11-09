@@ -42,11 +42,13 @@ function formatCoursesForList(courses) {
   const result = []
 
   courses.forEach((course) => {
+    console.log(course)
     result.push({
       hid: course.id,
       cname: course.name,
       starts: course.starts,
-      ends: course.ends
+      ends: course.ends,
+      instructor: course.instructor
     })
   })
 
