@@ -119,7 +119,7 @@ export const StudentTableRow = props => {
     if (commentsForWeek.length === 0) {
       return null
     }
-    const newComments = commentsForWeek.filter(comment => !comment.isRead.includes(loggedInUser.user.id))
+    const newComments = commentsForWeek.filter(comment => comment && !comment.isRead.includes(loggedInUser.user.id))
     return newComments
   }
 
@@ -216,7 +216,7 @@ export const StudentTableRow = props => {
             to={
               finalPoints === undefined
                 ? `/labtool/reviewstudent/${selectedInstance.ohid}/${siId}/${i + 1}`
-                : { pathname: `/labtool/browsereviews/${selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: i + ii } }
+                : { pathname: `/labtool/browsereviews/${selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: i + ii + 1 } }
             }
           >
             <div style={{ width: '100%', height: '100%' }}>
