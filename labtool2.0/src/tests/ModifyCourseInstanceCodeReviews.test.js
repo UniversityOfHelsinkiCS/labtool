@@ -442,18 +442,27 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
       const expectedOptions = [
         {
           text: 'select a student or add a repo link',
-          value: null
+          value: null,
+          icon: null // placeholder
         },
         {
           text: 'Teräs Henkilö',
-          value: 10031
+          value: 10031,
+          icon: null // not a repeat
+        },
+        {
+          text: 'Maarit Mirja Opiskelija',
+          value: 10011,
+          icon: 'repeat' // is a repeat
         }
       ]
-      expect(dropdownWrapper.props()).toHaveProperty('options', expectedOptions)
+      const dropdown = dropdownWrapper.props().children[0]
+      expect(dropdown.props).toHaveProperty('options', expectedOptions)
     })
 
     it('Reviewee dropdown allows to add an arbitrary repository link', () => {
-      expect(dropdownWrapper.props()).toHaveProperty('allowAdditions', true)
+      const dropdown = dropdownWrapper.props().children[0]
+      expect(dropdown.props).toHaveProperty('allowAdditions', true)
       dropdownWrapper.simulate('change', { target: { value: 'https://github.com/userName/repo' } })
       expect(mockAddCodeReview).toHaveBeenCalled()
     })

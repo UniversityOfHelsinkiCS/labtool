@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { getOneCI, modifyOneCI } from '../../services/courseInstance'
 import { coursePageInformation } from '../../services/courseInstance'
 import { bulkinsertCodeReviews, removeOneCodeReview } from '../../services/codeReview'
-import { filterByReview, initOneReview, randomAssign, codeReviewReset, selectDropdown, toggleCreate, createStates, restoreData } from '../../reducers/codeReviewReducer'
+import { filterByReview, initOneReview, randomAssign, codeReviewReset, selectDropdown, createStates, restoreData } from '../../reducers/codeReviewReducer'
 import { clearNotifications, showNotification } from '../../reducers/notificationReducer'
 import { Button, Table, Loader, Dropdown, Popup, Icon, Message } from 'semantic-ui-react'
 import StudentTable from '../StudentTable'
@@ -13,6 +13,7 @@ import { usePersistedState } from '../../hooks/persistedState'
 import { getAllTags } from '../../services/tags'
 import { objectKeyFilter } from '../../util/objectKeyFilter'
 import { getGithubRepo } from '../../util/github'
+import './ModifyCourseInstanceCodeReviews.css'
 
 import BackButton from '../BackButton'
 import ConfirmationModal from '../ConfirmationModal'
@@ -57,12 +58,9 @@ export const ModifyCourseInstanceReview = props => {
     try {
       e.preventDefault()
       let createTrue = false
-      if (reviewNumber === 'create') {
-        props.toggleCreate()
-      }
       const codeReviews = props.codeReviewLogic.codeReviewStates[reviewNumber]
       const courseId = props.selectedInstance.id
-      if (reviewNumber === 'create') {
+      if (reviewNumber < 0) {
         reviewNumber = props.selectedInstance.amountOfCodeReviews + 1
         createTrue = true
       }
@@ -95,16 +93,18 @@ export const ModifyCourseInstanceReview = props => {
           props.showNotification({ message: 'Your link should start with http/https', error: true })
           return
         }
+        /* do not cause an error on this -- hisahi
         if (
           props.courseData.data
             .find(student => student.id === id)
-            .codeReviews.filter(cr => cr.reviewNumber < (reviewRound === 'create' ? props.selectedInstance.amountOfCodeReviews + 1 : reviewRound))
+            .codeReviews.filter(cr => cr.reviewNumber < (reviewRound < 0 ? props.selectedInstance.amountOfCodeReviews + 1 : reviewRound))
             .map(cr => cr.repoToReview)
             .includes(value)
         ) {
           props.showNotification({ message: 'The student has reviewed the same repo before', error: true })
           return
         }
+        */
         crData = {
           ...crData,
           repoToReview: value
@@ -123,11 +123,6 @@ export const ModifyCourseInstanceReview = props => {
         props.filterByReview(props.selectDropdown(data.value))
       }
     }
-  }
-
-  const toggleCreate = () => {
-    checkStates()
-    props.toggleCreate()
   }
 
   const filterUnassigned = review => {
@@ -200,11 +195,13 @@ export const ModifyCourseInstanceReview = props => {
   }
 
   const showVisibilityReminder = () => {
+    if (props.codeReviewLogic.selectedDropdown < 0) {
+      // creating new code review
+      return null
+    }
     if (!props.selectedInstance.currentCodeReview || !props.codeReviewLogic.selectedDropdown) {
       const message =
-        Object.keys(props.dropdownCodeReviews).length > 0
-          ? 'Please select a code review or create a new round of code review by clicking the New code review-button.'
-          : 'Please create a new round of code review by clicking the New code review-button.'
+        Object.keys(props.dropdownCodeReviews).length > 0 ? 'Please select an existing code review or create a new one from the dropdown below.' : 'Please create a code review by clicking below.'
       return (
         <Message className="visibilityReminder" info>
           <span>{message}</span>
@@ -216,8 +213,8 @@ export const ModifyCourseInstanceReview = props => {
     }
     return (
       <Message className="visibilityReminder" warning>
-        <span>This code review is currently not visible to students.</span>
-        <Button color="green" size="small" onClick={() => handleActivateCr(props.codeReviewLogic.selectedDropdown)}>
+        <span>This code review is currently not visible to students.</span>{' '}
+        <Button color="green" compact size="small" onClick={() => handleActivateCr(props.codeReviewLogic.selectedDropdown)}>
           Activate the code review
         </Button>
       </Message>
@@ -324,8 +321,7 @@ export const ModifyCourseInstanceReview = props => {
           onChange={createDropdown()}
           defaultValue={props.codeReviewLogic.selectedDropdown}
           noResultsMessage={'Try another search.'}
-          placeholder={Object.keys(props.dropdownCodeReviews).length > 0 ? 'SELECT A CODE REVIEW HERE!' : 'No code reviews'}
-          disabled={Object.keys(props.dropdownCodeReviews).length === 0}
+          placeholder={Object.keys(props.dropdownCodeReviews).length > 1 ? 'SELECT A CODE REVIEW HERE!' : 'CREATE NEW CODE REVIEW?'}
           fluid
           options={props.dropdownCodeReviews}
         />
@@ -336,7 +332,15 @@ export const ModifyCourseInstanceReview = props => {
   const makeCodeReviewSelectorCell = data => (
     <Table.Cell key="CodeReviewSelector">
       {showCurrentReview(data)}
-      <RevieweeDropdown create={false} dropdownUsers={props.dropdownUsers} studentData={data} codeReviewLogic={props.codeReviewLogic} addCodeReview={addCodeReview} courseData={props.courseData} />
+      <RevieweeDropdown
+        create={props.codeReviewLogic.selectedDropdown < 0}
+        amountOfCodeReviews={props.selectedInstance.amountOfCodeReviews}
+        dropdownUsers={props.dropdownUsers}
+        studentData={data}
+        codeReviewLogic={props.codeReviewLogic}
+        addCodeReview={addCodeReview}
+        courseData={props.courseData}
+      />
     </Table.Cell>
   )
 
@@ -348,62 +352,6 @@ export const ModifyCourseInstanceReview = props => {
       <Button compact size="small" style={{ float: 'right' }} onClick={handleSubmit(props.codeReviewLogic.selectedDropdown)}>
         Save
       </Button>
-    </Table.HeaderCell>
-  )
-
-  const makeCodeReviewCreatorHeader = () => (
-    <Table.HeaderCell key="creatorHeader">
-      {props.codeReviewLogic.showCreate ? (
-        <div>
-          Create new code review ( {props.selectedInstance.amountOfCodeReviews + 1} )
-          <Button size="tiny" style={{ float: 'right' }} onClick={() => toggleCreate()} compact>
-            Hide
-          </Button>
-        </div>
-      ) : (
-        <Popup
-          content="Click to create a new round of code review"
-          trigger={
-            <Button size="tiny" onClick={() => toggleCreate()} compact>
-              New code review
-            </Button>
-          }
-          position="top right"
-        />
-      )}
-    </Table.HeaderCell>
-  )
-
-  const makeCodeReviewCreatorCell = data => (
-    <Table.Cell key="CodeReviewCreator">
-      {props.codeReviewLogic.showCreate ? (
-        <RevieweeDropdown
-          create={true}
-          dropdownUsers={props.dropdownUsers}
-          studentData={data}
-          codeReviewLogic={props.codeReviewLogic}
-          addCodeReview={addCodeReview}
-          courseData={props.courseData}
-          amountOfCodeReviews={props.selectedInstance.amountOfCodeReviews}
-        />
-      ) : (
-        <div />
-      )}
-    </Table.Cell>
-  )
-
-  const makeCodeReviewCreatorFooter = () => (
-    <Table.HeaderCell singleLine key="creatorFooter">
-      {props.codeReviewLogic.showCreate ? (
-        <span>
-          <Button compact onClick={assignRandomly('create')} size="small" style={{ float: 'left' }}>
-            Assign selected randomly
-          </Button>
-          <Button compact size="small" style={{ marginLeft: '6em', float: 'right' }} onClick={handleSubmit('create')}>
-            Create and save
-          </Button>
-        </span>
-      ) : null}
     </Table.HeaderCell>
   )
 
@@ -453,11 +401,7 @@ export const ModifyCourseInstanceReview = props => {
 
           <StudentTable
             extraButtons={[makeFilterButton]}
-            columns={[
-              'select',
-              [makeCodeReviewSelectorHeader, makeCodeReviewSelectorCell, makeCodeReviewSelectorFooter],
-              [makeCodeReviewCreatorHeader, makeCodeReviewCreatorCell, makeCodeReviewCreatorFooter]
-            ]}
+            columns={['select', [makeCodeReviewSelectorHeader, makeCodeReviewSelectorCell, makeCodeReviewSelectorFooter]]}
             extraStudentIcon={displayIssuesDisabledIcon}
             studentFooter={makeStudentFooter}
             showFooter={true}
@@ -510,6 +454,10 @@ const codeReviewHelper = data => {
     })
     i++
   }
+  codeReviews.push({
+    value: -1,
+    text: 'New code review'
+  })
   return codeReviews
 }
 
@@ -538,7 +486,6 @@ const mapDispatchToProps = {
   codeReviewReset,
   resetLoading,
   selectDropdown,
-  toggleCreate,
   createStates,
   restoreData,
   filterByReview,
@@ -571,7 +518,6 @@ ModifyCourseInstanceReview.propTypes = {
   codeReviewReset: PropTypes.func.isRequired,
   resetLoading: PropTypes.func.isRequired,
   selectDropdown: PropTypes.func.isRequired,
-  toggleCreate: PropTypes.func.isRequired,
   createStates: PropTypes.func.isRequired,
   restoreData: PropTypes.func.isRequired,
   filterByReview: PropTypes.func.isRequired,

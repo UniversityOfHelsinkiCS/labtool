@@ -239,10 +239,7 @@ export const StudentTableRow = props => {
             </div>
           ))}
           {allowModify && (
-            <Popup
-              trigger={<Icon id={'tagModify'} onClick={changeHiddenTagDropdown(data.id)} name="add" color="green" style={{ float: 'right', fontSize: '1.25em' }} />}
-              content="Add tag"
-            />
+            <Popup trigger={<Icon id={'tagModify'} onClick={changeHiddenTagDropdown(data.id)} name="add" color="green" style={{ float: 'right', fontSize: '1.25em' }} />} content="Add tag" />
           )}
         </span>
         {allowModify && (
