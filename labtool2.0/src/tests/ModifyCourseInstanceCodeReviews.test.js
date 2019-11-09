@@ -86,7 +86,7 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
       },
       {
         id: 10015,
-        github: 'http://github.com/5',
+        github: 'http://github.com/tiralabra5',
         projectName: 'Tiran viides labraprojekti',
         createdAt: '2018-03-26T00:00:00.000Z',
         updatedAt: '2018-03-26T00:00:00.000Z',
@@ -118,7 +118,7 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
       },
       {
         id: 10016,
-        github: 'http://github.com/6',
+        github: 'http://github.com/tiralabra6',
         projectName: 'Tiran kuudes labraprojekti',
         createdAt: '2018-03-26T00:00:00.000Z',
         updatedAt: '2018-03-26T00:00:00.000Z',
