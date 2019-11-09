@@ -141,7 +141,7 @@ export const CoursePage = props => {
       values.push(sum)
       csvResult.push(values.join(','))
     })
-    
+
     download(csvFilename, 'text/csv;charset=utf-8', csvResult.join('\n'))
   }
 

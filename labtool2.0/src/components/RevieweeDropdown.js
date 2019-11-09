@@ -32,8 +32,8 @@ const RevieweeDropdown = props => {
 
   const reviewee = create
     ? //if the code round is a new created one
-      codeReviewLogic.currentSelections['create'][studentData.id]
-      ? codeReviewLogic.currentSelections['create'][studentData.id]
+      codeReviewLogic.currentSelections[-1][studentData.id]
+      ? codeReviewLogic.currentSelections[-1][studentData.id]
       : null
     : // otherwise check if a code round has been selected
     codeReviewLogic.selectedDropdown !== null
@@ -42,7 +42,7 @@ const RevieweeDropdown = props => {
       : null
     : null
 
-  const initialOptions = dropdownUsers.filter(d => d.value !== studentData.id && !checkDropped(d.value) && !checkValidRegistration(d.value) && !reviewedInPrevious(d.value))
+  const initialOptions = dropdownUsers.filter(d => d.value !== studentData.id && !checkDropped(d.value) && !checkValidRegistration(d.value))
   const [options, setOptions] = useState(initialOptions)
 
   useEffect(() => {
@@ -50,7 +50,7 @@ const RevieweeDropdown = props => {
   }, [codeReviewLogic])
 
   const handleAdditions = (e, { value }) => {
-    if (value.includes('http') && !reviewedInPrevious(value)) {
+    if (value.includes('http')) {
       const newOption = { text: value, value }
       setOptions(options.concat(newOption))
     }
@@ -62,26 +62,34 @@ const RevieweeDropdown = props => {
 
   const value = () => {
     if (create) {
-      return codeReviewLogic.currentSelections['create'][studentData.id]
+      return codeReviewLogic.currentSelections[-1][studentData.id]
     }
     const codeReview = codeReviewLogic.codeReviewStates[codeReviewLogic.selectedDropdown].find(cr => cr.reviewer === studentData.id)
     return codeReview ? codeReview.toReview || codeReview.repoToReview : null
   }
 
-  const codeReviewRound = create ? 'create' : codeReviewLogic.selectedDropdown
+  const codeReviewRound = create ? -1 : codeReviewLogic.selectedDropdown
 
   return (
-    <Dropdown
-      fluid
-      selection
-      options={options}
-      value={value()}
-      search
-      allowAdditions
-      onAddItem={handleAdditions}
-      placeholder="select a student or add a repo link"
-      onChange={addCodeReview(codeReviewRound, studentData.id)}
-    />
+    <div>
+      <Dropdown
+        selection
+        fluid
+        options={options.map(option => ({ ...option, icon: reviewedInPrevious(option.value) ? 'repeat' : null }))}
+        value={value()}
+        search
+        allowAdditions
+        onAddItem={handleAdditions}
+        placeholder="select a student or add a repo link"
+        onChange={addCodeReview(codeReviewRound, studentData.id)}
+      />
+      {reviewedInPrevious(value()) && (
+        <>
+          <br />
+          <strong>This student has already reviewed this project in an earlier code review</strong>
+        </>
+      )}
+    </div>
   )
 }
 
