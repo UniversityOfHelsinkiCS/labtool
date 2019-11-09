@@ -24,18 +24,16 @@ export const StudentTableRow = props => {
     associateTeacherToStudent,
     selectStudent,
     unselectStudent,
-    selectTeacher,
-    selectTag,
     showAssistantDropdown,
     showTagDropdown,
     tagStudent,
     unTagStudent
   } = props
 
-  const updateTeacher = id => async e => {
+  const updateTeacher = id => async (e, { value }) => {
     try {
       e.preventDefault()
-      let teacherId = coursePageLogic.selectedTeacher
+      let teacherId = value
       if (teacherId === '-') {
         // unassign
         teacherId = null
@@ -60,20 +58,6 @@ export const StudentTableRow = props => {
     }
   }
 
-  const changeSelectedTeacher = () => {
-    return (e, data) => {
-      const { value } = data
-      selectTeacher(value)
-    }
-  }
-
-  const changeSelectedTag = () => {
-    return (e, data) => {
-      const { value } = data
-      selectTag(value)
-    }
-  }
-
   const changeHiddenAssistantDropdown = id => {
     return () => {
       showAssistantDropdown(coursePageLogic.showAssistantDropdown === id ? '' : id)
@@ -86,12 +70,12 @@ export const StudentTableRow = props => {
     }
   }
 
-  const addTag = id => async e => {
+  const addTag = id => async (e, { value }) => {
     try {
       e.preventDefault()
       const data = {
         studentId: id,
-        tagId: coursePageLogic.selectedTag
+        tagId: value
       }
       await tagStudent(data)
     } catch (error) {
@@ -296,8 +280,8 @@ export const StudentTableRow = props => {
           ))}
           {allowModify && (
             <Popup
-              trigger={<Icon id={'tagModify'} onClick={changeHiddenTagDropdown(data.id)} name="pencil" color="green" style={{ float: 'right', fontSize: '1.25em' }} />}
-              content="Add or remove tag"
+              trigger={<Icon id={'tagModify'} onClick={changeHiddenTagDropdown(data.id)} name="add" color="green" style={{ float: 'right', fontSize: '1.25em' }} />}
+              content="Add tag"
             />
           )}
         </span>
@@ -305,17 +289,7 @@ export const StudentTableRow = props => {
           <div>
             {coursePageLogic.showTagDropdown === data.id ? (
               <div>
-                <Dropdown id={'tagDropdown'} style={{ float: 'left' }} options={dropDownTags} onChange={changeSelectedTag()} placeholder="Choose tag" fluid selection />
-                <br />
-                <div className="two ui buttons" style={{ float: 'left' }}>
-                  <button className="ui icon positive button" onClick={addTag(data.id)} size="mini">
-                    <i className="plus icon" />
-                  </button>
-                  <div className="or" />
-                  <button className="ui icon button" onClick={removeTag(data.id, null)} size="mini">
-                    <i className="trash icon" />
-                  </button>
-                </div>
+                <Dropdown id={'tagDropdown'} style={{ float: 'left' }} options={dropDownTags} onChange={addTag(data.id)} placeholder="Choose tag" fluid selection />
               </div>
             ) : (
               <div />
@@ -337,7 +311,7 @@ export const StudentTableRow = props => {
       )}
 
       {/* Instructor */}
-      {showColumn('instructor') && (!shouldHideInstructor(studentInstances) || allowModify) && (
+      {showColumn('instructor') && !shouldHideInstructor(studentInstances) && (
         <Table.Cell key="instructor">
           {!shouldHideInstructor(studentInstances) &&
             (data.teacherInstanceId && selectedInstance.teacherInstances ? (
@@ -359,10 +333,7 @@ export const StudentTableRow = props => {
               />
               {coursePageLogic.showAssistantDropdown === data.id ? (
                 <div>
-                  <Dropdown id={'assistantDropdown'} options={dropDownTeachers} onChange={changeSelectedTeacher()} placeholder="Select teacher" fluid selection />
-                  <Button onClick={updateTeacher(data.id, data.teacherInstanceId)} size="small">
-                    Change instructor
-                  </Button>
+                  <Dropdown id={'assistantDropdown'} options={dropDownTeachers} onChange={updateTeacher(data.id, data.teacherInstanceId)} placeholder="Select teacher" fluid selection />
                 </div>
               ) : (
                 <div />
@@ -396,8 +367,6 @@ StudentTableRow.propTypes = {
   associateTeacherToStudent: PropTypes.func.isRequired,
   showAssistantDropdown: PropTypes.func.isRequired,
   showTagDropdown: PropTypes.func.isRequired,
-  selectTeacher: PropTypes.func.isRequired,
-  selectTag: PropTypes.func.isRequired,
   getAllTags: PropTypes.func.isRequired,
   tagStudent: PropTypes.func.isRequired,
   unTagStudent: PropTypes.func.isRequired,
