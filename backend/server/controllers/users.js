@@ -28,7 +28,7 @@ module.exports = {
       invalidInputResponse(res, 'Input was not a valid email address.')
     } else {
       User.update({ email: req.body.email }, { where: { id: req.decoded.id } }).then(
-        User.findById(req.decoded.id)
+        User.findByPk(req.decoded.id)
           .then((user) => {
             const returnedUser = {
               email: req.body.email,
@@ -149,7 +149,7 @@ module.exports = {
           return res.status(400).send('You must be a teacher on the course to add assistants.')
         }
 
-        const userToAssistant = await User.findById(req.body.id)
+        const userToAssistant = await User.findByPk(req.body.id)
         const courseToAssist = courseInstance
 
         if (!userToAssistant || !courseToAssist) {
@@ -191,7 +191,7 @@ module.exports = {
 
     if (req.authenticated.success) {
       try {
-        const teacherToRemoveAsUser = await User.findById(req.body.id)
+        const teacherToRemoveAsUser = await User.findByPk(req.body.id)
         const courseInstance = await CourseInstance.findOne({
           where: {
             ohid: req.body.ohid
