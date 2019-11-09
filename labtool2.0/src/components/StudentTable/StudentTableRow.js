@@ -101,6 +101,9 @@ export const StudentTableRow = props => {
     if (selectedInstance.teacherInstances.find(ti => !ti.instructor && ti.userId === loggedInUser.user.id)) {
       return true
     }
+    if (si.teacherInstanceId === null) {
+      return !!selectedInstance.teacherInstances.find(ti => !ti.instructor && ti.userId === loggedInUser.user.id)
+    }
     const userIdOfInstructor = selectedInstance.teacherInstances.find(ti => ti.id === si.teacherInstanceId).userId
     // return true if logged in user is same as the instructor of the student
     return userIdOfInstructor === loggedInUser.user.id
