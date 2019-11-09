@@ -15,7 +15,6 @@ export const StudentTableRow = props => {
     extraStudentIcon,
     allowReview,
     allowModify,
-    showCommentNotification,
     addFilterTag,
     loggedInUser,
     coursePageLogic,
@@ -97,11 +96,13 @@ export const StudentTableRow = props => {
     }
   }
 
-  const loggedInUserSameAsSiInstructor = si => {
-    // If there's no instructor assigned to the student, the instructor is the teacher in charge(paaopettaja) by default.
-    // It means paaopettaja can see the notification if there are comments from students without instructor assinged
+  const loggedInUserSameAsTeacherOrSiInstructor = si => {
+    // The teacher can always see notification
+    if (selectedInstance.teacherInstances.find(ti => !ti.instructor && ti.userId === loggedInUser.user.id)) {
+      return true
+    }
     if (si.teacherInstanceId === null) {
-      return loggedInUser.user.id === selectedInstance.teacherInstances.find(ti => !ti.instructor).userId
+      return !!selectedInstance.teacherInstances.find(ti => !ti.instructor && ti.userId === loggedInUser.user.id)
     }
     const userIdOfInstructor = selectedInstance.teacherInstances.find(ti => ti.id === si.teacherInstanceId).userId
     // return true if logged in user is same as the instructor of the student
@@ -110,7 +111,7 @@ export const StudentTableRow = props => {
 
   const unReadComments = (siId, week) => {
     const si = courseData.data.find(si => si.id === siId)
-    if (!loggedInUserSameAsSiInstructor(si)) {
+    if (!loggedInUserSameAsTeacherOrSiInstructor(si)) {
       return null
     }
 
