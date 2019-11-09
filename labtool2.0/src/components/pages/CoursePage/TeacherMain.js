@@ -27,6 +27,8 @@ export const CoursePageTeacherMain = props => {
     </Button>
   )
 
+  // Changes here.
+
   return (
     <div className="TeachersBottomView">
       <br />
