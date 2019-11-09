@@ -41,6 +41,7 @@ export const CoursePageTeacherMain = props => {
         columns={['select', 'points', 'instructor']}
         allowModify={true}
         allowReview={true}
+        showCommentNotification={true}
         loggedInUser={loggedInUser}
         selectedInstance={selectedInstance}
         courseData={courseData}

@@ -15,6 +15,7 @@ export const StudentTableRow = props => {
     extraStudentIcon,
     allowReview,
     allowModify,
+    showCommentNotification,
     addFilterTag,
     loggedInUser,
     coursePageLogic,
@@ -112,8 +113,8 @@ export const StudentTableRow = props => {
     if (!loggedInUserSameAsSiInstructor(si)) {
       return null
     }
-    const commentsForWeek = si.weeks.find(wk => wk.weekNumber === week).comments
 
+    const commentsForWeek = si.weeks.find(wk => wk.weekNumber === week).comments
     if (commentsForWeek.length === 0) {
       return null
     }
@@ -122,6 +123,10 @@ export const StudentTableRow = props => {
   }
 
   const showNewCommentsNotification = (siId, week) => {
+    if (!props.showCommentNotification) {
+      return false
+    }
+
     const newComments = unReadComments(siId, week)
     return !newComments ? false : newComments.length > 0
   }
@@ -354,6 +359,7 @@ StudentTableRow.propTypes = {
   shouldHideInstructor: PropTypes.func.isRequired,
   allowReview: PropTypes.bool,
   allowModify: PropTypes.bool,
+  showCommentNotification: PropTypes.bool,
   addFilterTag: PropTypes.func.isRequired,
   extraStudentIcon: PropTypes.func,
 
