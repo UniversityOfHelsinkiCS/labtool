@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 import StudentTable from '../../StudentTable'
 
 export const CoursePageTeacherMain = props => {
-  const { courseData, students, droppedTagExists, markAllWithDroppedTagAsDropped, courseId, selectedInstance, coursePageLogic, tags } = props
+  const { courseData, students, droppedTagExists, markAllWithDroppedTagAsDropped, courseId, selectedInstance, coursePageLogic, tags, exportCSV } = props
 
   let droppedStudentCount = 0
   let activeStudentCount = 0
@@ -26,6 +26,7 @@ export const CoursePageTeacherMain = props => {
       Mark all with dropped tag as dropped out
     </Button>
   )
+
   return (
     <div className="TeachersBottomView">
       <br />
@@ -53,6 +54,9 @@ export const CoursePageTeacherMain = props => {
           <Button size="small">Send email to multiple students</Button>
         </Link>
       }
+      <Button size="small" onClick={exportCSV}>
+        Export CSV of all students
+      </Button>
     </div>
   )
 }
@@ -66,7 +70,8 @@ CoursePageTeacherMain.propTypes = {
   students: PropTypes.array.isRequired,
 
   droppedTagExists: PropTypes.func.isRequired,
-  markAllWithDroppedTagAsDropped: PropTypes.func.isRequired
+  markAllWithDroppedTagAsDropped: PropTypes.func.isRequired,
+  exportCSV: PropTypes.func.isRequired
 }
 
 export default CoursePageTeacherMain
