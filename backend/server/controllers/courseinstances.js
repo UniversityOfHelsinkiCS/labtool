@@ -431,7 +431,8 @@ module.exports = {
             }
 
             return StudentInstance.update(newStudentInstance,
-              { returning: true,
+              {
+                returning: true,
                 where: {
                   userId: studentInstance.userId,
                   courseInstanceId: course.id
@@ -481,7 +482,7 @@ module.exports = {
 
     try {
       if (req.authenticated.success) {
-        const userId = req.body.userId || req.decoded.id
+        const userId = req.body.userId || req.decoded.id
 
         const course = await CourseInstance.findOne({
           where: {
@@ -585,9 +586,9 @@ module.exports = {
                 weekMaxPoints: req.body.weekMaxPoints || courseInstance.weekMaxPoints,
                 currentWeek: req.body.currentWeek || courseInstance.currentWeek,
                 finalReview: req.body.finalReview,
-                currentCodeReview: newCr.length === 0 ? [] : `{${newCr.join(',')}}`,
-                coursesPage: typeof req.body.coursesPage === 'string' ? req.body.coursesPage : courseInstance.coursesPage,
-                courseMaterial: typeof req.body.courseMaterial === 'string' ? req.body.courseMaterial : courseInstance.courseMaterial
+                currentCodeReview: newCr.length === 0 ? [] : newCr,
+                coursesPage: typeof req.body.coursesPage === 'string' ? req.body.coursesPage : courseInstance.coursesPage,
+                courseMaterial: typeof req.body.courseMaterial === 'string' ? req.body.courseMaterial : courseInstance.courseMaterial
               })
               .then(updatedCourseInstance => res.status(200).send(updatedCourseInstance))
               .catch((error) => {
@@ -843,9 +844,11 @@ module.exports = {
       // Add checklist items to checklists
       for (const checklist of checklists) {
         const checklistJson = {}
-        const checklistItems = await ChecklistItem.findAll({ where: {
-          checklistId: checklist.id
-        } })
+        const checklistItems = await ChecklistItem.findAll({
+          where: {
+            checklistId: checklist.id
+          }
+        })
         checklistItems.forEach(({ dataValues: checklistItem }) => {
           if (checklistJson[checklistItem.category] === undefined) {
             checklistJson[checklistItem.category] = []
@@ -912,7 +915,8 @@ module.exports = {
           hidden: message.hidden,
           comment: message.comment,
           from: name,
-          notified: false
+          notified: false,
+          isRead: [userId]
         })
 
         if (!comment) {
@@ -920,6 +924,54 @@ module.exports = {
         } else {
           res.status(200).send(comment)
         }
+      } catch (e) {
+        res.status(400).send(e)
+        logger.error(e)
+      }
+    }
+  },
+
+  async markCommentsAsRead(req, res) {
+    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
+    if (req.authenticated.success) {
+      try {
+        const userId = req.decoded.id
+        const commentsToUpdate = req.body
+        const weekId = commentsToUpdate[0].weekId
+        // comments should have same weekId
+        if (commentsToUpdate.filter(comment => comment.weekId !== weekId).length > 0) {
+          return res.status(400).send('the comments do not belong to the same week review')
+        }
+        // comments should exist
+        let arr = []
+        for (let i = 0; i < commentsToUpdate.length; i++) {
+          arr.push(Comment.findByPk(commentsToUpdate[i].id))
+        }
+        arr = await Promise.all(arr)
+        if (arr.includes(null)) {
+          return res.status(400).send('comment not found')
+        }
+
+        const hasPermission = await helper.checkHasCommentPermission(userId, weekId)
+        if (!hasPermission) {
+          return res.status(403).send('you have no permission to update these comments')
+        }
+        commentsToUpdate.map((comment) => {
+          if (!comment.isRead.includes(userId)) {
+            comment.isRead.push(userId)
+          }
+        })
+        await Promise.all(commentsToUpdate.map(comment => Comment.update(
+          { isRead: comment.isRead },
+          {
+            where: {
+              id: comment.id
+            }
+          }
+        )))
+        res.status(200).send(commentsToUpdate)
       } catch (e) {
         res.status(400).send(e)
         logger.error(e)

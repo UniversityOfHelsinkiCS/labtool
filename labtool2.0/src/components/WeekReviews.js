@@ -7,6 +7,7 @@ import { getOneCI, coursePageInformation } from '../services/courseInstance'
 import { associateTeacherToStudent } from '../services/assistant'
 import { addLinkToCodeReview, gradeCodeReview } from '../services/codeReview'
 import { sendEmail } from '../services/email'
+import { markCommentsAsRead } from '../services/comment'
 import { coursePageReset, updateActiveIndex, toggleCodeReview, selectTag, selectTeacher } from '../reducers/coursePageLogicReducer'
 import { resetLoading } from '../reducers/loadingReducer'
 import useLegacyState from '../hooks/legacyState'
@@ -120,6 +121,10 @@ export const WeekReviews = props => {
     }
   }
 
+  const markComments = async comments => {
+    await props.markCommentsAsRead(comments)
+  }
+
   const weekMatcher = i => week => week.weekNumber === i + 1
   const weekAmount = props.selectedInstance.weekAmount
 
@@ -153,6 +158,7 @@ export const WeekReviews = props => {
         courseId={props.courseId}
         user={props.user.user}
         isTeacher={isTeacher()}
+        markComments={markComments}
         {...weekReviewFunctions}
       />
     )
@@ -261,7 +267,8 @@ WeekReviews.propTypes = {
   resetLoading: PropTypes.func.isRequired,
   associateTeacherToStudent: PropTypes.func.isRequired,
   selectTag: PropTypes.func.isRequired,
-  selectTeacher: PropTypes.func.isRequired
+  selectTeacher: PropTypes.func.isRequired,
+  markCommentsAsRead: PropTypes.func
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -288,7 +295,8 @@ const mapDispatchToProps = {
   resetLoading,
   associateTeacherToStudent,
   selectTag,
-  selectTeacher
+  selectTeacher,
+  markCommentsAsRead
 }
 
 export default connect(

@@ -16,8 +16,10 @@ export const StudentTableRow = props => {
     allowReview,
     allowModify,
     addFilterTag,
+    loggedInUser,
     coursePageLogic,
     selectedInstance,
+    courseData,
     studentInstances,
     associateTeacherToStudent,
     selectStudent,
@@ -94,6 +96,42 @@ export const StudentTableRow = props => {
     }
   }
 
+  const loggedInUserSameAsTeacherOrSiInstructor = si => {
+    // The teacher can always see notification
+    if (selectedInstance.teacherInstances.find(ti => !ti.instructor && ti.userId === loggedInUser.user.id)) {
+      return true
+    }
+    if (si.teacherInstanceId === null) {
+      return !!selectedInstance.teacherInstances.find(ti => !ti.instructor && ti.userId === loggedInUser.user.id)
+    }
+    const userIdOfInstructor = selectedInstance.teacherInstances.find(ti => ti.id === si.teacherInstanceId).userId
+    // return true if logged in user is same as the instructor of the student
+    return userIdOfInstructor === loggedInUser.user.id
+  }
+
+  const unReadComments = (siId, week) => {
+    const si = courseData.data.find(si => si.id === siId)
+    if (!loggedInUserSameAsTeacherOrSiInstructor(si)) {
+      return null
+    }
+
+    const commentsForWeek = si.weeks.find(wk => wk.weekNumber === week).comments
+    if (commentsForWeek.length === 0) {
+      return null
+    }
+    const newComments = commentsForWeek.filter(comment => !comment.isRead.includes(loggedInUser.user.id))
+    return newComments
+  }
+
+  const showNewCommentsNotification = (siId, week) => {
+    if (!props.showCommentNotification) {
+      return false
+    }
+
+    const newComments = unReadComments(siId, week)
+    return !newComments ? false : newComments.length > 0
+  }
+
   const createWeekHeaders = (weeks, codeReviews, siId) => {
     const cr =
       codeReviews &&
@@ -119,7 +157,6 @@ export const StudentTableRow = props => {
       // we have <br /> to make this easier to click, but it'd be better
       // if we could Link an entire Table.Cell, this however breaks formatting
       // completely.
-
       indents.push(
         <Table.Cell selectable key={'week' + i} textAlign="center" style={{ position: 'relative' }}>
           <Link
@@ -134,7 +171,16 @@ export const StudentTableRow = props => {
             {selectedInstance.currentWeek === i + 1 && weekPoints[i + 1] === undefined ? (
               <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'star', size: 'large' }} />} content="Review" />
             ) : (
-              <p>{weekPoints[i + 1] !== undefined ? weekPoints[i + 1] : '-'}</p>
+              <div>
+                {weekPoints[i + 1] === undefined ? (
+                  <p>-</p>
+                ) : (
+                  <div>
+                    <p>{weekPoints[i + 1]}</p>
+                    {showNewCommentsNotification(data.id, i + 1) ? <Popup trigger={<Icon name="comment outline" size="small" />} content="You have new comments" /> : null}
+                  </div>
+                )}
+              </div>
             )}
           </Link>
         </Table.Cell>
@@ -315,6 +361,7 @@ StudentTableRow.propTypes = {
   shouldHideInstructor: PropTypes.func.isRequired,
   allowReview: PropTypes.bool,
   allowModify: PropTypes.bool,
+  showCommentNotification: PropTypes.bool,
   addFilterTag: PropTypes.func.isRequired,
   extraStudentIcon: PropTypes.func,
 
@@ -329,7 +376,9 @@ StudentTableRow.propTypes = {
   tagStudent: PropTypes.func.isRequired,
   unTagStudent: PropTypes.func.isRequired,
   selectStudent: PropTypes.func.isRequired,
-  unselectStudent: PropTypes.func.isRequired
+  unselectStudent: PropTypes.func.isRequired,
+  loggedInUser: PropTypes.object,
+  courseData: PropTypes.object
 }
 
 export default StudentTableRow

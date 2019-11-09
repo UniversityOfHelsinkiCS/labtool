@@ -29,6 +29,10 @@ module.exports = (sequelize, DataTypes) => {
       notified: {
         type: DataTypes.BOOLEAN,
         allowNull: false
+      },
+      isRead: {
+        type: DataTypes.ARRAY(DataTypes.INTEGER), // userIds who read the comment
+        allowNull: true
       }
     },
     {}

@@ -19,6 +19,7 @@ exports.controllerBeforeAuthCheckAction = applicationHelpers.controllerBeforeAut
 exports.checkHasCommentPermission = checkHasCommentPermission
 exports.getTeacherId = applicationHelpers.getTeacherId
 exports.getRoleToViewStudentInstance = getRoleToViewStudentInstance
+//exports.checkHasMarkCommentAsReadPermission = checkHasMarkCommentAsReadPermission
 
 /**
  * Only used in courseInstance controller so its place is here.
@@ -74,7 +75,7 @@ function checkWebOodi(req, res, user, resolve) {
  * @param weekId
  * @returns {*|Promise<T>}
  */
-async function checkHasCommentPermission(userid, weekId) {
+async function checkHasCommentPermission(userId, weekId) {
   // get actual week instance to get student instance
   const week = await Week.findOne({
     where: {
@@ -109,7 +110,7 @@ async function checkHasCommentPermission(userid, weekId) {
   // check if the user is a teacher
   const teacher = await TeacherInstance.findOne({
     where: {
-      userId: userid,
+      userId,
       courseInstanceId: course.id
     }
   })
@@ -117,9 +118,36 @@ async function checkHasCommentPermission(userid, weekId) {
   // ok, user is a teacher?
   const isTeacher = !!teacher
   // ok, user is the student whose review we are trying to comment on?
-  const isCorrectStudent = student && (student.userId === userid)
+  const isCorrectStudent = student && (student.userId === userId)
   return isTeacher || isCorrectStudent
 }
+
+// async function checkHasMarkCommentAsReadPermission(userId, weekId) {
+//   const week = await Week.findOne({
+//     where: {
+//       id: weekId
+//     }
+//   })
+//   if (!week) {
+//     return false
+//   }
+
+//   const student = await StudentInstance.findOne({
+//     where: {
+//       id: week.studentInstanceId
+//     }
+//   })
+//   if (!student) {
+//     return false
+//   }
+//   const teacher = await TeacherInstance.findOne({
+//     where: {
+//       id: student.teacherInstanceId,
+//       userId
+//     }
+//   })
+//   return !!teacher
+// }
 
 /**
  * Checks if logged in user has permission to see student instance

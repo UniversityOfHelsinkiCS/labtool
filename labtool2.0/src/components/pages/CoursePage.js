@@ -260,7 +260,7 @@ export const CoursePage = props => {
     return <Loader active />
   }
 
-  const { courseId, courseData, coursePageLogic, courseInstance, selectedInstance, tags } = props
+  const { user, courseId, courseData, coursePageLogic, courseInstance, selectedInstance, tags } = props
 
   // This function activates the course, leaving other data intact.
   const activateCourse = () => {
@@ -352,6 +352,7 @@ export const CoursePage = props => {
           courseId={courseId}
           courseData={courseData}
           selectedInstance={selectedInstance}
+          loggedInUser={user}
           coursePageLogic={coursePageLogic}
           tags={tags}
           droppedTagExists={droppedTagExists}

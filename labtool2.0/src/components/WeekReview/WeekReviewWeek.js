@@ -24,12 +24,18 @@ export const WeekReviewWeek = props => {
     sendCommentEmail,
     sendStudentEmail,
     sendWeekEmail,
-    sortCommentsByDate
+    sortCommentsByDate,
+    markComments
   } = props
 
   const i = index
   const reviewIndex = isFinalWeek ? selectedInstance.weekAmount + 1 : i + 1
   const isWeekOpen = openWeeks[i + (isFinalWeek && isTeacher ? 1 : 0)]
+
+  const checkAllCommentsAreRead = weekComments => {
+    const unReadComment = weekComments.find(comment => !comment.isRead.includes(user.id))
+    return unReadComment ? false : true
+  }
 
   if (week) {
     return (
@@ -81,17 +87,32 @@ export const WeekReviewWeek = props => {
           {week.comments.length === 0 ? null : <h4> Comments </h4>}
           <Comment.Group>
             {week ? (
-              sortCommentsByDate(week.comments).map(comment => (
-                <WeekReviewComment
-                  key={`weekReviewComment${comment.id}`}
-                  user={user}
-                  comment={comment}
-                  isFinalWeek={isFinalWeek}
-                  isTeacher={isTeacher}
-                  sendTeacherEmail={sendCommentEmail}
-                  sendStudentEmail={sendStudentEmail}
-                />
-              ))
+              <div>
+                {sortCommentsByDate(week.comments).map(comment => (
+                  <WeekReviewComment
+                    key={`weekReviewComment${comment.id}`}
+                    user={user}
+                    comment={comment}
+                    isFinalWeek={isFinalWeek}
+                    isTeacher={isTeacher}
+                    sendTeacherEmail={sendCommentEmail}
+                    sendStudentEmail={sendStudentEmail}
+                  />
+                ))}
+
+                {isTeacher && week.comments.length > 0 ? (
+                  <div>
+                    <br />
+                    {checkAllCommentsAreRead(week.comments) ? (
+                      <Label>
+                        You have read all comments <Icon name="check" color="green" />
+                      </Label>
+                    ) : (
+                      <Button onClick={() => markComments(week.comments)}>Mark comments of this week as read</Button>
+                    )}
+                  </div>
+                ) : null}
+              </div>
             ) : (
               <h4> No comments </h4>
             )}
@@ -140,7 +161,8 @@ WeekReviewWeek.propTypes = {
   sendCommentEmail: PropTypes.func.isRequired,
   sendStudentEmail: PropTypes.func.isRequired,
   sendWeekEmail: PropTypes.func.isRequired,
-  sortCommentsByDate: PropTypes.func.isRequired
+  sortCommentsByDate: PropTypes.func.isRequired,
+  markComments: PropTypes.func
 }
 
 export default WeekReviewWeek

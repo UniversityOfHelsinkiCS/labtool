@@ -240,8 +240,12 @@ export const StudentTable = props => {
                 extraStudentIcon={extraStudentIcon}
                 allowReview={props.allowReview}
                 allowModify={props.allowModify}
+                showCommentNotification={props.showCommentNotification}
+                loggedInUser={props.loggedInUser}
                 coursePageLogic={props.coursePageLogic}
                 selectedInstance={props.selectedInstance}
+                //courePage={props.courePage}
+                courseData={props.courseData}
                 studentInstances={props.studentInstances}
                 associateTeacherToStudent={props.associateTeacherToStudent}
                 selectStudent={props.selectStudent}
@@ -295,6 +299,7 @@ StudentTable.propTypes = {
   columns: PropTypes.array,
   allowModify: PropTypes.bool,
   allowReview: PropTypes.bool,
+  showCommentNotification: PropTypes.bool,
   disableDefaultFilter: PropTypes.bool,
   showFooter: PropTypes.bool,
   studentColumnName: PropTypes.string,
