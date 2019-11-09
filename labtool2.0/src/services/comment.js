@@ -7,4 +7,11 @@ export const createOneComment = data => {
   return callController(route, prefix, data, method)
 }
 
+export const markCommentsAsRead = data => {
+  const route = '/comments/update'
+  const prefix = 'MARK_COMMENTS_AS_READ_'
+  const method = 'put'
+  return callController(route, prefix, data, method)
+}
+
 export default { createOneComment }

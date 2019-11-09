@@ -585,7 +585,7 @@ module.exports = {
                 weekMaxPoints: req.body.weekMaxPoints || courseInstance.weekMaxPoints,
                 currentWeek: req.body.currentWeek || courseInstance.currentWeek,
                 finalReview: req.body.finalReview,
-                currentCodeReview: newCr.length === 0 ? [] : `{${newCr.join(',')}}`,
+                currentCodeReview: newCr.length === 0 ? [] : newCr,
                 coursesPage: typeof req.body.coursesPage === 'string' ? req.body.coursesPage : courseInstance.coursesPage,
                 courseMaterial: typeof req.body.courseMaterial === 'string' ? req.body.courseMaterial : courseInstance.courseMaterial
               })
@@ -937,7 +937,7 @@ module.exports = {
     if (req.authenticated.success) {
       try {
         const userId = req.decoded.id
-        const commentsToUpdate = req.body.comments
+        const commentsToUpdate = req.body
         const weekId = commentsToUpdate[0].weekId
         // comments should have same weekId
         if (commentsToUpdate.filter(comment => comment.weekId !== weekId).length > 0) {

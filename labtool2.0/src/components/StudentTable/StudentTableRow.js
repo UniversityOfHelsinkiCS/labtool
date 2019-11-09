@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import { Button, Icon, Table, Popup, Dropdown, Checkbox } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import RepoLink from '../RepoLink'
-import comment from '../../services/comment'
 
 export const StudentTableRow = props => {
   const {
@@ -124,20 +123,23 @@ export const StudentTableRow = props => {
     return userIdOfInstructor === loggedInUser.user.id
   }
 
-  const showNotificationForNewComment = (siId, week) => {
+  const unReadComments = (siId, week) => {
     const si = courseData.data.find(si => si.id === siId)
     if (!loggedInUserSameAsSiInstructor(si)) {
-      return false
+      return null
     }
-
     const commentsForWeek = si.weeks.find(wk => wk.weekNumber === week).comments
 
     if (commentsForWeek.length === 0) {
-      return false
+      return null
     }
-    const unreadComments = commentsForWeek.find(comment => !comment.isRead.includes(loggedInUser.user.id))
+    const newComments = commentsForWeek.filter(comment => !comment.isRead.includes(loggedInUser.user.id))
+    return newComments
+  }
 
-    return unreadComments ? true : false
+  const showNewCommentsNotification = (siId, week) => {
+    const newComments = unReadComments(siId, week)
+    return !newComments ? false : newComments.length > 0
   }
 
   const createWeekHeaders = (weeks, codeReviews, siId) => {
@@ -165,7 +167,6 @@ export const StudentTableRow = props => {
       // we have <br /> to make this easier to click, but it'd be better
       // if we could Link an entire Table.Cell, this however breaks formatting
       // completely.
-
       indents.push(
         <Table.Cell selectable key={'week' + i} textAlign="center" style={{ position: 'relative' }}>
           <Link
@@ -184,9 +185,9 @@ export const StudentTableRow = props => {
                 {weekPoints[i + 1] === undefined ? (
                   <p>-</p>
                 ) : (
-                  <div onClick={() => console.log('hehe')}>
+                  <div>
                     <p>{weekPoints[i + 1]}</p>
-                    {showNotificationForNewComment(data.id, i + 1) ? <Popup trigger={<Icon name="comment outline" size="small" />} content="You have new comments" /> : null}
+                    {showNewCommentsNotification(data.id, i + 1) ? <Popup trigger={<Icon name="comment outline" size="small" />} content="You have new comments" /> : null}
                   </div>
                 )}
               </div>
@@ -401,7 +402,9 @@ StudentTableRow.propTypes = {
   tagStudent: PropTypes.func.isRequired,
   unTagStudent: PropTypes.func.isRequired,
   selectStudent: PropTypes.func.isRequired,
-  unselectStudent: PropTypes.func.isRequired
+  unselectStudent: PropTypes.func.isRequired,
+  loggedInUser: PropTypes.object.isRequired,
+  courseData: PropTypes.object.isRequired
 }
 
 export default StudentTableRow

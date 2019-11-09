@@ -1,18 +1,12 @@
 PUT http://localhost:3001/api/comments/update
 content-type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InBhYW9wZXR0YWphIiwiaWQiOjEwMDEwLCJpYXQiOjE1NzMyNTA2MTZ9.QGBl0lVS_olLgjrpsN-wFkGRzD6PFcsuSXRs4f5ylPo
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRpcmFvaGphYWphIiwiaWQiOjEwMDE1LCJpYXQiOjE1NzMyOTk3Nzh9.TFXSGOuvBvobDdr1LdD-BhvkqDHYncqJo8nVeOtBxgo
 
-{
-  "comments":[
+
+  [
     {
-      "id":4,
+      "id":3,
       "weekId":10001,
       "isRead":[10011]
-    }, 
-    {
-      "id":5,
-      "weekId":10001,
-      "isRead":[10011]
-    }  
+    }
   ]
-}
