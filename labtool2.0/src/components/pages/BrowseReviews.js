@@ -103,6 +103,14 @@ export const BrowseReviews = props => {
     })
   }
 
+  const handleMarkAsValidRegistration = async validRegistration => {
+    await props.updateStudentProjectInfo({
+      ohid: props.selectedInstance.ohid,
+      userId: props.courseData.data.find(data => data.id === Number(props.studentInstance)).userId,
+      validRegistration
+    })
+  }
+
   const handleClickShowAllCurrent = () => {
     if (props.courseData.data && props.studentInstance) {
       const student = props.courseData.data.find(student => student.id === Number(props.studentInstance))
@@ -157,6 +165,7 @@ export const BrowseReviews = props => {
             student={student}
             otherParticipations={props.studentInstanceToBeReviewed.filter(courseInstance => courseInstance.ohid.includes(props.courseId.substring(0, 8)) && courseInstance.ohid !== props.courseId)}
             handleMarkAsDropped={handleMarkAsDropped}
+            handleMarkAsValidRegistration={handleMarkAsValidRegistration}
             teacherInstance={props.teacherInstance}
           />
           <span>
