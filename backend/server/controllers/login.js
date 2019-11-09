@@ -28,7 +28,7 @@ const login = (req, res) => {
   } catch (error) {
     logger.error('login error', { error: error.message })
     res.status(500).send({
-      error: 'Unexpected error'
+      error: 'Unexpected error. Please try again.'
     })
   }
 }

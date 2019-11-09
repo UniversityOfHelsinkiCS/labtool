@@ -76,10 +76,10 @@ module.exports = {
         }
         res.status(200).send(week)
       } else {
-        res.status(400).send('token verific ation failed')
+        res.status(400).send('Token verification failed.')
       }
     } catch (error) {
-      logger.error('create weeks error', { error: error.message })
+      logger.error('Create weeks error.', { error: error.message })
     }
   },
   /**
@@ -178,7 +178,7 @@ module.exports = {
     return Week.findAll()
       .then(ui => res.status(200).send(ui))
       .catch((error) => {
-        logger.error('list weeks error', { error: error.message })
+        logger.error('List weeks error.', { error: error.message })
         res.status(400).send(error)
       })
   },
@@ -197,13 +197,13 @@ module.exports = {
       .then((week) => {
         if (!week) {
           return res.status(404).send({
-            message: 'Teacher Instance not Found'
+            message: 'Teacher instance not found.'
           })
         }
         return res.status(200).send(week)
       })
       .catch((error) => {
-        logger.error('retrieve weeks error', { error: error.message })
+        logger.error('Retrieve weeks error.', { error: error.message })
         res.status(400).send(error)
       })
   }

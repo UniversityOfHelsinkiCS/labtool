@@ -22,7 +22,7 @@ module.exports = {
       const studentInsId = req.body.studentInstanceId
 
       if (!req.authenticated.success) {
-        res.status(400).send('you have to be authenticated to do this')
+        res.status(400).send('You have to be authenticated to do this.')
         return
       }
       const requestMakerId = req.decoded.id
@@ -60,7 +60,7 @@ module.exports = {
         }
       })
       if (!givenTeachersTeacherInstance) {
-        res.status(404).send('There is no teacher with the given teacherInstanceId')
+        res.status(404).send('There is no teacher with the given teacher instance ID.')
         return
       }
       const teachersCourseId = givenTeachersTeacherInstance.courseInstanceId
@@ -78,7 +78,7 @@ module.exports = {
       })
       res.status(200).send(studentInstance)
     } catch (e) {
-      logger.error('create assistant error', { error: e.message })
+      logger.error('Error when creating an assistant.', { error: e.message })
     }
   },
 
@@ -122,11 +122,11 @@ module.exports = {
           firsts: assistantAsUser.firsts,
           lastname: assistantAsUser.lastname
         }
-        returnedAssistantInfo.status = 'student has an assigned assistant'
+        returnedAssistantInfo.status = 'Student already has an assigned assistant.'
 
         res.status(200).send(returnedAssistantInfo)
       } else {
-        returnedAssistantInfo.status = 'no assistant assigned to student'
+        returnedAssistantInfo.status = 'No assistant assigned to student.'
         res.status(200).send(returnedAssistantInfo)
       }
     } catch (e) {
@@ -148,7 +148,7 @@ module.exports = {
       })
       res.status(200).send(studentsForThisTeacherInstance)
     } catch (e) {
-      logger.error('find students by teacher instance error', { error: e.message })
+      logger.error('Find students by teacher instance error.', { error: e.message })
       res.status(400).send(e)
     }
   }

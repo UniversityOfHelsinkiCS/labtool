@@ -63,7 +63,7 @@ module.exports = {
         }
       })
       if (!teacher) {
-        return res.status(400).send('you have to be a course teacher to do this')
+        return res.status(400).send('You have to be a course teacher to do this.')
       }
 
       const tag = await Tag.findOne({
@@ -72,7 +72,7 @@ module.exports = {
         }
       })
       if (!tag) {
-        return res.status(404).send('there is no tag with that name')
+        return res.status(404).send('There is no tag with that name.')
       }
 
       const { id } = tag
@@ -92,11 +92,11 @@ module.exports = {
       return Tag.findAll()
         .then(tag => res.status(200).send(tag))
         .catch((error) => {
-          res.status(400).send('et ny saa niitä tageja')
-          logger.error('tag getall error', { error: error.message })
+          res.status(400).send('Error fetching tags.')
+          logger.error('Couldn\'t fetch tags.', { error: error.message })
         })
     } catch (e) {
-      res.status(400).send('nymmeni jokin pieleen')
+      res.status(400).send('An error occurred. Please try again.')
     }
   },
 
@@ -113,7 +113,7 @@ module.exports = {
           }
         })
         if (!teacher) {
-          res.status(400).send('you have to be a teacher to do this')
+          res.status(400).send('You have to be a teacher to do this.')
           return
         }
 
@@ -123,7 +123,7 @@ module.exports = {
           }
         })
         if (!student) {
-          res.status(404).send('did not found student with that id')
+          res.status(404).send('Did not found student with that ID.')
           return
         }
 
@@ -133,7 +133,7 @@ module.exports = {
           }
         })
         if (!foundTag) {
-          res.status(404).send('did not find a tag with that id')
+          res.status(404).send('Did not find a tag with that ID.')
           return
         }
 
@@ -144,7 +144,7 @@ module.exports = {
           }
         })
         if (!studentTag) {
-          res.status(400).send('tagging did not succeed')
+          res.status(400).send('Tagging did not succeed.')
           return
         }
 
@@ -193,10 +193,10 @@ module.exports = {
         })
         res.status(200).send(newStudent)
       } catch (e) {
-        res.status(400).send('ei onnistu')
+        res.status(400).send('An unknown error occurred. Please try again.')
       }
     } else {
-      res.status(400).send('no tag selected')
+      res.status(400).send('No tag selected.')
     }
   },
 
@@ -213,7 +213,7 @@ module.exports = {
           }
         })
         if (!teacher) {
-          res.status(400).send('you have to be a teacher to do this')
+          res.status(400).send('You have to be a teacher to do this.')
           return
         }
 
@@ -224,12 +224,12 @@ module.exports = {
           }
         })
         if (!studentTag) {
-          res.status(404).send('did not find the given student tag')
+          res.status(404).send('Did not find the given student tag.')
         }
 
         const removedTag = await studentTag.destroy()
         if (!removedTag) {
-          return res.status(400).send('removing student tag failed')
+          return res.status(400).send('Removing student tag failed.')
         }
 
         const newStudent = await StudentInstance.findOne({
@@ -277,10 +277,10 @@ module.exports = {
         })
         res.status(200).send(newStudent)
       } catch (e) {
-        res.status(400).send('ei onnistu')
+        res.status(400).send('An unknown error occurred. Please try again.')
       }
     } else {
-      res.status(400).send('no tag selected')
+      res.status(400).send('No tag selected.')
     }
   }
 }

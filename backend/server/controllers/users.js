@@ -41,7 +41,7 @@ module.exports = {
           })
           .catch((error) => {
             res.status(400).send(error)
-            logger.error('user update error', { error: error.message })
+            logger.error('User update error.', { error: error.message })
           })
       )
     }
@@ -59,10 +59,10 @@ module.exports = {
     }
     const isAdmin = await helper.isAuthUserAdmin(req.decoded.id)
     if (!isAdmin) {
-      return res.status(403).send('You must be a sysop')
+      return res.status(403).send('You must be a sysop.')
     }
     if (!req.body.id) {
-      return res.status(400).send('You must provide an user ID')
+      return res.status(400).send('You must provide a user ID.')
     }
 
     const user = await User.findOne({
@@ -72,7 +72,7 @@ module.exports = {
     })
 
     if (!user) {
-      return res.status(404).send('User not found')
+      return res.status(404).send('User not found.')
     }
 
     const updatedUser = await user.update({
@@ -103,7 +103,7 @@ module.exports = {
         const isAdmin = await helper.isAuthUserAdmin(req.decoded.id)
 
         if (!teacherInstances && !isAdmin) {
-          return res.status(401).send('Unauthorized')
+          return res.status(401).send('Unauthorized.')
         }
 
         const users = await User.findAll({
@@ -113,8 +113,8 @@ module.exports = {
         })
         res.status(200).send(users)
       } catch (exception) {
-        logger.error('user list error', { error: exception.message })
-        res.status(400).send('Unable to send user list')
+        logger.error('User list error.', { error: exception.message })
+        res.status(400).send('Unable to send user list.')
       }
     }
   },
@@ -153,7 +153,7 @@ module.exports = {
         const courseToAssist = courseInstance
 
         if (!userToAssistant || !courseToAssist) {
-          return res.status(404).send('User or course not found')
+          return res.status(404).send('User or course not found.')
         }
 
         const alreadyExistingTeacherInstanceCount = await TeacherInstance.count({
@@ -199,7 +199,7 @@ module.exports = {
         })
 
         if (!teacherToRemoveAsUser || !courseInstance) {
-          return res.status(404).send('User or course not found')
+          return res.status(404).send('User or course not found.')
         }
 
         // Make sure only teachers/assistants can remove assistants.
