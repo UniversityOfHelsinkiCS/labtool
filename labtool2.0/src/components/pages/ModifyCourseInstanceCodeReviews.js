@@ -271,7 +271,7 @@ export const ModifyCourseInstanceReview = props => {
       return null
     }
     const currentReviewee = getCurrentReviewee(props.codeReviewLogic.selectedDropdown, data.id)
-    const showCurrentReviewee = currentReviewee.includes('http') ? (
+    const showCurrentReviewee = currentReviewee.startsWith('http:/') || currentReviewee.startsWith('https:/') ? (
       <p style={{ display: 'inline' }}>
         Current review: <RepoLink url={currentReviewee} />
       </p>

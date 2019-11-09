@@ -23,9 +23,10 @@ async function formatCodeReview(codeReview, allStudentInstancesIds, reviewNumber
     }
   }).then(r => r)
   const repeated = reviewed.filter(r => r.toReview === codeReview.toReview || r.repoToReview === codeReview.repoToReview).length > 0
+  /*  do not prevent repeats in backend -- hisahi
   if (repeated) {
     return null
-  }
+  }*/
 
   allStudentInstancesIds.push(codeReview.reviewer)
   return {
@@ -71,7 +72,7 @@ module.exports = {
       )
       if (values.indexOf(null) !== -1) {
         // Malformed items in codeReviews are replaced by null.
-        res.status(400).send('Malformed codeReview or code review is repeated.')
+        res.status(400).send('Malformed codeReview.')
         return
       }
       // Get all studentInstances that have been referenced for validation purposes.
