@@ -538,6 +538,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
     }
     droppedTagExists={[Function]}
     exportCSV={[Function]}
+    loggedInUser={Object {}}
     markAllWithDroppedTagAsDropped={[Function]}
     selectedInstance={
       Object {

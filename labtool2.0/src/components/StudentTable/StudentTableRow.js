@@ -279,10 +279,7 @@ export const StudentTableRow = props => {
             </div>
           ))}
           {allowModify && (
-            <Popup
-              trigger={<Icon id={'tagModify'} onClick={changeHiddenTagDropdown(data.id)} name="add" color="green" style={{ float: 'right', fontSize: '1.25em' }} />}
-              content="Add tag"
-            />
+            <Popup trigger={<Icon id={'tagModify'} onClick={changeHiddenTagDropdown(data.id)} name="add" color="green" style={{ float: 'right', fontSize: '1.25em' }} />} content="Add tag" />
           )}
         </span>
         {allowModify && (
@@ -372,8 +369,8 @@ StudentTableRow.propTypes = {
   unTagStudent: PropTypes.func.isRequired,
   selectStudent: PropTypes.func.isRequired,
   unselectStudent: PropTypes.func.isRequired,
-  loggedInUser: PropTypes.object.isRequired,
-  courseData: PropTypes.object.isRequired
+  loggedInUser: PropTypes.object,
+  courseData: PropTypes.object
 }
 
 export default StudentTableRow
