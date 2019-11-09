@@ -15,7 +15,9 @@ export const CoursePageTeacherBulkForm = props => {
     bulkRemoveTag,
     bulkUpdateTeacher,
     bulkMarkDropped,
-    bulkMarkNotDropped
+    bulkMarkNotDropped,
+    bulkMarkValid,
+    bulkMarkInvalid
   } = props
   const state = usePersistedState(`CoursePage-${courseId}`, { showMassAssignForm: false })
   const numSelected = Object.keys(coursePageLogic.selectedStudents).length
@@ -69,6 +71,18 @@ export const CoursePageTeacherBulkForm = props => {
                 </Button>
               </Grid.Column>
             </Grid.Row>
+            <Grid.Row>
+              <Grid.Column>
+                <Button disabled={disabled} onClick={() => bulkMarkValid()}>
+                  Valid course registration
+                </Button>
+              </Grid.Column>
+              <Grid.Column>
+                <Button disabled={disabled} basic color="red" onClick={() => bulkMarkInvalid()}>
+                  Invalid course registration
+                </Button>
+              </Grid.Column>
+            </Grid.Row>
           </Grid>
           <br />
           <br />
@@ -91,7 +105,9 @@ CoursePageTeacherBulkForm.propTypes = {
   bulkRemoveTag: PropTypes.func.isRequired,
   bulkUpdateTeacher: PropTypes.func.isRequired,
   bulkMarkDropped: PropTypes.func.isRequired,
-  bulkMarkNotDropped: PropTypes.func.isRequired
+  bulkMarkNotDropped: PropTypes.func.isRequired,
+  bulkMarkValid: PropTypes.func.isRequired,
+  bulkMarkInvalid: PropTypes.func.isRequired
 }
 
 export default CoursePageTeacherBulkForm

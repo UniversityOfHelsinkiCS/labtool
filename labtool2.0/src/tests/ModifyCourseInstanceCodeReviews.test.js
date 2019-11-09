@@ -63,6 +63,7 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
             toReview: 10011
           }
         ],
+        validRegistration: true,
         User: {
           id: 10012,
           username: 'tiraopiskelija2',
@@ -95,6 +96,7 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
         weeks: [],
         codeReviews: [],
         dropped: true,
+        validRegistration: true,
         User: {
           id: 10015,
           username: 'tiraopiskelija5',
@@ -102,6 +104,37 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
           firsts: 'Tom Thomas',
           lastname: 'Student',
           studentNumber: '014553245',
+          admin: false,
+          createdAt: '2018-03-26T00:00:00.000Z',
+          updatedAt: '2018-03-26T00:00:00.000Z'
+        },
+        Tags: [
+          {
+            id: 30001,
+            name: 'Javascript',
+            color: 'red'
+          }
+        ]
+      },
+      {
+        id: 10016,
+        github: 'http://github.com/tiralabra6',
+        projectName: 'Tiran kuudes labraprojekti',
+        createdAt: '2018-03-26T00:00:00.000Z',
+        updatedAt: '2018-03-26T00:00:00.000Z',
+        courseInstanceId: 10011,
+        userId: 10016,
+        teacherInstanceId: 10011,
+        weeks: [],
+        codeReviews: [],
+        validRegistration: false,
+        User: {
+          id: 10016,
+          username: 'tiraopiskelija6',
+          email: 'tarja.student@helsinki.invalid',
+          firsts: 'Tarja',
+          lastname: 'Student',
+          studentNumber: '014689455',
           admin: false,
           createdAt: '2018-03-26T00:00:00.000Z',
           updatedAt: '2018-03-26T00:00:00.000Z'
@@ -125,6 +158,7 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
         teacherInstanceId: 10011,
         weeks: [],
         codeReviews: [],
+        validRegistration: true,
         User: {
           id: 10031,
           username: 'superopiskelija',
@@ -197,6 +231,7 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
           }
         ],
         codeReviews: [],
+        validRegistration: true,
         User: {
           id: 10011,
           username: 'tiraopiskelija1',
@@ -438,7 +473,7 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
       )
     })
 
-    it('dropdown options do not include options that the student reviewed previously and dropped out students', () => {
+    it('dropdown options do not include options that the student reviewed previously, dropped out students and students with invalid course registration', () => {
       const expectedOptions = [
         {
           text: 'select a student or add a repo link',

@@ -1026,7 +1026,7 @@ exports[`<StudentTableRow /> StudentTableRow Component should render correctly 1
 <TableRow
   as="tr"
   cellAs="td"
-  className="TableRowForActiveStudent"
+  className="TableRowForDroppedOutStudent"
   key="10012"
 >
   <TableCell
@@ -1044,6 +1044,27 @@ exports[`<StudentTableRow /> StudentTableRow Component should render correctly 1
     as="td"
     key="studentinfo"
   >
+    <Popup
+      content="This student has invalid course registration"
+      disabled={false}
+      eventsEnabled={true}
+      offset={0}
+      on={
+        Array [
+          "click",
+          "hover",
+        ]
+      }
+      pinned={false}
+      position="top left"
+      trigger={
+        <Icon
+          as="i"
+          color="black"
+          name="warning"
+        />
+      }
+    />
     <span>
       Johan Wilhelm
        
