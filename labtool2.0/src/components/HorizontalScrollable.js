@@ -8,10 +8,38 @@ export const HorizontalScrollable = props => {
   let scrollbar = null
   const antibounce = {}
 
+  const isMobile = () => {
+    return window.matchMedia('(max-width: 768px)').matches
+  }
+
+  const onKeyDownScroll = e => {
+    if (!scrollbar) {
+      return
+    }
+
+    const targetElement = scrollbar.children[0]
+
+    if (e.key == 'ArrowLeft' || e.key == 'ArrowRight') {
+      // forward key event to target element to trigger scroll
+      // tabIndex necessary for focus, which is necessary for key events
+      targetElement.tabIndex = 0
+      targetElement.focus()
+      targetElement.dispatchEvent(new KeyboardEvent('keydown', { key: e.key }))
+    }
+  }
+
   const mainElementReady = element => {
+    if (content) {
+      // remove listener from outgoing element
+      content.children[0].removeEventListener('keydown', onKeyDownScroll)
+    }
     content = element
     if (content) {
       content.style.position = 'relative'
+      // tabIndex necessary for focus, which is necessary for key events
+      content.children[0].tabIndex = 0
+      // add listener to incoming element
+      content.children[0].addEventListener('keydown', onKeyDownScroll)
     }
     resizeBar()
   }
@@ -124,6 +152,11 @@ export const HorizontalScrollable = props => {
         scrollbar.style.zIndex = 'auto'
       }
     }
+  }
+
+  // on mobile, we can flick scroll, so rely on native scrolling
+  if (isMobile()) {
+    return <div style={{ overflowX: 'scroll', overflowY: 'visible' }}>{props.children}</div>
   }
 
   // marginBottom, paddingBottom hack adds unused "overflowable" space
