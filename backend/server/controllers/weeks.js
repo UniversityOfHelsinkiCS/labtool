@@ -49,26 +49,7 @@ module.exports = {
         const checksObject = {}
 
         if (week) {
-          let updatedChecks = {}
-          if (req.body.checks) {
-            Object.keys(week.checks).forEach((key) => {
-              // handle existing cases where clItems were saved by name in week.checks
-              if (!Number.isInteger(key)) {
-                return
-              }
-
-              if (req.body.checks[key] !== undefined) {
-                updatedChecks[key] = req.body.checks[key]
-              } else {
-                updatedChecks[key] = week.checks[key]
-              }
-            })
-            Object.keys(req.body.checks).forEach((key) => {
-              updatedChecks[key] = req.body.checks[key]
-            })
-          } else {
-            updatedChecks = week.checks
-          }
+          let updatedChecks = req.body.checks || {}
           await week.update({
             points: req.body.points || week.points,
             feedback: req.body.feedback || week.feedback,
@@ -79,11 +60,18 @@ module.exports = {
               checklistItemId: Number(check),
               weekId: week.id
             }
-          }).then(weekCheck => weekCheck.update({
-            checked: updatedChecks[check]
-          }).then((updatedWeekCheck) => {
-            checksObject[updatedWeekCheck.checklistItemId] = updatedWeekCheck.checked
-          }))))
+          }).then(weekCheck => {
+            return WeekCheck.update({
+              checked: updatedChecks[check]
+            },{
+              where: {
+                id: weekCheck[0].dataValues.id
+              },
+              returning: true
+            })
+          }).then(([_, [updatedWeekCheck]]) => {
+            checksObject[updatedWeekCheck.checklistItemId] = updatedWeekCheck.dataValues.checked
+          })))
         } else {
           const week = await Week.create({
             points: req.body.points,
@@ -101,12 +89,13 @@ module.exports = {
             checksObject[weekCheck.checklistItemId] = weekCheck.checked
           })))
         }
-        res.status(200).send({ ...week, checks: checksObject })
+        res.status(200).send({ ...week.dataValues, checks: checksObject })
       } else {
         res.status(400).send('token verific ation failed')
       }
     } catch (error) {
       logger.error('create weeks error', { error: error.message })
+      res.status(400).send({ error })
     }
   },
 
