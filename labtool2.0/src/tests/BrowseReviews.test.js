@@ -264,11 +264,11 @@ describe('<BrowseReviews />', () => {
             end: '2017-04-29T21:00:00.000Z',
             active: false,
             ohid: 'TKT20010.2017.K.A.1',
-            courseInstances: [{ id: 1 }]
+            courseInstances: [{ id: 1, validRegistration: true }]
           },
           {
             ...coursePage,
-            courseInstances: [{ id: 10011 }]
+            courseInstances: [{ id: 10011, validRegistration: true }]
           }
         ]
         beforeEach(() => {
