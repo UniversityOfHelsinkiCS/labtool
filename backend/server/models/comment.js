@@ -14,6 +14,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false
       },
+      userId: {
+        type: DataTypes.INTEGER,
+        allowNull: true // old comments will have null for "unknown author"
+      },
       from: {
         type: DataTypes.STRING,
         allowNull: false
@@ -25,6 +29,10 @@ module.exports = (sequelize, DataTypes) => {
       notified: {
         type: DataTypes.BOOLEAN,
         allowNull: false
+      },
+      isRead: {
+        type: DataTypes.ARRAY(DataTypes.INTEGER), // userIds who read the comment
+        allowNull: true
       }
     },
     {}
@@ -32,6 +40,10 @@ module.exports = (sequelize, DataTypes) => {
   Comment.associate = function (models) {
     Comment.belongsTo(models.Week, {
       foreignKey: 'weekId',
+      onDelete: 'CASCADE'
+    })
+    Comment.belongsTo(models.User, {
+      foreignKey: 'userId',
       onDelete: 'CASCADE'
     })
   }
