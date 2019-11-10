@@ -120,7 +120,7 @@ export const StudentTableRow = props => {
     if (commentsForWeek.length === 0) {
       return null
     }
-    const newComments = commentsForWeek.filter(comment => comment && !comment.isRead.includes(loggedInUser.user.id))
+    const newComments = commentsForWeek.filter(comment => comment && !(comment.isRead || []).includes(loggedInUser.user.id))
     return newComments
   }
 

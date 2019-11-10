@@ -33,7 +33,7 @@ export const WeekReviewWeek = props => {
   const isWeekOpen = openWeeks[i]
 
   const checkAllCommentsAreRead = weekComments => {
-    const unReadComment = weekComments.find(comment => !comment.isRead.includes(user.id))
+    const unReadComment = weekComments.find(comment => !(comment.isRead || []).includes(user.id))
     return unReadComment ? false : true
   }
 
