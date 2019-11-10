@@ -931,6 +931,14 @@ module.exports = {
     }
   },
 
+  /**
+   * Mark a comment as read
+   *   permissions: must be able to see the comment (see above)
+   *
+   * @param req
+   * @param res
+   * @returns {*|Promise<T>}
+   */
   async markCommentsAsRead(req, res) {
     if (!helper.controllerBeforeAuthCheckAction(req, res)) {
       return
@@ -959,7 +967,9 @@ module.exports = {
           return res.status(403).send('you have no permission to update these comments')
         }
         commentsToUpdate.map((comment) => {
-          if (!comment.isRead.includes(userId)) {
+          if (comment.isRead === null) {
+            comment.isRead = [userId]
+          } else if (!comment.isRead.includes(userId)) {
             comment.isRead.push(userId)
           }
         })

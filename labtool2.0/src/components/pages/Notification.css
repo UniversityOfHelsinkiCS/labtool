@@ -5,6 +5,7 @@
   left: 0;
   text-align: center;
   pointer-events: none;
+  z-index: 10000;
 }
 .notification {
   display: inline-block !important;

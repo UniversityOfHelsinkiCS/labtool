@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Accordion, Button, Icon, Dropdown, Grid } from 'semantic-ui-react'
+import { Accordion, Button, Icon, Dropdown, Grid, Popup } from 'semantic-ui-react'
 import { usePersistedState } from '../../../hooks/persistedState'
 
 export const CoursePageTeacherBulkForm = props => {
@@ -78,9 +78,14 @@ export const CoursePageTeacherBulkForm = props => {
                 </Button>
               </Grid.Column>
               <Grid.Column>
-                <Button disabled={disabled} basic color="red" onClick={() => bulkMarkInvalid()}>
-                  Invalid course registration
-                </Button>
+                <Popup
+                  content="Mark a registration as invalid, if the student accidentally registered onto the course"
+                  trigger={
+                    <Button disabled={disabled} basic color="red" onClick={() => bulkMarkInvalid()}>
+                      Invalid course registration
+                    </Button>
+                  }
+                />
               </Grid.Column>
             </Grid.Row>
           </Grid>

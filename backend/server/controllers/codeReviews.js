@@ -192,8 +192,8 @@ module.exports = {
   },
 
   /**
-   * Add custom link to a student.
-   *   permissions: must be teacher/instructor on course
+   * Add a link to a code review.
+   *   permissions: should be a student
    *
    * @param {*} req
    * @param {*} res
@@ -224,14 +224,6 @@ module.exports = {
       if (!studentInstance) {
         res.status(404).send('No student instance matched given id.')
         return
-      }
-
-      const courseInstance = await CourseInstance.findOne({
-        where: { id: studentInstance.courseInstanceId }
-      })
-      const isTeacher = await helper.getTeacherId(req.decoded.id, courseInstance.id)
-      if (!isTeacher) {
-        return res.status(403).send('must be teacher on the course')
       }
 
       const modifiedRows = await CodeReview.update(
