@@ -112,7 +112,7 @@ describe('<Register />', () => {
         .find({ name: 'github' })
         .simulate('change', { target: { value: 'https://github.com/invalid_repo' } })
 
-      expect(wrapper.find('GithubRepoWarning').length).toEqual(1)
+      expect(wrapper.find('GitHubRepoWarning').length).toEqual(1)
     })
   })
 })

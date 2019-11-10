@@ -1,0 +1,12 @@
+PUT http://localhost:3001/api/comments/update
+content-type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRpcmFvaGphYWphIiwiaWQiOjEwMDE1LCJpYXQiOjE1NzMyOTk3Nzh9.TFXSGOuvBvobDdr1LdD-BhvkqDHYncqJo8nVeOtBxgo
+
+
+  [
+    {
+      "id":3,
+      "weekId":10001,
+      "isRead":[10011]
+    }
+  ]

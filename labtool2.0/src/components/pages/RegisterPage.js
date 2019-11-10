@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input, Grid, Loader, Message } from 'semantic-ui-react'
+import { Form, Input, Grid, Loader } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createStudentCourses, updateStudentProjectInfo } from '../../services/studentinstances'
@@ -9,17 +9,7 @@ import { Redirect } from 'react-router'
 import { getOneCI } from '../../services/courseInstance'
 import useDebounce from '../../hooks/useDebounce'
 import useGithubRepo from '../../hooks/useGithubRepo'
-
-const GithubRepoWarning = ({ githubRepo }) => {
-  if (!githubRepo) {
-    return <Message warning compact icon="warning sign" size="small" hidden={false} content="Your GitHub repository either is private or it does not exist" />
-  }
-  return null
-}
-
-GithubRepoWarning.propTypes = {
-  githubRepo: PropTypes.object
-}
+import { GitHubRepoWarning } from './RegisterPage/GitHubRepoWarning'
 
 /**
  * The page user uses to register to a course AS A STUDENT
@@ -153,7 +143,7 @@ export const RegisterPage = props => {
               />
             </Form.Group>
 
-            {githubRepoError && <GithubRepoWarning githubRepo={githubRepo} />}
+            {githubRepoError && <GitHubRepoWarning githubRepo={githubRepo} />}
 
             <Form.Field>
               <button className="ui left floated blue button" type="submit">

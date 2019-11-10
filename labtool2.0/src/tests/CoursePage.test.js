@@ -216,12 +216,14 @@ describe('<CoursePage /> as teacher', () => {
   let mockFn = jest.fn()
 
   let mockUpdateStudentProjectInfo
+  let mockDownloadFile
 
   //Mock window.confirm to return true in all cases
   window.confirm = jest.fn(() => true)
 
   beforeEach(() => {
     mockUpdateStudentProjectInfo = jest.fn()
+    mockDownloadFile = jest.fn()
 
     wrapper = shallow(
       <CoursePage
@@ -242,6 +244,7 @@ describe('<CoursePage /> as teacher', () => {
         createOneComment={mockFn}
         addLinkToCodeReview={mockFn}
         coursePageReset={mockFn}
+        prepareForCourse={mockFn}
         toggleCodeReview={mockFn}
         tagStudent={mockFn}
         sendEmail={mockFn}
@@ -251,6 +254,8 @@ describe('<CoursePage /> as teacher', () => {
         selectTeacher={mockFn}
         changeCourseField={mockFn}
         modifyOneCI={mockFn}
+        courseInstance={{}}
+        downloadFile={mockDownloadFile}
       />
     )
   })
@@ -269,26 +274,50 @@ describe('<CoursePage /> as teacher', () => {
     })
 
     it('renders teachers top view', () => {
-      expect(wrapper.find('.TeachersTopView').length).toEqual(1)
+      expect(
+        wrapper
+          .find('CoursePageTeacherHeader')
+          .dive()
+          .find('.TeachersTopView').length
+      ).toEqual(1)
     })
 
     it('renders teachers bottom view for all students', () => {
-      expect(wrapper.find('.TeachersBottomView').length).toEqual(1)
+      expect(
+        wrapper
+          .find('CoursePageTeacherMain')
+          .dive()
+          .find('.TeachersBottomView').length
+      ).toEqual(1)
     })
 
     it('doesnt render students top view when role is teacher', () => {
-      expect(wrapper.find('.StudentsView').length).toEqual(0)
+      expect(wrapper.find('CoursePageStudentInfo').length).toEqual(0)
     })
 
-    it('renders bulk editing form when a student is selected', () => {
-      expect(wrapper.find('.TeacherBulkForm').length).toEqual(1)
+    it('renders bulk editing form', () => {
+      expect(wrapper.find('CoursePageTeacherBulkForm').length).toEqual(1)
     })
 
     it('can mark all students with DROPPED tag as dropped', () => {
       window.confirm = jest.fn(() => true)
-      wrapper.find({ children: 'Mark all with dropped tag as dropped out' }).simulate('click')
+      wrapper
+        .find('CoursePageTeacherMain')
+        .dive()
+        .find({ children: 'Mark all with dropped tag as dropped out' })
+        .simulate('click')
 
       expect(mockUpdateStudentProjectInfo).toBeCalledWith(expect.objectContaining({ userId: 10031, dropped: true }))
+    })
+
+    it('can export students as CSV', () => {
+      wrapper
+        .find('CoursePageTeacherMain')
+        .dive()
+        .find({ children: 'Export CSV of all students' })
+        .simulate('click')
+
+      expect(mockDownloadFile).toBeCalledWith(expect.anything(), expect.anything(), expect.stringContaining('Maarit Mirja Opiskelija,014578343,maarit.opiskelija@helsinki.invalid,Tiran labraprojekti'))
     })
 
     /*
@@ -463,6 +492,7 @@ describe('<CoursePage /> as student', () => {
         createOneComment={mockFn}
         addLinkToCodeReview={mockFn}
         coursePageReset={mockFn}
+        prepareForCourse={mockFn}
         toggleCodeReview={mockFn}
         tagStudent={mockFn}
         sendEmail={mockFn}
@@ -494,15 +524,11 @@ describe('<CoursePage /> as student', () => {
     // })
 
     it('doesnt render teachers top view when role is student', () => {
-      expect(wrapper.find('.TeachersTopView').length).toEqual(0)
+      expect(wrapper.find('CoursePageTeacherHeader').length).toEqual(0)
     })
 
     it('doesnt render teachers bottom view when role is student', () => {
-      expect(wrapper.find('.TeachersBottomView').length).toEqual(0)
-    })
-
-    it('renders code review cards', () => {
-      expect(wrapper.find('.codeReview').length).toEqual(coursePage.data.codeReviews.length)
+      expect(wrapper.find('CoursePageTeacherMain').length).toEqual(0)
     })
 
     // it('renders collapsed code review points only if not null', () => {

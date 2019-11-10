@@ -3,6 +3,13 @@ const helper = require('../helpers/weeksControllerHelper')
 const logger = require('../utils/logger')
 
 module.exports = {
+  /**
+   * Submit a week review
+   *   permissions: must be a teacher/instructor on the course
+   *
+   * @param {*} req
+   * @param {*} res
+   */
   async create(req, res) {
     try {
       if (!helper.controllerBeforeAuthCheckAction(req, res)) {
@@ -40,7 +47,7 @@ module.exports = {
           let updatedChecks = {}
           if (req.body.checks) {
             Object.keys(week.checks).forEach((key) => {
-              //handle existing cases where clItems were saved by name in week.checks
+              // handle existing cases where clItems were saved by name in week.checks
               if (!Number.isInteger(key)) {
                 return
               }
@@ -82,7 +89,10 @@ module.exports = {
       logger.error('create weeks error', { error: error.message })
     }
   },
+
   /**
+   * Get week review draft
+   *   permissions: must be a teacher/instructor on the course
    *
    * @param req
    * @param res
@@ -120,7 +130,10 @@ module.exports = {
       }
     }
   },
+
   /**
+   * Save week review draft
+   *   permissions: must be a teacher/instructor on the course
    *
    * @param req
    * @param res
@@ -163,48 +176,5 @@ module.exports = {
       }
       res.status(200).send(weekDraft)
     }
-  },
-  /**
-   *
-   * @param req
-   * @param res
-   * @returns {*|Promise<T>}
-   */
-  list(req, res) {
-    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
-      return
-    }
-
-    return Week.all()
-      .then(ui => res.status(200).send(ui))
-      .catch((error) => {
-        logger.error('list weeks error', { error: error.message })
-        res.status(400).send(error)
-      })
-  },
-  /**
-   *
-   * @param req
-   * @param res
-   * @returns {Promise<Model>}
-   */
-  retrieve(req, res) {
-    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
-      return
-    }
-
-    return Week.findById(req.params.id, {})
-      .then((week) => {
-        if (!week) {
-          return res.status(404).send({
-            message: 'Teacher Instance not Found'
-          })
-        }
-        return res.status(200).send(week)
-      })
-      .catch((error) => {
-        logger.error('retrieve weeks error', { error: error.message })
-        res.status(400).send(error)
-      })
   }
 }
