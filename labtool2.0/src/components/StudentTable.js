@@ -1,51 +1,21 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Button, Icon, Table, Popup, Dropdown, Label, Checkbox } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
+import { Button, Table, Dropdown, Label, Checkbox } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import HorizontalScrollable from './HorizontalScrollable'
 import { getAllTags, tagStudent, unTagStudent } from '../services/tags'
 import { associateTeacherToStudent } from '../services/assistant'
-import { showAssistantDropdown, showTagDropdown, selectTeacher, selectTag, selectStudent, unselectStudent, selectAllStudents, unselectAllStudents } from '../reducers/coursePageLogicReducer'
+import { showAssistantDropdown, showTagDropdown, selectStudent, unselectStudent, selectAllStudents, unselectAllStudents } from '../reducers/coursePageLogicReducer'
 import { createDropdownTeachers, createDropdownTags } from '../util/dropdown'
 import { usePersistedState } from '../hooks/persistedState'
-import RepoLink from './RepoLink'
 
-const { Fragment } = React
+import { StudentTableRow } from './StudentTable/StudentTableRow'
 
 export const StudentTable = props => {
   const state = usePersistedState(props.persistentFilterKey || null, {
     filterByAssistant: 0,
     filterByTag: []
   })
-
-  const updateTeacher = id => async e => {
-    try {
-      e.preventDefault()
-      let teacherId = props.coursePageLogic.selectedTeacher
-      if (teacherId === '-') {
-        // unassign
-        teacherId = null
-      }
-
-      const data = {
-        studentInstanceId: id,
-        teacherInstanceId: teacherId
-      }
-      await props.associateTeacherToStudent(data)
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-  const handleSelectCheck = id => (e, data) => {
-    const { checked } = data
-    if (checked) {
-      props.selectStudent(id)
-    } else {
-      props.unselectStudent(id)
-    }
-  }
 
   const handleSelectAll = (e, data) => {
     if (!data) {
@@ -60,58 +30,6 @@ export const StudentTable = props => {
       props.selectAllStudents(ids)
     } else {
       props.unselectAllStudents(ids)
-    }
-  }
-
-  const changeSelectedTeacher = () => {
-    return (e, data) => {
-      const { value } = data
-      props.selectTeacher(value)
-    }
-  }
-
-  const changeSelectedTag = () => {
-    return (e, data) => {
-      const { value } = data
-      props.selectTag(value)
-    }
-  }
-
-  const changeHiddenAssistantDropdown = id => {
-    return () => {
-      props.showAssistantDropdown(props.coursePageLogic.showAssistantDropdown === id ? '' : id)
-    }
-  }
-
-  const changeHiddenTagDropdown = id => {
-    return () => {
-      props.showTagDropdown(props.coursePageLogic.showTagDropdown === id ? '' : id)
-    }
-  }
-
-  const addTag = id => async e => {
-    try {
-      e.preventDefault()
-      const data = {
-        studentId: id,
-        tagId: props.coursePageLogic.selectedTag
-      }
-      await props.tagStudent(data)
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-  const removeTag = (id, tag) => async e => {
-    try {
-      e.preventDefault()
-      const data = {
-        studentId: id,
-        tagId: tag || props.coursePageLogic.selectedTag
-      }
-      await props.unTagStudent(data)
-    } catch (error) {
-      console.error(error)
     }
   }
 
@@ -170,7 +88,11 @@ export const StudentTable = props => {
     const headers = []
     let i = 0
     for (; i < props.selectedInstance.weekAmount; i++) {
-      headers.push(<Table.HeaderCell key={i}>Wk {i + 1}</Table.HeaderCell>)
+      headers.push(
+        <Table.HeaderCell key={i}>
+          <abbr title="Week">Wk</abbr> {i + 1}
+        </Table.HeaderCell>
+      )
     }
     for (var ii = 1; ii <= props.selectedInstance.amountOfCodeReviews; ii++) {
       headers.push(
@@ -195,233 +117,7 @@ export const StudentTable = props => {
     return headers
   }
 
-  const createIndents = (weeks, codeReviews, siId) => {
-    const cr =
-      codeReviews &&
-      codeReviews.reduce((a, b) => {
-        return { ...a, [b.reviewNumber]: b.points }
-      }, {})
-    const indents = []
-    let i = 0
-    let weekPoints = {}
-    let finalPoints = undefined
-
-    const tableCellLinkStyle = { position: 'absolute', display: 'inline-block', top: 0, left: 0, right: 0, bottom: 0 }
-    const flexCenter = { display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }
-
-    for (var j = 0; j < weeks.length; j++) {
-      if (weeks[j].weekNumber === props.selectedInstance.weekAmount + 1) {
-        finalPoints = weeks[j].points
-      } else if (weeks[j].weekNumber) {
-        weekPoints[weeks[j].weekNumber] = weeks[j].points
-      }
-    }
-    for (; i < props.selectedInstance.weekAmount; i++) {
-      // we have <br /> to make this easier to click, but it'd be better
-      // if we could Link an entire Table.Cell, this however breaks formatting
-      // completely.
-
-      indents.push(
-        <Table.Cell selectable key={'week' + i} textAlign="center" style={{ position: 'relative' }}>
-          <Link
-            style={{ ...tableCellLinkStyle, ...flexCenter }}
-            key={'week' + i + 'link'}
-            to={
-              weekPoints[i + 1] === undefined
-                ? `/labtool/reviewstudent/${props.selectedInstance.ohid}/${siId}/${i + 1}`
-                : { pathname: `/labtool/browsereviews/${props.selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: i } }
-            }
-          >
-            {props.selectedInstance.currentWeek === i + 1 && weekPoints[i + 1] === undefined ? (
-              <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'star', size: 'large' }} />} content="Review" />
-            ) : (
-              <p>{weekPoints[i + 1] !== undefined ? weekPoints[i + 1] : '-'}</p>
-            )}
-          </Link>
-        </Table.Cell>
-      )
-    }
-
-    let ii = 0
-    const { amountOfCodeReviews } = props.selectedInstance
-    if (amountOfCodeReviews) {
-      for (let index = 1; index <= amountOfCodeReviews; index++) {
-        indents.push(
-          <Table.Cell selectable key={siId + index} textAlign="center" style={{ position: 'relative' }}>
-            <Link
-              className="codeReviewPoints"
-              style={tableCellLinkStyle}
-              key={'codeReview' + i + ii + 'link'}
-              to={{ pathname: `/labtool/browsereviews/${props.selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: i + ii } }}
-            >
-              <p style={flexCenter}>{cr[index] || cr[index] === 0 ? cr[index] : '-'}</p>
-            </Link>
-          </Table.Cell>
-        )
-        ++ii
-      }
-    }
-
-    if (props.selectedInstance.finalReview) {
-      let finalReviewPointsCell = (
-        <Table.Cell selectable key={i + ii + 1} textAlign="center" style={{ position: 'relative' }}>
-          <Link
-            style={tableCellLinkStyle}
-            key={'finalReviewlink'}
-            to={
-              finalPoints === undefined
-                ? `/labtool/reviewstudent/${props.selectedInstance.ohid}/${siId}/${i + 1}`
-                : { pathname: `/labtool/browsereviews/${props.selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: i + ii } }
-            }
-          >
-            <div style={{ width: '100%', height: '100%' }}>
-              <p style={flexCenter}>{finalPoints === undefined ? '-' : finalPoints}</p>
-            </div>
-          </Link>
-        </Table.Cell>
-      )
-      indents.push(finalReviewPointsCell)
-    }
-
-    return indents
-  }
-
-  const createStudentTableRow = (showColumn, data, extraColumns, dropDownTags, dropDownTeachers, { allowReview, extraStudentIcon }) => (
-    <Table.Row key={data.id} className={data.dropped ? 'TableRowForDroppedOutStudent' : 'TableRowForActiveStudent'}>
-      {/* Select Check Box */}
-      {showColumn('select') && (
-        <Table.Cell key="select">
-          <Checkbox id={'select' + data.id} checked={props.coursePageLogic.selectedStudents[data.id] || false} onChange={handleSelectCheck(data.id)} />
-        </Table.Cell>
-      )}
-
-      {/* Student */}
-      <Table.Cell key="studentinfo">
-        {allowReview ? (
-          <Link to={`/labtool/browsereviews/${props.selectedInstance.ohid}/${data.id}`}>
-            <Popup
-              trigger={
-                <span>
-                  {extraStudentIcon && extraStudentIcon(data)}
-                  {data.User.firsts} {data.User.lastname}
-                  <br />({data.User.studentNumber})
-                </span>
-              }
-              content={data.dropped ? 'Review student (this student has dropped out)' : 'Review student'}
-            />
-          </Link>
-        ) : (
-          <span>
-            {extraStudentIcon && extraStudentIcon(data)}
-            {data.User.firsts} {data.User.lastname}
-            <br />({data.User.studentNumber})
-          </span>
-        )}
-      </Table.Cell>
-
-      {/* Project Info */}
-      <Table.Cell key="projectinfo">
-        <span>
-          {data.projectName}
-          <br />
-          <RepoLink url={data.github} />
-          {data.Tags.map(tag => (
-            <div key={data.id + ':' + tag.id}>
-              <Button.Group className={'mini'}>
-                <Button compact floated="left" className={`mini ui ${tag.color} button`} onClick={addFilterTag(tag)}>
-                  {tag.name}
-                </Button>
-                {props.allowModify && (
-                  <Button compact icon attached="right" className={`mini ui ${tag.color} button`} style={{ paddingLeft: 0, paddingRight: 0 }} onClick={removeTag(data.id, tag.id)}>
-                    <Icon name="remove" />
-                  </Button>
-                )}
-              </Button.Group>
-            </div>
-          ))}
-          {props.allowModify && (
-            <Popup
-              trigger={<Icon id={'tagModify'} onClick={changeHiddenTagDropdown(data.id)} name="pencil" color="green" style={{ float: 'right', fontSize: '1.25em' }} />}
-              content="Add or remove tag"
-            />
-          )}
-        </span>
-        {props.allowModify && (
-          <div>
-            {props.coursePageLogic.showTagDropdown === data.id ? (
-              <div>
-                <Dropdown id={'tagDropdown'} style={{ float: 'left' }} options={dropDownTags} onChange={changeSelectedTag()} placeholder="Choose tag" fluid selection />
-                <br />
-                <div className="two ui buttons" style={{ float: 'left' }}>
-                  <button className="ui icon positive button" onClick={addTag(data.id)} size="mini">
-                    <i className="plus icon" />
-                  </button>
-                  <div className="or" />
-                  <button className="ui icon button" onClick={removeTag(data.id, null)} size="mini">
-                    <i className="trash icon" />
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div />
-            )}
-          </div>
-        )}
-      </Table.Cell>
-
-      {showColumn('points') && (
-        <Fragment>
-          {/* Week #, Code Review # */}
-          {createIndents(data.weeks, data.codeReviews, data.id)}
-
-          {/* Sum */}
-          <Table.Cell key="pointssum" textAlign="center">
-            {(data.weeks.map(week => week.points).reduce((a, b) => a + b, 0) + data.codeReviews.map(cr => cr.points).reduce((a, b) => a + b, 0)).toFixed(2).replace(/[.,]00$/, '')}
-          </Table.Cell>
-        </Fragment>
-      )}
-
-      {/* Instructor */}
-      {showColumn('instructor') && (!shouldHideInstructor(props.studentInstances) || props.allowModify) && (
-        <Table.Cell key="instructor">
-          {!shouldHideInstructor(props.studentInstances) &&
-            (data.teacherInstanceId && props.selectedInstance.teacherInstances ? (
-              props.selectedInstance.teacherInstances
-                .filter(teacher => teacher.id === data.teacherInstanceId)
-                .map(teacher => (
-                  <span key={data.id + ':' + teacher.id}>
-                    {teacher.firsts} {teacher.lastname}
-                  </span>
-                ))
-            ) : (
-              <span>not assigned</span>
-            ))}
-          {props.allowModify && (
-            <Fragment>
-              <Popup
-                trigger={<Button circular onClick={changeHiddenAssistantDropdown(data.id)} size="small" icon={{ name: 'pencil' }} style={{ margin: '0.25em', float: 'right' }} />}
-                content="Assign instructor"
-              />
-              {props.coursePageLogic.showAssistantDropdown === data.id ? (
-                <div>
-                  <Dropdown id={'assistantDropdown'} options={dropDownTeachers} onChange={changeSelectedTeacher()} placeholder="Select teacher" fluid selection />
-                  <Button onClick={updateTeacher(data.id, data.teacherInstanceId)} size="small">
-                    Change instructor
-                  </Button>
-                </div>
-              ) : (
-                <div />
-              )}
-            </Fragment>
-          )}
-        </Table.Cell>
-      )}
-
-      {(extraColumns || []).map(([, cell]) => cell(data))}
-    </Table.Row>
-  )
-
-  const { columns, disableDefaultFilter, studentColumnName, showFooter, studentFooter } = props
+  const { columns, disableDefaultFilter, studentColumnName, showFooter, extraStudentIcon, studentFooter } = props
 
   const showColumn = column => columns.indexOf(column) >= 0
   const nullFunc = () => nullFunc
@@ -471,7 +167,7 @@ export const StudentTable = props => {
   }
 
   return (
-    <Fragment>
+    <>
       <div style={{ textAlign: 'left' }}>
         {(props.extraButtons || []).map(f => f())}
         {showColumn('instructor') && (
@@ -519,18 +215,50 @@ export const StudentTable = props => {
               <Table.HeaderCell key={-1}>{studentColumnName || 'Student'}</Table.HeaderCell>
               <Table.HeaderCell>Project Info</Table.HeaderCell>
               {showColumn('points') && (
-                <Fragment>
+                <>
                   {createHeadersTeacher() /* Week #, Code Review # */}
                   <Table.HeaderCell>Sum</Table.HeaderCell>
-                </Fragment>
+                </>
               )}
-              {showColumn('instructor') && (!shouldHideInstructor(props.studentInstances) || props.allowModify) && (
+              {showColumn('instructor') && !shouldHideInstructor(props.studentInstances) && (
                 <Table.HeaderCell width={shouldHideInstructor(props.studentInstances) ? null : 'six'}>Instructor</Table.HeaderCell>
               )}
               {extraColumns.map(([header, ,]) => header())}
             </Table.Row>
           </Table.Header>
-          <Table.Body>{filteredData.map(data => createStudentTableRow(showColumn, data, extraColumns, dropDownTags, dropDownTeachers, props))}</Table.Body>
+          <Table.Body>
+            {filteredData.map(data => (
+              <StudentTableRow
+                key={`tableRow${data.id}`}
+                showColumn={showColumn}
+                data={data}
+                extraColumns={extraColumns}
+                dropDownTags={dropDownTags}
+                dropDownTeachers={dropDownTeachers}
+                addFilterTag={addFilterTag}
+                shouldHideInstructor={shouldHideInstructor}
+                extraStudentIcon={extraStudentIcon}
+                allowReview={props.allowReview}
+                allowModify={props.allowModify}
+                showCommentNotification={props.showCommentNotification}
+                loggedInUser={props.loggedInUser}
+                coursePageLogic={props.coursePageLogic}
+                selectedInstance={props.selectedInstance}
+                //courePage={props.courePage}
+                courseData={props.courseData}
+                studentInstances={props.studentInstances}
+                associateTeacherToStudent={props.associateTeacherToStudent}
+                selectStudent={props.selectStudent}
+                unselectStudent={props.unselectStudent}
+                showAssistantDropdown={props.showAssistantDropdown}
+                showTagDropdown={props.showTagDropdown}
+                tagStudent={props.tagStudent}
+                unTagStudent={props.unTagStudent}
+                getAllTags={props.getAllTags}
+              />
+            ))}
+          </Table.Body>
+          {/* <Table.Body>{filteredData.map(data => createStudentTableRow(showColumn, data, extraColumns, dropDownTags, dropDownTeachers, props))}</Table.Body> --> */}
           {showFooter && (
             <Table.Footer>
               <Table.Row>
@@ -550,7 +278,7 @@ export const StudentTable = props => {
           )}
         </Table>
       </HorizontalScrollable>
-    </Fragment>
+    </>
   )
 }
 
@@ -558,8 +286,6 @@ const mapDispatchToProps = {
   associateTeacherToStudent,
   showAssistantDropdown,
   showTagDropdown,
-  selectTeacher,
-  selectTag,
   getAllTags,
   tagStudent,
   unTagStudent,
@@ -573,6 +299,7 @@ StudentTable.propTypes = {
   columns: PropTypes.array,
   allowModify: PropTypes.bool,
   allowReview: PropTypes.bool,
+  showCommentNotification: PropTypes.bool,
   disableDefaultFilter: PropTypes.bool,
   showFooter: PropTypes.bool,
   studentColumnName: PropTypes.string,
@@ -590,8 +317,6 @@ StudentTable.propTypes = {
   associateTeacherToStudent: PropTypes.func.isRequired,
   showAssistantDropdown: PropTypes.func.isRequired,
   showTagDropdown: PropTypes.func.isRequired,
-  selectTeacher: PropTypes.func.isRequired,
-  selectTag: PropTypes.func.isRequired,
   getAllTags: PropTypes.func.isRequired,
   tagStudent: PropTypes.func.isRequired,
   unTagStudent: PropTypes.func.isRequired,

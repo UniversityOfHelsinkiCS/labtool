@@ -250,6 +250,17 @@ const trySendEmail = async (emailOptions) => {
   }
 }
 
+/**
+ * Send email notification about a review or comment.
+ *   permissions:
+ *     if role == 'teacher': must be teacher on course
+ *     if role == 'student': must be student on course, and must
+ *       have sent the comment that we must notify about
+ *       students also can only send notifications about comments
+ *
+ * @param {*} req
+ * @param {*} res
+ */
 const send = async (req, res) => {
   if (!helper.controllerBeforeAuthCheckAction(req, res)) {
     return
@@ -269,6 +280,10 @@ const send = async (req, res) => {
 
     // If commentId has been supplied, use it. Otherwise use weekId.
     const useComment = req.body.commentId !== undefined
+
+    if (!useComment && req.body.role === 'student') {
+      return reject(res, 400, 'Must send a notification about a comment as a student')
+    }
 
     let subject
     let html
@@ -345,6 +360,13 @@ const send = async (req, res) => {
   }
 }
 
+/**
+ * Send a mass email notification to any number of students.
+ *   permissions: must be teacher on the course on which the students are
+ *
+ * @param {*} req
+ * @param {*} res
+ */
 const sendMass = async (req, res) => {
   if (!helper.controllerBeforeAuthCheckAction(req, res)) {
     return

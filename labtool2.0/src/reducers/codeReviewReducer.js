@@ -13,7 +13,6 @@ const INITIAL_STATE = {
   selectedDropdown: null,
   statesCreated: false,
   initialized: false,
-  showCreate: false,
   filterByReview: 0,
   filterActive: false
 }
@@ -22,7 +21,7 @@ const INITIAL_STATE = {
  * Check if there is a repeated reviewer-toReview pair or the reviewer is same as toReview when code review round>1
  */
 const checkRepeated = (currentSelections, reviewers, toReviews, round) => {
-  if (round === 'create') {
+  if (round === -1) {
     round = Object.keys(currentSelections).length
   }
   for (let i = 1; i < round; i++) {
@@ -94,19 +93,17 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
         currentSelections[i] = {}
 
         for (let j = 0; j < studentData.length; j++) {
-          const codeReview = studentData[j].codeReviews.find(cr => cr.reviewNumber === i)
+          const codeReview = studentData[j].codeReviews.find(cr => cr.reviewNumber === i) // eslint-disable-line no-loop-func
           if (codeReview) {
             currentSelections[i][studentData[j].id] = codeReview.toReview || codeReview.repoToReview
           }
         }
         i++
       }
-      codeReviewStates['create'] = []
-      currentSelections['create'] = {}
+      codeReviewStates[-1] = []
+      currentSelections[-1] = {}
       return { ...state, codeReviewStates: codeReviewStates, currentSelections: currentSelections, statesCreated: true }
     }
-    case 'TOGGLE_CREATE':
-      return { ...state, showCreate: !state.showCreate }
     case 'SELECT_DROPDOWN':
       return { ...state, selectedDropdown: action.data }
     case 'FILTER_BY_REVIEW': {
@@ -160,7 +157,7 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
       codeReviewRoundsToUpdate[action.response.data.reviewNumber] = []
       if (action.response.data.createTrue) {
         dropdown = action.response.data.reviewNumber
-        currentSelectionsToUpdate['create'] = {}
+        currentSelectionsToUpdate[-1] = {}
       }
       return { ...state, codeReviewStates: codeReviewRoundsToUpdate, currentSelections: currentSelectionsToUpdate, selectedDropdown: dropdown }
     }
@@ -178,7 +175,7 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
       let shuffledReviewers
 
       shuffleArray(reviewers)
-      if (action.data.reviewNumber === 1 || (action.data.reviewNumber === 'create' && Object.keys(state.currentSelections).length === 1)) {
+      if (action.data.reviewNumber === 1 || (action.data.reviewNumber === -1 && Object.keys(state.currentSelections).length === 1)) {
         //if the code review round is 1 or there is no code review and the first one will be created, we don't need to care about the repetition problem
         shuffledReviewers = reviewers
       } else {
@@ -232,14 +229,6 @@ export const restoreData = data => {
     dispatch({
       type: 'CODE_REVIEW_RESTORE',
       data
-    })
-  }
-}
-
-export const toggleCreate = () => {
-  return async dispatch => {
-    dispatch({
-      type: 'TOGGLE_CREATE'
     })
   }
 }
