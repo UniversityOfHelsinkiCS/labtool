@@ -135,7 +135,8 @@ export const WeekReviews = props => {
     sendWeekEmail,
     sendCommentEmail,
     sendStudentEmail,
-    sortCommentsByDate
+    sortCommentsByDate,
+    markComments
   }
 
   const codeReviewFunctions = {
@@ -158,7 +159,6 @@ export const WeekReviews = props => {
         courseId={props.courseId}
         user={props.user.user}
         isTeacher={isTeacher()}
-        markComments={markComments}
         {...weekReviewFunctions}
       />
     )

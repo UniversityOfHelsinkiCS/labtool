@@ -101,6 +101,7 @@ export const StudentTableRow = props => {
     if (selectedInstance.teacherInstances.find(ti => !ti.instructor && ti.userId === loggedInUser.user.id)) {
       return true
     }
+    // if instructor is not assinged, the teacher can see the notification
     if (si.teacherInstanceId === null) {
       return !!selectedInstance.teacherInstances.find(ti => !ti.instructor && ti.userId === loggedInUser.user.id)
     }
@@ -160,7 +161,7 @@ export const StudentTableRow = props => {
       indents.push(
         <Table.Cell selectable key={'week' + i} textAlign="center" style={{ position: 'relative' }}>
           <Link
-            style={{ ...tableCellLinkStyle, ...flexCenter }}
+            style={(tableCellLinkStyle, flexCenter)}
             key={'week' + i + 'link'}
             to={
               weekPoints[i + 1] === undefined
@@ -211,7 +212,7 @@ export const StudentTableRow = props => {
       let finalReviewPointsCell = (
         <Table.Cell selectable key={i + ii + 1} textAlign="center" style={{ position: 'relative' }}>
           <Link
-            style={tableCellLinkStyle}
+            style={(tableCellLinkStyle, flexCenter)}
             key={'finalReviewlink'}
             to={
               finalPoints === undefined
@@ -220,7 +221,14 @@ export const StudentTableRow = props => {
             }
           >
             <div style={{ width: '100%', height: '100%' }}>
-              <p style={flexCenter}>{finalPoints === undefined ? '-' : finalPoints}</p>
+              {finalPoints === undefined ? (
+                <p style={flexCenter}>-</p>
+              ) : (
+                <div>
+                  <p style={flexCenter}>{finalPoints}</p>
+                  {showNewCommentsNotification(data.id, selectedInstance.weekAmount + 1) ? <Popup trigger={<Icon name="comment outline" size="small" />} content="You have new comments" /> : null}
+                </div>
+              )}
             </div>
           </Link>
         </Table.Cell>
