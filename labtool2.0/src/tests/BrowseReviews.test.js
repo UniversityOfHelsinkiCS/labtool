@@ -309,7 +309,8 @@ describe('<BrowseReviews />', () => {
       })
       it('students course registration can be marked as valid and invalid', () => {
         wrapper = wrapper.find('StudentCard').dive()
-        wrapper.find({ children: 'Mark registration as valid' }).simulate('click')
+        //wrapper.find({ children: 'Mark registration as valid' }).simulate('click')
+        shallow(wrapper.find('Popup').prop('trigger')).dive().find('#buttonInvalidRegistration').simulate('click')
 
         expect(mockUpdateStudentProjectInfo).toBeCalledWith(expect.objectContaining({ validRegistration: true }))
       })
