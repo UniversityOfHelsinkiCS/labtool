@@ -163,7 +163,9 @@ export const BrowseReviews = props => {
           </Link>
           <StudentCard
             student={student}
-            otherParticipations={props.studentInstanceToBeReviewed.filter(courseInstance => courseInstance.ohid.includes(props.courseId.substring(0, 8)) && courseInstance.ohid !== props.courseId)}
+            otherParticipations={props.studentInstanceToBeReviewed.filter(
+              courseInstance => courseInstance.ohid.includes(props.courseId.substring(0, 8)) && courseInstance.ohid !== props.courseId && courseInstance.courseInstances[0].validRegistration
+            )}
             handleMarkAsDropped={handleMarkAsDropped}
             handleMarkAsValidRegistration={handleMarkAsValidRegistration}
             teacherInstance={props.teacherInstance}
