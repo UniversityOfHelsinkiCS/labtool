@@ -116,6 +116,7 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
               <Input
                 name="points"
                 onChange={[Function]}
+                required={true}
                 step="0.01"
                 style={
                   Object {
