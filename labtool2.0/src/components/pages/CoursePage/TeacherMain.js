@@ -27,16 +27,18 @@ export const CoursePageTeacherMain = props => {
     </Button>
   )
 
-  // Changes here.
+  let studentStats = activeStudentCount + 'active student' + (activeStudentCount === 1 ? '' : 's')
+
+  if (droppedStudentCount !== 0) {
+    studentStats = studentStats += droppedStudentCount + 'dropped student' + (droppedStudentCount === 1 ? '' : 's') + '(' + totalStudentCount + ' in total)'
+  }
 
   return (
     <div className="TeachersBottomView">
       <br />
       <Header as="h2">Students</Header>
 
-      <p>
-        {activeStudentCount} active student{activeStudentCount === 1 ? '' : 's'}, {droppedStudentCount} dropped student{droppedStudentCount === 1 ? '' : 's'} ({totalStudentCount} in total)
-      </p>
+      <p>{studentStats}</p>
 
       <StudentTable
         key={'studentTable'}
