@@ -60,12 +60,12 @@ module.exports = {
               checklistItemId: Number(check),
               weekId: week.id
             }
-          }).then(ReviewCheck => {
+          }).then(reviewCheck => {
             return ReviewCheck.update({
               checked: updatedChecks[check]
             },{
               where: {
-                id: ReviewCheck[0].dataValues.id
+                id: reviewCheck[0].dataValues.id
               },
               returning: true
             })
@@ -85,8 +85,8 @@ module.exports = {
             checklistItemId: Number(check),
             checked: req.body.checks[check],
             weekId: week.id
-          }).then((ReviewCheck) => {
-            checksObject[ReviewCheck.checklistItemId] = ReviewCheck.checked
+          }).then((reviewCheck) => {
+            checksObject[reviewCheck.checklistItemId] = reviewCheck.checked
           })))
         }
         res.status(200).send({ ...week.dataValues, checks: checksObject })

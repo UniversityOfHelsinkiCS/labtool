@@ -207,7 +207,7 @@ module.exports = {
             delete palautus.data.toReviews
           }
           palautus.data.weeks = palautus.data.weeks.map(week => ({ ...week.dataValues,
-            checks: week.checks.reduce((checksObject, ReviewCheck) => ({ ...checksObject, [ReviewCheck.checklistItemId]: ReviewCheck.checked }), {})
+            checks: week.checks.reduce((checksObject, reviewCheck) => ({ ...checksObject, [reviewCheck.checklistItemId]: reviewCheck.checked }), {})
           }))
         } else {
           palautus.data = null
@@ -275,7 +275,7 @@ module.exports = {
       try {
         palautus.data = teacherPalautus.map(studentInstance => ({ ...studentInstance.dataValues,
           weeks: studentInstance.dataValues.weeks.map(week => ({ ...week.dataValues,
-            checks: week.checks.reduce((checksObject, ReviewCheck) => ({ ...checksObject, [ReviewCheck.checklistItemId]: ReviewCheck.checked }), {}) })) }))
+            checks: week.checks.reduce((checksObject, reviewCheck) => ({ ...checksObject, [reviewCheck.checklistItemId]: reviewCheck.checked }), {}) })) }))
         palautus.role = 'teacher'
         res.status(200).send(palautus)
       } catch (e) {
