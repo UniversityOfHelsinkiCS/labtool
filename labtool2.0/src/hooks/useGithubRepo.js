@@ -7,7 +7,6 @@ export default repo => {
   const [error, setError] = useState()
 
   useEffect(() => {
-    console.log(repo)
     if (repo === null) {
       setGithubRepo(null)
       setError(null)

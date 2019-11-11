@@ -9,7 +9,6 @@ export const CoursePageStudentInfo = props => {
   if (!(courseData && courseData.data)) {
     return <div />
   }
-  console.log(courseData.data)
 
   return (
     <div key="student info">

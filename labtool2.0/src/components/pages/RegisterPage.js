@@ -17,6 +17,7 @@ import { GitHubRepoWarning } from './RegisterPage/GitHubRepoWarning'
 
 export const RegisterPage = props => {
   const [repo, setRepo] = useState()
+  const [foundExisting, setFoundExisting] = useState(false)
   const [projectName, setProjectName] = useState('')
   const [projectLink, setProjectLink] = useState('https://github.com')
   const debouncedRepo = useDebounce(repo, 500)
@@ -31,7 +32,8 @@ export const RegisterPage = props => {
 
   useEffect(() => {
     const existing = getExistingData()
-    if (existing.projectLink && !repo) {
+    if (!foundExisting && existing.projectLink && !repo) {
+      setFoundExisting(true)
       setProjectName(existing.projectName)
       updateRepo(existing.projectLink)
     }
