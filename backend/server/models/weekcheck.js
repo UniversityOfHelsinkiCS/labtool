@@ -5,7 +5,9 @@ module.exports = (sequelize, DataTypes) => {
       checklistItemId: DataTypes.INTEGER,
       checked: DataTypes.BOOLEAN
     },
-    {}
+    {
+      timestamps: false
+    }
   )
   WeekCheck.associate = (models) => {
     WeekCheck.belongsTo(models.Week, {

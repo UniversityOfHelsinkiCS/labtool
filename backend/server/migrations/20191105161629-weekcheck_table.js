@@ -25,14 +25,6 @@ module.exports = {
             as: 'weekId'
           }
         },
-        createdAt: {
-          allowNull: false,
-          type: Sequelize.DATE
-        },
-        updatedAt: {
-          allowNull: false,
-          type: Sequelize.DATE
-        }
       })
 
       const weeks = await queryInterface.sequelize.query('SELECT "id", "checks", "weekNumber", "studentInstanceId" FROM "Weeks"', { type: queryInterface.sequelize.QueryTypes.SELECT })
