@@ -245,8 +245,13 @@ export const ModifyCourseInstanceReview = props => {
 
         props.massUpdateStudentProjectInfo({ ohid: props.selectedInstance.ohid, studentInstances })
       })
-      .catch(() => {
-        props.showNotification({ message: 'Failed to fetch data from GitHub API. Most likely you have exceeded GitHub API ratelimit or your Internet connection is down.', error: true })
+      .catch(error => {
+        props.showNotification({
+          message: `Failed to fetch data from GitHub API. Most likely you have exceeded GitHub API ratelimit or your Internet connection is down. (${
+            error.response ? (error.response.data.message ? `${error.response.status}: ${error.response.data.message}` : `${error.response.status}: ${error.response.data}`) : error
+          })`,
+          error: true
+        })
       })
   }
 
