@@ -8,6 +8,7 @@ import { associateTeacherToStudent } from '../services/assistant'
 import { showAssistantDropdown, showTagDropdown, selectStudent, unselectStudent, selectAllStudents, unselectAllStudents } from '../reducers/coursePageLogicReducer'
 import { createDropdownTeachers, createDropdownTags } from '../util/dropdown'
 import { usePersistedState } from '../hooks/persistedState'
+import { updateStudentProjectInfo } from '../services/studentinstances'
 
 import { StudentTableRow } from './StudentTable/StudentTableRow'
 
@@ -244,7 +245,6 @@ export const StudentTable = props => {
                 loggedInUser={props.loggedInUser}
                 coursePageLogic={props.coursePageLogic}
                 selectedInstance={props.selectedInstance}
-                //courePage={props.courePage}
                 courseData={props.courseData}
                 studentInstances={props.studentInstances}
                 associateTeacherToStudent={props.associateTeacherToStudent}
@@ -255,6 +255,7 @@ export const StudentTable = props => {
                 tagStudent={props.tagStudent}
                 unTagStudent={props.unTagStudent}
                 getAllTags={props.getAllTags}
+                updateStudentProjectInfo={props.updateStudentProjectInfo}
               />
             ))}
           </Table.Body>
@@ -292,7 +293,8 @@ const mapDispatchToProps = {
   selectStudent,
   unselectStudent,
   selectAllStudents,
-  unselectAllStudents
+  unselectAllStudents,
+  updateStudentProjectInfo
 }
 
 StudentTable.propTypes = {
@@ -323,7 +325,8 @@ StudentTable.propTypes = {
   selectStudent: PropTypes.func.isRequired,
   unselectStudent: PropTypes.func.isRequired,
   selectAllStudents: PropTypes.func.isRequired,
-  unselectAllStudents: PropTypes.func.isRequired
+  unselectAllStudents: PropTypes.func.isRequired,
+  updateStudentProjectInfo: PropTypes.func.isRequired
 }
 
 export default connect(

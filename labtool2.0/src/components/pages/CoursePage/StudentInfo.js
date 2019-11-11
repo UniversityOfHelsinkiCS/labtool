@@ -22,13 +22,22 @@ export const CoursePageStudentInfo = props => {
               </h2>
               <h3> {courseData.data.projectName} </h3>
               <h3>
-                <a href={courseData.data.github} target="_blank" rel="noopener noreferrer">
-                  {courseData.data.github}
-                </a>{' '}
                 <Link to={`/labtool/courseregistration/${selectedInstance.ohid}`}>
                   <Button circular floated="right" size="large" icon={{ name: 'edit', color: 'orange', size: 'large' }} />
                 </Link>
+                <a href={courseData.data.github} target="_blank" rel="noopener noreferrer">
+                  {courseData.data.github}
+                </a>{' '}
               </h3>
+              {courseData.data.repoExists === false && (
+                <>
+                  <br />
+                  <Message warning>
+                    <Message.Header>Your project repository might not be accessible</Message.Header>
+                    <p>Please verify that the repository exists and that it is not private. To hide this warning, edit your repository by clicking the button on the right, make sure there is no warning (or it goes away) and click 'Submit'.</p>
+                  </Message>
+                </>
+              )}
             </Card.Content>
           </Card>
           {!courseData.data.validRegistration && (
