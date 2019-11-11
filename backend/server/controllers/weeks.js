@@ -1,4 +1,4 @@
-const { Week, WeekCheck, WeekDraft, StudentInstance } = require('../models')
+const { Week, ReviewCheck, WeekDraft, StudentInstance } = require('../models')
 const helper = require('../helpers/weeksControllerHelper')
 const logger = require('../utils/logger')
 
@@ -55,22 +55,22 @@ module.exports = {
             feedback: req.body.feedback || week.feedback,
             instructorNotes: req.body.instructorNotes || week.instructorNotes
           })
-          await Promise.all(Object.keys(updatedChecks).map(check => WeekCheck.findOrCreate({
+          await Promise.all(Object.keys(updatedChecks).map(check => ReviewCheck.findOrCreate({
             where: {
               checklistItemId: Number(check),
               weekId: week.id
             }
-          }).then(weekCheck => {
-            return WeekCheck.update({
+          }).then(ReviewCheck => {
+            return ReviewCheck.update({
               checked: updatedChecks[check]
             },{
               where: {
-                id: weekCheck[0].dataValues.id
+                id: ReviewCheck[0].dataValues.id
               },
               returning: true
             })
-          }).then(([_, [updatedWeekCheck]]) => {
-            checksObject[updatedWeekCheck.checklistItemId] = updatedWeekCheck.dataValues.checked
+          }).then(([_, [updatedReviewCheck]]) => {
+            checksObject[updatedReviewCheck.checklistItemId] = updatedReviewCheck.dataValues.checked
           })))
         } else {
           week = await Week.create({
@@ -81,12 +81,12 @@ module.exports = {
             weekNumber: req.body.weekNumber,
             notified: false
           })
-          await Promise.all(Object.keys(req.body.checks).map(check => WeekCheck.create({
+          await Promise.all(Object.keys(req.body.checks).map(check => ReviewCheck.create({
             checklistItemId: Number(check),
             checked: req.body.checks[check],
             weekId: week.id
-          }).then((weekCheck) => {
-            checksObject[weekCheck.checklistItemId] = weekCheck.checked
+          }).then((ReviewCheck) => {
+            checksObject[ReviewCheck.checklistItemId] = ReviewCheck.checked
           })))
         }
         res.status(200).send({ ...week.dataValues, checks: checksObject })

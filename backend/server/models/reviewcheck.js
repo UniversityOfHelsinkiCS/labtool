@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
-  const WeekCheck = sequelize.define(
-    'WeekCheck',
+  const ReviewCheck = sequelize.define(
+    'ReviewCheck',
     {
       checklistItemId: DataTypes.INTEGER,
       checked: DataTypes.BOOLEAN
@@ -9,11 +9,12 @@ module.exports = (sequelize, DataTypes) => {
       timestamps: false
     }
   )
-  WeekCheck.associate = (models) => {
-    WeekCheck.belongsTo(models.Week, {
+  ReviewCheck.associate = (models) => {
+    ReviewCheck.belongsTo(models.Week, {
       foreignKey: 'weekId',
-      onDelete: 'CASCADE'
+      onDelete: 'CASCADE',
+      allowNull: true
     })
   }
-  return WeekCheck
+  return ReviewCheck
 }

@@ -5,7 +5,7 @@ const helper = require('../helpers/courseInstanceHelper')
 const logger = require('../utils/logger')
 
 const { Op } = Sequelize
-const { User, CourseInstance, StudentInstance, TeacherInstance, Week, WeekCheck, CodeReview, Comment, Tag, Checklist, ChecklistItem } = db
+const { User, CourseInstance, StudentInstance, TeacherInstance, Week, ReviewCheck, CodeReview, Comment, Tag, Checklist, ChecklistItem } = db
 
 const env = process.env.NODE_ENV || 'development'
 const config = require('./../config/config.js')[env]
@@ -145,7 +145,7 @@ module.exports = {
                 required: false
               },
               {
-                model: WeekCheck,
+                model: ReviewCheck,
                 as: 'checks'
               }
             ]
@@ -207,7 +207,7 @@ module.exports = {
             delete palautus.data.toReviews
           }
           palautus.data.weeks = palautus.data.weeks.map(week => ({ ...week.dataValues,
-            checks: week.checks.reduce((checksObject, weekCheck) => ({ ...checksObject, [weekCheck.checklistItemId]: weekCheck.checked }), {})
+            checks: week.checks.reduce((checksObject, ReviewCheck) => ({ ...checksObject, [ReviewCheck.checklistItemId]: ReviewCheck.checked }), {})
           }))
         } else {
           palautus.data = null
@@ -242,7 +242,7 @@ module.exports = {
                 as: 'comments'
               },
               {
-                model: WeekCheck,
+                model: ReviewCheck,
                 as: 'checks'
               }
             ]
@@ -275,7 +275,7 @@ module.exports = {
       try {
         palautus.data = teacherPalautus.map(studentInstance => ({ ...studentInstance.dataValues,
           weeks: studentInstance.dataValues.weeks.map(week => ({ ...week.dataValues,
-            checks: week.checks.reduce((checksObject, weekCheck) => ({ ...checksObject, [weekCheck.checklistItemId]: weekCheck.checked }), {}) })) }))
+            checks: week.checks.reduce((checksObject, ReviewCheck) => ({ ...checksObject, [ReviewCheck.checklistItemId]: ReviewCheck.checked }), {}) })) }))
         palautus.role = 'teacher'
         res.status(200).send(palautus)
       } catch (e) {

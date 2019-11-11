@@ -19,9 +19,10 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'weekId',
       as: 'comments'
     })
-    Week.hasMany(models.WeekCheck, {
+    Week.hasMany(models.ReviewCheck, {
       foreignKey: 'weekId',
-      as: 'checks'
+      as: 'checks',
+      allowNull: true
     })
   }
   return Week
