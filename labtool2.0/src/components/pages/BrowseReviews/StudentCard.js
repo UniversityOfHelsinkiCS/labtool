@@ -56,9 +56,14 @@ export const StudentCard = ({ student, otherParticipations, handleMarkAsDropped,
         </Button>
       }
       {
-        <Button basic color="red" style={{ float: 'right' }} onClick={() => handleMarkAsValidRegistration(!student.validRegistration)}>
-          {student.validRegistration ? 'Mark registration as invalid' : 'Mark registration as valid'}
-        </Button>
+        <Popup
+          content="Mark a registration as invalid, if the student accidentally registered onto the course"
+          trigger={
+            <Button basic id="buttonInvalidRegistration" color="red" style={{ float: 'right' }} onClick={() => handleMarkAsValidRegistration(!student.validRegistration)}>
+              {student.validRegistration ? 'Mark registration as invalid' : 'Mark registration as valid'}
+            </Button>
+          }
+        />
       }
     </Card.Content>
   </Card>

@@ -30,17 +30,17 @@ export const WeekReviewWeek = props => {
 
   const i = index
   const reviewIndex = isFinalWeek ? selectedInstance.weekAmount + 1 : i + 1
-  const isWeekOpen = openWeeks[i + (isFinalWeek && isTeacher ? 1 : 0)]
+  const isWeekOpen = openWeeks[i]
 
   const checkAllCommentsAreRead = weekComments => {
-    const unReadComment = weekComments.find(comment => !comment.isRead.includes(user.id))
+    const unReadComment = weekComments.find(comment => !(comment.isRead || []).includes(user.id))
     return unReadComment ? false : true
   }
 
   if (week) {
     return (
       <Accordion fluid styled id={`review${i}`}>
-        <Accordion.Title active={isWeekOpen} index={i + (isFinalWeek && isTeacher ? 1 : 0)} onClick={handleClickWeek}>
+        <Accordion.Title active={isWeekOpen} index={i} onClick={handleClickWeek}>
           <Icon name="dropdown" /> {isFinalWeek ? 'Final Review' : `Week ${week.weekNumber}`}, points {week.points} / {getMaximumPoints(week.weekNumber)}
         </Accordion.Title>
         <Accordion.Content active={isWeekOpen}>

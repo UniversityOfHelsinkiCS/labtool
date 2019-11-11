@@ -135,7 +135,8 @@ export const WeekReviews = props => {
     sendWeekEmail,
     sendCommentEmail,
     sendStudentEmail,
-    sortCommentsByDate
+    sortCommentsByDate,
+    markComments
   }
 
   const codeReviewFunctions = {
@@ -158,7 +159,6 @@ export const WeekReviews = props => {
         courseId={props.courseId}
         user={props.user.user}
         isTeacher={isTeacher()}
-        markComments={markComments}
         {...weekReviewFunctions}
       />
     )
@@ -185,10 +185,10 @@ export const WeekReviews = props => {
 
   const finalReview = []
   if (props.selectedInstance.finalReview) {
-    normalWeeks.push(
+    finalReview.push(
       <WeekReviewWeek
         key="weekReviewWeekFinal"
-        index={weekAmount + codeReviews.length}
+        index={weekAmount + codeReviews.length + 1}
         week={props.student.weeks.find(weekMatcher(weekAmount))}
         studentInstance={props.studentInstance}
         isFinalWeek={true}
