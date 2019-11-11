@@ -37,7 +37,7 @@ module.exports = {
           }
         })
 
-        const week = await Week.findOne({
+        let week = await Week.findOne({
           where: {
             weekNumber: req.body.weekNumber,
             studentInstanceId: req.body.studentInstanceId
@@ -73,7 +73,7 @@ module.exports = {
             checksObject[updatedWeekCheck.checklistItemId] = updatedWeekCheck.dataValues.checked
           })))
         } else {
-          const week = await Week.create({
+          week = await Week.create({
             points: req.body.points,
             studentInstanceId: req.body.studentInstanceId,
             feedback: req.body.feedback,
