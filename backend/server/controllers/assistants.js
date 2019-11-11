@@ -9,9 +9,16 @@ const config = require('./../config/config.js')[env]
 const Op = Sequelize.Op
 */
 
-const { User, StudentInstance, TeacherInstance } = db
+const { User, StudentInstance, TeacherInstance, CourseInstance } = db
 
 module.exports = {
+  /**
+   * Associate instructor with student
+   *   permissions: must be teacher on course
+   *
+   * @param {*} req
+   * @param {*} res
+   */
   async create(req, res) {
     if (!helper.controllerBeforeAuthCheckAction(req, res)) {
       return
@@ -82,6 +89,14 @@ module.exports = {
     }
   },
 
+  /**
+   * Get assistant for student instance
+   *   permissions: must be teacher on course
+   * currently not used by frontend, but has a call (getStudentsAssistant)
+   *
+   * @param {*} req
+   * @param {*} res
+   */
   async findAssistantByStudentInstance(req, res) {
     if (!helper.controllerBeforeAuthCheckAction(req, res)) {
       return
@@ -107,6 +122,14 @@ module.exports = {
       })
 
       if (studentInstance) {
+        const courseInstance = await CourseInstance.findOne({
+          where: { id: studentInstance.courseInstanceId }
+        })
+        const isTeacher = await helper.getTeacherId(req.decoded.id, courseInstance.id)
+        if (!isTeacher) {
+          return res.status(403).send('must be teacher on the course')
+        }
+
         const assistantId = studentInstance.teacherInstanceId
         const assistantAsTeacher = await TeacherInstance.findOne({
           where: {
@@ -130,25 +153,6 @@ module.exports = {
         res.status(200).send(returnedAssistantInfo)
       }
     } catch (e) {
-      res.status(400).send(e)
-    }
-  },
-
-  async findStudentsByTeacherInstance(req, res) {
-    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
-      return
-    }
-    try {
-      const teacherInsId = req.params.id
-
-      const studentsForThisTeacherInstance = await StudentInstance.findAll({
-        where: {
-          teacherInstanceId: teacherInsId
-        }
-      })
-      res.status(200).send(studentsForThisTeacherInstance)
-    } catch (e) {
-      logger.error('find students by teacher instance error', { error: e.message })
       res.status(400).send(e)
     }
   }

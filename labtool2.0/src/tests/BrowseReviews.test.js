@@ -264,11 +264,11 @@ describe('<BrowseReviews />', () => {
             end: '2017-04-29T21:00:00.000Z',
             active: false,
             ohid: 'TKT20010.2017.K.A.1',
-            courseInstances: [{ id: 1 }]
+            courseInstances: [{ id: 1, validRegistration: true }]
           },
           {
             ...coursePage,
-            courseInstances: [{ id: 10011 }]
+            courseInstances: [{ id: 10011, validRegistration: true }]
           }
         ]
         beforeEach(() => {
@@ -306,6 +306,13 @@ describe('<BrowseReviews />', () => {
         wrapper.find({ children: 'Mark as dropped' }).simulate('click')
 
         expect(mockUpdateStudentProjectInfo).toBeCalledWith(expect.objectContaining({ dropped: true }))
+      })
+      it('students course registration can be marked as valid and invalid', () => {
+        wrapper = wrapper.find('StudentCard').dive()
+        //wrapper.find({ children: 'Mark registration as valid' }).simulate('click')
+        shallow(wrapper.find('Popup').prop('trigger')).dive().find('#buttonInvalidRegistration').simulate('click')
+
+        expect(mockUpdateStudentProjectInfo).toBeCalledWith(expect.objectContaining({ validRegistration: true }))
       })
     })
   })

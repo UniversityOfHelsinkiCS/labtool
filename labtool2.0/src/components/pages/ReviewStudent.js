@@ -258,7 +258,15 @@ export const ReviewStudent = props => {
                 <Form.Field>
                   <label className="showMaxPoints">Points 0-{getMaximumPoints()}</label>
 
-                  <Input name="points" value={pstate.points} onChange={(e, { value }) => (pstate.points = value)} type="number" step="0.01" style={{ width: '150px', align: 'center' }} />
+                  <Input
+                    name="points"
+                    required={true}
+                    value={pstate.points}
+                    onChange={(e, { value }) => (pstate.points = value)}
+                    type="number"
+                    step="0.01"
+                    style={{ width: '150px', align: 'center' }}
+                  />
                 </Form.Field>
               </Form.Group>
               <h4>Feedback</h4>

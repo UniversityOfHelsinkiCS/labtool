@@ -16,24 +16,24 @@ export const StudentTableRow = props => {
     allowReview,
     allowModify,
     addFilterTag,
+    loggedInUser,
     coursePageLogic,
     selectedInstance,
+    courseData,
     studentInstances,
     associateTeacherToStudent,
     selectStudent,
     unselectStudent,
-    selectTeacher,
-    selectTag,
     showAssistantDropdown,
     showTagDropdown,
     tagStudent,
     unTagStudent
   } = props
 
-  const updateTeacher = id => async e => {
+  const updateTeacher = id => async (e, { value }) => {
     try {
       e.preventDefault()
-      let teacherId = coursePageLogic.selectedTeacher
+      let teacherId = value
       if (teacherId === '-') {
         // unassign
         teacherId = null
@@ -58,20 +58,6 @@ export const StudentTableRow = props => {
     }
   }
 
-  const changeSelectedTeacher = () => {
-    return (e, data) => {
-      const { value } = data
-      selectTeacher(value)
-    }
-  }
-
-  const changeSelectedTag = () => {
-    return (e, data) => {
-      const { value } = data
-      selectTag(value)
-    }
-  }
-
   const changeHiddenAssistantDropdown = id => {
     return () => {
       showAssistantDropdown(coursePageLogic.showAssistantDropdown === id ? '' : id)
@@ -84,12 +70,12 @@ export const StudentTableRow = props => {
     }
   }
 
-  const addTag = id => async e => {
+  const addTag = id => async (e, { value }) => {
     try {
       e.preventDefault()
       const data = {
         studentId: id,
-        tagId: coursePageLogic.selectedTag
+        tagId: value
       }
       await tagStudent(data)
     } catch (error) {
@@ -108,6 +94,43 @@ export const StudentTableRow = props => {
     } catch (error) {
       console.error(error)
     }
+  }
+
+  const loggedInUserSameAsTeacherOrSiInstructor = si => {
+    // The teacher can always see notification
+    if (selectedInstance.teacherInstances.find(ti => !ti.instructor && ti.userId === loggedInUser.user.id)) {
+      return true
+    }
+    // if instructor is not assinged, the teacher can see the notification
+    if (si.teacherInstanceId === null) {
+      return !!selectedInstance.teacherInstances.find(ti => !ti.instructor && ti.userId === loggedInUser.user.id)
+    }
+    const userIdOfInstructor = selectedInstance.teacherInstances.find(ti => ti.id === si.teacherInstanceId).userId
+    // return true if logged in user is same as the instructor of the student
+    return userIdOfInstructor === loggedInUser.user.id
+  }
+
+  const unReadComments = (siId, week) => {
+    const si = courseData.data.find(si => si.id === siId)
+    if (!loggedInUserSameAsTeacherOrSiInstructor(si)) {
+      return null
+    }
+
+    const commentsForWeek = si.weeks.find(wk => wk.weekNumber === week).comments
+    if (commentsForWeek.length === 0) {
+      return null
+    }
+    const newComments = commentsForWeek.filter(comment => comment && !(comment.isRead || []).includes(loggedInUser.user.id))
+    return newComments
+  }
+
+  const showNewCommentsNotification = (siId, week) => {
+    if (!props.showCommentNotification) {
+      return false
+    }
+
+    const newComments = unReadComments(siId, week)
+    return !newComments ? false : newComments.length > 0
   }
 
   const createWeekHeaders = (weeks, codeReviews, siId) => {
@@ -135,11 +158,10 @@ export const StudentTableRow = props => {
       // we have <br /> to make this easier to click, but it'd be better
       // if we could Link an entire Table.Cell, this however breaks formatting
       // completely.
-
       indents.push(
         <Table.Cell selectable key={'week' + i} textAlign="center" style={{ position: 'relative' }}>
           <Link
-            style={{ ...tableCellLinkStyle, ...flexCenter }}
+            style={(tableCellLinkStyle, flexCenter)}
             key={'week' + i + 'link'}
             to={
               weekPoints[i + 1] === undefined
@@ -150,7 +172,16 @@ export const StudentTableRow = props => {
             {selectedInstance.currentWeek === i + 1 && weekPoints[i + 1] === undefined ? (
               <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'star', size: 'large' }} />} content="Review" />
             ) : (
-              <p>{weekPoints[i + 1] !== undefined ? weekPoints[i + 1] : '-'}</p>
+              <div>
+                {weekPoints[i + 1] === undefined ? (
+                  <p>-</p>
+                ) : (
+                  <div>
+                    <p>{weekPoints[i + 1]}</p>
+                    {showNewCommentsNotification(data.id, i + 1) ? <Popup trigger={<Icon name="comment outline" size="small" />} content="You have new comments" /> : null}
+                  </div>
+                )}
+              </div>
             )}
           </Link>
         </Table.Cell>
@@ -181,16 +212,23 @@ export const StudentTableRow = props => {
       let finalReviewPointsCell = (
         <Table.Cell selectable key={i + ii + 1} textAlign="center" style={{ position: 'relative' }}>
           <Link
-            style={tableCellLinkStyle}
+            style={(tableCellLinkStyle, flexCenter)}
             key={'finalReviewlink'}
             to={
               finalPoints === undefined
                 ? `/labtool/reviewstudent/${selectedInstance.ohid}/${siId}/${i + 1}`
-                : { pathname: `/labtool/browsereviews/${selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: i + ii } }
+                : { pathname: `/labtool/browsereviews/${selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: i + ii + 1 } }
             }
           >
             <div style={{ width: '100%', height: '100%' }}>
-              <p style={flexCenter}>{finalPoints === undefined ? '-' : finalPoints}</p>
+              {finalPoints === undefined ? (
+                <p style={flexCenter}>-</p>
+              ) : (
+                <div>
+                  <p style={flexCenter}>{finalPoints}</p>
+                  {showNewCommentsNotification(data.id, selectedInstance.weekAmount + 1) ? <Popup trigger={<Icon name="comment outline" size="small" />} content="You have new comments" /> : null}
+                </div>
+              )}
             </div>
           </Link>
         </Table.Cell>
@@ -202,7 +240,7 @@ export const StudentTableRow = props => {
   }
 
   return (
-    <Table.Row key={data.id} className={data.dropped ? 'TableRowForDroppedOutStudent' : 'TableRowForActiveStudent'}>
+    <Table.Row key={data.id} className={data.dropped || !data.validRegistration ? 'TableRowForDroppedOutStudent' : 'TableRowForActiveStudent'}>
       {/* Select Check Box */}
       {showColumn('select') && (
         <Table.Cell key="select">
@@ -212,6 +250,7 @@ export const StudentTableRow = props => {
 
       {/* Student */}
       <Table.Cell key="studentinfo">
+        {data.validRegistration ? null : <Popup trigger={<Icon name="warning" color="black" />} content="This student has invalid course registration" />}
         {allowReview ? (
           <Link to={`/labtool/browsereviews/${selectedInstance.ohid}/${data.id}`}>
             <Popup
@@ -255,27 +294,14 @@ export const StudentTableRow = props => {
             </div>
           ))}
           {allowModify && (
-            <Popup
-              trigger={<Icon id={'tagModify'} onClick={changeHiddenTagDropdown(data.id)} name="pencil" color="green" style={{ float: 'right', fontSize: '1.25em' }} />}
-              content="Add or remove tag"
-            />
+            <Popup trigger={<Icon id={'tagModify'} onClick={changeHiddenTagDropdown(data.id)} name="add" color="green" style={{ float: 'right', fontSize: '1.25em' }} />} content="Add tag" />
           )}
         </span>
         {allowModify && (
           <div>
             {coursePageLogic.showTagDropdown === data.id ? (
               <div>
-                <Dropdown id={'tagDropdown'} style={{ float: 'left' }} options={dropDownTags} onChange={changeSelectedTag()} placeholder="Choose tag" fluid selection />
-                <br />
-                <div className="two ui buttons" style={{ float: 'left' }}>
-                  <button className="ui icon positive button" onClick={addTag(data.id)} size="mini">
-                    <i className="plus icon" />
-                  </button>
-                  <div className="or" />
-                  <button className="ui icon button" onClick={removeTag(data.id, null)} size="mini">
-                    <i className="trash icon" />
-                  </button>
-                </div>
+                <Dropdown id={'tagDropdown'} style={{ float: 'left' }} options={dropDownTags} onChange={addTag(data.id)} placeholder="Choose tag" fluid selection />
               </div>
             ) : (
               <div />
@@ -297,7 +323,7 @@ export const StudentTableRow = props => {
       )}
 
       {/* Instructor */}
-      {showColumn('instructor') && (!shouldHideInstructor(studentInstances) || allowModify) && (
+      {showColumn('instructor') && !shouldHideInstructor(studentInstances) && (
         <Table.Cell key="instructor">
           {!shouldHideInstructor(studentInstances) &&
             (data.teacherInstanceId && selectedInstance.teacherInstances ? (
@@ -319,10 +345,7 @@ export const StudentTableRow = props => {
               />
               {coursePageLogic.showAssistantDropdown === data.id ? (
                 <div>
-                  <Dropdown id={'assistantDropdown'} options={dropDownTeachers} onChange={changeSelectedTeacher()} placeholder="Select teacher" fluid selection />
-                  <Button onClick={updateTeacher(data.id, data.teacherInstanceId)} size="small">
-                    Change instructor
-                  </Button>
+                  <Dropdown id={'assistantDropdown'} options={dropDownTeachers} onChange={updateTeacher(data.id, data.teacherInstanceId)} placeholder="Select teacher" fluid selection />
                 </div>
               ) : (
                 <div />
@@ -346,6 +369,7 @@ StudentTableRow.propTypes = {
   shouldHideInstructor: PropTypes.func.isRequired,
   allowReview: PropTypes.bool,
   allowModify: PropTypes.bool,
+  showCommentNotification: PropTypes.bool,
   addFilterTag: PropTypes.func.isRequired,
   extraStudentIcon: PropTypes.func,
 
@@ -356,13 +380,13 @@ StudentTableRow.propTypes = {
   associateTeacherToStudent: PropTypes.func.isRequired,
   showAssistantDropdown: PropTypes.func.isRequired,
   showTagDropdown: PropTypes.func.isRequired,
-  selectTeacher: PropTypes.func.isRequired,
-  selectTag: PropTypes.func.isRequired,
   getAllTags: PropTypes.func.isRequired,
   tagStudent: PropTypes.func.isRequired,
   unTagStudent: PropTypes.func.isRequired,
   selectStudent: PropTypes.func.isRequired,
-  unselectStudent: PropTypes.func.isRequired
+  unselectStudent: PropTypes.func.isRequired,
+  loggedInUser: PropTypes.object,
+  courseData: PropTypes.object
 }
 
 export default StudentTableRow

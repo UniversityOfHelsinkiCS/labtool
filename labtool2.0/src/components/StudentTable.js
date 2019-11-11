@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import HorizontalScrollable from './HorizontalScrollable'
 import { getAllTags, tagStudent, unTagStudent } from '../services/tags'
 import { associateTeacherToStudent } from '../services/assistant'
-import { showAssistantDropdown, showTagDropdown, selectTeacher, selectTag, selectStudent, unselectStudent, selectAllStudents, unselectAllStudents } from '../reducers/coursePageLogicReducer'
+import { showAssistantDropdown, showTagDropdown, selectStudent, unselectStudent, selectAllStudents, unselectAllStudents } from '../reducers/coursePageLogicReducer'
 import { createDropdownTeachers, createDropdownTags } from '../util/dropdown'
 import { usePersistedState } from '../hooks/persistedState'
 
@@ -220,7 +220,7 @@ export const StudentTable = props => {
                   <Table.HeaderCell>Sum</Table.HeaderCell>
                 </>
               )}
-              {showColumn('instructor') && (!shouldHideInstructor(props.studentInstances) || props.allowModify) && (
+              {showColumn('instructor') && !shouldHideInstructor(props.studentInstances) && (
                 <Table.HeaderCell width={shouldHideInstructor(props.studentInstances) ? null : 'six'}>Instructor</Table.HeaderCell>
               )}
               {extraColumns.map(([header, ,]) => header())}
@@ -240,14 +240,16 @@ export const StudentTable = props => {
                 extraStudentIcon={extraStudentIcon}
                 allowReview={props.allowReview}
                 allowModify={props.allowModify}
+                showCommentNotification={props.showCommentNotification}
+                loggedInUser={props.loggedInUser}
                 coursePageLogic={props.coursePageLogic}
                 selectedInstance={props.selectedInstance}
+                //courePage={props.courePage}
+                courseData={props.courseData}
                 studentInstances={props.studentInstances}
                 associateTeacherToStudent={props.associateTeacherToStudent}
                 selectStudent={props.selectStudent}
                 unselectStudent={props.unselectStudent}
-                selectTeacher={props.selectTeacher}
-                selectTag={props.selectTag}
                 showAssistantDropdown={props.showAssistantDropdown}
                 showTagDropdown={props.showTagDropdown}
                 tagStudent={props.tagStudent}
@@ -284,8 +286,6 @@ const mapDispatchToProps = {
   associateTeacherToStudent,
   showAssistantDropdown,
   showTagDropdown,
-  selectTeacher,
-  selectTag,
   getAllTags,
   tagStudent,
   unTagStudent,
@@ -299,6 +299,7 @@ StudentTable.propTypes = {
   columns: PropTypes.array,
   allowModify: PropTypes.bool,
   allowReview: PropTypes.bool,
+  showCommentNotification: PropTypes.bool,
   disableDefaultFilter: PropTypes.bool,
   showFooter: PropTypes.bool,
   studentColumnName: PropTypes.string,
@@ -316,8 +317,6 @@ StudentTable.propTypes = {
   associateTeacherToStudent: PropTypes.func.isRequired,
   showAssistantDropdown: PropTypes.func.isRequired,
   showTagDropdown: PropTypes.func.isRequired,
-  selectTeacher: PropTypes.func.isRequired,
-  selectTag: PropTypes.func.isRequired,
   getAllTags: PropTypes.func.isRequired,
   tagStudent: PropTypes.func.isRequired,
   unTagStudent: PropTypes.func.isRequired,

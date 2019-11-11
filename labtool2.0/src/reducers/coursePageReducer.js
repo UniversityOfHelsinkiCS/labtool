@@ -154,6 +154,14 @@ const courseInstancereducer = (store = INITIAL_STATE, action) => {
         return store
       }
     }
+    case 'MARK_COMMENTS_AS_READ_SUCCESS': {
+      const weekId = action.response[0].weekId
+      const newStudents = store.data.map(student => ({
+        ...student,
+        weeks: student.weeks.map(week => (week.id === weekId ? { ...week, comments: action.response } : week))
+      }))
+      return { ...store, data: newStudents }
+    }
     case 'CODE_REVIEW_REMOVE_ONE_SUCCESS': {
       let studentToChange = store.data.find(student => student.id === action.response.data.reviewer)
       studentToChange.codeReviews = studentToChange.codeReviews.filter(codeR => codeR.reviewNumber !== action.response.data.codeReviewRound)
