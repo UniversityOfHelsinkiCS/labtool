@@ -67,7 +67,8 @@ export const RegisterPage = props => {
       const data = {
         projectname: projectName,
         github: projectLink,
-        ohid: props.selectedInstance.ohid
+        ohid: props.selectedInstance.ohid,
+        repoExists: repo !== null ? !githubRepoError : null
       }
       if (props.coursePage && props.coursePage.data !== null) {
         props.addRedirectHook({
