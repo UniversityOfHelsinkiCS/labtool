@@ -56,7 +56,8 @@ export const RegisterPage = props => {
         const data = {
           projectname: e.target.projectName.value,
           github: e.target.github.value,
-          ohid: props.selectedInstance.ohid
+          ohid: props.selectedInstance.ohid,
+          repoExists: repo !== null ? !githubRepoError : null
         }
         props.addRedirectHook({
           hook: 'STUDENT_PROJECT_INFO_UPDATE_'
@@ -66,7 +67,8 @@ export const RegisterPage = props => {
         const content = {
           projectName: e.target.projectName.value,
           github: e.target.github.value,
-          ohid: props.selectedInstance.ohid
+          ohid: props.selectedInstance.ohid,
+          repoExists: repo !== null ? !githubRepoError : null
         }
         props.addRedirectHook({
           hook: 'STUDENT_COURSE_CREATE_ONE_'
