@@ -240,6 +240,7 @@ describe('<StudentTableRow />', () => {
         teacherInstanceId: 10011,
         weeks: [],
         codeReviews: [],
+        validRegistration: false,
         User: {
           id: 10012,
           username: 'tiraopiskelija2',
@@ -271,6 +272,7 @@ describe('<StudentTableRow />', () => {
         teacherInstanceId: 10011,
         weeks: [],
         codeReviews: [],
+        validRegistration: true,
         User: {
           id: 10031,
           username: 'superopiskelija',
@@ -461,6 +463,11 @@ describe('<StudentTableRow />', () => {
 
     it('should render correctly', () => {
       expect(wrapper).toMatchSnapshot()
+    })
+
+    it('displays warning if repo is not accessible', () => {
+      wrapper.setProps({ data: { ...coursePage.data[1], repoExists: false } })
+      expect(wrapper.find('RepoAccessWarning').length).toEqual(1)
     })
   })
 })
