@@ -34,7 +34,14 @@ export const CoursePage = props => {
   }, [])
 
   const sortStudentArrayAlphabeticallyByDroppedValue = theArray =>
-    theArray.sort((a, b) => Number(a.dropped) - Number(b.dropped) || a.User.lastname.localeCompare(b.User.lastname) || a.User.firsts.localeCompare(b.User.firsts) || a.id - b.id)
+    theArray.sort(
+      (a, b) =>
+        !Number(a.validRegistration) - !Number(b.validRegistration) ||
+        Number(a.dropped) - Number(b.dropped) ||
+        a.User.lastname.localeCompare(b.User.lastname) ||
+        a.User.firsts.localeCompare(b.User.firsts) ||
+        a.id - b.id
+    )
 
   const droppedTagExists = () => props.tags.tags && props.tags.tags.find(tag => tag.name.toUpperCase() === 'DROPPED')
 
@@ -60,6 +67,84 @@ export const CoursePage = props => {
     }
   }
 
+  const downloadFile = (filename, mime, data) => {
+    // create temporary element and use that to initiate download
+
+    const tempElement = document.createElement('a')
+    tempElement.setAttribute('href', `data:${mime},${encodeURIComponent(data)}`)
+    tempElement.setAttribute('download', filename)
+    tempElement.style.display = 'none'
+
+    document.body.appendChild(tempElement)
+    tempElement.click()
+    document.body.removeChild(tempElement)
+  }
+
+  const exportCSV = () => {
+    const download = props.downloadFile || downloadFile
+    const twoPad = number => `00${number}`.slice(-2)
+
+    const students = sortStudentArrayAlphabeticallyByDroppedValue(courseData.data)
+    const nowDate = new Date()
+    const dateFormat = `${nowDate.getUTCFullYear()}-${twoPad(nowDate.getUTCMonth() + 1)}-${twoPad(nowDate.getUTCDate())}_${twoPad(nowDate.getUTCHours())}-${twoPad(nowDate.getUTCMinutes())}-${twoPad(
+      nowDate.getUTCSeconds()
+    )}`
+    const csvFilename = `${courseId}_${dateFormat}.csv`
+    const csvResult = []
+
+    const columns = ['Name', 'StudentNo', 'Email', 'ProjectName', 'ProjectURL']
+    for (let i = 1; i <= props.selectedInstance.weekAmount; ++i) {
+      columns.push(`Week${i}`)
+    }
+    for (let i = 1; i <= props.selectedInstance.amountOfCodeReviews; ++i) {
+      columns.push(`CodeReview${i}`)
+    }
+    if (props.selectedInstance.finalReview) {
+      columns.push('FinalReview')
+    }
+    columns.push('Sum')
+    csvResult.push(columns.join(','))
+
+    students.forEach(student => {
+      const values = [`${student.User.firsts} ${student.User.lastname}`, student.User.studentNumber, student.User.email, student.projectName, student.github]
+      let sum = 0
+      const cr =
+        student.codeReviews &&
+        student.codeReviews.reduce((a, b) => {
+          return { ...a, [b.reviewNumber]: b.points }
+        }, {})
+      let weekPoints = {}
+      let finalPoints = undefined
+
+      for (var j = 0; j < student.weeks.length; j++) {
+        if (student.weeks[j].weekNumber === selectedInstance.weekAmount + 1) {
+          finalPoints = student.weeks[j].points
+        } else if (student.weeks[j].weekNumber) {
+          weekPoints[student.weeks[j].weekNumber] = student.weeks[j].points
+        }
+      }
+      for (let i = 1; i <= props.selectedInstance.weekAmount; ++i) {
+        const points = weekPoints[i]
+        values.push(points || points === 0 ? points : '-')
+        sum += points || 0
+      }
+      for (let i = 1; i <= props.selectedInstance.amountOfCodeReviews; ++i) {
+        const points = cr[i]
+        values.push(points || points === 0 ? points : '-')
+        sum += points || 0
+      }
+      if (props.selectedInstance.finalReview) {
+        const points = finalPoints
+        values.push(points || points === 0 ? points : '-')
+        sum += points || 0
+      }
+      values.push(sum)
+      csvResult.push(values.join(','))
+    })
+
+    download(csvFilename, 'text/csv;charset=utf-8', csvResult.join('\n'))
+  }
+
   const handleMarkAsDropped = async (dropped, id) => {
     props.updateStudentProjectInfo({
       ohid: props.selectedInstance.ohid,
@@ -68,18 +153,22 @@ export const CoursePage = props => {
     })
   }
 
-  const changeSelectedTeacher = () => {
-    return (e, data) => {
-      const { value } = data
-      props.selectTeacher(value)
-    }
+  const changeSelectedTeacher = (e, data) => {
+    const { value } = data
+    props.selectTeacher(value)
   }
 
-  const changeSelectedTag = () => {
-    return (e, data) => {
-      const { value } = data
-      props.selectTag(value)
-    }
+  const handleMarkRegistrationAsValid = async (validRegistration, id) => {
+    props.updateStudentProjectInfo({
+      ohid: props.selectedInstance.ohid,
+      userId: id,
+      validRegistration: validRegistration
+    })
+  }
+
+  const changeSelectedTag = (e, data) => {
+    const { value } = data
+    props.selectTag(value)
   }
 
   const bulkDoAction = action => {
@@ -140,6 +229,23 @@ export const CoursePage = props => {
     bulkMarkDroppedBool(true)
   }
 
+  const bulkMarkValidRegistrationBool = validRegistration => {
+    bulkDoAction(id => {
+      const student = props.courseData.data.find(data => data.id === Number(id))
+      if (student) {
+        handleMarkRegistrationAsValid(validRegistration, student.User.id)
+      }
+    })
+  }
+
+  const bulkMarkValid = () => {
+    bulkMarkValidRegistrationBool(true)
+  }
+
+  const bulkMarkInvalid = () => {
+    bulkMarkValidRegistrationBool(false)
+  }
+
   let dropDownTeachers = []
   dropDownTeachers = createDropdownTeachers(props.selectedInstance.teacherInstances, dropDownTeachers)
 
@@ -150,7 +256,7 @@ export const CoursePage = props => {
     return <Loader active />
   }
 
-  const { courseId, courseData, coursePageLogic, courseInstance, selectedInstance, tags } = props
+  const { user, courseId, courseData, coursePageLogic, courseInstance, selectedInstance, tags } = props
 
   // This function activates the course, leaving other data intact.
   const activateCourse = () => {
@@ -231,7 +337,9 @@ export const CoursePage = props => {
       bulkRemoveTag,
       bulkUpdateTeacher,
       bulkMarkDropped,
-      bulkMarkNotDropped
+      bulkMarkNotDropped,
+      bulkMarkValid,
+      bulkMarkInvalid
     }
     return (
       <div style={{ overflowX: 'auto', overflowY: 'hidden', marginBottom: '20em' }}>
@@ -240,11 +348,13 @@ export const CoursePage = props => {
           courseId={courseId}
           courseData={courseData}
           selectedInstance={selectedInstance}
+          loggedInUser={user}
           coursePageLogic={coursePageLogic}
           tags={tags}
           droppedTagExists={droppedTagExists}
           markAllWithDroppedTagAsDropped={markAllWithDroppedTagAsDropped}
           students={sortStudentArrayAlphabeticallyByDroppedValue(courseData.data)}
+          exportCSV={exportCSV}
         />
         <br />
         <CoursePageTeacherBulkForm courseId={courseId} coursePageLogic={coursePageLogic} dropDownTags={dropDownTags} dropDownTeachers={dropDownTeachers} {...coursePageBulkFormFunctions} />
@@ -281,7 +391,8 @@ CoursePage.propTypes = {
   selectTag: PropTypes.func.isRequired,
   selectTeacher: PropTypes.func.isRequired,
   changeCourseField: PropTypes.func.isRequired,
-  modifyOneCI: PropTypes.func.isRequired
+  modifyOneCI: PropTypes.func.isRequired,
+  downloadFile: PropTypes.func
 }
 
 const mapStateToProps = (state, ownProps) => {
