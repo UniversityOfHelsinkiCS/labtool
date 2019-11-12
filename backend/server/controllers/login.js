@@ -3,6 +3,8 @@ const { User } = require('../models')
 const logger = require('../utils/logger')
 
 /**
+ * Login
+ *   permissions: anyone
  *
  * @param req
  * @param res
@@ -33,6 +35,13 @@ const login = (req, res) => {
   }
 }
 
+/**
+ * Fake login, only works if fake login is enabled
+ *   permissions: anyone
+ *
+ * @param {*} req
+ * @param {*} res
+ */
 const loginFake = (req, res) => {
   if (!req.headers.uid || !req.headers.givenname) {
     res.status(500).send({

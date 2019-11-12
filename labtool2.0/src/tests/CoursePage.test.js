@@ -216,12 +216,14 @@ describe('<CoursePage /> as teacher', () => {
   let mockFn = jest.fn()
 
   let mockUpdateStudentProjectInfo
+  let mockDownloadFile
 
   //Mock window.confirm to return true in all cases
   window.confirm = jest.fn(() => true)
 
   beforeEach(() => {
     mockUpdateStudentProjectInfo = jest.fn()
+    mockDownloadFile = jest.fn()
 
     wrapper = shallow(
       <CoursePage
@@ -253,6 +255,7 @@ describe('<CoursePage /> as teacher', () => {
         changeCourseField={mockFn}
         modifyOneCI={mockFn}
         courseInstance={{}}
+        downloadFile={mockDownloadFile}
       />
     )
   })
@@ -305,6 +308,16 @@ describe('<CoursePage /> as teacher', () => {
         .simulate('click')
 
       expect(mockUpdateStudentProjectInfo).toBeCalledWith(expect.objectContaining({ userId: 10031, dropped: true }))
+    })
+
+    it('can export students as CSV', () => {
+      wrapper
+        .find('CoursePageTeacherMain')
+        .dive()
+        .find({ children: 'Export CSV of all students' })
+        .simulate('click')
+
+      expect(mockDownloadFile).toBeCalledWith(expect.anything(), expect.anything(), expect.stringContaining('Maarit Mirja Opiskelija,014578343,maarit.opiskelija@helsinki.invalid,Tiran labraprojekti'))
     })
 
     /*

@@ -24,7 +24,7 @@
     "pug": "^2.0.3",
     "raven": "^2.6.4",
     "request": "^2.85.0",
-    "sequelize": "^4.37.6",
+    "sequelize": "^5.15.1",
     "sequelize-cli": "^4.0.0",
     "should": "^13.2.1",
     "tape": "^4.9.0",
@@ -63,7 +63,8 @@
     "create_test_db": "./node_modules/.bin/sequelize db:drop --env test; ./node_modules/.bin/sequelize db:create --env test; ./node_modules/.bin/sequelize db:migrate --env test;",
     "drop_test_db": "./node_modules/.bin/sequelize db:drop --env test; ",
     "add_test_data": "./node_modules/.bin/sequelize db:seed:all",
-    "delete_test_data": "./node_modules/.bin/sequelize db:seed:undo:all"
+    "delete_test_data": "./node_modules/.bin/sequelize db:seed:undo:all",
+    "reset_db": "npm run dropdb && npm run createdb && npm run migrate && npm run add_test_data"
   },
   "author": "",
   "license": "ISC"
