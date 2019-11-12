@@ -26,6 +26,11 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: true
       },
+      repoExists: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true,
+        defaultValue: null
+      },
       issuesDisabled: {
         type: DataTypes.BOOLEAN,
         allowNull: true,

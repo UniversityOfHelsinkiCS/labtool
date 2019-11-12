@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import { createStudentCourses, updateStudentProjectInfo } from '../../services/studentinstances'
 import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 import { Redirect } from 'react-router'
-import { getOneCI } from '../../services/courseInstance'
+import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import useDebounce from '../../hooks/useDebounce'
 import useGithubRepo from '../../hooks/useGithubRepo'
 import { GitHubRepoWarning } from './RegisterPage/GitHubRepoWarning'
@@ -17,6 +17,9 @@ import { GitHubRepoWarning } from './RegisterPage/GitHubRepoWarning'
 
 export const RegisterPage = props => {
   const [repo, setRepo] = useState()
+  const [foundExisting, setFoundExisting] = useState(false)
+  const [projectName, setProjectName] = useState('')
+  const [projectLink, setProjectLink] = useState('https://github.com')
   const debouncedRepo = useDebounce(repo, 500)
   const { githubRepo, error: githubRepoError } = useGithubRepo(debouncedRepo)
 
@@ -24,7 +27,17 @@ export const RegisterPage = props => {
     // run on component mount
     props.resetLoading()
     props.getOneCI(props.courseId)
+    props.coursePageInformation(props.courseId)
   }, [])
+
+  useEffect(() => {
+    const existing = getExistingData()
+    if (!foundExisting && existing.projectLink && !repo) {
+      setFoundExisting(true)
+      setProjectName(existing.projectName)
+      updateRepo(existing.projectLink)
+    }
+  }, [props.coursePage])
 
   const getExistingData = () => {
     let projectName = null
@@ -39,39 +52,34 @@ export const RegisterPage = props => {
   }
 
   const updateRepo = value => {
+    setProjectLink(value)
     const repoLink = value.replace(/^https?:\/\//, '')
-    if (repoLink.startsWith('github.com')) {
+    if (repoLink.startsWith('github.com/')) {
       setRepo(repoLink.substring(11))
+    } else {
+      setRepo(null)
     }
-  }
-
-  const handleRepoChange = e => {
-    updateRepo(e.target.value)
   }
 
   const handleSubmit = async e => {
     try {
       e.preventDefault()
+      const data = {
+        projectname: projectName,
+        github: projectLink,
+        ohid: props.selectedInstance.ohid,
+        repoExists: repo !== null ? !githubRepoError : null
+      }
       if (props.coursePage && props.coursePage.data !== null) {
-        const data = {
-          projectname: e.target.projectName.value,
-          github: e.target.github.value,
-          ohid: props.selectedInstance.ohid
-        }
         props.addRedirectHook({
           hook: 'STUDENT_PROJECT_INFO_UPDATE_'
         })
         await props.updateStudentProjectInfo(data)
       } else {
-        const content = {
-          projectName: e.target.projectName.value,
-          github: e.target.github.value,
-          ohid: props.selectedInstance.ohid
-        }
         props.addRedirectHook({
           hook: 'STUDENT_COURSE_CREATE_ONE_'
         })
-        await props.createStudentCourses(content, props.selectedInstance.ohid)
+        await props.createStudentCourses(data, props.selectedInstance.ohid)
       }
     } catch (error) {
       console.error(error)
@@ -80,11 +88,6 @@ export const RegisterPage = props => {
 
   if (props.loading.redirect) {
     return <Redirect to={`/labtool/courses/${props.selectedInstance.ohid}`} />
-  }
-
-  const existing = getExistingData()
-  if (existing.projectLink && !repo) {
-    updateRepo(existing.projectLink)
   }
 
   return (
@@ -122,7 +125,8 @@ export const RegisterPage = props => {
                 className="form-control1"
                 name="projectName"
                 placeholder="MyProjectName"
-                defaultValue={existing.projectName || ''}
+                value={projectName}
+                onChange={(e, { value }) => setProjectName(value)}
                 required
                 style={{ minWidth: '30em' }}
               />
@@ -136,10 +140,10 @@ export const RegisterPage = props => {
                 type="url"
                 className="form-control2"
                 name="github"
-                defaultValue={existing.projectLink || 'https://github.com/'}
+                value={projectLink}
+                onChange={(e, { value }) => updateRepo(value)}
                 required
                 style={{ minWidth: '30em' }}
-                onChange={handleRepoChange}
               />
             </Form.Group>
 
@@ -177,6 +181,7 @@ const mapDispatchToProps = {
   createStudentCourses,
   updateStudentProjectInfo,
   getOneCI,
+  coursePageInformation,
   resetLoading,
   addRedirectHook
 }
@@ -191,6 +196,7 @@ RegisterPage.propTypes = {
   createStudentCourses: PropTypes.func.isRequired,
   updateStudentProjectInfo: PropTypes.func.isRequired,
   getOneCI: PropTypes.func.isRequired,
+  coursePageInformation: PropTypes.func.isRequired,
   resetLoading: PropTypes.func.isRequired,
   addRedirectHook: PropTypes.func.isRequired
 }
