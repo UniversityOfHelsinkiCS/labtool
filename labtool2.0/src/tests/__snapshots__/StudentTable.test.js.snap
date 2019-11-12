@@ -422,6 +422,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
           tagStudent={[MockFunction]}
           unTagStudent={[MockFunction]}
           unselectStudent={[MockFunction]}
+          updateStudentProjectInfo={[MockFunction]}
         />
         <StudentTableRow
           addFilterTag={[Function]}
@@ -724,6 +725,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
           tagStudent={[MockFunction]}
           unTagStudent={[MockFunction]}
           unselectStudent={[MockFunction]}
+          updateStudentProjectInfo={[MockFunction]}
         />
         <StudentTableRow
           addFilterTag={[Function]}
@@ -1015,6 +1017,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
           tagStudent={[MockFunction]}
           unTagStudent={[MockFunction]}
           unselectStudent={[MockFunction]}
+          updateStudentProjectInfo={[MockFunction]}
         />
       </TableBody>
     </Table>

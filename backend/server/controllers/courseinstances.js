@@ -425,6 +425,9 @@ module.exports = {
             if ('dropped' in studentInstance) {
               newStudentInstance.dropped = studentInstance.dropped
             }
+            if ('repoExists' in studentInstance) {
+              newStudentInstance.repoExists = studentInstance.repoExists
+            }
             if ('issuesDisabled' in studentInstance) {
               newStudentInstance.issuesDisabled = studentInstance.issuesDisabled
               newStudentInstance.issuesDisabledCheckedAt = currentTime.toISOString()
@@ -518,6 +521,7 @@ module.exports = {
             projectName: req.body.projectname || targetStudent.projectName,
             dropped: 'dropped' in req.body ? req.body.dropped : targetStudent.dropped,
             validRegistration: 'validRegistration' in req.body ? req.body.validRegistration : targetStudent.validRegistration,
+            repoExists: 'repoExists' in req.body ? req.body.repoExists : targetStudent.repoExists,
             issuesDisabled: 'issuesDisabled' in req.body ? req.body.issuesDisabled : targetStudent.issuesDisabled,
             issuesDisabledCheckedAt: 'issuesDisabled' in req.body ? new Date().toISOString() : targetStudent.issuesDisabledCheckedAt
           })
@@ -931,6 +935,14 @@ module.exports = {
     }
   },
 
+  /**
+   * Mark a comment as read
+   *   permissions: must be able to see the comment (see above)
+   *
+   * @param req
+   * @param res
+   * @returns {*|Promise<T>}
+   */
   async markCommentsAsRead(req, res) {
     if (!helper.controllerBeforeAuthCheckAction(req, res)) {
       return
@@ -959,7 +971,9 @@ module.exports = {
           return res.status(403).send('you have no permission to update these comments')
         }
         commentsToUpdate.map((comment) => {
-          if (!comment.isRead.includes(userId)) {
+          if (comment.isRead === null) {
+            comment.isRead = [userId]
+          } else if (!comment.isRead.includes(userId)) {
             comment.isRead.push(userId)
           }
         })

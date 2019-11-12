@@ -20,6 +20,7 @@ import ConfirmationModal from '../ConfirmationModal'
 import RevieweeDropdown from '../RevieweeDropdown'
 import RepoLink from '../RepoLink'
 import IssuesDisabledWarning from '../IssuesDisabledWarning'
+import RepoAccessWarning from '../RepoAccessWarning'
 import { updateStudentProjectInfo, massUpdateStudentProjectInfo } from '../../services/studentinstances'
 
 export const ModifyCourseInstanceReview = props => {
@@ -244,8 +245,13 @@ export const ModifyCourseInstanceReview = props => {
 
         props.massUpdateStudentProjectInfo({ ohid: props.selectedInstance.ohid, studentInstances })
       })
-      .catch(() => {
-        props.showNotification({ message: 'Failed to fetch data from GitHub API. Most likely you have exceeded GitHub API ratelimit or your Internet connection is down.', error: true })
+      .catch(error => {
+        props.showNotification({
+          message: `Failed to fetch data from GitHub API. Most likely you have exceeded GitHub API ratelimit or your Internet connection is down. (${
+            error.response ? (error.response.data.message ? `${error.response.status}: ${error.response.data.message}` : `${error.response.status}: ${error.response.data}`) : error
+          })`,
+          error: true
+        })
       })
   }
 
@@ -259,7 +265,11 @@ export const ModifyCourseInstanceReview = props => {
     }
   }
 
+
   const displayIssuesDisabledIcon = student => {
+    if (student.repoExists === false) {
+      return <RepoAccessWarning student={student} ohid={props.selectedInstance.ohid} updateStudentProjectInfo={props.updateStudentProjectInfo} />
+    }
     if (areIssuesDisabledForStudent(student)) {
       return <IssuesDisabledWarning onClick={() => disableIssuesDisabledWarning(student)} />
     }
@@ -271,13 +281,14 @@ export const ModifyCourseInstanceReview = props => {
       return null
     }
     const currentReviewee = getCurrentReviewee(props.codeReviewLogic.selectedDropdown, data.id)
-    const showCurrentReviewee = currentReviewee.startsWith('http:/') || currentReviewee.startsWith('https:/') ? (
-      <p style={{ display: 'inline' }}>
-        Current review: <RepoLink url={currentReviewee} />
-      </p>
-    ) : (
-      <p style={{ display: 'inline' }}>Current review: {currentReviewee}</p>
-    )
+    const showCurrentReviewee =
+      currentReviewee.startsWith('http:/') || currentReviewee.startsWith('https:/') ? (
+        <p style={{ display: 'inline' }}>
+          Current review: <RepoLink url={currentReviewee} />
+        </p>
+      ) : (
+        <p style={{ display: 'inline' }}>Current review: {currentReviewee}</p>
+      )
     if (!data.codeReviews.find(cr => cr.reviewNumber === props.codeReviewLogic.selectedDropdown)) {
       return <div>{showCurrentReviewee}</div>
     }
