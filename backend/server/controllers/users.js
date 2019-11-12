@@ -8,6 +8,8 @@ function invalidInputResponse(res, error) {
 
 module.exports = {
   /**
+   * Update the user that is making the request, changing email for now
+   *   permissions: any logged in user
    *
    * @param req
    * @param res
@@ -48,6 +50,8 @@ module.exports = {
   },
 
   /**
+   * Update any other user, used to assign or remove admins.
+   *   permissions: must be an admin
    *
    * @param req
    * @param res
@@ -82,6 +86,8 @@ module.exports = {
   },
 
   /**
+   * List all users in the system
+   *   permissions: must be an admin, or a teacher/an instructor on any course
    *
    * @param req
    * @param res
@@ -120,10 +126,11 @@ module.exports = {
   },
 
   /**
+   * Add an assistant to a course
+   *   permissions: must be an admin, or a teacher/an instructor on the course
    *
-   * @param req
-   * @param res
-   * @returns {Promise<*|Promise<T>>}
+   * @param {*} req
+   * @param {*} res
    */
   async createTeacher(req, res) {
     if (!helper.controllerBeforeAuthCheckAction(req, res)) {
@@ -179,9 +186,11 @@ module.exports = {
   },
 
   /**
+   * Remove an assistant to a course
+   *   permissions: must be an admin, or a teacher/an instructor on the course
    *
-   * @param req
-   * @param res
+   * @param {*} req
+   * @param {*} res
    * @returns {Promise<*|Promise<T>>}
    */
   async removeTeacher(req, res) {

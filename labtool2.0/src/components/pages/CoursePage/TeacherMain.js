@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 import StudentTable from '../../StudentTable'
 
 export const CoursePageTeacherMain = props => {
-  const { courseData, students, droppedTagExists, markAllWithDroppedTagAsDropped, courseId, selectedInstance, coursePageLogic, tags, exportCSV } = props
+  const { loggedInUser, courseData, students, droppedTagExists, markAllWithDroppedTagAsDropped, courseId, selectedInstance, coursePageLogic, tags, exportCSV } = props
 
   let droppedStudentCount = 0
   let activeStudentCount = 0
@@ -41,7 +41,11 @@ export const CoursePageTeacherMain = props => {
         columns={['select', 'points', 'instructor']}
         allowModify={true}
         allowReview={true}
+        showCommentNotification={true}
+        loggedInUser={loggedInUser}
         selectedInstance={selectedInstance}
+        courseData={courseData}
+        //coursePage={coursePage}
         studentInstances={students}
         coursePageLogic={coursePageLogic}
         tags={tags}

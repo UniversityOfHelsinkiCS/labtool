@@ -6,7 +6,7 @@ import { createCourseIdWithYearAndTerm } from '../../../util/format'
 
 import RepoLink from '../../RepoLink'
 
-export const StudentCard = ({ student, otherParticipations, handleMarkAsDropped, teacherInstance }) => (
+export const StudentCard = ({ student, otherParticipations, handleMarkAsDropped, handleMarkAsValidRegistration, teacherInstance }) => (
   <Card key={student.id} fluid color="yellow" className="studentCard">
     <Card.Content>
       <Header as="h2">
@@ -15,6 +15,12 @@ export const StudentCard = ({ student, otherParticipations, handleMarkAsDropped,
           <Label style={{ marginTop: 5, float: 'right' }}>
             <Icon name="warning sign" color="red" />
             Has dropped course
+          </Label>
+        )}
+        {!student.validRegistration && (
+          <Label style={{ marginTop: 5, float: 'right' }}>
+            <Icon name="warning" color="red" />
+            Invalid course registration
           </Label>
         )}
         <Header.Subheader>
@@ -49,6 +55,16 @@ export const StudentCard = ({ student, otherParticipations, handleMarkAsDropped,
           {student.dropped ? 'Mark as non-dropped' : 'Mark as dropped'}
         </Button>
       }
+      {
+        <Popup
+          content="Mark a registration as invalid, if the student accidentally registered onto the course"
+          trigger={
+            <Button basic id="buttonInvalidRegistration" color="red" style={{ float: 'right' }} onClick={() => handleMarkAsValidRegistration(!student.validRegistration)}>
+              {student.validRegistration ? 'Mark registration as invalid' : 'Mark registration as valid'}
+            </Button>
+          }
+        />
+      }
     </Card.Content>
   </Card>
 )
@@ -57,7 +73,8 @@ StudentCard.propTypes = {
   student: PropTypes.object.isRequired,
   teacherInstance: PropTypes.array.isRequired,
   otherParticipations: PropTypes.array.isRequired,
-  handleMarkAsDropped: PropTypes.func.isRequired
+  handleMarkAsDropped: PropTypes.func.isRequired,
+  handleMarkAsValidRegistration: PropTypes.func.isRequired
 }
 
 export default StudentCard

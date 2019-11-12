@@ -2,6 +2,8 @@ const logger = require('../utils/logger')
 
 module.exports = {
   /**
+   * Logout.
+   *   permissions: anyone
    *
    * @param req
    * @param res

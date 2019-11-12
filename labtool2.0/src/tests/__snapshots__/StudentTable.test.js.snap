@@ -220,8 +220,6 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
           getAllTags={[MockFunction]}
           key="tableRow10012"
           selectStudent={[MockFunction]}
-          selectTag={[MockFunction]}
-          selectTeacher={[MockFunction]}
           selectedInstance={
             Object {
               "data": Array [
@@ -424,6 +422,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
           tagStudent={[MockFunction]}
           unTagStudent={[MockFunction]}
           unselectStudent={[MockFunction]}
+          updateStudentProjectInfo={[MockFunction]}
         />
         <StudentTableRow
           addFilterTag={[Function]}
@@ -524,8 +523,6 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
           getAllTags={[MockFunction]}
           key="tableRow10031"
           selectStudent={[MockFunction]}
-          selectTag={[MockFunction]}
-          selectTeacher={[MockFunction]}
           selectedInstance={
             Object {
               "data": Array [
@@ -728,6 +725,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
           tagStudent={[MockFunction]}
           unTagStudent={[MockFunction]}
           unselectStudent={[MockFunction]}
+          updateStudentProjectInfo={[MockFunction]}
         />
         <StudentTableRow
           addFilterTag={[Function]}
@@ -817,8 +815,6 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
           getAllTags={[MockFunction]}
           key="tableRow10011"
           selectStudent={[MockFunction]}
-          selectTag={[MockFunction]}
-          selectTeacher={[MockFunction]}
           selectedInstance={
             Object {
               "data": Array [
@@ -1021,6 +1017,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
           tagStudent={[MockFunction]}
           unTagStudent={[MockFunction]}
           unselectStudent={[MockFunction]}
+          updateStudentProjectInfo={[MockFunction]}
         />
       </TableBody>
     </Table>
@@ -1032,7 +1029,7 @@ exports[`<StudentTableRow /> StudentTableRow Component should render correctly 1
 <TableRow
   as="tr"
   cellAs="td"
-  className="TableRowForActiveStudent"
+  className="TableRowForDroppedOutStudent"
   key="10012"
 >
   <TableCell
@@ -1050,6 +1047,27 @@ exports[`<StudentTableRow /> StudentTableRow Component should render correctly 1
     as="td"
     key="studentinfo"
   >
+    <Popup
+      content="This student has invalid course registration"
+      disabled={false}
+      eventsEnabled={true}
+      offset={0}
+      on={
+        Array [
+          "click",
+          "hover",
+        ]
+      }
+      pinned={false}
+      position="top left"
+      trigger={
+        <Icon
+          as="i"
+          color="black"
+          name="warning"
+        />
+      }
+    />
     <span>
       Johan Wilhelm
        

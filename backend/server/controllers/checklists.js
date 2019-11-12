@@ -1,8 +1,15 @@
 const helper = require('../helpers/checklistHelper')
-const { TeacherInstance, Checklist, ChecklistItem } = require('../models')
+const { TeacherInstance, Checklist, ChecklistItem, StudentInstance } = require('../models')
 const logger = require('../utils/logger')
 
 module.exports = {
+  /**
+   * Create/edit checklist for course
+   *   permissions: must be teacher on course
+   *
+   * @param {*} req
+   * @param {*} res
+   */
   async create(req, res) {
     if (!helper.controllerBeforeAuthCheckAction(req, res)) {
       return
@@ -11,6 +18,17 @@ module.exports = {
     try {
       if (!req.authenticated.success) {
         res.status(403).send('You have to be authenticated to do this.')
+        return
+      }
+      const teacherInstance = await TeacherInstance.findOne({
+        attributes: ['id'],
+        where: {
+          userId: req.decoded.id,
+          courseInstanceId: req.body.courseInstanceId
+        }
+      })
+      if (!teacherInstance) {
+        res.status(403).send('You must be a teacher of the course to perform this action.')
         return
       }
       if (typeof req.body.week !== 'number' || typeof req.body.courseInstanceId !== 'number') {
@@ -74,17 +92,6 @@ module.exports = {
         res.status(400).send('Cannot parse checklist JSON.')
         return
       }
-      const teacherInstance = await TeacherInstance.findOne({
-        attributes: ['id'],
-        where: {
-          userId: req.decoded.id,
-          courseInstanceId: req.body.courseInstanceId
-        }
-      })
-      if (!teacherInstance) {
-        res.status(403).send('You must be a teacher of the course to perform this action.')
-        return
-      }
       // No validation is done to prevent creating a checklist for a week that doesn't exist.
       // Arguably, this is a feature, since the number of weeks can change.
       let result = await Checklist.findOrCreate({ where: {
@@ -103,7 +110,7 @@ module.exports = {
       for (const category in req.body.checklist) {
         const checklistForCategory = req.body.checklist[category]
 
-        const checklistForCategoryIdFiltered = await Promise.all(checklistForCategory.map(async checklistItem => {
+        const checklistForCategoryIdFiltered = await Promise.all(checklistForCategory.map(async (checklistItem) => {
           // if the ID conflicts with an existing checklist item
           // *on another checklist*, remove ID here. this makes
           // copying a lot easier, since it won't overwrite the
@@ -124,20 +131,18 @@ module.exports = {
           return checklistItemCopy
         }))
 
-        const checklistItems = await Promise.all(checklistForCategoryIdFiltered.map(checklistItem => {
-          return ChecklistItem.upsert({
-            id: checklistItem.id,
-            name: checklistItem.name,
-            textWhenOn: checklistItem.textWhenOn,
-            textWhenOff: checklistItem.textWhenOff,
-            checkedPoints: checklistItem.checkedPoints,
-            uncheckedPoints: checklistItem.uncheckedPoints,
-            category,
-            checklistId: result[1].dataValues.id
-          }, { returning: true })
-        }))
+        const checklistItems = await Promise.all(checklistForCategoryIdFiltered.map(checklistItem => ChecklistItem.upsert({
+          id: checklistItem.id,
+          name: checklistItem.name,
+          textWhenOn: checklistItem.textWhenOn,
+          textWhenOff: checklistItem.textWhenOff,
+          checkedPoints: checklistItem.checkedPoints,
+          uncheckedPoints: checklistItem.uncheckedPoints,
+          category,
+          checklistId: result[1].dataValues.id
+        }, { returning: true })))
 
-        checklistJson[category] = checklistItems.map(item => {
+        checklistJson[category] = checklistItems.map((item) => {
           const checklistItem = item[0].dataValues
           const checklistItemCopy = { ...checklistItem }
           checklistIdsNow.push(checklistItemCopy.id)
@@ -150,7 +155,7 @@ module.exports = {
       // remove the other stuff that we do not want
       const checklistWeekItems = await ChecklistItem.findAll({
         where: {
-          checklistId: result[1].dataValues.id,
+          checklistId: result[1].dataValues.id
         }
       })
       await Promise.all(checklistWeekItems.filter(item => !checklistIdsNow.includes(item.id)).map(item => item.destroy()))
@@ -165,8 +170,15 @@ module.exports = {
       res.status(500).send('Unexpected error. Please try again.')
     }
   },
+
+  /**
+   * Get checklist for course
+   *   permissions: must be teacher or student on course
+   *
+   * @param {*} req
+   * @param {*} res
+   */
   async getOne(req, res) {
-    // There is no validation, since checklists are not secret/sensitive.
     try {
       if (typeof req.body.week !== 'number' || typeof req.body.courseInstanceId !== 'number') {
         res.status(400).send({
@@ -175,6 +187,13 @@ module.exports = {
         })
         return
       }
+
+      const isTeacher = await helper.getTeacherId(req.decoded.id, req.body.courseInstanceId)
+      const isStudent = await StudentInstance.findOne({ where: { courseInstanceId: req.body.courseInstanceId } })
+      if (!isTeacher && !isStudent) {
+        return res.status(403).send('must be on the course')
+      }
+
       const checklist = await Checklist.findOne({
         attributes: {
           exclude: ['createdAt', 'updatedAt']

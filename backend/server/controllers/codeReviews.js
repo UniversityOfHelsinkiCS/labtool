@@ -23,9 +23,10 @@ async function formatCodeReview(codeReview, allStudentInstancesIds, reviewNumber
     }
   }).then(r => r)
   const repeated = reviewed.filter(r => r.toReview === codeReview.toReview || r.repoToReview === codeReview.repoToReview).length > 0
+  /*  do not prevent repeats in backend -- hisahi
   if (repeated) {
     return null
-  }
+  }*/
 
   allStudentInstancesIds.push(codeReview.reviewer)
   return {
@@ -38,6 +39,13 @@ async function formatCodeReview(codeReview, allStudentInstancesIds, reviewNumber
 
 
 module.exports = {
+  /**
+   * Assign code reviews to N students.
+   *   permissions: must be teacher/instructor on course
+   *
+   * @param {*} req
+   * @param {*} res
+   */
   async bulkInsert(req, res) {
     if (!helper.controllerBeforeAuthCheckAction(req, res)) {
       return
@@ -64,7 +72,7 @@ module.exports = {
       )
       if (values.indexOf(null) !== -1) {
         // Malformed items in codeReviews are replaced by null.
-        res.status(400).send('Malformed code review or code review is repeated.')
+        res.status(400).send('Malformed code review.')
         return
       }
       // Get all studentInstances that have been referenced for validation purposes.
@@ -112,6 +120,13 @@ module.exports = {
     }
   },
 
+  /**
+   * Grade a code review submitted by a student.
+   *   permissions: must be teacher/instructor on course
+   *
+   * @param {*} req
+   * @param {*} res
+   */
   async grade(req, res) {
     if (!helper.controllerBeforeAuthCheckAction(req, res)) {
       return
@@ -176,6 +191,13 @@ module.exports = {
     }
   },
 
+  /**
+   * Add a link to a code review.
+   *   permissions: should be a student
+   *
+   * @param {*} req
+   * @param {*} res
+   */
   async addLink(req, res) {
     if (!helper.controllerBeforeAuthCheckAction(req, res)) {
       return
@@ -228,6 +250,13 @@ module.exports = {
     }
   },
 
+  /**
+   * Remove one code review from a student.
+   *   permissions: must be teacher/instructor on course
+   *
+   * @param {*} req
+   * @param {*} res
+   */
   async removeOne(req, res) {
     if (!helper.controllerBeforeAuthCheckAction(req, res)) {
       return
@@ -242,6 +271,20 @@ module.exports = {
         res.status(403).send('Cannot delete from null.')
         return
       }
+      const studentInstance = await StudentInstance.findOne({
+        where: { id: req.body.reviewer }
+      })
+      if (!studentInstance) {
+        return res.status(404).send('no student with that ID found')
+      }
+      const courseInstance = await CourseInstance.findOne({
+        where: { id: studentInstance.courseInstanceId }
+      })
+      const isTeacher = await helper.getTeacherId(req.decoded.id, courseInstance.id)
+      if (!isTeacher) {
+        return res.status(403).send('must be teacher on the course')
+      }
+
       const deleteOne = await CodeReview.destroy({
         where: {
           studentInstanceId: req.body.reviewer,
