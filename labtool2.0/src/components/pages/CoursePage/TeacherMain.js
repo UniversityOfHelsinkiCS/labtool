@@ -27,10 +27,13 @@ export const CoursePageTeacherMain = props => {
     </Button>
   )
 
-  let studentStats = activeStudentCount + 'active student' + (activeStudentCount === 1 ? '' : 's')
+  // We always show how many active students there are (0, 1 or more).
+  let studentStats = activeStudentCount + ' active student' + (activeStudentCount === 1 ? '' : 's')
 
-  if (droppedStudentCount !== 0) {
-    studentStats = studentStats += droppedStudentCount + 'dropped student' + (droppedStudentCount === 1 ? '' : 's') + '(' + totalStudentCount + ' in total)'
+  if (droppedStudentCount >= 0) {
+    // If we have at least 1 dropped student, additionally show their amount and the total amount of students.
+    studentStats = studentStats += ', ' + droppedStudentCount + ' dropped student' + (droppedStudentCount === 1 ? '' : 's')
+    studentStats = studentStats += ' (' + totalStudentCount + ' in total)'
   }
 
   return (
