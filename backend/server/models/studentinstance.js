@@ -6,7 +6,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          isUrl: { msg: 'not a valid url' }
+          isUrl: { msg: 'GitHub link is not a valid URL.' },
+          is: {
+            args: /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/gm,
+            msg: 'GitHub link contains invalid characters.'
+          }
         }
       },
       projectName: {
@@ -25,6 +29,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: true
+      },
+      repoExists: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true,
+        defaultValue: null
       },
       issuesDisabled: {
         type: DataTypes.BOOLEAN,

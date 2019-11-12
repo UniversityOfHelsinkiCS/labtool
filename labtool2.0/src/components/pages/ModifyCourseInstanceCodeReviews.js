@@ -236,16 +236,17 @@ export const ModifyCourseInstanceReview = props => {
       })
     )
       .then(githubRepos => {
-        const studentInstances = githubRepos
-          .filter(([, repo]) => !!repo)
-          .map(([userId, githubRepo]) => {
-            return { userId, issuesDisabled: !githubRepo.has_issues || githubRepo.archived }
-          })
+        const studentInstances = githubRepos.map(([userId, githubRepo]) => ({ userId, repoExists: !!githubRepo, issuesDisabled: githubRepo ? !githubRepo.has_issues || githubRepo.archived : false }))
 
         props.massUpdateStudentProjectInfo({ ohid: props.selectedInstance.ohid, studentInstances })
       })
-      .catch(() => {
-        props.showNotification({ message: 'Failed to fetch data from GitHub API. Most likely you have exceeded GitHub API ratelimit or your Internet connection is down.', error: true })
+      .catch(error => {
+        props.showNotification({
+          message: `Failed to fetch data from GitHub API. Most likely you have exceeded GitHub API ratelimit or your Internet connection is down. (${
+            error.response ? (error.response.data.message ? `${error.response.status}: ${error.response.data.message}` : `${error.response.status}: ${error.response.data}`) : error
+          })`,
+          error: true
+        })
       })
   }
 
@@ -260,6 +261,10 @@ export const ModifyCourseInstanceReview = props => {
   }
 
   const displayIssuesDisabledIcon = student => {
+    if (!student.repoExists) {
+      // display nothing, the warning will already be displayed by StudentTable
+      return null
+    }
     if (areIssuesDisabledForStudent(student)) {
       return <IssuesDisabledWarning onClick={() => disableIssuesDisabledWarning(student)} />
     }

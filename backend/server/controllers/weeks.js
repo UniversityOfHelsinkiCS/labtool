@@ -83,10 +83,10 @@ module.exports = {
         }
         res.status(200).send(week)
       } else {
-        res.status(400).send('token verific ation failed')
+        res.status(400).send('Token verification failed.')
       }
     } catch (error) {
-      logger.error('create weeks error', { error: error.message })
+      logger.error('Create weeks error.', { error: error.message })
     }
   },
 

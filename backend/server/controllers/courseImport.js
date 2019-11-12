@@ -15,7 +15,7 @@ module.exports = {
     }
 
     if (!req.authenticated.success) {
-      res.status(401).send('be authenticated').end()
+      res.status(401).send('You must be authenticated.').end()
     }
     const user = req.decoded.id
 
@@ -40,13 +40,13 @@ module.exports = {
     }
 
     if (!req.authenticated.success) {
-      res.status(401).send('be authenticated').end()
+      res.status(401).send('You must be authenticated.').end()
     }
     const user = req.decoded.id
 
     const gotPermission = await helper.hasPermissionToImport(user)
     if (!gotPermission) {
-      res.status(403).send('you are not allowed to import courses')
+      res.status(403).send('You are not allowed to import courses.')
       return
     }
 
@@ -54,7 +54,7 @@ module.exports = {
       const nonActive = await helper.getInactive(req, res)
       res.status(200).send(helper.formatCoursesForList(nonActive))
     } catch (e) {
-      res.status(400).send('error while listing importable courses')
+      res.status(400).send('Error while listing importable courses.')
     }
   },
 
@@ -71,13 +71,13 @@ module.exports = {
     }
 
     if (!req.authenticated.success) {
-      res.status(401).send('be authenticated').end()
+      res.status(401).send('You must be authenticated.').end()
     }
     const user = req.decoded.id
 
     const gotPermission = await helper.hasPermissionToImport(user)
     if (!gotPermission) {
-      res.status(403).send('you are not allowed to import courses')
+      res.status(403).send('You are not allowed to import courses.')
       return
     }
 

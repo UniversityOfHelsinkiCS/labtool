@@ -153,6 +153,11 @@ export const CoursePage = props => {
     })
   }
 
+  const changeSelectedTeacher = (e, data) => {
+    const { value } = data
+    props.selectTeacher(value)
+  }
+
   const handleMarkRegistrationAsValid = async (validRegistration, id) => {
     props.updateStudentProjectInfo({
       ohid: props.selectedInstance.ohid,
@@ -161,18 +166,9 @@ export const CoursePage = props => {
     })
   }
 
-  const changeSelectedTeacher = () => {
-    return (e, data) => {
-      const { value } = data
-      props.selectTeacher(value)
-    }
-  }
-
-  const changeSelectedTag = () => {
-    return (e, data) => {
-      const { value } = data
-      props.selectTag(value)
-    }
+  const changeSelectedTag = (e, data) => {
+    const { value } = data
+    props.selectTag(value)
   }
 
   const bulkDoAction = action => {
