@@ -63,7 +63,8 @@
     "create_test_db": "./node_modules/.bin/sequelize db:drop --env test; ./node_modules/.bin/sequelize db:create --env test; ./node_modules/.bin/sequelize db:migrate --env test;",
     "drop_test_db": "./node_modules/.bin/sequelize db:drop --env test; ",
     "add_test_data": "./node_modules/.bin/sequelize db:seed:all",
-    "delete_test_data": "./node_modules/.bin/sequelize db:seed:undo:all"
+    "delete_test_data": "./node_modules/.bin/sequelize db:seed:undo:all",
+    "reset_db": "npm run dropdb && npm run createdb && npm run migrate && npm run add_test_data"
   },
   "author": "",
   "license": "ISC"

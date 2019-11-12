@@ -20,6 +20,7 @@ import ConfirmationModal from '../ConfirmationModal'
 import RevieweeDropdown from '../RevieweeDropdown'
 import RepoLink from '../RepoLink'
 import IssuesDisabledWarning from '../IssuesDisabledWarning'
+import RepoAccessWarning from '../RepoAccessWarning'
 import { updateStudentProjectInfo, massUpdateStudentProjectInfo } from '../../services/studentinstances'
 
 export const ModifyCourseInstanceReview = props => {
@@ -264,7 +265,11 @@ export const ModifyCourseInstanceReview = props => {
     }
   }
 
+
   const displayIssuesDisabledIcon = student => {
+    if (student.repoExists === false) {
+      return <RepoAccessWarning student={student} ohid={props.selectedInstance.ohid} updateStudentProjectInfo={props.updateStudentProjectInfo} />
+    }
     if (areIssuesDisabledForStudent(student)) {
       return <IssuesDisabledWarning onClick={() => disableIssuesDisabledWarning(student)} />
     }

@@ -4,6 +4,8 @@ import { Button, Icon, Table, Popup, Dropdown, Checkbox } from 'semantic-ui-reac
 import { Link } from 'react-router-dom'
 import RepoLink from '../RepoLink'
 
+import RepoAccessWarning from '../RepoAccessWarning'
+
 export const StudentTableRow = props => {
   const {
     showColumn,
@@ -22,6 +24,7 @@ export const StudentTableRow = props => {
     courseData,
     studentInstances,
     associateTeacherToStudent,
+    updateStudentProjectInfo,
     selectStudent,
     unselectStudent,
     showAssistantDropdown,
@@ -238,6 +241,7 @@ export const StudentTableRow = props => {
 
     return indents
   }
+  
 
   return (
     <Table.Row key={data.id} className={data.dropped || !data.validRegistration ? 'TableRowForDroppedOutStudent' : 'TableRowForActiveStudent'}>
@@ -250,7 +254,8 @@ export const StudentTableRow = props => {
 
       {/* Student */}
       <Table.Cell key="studentinfo">
-        {data.validRegistration ? null : <Popup trigger={<Icon name="warning" color="black" />} content="This student has invalid course registration" />}
+        {!data.validRegistration && <Popup trigger={<Icon name="warning" color="black" />} content="This student has invalid course registration" />}
+        {!data.dropped && data.validRegistration && data.repoExists === false && <RepoAccessWarning student={data} ohid={selectedInstance.ohid} updateStudentProjectInfo={updateStudentProjectInfo} />}
         {allowReview ? (
           <Link to={`/labtool/browsereviews/${selectedInstance.ohid}/${data.id}`}>
             <Popup
@@ -378,6 +383,7 @@ StudentTableRow.propTypes = {
   coursePageLogic: PropTypes.object.isRequired,
 
   associateTeacherToStudent: PropTypes.func.isRequired,
+  updateStudentProjectInfo: PropTypes.func.isRequired,
   showAssistantDropdown: PropTypes.func.isRequired,
   showTagDropdown: PropTypes.func.isRequired,
   getAllTags: PropTypes.func.isRequired,
