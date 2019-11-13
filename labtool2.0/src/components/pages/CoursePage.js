@@ -50,23 +50,6 @@ export const CoursePage = props => {
     return studentInstanceTagNames.includes('DROPPED')
   }
 
-  const markAllWithDroppedTagAsDropped = async courseData => {
-    if (
-      !window.confirm(
-        'Confirming will mark the students with a dropped tag as dropped out. If a different tag was being used, the system will not suggest an automatic change. In that case, you need to change the status manually in the review page of that student. Are you sure you want to confirm?'
-      )
-    ) {
-      return
-    }
-    for (let i = 0; i < courseData.data.length; i++) {
-      let student = courseData.data[i]
-      let studentTags = student.Tags
-      if (hasDroppedTag(studentTags) === true) {
-        handleMarkAsDropped(true, student.User.id)
-      }
-    }
-  }
-
   const downloadFile = (filename, mime, data) => {
     // create temporary element and use that to initiate download
 
@@ -352,7 +335,6 @@ export const CoursePage = props => {
           coursePageLogic={coursePageLogic}
           tags={tags}
           droppedTagExists={droppedTagExists}
-          markAllWithDroppedTagAsDropped={markAllWithDroppedTagAsDropped}
           students={sortStudentArrayAlphabeticallyByDroppedValue(courseData.data)}
           exportCSV={exportCSV}
         />
