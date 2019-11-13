@@ -17,6 +17,12 @@ exports[`<MassEmailPage /> MassEmailPage Component should render correctly 1`] =
     >
       Send email to students 
     </Header>
+    <Button
+      as="button"
+      onClick={[Function]}
+    >
+      Select all non-dropped students
+    </Button>
     <Form
       as="form"
       onSubmit={[Function]}
