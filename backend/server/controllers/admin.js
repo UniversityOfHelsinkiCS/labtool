@@ -15,7 +15,7 @@ module.exports = {
     } catch (e) {
       logger.error('admin page error', { error: e.message })
 
-      res.send('errored in controllers/admin/list')
+      res.send('Error in controllers/admin/list.') // More helpful!
     }
   },
 

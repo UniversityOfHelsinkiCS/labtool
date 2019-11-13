@@ -69,6 +69,9 @@ export const callController = (route, prefix, data, method = 'get') => dispatch 
   dispatch({ type: `${prefix}ATTEMPT`, payload }) //handleRequest will handle this, look below
 }
 
+let willRefresh = false
+let backendIsBroken = false
+
 // If you feel a sudden urge to call this. Don't.
 export const handleRequest = store => next => action => {
   next(action)
@@ -76,6 +79,7 @@ export const handleRequest = store => next => action => {
   if (payload) {
     callApi(payload.route, payload.method, payload.data, payload.prefix, store.getState().user.token)
       .then(res => {
+        backendIsBroken = false
         store.dispatch({ type: `${payload.prefix}SUCCESS`, response: res.data })
       })
       .catch(err => {
@@ -88,8 +92,24 @@ export const handleRequest = store => next => action => {
         // AJAX fails to send a request to Shibbo, as the SOP prevents
         // us from making such a request.
 
+        // instead of a refresh loop, we also make sure we only refresh
+        // once at most within a certain amount of time
+
         if (err.message.toLowerCase() === 'network error') {
+          const now = new Date().getTime()
+          const lastRefresh = window.localStorage.getItem('labtoolLastNetworkRefresh')
+          if (!willRefresh && lastRefresh && now - lastRefresh < (backendIsBroken ? 18000 : 6000)) {
+            // another refresh within 6 or 18 seconds?
+            if (!backendIsBroken) {
+              window.alert('There is a problem communicating with the backend. Please try again later.')
+              backendIsBroken = true
+            }
+            return
+          }
+
           console.warn('Session expired, reloading...')
+          window.localStorage.setItem('labtoolLastNetworkRefresh', now)
+          willRefresh = true
           window.location.reload(true)
           return
         }
