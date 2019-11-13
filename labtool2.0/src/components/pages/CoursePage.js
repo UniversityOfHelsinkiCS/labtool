@@ -60,7 +60,7 @@ export const CoursePage = props => {
     const download = props.downloadFile || downloadFile
     const twoPad = number => `00${number}`.slice(-2)
 
-    const students = sortStudentArrayAlphabeticallyByDroppedValue(courseData.data)
+    const students = sortStudentArrayAlphabeticallyByDroppedValue(courseData.data.filter(student => student.validRegistration))
     const nowDate = new Date()
     const dateFormat = `${nowDate.getUTCFullYear()}-${twoPad(nowDate.getUTCMonth() + 1)}-${twoPad(nowDate.getUTCDate())}_${twoPad(nowDate.getUTCHours())}-${twoPad(nowDate.getUTCMinutes())}-${twoPad(
       nowDate.getUTCSeconds()
