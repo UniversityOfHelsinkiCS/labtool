@@ -34,6 +34,9 @@ export const StudentTableRow = props => {
   } = props
 
   const updateTeacher = id => async (e, { value }) => {
+    if (!value) {
+      return
+    }
     try {
       e.preventDefault()
       let teacherId = value
@@ -74,6 +77,9 @@ export const StudentTableRow = props => {
   }
 
   const addTag = id => async (e, { value }) => {
+    if (!value) {
+      return
+    }
     try {
       e.preventDefault()
       const data = {
@@ -278,7 +284,7 @@ export const StudentTableRow = props => {
           <div>
             {coursePageLogic.showTagDropdown === data.id ? (
               <div>
-                <Dropdown id={'tagDropdown'} style={{ float: 'left' }} options={dropDownTags} onChange={addTag(data.id)} placeholder="Choose tag" fluid selection />
+                <Dropdown id={'tagDropdown'} style={{ float: 'left' }} selectOnBlur={false} options={dropDownTags} onChange={addTag(data.id)} placeholder="Choose tag" fluid selection />
               </div>
             ) : (
               <div />
@@ -322,7 +328,7 @@ export const StudentTableRow = props => {
               />
               {coursePageLogic.showAssistantDropdown === data.id ? (
                 <div>
-                  <Dropdown id={'assistantDropdown'} options={dropDownTeachers} onChange={updateTeacher(data.id, data.teacherInstanceId)} placeholder="Select teacher" fluid selection />
+                  <Dropdown id={'assistantDropdown'} selectOnBlur={false} options={dropDownTeachers} onChange={updateTeacher(data.id, data.teacherInstanceId)} placeholder="Select teacher" fluid selection />
                 </div>
               ) : (
                 <div />
