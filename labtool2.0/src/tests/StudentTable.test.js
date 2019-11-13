@@ -236,6 +236,8 @@ describe('<StudentTable />', () => {
         selectAllStudents={mockFn}
         unselectAllStudents={mockFn}
         updateStudentProjectInfo={mockFn}
+        courseData={{}}
+        loggedInUser={{}}
       />
     )
   })
