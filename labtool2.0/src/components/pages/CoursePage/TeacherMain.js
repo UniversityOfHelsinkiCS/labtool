@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 import StudentTable from '../../StudentTable'
 
 export const CoursePageTeacherMain = props => {
-  const { loggedInUser, courseData, students, droppedTagExists, courseId, selectedInstance, coursePageLogic, tags, exportCSV } = props
+  const { loggedInUser, courseData, students, courseId, selectedInstance, coursePageLogic, tags, exportCSV } = props
 
   let droppedStudentCount = 0
   let activeStudentCount = 0
@@ -66,7 +66,6 @@ CoursePageTeacherMain.propTypes = {
   courseId: PropTypes.string.isRequired,
   students: PropTypes.array.isRequired,
 
-  droppedTagExists: PropTypes.func.isRequired,
   exportCSV: PropTypes.func.isRequired
 }
 
