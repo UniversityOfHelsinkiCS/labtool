@@ -143,6 +143,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
               "Tags": Array [
                 Object {
                   "color": "red",
+                  "courseInstanceId": null,
                   "id": 20001,
                   "name": "Javascript",
                 },
@@ -213,6 +214,11 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
                 "text": "DROPPED",
                 "value": 20008,
               },
+              Object {
+                "key": 20009,
+                "text": "Tag for this course",
+                "value": 20009,
+              },
             ]
           }
           dropDownTeachers={Array []}
@@ -227,6 +233,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
                   "Tags": Array [
                     Object {
                       "color": "red",
+                      "courseInstanceId": null,
                       "id": 20001,
                       "name": "Javascript",
                     },
@@ -258,11 +265,13 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
                   "Tags": Array [
                     Object {
                       "color": "grey",
+                      "courseInstanceId": null,
                       "id": 20008,
                       "name": "DROPPED",
                     },
                     Object {
                       "color": "yellow",
+                      "courseInstanceId": null,
                       "id": 20002,
                       "name": "HTML",
                     },
@@ -316,6 +325,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
                   "weeks": Array [],
                 },
               ],
+              "id": 10011,
               "role": "teacher",
             }
           }
@@ -329,6 +339,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
                 "Tags": Array [
                   Object {
                     "color": "red",
+                    "courseInstanceId": null,
                     "id": 20001,
                     "name": "Javascript",
                   },
@@ -360,11 +371,13 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
                 "Tags": Array [
                   Object {
                     "color": "grey",
+                    "courseInstanceId": null,
                     "id": 20008,
                     "name": "DROPPED",
                   },
                   Object {
                     "color": "yellow",
+                    "courseInstanceId": null,
                     "id": 20002,
                     "name": "HTML",
                   },
@@ -441,11 +454,13 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
               "Tags": Array [
                 Object {
                   "color": "grey",
+                  "courseInstanceId": null,
                   "id": 20008,
                   "name": "DROPPED",
                 },
                 Object {
                   "color": "yellow",
+                  "courseInstanceId": null,
                   "id": 20002,
                   "name": "HTML",
                 },
@@ -516,6 +531,11 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
                 "text": "DROPPED",
                 "value": 20008,
               },
+              Object {
+                "key": 20009,
+                "text": "Tag for this course",
+                "value": 20009,
+              },
             ]
           }
           dropDownTeachers={Array []}
@@ -530,6 +550,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
                   "Tags": Array [
                     Object {
                       "color": "red",
+                      "courseInstanceId": null,
                       "id": 20001,
                       "name": "Javascript",
                     },
@@ -561,11 +582,13 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
                   "Tags": Array [
                     Object {
                       "color": "grey",
+                      "courseInstanceId": null,
                       "id": 20008,
                       "name": "DROPPED",
                     },
                     Object {
                       "color": "yellow",
+                      "courseInstanceId": null,
                       "id": 20002,
                       "name": "HTML",
                     },
@@ -619,6 +642,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
                   "weeks": Array [],
                 },
               ],
+              "id": 10011,
               "role": "teacher",
             }
           }
@@ -632,6 +656,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
                 "Tags": Array [
                   Object {
                     "color": "red",
+                    "courseInstanceId": null,
                     "id": 20001,
                     "name": "Javascript",
                   },
@@ -663,11 +688,13 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
                 "Tags": Array [
                   Object {
                     "color": "grey",
+                    "courseInstanceId": null,
                     "id": 20008,
                     "name": "DROPPED",
                   },
                   Object {
                     "color": "yellow",
+                    "courseInstanceId": null,
                     "id": 20002,
                     "name": "HTML",
                   },
@@ -808,6 +835,11 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
                 "text": "DROPPED",
                 "value": 20008,
               },
+              Object {
+                "key": 20009,
+                "text": "Tag for this course",
+                "value": 20009,
+              },
             ]
           }
           dropDownTeachers={Array []}
@@ -822,6 +854,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
                   "Tags": Array [
                     Object {
                       "color": "red",
+                      "courseInstanceId": null,
                       "id": 20001,
                       "name": "Javascript",
                     },
@@ -853,11 +886,13 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
                   "Tags": Array [
                     Object {
                       "color": "grey",
+                      "courseInstanceId": null,
                       "id": 20008,
                       "name": "DROPPED",
                     },
                     Object {
                       "color": "yellow",
+                      "courseInstanceId": null,
                       "id": 20002,
                       "name": "HTML",
                     },
@@ -911,6 +946,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
                   "weeks": Array [],
                 },
               ],
+              "id": 10011,
               "role": "teacher",
             }
           }
@@ -924,6 +960,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
                 "Tags": Array [
                   Object {
                     "color": "red",
+                    "courseInstanceId": null,
                     "id": 20001,
                     "name": "Javascript",
                   },
@@ -955,11 +992,13 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
                 "Tags": Array [
                   Object {
                     "color": "grey",
+                    "courseInstanceId": null,
                     "id": 20008,
                     "name": "DROPPED",
                   },
                   Object {
                     "color": "yellow",
+                    "courseInstanceId": null,
                     "id": 20002,
                     "name": "HTML",
                   },
