@@ -51,7 +51,7 @@ export const ManageTags = props => {
       state.valueGlobal = false
 
       if (props.tags.modifyTag) {
-        modifyTag(props.tags.modifyTag, tag.newText, tag.color)(e)
+        modifyTag(props.tags.modifyTag, tag.text, tag.color, tag.courseInstanceId !== null)(e)
       } else {
         createNewTag(e)
       }
