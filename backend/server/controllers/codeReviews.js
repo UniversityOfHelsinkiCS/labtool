@@ -26,7 +26,7 @@ async function formatCodeReview(codeReview, allStudentInstancesIds, reviewNumber
   /*  do not prevent repeats in backend -- hisahi
   if (repeated) {
     return null
-  }*/
+  } */
 
   allStudentInstancesIds.push(codeReview.reviewer)
   return {
