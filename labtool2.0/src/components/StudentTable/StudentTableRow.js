@@ -262,20 +262,22 @@ export const StudentTableRow = props => {
           {data.projectName}
           <br />
           <RepoLink url={data.github} />
-          {data.Tags.map(tag => (
-            <div key={data.id + ':' + tag.id}>
-              <Button.Group className={'mini'}>
-                <Button compact floated="left" className={`mini ui ${tag.color} button`} onClick={addFilterTag(tag)}>
-                  {tag.name}
-                </Button>
-                {allowModify && (
-                  <Button compact icon attached="right" className={`mini ui ${tag.color} button`} style={{ paddingLeft: 0, paddingRight: 0 }} onClick={removeTag(data.id, tag.id)}>
-                    <Icon name="remove" />
+          <div>
+            {data.Tags.map(tag => (
+              <span key={data.id + ':' + tag.id} style={{ float: 'left', marginRight: '0.33em' }}>
+                <Button.Group className={'mini'}>
+                  <Button compact style={{ display: 'inline-block' }} className={`mini ui ${tag.color} button`} onClick={addFilterTag(tag)}>
+                    {tag.name}
                   </Button>
-                )}
-              </Button.Group>
-            </div>
-          ))}
+                  {allowModify && (
+                    <Button compact icon attached="right" className={`mini ui ${tag.color} button`} style={{ paddingLeft: 0, paddingRight: 0 }} onClick={removeTag(data.id, tag.id)}>
+                      <Icon name="remove" />
+                    </Button>
+                  )}
+                </Button.Group>
+              </span>
+            ))}
+          </div>
           {allowModify && (
             <Popup trigger={<Icon id={'tagModify'} onClick={changeHiddenTagDropdown(data.id)} name="add" color="green" style={{ float: 'right', fontSize: '1.25em' }} />} content="Add tag" />
           )}

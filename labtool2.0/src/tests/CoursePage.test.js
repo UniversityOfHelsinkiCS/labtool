@@ -50,6 +50,7 @@ describe('<CoursePage /> as teacher', () => {
         teacherInstanceId: 10011,
         weeks: [],
         codeReviews: [],
+        validRegistration: false,
         User: {
           id: 10012,
           username: 'tiraopiskelija2',
@@ -82,6 +83,7 @@ describe('<CoursePage /> as teacher', () => {
         teacherInstanceId: 10011,
         weeks: [],
         codeReviews: [],
+        validRegistration: true,
         User: {
           id: 10031,
           username: 'superopiskelija',
@@ -119,6 +121,7 @@ describe('<CoursePage /> as teacher', () => {
         teacherInstanceId: 10011,
         weeks: [],
         codeReviews: [],
+        validRegistration: true,
         User: {
           id: 10011,
           username: 'tiraopiskelija1',

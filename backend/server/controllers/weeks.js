@@ -49,7 +49,7 @@ module.exports = {
         const checksObject = {}
 
         if (week) {
-          let updatedChecks = req.body.checks || {}
+          const updatedChecks = req.body.checks || {}
           await week.update({
             points: req.body.points || week.points,
             feedback: req.body.feedback || week.feedback,
@@ -60,16 +60,14 @@ module.exports = {
               checklistItemId: Number(check),
               weekId: week.id
             }
-          }).then(reviewCheck => {
-            return ReviewCheck.update({
-              checked: updatedChecks[check]
-            },{
-              where: {
-                id: reviewCheck[0].dataValues.id
-              },
-              returning: true
-            })
-          }).then(([_, [updatedReviewCheck]]) => {
+          }).then(reviewCheck => ReviewCheck.update({
+            checked: updatedChecks[check]
+          }, {
+            where: {
+              id: reviewCheck[0].dataValues.id
+            },
+            returning: true
+          })).then(([_, [updatedReviewCheck]]) => {
             checksObject[updatedReviewCheck.checklistItemId] = updatedReviewCheck.dataValues.checked
           })))
         } else {
