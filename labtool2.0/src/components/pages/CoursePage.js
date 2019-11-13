@@ -43,13 +43,6 @@ export const CoursePage = props => {
         a.id - b.id
     )
 
-  const droppedTagExists = () => props.tags.tags && props.tags.tags.find(tag => tag.name.toUpperCase() === 'DROPPED')
-
-  const hasDroppedTag = studentTagsData => {
-    let studentInstanceTagNames = studentTagsData.map(tag => tag.name.toUpperCase())
-    return studentInstanceTagNames.includes('DROPPED')
-  }
-
   const downloadFile = (filename, mime, data) => {
     // create temporary element and use that to initiate download
 
@@ -335,7 +328,6 @@ export const CoursePage = props => {
           loggedInUser={user}
           coursePageLogic={coursePageLogic}
           tags={tags}
-          droppedTagExists={droppedTagExists}
           students={sortStudentArrayAlphabeticallyByDroppedValue(courseData.data)}
           exportCSV={exportCSV}
         />
