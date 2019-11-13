@@ -129,6 +129,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
         <StudentTableRow
           addFilterTag={[Function]}
           associateTeacherToStudent={[MockFunction]}
+          courseData={Object {}}
           coursePageLogic={
             Object {
               "filterByAssistant": 0,
@@ -227,6 +228,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
           extraColumns={Array []}
           getAllTags={[MockFunction]}
           key="tableRow10012"
+          loggedInUser={Object {}}
           selectStudent={[MockFunction]}
           selectedInstance={
             Object {
@@ -435,6 +437,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
         <StudentTableRow
           addFilterTag={[Function]}
           associateTeacherToStudent={[MockFunction]}
+          courseData={Object {}}
           coursePageLogic={
             Object {
               "filterByAssistant": 0,
@@ -538,6 +541,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
           extraColumns={Array []}
           getAllTags={[MockFunction]}
           key="tableRow10031"
+          loggedInUser={Object {}}
           selectStudent={[MockFunction]}
           selectedInstance={
             Object {
@@ -746,6 +750,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
         <StudentTableRow
           addFilterTag={[Function]}
           associateTeacherToStudent={[MockFunction]}
+          courseData={Object {}}
           coursePageLogic={
             Object {
               "filterByAssistant": 0,
@@ -838,6 +843,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
           extraColumns={Array []}
           getAllTags={[MockFunction]}
           key="tableRow10011"
+          loggedInUser={Object {}}
           selectStudent={[MockFunction]}
           selectedInstance={
             Object {

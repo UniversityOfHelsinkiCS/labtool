@@ -11,6 +11,7 @@ import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 import store from '../../store'
 import StudentTable from '../StudentTable'
 import { usePersistedState, clearOnePersistedState } from '../../hooks/persistedState'
+import { sortStudentsAlphabeticallyByDroppedValue } from '../../util/sort'
 
 export const MassEmailPage = props => {
   const myCourseId = props.courseId
@@ -53,16 +54,6 @@ export const MassEmailPage = props => {
     }
   }, [])
 
-  useEffect(() => {
-    const oldSelectedStudents = { ...props.coursePageLogic.selectedStudents }
-    // if no students selected, select all students with valid registrations that have not dropped
-    if (props.courseData && !Object.keys(oldSelectedStudents).filter(key => oldSelectedStudents[key]).length) {
-      const newSelect = {}
-      props.courseData.data.filter(student => student.validRegistration && !student.dropped).forEach(student => (newSelect[student.id] = true))
-      props.restoreStudentSelection(newSelect)
-    }
-  }, [props.courseData])
-
   const handleSubmit = async e => {
     e.preventDefault()
     const data = props.courseData && props.courseData.data
@@ -78,6 +69,12 @@ export const MassEmailPage = props => {
         await props.sendMassEmail({ students: sendingTo, content: e.target.content.value, sendToInstructors: e.target.sendToInstructors.checked }, props.selectedInstance.ohid)
       }
     }
+  }
+
+  const selectAllNonDroppedStudents = () => {
+    const newSelect = {}
+    props.courseData.data.filter(student => student.validRegistration && !student.dropped).forEach(student => (newSelect[student.id] = true))
+    props.restoreStudentSelection(newSelect)
   }
 
   if (props.loading.loading) {
@@ -104,13 +101,15 @@ export const MassEmailPage = props => {
       <div className="TeacherMassEmailPart">
         <Header as="h2">Send email to students </Header>
 
+        <Button onClick={selectAllNonDroppedStudents}>Select all non-dropped students</Button>
+
         <Form onSubmit={handleSubmit}>
           <StudentTable
             columns={['select', 'instructor']}
             allowModify={false}
             filterStudents={data => data.User.email && data.validRegistration}
             disableDefaultFilter={false}
-            studentInstances={courseData.data}
+            studentInstances={sortStudentsAlphabeticallyByDroppedValue(courseData.data)}
             selectedInstance={selectedInstance}
             courseData={courseData}
             coursePageLogic={coursePageLogic}
