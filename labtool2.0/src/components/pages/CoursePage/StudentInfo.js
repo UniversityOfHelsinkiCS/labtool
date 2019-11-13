@@ -39,7 +39,7 @@ export const CoursePageStudentInfo = props => {
               )}
             </Card.Content>
           </Card>
-          {!courseData.data.validRegistration && (
+          {courseData.role === 'student' && !courseData.data.validRegistration && (
             <>
               <Message negative>
                 <Message.Header>Your registration has been marked as invalid</Message.Header>
@@ -48,7 +48,7 @@ export const CoursePageStudentInfo = props => {
               <br />
             </>
           )}
-          {courseData.data.dropped && (
+          {courseData.role === 'student' && courseData.data.validRegistration && courseData.data.dropped && (
             <>
               <Message>
                 <Message.Header>You have been marked as dropped out from this course</Message.Header>

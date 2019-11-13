@@ -45,6 +45,7 @@ export const MassEmailPage = props => {
 
     // do not carry over selection changes back to main student table
     const oldSelectedStudents = { ...props.coursePageLogic.selectedStudents }
+
     return () => {
       // run on component unmount
       props.coursePageReset()
@@ -52,11 +53,21 @@ export const MassEmailPage = props => {
     }
   }, [])
 
+  useEffect(() => {
+    const oldSelectedStudents = { ...props.coursePageLogic.selectedStudents }
+    // if no students selected, select all students with valid registrations that have not dropped
+    if (props.courseData && !Object.keys(oldSelectedStudents).filter(key => oldSelectedStudents[key]).length) {
+      const newSelect = {}
+      props.courseData.data.filter(student => student.validRegistration && !student.dropped).forEach(student => (newSelect[student.id] = true))
+      props.restoreStudentSelection(newSelect)
+    }
+  }, [props.courseData])
+
   const handleSubmit = async e => {
     e.preventDefault()
     const data = props.courseData && props.courseData.data
     if (data) {
-      const sendingTo = data.filter(entry => props.coursePageLogic.selectedStudents[entry.id]).map(entry => ({ id: entry.id }))
+      const sendingTo = data.filter(entry => props.coursePageLogic.selectedStudents[entry.id] && props.coursePageLogic.selectedStudents[entry.id].validRegistration).map(entry => ({ id: entry.id }))
 
       if (!sendingTo.length) {
         store.dispatch({ type: 'MASS_EMAIL_SENDFAILURE' })
@@ -83,8 +94,13 @@ export const MassEmailPage = props => {
    * and what exactly to send
    */
   const { courseData, selectedInstance, coursePageLogic, tags } = props
-  const renderTeacherPart = () => {
-    return (
+
+  if (props.courseData.role !== 'teacher') {
+    return <div />
+  }
+
+  return (
+    <div style={{ overflowX: 'auto', overflowY: 'hidden' }}>
       <div className="TeacherMassEmailPart">
         <Header as="h2">Send email to students </Header>
 
@@ -92,7 +108,7 @@ export const MassEmailPage = props => {
           <StudentTable
             columns={['select', 'instructor']}
             allowModify={false}
-            filterStudents={data => data.User.email}
+            filterStudents={data => data.User.email && data.validRegistration}
             disableDefaultFilter={false}
             studentInstances={courseData.data}
             selectedInstance={selectedInstance}
@@ -117,28 +133,15 @@ export const MassEmailPage = props => {
         </Form>
         <br />
       </div>
-    )
-  }
-
-  /**
-   * This part actually tells what to show to the user
-   */
-  if (props.courseData.role === 'teacher') {
-    return (
-      <div style={{ overflowX: 'auto', overflowY: 'hidden' }}>
-        {renderTeacherPart()}
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-      </div>
-    )
-  } else {
-    return <div />
-  }
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+    </div>
+  )
 }
 
 MassEmailPage.propTypes = {

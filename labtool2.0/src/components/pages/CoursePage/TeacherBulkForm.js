@@ -109,7 +109,10 @@ export const CoursePageTeacherBulkForm = props => {
             </Grid.Row>
             <Grid.Row>
               <Grid.Column>
-                <Button disabled={disabled} onClick={() => bulkMarkValid()}>
+                <Button disabled={disabled} onClick={() => {
+                  bulkMarkValid()
+                  state.showMassAssignForm = false
+                }}>
                   Valid course registration
                 </Button>
               </Grid.Column>
@@ -117,7 +120,10 @@ export const CoursePageTeacherBulkForm = props => {
                 <Popup
                   content="Mark a registration as invalid, if the student accidentally registered onto the course"
                   trigger={
-                    <Button disabled={disabled} basic color="red" onClick={() => bulkMarkInvalid()}>
+                    <Button disabled={disabled} basic color="red" onClick={() => {
+                      bulkMarkInvalid()
+                      state.showMassAssignForm = false
+                    }}>
                       Invalid course registration
                     </Button>
                   }
