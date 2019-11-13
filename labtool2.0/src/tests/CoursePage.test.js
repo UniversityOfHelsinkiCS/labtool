@@ -299,17 +299,6 @@ describe('<CoursePage /> as teacher', () => {
       expect(wrapper.find('CoursePageTeacherBulkForm').length).toEqual(1)
     })
 
-    it('can mark all students with DROPPED tag as dropped', () => {
-      window.confirm = jest.fn(() => true)
-      wrapper
-        .find('CoursePageTeacherMain')
-        .dive()
-        .find({ children: 'Mark all with dropped tag as dropped out' })
-        .simulate('click')
-
-      expect(mockUpdateStudentProjectInfo).toBeCalledWith(expect.objectContaining({ userId: 10031, dropped: true }))
-    })
-
     it('can export students as CSV', () => {
       wrapper
         .find('CoursePageTeacherMain')

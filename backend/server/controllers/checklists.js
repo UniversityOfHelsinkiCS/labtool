@@ -17,7 +17,7 @@ module.exports = {
 
     try {
       if (!req.authenticated.success) {
-        res.status(403).send('you have to be authenticated to do this')
+        res.status(403).send('You have to be authenticated to do this.')
         return
       }
       const teacherInstance = await TeacherInstance.findOne({
@@ -47,7 +47,7 @@ module.exports = {
           }
           req.body.checklist[cl].forEach((row) => {
             if (row.id !== undefined && typeof row.id !== 'number') {
-              res.status(400).send('Field id must be numeric')
+              res.status(400).send('Field ID must be numeric.')
               return
             }
             if (typeof row.name !== 'string') {
@@ -74,12 +74,12 @@ module.exports = {
                   break
                 case 'textWhenOn':
                   if (typeof row[key] !== 'string') {
-                    res.status(400).send('textWhenOn must have a string value or be undefined.')
+                    res.status(400).send('"textWhenOn" must have a string value or be undefined.')
                   }
                   break
                 case 'textWhenOff':
                   if (typeof row[key] !== 'string') {
-                    res.status(400).send('textWhenOff must have a string value or be undefined.')
+                    res.status(400).send('"textWhenOff" must have a string value or be undefined.')
                   }
                   break
                 default:
@@ -161,13 +161,13 @@ module.exports = {
       await Promise.all(checklistWeekItems.filter(item => !checklistIdsNow.includes(item.id)).map(item => item.destroy()))
 
       res.status(200).send({
-        message: `checklist saved successfully for week ${req.body.week}.`,
+        message: `Checklist saved successfully for week ${req.body.week}.`,
         result: { ...result[1].dataValues, list: checklistJson },
         data: req.body
       })
     } catch (e) {
-      logger.error('checklist creation error', { error: e.message })
-      res.status(500).send('Unexpected error')
+      logger.error('Checklist creation error.', { error: e.message })
+      res.status(500).send('Unexpected error. Please try again.')
     }
   },
 
@@ -230,7 +230,7 @@ module.exports = {
         })
       }
     } catch (e) {
-      logger.error('get checklist error', { error: e.message })
+      logger.error('Get checklist error.', { error: e.message })
       res.status(500).send(e)
     }
   }
