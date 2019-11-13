@@ -14,7 +14,8 @@ export const CoursePageTeacherMain = props => {
   students.forEach(student => {
     if (student.dropped) {
       droppedStudentCount++
-    } else {
+    } else if (student.validRegistration) {
+      //exclude students with invalid registration completely from the statistics
       activeStudentCount++
     }
   })
@@ -66,7 +67,8 @@ CoursePageTeacherMain.propTypes = {
   courseId: PropTypes.string.isRequired,
   students: PropTypes.array.isRequired,
 
-  exportCSV: PropTypes.func.isRequired
+  exportCSV: PropTypes.func.isRequired,
+  loggedInUser: PropTypes.object.isRequired
 }
 
 export default CoursePageTeacherMain

@@ -95,10 +95,13 @@ export const WeekReviewWeek = props => {
                   <div>
                     {checkAllCommentsAreRead(week.comments) ? (
                       <Label>
-                        You have read all comments <Icon name="check" color="green" />
+                        You have read all comments
+                        <Icon name="check" color="green" />
                       </Label>
                     ) : (
-                      <Button onClick={() => markComments(week.comments)}>Mark comments of this week as read</Button>
+                      <Button color="green" onClick={() => markComments(week.comments)}>
+                        Mark comments of this week as read
+                      </Button>
                     )}
                   </div>
                 ) : null}
