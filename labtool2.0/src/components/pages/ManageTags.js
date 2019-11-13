@@ -144,6 +144,12 @@ export const ManageTags = props => {
     })
   }
 
+  const editTag = (props.tags.tags || []).find(tag => tag.id === props.tags.modifyTag)
+  if (props.tags.tags && props.tags.modifyTag && !editTag) {
+    props.willCreateNewTag()
+    return <div />
+  }
+
   return (
     <div>
       <BackButton preset="modifyCIPage" />
@@ -162,7 +168,7 @@ export const ManageTags = props => {
           <Grid>
             <Grid.Row centered>
               <Form key="createOrModify" onSubmit={handleSubmit}>
-                {props.tags.modifyTag ? <h4>Editing tag: {props.tags.tags.find(tag => tag.id === props.tags.modifyTag).name}</h4> : <h4>You are creating a new tag.</h4>}
+                {props.tags.modifyTag ? <h4>Editing tag: {editTag.name}</h4> : <h4>You are creating a new tag.</h4>}
                 <div>
                   Preview:{' '}
                   <button className={`mini ui button ${validColors.includes(state.valueColor) ? state.valueColor : ''}`} style={{ display: state.valueText ? 'inline' : 'none' }}>

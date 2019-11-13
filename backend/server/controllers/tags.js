@@ -22,7 +22,7 @@ module.exports = {
         }
       })
       if (!teacher) {
-        return res.status(400).send('You need to be a teacher or instructor to do this.')
+        return res.status(403).send('You need to be a teacher or instructor to do this.')
       }
 
       const tag = {
@@ -31,10 +31,10 @@ module.exports = {
         courseInstanceId: req.body.courseInstanceId || null
       }
 
-      if (tag.courseInstanceId !== null && req.body.id) {
+      if (req.body.id) {
         // find existing tag, if there is one
         const oldTag = await Tag.findOne({ where: { id: req.body.id } })
-        if (oldTag && oldTag.courseInstanceId === null) {
+        if (tag.courseInstanceId !== null && oldTag && oldTag.courseInstanceId === null) {
           // if old tag was global, duplicate that tag to every other
           // course it was used in
           const studentTags = await StudentTag.findAll({
@@ -76,6 +76,38 @@ module.exports = {
               ))
             }
           }))
+        } else if (tag.courseInstanceId === null && oldTag && oldTag.courseInstanceId !== null) {
+          // converting to a global tag
+          // if there already is a global tag with the same name and color,
+          // merge the two tags (the existing global tag stays)
+
+          const mergeTag = await Tag.findOne({ where: {
+            name: tag.name,
+            color: tag.color,
+            courseInstanceId: null
+          } })
+
+          if (mergeTag) {
+            await StudentTag.update(
+              {
+                tagId: mergeTag.id
+              },
+              {
+                where: {
+                  tagId: oldTag.id
+                }
+              }
+            )
+
+            await oldTag.destroy()
+            return res.status(200).send({
+              id: mergeTag.id,
+              name: mergeTag.name,
+              color: mergeTag.color,
+              courseInstanceId: null,
+              deleteId: oldTag.id
+            })
+          }
         }
       }
 
@@ -97,6 +129,7 @@ module.exports = {
       )
       res.status(200).send(newTag)
     } catch (e) {
+      console.error(e)
       res.status(400).send(e)
     }
   },
