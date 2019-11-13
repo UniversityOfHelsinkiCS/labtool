@@ -250,8 +250,14 @@ export const ModifyCourseInstanceReview = props => {
       })
   }
 
+  const areIssuesEnabledForStudent = student => {
+    // add timeout, 48 hours / 2 days
+    const lastCheck = new Date(student.issuesDisabledCheckedAt)
+    return student.issuesDisabled === false && new Date().getTime() - lastCheck.getTime() < 48 * 60 * 60
+  }
+
   const areIssuesDisabledForStudent = student => {
-    return student.issuesDisabled
+    return student.issuesDisabled === true
   }
 
   const disableIssuesDisabledWarning = student => {
@@ -267,6 +273,8 @@ export const ModifyCourseInstanceReview = props => {
     }
     if (areIssuesDisabledForStudent(student)) {
       return <IssuesDisabledWarning onClick={() => disableIssuesDisabledWarning(student)} />
+    } else if (areIssuesEnabledForStudent(student)) {
+      return <Popup trigger={<Icon name="checkmark" size="large" color="green" />} content={<span>This repository exists and has issues enabled!</span>} hoverable />
     }
     return null
   }
