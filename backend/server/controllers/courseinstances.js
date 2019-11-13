@@ -5,7 +5,7 @@ const helper = require('../helpers/courseInstanceHelper')
 const logger = require('../utils/logger')
 
 const { Op } = Sequelize
-const { User, CourseInstance, StudentInstance, TeacherInstance, Week, CodeReview, Comment, Tag, Checklist, ChecklistItem } = db
+const { User, CourseInstance, StudentInstance, TeacherInstance, Week, ReviewCheck, CodeReview, Comment, Tag, Checklist, ChecklistItem } = db
 
 const env = process.env.NODE_ENV || 'development'
 const config = require('./../config/config.js')[env]
@@ -142,6 +142,10 @@ module.exports = {
                   hidden: false
                 },
                 required: false
+              },
+              {
+                model: ReviewCheck,
+                as: 'checks'
               }
             ]
           },
@@ -201,6 +205,9 @@ module.exports = {
             // This was only ever included to be spliced into the codeReviews filed above.
             delete palautus.data.toReviews
           }
+          palautus.data.weeks = palautus.data.weeks.map(week => ({ ...week.dataValues,
+            checks: week.checks.reduce((checksObject, reviewCheck) => ({ ...checksObject, [reviewCheck.checklistItemId]: reviewCheck.checked }), {})
+          }))
         } else {
           palautus.data = null
         }
@@ -232,6 +239,10 @@ module.exports = {
                   exclude: ['updatedAt']
                 },
                 as: 'comments'
+              },
+              {
+                model: ReviewCheck,
+                as: 'checks'
               }
             ]
           },
@@ -261,7 +272,9 @@ module.exports = {
         ]
       })
       try {
-        palautus.data = teacherPalautus
+        palautus.data = teacherPalautus.map(studentInstance => ({ ...studentInstance.dataValues,
+          weeks: studentInstance.dataValues.weeks.map(week => ({ ...week.dataValues,
+            checks: week.checks.reduce((checksObject, reviewCheck) => ({ ...checksObject, [reviewCheck.checklistItemId]: reviewCheck.checked }), {}) })) }))
         palautus.role = 'teacher'
         res.status(200).send(palautus)
       } catch (e) {
