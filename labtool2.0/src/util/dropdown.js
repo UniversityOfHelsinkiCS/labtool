@@ -5,13 +5,15 @@ export const createDropdownTeachers = (teachers, array) => {
     array.push({
       key: '-',
       text: '(unassigned)',
-      value: '-'
+      value: '-',
+      selected: false
     })
     teachers.map(m =>
       array.push({
         key: m.id,
         text: m.firsts + ' ' + m.lastname,
-        value: m.id
+        value: m.id,
+        selected: false
       })
     )
     return array
@@ -25,7 +27,8 @@ export const createDropdownTags = (tags, array) => {
       array.push({
         key: tag.id,
         text: tag.name,
-        value: tag.id
+        value: tag.id,
+        selected: false
       })
     )
     return array
