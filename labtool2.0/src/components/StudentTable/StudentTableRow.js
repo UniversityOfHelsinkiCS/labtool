@@ -109,7 +109,7 @@ export const StudentTableRow = props => {
     return newComments.length > 0
   }
 
-  const createWeekHeaders = (weeks, codeReviews, siId, dropped) => {
+  const createWeekHeaders = (weeks, codeReviews, siId, dropped, validRegistration) => {
     const cr =
       codeReviews &&
       codeReviews.reduce((a, b) => {
@@ -145,7 +145,7 @@ export const StudentTableRow = props => {
                 : { pathname: `/labtool/browsereviews/${selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: i } }
             }
           >
-            {selectedInstance.currentWeek === i + 1 && weekPoints[i + 1] === undefined && !dropped ? (
+            {selectedInstance.currentWeek === i + 1 && weekPoints[i + 1] === undefined && !dropped && validRegistration ? (
               <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'star', size: 'large' }} />} content="Review" />
             ) : (
               <div>
@@ -290,7 +290,7 @@ export const StudentTableRow = props => {
       {showColumn('points') && (
         <>
           {/* Week #, Code Review # */}
-          {createWeekHeaders(data.weeks, data.codeReviews, data.id, data.dropped)}
+          {createWeekHeaders(data.weeks, data.codeReviews, data.id, data.dropped, data.validRegistration)}
 
           {/* Sum */}
           <Table.Cell key="pointssum" textAlign="center">

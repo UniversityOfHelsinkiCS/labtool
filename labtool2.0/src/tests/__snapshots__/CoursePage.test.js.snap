@@ -536,7 +536,6 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
         "showDropdown": "",
       }
     }
-    droppedTagExists={[Function]}
     exportCSV={[Function]}
     loggedInUser={Object {}}
     selectedInstance={
