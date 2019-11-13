@@ -21,12 +21,6 @@ export const CoursePageTeacherMain = props => {
 
   const totalStudentCount = activeStudentCount + droppedStudentCount
 
-  const dropConvertButton = droppedTagExists() && (
-    <Button onClick={() => markAllWithDroppedTagAsDropped(courseData)} size="small">
-      Mark all with dropped tag as dropped out
-    </Button>
-  )
-
   return (
     <div className="TeachersBottomView">
       <br />
@@ -52,7 +46,6 @@ export const CoursePageTeacherMain = props => {
         persistentFilterKey={`CoursePage_filters_${courseId}`}
       />
       <br />
-      {dropConvertButton}
       {
         <Link to={`/labtool/massemail/${selectedInstance.ohid}`}>
           <Button size="small">Send email to multiple students</Button>
