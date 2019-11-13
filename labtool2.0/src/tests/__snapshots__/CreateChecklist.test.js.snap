@@ -36,7 +36,7 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
         selectOnBlur={true}
         selectOnNavigation={true}
         selection={true}
-        value={6}
+        value="week6"
         wrapSelection={true}
       />
       <div
@@ -108,7 +108,7 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
         className="jsonButtons"
       >
         <JsonEdit
-          downloadName="TKT20010.2018.K.A.1_week_6.json"
+          downloadName="TKT20010.2018.K.A.1_week6.json"
           initialData={
             Object {
               "Koodi": Array [

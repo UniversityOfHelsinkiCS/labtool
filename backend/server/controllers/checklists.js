@@ -89,18 +89,23 @@ module.exports = {
           })
         })
       } catch (e) {
-        res.status(400).send('Cannot parse checklist JSON.')
-        return
+        return res.status(400).send('Cannot parse checklist JSON.')
       }
       // No validation is done to prevent creating a checklist for a week that doesn't exist.
       // Arguably, this is a feature, since the number of weeks can change.
-      let result = 'week' in req.body ? await Checklist.findOrCreate({ where: {
-        week: req.body.week,
-        courseInstanceId: req.body.courseInstanceId
-      } }) : await Checklist.findOrCreate({ where: {
-        codeReviewNumber: req.body.codeReviewNumber,
-        courseInstanceId: req.body.courseInstanceId
-      } })
+      if ('week' in req.body) {
+        result = await Checklist.findOrCreate({ where: {
+          week: req.body.week,
+          courseInstanceId: req.body.courseInstanceId
+        } })
+      } else if ('codeReviewNumber' in req.body) {
+        result = await Checklist.findOrCreate({ where: {
+          codeReviewNumber: req.body.codeReviewNumber,
+          courseInstanceId: req.body.courseInstanceId
+        } })
+      } else {
+        return res.status(400).send('You must supply either a "week" or a "codeReviewNumber".')
+      }
       // Update maxPoints. This cannot be done with findOrCreate as by default courses have null as maxPoints
       result = await Checklist.update(
         { maxPoints: req.body.maxPoints },

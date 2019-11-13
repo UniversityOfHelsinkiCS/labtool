@@ -218,7 +218,7 @@ module.exports = {
       })
       return
     } catch (e) {
-      console.log(e)
+      console.error(e)
       res.status(500).send('Unexpected error. Please try again.')
     }
   },
