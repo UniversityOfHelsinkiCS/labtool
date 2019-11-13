@@ -31,7 +31,7 @@ module.exports = {
         res.status(403).send('You must be a teacher of the course to perform this action.')
         return
       }
-      if (typeof req.body.week !== 'number' || typeof req.body.courseInstanceId !== 'number') {
+      if ((typeof req.body.week !== 'number' && typeof req.body.codeReviewNumber !== 'number') || typeof req.body.courseInstanceId !== 'number') {
         res.status(400).send('Missing or malformed inputs.')
         return
       }
@@ -94,8 +94,11 @@ module.exports = {
       }
       // No validation is done to prevent creating a checklist for a week that doesn't exist.
       // Arguably, this is a feature, since the number of weeks can change.
-      let result = await Checklist.findOrCreate({ where: {
+      let result = 'week' in req.body ? await Checklist.findOrCreate({ where: {
         week: req.body.week,
+        courseInstanceId: req.body.courseInstanceId
+      } }) : await Checklist.findOrCreate({ where: {
+        codeReviewNumber: req.body.codeReviewNumber,
         courseInstanceId: req.body.courseInstanceId
       } })
       // Update maxPoints. This cannot be done with findOrCreate as by default courses have null as maxPoints
@@ -161,7 +164,7 @@ module.exports = {
       await Promise.all(checklistWeekItems.filter(item => !checklistIdsNow.includes(item.id)).map(item => item.destroy()))
 
       res.status(200).send({
-        message: `Checklist saved successfully for week ${req.body.week}.`,
+        message: `Checklist saved successfully for ${'week' in req.body ? `week ${req.body.week}` : `code review ${req.body.codeReviewNumber}`}.`,
         result: { ...result[1].dataValues, list: checklistJson },
         data: req.body
       })
@@ -180,7 +183,7 @@ module.exports = {
    */
   async getOne(req, res) {
     try {
-      if (typeof req.body.week !== 'number' || typeof req.body.courseInstanceId !== 'number') {
+      if ((typeof req.body.week !== 'number' && typeof req.body.codeReviewNumber !== 'number') || typeof req.body.courseInstanceId !== 'number') {
         res.status(400).send({
           message: 'Missing or malformed inputs.',
           data: req.body
@@ -194,7 +197,7 @@ module.exports = {
         return res.status(403).send('must be on the course')
       }
 
-      const checklist = await Checklist.findOne({
+      const checklist = 'week' in req.body ? await Checklist.findOne({
         attributes: {
           exclude: ['createdAt', 'updatedAt']
         },
@@ -202,7 +205,16 @@ module.exports = {
           courseInstanceId: req.body.courseInstanceId,
           week: req.body.week
         }
+      }) : await Checklist.findOne({
+        attributes: {
+          exclude: ['createdAt', 'updatedAt']
+        },
+        where: {
+          courseInstanceId: req.body.courseInstanceId,
+          codeReviewNumber: req.body.codeReviewNumber
+        }
       })
+
       if (checklist) {
         const checklistJson = {}
         const checklistItems = await ChecklistItem.findAll({ where: {
