@@ -191,8 +191,8 @@ export const ReviewStudent = props => {
     })
     if (checklistPoints < 0) {
       checklistPoints = 0
-    } else if (checklistPoints > props.selectedInstance.weekMaxPoints) {
-      checklistPoints = props.selectedInstance.weekMaxPoints
+    } else if (checklistPoints > getMaximumPoints()) {
+      checklistPoints = getMaximumPoints()
     }
   }
 
