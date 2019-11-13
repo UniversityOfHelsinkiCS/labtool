@@ -5,7 +5,7 @@ const logger = require('../../server/utils/logger')
 module.exports = {
   /**
    * Creates or edits a tag
-   *   permissions: must be a *course teacher* on any course
+   *   permissions: must be an instructor on any course
    *
    * @param req
    * @param res
@@ -16,38 +16,39 @@ module.exports = {
     }
 
     try {
+      console.log('createOrUpdate')
       const teacher = await TeacherInstance.findOne({
         where: {
-          userId: req.decoded.id,
-          instructor: false
+          userId: req.decoded.id
         }
       })
       if (!teacher) {
-        res.status(400).send('You need to be a teacher to do this.')
-        return
+        return res.status(400).send('You need to be a teacher or instructor to do this.')
       }
 
-      const tag = await Tag.findOrCreate({
-        where: {
-          name: req.body.text
-        }
-      })
+      const tag = {
+        color: req.body.color || 'gray',
+        name: req.body.text,
+        courseInstanceId: req.body.courseInstanceId || null
+      }
 
-      const text = req.body.newText ? req.body.newText : tag[0].text
-      const newTag = await Tag.update(
-        {
-          color: req.body.color || 'gray',
-          name: text
-        },
+      const newTag = req.body.id ? (await Tag.update(
+        tag,
         {
           where: {
-            id: tag[0].id
+            id: req.body.id
           },
           returning: true,
           plain: true
         }
+      ))[1] : await Tag.create(
+        tag,
+        {
+          returning: true,
+          plain: true
+        }
       )
-      res.status(200).send(newTag[1])
+      res.status(200).send(newTag)
     } catch (e) {
       res.status(400).send(e)
     }
@@ -78,7 +79,7 @@ module.exports = {
 
       const tag = await Tag.findOne({
         where: {
-          name: req.body.text
+          id: req.body.id
         }
       })
       if (!tag) {

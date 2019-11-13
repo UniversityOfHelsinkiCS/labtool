@@ -10,6 +10,7 @@ import { resetChecklist, changeField, restoreChecklist, addTopic, addRow, remove
 import './CreateChecklist.css'
 import { usePersistedState } from '../../hooks/persistedState'
 import { roundNumber } from '../../util/format'
+import { sortCoursesByName } from '../../util/sort'
 
 import BackButton from '../BackButton'
 import JsonEdit from '../JsonEdit'
@@ -307,7 +308,7 @@ export const CreateChecklist = props => {
   const createCourseDropdowns = () => {
     if (!props.courses || !props.selectedInstance || !Object.keys(props.courses).length) return []
     const courses = state.week > props.selectedInstance.weekAmount ? finalFilter(props.courses) : weekFilter(props.courses)
-    const options = courses
+    const options = sortCoursesByName(courses)
       .filter(course => props.selectedInstance.id !== course.id)
       .map(course => {
         return {

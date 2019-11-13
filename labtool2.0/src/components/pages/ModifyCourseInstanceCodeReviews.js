@@ -265,7 +265,6 @@ export const ModifyCourseInstanceReview = props => {
     }
   }
 
-
   const displayIssuesDisabledIcon = student => {
     if (student.repoExists === false) {
       return <RepoAccessWarning student={student} ohid={props.selectedInstance.ohid} updateStudentProjectInfo={props.updateStudentProjectInfo} />

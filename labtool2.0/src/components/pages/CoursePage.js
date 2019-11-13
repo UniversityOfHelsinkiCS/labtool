@@ -249,8 +249,9 @@ export const CoursePage = props => {
   let dropDownTeachers = []
   dropDownTeachers = createDropdownTeachers(props.selectedInstance.teacherInstances, dropDownTeachers)
 
+  const courseTags = (props.tags.tags || []).filter(tag => tag.courseInstanceId === null || tag.courseInstanceId === props.selectedInstance.id)
   let dropDownTags = []
-  dropDownTags = createDropdownTags(props.tags.tags, dropDownTags)
+  dropDownTags = createDropdownTags(courseTags, dropDownTags)
 
   if (props.loading.loading) {
     return <Loader active />

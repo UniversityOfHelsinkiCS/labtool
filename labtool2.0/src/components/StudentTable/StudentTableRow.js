@@ -241,7 +241,6 @@ export const StudentTableRow = props => {
 
     return indents
   }
-  
 
   return (
     <Table.Row key={data.id} className={data.dropped || !data.validRegistration ? 'TableRowForDroppedOutStudent' : 'TableRowForActiveStudent'}>

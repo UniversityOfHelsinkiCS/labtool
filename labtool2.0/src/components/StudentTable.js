@@ -135,12 +135,13 @@ export const StudentTable = props => {
   ]
   dropDownFilterTeachers = createDropdownTeachers(props.selectedInstance.teacherInstances, dropDownFilterTeachers)
 
+  const courseTags = (props.tags.tags || []).filter(tag => tag.courseInstanceId === null || tag.courseInstanceId === props.selectedInstance.id)
   let dropDownTags = []
-  dropDownTags = createDropdownTags(props.tags.tags, dropDownTags)
-  let dropDownFilterTags = createDropdownTags(props.tags.tags, []).filter(
+  dropDownTags = createDropdownTags(courseTags, dropDownTags)
+  let dropDownFilterTags = createDropdownTags(courseTags, []).filter(
     tag => state.filterByTag.find(t => t.id === tag.value) || (props.studentInstances && countStudentsWithTag(props.studentInstances, tag.value) > 0)
   )
-  dropDownFilterTags = dropDownFilterTags.map(tag => props.tags.tags.find(t => t.id === tag.value))
+  dropDownFilterTags = dropDownFilterTags.map(tag => courseTags.find(t => t.id === tag.value))
 
   const dataFilter = data =>
     disableDefaultFilter ||

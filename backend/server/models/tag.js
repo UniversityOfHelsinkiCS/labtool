@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     Tag.belongsToMany(models.StudentInstance, {
       through: 'StudentTag',
       foreignKey: 'tagId'
-    }),
+    })
     Tag.belongsTo(models.CourseInstance, {
       foreignKey: {
         name: 'courseInstanceId',
