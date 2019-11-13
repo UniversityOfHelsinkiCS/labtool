@@ -1,14 +1,14 @@
 import React from 'react'
-import { ReviewStudent } from '../components/pages/ReviewStudent'
+import { ReviewStudentCodeReview } from '../components/pages/ReviewStudentCodeReview'
 import { shallow } from 'enzyme'
 
-describe('<ReviewStudent />', () => {
+describe('<ReviewStudentCodeReviews />', () => {
   let wrapper
 
   const ownProps = {
     courseId: 'TKT20010.2018.K.A.1',
-    studentInstance: '10011',
-    weekNumber: '1'
+    codeReviewNumber: '1',
+    studentInstance: '10011'
   }
 
   const props = {
@@ -24,18 +24,8 @@ describe('<ReviewStudent />', () => {
       ohid: 'TKT20010.2018.K.A.1',
       checklists: [
         {
-          id: 10002,
-          week: 2,
-          list: {},
-          courseName: 'Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit',
-          master: false,
-          createdAt: '2018-03-26T00:00:00.000Z',
-          updatedAt: '2018-03-26T00:00:00.000Z',
-          courseInstanceId: 10011
-        },
-        {
-          id: 10003,
-          week: 1,
+          id: 20003,
+          codeReviewNumber: 1,
           list: {
             Koodi: [
               {
@@ -215,7 +205,18 @@ describe('<ReviewStudent />', () => {
               comments: []
             }
           ],
-          codeReviews: [],
+          codeReviews: [
+            {
+              id: 10001,
+              points: null,
+              reviewNumber: 1,
+              linkToReview: 'http://github.com/tiralabra2/issues/1',
+              repoToReview: 'http://github.com/tiralabra2',
+              createdAt: '2018-03-26T00:00:00.000Z',
+              updatedAt: '2018-03-26T00:00:00.000Z',
+              studentInstanceId: 10011
+            }
+          ],
           User: {
             id: 10011,
             username: 'tiraopiskelija1',
@@ -355,7 +356,8 @@ describe('<ReviewStudent />', () => {
               reviewNumber: 1,
               linkToReview: null,
               studentInstanceId: 10011,
-              toReview: 10012
+              toReview: 10012,
+              checks: {}
             },
             {
               id: 10007,
@@ -363,7 +365,8 @@ describe('<ReviewStudent />', () => {
               reviewNumber: 2,
               linkToReview: null,
               studentInstanceId: 10011,
-              toReview: 10031
+              toReview: 10031,
+              checks: {}
             }
           ],
           User: {
@@ -494,10 +497,9 @@ describe('<ReviewStudent />', () => {
 
   beforeEach(() => {
     wrapper = shallow(
-      <ReviewStudent
+      <ReviewStudentCodeReview
         getOneCI={mockFn}
         clearNotifications={mockFn}
-        getWeekDraft={mockFn}
         courseData={props.coursePage}
         ownProps={ownProps}
         selectedInstance={props.selectedInstance}
@@ -505,57 +507,29 @@ describe('<ReviewStudent />', () => {
         loading={props.loading}
         resetLoading={mockFn}
         coursePageInformation={mockFn}
-        courseId={''}
-        studentInstance={''}
-        weekNumber={''}
+        {...ownProps}
         notification={{}}
-        createOneWeek={mockFn}
-        saveWeekDraft={mockFn}
-        toggleCheckWeek={mockFn}
+        toggleCheckCodeReview={mockFn}
         initChecks={mockFn}
         restoreChecks={mockFn}
         resetChecklist={mockFn}
         addRedirectHook={mockFn}
+        gradeCodeReview={mockFn}
       />
     )
   })
 
-  describe('ReviewStudent Component', () => {
+  describe('ReviewStudentCodeReview Component', () => {
     it('is ok', () => {
       true
     })
 
     it('should render without throwing an error', () => {
-      expect(wrapper.find('.ReviewStudent').exists()).toEqual(true)
+      expect(wrapper.find('.ReviewStudentCodeReview').exists()).toEqual(true)
     })
 
     it('should render correctly', () => {
       expect(wrapper).toMatchSnapshot()
-    })
-
-    it('should render maximum points correctly', () => {
-      const maxPoints = props.selectedInstance.checklists.find(cl => cl.week === props.selectedInstance.currentWeek).maxPoints
-      expect(wrapper.find('.showMaxPoints').text()).toEqual('Points 0-' + maxPoints)
-    })
-
-    describe('Checklist', () => {
-      it('renders a checklist', () => {
-        expect(wrapper.find('.checklist').exists()).toEqual(true)
-      })
-
-      it('renders a card for each checklist topic', () => {
-        const expected = Object.keys(props.selectedInstance.checklists.find(cl => cl.week === props.selectedInstance.currentWeek).list).length
-        expect(wrapper.find('.checklistCard').length).toEqual(expected)
-      })
-
-      it('renders a row for each checklist item', () => {
-        let expected = 0
-        const checklist = props.selectedInstance.checklists.find(cl => cl.week === props.selectedInstance.currentWeek).list
-        Object.keys(checklist).forEach(key => {
-          expected += checklist[key].length
-        })
-        expect(wrapper.find('.checklistCardRow').length).toEqual(expected)
-      })
     })
   })
 })

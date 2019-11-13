@@ -17,6 +17,14 @@ module.exports = {
       week: 1,
       courseInstanceId: 10011,
       master: false
+    },
+    {
+      id: 10003,
+      createdAt: '2018-03-26',
+      updatedAt: '2018-03-26',
+      codeReviewNumber: 1,
+      courseInstanceId: 10011,
+      master: false
     }
   ]), queryInterface.bulkInsert('ChecklistItems', [
     {
@@ -117,6 +125,24 @@ module.exports = {
       uncheckedPoints: 0,
       category: 'Koodi',
       checklistId: 10002
+    },
+    {
+      name: 'Rakentava palaute',
+      textWhenOn: 'Palaute rakentavaa',
+      textWhenOff: 'Rakentava palaute puuttuu',
+      checkedPoints: 1,
+      uncheckedPoints: 0,
+      category: 'Katselmointi',
+      checklistId: 10003
+    },
+    {
+      name: 'Koodi selattu',
+      textWhenOn: 'Koodia on katsottu',
+      textWhenOff: 'Koodia ei katsottu',
+      checkedPoints: 1,
+      uncheckedPoints: 0,
+      category: 'Katselmointi',
+      checklistId: 10003
     }
   ])]),
 

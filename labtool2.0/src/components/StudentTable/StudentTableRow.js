@@ -328,7 +328,15 @@ export const StudentTableRow = props => {
               />
               {coursePageLogic.showAssistantDropdown === data.id ? (
                 <div>
-                  <Dropdown id={'assistantDropdown'} selectOnBlur={false} options={dropDownTeachers} onChange={updateTeacher(data.id, data.teacherInstanceId)} placeholder="Select teacher" fluid selection />
+                  <Dropdown
+                    id={'assistantDropdown'}
+                    selectOnBlur={false}
+                    options={dropDownTeachers}
+                    onChange={updateTeacher(data.id, data.teacherInstanceId)}
+                    placeholder="Select teacher"
+                    fluid
+                    selection
+                  />
                 </div>
               ) : (
                 <div />

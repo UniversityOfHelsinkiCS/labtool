@@ -259,7 +259,7 @@ export const CreateChecklist = props => {
 
   const importChecklist = checklistForWeek => {
     const data = { list: checklistForWeek }
-    const index = { }
+    const index = {}
     const obj = parseChecklistValue(state.current)
     if (obj.kind === 'week') {
       index.week = obj.number
@@ -403,7 +403,8 @@ export const CreateChecklist = props => {
   const createCourseDropdowns = () => {
     if (!props.courses || !props.selectedInstance || !Object.keys(props.courses).length) return []
     const obj = parseChecklistValue(state.current)
-    const courses = obj.kind === 'codeReview' ? codeReviewFilter(obj.number, props.courses) : (obj.number > props.selectedInstance.weekAmount ? finalFilter(props.courses) : weekFilter(obj.number, props.courses))
+    const courses =
+      obj.kind === 'codeReview' ? codeReviewFilter(obj.number, props.courses) : obj.number > props.selectedInstance.weekAmount ? finalFilter(props.courses) : weekFilter(obj.number, props.courses)
     const options = courses
       .filter(course => props.selectedInstance.id !== course.id)
       .map(course => {

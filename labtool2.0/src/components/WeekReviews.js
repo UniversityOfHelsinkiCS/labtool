@@ -188,6 +188,7 @@ export const WeekReviews = props => {
         courseData={props.courseData}
         coursePageLogic={props.coursePageLogic}
         isTeacher={isTeacher()}
+        selectedInstance={props.selectedInstance}
         {...codeReviewFunctions}
       />
     ))

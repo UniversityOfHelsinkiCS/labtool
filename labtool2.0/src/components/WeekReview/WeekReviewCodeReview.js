@@ -1,12 +1,27 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Icon, Accordion, Form, Input, Button } from 'semantic-ui-react'
+import { Icon, Accordion, Form, Input, Button, Popup } from 'semantic-ui-react'
+import { Link } from 'react-router-dom'
 
 export const WeekReviewCodeReview = props => {
-  const { index, cr, studentInstance, openWeeks, isTeacher, courseData, coursePageLogic, getMaximumPointsForCodeReview, handleClickWeek, gradeCodeReview, handleAddingIssueLink } = props
+  const {
+    index,
+    cr,
+    selectedInstance,
+    studentInstance,
+    openWeeks,
+    isTeacher,
+    courseData,
+    coursePageLogic,
+    getMaximumPointsForCodeReview,
+    handleClickWeek,
+    gradeCodeReview,
+    handleAddingIssueLink
+  } = props
   const i = index
 
   const doOpen = openWeeks[i] || (!isTeacher && cr.points === null)
+  const hasChecklist = selectedInstance.checklists.find(checkl => checkl.codeReviewNumber === cr.reviewNumber)
   const maxPoints = getMaximumPointsForCodeReview(cr.reviewNumber)
 
   return (
@@ -45,11 +60,20 @@ export const WeekReviewCodeReview = props => {
               'No review linked yet'
             )}
             {cr.points !== null ? <h4>{cr.points} points</h4> : <h4>Not graded yet</h4>}
-            <Form onSubmit={gradeCodeReview(cr.reviewNumber, studentInstance)}>
-              <label>Points </label>
-              <Input name="points" defaultValue={cr.points ? cr.points : ''} type="number" step="0.01" style={{ width: '100px' }} />
-              <Input type="submit" value="Grade" />
-            </Form>
+            {hasChecklist ? (
+              <>
+                <h3>Review</h3>
+                <Link to={`/labtool/reviewstudentcr/${selectedInstance.ohid}/${studentInstance}/${cr.reviewNumber}`}>
+                  <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'edit', color: 'black', size: 'large' }} />} content={cr.points !== null ? 'Edit review' : 'Review'} />
+                </Link>
+              </>
+            ) : (
+              <Form onSubmit={gradeCodeReview(cr.reviewNumber, studentInstance)}>
+                <label>Points </label>
+                <Input name="points" defaultValue={cr.points ? cr.points : ''} type="number" step="0.01" style={{ width: '100px' }} />
+                <Input type="submit" value="Grade" />
+              </Form>
+            )}
           </>
         ) : (
           <>
@@ -115,6 +139,7 @@ WeekReviewCodeReview.propTypes = {
   cr: PropTypes.object.isRequired,
   isTeacher: PropTypes.bool,
   studentInstance: PropTypes.string,
+  selectedInstance: PropTypes.object.isRequired,
   courseData: PropTypes.object.isRequired,
   coursePageLogic: PropTypes.object.isRequired,
   courseId: PropTypes.string.isRequired,
