@@ -18,7 +18,7 @@ export const CreateChecklist = props => {
   const state = usePersistedState(`CreateChecklist_${props.courseId}`, {
     current: undefined, // tracks value of checklist dropdown.
     copyCourse: undefined, // tracks value of copy from another course dropdown.
-    copyWeek: undefined, // tracks value of copy from another week dropdown.
+    copyWeek: undefined, // tracks value of copy from another week dropdown. (misnomer: can also be a code review)
     topicName: '', // tracks value inputted into topic creation dialog box.
     rowName: '', // tracks value inputted into row creation dialog box.
     openAdd: '', // which addForm is currently open. '' denotes no open addForms. Only one addForm can be open at one time.
@@ -593,6 +593,7 @@ export const CreateChecklist = props => {
                 content="Defining maximum points yourself is not mandatory. If no value is given, default weekly points remain valid."
               />
             </div>
+            {currentObj.kind === 'codeReview' && <strong>You must specify max points for this code review in order for them to be visible to students.</strong>}
             <Card className="maxPointsCard">
               <Card.Content>
                 <p>

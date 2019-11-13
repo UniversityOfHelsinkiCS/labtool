@@ -3,16 +3,17 @@ import PropTypes from 'prop-types'
 import { Icon, Accordion, Form, Input, Button } from 'semantic-ui-react'
 
 export const WeekReviewCodeReview = props => {
-  const { index, cr, studentInstance, openWeeks, isTeacher, courseData, coursePageLogic, handleClickWeek, gradeCodeReview, handleAddingIssueLink } = props
+  const { index, cr, studentInstance, openWeeks, isTeacher, courseData, coursePageLogic, getMaximumPointsForCodeReview, handleClickWeek, gradeCodeReview, handleAddingIssueLink } = props
   const i = index
 
   const doOpen = openWeeks[i] || (!isTeacher && cr.points === null)
+  const maxPoints = getMaximumPointsForCodeReview(cr.reviewNumber)
 
   return (
     <Accordion key={`codereview${i}`} fluid styled id={`review${i - 1}`}>
       {' '}
       <Accordion.Title className="codeReview" active={doOpen} index={i} onClick={handleClickWeek}>
-        <Icon name="dropdown" /> Code Review {cr.reviewNumber} {cr.points !== null ? ', points ' + cr.points : ''}
+        <Icon name="dropdown" /> Code Review {cr.reviewNumber} {cr.points !== null ? `, points ${cr.points}${maxPoints !== null ? ` / ${maxPoints}` : ''}` : ''}
       </Accordion.Title>
       <Accordion.Content active={doOpen}>
         {isTeacher ? (
@@ -52,7 +53,7 @@ export const WeekReviewCodeReview = props => {
           </>
         ) : (
           <>
-            <strong>Points: </strong> {cr.points !== null ? cr.points : 'Not graded yet'}
+            <strong>Points: </strong> {cr.points !== null ? `${cr.points}${maxPoints !== null ? ` / ${maxPoints}` : ''}` : 'Not graded yet'}
             <br />
             <strong>GitHub: </strong>
             <a href={cr.toReview.github || cr.repoToReview} target="_blank" rel="noopener noreferrer">
@@ -118,6 +119,7 @@ WeekReviewCodeReview.propTypes = {
   coursePageLogic: PropTypes.object.isRequired,
   courseId: PropTypes.string.isRequired,
 
+  getMaximumPointsForCodeReview: PropTypes.func.isRequired,
   handleClickWeek: PropTypes.func.isRequired,
   gradeCodeReview: PropTypes.func.isRequired,
   handleAddingIssueLink: PropTypes.func.isRequired
