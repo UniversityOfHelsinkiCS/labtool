@@ -25,7 +25,7 @@ module.exports = {
             key: 'id',
             as: 'weekId'
           }
-        },
+        }
       })
 
       const weeks = await queryInterface.sequelize.query('SELECT "id", "checks", "weekNumber", "studentInstanceId" FROM "Weeks"', { type: queryInterface.sequelize.QueryTypes.SELECT })
