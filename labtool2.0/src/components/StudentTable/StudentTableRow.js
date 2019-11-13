@@ -99,41 +99,14 @@ export const StudentTableRow = props => {
     }
   }
 
-  const loggedInUserSameAsTeacherOrSiInstructor = si => {
-    // The teacher can always see notification
-    if (selectedInstance.teacherInstances.find(ti => !ti.instructor && ti.userId === loggedInUser.user.id)) {
-      return true
-    }
-    // if instructor is not assinged, the teacher can see the notification
-    if (si.teacherInstanceId === null) {
-      return !!selectedInstance.teacherInstances.find(ti => !ti.instructor && ti.userId === loggedInUser.user.id)
-    }
-    const userIdOfInstructor = selectedInstance.teacherInstances.find(ti => ti.id === si.teacherInstanceId).userId
-    // return true if logged in user is same as the instructor of the student
-    return userIdOfInstructor === loggedInUser.user.id
-  }
-
-  const unReadComments = (siId, week) => {
+  const showNewCommentsNotification = (siId, week) => {
     const si = courseData.data.find(si => si.id === siId)
-    if (!loggedInUserSameAsTeacherOrSiInstructor(si)) {
-      return null
-    }
-
     const commentsForWeek = si.weeks.find(wk => wk.weekNumber === week).comments
     if (commentsForWeek.length === 0) {
-      return null
-    }
-    const newComments = commentsForWeek.filter(comment => comment && !(comment.isRead || []).includes(loggedInUser.user.id))
-    return newComments
-  }
-
-  const showNewCommentsNotification = (siId, week) => {
-    if (!props.showCommentNotification) {
       return false
     }
-
-    const newComments = unReadComments(siId, week)
-    return !newComments ? false : newComments.length > 0
+    const newComments = commentsForWeek.filter(comment => !(comment.isRead || []).includes(loggedInUser.user.id))
+    return newComments.length > 0
   }
 
   const createWeekHeaders = (weeks, codeReviews, siId, dropped, validRegistration) => {
@@ -181,7 +154,7 @@ export const StudentTableRow = props => {
                 ) : (
                   <div>
                     <p>{weekPoints[i + 1]}</p>
-                    {showNewCommentsNotification(data.id, i + 1) ? <Popup trigger={<Icon name="comment outline" size="small" />} content="You have new comments" /> : null}
+                    {showNewCommentsNotification(data.id, i + 1) ? <Popup trigger={<Icon name="comments" size="big" />} content="You have new comments" /> : null}
                   </div>
                 )}
               </div>
