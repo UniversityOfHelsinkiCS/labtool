@@ -168,7 +168,7 @@ export const StudentTableRow = props => {
             key={'week' + i + 'link'}
             to={
               weekPoints[i + 1] === undefined
-                ? `/labtool/reviewstudent/${selectedInstance.ohid}/${siId}/${i + 1}`
+                ? { pathname: `/labtool/reviewstudent/${selectedInstance.ohid}/${siId}/${i + 1}`, state: { cameFromCoursePage: true } }
                 : { pathname: `/labtool/browsereviews/${selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: i } }
             }
           >
