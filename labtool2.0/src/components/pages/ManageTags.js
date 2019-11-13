@@ -244,6 +244,12 @@ export const ManageTags = props => {
                   <br />
                   <br />
                 </div>
+              ) : globalTags.length ? (
+                <div>
+                  <i>Tip: To convert a global tag into a course tag, select a global tag below, uncheck the &quot;global&quot; box and save.</i>
+                  <br />
+                  <br />
+                </div>
               ) : (
                 <span />
               )}

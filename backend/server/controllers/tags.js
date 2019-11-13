@@ -1,4 +1,4 @@
-const { Tag, StudentTag, TeacherInstance, StudentInstance, Week, User, Comment, CodeReview } = require('../models')
+const { Tag, StudentTag, TeacherInstance, StudentInstance, CourseInstance, Week, User, Comment, CodeReview } = require('../models')
 const helper = require('../helpers/courseInstanceHelper')
 const logger = require('../../server/utils/logger')
 
@@ -16,7 +16,6 @@ module.exports = {
     }
 
     try {
-      console.log('createOrUpdate')
       const teacher = await TeacherInstance.findOne({
         where: {
           userId: req.decoded.id
@@ -30,6 +29,54 @@ module.exports = {
         color: req.body.color || 'gray',
         name: req.body.text,
         courseInstanceId: req.body.courseInstanceId || null
+      }
+
+      if (tag.courseInstanceId !== null && req.body.id) {
+        // find existing tag, if there is one
+        const oldTag = await Tag.findOne({ where: { id: req.body.id } })
+        if (oldTag && oldTag.courseInstanceId === null) {
+          // if old tag was global, duplicate that tag to every other
+          // course it was used in
+          const studentTags = await StudentTag.findAll({
+            where: {
+              tagId: oldTag.id
+            }
+          })
+
+          const students = await Promise.all(studentTags.map(st => StudentInstance.findByPk(st.studentInstanceId)))
+          const studentsMap = {}
+          students.forEach((student) => {
+            studentsMap[student.id] = student
+          })
+
+          const courses = await Promise.all(students.map(student => CourseInstance.findByPk(student.courseInstanceId)))
+          const uniqueCourseIds = [...new Set(courses.map(course => course.id))].filter(id => id !== tag.courseInstanceId)
+
+          // go over StudentTag list by course instance ID
+          await Promise.all(uniqueCourseIds.map(async (id) => {
+            const theseStudentTags = studentTags.filter(st => studentsMap[st.studentInstanceId].courseInstanceId === id)
+            if (theseStudentTags.length) {
+              // copy the tag for this course, then
+              const copyTag = await Tag.create({
+                ...tag,
+                courseInstanceId: id
+              })
+
+              // update all student tag instances
+              await Promise.all(theseStudentTags.map(st => StudentTag.update(
+                {
+                  tagId: copyTag.id
+                },
+                {
+                  where: {
+                    id: st.id
+                  }
+                }
+              )
+              ))
+            }
+          }))
+        }
       }
 
       const newTag = req.body.id ? (await Tag.update(
