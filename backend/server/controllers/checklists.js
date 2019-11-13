@@ -106,6 +106,7 @@ module.exports = {
 
       const checklistJson = {}
       const checklistIdsNow = []
+      let checklistOrder = 1
 
       for (const category in req.body.checklist) {
         const checklistForCategory = req.body.checklist[category]
@@ -130,8 +131,7 @@ module.exports = {
           }
           return checklistItemCopy
         }))
-
-        const checklistItems = await Promise.all(checklistForCategoryIdFiltered.map(checklistItem => ChecklistItem.upsert({
+        const checklistItems = await Promise.all(checklistForCategoryIdFiltered.map((checklistItem, index) => ChecklistItem.upsert({
           id: checklistItem.id,
           name: checklistItem.name,
           textWhenOn: checklistItem.textWhenOn,
@@ -139,7 +139,8 @@ module.exports = {
           checkedPoints: checklistItem.checkedPoints,
           uncheckedPoints: checklistItem.uncheckedPoints,
           category,
-          checklistId: result[1].dataValues.id
+          checklistId: result[1].dataValues.id,
+          order: checklistOrder + index
         }, { returning: true })))
 
         checklistJson[category] = checklistItems.map((item) => {
@@ -150,6 +151,8 @@ module.exports = {
           delete checklistItemCopy.checklistId
           return checklistItemCopy
         })
+
+        checklistOrder += checklistItems.length
       }
 
       // remove the other stuff that we do not want
@@ -207,7 +210,8 @@ module.exports = {
         const checklistJson = {}
         const checklistItems = await ChecklistItem.findAll({ where: {
           checklistId: checklist.id
-        } })
+        },
+        order: [['order', 'ASC']] })
         checklistItems.forEach(({ dataValues: checklistItem }) => {
           if (checklistJson[checklistItem.category] === undefined) {
             checklistJson[checklistItem.category] = []
@@ -216,6 +220,7 @@ module.exports = {
           const checklistItemCopy = { ...checklistItem }
           delete checklistItemCopy.category
           delete checklistItemCopy.checklistId
+          delete checklistItemCopy.order
           if (req.body.copying) {
             delete checklistItemCopy.id
           }

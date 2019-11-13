@@ -9,6 +9,7 @@ import { prepareForCourse, coursePageReset, selectTag, selectTeacher } from '../
 import { changeCourseField } from '../../reducers/selectedInstanceReducer'
 import { updateStudentProjectInfo } from '../../services/studentinstances'
 import { resetLoading } from '../../reducers/loadingReducer'
+import { sortStudentsAlphabeticallyByDroppedValue } from '../../util/sort'
 
 import { createDropdownTeachers, createDropdownTags } from '../../util/dropdown'
 import CoursePageStudentInfo from './CoursePage/StudentInfo'
@@ -33,16 +34,6 @@ export const CoursePage = props => {
     }
   }, [])
 
-  const sortStudentArrayAlphabeticallyByDroppedValue = theArray =>
-    theArray.sort(
-      (a, b) =>
-        !Number(a.validRegistration) - !Number(b.validRegistration) ||
-        Number(a.dropped) - Number(b.dropped) ||
-        a.User.lastname.localeCompare(b.User.lastname) ||
-        a.User.firsts.localeCompare(b.User.firsts) ||
-        a.id - b.id
-    )
-
   const downloadFile = (filename, mime, data) => {
     // create temporary element and use that to initiate download
 
@@ -60,7 +51,7 @@ export const CoursePage = props => {
     const download = props.downloadFile || downloadFile
     const twoPad = number => `00${number}`.slice(-2)
 
-    const students = sortStudentArrayAlphabeticallyByDroppedValue(courseData.data.filter(student => student.validRegistration))
+    const students = sortStudentsAlphabeticallyByDroppedValue(courseData.data.filter(student => student.validRegistration))
     const nowDate = new Date()
     const dateFormat = `${nowDate.getUTCFullYear()}-${twoPad(nowDate.getUTCMonth() + 1)}-${twoPad(nowDate.getUTCDate())}_${twoPad(nowDate.getUTCHours())}-${twoPad(nowDate.getUTCMinutes())}-${twoPad(
       nowDate.getUTCSeconds()
@@ -327,7 +318,7 @@ export const CoursePage = props => {
           loggedInUser={user}
           coursePageLogic={coursePageLogic}
           tags={tags}
-          students={sortStudentArrayAlphabeticallyByDroppedValue(courseData.data)}
+          students={sortStudentsAlphabeticallyByDroppedValue(courseData.data)}
           exportCSV={exportCSV}
         />
         <br />
