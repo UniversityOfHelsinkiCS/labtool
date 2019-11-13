@@ -61,6 +61,7 @@ exports[`<ReviewStudentCodeReviews /> ReviewStudentCodeReview Component should r
           <p>
             <a
               href="http://github.com/tiralabra2/issues/1"
+              rel="noopener noreferrer"
               target="_blank"
             >
               http://github.com/tiralabra2/issues/1
