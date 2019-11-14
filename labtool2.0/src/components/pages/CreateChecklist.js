@@ -182,7 +182,8 @@ export const CreateChecklist = props => {
         props.createChecklist({
           courseInstanceId: props.selectedInstance.id,
           week: state.week,
-          checklist: checklistForWeek
+          checklist: checklistForWeek,
+          maxPoints: Number(state.maximumPoints)
         })
         state.checklistData = checklistForWeek
         state.canSave = false

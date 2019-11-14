@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 import StudentTable from '../../StudentTable'
 
 export const CoursePageTeacherMain = props => {
-  const { loggedInUser, courseData, students, droppedTagExists, markAllWithDroppedTagAsDropped, courseId, selectedInstance, coursePageLogic, tags, exportCSV } = props
+  const { loggedInUser, courseData, students, courseId, selectedInstance, coursePageLogic, tags, exportCSV } = props
 
   let droppedStudentCount = 0
   let activeStudentCount = 0
@@ -14,13 +14,14 @@ export const CoursePageTeacherMain = props => {
   students.forEach(student => {
     if (student.dropped) {
       droppedStudentCount++
-    } else {
+    } else if (student.validRegistration) {
+      //exclude students with invalid registration completely from the statistics
       activeStudentCount++
     }
   })
 
   const totalStudentCount = activeStudentCount + droppedStudentCount
-
+  
   const dropConvertButton = droppedTagExists() && (
     <Button onClick={() => markAllWithDroppedTagAsDropped(courseData)} size="small">
       Mark all with dropped tag as dropped out
@@ -53,7 +54,6 @@ export const CoursePageTeacherMain = props => {
         persistentFilterKey={`CoursePage_filters_${courseId}`}
       />
       <br />
-      {dropConvertButton}
       {
         <Link to={`/labtool/massemail/${selectedInstance.ohid}`}>
           <Button size="small">Send email to multiple students</Button>
@@ -74,9 +74,8 @@ CoursePageTeacherMain.propTypes = {
   courseId: PropTypes.string.isRequired,
   students: PropTypes.array.isRequired,
 
-  droppedTagExists: PropTypes.func.isRequired,
-  markAllWithDroppedTagAsDropped: PropTypes.func.isRequired,
-  exportCSV: PropTypes.func.isRequired
+  exportCSV: PropTypes.func.isRequired,
+  loggedInUser: PropTypes.object.isRequired
 }
 
 export default CoursePageTeacherMain
