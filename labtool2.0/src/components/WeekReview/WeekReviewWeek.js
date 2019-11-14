@@ -65,44 +65,46 @@ export const WeekReviewWeek = props => {
             </Card.Content>
             {isTeacher ? (
               <Card.Content style={{ paddingBottom: '5px' }}>
-                {!isFinalWeek && (week.notified ? (
-                  <Label>
-                    Notified <Icon name="check" color="green" />
-                  </Label>
-                ) : (
-                  <Button type="button" onClick={sendWeekEmail(week.id)} size="small">
-                    Send email notification
-                  </Button>
-                ))}
+                {!isFinalWeek &&
+                  (week.notified ? (
+                    <Label>
+                      Notified <Icon name="check" color="green" />
+                    </Label>
+                  ) : (
+                    <Button type="button" onClick={sendWeekEmail(week.id)} size="small">
+                      Send email notification
+                    </Button>
+                  ))}
                 <Link to={`/labtool/reviewstudent/${selectedInstance.ohid}/${studentInstance}/${reviewIndex}`}>
-                  <Popup
-                    trigger={<Button circular color="orange" size="tiny" icon={{ name: 'edit', color: 'black', size: 'large' }} />}
-                    content={isFinalWeek ? 'Edit final review' : 'Edit review'}
-                  />
+                  <Popup trigger={<Button circular color="orange" icon={{ name: 'edit', color: 'black', size: 'large' }} />} content={isFinalWeek ? 'Edit final review' : 'Edit review'} />
                 </Link>
               </Card.Content>
             ) : (
               <span />
             )}
           </Card>
-          {week.comments.length === 0 ? null : <h4> Comments </h4>}
+          {week.comments.length === 0 ? null : (
+            <div>
+              <h4 style={{ display: 'inline-block' }}> Comments </h4>
+              {isTeacher ? (
+                <div style={{ display: 'inline-block', marginLeft: '10px' }}>
+                  {checkAllCommentsAreRead(week.comments) ? (
+                    <Label>
+                      You have read all comments
+                      <Icon name="check" color="green" />
+                    </Label>
+                  ) : (
+                    <Button compact color="green" onClick={() => markComments(week.comments)}>
+                      Mark comments of this week as read
+                    </Button>
+                  )}
+                </div>
+              ) : null}
+            </div>
+          )}
           <Comment.Group>
-            {week ? (
+            {week.comments.length > 0 ? (
               <div>
-                {isTeacher && week.comments.length > 0 ? (
-                  <div>
-                    {checkAllCommentsAreRead(week.comments) ? (
-                      <Label>
-                        You have read all comments
-                        <Icon name="check" color="green" />
-                      </Label>
-                    ) : (
-                      <Button color="green" onClick={() => markComments(week.comments)}>
-                        Mark comments of this week as read
-                      </Button>
-                    )}
-                  </div>
-                ) : null}
                 {sortCommentsByDate(week.comments).map(comment => (
                   <WeekReviewComment
                     key={`weekReviewComment${comment.id}`}
