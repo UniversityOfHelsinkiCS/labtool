@@ -16,6 +16,13 @@ module.exports = (sequelize, DataTypes) => {
       through: 'StudentTag',
       foreignKey: 'tagId'
     })
+    Tag.belongsTo(models.CourseInstance, {
+      foreignKey: {
+        name: 'courseInstanceId',
+        allowNull: true
+      },
+      onDelete: 'CASCADE'
+    })
   }
   return Tag
 }
