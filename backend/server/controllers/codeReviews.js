@@ -23,9 +23,10 @@ async function formatCodeReview(codeReview, allStudentInstancesIds, reviewNumber
     }
   }).then(r => r)
   const repeated = reviewed.filter(r => r.toReview === codeReview.toReview || r.repoToReview === codeReview.repoToReview).length > 0
+  /*  do not prevent repeats in backend -- hisahi
   if (repeated) {
     return null
-  }
+  } */
 
   allStudentInstancesIds.push(codeReview.reviewer)
   return {
@@ -38,6 +39,13 @@ async function formatCodeReview(codeReview, allStudentInstancesIds, reviewNumber
 
 
 module.exports = {
+  /**
+   * Assign code reviews to N students.
+   *   permissions: must be teacher/instructor on course
+   *
+   * @param {*} req
+   * @param {*} res
+   */
   async bulkInsert(req, res) {
     if (!helper.controllerBeforeAuthCheckAction(req, res)) {
       return
@@ -45,7 +53,7 @@ module.exports = {
 
     try {
       if (!req.authenticated.success) {
-        res.status(403).send('you have to be authenticated to do this')
+        res.status(403).send('You have to be authenticated to do this.')
         return
       }
       if (!Array.isArray(req.body.codeReviews || typeof req.body.reviewNumber !== 'number')) {
@@ -64,7 +72,7 @@ module.exports = {
       )
       if (values.indexOf(null) !== -1) {
         // Malformed items in codeReviews are replaced by null.
-        res.status(400).send('Malformed codeReview or code review is repeated.')
+        res.status(400).send('Malformed code review.')
         return
       }
       // Get all studentInstances that have been referenced for validation purposes.
@@ -107,11 +115,18 @@ module.exports = {
         data: req.body
       })
     } catch (e) {
-      logger.error('CodeReview bulk insert failed.', { error: e.message })
-      res.status(500).send('Unexpected error.')
+      logger.error('Code review bulk insert failed.', { error: e.message })
+      res.status(500).send('Unexpected error. Please try again.')
     }
   },
 
+  /**
+   * Grade a code review submitted by a student.
+   *   permissions: must be teacher/instructor on course
+   *
+   * @param {*} req
+   * @param {*} res
+   */
   async grade(req, res) {
     if (!helper.controllerBeforeAuthCheckAction(req, res)) {
       return
@@ -119,7 +134,7 @@ module.exports = {
 
     try {
       if (!req.authenticated.success) {
-        res.status(403).send('you have to be authenticated to do this')
+        res.status(403).send('You have to be authenticated to do this.')
         return
       }
       if (typeof req.body.studentInstanceId !== 'number'
@@ -137,7 +152,7 @@ module.exports = {
         }
       })
       if (!studentInstance) {
-        res.status(404).send('No student instance matched given id.')
+        res.status(404).send('No student instance matched the given ID.')
         return
       }
       const courseId = studentInstance.courseInstanceId
@@ -164,18 +179,25 @@ module.exports = {
         }
       )
       if (modifiedRows === 0) {
-        res.status(404).send('No code review matched the given studentInstanceId and reviewNumber.')
+        res.status(404).send('No code review matched the given student instance ID and review number.')
       }
       res.status(200).send({
-        message: 'Code review points updated successfully',
+        message: 'Code review points updated successfully.',
         data: req.body
       })
       return
     } catch (e) {
-      res.status(500).send('Unexpected error.')
+      res.status(500).send('Unexpected error. Please try again.')
     }
   },
 
+  /**
+   * Add a link to a code review.
+   *   permissions: should be a student
+   *
+   * @param {*} req
+   * @param {*} res
+   */
   async addLink(req, res) {
     if (!helper.controllerBeforeAuthCheckAction(req, res)) {
       return
@@ -183,11 +205,11 @@ module.exports = {
 
     try {
       if (!req.authenticated.success) {
-        res.status(403).send('You have to be authenticated to do this')
+        res.status(403).send('You have to be authenticated to do this.')
         return
       }
       if (!(req.body.linkToReview.startsWith('http://') || req.body.linkToReview.startsWith('https://'))) {
-        res.status(400).send('A link usually starts with http:// or https://')
+        res.status(400).send('The link must start with either "http://" or "https://".')
         return
       }
 
@@ -200,7 +222,7 @@ module.exports = {
         }
       })
       if (!studentInstance) {
-        res.status(404).send('No student instance matched given id.')
+        res.status(404).send('No student instance matched the given ID.')
         return
       }
 
@@ -216,18 +238,25 @@ module.exports = {
         }
       )
       if (modifiedRows === 0) {
-        res.status(404).send('No code review matched the given studentInstanceId and reviewNumber.')
+        res.status(404).send('No code review matched the given student instance ID and review number.')
       }
       res.status(200).send({
-        message: 'Code review link added successfully',
+        message: 'Code review link added successfully.',
         data: req.body
       })
       return
     } catch (e) {
-      res.status(500).send('Unexpected error.')
+      res.status(500).send('Unexpected error. Please try again.') // Make this more helpful?
     }
   },
 
+  /**
+   * Remove one code review from a student.
+   *   permissions: must be teacher/instructor on course
+   *
+   * @param {*} req
+   * @param {*} res
+   */
   async removeOne(req, res) {
     if (!helper.controllerBeforeAuthCheckAction(req, res)) {
       return
@@ -235,13 +264,27 @@ module.exports = {
 
     try {
       if (!req.authenticated.success) {
-        res.status(403).send('You have to be authenticated to do this')
+        res.status(403).send('You have to be authenticated to do this.')
         return
       }
       if (!req.params.id) {
-        res.status(403).send('Cant delete from null')
+        res.status(403).send('Cannot delete from null.')
         return
       }
+      const studentInstance = await StudentInstance.findOne({
+        where: { id: req.body.reviewer }
+      })
+      if (!studentInstance) {
+        return res.status(404).send('no student with that ID found')
+      }
+      const courseInstance = await CourseInstance.findOne({
+        where: { id: studentInstance.courseInstanceId }
+      })
+      const isTeacher = await helper.getTeacherId(req.decoded.id, courseInstance.id)
+      if (!isTeacher) {
+        return res.status(403).send('must be teacher on the course')
+      }
+
       const deleteOne = await CodeReview.destroy({
         where: {
           studentInstanceId: req.body.reviewer,
@@ -250,7 +293,7 @@ module.exports = {
       })
       if (deleteOne === 1) {
         res.status(200).send({
-          message: 'Code review link removed successfully',
+          message: 'Code review link removed successfully.',
           data: req.body
         })
       }

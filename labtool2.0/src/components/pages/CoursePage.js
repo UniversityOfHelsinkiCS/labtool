@@ -9,6 +9,7 @@ import { prepareForCourse, coursePageReset, selectTag, selectTeacher } from '../
 import { changeCourseField } from '../../reducers/selectedInstanceReducer'
 import { updateStudentProjectInfo } from '../../services/studentinstances'
 import { resetLoading } from '../../reducers/loadingReducer'
+import { sortStudentsAlphabeticallyByDroppedValue } from '../../util/sort'
 
 import { createDropdownTeachers, createDropdownTags } from '../../util/dropdown'
 import CoursePageStudentInfo from './CoursePage/StudentInfo'
@@ -33,33 +34,6 @@ export const CoursePage = props => {
     }
   }, [])
 
-  const sortStudentArrayAlphabeticallyByDroppedValue = theArray =>
-    theArray.sort((a, b) => Number(a.dropped) - Number(b.dropped) || a.User.lastname.localeCompare(b.User.lastname) || a.User.firsts.localeCompare(b.User.firsts) || a.id - b.id)
-
-  const droppedTagExists = () => props.tags.tags && props.tags.tags.find(tag => tag.name.toUpperCase() === 'DROPPED')
-
-  const hasDroppedTag = studentTagsData => {
-    let studentInstanceTagNames = studentTagsData.map(tag => tag.name.toUpperCase())
-    return studentInstanceTagNames.includes('DROPPED')
-  }
-
-  const markAllWithDroppedTagAsDropped = async courseData => {
-    if (
-      !window.confirm(
-        'Confirming will mark the students with a dropped tag as dropped out. If a different tag was being used, the system will not suggest an automatic change. In that case, you need to change the status manually in the review page of that student. Are you sure you want to confirm?'
-      )
-    ) {
-      return
-    }
-    for (let i = 0; i < courseData.data.length; i++) {
-      let student = courseData.data[i]
-      let studentTags = student.Tags
-      if (hasDroppedTag(studentTags) === true) {
-        handleMarkAsDropped(true, student.User.id)
-      }
-    }
-  }
-
   const downloadFile = (filename, mime, data) => {
     // create temporary element and use that to initiate download
 
@@ -77,7 +51,7 @@ export const CoursePage = props => {
     const download = props.downloadFile || downloadFile
     const twoPad = number => `00${number}`.slice(-2)
 
-    const students = sortStudentArrayAlphabeticallyByDroppedValue(courseData.data)
+    const students = sortStudentsAlphabeticallyByDroppedValue(courseData.data.filter(student => student.validRegistration))
     const nowDate = new Date()
     const dateFormat = `${nowDate.getUTCFullYear()}-${twoPad(nowDate.getUTCMonth() + 1)}-${twoPad(nowDate.getUTCDate())}_${twoPad(nowDate.getUTCHours())}-${twoPad(nowDate.getUTCMinutes())}-${twoPad(
       nowDate.getUTCSeconds()
@@ -134,7 +108,7 @@ export const CoursePage = props => {
       values.push(sum)
       csvResult.push(values.join(','))
     })
-    
+
     download(csvFilename, 'text/csv;charset=utf-8', csvResult.join('\n'))
   }
 
@@ -146,18 +120,22 @@ export const CoursePage = props => {
     })
   }
 
-  const changeSelectedTeacher = () => {
-    return (e, data) => {
-      const { value } = data
-      props.selectTeacher(value)
-    }
+  const changeSelectedTeacher = (e, data) => {
+    const { value } = data
+    props.selectTeacher(value)
   }
 
-  const changeSelectedTag = () => {
-    return (e, data) => {
-      const { value } = data
-      props.selectTag(value)
-    }
+  const handleMarkRegistrationAsValid = async (validRegistration, id) => {
+    props.updateStudentProjectInfo({
+      ohid: props.selectedInstance.ohid,
+      userId: id,
+      validRegistration: validRegistration
+    })
+  }
+
+  const changeSelectedTag = (e, data) => {
+    const { value } = data
+    props.selectTag(value)
   }
 
   const bulkDoAction = action => {
@@ -218,6 +196,23 @@ export const CoursePage = props => {
     bulkMarkDroppedBool(true)
   }
 
+  const bulkMarkValidRegistrationBool = validRegistration => {
+    bulkDoAction(id => {
+      const student = props.courseData.data.find(data => data.id === Number(id))
+      if (student) {
+        handleMarkRegistrationAsValid(validRegistration, student.User.id)
+      }
+    })
+  }
+
+  const bulkMarkValid = () => {
+    bulkMarkValidRegistrationBool(true)
+  }
+
+  const bulkMarkInvalid = () => {
+    bulkMarkValidRegistrationBool(false)
+  }
+
   let dropDownTeachers = []
   dropDownTeachers = createDropdownTeachers(props.selectedInstance.teacherInstances, dropDownTeachers)
 
@@ -228,7 +223,7 @@ export const CoursePage = props => {
     return <Loader active />
   }
 
-  const { courseId, courseData, coursePageLogic, courseInstance, selectedInstance, tags } = props
+  const { user, courseId, courseData, coursePageLogic, courseInstance, selectedInstance, tags } = props
 
   // This function activates the course, leaving other data intact.
   const activateCourse = () => {
@@ -257,13 +252,10 @@ export const CoursePage = props => {
 
   // This function advances the current week by 1, leaving other data intact.
   const moveToNextWeek = () => {
-    if (!window.confirm('This will advance the course by 1 week. Confirm?')) {
-      return
-    }
-
     const { weekAmount, weekMaxPoints, currentWeek, active, ohid, finalReview, coursesPage, courseMaterial, currentCodeReview } = selectedInstance
 
-    if (currentWeek === weekAmount) {
+    // We can advance past the final week for code review purposes.
+    if (currentWeek >= weekAmount + (finalReview ? 1 : 0)) {
       return
     }
 
@@ -309,7 +301,9 @@ export const CoursePage = props => {
       bulkRemoveTag,
       bulkUpdateTeacher,
       bulkMarkDropped,
-      bulkMarkNotDropped
+      bulkMarkNotDropped,
+      bulkMarkValid,
+      bulkMarkInvalid
     }
     return (
       <div style={{ overflowX: 'auto', overflowY: 'hidden', marginBottom: '20em' }}>
@@ -318,11 +312,10 @@ export const CoursePage = props => {
           courseId={courseId}
           courseData={courseData}
           selectedInstance={selectedInstance}
+          loggedInUser={user}
           coursePageLogic={coursePageLogic}
           tags={tags}
-          droppedTagExists={droppedTagExists}
-          markAllWithDroppedTagAsDropped={markAllWithDroppedTagAsDropped}
-          students={sortStudentArrayAlphabeticallyByDroppedValue(courseData.data)}
+          students={sortStudentsAlphabeticallyByDroppedValue(courseData.data)}
           exportCSV={exportCSV}
         />
         <br />

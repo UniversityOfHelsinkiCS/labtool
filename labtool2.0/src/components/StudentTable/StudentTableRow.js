@@ -4,6 +4,8 @@ import { Button, Icon, Table, Popup, Dropdown, Checkbox } from 'semantic-ui-reac
 import { Link } from 'react-router-dom'
 import RepoLink from '../RepoLink'
 
+import RepoAccessWarning from '../RepoAccessWarning'
+
 export const StudentTableRow = props => {
   const {
     showColumn,
@@ -16,24 +18,28 @@ export const StudentTableRow = props => {
     allowReview,
     allowModify,
     addFilterTag,
+    loggedInUser,
     coursePageLogic,
     selectedInstance,
+    courseData,
     studentInstances,
     associateTeacherToStudent,
+    updateStudentProjectInfo,
     selectStudent,
     unselectStudent,
-    selectTeacher,
-    selectTag,
     showAssistantDropdown,
     showTagDropdown,
     tagStudent,
     unTagStudent
   } = props
 
-  const updateTeacher = id => async e => {
+  const updateTeacher = id => async (e, { value }) => {
+    if (!value) {
+      return
+    }
     try {
       e.preventDefault()
-      let teacherId = coursePageLogic.selectedTeacher
+      let teacherId = value
       if (teacherId === '-') {
         // unassign
         teacherId = null
@@ -58,20 +64,6 @@ export const StudentTableRow = props => {
     }
   }
 
-  const changeSelectedTeacher = () => {
-    return (e, data) => {
-      const { value } = data
-      selectTeacher(value)
-    }
-  }
-
-  const changeSelectedTag = () => {
-    return (e, data) => {
-      const { value } = data
-      selectTag(value)
-    }
-  }
-
   const changeHiddenAssistantDropdown = id => {
     return () => {
       showAssistantDropdown(coursePageLogic.showAssistantDropdown === id ? '' : id)
@@ -84,12 +76,15 @@ export const StudentTableRow = props => {
     }
   }
 
-  const addTag = id => async e => {
+  const addTag = id => async (e, { value }) => {
+    if (!value) {
+      return
+    }
     try {
       e.preventDefault()
       const data = {
         studentId: id,
-        tagId: coursePageLogic.selectedTag
+        tagId: value
       }
       await tagStudent(data)
     } catch (error) {
@@ -110,7 +105,17 @@ export const StudentTableRow = props => {
     }
   }
 
-  const createWeekHeaders = (weeks, codeReviews, siId) => {
+  const showNewCommentsNotification = (siId, week) => {
+    const si = courseData.data.find(si => si.id === siId)
+    const commentsForWeek = si.weeks.find(wk => wk.weekNumber === week).comments
+    if (commentsForWeek.length === 0) {
+      return false
+    }
+    const newComments = commentsForWeek.filter(comment => !(comment.isRead || []).includes(loggedInUser.user.id))
+    return newComments.length > 0
+  }
+
+  const createWeekHeaders = (weeks, codeReviews, siId, dropped, validRegistration) => {
     const cr =
       codeReviews &&
       codeReviews.reduce((a, b) => {
@@ -120,6 +125,7 @@ export const StudentTableRow = props => {
     let i = 0
     let weekPoints = {}
     let finalPoints = undefined
+    const shouldReview = !dropped && validRegistration
 
     const tableCellLinkStyle = { position: 'absolute', display: 'inline-block', top: 0, left: 0, right: 0, bottom: 0 }
     const flexCenter = { display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }
@@ -135,23 +141,31 @@ export const StudentTableRow = props => {
       // we have <br /> to make this easier to click, but it'd be better
       // if we could Link an entire Table.Cell, this however breaks formatting
       // completely.
-
       indents.push(
         <Table.Cell selectable key={'week' + i} textAlign="center" style={{ position: 'relative' }}>
           <Link
-            style={{ ...tableCellLinkStyle, ...flexCenter }}
+            style={(tableCellLinkStyle, flexCenter)}
             key={'week' + i + 'link'}
             to={
               weekPoints[i + 1] === undefined
-                ? `/labtool/reviewstudent/${selectedInstance.ohid}/${siId}/${i + 1}`
+                ? { pathname: `/labtool/reviewstudent/${selectedInstance.ohid}/${siId}/${i + 1}`, state: { cameFromCoursePage: true } }
                 : { pathname: `/labtool/browsereviews/${selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: i } }
             }
           >
-            {selectedInstance.currentWeek === i + 1 && weekPoints[i + 1] === undefined ? (
-              <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'star', size: 'large' }} />} content="Review" />
-            ) : (
-              <p>{weekPoints[i + 1] !== undefined ? weekPoints[i + 1] : '-'}</p>
-            )}
+            <div>
+              {weekPoints[i + 1] === undefined ? (
+                shouldReview && selectedInstance.currentWeek === i + 1 ? (
+                  <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'star', size: 'large' }} />} content="Review" className="reviewButton" />
+                ) : (
+                  <p style={flexCenter}>-</p>
+                )
+              ) : (
+                <div>
+                  <p>{weekPoints[i + 1]}</p>
+                  {showNewCommentsNotification(data.id, i + 1) ? <Popup trigger={<Icon name="comments" size="big" />} content="You have new comments" /> : null}
+                </div>
+              )}
+            </div>
           </Link>
         </Table.Cell>
       )
@@ -181,16 +195,27 @@ export const StudentTableRow = props => {
       let finalReviewPointsCell = (
         <Table.Cell selectable key={i + ii + 1} textAlign="center" style={{ position: 'relative' }}>
           <Link
-            style={tableCellLinkStyle}
+            style={(tableCellLinkStyle, flexCenter)}
             key={'finalReviewlink'}
             to={
               finalPoints === undefined
                 ? `/labtool/reviewstudent/${selectedInstance.ohid}/${siId}/${i + 1}`
-                : { pathname: `/labtool/browsereviews/${selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: i + ii } }
+                : { pathname: `/labtool/browsereviews/${selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: i + ii + 1 } }
             }
           >
             <div style={{ width: '100%', height: '100%' }}>
-              <p style={flexCenter}>{finalPoints === undefined ? '-' : finalPoints}</p>
+              {finalPoints === undefined ? (
+                shouldReview && selectedInstance.currentWeek === selectedInstance.weekAmount + 1 ? (
+                  <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'star', size: 'large' }} />} content="Review" className="reviewButton" />
+                ) : (
+                  <p style={flexCenter}>-</p>
+                )
+              ) : (
+                <div>
+                  <p style={flexCenter}>{finalPoints}</p>
+                  {showNewCommentsNotification(data.id, selectedInstance.weekAmount + 1) ? <Popup trigger={<Icon name="comment outline" size="small" />} content="You have new comments" /> : null}
+                </div>
+              )}
             </div>
           </Link>
         </Table.Cell>
@@ -202,7 +227,7 @@ export const StudentTableRow = props => {
   }
 
   return (
-    <Table.Row key={data.id} className={data.dropped ? 'TableRowForDroppedOutStudent' : 'TableRowForActiveStudent'}>
+    <Table.Row key={data.id} className={data.dropped || !data.validRegistration ? 'TableRowForDroppedOutStudent' : 'TableRowForActiveStudent'}>
       {/* Select Check Box */}
       {showColumn('select') && (
         <Table.Cell key="select">
@@ -212,6 +237,8 @@ export const StudentTableRow = props => {
 
       {/* Student */}
       <Table.Cell key="studentinfo">
+        {!data.validRegistration && <Popup trigger={<Icon name="warning" color="black" />} content="This student has invalid course registration" />}
+        {!data.dropped && data.validRegistration && data.repoExists === false && <RepoAccessWarning student={data} ohid={selectedInstance.ohid} updateStudentProjectInfo={updateStudentProjectInfo} />}
         {allowReview ? (
           <Link to={`/labtool/browsereviews/${selectedInstance.ohid}/${data.id}`}>
             <Popup
@@ -240,42 +267,31 @@ export const StudentTableRow = props => {
           {data.projectName}
           <br />
           <RepoLink url={data.github} />
-          {data.Tags.map(tag => (
-            <div key={data.id + ':' + tag.id}>
-              <Button.Group className={'mini'}>
-                <Button compact floated="left" className={`mini ui ${tag.color} button`} onClick={addFilterTag(tag)}>
-                  {tag.name}
-                </Button>
-                {allowModify && (
-                  <Button compact icon attached="right" className={`mini ui ${tag.color} button`} style={{ paddingLeft: 0, paddingRight: 0 }} onClick={removeTag(data.id, tag.id)}>
-                    <Icon name="remove" />
+          <div>
+            {data.Tags.map(tag => (
+              <span key={data.id + ':' + tag.id} style={{ float: 'left', marginRight: '0.33em' }}>
+                <Button.Group className={'mini'}>
+                  <Button compact style={{ display: 'inline-block' }} className={`mini ui ${tag.color} button`} onClick={addFilterTag(tag)}>
+                    {tag.name}
                   </Button>
-                )}
-              </Button.Group>
-            </div>
-          ))}
+                  {allowModify && (
+                    <Button compact icon attached="right" className={`mini ui ${tag.color} button`} style={{ paddingLeft: 0, paddingRight: 0 }} onClick={removeTag(data.id, tag.id)}>
+                      <Icon name="remove" />
+                    </Button>
+                  )}
+                </Button.Group>
+              </span>
+            ))}
+          </div>
           {allowModify && (
-            <Popup
-              trigger={<Icon id={'tagModify'} onClick={changeHiddenTagDropdown(data.id)} name="pencil" color="green" style={{ float: 'right', fontSize: '1.25em' }} />}
-              content="Add or remove tag"
-            />
+            <Popup trigger={<Icon id={'tagModify'} onClick={changeHiddenTagDropdown(data.id)} name="add" color="green" style={{ float: 'right', fontSize: '1.25em' }} />} content="Add tag" />
           )}
         </span>
         {allowModify && (
           <div>
             {coursePageLogic.showTagDropdown === data.id ? (
               <div>
-                <Dropdown id={'tagDropdown'} style={{ float: 'left' }} options={dropDownTags} onChange={changeSelectedTag()} placeholder="Choose tag" fluid selection />
-                <br />
-                <div className="two ui buttons" style={{ float: 'left' }}>
-                  <button className="ui icon positive button" onClick={addTag(data.id)} size="mini">
-                    <i className="plus icon" />
-                  </button>
-                  <div className="or" />
-                  <button className="ui icon button" onClick={removeTag(data.id, null)} size="mini">
-                    <i className="trash icon" />
-                  </button>
-                </div>
+                <Dropdown id={'tagDropdown'} style={{ float: 'left' }} selectOnBlur={false} options={dropDownTags} onChange={addTag(data.id)} placeholder="Choose tag" fluid selection />
               </div>
             ) : (
               <div />
@@ -287,7 +303,7 @@ export const StudentTableRow = props => {
       {showColumn('points') && (
         <>
           {/* Week #, Code Review # */}
-          {createWeekHeaders(data.weeks, data.codeReviews, data.id)}
+          {createWeekHeaders(data.weeks, data.codeReviews, data.id, data.dropped, data.validRegistration)}
 
           {/* Sum */}
           <Table.Cell key="pointssum" textAlign="center">
@@ -297,7 +313,7 @@ export const StudentTableRow = props => {
       )}
 
       {/* Instructor */}
-      {showColumn('instructor') && (!shouldHideInstructor(studentInstances) || allowModify) && (
+      {showColumn('instructor') && !shouldHideInstructor(studentInstances) && (
         <Table.Cell key="instructor">
           {!shouldHideInstructor(studentInstances) &&
             (data.teacherInstanceId && selectedInstance.teacherInstances ? (
@@ -319,10 +335,7 @@ export const StudentTableRow = props => {
               />
               {coursePageLogic.showAssistantDropdown === data.id ? (
                 <div>
-                  <Dropdown id={'assistantDropdown'} options={dropDownTeachers} onChange={changeSelectedTeacher()} placeholder="Select teacher" fluid selection />
-                  <Button onClick={updateTeacher(data.id, data.teacherInstanceId)} size="small">
-                    Change instructor
-                  </Button>
+                  <Dropdown id={'assistantDropdown'} selectOnBlur={false} options={dropDownTeachers} onChange={updateTeacher(data.id, data.teacherInstanceId)} placeholder="Select teacher" fluid selection />
                 </div>
               ) : (
                 <div />
@@ -346,6 +359,7 @@ StudentTableRow.propTypes = {
   shouldHideInstructor: PropTypes.func.isRequired,
   allowReview: PropTypes.bool,
   allowModify: PropTypes.bool,
+  showCommentNotification: PropTypes.bool,
   addFilterTag: PropTypes.func.isRequired,
   extraStudentIcon: PropTypes.func,
 
@@ -354,15 +368,16 @@ StudentTableRow.propTypes = {
   coursePageLogic: PropTypes.object.isRequired,
 
   associateTeacherToStudent: PropTypes.func.isRequired,
+  updateStudentProjectInfo: PropTypes.func.isRequired,
   showAssistantDropdown: PropTypes.func.isRequired,
   showTagDropdown: PropTypes.func.isRequired,
-  selectTeacher: PropTypes.func.isRequired,
-  selectTag: PropTypes.func.isRequired,
   getAllTags: PropTypes.func.isRequired,
   tagStudent: PropTypes.func.isRequired,
   unTagStudent: PropTypes.func.isRequired,
   selectStudent: PropTypes.func.isRequired,
-  unselectStudent: PropTypes.func.isRequired
+  unselectStudent: PropTypes.func.isRequired,
+  loggedInUser: PropTypes.object,
+  courseData: PropTypes.object
 }
 
 export default StudentTableRow

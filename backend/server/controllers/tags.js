@@ -4,6 +4,8 @@ const logger = require('../../server/utils/logger')
 
 module.exports = {
   /**
+   * Creates or edits a tag
+   *   permissions: must be a *course teacher* on any course
    *
    * @param req
    * @param res
@@ -16,7 +18,8 @@ module.exports = {
     try {
       const teacher = await TeacherInstance.findOne({
         where: {
-          userId: req.decoded.id
+          userId: req.decoded.id,
+          instructor: false
         }
       })
       if (!teacher) {
@@ -50,6 +53,13 @@ module.exports = {
     }
   },
 
+  /**
+   * Removes a tag
+   *   permissions: must be a *course teacher* on any course
+   *
+   * @param req
+   * @param res
+   */
   async remove(req, res) {
     if (!helper.controllerBeforeAuthCheckAction(req, res)) {
       return
@@ -63,7 +73,7 @@ module.exports = {
         }
       })
       if (!teacher) {
-        return res.status(400).send('you have to be a course teacher to do this')
+        return res.status(400).send('You have to be a course teacher to do this.')
       }
 
       const tag = await Tag.findOne({
@@ -72,7 +82,7 @@ module.exports = {
         }
       })
       if (!tag) {
-        return res.status(404).send('there is no tag with that name')
+        return res.status(404).send('There is no tag with that name.')
       }
 
       const { id } = tag
@@ -83,6 +93,13 @@ module.exports = {
     }
   },
 
+  /**
+   * Get all tags
+   *   permissions: any logged in user
+   *
+   * @param req
+   * @param res
+   */
   getAll(req, res) {
     if (!helper.controllerBeforeAuthCheckAction(req, res)) {
       return
@@ -92,14 +109,21 @@ module.exports = {
       return Tag.findAll()
         .then(tag => res.status(200).send(tag))
         .catch((error) => {
-          res.status(400).send('et ny saa niitä tageja')
-          logger.error('tag getall error', { error: error.message })
+          res.status(400).send('Error fetching tags.')
+          logger.error('Couldn\'t fetch tags.', { error: error.message })
         })
     } catch (e) {
-      res.status(400).send('nymmeni jokin pieleen')
+      res.status(400).send('An error occurred. Please try again.')
     }
   },
 
+  /**
+   * Add tag to a student
+   *   permissions: must be a teacher/instructor on the course of that student
+   *
+   * @param req
+   * @param res
+   */
   async addTagToStudentInstance(req, res) {
     if (req.body.tagId) {
       if (!helper.controllerBeforeAuthCheckAction(req, res)) {
@@ -107,24 +131,23 @@ module.exports = {
       }
 
       try {
-        const teacher = await TeacherInstance.findOne({
-          where: {
-            userId: req.decoded.id
-          }
-        })
-        if (!teacher) {
-          res.status(400).send('you have to be a teacher to do this')
-          return
-        }
-
         const student = await StudentInstance.findOne({
           where: {
             id: req.body.studentId
           }
         })
         if (!student) {
-          res.status(404).send('did not found student with that id')
-          return
+          return res.status(404).send('Did not found student with that ID.')
+        }
+
+        const teacher = await TeacherInstance.findOne({
+          where: {
+            userId: req.decoded.id,
+            courseInstanceId: student.courseInstanceId
+          }
+        })
+        if (!teacher) {
+          return res.status(400).send('You have to be a teacher to do this.')
         }
 
         const foundTag = await Tag.findOne({
@@ -133,8 +156,7 @@ module.exports = {
           }
         })
         if (!foundTag) {
-          res.status(404).send('did not find a tag with that id')
-          return
+          return res.status(404).send('Did not find a tag with that ID.')
         }
 
         const studentTag = await StudentTag.findOrCreate({
@@ -144,7 +166,7 @@ module.exports = {
           }
         })
         if (!studentTag) {
-          res.status(400).send('tagging did not succeed')
+          res.status(400).send('Tagging did not succeed.')
           return
         }
 
@@ -193,13 +215,20 @@ module.exports = {
         })
         res.status(200).send(newStudent)
       } catch (e) {
-        res.status(400).send('ei onnistu')
+        res.status(400).send('An unknown error occurred. Please try again.')
       }
     } else {
-      res.status(400).send('no tag selected')
+      res.status(400).send('No tag selected.')
     }
   },
 
+  /**
+   * Remove tag from a student
+   *   permissions: must be a teacher/instructor on the course of that student
+   *
+   * @param req
+   * @param res
+   */
   async removeTagFromStudentInstance(req, res) {
     if (req.body.tagId) {
       if (!helper.controllerBeforeAuthCheckAction(req, res)) {
@@ -207,14 +236,23 @@ module.exports = {
       }
 
       try {
+        const student = await StudentInstance.findOne({
+          where: {
+            id: req.body.studentId
+          }
+        })
+        if (!student) {
+          return res.status(404).send('did not found student with that id')
+        }
+
         const teacher = await TeacherInstance.findOne({
           where: {
-            userId: req.decoded.id
+            userId: req.decoded.id,
+            courseInstanceId: student.courseInstanceId
           }
         })
         if (!teacher) {
-          res.status(400).send('you have to be a teacher to do this')
-          return
+          return res.status(400).send('You have to be a teacher to do this.')
         }
 
         const studentTag = await StudentTag.findOne({
@@ -224,12 +262,12 @@ module.exports = {
           }
         })
         if (!studentTag) {
-          res.status(404).send('did not find the given student tag')
+          res.status(404).send('Did not find the given student tag.')
         }
 
         const removedTag = await studentTag.destroy()
         if (!removedTag) {
-          return res.status(400).send('removing student tag failed')
+          return res.status(400).send('Removing student tag failed.')
         }
 
         const newStudent = await StudentInstance.findOne({
@@ -277,10 +315,10 @@ module.exports = {
         })
         res.status(200).send(newStudent)
       } catch (e) {
-        res.status(400).send('ei onnistu')
+        res.status(400).send('An unknown error occurred. Please try again.')
       }
     } else {
-      res.status(400).send('no tag selected')
+      res.status(400).send('No tag selected.')
     }
   }
 }

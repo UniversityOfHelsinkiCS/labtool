@@ -5,9 +5,10 @@ import { connect } from 'react-redux'
 import HorizontalScrollable from './HorizontalScrollable'
 import { getAllTags, tagStudent, unTagStudent } from '../services/tags'
 import { associateTeacherToStudent } from '../services/assistant'
-import { showAssistantDropdown, showTagDropdown, selectTeacher, selectTag, selectStudent, unselectStudent, selectAllStudents, unselectAllStudents } from '../reducers/coursePageLogicReducer'
+import { showAssistantDropdown, showTagDropdown, selectStudent, unselectStudent, selectAllStudents, unselectAllStudents } from '../reducers/coursePageLogicReducer'
 import { createDropdownTeachers, createDropdownTags } from '../util/dropdown'
 import { usePersistedState } from '../hooks/persistedState'
+import { updateStudentProjectInfo } from '../services/studentinstances'
 
 import { StudentTableRow } from './StudentTable/StudentTableRow'
 
@@ -117,7 +118,7 @@ export const StudentTable = props => {
     return headers
   }
 
-  const { columns, disableDefaultFilter, studentColumnName, showFooter, extraStudentIcon, studentFooter } = props
+  const { columns, disableDefaultFilter, filterStudents, studentColumnName, showFooter, extraStudentIcon, studentFooter } = props
 
   const showColumn = column => columns.indexOf(column) >= 0
   const nullFunc = () => nullFunc
@@ -148,7 +149,7 @@ export const StudentTable = props => {
       // remove students when filtering tags and they don't match
       (state.filterByTag.length === 0 || hasFilteringTags(data.Tags, state.filterByTag)))
 
-  const filteredData = (props.studentInstances || []).filter(dataFilter)
+  const filteredData = (props.studentInstances || []).filter(dataFilter).filter(filterStudents ? filterStudents : () => true)
 
   if (props.onFilter) {
     props.onFilter(filteredData.map(data => data.id))
@@ -220,7 +221,7 @@ export const StudentTable = props => {
                   <Table.HeaderCell>Sum</Table.HeaderCell>
                 </>
               )}
-              {showColumn('instructor') && (!shouldHideInstructor(props.studentInstances) || props.allowModify) && (
+              {showColumn('instructor') && !shouldHideInstructor(props.studentInstances) && (
                 <Table.HeaderCell width={shouldHideInstructor(props.studentInstances) ? null : 'six'}>Instructor</Table.HeaderCell>
               )}
               {extraColumns.map(([header, ,]) => header())}
@@ -240,19 +241,21 @@ export const StudentTable = props => {
                 extraStudentIcon={extraStudentIcon}
                 allowReview={props.allowReview}
                 allowModify={props.allowModify}
+                showCommentNotification={props.showCommentNotification}
+                loggedInUser={props.loggedInUser}
                 coursePageLogic={props.coursePageLogic}
                 selectedInstance={props.selectedInstance}
+                courseData={props.courseData}
                 studentInstances={props.studentInstances}
                 associateTeacherToStudent={props.associateTeacherToStudent}
                 selectStudent={props.selectStudent}
                 unselectStudent={props.unselectStudent}
-                selectTeacher={props.selectTeacher}
-                selectTag={props.selectTag}
                 showAssistantDropdown={props.showAssistantDropdown}
                 showTagDropdown={props.showTagDropdown}
                 tagStudent={props.tagStudent}
                 unTagStudent={props.unTagStudent}
                 getAllTags={props.getAllTags}
+                updateStudentProjectInfo={props.updateStudentProjectInfo}
               />
             ))}
           </Table.Body>
@@ -284,21 +287,21 @@ const mapDispatchToProps = {
   associateTeacherToStudent,
   showAssistantDropdown,
   showTagDropdown,
-  selectTeacher,
-  selectTag,
   getAllTags,
   tagStudent,
   unTagStudent,
   selectStudent,
   unselectStudent,
   selectAllStudents,
-  unselectAllStudents
+  unselectAllStudents,
+  updateStudentProjectInfo
 }
 
 StudentTable.propTypes = {
   columns: PropTypes.array,
   allowModify: PropTypes.bool,
   allowReview: PropTypes.bool,
+  showCommentNotification: PropTypes.bool,
   disableDefaultFilter: PropTypes.bool,
   showFooter: PropTypes.bool,
   studentColumnName: PropTypes.string,
@@ -307,24 +310,26 @@ StudentTable.propTypes = {
   persistentFilterKey: PropTypes.string,
   extraStudentIcon: PropTypes.func,
   studentFooter: PropTypes.func,
+  filterStudents: PropTypes.func,
 
   studentInstances: PropTypes.array.isRequired,
   selectedInstance: PropTypes.object.isRequired,
   coursePageLogic: PropTypes.object.isRequired,
   tags: PropTypes.object.isRequired,
+  courseData: PropTypes.object.isRequired,
+  loggedInUser: PropTypes.object.isRequired,
 
   associateTeacherToStudent: PropTypes.func.isRequired,
   showAssistantDropdown: PropTypes.func.isRequired,
   showTagDropdown: PropTypes.func.isRequired,
-  selectTeacher: PropTypes.func.isRequired,
-  selectTag: PropTypes.func.isRequired,
   getAllTags: PropTypes.func.isRequired,
   tagStudent: PropTypes.func.isRequired,
   unTagStudent: PropTypes.func.isRequired,
   selectStudent: PropTypes.func.isRequired,
   unselectStudent: PropTypes.func.isRequired,
   selectAllStudents: PropTypes.func.isRequired,
-  unselectAllStudents: PropTypes.func.isRequired
+  unselectAllStudents: PropTypes.func.isRequired,
+  updateStudentProjectInfo: PropTypes.func.isRequired
 }
 
 export default connect(
