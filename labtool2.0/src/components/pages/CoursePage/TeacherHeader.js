@@ -49,13 +49,18 @@ export const CoursePageTeacherHeader = props => {
               <Popup
                 content={weekAdvanceEnabled ? 'Advance course by 1 week' : selectedInstance.finalReview ? 'Already at final review' : 'Already at final week'}
                 trigger={
-                  <Button
-                    disabled={!weekAdvanceEnabled}
-                    icon={{ name: 'right arrow' }}
-                    onClick={() => moveToNextWeek()}
-                    style={{ size: 'tiny', marginLeft: '15px', cursor: weekAdvanceEnabled ? 'pointer' : 'not-allowed' }}
-                    content=" Advance"
-                  />
+                  <span style={{ marginLeft: '15px' }}>
+                    <Button
+                      content="Advance"
+                      icon={{ name: 'right arrow' }}
+                      labelPosition="right"
+                      disabled={!weekAdvanceEnabled}
+                      onClick={() => moveToNextWeek()}
+                      compact
+                      size="mini"
+                      style={{ cursor: weekAdvanceEnabled ? 'pointer' : 'not-allowed' }}
+                    />
+                  </span>
                 }
               />
             </Table.Cell>
