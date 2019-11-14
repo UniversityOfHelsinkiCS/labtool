@@ -86,7 +86,9 @@ module.exports = {
       })
       res.status(200).send(week)
     } catch (error) {
-      logger.error('Create weeks error.', { error: error.message })
+      logger.error('Create weeks error.')
+      logger.error(error)
+      res.status(500).send(error.message)
     }
   },
 
