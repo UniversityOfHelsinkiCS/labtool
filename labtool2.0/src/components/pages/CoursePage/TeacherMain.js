@@ -27,21 +27,15 @@ export const CoursePageTeacherMain = props => {
     </Button>
   )
 
-  // We always show how many active students there are (0, 1 or more).
-  let studentStats = activeStudentCount + ' active student' + (activeStudentCount === 1 ? '' : 's')
-
-  if (droppedStudentCount >= 0) {
-    // If we have at least 1 dropped student, additionally show their amount and the total amount of students.
-    studentStats = studentStats += ', ' + droppedStudentCount + ' dropped student' + (droppedStudentCount === 1 ? '' : 's')
-    studentStats = studentStats += ' (' + totalStudentCount + ' in total)'
-  }
-
   return (
     <div className="TeachersBottomView">
       <br />
       <Header as="h2">Students</Header>
 
-      <p>{studentStats}</p>
+      <p>
+        {activeStudentCount} active student{activeStudentCount === 1 ? '' : 's'}
+        {droppedStudentCount > 0 ? ', ' + droppedStudentCount + ' dropped (' + totalStudentCount + ' in total)' : ''}
+      </p>
 
       <StudentTable
         key={'studentTable'}
