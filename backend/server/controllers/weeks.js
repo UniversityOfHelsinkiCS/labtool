@@ -16,84 +16,85 @@ module.exports = {
         return
       }
 
-      if (req.authenticated.success) {
-        // Check that there is a TeacherInstance for this user and this course.
-        const studentInstance = await StudentInstance.findOne({
-          where: {
-            id: req.body.studentInstanceId
-          }
-        })
-        const isTeacher = await helper.getTeacherId(req.decoded.id, studentInstance.courseInstanceId)
-        if (!isTeacher) {
-          res.status(400).send('You must be a teacher to give points.')
-          return
-        }
-
-        // Remove draft.
-        await WeekDraft.destroy({
-          where: {
-            weekNumber: req.body.weekNumber,
-            studentInstanceId: req.body.studentInstanceId
-          }
-        })
-
-        let week = await Week.findOne({
-          where: {
-            weekNumber: req.body.weekNumber,
-            studentInstanceId: req.body.studentInstanceId
-          }
-        })
-
-        // Collect checklist checks from DB to this object
-        // This is to keep backend backwards compatible
-        const checksObject = {}
-
-        if (week) {
-          const updatedChecks = req.body.checks || {}
-          await week.update({
-            points: req.body.points || week.points,
-            feedback: req.body.feedback || week.feedback,
-            instructorNotes: req.body.instructorNotes || week.instructorNotes
-          })
-          await Promise.all(Object.keys(updatedChecks).map(check => ReviewCheck.findOrCreate({
-            where: {
-              checklistItemId: Number(check),
-              weekId: week.id
-            }
-          }).then(reviewCheck => ReviewCheck.update({
-            checked: updatedChecks[check]
-          }, {
-            where: {
-              id: reviewCheck[0].dataValues.id
-            },
-            returning: true
-          })).then(([_, [updatedReviewCheck]]) => {
-            checksObject[updatedReviewCheck.checklistItemId] = updatedReviewCheck.dataValues.checked
-          })))
-        } else {
-          week = await Week.create({
-            points: req.body.points,
-            studentInstanceId: req.body.studentInstanceId,
-            feedback: req.body.feedback,
-            instructorNotes: req.body.instructorNotes,
-            weekNumber: req.body.weekNumber,
-            notified: false
-          })
-          await Promise.all(Object.keys(req.body.checks).map(check => ReviewCheck.create({
-            checklistItemId: Number(check),
-            checked: req.body.checks[check],
-            weekId: week.id
-          }).then((reviewCheck) => {
-            checksObject[reviewCheck.checklistItemId] = reviewCheck.checked
-          })))
-        }
-        res.status(200).send({ ...week.dataValues, checks: checksObject })
-      } else {
-        res.status(400).send('Token verification failed.')
+      if (!req.authenticated.success) {
+        return res.status(400).send('Token verification failed.')
       }
+
+      // Check that there is a TeacherInstance for this user and this course.
+      const studentInstance = await StudentInstance.findOne({
+        where: {
+          id: req.body.studentInstanceId
+        }
+      })
+      const isTeacher = await helper.getTeacherId(req.decoded.id, studentInstance.courseInstanceId)
+      if (!isTeacher) {
+        res.status(400).send('You must be a teacher to give points.')
+        return
+      }
+
+      let week = await Week.findOne({
+        where: {
+          weekNumber: req.body.weekNumber,
+          studentInstanceId: req.body.studentInstanceId
+        }
+      })
+
+      // Collect checklist checks from DB to this object
+      // This is to keep backend backwards compatible
+      const checksObject = {}
+
+      if (week) {
+        const updatedChecks = req.body.checks || {}
+        await week.update({
+          points: req.body.points || week.points,
+          feedback: req.body.feedback || week.feedback,
+          instructorNotes: req.body.instructorNotes || week.instructorNotes
+        })
+        await Promise.all(Object.keys(updatedChecks).map(check => ReviewCheck.findOrCreate({
+          where: {
+            checklistItemId: Number(check),
+            weekId: week.id
+          }
+        }).then(reviewCheck => ReviewCheck.update({
+          checked: updatedChecks[check]
+        }, {
+          where: {
+            id: reviewCheck[0].dataValues.id
+          },
+          returning: true
+        })).then(([_, [updatedReviewCheck]]) => {
+          checksObject[updatedReviewCheck.checklistItemId] = updatedReviewCheck.dataValues.checked
+        })))
+      } else {
+        week = await Week.create({
+          points: req.body.points,
+          studentInstanceId: req.body.studentInstanceId,
+          feedback: req.body.feedback,
+          instructorNotes: req.body.instructorNotes,
+          weekNumber: req.body.weekNumber,
+          notified: false
+        })
+        await Promise.all(Object.keys(req.body.checks).map(check => ReviewCheck.create({
+          checklistItemId: Number(check),
+          checked: req.body.checks[check],
+          weekId: week.id
+        }).then((reviewCheck) => {
+          checksObject[reviewCheck.checklistItemId] = reviewCheck.checked
+        })))
+      }
+
+      // Remove draft.
+      await WeekDraft.destroy({
+        where: {
+          weekNumber: req.body.weekNumber,
+          studentInstanceId: req.body.studentInstanceId
+        }
+      })
+      res.status(200).send({ ...week.dataValues, checks: checksObject })
     } catch (error) {
-      logger.error('create weeks error', { error: error.message })
-      res.status(400).send({ error })
+      logger.error('Create weeks error.')
+      logger.error(error)
+      res.status(500).send(error.message)
     }
   },
 
