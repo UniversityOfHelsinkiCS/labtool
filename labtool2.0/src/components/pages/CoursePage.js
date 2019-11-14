@@ -287,7 +287,8 @@ export const CoursePage = props => {
   const moveToNextWeek = () => {
     const { weekAmount, weekMaxPoints, currentWeek, active, ohid, finalReview, coursesPage, courseMaterial, currentCodeReview } = selectedInstance
 
-    if (currentWeek === weekAmount) {
+    // We can advance past the final week for code review purposes.
+    if (currentWeek === weekAmount + 1) {
       return
     }
 

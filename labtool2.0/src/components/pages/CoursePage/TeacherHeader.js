@@ -50,10 +50,10 @@ export const CoursePageTeacherHeader = props => {
                 trigger={
                   <Button
                     disabled={!weekAdvanceEnabled}
-                    icon={{ name: 'right arrow', size: 'medium', color: 'orange' }}
+                    icon={{ name: 'right arrow' }}
                     onClick={() => moveToNextWeek()}
-                    style={{ marginLeft: '15px', cursor: weekAdvanceEnabled ? 'pointer' : 'not-allowed' }}
-                    content="Advance"
+                    style={{ size: 'tiny', marginLeft: '15px', cursor: weekAdvanceEnabled ? 'pointer' : 'not-allowed' }}
+                    content=" Advance"
                   />
                 }
               />
