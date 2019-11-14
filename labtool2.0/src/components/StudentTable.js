@@ -118,7 +118,7 @@ export const StudentTable = props => {
     return headers
   }
 
-  const { columns, disableDefaultFilter, studentColumnName, showFooter, extraStudentIcon, studentFooter } = props
+  const { columns, disableDefaultFilter, filterStudents, studentColumnName, showFooter, extraStudentIcon, studentFooter } = props
 
   const showColumn = column => columns.indexOf(column) >= 0
   const nullFunc = () => nullFunc
@@ -149,7 +149,7 @@ export const StudentTable = props => {
       // remove students when filtering tags and they don't match
       (state.filterByTag.length === 0 || hasFilteringTags(data.Tags, state.filterByTag)))
 
-  const filteredData = (props.studentInstances || []).filter(dataFilter)
+  const filteredData = (props.studentInstances || []).filter(dataFilter).filter(filterStudents ? filterStudents : () => true)
 
   if (props.onFilter) {
     props.onFilter(filteredData.map(data => data.id))
@@ -310,11 +310,14 @@ StudentTable.propTypes = {
   persistentFilterKey: PropTypes.string,
   extraStudentIcon: PropTypes.func,
   studentFooter: PropTypes.func,
+  filterStudents: PropTypes.func,
 
   studentInstances: PropTypes.array.isRequired,
   selectedInstance: PropTypes.object.isRequired,
   coursePageLogic: PropTypes.object.isRequired,
   tags: PropTypes.object.isRequired,
+  courseData: PropTypes.object.isRequired,
+  loggedInUser: PropTypes.object.isRequired,
 
   associateTeacherToStudent: PropTypes.func.isRequired,
   showAssistantDropdown: PropTypes.func.isRequired,

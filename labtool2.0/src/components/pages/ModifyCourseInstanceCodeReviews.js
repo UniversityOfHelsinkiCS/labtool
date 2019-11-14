@@ -20,7 +20,6 @@ import ConfirmationModal from '../ConfirmationModal'
 import RevieweeDropdown from '../RevieweeDropdown'
 import RepoLink from '../RepoLink'
 import IssuesDisabledWarning from '../IssuesDisabledWarning'
-import RepoAccessWarning from '../RepoAccessWarning'
 import { updateStudentProjectInfo, massUpdateStudentProjectInfo } from '../../services/studentinstances'
 
 export const ModifyCourseInstanceReview = props => {
@@ -237,11 +236,7 @@ export const ModifyCourseInstanceReview = props => {
       })
     )
       .then(githubRepos => {
-        const studentInstances = githubRepos
-          .filter(([, repo]) => !!repo)
-          .map(([userId, githubRepo]) => {
-            return { userId, issuesDisabled: !githubRepo.has_issues || githubRepo.archived }
-          })
+        const studentInstances = githubRepos.map(([userId, githubRepo]) => ({ userId, repoExists: !!githubRepo, issuesDisabled: githubRepo ? !githubRepo.has_issues || githubRepo.archived : false }))
 
         props.massUpdateStudentProjectInfo({ ohid: props.selectedInstance.ohid, studentInstances })
       })
@@ -255,8 +250,14 @@ export const ModifyCourseInstanceReview = props => {
       })
   }
 
+  const areIssuesEnabledForStudent = student => {
+    // add timeout, 48 hours / 2 days
+    const lastCheck = new Date(student.issuesDisabledCheckedAt)
+    return student.issuesDisabled === false && new Date().getTime() - lastCheck.getTime() < 48 * 60 * 60
+  }
+
   const areIssuesDisabledForStudent = student => {
-    return student.issuesDisabled
+    return student.issuesDisabled === true
   }
 
   const disableIssuesDisabledWarning = student => {
@@ -265,13 +266,15 @@ export const ModifyCourseInstanceReview = props => {
     }
   }
 
-
   const displayIssuesDisabledIcon = student => {
-    if (student.repoExists === false) {
-      return <RepoAccessWarning student={student} ohid={props.selectedInstance.ohid} updateStudentProjectInfo={props.updateStudentProjectInfo} />
+    if (!student.repoExists) {
+      // display nothing, the warning will already be displayed by StudentTable
+      return null
     }
     if (areIssuesDisabledForStudent(student)) {
       return <IssuesDisabledWarning onClick={() => disableIssuesDisabledWarning(student)} />
+    } else if (areIssuesEnabledForStudent(student)) {
+      return <Popup trigger={<Icon name="checkmark" size="large" color="green" />} content={<span>This repository exists and has issues enabled!</span>} hoverable />
     }
     return null
   }
