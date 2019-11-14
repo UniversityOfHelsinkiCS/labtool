@@ -1,8 +1,15 @@
 const helper = require('../helpers/checklistHelper')
-const { TeacherInstance, Checklist, ChecklistItem } = require('../models')
+const { TeacherInstance, Checklist, ChecklistItem, StudentInstance } = require('../models')
 const logger = require('../utils/logger')
 
 module.exports = {
+  /**
+   * Create/edit checklist for course
+   *   permissions: must be teacher on course
+   *
+   * @param {*} req
+   * @param {*} res
+   */
   async create(req, res) {
     if (!helper.controllerBeforeAuthCheckAction(req, res)) {
       return
@@ -10,7 +17,18 @@ module.exports = {
 
     try {
       if (!req.authenticated.success) {
-        res.status(403).send('you have to be authenticated to do this')
+        res.status(403).send('You have to be authenticated to do this.')
+        return
+      }
+      const teacherInstance = await TeacherInstance.findOne({
+        attributes: ['id'],
+        where: {
+          userId: req.decoded.id,
+          courseInstanceId: req.body.courseInstanceId
+        }
+      })
+      if (!teacherInstance) {
+        res.status(403).send('You must be a teacher of the course to perform this action.')
         return
       }
       if (typeof req.body.week !== 'number' || typeof req.body.courseInstanceId !== 'number') {
@@ -29,7 +47,7 @@ module.exports = {
           }
           req.body.checklist[cl].forEach((row) => {
             if (row.id !== undefined && typeof row.id !== 'number') {
-              res.status(400).send('Field id must be numeric')
+              res.status(400).send('Field ID must be numeric.')
               return
             }
             if (typeof row.name !== 'string') {
@@ -56,12 +74,12 @@ module.exports = {
                   break
                 case 'textWhenOn':
                   if (typeof row[key] !== 'string') {
-                    res.status(400).send('textWhenOn must have a string value or be undefined.')
+                    res.status(400).send('"textWhenOn" must have a string value or be undefined.')
                   }
                   break
                 case 'textWhenOff':
                   if (typeof row[key] !== 'string') {
-                    res.status(400).send('textWhenOff must have a string value or be undefined.')
+                    res.status(400).send('"textWhenOff" must have a string value or be undefined.')
                   }
                   break
                 default:
@@ -72,17 +90,6 @@ module.exports = {
         })
       } catch (e) {
         res.status(400).send('Cannot parse checklist JSON.')
-        return
-      }
-      const teacherInstance = await TeacherInstance.findOne({
-        attributes: ['id'],
-        where: {
-          userId: req.decoded.id,
-          courseInstanceId: req.body.courseInstanceId
-        }
-      })
-      if (!teacherInstance) {
-        res.status(403).send('You must be a teacher of the course to perform this action.')
         return
       }
       // No validation is done to prevent creating a checklist for a week that doesn't exist.
@@ -99,11 +106,12 @@ module.exports = {
 
       const checklistJson = {}
       const checklistIdsNow = []
+      let checklistOrder = 1
 
       for (const category in req.body.checklist) {
         const checklistForCategory = req.body.checklist[category]
 
-        const checklistForCategoryIdFiltered = await Promise.all(checklistForCategory.map(async checklistItem => {
+        const checklistForCategoryIdFiltered = await Promise.all(checklistForCategory.map(async (checklistItem) => {
           // if the ID conflicts with an existing checklist item
           // *on another checklist*, remove ID here. this makes
           // copying a lot easier, since it won't overwrite the
@@ -123,21 +131,19 @@ module.exports = {
           }
           return checklistItemCopy
         }))
+        const checklistItems = await Promise.all(checklistForCategoryIdFiltered.map((checklistItem, index) => ChecklistItem.upsert({
+          id: checklistItem.id,
+          name: checklistItem.name,
+          textWhenOn: checklistItem.textWhenOn,
+          textWhenOff: checklistItem.textWhenOff,
+          checkedPoints: checklistItem.checkedPoints,
+          uncheckedPoints: checklistItem.uncheckedPoints,
+          category,
+          checklistId: result[1].dataValues.id,
+          order: checklistOrder + index
+        }, { returning: true })))
 
-        const checklistItems = await Promise.all(checklistForCategoryIdFiltered.map(checklistItem => {
-          return ChecklistItem.upsert({
-            id: checklistItem.id,
-            name: checklistItem.name,
-            textWhenOn: checklistItem.textWhenOn,
-            textWhenOff: checklistItem.textWhenOff,
-            checkedPoints: checklistItem.checkedPoints,
-            uncheckedPoints: checklistItem.uncheckedPoints,
-            category,
-            checklistId: result[1].dataValues.id
-          }, { returning: true })
-        }))
-
-        checklistJson[category] = checklistItems.map(item => {
+        checklistJson[category] = checklistItems.map((item) => {
           const checklistItem = item[0].dataValues
           const checklistItemCopy = { ...checklistItem }
           checklistIdsNow.push(checklistItemCopy.id)
@@ -145,28 +151,37 @@ module.exports = {
           delete checklistItemCopy.checklistId
           return checklistItemCopy
         })
+
+        checklistOrder += checklistItems.length
       }
 
       // remove the other stuff that we do not want
       const checklistWeekItems = await ChecklistItem.findAll({
         where: {
-          checklistId: result[1].dataValues.id,
+          checklistId: result[1].dataValues.id
         }
       })
       await Promise.all(checklistWeekItems.filter(item => !checklistIdsNow.includes(item.id)).map(item => item.destroy()))
 
       res.status(200).send({
-        message: `checklist saved successfully for week ${req.body.week}.`,
+        message: `Checklist saved successfully for week ${req.body.week}.`,
         result: { ...result[1].dataValues, list: checklistJson },
         data: req.body
       })
     } catch (e) {
-      logger.error('checklist creation error', { error: e.message })
-      res.status(500).send('Unexpected error')
+      logger.error('Checklist creation error.', { error: e.message })
+      res.status(500).send('Unexpected error. Please try again.')
     }
   },
+
+  /**
+   * Get checklist for course
+   *   permissions: must be teacher or student on course
+   *
+   * @param {*} req
+   * @param {*} res
+   */
   async getOne(req, res) {
-    // There is no validation, since checklists are not secret/sensitive.
     try {
       if (typeof req.body.week !== 'number' || typeof req.body.courseInstanceId !== 'number') {
         res.status(400).send({
@@ -175,6 +190,13 @@ module.exports = {
         })
         return
       }
+
+      const isTeacher = await helper.getTeacherId(req.decoded.id, req.body.courseInstanceId)
+      const isStudent = await StudentInstance.findOne({ where: { courseInstanceId: req.body.courseInstanceId } })
+      if (!isTeacher && !isStudent) {
+        return res.status(403).send('must be on the course')
+      }
+
       const checklist = await Checklist.findOne({
         attributes: {
           exclude: ['createdAt', 'updatedAt']
@@ -188,7 +210,8 @@ module.exports = {
         const checklistJson = {}
         const checklistItems = await ChecklistItem.findAll({ where: {
           checklistId: checklist.id
-        } })
+        },
+        order: [['order', 'ASC']] })
         checklistItems.forEach(({ dataValues: checklistItem }) => {
           if (checklistJson[checklistItem.category] === undefined) {
             checklistJson[checklistItem.category] = []
@@ -197,6 +220,7 @@ module.exports = {
           const checklistItemCopy = { ...checklistItem }
           delete checklistItemCopy.category
           delete checklistItemCopy.checklistId
+          delete checklistItemCopy.order
           if (req.body.copying) {
             delete checklistItemCopy.id
           }
@@ -211,7 +235,7 @@ module.exports = {
         })
       }
     } catch (e) {
-      logger.error('get checklist error', { error: e.message })
+      logger.error('Get checklist error.', { error: e.message })
       res.status(500).send(e)
     }
   }

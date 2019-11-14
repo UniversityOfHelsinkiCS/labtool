@@ -8,6 +8,8 @@ function invalidInputResponse(res, error) {
 
 module.exports = {
   /**
+   * Update the user that is making the request, changing email for now
+   *   permissions: any logged in user
    *
    * @param req
    * @param res
@@ -28,7 +30,7 @@ module.exports = {
       invalidInputResponse(res, 'Input was not a valid email address.')
     } else {
       User.update({ email: req.body.email }, { where: { id: req.decoded.id } }).then(
-        User.findById(req.decoded.id)
+        User.findByPk(req.decoded.id)
           .then((user) => {
             const returnedUser = {
               email: req.body.email,
@@ -41,13 +43,15 @@ module.exports = {
           })
           .catch((error) => {
             res.status(400).send(error)
-            logger.error('user update error', { error: error.message })
+            logger.error('User update error.', { error: error.message })
           })
       )
     }
   },
 
   /**
+   * Update any other user, used to assign or remove admins.
+   *   permissions: must be an admin
    *
    * @param req
    * @param res
@@ -59,10 +63,10 @@ module.exports = {
     }
     const isAdmin = await helper.isAuthUserAdmin(req.decoded.id)
     if (!isAdmin) {
-      return res.status(403).send('You must be a sysop')
+      return res.status(403).send('You must be a sysop.')
     }
     if (!req.body.id) {
-      return res.status(400).send('You must provide an user ID')
+      return res.status(400).send('You must provide a user ID.')
     }
 
     const user = await User.findOne({
@@ -72,7 +76,7 @@ module.exports = {
     })
 
     if (!user) {
-      return res.status(404).send('User not found')
+      return res.status(404).send('User not found.')
     }
 
     const updatedUser = await user.update({
@@ -82,6 +86,8 @@ module.exports = {
   },
 
   /**
+   * List all users in the system
+   *   permissions: must be an admin, or a teacher/an instructor on any course
    *
    * @param req
    * @param res
@@ -103,7 +109,7 @@ module.exports = {
         const isAdmin = await helper.isAuthUserAdmin(req.decoded.id)
 
         if (!teacherInstances && !isAdmin) {
-          return res.status(401).send('Unauthorized')
+          return res.status(401).send('Unauthorized.')
         }
 
         const users = await User.findAll({
@@ -113,17 +119,18 @@ module.exports = {
         })
         res.status(200).send(users)
       } catch (exception) {
-        logger.error('user list error', { error: exception.message })
-        res.status(400).send('Unable to send user list')
+        logger.error('User list error.', { error: exception.message })
+        res.status(400).send('Unable to send user list.')
       }
     }
   },
 
   /**
+   * Add an assistant to a course
+   *   permissions: must be an admin, or a teacher/an instructor on the course
    *
-   * @param req
-   * @param res
-   * @returns {Promise<*|Promise<T>>}
+   * @param {*} req
+   * @param {*} res
    */
   async createTeacher(req, res) {
     if (!helper.controllerBeforeAuthCheckAction(req, res)) {
@@ -149,11 +156,11 @@ module.exports = {
           return res.status(400).send('You must be a teacher on the course to add assistants.')
         }
 
-        const userToAssistant = await User.findById(req.body.id)
+        const userToAssistant = await User.findByPk(req.body.id)
         const courseToAssist = courseInstance
 
         if (!userToAssistant || !courseToAssist) {
-          return res.status(404).send('User or course not found')
+          return res.status(404).send('User or course not found.')
         }
 
         const alreadyExistingTeacherInstanceCount = await TeacherInstance.count({
@@ -173,15 +180,17 @@ module.exports = {
         })
         res.status(200).send(assistant)
       } catch (exception) {
-        res.status(400).send('Error in creating teacher/assistant')
+        res.status(400).send('Error in creating teacher/assistant.')
       }
     }
   },
 
   /**
+   * Remove an assistant to a course
+   *   permissions: must be an admin, or a teacher/an instructor on the course
    *
-   * @param req
-   * @param res
+   * @param {*} req
+   * @param {*} res
    * @returns {Promise<*|Promise<T>>}
    */
   async removeTeacher(req, res) {
@@ -191,7 +200,7 @@ module.exports = {
 
     if (req.authenticated.success) {
       try {
-        const teacherToRemoveAsUser = await User.findById(req.body.id)
+        const teacherToRemoveAsUser = await User.findByPk(req.body.id)
         const courseInstance = await CourseInstance.findOne({
           where: {
             ohid: req.body.ohid
@@ -199,7 +208,7 @@ module.exports = {
         })
 
         if (!teacherToRemoveAsUser || !courseInstance) {
-          return res.status(404).send('User or course not found')
+          return res.status(404).send('User or course not found.')
         }
 
         // Make sure only teachers/assistants can remove assistants.

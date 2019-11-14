@@ -50,6 +50,7 @@ describe('<CoursePage /> as teacher', () => {
         teacherInstanceId: 10011,
         weeks: [],
         codeReviews: [],
+        validRegistration: false,
         User: {
           id: 10012,
           username: 'tiraopiskelija2',
@@ -82,6 +83,7 @@ describe('<CoursePage /> as teacher', () => {
         teacherInstanceId: 10011,
         weeks: [],
         codeReviews: [],
+        validRegistration: true,
         User: {
           id: 10031,
           username: 'superopiskelija',
@@ -119,6 +121,7 @@ describe('<CoursePage /> as teacher', () => {
         teacherInstanceId: 10011,
         weeks: [],
         codeReviews: [],
+        validRegistration: true,
         User: {
           id: 10011,
           username: 'tiraopiskelija1',
@@ -216,12 +219,14 @@ describe('<CoursePage /> as teacher', () => {
   let mockFn = jest.fn()
 
   let mockUpdateStudentProjectInfo
+  let mockDownloadFile
 
   //Mock window.confirm to return true in all cases
   window.confirm = jest.fn(() => true)
 
   beforeEach(() => {
     mockUpdateStudentProjectInfo = jest.fn()
+    mockDownloadFile = jest.fn()
 
     wrapper = shallow(
       <CoursePage
@@ -253,6 +258,7 @@ describe('<CoursePage /> as teacher', () => {
         changeCourseField={mockFn}
         modifyOneCI={mockFn}
         courseInstance={{}}
+        downloadFile={mockDownloadFile}
       />
     )
   })
@@ -296,15 +302,14 @@ describe('<CoursePage /> as teacher', () => {
       expect(wrapper.find('CoursePageTeacherBulkForm').length).toEqual(1)
     })
 
-    it('can mark all students with DROPPED tag as dropped', () => {
-      window.confirm = jest.fn(() => true)
+    it('can export students as CSV', () => {
       wrapper
         .find('CoursePageTeacherMain')
         .dive()
-        .find({ children: 'Mark all with dropped tag as dropped out' })
+        .find({ children: 'Export CSV of all students' })
         .simulate('click')
 
-      expect(mockUpdateStudentProjectInfo).toBeCalledWith(expect.objectContaining({ userId: 10031, dropped: true }))
+      expect(mockDownloadFile).toBeCalledWith(expect.anything(), expect.anything(), expect.stringContaining('Maarit Mirja Opiskelija,014578343,maarit.opiskelija@helsinki.invalid,Tiran labraprojekti'))
     })
 
     /*

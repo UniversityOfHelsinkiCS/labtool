@@ -2,6 +2,8 @@ const logger = require('../utils/logger')
 
 module.exports = {
   /**
+   * Logout.
+   *   permissions: anyone
    *
    * @param req
    * @param res
@@ -15,7 +17,7 @@ module.exports = {
     } catch (error) {
       logger.error('login error', { error: error.message })
       res.status(500).send({
-        error: 'Unexpected error'
+        error: 'Unexpected error. Please try again.'
       })
     }
   }

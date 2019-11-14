@@ -9,9 +9,16 @@ const config = require('./../config/config.js')[env]
 const Op = Sequelize.Op
 */
 
-const { User, StudentInstance, TeacherInstance } = db
+const { User, StudentInstance, TeacherInstance, CourseInstance } = db
 
 module.exports = {
+  /**
+   * Associate instructor with student
+   *   permissions: must be teacher on course
+   *
+   * @param {*} req
+   * @param {*} res
+   */
   async create(req, res) {
     if (!helper.controllerBeforeAuthCheckAction(req, res)) {
       return
@@ -22,7 +29,7 @@ module.exports = {
       const studentInsId = req.body.studentInstanceId
 
       if (!req.authenticated.success) {
-        res.status(400).send('you have to be authenticated to do this')
+        res.status(400).send('You have to be authenticated to do this.')
         return
       }
       const requestMakerId = req.decoded.id
@@ -36,7 +43,7 @@ module.exports = {
         return
       }
       if (!teacherInsId) {
-        studentInstance.updateAttributes({
+        studentInstance.update({
           teacherInstanceId: null
         })
         res.status(200).send(studentInstance)
@@ -60,7 +67,7 @@ module.exports = {
         }
       })
       if (!givenTeachersTeacherInstance) {
-        res.status(404).send('There is no teacher with the given teacherInstanceId')
+        res.status(404).send('There is no teacher with the given teacher instance ID.')
         return
       }
       const teachersCourseId = givenTeachersTeacherInstance.courseInstanceId
@@ -73,15 +80,23 @@ module.exports = {
         res.status(400).send('The teacher is not from the same course as this student.')
         return
       }
-      studentInstance.updateAttributes({
+      studentInstance.update({
         teacherInstanceId: teacherInsId
       })
       res.status(200).send(studentInstance)
     } catch (e) {
-      logger.error('create assistant error', { error: e.message })
+      logger.error('Error when creating an assistant.', { error: e.message })
     }
   },
 
+  /**
+   * Get assistant for student instance
+   *   permissions: must be teacher on course
+   * currently not used by frontend, but has a call (getStudentsAssistant)
+   *
+   * @param {*} req
+   * @param {*} res
+   */
   async findAssistantByStudentInstance(req, res) {
     if (!helper.controllerBeforeAuthCheckAction(req, res)) {
       return
@@ -107,6 +122,14 @@ module.exports = {
       })
 
       if (studentInstance) {
+        const courseInstance = await CourseInstance.findOne({
+          where: { id: studentInstance.courseInstanceId }
+        })
+        const isTeacher = await helper.getTeacherId(req.decoded.id, courseInstance.id)
+        if (!isTeacher) {
+          return res.status(403).send('must be teacher on the course')
+        }
+
         const assistantId = studentInstance.teacherInstanceId
         const assistantAsTeacher = await TeacherInstance.findOne({
           where: {
@@ -122,33 +145,14 @@ module.exports = {
           firsts: assistantAsUser.firsts,
           lastname: assistantAsUser.lastname
         }
-        returnedAssistantInfo.status = 'student has an assigned assistant'
+        returnedAssistantInfo.status = 'Student already has an assigned assistant.'
 
         res.status(200).send(returnedAssistantInfo)
       } else {
-        returnedAssistantInfo.status = 'no assistant assigned to student'
+        returnedAssistantInfo.status = 'No assistant assigned to student.'
         res.status(200).send(returnedAssistantInfo)
       }
     } catch (e) {
-      res.status(400).send(e)
-    }
-  },
-
-  async findStudentsByTeacherInstance(req, res) {
-    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
-      return
-    }
-    try {
-      const teacherInsId = req.params.id
-
-      const studentsForThisTeacherInstance = await StudentInstance.findAll({
-        where: {
-          teacherInstanceId: teacherInsId
-        }
-      })
-      res.status(200).send(studentsForThisTeacherInstance)
-    } catch (e) {
-      logger.error('find students by teacher instance error', { error: e.message })
       res.status(400).send(e)
     }
   }

@@ -81,6 +81,7 @@ describe('<Register />', () => {
         createStudentCourses={mockFn}
         updateStudentProjectInfo={mockFn}
         addRedirectHook={mockFn}
+        coursePageInformation={mockFn}
       />
     )
   })
@@ -110,7 +111,7 @@ describe('<Register />', () => {
       wrapper
         .find(Input)
         .find({ name: 'github' })
-        .simulate('change', { target: { value: 'https://github.com/invalid_repo' } })
+        .simulate('change', null, { value: 'https://github.com/invalid_repo' })
 
       expect(wrapper.find('GitHubRepoWarning').length).toEqual(1)
     })

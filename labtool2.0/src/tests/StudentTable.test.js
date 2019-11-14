@@ -207,6 +207,9 @@ describe('<StudentTable />', () => {
         unselectStudent={mockFn}
         selectAllStudents={mockFn}
         unselectAllStudents={mockFn}
+        updateStudentProjectInfo={mockFn}
+        courseData={{}}
+        loggedInUser={{}}
       />
     )
   })
@@ -224,6 +227,8 @@ describe('<StudentTable />', () => {
 
 describe('<StudentTableRow />', () => {
   let wrapper
+  const emptyWeek = () => ({ points: null })
+  const gradedWeek = p => ({ points: p })
 
   const coursePage = {
     role: 'teacher',
@@ -237,8 +242,9 @@ describe('<StudentTableRow />', () => {
         courseInstanceId: 10011,
         userId: 10012,
         teacherInstanceId: 10011,
-        weeks: [],
+        weeks: [emptyWeek(), emptyWeek(), emptyWeek(), emptyWeek(), emptyWeek(), emptyWeek(), emptyWeek(), emptyWeek()],
         codeReviews: [],
+        validRegistration: false,
         User: {
           id: 10012,
           username: 'tiraopiskelija2',
@@ -268,8 +274,9 @@ describe('<StudentTableRow />', () => {
         courseInstanceId: 10011,
         userId: 10031,
         teacherInstanceId: 10011,
-        weeks: [],
+        weeks: [gradedWeek(3), emptyWeek(), emptyWeek(), emptyWeek(), emptyWeek(), emptyWeek(), emptyWeek(), emptyWeek()],
         codeReviews: [],
+        validRegistration: true,
         User: {
           id: 10031,
           username: 'superopiskelija',
@@ -304,7 +311,7 @@ describe('<StudentTableRow />', () => {
         courseInstanceId: 10011,
         userId: 10011,
         teacherInstanceId: 10011,
-        weeks: [],
+        weeks: [emptyWeek(), emptyWeek(), emptyWeek(), emptyWeek(), emptyWeek(), emptyWeek(), emptyWeek(), emptyWeek()],
         codeReviews: [],
         User: {
           id: 10011,
@@ -320,7 +327,9 @@ describe('<StudentTableRow />', () => {
         },
         Tags: []
       }
-    ]
+    ],
+    weekAmount: 7,
+    finalReview: false
   }
 
   const tags = {
@@ -422,7 +431,7 @@ describe('<StudentTableRow />', () => {
     wrapper = shallow(
       <StudentTableRow
         data={coursePage.data[0]}
-        showColumn={c => c === 'select'}
+        showColumn={c => c === 'select' || c === 'points'}
         extraColumns={[]}
         dropDownTags={dropDownTags}
         dropDownTeachers={dropDownTeachers}
@@ -448,6 +457,7 @@ describe('<StudentTableRow />', () => {
         unselectStudent={mockFn}
         selectAllStudents={mockFn}
         unselectAllStudents={mockFn}
+        updateStudentProjectInfo={mockFn}
       />
     )
   })
@@ -459,6 +469,21 @@ describe('<StudentTableRow />', () => {
 
     it('should render correctly', () => {
       expect(wrapper).toMatchSnapshot()
+    })
+
+    it('displays warning if repo is not accessible', () => {
+      wrapper.setProps({ data: { ...coursePage.data[1], repoExists: false } })
+      expect(wrapper.find('RepoAccessWarning').length).toEqual(1)
+    })
+
+    it('displays review button for unreviewed week', () => {
+      wrapper.setProps({ data: coursePage.data[1], selectedInstance: { ...coursePage, currentWeek: 4 } })
+      expect(wrapper.find('.reviewButton').length).toEqual(1)
+    })
+
+    it('displays review button for final review', () => {
+      wrapper.setProps({ data: coursePage.data[1], selectedInstance: { ...coursePage, finalReview: true, currentWeek: coursePage.weekAmount + 1 } })
+      expect(wrapper.find('.reviewButton').length).toEqual(1)
     })
   })
 })

@@ -18,7 +18,8 @@ exports.getCurrent = applicationHelpers.getCurrent
 exports.controllerBeforeAuthCheckAction = applicationHelpers.controllerBeforeAuthCheckAction
 exports.checkHasCommentPermission = checkHasCommentPermission
 exports.getTeacherId = applicationHelpers.getTeacherId
-exports.checkHasPermissionToViewStudentInstance = checkHasPermissionToViewStudentInstance
+exports.getRoleToViewStudentInstance = getRoleToViewStudentInstance
+// exports.checkHasMarkCommentAsReadPermission = checkHasMarkCommentAsReadPermission
 
 /**
  * Only used in courseInstance controller so its place is here.
@@ -74,7 +75,7 @@ function checkWebOodi(req, res, user, resolve) {
  * @param weekId
  * @returns {*|Promise<T>}
  */
-async function checkHasCommentPermission(user, weekId) {
+async function checkHasCommentPermission(userId, weekId) {
   // get actual week instance to get student instance
   const week = await Week.findOne({
     where: {
@@ -109,7 +110,7 @@ async function checkHasCommentPermission(user, weekId) {
   // check if the user is a teacher
   const teacher = await TeacherInstance.findOne({
     where: {
-      userId: user.id,
+      userId,
       courseInstanceId: course.id
     }
   })
@@ -117,9 +118,36 @@ async function checkHasCommentPermission(user, weekId) {
   // ok, user is a teacher?
   const isTeacher = !!teacher
   // ok, user is the student whose review we are trying to comment on?
-  const isCorrectStudent = student && (student.userId === user.id)
+  const isCorrectStudent = student && (student.userId === userId)
   return isTeacher || isCorrectStudent
 }
+
+// async function checkHasMarkCommentAsReadPermission(userId, weekId) {
+//   const week = await Week.findOne({
+//     where: {
+//       id: weekId
+//     }
+//   })
+//   if (!week) {
+//     return false
+//   }
+
+//   const student = await StudentInstance.findOne({
+//     where: {
+//       id: week.studentInstanceId
+//     }
+//   })
+//   if (!student) {
+//     return false
+//   }
+//   const teacher = await TeacherInstance.findOne({
+//     where: {
+//       id: student.teacherInstanceId,
+//       userId
+//     }
+//   })
+//   return !!teacher
+// }
 
 /**
  * Checks if logged in user has permission to see student instance
@@ -127,7 +155,7 @@ async function checkHasCommentPermission(user, weekId) {
  * @param {*} courseInstanceId
  * @param {*} userId
  */
-async function checkHasPermissionToViewStudentInstance(req, courseInstanceId, userId) {
+async function getRoleToViewStudentInstance(req, courseInstanceId, userId) {
   const adminTeacherInstance = await TeacherInstance.findOne({ where: {
     userId: req.decoded.id,
     courseInstanceId,
@@ -136,11 +164,11 @@ async function checkHasPermissionToViewStudentInstance(req, courseInstanceId, us
 
   // Logged in user is teacher (not instructor) on the course
   if (adminTeacherInstance) {
-    return true
+    return 'teacher'
   }
 
   // Find student instance where logged in user is either student or assigned teacher
-  const studentInstances = await StudentInstance.findAll({
+  const studentInstance = await StudentInstance.findOne({
     where: {
       courseInstanceId,
       userId,
@@ -151,7 +179,13 @@ async function checkHasPermissionToViewStudentInstance(req, courseInstanceId, us
     },
     include: [TeacherInstance]
   })
-  return studentInstances.length > 0
+
+  if (studentInstance && studentInstance.userId === req.decoded.id) {
+    return 'student'
+  } if (studentInstance) {
+    return 'assistant'
+  }
+  return null
 }
 
 /**

@@ -3,6 +3,8 @@ const { User } = require('../models')
 const logger = require('../utils/logger')
 
 /**
+ * Login
+ *   permissions: anyone
  *
  * @param req
  * @param res
@@ -28,11 +30,18 @@ const login = (req, res) => {
   } catch (error) {
     logger.error('login error', { error: error.message })
     res.status(500).send({
-      error: 'Unexpected error'
+      error: 'Unexpected error. Please try again.'
     })
   }
 }
 
+/**
+ * Fake login, only works if fake login is enabled
+ *   permissions: anyone
+ *
+ * @param {*} req
+ * @param {*} res
+ */
 const loginFake = (req, res) => {
   if (!req.headers.uid || !req.headers.givenname) {
     res.status(500).send({
