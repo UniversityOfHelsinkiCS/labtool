@@ -21,12 +21,6 @@ export const CoursePageTeacherMain = props => {
   })
 
   const totalStudentCount = activeStudentCount + droppedStudentCount
-  
-  const dropConvertButton = droppedTagExists() && (
-    <Button onClick={() => markAllWithDroppedTagAsDropped(courseData)} size="small">
-      Mark all with dropped tag as dropped out
-    </Button>
-  )
 
   return (
     <div className="TeachersBottomView">
