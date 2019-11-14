@@ -1190,5 +1190,334 @@ exports[`<StudentTableRow /> StudentTableRow Component should render correctly 1
       </div>
     </span>
   </TableCell>
+  <TableCell
+    as="td"
+    key="week0"
+    selectable={true}
+    style={
+      Object {
+        "position": "relative",
+      }
+    }
+    textAlign="center"
+  >
+    <Link
+      key="week0link"
+      style={
+        Object {
+          "alignItems": "center",
+          "display": "flex",
+          "height": "100%",
+          "justifyContent": "center",
+        }
+      }
+      to={
+        Object {
+          "pathname": "/labtool/reviewstudent/undefined/10012/1",
+          "state": Object {
+            "cameFromCoursePage": true,
+          },
+        }
+      }
+    >
+      <div>
+        <p
+          style={
+            Object {
+              "alignItems": "center",
+              "display": "flex",
+              "height": "100%",
+              "justifyContent": "center",
+            }
+          }
+        >
+          -
+        </p>
+      </div>
+    </Link>
+  </TableCell>
+  <TableCell
+    as="td"
+    key="week1"
+    selectable={true}
+    style={
+      Object {
+        "position": "relative",
+      }
+    }
+    textAlign="center"
+  >
+    <Link
+      key="week1link"
+      style={
+        Object {
+          "alignItems": "center",
+          "display": "flex",
+          "height": "100%",
+          "justifyContent": "center",
+        }
+      }
+      to={
+        Object {
+          "pathname": "/labtool/reviewstudent/undefined/10012/2",
+          "state": Object {
+            "cameFromCoursePage": true,
+          },
+        }
+      }
+    >
+      <div>
+        <p
+          style={
+            Object {
+              "alignItems": "center",
+              "display": "flex",
+              "height": "100%",
+              "justifyContent": "center",
+            }
+          }
+        >
+          -
+        </p>
+      </div>
+    </Link>
+  </TableCell>
+  <TableCell
+    as="td"
+    key="week2"
+    selectable={true}
+    style={
+      Object {
+        "position": "relative",
+      }
+    }
+    textAlign="center"
+  >
+    <Link
+      key="week2link"
+      style={
+        Object {
+          "alignItems": "center",
+          "display": "flex",
+          "height": "100%",
+          "justifyContent": "center",
+        }
+      }
+      to={
+        Object {
+          "pathname": "/labtool/reviewstudent/undefined/10012/3",
+          "state": Object {
+            "cameFromCoursePage": true,
+          },
+        }
+      }
+    >
+      <div>
+        <p
+          style={
+            Object {
+              "alignItems": "center",
+              "display": "flex",
+              "height": "100%",
+              "justifyContent": "center",
+            }
+          }
+        >
+          -
+        </p>
+      </div>
+    </Link>
+  </TableCell>
+  <TableCell
+    as="td"
+    key="week3"
+    selectable={true}
+    style={
+      Object {
+        "position": "relative",
+      }
+    }
+    textAlign="center"
+  >
+    <Link
+      key="week3link"
+      style={
+        Object {
+          "alignItems": "center",
+          "display": "flex",
+          "height": "100%",
+          "justifyContent": "center",
+        }
+      }
+      to={
+        Object {
+          "pathname": "/labtool/reviewstudent/undefined/10012/4",
+          "state": Object {
+            "cameFromCoursePage": true,
+          },
+        }
+      }
+    >
+      <div>
+        <p
+          style={
+            Object {
+              "alignItems": "center",
+              "display": "flex",
+              "height": "100%",
+              "justifyContent": "center",
+            }
+          }
+        >
+          -
+        </p>
+      </div>
+    </Link>
+  </TableCell>
+  <TableCell
+    as="td"
+    key="week4"
+    selectable={true}
+    style={
+      Object {
+        "position": "relative",
+      }
+    }
+    textAlign="center"
+  >
+    <Link
+      key="week4link"
+      style={
+        Object {
+          "alignItems": "center",
+          "display": "flex",
+          "height": "100%",
+          "justifyContent": "center",
+        }
+      }
+      to={
+        Object {
+          "pathname": "/labtool/reviewstudent/undefined/10012/5",
+          "state": Object {
+            "cameFromCoursePage": true,
+          },
+        }
+      }
+    >
+      <div>
+        <p
+          style={
+            Object {
+              "alignItems": "center",
+              "display": "flex",
+              "height": "100%",
+              "justifyContent": "center",
+            }
+          }
+        >
+          -
+        </p>
+      </div>
+    </Link>
+  </TableCell>
+  <TableCell
+    as="td"
+    key="week5"
+    selectable={true}
+    style={
+      Object {
+        "position": "relative",
+      }
+    }
+    textAlign="center"
+  >
+    <Link
+      key="week5link"
+      style={
+        Object {
+          "alignItems": "center",
+          "display": "flex",
+          "height": "100%",
+          "justifyContent": "center",
+        }
+      }
+      to={
+        Object {
+          "pathname": "/labtool/reviewstudent/undefined/10012/6",
+          "state": Object {
+            "cameFromCoursePage": true,
+          },
+        }
+      }
+    >
+      <div>
+        <p
+          style={
+            Object {
+              "alignItems": "center",
+              "display": "flex",
+              "height": "100%",
+              "justifyContent": "center",
+            }
+          }
+        >
+          -
+        </p>
+      </div>
+    </Link>
+  </TableCell>
+  <TableCell
+    as="td"
+    key="week6"
+    selectable={true}
+    style={
+      Object {
+        "position": "relative",
+      }
+    }
+    textAlign="center"
+  >
+    <Link
+      key="week6link"
+      style={
+        Object {
+          "alignItems": "center",
+          "display": "flex",
+          "height": "100%",
+          "justifyContent": "center",
+        }
+      }
+      to={
+        Object {
+          "pathname": "/labtool/reviewstudent/undefined/10012/7",
+          "state": Object {
+            "cameFromCoursePage": true,
+          },
+        }
+      }
+    >
+      <div>
+        <p
+          style={
+            Object {
+              "alignItems": "center",
+              "display": "flex",
+              "height": "100%",
+              "justifyContent": "center",
+            }
+          }
+        >
+          -
+        </p>
+      </div>
+    </Link>
+  </TableCell>
+  <TableCell
+    as="td"
+    key="pointssum"
+    textAlign="center"
+  >
+    0
+  </TableCell>
 </TableRow>
 `;
