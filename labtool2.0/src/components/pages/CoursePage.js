@@ -258,7 +258,7 @@ export const CoursePage = props => {
 
     const { weekAmount, weekMaxPoints, currentWeek, active, ohid, finalReview, coursesPage, courseMaterial, currentCodeReview } = selectedInstance
 
-    if (currentWeek === weekAmount) {
+    if (currentWeek >= weekAmount + (finalReview ? 1 : 0)) {
       return
     }
 
