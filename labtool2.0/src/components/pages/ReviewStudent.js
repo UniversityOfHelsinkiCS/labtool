@@ -77,19 +77,6 @@ export const ReviewStudent = props => {
     }
   }
 
-  const getMaximumPoints = () => {
-    const checklist = props.selectedInstance.checklists.find(checkl => checkl.week === Number(props.ownProps.weekNumber))
-    if (checklist && checklist.maxPoints) {
-      return checklist.maxPoints
-    }
-    return props.selectedInstance.weekMaxPoints
-  }
-
-  const toggleCheckbox = (checklistItemId, studentId, weekNbr) => async () => {
-    setAllowChecksCopy(true)
-    props.toggleCheck(checklistItemId, studentId, weekNbr)
-  }
-
   const importWeekDataFromDraft = () => {
     props.getWeekDraft({
       studentInstanceId: props.studentInstance,
@@ -126,6 +113,19 @@ export const ReviewStudent = props => {
     e.preventDefault()
     pstate.points = e.target.points.value
     pstate.feedback = e.target.text.value
+  }
+
+  const getMaximumPoints = () => {
+    const checklist = props.selectedInstance.checklists.find(checkl => checkl.week === Number(props.ownProps.weekNumber))
+    if (checklist && checklist.maxPoints) {
+      return checklist.maxPoints
+    }
+    return props.selectedInstance.weekMaxPoints
+  }
+
+  const toggleCheckbox = (checklistItemId, studentId, weekNbr) => async () => {
+    setAllowChecksCopy(true)
+    props.toggleCheck(checklistItemId, studentId, weekNbr)
   }
 
   const isChecked = (checks, checklistItemId) =>
