@@ -252,13 +252,10 @@ export const CoursePage = props => {
 
   // This function advances the current week by 1, leaving other data intact.
   const moveToNextWeek = () => {
-    if (!window.confirm('This will advance the course by 1 week. Confirm?')) {
-      return
-    }
-
     const { weekAmount, weekMaxPoints, currentWeek, active, ohid, finalReview, coursesPage, courseMaterial, currentCodeReview } = selectedInstance
 
-    if (currentWeek === weekAmount) {
+    // We can advance past the final week for code review purposes.
+    if (currentWeek >= weekAmount + (finalReview ? 1 : 0)) {
       return
     }
 
