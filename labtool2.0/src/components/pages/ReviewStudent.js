@@ -131,19 +131,6 @@ export const ReviewStudent = props => {
     pstate.feedback = e.target.text.value
   }
 
-  const getMaximumPoints = () => {
-    const checklist = props.selectedInstance.checklists.find(checkl => checkl.week === Number(props.ownProps.weekNumber))
-    if (checklist && checklist.maxPoints) {
-      return checklist.maxPoints
-    }
-    return props.selectedInstance.weekMaxPoints
-  }
-
-  const toggleCheckbox = (checklistItemId, studentId, weekNbr) => async () => {
-    setAllowChecksCopy(true)
-    props.toggleCheck(checklistItemId, studentId, weekNbr)
-  }
-
   const isChecked = (checks, checklistItemId) =>
     checks !== null && checks[checklistItemId] !== undefined
       ? checks[checklistItemId]
