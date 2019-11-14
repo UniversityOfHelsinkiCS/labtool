@@ -8,6 +8,16 @@ export const sortCourses = courses => {
     })
 }
 
+export const sortCoursesByName = courses => {
+  return courses
+    .sort((a, b) => {
+      return new Date(b.start) - new Date(a.start)
+    })
+    .sort((a, b) => {
+      return new Date(b.name) - new Date(a.name)
+    })
+}
+
 export const sortTags = tags => {
   return tags.sort((a, b) => {
     if (a.name.toLowerCase() < b.name.toLowerCase()) {

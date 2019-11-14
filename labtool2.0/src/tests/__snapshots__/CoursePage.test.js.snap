@@ -352,11 +352,13 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             "Tags": Array [
               Object {
                 "color": "grey",
+                "courseInstanceId": null,
                 "id": 20008,
                 "name": "DROPPED",
               },
               Object {
                 "color": "yellow",
+                "courseInstanceId": null,
                 "id": 20002,
                 "name": "HTML",
               },
@@ -390,6 +392,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             "Tags": Array [
               Object {
                 "color": "red",
+                "courseInstanceId": null,
                 "id": 20001,
                 "name": "Javascript",
               },
@@ -459,11 +462,13 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             "Tags": Array [
               Object {
                 "color": "grey",
+                "courseInstanceId": null,
                 "id": 20008,
                 "name": "DROPPED",
               },
               Object {
                 "color": "yellow",
+                "courseInstanceId": null,
                 "id": 20002,
                 "name": "HTML",
               },
@@ -497,6 +502,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             "Tags": Array [
               Object {
                 "color": "red",
+                "courseInstanceId": null,
                 "id": 20001,
                 "name": "Javascript",
               },
@@ -578,11 +584,13 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             "Tags": Array [
               Object {
                 "color": "grey",
+                "courseInstanceId": null,
                 "id": 20008,
                 "name": "DROPPED",
               },
               Object {
                 "color": "yellow",
+                "courseInstanceId": null,
                 "id": 20002,
                 "name": "HTML",
               },
@@ -616,6 +624,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             "Tags": Array [
               Object {
                 "color": "red",
+                "courseInstanceId": null,
                 "id": 20001,
                 "name": "Javascript",
               },
@@ -682,11 +691,13 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           "Tags": Array [
             Object {
               "color": "grey",
+              "courseInstanceId": null,
               "id": 20008,
               "name": "DROPPED",
             },
             Object {
               "color": "yellow",
+              "courseInstanceId": null,
               "id": 20002,
               "name": "HTML",
             },
@@ -720,6 +731,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           "Tags": Array [
             Object {
               "color": "red",
+              "courseInstanceId": null,
               "id": 20001,
               "name": "Javascript",
             },
@@ -756,6 +768,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
         "tags": Array [
           Object {
             "color": "red",
+            "courseInstanceId": null,
             "createdAt": "2018-06-13T00:00:00.000Z",
             "id": 20001,
             "name": "Javascript",
@@ -763,6 +776,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           },
           Object {
             "color": "yellow",
+            "courseInstanceId": null,
             "createdAt": "2018-06-13T00:00:00.000Z",
             "id": 20002,
             "name": "HTML",
@@ -770,6 +784,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           },
           Object {
             "color": "black",
+            "courseInstanceId": null,
             "createdAt": "2018-06-13T00:00:00.000Z",
             "id": 20003,
             "name": "game",
@@ -777,6 +792,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           },
           Object {
             "color": "green",
+            "courseInstanceId": null,
             "createdAt": "2018-06-13T00:00:00.000Z",
             "id": 20004,
             "name": "React",
@@ -784,6 +800,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           },
           Object {
             "color": "blue",
+            "courseInstanceId": null,
             "createdAt": "2018-06-13T00:00:00.000Z",
             "id": 20005,
             "name": "Node.js",
@@ -791,6 +808,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           },
           Object {
             "color": "orange",
+            "courseInstanceId": null,
             "createdAt": "2018-06-13T00:00:00.000Z",
             "id": 20006,
             "name": "Java",
@@ -798,6 +816,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           },
           Object {
             "color": "pink",
+            "courseInstanceId": null,
             "createdAt": "2018-06-13T00:00:00.000Z",
             "id": 20007,
             "name": "FORTRAN",
@@ -805,6 +824,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           },
           Object {
             "color": "grey",
+            "courseInstanceId": null,
             "createdAt": "2018-06-13T00:00:00.000Z",
             "id": 20008,
             "name": "DROPPED",
