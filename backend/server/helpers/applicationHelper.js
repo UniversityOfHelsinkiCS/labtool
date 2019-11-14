@@ -189,7 +189,7 @@ async function addInstructorToCourseList(course) {
     return { ...course, instructor: result.teachers.join('; ') }
   } catch (error) {
     logger.error('error getting instructor', { error })
-    return course
+    return { ...course, instructor: '' }
   }
 }
 
