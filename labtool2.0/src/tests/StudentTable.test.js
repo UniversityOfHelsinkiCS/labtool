@@ -8,6 +8,7 @@ describe('<StudentTable />', () => {
 
   const coursePage = {
     role: 'teacher',
+    id: 10011,
     data: [
       {
         id: 10012,
@@ -36,7 +37,8 @@ describe('<StudentTable />', () => {
           {
             id: 20001,
             name: 'Javascript',
-            color: 'red'
+            color: 'red',
+            courseInstanceId: null
           }
         ]
       },
@@ -67,12 +69,14 @@ describe('<StudentTable />', () => {
           {
             id: 20008,
             name: 'DROPPED',
-            color: 'grey'
+            color: 'grey',
+            courseInstanceId: null
           },
           {
             id: 20002,
             name: 'HTML',
-            color: 'yellow'
+            color: 'yellow',
+            courseInstanceId: null
           }
         ]
       },
@@ -111,56 +115,80 @@ describe('<StudentTable />', () => {
         name: 'Javascript',
         color: 'red',
         createdAt: '2018-06-13T00:00:00.000Z',
-        updatedAt: '2018-06-13T00:00:00.000Z'
+        updatedAt: '2018-06-13T00:00:00.000Z',
+        courseInstanceId: null
       },
       {
         id: 20002,
         name: 'HTML',
         color: 'yellow',
         createdAt: '2018-06-13T00:00:00.000Z',
-        updatedAt: '2018-06-13T00:00:00.000Z'
+        updatedAt: '2018-06-13T00:00:00.000Z',
+        courseInstanceId: null
       },
       {
         id: 20003,
         name: 'game',
         color: 'black',
         createdAt: '2018-06-13T00:00:00.000Z',
-        updatedAt: '2018-06-13T00:00:00.000Z'
+        updatedAt: '2018-06-13T00:00:00.000Z',
+        courseInstanceId: null
       },
       {
         id: 20004,
         name: 'React',
         color: 'green',
         createdAt: '2018-06-13T00:00:00.000Z',
-        updatedAt: '2018-06-13T00:00:00.000Z'
+        updatedAt: '2018-06-13T00:00:00.000Z',
+        courseInstanceId: null
       },
       {
         id: 20005,
         name: 'Node.js',
         color: 'blue',
         createdAt: '2018-06-13T00:00:00.000Z',
-        updatedAt: '2018-06-13T00:00:00.000Z'
+        updatedAt: '2018-06-13T00:00:00.000Z',
+        courseInstanceId: null
       },
       {
         id: 20006,
         name: 'Java',
         color: 'orange',
         createdAt: '2018-06-13T00:00:00.000Z',
-        updatedAt: '2018-06-13T00:00:00.000Z'
+        updatedAt: '2018-06-13T00:00:00.000Z',
+        courseInstanceId: null
       },
       {
         id: 20007,
         name: 'FORTRAN',
         color: 'pink',
         createdAt: '2018-06-13T00:00:00.000Z',
-        updatedAt: '2018-06-13T00:00:00.000Z'
+        updatedAt: '2018-06-13T00:00:00.000Z',
+        courseInstanceId: null
       },
       {
         id: 20008,
         name: 'DROPPED',
         color: 'grey',
         createdAt: '2018-06-13T00:00:00.000Z',
-        updatedAt: '2018-06-13T00:00:00.000Z'
+        updatedAt: '2018-06-13T00:00:00.000Z',
+        courseInstanceId: null
+      },
+      {
+        id: 20009,
+        name: 'Tag for this course',
+        color: 'grey',
+        createdAt: '2018-06-13T00:00:00.000Z',
+        updatedAt: '2018-06-13T00:00:00.000Z',
+        courseInstanceId: 10011
+      },
+      {
+        id: 20010,
+        name: 'Tag for other course',
+        color: 'grey',
+        createdAt: '2018-06-13T00:00:00.000Z',
+        updatedAt: '2018-06-13T00:00:00.000Z',
+        courseInstanceId: 10012
       }
     ]
   }
@@ -232,6 +260,7 @@ describe('<StudentTableRow />', () => {
 
   const coursePage = {
     role: 'teacher',
+    id: 10011,
     data: [
       {
         id: 10012,

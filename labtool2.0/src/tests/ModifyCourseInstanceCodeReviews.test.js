@@ -80,7 +80,8 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
           {
             id: 30001,
             name: 'Javascript',
-            color: 'red'
+            color: 'red',
+            courseInstanceId: null
           }
         ]
       },
@@ -112,7 +113,8 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
           {
             id: 30001,
             name: 'Javascript',
-            color: 'red'
+            color: 'red',
+            courseInstanceId: null
           }
         ]
       },
@@ -143,7 +145,8 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
           {
             id: 30001,
             name: 'Javascript',
-            color: 'red'
+            color: 'red',
+            courseInstanceId: null
           }
         ]
       },
@@ -175,7 +178,8 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
           {
             id: 30001,
             name: 'Javascript',
-            color: 'red'
+            color: 'red',
+            courseInstanceId: null
           }
         ]
       },
@@ -248,7 +252,8 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
           {
             id: 30001,
             name: 'Javascript',
-            color: 'red'
+            color: 'red',
+            courseInstanceId: null
           }
         ]
       }
@@ -262,49 +267,56 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
         name: 'Javascript',
         color: 'red',
         createdAt: '2018-06-13T00:00:00.000Z',
-        updatedAt: '2018-06-13T00:00:00.000Z'
+        updatedAt: '2018-06-13T00:00:00.000Z',
+        courseInstanceId: null
       },
       {
         id: 20002,
         name: 'HTML',
         color: 'yellow',
         createdAt: '2018-06-13T00:00:00.000Z',
-        updatedAt: '2018-06-13T00:00:00.000Z'
+        updatedAt: '2018-06-13T00:00:00.000Z',
+        courseInstanceId: null
       },
       {
         id: 20003,
         name: 'game',
         color: 'black',
         createdAt: '2018-06-13T00:00:00.000Z',
-        updatedAt: '2018-06-13T00:00:00.000Z'
+        updatedAt: '2018-06-13T00:00:00.000Z',
+        courseInstanceId: null
       },
       {
         id: 20004,
         name: 'React',
         color: 'green',
         createdAt: '2018-06-13T00:00:00.000Z',
-        updatedAt: '2018-06-13T00:00:00.000Z'
+        updatedAt: '2018-06-13T00:00:00.000Z',
+        courseInstanceId: null
       },
       {
         id: 20005,
         name: 'Node.js',
         color: 'blue',
         createdAt: '2018-06-13T00:00:00.000Z',
-        updatedAt: '2018-06-13T00:00:00.000Z'
+        updatedAt: '2018-06-13T00:00:00.000Z',
+        courseInstanceId: null
       },
       {
         id: 20006,
         name: 'Java',
         color: 'orange',
         createdAt: '2018-06-13T00:00:00.000Z',
-        updatedAt: '2018-06-13T00:00:00.000Z'
+        updatedAt: '2018-06-13T00:00:00.000Z',
+        courseInstanceId: null
       },
       {
         id: 20007,
         name: 'FORTRAN',
         color: 'pink',
         createdAt: '2018-06-13T00:00:00.000Z',
-        updatedAt: '2018-06-13T00:00:00.000Z'
+        updatedAt: '2018-06-13T00:00:00.000Z',
+        courseInstanceId: null
       }
     ]
   }
