@@ -29,14 +29,6 @@ module.exports = {
           return
         }
 
-        // Remove draft.
-        await WeekDraft.destroy({
-          where: {
-            weekNumber: req.body.weekNumber,
-            studentInstanceId: req.body.studentInstanceId
-          }
-        })
-
         const week = await Week.findOne({
           where: {
             weekNumber: req.body.weekNumber,
@@ -81,6 +73,14 @@ module.exports = {
             checks: req.body.checks
           })
         }
+        
+        // Remove draft.
+        await WeekDraft.destroy({
+          where: {
+            weekNumber: req.body.weekNumber,
+            studentInstanceId: req.body.studentInstanceId
+          }
+        })
         res.status(200).send(week)
       } else {
         res.status(400).send('Token verification failed.')

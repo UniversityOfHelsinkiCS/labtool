@@ -56,12 +56,12 @@ export const ReviewStudent = props => {
     try {
       e.preventDefault()
       const content = {
-        points: e.target.points.value,
+        points: pstate.points,
         studentInstanceId: props.studentInstance,
-        feedback: e.target.comment.value,
-        instructorNotes: e.target.instructorNotes.value,
+        feedback: pstate.feedback,
+        instructorNotes: pstate.instructorNotes,
         weekNumber: props.weekNumber,
-        checks: props.weekReview.checks
+        checks
       }
       pstate.clear()
       if (e.target.points.value < 0 || e.target.points.value > getMaximumPoints()) {
