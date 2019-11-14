@@ -104,18 +104,42 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
             >
               Current week
             </label>
-            <Input
-              className="form-control3"
-              name="currentWeek"
+            <Dropdown
+              additionLabel="Add "
+              additionPosition="top"
+              closeOnBlur={true}
+              closeOnEscape={true}
+              deburr={false}
+              fluid={true}
+              icon="dropdown"
+              minCharacters={1}
+              noResultsMessage="No results found."
               onChange={[Function]}
-              required={true}
+              openOnFocus={true}
+              options={
+                Array [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                ]
+              }
+              placeholder={1}
+              renderLabel={[Function]}
+              searchInput="text"
+              selectOnBlur={true}
+              selectOnNavigation={true}
+              selection={true}
               style={
                 Object {
                   "maxWidth": "7em",
                 }
               }
-              type="text"
-              value={1}
+              wrapSelection={true}
             />
           </FormGroup>
           <FormGroup
