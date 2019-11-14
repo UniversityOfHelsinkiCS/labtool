@@ -17,6 +17,12 @@ exports[`<MassEmailPage /> MassEmailPage Component should render correctly 1`] =
     >
       Send email to students 
     </Header>
+    <Button
+      as="button"
+      onClick={[Function]}
+    >
+      Select all non-dropped students
+    </Button>
     <Form
       as="form"
       onSubmit={[Function]}
@@ -32,37 +38,6 @@ exports[`<MassEmailPage /> MassEmailPage Component should render correctly 1`] =
         courseData={
           Object {
             "data": Array [
-              Object {
-                "Tags": Array [
-                  Object {
-                    "color": "red",
-                    "id": 20001,
-                    "name": "Javascript",
-                  },
-                ],
-                "User": Object {
-                  "createdAt": "2018-03-26T00:00:00.000Z",
-                  "email": "johan.studerande@helsinki.invalid",
-                  "firsts": "Johan Wilhelm",
-                  "id": 10012,
-                  "lastname": "Studerande",
-                  "studentNumber": "014553242",
-                  "sysop": false,
-                  "teacher": false,
-                  "updatedAt": "2018-03-26T00:00:00.000Z",
-                  "username": "tiraopiskelija2",
-                },
-                "codeReviews": Array [],
-                "courseInstanceId": 10011,
-                "createdAt": "2018-03-26T00:00:00.000Z",
-                "github": "http://github.com/tiralabra2",
-                "id": 10012,
-                "projectName": "Tiran toinen labraprojekti",
-                "teacherInstanceId": 10011,
-                "updatedAt": "2018-03-26T00:00:00.000Z",
-                "userId": 10012,
-                "weeks": Array [],
-              },
               Object {
                 "Tags": Array [
                   Object {
@@ -122,6 +97,37 @@ exports[`<MassEmailPage /> MassEmailPage Component should render correctly 1`] =
                 "teacherInstanceId": 10011,
                 "updatedAt": "2018-03-26T00:00:00.000Z",
                 "userId": 10011,
+                "weeks": Array [],
+              },
+              Object {
+                "Tags": Array [
+                  Object {
+                    "color": "red",
+                    "id": 20001,
+                    "name": "Javascript",
+                  },
+                ],
+                "User": Object {
+                  "createdAt": "2018-03-26T00:00:00.000Z",
+                  "email": "johan.studerande@helsinki.invalid",
+                  "firsts": "Johan Wilhelm",
+                  "id": 10012,
+                  "lastname": "Studerande",
+                  "studentNumber": "014553242",
+                  "sysop": false,
+                  "teacher": false,
+                  "updatedAt": "2018-03-26T00:00:00.000Z",
+                  "username": "tiraopiskelija2",
+                },
+                "codeReviews": Array [],
+                "courseInstanceId": 10011,
+                "createdAt": "2018-03-26T00:00:00.000Z",
+                "github": "http://github.com/tiralabra2",
+                "id": 10012,
+                "projectName": "Tiran toinen labraprojekti",
+                "teacherInstanceId": 10011,
+                "updatedAt": "2018-03-26T00:00:00.000Z",
+                "userId": 10012,
                 "weeks": Array [],
               },
             ],
@@ -144,37 +150,6 @@ exports[`<MassEmailPage /> MassEmailPage Component should render correctly 1`] =
               Object {
                 "Tags": Array [
                   Object {
-                    "color": "red",
-                    "id": 20001,
-                    "name": "Javascript",
-                  },
-                ],
-                "User": Object {
-                  "createdAt": "2018-03-26T00:00:00.000Z",
-                  "email": "johan.studerande@helsinki.invalid",
-                  "firsts": "Johan Wilhelm",
-                  "id": 10012,
-                  "lastname": "Studerande",
-                  "studentNumber": "014553242",
-                  "sysop": false,
-                  "teacher": false,
-                  "updatedAt": "2018-03-26T00:00:00.000Z",
-                  "username": "tiraopiskelija2",
-                },
-                "codeReviews": Array [],
-                "courseInstanceId": 10011,
-                "createdAt": "2018-03-26T00:00:00.000Z",
-                "github": "http://github.com/tiralabra2",
-                "id": 10012,
-                "projectName": "Tiran toinen labraprojekti",
-                "teacherInstanceId": 10011,
-                "updatedAt": "2018-03-26T00:00:00.000Z",
-                "userId": 10012,
-                "weeks": Array [],
-              },
-              Object {
-                "Tags": Array [
-                  Object {
                     "color": "grey",
                     "id": 20008,
                     "name": "DROPPED",
@@ -233,43 +208,43 @@ exports[`<MassEmailPage /> MassEmailPage Component should render correctly 1`] =
                 "userId": 10011,
                 "weeks": Array [],
               },
+              Object {
+                "Tags": Array [
+                  Object {
+                    "color": "red",
+                    "id": 20001,
+                    "name": "Javascript",
+                  },
+                ],
+                "User": Object {
+                  "createdAt": "2018-03-26T00:00:00.000Z",
+                  "email": "johan.studerande@helsinki.invalid",
+                  "firsts": "Johan Wilhelm",
+                  "id": 10012,
+                  "lastname": "Studerande",
+                  "studentNumber": "014553242",
+                  "sysop": false,
+                  "teacher": false,
+                  "updatedAt": "2018-03-26T00:00:00.000Z",
+                  "username": "tiraopiskelija2",
+                },
+                "codeReviews": Array [],
+                "courseInstanceId": 10011,
+                "createdAt": "2018-03-26T00:00:00.000Z",
+                "github": "http://github.com/tiralabra2",
+                "id": 10012,
+                "projectName": "Tiran toinen labraprojekti",
+                "teacherInstanceId": 10011,
+                "updatedAt": "2018-03-26T00:00:00.000Z",
+                "userId": 10012,
+                "weeks": Array [],
+              },
             ],
             "role": "teacher",
           }
         }
         studentInstances={
           Array [
-            Object {
-              "Tags": Array [
-                Object {
-                  "color": "red",
-                  "id": 20001,
-                  "name": "Javascript",
-                },
-              ],
-              "User": Object {
-                "createdAt": "2018-03-26T00:00:00.000Z",
-                "email": "johan.studerande@helsinki.invalid",
-                "firsts": "Johan Wilhelm",
-                "id": 10012,
-                "lastname": "Studerande",
-                "studentNumber": "014553242",
-                "sysop": false,
-                "teacher": false,
-                "updatedAt": "2018-03-26T00:00:00.000Z",
-                "username": "tiraopiskelija2",
-              },
-              "codeReviews": Array [],
-              "courseInstanceId": 10011,
-              "createdAt": "2018-03-26T00:00:00.000Z",
-              "github": "http://github.com/tiralabra2",
-              "id": 10012,
-              "projectName": "Tiran toinen labraprojekti",
-              "teacherInstanceId": 10011,
-              "updatedAt": "2018-03-26T00:00:00.000Z",
-              "userId": 10012,
-              "weeks": Array [],
-            },
             Object {
               "Tags": Array [
                 Object {
@@ -329,6 +304,37 @@ exports[`<MassEmailPage /> MassEmailPage Component should render correctly 1`] =
               "teacherInstanceId": 10011,
               "updatedAt": "2018-03-26T00:00:00.000Z",
               "userId": 10011,
+              "weeks": Array [],
+            },
+            Object {
+              "Tags": Array [
+                Object {
+                  "color": "red",
+                  "id": 20001,
+                  "name": "Javascript",
+                },
+              ],
+              "User": Object {
+                "createdAt": "2018-03-26T00:00:00.000Z",
+                "email": "johan.studerande@helsinki.invalid",
+                "firsts": "Johan Wilhelm",
+                "id": 10012,
+                "lastname": "Studerande",
+                "studentNumber": "014553242",
+                "sysop": false,
+                "teacher": false,
+                "updatedAt": "2018-03-26T00:00:00.000Z",
+                "username": "tiraopiskelija2",
+              },
+              "codeReviews": Array [],
+              "courseInstanceId": 10011,
+              "createdAt": "2018-03-26T00:00:00.000Z",
+              "github": "http://github.com/tiralabra2",
+              "id": 10012,
+              "projectName": "Tiran toinen labraprojekti",
+              "teacherInstanceId": 10011,
+              "updatedAt": "2018-03-26T00:00:00.000Z",
+              "userId": 10012,
               "weeks": Array [],
             },
           ]

@@ -125,13 +125,13 @@ const commentMessage = async (role, commentId) => {
     return {
       success: false,
       status: 400,
-      error: 'Bad value for "role"'
+      error: 'Bad value for "role".'
     }
   } catch (e) {
     return {
       success: false,
       status: 500,
-      error: 'Unexpected error'
+      error: 'Unexpected error. Please try again.'
     }
   }
 }
@@ -182,13 +182,13 @@ const weekMessage = async (role, weekId) => {
     return {
       success: false,
       status: 400,
-      error: 'Bad value for "role"'
+      error: 'Bad value for "role".'
     }
   } catch (e) {
     return {
       success: false,
       status: 500,
-      error: 'Unexpected error'
+      error: 'Unexpected error. Please try again.'
     }
   }
 }
@@ -233,7 +233,7 @@ const trySendEmail = async (emailOptions) => {
   }
 
   if (env !== 'production') {
-    console.log('simulated email sending', options)
+    console.log('Simulated sending email.', options)
     return {
       success: true,
       simulated: true
@@ -269,7 +269,7 @@ const send = async (req, res) => {
   try {
     // Basic validations
     if (!req.authenticated.success) {
-      return reject(res, 403, 'you have to be authenticated to do this')
+      return reject(res, 403, 'You have to be authenticated to do this.')
     }
     if (!(req.body.role === 'teacher' || req.body.role === 'student')) {
       return reject(res, 400, 'Missing field "role".')
@@ -348,7 +348,7 @@ const send = async (req, res) => {
     if (success) {
       markAsNotified(useComment, req.body.commentId || req.body.weekId)
       res.status(200).send({
-        message: simulated ? 'Email sending simulated' : 'Email sent successfully',
+        message: simulated ? 'Email sending simulated.' : 'Email sent successfully.',
         data: req.body
       })
     } else {
@@ -356,7 +356,7 @@ const send = async (req, res) => {
     }
   } catch (e) {
     logger.error(e)
-    return reject(res, 500, 'Unexpected error')
+    return reject(res, 500, 'Unexpected error. Please try again.')
   }
 }
 
@@ -375,7 +375,7 @@ const sendMass = async (req, res) => {
   try {
     // Basic validations
     if (!req.authenticated.success) {
-      return reject(res, 403, 'you have to be authenticated to do this')
+      return reject(res, 403, 'You have to be authenticated to do this.')
     }
     if (!(req.body.students)) {
       return reject(res, 400, 'Missing field "students".')
@@ -390,7 +390,7 @@ const sendMass = async (req, res) => {
       }
     })
     if (!courseInstance) {
-      return reject(res, 404, 'course instance not found')
+      return reject(res, 404, 'Course instance not found.')
     }
 
     const teacher = await TeacherInstance.findOne({
@@ -401,7 +401,7 @@ const sendMass = async (req, res) => {
       }
     })
     if (!teacher || !req.authenticated.success) {
-      return reject(res, 403, 'You have to be a teacher of the course to send mass emails')
+      return reject(res, 403, 'You have to be a teacher of the course to send mass emails.')
     }
 
     const inputStudents = req.body.students
@@ -431,7 +431,7 @@ const sendMass = async (req, res) => {
     }))).filter(email => email)
 
     if (studentEmails.length === 0) {
-      return reject(res, 404, 'No student email addresses found')
+      return reject(res, 404, 'No student email addresses found.')
     }
 
     let instructorEmails = []
@@ -469,7 +469,7 @@ const sendMass = async (req, res) => {
 
     if (success) {
       res.status(200).send({
-        message: simulated ? 'Email sending simulated' : 'Email sent successfully',
+        message: simulated ? 'Email sending simulated.' : 'Email sent successfully.',
         data: req.body
       })
     } else {
@@ -477,7 +477,7 @@ const sendMass = async (req, res) => {
     }
   } catch (e) {
     logger.error(e)
-    return reject(res, 500, 'Unexpected error')
+    return reject(res, 500, 'Unexpected error. Please try again.')
   }
 }
 

@@ -129,6 +129,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
         <StudentTableRow
           addFilterTag={[Function]}
           associateTeacherToStudent={[MockFunction]}
+          courseData={Object {}}
           coursePageLogic={
             Object {
               "filterByAssistant": 0,
@@ -175,41 +176,49 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
             Array [
               Object {
                 "key": 20001,
+                "selected": false,
                 "text": "Javascript",
                 "value": 20001,
               },
               Object {
                 "key": 20002,
+                "selected": false,
                 "text": "HTML",
                 "value": 20002,
               },
               Object {
                 "key": 20003,
+                "selected": false,
                 "text": "game",
                 "value": 20003,
               },
               Object {
                 "key": 20004,
+                "selected": false,
                 "text": "React",
                 "value": 20004,
               },
               Object {
                 "key": 20005,
+                "selected": false,
                 "text": "Node.js",
                 "value": 20005,
               },
               Object {
                 "key": 20006,
+                "selected": false,
                 "text": "Java",
                 "value": 20006,
               },
               Object {
                 "key": 20007,
+                "selected": false,
                 "text": "FORTRAN",
                 "value": 20007,
               },
               Object {
                 "key": 20008,
+                "selected": false,
                 "text": "DROPPED",
                 "value": 20008,
               },
@@ -219,6 +228,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
           extraColumns={Array []}
           getAllTags={[MockFunction]}
           key="tableRow10012"
+          loggedInUser={Object {}}
           selectStudent={[MockFunction]}
           selectedInstance={
             Object {
@@ -427,6 +437,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
         <StudentTableRow
           addFilterTag={[Function]}
           associateTeacherToStudent={[MockFunction]}
+          courseData={Object {}}
           coursePageLogic={
             Object {
               "filterByAssistant": 0,
@@ -478,41 +489,49 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
             Array [
               Object {
                 "key": 20001,
+                "selected": false,
                 "text": "Javascript",
                 "value": 20001,
               },
               Object {
                 "key": 20002,
+                "selected": false,
                 "text": "HTML",
                 "value": 20002,
               },
               Object {
                 "key": 20003,
+                "selected": false,
                 "text": "game",
                 "value": 20003,
               },
               Object {
                 "key": 20004,
+                "selected": false,
                 "text": "React",
                 "value": 20004,
               },
               Object {
                 "key": 20005,
+                "selected": false,
                 "text": "Node.js",
                 "value": 20005,
               },
               Object {
                 "key": 20006,
+                "selected": false,
                 "text": "Java",
                 "value": 20006,
               },
               Object {
                 "key": 20007,
+                "selected": false,
                 "text": "FORTRAN",
                 "value": 20007,
               },
               Object {
                 "key": 20008,
+                "selected": false,
                 "text": "DROPPED",
                 "value": 20008,
               },
@@ -522,6 +541,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
           extraColumns={Array []}
           getAllTags={[MockFunction]}
           key="tableRow10031"
+          loggedInUser={Object {}}
           selectStudent={[MockFunction]}
           selectedInstance={
             Object {
@@ -730,6 +750,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
         <StudentTableRow
           addFilterTag={[Function]}
           associateTeacherToStudent={[MockFunction]}
+          courseData={Object {}}
           coursePageLogic={
             Object {
               "filterByAssistant": 0,
@@ -770,41 +791,49 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
             Array [
               Object {
                 "key": 20001,
+                "selected": false,
                 "text": "Javascript",
                 "value": 20001,
               },
               Object {
                 "key": 20002,
+                "selected": false,
                 "text": "HTML",
                 "value": 20002,
               },
               Object {
                 "key": 20003,
+                "selected": false,
                 "text": "game",
                 "value": 20003,
               },
               Object {
                 "key": 20004,
+                "selected": false,
                 "text": "React",
                 "value": 20004,
               },
               Object {
                 "key": 20005,
+                "selected": false,
                 "text": "Node.js",
                 "value": 20005,
               },
               Object {
                 "key": 20006,
+                "selected": false,
                 "text": "Java",
                 "value": 20006,
               },
               Object {
                 "key": 20007,
+                "selected": false,
                 "text": "FORTRAN",
                 "value": 20007,
               },
               Object {
                 "key": 20008,
+                "selected": false,
                 "text": "DROPPED",
                 "value": 20008,
               },
@@ -814,6 +843,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
           extraColumns={Array []}
           getAllTags={[MockFunction]}
           key="tableRow10011"
+          loggedInUser={Object {}}
           selectStudent={[MockFunction]}
           selectedInstance={
             Object {
@@ -1088,21 +1118,33 @@ exports[`<StudentTableRow /> StudentTableRow Component should render correctly 1
       <RepoLink
         url="http://github.com/tiralabra2"
       />
-      <div
-        key="10012:20001"
-      >
-        <ButtonGroup
-          className="mini"
+      <div>
+        <span
+          key="10012:20001"
+          style={
+            Object {
+              "float": "left",
+              "marginRight": "0.33em",
+            }
+          }
         >
-          <Button
-            as="button"
-            className="mini ui red button"
-            compact={true}
-            floated="left"
+          <ButtonGroup
+            className="mini"
           >
-            Javascript
-          </Button>
-        </ButtonGroup>
+            <Button
+              as="button"
+              className="mini ui red button"
+              compact={true}
+              style={
+                Object {
+                  "display": "inline-block",
+                }
+              }
+            >
+              Javascript
+            </Button>
+          </ButtonGroup>
+        </span>
       </div>
     </span>
   </TableCell>
