@@ -6,8 +6,7 @@ module.exports = (sequelize, DataTypes) => {
       weekNumber: DataTypes.INTEGER,
       feedback: DataTypes.STRING,
       instructorNotes: DataTypes.STRING,
-      notified: DataTypes.BOOLEAN,
-      checks: DataTypes.JSONB
+      notified: DataTypes.BOOLEAN
     },
     {}
   )
@@ -19,6 +18,11 @@ module.exports = (sequelize, DataTypes) => {
     Week.hasMany(models.Comment, {
       foreignKey: 'weekId',
       as: 'comments'
+    })
+    Week.hasMany(models.ReviewCheck, {
+      foreignKey: 'weekId',
+      as: 'checks',
+      allowNull: true
     })
   }
   return Week

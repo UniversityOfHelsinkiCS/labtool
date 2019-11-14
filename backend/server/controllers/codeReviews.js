@@ -26,7 +26,7 @@ async function formatCodeReview(codeReview, allStudentInstancesIds, reviewNumber
   /*  do not prevent repeats in backend -- hisahi
   if (repeated) {
     return null
-  }*/
+  } */
 
   allStudentInstancesIds.push(codeReview.reviewer)
   return {
@@ -53,7 +53,7 @@ module.exports = {
 
     try {
       if (!req.authenticated.success) {
-        res.status(403).send('you have to be authenticated to do this')
+        res.status(403).send('You have to be authenticated to do this.')
         return
       }
       if (!Array.isArray(req.body.codeReviews || typeof req.body.reviewNumber !== 'number')) {
@@ -72,7 +72,7 @@ module.exports = {
       )
       if (values.indexOf(null) !== -1) {
         // Malformed items in codeReviews are replaced by null.
-        res.status(400).send('Malformed codeReview.')
+        res.status(400).send('Malformed code review.')
         return
       }
       // Get all studentInstances that have been referenced for validation purposes.
@@ -115,8 +115,8 @@ module.exports = {
         data: req.body
       })
     } catch (e) {
-      logger.error('CodeReview bulk insert failed.', { error: e.message })
-      res.status(500).send('Unexpected error.')
+      logger.error('Code review bulk insert failed.', { error: e.message })
+      res.status(500).send('Unexpected error. Please try again.')
     }
   },
 
@@ -134,7 +134,7 @@ module.exports = {
 
     try {
       if (!req.authenticated.success) {
-        res.status(403).send('you have to be authenticated to do this')
+        res.status(403).send('You have to be authenticated to do this.')
         return
       }
       if (typeof req.body.studentInstanceId !== 'number'
@@ -152,7 +152,7 @@ module.exports = {
         }
       })
       if (!studentInstance) {
-        res.status(404).send('No student instance matched given id.')
+        res.status(404).send('No student instance matched the given ID.')
         return
       }
       const courseId = studentInstance.courseInstanceId
@@ -179,15 +179,15 @@ module.exports = {
         }
       )
       if (modifiedRows === 0) {
-        res.status(404).send('No code review matched the given studentInstanceId and reviewNumber.')
+        res.status(404).send('No code review matched the given student instance ID and review number.')
       }
       res.status(200).send({
-        message: 'Code review points updated successfully',
+        message: 'Code review points updated successfully.',
         data: req.body
       })
       return
     } catch (e) {
-      res.status(500).send('Unexpected error.')
+      res.status(500).send('Unexpected error. Please try again.')
     }
   },
 
@@ -205,11 +205,11 @@ module.exports = {
 
     try {
       if (!req.authenticated.success) {
-        res.status(403).send('You have to be authenticated to do this')
+        res.status(403).send('You have to be authenticated to do this.')
         return
       }
       if (!(req.body.linkToReview.startsWith('http://') || req.body.linkToReview.startsWith('https://'))) {
-        res.status(400).send('A link usually starts with http:// or https://')
+        res.status(400).send('The link must start with either "http://" or "https://".')
         return
       }
 
@@ -222,7 +222,7 @@ module.exports = {
         }
       })
       if (!studentInstance) {
-        res.status(404).send('No student instance matched given id.')
+        res.status(404).send('No student instance matched the given ID.')
         return
       }
 
@@ -238,15 +238,15 @@ module.exports = {
         }
       )
       if (modifiedRows === 0) {
-        res.status(404).send('No code review matched the given studentInstanceId and reviewNumber.')
+        res.status(404).send('No code review matched the given student instance ID and review number.')
       }
       res.status(200).send({
-        message: 'Code review link added successfully',
+        message: 'Code review link added successfully.',
         data: req.body
       })
       return
     } catch (e) {
-      res.status(500).send('Unexpected error.')
+      res.status(500).send('Unexpected error. Please try again.') // Make this more helpful?
     }
   },
 
@@ -263,8 +263,12 @@ module.exports = {
     }
 
     try {
+      if (!req.authenticated.success) {
+        res.status(403).send('You have to be authenticated to do this.')
+        return
+      }
       if (!req.params.id) {
-        res.status(403).send('Cant delete from null')
+        res.status(403).send('Cannot delete from null.')
         return
       }
       const studentInstance = await StudentInstance.findOne({
@@ -289,7 +293,7 @@ module.exports = {
       })
       if (deleteOne === 1) {
         res.status(200).send({
-          message: 'Code review link removed successfully',
+          message: 'Code review link removed successfully.',
           data: req.body
         })
       }

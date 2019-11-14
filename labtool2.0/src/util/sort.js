@@ -20,6 +20,16 @@ export const sortTags = tags => {
   })
 }
 
+export const sortStudentsAlphabeticallyByDroppedValue = students =>
+  students.sort(
+    (a, b) =>
+      !Number(a.validRegistration) - !Number(b.validRegistration) ||
+      Number(a.dropped) - Number(b.dropped) ||
+      a.User.lastname.localeCompare(b.User.lastname) ||
+      a.User.firsts.localeCompare(b.User.firsts) ||
+      a.id - b.id
+  )
+
 export const sortUsersByTeacherAssistantLastname = (users, assistants) => {
   return users.sort((a, b) => {
     const aIsAssistant = assistants.find(ass => ass.userId === a.id)

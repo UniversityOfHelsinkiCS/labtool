@@ -5,7 +5,7 @@ const helper = require('../helpers/courseInstanceHelper')
 const logger = require('../utils/logger')
 
 const { Op } = Sequelize
-const { User, CourseInstance, StudentInstance, TeacherInstance, Week, CodeReview, Comment, Tag, Checklist, ChecklistItem } = db
+const { User, CourseInstance, StudentInstance, TeacherInstance, Week, ReviewCheck, CodeReview, Comment, Tag, Checklist, ChecklistItem } = db
 
 const env = process.env.NODE_ENV || 'development'
 const config = require('./../config/config.js')[env]
@@ -15,11 +15,10 @@ const overkillLogging = (req, error) => {
   logger.error('error: ', error)
 }
 
-const validationErrorMessages = {
-  github: 'Github repository link is not a proper url.',
-  projectName: 'Project name contains illegal characters.\nCharacters allowed'
-    + 'are letters from a-ö, numbers, apostrophe, - and whitespace'
-    + '(not multiple in a row or at first/last character)'
+const invalidProjectNameErrorMessage = {
+  projectName: 'Project name contains illegal characters.\n Characters allowed '
+    + ' in the project name are letters from a-ö, numbers, apostrophe, - and '
+    + ' whitespace (not multiple in a row or at first/last character).'
 }
 
 module.exports = {
@@ -143,6 +142,10 @@ module.exports = {
                   hidden: false
                 },
                 required: false
+              },
+              {
+                model: ReviewCheck,
+                as: 'checks'
               }
             ]
           },
@@ -202,6 +205,9 @@ module.exports = {
             // This was only ever included to be spliced into the codeReviews filed above.
             delete palautus.data.toReviews
           }
+          palautus.data.weeks = palautus.data.weeks.map(week => ({ ...week.dataValues,
+            checks: week.checks.reduce((checksObject, reviewCheck) => ({ ...checksObject, [reviewCheck.checklistItemId]: reviewCheck.checked }), {})
+          }))
         } else {
           palautus.data = null
         }
@@ -233,6 +239,10 @@ module.exports = {
                   exclude: ['updatedAt']
                 },
                 as: 'comments'
+              },
+              {
+                model: ReviewCheck,
+                as: 'checks'
               }
             ]
           },
@@ -262,7 +272,9 @@ module.exports = {
         ]
       })
       try {
-        palautus.data = teacherPalautus
+        palautus.data = teacherPalautus.map(studentInstance => ({ ...studentInstance.dataValues,
+          weeks: studentInstance.dataValues.weeks.map(week => ({ ...week.dataValues,
+            checks: week.checks.reduce((checksObject, reviewCheck) => ({ ...checksObject, [reviewCheck.checklistItemId]: reviewCheck.checked }), {}) })) }))
         palautus.role = 'teacher'
         res.status(200).send(palautus)
       } catch (e) {
@@ -306,14 +318,14 @@ module.exports = {
     if (!course) {
       overkillLogging(req, null)
       return res.status(400).send({
-        message: 'course instance not found'
+        message: 'Course instance not found.'
       })
     }
     if (course.active === false) {
-      logger.info('course registration failed because course is not active')
+      logger.info('Course registration failed because course is not active.')
       overkillLogging(req, null)
       return res.status(400).send({
-        message: 'course is not active'
+        message: 'Course is not active.'
       })
     }
     const user = await User.findByPk(req.decoded.id)
@@ -357,14 +369,14 @@ module.exports = {
       })
     } catch (error) {
       if (error.name === 'SequelizeValidationError') {
-        const errorMessage = error.errors.map(e => validationErrorMessages[e.path] || 'Unknown validation error.')
+        const errorMessage = error.errors.map(e => invalidProjectNameErrorMessage[e.path] || e.message || 'Unknown validation error.')
         return res.status(400).json({
           message: errorMessage.join('\n')
         })
       }
       overkillLogging(req, error)
       return res.status(500).json({
-        message: 'Unexpected error.'
+        message: 'Unexpected error. Please try again.'
       })
     }
     if (!student) {
@@ -407,7 +419,7 @@ module.exports = {
         where: { ohid: req.body.ohid }
       }).then((course) => {
         if (!course) {
-          res.status(404).send('course not found')
+          res.status(404).send('Course not found.')
           return
         }
 
@@ -493,17 +505,17 @@ module.exports = {
           }
         })
         if (!course) {
-          return res.status(404).send('course not found')
+          return res.status(404).send('Course not found.')
         }
         const isAllowedToUpdate = await helper.getRoleToViewStudentInstance(req, course.id, userId)
         if (!isAllowedToUpdate) {
-          return res.status(403).send(`Not allowed to update student instance for user ${userId}`)
+          return res.status(403).send(`You are not allowed to update student instance for user ${userId}.`)
         }
         if (req.body.issuesDisabled && isAllowedToUpdate === 'student') {
-          return res.status(403).send('you cannot edit your issues disabled status as a student')
+          return res.status(403).send('You cannot modify this flag as a student.')
         }
         if (req.body.github && isAllowedToUpdate === 'assistant') {
-          return res.status(403).send('you cannot edit the repository URL as an assistant')
+          return res.status(403).send('You cannot modify the repository URL as an assistant.')
         }
         const targetStudent = await StudentInstance.findOne({
           where: {
@@ -512,7 +524,7 @@ module.exports = {
           }
         })
         if (!targetStudent) {
-          res.status(404).send('Student not found')
+          res.status(404).send('Student not found.')
           return
         }
         try {
@@ -529,11 +541,11 @@ module.exports = {
         } catch (error) {
           if (error.name === 'SequelizeValidationError') {
             const errorMessage = error.errors.map(
-              e => validationErrorMessages[e.path] || 'Unknown validation error.')
+              e => invalidProjectNameErrorMessage[e.path] || e.message || 'Unknown validation error.')
             logger.error(error)
             return res.status(400).send({ message: errorMessage.join('\n') })
           }
-          res.status(400).send(error)
+          res.status(400).send('\n\n\n\nAn error occurred: ', error)
         }
       }
     } catch (e) {
@@ -563,7 +575,7 @@ module.exports = {
       .then((courseInstance) => {
         if (!courseInstance) {
           res.status(400).send({
-            message: 'course instance not found'
+            message: 'Course instance not found.'
           })
           return
         }
@@ -575,7 +587,7 @@ module.exports = {
         })
           .then((teacher) => {
             if (!teacher || !req.authenticated.success) {
-              res.status(400).send('You have to be a teacher to update course info')
+              res.status(400).send('You have to be a teacher to update course info.')
               return
             }
             const newCr = req.body.newCr || []
@@ -659,7 +671,7 @@ module.exports = {
       .then((courseInstance) => {
         if (!courseInstance) {
           return res.status(404).send({
-            message: 'Course not Found'
+            message: 'Course not found.'
           })
         }
         return res.status(200).send(courseInstance)
@@ -739,7 +751,7 @@ module.exports = {
     const auth = process.env.TOKEN || 'notset' // You have to set TOKEN in .env file in order for this to work
     const termAndYear = helper.CurrentTermAndYear()
     if (auth === 'notset') {
-      res.send('Please restart the backend with the correct TOKEN environment variable set')
+      res.send('Please restart the backend with the correct TOKEN environment variable set.')
     } else if (this.remoteAddress === '127.0.0.1') {
       res.send('gtfo')
     } else {
@@ -813,7 +825,7 @@ module.exports = {
       })
 
       if (!course) {
-        return res.status(404).send('Course not found')
+        return res.status(404).send('Course not found.')
       }
 
       const isTeacher = await helper.getTeacherId(req.decoded.id, course.id)
@@ -898,18 +910,18 @@ module.exports = {
 
         const user = await User.findByPk(userId)
         if (!user) {
-          res.status(400).send('you are not an user in the system')
+          res.status(400).send('You are not an user in the system.')
           return
         }
         const hasPermission = await helper.checkHasCommentPermission(userId, message.week)
         if (!hasPermission) {
-          res.status(403).send('you are not allowed to comment here')
+          res.status(403).send('You are not allowed to comment here.')
           return
         }
         const name = user.firsts.concat(' ').concat(user.lastname)
 
         if (message.comment.trim().length === 0) {
-          res.status(400).send('comment cannot be empty')
+          res.status(400).send('Comment cannot be empty.')
           return
         }
 
@@ -924,7 +936,7 @@ module.exports = {
         })
 
         if (!comment) {
-          res.status(400).send('week not found')
+          res.status(400).send('Week not found.')
         } else {
           res.status(200).send(comment)
         }
