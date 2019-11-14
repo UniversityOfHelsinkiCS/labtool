@@ -96,6 +96,15 @@ export const ModifyCourseInstancePage = props => {
     return <Redirect to={`/labtool/courses/${props.selectedInstance.ohid}`} />
   }
   const selectedInstance = { ...props.selectedInstance }
+
+  let weeks = []
+
+  // There are a million better ways to do this. But none so lazy as this one.
+  for (let i = 0; i < selectedInstance.weekAmount + 1; i++) {
+    // We purposefully added 1 week for code reviews.
+    weeks.push(i + 1)
+  }
+
   return (
     <div>
       <BackButton preset="coursePage" />
@@ -121,7 +130,8 @@ export const ModifyCourseInstancePage = props => {
 
               <Form.Group inline>
                 <label style={{ width: '125px', textAlign: 'left' }}>Current week</label>
-                <Input name="currentWeek" required={true} type="text" style={{ maxWidth: '7em' }} value={selectedInstance.currentWeek} className="form-control3" onChange={changeField} />
+
+                <Dropdown onChange={changeField} style={{ maxWidth: '7em' }} options={weeks} fluid selection placeholder={selectedInstance.currentWeek} />
               </Form.Group>
 
               <Form.Group inline>
