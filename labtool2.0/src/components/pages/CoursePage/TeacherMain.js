@@ -29,7 +29,7 @@ export const CoursePageTeacherMain = props => {
 
       <p>
         {activeStudentCount} active student{activeStudentCount === 1 ? '' : 's'}
-        {droppedStudentCount > 0 ? ', ' + droppedStudentCount + ' dropped (' + totalStudentCount + ' in total)' : ''}
+        {droppedStudentCount > 0 ? `, ${droppedStudentCount} dropped (${totalStudentCount} in total)` : ''}
       </p>
 
       <StudentTable
