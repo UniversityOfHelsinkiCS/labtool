@@ -63,9 +63,9 @@ export const WeekReviewWeek = props => {
                 <span />
               )}
             </Card.Content>
-            {isTeacher && !isFinalWeek ? (
+            {isTeacher ? (
               <Card.Content style={{ paddingBottom: '5px' }}>
-                {week.notified ? (
+                {!isFinalWeek && (week.notified ? (
                   <Label>
                     Notified <Icon name="check" color="green" />
                   </Label>
@@ -73,15 +73,13 @@ export const WeekReviewWeek = props => {
                   <Button type="button" onClick={sendWeekEmail(week.id)} size="small">
                     Send email notification
                   </Button>
-                )}
-                {isTeacher && (
-                  <Link to={`/labtool/reviewstudent/${selectedInstance.ohid}/${studentInstance}/${reviewIndex}`}>
-                    <Popup
-                      trigger={<Button circular color="orange" size="tiny" icon={{ name: 'edit', color: 'black', size: 'large' }} />}
-                      content={isFinalWeek ? 'Edit final review' : 'Edit review'}
-                    />
-                  </Link>
-                )}
+                ))}
+                <Link to={`/labtool/reviewstudent/${selectedInstance.ohid}/${studentInstance}/${reviewIndex}`}>
+                  <Popup
+                    trigger={<Button circular color="orange" size="tiny" icon={{ name: 'edit', color: 'black', size: 'large' }} />}
+                    content={isFinalWeek ? 'Edit final review' : 'Edit review'}
+                  />
+                </Link>
               </Card.Content>
             ) : (
               <span />
