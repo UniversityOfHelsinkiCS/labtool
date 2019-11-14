@@ -34,6 +34,9 @@ export const StudentTableRow = props => {
   } = props
 
   const updateTeacher = id => async (e, { value }) => {
+    if (!value) {
+      return
+    }
     try {
       e.preventDefault()
       let teacherId = value
@@ -74,6 +77,9 @@ export const StudentTableRow = props => {
   }
 
   const addTag = id => async (e, { value }) => {
+    if (!value) {
+      return
+    }
     try {
       e.preventDefault()
       const data = {
@@ -99,44 +105,17 @@ export const StudentTableRow = props => {
     }
   }
 
-  const loggedInUserSameAsTeacherOrSiInstructor = si => {
-    // The teacher can always see notification
-    if (selectedInstance.teacherInstances.find(ti => !ti.instructor && ti.userId === loggedInUser.user.id)) {
-      return true
-    }
-    // if instructor is not assinged, the teacher can see the notification
-    if (si.teacherInstanceId === null) {
-      return !!selectedInstance.teacherInstances.find(ti => !ti.instructor && ti.userId === loggedInUser.user.id)
-    }
-    const userIdOfInstructor = selectedInstance.teacherInstances.find(ti => ti.id === si.teacherInstanceId).userId
-    // return true if logged in user is same as the instructor of the student
-    return userIdOfInstructor === loggedInUser.user.id
-  }
-
-  const unReadComments = (siId, week) => {
+  const showNewCommentsNotification = (siId, week) => {
     const si = courseData.data.find(si => si.id === siId)
-    if (!loggedInUserSameAsTeacherOrSiInstructor(si)) {
-      return null
-    }
-
     const commentsForWeek = si.weeks.find(wk => wk.weekNumber === week).comments
     if (commentsForWeek.length === 0) {
-      return null
-    }
-    const newComments = commentsForWeek.filter(comment => comment && !(comment.isRead || []).includes(loggedInUser.user.id))
-    return newComments
-  }
-
-  const showNewCommentsNotification = (siId, week) => {
-    if (!props.showCommentNotification) {
       return false
     }
-
-    const newComments = unReadComments(siId, week)
-    return !newComments ? false : newComments.length > 0
+    const newComments = commentsForWeek.filter(comment => !(comment.isRead || []).includes(loggedInUser.user.id))
+    return newComments.length > 0
   }
 
-  const createWeekHeaders = (weeks, codeReviews, siId, dropped) => {
+  const createWeekHeaders = (weeks, codeReviews, siId, dropped, validRegistration) => {
     const cr =
       codeReviews &&
       codeReviews.reduce((a, b) => {
@@ -168,11 +147,11 @@ export const StudentTableRow = props => {
             key={'week' + i + 'link'}
             to={
               weekPoints[i + 1] === undefined
-                ? `/labtool/reviewstudent/${selectedInstance.ohid}/${siId}/${i + 1}`
+                ? { pathname: `/labtool/reviewstudent/${selectedInstance.ohid}/${siId}/${i + 1}`, state: { cameFromCoursePage: true } }
                 : { pathname: `/labtool/browsereviews/${selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: i } }
             }
           >
-            {selectedInstance.currentWeek === i + 1 && weekPoints[i + 1] === undefined && !dropped ? (
+            {selectedInstance.currentWeek === i + 1 && weekPoints[i + 1] === undefined && !dropped && validRegistration ? (
               <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'star', size: 'large' }} />} content="Review" />
             ) : (
               <div>
@@ -181,7 +160,7 @@ export const StudentTableRow = props => {
                 ) : (
                   <div>
                     <p>{weekPoints[i + 1]}</p>
-                    {showNewCommentsNotification(data.id, i + 1) ? <Popup trigger={<Icon name="comment outline" size="small" />} content="You have new comments" /> : null}
+                    {showNewCommentsNotification(data.id, i + 1) ? <Popup trigger={<Icon name="comments" size="big" />} content="You have new comments" /> : null}
                   </div>
                 )}
               </div>
@@ -241,7 +220,6 @@ export const StudentTableRow = props => {
 
     return indents
   }
-  
 
   return (
     <Table.Row key={data.id} className={data.dropped || !data.validRegistration ? 'TableRowForDroppedOutStudent' : 'TableRowForActiveStudent'}>
@@ -284,20 +262,22 @@ export const StudentTableRow = props => {
           {data.projectName}
           <br />
           <RepoLink url={data.github} />
-          {data.Tags.map(tag => (
-            <div key={data.id + ':' + tag.id}>
-              <Button.Group className={'mini'}>
-                <Button compact floated="left" className={`mini ui ${tag.color} button`} onClick={addFilterTag(tag)}>
-                  {tag.name}
-                </Button>
-                {allowModify && (
-                  <Button compact icon attached="right" className={`mini ui ${tag.color} button`} style={{ paddingLeft: 0, paddingRight: 0 }} onClick={removeTag(data.id, tag.id)}>
-                    <Icon name="remove" />
+          <div>
+            {data.Tags.map(tag => (
+              <span key={data.id + ':' + tag.id} style={{ float: 'left', marginRight: '0.33em' }}>
+                <Button.Group className={'mini'}>
+                  <Button compact style={{ display: 'inline-block' }} className={`mini ui ${tag.color} button`} onClick={addFilterTag(tag)}>
+                    {tag.name}
                   </Button>
-                )}
-              </Button.Group>
-            </div>
-          ))}
+                  {allowModify && (
+                    <Button compact icon attached="right" className={`mini ui ${tag.color} button`} style={{ paddingLeft: 0, paddingRight: 0 }} onClick={removeTag(data.id, tag.id)}>
+                      <Icon name="remove" />
+                    </Button>
+                  )}
+                </Button.Group>
+              </span>
+            ))}
+          </div>
           {allowModify && (
             <Popup trigger={<Icon id={'tagModify'} onClick={changeHiddenTagDropdown(data.id)} name="add" color="green" style={{ float: 'right', fontSize: '1.25em' }} />} content="Add tag" />
           )}
@@ -306,7 +286,7 @@ export const StudentTableRow = props => {
           <div>
             {coursePageLogic.showTagDropdown === data.id ? (
               <div>
-                <Dropdown id={'tagDropdown'} style={{ float: 'left' }} options={dropDownTags} onChange={addTag(data.id)} placeholder="Choose tag" fluid selection />
+                <Dropdown id={'tagDropdown'} style={{ float: 'left' }} selectOnBlur={false} options={dropDownTags} onChange={addTag(data.id)} placeholder="Choose tag" fluid selection />
               </div>
             ) : (
               <div />
@@ -318,7 +298,7 @@ export const StudentTableRow = props => {
       {showColumn('points') && (
         <>
           {/* Week #, Code Review # */}
-          {createWeekHeaders(data.weeks, data.codeReviews, data.id, data.dropped)}
+          {createWeekHeaders(data.weeks, data.codeReviews, data.id, data.dropped, data.validRegistration)}
 
           {/* Sum */}
           <Table.Cell key="pointssum" textAlign="center">
@@ -350,7 +330,7 @@ export const StudentTableRow = props => {
               />
               {coursePageLogic.showAssistantDropdown === data.id ? (
                 <div>
-                  <Dropdown id={'assistantDropdown'} options={dropDownTeachers} onChange={updateTeacher(data.id, data.teacherInstanceId)} placeholder="Select teacher" fluid selection />
+                  <Dropdown id={'assistantDropdown'} selectOnBlur={false} options={dropDownTeachers} onChange={updateTeacher(data.id, data.teacherInstanceId)} placeholder="Select teacher" fluid selection />
                 </div>
               ) : (
                 <div />
