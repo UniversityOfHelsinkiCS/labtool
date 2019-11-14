@@ -84,15 +84,15 @@ export const ReviewStudent = props => {
     })
   }
 
-  const exportToDraft = form => {
+  const exportToDraft = () => {
     // produce a JSON object for all the review data;
     // this will be used verbatim as weekData (except for checks;
     // they get passed to weekReview by the reducer)
     const draftData = {}
-    draftData.checks = props.weekReview.checks || {}
-    draftData.points = form.points.value || ''
-    draftData.feedback = form.comment.value || ''
-    draftData.instructorNotes = form.instructorNotes.value || ''
+    draftData.checks = checks
+    draftData.points = pstate.points || ''
+    draftData.feedback = pstate.feedback || ''
+    draftData.instructorNotes = pstate.instructorNotes || ''
     return draftData
   }
 
@@ -100,7 +100,7 @@ export const ReviewStudent = props => {
     const content = {
       studentInstanceId: props.studentInstance,
       weekNumber: props.weekNumber,
-      reviewData: exportToDraft(e.target.form)
+      reviewData: exportToDraft()
     }
     pstate.clear()
     props.addRedirectHook({
