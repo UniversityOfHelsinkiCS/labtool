@@ -42,7 +42,6 @@ function formatCoursesForList(courses) {
   const result = []
 
   courses.forEach((course) => {
-    console.log(course)
     result.push({
       hid: course.id,
       cname: course.name,
