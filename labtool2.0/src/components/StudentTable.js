@@ -118,7 +118,7 @@ export const StudentTable = props => {
     return headers
   }
 
-  const { columns, disableDefaultFilter, studentColumnName, showFooter, extraStudentIcon, studentFooter } = props
+  const { columns, disableDefaultFilter, filterStudents, studentColumnName, showFooter, extraStudentIcon, studentFooter } = props
 
   const showColumn = column => columns.indexOf(column) >= 0
   const nullFunc = () => nullFunc
@@ -135,12 +135,13 @@ export const StudentTable = props => {
   ]
   dropDownFilterTeachers = createDropdownTeachers(props.selectedInstance.teacherInstances, dropDownFilterTeachers)
 
+  const courseTags = (props.tags.tags || []).filter(tag => tag.courseInstanceId === null || tag.courseInstanceId === props.selectedInstance.id)
   let dropDownTags = []
-  dropDownTags = createDropdownTags(props.tags.tags, dropDownTags)
-  let dropDownFilterTags = createDropdownTags(props.tags.tags, []).filter(
+  dropDownTags = createDropdownTags(courseTags, dropDownTags)
+  let dropDownFilterTags = createDropdownTags(courseTags, []).filter(
     tag => state.filterByTag.find(t => t.id === tag.value) || (props.studentInstances && countStudentsWithTag(props.studentInstances, tag.value) > 0)
   )
-  dropDownFilterTags = dropDownFilterTags.map(tag => props.tags.tags.find(t => t.id === tag.value))
+  dropDownFilterTags = dropDownFilterTags.map(tag => courseTags.find(t => t.id === tag.value))
 
   const dataFilter = data =>
     disableDefaultFilter ||
@@ -149,7 +150,7 @@ export const StudentTable = props => {
       // remove students when filtering tags and they don't match
       (state.filterByTag.length === 0 || hasFilteringTags(data.Tags, state.filterByTag)))
 
-  const filteredData = (props.studentInstances || []).filter(dataFilter)
+  const filteredData = (props.studentInstances || []).filter(dataFilter).filter(filterStudents ? filterStudents : () => true)
 
   if (props.onFilter) {
     props.onFilter(filteredData.map(data => data.id))
@@ -310,11 +311,14 @@ StudentTable.propTypes = {
   persistentFilterKey: PropTypes.string,
   extraStudentIcon: PropTypes.func,
   studentFooter: PropTypes.func,
+  filterStudents: PropTypes.func,
 
   studentInstances: PropTypes.array.isRequired,
   selectedInstance: PropTypes.object.isRequired,
   coursePageLogic: PropTypes.object.isRequired,
   tags: PropTypes.object.isRequired,
+  courseData: PropTypes.object.isRequired,
+  loggedInUser: PropTypes.object.isRequired,
 
   associateTeacherToStudent: PropTypes.func.isRequired,
   showAssistantDropdown: PropTypes.func.isRequired,

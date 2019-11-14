@@ -289,6 +289,7 @@ describe('<ReviewStudent />', () => {
               id: 20007,
               name: 'FORTRAN',
               color: 'pink',
+              courseInstanceId: null,
               StudentTag: {
                 id: 30007,
                 studentInstanceId: 10031,
@@ -381,6 +382,7 @@ describe('<ReviewStudent />', () => {
               id: 20003,
               name: 'game',
               color: 'black',
+              courseInstanceId: null,
               StudentTag: {
                 id: 30003,
                 studentInstanceId: 10011,
@@ -393,6 +395,7 @@ describe('<ReviewStudent />', () => {
               id: 20002,
               name: 'HTML',
               color: 'yellow',
+              courseInstanceId: null,
               StudentTag: {
                 id: 30002,
                 studentInstanceId: 10011,
@@ -405,6 +408,7 @@ describe('<ReviewStudent />', () => {
               id: 20001,
               name: 'Javascript',
               color: 'red',
+              courseInstanceId: null,
               StudentTag: {
                 id: 30001,
                 studentInstanceId: 10011,
@@ -456,6 +460,7 @@ describe('<ReviewStudent />', () => {
               id: 20005,
               name: 'Node.js',
               color: 'blue',
+              courseInstanceId: null,
               StudentTag: {
                 id: 30005,
                 studentInstanceId: 10012,
@@ -468,6 +473,7 @@ describe('<ReviewStudent />', () => {
               id: 20001,
               name: 'Javascript',
               color: 'red',
+              courseInstanceId: null,
               StudentTag: {
                 id: 30004,
                 studentInstanceId: 10012,

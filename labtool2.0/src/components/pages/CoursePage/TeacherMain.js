@@ -14,7 +14,8 @@ export const CoursePageTeacherMain = props => {
   students.forEach(student => {
     if (student.dropped) {
       droppedStudentCount++
-    } else {
+    } else if (student.validRegistration) {
+      //exclude students with invalid registration completely from the statistics
       activeStudentCount++
     }
   })
@@ -27,7 +28,8 @@ export const CoursePageTeacherMain = props => {
       <Header as="h2">Students</Header>
 
       <p>
-        {activeStudentCount} active student{activeStudentCount === 1 ? '' : 's'}, {droppedStudentCount} dropped student{droppedStudentCount === 1 ? '' : 's'} ({totalStudentCount} in total)
+        {activeStudentCount} active student{activeStudentCount === 1 ? '' : 's'}
+        {droppedStudentCount > 0 ? `, ${droppedStudentCount} dropped (${totalStudentCount} in total)` : ''}
       </p>
 
       <StudentTable
@@ -66,7 +68,8 @@ CoursePageTeacherMain.propTypes = {
   courseId: PropTypes.string.isRequired,
   students: PropTypes.array.isRequired,
 
-  exportCSV: PropTypes.func.isRequired
+  exportCSV: PropTypes.func.isRequired,
+  loggedInUser: PropTypes.object.isRequired
 }
 
 export default CoursePageTeacherMain

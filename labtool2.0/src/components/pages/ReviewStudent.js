@@ -59,12 +59,12 @@ export const ReviewStudent = props => {
     try {
       e.preventDefault()
       const content = {
-        points: e.target.points.value,
+        points: pstate.points,
         studentInstanceId: props.studentInstance,
-        feedback: e.target.comment.value,
-        instructorNotes: e.target.instructorNotes.value,
+        feedback: pstate.feedback,
+        instructorNotes: pstate.instructorNotes,
         weekNumber: props.weekNumber,
-        checks: props.weekReview.checks
+        checks
       }
       pstate.clear()
       if (e.target.points.value < 0 || e.target.points.value > getMaximumPoints()) {
@@ -100,15 +100,15 @@ export const ReviewStudent = props => {
     })
   }
 
-  const exportToDraft = form => {
+  const exportToDraft = () => {
     // produce a JSON object for all the review data;
     // this will be used verbatim as weekData (except for checks;
     // they get passed to weekReview by the reducer)
     const draftData = {}
-    draftData.checks = props.weekReview.checks || {}
-    draftData.points = form.points.value || ''
-    draftData.feedback = form.comment.value || ''
-    draftData.instructorNotes = form.instructorNotes.value || ''
+    draftData.checks = checks
+    draftData.points = pstate.points || ''
+    draftData.feedback = pstate.feedback || ''
+    draftData.instructorNotes = pstate.instructorNotes || ''
     return draftData
   }
 
@@ -116,7 +116,7 @@ export const ReviewStudent = props => {
     const content = {
       studentInstanceId: props.studentInstance,
       weekNumber: props.weekNumber,
-      reviewData: exportToDraft(e.target.form)
+      reviewData: exportToDraft()
     }
     pstate.clear()
     props.addRedirectHook({
@@ -129,6 +129,19 @@ export const ReviewStudent = props => {
     e.preventDefault()
     pstate.points = e.target.points.value
     pstate.feedback = e.target.text.value
+  }
+
+  const getMaximumPoints = () => {
+    const checklist = props.selectedInstance.checklists.find(checkl => checkl.week === Number(props.ownProps.weekNumber))
+    if (checklist && checklist.maxPoints) {
+      return checklist.maxPoints
+    }
+    return props.selectedInstance.weekMaxPoints
+  }
+
+  const toggleCheckbox = (checklistItemId, studentId, weekNbr) => async () => {
+    setAllowChecksCopy(true)
+    props.toggleCheck(checklistItemId, studentId, weekNbr)
   }
 
   const isChecked = (checks, checklistItemId) =>

@@ -125,6 +125,7 @@ export const StudentTableRow = props => {
     let i = 0
     let weekPoints = {}
     let finalPoints = undefined
+    const shouldReview = !dropped && validRegistration
 
     const tableCellLinkStyle = { position: 'absolute', display: 'inline-block', top: 0, left: 0, right: 0, bottom: 0 }
     const flexCenter = { display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }
@@ -151,20 +152,20 @@ export const StudentTableRow = props => {
                 : { pathname: `/labtool/browsereviews/${selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: i } }
             }
           >
-            {selectedInstance.currentWeek === i + 1 && weekPoints[i + 1] === undefined && !dropped && validRegistration ? (
-              <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'star', size: 'large' }} />} content="Review" />
-            ) : (
-              <div>
-                {weekPoints[i + 1] === undefined ? (
-                  <p>-</p>
+            <div>
+              {weekPoints[i + 1] === undefined ? (
+                shouldReview && selectedInstance.currentWeek === i + 1 ? (
+                  <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'star', size: 'large' }} />} content="Review" className="reviewButton" />
                 ) : (
-                  <div>
-                    <p>{weekPoints[i + 1]}</p>
-                    {showNewCommentsNotification(data.id, i + 1) ? <Popup trigger={<Icon name="comments" size="big" />} content="You have new comments" /> : null}
-                  </div>
-                )}
-              </div>
-            )}
+                  <p style={flexCenter}>-</p>
+                )
+              ) : (
+                <div>
+                  <p>{weekPoints[i + 1]}</p>
+                  {showNewCommentsNotification(data.id, i + 1) ? <Popup trigger={<Icon name="comments" size="big" />} content="You have new comments" /> : null}
+                </div>
+              )}
+            </div>
           </Link>
         </Table.Cell>
       )
@@ -204,7 +205,11 @@ export const StudentTableRow = props => {
           >
             <div style={{ width: '100%', height: '100%' }}>
               {finalPoints === undefined ? (
-                <p style={flexCenter}>-</p>
+                shouldReview && selectedInstance.currentWeek === selectedInstance.weekAmount + 1 ? (
+                  <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'star', size: 'large' }} />} content="Review" className="reviewButton" />
+                ) : (
+                  <p style={flexCenter}>-</p>
+                )
               ) : (
                 <div>
                   <p style={flexCenter}>{finalPoints}</p>
@@ -262,20 +267,22 @@ export const StudentTableRow = props => {
           {data.projectName}
           <br />
           <RepoLink url={data.github} />
-          {data.Tags.map(tag => (
-            <div key={data.id + ':' + tag.id}>
-              <Button.Group className={'mini'}>
-                <Button compact floated="left" className={`mini ui ${tag.color} button`} onClick={addFilterTag(tag)}>
-                  {tag.name}
-                </Button>
-                {allowModify && (
-                  <Button compact icon attached="right" className={`mini ui ${tag.color} button`} style={{ paddingLeft: 0, paddingRight: 0 }} onClick={removeTag(data.id, tag.id)}>
-                    <Icon name="remove" />
+          <div>
+            {data.Tags.map(tag => (
+              <span key={data.id + ':' + tag.id} style={{ float: 'left', marginRight: '0.33em' }}>
+                <Button.Group className={'mini'}>
+                  <Button compact style={{ display: 'inline-block' }} className={`mini ui ${tag.color} button`} onClick={addFilterTag(tag)}>
+                    {tag.name}
                   </Button>
-                )}
-              </Button.Group>
-            </div>
-          ))}
+                  {allowModify && (
+                    <Button compact icon attached="right" className={`mini ui ${tag.color} button`} style={{ paddingLeft: 0, paddingRight: 0 }} onClick={removeTag(data.id, tag.id)}>
+                      <Icon name="remove" />
+                    </Button>
+                  )}
+                </Button.Group>
+              </span>
+            ))}
+          </div>
           {allowModify && (
             <Popup trigger={<Icon id={'tagModify'} onClick={changeHiddenTagDropdown(data.id)} name="add" color="green" style={{ float: 'right', fontSize: '1.25em' }} />} content="Add tag" />
           )}

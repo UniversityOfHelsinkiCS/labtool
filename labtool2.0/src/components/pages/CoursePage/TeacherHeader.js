@@ -9,7 +9,8 @@ import CoursePageHeader from './Header'
  */
 export const CoursePageTeacherHeader = props => {
   const { selectedInstance, courseInstance, activateCourse, moveToNextWeek } = props
-  const weekAdvanceEnabled = selectedInstance.currentWeek !== selectedInstance.weekAmount
+  const isFinalReview = selectedInstance.currentWeek > selectedInstance.weekAmount
+  const weekAdvanceEnabled = selectedInstance.currentWeek < (selectedInstance.weekAmount + (selectedInstance.finalReview ? 1 : 0))
 
   return (
     <div className="TeachersTopView" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
@@ -44,11 +45,22 @@ export const CoursePageTeacherHeader = props => {
             </Table.Cell>
             <Table.Cell>Week amount: {selectedInstance.weekAmount}</Table.Cell>
             <Table.Cell>
-              Current week: {selectedInstance.currentWeek}
+              Current week: {isFinalReview ? 'Final Review' : selectedInstance.currentWeek}
               <Popup
-                content={weekAdvanceEnabled ? 'Advance course by 1 week' : 'Already at final week'}
+                content={weekAdvanceEnabled ? 'Advance course by 1 week' : selectedInstance.finalReview ? 'Already at final review' : 'Already at final week'}
                 trigger={
-                  <Icon disabled={!weekAdvanceEnabled} name="right arrow" onClick={() => moveToNextWeek()} style={{ marginLeft: '15px', cursor: weekAdvanceEnabled ? 'pointer' : 'not-allowed' }} />
+                  <span style={{ marginLeft: '15px' }}>
+                    <Button
+                      content="Advance"
+                      icon={{ name: 'right arrow' }}
+                      labelPosition="right"
+                      disabled={!weekAdvanceEnabled}
+                      onClick={() => moveToNextWeek()}
+                      compact
+                      size="mini"
+                      style={{ cursor: weekAdvanceEnabled ? 'pointer' : 'not-allowed' }}
+                    />
+                  </span>
                 }
               />
             </Table.Cell>

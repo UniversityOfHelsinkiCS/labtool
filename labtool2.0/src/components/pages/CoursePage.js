@@ -9,6 +9,7 @@ import { prepareForCourse, coursePageReset, selectTag, selectTeacher } from '../
 import { changeCourseField } from '../../reducers/selectedInstanceReducer'
 import { updateStudentProjectInfo } from '../../services/studentinstances'
 import { resetLoading } from '../../reducers/loadingReducer'
+import { sortStudentsAlphabeticallyByDroppedValue } from '../../util/sort'
 
 import { createDropdownTeachers, createDropdownTags } from '../../util/dropdown'
 import CoursePageStudentInfo from './CoursePage/StudentInfo'
@@ -33,16 +34,6 @@ export const CoursePage = props => {
     }
   }, [])
 
-  const sortStudentArrayAlphabeticallyByDroppedValue = theArray =>
-    theArray.sort(
-      (a, b) =>
-        !Number(a.validRegistration) - !Number(b.validRegistration) ||
-        Number(a.dropped) - Number(b.dropped) ||
-        a.User.lastname.localeCompare(b.User.lastname) ||
-        a.User.firsts.localeCompare(b.User.firsts) ||
-        a.id - b.id
-    )
-
   const downloadFile = (filename, mime, data) => {
     // create temporary element and use that to initiate download
 
@@ -60,7 +51,7 @@ export const CoursePage = props => {
     const download = props.downloadFile || downloadFile
     const twoPad = number => `00${number}`.slice(-2)
 
-    const students = sortStudentArrayAlphabeticallyByDroppedValue(courseData.data)
+    const students = sortStudentsAlphabeticallyByDroppedValue(courseData.data.filter(student => student.validRegistration))
     const nowDate = new Date()
     const dateFormat = `${nowDate.getUTCFullYear()}-${twoPad(nowDate.getUTCMonth() + 1)}-${twoPad(nowDate.getUTCDate())}_${twoPad(nowDate.getUTCHours())}-${twoPad(nowDate.getUTCMinutes())}-${twoPad(
       nowDate.getUTCSeconds()
@@ -225,8 +216,9 @@ export const CoursePage = props => {
   let dropDownTeachers = []
   dropDownTeachers = createDropdownTeachers(props.selectedInstance.teacherInstances, dropDownTeachers)
 
+  const courseTags = (props.tags.tags || []).filter(tag => tag.courseInstanceId === null || tag.courseInstanceId === props.selectedInstance.id)
   let dropDownTags = []
-  dropDownTags = createDropdownTags(props.tags.tags, dropDownTags)
+  dropDownTags = createDropdownTags(courseTags, dropDownTags)
 
   if (props.loading.loading) {
     return <Loader active />
@@ -261,13 +253,10 @@ export const CoursePage = props => {
 
   // This function advances the current week by 1, leaving other data intact.
   const moveToNextWeek = () => {
-    if (!window.confirm('This will advance the course by 1 week. Confirm?')) {
-      return
-    }
-
     const { weekAmount, weekMaxPoints, currentWeek, active, ohid, finalReview, coursesPage, courseMaterial, currentCodeReview } = selectedInstance
 
-    if (currentWeek === weekAmount) {
+    // We can advance past the final week for code review purposes.
+    if (currentWeek >= weekAmount + (finalReview ? 1 : 0)) {
       return
     }
 
@@ -327,7 +316,7 @@ export const CoursePage = props => {
           loggedInUser={user}
           coursePageLogic={coursePageLogic}
           tags={tags}
-          students={sortStudentArrayAlphabeticallyByDroppedValue(courseData.data)}
+          students={sortStudentsAlphabeticallyByDroppedValue(courseData.data)}
           exportCSV={exportCSV}
         />
         <br />

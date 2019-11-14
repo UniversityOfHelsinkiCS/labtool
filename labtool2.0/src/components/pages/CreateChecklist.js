@@ -10,6 +10,7 @@ import { resetChecklist, changeField, restoreChecklist, addTopic, addRow, remove
 import './CreateChecklist.css'
 import { usePersistedState } from '../../hooks/persistedState'
 import { roundNumber } from '../../util/format'
+import { sortCoursesByName } from '../../util/sort'
 
 import BackButton from '../BackButton'
 import JsonEdit from '../JsonEdit'
@@ -405,7 +406,7 @@ export const CreateChecklist = props => {
     const obj = parseChecklistValue(state.current)
     const courses =
       obj.kind === 'codeReview' ? codeReviewFilter(obj.number, props.courses) : obj.number > props.selectedInstance.weekAmount ? finalFilter(props.courses) : weekFilter(obj.number, props.courses)
-    const options = courses
+    const options = sortCoursesByName(courses)
       .filter(course => props.selectedInstance.id !== course.id)
       .map(course => {
         return {

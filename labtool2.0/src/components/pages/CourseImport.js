@@ -38,6 +38,7 @@ export const CourseImport = props => {
       </Table.Cell>
       <Table.Cell>{instance.shorterId}</Table.Cell>
       <Table.Cell>{formatCourseName(instance.cname, instance.hid, instance.starts)}</Table.Cell>
+      <Table.Cell>{instance.instructor}</Table.Cell>
       <Table.Cell>{instance.europeanStart}</Table.Cell>
       <Table.Cell>{instance.europeanEnd}</Table.Cell>
     </Table.Row>
@@ -62,6 +63,7 @@ export const CourseImport = props => {
                     </Table.HeaderCell>
                     <Table.HeaderCell colSpan="1">Course ID</Table.HeaderCell>
                     <Table.HeaderCell colSpan="1">Course name</Table.HeaderCell>
+                    <Table.HeaderCell colSpan="1">Instructor (original)</Table.HeaderCell>
                     <Table.HeaderCell colSpan="1">Course start date</Table.HeaderCell>
                     <Table.HeaderCell colSpan="1">Course end date</Table.HeaderCell>
                   </Table.Row>
