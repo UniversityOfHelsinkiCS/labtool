@@ -151,6 +151,11 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
                     "text": "Week 6",
                     "value": 6,
                   },
+                  Object {
+                    "key": 7,
+                    "text": "Week 7",
+                    "value": 7,
+                  },
                 ]
               }
               renderLabel={[Function]}
