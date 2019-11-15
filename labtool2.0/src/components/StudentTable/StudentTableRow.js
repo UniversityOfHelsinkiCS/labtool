@@ -179,11 +179,15 @@ export const StudentTableRow = props => {
           <Table.Cell selectable key={siId + index} textAlign="center" style={{ position: 'relative' }}>
             <Link
               className="codeReviewPoints"
-              style={tableCellLinkStyle}
+              style={{ tableCellLinkStyle, flexCenter }}
               key={'codeReview' + i + ii + 'link'}
               to={{ pathname: `/labtool/browsereviews/${selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: i + ii } }}
             >
-              <p style={flexCenter}>{cr[index] || cr[index] === 0 ? cr[index] : '-'}</p>
+              {shouldReview && selectedInstance.currentCodeReview.includes(index) && codeReviews && !!codeReviews.find(cr => cr.reviewNumber === index && !!cr.linkToReview && cr.points === null) ? (
+                <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'star', size: 'large' }} />} content="Review" className="codeReviewButton" />
+              ) : (
+                <p style={flexCenter}>{cr[index] || cr[index] === 0 ? cr[index] : '-'}</p>
+              )}
             </Link>
           </Table.Cell>
         )
