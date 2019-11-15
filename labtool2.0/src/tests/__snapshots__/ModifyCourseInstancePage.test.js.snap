@@ -109,6 +109,7 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
             <Dropdown
               additionLabel="Add "
               additionPosition="top"
+              className="weekDropdown"
               closeOnBlur={true}
               closeOnEscape={true}
               deburr={false}
@@ -287,6 +288,7 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
             <Dropdown
               additionLabel="Add "
               additionPosition="top"
+              className="codeReviewDropdown"
               closeOnBlur={true}
               closeOnEscape={true}
               deburr={false}
