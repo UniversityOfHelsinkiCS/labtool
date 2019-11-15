@@ -175,6 +175,8 @@ export const StudentTableRow = props => {
     const { amountOfCodeReviews } = selectedInstance
     if (amountOfCodeReviews) {
       for (let index = 1; index <= amountOfCodeReviews; index++) {
+        const codeReview = codeReviews ? codeReviews.find(cr => cr.reviewNumber === index) : null
+
         indents.push(
           <Table.Cell selectable key={siId + index} textAlign="center" style={{ position: 'relative' }}>
             <Link
@@ -183,10 +185,21 @@ export const StudentTableRow = props => {
               key={'codeReview' + i + ii + 'link'}
               to={{ pathname: `/labtool/browsereviews/${selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: i + ii } }}
             >
-              {shouldReview && selectedInstance.currentCodeReview.includes(index) && codeReviews && !!codeReviews.find(cr => cr.reviewNumber === index && !!cr.linkToReview && cr.points === null) ? (
-                <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'star', size: 'large' }} />} content="Review" className="codeReviewButton" />
+              {shouldReview && selectedInstance.currentCodeReview.includes(index) && codeReview ? (
+                codeReview.linkToReview === null ? (
+                  <Popup
+                    position="top center"
+                    trigger={<Icon color="grey" size="small" name="hourglass end" fitted />}
+                    content="Student has not yet submitted the code review"
+                    className="codeReviewNotReady"
+                  />
+                ) : codeReview.points === null ? (
+                  <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'star', size: 'large' }} />} content="Review" className="codeReviewButton" />
+                ) : (
+                  <p>{cr[index] || cr[index] === 0 ? cr[index] : '-'}</p>
+                )
               ) : (
-                <p style={flexCenter}>{cr[index] || cr[index] === 0 ? cr[index] : '-'}</p>
+                <p>{cr[index] || cr[index] === 0 ? cr[index] : '-'}</p>
               )}
             </Link>
           </Table.Cell>
