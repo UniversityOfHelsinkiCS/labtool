@@ -149,7 +149,7 @@ export const StudentTableRow = props => {
             to={
               weekPoints[i + 1] === undefined
                 ? { pathname: `/labtool/reviewstudent/${selectedInstance.ohid}/${siId}/${i + 1}`, state: { cameFromCoursePage: true } }
-                : { pathname: `/labtool/browsereviews/${selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: i } }
+                : { pathname: `/labtool/browsereviews/${selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: `Week${i + 1}` } }
             }
           >
             <div>
@@ -171,19 +171,18 @@ export const StudentTableRow = props => {
       )
     }
 
-    let ii = 0
     const { amountOfCodeReviews } = selectedInstance
     if (amountOfCodeReviews) {
       for (let index = 1; index <= amountOfCodeReviews; index++) {
         const codeReview = codeReviews ? codeReviews.find(cr => cr.reviewNumber === index) : null
 
         indents.push(
-          <Table.Cell selectable key={siId + index} textAlign="center" style={{ position: 'relative' }}>
+          <Table.Cell selectable key={`cr${siId}:${index}`} textAlign="center" style={{ position: 'relative' }}>
             <Link
               className="codeReviewPoints"
               style={{ tableCellLinkStyle, flexCenter }}
-              key={'codeReview' + i + ii + 'link'}
-              to={{ pathname: `/labtool/browsereviews/${selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: i + ii } }}
+              key={'codeReview' + codeReview.reviewNumber + 'link'}
+              to={{ pathname: `/labtool/browsereviews/${selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: `CodeReview${codeReview.reviewNumber}` } }}
             >
               {shouldReview && selectedInstance.currentCodeReview.includes(index) && codeReview ? (
                 codeReview.linkToReview === null ? (
@@ -204,20 +203,19 @@ export const StudentTableRow = props => {
             </Link>
           </Table.Cell>
         )
-        ++ii
       }
     }
 
     if (selectedInstance.finalReview) {
       let finalReviewPointsCell = (
-        <Table.Cell selectable key={i + ii + 1} textAlign="center" style={{ position: 'relative' }}>
+        <Table.Cell selectable key="finalReview" textAlign="center" style={{ position: 'relative' }}>
           <Link
             style={(tableCellLinkStyle, flexCenter)}
             key={'finalReviewlink'}
             to={
               finalPoints === undefined
                 ? `/labtool/reviewstudent/${selectedInstance.ohid}/${siId}/${i + 1}`
-                : { pathname: `/labtool/browsereviews/${selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: i + ii + 1 } }
+                : { pathname: `/labtool/browsereviews/${selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: 'Final' } }
             }
           >
             <div style={{ width: '100%', height: '100%' }}>
