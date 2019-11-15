@@ -18,7 +18,7 @@ export const WeekReviewWeek = props => {
     courseId,
     user,
     isTeacher,
-    getMaximumPoints,
+    getMaximumPointsForWeek,
     handleClickWeek,
     handleSubmit,
     sendCommentEmail,
@@ -41,7 +41,7 @@ export const WeekReviewWeek = props => {
     return (
       <Accordion fluid styled id={`review${i}`}>
         <Accordion.Title active={isWeekOpen} index={i} onClick={handleClickWeek}>
-          <Icon name="dropdown" /> {isFinalWeek ? 'Final Review' : `Week ${week.weekNumber}`}, points {week.points} / {getMaximumPoints(week.weekNumber)}
+          <Icon name="dropdown" /> {isFinalWeek ? 'Final Review' : `Week ${week.weekNumber}`}, points {week.points} / {getMaximumPointsForWeek(week.weekNumber)}
         </Accordion.Title>
         <Accordion.Content active={isWeekOpen}>
           <h3>Review</h3>
@@ -49,7 +49,7 @@ export const WeekReviewWeek = props => {
             <Card.Content>
               <h4>
                 {' '}
-                Points {week.points} / {getMaximumPoints(week.weekNumber)}{' '}
+                Points {week.points} / {getMaximumPointsForWeek(week.weekNumber)}{' '}
               </h4>
               <h4> Feedback </h4>
               <ReactMarkdown>{week.feedback}</ReactMarkdown>{' '}
@@ -159,7 +159,7 @@ WeekReviewWeek.propTypes = {
   courseId: PropTypes.string.isRequired,
   user: PropTypes.object.isRequired,
 
-  getMaximumPoints: PropTypes.func.isRequired,
+  getMaximumPointsForWeek: PropTypes.func.isRequired,
   handleClickWeek: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   sendCommentEmail: PropTypes.func.isRequired,
