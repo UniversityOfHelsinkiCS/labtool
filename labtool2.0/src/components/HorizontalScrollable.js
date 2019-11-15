@@ -84,7 +84,13 @@ export const HorizontalScrollable = props => {
 
       scrollbar.style.overflowX = contentWidth > viewWidth ? 'scroll' : 'auto'
       scrollbar.scrollLeft = oldScrollLeft
+      setContentScroll(scrollbar.scrollLeft)
     }
+  }
+
+  const setContentScroll = x => {
+    // TODO: is this possible without causing a rerender (modifying CSS causes one)?
+    window.requestAnimationFrame(() => (content.style.left = `-${x}px`))
   }
 
   const updateScrollX = doNotUpdate => e => {
@@ -113,7 +119,7 @@ export const HorizontalScrollable = props => {
 
     if (doNotUpdate !== 'content' && content) {
       antibounce.content = true
-      window.requestAnimationFrame(() => (content.style.left = `-${newX}px`))
+      setContentScroll(newX)
     }
     if (doNotUpdate !== 'scrollbar' && scrollbar) {
       antibounce.scrollbar = true
