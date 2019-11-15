@@ -99,19 +99,20 @@ export const ModifyCourseInstancePage = props => {
 
   const createDropdownWeeks = () => {
     const options = []
-    const i = 1
 
-    options.push({
-      key: i,
-      text: `Week ${i}`,
-      value: i,
-    })
+    for (let i = 1; i < props.selectedInstance.weekAmount; i++) {
+      options.push({
+        key: i,
+        text: `Week ${i}`,
+        value: i
+      })
+    }
 
     if (props.selectedInstance.finalReview) {
       options.push({
         key: props.selectedInstance.weekAmount + 1,
         text: 'Final Review',
-        value: props.selectedInstance.weekAmount + 1,
+        value: props.selectedInstance.weekAmount + 1
       })
     }
 
