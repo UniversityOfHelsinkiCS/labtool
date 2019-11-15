@@ -32,9 +32,9 @@ export const ModifyCourseInstancePage = props => {
 
   useEffect(() => {
     if (props.selectedInstance.currentWeek !== null) {
+      console.log(props.selectedInstance.currentWeek)
       const possibleValues = createDropdownWeeks().map(option => option.value)
       if (!possibleValues.includes(props.selectedInstance.currentWeek)) {
-        console.log('reset')
         props.changeCourseField({ field: 'currentWeek', value: null })
       }
     }
@@ -86,7 +86,7 @@ export const ModifyCourseInstancePage = props => {
 
       if (currentWeek === null || !dropdownWeeks.map(option => option.value).includes(currentWeek)) {
         props.showNotification({
-          message: 'You must select a week first!',
+          message: 'You must select a week to be the current week first!',
           error: true
         })
         return
@@ -118,8 +118,9 @@ export const ModifyCourseInstancePage = props => {
 
   const createDropdownWeeks = () => {
     const options = []
+    const weekAmount = Number(props.selectedInstance.weekAmount, 10)
 
-    for (let i = 1; i <= props.selectedInstance.weekAmount; i++) {
+    for (let i = 1; i <= weekAmount; i++) {
       options.push({
         key: i,
         text: `Week ${i}`,
@@ -129,9 +130,9 @@ export const ModifyCourseInstancePage = props => {
 
     if (props.selectedInstance.finalReview) {
       options.push({
-        key: props.selectedInstance.weekAmount + 1,
+        key: weekAmount + 1,
         text: 'Final Review',
-        value: props.selectedInstance.weekAmount + 1
+        value: weekAmount + 1
       })
     }
 
