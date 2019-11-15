@@ -32,7 +32,6 @@ export const ModifyCourseInstancePage = props => {
 
   useEffect(() => {
     if (props.selectedInstance.currentWeek !== null) {
-      console.log(props.selectedInstance.currentWeek)
       const possibleValues = createDropdownWeeks().map(option => option.value)
       if (!possibleValues.includes(props.selectedInstance.currentWeek)) {
         props.changeCourseField({ field: 'currentWeek', value: null })
