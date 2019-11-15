@@ -537,7 +537,7 @@ module.exports = {
         try {
           const updatedStudentInstance = await targetStudent.update({
             github: req.body.github || targetStudent.github,
-            projectName: req.body.projectname || targetStudent.projectName,
+            projectName: req.body.projectName || targetStudent.projectName,
             dropped: 'dropped' in req.body ? req.body.dropped : targetStudent.dropped,
             validRegistration: 'validRegistration' in req.body ? req.body.validRegistration : targetStudent.validRegistration,
             repoExists: 'repoExists' in req.body ? req.body.repoExists : targetStudent.repoExists,
