@@ -46,12 +46,20 @@ export const WeekReviews = props => {
     props.gradeCodeReview(data)
   }
 
-  const getMaximumPoints = week => {
+  const getMaximumPointsForWeek = week => {
     const checklist = props.selectedInstance.checklists.find(checkl => checkl.week === week)
     if (checklist && checklist.maxPoints) {
       return checklist.maxPoints
     }
     return props.selectedInstance.weekMaxPoints
+  }
+
+  const getMaximumPointsForCodeReview = codeReview => {
+    const checklist = props.selectedInstance.checklists.find(checkl => checkl.codeReviewNumber === codeReview)
+    if (checklist && checklist.maxPoints) {
+      return checklist.maxPoints
+    }
+    return null
   }
 
   const sendCommentEmail = commentId => async () => {
@@ -129,7 +137,7 @@ export const WeekReviews = props => {
   const weekAmount = props.selectedInstance.weekAmount
 
   const weekReviewFunctions = {
-    getMaximumPoints,
+    getMaximumPointsForWeek,
     handleClickWeek,
     handleSubmit,
     sendWeekEmail,
@@ -140,6 +148,7 @@ export const WeekReviews = props => {
   }
 
   const codeReviewFunctions = {
+    getMaximumPointsForCodeReview,
     handleClickWeek,
     gradeCodeReview,
     handleAddingIssueLink
@@ -179,6 +188,7 @@ export const WeekReviews = props => {
         courseData={props.courseData}
         coursePageLogic={props.coursePageLogic}
         isTeacher={isTeacher()}
+        selectedInstance={props.selectedInstance}
         {...codeReviewFunctions}
       />
     ))
