@@ -14,8 +14,6 @@ import useLegacyState from '../../hooks/legacyState'
 
 import BackButton from '../BackButton'
 
-// The dropdown feature will be implemented here ("Current week").
-
 /**
  *  Page used to modify a courseinstances information. Can only be accessed by teachers.
  */
@@ -32,10 +30,17 @@ export const ModifyCourseInstancePage = props => {
     props.getOneCI(props.courseId)
   }, [])
 
-  const changeField = async e => {
+  const changeField = e => {
     props.changeCourseField({
       field: e.target.name,
       value: e.target.value
+    })
+  }
+
+  const changeDropdown = field => (e, { value }) => {
+    props.changeCourseField({
+      field,
+      value
     })
   }
 
@@ -92,18 +97,32 @@ export const ModifyCourseInstancePage = props => {
     }
   }
 
+  const createDropdownWeeks = () => {
+    const options = []
+    const i = 1
+
+    options.push({
+      key: i,
+      text: `Week ${i}`,
+      value: i,
+    })
+
+    if (props.selectedInstance.finalReview) {
+      options.push({
+        key: props.selectedInstance.weekAmount + 1,
+        text: 'Final Review',
+        value: props.selectedInstance.weekAmount + 1,
+      })
+    }
+
+    return options
+  }
+
   if ((props.redirect && props.redirect.redirect) || props.loading.redirect) {
     return <Redirect to={`/labtool/courses/${props.selectedInstance.ohid}`} />
   }
   const selectedInstance = { ...props.selectedInstance }
-
-  let weeks = []
-
-  // There are a million better ways to do this. But none so lazy as this one.
-  for (let i = 0; i < selectedInstance.weekAmount + 1; i++) {
-    // We purposefully added 1 week for code reviews.
-    weeks.push(i + 1)
-  }
+  const dropdownWeeks = createDropdownWeeks()
 
   return (
     <div>
@@ -120,18 +139,18 @@ export const ModifyCourseInstancePage = props => {
             <Form onSubmit={handleSubmit}>
               <Form.Group inline>
                 <label style={{ width: '125px', textAlign: 'left' }}>Week amount</label>
-                <Input name="weekAmount" required={true} type="text" style={{ maxWidth: '7em' }} value={selectedInstance.weekAmount} className="form-control1" onChange={changeField} />
+                <Input name="weekAmount" type="number" min={1} required={true} style={{ maxWidth: '7em' }} value={selectedInstance.weekAmount} className="form-control1" onChange={changeField} />
               </Form.Group>
 
               <Form.Group inline>
-                <label style={{ width: '125px', textAlign: 'left' }}>Weekly maxpoints</label>
-                <Input name="weekMaxPoints" required={true} type="text" style={{ maxWidth: '7em' }} value={selectedInstance.weekMaxPoints} className="form-control2" onChange={changeField} />
+                <label style={{ width: '125px', textAlign: 'left' }}>Maximum week points</label>
+                <Input name="weekMaxPoints" type="number" min={0} required={true} style={{ maxWidth: '7em' }} value={selectedInstance.weekMaxPoints} className="form-control2" onChange={changeField} />
               </Form.Group>
 
               <Form.Group inline>
                 <label style={{ width: '125px', textAlign: 'left' }}>Current week</label>
 
-                <Dropdown onChange={changeField} style={{ maxWidth: '7em' }} options={weeks} fluid selection placeholder={selectedInstance.currentWeek} />
+                <Dropdown onChange={changeDropdown('currentWeek')} style={{ maxWidth: '12em' }} options={dropdownWeeks} fluid required selection value={selectedInstance.currentWeek} />
               </Form.Group>
 
               <Form.Group inline>
