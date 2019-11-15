@@ -175,15 +175,32 @@ export const StudentTableRow = props => {
     const { amountOfCodeReviews } = selectedInstance
     if (amountOfCodeReviews) {
       for (let index = 1; index <= amountOfCodeReviews; index++) {
+        const codeReview = codeReviews ? codeReviews.find(cr => cr.reviewNumber === index) : null
+
         indents.push(
           <Table.Cell selectable key={siId + index} textAlign="center" style={{ position: 'relative' }}>
             <Link
               className="codeReviewPoints"
-              style={tableCellLinkStyle}
+              style={{ tableCellLinkStyle, flexCenter }}
               key={'codeReview' + i + ii + 'link'}
               to={{ pathname: `/labtool/browsereviews/${selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: i + ii } }}
             >
-              <p style={flexCenter}>{cr[index] || cr[index] === 0 ? cr[index] : '-'}</p>
+              {shouldReview && selectedInstance.currentCodeReview.includes(index) && codeReview ? (
+                codeReview.linkToReview === null ? (
+                  <Popup
+                    position="top center"
+                    trigger={<Icon color="grey" size="small" name="hourglass end" fitted />}
+                    content="Student has not yet submitted the code review"
+                    className="codeReviewNotReady"
+                  />
+                ) : codeReview.points === null ? (
+                  <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'star', size: 'large' }} />} content="Review" className="codeReviewButton" />
+                ) : (
+                  <p>{cr[index] || cr[index] === 0 ? cr[index] : '-'}</p>
+                )
+              ) : (
+                <p>{cr[index] || cr[index] === 0 ? cr[index] : '-'}</p>
+              )}
             </Link>
           </Table.Cell>
         )
