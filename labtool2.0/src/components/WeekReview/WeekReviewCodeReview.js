@@ -1,18 +1,34 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Icon, Accordion, Form, Input, Button } from 'semantic-ui-react'
+import { Icon, Accordion, Form, Input, Button, Popup } from 'semantic-ui-react'
+import { Link } from 'react-router-dom'
 
 export const WeekReviewCodeReview = props => {
-  const { index, cr, studentInstance, openWeeks, isTeacher, courseData, coursePageLogic, handleClickWeek, gradeCodeReview, handleAddingIssueLink } = props
+  const {
+    index,
+    cr,
+    selectedInstance,
+    studentInstance,
+    openWeeks,
+    isTeacher,
+    courseData,
+    coursePageLogic,
+    getMaximumPointsForCodeReview,
+    handleClickWeek,
+    gradeCodeReview,
+    handleAddingIssueLink
+  } = props
   const i = index
 
   const doOpen = openWeeks[i] || (!isTeacher && cr.points === null)
+  const hasChecklist = selectedInstance.checklists.find(checkl => checkl.codeReviewNumber === cr.reviewNumber)
+  const maxPoints = getMaximumPointsForCodeReview(cr.reviewNumber)
 
   return (
     <Accordion key={`codereview${i}`} fluid styled id={`review${i - 1}`}>
       {' '}
       <Accordion.Title className="codeReview" active={doOpen} index={i} onClick={handleClickWeek}>
-        <Icon name="dropdown" /> Code Review {cr.reviewNumber} {cr.points !== null ? ', points ' + cr.points : ''}
+        <Icon name="dropdown" /> Code Review {cr.reviewNumber} {cr.points !== null ? `, points ${cr.points}${maxPoints !== null ? ` / ${maxPoints}` : ''}` : ''}
       </Accordion.Title>
       <Accordion.Content active={doOpen}>
         {isTeacher ? (
@@ -44,15 +60,24 @@ export const WeekReviewCodeReview = props => {
               'No review linked yet'
             )}
             {cr.points !== null ? <h4>{cr.points} points</h4> : <h4>Not graded yet</h4>}
-            <Form onSubmit={gradeCodeReview(cr.reviewNumber, studentInstance)}>
-              <label>Points </label>
-              <Input name="points" defaultValue={cr.points ? cr.points : ''} type="number" step="0.01" style={{ width: '100px' }} />
-              <Input type="submit" value="Grade" />
-            </Form>
+            {hasChecklist ? (
+              <>
+                <h3>Review</h3>
+                <Link to={`/labtool/reviewstudentcr/${selectedInstance.ohid}/${studentInstance}/${cr.reviewNumber}`}>
+                  <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'edit', color: 'black', size: 'large' }} />} content={cr.points !== null ? 'Edit review' : 'Review'} />
+                </Link>
+              </>
+            ) : (
+              <Form onSubmit={gradeCodeReview(cr.reviewNumber, studentInstance)}>
+                <label>Points </label>
+                <Input name="points" defaultValue={cr.points ? cr.points : ''} type="number" step="0.01" style={{ width: '100px' }} />
+                <Input type="submit" value="Grade" />
+              </Form>
+            )}
           </>
         ) : (
           <>
-            <strong>Points: </strong> {cr.points !== null ? cr.points : 'Not graded yet'}
+            <strong>Points: </strong> {cr.points !== null ? `${cr.points}${maxPoints !== null ? ` / ${maxPoints}` : ''}` : 'Not graded yet'}
             <br />
             <strong>GitHub: </strong>
             <a href={cr.toReview.github || cr.repoToReview} target="_blank" rel="noopener noreferrer">
@@ -114,10 +139,12 @@ WeekReviewCodeReview.propTypes = {
   cr: PropTypes.object.isRequired,
   isTeacher: PropTypes.bool,
   studentInstance: PropTypes.string,
+  selectedInstance: PropTypes.object.isRequired,
   courseData: PropTypes.object.isRequired,
   coursePageLogic: PropTypes.object.isRequired,
   courseId: PropTypes.string.isRequired,
 
+  getMaximumPointsForCodeReview: PropTypes.func.isRequired,
   handleClickWeek: PropTypes.func.isRequired,
   gradeCodeReview: PropTypes.func.isRequired,
   handleAddingIssueLink: PropTypes.func.isRequired

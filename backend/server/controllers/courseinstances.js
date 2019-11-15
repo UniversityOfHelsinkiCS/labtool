@@ -251,7 +251,14 @@ module.exports = {
             attributes: {
               exclude: ['createdAt', 'updatedAt']
             },
-            as: 'codeReviews'
+            as: 'codeReviews',
+            include: [
+              {
+                model: ReviewCheck,
+                attributes: ['checklistItemId', 'checked'],
+                as: 'checks'
+              }
+            ]
           },
           {
             model: User,

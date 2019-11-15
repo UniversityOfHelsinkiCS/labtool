@@ -4,33 +4,25 @@ import { withRouter } from 'react-router'
 import { Button, Form, Input, Grid, Card, Loader, Icon } from 'semantic-ui-react'
 import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { createOneWeek, getWeekDraft, saveWeekDraft } from '../../services/week'
 import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import { clearNotifications } from '../../reducers/notificationReducer'
-import { toggleCheckWeek, resetChecklist, restoreChecks } from '../../reducers/weekReviewReducer'
+import { gradeCodeReview } from '../../services/codeReview'
+import { toggleCheckCodeReview, resetChecklist, restoreChecks } from '../../reducers/weekReviewReducer'
 import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 import store from '../../store'
-import { trimDate } from '../../util/format'
 import { usePersistedState } from '../../hooks/persistedState'
 
-import { FormMarkdownTextArea } from '../MarkdownTextArea'
 import RepoLink from '../RepoLink'
-import { PreviousWeekDetails } from './ReviewStudent/PreviousWeekDetails'
-
 import BackButton from '../BackButton'
-
-const isFinalReview = props => props.weekNumber > props.selectedInstance.weekAmount
 
 /**
  *  The page which is used by teacher to review submissions,.
  */
-export const ReviewStudent = props => {
-  const [loadedWeekData, setLoadedWeekData] = useState(false)
+export const ReviewStudentCodeReview = props => {
+  const [loadedCrData, setLoadedCrData] = useState(false)
   const [allowChecksCopy, setAllowChecksCopy] = useState(false)
-  const pstate = usePersistedState(`ReviewStudent_${props.studentInstance}:${props.weekNumber}`, {
+  const pstate = usePersistedState(`ReviewStudentCodeReview_${props.studentInstance}:${props.codeReviewNumber}`, {
     points: '',
-    feedback: '',
-    instructorNotes: '',
     checks: null
   })
 
@@ -40,7 +32,6 @@ export const ReviewStudent = props => {
     props.getOneCI(props.courseId)
     props.coursePageInformation(props.courseId)
     props.clearNotifications()
-    importWeekDataFromDraft()
 
     return () => {
       // run on component unmount
@@ -55,25 +46,41 @@ export const ReviewStudent = props => {
     }
   }, [props.weekReview.checks])
 
+  const constructChecks = thisChecks => {
+    let checksObj = {}
+    Object.keys(checkList.list).forEach(category => {
+      checkList.list[category].forEach(clItem => {
+        checksObj[clItem.id] = false
+      })
+    })
+    checksObj = { ...checksObj, ...thisChecks }
+    return Object.keys(checksObj).map(id => ({ id: Number(id, 10), checked: checksObj[id] }))
+  }
+
+  const decodeChecks = checksList => {
+    const checksObj = {}
+    checksList.forEach(({ checklistItemId, checked }) => (checksObj[checklistItemId] = checked))
+    return checksObj
+  }
+
   const handleSubmit = async e => {
     try {
       e.preventDefault()
       const content = {
-        points: pstate.points,
-        studentInstanceId: props.studentInstance,
-        feedback: pstate.feedback,
-        instructorNotes: pstate.instructorNotes,
-        weekNumber: props.weekNumber,
-        checks
+        points: Number(e.target.points.value),
+        checks: constructChecks(props.weekReview.checks),
+        studentInstanceId: Number(props.studentInstance),
+        reviewNumber: Number(props.codeReviewNumber)
       }
       pstate.clear()
-      if (e.target.points.value < 0 || e.target.points.value > getMaximumPoints()) {
-        store.dispatch({ type: 'WEEKS_CREATE_ONEFAILURE' })
+      const maxPoints = getMaximumPoints()
+      if (e.target.points.value < 0 || (maxPoints && e.target.points.value > maxPoints)) {
+        store.dispatch({ type: 'CODE_REVIEW_GRADE_FAILURE', response: { response: { data: 'Invalid points value' } } })
       } else {
         props.addRedirectHook({
-          hook: 'WEEKS_CREATE_ONE'
+          hook: 'CODE_REVIEW_GRADE_'
         })
-        await props.createOneWeek(content)
+        await props.gradeCodeReview(content)
       }
     } catch (error) {
       console.error(error)
@@ -81,54 +88,21 @@ export const ReviewStudent = props => {
   }
 
   const getMaximumPoints = () => {
-    const checklist = props.selectedInstance.checklists.find(checkl => checkl.week === Number(props.ownProps.weekNumber))
+    const checklist = props.selectedInstance.checklists.find(checkl => checkl.codeReviewNumber === props.codeReviewNumber)
     if (checklist && checklist.maxPoints) {
       return checklist.maxPoints
     }
-    return props.selectedInstance.weekMaxPoints
+    return null
   }
 
-  const toggleCheckbox = (checklistItemId, studentId, weekNbr) => async () => {
+  const toggleCheckbox = (checklistItemId, studentId, crNbr) => async () => {
     setAllowChecksCopy(true)
-    props.toggleCheckWeek(checklistItemId, studentId, weekNbr)
-  }
-
-  const importWeekDataFromDraft = () => {
-    props.getWeekDraft({
-      studentInstanceId: props.studentInstance,
-      weekNumber: props.weekNumber
-    })
-  }
-
-  const exportToDraft = () => {
-    // produce a JSON object for all the review data;
-    // this will be used verbatim as weekData (except for checks;
-    // they get passed to weekReview by the reducer)
-    const draftData = {}
-    draftData.checks = checks
-    draftData.points = pstate.points || ''
-    draftData.feedback = pstate.feedback || ''
-    draftData.instructorNotes = pstate.instructorNotes || ''
-    return draftData
-  }
-
-  const onClickSaveDraft = async e => {
-    const content = {
-      studentInstanceId: props.studentInstance,
-      weekNumber: props.weekNumber,
-      reviewData: exportToDraft()
-    }
-    pstate.clear()
-    props.addRedirectHook({
-      hook: 'WEEKDRAFTS_CREATE_ONE'
-    })
-    await props.saveWeekDraft(content)
+    props.toggleCheckCodeReview(checklistItemId, studentId, crNbr)
   }
 
   const copyChecklistOutput = async e => {
     e.preventDefault()
     pstate.points = e.target.points.value
-    pstate.feedback = e.target.text.value
   }
 
   const isChecked = (checks, checklistItemId) =>
@@ -149,29 +123,25 @@ export const ReviewStudent = props => {
     return <Loader active />
   }
 
-  // props.ownProps.studentInstance is a string, therefore casting to number.
-  const studentData = props.weekReview.data.find(dataArray => dataArray.id === Number(props.ownProps.studentInstance))
-  // do we have a draft?
-  const loadedFromDraft = !!props.weekReview.draftCreatedAt
-  // props.weekNumber is a string, therefore casting to number.
-  const weekData = loadedFromDraft ? props.weekReview.draftData : studentData.weeks.find(theWeek => theWeek.weekNumber === Number(props.ownProps.weekNumber))
-  const previousWeekData = studentData.weeks.find(week => week.weekNumber === Number(props.ownProps.weekNumber) - 1)
-  const savedChecks = weekData ? weekData.checks || {} : {}
-  const checks = props.weekReview.checks !== null ? props.weekReview.checks : savedChecks //weekData ? weekData.checks || {} : {}
-  const weekPoints = studentData.weeks
-    .filter(week => week.weekNumber < props.weekNumber)
+  const student = props.courseData.data.find(student => student.id === Number(props.studentInstance))
+  const cr = student.codeReviews.find(cr => cr.reviewNumber === Number(props.codeReviewNumber))
+  const checkList = props.selectedInstance.checklists.find(checkl => checkl.codeReviewNumber === Number(props.codeReviewNumber))
+  const maxPoints = getMaximumPoints()
+  const weekPoints = student.weeks
     .map(week => week.points)
     .reduce((a, b) => {
       return a + b
     }, 0)
-  const codeReviewPoints = studentData.codeReviews
+  const codeReviewPoints = student.codeReviews
+    .filter(review => review.reviewNumber < Number(props.codeReviewNumber))
     .map(review => review.points)
     .reduce((a, b) => {
       return a + b
     }, 0)
-  const checkList = props.selectedInstance.checklists.find(checkl => checkl.week === Number(props.ownProps.weekNumber))
-  let checklistOutput = ''
+  const savedChecks = cr ? cr.checks || {} : {}
+  const checks = props.weekReview.checks !== null ? props.weekReview.checks : savedChecks
   let checklistPoints = 0
+  const toReviewProject = cr.toReview ? props.courseData.data.find(student => student.id === cr.toReview) : null
   if (checkList) {
     Object.keys(checkList.list).forEach(category => {
       checkList.list[category].forEach(clItem => {
@@ -182,9 +152,6 @@ export const ReviewStudent = props => {
         }
 
         const checked = isChecked(checks, clItem.id)
-        const addition = checked ? clItem.textWhenOn : clItem.textWhenOff
-        if (addition) checklistOutput += addition + '\n\n'
-
         if (checked) {
           checklistPoints += clItem.checkedPoints
         } else {
@@ -194,80 +161,72 @@ export const ReviewStudent = props => {
     })
     if (checklistPoints < 0) {
       checklistPoints = 0
-    } else if (checklistPoints > getMaximumPoints()) {
-      checklistPoints = getMaximumPoints()
+    } else if (maxPoints !== null && checklistPoints > maxPoints) {
+      checklistPoints = maxPoints
     }
   }
 
-  if (!loadedWeekData) {
-    if (weekData) {
-      if (pstate.checks) {
-        props.restoreChecks(props.ownProps.studentInstance, pstate.checks)
+  if (!loadedCrData) {
+    if (cr.points) {
+      if (cr.checks) {
+        props.restoreChecks(props.ownProps.studentInstance, decodeChecks(cr.checks))
       }
 
-      pstate.points = pstate.points || weekData.points
-      pstate.feedback = pstate.feedback || weekData.feedback
-      pstate.instructorNotes = pstate.instructorNotes || weekData.instructorNotes
-      setLoadedWeekData(true)
+      pstate.points = pstate.points || cr.points
+      setLoadedCrData(true)
     }
   }
 
   const arrivedFromCoursePage = props.location && props.location.state && props.location.state.cameFromCoursePage
 
   return (
-    <div className="ReviewStudent">
+    <div className="ReviewStudentCodeReview">
       <BackButton
         preset={arrivedFromCoursePage && 'coursePage'}
-        to={!arrivedFromCoursePage && `/labtool/browsereviews/${props.selectedInstance.ohid}/${studentData.id}`}
+        to={!arrivedFromCoursePage && `/labtool/browsereviews/${props.selectedInstance.ohid}/${student.id}`}
         text={!arrivedFromCoursePage && 'Back to student reviews'}
       />
       <div style={{ textAlignVertical: 'center', textAlign: 'center' }}>
         <h2> {props.selectedInstance.name}</h2>
         <h3>
           {' '}
-          {studentData.User.firsts} {studentData.User.lastname}{' '}
-          <div style={{ display: 'inline-block', padding: '0px 0px 0px 25px' }}>
-            {studentData.projectName}: <RepoLink url={studentData.github} />
-          </div>
-          {studentData.Tags.map(tag => (
-            <div key={tag.id}>
-              <Button compact floated="right" className={`mini ui ${tag.color} button`}>
-                {tag.name}
-              </Button>
-            </div>
-          ))}
+          {student.User.firsts} {student.User.lastname}
         </h3>
-        {isFinalReview(props) ? <h3>Final Review</h3> : <h3>Week {props.weekNumber}</h3>}
+        <h3>Code Review {props.codeReviewNumber}</h3>
         <Grid>
           <Grid.Row columns={2}>
             <Grid.Column>
-              {isFinalReview(props) ? (
-                <div align="left">
-                  <h3>Points before final review: {weekPoints + codeReviewPoints} </h3>
-                  Week points: {weekPoints} <br />
-                  Code review points: {codeReviewPoints}
-                </div>
+              <div align="left">
+                <h3>Points so far: {weekPoints + codeReviewPoints} </h3>
+                Earlier code review points: {codeReviewPoints}
+                <br />
+                Week points: {weekPoints}
+              </div>
+              <h3>Project to review</h3>
+              {toReviewProject ? (
+                <p>
+                  {toReviewProject.projectName}: <RepoLink url={toReviewProject.github} />
+                </p>
+              ) : cr.repoToReview ? (
+                <RepoLink url={cr.repoToReview} />
               ) : (
-                <div align="left">
-                  <h3>Points from previous weeks: {weekPoints + codeReviewPoints} </h3>
-                  Week points: {weekPoints} <br />
-                  Code review points: {codeReviewPoints}
-                </div>
+                <p>No assigned project to review</p>
               )}
-              <PreviousWeekDetails weekData={previousWeekData} />
-              {isFinalReview(props) ? <h2>Final Review Points</h2> : <h2>Review</h2>}
-              {loadedFromDraft && (
-                <div>
-                  <p>
-                    <em>Loaded from draft saved at {trimDate(props.weekReview.draftCreatedAt)}</em>
-                  </p>
-                  <br />
-                </div>
+              <h3>Link to code review</h3>
+              {cr.linkToReview ? (
+                <p>
+                  <a target="_blank" rel="noopener noreferrer" href={cr.linkToReview}>
+                    {cr.linkToReview}
+                  </a>
+                </p>
+              ) : (
+                <p>No code review linked</p>
               )}
+              <h2>Review</h2>
               <Form onSubmit={handleSubmit}>
                 <Form.Group inline unstackable>
                   <Form.Field>
-                    <label className="showMaxPoints">Points 0-{getMaximumPoints()}</label>
+                    <label className="showMaxPoints">Points{maxPoints !== null ? `0-${maxPoints}` : ''}</label>
 
                     <Input
                       name="points"
@@ -280,34 +239,11 @@ export const ReviewStudent = props => {
                     />
                   </Form.Field>
                 </Form.Group>
-                <h4>Feedback</h4>
-                <Form.Group inline unstackable style={{ textAlignVertical: 'top' }}>
-                  <div style={{ width: '100%' }}>
-                    <FormMarkdownTextArea value={pstate.feedback} onChange={(e, { value }) => (pstate.feedback = value)} name="comment" style={{ width: '500px', height: '250px' }} />
-                  </div>
-                </Form.Group>
-                <h4>Review notes</h4>
-                <p>
-                  <em>Only shown to instructors on this course</em>
-                </p>
-                <Form.Group inline unstackable style={{ textAlignVertical: 'top' }}>
-                  <div style={{ width: '100%' }}>
-                    <FormMarkdownTextArea
-                      value={pstate.instructorNotes}
-                      onChange={(e, { value }) => (pstate.instructorNotes = value)}
-                      name="instructorNotes"
-                      style={{ width: '500px', height: '150px' }}
-                    />
-                  </div>
-                </Form.Group>
                 <Form.Field>
                   <Button className="ui center floated green button" type="submit">
                     Save
                   </Button>
-                  <Button className="ui center floated button" type="button" onClick={onClickSaveDraft}>
-                    Save as draft
-                  </Button>
-                  <Link to={`/labtool/browsereviews/${props.selectedInstance.ohid}/${studentData.id}`} type="Cancel">
+                  <Link to={`/labtool/browsereviews/${props.selectedInstance.ohid}/${student.id}`} type="Cancel">
                     <Button className="ui center floated button" type="cancel" onClick={pstate.clear}>
                       Cancel
                     </Button>
@@ -350,15 +286,14 @@ export const ReviewStudent = props => {
                     ))}
                     <div>
                       <Form className="checklistOutput" onSubmit={copyChecklistOutput}>
-                        <Form.TextArea className="checklistOutputText" name="text" value={checklistOutput} style={{ width: '100%', height: '250px' }} />
                         <p className="checklistOutputPoints">points: {checklistPoints.toFixed(2)}</p>
                         <input type="hidden" name="points" value={checklistPoints} />
-                        <Button type="submit">Copy to review fields</Button>
+                        <Button type="submit">Copy to review field</Button>
                       </Form>
                     </div>
                   </div>
                 ) : (
-                  <p>There is no checklist for this week.</p>
+                  <p>There is no checklist for this code review.</p>
                 )}
               </Grid.Column>
             ) : (
@@ -375,7 +310,6 @@ const mapStateToProps = (state, ownProps) => {
   return {
     ownProps,
     selectedInstance: state.selectedInstance,
-    notification: state.notification,
     courseData: state.coursePage,
     weekReview: state.weekReview,
     loading: state.loading
@@ -383,12 +317,10 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 const mapDispatchToProps = {
-  createOneWeek,
-  getWeekDraft,
-  saveWeekDraft,
   getOneCI,
   clearNotifications,
-  toggleCheckWeek,
+  gradeCodeReview,
+  toggleCheckCodeReview,
   restoreChecks,
   resetChecklist,
   coursePageInformation,
@@ -396,26 +328,23 @@ const mapDispatchToProps = {
   addRedirectHook
 }
 
-ReviewStudent.propTypes = {
+ReviewStudentCodeReview.propTypes = {
   ownProps: PropTypes.object.isRequired,
 
   courseId: PropTypes.string.isRequired,
   studentInstance: PropTypes.string.isRequired,
-  weekNumber: PropTypes.string.isRequired,
+  codeReviewNumber: PropTypes.string.isRequired,
 
   selectedInstance: PropTypes.object.isRequired,
-  notification: PropTypes.object.isRequired,
   courseData: PropTypes.object.isRequired,
   weekReview: PropTypes.object.isRequired,
   loading: PropTypes.object.isRequired,
   location: PropTypes.object,
 
-  createOneWeek: PropTypes.func.isRequired,
-  getWeekDraft: PropTypes.func.isRequired,
-  saveWeekDraft: PropTypes.func.isRequired,
   getOneCI: PropTypes.func.isRequired,
   clearNotifications: PropTypes.func.isRequired,
-  toggleCheckWeek: PropTypes.func.isRequired,
+  gradeCodeReview: PropTypes.func.isRequired,
+  toggleCheckCodeReview: PropTypes.func.isRequired,
   restoreChecks: PropTypes.func.isRequired,
   resetChecklist: PropTypes.func.isRequired,
   coursePageInformation: PropTypes.func.isRequired,
@@ -427,5 +356,5 @@ export default withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(ReviewStudent)
+  )(ReviewStudentCodeReview)
 )
