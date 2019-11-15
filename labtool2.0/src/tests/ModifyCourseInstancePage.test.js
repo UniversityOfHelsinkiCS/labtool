@@ -47,6 +47,7 @@ describe('<ModifyCourseInstancePage />', () => {
         addRedirectHook={mockFn}
         setFinalReview={mockFn}
         forceRedirect={mockFn}
+        showNotification={mockFn}
       />
     )
   })
@@ -71,8 +72,9 @@ describe('<ModifyCourseInstancePage />', () => {
     it('renders weekly maxpoints', () => {
       expect(wrapper.find('.form-control2').length).toEqual(1)
     })
+
     it('renders current week', () => {
-      expect(wrapper.find('.form-control3').length).toEqual(1)
+      expect(wrapper.find('.weekDropdown').length).toEqual(1)
     })
     it('renders currently visible code reviews', () => {
       expect(
@@ -90,8 +92,8 @@ describe('<ModifyCourseInstancePage />', () => {
     })
 
     it('renders dropdown to show currently not visible code reviews', () => {
-      expect(wrapper.find(Dropdown).length).toEqual(1)
-      expect(wrapper.find(Dropdown).props().options[0].text).toEqual('3')
+      expect(wrapper.find('.codeReviewDropdown').length).toEqual(1)
+      expect(wrapper.find('.codeReviewDropdown').props().options[0].text).toEqual('3')
     })
     it('renders active course checkbox', () => {
       const checkbox = wrapper.find(Checkbox).find({ name: 'courseActive' })
