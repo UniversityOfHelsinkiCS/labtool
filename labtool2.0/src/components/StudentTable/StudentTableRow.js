@@ -228,7 +228,7 @@ export const StudentTableRow = props => {
               ) : (
                 <div>
                   <p style={flexCenter}>{finalPoints}</p>
-                  {showNewCommentsNotification(data.id, selectedInstance.weekAmount + 1) ? <Popup trigger={<Icon name="comment outline" size="small" />} content="You have new comments" /> : null}
+                  {showNewCommentsNotification(data.id, selectedInstance.weekAmount + 1) ? <Popup trigger={<Icon name="comments" size="big" />} content="You have new comments" /> : null}
                 </div>
               )}
             </div>
