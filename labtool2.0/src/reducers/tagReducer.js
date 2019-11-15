@@ -7,13 +7,17 @@ const tagsReducer = (store = INITIAL_STATE, action) => {
     case 'LOGOUT_SUCCESS':
       return INITIAL_STATE
     case 'TAG_CREATE_SUCCESS': {
+      const newTag = { ...action.response }
+      const deleteId = newTag.deleteId
+      delete newTag.deleteId
       const id = action.response.id
       const changedTag = store.tags.filter(tag => tag.id === id)
+      const newModifyTag = deleteId && store.modifyTag === deleteId ? newTag.id : store.modifyTag
       if (changedTag.length !== 0) {
-        const newTagList = store.tags.map(tag => (tag.id !== id ? tag : action.response))
-        return { ...store, tags: newTagList }
+        const newTagList = store.tags.map(tag => (tag.id !== id ? tag : newTag))
+        return { ...store, tags: newTagList.filter(tag => !deleteId || tag.id !== deleteId), modifyTag: newModifyTag }
       } else {
-        return { ...store, tags: [...store.tags, action.response] }
+        return { ...store, tags: [...store.tags.filter(tag => !deleteId || tag.id !== deleteId), newTag], modifyTag: newModifyTag }
       }
     }
     case 'TAG_REMOVE_SUCCESS': {

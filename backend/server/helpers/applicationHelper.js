@@ -177,6 +177,22 @@ async function getActive(req, _res) {
   }
 }
 
+// adds .instructor to Kurki courses
+async function addInstructorToCourseList(course) {
+  const options = await axiosCourseBla(course.id)
+  try {
+    const result = await axios
+      .create(options)
+      .get()
+      .then(barf => barf.data)
+    
+    return { ...course, instructor: result.teachers.join('; ') }
+  } catch (error) {
+    logger.error('error getting instructor', { error: error.message })
+    return { ...course, instructor: '' }
+  }
+}
+
 /**
  *
  * @param req
@@ -187,32 +203,16 @@ async function getInactive(req, res) {
   try {
     const cur = await getCurrent(req, res)
     const nxt = await getNewer(req, res)
-    const newobj = await cur.concat(nxt)
-    const iarr = []
-    for (const blob in Object.keys(newobj)) {
-      iarr.push(newobj[blob].id)
-    }
-
+    const newobj = cur.concat(nxt)
+    const iarr = Object.keys(newobj).map(blob => newobj[blob].id)
     const ires = await CourseInstance.findAll({
       where: {
         ohid: { [Op.in]: iarr }
       }
     })
-    const notactivated = []
-
-    for (const i in Object.keys(newobj)) {
-      let found = 0
-      for (const j in ires) {
-        if (newobj[i].id === ires[j].ohid) {
-          found = 1
-        }
-      }
-      if (found === 0) {
-        notactivated.push(newobj[i])
-      }
-    }
-
-    return notactivated
+    const activated = ires.map(course => course.ohid)
+    const notActivated = newobj.filter(c => !activated.includes(c.id))
+    return Promise.all(notActivated.map(addInstructorToCourseList))
   } catch (e) {
     return e
   }

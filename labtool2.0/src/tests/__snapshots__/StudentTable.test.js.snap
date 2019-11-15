@@ -144,6 +144,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
               "Tags": Array [
                 Object {
                   "color": "red",
+                  "courseInstanceId": null,
                   "id": 20001,
                   "name": "Javascript",
                 },
@@ -222,6 +223,12 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
                 "text": "DROPPED",
                 "value": 20008,
               },
+              Object {
+                "key": 20009,
+                "selected": false,
+                "text": "Tag for this course",
+                "value": 20009,
+              },
             ]
           }
           dropDownTeachers={Array []}
@@ -237,6 +244,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
                   "Tags": Array [
                     Object {
                       "color": "red",
+                      "courseInstanceId": null,
                       "id": 20001,
                       "name": "Javascript",
                     },
@@ -268,11 +276,13 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
                   "Tags": Array [
                     Object {
                       "color": "grey",
+                      "courseInstanceId": null,
                       "id": 20008,
                       "name": "DROPPED",
                     },
                     Object {
                       "color": "yellow",
+                      "courseInstanceId": null,
                       "id": 20002,
                       "name": "HTML",
                     },
@@ -326,6 +336,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
                   "weeks": Array [],
                 },
               ],
+              "id": 10011,
               "role": "teacher",
             }
           }
@@ -339,6 +350,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
                 "Tags": Array [
                   Object {
                     "color": "red",
+                    "courseInstanceId": null,
                     "id": 20001,
                     "name": "Javascript",
                   },
@@ -370,11 +382,13 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
                 "Tags": Array [
                   Object {
                     "color": "grey",
+                    "courseInstanceId": null,
                     "id": 20008,
                     "name": "DROPPED",
                   },
                   Object {
                     "color": "yellow",
+                    "courseInstanceId": null,
                     "id": 20002,
                     "name": "HTML",
                   },
@@ -452,11 +466,13 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
               "Tags": Array [
                 Object {
                   "color": "grey",
+                  "courseInstanceId": null,
                   "id": 20008,
                   "name": "DROPPED",
                 },
                 Object {
                   "color": "yellow",
+                  "courseInstanceId": null,
                   "id": 20002,
                   "name": "HTML",
                 },
@@ -535,6 +551,12 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
                 "text": "DROPPED",
                 "value": 20008,
               },
+              Object {
+                "key": 20009,
+                "selected": false,
+                "text": "Tag for this course",
+                "value": 20009,
+              },
             ]
           }
           dropDownTeachers={Array []}
@@ -550,6 +572,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
                   "Tags": Array [
                     Object {
                       "color": "red",
+                      "courseInstanceId": null,
                       "id": 20001,
                       "name": "Javascript",
                     },
@@ -581,11 +604,13 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
                   "Tags": Array [
                     Object {
                       "color": "grey",
+                      "courseInstanceId": null,
                       "id": 20008,
                       "name": "DROPPED",
                     },
                     Object {
                       "color": "yellow",
+                      "courseInstanceId": null,
                       "id": 20002,
                       "name": "HTML",
                     },
@@ -639,6 +664,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
                   "weeks": Array [],
                 },
               ],
+              "id": 10011,
               "role": "teacher",
             }
           }
@@ -652,6 +678,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
                 "Tags": Array [
                   Object {
                     "color": "red",
+                    "courseInstanceId": null,
                     "id": 20001,
                     "name": "Javascript",
                   },
@@ -683,11 +710,13 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
                 "Tags": Array [
                   Object {
                     "color": "grey",
+                    "courseInstanceId": null,
                     "id": 20008,
                     "name": "DROPPED",
                   },
                   Object {
                     "color": "yellow",
+                    "courseInstanceId": null,
                     "id": 20002,
                     "name": "HTML",
                   },
@@ -837,6 +866,12 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
                 "text": "DROPPED",
                 "value": 20008,
               },
+              Object {
+                "key": 20009,
+                "selected": false,
+                "text": "Tag for this course",
+                "value": 20009,
+              },
             ]
           }
           dropDownTeachers={Array []}
@@ -852,6 +887,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
                   "Tags": Array [
                     Object {
                       "color": "red",
+                      "courseInstanceId": null,
                       "id": 20001,
                       "name": "Javascript",
                     },
@@ -883,11 +919,13 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
                   "Tags": Array [
                     Object {
                       "color": "grey",
+                      "courseInstanceId": null,
                       "id": 20008,
                       "name": "DROPPED",
                     },
                     Object {
                       "color": "yellow",
+                      "courseInstanceId": null,
                       "id": 20002,
                       "name": "HTML",
                     },
@@ -941,6 +979,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
                   "weeks": Array [],
                 },
               ],
+              "id": 10011,
               "role": "teacher",
             }
           }
@@ -954,6 +993,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
                 "Tags": Array [
                   Object {
                     "color": "red",
+                    "courseInstanceId": null,
                     "id": 20001,
                     "name": "Javascript",
                   },
@@ -985,11 +1025,13 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
                 "Tags": Array [
                   Object {
                     "color": "grey",
+                    "courseInstanceId": null,
                     "id": 20008,
                     "name": "DROPPED",
                   },
                   Object {
                     "color": "yellow",
+                    "courseInstanceId": null,
                     "id": 20002,
                     "name": "HTML",
                   },
@@ -1147,6 +1189,335 @@ exports[`<StudentTableRow /> StudentTableRow Component should render correctly 1
         </span>
       </div>
     </span>
+  </TableCell>
+  <TableCell
+    as="td"
+    key="week0"
+    selectable={true}
+    style={
+      Object {
+        "position": "relative",
+      }
+    }
+    textAlign="center"
+  >
+    <Link
+      key="week0link"
+      style={
+        Object {
+          "alignItems": "center",
+          "display": "flex",
+          "height": "100%",
+          "justifyContent": "center",
+        }
+      }
+      to={
+        Object {
+          "pathname": "/labtool/reviewstudent/undefined/10012/1",
+          "state": Object {
+            "cameFromCoursePage": true,
+          },
+        }
+      }
+    >
+      <div>
+        <p
+          style={
+            Object {
+              "alignItems": "center",
+              "display": "flex",
+              "height": "100%",
+              "justifyContent": "center",
+            }
+          }
+        >
+          -
+        </p>
+      </div>
+    </Link>
+  </TableCell>
+  <TableCell
+    as="td"
+    key="week1"
+    selectable={true}
+    style={
+      Object {
+        "position": "relative",
+      }
+    }
+    textAlign="center"
+  >
+    <Link
+      key="week1link"
+      style={
+        Object {
+          "alignItems": "center",
+          "display": "flex",
+          "height": "100%",
+          "justifyContent": "center",
+        }
+      }
+      to={
+        Object {
+          "pathname": "/labtool/reviewstudent/undefined/10012/2",
+          "state": Object {
+            "cameFromCoursePage": true,
+          },
+        }
+      }
+    >
+      <div>
+        <p
+          style={
+            Object {
+              "alignItems": "center",
+              "display": "flex",
+              "height": "100%",
+              "justifyContent": "center",
+            }
+          }
+        >
+          -
+        </p>
+      </div>
+    </Link>
+  </TableCell>
+  <TableCell
+    as="td"
+    key="week2"
+    selectable={true}
+    style={
+      Object {
+        "position": "relative",
+      }
+    }
+    textAlign="center"
+  >
+    <Link
+      key="week2link"
+      style={
+        Object {
+          "alignItems": "center",
+          "display": "flex",
+          "height": "100%",
+          "justifyContent": "center",
+        }
+      }
+      to={
+        Object {
+          "pathname": "/labtool/reviewstudent/undefined/10012/3",
+          "state": Object {
+            "cameFromCoursePage": true,
+          },
+        }
+      }
+    >
+      <div>
+        <p
+          style={
+            Object {
+              "alignItems": "center",
+              "display": "flex",
+              "height": "100%",
+              "justifyContent": "center",
+            }
+          }
+        >
+          -
+        </p>
+      </div>
+    </Link>
+  </TableCell>
+  <TableCell
+    as="td"
+    key="week3"
+    selectable={true}
+    style={
+      Object {
+        "position": "relative",
+      }
+    }
+    textAlign="center"
+  >
+    <Link
+      key="week3link"
+      style={
+        Object {
+          "alignItems": "center",
+          "display": "flex",
+          "height": "100%",
+          "justifyContent": "center",
+        }
+      }
+      to={
+        Object {
+          "pathname": "/labtool/reviewstudent/undefined/10012/4",
+          "state": Object {
+            "cameFromCoursePage": true,
+          },
+        }
+      }
+    >
+      <div>
+        <p
+          style={
+            Object {
+              "alignItems": "center",
+              "display": "flex",
+              "height": "100%",
+              "justifyContent": "center",
+            }
+          }
+        >
+          -
+        </p>
+      </div>
+    </Link>
+  </TableCell>
+  <TableCell
+    as="td"
+    key="week4"
+    selectable={true}
+    style={
+      Object {
+        "position": "relative",
+      }
+    }
+    textAlign="center"
+  >
+    <Link
+      key="week4link"
+      style={
+        Object {
+          "alignItems": "center",
+          "display": "flex",
+          "height": "100%",
+          "justifyContent": "center",
+        }
+      }
+      to={
+        Object {
+          "pathname": "/labtool/reviewstudent/undefined/10012/5",
+          "state": Object {
+            "cameFromCoursePage": true,
+          },
+        }
+      }
+    >
+      <div>
+        <p
+          style={
+            Object {
+              "alignItems": "center",
+              "display": "flex",
+              "height": "100%",
+              "justifyContent": "center",
+            }
+          }
+        >
+          -
+        </p>
+      </div>
+    </Link>
+  </TableCell>
+  <TableCell
+    as="td"
+    key="week5"
+    selectable={true}
+    style={
+      Object {
+        "position": "relative",
+      }
+    }
+    textAlign="center"
+  >
+    <Link
+      key="week5link"
+      style={
+        Object {
+          "alignItems": "center",
+          "display": "flex",
+          "height": "100%",
+          "justifyContent": "center",
+        }
+      }
+      to={
+        Object {
+          "pathname": "/labtool/reviewstudent/undefined/10012/6",
+          "state": Object {
+            "cameFromCoursePage": true,
+          },
+        }
+      }
+    >
+      <div>
+        <p
+          style={
+            Object {
+              "alignItems": "center",
+              "display": "flex",
+              "height": "100%",
+              "justifyContent": "center",
+            }
+          }
+        >
+          -
+        </p>
+      </div>
+    </Link>
+  </TableCell>
+  <TableCell
+    as="td"
+    key="week6"
+    selectable={true}
+    style={
+      Object {
+        "position": "relative",
+      }
+    }
+    textAlign="center"
+  >
+    <Link
+      key="week6link"
+      style={
+        Object {
+          "alignItems": "center",
+          "display": "flex",
+          "height": "100%",
+          "justifyContent": "center",
+        }
+      }
+      to={
+        Object {
+          "pathname": "/labtool/reviewstudent/undefined/10012/7",
+          "state": Object {
+            "cameFromCoursePage": true,
+          },
+        }
+      }
+    >
+      <div>
+        <p
+          style={
+            Object {
+              "alignItems": "center",
+              "display": "flex",
+              "height": "100%",
+              "justifyContent": "center",
+            }
+          }
+        >
+          -
+        </p>
+      </div>
+    </Link>
+  </TableCell>
+  <TableCell
+    as="td"
+    key="pointssum"
+    textAlign="center"
+  >
+    0
   </TableCell>
 </TableRow>
 `;

@@ -17,6 +17,7 @@ import ModifyCourseInstancePage from './components/pages/ModifyCourseInstancePag
 import ModifyCourseInstanceStaff from './components/pages/ModifyCourseInstanceStaff'
 import ModifyCourseInstanceCodeReviews from './components/pages/ModifyCourseInstanceCodeReviews'
 import ReviewStudent from './components/pages/ReviewStudent'
+import ReviewStudentCodeReview from './components/pages/ReviewStudentCodeReview'
 import BrowseReviews from './components/pages/BrowseReviews'
 import MyPage from './components/pages/MyPage'
 import CreateChecklist from './components/pages/CreateChecklist'
@@ -123,6 +124,10 @@ const App = props => {
           <Route
             path={`/labtool/reviewstudent/:id/:si/:wk`}
             render={({ match, history }) => <ReviewStudent history={history} courseId={match.params.id} studentInstance={match.params.si} weekNumber={match.params.wk} />}
+          />
+          <Route
+            path={`/labtool/reviewstudentcr/:id/:si/:cr`}
+            render={({ match, history }) => <ReviewStudentCodeReview history={history} courseId={match.params.id} studentInstance={match.params.si} codeReviewNumber={match.params.cr} />}
           />
           <Route path={`/labtool/ModifyCourseInstancePage/:id`} render={({ match }) => <ModifyCourseInstancePage courseId={match.params.id} />} />
           <Route path={`/labtool/ModifyCourseInstanceStaff/:id`} render={({ match }) => <ModifyCourseInstanceStaff courseId={match.params.id} />} />

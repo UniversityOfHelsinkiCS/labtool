@@ -33,7 +33,10 @@ export const CoursePageStudentInfo = props => {
                   <br />
                   <Message warning>
                     <Message.Header>Your project repository might not be accessible</Message.Header>
-                    <p>Please verify that the repository exists and that it is not private. To hide this warning, edit your repository by clicking the button on the right, make sure there is no warning (or it goes away) and click 'Submit'.</p>
+                    <p>
+                      Please verify that the repository exists and that it is not private. To hide this warning, edit your repository by clicking the button on the right, make sure there is no warning
+                      (or it goes away) and click 'Submit'.
+                    </p>
                   </Message>
                 </>
               )}
