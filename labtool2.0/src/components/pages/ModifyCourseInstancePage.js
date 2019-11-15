@@ -151,7 +151,16 @@ export const ModifyCourseInstancePage = props => {
               <Form.Group inline>
                 <label style={{ width: '125px', textAlign: 'left' }}>Current week</label>
 
-                <Dropdown className="weekDropdown" onChange={changeDropdown('currentWeek')} style={{ maxWidth: '12em' }} options={dropdownWeeks} fluid required selection value={selectedInstance.currentWeek} />
+                <Dropdown
+                  className="weekDropdown"
+                  onChange={changeDropdown('currentWeek')}
+                  style={{ maxWidth: '12em' }}
+                  options={dropdownWeeks}
+                  fluid
+                  required
+                  selection
+                  value={selectedInstance.currentWeek}
+                />
               </Form.Group>
 
               <Form.Group inline>
