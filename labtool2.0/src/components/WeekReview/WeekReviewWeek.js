@@ -39,7 +39,7 @@ export const WeekReviewWeek = props => {
 
   if (week) {
     return (
-      <Accordion fluid styled id={`review${i}`}>
+      <Accordion fluid styled id={isFinalWeek ? 'reviewFinal' : `reviewWeek${week.weekNumber}`}>
         <Accordion.Title active={isWeekOpen} index={i} onClick={handleClickWeek}>
           <Icon name="dropdown" /> {isFinalWeek ? 'Final Review' : `Week ${week.weekNumber}`}, points {week.points} / {getMaximumPointsForWeek(week.weekNumber)}
         </Accordion.Title>
