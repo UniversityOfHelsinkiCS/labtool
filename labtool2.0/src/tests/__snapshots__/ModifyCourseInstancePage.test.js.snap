@@ -158,6 +158,7 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
                   },
                 ]
               }
+              placeholder="Select week!"
               renderLabel={[Function]}
               required={true}
               searchInput="text"

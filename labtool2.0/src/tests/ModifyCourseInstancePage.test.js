@@ -47,6 +47,7 @@ describe('<ModifyCourseInstancePage />', () => {
         addRedirectHook={mockFn}
         setFinalReview={mockFn}
         forceRedirect={mockFn}
+        showNotification={mockFn}
       />
     )
   })

@@ -6,7 +6,7 @@ import { setFinalReview } from '../../reducers/selectedInstanceReducer'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Redirect } from 'react-router'
-import { clearNotifications } from '../../reducers/notificationReducer'
+import { showNotification, clearNotifications } from '../../reducers/notificationReducer'
 import { changeCourseField } from '../../reducers/selectedInstanceReducer'
 import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 import { forceRedirect } from '../../reducers/redirectReducer'
@@ -29,6 +29,16 @@ export const ModifyCourseInstancePage = props => {
     props.clearNotifications()
     props.getOneCI(props.courseId)
   }, [])
+
+  useEffect(() => {
+    if (props.selectedInstance.currentWeek !== null) {
+      const possibleValues = createDropdownWeeks().map(option => option.value)
+      if (!possibleValues.includes(props.selectedInstance.currentWeek)) {
+        console.log('reset')
+        props.changeCourseField({ field: 'currentWeek', value: null })
+      }
+    }
+  }, [props.selectedInstance.weekAmount, props.selectedInstance.finalReview, props.selectedInstance.currentWeek])
 
   const changeField = e => {
     props.changeCourseField({
@@ -73,6 +83,15 @@ export const ModifyCourseInstancePage = props => {
       let newCr = props.selectedInstance.currentCodeReview.filter(cr => !state.toRemoveCr.includes(cr))
       newCr = newCr.concat(state.toAddCr)
       const { weekAmount, weekMaxPoints, currentWeek, active, ohid, finalReview, coursesPage, courseMaterial } = props.selectedInstance
+
+      if (currentWeek === null || !dropdownWeeks.map(option => option.value).includes(currentWeek)) {
+        props.showNotification({
+          message: 'You must select a week first!',
+          error: true
+        })
+        return
+      }
+
       const content = {
         weekAmount,
         weekMaxPoints,
@@ -157,8 +176,9 @@ export const ModifyCourseInstancePage = props => {
                   style={{ maxWidth: '12em' }}
                   options={dropdownWeeks}
                   fluid
-                  required
+                  required={true}
                   selection
+                  placeholder="Select week!"
                   value={selectedInstance.currentWeek}
                 />
               </Form.Group>
@@ -316,6 +336,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = {
   getOneCI,
   modifyOneCI,
+  showNotification,
   clearNotifications,
   changeCourseField,
   resetLoading,
@@ -335,6 +356,7 @@ ModifyCourseInstancePage.propTypes = {
 
   getOneCI: PropTypes.func.isRequired,
   modifyOneCI: PropTypes.func.isRequired,
+  showNotification: PropTypes.func.isRequired,
   clearNotifications: PropTypes.func.isRequired,
   changeCourseField: PropTypes.func.isRequired,
   resetLoading: PropTypes.func.isRequired,
