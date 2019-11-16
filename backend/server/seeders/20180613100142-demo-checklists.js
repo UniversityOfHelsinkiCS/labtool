@@ -17,6 +17,14 @@ module.exports = {
       week: 1,
       courseInstanceId: 10011,
       master: false
+    },
+    {
+      id: 10003,
+      createdAt: '2018-03-26',
+      updatedAt: '2018-03-26',
+      codeReviewNumber: 1,
+      courseInstanceId: 10011,
+      master: false
     }
   ]), queryInterface.bulkInsert('ChecklistItems', [
     {
@@ -26,7 +34,8 @@ module.exports = {
       checkedPoints: 0,
       uncheckedPoints: -0.5,
       category: 'Dokumentaatio',
-      checklistId: 10001
+      checklistId: 10001,
+      order: 1
     },
     {
       name: 'Tuntikirjanpito',
@@ -35,7 +44,8 @@ module.exports = {
       checkedPoints: 0,
       uncheckedPoints: -0.5,
       category: 'Dokumentaatio',
-      checklistId: 10001
+      checklistId: 10001,
+      order: 2
     },
     {
       name: 'Tietokantakaavio',
@@ -44,7 +54,8 @@ module.exports = {
       checkedPoints: 0.5,
       uncheckedPoints: 0,
       category: 'Tietokanta',
-      checklistId: 10001
+      checklistId: 10001,
+      order: 3
     },
     {
       name: 'Tietokanta luotu',
@@ -53,7 +64,8 @@ module.exports = {
       checkedPoints: 0.5,
       uncheckedPoints: 0,
       category: 'Tietokanta',
-      checklistId: 10001
+      checklistId: 10001,
+      order: 4
     },
     {
       name: 'Tietokannassa dataa',
@@ -62,7 +74,8 @@ module.exports = {
       checkedPoints: 0.5,
       uncheckedPoints: 0,
       category: 'Tietokanta',
-      checklistId: 10001
+      checklistId: 10001,
+      order: 5
     },
     {
       name: 'Koodin laatu',
@@ -71,7 +84,8 @@ module.exports = {
       checkedPoints: 0.5,
       uncheckedPoints: 0,
       category: 'Koodi',
-      checklistId: 10001
+      checklistId: 10001,
+      order: 6
     },
     {
       name: 'Readme',
@@ -80,7 +94,8 @@ module.exports = {
       checkedPoints: 0,
       uncheckedPoints: -0.5,
       category: 'Dokumentaatio',
-      checklistId: 10002
+      checklistId: 10002,
+      order: 1
     },
     {
       name: 'Tuntikirjanpito',
@@ -89,7 +104,8 @@ module.exports = {
       checkedPoints: 0,
       uncheckedPoints: -0.5,
       category: 'Dokumentaatio',
-      checklistId: 10002
+      checklistId: 10002,
+      order: 2
     },
     {
       name: 'Algoritmin runko',
@@ -98,7 +114,8 @@ module.exports = {
       checkedPoints: 1,
       uncheckedPoints: 0,
       category: 'Algoritmit',
-      checklistId: 10002
+      checklistId: 10002,
+      order: 3
     },
     {
       name: 'Tietorakenteita luotu',
@@ -107,7 +124,8 @@ module.exports = {
       checkedPoints: 0.5,
       uncheckedPoints: 0,
       category: 'Algoritmit',
-      checklistId: 10002
+      checklistId: 10002,
+      order: 4
     },
     {
       name: 'Koodin laatu',
@@ -116,7 +134,26 @@ module.exports = {
       checkedPoints: 0.5,
       uncheckedPoints: 0,
       category: 'Koodi',
-      checklistId: 10002
+      checklistId: 10002,
+      order: 5
+    },
+    {
+      name: 'Rakentava palaute',
+      textWhenOn: 'Palaute rakentavaa',
+      textWhenOff: 'Rakentava palaute puuttuu',
+      checkedPoints: 1,
+      uncheckedPoints: 0,
+      category: 'Katselmointi',
+      checklistId: 10003
+    },
+    {
+      name: 'Koodi selattu',
+      textWhenOn: 'Koodia on katsottu',
+      textWhenOff: 'Koodia ei katsottu',
+      checkedPoints: 1,
+      uncheckedPoints: 0,
+      category: 'Katselmointi',
+      checklistId: 10003
     }
   ])]),
 

@@ -1,11 +1,11 @@
-const { Tag, StudentTag, TeacherInstance, StudentInstance, Week, User, Comment, CodeReview } = require('../models')
+const { Tag, StudentTag, TeacherInstance, StudentInstance, CourseInstance, Week, User, Comment, CodeReview } = require('../models')
 const helper = require('../helpers/courseInstanceHelper')
 const logger = require('../../server/utils/logger')
 
 module.exports = {
   /**
    * Creates or edits a tag
-   *   permissions: must be a *course teacher* on any course
+   *   permissions: must be an instructor on any course
    *
    * @param req
    * @param res
@@ -18,37 +18,118 @@ module.exports = {
     try {
       const teacher = await TeacherInstance.findOne({
         where: {
-          userId: req.decoded.id,
-          instructor: false
+          userId: req.decoded.id
         }
       })
       if (!teacher) {
-        res.status(400).send('You need to be a teacher to do this.')
-        return
+        return res.status(403).send('You need to be a teacher or instructor to do this.')
       }
 
-      const tag = await Tag.findOrCreate({
-        where: {
-          name: req.body.text
-        }
-      })
+      const tag = {
+        color: req.body.color || 'gray',
+        name: req.body.text,
+        courseInstanceId: req.body.courseInstanceId || null
+      }
 
-      const text = req.body.newText ? req.body.newText : tag[0].text
-      const newTag = await Tag.update(
-        {
-          color: req.body.color || 'gray',
-          name: text
-        },
+      if (req.body.id) {
+        // find existing tag, if there is one
+        const oldTag = await Tag.findOne({ where: { id: req.body.id } })
+        if (tag.courseInstanceId !== null && oldTag && oldTag.courseInstanceId === null) {
+          // if old tag was global, duplicate that tag to every other
+          // course it was used in
+          const studentTags = await StudentTag.findAll({
+            where: {
+              tagId: oldTag.id
+            }
+          })
+
+          const students = await Promise.all(studentTags.map(st => StudentInstance.findByPk(st.studentInstanceId)))
+          const studentsMap = {}
+          students.forEach((student) => {
+            studentsMap[student.id] = student
+          })
+
+          const courses = await Promise.all(students.map(student => CourseInstance.findByPk(student.courseInstanceId)))
+          const uniqueCourseIds = [...new Set(courses.map(course => course.id))].filter(id => id !== tag.courseInstanceId)
+
+          // go over StudentTag list by course instance ID
+          await Promise.all(uniqueCourseIds.map(async (id) => {
+            const theseStudentTags = studentTags.filter(st => studentsMap[st.studentInstanceId].courseInstanceId === id)
+            if (theseStudentTags.length) {
+              // copy the tag for this course, then
+              const copyTag = await Tag.create({
+                ...tag,
+                courseInstanceId: id
+              })
+
+              // update all student tag instances
+              await Promise.all(theseStudentTags.map(st => StudentTag.update(
+                {
+                  tagId: copyTag.id
+                },
+                {
+                  where: {
+                    id: st.id
+                  }
+                }
+              )
+              ))
+            }
+          }))
+        } else if (tag.courseInstanceId === null && oldTag && oldTag.courseInstanceId !== null) {
+          // converting to a global tag
+          // if there already is a global tag with the same name and color,
+          // merge the two tags (the existing global tag stays)
+
+          const mergeTag = await Tag.findOne({ where: {
+            name: tag.name,
+            color: tag.color,
+            courseInstanceId: null
+          } })
+
+          if (mergeTag) {
+            await StudentTag.update(
+              {
+                tagId: mergeTag.id
+              },
+              {
+                where: {
+                  tagId: oldTag.id
+                }
+              }
+            )
+
+            await oldTag.destroy()
+            return res.status(200).send({
+              id: mergeTag.id,
+              name: mergeTag.name,
+              color: mergeTag.color,
+              courseInstanceId: null,
+              deleteId: oldTag.id
+            })
+          }
+        }
+      }
+
+      const newTag = req.body.id ? (await Tag.update(
+        tag,
         {
           where: {
-            id: tag[0].id
+            id: req.body.id
           },
           returning: true,
           plain: true
         }
+      ))[1] : await Tag.create(
+        tag,
+        {
+          returning: true,
+          plain: true
+        }
       )
-      res.status(200).send(newTag[1])
+      res.status(200).send(newTag)
     } catch (e) {
+      console.error(e)
       res.status(400).send(e)
     }
   },
@@ -78,7 +159,7 @@ module.exports = {
 
       const tag = await Tag.findOne({
         where: {
-          name: req.body.text
+          id: req.body.id
         }
       })
       if (!tag) {

@@ -117,7 +117,7 @@ describe('<CreateChecklist /> component', () => {
         addRedirectHook={mockFn}
       />
     )
-    wrapper.find('#weekDropdown').prop('onChange')(null, { value: weekChoice })
+    wrapper.find('#weekDropdown').prop('onChange')(null, { value: `week${weekChoice}` })
   })
 
   it('renders without error', () => {
@@ -170,7 +170,7 @@ describe('<CreateChecklist /> component', () => {
       })
 
       it('Renders appropriate options for week', () => {
-        wrapper.find('#weekDropdown').prop('onChange')(null, { value: weekChoice })
+        wrapper.find('#weekDropdown').prop('onChange')(null, { value: `week${weekChoice}` })
         const options = wrapper.find('.courseDropdown').prop('options')
         expect(options.length).toEqual(courseInstance.filter(course => course.weekAmount >= weekChoice && course !== courseInstance[0]).length)
       })
@@ -229,7 +229,7 @@ describe('<CreateChecklist /> component', () => {
           })
           expect(wrapper.find('.maxPointsIcon').prop('content')).toEqual('The total matches maximum weekly points for this course.')
         }
-        wrapper.find('#weekDropdown').prop('onChange')(null, { value: courseInstance[0].weekAmount + 1 })
+        wrapper.find('#weekDropdown').prop('onChange')(null, { value: `week${courseInstance[0].weekAmount + 1}` })
         expect(wrapper.find('.maxPointsIcon').exists()).toEqual(false)
       })
 

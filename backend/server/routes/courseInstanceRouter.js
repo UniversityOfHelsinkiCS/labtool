@@ -7,7 +7,7 @@ module.exports = (app) => {
   app.post('/api/course/student', courseInstanceController.findByUserStudentInstance)
   app.post('/api/course/teacher', courseInstanceController.findByUserTeacherInstance)
   app.get('/api/course/assistant/student/:id', assistantController.findAssistantByStudentInstance) // Get assistant for studentInstance
-  //app.get('/api/course/assistant/teacher/:id', assistantController.findStudentsByTeacherInstance) // Get student for assistantInstance
+  // app.get('/api/course/assistant/teacher/:id', assistantController.findStudentsByTeacherInstance) // Get student for assistantInstance
   app.post('/api/course/assistant/create', assistantController.create)
   app.get('/api/courseinstances', courseInstanceController.list) // Skolen kurssit on julkista tietoa eli periaattessa ok.
   app.get('/api/courseinstances/:ohid', courseInstanceController.retrieve) // En tiedä joten ei käy

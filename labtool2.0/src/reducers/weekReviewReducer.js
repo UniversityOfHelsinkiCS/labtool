@@ -31,6 +31,18 @@ const weekReviewReducer = (state = INITIAL_STATE, action) => {
         }
       }
     }
+    case 'WEEK_CODE_REVIEW_TOGGLE': {
+      const thisCr = state.data.filter(student => student.id === Number(action.studentId, 10))[0].codeReviews.filter(cr => cr.reviewNumber === Number(action.crNbr, 10))[0]
+      const baseChecks = state.checks ? state.checks : thisCr ? thisCr.checks : {}
+      return {
+        ...state,
+        checks: {
+          ...baseChecks,
+          [action.checklistItemId]:
+            baseChecks[action.checklistItemId] !== undefined ? !baseChecks[action.checklistItemId] : thisCr ? !thisCr.checks[action.checklistItemId] : !baseChecks[action.checklistItemId]
+        }
+      }
+    }
     case 'WEEK_REVIEW_RESET':
       return INITIAL_STATE
     case 'WEEK_REVIEW_CHECKS_RESTORE':
@@ -70,7 +82,7 @@ export const resetChecklist = () => {
   }
 }
 
-export const toggleCheck = (checklistItemId, studentId, weekNbr) => {
+export const toggleCheckWeek = (checklistItemId, studentId, weekNbr) => {
   return async dispatch => {
     dispatch({
       type: 'WEEK_REVIEW_TOGGLE',
@@ -81,12 +93,22 @@ export const toggleCheck = (checklistItemId, studentId, weekNbr) => {
   }
 }
 
-export const restoreChecks = (studentId, weekNbr, checks) => {
+export const toggleCheckCodeReview = (checklistItemId, studentId, crNbr) => {
+  return async dispatch => {
+    dispatch({
+      type: 'WEEK_CODE_REVIEW_TOGGLE',
+      checklistItemId,
+      studentId,
+      crNbr
+    })
+  }
+}
+
+export const restoreChecks = (studentId, checks) => {
   return async dispatch => {
     dispatch({
       type: 'WEEK_REVIEW_CHECKS_RESTORE',
       studentId,
-      weekNbr,
       checks
     })
   }

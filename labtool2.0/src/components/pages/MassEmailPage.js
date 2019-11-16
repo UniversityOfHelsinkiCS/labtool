@@ -11,6 +11,7 @@ import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 import store from '../../store'
 import StudentTable from '../StudentTable'
 import { usePersistedState, clearOnePersistedState } from '../../hooks/persistedState'
+import { sortStudentsAlphabeticallyByDroppedValue } from '../../util/sort'
 
 export const MassEmailPage = props => {
   const myCourseId = props.courseId
@@ -45,6 +46,7 @@ export const MassEmailPage = props => {
 
     // do not carry over selection changes back to main student table
     const oldSelectedStudents = { ...props.coursePageLogic.selectedStudents }
+
     return () => {
       // run on component unmount
       props.coursePageReset()
@@ -54,10 +56,9 @@ export const MassEmailPage = props => {
 
   const handleSubmit = async e => {
     e.preventDefault()
-    const data = props.courseData && props.courseData.data
+    const data = (props.courseData && props.courseData.data).filter(student => student.validRegistration)
     if (data) {
       const sendingTo = data.filter(entry => props.coursePageLogic.selectedStudents[entry.id]).map(entry => ({ id: entry.id }))
-
       if (!sendingTo.length) {
         store.dispatch({ type: 'MASS_EMAIL_SENDFAILURE' })
       } else {
@@ -67,6 +68,12 @@ export const MassEmailPage = props => {
         await props.sendMassEmail({ students: sendingTo, content: e.target.content.value, sendToInstructors: e.target.sendToInstructors.checked }, props.selectedInstance.ohid)
       }
     }
+  }
+
+  const selectAllNonDroppedStudents = () => {
+    const newSelect = {}
+    props.courseData.data.filter(student => student.validRegistration && !student.dropped).forEach(student => (newSelect[student.id] = true))
+    props.restoreStudentSelection(newSelect)
   }
 
   if (props.loading.loading) {
@@ -83,18 +90,25 @@ export const MassEmailPage = props => {
    * and what exactly to send
    */
   const { courseData, selectedInstance, coursePageLogic, tags } = props
-  const renderTeacherPart = () => {
-    return (
+
+  if (props.courseData.role !== 'teacher') {
+    return <div />
+  }
+
+  return (
+    <div style={{ overflowX: 'auto', overflowY: 'hidden' }}>
       <div className="TeacherMassEmailPart">
         <Header as="h2">Send email to students </Header>
+
+        <Button onClick={selectAllNonDroppedStudents}>Select all non-dropped students</Button>
 
         <Form onSubmit={handleSubmit}>
           <StudentTable
             columns={['select', 'instructor']}
             allowModify={false}
-            filterStudents={data => data.User.email}
+            filterStudents={data => data.User.email && data.validRegistration}
             disableDefaultFilter={false}
-            studentInstances={courseData.data}
+            studentInstances={sortStudentsAlphabeticallyByDroppedValue(courseData.data)}
             selectedInstance={selectedInstance}
             courseData={courseData}
             coursePageLogic={coursePageLogic}
@@ -117,28 +131,15 @@ export const MassEmailPage = props => {
         </Form>
         <br />
       </div>
-    )
-  }
-
-  /**
-   * This part actually tells what to show to the user
-   */
-  if (props.courseData.role === 'teacher') {
-    return (
-      <div style={{ overflowX: 'auto', overflowY: 'hidden' }}>
-        {renderTeacherPart()}
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-      </div>
-    )
-  } else {
-    return <div />
-  }
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+    </div>
+  )
 }
 
 MassEmailPage.propTypes = {

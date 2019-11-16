@@ -89,7 +89,7 @@ const coursePageLogicReducer = (state = INITIAL_STATE, action) => {
                 new Date(action.response.data.weeks[i].createdAt) > new Date(action.response.data.weeks[i - 1].createdAt) ? action.response.data.weeks[i] : action.response.data.weeks[i - 1]
               newestWeek = new Date(probablyNewest.createdAt) > new Date(newestWeek.createdAt) ? probablyNewest : newestWeek
             }
-            newestReviewWeek = newestWeek.weekNumber
+            newestReviewWeek = newestWeek ? newestWeek.weekNumber : 0
           }
 
           // The showCodeReviews -line below sets showCodeReviews to be equal to the reviewNumbers whose points are 0.
@@ -101,7 +101,7 @@ const coursePageLogicReducer = (state = INITIAL_STATE, action) => {
             showCodeReviews: action.response.data.codeReviews.filter(cr => cr.points === null).map(cr => cr.reviewNumber)
           }
         } catch (e) {
-          console.log('ERROR: Setting initial values for shown codeReviews failed.')
+          console.error('Setting initial values for shown codeReviews failed.', e)
           return state
         }
       } else {

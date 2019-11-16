@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize')
-const { CodeReview, StudentInstance, TeacherInstance, CourseInstance } = require('../models')
+const { CodeReview, ReviewCheck, StudentInstance, TeacherInstance, CourseInstance } = require('../models')
 const helper = require('../helpers/codeReviewHelper')
 const logger = require('../utils/logger')
 
@@ -26,7 +26,7 @@ async function formatCodeReview(codeReview, allStudentInstancesIds, reviewNumber
   /*  do not prevent repeats in backend -- hisahi
   if (repeated) {
     return null
-  }*/
+  } */
 
   allStudentInstancesIds.push(codeReview.reviewer)
   return {
@@ -167,19 +167,50 @@ module.exports = {
         res.status(403).send('You must be a teacher of the course to perform this action.')
         return
       }
-      const modifiedRows = await CodeReview.update(
+      const codeReview = await CodeReview.findOne({
+        where: {
+          studentInstanceId: req.body.studentInstanceId,
+          reviewNumber: req.body.reviewNumber
+        }
+      })
+      if (!codeReview) {
+        res.status(404).send('No code review matched the given student instance ID and review number.')
+      }
+      await CodeReview.update(
         {
           points: req.body.points
         },
         {
           where: {
-            studentInstanceId: req.body.studentInstanceId,
-            reviewNumber: req.body.reviewNumber
+            id: codeReview.id
           }
         }
       )
-      if (modifiedRows === 0) {
-        res.status(404).send('No code review matched the given student instance ID and review number.')
+      if (req.body.checks) {
+        await Promise.all(req.body.checks.map(async check => {
+          return ReviewCheck.findOne({
+            where: {
+              codeReviewId: codeReview.id,
+              checklistItemId: check.id
+            }
+          }).then(reviewCheck => {
+            if (reviewCheck) {
+              return ReviewCheck.update({
+                checked: check.checked
+              }, {
+                where: {
+                  id: reviewCheck.id
+                }
+              })
+            } else {
+              return ReviewCheck.create({
+                checklistItemId: check.id,
+                checked: check.checked,
+                codeReviewId: codeReview.id
+              })
+            }
+          })
+        }))
       }
       res.status(200).send({
         message: 'Code review points updated successfully.',
@@ -187,6 +218,7 @@ module.exports = {
       })
       return
     } catch (e) {
+      console.error(e)
       res.status(500).send('Unexpected error. Please try again.')
     }
   },

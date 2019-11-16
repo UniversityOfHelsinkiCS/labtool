@@ -50,6 +50,7 @@ describe('<CoursePage /> as teacher', () => {
         teacherInstanceId: 10011,
         weeks: [],
         codeReviews: [],
+        validRegistration: false,
         User: {
           id: 10012,
           username: 'tiraopiskelija2',
@@ -66,7 +67,8 @@ describe('<CoursePage /> as teacher', () => {
           {
             id: 20001,
             name: 'Javascript',
-            color: 'red'
+            color: 'red',
+            courseInstanceId: null
           }
         ]
       },
@@ -82,6 +84,7 @@ describe('<CoursePage /> as teacher', () => {
         teacherInstanceId: 10011,
         weeks: [],
         codeReviews: [],
+        validRegistration: true,
         User: {
           id: 10031,
           username: 'superopiskelija',
@@ -98,12 +101,14 @@ describe('<CoursePage /> as teacher', () => {
           {
             id: 20008,
             name: 'DROPPED',
-            color: 'grey'
+            color: 'grey',
+            courseInstanceId: null
           },
           {
             id: 20002,
             name: 'HTML',
-            color: 'yellow'
+            color: 'yellow',
+            courseInstanceId: null
           }
         ]
       },
@@ -119,6 +124,7 @@ describe('<CoursePage /> as teacher', () => {
         teacherInstanceId: 10011,
         weeks: [],
         codeReviews: [],
+        validRegistration: true,
         User: {
           id: 10011,
           username: 'tiraopiskelija1',
@@ -143,56 +149,64 @@ describe('<CoursePage /> as teacher', () => {
         name: 'Javascript',
         color: 'red',
         createdAt: '2018-06-13T00:00:00.000Z',
-        updatedAt: '2018-06-13T00:00:00.000Z'
+        updatedAt: '2018-06-13T00:00:00.000Z',
+        courseInstanceId: null
       },
       {
         id: 20002,
         name: 'HTML',
         color: 'yellow',
         createdAt: '2018-06-13T00:00:00.000Z',
-        updatedAt: '2018-06-13T00:00:00.000Z'
+        updatedAt: '2018-06-13T00:00:00.000Z',
+        courseInstanceId: null
       },
       {
         id: 20003,
         name: 'game',
         color: 'black',
         createdAt: '2018-06-13T00:00:00.000Z',
-        updatedAt: '2018-06-13T00:00:00.000Z'
+        updatedAt: '2018-06-13T00:00:00.000Z',
+        courseInstanceId: null
       },
       {
         id: 20004,
         name: 'React',
         color: 'green',
         createdAt: '2018-06-13T00:00:00.000Z',
-        updatedAt: '2018-06-13T00:00:00.000Z'
+        updatedAt: '2018-06-13T00:00:00.000Z',
+        courseInstanceId: null
       },
       {
         id: 20005,
         name: 'Node.js',
         color: 'blue',
         createdAt: '2018-06-13T00:00:00.000Z',
-        updatedAt: '2018-06-13T00:00:00.000Z'
+        updatedAt: '2018-06-13T00:00:00.000Z',
+        courseInstanceId: null
       },
       {
         id: 20006,
         name: 'Java',
         color: 'orange',
         createdAt: '2018-06-13T00:00:00.000Z',
-        updatedAt: '2018-06-13T00:00:00.000Z'
+        updatedAt: '2018-06-13T00:00:00.000Z',
+        courseInstanceId: null
       },
       {
         id: 20007,
         name: 'FORTRAN',
         color: 'pink',
         createdAt: '2018-06-13T00:00:00.000Z',
-        updatedAt: '2018-06-13T00:00:00.000Z'
+        updatedAt: '2018-06-13T00:00:00.000Z',
+        courseInstanceId: null
       },
       {
         id: 20008,
         name: 'DROPPED',
         color: 'grey',
         createdAt: '2018-06-13T00:00:00.000Z',
-        updatedAt: '2018-06-13T00:00:00.000Z'
+        updatedAt: '2018-06-13T00:00:00.000Z',
+        courseInstanceId: null
       }
     ]
   }
@@ -299,17 +313,6 @@ describe('<CoursePage /> as teacher', () => {
       expect(wrapper.find('CoursePageTeacherBulkForm').length).toEqual(1)
     })
 
-    it('can mark all students with DROPPED tag as dropped', () => {
-      window.confirm = jest.fn(() => true)
-      wrapper
-        .find('CoursePageTeacherMain')
-        .dive()
-        .find({ children: 'Mark all with dropped tag as dropped out' })
-        .simulate('click')
-
-      expect(mockUpdateStudentProjectInfo).toBeCalledWith(expect.objectContaining({ userId: 10031, dropped: true }))
-    })
-
     it('can export students as CSV', () => {
       wrapper
         .find('CoursePageTeacherMain')
@@ -406,49 +409,56 @@ describe('<CoursePage /> as student', () => {
         name: 'Javascript',
         color: 'red',
         createdAt: '2018-06-13T00:00:00.000Z',
-        updatedAt: '2018-06-13T00:00:00.000Z'
+        updatedAt: '2018-06-13T00:00:00.000Z',
+        courseInstanceId: null
       },
       {
         id: 20002,
         name: 'HTML',
         color: 'yellow',
         createdAt: '2018-06-13T00:00:00.000Z',
-        updatedAt: '2018-06-13T00:00:00.000Z'
+        updatedAt: '2018-06-13T00:00:00.000Z',
+        courseInstanceId: null
       },
       {
         id: 20003,
         name: 'game',
         color: 'black',
         createdAt: '2018-06-13T00:00:00.000Z',
-        updatedAt: '2018-06-13T00:00:00.000Z'
+        updatedAt: '2018-06-13T00:00:00.000Z',
+        courseInstanceId: null
       },
       {
         id: 20004,
         name: 'React',
         color: 'green',
         createdAt: '2018-06-13T00:00:00.000Z',
-        updatedAt: '2018-06-13T00:00:00.000Z'
+        updatedAt: '2018-06-13T00:00:00.000Z',
+        courseInstanceId: null
       },
       {
         id: 20005,
         name: 'Node.js',
         color: 'blue',
         createdAt: '2018-06-13T00:00:00.000Z',
-        updatedAt: '2018-06-13T00:00:00.000Z'
+        updatedAt: '2018-06-13T00:00:00.000Z',
+        courseInstanceId: null
       },
       {
         id: 20006,
         name: 'Java',
         color: 'orange',
         createdAt: '2018-06-13T00:00:00.000Z',
-        updatedAt: '2018-06-13T00:00:00.000Z'
+        updatedAt: '2018-06-13T00:00:00.000Z',
+        courseInstanceId: null
       },
       {
         id: 20007,
         name: 'FORTRAN',
         color: 'pink',
         createdAt: '2018-06-13T00:00:00.000Z',
-        updatedAt: '2018-06-13T00:00:00.000Z'
+        updatedAt: '2018-06-13T00:00:00.000Z',
+        courseInstanceId: null
       }
     ]
   }

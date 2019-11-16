@@ -1,4 +1,4 @@
-const { Week, WeekDraft, StudentInstance } = require('../models')
+const { Week, ReviewCheck, WeekDraft, StudentInstance } = require('../models')
 const helper = require('../helpers/weeksControllerHelper')
 const logger = require('../utils/logger')
 
@@ -32,51 +32,57 @@ module.exports = {
         return
       }
 
-      const week = await Week.findOne({
+      let week = await Week.findOne({
         where: {
           weekNumber: req.body.weekNumber,
           studentInstanceId: req.body.studentInstanceId
         }
       })
-      if (week) {
-        let updatedChecks = {}
-        if (req.body.checks) {
-          Object.keys(week.checks).forEach((key) => {
-            // handle existing cases where clItems were saved by name in week.checks
-            if (!Number.isInteger(key)) {
-              return
-            }
 
-            if (req.body.checks[key] !== undefined) {
-              updatedChecks[key] = req.body.checks[key]
-            } else {
-              updatedChecks[key] = week.checks[key]
-            }
-          })
-          Object.keys(req.body.checks).forEach((key) => {
-            updatedChecks[key] = req.body.checks[key]
-          })
-        } else {
-          updatedChecks = week.checks
-        }
+      // Collect checklist checks from DB to this object
+      // This is to keep backend backwards compatible
+      const checksObject = {}
+
+      if (week) {
+        const updatedChecks = req.body.checks || {}
         await week.update({
           points: req.body.points || week.points,
           feedback: req.body.feedback || week.feedback,
-          instructorNotes: req.body.instructorNotes || week.instructorNotes,
-          checks: updatedChecks
+          instructorNotes: req.body.instructorNotes || week.instructorNotes
         })
+        await Promise.all(Object.keys(updatedChecks).map(check => ReviewCheck.findOrCreate({
+          where: {
+            checklistItemId: Number(check),
+            weekId: week.id
+          }
+        }).then(reviewCheck => ReviewCheck.update({
+          checked: updatedChecks[check]
+        }, {
+          where: {
+            id: reviewCheck[0].dataValues.id
+          },
+          returning: true
+        })).then(([_, [updatedReviewCheck]]) => {
+          checksObject[updatedReviewCheck.checklistItemId] = updatedReviewCheck.dataValues.checked
+        })))
       } else {
-        await Week.create({
+        week = await Week.create({
           points: req.body.points,
           studentInstanceId: req.body.studentInstanceId,
           feedback: req.body.feedback,
           instructorNotes: req.body.instructorNotes,
           weekNumber: req.body.weekNumber,
-          notified: false,
-          checks: req.body.checks
+          notified: false
         })
+        await Promise.all(Object.keys(req.body.checks).map(check => ReviewCheck.create({
+          checklistItemId: Number(check),
+          checked: req.body.checks[check],
+          weekId: week.id
+        }).then((reviewCheck) => {
+          checksObject[reviewCheck.checklistItemId] = reviewCheck.checked
+        })))
       }
-      
+
       // Remove draft.
       await WeekDraft.destroy({
         where: {
@@ -84,7 +90,7 @@ module.exports = {
           studentInstanceId: req.body.studentInstanceId
         }
       })
-      res.status(200).send(week)
+      res.status(200).send({ ...week.dataValues, checks: checksObject })
     } catch (error) {
       logger.error('Create weeks error.')
       logger.error(error)

@@ -10,15 +10,16 @@ import { resetChecklist, changeField, restoreChecklist, addTopic, addRow, remove
 import './CreateChecklist.css'
 import { usePersistedState } from '../../hooks/persistedState'
 import { roundNumber } from '../../util/format'
+import { sortCoursesByName } from '../../util/sort'
 
 import BackButton from '../BackButton'
 import JsonEdit from '../JsonEdit'
 
 export const CreateChecklist = props => {
   const state = usePersistedState(`CreateChecklist_${props.courseId}`, {
-    week: undefined, // tracks value of week dropdown.
-    copyCourse: undefined, // tracks value of course dropdown.
-    copyWeek: undefined, // tracks value of week dropdown.
+    current: undefined, // tracks value of checklist dropdown.
+    copyCourse: undefined, // tracks value of copy from another course dropdown.
+    copyWeek: undefined, // tracks value of copy from another week dropdown. (misnomer: can also be a code review)
     topicName: '', // tracks value inputted into topic creation dialog box.
     rowName: '', // tracks value inputted into row creation dialog box.
     openAdd: '', // which addForm is currently open. '' denotes no open addForms. Only one addForm can be open at one time.
@@ -44,31 +45,77 @@ export const CreateChecklist = props => {
   useEffect(() => {
     state.courseDropdowns = createCourseDropdowns()
     state.copyWeekDropdowns = createCopyWeekDropdowns()
-  }, [state.week])
+  }, [state.current])
 
   useEffect(() => {
     state.checklistData = props.checklist.data
   }, [props.checklist])
 
+  const parseChecklistValue = value => {
+    if (!value) {
+      return { error: true }
+    }
+
+    if (value.startsWith('week')) {
+      const number = Number(value.slice(4), 10)
+      if (!number) {
+        return { error: true }
+      }
+      return { kind: 'week', number }
+    } else if (value.startsWith('codeReview')) {
+      const number = Number(value.slice(10), 10)
+      if (!number) {
+        return { error: true }
+      }
+      return { kind: 'codeReview', number }
+    } else {
+      return { error: true }
+    }
+  }
+
   // Make api call to save checklist to database.
   const handleSubmit = async e => {
     e.preventDefault()
-    const weeks = props.selectedInstance.weekAmount
-    const checklists = props.selectedInstance.finalReview ? weeks + 1 : weeks
-    if (state.week <= 0 || state.week > checklists) {
+    const data = {
+      courseInstanceId: props.selectedInstance.id,
+      checklist: props.checklist.data,
+      maxPoints: Number(state.maximumPoints)
+    }
+
+    const { error, kind, number } = parseChecklistValue(state.current)
+    if (error) {
       props.showNotification({
-        message: 'Invalid week.',
+        message: 'Select a week or code review!',
         error: true
       })
       return
     }
+
+    if (kind === 'week') {
+      const weeks = props.selectedInstance.weekAmount
+      const checklists = props.selectedInstance.finalReview ? weeks + 1 : weeks
+      if (number <= 0 || number > checklists) {
+        props.showNotification({
+          message: 'Invalid week.',
+          error: true
+        })
+        return
+      }
+      data.week = number
+    } else if (kind === 'codeReview') {
+      const codeReviews = props.selectedInstance.amountOfCodeReviews
+      if (number <= 0 || number > codeReviews) {
+        props.showNotification({
+          message: 'Invalid code review.',
+          error: true
+        })
+        return
+      }
+      data.codeReviewNumber = number
+    }
+
     try {
-      props.createChecklist({
-        courseInstanceId: props.selectedInstance.id,
-        week: state.week,
-        checklist: props.checklist.data,
-        maxPoints: Number(state.maximumPoints)
-      })
+      props.createChecklist(data)
       state.canSave = false
     } catch (e) {
       props.showNotification({
@@ -79,26 +126,38 @@ export const CreateChecklist = props => {
   }
 
   const changeWeek = async (e, { value }) => {
-    const week = value
+    const newCurrent = value
+    const newCurrentObj = parseChecklistValue(newCurrent)
+    if (newCurrentObj.error) {
+      return
+    }
     let copyCourse
     if (state.copyCourse) {
-      if (week > props.selectedInstance.weekAmount) {
-        copyCourse = props.courses.find(course => course.id === state.copyCourse).finalReview ? state.copyCourse : null
-      } else {
-        copyCourse = props.courses.find(course => course.id === state.copyCourse).weekAmount >= week ? state.copyCourse : null
+      if (newCurrentObj.kind === 'week') {
+        if (newCurrentObj.number > props.selectedInstance.weekAmount) {
+          copyCourse = props.courses.find(course => course.id === state.copyCourse).finalReview ? state.copyCourse : null
+        } else {
+          copyCourse = props.courses.find(course => course.id === state.copyCourse).weekAmount >= newCurrentObj.number ? state.copyCourse : null
+        }
+      } else if (newCurrentObj.kind === 'codeReview') {
+        if (newCurrentObj.number > props.selectedInstance.amountOfCodeReviews) {
+          copyCourse = null
+        } else {
+          copyCourse = props.courses.find(course => course.id === state.copyCourse).amountOfCodeReviews >= newCurrentObj.number ? state.copyCourse : null
+        }
       }
     } else {
       copyCourse = null
     }
     state.maximumPoints = ''
-    state.week = week
+    state.current = newCurrent
     state.copyCourse = copyCourse
-    if (state.copyWeek === week) {
+    if (state.copyWeek === newCurrent) {
       state.copyWeek = null
     }
     state.courseDropdowns = createCourseDropdowns()
     state.copyWeekDropdowns = createCopyWeekDropdowns()
-    loadChecklist(week)
+    loadChecklist(newCurrent)
   }
 
   useEffect(() => {
@@ -131,36 +190,62 @@ export const CreateChecklist = props => {
   }
 
   // Make api call to receive checklist from database.
-  const loadChecklist = async week => {
+  const loadChecklist = async current => {
+    const obj = parseChecklistValue(current)
+    const data = { courseInstanceId: props.selectedInstance.id }
+    if (obj.error) {
+      return
+    } else if (obj.kind === 'week') {
+      data.week = obj.number
+    } else if (obj.kind === 'codeReview') {
+      data.codeReviewNumber = obj.number
+    }
     state.canSave = false
-    props.getOneChecklist({
-      week,
-      courseInstanceId: props.selectedInstance.id
-    })
+    props.getOneChecklist(data)
   }
 
   const copyChecklist = async () => {
     if (state.copyCourse) {
-      const week = state.week > props.selectedInstance.weekAmount ? props.courses.find(course => course.id === state.copyCourse).weekAmount + 1 : state.week
+      const obj = parseChecklistValue(state.current)
+      if (obj.error) {
+        return
+      }
+
       state.canSave = true
-      props.getOneChecklist({
-        week,
+      const data = {
         courseInstanceId: state.copyCourse,
         copying: true
-      })
+      }
+      if (obj.kind === 'week') {
+        const week = obj.number > props.selectedInstance.weekAmount ? props.courses.find(course => course.id === state.copyCourse).weekAmount + 1 : obj.number
+        data.week = week
+      } else if (obj.kind === 'codeReview') {
+        data.codeReviewNumber = obj.number
+      }
+      props.getOneChecklist(data)
     } else if (state.copyWeek) {
+      const obj = parseChecklistValue(state.copyWeek)
+      if (obj.error) {
+        return
+      }
+
       state.canSave = true
-      props.getOneChecklist({
-        week: state.copyWeek,
+      const data = {
         courseInstanceId: props.selectedInstance.id,
         copying: true
-      })
+      }
+      if (obj.kind === 'week') {
+        data.week = obj.number
+      } else if (obj.kind === 'codeReview') {
+        data.codeReviewNumber = obj.number
+      }
+      props.getOneChecklist(data)
     }
   }
 
   const validateChecklist = checklist => {
     return (
-      !!checklist.week &&
+      (!!checklist.week || !!checklist.codeReviewNumber) &&
       !!checklist.list &&
       Object.keys(checklist.list).every(listKey => {
         return (
@@ -174,14 +259,22 @@ export const CreateChecklist = props => {
   }
 
   const importChecklist = checklistForWeek => {
-    if (validateChecklist({ week: state.week, list: checklistForWeek })) {
+    const data = { list: checklistForWeek }
+    const index = {}
+    const obj = parseChecklistValue(state.current)
+    if (obj.kind === 'week') {
+      index.week = obj.number
+    } else if (obj.kind === 'codeReview') {
+      index.codeReviewNumber = obj.number
+    }
+    if (validateChecklist({ ...index, ...data })) {
       try {
         props.addRedirectHook({
           hook: 'CHECKLIST_CREATE_'
         })
         props.createChecklist({
           courseInstanceId: props.selectedInstance.id,
-          week: state.week,
+          ...index,
           checklist: checklistForWeek,
           maxPoints: Number(state.maximumPoints)
         })
@@ -298,8 +391,11 @@ export const CreateChecklist = props => {
     })
   }
 
-  const weekFilter = courses => {
-    return courses.filter(course => state.week <= course.weekAmount)
+  const weekFilter = (number, courses) => {
+    return courses.filter(course => number <= course.weekAmount)
+  }
+  const codeReviewFilter = (number, courses) => {
+    return courses.filter(course => number <= course.amountOfCodeReviews)
   }
   const finalFilter = courses => {
     return courses.filter(course => course.finalReview)
@@ -307,8 +403,10 @@ export const CreateChecklist = props => {
 
   const createCourseDropdowns = () => {
     if (!props.courses || !props.selectedInstance || !Object.keys(props.courses).length) return []
-    const courses = state.week > props.selectedInstance.weekAmount ? finalFilter(props.courses) : weekFilter(props.courses)
-    const options = courses
+    const obj = parseChecklistValue(state.current)
+    const courses =
+      obj.kind === 'codeReview' ? codeReviewFilter(obj.number, props.courses) : obj.number > props.selectedInstance.weekAmount ? finalFilter(props.courses) : weekFilter(obj.number, props.courses)
+    const options = sortCoursesByName(courses)
       .filter(course => props.selectedInstance.id !== course.id)
       .map(course => {
         return {
@@ -320,7 +418,7 @@ export const CreateChecklist = props => {
   }
 
   const createCopyWeekDropdowns = () => {
-    return props.weekDropdowns.filter(option => option.value !== state.week)
+    return props.weekDropdowns.filter(option => option.value !== state.current)
   }
 
   const renderChecklist = () => {
@@ -418,7 +516,8 @@ export const CreateChecklist = props => {
     window.location.reload(true)
   }
 
-  const hasSelectedWeek = state.week !== undefined && state.week !== null
+  const hasSelectedWeek = state.current !== undefined && state.current !== null
+  const currentObj = parseChecklistValue(state.current)
   const { checklistJsx, maxPoints } = props.loading.loading ? { checklistJsx: null, maxPoints: null } : renderChecklist()
   return (
     <div className="CreateChecklist">
@@ -426,7 +525,7 @@ export const CreateChecklist = props => {
       <Header>{props.selectedInstance.name}</Header>
       <div className="editForm">
         <div className="topOptions">
-          <Dropdown id="weekDropdown" placeholder="Select Checklist" selection value={state.week} onChange={changeWeek} options={props.weekDropdowns} />
+          <Dropdown id="weekDropdown" placeholder="Select Checklist" selection value={state.current} onChange={changeWeek} options={props.weekDropdowns} />
           <div className="copyForm">
             <Button type="button" onClick={copyChecklist} disabled={!hasSelectedWeek || (!state.copyCourse && !state.copyWeek)}>
               Copy checklist
@@ -452,7 +551,7 @@ export const CreateChecklist = props => {
           </div>
           {hasSelectedWeek ? (
             <div className="jsonButtons">
-              <JsonEdit onImport={importChecklist} initialData={props.checklist.data} downloadName={`${props.selectedInstance.ohid}_week_${state.week}.json`} />
+              <JsonEdit onImport={importChecklist} initialData={props.checklist.data} downloadName={`${props.selectedInstance.ohid}_${state.current}.json`} />
             </div>
           ) : (
             <div />
@@ -496,13 +595,12 @@ export const CreateChecklist = props => {
                 content="Defining maximum points yourself is not mandatory. If no value is given, default weekly points remain valid."
               />
             </div>
+            {currentObj.kind === 'codeReview' && <strong>You must specify max points for this code review in order for them to be visible to students.</strong>}
             <Card className="maxPointsCard">
               <Card.Content>
                 <p>
                   Total max points: <strong className="maxPointsNumber">{roundNumber(getMaximumPoints(maxPoints), 2)}</strong>
-                  {state.week > props.selectedInstance.weekAmount ? (
-                    <span />
-                  ) : (
+                  {currentObj.kind === 'week' && currentObj.number <= props.selectedInstance.weekAmount ? (
                     <span>
                       {' '}
                       {props.selectedInstance.weekMaxPoints === getMaximumPoints(maxPoints) ? (
@@ -511,6 +609,8 @@ export const CreateChecklist = props => {
                         <Popup className="maxPointsIcon" trigger={<Icon name="delete" size="large" color="red" />} content="The total does not match maximum weekly points for this course." />
                       )}
                     </span>
+                  ) : (
+                    <span />
                   )}
                 </p>
               </Card.Content>
@@ -536,17 +636,21 @@ export const CreateChecklist = props => {
 const createWeekDropdowns = selectedInstance => {
   if (!selectedInstance) return []
   const options = []
-  let week = 1
-  while (week <= selectedInstance.weekAmount) {
+  for (let week = 1; week <= selectedInstance.weekAmount; ++week) {
     options.push({
-      value: week,
+      value: `week${week}`,
       text: `Week ${week}`
     })
-    week++
+  }
+  for (let cr = 1; cr <= selectedInstance.amountOfCodeReviews; ++cr) {
+    options.push({
+      value: `codeReview${cr}`,
+      text: `Code Review ${cr}`
+    })
   }
   if (selectedInstance.finalReview) {
     options.push({
-      value: week,
+      value: `week${selectedInstance.weekAmount + 1}`,
       text: 'Final Review'
     })
   }

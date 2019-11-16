@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] = `
+exports[`<ReviewStudentCodeReviews /> ReviewStudentCodeReview Component should render correctly 1`] = `
 <div
-  className="ReviewStudent"
+  className="ReviewStudentCodeReview"
 >
   <Connect(BackButton)
     text="Back to student reviews"
@@ -25,60 +25,10 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
       Maarit Mirja
        
       Opiskelija
-       
-      <div
-        style={
-          Object {
-            "display": "inline-block",
-            "padding": "0px 0px 0px 25px",
-          }
-        }
-      >
-        Tiran labraprojekti
-        : 
-        <RepoLink
-          url="http://github.com/tiraopi1/tiralabra1"
-        />
-      </div>
-      <div
-        key="20003"
-      >
-        <Button
-          as="button"
-          className="mini ui black button"
-          compact={true}
-          floated="right"
-        >
-          game
-        </Button>
-      </div>
-      <div
-        key="20002"
-      >
-        <Button
-          as="button"
-          className="mini ui yellow button"
-          compact={true}
-          floated="right"
-        >
-          HTML
-        </Button>
-      </div>
-      <div
-        key="20001"
-      >
-        <Button
-          as="button"
-          className="mini ui red button"
-          compact={true}
-          floated="right"
-        >
-          Javascript
-        </Button>
-      </div>
     </h3>
     <h3>
-      Week 
+      Code Review 
+      1
     </h3>
     <Grid>
       <GridRow
@@ -89,18 +39,34 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
             align="left"
           >
             <h3>
-              Points from previous weeks: 
-              0
+              Points so far: 
+              11
                
             </h3>
-            Week points: 
+            Earlier code review points: 
             0
-             
             <br />
-            Code review points: 
-            0
+            Week points: 
+            11
           </div>
-          <PreviousWeekDetails />
+          <h3>
+            Project to review
+          </h3>
+          <RepoLink
+            url="http://github.com/tiralabra2"
+          />
+          <h3>
+            Link to code review
+          </h3>
+          <p>
+            <a
+              href="http://github.com/tiralabra2/issues/1"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              http://github.com/tiralabra2/issues/1
+            </a>
+          </p>
           <h2>
             Review
           </h2>
@@ -116,8 +82,7 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
                 <label
                   className="showMaxPoints"
                 >
-                  Points 0-
-                  4
+                  Points
                 </label>
                 <Input
                   name="points"
@@ -131,77 +96,9 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
                     }
                   }
                   type="number"
-                  value={3}
+                  value=""
                 />
               </FormField>
-            </FormGroup>
-            <h4>
-              Feedback
-            </h4>
-            <FormGroup
-              inline={true}
-              style={
-                Object {
-                  "textAlignVertical": "top",
-                }
-              }
-              unstackable={true}
-            >
-              <div
-                style={
-                  Object {
-                    "width": "100%",
-                  }
-                }
-              >
-                <FormMarkdownTextArea
-                  name="comment"
-                  onChange={[Function]}
-                  style={
-                    Object {
-                      "height": "250px",
-                      "width": "500px",
-                    }
-                  }
-                  value="Hienoa työtä!"
-                />
-              </div>
-            </FormGroup>
-            <h4>
-              Review notes
-            </h4>
-            <p>
-              <em>
-                Only shown to instructors on this course
-              </em>
-            </p>
-            <FormGroup
-              inline={true}
-              style={
-                Object {
-                  "textAlignVertical": "top",
-                }
-              }
-              unstackable={true}
-            >
-              <div
-                style={
-                  Object {
-                    "width": "100%",
-                  }
-                }
-              >
-                <FormMarkdownTextArea
-                  name="instructorNotes"
-                  onChange={[Function]}
-                  style={
-                    Object {
-                      "height": "150px",
-                      "width": "500px",
-                    }
-                  }
-                />
-              </div>
             </FormGroup>
             <FormField>
               <Button
@@ -210,14 +107,6 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
                 type="submit"
               >
                 Save
-              </Button>
-              <Button
-                as="button"
-                className="ui center floated button"
-                onClick={[Function]}
-                type="button"
-              >
-                Save as draft
               </Button>
               <Link
                 to="/labtool/browsereviews/TKT20010.2018.K.A.1/10011"
@@ -548,29 +437,6 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
                 className="checklistOutput"
                 onSubmit={[Function]}
               >
-                <FormTextArea
-                  as={[Function]}
-                  className="checklistOutputText"
-                  control={[Function]}
-                  name="text"
-                  style={
-                    Object {
-                      "height": "250px",
-                      "width": "100%",
-                    }
-                  }
-                  value="Koodin laadussa parantamisen varaa
-
-Algoritmin runko puuttuu
-
-Tietorakenteita ei ole luotu
-
-README puuttuu
-
-Tuntikirjanpito puuttuu
-
-"
-                />
                 <p
                   className="checklistOutputPoints"
                 >
@@ -586,7 +452,7 @@ Tuntikirjanpito puuttuu
                   as="button"
                   type="submit"
                 >
-                  Copy to review fields
+                  Copy to review field
                 </Button>
               </Form>
             </div>

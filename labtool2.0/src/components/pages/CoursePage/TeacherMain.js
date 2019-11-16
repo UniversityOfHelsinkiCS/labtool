@@ -6,12 +6,13 @@ import { Link } from 'react-router-dom'
 import StudentTable from '../../StudentTable'
 
 export const CoursePageTeacherMain = props => {
-  const { loggedInUser, courseData, students, droppedTagExists, markAllWithDroppedTagAsDropped, courseId, selectedInstance, coursePageLogic, tags, exportCSV } = props
+  const { loggedInUser, courseData, students, courseId, selectedInstance, coursePageLogic, tags, exportCSV } = props
 
   let droppedStudentCount = 0
   let activeStudentCount = 0
 
-  students.forEach(student => {
+  // exclude students with invalid registration completely from the statistics
+  students.filter(student => student.validRegistration).forEach(student => {
     if (student.dropped) {
       droppedStudentCount++
     } else {
@@ -21,19 +22,14 @@ export const CoursePageTeacherMain = props => {
 
   const totalStudentCount = activeStudentCount + droppedStudentCount
 
-  const dropConvertButton = droppedTagExists() && (
-    <Button onClick={() => markAllWithDroppedTagAsDropped(courseData)} size="small">
-      Mark all with dropped tag as dropped out
-    </Button>
-  )
-
   return (
     <div className="TeachersBottomView">
       <br />
       <Header as="h2">Students</Header>
 
       <p>
-        {activeStudentCount} active student{activeStudentCount === 1 ? '' : 's'}, {droppedStudentCount} dropped student{droppedStudentCount === 1 ? '' : 's'} ({totalStudentCount} in total)
+        {activeStudentCount} active student{activeStudentCount === 1 ? '' : 's'}
+        {droppedStudentCount > 0 ? `, ${droppedStudentCount} dropped (${totalStudentCount} in total)` : ''}
       </p>
 
       <StudentTable
@@ -52,7 +48,6 @@ export const CoursePageTeacherMain = props => {
         persistentFilterKey={`CoursePage_filters_${courseId}`}
       />
       <br />
-      {dropConvertButton}
       {
         <Link to={`/labtool/massemail/${selectedInstance.ohid}`}>
           <Button size="small">Send email to multiple students</Button>
@@ -73,9 +68,8 @@ CoursePageTeacherMain.propTypes = {
   courseId: PropTypes.string.isRequired,
   students: PropTypes.array.isRequired,
 
-  droppedTagExists: PropTypes.func.isRequired,
-  markAllWithDroppedTagAsDropped: PropTypes.func.isRequired,
-  exportCSV: PropTypes.func.isRequired
+  exportCSV: PropTypes.func.isRequired,
+  loggedInUser: PropTypes.object.isRequired
 }
 
 export default CoursePageTeacherMain

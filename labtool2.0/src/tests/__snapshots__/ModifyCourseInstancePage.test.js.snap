@@ -52,6 +52,7 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
             </label>
             <Input
               className="form-control1"
+              min={1}
               name="weekAmount"
               onChange={[Function]}
               required={true}
@@ -60,7 +61,7 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
                   "maxWidth": "7em",
                 }
               }
-              type="text"
+              type="number"
               value={7}
             />
           </FormGroup>
@@ -75,10 +76,11 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
                 }
               }
             >
-              Weekly maxpoints
+              Maximum week points
             </label>
             <Input
               className="form-control2"
+              min={0}
               name="weekMaxPoints"
               onChange={[Function]}
               required={true}
@@ -87,7 +89,7 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
                   "maxWidth": "7em",
                 }
               }
-              type="text"
+              type="number"
               value={2}
             />
           </FormGroup>
@@ -104,18 +106,72 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
             >
               Current week
             </label>
-            <Input
-              className="form-control3"
-              name="currentWeek"
+            <Dropdown
+              additionLabel="Add "
+              additionPosition="top"
+              className="weekDropdown"
+              closeOnBlur={true}
+              closeOnEscape={true}
+              deburr={false}
+              fluid={true}
+              icon="dropdown"
+              minCharacters={1}
+              noResultsMessage="No results found."
               onChange={[Function]}
+              openOnFocus={true}
+              options={
+                Array [
+                  Object {
+                    "key": 1,
+                    "text": "Week 1",
+                    "value": 1,
+                  },
+                  Object {
+                    "key": 2,
+                    "text": "Week 2",
+                    "value": 2,
+                  },
+                  Object {
+                    "key": 3,
+                    "text": "Week 3",
+                    "value": 3,
+                  },
+                  Object {
+                    "key": 4,
+                    "text": "Week 4",
+                    "value": 4,
+                  },
+                  Object {
+                    "key": 5,
+                    "text": "Week 5",
+                    "value": 5,
+                  },
+                  Object {
+                    "key": 6,
+                    "text": "Week 6",
+                    "value": 6,
+                  },
+                  Object {
+                    "key": 7,
+                    "text": "Week 7",
+                    "value": 7,
+                  },
+                ]
+              }
+              placeholder="Select week!"
+              renderLabel={[Function]}
               required={true}
+              searchInput="text"
+              selectOnBlur={true}
+              selectOnNavigation={true}
+              selection={true}
               style={
                 Object {
-                  "maxWidth": "7em",
+                  "maxWidth": "12em",
                 }
               }
-              type="text"
               value={1}
+              wrapSelection={true}
             />
           </FormGroup>
           <FormGroup
@@ -238,6 +294,7 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
             <Dropdown
               additionLabel="Add "
               additionPosition="top"
+              className="codeReviewDropdown"
               closeOnBlur={true}
               closeOnEscape={true}
               deburr={false}

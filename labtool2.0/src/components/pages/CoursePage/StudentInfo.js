@@ -33,13 +33,16 @@ export const CoursePageStudentInfo = props => {
                   <br />
                   <Message warning>
                     <Message.Header>Your project repository might not be accessible</Message.Header>
-                    <p>Please verify that the repository exists and that it is not private. To hide this warning, edit your repository by clicking the button on the right, make sure there is no warning (or it goes away) and click 'Submit'.</p>
+                    <p>
+                      Please verify that the repository exists and that it is not private. To hide this warning, edit your repository by clicking the button on the right, make sure there is no warning
+                      (or it goes away) and click 'Submit'.
+                    </p>
                   </Message>
                 </>
               )}
             </Card.Content>
           </Card>
-          {!courseData.data.validRegistration && (
+          {courseData.role === 'student' && !courseData.data.validRegistration && (
             <>
               <Message negative>
                 <Message.Header>Your registration has been marked as invalid</Message.Header>
@@ -48,7 +51,7 @@ export const CoursePageStudentInfo = props => {
               <br />
             </>
           )}
-          {courseData.data.dropped && (
+          {courseData.role === 'student' && courseData.data.validRegistration && courseData.data.dropped && (
             <>
               <Message>
                 <Message.Header>You have been marked as dropped out from this course</Message.Header>

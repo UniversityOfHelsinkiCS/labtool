@@ -19,7 +19,7 @@ exports.controllerBeforeAuthCheckAction = applicationHelpers.controllerBeforeAut
 exports.checkHasCommentPermission = checkHasCommentPermission
 exports.getTeacherId = applicationHelpers.getTeacherId
 exports.getRoleToViewStudentInstance = getRoleToViewStudentInstance
-//exports.checkHasMarkCommentAsReadPermission = checkHasMarkCommentAsReadPermission
+// exports.checkHasMarkCommentAsReadPermission = checkHasMarkCommentAsReadPermission
 
 /**
  * Only used in courseInstance controller so its place is here.
