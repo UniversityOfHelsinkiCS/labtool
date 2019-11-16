@@ -149,7 +149,7 @@ export const StudentTableRow = props => {
             to={
               weekPoints[i + 1] === undefined
                 ? { pathname: `/labtool/reviewstudent/${selectedInstance.ohid}/${siId}/${i + 1}`, state: { cameFromCoursePage: true } }
-                : { pathname: `/labtool/browsereviews/${selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: i } }
+                : { pathname: `/labtool/browsereviews/${selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: `Week${i + 1}` } }
             }
           >
             <div>
@@ -171,36 +171,51 @@ export const StudentTableRow = props => {
       )
     }
 
-    let ii = 0
     const { amountOfCodeReviews } = selectedInstance
     if (amountOfCodeReviews) {
       for (let index = 1; index <= amountOfCodeReviews; index++) {
+        const codeReview = codeReviews ? codeReviews.find(cr => cr.reviewNumber === index) : null
+
         indents.push(
-          <Table.Cell selectable key={siId + index} textAlign="center" style={{ position: 'relative' }}>
+          <Table.Cell selectable key={`cr${siId}:${index}`} textAlign="center" style={{ position: 'relative' }}>
             <Link
               className="codeReviewPoints"
-              style={tableCellLinkStyle}
-              key={'codeReview' + i + ii + 'link'}
-              to={{ pathname: `/labtool/browsereviews/${selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: i + ii } }}
+              style={{ tableCellLinkStyle, flexCenter }}
+              key={'codeReview' + codeReview.reviewNumber + 'link'}
+              to={{ pathname: `/labtool/browsereviews/${selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: `CodeReview${codeReview.reviewNumber}` } }}
             >
-              <p style={flexCenter}>{cr[index] || cr[index] === 0 ? cr[index] : '-'}</p>
+              {shouldReview && selectedInstance.currentCodeReview.includes(index) && codeReview ? (
+                codeReview.linkToReview === null ? (
+                  <Popup
+                    position="top center"
+                    trigger={<Icon color="grey" size="small" name="hourglass end" fitted />}
+                    content="Student has not yet submitted the code review"
+                    className="codeReviewNotReady"
+                  />
+                ) : codeReview.points === null ? (
+                  <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'star', size: 'large' }} />} content="Review" className="codeReviewButton" />
+                ) : (
+                  <p>{cr[index] || cr[index] === 0 ? cr[index] : '-'}</p>
+                )
+              ) : (
+                <p>{cr[index] || cr[index] === 0 ? cr[index] : '-'}</p>
+              )}
             </Link>
           </Table.Cell>
         )
-        ++ii
       }
     }
 
     if (selectedInstance.finalReview) {
       let finalReviewPointsCell = (
-        <Table.Cell selectable key={i + ii + 1} textAlign="center" style={{ position: 'relative' }}>
+        <Table.Cell selectable key="finalReview" textAlign="center" style={{ position: 'relative' }}>
           <Link
             style={(tableCellLinkStyle, flexCenter)}
             key={'finalReviewlink'}
             to={
               finalPoints === undefined
                 ? `/labtool/reviewstudent/${selectedInstance.ohid}/${siId}/${i + 1}`
-                : { pathname: `/labtool/browsereviews/${selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: i + ii + 1 } }
+                : { pathname: `/labtool/browsereviews/${selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: 'Final' } }
             }
           >
             <div style={{ width: '100%', height: '100%' }}>
@@ -213,7 +228,7 @@ export const StudentTableRow = props => {
               ) : (
                 <div>
                   <p style={flexCenter}>{finalPoints}</p>
-                  {showNewCommentsNotification(data.id, selectedInstance.weekAmount + 1) ? <Popup trigger={<Icon name="comment outline" size="small" />} content="You have new comments" /> : null}
+                  {showNewCommentsNotification(data.id, selectedInstance.weekAmount + 1) ? <Popup trigger={<Icon name="comments" size="big" />} content="You have new comments" /> : null}
                 </div>
               )}
             </div>
@@ -335,7 +350,15 @@ export const StudentTableRow = props => {
               />
               {coursePageLogic.showAssistantDropdown === data.id ? (
                 <div>
-                  <Dropdown id={'assistantDropdown'} selectOnBlur={false} options={dropDownTeachers} onChange={updateTeacher(data.id, data.teacherInstanceId)} placeholder="Select teacher" fluid selection />
+                  <Dropdown
+                    id={'assistantDropdown'}
+                    selectOnBlur={false}
+                    options={dropDownTeachers}
+                    onChange={updateTeacher(data.id, data.teacherInstanceId)}
+                    placeholder="Select teacher"
+                    fluid
+                    selection
+                  />
                 </div>
               ) : (
                 <div />

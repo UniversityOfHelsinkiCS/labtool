@@ -251,7 +251,14 @@ module.exports = {
             attributes: {
               exclude: ['createdAt', 'updatedAt']
             },
-            as: 'codeReviews'
+            as: 'codeReviews',
+            include: [
+              {
+                model: ReviewCheck,
+                attributes: ['checklistItemId', 'checked'],
+                as: 'checks'
+              }
+            ]
           },
           {
             model: User,
@@ -530,7 +537,7 @@ module.exports = {
         try {
           const updatedStudentInstance = await targetStudent.update({
             github: req.body.github || targetStudent.github,
-            projectName: req.body.projectname || targetStudent.projectName,
+            projectName: req.body.projectName || targetStudent.projectName,
             dropped: 'dropped' in req.body ? req.body.dropped : targetStudent.dropped,
             validRegistration: 'validRegistration' in req.body ? req.body.validRegistration : targetStudent.validRegistration,
             repoExists: 'repoExists' in req.body ? req.body.repoExists : targetStudent.repoExists,
@@ -588,6 +595,14 @@ module.exports = {
           .then((teacher) => {
             if (!teacher || !req.authenticated.success) {
               res.status(400).send('You have to be a teacher to update course info.')
+              return
+            }
+            if (req.body.weekAmount < 1) {
+              res.status(400).send('weekAmount must be a positive value.')
+              return
+            }
+            if (req.body.weekMaxPoints < 0) {
+              res.status(400).send('weekMaxPoints must be a non-negative value.')
               return
             }
             const newCr = req.body.newCr || []

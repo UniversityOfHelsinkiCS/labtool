@@ -43,6 +43,11 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'toReview',
       as: 'toReviews'
     })
+    CodeReview.hasMany(models.ReviewCheck, {
+      foreignKey: 'codeReviewId',
+      as: 'checks',
+      allowNull: true
+    })
   }
   return CodeReview
 }
