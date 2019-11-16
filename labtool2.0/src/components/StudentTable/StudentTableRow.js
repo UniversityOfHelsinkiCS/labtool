@@ -181,8 +181,8 @@ export const StudentTableRow = props => {
             <Link
               className="codeReviewPoints"
               style={{ tableCellLinkStyle, flexCenter }}
-              key={'codeReview' + codeReview.reviewNumber + 'link'}
-              to={{ pathname: `/labtool/browsereviews/${selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: `CodeReview${codeReview.reviewNumber}` } }}
+              key={'codeReview' + index + 'link'}
+              to={{ pathname: `/labtool/browsereviews/${selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: codeReview ? `CodeReview${codeReview.reviewNumber}` : undefined } }}
             >
               {shouldReview && selectedInstance.currentCodeReview.includes(index) && codeReview ? (
                 codeReview.linkToReview === null ? (
