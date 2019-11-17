@@ -11,6 +11,7 @@ import BackButton from '../BackButton'
 import useLegacyState from '../../hooks/legacyState'
 import { sortCoursesByName } from '../../util/sort'
 import { showNotification } from '../../reducers/notificationReducer'
+import DocumentTitle from '../DocumentTitle'
 
 export const ManageTags = props => {
   const state = useLegacyState({
@@ -151,150 +152,153 @@ export const ManageTags = props => {
   }
 
   return (
-    <div>
-      <BackButton preset="modifyCIPage" />
-      <Container>
-        <div className="sixteen wide column" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
-          <h2>Add, modify or remove tags</h2>
-          <p />
-        </div>
-        <div
-          className="Add tag"
-          style={{
-            textAlignVertical: 'center',
-            textAlign: 'center'
-          }}
-        >
-          <Grid>
-            <Grid.Row centered>
-              <Form key="createOrModify" onSubmit={handleSubmit}>
-                {props.tags.modifyTag ? <h4>Editing tag: {editTag.name}</h4> : <h4>You are creating a new tag.</h4>}
-                <div>
-                  Preview:{' '}
-                  <button className={`mini ui button ${validColors.includes(state.valueColor) ? state.valueColor : ''}`} style={{ display: state.valueText ? 'inline' : 'none' }}>
-                    {state.valueText}
-                  </button>
-                  <br />
-                  <br />
-                </div>{' '}
-                <Form.Field required inline>
-                  <label style={{ width: '100px', textAlign: 'left' }}>Text</label>
-                  <Input
-                    type="text"
-                    value={state.valueText}
-                    className="form-control1"
-                    name="text"
-                    placeholder="Tag name"
-                    required
-                    style={{ minWidth: '30em' }}
-                    onChange={(e, { value }) => (state.valueText = value)}
-                  />
-                </Form.Field>
-                <Form.Field required inline>
-                  <label style={{ width: '100px', textAlign: 'left' }}>Color</label>
-                  <select className="ui dropdown" value={state.valueColor} name="color" style={{ minWidth: '30em' }} required onChange={e => (state.valueColor = e.target.value)}>
-                    <option value="" disabled>
-                      Select a tag color
-                    </option>
-                    <option value="white">White</option>
-                    {validColors.map(color => (
-                      <option key={color} value={color}>
-                        {capitalize(color)}
+    <>
+      <DocumentTitle title="Modify tags" />
+      <div>
+        <BackButton preset="modifyCIPage" />
+        <Container>
+          <div className="sixteen wide column" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
+            <h2>Add, modify or remove tags</h2>
+            <p />
+          </div>
+          <div
+            className="Add tag"
+            style={{
+              textAlignVertical: 'center',
+              textAlign: 'center'
+            }}
+          >
+            <Grid>
+              <Grid.Row centered>
+                <Form key="createOrModify" onSubmit={handleSubmit}>
+                  {props.tags.modifyTag ? <h4>Editing tag: {editTag.name}</h4> : <h4>You are creating a new tag.</h4>}
+                  <div>
+                    Preview:{' '}
+                    <button className={`mini ui button ${validColors.includes(state.valueColor) ? state.valueColor : ''}`} style={{ display: state.valueText ? 'inline' : 'none' }}>
+                      {state.valueText}
+                    </button>
+                    <br />
+                    <br />
+                  </div>{' '}
+                  <Form.Field required inline>
+                    <label style={{ width: '100px', textAlign: 'left' }}>Text</label>
+                    <Input
+                      type="text"
+                      value={state.valueText}
+                      className="form-control1"
+                      name="text"
+                      placeholder="Tag name"
+                      required
+                      style={{ minWidth: '30em' }}
+                      onChange={(e, { value }) => (state.valueText = value)}
+                    />
+                  </Form.Field>
+                  <Form.Field required inline>
+                    <label style={{ width: '100px', textAlign: 'left' }}>Color</label>
+                    <select className="ui dropdown" value={state.valueColor} name="color" style={{ minWidth: '30em' }} required onChange={e => (state.valueColor = e.target.value)}>
+                      <option value="" disabled>
+                        Select a tag color
                       </option>
-                    ))}
-                  </select>
-                </Form.Field>
-                <Form.Field inline>
-                  <label style={{ width: '100px', textAlign: 'left' }}>Global?</label>
-                  <Checkbox
-                    checked={state.valueGlobal}
-                    name="global"
-                    label="This tag will be available in all courses"
-                    style={{ minWidth: '30em' }}
-                    onChange={(e, { checked }) => (state.valueGlobal = checked)}
-                  />
-                </Form.Field>
-                <Form.Field>
-                  <Button className="ui left floated blue button" type="submit">
-                    {' '}
-                    Save
-                  </Button>
-                  {props.tags.modifyTag && (
-                    <Button className="ui left floated blue button" onClick={removeTag}>
+                      <option value="white">White</option>
+                      {validColors.map(color => (
+                        <option key={color} value={color}>
+                          {capitalize(color)}
+                        </option>
+                      ))}
+                    </select>
+                  </Form.Field>
+                  <Form.Field inline>
+                    <label style={{ width: '100px', textAlign: 'left' }}>Global?</label>
+                    <Checkbox
+                      checked={state.valueGlobal}
+                      name="global"
+                      label="This tag will be available in all courses"
+                      style={{ minWidth: '30em' }}
+                      onChange={(e, { checked }) => (state.valueGlobal = checked)}
+                    />
+                  </Form.Field>
+                  <Form.Field>
+                    <Button className="ui left floated blue button" type="submit">
                       {' '}
-                      Remove
+                      Save
                     </Button>
-                  )}
-                </Form.Field>
-              </Form>
-            </Grid.Row>
-          </Grid>
-          <h2>Click a tag below to edit</h2>
-          <button className={`mini ui button`} onClick={createNewTag}>
-            I want to create a new tag
-          </button>
-          <br />
-          <br />
-          {props.loading.loading ? (
-            <Loader active />
-          ) : props.tags.tags && props.tags.tags.length ? (
-            <>
-              {courseTags.length ? (
-                <div>
-                  <h2>Course tags</h2>
-                  {courseTags.map(tag => (
-                    <button key={tag.id} className={`mini ui ${tag.color} button`} onClick={modifyTag(tag.id, tag.name, tag.color, tag.courseInstanceId === null)}>
-                      {tag.name}
-                    </button>
-                  ))}
-                  <br />
-                  <br />
-                </div>
-              ) : globalTags.length ? (
-                <div>
-                  <i>Tip: To convert a global tag into a course tag, select a global tag below, uncheck the &quot;global&quot; box and save.</i>
-                  <br />
-                  <br />
-                </div>
-              ) : (
-                <span />
-              )}
-              {globalTags.length ? (
-                <div>
-                  <h2>Global tags</h2>
-                  {globalTags.map(tag => (
-                    <button key={tag.id} className={`mini ui ${tag.color} button`} onClick={modifyTag(tag.id, tag.name, tag.color, tag.courseInstanceId === null)}>
-                      {tag.name}
-                    </button>
-                  ))}
-                  <br />
-                  <br />
-                </div>
-              ) : (
-                <span />
-              )}
-            </>
-          ) : (
-            <div />
-          )}
-          <br />
-          <br />
-          <h2>Copy course tags from another course</h2>
-          <Dropdown
-            className="courseDropdown"
-            disabled={state.courseDropdowns.length < 1}
-            placeholder={state.courseDropdowns.length < 1 ? 'No other courses' : 'Select course to copy from'}
-            selection
-            value={state.copyCourse}
-            onChange={(e, { value }) => (state.copyCourse = value)}
-            options={state.courseDropdowns}
-          />{' '}
-          <Button type="button" onClick={copyCourseTags} disabled={!state.copyCourse}>
-            Copy course tags
-          </Button>
-        </div>
-      </Container>
-    </div>
+                    {props.tags.modifyTag && (
+                      <Button className="ui left floated blue button" onClick={removeTag}>
+                        {' '}
+                        Remove
+                      </Button>
+                    )}
+                  </Form.Field>
+                </Form>
+              </Grid.Row>
+            </Grid>
+            <h2>Click a tag below to edit</h2>
+            <button className={`mini ui button`} onClick={createNewTag}>
+              I want to create a new tag
+            </button>
+            <br />
+            <br />
+            {props.loading.loading ? (
+              <Loader active />
+            ) : props.tags.tags && props.tags.tags.length ? (
+              <>
+                {courseTags.length ? (
+                  <div>
+                    <h2>Course tags</h2>
+                    {courseTags.map(tag => (
+                      <button key={tag.id} className={`mini ui ${tag.color} button`} onClick={modifyTag(tag.id, tag.name, tag.color, tag.courseInstanceId === null)}>
+                        {tag.name}
+                      </button>
+                    ))}
+                    <br />
+                    <br />
+                  </div>
+                ) : globalTags.length ? (
+                  <div>
+                    <i>Tip: To convert a global tag into a course tag, select a global tag below, uncheck the &quot;global&quot; box and save.</i>
+                    <br />
+                    <br />
+                  </div>
+                ) : (
+                  <span />
+                )}
+                {globalTags.length ? (
+                  <div>
+                    <h2>Global tags</h2>
+                    {globalTags.map(tag => (
+                      <button key={tag.id} className={`mini ui ${tag.color} button`} onClick={modifyTag(tag.id, tag.name, tag.color, tag.courseInstanceId === null)}>
+                        {tag.name}
+                      </button>
+                    ))}
+                    <br />
+                    <br />
+                  </div>
+                ) : (
+                  <span />
+                )}
+              </>
+            ) : (
+              <div />
+            )}
+            <br />
+            <br />
+            <h2>Copy course tags from another course</h2>
+            <Dropdown
+              className="courseDropdown"
+              disabled={state.courseDropdowns.length < 1}
+              placeholder={state.courseDropdowns.length < 1 ? 'No other courses' : 'Select course to copy from'}
+              selection
+              value={state.copyCourse}
+              onChange={(e, { value }) => (state.copyCourse = value)}
+              options={state.courseDropdowns}
+            />{' '}
+            <Button type="button" onClick={copyCourseTags} disabled={!state.copyCourse}>
+              Copy course tags
+            </Button>
+          </div>
+        </Container>
+      </div>
+    </>
   )
 }
 

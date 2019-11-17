@@ -21,6 +21,7 @@ import RevieweeDropdown from '../RevieweeDropdown'
 import RepoLink from '../RepoLink'
 import IssuesDisabledWarning from '../IssuesDisabledWarning'
 import { updateStudentProjectInfo, massUpdateStudentProjectInfo } from '../../services/studentinstances'
+import DocumentTitle from '../DocumentTitle'
 
 export const ModifyCourseInstanceReview = props => {
   const pstate = usePersistedState(`ModifyCourseInstanceCodeReviews_${props.courseId}`, {
@@ -395,14 +396,22 @@ export const ModifyCourseInstanceReview = props => {
       </Button>
     )
 
+  const documentTitle = <DocumentTitle title="Code reviews" />
+
   if (props.loading.loading) {
-    return <Loader active />
+    return (
+      <>
+        {documentTitle}
+        <Loader active />
+      </>
+    )
   }
 
   const unassignedFilter = data => props.codeReviewLogic.filterByReview === 0 || isAssignedToReview(data, props.codeReviewLogic.selectedDropdown)
 
   return (
     <>
+      {documentTitle}
       <BackButton preset="modifyCIPage" cleanup={pstate.clear} />
       <div className="ModifyCourseInstanceCodeReviews" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
         <div style={{ overflowX: 'auto', overflowY: 'hidden' }}>

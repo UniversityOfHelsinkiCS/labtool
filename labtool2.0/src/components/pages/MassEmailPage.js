@@ -12,6 +12,7 @@ import store from '../../store'
 import StudentTable from '../StudentTable'
 import { usePersistedState, clearOnePersistedState } from '../../hooks/persistedState'
 import { sortStudentsAlphabeticallyByDroppedValue } from '../../util/sort'
+import DocumentTitle from '../DocumentTitle'
 
 export const MassEmailPage = props => {
   const myCourseId = props.courseId
@@ -76,8 +77,15 @@ export const MassEmailPage = props => {
     props.restoreStudentSelection(newSelect)
   }
 
+  const documentTitle = <DocumentTitle title="Mass email" />
+
   if (props.loading.loading) {
-    return <Loader active />
+    return (
+      <>
+        {documentTitle}
+        <Loader active />
+      </>
+    )
   }
   if (props.loading.redirect) {
     clearState()
@@ -96,49 +104,52 @@ export const MassEmailPage = props => {
   }
 
   return (
-    <div style={{ overflowX: 'auto', overflowY: 'hidden' }}>
-      <div className="TeacherMassEmailPart">
-        <Header as="h2">Send email to students </Header>
+    <>
+      {documentTitle}
+      <div style={{ overflowX: 'auto', overflowY: 'hidden' }}>
+        <div className="TeacherMassEmailPart">
+          <Header as="h2">Send email to students </Header>
 
-        <Button onClick={selectAllNonDroppedStudents}>Select all non-dropped students</Button>
+          <Button onClick={selectAllNonDroppedStudents}>Select all non-dropped students</Button>
 
-        <Form onSubmit={handleSubmit}>
-          <StudentTable
-            columns={['select', 'instructor']}
-            allowModify={false}
-            filterStudents={data => data.User.email && data.validRegistration}
-            disableDefaultFilter={false}
-            studentInstances={sortStudentsAlphabeticallyByDroppedValue(courseData.data)}
-            selectedInstance={selectedInstance}
-            courseData={courseData}
-            coursePageLogic={coursePageLogic}
-            tags={tags}
-          />
+          <Form onSubmit={handleSubmit}>
+            <StudentTable
+              columns={['select', 'instructor']}
+              allowModify={false}
+              filterStudents={data => data.User.email && data.validRegistration}
+              disableDefaultFilter={false}
+              studentInstances={sortStudentsAlphabeticallyByDroppedValue(courseData.data)}
+              selectedInstance={selectedInstance}
+              courseData={courseData}
+              coursePageLogic={coursePageLogic}
+              tags={tags}
+            />
 
+            <br />
+            <br />
+
+            <MassEmailInput />
+
+            <br />
+            <br />
+
+            <Link to={`/labtool/courses/${selectedInstance.ohid}`}>
+              <Button className="ui button" type="cancel" onClick={clearState}>
+                Cancel
+              </Button>
+            </Link>
+          </Form>
           <br />
-          <br />
-
-          <MassEmailInput />
-
-          <br />
-          <br />
-
-          <Link to={`/labtool/courses/${selectedInstance.ohid}`}>
-            <Button className="ui button" type="cancel" onClick={clearState}>
-              Cancel
-            </Button>
-          </Link>
-        </Form>
+        </div>
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
         <br />
       </div>
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-    </div>
+    </>
   )
 }
 

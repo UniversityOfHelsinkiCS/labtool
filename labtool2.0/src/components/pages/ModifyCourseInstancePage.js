@@ -13,6 +13,7 @@ import { forceRedirect } from '../../reducers/redirectReducer'
 import useLegacyState from '../../hooks/legacyState'
 
 import BackButton from '../BackButton'
+import DocumentTitle from '../DocumentTitle'
 
 /**
  *  Page used to modify a courseinstances information. Can only be accessed by teachers.
@@ -145,163 +146,175 @@ export const ModifyCourseInstancePage = props => {
   const dropdownWeeks = createDropdownWeeks()
 
   return (
-    <div>
-      <BackButton preset="coursePage" />
-      <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
-        <Loader active={props.loading.loading} inline="centered" />
-        <Grid>
-          <Grid.Row centered>
-            <h2> Edit course: {selectedInstance.name} </h2>
-          </Grid.Row>
-        </Grid>
-        <Grid>
-          <Grid.Row centered>
-            <Form onSubmit={handleSubmit}>
-              <Form.Group inline>
-                <label style={{ width: '125px', textAlign: 'left' }}>Week amount</label>
-                <Input name="weekAmount" type="number" min={1} required={true} style={{ maxWidth: '7em' }} value={selectedInstance.weekAmount} className="form-control1" onChange={changeField} />
-              </Form.Group>
+    <>
+      <DocumentTitle title="Modify course instance" />
+      <div>
+        <BackButton preset="coursePage" />
+        <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
+          <Loader active={props.loading.loading} inline="centered" />
+          <Grid>
+            <Grid.Row centered>
+              <h2> Edit course: {selectedInstance.name} </h2>
+            </Grid.Row>
+          </Grid>
+          <Grid>
+            <Grid.Row centered>
+              <Form onSubmit={handleSubmit}>
+                <Form.Group inline>
+                  <label style={{ width: '125px', textAlign: 'left' }}>Week amount</label>
+                  <Input name="weekAmount" type="number" min={1} required={true} style={{ maxWidth: '7em' }} value={selectedInstance.weekAmount} className="form-control1" onChange={changeField} />
+                </Form.Group>
 
-              <Form.Group inline>
-                <label style={{ width: '125px', textAlign: 'left' }}>Maximum week points</label>
-                <Input name="weekMaxPoints" type="number" min={0} required={true} style={{ maxWidth: '7em' }} value={selectedInstance.weekMaxPoints} className="form-control2" onChange={changeField} />
-              </Form.Group>
+                <Form.Group inline>
+                  <label style={{ width: '125px', textAlign: 'left' }}>Maximum week points</label>
+                  <Input
+                    name="weekMaxPoints"
+                    type="number"
+                    min={0}
+                    required={true}
+                    style={{ maxWidth: '7em' }}
+                    value={selectedInstance.weekMaxPoints}
+                    className="form-control2"
+                    onChange={changeField}
+                  />
+                </Form.Group>
 
-              <Form.Group inline>
-                <label style={{ width: '125px', textAlign: 'left' }}>Current week</label>
+                <Form.Group inline>
+                  <label style={{ width: '125px', textAlign: 'left' }}>Current week</label>
 
-                <Dropdown
-                  className="weekDropdown"
-                  onChange={changeDropdown('currentWeek')}
-                  style={{ maxWidth: '12em' }}
-                  options={dropdownWeeks}
-                  fluid
-                  required={true}
-                  selection
-                  placeholder="Select week!"
-                  value={selectedInstance.currentWeek}
-                />
-              </Form.Group>
+                  <Dropdown
+                    className="weekDropdown"
+                    onChange={changeDropdown('currentWeek')}
+                    style={{ maxWidth: '12em' }}
+                    options={dropdownWeeks}
+                    fluid
+                    required={true}
+                    selection
+                    placeholder="Select week!"
+                    value={selectedInstance.currentWeek}
+                  />
+                </Form.Group>
 
-              <Form.Group inline>
-                <label style={{ width: '125px', textAlign: 'left' }}>Link to courses.helsinki.fi</label>
-                <Input
-                  name="coursesPage"
-                  type="text"
-                  style={{ maxWidth: '12em' }}
-                  value={selectedInstance.coursesPage === null ? '' : selectedInstance.coursesPage}
-                  className="form-control4"
-                  onChange={changeField}
-                />
-              </Form.Group>
+                <Form.Group inline>
+                  <label style={{ width: '125px', textAlign: 'left' }}>Link to courses.helsinki.fi</label>
+                  <Input
+                    name="coursesPage"
+                    type="text"
+                    style={{ maxWidth: '12em' }}
+                    value={selectedInstance.coursesPage === null ? '' : selectedInstance.coursesPage}
+                    className="form-control4"
+                    onChange={changeField}
+                  />
+                </Form.Group>
 
-              <Form.Group inline>
-                <label style={{ width: '125px', textAlign: 'left' }}>Link to course material</label>
-                <Input
-                  name="courseMaterial"
-                  type="text"
-                  style={{ maxWidth: '12em' }}
-                  value={selectedInstance.courseMaterial === null ? '' : selectedInstance.courseMaterial}
-                  className="form-control5"
-                  onChange={changeField}
-                />
-              </Form.Group>
+                <Form.Group inline>
+                  <label style={{ width: '125px', textAlign: 'left' }}>Link to course material</label>
+                  <Input
+                    name="courseMaterial"
+                    type="text"
+                    style={{ maxWidth: '12em' }}
+                    value={selectedInstance.courseMaterial === null ? '' : selectedInstance.courseMaterial}
+                    className="form-control5"
+                    onChange={changeField}
+                  />
+                </Form.Group>
 
-              <Form.Group inline>
-                <label style={{ width: '125px', textAlign: 'left' }}>Currently visible code reviews</label>
-                {props.selectedInstance.currentCodeReview && props.selectedInstance.currentCodeReview.sort
-                  ? props.selectedInstance.currentCodeReview
-                      .sort((a, b) => {
-                        return a - b
-                      })
-                      .map(cr =>
-                        state.toRemoveCr.includes(cr) ? (
-                          <Popup
-                            key={cr}
-                            trigger={
-                              <Button color="red" value={cr} onClick={handleRemoveChange} compact>
-                                {cr}
-                              </Button>
-                            }
-                            content={'This code review will be hidden on save'}
-                          />
-                        ) : (
-                          <Popup
-                            key={cr}
-                            trigger={
-                              <Button value={cr} onClick={handleRemoveChange} compact>
-                                {cr}
-                              </Button>
-                            }
-                            content={'Click to hide this code review on save'}
-                          />
+                <Form.Group inline>
+                  <label style={{ width: '125px', textAlign: 'left' }}>Currently visible code reviews</label>
+                  {props.selectedInstance.currentCodeReview && props.selectedInstance.currentCodeReview.sort
+                    ? props.selectedInstance.currentCodeReview
+                        .sort((a, b) => {
+                          return a - b
+                        })
+                        .map(cr =>
+                          state.toRemoveCr.includes(cr) ? (
+                            <Popup
+                              key={cr}
+                              trigger={
+                                <Button color="red" value={cr} onClick={handleRemoveChange} compact>
+                                  {cr}
+                                </Button>
+                              }
+                              content={'This code review will be hidden on save'}
+                            />
+                          ) : (
+                            <Popup
+                              key={cr}
+                              trigger={
+                                <Button value={cr} onClick={handleRemoveChange} compact>
+                                  {cr}
+                                </Button>
+                              }
+                              content={'Click to hide this code review on save'}
+                            />
+                          )
                         )
-                      )
-                  : null}
-              </Form.Group>
-              <Form.Group inline>
-                <Dropdown
-                  className="codeReviewDropdown"
-                  onChange={handleAddChange}
-                  options={props.codeReviewDropdowns}
-                  fluid
-                  selection
-                  multiple={true}
-                  placeholder={props.selectedInstance.amountOfCodeReviews > 0 ? 'Select code reviews to set visible' : 'No code reviews'}
-                />
-              </Form.Group>
+                    : null}
+                </Form.Group>
+                <Form.Group inline>
+                  <Dropdown
+                    className="codeReviewDropdown"
+                    onChange={handleAddChange}
+                    options={props.codeReviewDropdowns}
+                    fluid
+                    selection
+                    multiple={true}
+                    placeholder={props.selectedInstance.amountOfCodeReviews > 0 ? 'Select code reviews to set visible' : 'No code reviews'}
+                  />
+                </Form.Group>
 
-              <Form.Group inline>
-                <Checkbox
-                  name="finalReview"
-                  checked={props.selectedInstance.finalReview}
-                  onChange={changeFinalReview}
-                  label="Course has a final review"
-                  style={{ width: '150px', textAlign: 'left' }}
-                />
-              </Form.Group>
+                <Form.Group inline>
+                  <Checkbox
+                    name="finalReview"
+                    checked={props.selectedInstance.finalReview}
+                    onChange={changeFinalReview}
+                    label="Course has a final review"
+                    style={{ width: '150px', textAlign: 'left' }}
+                  />
+                </Form.Group>
 
-              <Form.Group inline>
-                <Checkbox name="courseActive" label="Course registration is active" checked={selectedInstance.active} onChange={handleChange} style={{ width: '150px', textAlign: 'left' }} />
-              </Form.Group>
+                <Form.Group inline>
+                  <Checkbox name="courseActive" label="Course registration is active" checked={selectedInstance.active} onChange={handleChange} style={{ width: '150px', textAlign: 'left' }} />
+                </Form.Group>
 
-              <Form.Group style={{ display: 'inline-block', marginLeft: 'auto', marginRight: 'auto' }}>
-                <Button type="Submit" color="green" size="huge">
-                  Save
-                </Button>
-
-                <Link to={`/labtool/courses/${props.selectedInstance.ohid}`}>
-                  <Button type="Cancel" color="red" size="huge">
-                    Cancel
+                <Form.Group style={{ display: 'inline-block', marginLeft: 'auto', marginRight: 'auto' }}>
+                  <Button type="Submit" color="green" size="huge">
+                    Save
                   </Button>
-                </Link>
-              </Form.Group>
-            </Form>
-          </Grid.Row>
-        </Grid>
 
-        <Link to={`/labtool/ModifyCourseInstanceStaff/${props.selectedInstance.ohid}`}>
-          <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px' }} block="true">
-            Manage assistant teachers
-          </Button>
-        </Link>
-        <Link to={`/labtool/ModifyCourseInstanceCodeReviews/${props.selectedInstance.ohid}`}>
-          <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px' }} block="true">
-            Edit code reviews
-          </Button>
-        </Link>
-        <Link to={`/labtool/checklist/${props.selectedInstance.ohid}/create`}>
-          <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px' }} block="true">
-            Edit checklists
-          </Button>
-        </Link>
-        <Link to={`/labtool/managetags`}>
-          <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px' }} block="true">
-            Edit tags
-          </Button>
-        </Link>
+                  <Link to={`/labtool/courses/${props.selectedInstance.ohid}`}>
+                    <Button type="Cancel" color="red" size="huge">
+                      Cancel
+                    </Button>
+                  </Link>
+                </Form.Group>
+              </Form>
+            </Grid.Row>
+          </Grid>
+
+          <Link to={`/labtool/ModifyCourseInstanceStaff/${props.selectedInstance.ohid}`}>
+            <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px' }} block="true">
+              Manage assistant teachers
+            </Button>
+          </Link>
+          <Link to={`/labtool/ModifyCourseInstanceCodeReviews/${props.selectedInstance.ohid}`}>
+            <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px' }} block="true">
+              Edit code reviews
+            </Button>
+          </Link>
+          <Link to={`/labtool/checklist/${props.selectedInstance.ohid}/create`}>
+            <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px' }} block="true">
+              Edit checklists
+            </Button>
+          </Link>
+          <Link to={`/labtool/managetags`}>
+            <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px' }} block="true">
+              Edit tags
+            </Button>
+          </Link>
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 

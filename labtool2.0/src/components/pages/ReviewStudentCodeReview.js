@@ -14,6 +14,7 @@ import { usePersistedState } from '../../hooks/persistedState'
 
 import RepoLink from '../RepoLink'
 import BackButton from '../BackButton'
+import DocumentTitle from '../DocumentTitle'
 
 /**
  *  The page which is used by teacher to review submissions,.
@@ -180,129 +181,132 @@ export const ReviewStudentCodeReview = props => {
   const arrivedFromCoursePage = props.location && props.location.state && props.location.state.cameFromCoursePage
 
   return (
-    <div className="ReviewStudentCodeReview">
-      <BackButton
-        preset={arrivedFromCoursePage && 'coursePage'}
-        to={!arrivedFromCoursePage && `/labtool/browsereviews/${props.selectedInstance.ohid}/${student.id}`}
-        text={!arrivedFromCoursePage && 'Back to student reviews'}
-      />
-      <div style={{ textAlignVertical: 'center', textAlign: 'center' }}>
-        <h2> {props.selectedInstance.name}</h2>
-        <h3>
-          {' '}
-          {student.User.firsts} {student.User.lastname}
-        </h3>
-        <h3>Code Review {props.codeReviewNumber}</h3>
-        <Grid>
-          <Grid.Row columns={2}>
-            <Grid.Column>
-              <div align="left">
-                <h3>Points so far: {weekPoints + codeReviewPoints} </h3>
-                Earlier code review points: {codeReviewPoints}
-                <br />
-                Week points: {weekPoints}
-              </div>
-              <h3>Project to review</h3>
-              {toReviewProject ? (
-                <p>
-                  {toReviewProject.projectName}: <RepoLink url={toReviewProject.github} />
-                </p>
-              ) : cr.repoToReview ? (
-                <RepoLink url={cr.repoToReview} />
-              ) : (
-                <p>No assigned project to review</p>
-              )}
-              <h3>Link to code review</h3>
-              {cr.linkToReview ? (
-                <p>
-                  <a target="_blank" rel="noopener noreferrer" href={cr.linkToReview}>
-                    {cr.linkToReview}
-                  </a>
-                </p>
-              ) : (
-                <p>No code review linked</p>
-              )}
-              <h2>Review</h2>
-              <Form onSubmit={handleSubmit}>
-                <Form.Group inline unstackable>
-                  <Form.Field>
-                    <label className="showMaxPoints">Points{maxPoints !== null ? `0-${maxPoints}` : ''}</label>
-
-                    <Input
-                      name="points"
-                      required={true}
-                      value={pstate.points}
-                      onChange={(e, { value }) => (pstate.points = value)}
-                      type="number"
-                      step="0.01"
-                      style={{ width: '150px', align: 'center' }}
-                    />
-                  </Form.Field>
-                </Form.Group>
-                <Form.Field>
-                  <Button className="ui center floated green button" type="submit">
-                    Save
-                  </Button>
-                  <Link to={`/labtool/browsereviews/${props.selectedInstance.ohid}/${student.id}`} type="Cancel">
-                    <Button className="ui center floated button" type="cancel" onClick={pstate.clear}>
-                      Cancel
-                    </Button>
-                  </Link>
-                </Form.Field>
-              </Form>
-            </Grid.Column>
-            {checkList && checks !== undefined ? (
+    <>
+      <DocumentTitle title="Review student" />
+      <div className="ReviewStudentCodeReview">
+        <BackButton
+          preset={arrivedFromCoursePage && 'coursePage'}
+          to={!arrivedFromCoursePage && `/labtool/browsereviews/${props.selectedInstance.ohid}/${student.id}`}
+          text={!arrivedFromCoursePage && 'Back to student reviews'}
+        />
+        <div style={{ textAlignVertical: 'center', textAlign: 'center' }}>
+          <h2> {props.selectedInstance.name}</h2>
+          <h3>
+            {' '}
+            {student.User.firsts} {student.User.lastname}
+          </h3>
+          <h3>Code Review {props.codeReviewNumber}</h3>
+          <Grid>
+            <Grid.Row columns={2}>
               <Grid.Column>
-                <h2>Checklist</h2>
-                {checkList ? (
-                  <div className="checklist">
-                    {Object.keys(checkList.list).map(clItemCategory => (
-                      <Card className="checklistCard" fluid color="red" key={clItemCategory}>
-                        <Card.Content header={clItemCategory} />
-                        {checkList.list[clItemCategory].map(clItem => (
-                          <Card.Content className="checklistCardRow" key={clItem.id} onClick={toggleCheckbox(clItem.id, props.ownProps.studentInstance, props.ownProps.weekNumber)}>
-                            <Form.Field>
-                              <Grid>
-                                <Grid.Row style={{ cursor: 'pointer', userSelect: 'none' }}>
-                                  <Grid.Column width={3}>
-                                    <Icon
-                                      size="large"
-                                      name={isChecked(checks, clItem.id) ? 'circle check outline' : 'circle outline'}
-                                      style={{ color: isChecked(checks, clItem.id) ? 'green' : 'black' }}
-                                    />
-                                  </Grid.Column>
-                                  <Grid.Column width={10}>
-                                    <span style={{ flexGrow: 1, textAlign: 'center' }}>{clItem.name}</span>
-                                  </Grid.Column>
-                                  <Grid.Column width={3}>
-                                    <span>{`${clItem.checkedPoints} p / ${clItem.uncheckedPoints} p`}</span>
-                                  </Grid.Column>
-                                </Grid.Row>
-                              </Grid>
-                            </Form.Field>
-                          </Card.Content>
-                        ))}
-                      </Card>
-                    ))}
-                    <div>
-                      <Form className="checklistOutput" onSubmit={copyChecklistOutput}>
-                        <p className="checklistOutputPoints">points: {checklistPoints.toFixed(2)}</p>
-                        <input type="hidden" name="points" value={checklistPoints} />
-                        <Button type="submit">Copy to review field</Button>
-                      </Form>
-                    </div>
-                  </div>
+                <div align="left">
+                  <h3>Points so far: {weekPoints + codeReviewPoints} </h3>
+                  Earlier code review points: {codeReviewPoints}
+                  <br />
+                  Week points: {weekPoints}
+                </div>
+                <h3>Project to review</h3>
+                {toReviewProject ? (
+                  <p>
+                    {toReviewProject.projectName}: <RepoLink url={toReviewProject.github} />
+                  </p>
+                ) : cr.repoToReview ? (
+                  <RepoLink url={cr.repoToReview} />
                 ) : (
-                  <p>There is no checklist for this code review.</p>
+                  <p>No assigned project to review</p>
                 )}
+                <h3>Link to code review</h3>
+                {cr.linkToReview ? (
+                  <p>
+                    <a target="_blank" rel="noopener noreferrer" href={cr.linkToReview}>
+                      {cr.linkToReview}
+                    </a>
+                  </p>
+                ) : (
+                  <p>No code review linked</p>
+                )}
+                <h2>Review</h2>
+                <Form onSubmit={handleSubmit}>
+                  <Form.Group inline unstackable>
+                    <Form.Field>
+                      <label className="showMaxPoints">Points{maxPoints !== null ? `0-${maxPoints}` : ''}</label>
+
+                      <Input
+                        name="points"
+                        required={true}
+                        value={pstate.points}
+                        onChange={(e, { value }) => (pstate.points = value)}
+                        type="number"
+                        step="0.01"
+                        style={{ width: '150px', align: 'center' }}
+                      />
+                    </Form.Field>
+                  </Form.Group>
+                  <Form.Field>
+                    <Button className="ui center floated green button" type="submit">
+                      Save
+                    </Button>
+                    <Link to={`/labtool/browsereviews/${props.selectedInstance.ohid}/${student.id}`} type="Cancel">
+                      <Button className="ui center floated button" type="cancel" onClick={pstate.clear}>
+                        Cancel
+                      </Button>
+                    </Link>
+                  </Form.Field>
+                </Form>
               </Grid.Column>
-            ) : (
-              <div />
-            )}
-          </Grid.Row>
-        </Grid>
+              {checkList && checks !== undefined ? (
+                <Grid.Column>
+                  <h2>Checklist</h2>
+                  {checkList ? (
+                    <div className="checklist">
+                      {Object.keys(checkList.list).map(clItemCategory => (
+                        <Card className="checklistCard" fluid color="red" key={clItemCategory}>
+                          <Card.Content header={clItemCategory} />
+                          {checkList.list[clItemCategory].map(clItem => (
+                            <Card.Content className="checklistCardRow" key={clItem.id} onClick={toggleCheckbox(clItem.id, props.ownProps.studentInstance, props.ownProps.weekNumber)}>
+                              <Form.Field>
+                                <Grid>
+                                  <Grid.Row style={{ cursor: 'pointer', userSelect: 'none' }}>
+                                    <Grid.Column width={3}>
+                                      <Icon
+                                        size="large"
+                                        name={isChecked(checks, clItem.id) ? 'circle check outline' : 'circle outline'}
+                                        style={{ color: isChecked(checks, clItem.id) ? 'green' : 'black' }}
+                                      />
+                                    </Grid.Column>
+                                    <Grid.Column width={10}>
+                                      <span style={{ flexGrow: 1, textAlign: 'center' }}>{clItem.name}</span>
+                                    </Grid.Column>
+                                    <Grid.Column width={3}>
+                                      <span>{`${clItem.checkedPoints} p / ${clItem.uncheckedPoints} p`}</span>
+                                    </Grid.Column>
+                                  </Grid.Row>
+                                </Grid>
+                              </Form.Field>
+                            </Card.Content>
+                          ))}
+                        </Card>
+                      ))}
+                      <div>
+                        <Form className="checklistOutput" onSubmit={copyChecklistOutput}>
+                          <p className="checklistOutputPoints">points: {checklistPoints.toFixed(2)}</p>
+                          <input type="hidden" name="points" value={checklistPoints} />
+                          <Button type="submit">Copy to review field</Button>
+                        </Form>
+                      </div>
+                    </div>
+                  ) : (
+                    <p>There is no checklist for this code review.</p>
+                  )}
+                </Grid.Column>
+              ) : (
+                <div />
+              )}
+            </Grid.Row>
+          </Grid>
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 
