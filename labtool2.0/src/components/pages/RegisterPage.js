@@ -65,7 +65,7 @@ export const RegisterPage = props => {
     try {
       e.preventDefault()
       const data = {
-        projectname: projectName,
+        projectName,
         github: projectLink,
         ohid: props.selectedInstance.ohid,
         repoExists: repo !== null ? !githubRepoError : null

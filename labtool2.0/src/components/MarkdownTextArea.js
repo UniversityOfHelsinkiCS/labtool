@@ -46,6 +46,10 @@ export const FormMarkdownTextArea = props => {
   }, [])
 
   useEffect(() => {
+    handleChange(null, { value: props.value })
+  }, [props.value])
+
+  useEffect(() => {
     if (!scalable) {
       return
     }

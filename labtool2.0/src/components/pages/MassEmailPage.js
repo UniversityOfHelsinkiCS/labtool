@@ -56,10 +56,9 @@ export const MassEmailPage = props => {
 
   const handleSubmit = async e => {
     e.preventDefault()
-    const data = props.courseData && props.courseData.data
+    const data = (props.courseData && props.courseData.data).filter(student => student.validRegistration)
     if (data) {
-      const sendingTo = data.filter(entry => props.coursePageLogic.selectedStudents[entry.id] && props.coursePageLogic.selectedStudents[entry.id].validRegistration).map(entry => ({ id: entry.id }))
-
+      const sendingTo = data.filter(entry => props.coursePageLogic.selectedStudents[entry.id]).map(entry => ({ id: entry.id }))
       if (!sendingTo.length) {
         store.dispatch({ type: 'MASS_EMAIL_SENDFAILURE' })
       } else {

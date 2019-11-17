@@ -6,7 +6,7 @@ import { setFinalReview } from '../../reducers/selectedInstanceReducer'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Redirect } from 'react-router'
-import { clearNotifications } from '../../reducers/notificationReducer'
+import { showNotification, clearNotifications } from '../../reducers/notificationReducer'
 import { changeCourseField } from '../../reducers/selectedInstanceReducer'
 import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 import { forceRedirect } from '../../reducers/redirectReducer'
@@ -30,10 +30,26 @@ export const ModifyCourseInstancePage = props => {
     props.getOneCI(props.courseId)
   }, [])
 
-  const changeField = async e => {
+  useEffect(() => {
+    if (props.selectedInstance.currentWeek !== null) {
+      const possibleValues = createDropdownWeeks().map(option => option.value)
+      if (!possibleValues.includes(props.selectedInstance.currentWeek)) {
+        props.changeCourseField({ field: 'currentWeek', value: null })
+      }
+    }
+  }, [props.selectedInstance.weekAmount, props.selectedInstance.finalReview, props.selectedInstance.currentWeek])
+
+  const changeField = e => {
     props.changeCourseField({
       field: e.target.name,
       value: e.target.value
+    })
+  }
+
+  const changeDropdown = field => (e, { value }) => {
+    props.changeCourseField({
+      field,
+      value
     })
   }
 
@@ -66,6 +82,15 @@ export const ModifyCourseInstancePage = props => {
       let newCr = props.selectedInstance.currentCodeReview.filter(cr => !state.toRemoveCr.includes(cr))
       newCr = newCr.concat(state.toAddCr)
       const { weekAmount, weekMaxPoints, currentWeek, active, ohid, finalReview, coursesPage, courseMaterial } = props.selectedInstance
+
+      if (currentWeek === null || !dropdownWeeks.map(option => option.value).includes(currentWeek)) {
+        props.showNotification({
+          message: 'You must select a week to be the current week first!',
+          error: true
+        })
+        return
+      }
+
       const content = {
         weekAmount,
         weekMaxPoints,
@@ -90,10 +115,35 @@ export const ModifyCourseInstancePage = props => {
     }
   }
 
+  const createDropdownWeeks = () => {
+    const options = []
+    const weekAmount = Number(props.selectedInstance.weekAmount, 10)
+
+    for (let i = 1; i <= weekAmount; i++) {
+      options.push({
+        key: i,
+        text: `Week ${i}`,
+        value: i
+      })
+    }
+
+    if (props.selectedInstance.finalReview) {
+      options.push({
+        key: weekAmount + 1,
+        text: 'Final Review',
+        value: weekAmount + 1
+      })
+    }
+
+    return options
+  }
+
   if ((props.redirect && props.redirect.redirect) || props.loading.redirect) {
     return <Redirect to={`/labtool/courses/${props.selectedInstance.ohid}`} />
   }
   const selectedInstance = { ...props.selectedInstance }
+  const dropdownWeeks = createDropdownWeeks()
+
   return (
     <div>
       <BackButton preset="coursePage" />
@@ -109,17 +159,28 @@ export const ModifyCourseInstancePage = props => {
             <Form onSubmit={handleSubmit}>
               <Form.Group inline>
                 <label style={{ width: '125px', textAlign: 'left' }}>Week amount</label>
-                <Input name="weekAmount" required={true} type="text" style={{ maxWidth: '7em' }} value={selectedInstance.weekAmount} className="form-control1" onChange={changeField} />
+                <Input name="weekAmount" type="number" min={1} required={true} style={{ maxWidth: '7em' }} value={selectedInstance.weekAmount} className="form-control1" onChange={changeField} />
               </Form.Group>
 
               <Form.Group inline>
-                <label style={{ width: '125px', textAlign: 'left' }}>Weekly maxpoints</label>
-                <Input name="weekMaxPoints" required={true} type="text" style={{ maxWidth: '7em' }} value={selectedInstance.weekMaxPoints} className="form-control2" onChange={changeField} />
+                <label style={{ width: '125px', textAlign: 'left' }}>Maximum week points</label>
+                <Input name="weekMaxPoints" type="number" min={0} required={true} style={{ maxWidth: '7em' }} value={selectedInstance.weekMaxPoints} className="form-control2" onChange={changeField} />
               </Form.Group>
 
               <Form.Group inline>
                 <label style={{ width: '125px', textAlign: 'left' }}>Current week</label>
-                <Input name="currentWeek" required={true} type="text" style={{ maxWidth: '7em' }} value={selectedInstance.currentWeek} className="form-control3" onChange={changeField} />
+
+                <Dropdown
+                  className="weekDropdown"
+                  onChange={changeDropdown('currentWeek')}
+                  style={{ maxWidth: '12em' }}
+                  options={dropdownWeeks}
+                  fluid
+                  required={true}
+                  selection
+                  placeholder="Select week!"
+                  value={selectedInstance.currentWeek}
+                />
               </Form.Group>
 
               <Form.Group inline>
@@ -180,6 +241,7 @@ export const ModifyCourseInstancePage = props => {
               </Form.Group>
               <Form.Group inline>
                 <Dropdown
+                  className="codeReviewDropdown"
                   onChange={handleAddChange}
                   options={props.codeReviewDropdowns}
                   fluid
@@ -274,6 +336,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = {
   getOneCI,
   modifyOneCI,
+  showNotification,
   clearNotifications,
   changeCourseField,
   resetLoading,
@@ -293,6 +356,7 @@ ModifyCourseInstancePage.propTypes = {
 
   getOneCI: PropTypes.func.isRequired,
   modifyOneCI: PropTypes.func.isRequired,
+  showNotification: PropTypes.func.isRequired,
   clearNotifications: PropTypes.func.isRequired,
   changeCourseField: PropTypes.func.isRequired,
   resetLoading: PropTypes.func.isRequired,

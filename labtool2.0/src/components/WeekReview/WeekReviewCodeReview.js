@@ -25,7 +25,7 @@ export const WeekReviewCodeReview = props => {
   const maxPoints = getMaximumPointsForCodeReview(cr.reviewNumber)
 
   return (
-    <Accordion key={`codereview${i}`} fluid styled id={`review${i - 1}`}>
+    <Accordion key={`codereview${i}`} fluid styled id={`reviewCodeReview${cr.reviewNumber}`}>
       {' '}
       <Accordion.Title className="codeReview" active={doOpen} index={i} onClick={handleClickWeek}>
         <Icon name="dropdown" /> Code Review {cr.reviewNumber} {cr.points !== null ? `, points ${cr.points}${maxPoints !== null ? ` / ${maxPoints}` : ''}` : ''}
