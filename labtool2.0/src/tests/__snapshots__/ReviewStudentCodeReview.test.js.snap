@@ -1,465 +1,470 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`<ReviewStudentCodeReviews /> ReviewStudentCodeReview Component should render correctly 1`] = `
-<div
-  className="ReviewStudentCodeReview"
->
-  <Connect(BackButton)
-    text="Back to student reviews"
-    to="/labtool/browsereviews/TKT20010.2018.K.A.1/10011"
+<Fragment>
+  <_default
+    title="Review student"
   />
   <div
-    style={
-      Object {
-        "textAlign": "center",
-        "textAlignVertical": "center",
-      }
-    }
+    className="ReviewStudentCodeReview"
   >
-    <h2>
-       
-      Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit
-    </h2>
-    <h3>
-       
-      Maarit Mirja
-       
-      Opiskelija
-    </h3>
-    <h3>
-      Code Review 
-      1
-    </h3>
-    <Grid>
-      <GridRow
-        columns={2}
-      >
-        <GridColumn>
-          <div
-            align="left"
-          >
-            <h3>
-              Points so far: 
+    <Connect(BackButton)
+      text="Back to student reviews"
+      to="/labtool/browsereviews/TKT20010.2018.K.A.1/10011"
+    />
+    <div
+      style={
+        Object {
+          "textAlign": "center",
+          "textAlignVertical": "center",
+        }
+      }
+    >
+      <h2>
+         
+        Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit
+      </h2>
+      <h3>
+         
+        Maarit Mirja
+         
+        Opiskelija
+      </h3>
+      <h3>
+        Code Review 
+        1
+      </h3>
+      <Grid>
+        <GridRow
+          columns={2}
+        >
+          <GridColumn>
+            <div
+              align="left"
+            >
+              <h3>
+                Points so far: 
+                11
+                 
+              </h3>
+              Earlier code review points: 
+              0
+              <br />
+              Week points: 
               11
-               
+            </div>
+            <h3>
+              Project to review
             </h3>
-            Earlier code review points: 
-            0
-            <br />
-            Week points: 
-            11
-          </div>
-          <h3>
-            Project to review
-          </h3>
-          <RepoLink
-            url="http://github.com/tiralabra2"
-          />
-          <h3>
-            Link to code review
-          </h3>
-          <p>
-            <a
-              href="http://github.com/tiralabra2/issues/1"
-              rel="noopener noreferrer"
-              target="_blank"
+            <RepoLink
+              url="http://github.com/tiralabra2"
+            />
+            <h3>
+              Link to code review
+            </h3>
+            <p>
+              <a
+                href="http://github.com/tiralabra2/issues/1"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                http://github.com/tiralabra2/issues/1
+              </a>
+            </p>
+            <h2>
+              Review
+            </h2>
+            <Form
+              as="form"
+              onSubmit={[Function]}
             >
-              http://github.com/tiralabra2/issues/1
-            </a>
-          </p>
-          <h2>
-            Review
-          </h2>
-          <Form
-            as="form"
-            onSubmit={[Function]}
-          >
-            <FormGroup
-              inline={true}
-              unstackable={true}
-            >
-              <FormField>
-                <label
-                  className="showMaxPoints"
-                >
-                  Points
-                </label>
-                <Input
-                  name="points"
-                  onChange={[Function]}
-                  required={true}
-                  step="0.01"
-                  style={
-                    Object {
-                      "align": "center",
-                      "width": "150px",
+              <FormGroup
+                inline={true}
+                unstackable={true}
+              >
+                <FormField>
+                  <label
+                    className="showMaxPoints"
+                  >
+                    Points
+                  </label>
+                  <Input
+                    name="points"
+                    onChange={[Function]}
+                    required={true}
+                    step="0.01"
+                    style={
+                      Object {
+                        "align": "center",
+                        "width": "150px",
+                      }
                     }
-                  }
-                  type="number"
-                  value=""
-                />
-              </FormField>
-            </FormGroup>
-            <FormField>
-              <Button
-                as="button"
-                className="ui center floated green button"
-                type="submit"
-              >
-                Save
-              </Button>
-              <Link
-                to="/labtool/browsereviews/TKT20010.2018.K.A.1/10011"
-                type="Cancel"
-              >
+                    type="number"
+                    value=""
+                  />
+                </FormField>
+              </FormGroup>
+              <FormField>
                 <Button
                   as="button"
-                  className="ui center floated button"
-                  onClick={[Function]}
-                  type="cancel"
-                >
-                  Cancel
-                </Button>
-              </Link>
-            </FormField>
-          </Form>
-        </GridColumn>
-        <GridColumn>
-          <h2>
-            Checklist
-          </h2>
-          <div
-            className="checklist"
-          >
-            <Card
-              className="checklistCard"
-              color="red"
-              fluid={true}
-              key="Koodi"
-            >
-              <CardContent
-                header="Koodi"
-              />
-              <CardContent
-                className="checklistCardRow"
-                key="1"
-                onClick={[Function]}
-              >
-                <FormField>
-                  <Grid>
-                    <GridRow
-                      style={
-                        Object {
-                          "cursor": "pointer",
-                          "userSelect": "none",
-                        }
-                      }
-                    >
-                      <GridColumn
-                        width={3}
-                      >
-                        <Icon
-                          as="i"
-                          name="circle outline"
-                          size="large"
-                          style={
-                            Object {
-                              "color": "black",
-                            }
-                          }
-                        />
-                      </GridColumn>
-                      <GridColumn
-                        width={10}
-                      >
-                        <span
-                          style={
-                            Object {
-                              "flexGrow": 1,
-                              "textAlign": "center",
-                            }
-                          }
-                        >
-                          Koodin laatu
-                        </span>
-                      </GridColumn>
-                      <GridColumn
-                        width={3}
-                      >
-                        <span>
-                          undefined p / undefined p
-                        </span>
-                      </GridColumn>
-                    </GridRow>
-                  </Grid>
-                </FormField>
-              </CardContent>
-            </Card>
-            <Card
-              className="checklistCard"
-              color="red"
-              fluid={true}
-              key="Algoritmit"
-            >
-              <CardContent
-                header="Algoritmit"
-              />
-              <CardContent
-                className="checklistCardRow"
-                key="2"
-                onClick={[Function]}
-              >
-                <FormField>
-                  <Grid>
-                    <GridRow
-                      style={
-                        Object {
-                          "cursor": "pointer",
-                          "userSelect": "none",
-                        }
-                      }
-                    >
-                      <GridColumn
-                        width={3}
-                      >
-                        <Icon
-                          as="i"
-                          name="circle outline"
-                          size="large"
-                          style={
-                            Object {
-                              "color": "black",
-                            }
-                          }
-                        />
-                      </GridColumn>
-                      <GridColumn
-                        width={10}
-                      >
-                        <span
-                          style={
-                            Object {
-                              "flexGrow": 1,
-                              "textAlign": "center",
-                            }
-                          }
-                        >
-                          Algoritmin runko
-                        </span>
-                      </GridColumn>
-                      <GridColumn
-                        width={3}
-                      >
-                        <span>
-                          undefined p / undefined p
-                        </span>
-                      </GridColumn>
-                    </GridRow>
-                  </Grid>
-                </FormField>
-              </CardContent>
-              <CardContent
-                className="checklistCardRow"
-                key="3"
-                onClick={[Function]}
-              >
-                <FormField>
-                  <Grid>
-                    <GridRow
-                      style={
-                        Object {
-                          "cursor": "pointer",
-                          "userSelect": "none",
-                        }
-                      }
-                    >
-                      <GridColumn
-                        width={3}
-                      >
-                        <Icon
-                          as="i"
-                          name="circle outline"
-                          size="large"
-                          style={
-                            Object {
-                              "color": "black",
-                            }
-                          }
-                        />
-                      </GridColumn>
-                      <GridColumn
-                        width={10}
-                      >
-                        <span
-                          style={
-                            Object {
-                              "flexGrow": 1,
-                              "textAlign": "center",
-                            }
-                          }
-                        >
-                          Tietorakenteita luotu
-                        </span>
-                      </GridColumn>
-                      <GridColumn
-                        width={3}
-                      >
-                        <span>
-                          undefined p / undefined p
-                        </span>
-                      </GridColumn>
-                    </GridRow>
-                  </Grid>
-                </FormField>
-              </CardContent>
-            </Card>
-            <Card
-              className="checklistCard"
-              color="red"
-              fluid={true}
-              key="Dokumentaatio"
-            >
-              <CardContent
-                header="Dokumentaatio"
-              />
-              <CardContent
-                className="checklistCardRow"
-                key="4"
-                onClick={[Function]}
-              >
-                <FormField>
-                  <Grid>
-                    <GridRow
-                      style={
-                        Object {
-                          "cursor": "pointer",
-                          "userSelect": "none",
-                        }
-                      }
-                    >
-                      <GridColumn
-                        width={3}
-                      >
-                        <Icon
-                          as="i"
-                          name="circle outline"
-                          size="large"
-                          style={
-                            Object {
-                              "color": "black",
-                            }
-                          }
-                        />
-                      </GridColumn>
-                      <GridColumn
-                        width={10}
-                      >
-                        <span
-                          style={
-                            Object {
-                              "flexGrow": 1,
-                              "textAlign": "center",
-                            }
-                          }
-                        >
-                          Readme
-                        </span>
-                      </GridColumn>
-                      <GridColumn
-                        width={3}
-                      >
-                        <span>
-                          undefined p / undefined p
-                        </span>
-                      </GridColumn>
-                    </GridRow>
-                  </Grid>
-                </FormField>
-              </CardContent>
-              <CardContent
-                className="checklistCardRow"
-                key="5"
-                onClick={[Function]}
-              >
-                <FormField>
-                  <Grid>
-                    <GridRow
-                      style={
-                        Object {
-                          "cursor": "pointer",
-                          "userSelect": "none",
-                        }
-                      }
-                    >
-                      <GridColumn
-                        width={3}
-                      >
-                        <Icon
-                          as="i"
-                          name="circle outline"
-                          size="large"
-                          style={
-                            Object {
-                              "color": "black",
-                            }
-                          }
-                        />
-                      </GridColumn>
-                      <GridColumn
-                        width={10}
-                      >
-                        <span
-                          style={
-                            Object {
-                              "flexGrow": 1,
-                              "textAlign": "center",
-                            }
-                          }
-                        >
-                          Tuntikirjanpito
-                        </span>
-                      </GridColumn>
-                      <GridColumn
-                        width={3}
-                      >
-                        <span>
-                          undefined p / undefined p
-                        </span>
-                      </GridColumn>
-                    </GridRow>
-                  </Grid>
-                </FormField>
-              </CardContent>
-            </Card>
-            <div>
-              <Form
-                as="form"
-                className="checklistOutput"
-                onSubmit={[Function]}
-              >
-                <p
-                  className="checklistOutputPoints"
-                >
-                  points: 
-                  NaN
-                </p>
-                <input
-                  name="points"
-                  type="hidden"
-                  value={NaN}
-                />
-                <Button
-                  as="button"
+                  className="ui center floated green button"
                   type="submit"
                 >
-                  Copy to review field
+                  Save
                 </Button>
-              </Form>
+                <Link
+                  to="/labtool/browsereviews/TKT20010.2018.K.A.1/10011"
+                  type="Cancel"
+                >
+                  <Button
+                    as="button"
+                    className="ui center floated button"
+                    onClick={[Function]}
+                    type="cancel"
+                  >
+                    Cancel
+                  </Button>
+                </Link>
+              </FormField>
+            </Form>
+          </GridColumn>
+          <GridColumn>
+            <h2>
+              Checklist
+            </h2>
+            <div
+              className="checklist"
+            >
+              <Card
+                className="checklistCard"
+                color="red"
+                fluid={true}
+                key="Koodi"
+              >
+                <CardContent
+                  header="Koodi"
+                />
+                <CardContent
+                  className="checklistCardRow"
+                  key="1"
+                  onClick={[Function]}
+                >
+                  <FormField>
+                    <Grid>
+                      <GridRow
+                        style={
+                          Object {
+                            "cursor": "pointer",
+                            "userSelect": "none",
+                          }
+                        }
+                      >
+                        <GridColumn
+                          width={3}
+                        >
+                          <Icon
+                            as="i"
+                            name="circle outline"
+                            size="large"
+                            style={
+                              Object {
+                                "color": "black",
+                              }
+                            }
+                          />
+                        </GridColumn>
+                        <GridColumn
+                          width={10}
+                        >
+                          <span
+                            style={
+                              Object {
+                                "flexGrow": 1,
+                                "textAlign": "center",
+                              }
+                            }
+                          >
+                            Koodin laatu
+                          </span>
+                        </GridColumn>
+                        <GridColumn
+                          width={3}
+                        >
+                          <span>
+                            undefined p / undefined p
+                          </span>
+                        </GridColumn>
+                      </GridRow>
+                    </Grid>
+                  </FormField>
+                </CardContent>
+              </Card>
+              <Card
+                className="checklistCard"
+                color="red"
+                fluid={true}
+                key="Algoritmit"
+              >
+                <CardContent
+                  header="Algoritmit"
+                />
+                <CardContent
+                  className="checklistCardRow"
+                  key="2"
+                  onClick={[Function]}
+                >
+                  <FormField>
+                    <Grid>
+                      <GridRow
+                        style={
+                          Object {
+                            "cursor": "pointer",
+                            "userSelect": "none",
+                          }
+                        }
+                      >
+                        <GridColumn
+                          width={3}
+                        >
+                          <Icon
+                            as="i"
+                            name="circle outline"
+                            size="large"
+                            style={
+                              Object {
+                                "color": "black",
+                              }
+                            }
+                          />
+                        </GridColumn>
+                        <GridColumn
+                          width={10}
+                        >
+                          <span
+                            style={
+                              Object {
+                                "flexGrow": 1,
+                                "textAlign": "center",
+                              }
+                            }
+                          >
+                            Algoritmin runko
+                          </span>
+                        </GridColumn>
+                        <GridColumn
+                          width={3}
+                        >
+                          <span>
+                            undefined p / undefined p
+                          </span>
+                        </GridColumn>
+                      </GridRow>
+                    </Grid>
+                  </FormField>
+                </CardContent>
+                <CardContent
+                  className="checklistCardRow"
+                  key="3"
+                  onClick={[Function]}
+                >
+                  <FormField>
+                    <Grid>
+                      <GridRow
+                        style={
+                          Object {
+                            "cursor": "pointer",
+                            "userSelect": "none",
+                          }
+                        }
+                      >
+                        <GridColumn
+                          width={3}
+                        >
+                          <Icon
+                            as="i"
+                            name="circle outline"
+                            size="large"
+                            style={
+                              Object {
+                                "color": "black",
+                              }
+                            }
+                          />
+                        </GridColumn>
+                        <GridColumn
+                          width={10}
+                        >
+                          <span
+                            style={
+                              Object {
+                                "flexGrow": 1,
+                                "textAlign": "center",
+                              }
+                            }
+                          >
+                            Tietorakenteita luotu
+                          </span>
+                        </GridColumn>
+                        <GridColumn
+                          width={3}
+                        >
+                          <span>
+                            undefined p / undefined p
+                          </span>
+                        </GridColumn>
+                      </GridRow>
+                    </Grid>
+                  </FormField>
+                </CardContent>
+              </Card>
+              <Card
+                className="checklistCard"
+                color="red"
+                fluid={true}
+                key="Dokumentaatio"
+              >
+                <CardContent
+                  header="Dokumentaatio"
+                />
+                <CardContent
+                  className="checklistCardRow"
+                  key="4"
+                  onClick={[Function]}
+                >
+                  <FormField>
+                    <Grid>
+                      <GridRow
+                        style={
+                          Object {
+                            "cursor": "pointer",
+                            "userSelect": "none",
+                          }
+                        }
+                      >
+                        <GridColumn
+                          width={3}
+                        >
+                          <Icon
+                            as="i"
+                            name="circle outline"
+                            size="large"
+                            style={
+                              Object {
+                                "color": "black",
+                              }
+                            }
+                          />
+                        </GridColumn>
+                        <GridColumn
+                          width={10}
+                        >
+                          <span
+                            style={
+                              Object {
+                                "flexGrow": 1,
+                                "textAlign": "center",
+                              }
+                            }
+                          >
+                            Readme
+                          </span>
+                        </GridColumn>
+                        <GridColumn
+                          width={3}
+                        >
+                          <span>
+                            undefined p / undefined p
+                          </span>
+                        </GridColumn>
+                      </GridRow>
+                    </Grid>
+                  </FormField>
+                </CardContent>
+                <CardContent
+                  className="checklistCardRow"
+                  key="5"
+                  onClick={[Function]}
+                >
+                  <FormField>
+                    <Grid>
+                      <GridRow
+                        style={
+                          Object {
+                            "cursor": "pointer",
+                            "userSelect": "none",
+                          }
+                        }
+                      >
+                        <GridColumn
+                          width={3}
+                        >
+                          <Icon
+                            as="i"
+                            name="circle outline"
+                            size="large"
+                            style={
+                              Object {
+                                "color": "black",
+                              }
+                            }
+                          />
+                        </GridColumn>
+                        <GridColumn
+                          width={10}
+                        >
+                          <span
+                            style={
+                              Object {
+                                "flexGrow": 1,
+                                "textAlign": "center",
+                              }
+                            }
+                          >
+                            Tuntikirjanpito
+                          </span>
+                        </GridColumn>
+                        <GridColumn
+                          width={3}
+                        >
+                          <span>
+                            undefined p / undefined p
+                          </span>
+                        </GridColumn>
+                      </GridRow>
+                    </Grid>
+                  </FormField>
+                </CardContent>
+              </Card>
+              <div>
+                <Form
+                  as="form"
+                  className="checklistOutput"
+                  onSubmit={[Function]}
+                >
+                  <p
+                    className="checklistOutputPoints"
+                  >
+                    points: 
+                    NaN
+                  </p>
+                  <input
+                    name="points"
+                    type="hidden"
+                    value={NaN}
+                  />
+                  <Button
+                    as="button"
+                    type="submit"
+                  >
+                    Copy to review field
+                  </Button>
+                </Form>
+              </div>
             </div>
-          </div>
-        </GridColumn>
-      </GridRow>
-    </Grid>
+          </GridColumn>
+        </GridRow>
+      </Grid>
+    </div>
   </div>
-</div>
+</Fragment>
 `;

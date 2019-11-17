@@ -1,169 +1,174 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`<ModifyCourseInstanceStaff /> Components renders correctly 1`] = `
-<div>
-  <Connect(BackButton)
-    preset="modifyCIPage"
+<Fragment>
+  <_default
+    title="Modify course instance"
   />
-  <div
-    className="sixteen wide column"
-    style={
-      Object {
-        "textAlign": "center",
-        "textAlignVertical": "center",
+  <div>
+    <Connect(BackButton)
+      preset="modifyCIPage"
+    />
+    <div
+      className="sixteen wide column"
+      style={
+        Object {
+          "textAlign": "center",
+          "textAlignVertical": "center",
+        }
       }
-    }
-  >
-    <h2>
-      Add and remove assistants
-    </h2>
-    <h2>
-      Aineopintojen harjoitustyö: Tietokantasovellus
-    </h2>
-  </div>
-  <Header
-    as="h2"
-  >
-    Users
-  </Header>
-  <Form
-    as="form"
-    id="myForm"
-    onSubmit={[Function]}
-  >
-    <Table
-      as="table"
-      color="yellow"
-      fixed={true}
-      singleLine={true}
     >
-      <TableHeader
-        as="thead"
+      <h2>
+        Add and remove assistants
+      </h2>
+      <h2>
+        Aineopintojen harjoitustyö: Tietokantasovellus
+      </h2>
+    </div>
+    <Header
+      as="h2"
+    >
+      Users
+    </Header>
+    <Form
+      as="form"
+      id="myForm"
+      onSubmit={[Function]}
+    >
+      <Table
+        as="table"
+        color="yellow"
+        fixed={true}
+        singleLine={true}
       >
-        <TableRow
-          as="tr"
-          cellAs="td"
+        <TableHeader
+          as="thead"
         >
-          <TableHeaderCell
-            as="th"
+          <TableRow
+            as="tr"
+            cellAs="td"
           >
-            Name
-          </TableHeaderCell>
-          <TableHeaderCell
-            as="th"
-          >
-            Status
-          </TableHeaderCell>
-        </TableRow>
-      </TableHeader>
-      <TableBody
-        as="tbody"
-      >
-        <TableRow
-          as="tr"
-          cellAs="td"
-          key="10010"
-        >
-          <TableCell
-            as="td"
-          >
-            Pää
-             
-            Opettaja
-            <br />
-            <a
-              href="mailto:paa.opettaja@helsinki.invalid"
+            <TableHeaderCell
+              as="th"
             >
-              paa.opettaja@helsinki.invalid
-            </a>
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            <div>
-              <Label
-                color="orange"
-                horizontal={true}
-              >
-                Teacher
-              </Label>
-            </div>
-          </TableCell>
-        </TableRow>
-        <TableRow
-          as="tr"
-          cellAs="td"
-          key="10012"
-        >
-          <TableCell
-            as="td"
-          >
-            Aimo
-             
-            Assistentti
-            <br />
-            <a
-              href="mailto:aimo.assistentti@helsinki.invalid"
+              Name
+            </TableHeaderCell>
+            <TableHeaderCell
+              as="th"
             >
-              aimo.assistentti@helsinki.invalid
-            </a>
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            <div>
-              <Label
-                color="orange"
-                horizontal={true}
-              >
-                Assistant
-              </Label>
-              <Button
-                as="button"
-                color="green"
-                onClick={[Function]}
-                size="tiny"
-              >
-                Remove assistant
-              </Button>
-            </div>
-          </TableCell>
-        </TableRow>
-        <TableRow
-          as="tr"
-          cellAs="td"
-          key="10011"
+              Status
+            </TableHeaderCell>
+          </TableRow>
+        </TableHeader>
+        <TableBody
+          as="tbody"
         >
-          <TableCell
-            as="td"
+          <TableRow
+            as="tr"
+            cellAs="td"
+            key="10010"
           >
-            Sivu
-             
-            Opiskelija
-            <br />
-            <a
-              href="mailto:paa.opettaja@helsinki.invalid"
+            <TableCell
+              as="td"
             >
-              paa.opettaja@helsinki.invalid
-            </a>
-          </TableCell>
-          <TableCell
-            as="td"
-          >
-            <div>
-              <Button
-                as="button"
-                color="green"
-                onClick={[Function]}
-                size="tiny"
+              Pää
+               
+              Opettaja
+              <br />
+              <a
+                href="mailto:paa.opettaja@helsinki.invalid"
               >
-                Add assistant
-              </Button>
-            </div>
-          </TableCell>
-        </TableRow>
-      </TableBody>
-    </Table>
-  </Form>
-</div>
+                paa.opettaja@helsinki.invalid
+              </a>
+            </TableCell>
+            <TableCell
+              as="td"
+            >
+              <div>
+                <Label
+                  color="orange"
+                  horizontal={true}
+                >
+                  Teacher
+                </Label>
+              </div>
+            </TableCell>
+          </TableRow>
+          <TableRow
+            as="tr"
+            cellAs="td"
+            key="10012"
+          >
+            <TableCell
+              as="td"
+            >
+              Aimo
+               
+              Assistentti
+              <br />
+              <a
+                href="mailto:aimo.assistentti@helsinki.invalid"
+              >
+                aimo.assistentti@helsinki.invalid
+              </a>
+            </TableCell>
+            <TableCell
+              as="td"
+            >
+              <div>
+                <Label
+                  color="orange"
+                  horizontal={true}
+                >
+                  Assistant
+                </Label>
+                <Button
+                  as="button"
+                  color="green"
+                  onClick={[Function]}
+                  size="tiny"
+                >
+                  Remove assistant
+                </Button>
+              </div>
+            </TableCell>
+          </TableRow>
+          <TableRow
+            as="tr"
+            cellAs="td"
+            key="10011"
+          >
+            <TableCell
+              as="td"
+            >
+              Sivu
+               
+              Opiskelija
+              <br />
+              <a
+                href="mailto:paa.opettaja@helsinki.invalid"
+              >
+                paa.opettaja@helsinki.invalid
+              </a>
+            </TableCell>
+            <TableCell
+              as="td"
+            >
+              <div>
+                <Button
+                  as="button"
+                  color="green"
+                  onClick={[Function]}
+                  size="tiny"
+                >
+                  Add assistant
+                </Button>
+              </div>
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    </Form>
+  </div>
+</Fragment>
 `;

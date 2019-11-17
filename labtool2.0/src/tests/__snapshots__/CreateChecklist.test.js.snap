@@ -1,544 +1,286 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`<CreateChecklist /> component should render correctly 1`] = `
-<div
-  className="CreateChecklist"
->
-  <Connect(BackButton)
-    cleanup={[Function]}
-    preset="modifyCIPage"
+<Fragment>
+  <_default
+    title="Create checklist"
   />
-  <Header>
-    Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit
-  </Header>
   <div
-    className="editForm"
+    className="CreateChecklist"
   >
+    <Connect(BackButton)
+      cleanup={[Function]}
+      preset="modifyCIPage"
+    />
+    <Header>
+      Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit
+    </Header>
     <div
-      className="topOptions"
+      className="editForm"
     >
-      <Dropdown
-        additionLabel="Add "
-        additionPosition="top"
-        closeOnBlur={true}
-        closeOnEscape={true}
-        deburr={false}
-        icon="dropdown"
-        id="weekDropdown"
-        minCharacters={1}
-        noResultsMessage="No results found."
-        onChange={[Function]}
-        openOnFocus={true}
-        options={Array []}
-        placeholder="Select Checklist"
-        renderLabel={[Function]}
-        searchInput="text"
-        selectOnBlur={true}
-        selectOnNavigation={true}
-        selection={true}
-        value="week6"
-        wrapSelection={true}
-      />
       <div
-        className="copyForm"
+        className="topOptions"
       >
-        <Button
-          as="button"
-          disabled={true}
-          onClick={[Function]}
-          type="button"
-        >
-          Copy checklist
-        </Button>
         <Dropdown
           additionLabel="Add "
           additionPosition="top"
-          className="weekDropdown"
           closeOnBlur={true}
           closeOnEscape={true}
           deburr={false}
-          disabled={false}
           icon="dropdown"
+          id="weekDropdown"
           minCharacters={1}
           noResultsMessage="No results found."
           onChange={[Function]}
           openOnFocus={true}
           options={Array []}
-          placeholder="...from another week"
+          placeholder="Select Checklist"
           renderLabel={[Function]}
           searchInput="text"
           selectOnBlur={true}
           selectOnNavigation={true}
           selection={true}
+          value="week6"
           wrapSelection={true}
         />
-         
-        <Dropdown
-          additionLabel="Add "
-          additionPosition="top"
-          className="courseDropdown"
-          closeOnBlur={true}
-          closeOnEscape={true}
-          deburr={false}
-          disabled={false}
-          icon="dropdown"
-          minCharacters={1}
-          noResultsMessage="No results found."
-          onChange={[Function]}
-          openOnFocus={true}
-          options={
-            Array [
-              Object {
-                "text": "Ohjelmistotekniikan menetelmät (11.03.2018)",
-                "value": 10012,
-              },
-            ]
-          }
-          placeholder="...from another course"
-          renderLabel={[Function]}
-          searchInput="text"
-          selectOnBlur={true}
-          selectOnNavigation={true}
-          selection={true}
-          value={null}
-          wrapSelection={true}
-        />
-      </div>
-      <div
-        className="jsonButtons"
-      >
-        <JsonEdit
-          downloadName="TKT20010.2018.K.A.1_week6.json"
-          initialData={
-            Object {
-              "Koodi": Array [
-                Object {
-                  "checkedPoints": 2,
-                  "name": "Koodin laatu",
-                  "textWhenOff": "Koodin laadussa parantamisen varaa",
-                  "textWhenOn": "Koodin laatu kiitettävää",
-                  "uncheckedPoints": 0,
-                },
-              ],
-              "Repo": Array [
-                Object {
-                  "checkedPoints": 0,
-                  "name": "Readme kunnossa",
-                  "textWhenOff": "Readmessa feelua",
-                  "textWhenOn": "",
-                  "uncheckedPoints": -1,
-                },
-              ],
-            }
-          }
-          onImport={[Function]}
-        />
-      </div>
-    </div>
-    <div>
-      <form
-        onSubmit={[Function]}
-      >
-        <Button
-          as="button"
-          className="saveButton"
-          color="green"
-          disabled={true}
-          size="large"
-          type="submit"
+        <div
+          className="copyForm"
         >
-          <div
-            className="saveButtonText"
+          <Button
+            as="button"
+            disabled={true}
+            onClick={[Function]}
+            type="button"
           >
-            Save
-          </div>
-        </Button>
-        <br />
-        <br />
-      </form>
-      <div>
-        <Card
-          color="red"
-          fluid={true}
-          key="Koodi"
-        >
-          <CardContent>
-            <Header>
-              Koodi
-               
-              <Button
-                as="button"
-                className="deleteButton"
-                color="red"
-                onClick={[Function]}
-                size="tiny"
-                type="button"
-              >
-                <div
-                  className="deleteButtonText"
-                >
-                  Delete topic
-                </div>
-              </Button>
-            </Header>
-            <div>
-              <p>
-                Max points: 
-                <strong
-                  className="bestPointsNumber"
-                >
-                  2
-                </strong>
-                <span />
-              </p>
-            </div>
-          </CardContent>
-          <CardContent
-            key="Koodin laatu"
-          >
-            <Header>
-              Koodin laatu
-               
-              <Button
-                as="button"
-                className="deleteButton"
-                color="red"
-                onClick={[Function]}
-                size="tiny"
-                type="button"
-              >
-                <div
-                  className="deleteButtonText"
-                >
-                  Delete checkbox
-                </div>
-              </Button>
-            </Header>
-            <div
-              className="formField"
-            >
-              <Label>
-                Points when checked
-              </Label>
-              <Input
-                className="numberField"
-                onBlur={[Function]}
-                onChange={[Function]}
-                step="0.01"
-                type="number"
-                value={2}
-              />
-            </div>
-            <div
-              className="formField"
-            >
-              <Label>
-                Text
-              </Label>
-              <Input
-                className="textField"
-                onChange={[Function]}
-                type="text"
-                value="Koodin laatu kiitettävää"
-              />
-            </div>
-            <div
-              className="formField"
-            >
-              <Label>
-                Points when unchecked
-              </Label>
-              <Input
-                className="numberField"
-                onBlur={[Function]}
-                onChange={[Function]}
-                step="0.01"
-                type="number"
-                value={0}
-              />
-            </div>
-            <div
-              className="formField"
-            >
-              <Label>
-                Text
-              </Label>
-              <Input
-                className="textField"
-                onChange={[Function]}
-                type="text"
-                value="Koodin laadussa parantamisen varaa"
-              />
-            </div>
-          </CardContent>
-          <form
-            className="addForm"
-            onSubmit={[Function]}
-          >
-            <Popup
-              content="Add new checkbox"
-              disabled={false}
-              eventsEnabled={true}
-              offset={0}
-              on={
-                Array [
-                  "click",
-                  "hover",
-                ]
-              }
-              pinned={false}
-              position="top left"
-              trigger={
-                <Button
-                  as="button"
-                  circular={true}
-                  icon={
-                    Object {
-                      "name": "add",
-                    }
-                  }
-                  type="submit"
-                />
-              }
-            />
-            <div />
-          </form>
-        </Card>
-        <Card
-          color="red"
-          fluid={true}
-          key="Repo"
-        >
-          <CardContent>
-            <Header>
-              Repo
-               
-              <Button
-                as="button"
-                className="deleteButton"
-                color="red"
-                onClick={[Function]}
-                size="tiny"
-                type="button"
-              >
-                <div
-                  className="deleteButtonText"
-                >
-                  Delete topic
-                </div>
-              </Button>
-            </Header>
-            <div>
-              <p>
-                Max points: 
-                <strong
-                  className="bestPointsNumber"
-                >
-                  0
-                </strong>
-                <span />
-              </p>
-            </div>
-          </CardContent>
-          <CardContent
-            key="Readme kunnossa"
-          >
-            <Header>
-              Readme kunnossa
-               
-              <Button
-                as="button"
-                className="deleteButton"
-                color="red"
-                onClick={[Function]}
-                size="tiny"
-                type="button"
-              >
-                <div
-                  className="deleteButtonText"
-                >
-                  Delete checkbox
-                </div>
-              </Button>
-            </Header>
-            <div
-              className="formField"
-            >
-              <Label>
-                Points when checked
-              </Label>
-              <Input
-                className="numberField"
-                onBlur={[Function]}
-                onChange={[Function]}
-                step="0.01"
-                type="number"
-                value={0}
-              />
-            </div>
-            <div
-              className="formField"
-            >
-              <Label>
-                Text
-              </Label>
-              <Input
-                className="textField"
-                onChange={[Function]}
-                type="text"
-                value=""
-              />
-            </div>
-            <div
-              className="formField"
-            >
-              <Label>
-                Points when unchecked
-              </Label>
-              <Input
-                className="numberField"
-                onBlur={[Function]}
-                onChange={[Function]}
-                step="0.01"
-                type="number"
-                value={-1}
-              />
-            </div>
-            <div
-              className="formField"
-            >
-              <Label>
-                Text
-              </Label>
-              <Input
-                className="textField"
-                onChange={[Function]}
-                type="text"
-                value="Readmessa feelua"
-              />
-            </div>
-          </CardContent>
-          <form
-            className="addForm"
-            onSubmit={[Function]}
-          >
-            <Popup
-              content="Add new checkbox"
-              disabled={false}
-              eventsEnabled={true}
-              offset={0}
-              on={
-                Array [
-                  "click",
-                  "hover",
-                ]
-              }
-              pinned={false}
-              position="top left"
-              trigger={
-                <Button
-                  as="button"
-                  circular={true}
-                  icon={
-                    Object {
-                      "name": "add",
-                    }
-                  }
-                  type="submit"
-                />
-              }
-            />
-            <div />
-          </form>
-        </Card>
-        <form
-          className="addForm"
-          onSubmit={[Function]}
-        >
-          <Popup
-            content="Add new topic"
+            Copy checklist
+          </Button>
+          <Dropdown
+            additionLabel="Add "
+            additionPosition="top"
+            className="weekDropdown"
+            closeOnBlur={true}
+            closeOnEscape={true}
+            deburr={false}
             disabled={false}
-            eventsEnabled={true}
-            offset={0}
-            on={
+            icon="dropdown"
+            minCharacters={1}
+            noResultsMessage="No results found."
+            onChange={[Function]}
+            openOnFocus={true}
+            options={Array []}
+            placeholder="...from another week"
+            renderLabel={[Function]}
+            searchInput="text"
+            selectOnBlur={true}
+            selectOnNavigation={true}
+            selection={true}
+            wrapSelection={true}
+          />
+           
+          <Dropdown
+            additionLabel="Add "
+            additionPosition="top"
+            className="courseDropdown"
+            closeOnBlur={true}
+            closeOnEscape={true}
+            deburr={false}
+            disabled={false}
+            icon="dropdown"
+            minCharacters={1}
+            noResultsMessage="No results found."
+            onChange={[Function]}
+            openOnFocus={true}
+            options={
               Array [
-                "click",
-                "hover",
+                Object {
+                  "text": "Ohjelmistotekniikan menetelmät (11.03.2018)",
+                  "value": 10012,
+                },
               ]
             }
-            pinned={false}
-            position="top left"
-            trigger={
-              <Button
-                as="button"
-                circular={true}
-                icon={
-                  Object {
-                    "name": "add",
-                    "size": "large",
-                  }
-                }
-                type="submit"
-              />
-            }
+            placeholder="...from another course"
+            renderLabel={[Function]}
+            searchInput="text"
+            selectOnBlur={true}
+            selectOnNavigation={true}
+            selection={true}
+            value={null}
+            wrapSelection={true}
           />
-          <div />
-        </form>
+        </div>
+        <div
+          className="jsonButtons"
+        >
+          <JsonEdit
+            downloadName="TKT20010.2018.K.A.1_week6.json"
+            initialData={
+              Object {
+                "Koodi": Array [
+                  Object {
+                    "checkedPoints": 2,
+                    "name": "Koodin laatu",
+                    "textWhenOff": "Koodin laadussa parantamisen varaa",
+                    "textWhenOn": "Koodin laatu kiitettävää",
+                    "uncheckedPoints": 0,
+                  },
+                ],
+                "Repo": Array [
+                  Object {
+                    "checkedPoints": 0,
+                    "name": "Readme kunnossa",
+                    "textWhenOff": "Readmessa feelua",
+                    "textWhenOn": "",
+                    "uncheckedPoints": -1,
+                  },
+                ],
+              }
+            }
+            onImport={[Function]}
+          />
+        </div>
       </div>
       <div>
-        <Label>
-          Maximum points
-        </Label>
-        <Input
-          className="maxPointsInput"
-          onChange={[Function]}
-          step="0.01"
-          style={
-            Object {
-              "width": "100px",
-            }
-          }
-          type="number"
-          value=""
-        />
-        <Popup
-          className="infoText"
-          content="Defining maximum points yourself is not mandatory. If no value is given, default weekly points remain valid."
-          disabled={false}
-          eventsEnabled={true}
-          offset={0}
-          on={
-            Array [
-              "click",
-              "hover",
-            ]
-          }
-          pinned={false}
-          position="top left"
-          trigger={
-            <Icon
-              as="i"
-              name="question circle"
-            />
-          }
-        />
-      </div>
-      <Card
-        className="maxPointsCard"
-      >
-        <CardContent>
-          <p>
-            Total max points: 
-            <strong
-              className="maxPointsNumber"
+        <form
+          onSubmit={[Function]}
+        >
+          <Button
+            as="button"
+            className="saveButton"
+            color="green"
+            disabled={true}
+            size="large"
+            type="submit"
+          >
+            <div
+              className="saveButtonText"
             >
-              2
-            </strong>
-            <span>
-               
+              Save
+            </div>
+          </Button>
+          <br />
+          <br />
+        </form>
+        <div>
+          <Card
+            color="red"
+            fluid={true}
+            key="Koodi"
+          >
+            <CardContent>
+              <Header>
+                Koodi
+                 
+                <Button
+                  as="button"
+                  className="deleteButton"
+                  color="red"
+                  onClick={[Function]}
+                  size="tiny"
+                  type="button"
+                >
+                  <div
+                    className="deleteButtonText"
+                  >
+                    Delete topic
+                  </div>
+                </Button>
+              </Header>
+              <div>
+                <p>
+                  Max points: 
+                  <strong
+                    className="bestPointsNumber"
+                  >
+                    2
+                  </strong>
+                  <span />
+                </p>
+              </div>
+            </CardContent>
+            <CardContent
+              key="Koodin laatu"
+            >
+              <Header>
+                Koodin laatu
+                 
+                <Button
+                  as="button"
+                  className="deleteButton"
+                  color="red"
+                  onClick={[Function]}
+                  size="tiny"
+                  type="button"
+                >
+                  <div
+                    className="deleteButtonText"
+                  >
+                    Delete checkbox
+                  </div>
+                </Button>
+              </Header>
+              <div
+                className="formField"
+              >
+                <Label>
+                  Points when checked
+                </Label>
+                <Input
+                  className="numberField"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  step="0.01"
+                  type="number"
+                  value={2}
+                />
+              </div>
+              <div
+                className="formField"
+              >
+                <Label>
+                  Text
+                </Label>
+                <Input
+                  className="textField"
+                  onChange={[Function]}
+                  type="text"
+                  value="Koodin laatu kiitettävää"
+                />
+              </div>
+              <div
+                className="formField"
+              >
+                <Label>
+                  Points when unchecked
+                </Label>
+                <Input
+                  className="numberField"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  step="0.01"
+                  type="number"
+                  value={0}
+                />
+              </div>
+              <div
+                className="formField"
+              >
+                <Label>
+                  Text
+                </Label>
+                <Input
+                  className="textField"
+                  onChange={[Function]}
+                  type="text"
+                  value="Koodin laadussa parantamisen varaa"
+                />
+              </div>
+            </CardContent>
+            <form
+              className="addForm"
+              onSubmit={[Function]}
+            >
               <Popup
-                className="maxPointsIcon"
-                content="The total does not match maximum weekly points for this course."
+                content="Add new checkbox"
                 disabled={false}
                 eventsEnabled={true}
                 offset={0}
@@ -551,39 +293,302 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
                 pinned={false}
                 position="top left"
                 trigger={
-                  <Icon
-                    as="i"
-                    color="red"
-                    name="delete"
-                    size="large"
+                  <Button
+                    as="button"
+                    circular={true}
+                    icon={
+                      Object {
+                        "name": "add",
+                      }
+                    }
+                    type="submit"
                   />
                 }
               />
-            </span>
-          </p>
-        </CardContent>
-      </Card>
-      <form
-        onSubmit={[Function]}
-      >
-        <Button
-          as="button"
-          className="saveButton"
-          color="green"
-          disabled={true}
-          size="large"
-          type="submit"
-        >
-          <div
-            className="saveButtonText"
+              <div />
+            </form>
+          </Card>
+          <Card
+            color="red"
+            fluid={true}
+            key="Repo"
           >
-            Save
-          </div>
-        </Button>
-        <br />
-        <br />
-      </form>
+            <CardContent>
+              <Header>
+                Repo
+                 
+                <Button
+                  as="button"
+                  className="deleteButton"
+                  color="red"
+                  onClick={[Function]}
+                  size="tiny"
+                  type="button"
+                >
+                  <div
+                    className="deleteButtonText"
+                  >
+                    Delete topic
+                  </div>
+                </Button>
+              </Header>
+              <div>
+                <p>
+                  Max points: 
+                  <strong
+                    className="bestPointsNumber"
+                  >
+                    0
+                  </strong>
+                  <span />
+                </p>
+              </div>
+            </CardContent>
+            <CardContent
+              key="Readme kunnossa"
+            >
+              <Header>
+                Readme kunnossa
+                 
+                <Button
+                  as="button"
+                  className="deleteButton"
+                  color="red"
+                  onClick={[Function]}
+                  size="tiny"
+                  type="button"
+                >
+                  <div
+                    className="deleteButtonText"
+                  >
+                    Delete checkbox
+                  </div>
+                </Button>
+              </Header>
+              <div
+                className="formField"
+              >
+                <Label>
+                  Points when checked
+                </Label>
+                <Input
+                  className="numberField"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  step="0.01"
+                  type="number"
+                  value={0}
+                />
+              </div>
+              <div
+                className="formField"
+              >
+                <Label>
+                  Text
+                </Label>
+                <Input
+                  className="textField"
+                  onChange={[Function]}
+                  type="text"
+                  value=""
+                />
+              </div>
+              <div
+                className="formField"
+              >
+                <Label>
+                  Points when unchecked
+                </Label>
+                <Input
+                  className="numberField"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  step="0.01"
+                  type="number"
+                  value={-1}
+                />
+              </div>
+              <div
+                className="formField"
+              >
+                <Label>
+                  Text
+                </Label>
+                <Input
+                  className="textField"
+                  onChange={[Function]}
+                  type="text"
+                  value="Readmessa feelua"
+                />
+              </div>
+            </CardContent>
+            <form
+              className="addForm"
+              onSubmit={[Function]}
+            >
+              <Popup
+                content="Add new checkbox"
+                disabled={false}
+                eventsEnabled={true}
+                offset={0}
+                on={
+                  Array [
+                    "click",
+                    "hover",
+                  ]
+                }
+                pinned={false}
+                position="top left"
+                trigger={
+                  <Button
+                    as="button"
+                    circular={true}
+                    icon={
+                      Object {
+                        "name": "add",
+                      }
+                    }
+                    type="submit"
+                  />
+                }
+              />
+              <div />
+            </form>
+          </Card>
+          <form
+            className="addForm"
+            onSubmit={[Function]}
+          >
+            <Popup
+              content="Add new topic"
+              disabled={false}
+              eventsEnabled={true}
+              offset={0}
+              on={
+                Array [
+                  "click",
+                  "hover",
+                ]
+              }
+              pinned={false}
+              position="top left"
+              trigger={
+                <Button
+                  as="button"
+                  circular={true}
+                  icon={
+                    Object {
+                      "name": "add",
+                      "size": "large",
+                    }
+                  }
+                  type="submit"
+                />
+              }
+            />
+            <div />
+          </form>
+        </div>
+        <div>
+          <Label>
+            Maximum points
+          </Label>
+          <Input
+            className="maxPointsInput"
+            onChange={[Function]}
+            step="0.01"
+            style={
+              Object {
+                "width": "100px",
+              }
+            }
+            type="number"
+            value=""
+          />
+          <Popup
+            className="infoText"
+            content="Defining maximum points yourself is not mandatory. If no value is given, default weekly points remain valid."
+            disabled={false}
+            eventsEnabled={true}
+            offset={0}
+            on={
+              Array [
+                "click",
+                "hover",
+              ]
+            }
+            pinned={false}
+            position="top left"
+            trigger={
+              <Icon
+                as="i"
+                name="question circle"
+              />
+            }
+          />
+        </div>
+        <Card
+          className="maxPointsCard"
+        >
+          <CardContent>
+            <p>
+              Total max points: 
+              <strong
+                className="maxPointsNumber"
+              >
+                2
+              </strong>
+              <span>
+                 
+                <Popup
+                  className="maxPointsIcon"
+                  content="The total does not match maximum weekly points for this course."
+                  disabled={false}
+                  eventsEnabled={true}
+                  offset={0}
+                  on={
+                    Array [
+                      "click",
+                      "hover",
+                    ]
+                  }
+                  pinned={false}
+                  position="top left"
+                  trigger={
+                    <Icon
+                      as="i"
+                      color="red"
+                      name="delete"
+                      size="large"
+                    />
+                  }
+                />
+              </span>
+            </p>
+          </CardContent>
+        </Card>
+        <form
+          onSubmit={[Function]}
+        >
+          <Button
+            as="button"
+            className="saveButton"
+            color="green"
+            disabled={true}
+            size="large"
+            type="submit"
+          >
+            <div
+              className="saveButtonText"
+            >
+              Save
+            </div>
+          </Button>
+          <br />
+          <br />
+        </form>
+      </div>
     </div>
   </div>
-</div>
+</Fragment>
 `;
