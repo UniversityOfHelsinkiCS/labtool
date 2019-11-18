@@ -65,9 +65,31 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
           "role": "student",
         }
       }
-      selectedInstance={
-        Object {
-          "data": Object {
+    }
+    courseId=""
+  />
+</div>
+`;
+
+exports[`<CoursePage /> as teacher CoursePage Component should render correctly 1`] = `
+<div
+  style={
+    Object {
+      "marginBottom": "-20em",
+      "overflowX": "auto",
+      "overflowY": "hidden",
+      "paddingBottom": "20em",
+    }
+  }
+>
+  <CoursePageTeacherHeader
+    activateCourse={[Function]}
+    courseInstance={Object {}}
+    moveToNextWeek={[Function]}
+    selectedInstance={
+      Object {
+        "data": Array [
+          Object {
             "Tags": Array [],
             "User": Object {
               "createdAt": "2018-03-26T00:00:00.000Z",
