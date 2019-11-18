@@ -1,0 +1,131 @@
+Table CourseInstances {
+    id int [pk]
+    name string
+    start timestamp
+    end timestamp
+    active boolean
+    weekAmount int
+    weekMaxPoints double
+    currentWeek int
+    currentCodeReview int[]
+    amountOfCodeReviews int
+    codeReviewActive boolean
+    finalReview boolean
+    ohid string
+    coursesPage string
+    coursesMaterial string
+}
+
+Table Users {
+    id int [pk]
+    username string
+    email string
+    firsts string
+    lastname string
+    token string
+    studentNumber string
+    teacher boolean
+    sysop boolean
+}
+
+Table StudentInstances {
+    id int [pk]
+    userId int [ref: > Users.id]
+    courseInstanceId int [ref: > CourseInstances.id]
+    teacherInstanceId null int [ref: > TeacherInstances.id]
+    github string
+    projectName string
+    dropped boolean
+    issuesDisabled boolean
+    issuesDisabledCheckedAt timestamp
+    validRegistration boolean
+    repoExists null boolean
+}
+
+Table TeacherInstances {
+    id int [pk]
+    userId int [ref: > Users.id]
+    courseInstanceId int [ref: > CourseInstances.id]
+    instructor boolean
+}
+
+Table Weeks {
+    id int [pk]
+    studentInstanceId [ref: > StudentInstances.id]
+    points double
+    weekNumber int
+    feedback string
+    notified boolean
+    instructorNotes string
+}
+
+Table Tags {
+    id int [pk]
+    name string
+    color string
+    courseInstanceId [ref: > CourseInstances.id]
+}
+
+Table StudentTags {
+    id int [pk]
+    studentInstanceId [ref: > StudentInstances.id]
+    tagId [ref: > Tags.id]
+}
+
+Table Comments {
+    id int [pk]
+    comment string
+    hidden boolean
+    weekId int
+    from string
+    userId int [ref: > Users.id]
+    notified boolean
+    isRead int[]
+}
+
+Table CodeReviews {
+    id int [pk]
+    studentInstanceId int [ref: > StudentInstances.id]
+    points double
+    reviewNumber int
+    linkToReview string
+    toReview null int [ref: > StudentInstances.id]
+    repoToReview null string
+}
+
+Table Checklists {
+    id int [pk]
+    courseInstanceId int [ref: > CourseInstances.id]
+    master boolean
+    maxPoints double
+    week null int
+    codeReviewNumber null int
+}
+
+Table ChecklistItems {
+    id int [pk]
+    checklistId int [ref: > Checklists.id]
+    name string
+    textWhenOff string
+    textWhenOn string
+    checkedPoints double
+    uncheckedPoints double
+    category string
+    order int
+}
+
+Table ReviewChecks {
+    id int [pk]
+    ChecklistItemId int [ref: > ChecklistItems.id]
+    checked boolean
+    weekId null int [ref: > Weeks.id]
+    codeReviewId null int [ref: > CodeReviews.id]
+}
+
+Table WeekDrafts {
+    id int [pk]
+    studentInstanceId int [ref: > StudentInstances.id]
+    weekNumber int
+    data json
+}
+
