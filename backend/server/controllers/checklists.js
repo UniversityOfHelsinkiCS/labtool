@@ -82,6 +82,10 @@ module.exports = {
                     res.status(400).send('"textWhenOff" must have a string value or be undefined.')
                   }
                   break
+                case 'minimumRequirement':
+                  if (typeof row[key] !== 'boolean') {
+                    res.status(400).send('"minimumRequirement" must be a boolean')
+                  }
                 default:
                   res.status(400).send(`Found unexpected key: ${key}`)
               }
@@ -148,7 +152,8 @@ module.exports = {
           uncheckedPoints: checklistItem.uncheckedPoints,
           category,
           checklistId: result[1].dataValues.id,
-          order: checklistOrder + index
+          order: checklistOrder + index,
+          minimumRequirement: checklistItem.minimumRequirement
         }, { returning: true })))
 
         checklistJson[category] = checklistItems.map((item) => {
