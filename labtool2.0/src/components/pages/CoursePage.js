@@ -19,6 +19,8 @@ import CoursePageTeacherBulkForm from './CoursePage/TeacherBulkForm'
 import CoursePageTeacherHeader from './CoursePage/TeacherHeader'
 import CoursePageTeacherMain from './CoursePage/TeacherMain'
 
+// This will receive the change.
+
 export const CoursePage = props => {
   useEffect(() => {
     // run on component mount
