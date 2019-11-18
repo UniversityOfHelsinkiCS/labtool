@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false
       },
       comment: {
-        type: DataTypes.STRING
+        type: DataTypes.TEXT
       },
       weekId: {
         type: DataTypes.INTEGER,

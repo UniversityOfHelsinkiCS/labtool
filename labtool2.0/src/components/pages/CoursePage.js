@@ -307,7 +307,7 @@ export const CoursePage = props => {
       bulkMarkInvalid
     }
     return (
-      <div style={{ overflowX: 'auto', overflowY: 'hidden', marginBottom: '20em' }}>
+      <div style={{ overflowX: 'auto', overflowY: 'hidden', marginBottom: '-20em', paddingBottom: '20em' }}>
         <CoursePageTeacherHeader selectedInstance={selectedInstance} courseInstance={courseInstance} activateCourse={activateCourse} moveToNextWeek={moveToNextWeek} />
         <CoursePageTeacherMain
           courseId={courseId}
