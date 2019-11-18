@@ -19,7 +19,7 @@ export const HorizontalScrollable = props => {
 
     const targetElement = scrollbar.children[0]
 
-    if (e.key == 'ArrowLeft' || e.key == 'ArrowRight') {
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
       // forward key event to target element to trigger scroll
       // tabIndex necessary for focus, which is necessary for key events
       targetElement.tabIndex = 0
@@ -46,6 +46,7 @@ export const HorizontalScrollable = props => {
   const scrollBarReady = element => {
     scrollbar = element
     resizeBar()
+    updateSticky()
   }
   const containerReady = element => {
     container = element
@@ -84,7 +85,13 @@ export const HorizontalScrollable = props => {
 
       scrollbar.style.overflowX = contentWidth > viewWidth ? 'scroll' : 'auto'
       scrollbar.scrollLeft = oldScrollLeft
+      setContentScroll(scrollbar.scrollLeft)
     }
+  }
+
+  const setContentScroll = x => {
+    // use translateX because a repaint is way faster than a reflow caused by using .left
+    window.requestAnimationFrame(() => (content ? content.style.transform = `translateX(-${x}px)` : null))
   }
 
   const updateScrollX = doNotUpdate => e => {
@@ -113,7 +120,7 @@ export const HorizontalScrollable = props => {
 
     if (doNotUpdate !== 'content' && content) {
       antibounce.content = true
-      window.requestAnimationFrame(() => (content.style.left = `-${newX}px`))
+      setContentScroll(newX)
     }
     if (doNotUpdate !== 'scrollbar' && scrollbar) {
       antibounce.scrollbar = true
