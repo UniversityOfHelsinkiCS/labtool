@@ -47,6 +47,8 @@ export const CoursePage = props => {
     document.body.removeChild(tempElement)
   }
 
+  // This will be changed.
+
   const exportCSV = () => {
     const download = props.downloadFile || downloadFile
     const twoPad = number => `00${number}`.slice(-2)
