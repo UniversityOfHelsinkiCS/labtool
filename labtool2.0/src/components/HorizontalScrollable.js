@@ -19,7 +19,7 @@ export const HorizontalScrollable = props => {
 
     const targetElement = scrollbar.children[0]
 
-    if (e.key == 'ArrowLeft' || e.key == 'ArrowRight') {
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
       // forward key event to target element to trigger scroll
       // tabIndex necessary for focus, which is necessary for key events
       targetElement.tabIndex = 0
@@ -46,6 +46,7 @@ export const HorizontalScrollable = props => {
   const scrollBarReady = element => {
     scrollbar = element
     resizeBar()
+    updateSticky()
   }
   const containerReady = element => {
     container = element
@@ -89,8 +90,8 @@ export const HorizontalScrollable = props => {
   }
 
   const setContentScroll = x => {
-    // TODO: is this possible without causing a rerender (modifying CSS causes one)?
-    window.requestAnimationFrame(() => (content.style.left = `-${x}px`))
+    // use translateX because a repaint is way faster than a reflow caused by using .left
+    window.requestAnimationFrame(() => (content ? content.style.transform = `translateX(-${x}px)` : null))
   }
 
   const updateScrollX = doNotUpdate => e => {
