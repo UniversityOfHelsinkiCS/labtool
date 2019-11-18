@@ -100,8 +100,9 @@ export const MassEmailPage = props => {
       <div className="TeacherMassEmailPart">
         <Header as="h2">Send email to students </Header>
 
-        <Button onClick={selectAllNonDroppedStudents}>Select all non-dropped students</Button>
-
+        <Button style={{ marginBottom: '8px' }} onClick={selectAllNonDroppedStudents}>
+          Select all active students
+        </Button>
         <Form onSubmit={handleSubmit}>
           <StudentTable
             columns={['select', 'instructor']}
