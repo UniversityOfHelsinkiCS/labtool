@@ -306,7 +306,7 @@ export const StudentTableRow = props => {
           <div>
             {coursePageLogic.showTagDropdown === data.id ? (
               <div>
-                <Dropdown id={'tagDropdown'} style={{ float: 'left' }} selectOnBlur={false} options={dropDownTags} onChange={addTag(data.id)} placeholder="Choose tag" fluid selection />
+                <Dropdown id={'tagDropdown'} upward={false} style={{ float: 'left' }} selectOnBlur={false} options={dropDownTags} onChange={addTag(data.id)} placeholder="Choose tag" fluid selection />
               </div>
             ) : (
               <div />
@@ -353,6 +353,7 @@ export const StudentTableRow = props => {
                   <Dropdown
                     id={'assistantDropdown'}
                     selectOnBlur={false}
+                    upward={false}
                     options={dropDownTeachers}
                     onChange={updateTeacher(data.id, data.teacherInstanceId)}
                     placeholder="Select teacher"
