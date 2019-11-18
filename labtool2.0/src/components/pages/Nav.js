@@ -5,6 +5,8 @@ import { connect } from 'react-redux'
 import { Menu, Icon, Image } from 'semantic-ui-react'
 import LogoutButton from '../LogoutButton'
 
+// Changes here.
+
 /**
  * Navigation bar component
  */
