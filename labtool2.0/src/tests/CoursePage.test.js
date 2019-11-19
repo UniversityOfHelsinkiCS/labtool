@@ -320,7 +320,8 @@ describe('<CoursePage /> as teacher', () => {
         .find({ children: 'Export CSV of all students' })
         .simulate('click')
 
-      expect(mockDownloadFile).toBeCalledWith(expect.anything(), expect.anything(), expect.stringContaining('Maarit Mirja Opiskelija,014578343,maarit.opiskelija@helsinki.invalid,Tiran labraprojekti'))
+      // TODO: Remember to add the instructor to the following line once it has been implemented!
+      expect(mockDownloadFile).toBeCalledWith(expect.anything(), expect.anything(), expect.stringContaining('Maarit Mirja,Opiskelija,014578343,maarit.opiskelija@helsinki.invalid,Tiran labraprojekti'))
     })
 
     /*
