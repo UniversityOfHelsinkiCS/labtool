@@ -2,10 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { Menu, Icon, Image } from 'semantic-ui-react'
+import { Divider, Menu, Icon, Image } from 'semantic-ui-react'
 import LogoutButton from '../LogoutButton'
-
-// Changes here.
 
 /**
  * Navigation bar component
@@ -25,7 +23,7 @@ const Nav = props => {
         backgroundColor: '#e9af43'
       }}
     >
-      <Menu.Menu position="left">
+      <Menu.Menu position="left" as={Link} to="/labtool/mypage">
         <Menu.Item
           header
           style={{
