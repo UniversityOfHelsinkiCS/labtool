@@ -47,8 +47,6 @@ export const CoursePage = props => {
     document.body.removeChild(tempElement)
   }
 
-  // This will be changed.
-
   const exportCSV = () => {
     const download = props.downloadFile || downloadFile
     const twoPad = number => `00${number}`.slice(-2)
@@ -61,7 +59,7 @@ export const CoursePage = props => {
     const csvFilename = `${courseId}_${dateFormat}.csv`
     const csvResult = []
 
-    const columns = ['Name', 'StudentNo', 'Email', 'ProjectName', 'ProjectURL']
+    const columns = ['First Name', 'Last Name', 'StudentNo', 'Email', 'ProjectName', 'ProjectURL', 'Instructor']
     for (let i = 1; i <= props.selectedInstance.weekAmount; ++i) {
       columns.push(`Week${i}`)
     }
@@ -75,7 +73,10 @@ export const CoursePage = props => {
     csvResult.push(columns.join(','))
 
     students.forEach(student => {
-      const values = [`${student.User.firsts} ${student.User.lastname}`, student.User.studentNumber, student.User.email, student.projectName, student.github]
+      console.log(this)
+      console.log(props)
+      const instructor = 'INSTRUCTOR_HERE'
+      const values = [student.User.firsts, student.User.lastname, student.User.studentNumber, student.User.email, student.projectName, student.github, instructor]
       let sum = 0
       const cr =
         student.codeReviews &&
