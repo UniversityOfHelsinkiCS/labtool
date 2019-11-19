@@ -187,11 +187,11 @@ describe('<CreateChecklist /> component', () => {
 
       it('if user adds maximum points, the given points are shown', () => {
         wrapper.find('.maxPointsInput').simulate('change', { target: { value: '5' } })
-        expect(wrapper.find('.maxPointsNumber').text()).toEqual(String(5))
+        expect(wrapper.find('.maxPointsForWeek').text()).toEqual('Maximum points for this week: 5')
         wrapper.find('.maxPointsInput').simulate('change', { target: { value: '' } })
       })
 
-      it('renders correct value for max points', () => {
+      it('renders correct value for total points of the checklist', () => {
         let maxPoints = 0
         Object.keys(checklist.data).forEach(key => {
           checklist.data[key].forEach(row => {
@@ -202,32 +202,32 @@ describe('<CreateChecklist /> component', () => {
             }
           })
         })
-        expect(wrapper.find('.maxPointsNumber').text()).toEqual(String(maxPoints))
+        expect(wrapper.find('.totalPointsOfChecklist').text()).toEqual(String(maxPoints))
       })
 
-      it('renders the correct icon for max points', () => {
-        let maxPoints = 0
+      it('renders the correct icon for total points of the checklist', () => {
+        let totalPointsOfChecklist = 0
         Object.keys(checklist.data).forEach(key => {
           checklist.data[key].forEach(row => {
             if (row.checkedPoints < row.uncheckedPoints) {
-              maxPoints += row.uncheckedPoints
+              totalPointsOfChecklist += row.uncheckedPoints
             } else {
-              maxPoints += row.checkedPoints
+              totalPointsOfChecklist += row.checkedPoints
             }
           })
         })
-        if (maxPoints === courseInstance[0].weekMaxPoints) {
-          expect(wrapper.find('.maxPointsIcon').prop('content')).toEqual('The total matches maximum weekly points for this course.')
+        if (totalPointsOfChecklist === courseInstance[0].weekMaxPoints) {
+          expect(wrapper.find('.maxPointsIcon').prop('content')).toEqual('The total points match the defaulted maximum weekly points for this course.')
           wrapper.setProps({
-            selectedInstance: { ...courseInstance[0], weekMaxPoints: maxPoints + 1 }
+            selectedInstance: { ...courseInstance[0], weekMaxPoints: totalPointsOfChecklist + 1 }
           })
-          expect(wrapper.find('.maxPointsIcon').prop('content')).toEqual('The total does not match maximum weekly points for this course.')
+          expect(wrapper.find('.maxPointsIcon').prop('content')).toEqual(`The total points don't match the defaulted maximum weekly points for this course.`)
         } else {
-          expect(wrapper.find('.maxPointsIcon').prop('content')).toEqual('The total does not match maximum weekly points for this course.')
+          expect(wrapper.find('.maxPointsIcon').prop('content')).toEqual(`The total points don't match the defaulted maximum weekly points for this course.`)
           wrapper.setProps({
-            selectedInstance: { ...courseInstance[0], weekMaxPoints: maxPoints }
+            selectedInstance: { ...courseInstance[0], weekMaxPoints: totalPointsOfChecklist }
           })
-          expect(wrapper.find('.maxPointsIcon').prop('content')).toEqual('The total matches maximum weekly points for this course.')
+          expect(wrapper.find('.maxPointsIcon').prop('content')).toEqual('The total points match the defaulted maximum weekly points for this course.')
         }
         wrapper.find('#weekDropdown').prop('onChange')(null, { value: `week${courseInstance[0].weekAmount + 1}` })
         expect(wrapper.find('.maxPointsIcon').exists()).toEqual(false)
