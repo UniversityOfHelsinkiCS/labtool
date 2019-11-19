@@ -315,7 +315,7 @@ describe('<CoursePage /> as teacher', () => {
 
     it('can export students as CSV', () => {
       wrapper
-        .find('CoursePageTeacherMain')
+        .find('CoursePageTeacherBulkForm')
         .dive()
         .find({ children: 'Export CSV of all students' })
         .simulate('click')

@@ -549,7 +549,6 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
         "showDropdown": "",
       }
     }
-    exportCSV={[Function]}
     loggedInUser={Object {}}
     selectedInstance={
       Object {
@@ -911,6 +910,115 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
       ]
     }
     dropDownTeachers={Array []}
+    exportCSV={[Function]}
+    selectedInstance={
+      Object {
+        "data": Array [
+          Object {
+            "Tags": Array [],
+            "User": Object {
+              "createdAt": "2018-03-26T00:00:00.000Z",
+              "email": "maarit.opiskelija@helsinki.invalid",
+              "firsts": "Maarit Mirja",
+              "id": 10011,
+              "lastname": "Opiskelija",
+              "studentNumber": "014578343",
+              "sysop": false,
+              "teacher": false,
+              "updatedAt": "2018-03-26T00:00:00.000Z",
+              "username": "tiraopiskelija1",
+            },
+            "codeReviews": Array [],
+            "courseInstanceId": 10011,
+            "createdAt": "2018-03-26T00:00:00.000Z",
+            "dropped": false,
+            "github": "http://github.com/tiralabra1",
+            "id": 10011,
+            "projectName": "Tiran labraprojekti",
+            "teacherInstanceId": 10011,
+            "updatedAt": "2018-03-26T00:00:00.000Z",
+            "userId": 10011,
+            "validRegistration": true,
+            "weeks": Array [],
+          },
+          Object {
+            "Tags": Array [
+              Object {
+                "color": "grey",
+                "courseInstanceId": null,
+                "id": 20008,
+                "name": "DROPPED",
+              },
+              Object {
+                "color": "yellow",
+                "courseInstanceId": null,
+                "id": 20002,
+                "name": "HTML",
+              },
+            ],
+            "User": Object {
+              "createdAt": "2018-03-26T00:00:00.000Z",
+              "email": "teras.henkilo@helsinki.invalid",
+              "firsts": "Teräs",
+              "id": 10031,
+              "lastname": "Henkilö",
+              "studentNumber": "014666666",
+              "sysop": false,
+              "teacher": false,
+              "updatedAt": "2018-03-26T00:00:00.000Z",
+              "username": "superopiskelija",
+            },
+            "codeReviews": Array [],
+            "courseInstanceId": 10011,
+            "createdAt": "2018-03-26T00:00:00.000Z",
+            "dropped": true,
+            "github": "http://github.com/superprojekti",
+            "id": 10031,
+            "projectName": "Tira super projekti",
+            "teacherInstanceId": 10011,
+            "updatedAt": "2018-06-05T07:12:28.603Z",
+            "userId": 10031,
+            "validRegistration": true,
+            "weeks": Array [],
+          },
+          Object {
+            "Tags": Array [
+              Object {
+                "color": "red",
+                "courseInstanceId": null,
+                "id": 20001,
+                "name": "Javascript",
+              },
+            ],
+            "User": Object {
+              "createdAt": "2018-03-26T00:00:00.000Z",
+              "email": "johan.studerande@helsinki.invalid",
+              "firsts": "Johan Wilhelm",
+              "id": 10012,
+              "lastname": "Studerande",
+              "studentNumber": "014553242",
+              "sysop": false,
+              "teacher": false,
+              "updatedAt": "2018-03-26T00:00:00.000Z",
+              "username": "tiraopiskelija2",
+            },
+            "codeReviews": Array [],
+            "courseInstanceId": 10011,
+            "createdAt": "2018-03-26T00:00:00.000Z",
+            "dropped": false,
+            "github": "http://github.com/tiralabra2",
+            "id": 10012,
+            "projectName": "Tiran toinen labraprojekti",
+            "teacherInstanceId": 10011,
+            "updatedAt": "2018-03-26T00:00:00.000Z",
+            "userId": 10012,
+            "validRegistration": false,
+            "weeks": Array [],
+          },
+        ],
+        "role": "teacher",
+      }
+    }
   />
 </div>
 `;
