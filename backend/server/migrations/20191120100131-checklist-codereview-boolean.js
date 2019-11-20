@@ -4,7 +4,8 @@ module.exports = {
       type: Sequelize.BOOLEAN,
       defaultValue: false
     })
-    await queryInterface.sequelize.query('UPDATE "Checklists" SET "forCodeReview" = TRUE WHERE "codeReviewNumber" IS NOT NULL')
+    await queryInterface.sequelize.query('UPDATE "Checklists" SET "forCodeReview" = TRUE WHERE "codeReviewNumber" = 1')
+    await queryInterface.sequelize.query('DELETE FROM "Checklists" WHERE "codeReviewNumber" > 1')
     await queryInterface.removeColumn('Checklists', 'codeReviewNumber')
   },
 
