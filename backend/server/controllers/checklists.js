@@ -86,6 +86,7 @@ module.exports = {
                   if (typeof row[key] !== 'boolean') {
                     res.status(400).send('"minimumRequirement" must be a boolean')
                   }
+                  break
                 default:
                   res.status(400).send(`Found unexpected key: ${key}`)
               }
