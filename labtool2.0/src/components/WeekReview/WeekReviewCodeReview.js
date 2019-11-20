@@ -21,7 +21,7 @@ export const WeekReviewCodeReview = props => {
   const i = index
 
   const doOpen = openWeeks[i] || (!isTeacher && cr.points === null)
-  const hasChecklist = selectedInstance.checklists.find(checkl => checkl.codeReviewNumber === cr.reviewNumber)
+  const hasChecklist = selectedInstance.checklists.find(checkl => checkl.forCodeReview)
   const maxPoints = getMaximumPointsForCodeReview(cr.reviewNumber)
 
   return (
