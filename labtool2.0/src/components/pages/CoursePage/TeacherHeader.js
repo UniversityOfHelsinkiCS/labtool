@@ -10,7 +10,7 @@ import CoursePageHeader from './Header'
 export const CoursePageTeacherHeader = props => {
   const { selectedInstance, courseInstance, activateCourse, moveToNextWeek } = props
   const isFinalReview = selectedInstance.currentWeek > selectedInstance.weekAmount
-  const weekAdvanceEnabled = selectedInstance.currentWeek < (selectedInstance.weekAmount + (selectedInstance.finalReview ? 1 : 0))
+  const weekAdvanceEnabled = selectedInstance.currentWeek < selectedInstance.weekAmount + (selectedInstance.finalReview ? 1 : 0)
 
   return (
     <div className="TeachersTopView" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
@@ -67,6 +67,9 @@ export const CoursePageTeacherHeader = props => {
             <Table.Cell>Week max points: {selectedInstance.weekMaxPoints}</Table.Cell>
             <Table.Cell textAlign="right">
               {' '}
+              <Link to={`/labtool/ModifyCourseInstanceCodeReviews/${selectedInstance.ohid}`}>
+                <Popup trigger={<Button circular size="tiny" icon={{ name: 'shuffle', size: 'large', color: 'orange' }} />} content="Edit code reviews" />
+              </Link>
               <Link to={`/labtool/ModifyCourseInstancePage/${selectedInstance.ohid}`}>
                 <Popup trigger={<Button circular size="tiny" icon={{ name: 'edit', size: 'large', color: 'orange' }} />} content="Edit course" />
               </Link>
