@@ -6,7 +6,7 @@ import { withRouter } from 'react-router'
 import { connect } from 'react-redux'
 import { trimDate } from '../util/format'
 
-export const LabtoolComment = ({ comment, allowNotify, sendCommentEmail }) =>
+export const LabtoolComment = ({ comment, allowNotify, latestComment, sendCommentEmail }) =>
   comment.hidden ? (
     <Comment key={comment.id} disabled>
       <Comment.Content>
@@ -40,10 +40,12 @@ export const LabtoolComment = ({ comment, allowNotify, sendCommentEmail }) =>
           <Label>
             Notified <Icon name="check" color="green" />
           </Label>
-        ) : (
+        ) : latestComment ? (
           <Button type="button" onClick={sendCommentEmail} size="small">
             Send email notification
           </Button>
+        ) : (
+          <div />
         )
       ) : (
         <div />
@@ -54,6 +56,7 @@ export const LabtoolComment = ({ comment, allowNotify, sendCommentEmail }) =>
 LabtoolComment.propTypes = {
   comment: PropTypes.object.isRequired,
   allowNotify: PropTypes.bool,
+  latestComment: PropTypes.bool,
   sendCommentEmail: PropTypes.func
 }
 
