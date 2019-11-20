@@ -473,7 +473,9 @@ Array [
       <strong>
          Total Points: 
       </strong>
-      3
+      <Points
+        points={3}
+      />
     </AccordionTitle>
   </Accordion>,
 ]
