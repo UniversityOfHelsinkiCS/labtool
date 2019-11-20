@@ -5,7 +5,7 @@ import { shallow } from 'enzyme'
 describe('<CoursePage /> as teacher', () => {
   let wrapper
 
-  /* const selectedInstance = {
+  const selectedInstance = {
     id: 10011,
     name: 'Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit',
     start: '2018-03-11T21:00:00.000Z',
@@ -33,7 +33,7 @@ describe('<CoursePage /> as teacher', () => {
         lastname: 'Mutikainen'
       }
     ]
-  }*/
+  }
 
   const coursePage = {
     role: 'teacher',
@@ -245,7 +245,7 @@ describe('<CoursePage /> as teacher', () => {
         getOneCI={mockFn}
         coursePageInformation={mockFn}
         associateTeacherToStudent={mockFn}
-        selectedInstance={coursePage}
+        selectedInstance={selectedInstance}
         coursePageLogic={coursePageLogic}
         updateStudentProjectInfo={mockUpdateStudentProjectInfo}
         getAllTags={mockFn}
@@ -320,7 +320,11 @@ describe('<CoursePage /> as teacher', () => {
         .find({ children: 'Export CSV of all students' })
         .simulate('click')
 
-      expect(mockDownloadFile).toBeCalledWith(expect.anything(), expect.anything(), expect.stringContaining('Maarit Mirja Opiskelija,014578343,maarit.opiskelija@helsinki.invalid,Tiran labraprojekti'))
+      expect(mockDownloadFile).toBeCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.stringMatching(/^Maarit Mirja,Opiskelija,014578343,maarit\.opiskelija@helsinki\.invalid,Tiran labraprojekti,http:\/\/github\.com\/tiralabra1[0-9,-]+,[0-9]+,Ossi Ohjaaja Mutikainen$/m)
+      )
     })
 
     /*
