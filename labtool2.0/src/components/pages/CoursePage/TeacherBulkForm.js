@@ -35,7 +35,7 @@ export const CoursePageTeacherBulkForm = props => {
         </Accordion.Title>
         <Accordion.Content active={state.showMassAssignForm}>
           <br />
-          <h3 style={{ display: 'inline' }}> Modify selected students</h3>
+          <h3 style={{ display: 'inline' }}> Modify selected students</h3> ({numSelected > 0 ? <b>{numSelected} selected</b> : <span>{numSelected} selected</span>})
           <br />
           <br />
           <Grid columns={2} divided style={{ width: '90%', display: 'inline-block' }}>
