@@ -73,8 +73,12 @@ export const CoursePage = props => {
     csvResult.push(columns.join(','))
 
     students.forEach(student => {
-      const instructor = 'INSTRUCTOR_HERE'
-      const values = [student.User.firsts, student.User.lastname, student.User.studentNumber, student.User.email, student.projectName, student.github, instructor]
+      let instructorName = 'unassigned'
+      if (student.teacherInstanceId !== null) {
+        const teacherInstance = props.selectedInstance.teacherInstances.find(ti => ti.id === student.teacherInstanceId)
+        instructorName = `${teacherInstance.firsts} ${teacherInstance.lastname}`
+      }
+      const values = [student.User.firsts, student.User.lastname, student.User.studentNumber, student.User.email, student.projectName, student.github, instructorName]
       let sum = 0
       const cr =
         student.codeReviews &&
