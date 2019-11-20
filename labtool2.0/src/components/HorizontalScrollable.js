@@ -7,6 +7,7 @@ export const HorizontalScrollable = props => {
   let content = null
   let scrollbar = null
   const antibounce = {}
+  let iconUpdateTimer = null
 
   const isMobile = () => {
     return window.matchMedia('(max-width: 768px)').matches
@@ -94,6 +95,18 @@ export const HorizontalScrollable = props => {
     window.requestAnimationFrame(() => (content ? content.style.transform = `translateX(-${x}px)` : null))
   }
 
+  const iconRefresh = () => {
+    // pick one icon in the table and mess with it to force an update
+    const icon = document.querySelector('.horizontalScrollableParent .icon')
+    const display = icon.style.display
+    const frobulate = (() => {})
+
+    icon.style.display = 'none'
+    frobulate(icon.offsetHeight)
+    icon.style.display = display
+    frobulate(icon.offsetHeight)
+  }
+
   const updateScrollX = doNotUpdate => e => {
     // synchronize scroll positions
     const newX = e.target.scrollLeft
@@ -126,6 +139,13 @@ export const HorizontalScrollable = props => {
       antibounce.scrollbar = true
       scrollbar.scrollLeft = newX
     }
+    
+    // try updating icons. on Chrome, they wouldn't move when using transforms
+    // use debouncing to prevent performance issues
+    if (iconUpdateTimer) {
+      clearTimeout(iconUpdateTimer)
+    }
+    iconUpdateTimer = setTimeout(iconRefresh, 50)
   }
 
   const updateSticky = () => {
@@ -171,7 +191,7 @@ export const HorizontalScrollable = props => {
   // the parent page should define overflowY: hidden and add some extra
   // <br />s to the bottom
   return (
-    <div ref={containerReady} style={{ overflow: 'hidden', boxSizing: 'border-box', marginBottom: '-50vh', paddingBottom: '50vh' }}>
+    <div className="horizontalScrollableParent" ref={containerReady} style={{ overflow: 'hidden', boxSizing: 'border-box', marginBottom: '-50vh', paddingBottom: '50vh' }}>
       <div ref={mainElementReady} onScroll={updateScrollX('content')} style={{ overflowX: 'visible', overflowY: 'visible' }}>
         {props.children}
       </div>
