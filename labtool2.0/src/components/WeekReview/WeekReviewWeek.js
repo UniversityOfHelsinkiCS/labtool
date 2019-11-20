@@ -105,7 +105,7 @@ export const WeekReviewWeek = props => {
           <Comment.Group>
             {week.comments.length > 0 ? (
               <div>
-                {sortCommentsByDate(week.comments).map(comment => (
+                {sortCommentsByDate(week.comments).map((comment, index, array) => (
                   <WeekReviewComment
                     key={`weekReviewComment${comment.id}`}
                     user={user}
@@ -114,6 +114,7 @@ export const WeekReviewWeek = props => {
                     isTeacher={isTeacher}
                     sendTeacherEmail={sendCommentEmail}
                     sendStudentEmail={sendStudentEmail}
+                    latestComment={index >= array.length - 1}
                   />
                 ))}
               </div>
