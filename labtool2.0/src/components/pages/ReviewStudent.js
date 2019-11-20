@@ -10,7 +10,7 @@ import { clearNotifications } from '../../reducers/notificationReducer'
 import { toggleCheckWeek, resetChecklist, restoreChecks } from '../../reducers/weekReviewReducer'
 import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 import store from '../../store'
-import { trimDate } from '../../util/format'
+import { formatCourseName, trimDate } from '../../util/format'
 import { usePersistedState } from '../../hooks/persistedState'
 
 import { FormMarkdownTextArea } from '../MarkdownTextArea'
@@ -223,7 +223,9 @@ export const ReviewStudent = props => {
         text={!arrivedFromCoursePage && 'Back to student reviews'}
       />
       <div style={{ textAlignVertical: 'center', textAlign: 'center' }}>
-        <h2> {props.selectedInstance.name}</h2>
+        <Link to={`/labtool/courses/${props.selectedInstance.ohid}`} style={{ textAlign: 'center' }}>
+          <h2> {formatCourseName(props.selectedInstance.name, props.selectedInstance.ohid, props.selectedInstance.start)}</h2>
+        </Link>
         <h3>
           {' '}
           {studentData.User.firsts} {studentData.User.lastname}{' '}

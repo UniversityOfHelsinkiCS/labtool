@@ -185,10 +185,10 @@ export const StudentTableRow = props => {
               to={{ pathname: `/labtool/browsereviews/${selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: codeReview ? `CodeReview${codeReview.reviewNumber}` : undefined } }}
             >
               {shouldReview && selectedInstance.currentCodeReview.includes(index) && codeReview ? (
-                codeReview.linkToReview === null ? (
+                codeReview.linkToReview === null && codeReview.points === null ? (
                   <Popup
                     position="top center"
-                    trigger={<Icon color="grey" size="small" name="hourglass end" fitted />}
+                    trigger={<Icon color="grey" size="large" name="hourglass end" fitted />}
                     content="Student has not yet submitted the code review"
                     className="codeReviewNotReady"
                   />

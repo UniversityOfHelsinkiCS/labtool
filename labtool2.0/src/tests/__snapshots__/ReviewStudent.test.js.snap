@@ -16,10 +16,19 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
       }
     }
   >
-    <h2>
-       
-      Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit
-    </h2>
+    <Link
+      style={
+        Object {
+          "textAlign": "center",
+        }
+      }
+      to="/labtool/courses/TKT20010.2018.K.A.1"
+    >
+      <h2>
+         
+        Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit (spring, 2018)
+      </h2>
+    </Link>
     <h3>
        
       Maarit Mirja
