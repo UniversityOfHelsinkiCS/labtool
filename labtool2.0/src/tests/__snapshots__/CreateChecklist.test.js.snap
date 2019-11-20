@@ -314,7 +314,7 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
           key="Repo"
           style={
             Object {
-              "backgroundColor": "#FCEFEF",
+              "backgroundColor": "#EAEAEA",
             }
           }
         >
@@ -512,7 +512,7 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
                
               <Popup
                 className="maxPointsIcon"
-                content="The total points don't match the defaulted maximum weekly points for this course."
+                content="The total points don't match the maximum points for this week."
                 disabled={false}
                 eventsEnabled={true}
                 offset={0}

@@ -217,17 +217,17 @@ describe('<CreateChecklist /> component', () => {
           })
         })
         if (totalPointsOfChecklist === courseInstance[0].weekMaxPoints) {
-          expect(wrapper.find('.maxPointsIcon').prop('content')).toEqual('The total points match the defaulted maximum weekly points for this course.')
+          expect(wrapper.find('.maxPointsIcon').prop('content')).toEqual('The total points match the maximum points for this week.')
           wrapper.setProps({
             selectedInstance: { ...courseInstance[0], weekMaxPoints: totalPointsOfChecklist + 1 }
           })
-          expect(wrapper.find('.maxPointsIcon').prop('content')).toEqual(`The total points don't match the defaulted maximum weekly points for this course.`)
+          expect(wrapper.find('.maxPointsIcon').prop('content')).toEqual(`The total points don't match the maximum points for this week.`)
         } else {
-          expect(wrapper.find('.maxPointsIcon').prop('content')).toEqual(`The total points don't match the defaulted maximum weekly points for this course.`)
+          expect(wrapper.find('.maxPointsIcon').prop('content')).toEqual(`The total points don't match the maximum points for this week.`)
           wrapper.setProps({
             selectedInstance: { ...courseInstance[0], weekMaxPoints: totalPointsOfChecklist }
           })
-          expect(wrapper.find('.maxPointsIcon').prop('content')).toEqual('The total points match the defaulted maximum weekly points for this course.')
+          expect(wrapper.find('.maxPointsIcon').prop('content')).toEqual('The total points match the maximum points for this week.')
         }
         wrapper.find('#weekDropdown').prop('onChange')(null, { value: `week${courseInstance[0].weekAmount + 1}` })
         expect(wrapper.find('.maxPointsIcon').exists()).toEqual(false)

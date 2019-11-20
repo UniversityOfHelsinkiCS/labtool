@@ -597,18 +597,10 @@ export const CreateChecklist = props => {
                   {currentObj.kind === 'week' && currentObj.number <= props.selectedInstance.weekAmount ? (
                     <span>
                       {' '}
-                      {props.selectedInstance.weekMaxPoints === maxPoints ? (
-                        <Popup
-                          className="maxPointsIcon"
-                          trigger={<Icon name="check" size="large" color="green" />}
-                          content="The total points match the defaulted maximum weekly points for this course."
-                        />
+                      {maxPoints === (state.maximumPoints !== '' ? Number(state.maximumPoints) : props.selectedInstance.weekMaxPoints) ? (
+                        <Popup className="maxPointsIcon" trigger={<Icon name="check" size="large" color="green" />} content="The total points match the maximum points for this week." />
                       ) : (
-                        <Popup
-                          className="maxPointsIcon"
-                          trigger={<Icon name="delete" size="large" color="red" />}
-                          content="The total points don't match the defaulted maximum weekly points for this course."
-                        />
+                        <Popup className="maxPointsIcon" trigger={<Icon name="delete" size="large" color="red" />} content="The total points don't match the maximum points for this week." />
                       )}
                     </span>
                   ) : (
