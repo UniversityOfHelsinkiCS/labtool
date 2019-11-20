@@ -323,7 +323,7 @@ describe('<CoursePage /> as teacher', () => {
       expect(mockDownloadFile).toBeCalledWith(
         expect.anything(),
         expect.anything(),
-        expect.stringContaining('Maarit Mirja,Opiskelija,014578343,maarit.opiskelija@helsinki.invalid,Tiran labraprojekti,http://github.com/tiralabra1,Ossi Ohjaaja Mutikainen')
+        expect.stringMatching(/^Maarit Mirja,Opiskelija,014578343,maarit\.opiskelija@helsinki\.invalid,Tiran labraprojekti,http:\/\/github\.com\/tiralabra1[0-9,-]+,[0-9]+,Ossi Ohjaaja Mutikainen$/m)
       )
     })
 

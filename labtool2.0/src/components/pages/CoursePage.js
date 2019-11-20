@@ -59,7 +59,7 @@ export const CoursePage = props => {
     const csvFilename = `${courseId}_${dateFormat}.csv`
     const csvResult = []
 
-    const columns = ['First Name', 'Last Name', 'StudentNo', 'Email', 'ProjectName', 'ProjectURL', 'Instructor']
+    const columns = ['First Name', 'Last Name', 'StudentNo', 'Email', 'ProjectName', 'ProjectURL']
     for (let i = 1; i <= props.selectedInstance.weekAmount; ++i) {
       columns.push(`Week${i}`)
     }
@@ -70,6 +70,7 @@ export const CoursePage = props => {
       columns.push('FinalReview')
     }
     columns.push('Sum')
+    columns.push('Instructor')
     csvResult.push(columns.join(','))
 
     students.forEach(student => {
@@ -78,7 +79,7 @@ export const CoursePage = props => {
         const teacherInstance = props.selectedInstance.teacherInstances.find(ti => ti.id === student.teacherInstanceId)
         instructorName = `${teacherInstance.firsts} ${teacherInstance.lastname}`
       }
-      const values = [student.User.firsts, student.User.lastname, student.User.studentNumber, student.User.email, student.projectName, student.github, instructorName]
+      const values = [student.User.firsts, student.User.lastname, student.User.studentNumber, student.User.email, student.projectName, student.github]
       let sum = 0
       const cr =
         student.codeReviews &&
@@ -111,6 +112,7 @@ export const CoursePage = props => {
         sum += points || 0
       }
       values.push(sum)
+      values.push(instructorName)
       csvResult.push(values.join(','))
     })
 
