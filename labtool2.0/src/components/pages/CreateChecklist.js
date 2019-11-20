@@ -433,7 +433,7 @@ export const CreateChecklist = props => {
       maxPoints += bestPoints
       colorIndex++
       return (
-        <Card fluid color="red" key={key} style={colorIndex % 2 === 0 ? { backgroundColor: '#FCEFEF' } : null}>
+        <Card fluid color="red" key={key} style={colorIndex % 2 === 0 ? { backgroundColor: '#EAEAEA' } : null}>
           <Card.Content>
             <Header size="huge" color="brown">
               {key}{' '}
