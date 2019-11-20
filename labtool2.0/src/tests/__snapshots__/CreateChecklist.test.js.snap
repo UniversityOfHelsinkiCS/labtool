@@ -187,7 +187,8 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
             </Header>
             <div>
               <p>
-                Total points for this section: 
+                Total points for this section:
+                 
                 <strong
                   className="bestPointsNumber"
                 >
@@ -344,7 +345,8 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
             </Header>
             <div>
               <p>
-                Total points for this section: 
+                Total points for this section:
+                 
                 <strong
                   className="bestPointsNumber"
                 >
@@ -506,7 +508,8 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
       >
         <CardContent>
           <p>
-            Total points of the checklist: 
+            Total points of the checklist:
+             
             <strong
               className="totalPointsOfChecklist"
             >
@@ -546,7 +549,8 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
           <p
             className="maxPointsForWeek"
           >
-            Maximum points for this week: 
+            Maximum points for this week:
+             
             <strong>
               <Points
                 points={3}
