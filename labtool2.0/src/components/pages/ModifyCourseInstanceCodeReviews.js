@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
+import { withRouter } from 'react-router'
 import { connect } from 'react-redux'
 import { getOneCI, modifyOneCI } from '../../services/courseInstance'
 import { coursePageInformation } from '../../services/courseInstance'
@@ -400,10 +401,11 @@ export const ModifyCourseInstanceReview = props => {
   }
 
   const unassignedFilter = data => props.codeReviewLogic.filterByReview === 0 || isAssignedToReview(data, props.codeReviewLogic.selectedDropdown)
+  const arrivedFromCoursePage = props.location && props.location.state && props.location.state.cameFromCoursePage
 
   return (
     <>
-      <BackButton preset="modifyCIPage" cleanup={pstate.clear} />
+      <BackButton preset={arrivedFromCoursePage ? 'coursePage' : 'modifyCIPage'} cleanup={pstate.clear} />
       <div className="ModifyCourseInstanceCodeReviews" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
         <div style={{ overflowX: 'auto', overflowY: 'hidden' }}>
           <div className="sixteen wide column">
@@ -521,6 +523,7 @@ ModifyCourseInstanceReview.propTypes = {
   coursePageLogic: PropTypes.object.isRequired,
   loading: PropTypes.object.isRequired,
   tags: PropTypes.object.isRequired,
+  location: PropTypes.object,
 
   getOneCI: PropTypes.func.isRequired,
   modifyOneCI: PropTypes.func.isRequired,
@@ -542,7 +545,9 @@ ModifyCourseInstanceReview.propTypes = {
   massUpdateStudentProjectInfo: PropTypes.func.isRequired
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ModifyCourseInstanceReview)
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(ModifyCourseInstanceReview)
+)
