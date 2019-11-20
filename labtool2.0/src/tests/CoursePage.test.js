@@ -320,7 +320,6 @@ describe('<CoursePage /> as teacher', () => {
         .find({ children: 'Export CSV of all students' })
         .simulate('click')
 
-      // TODO: Remember to add the instructor to the following line once it has been implemented!
       expect(mockDownloadFile).toBeCalledWith(
         expect.anything(),
         expect.anything(),
