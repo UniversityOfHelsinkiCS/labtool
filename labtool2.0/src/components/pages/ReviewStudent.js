@@ -16,6 +16,7 @@ import { usePersistedState } from '../../hooks/persistedState'
 import { FormMarkdownTextArea } from '../MarkdownTextArea'
 import RepoLink from '../RepoLink'
 import { PreviousWeekDetails } from './ReviewStudent/PreviousWeekDetails'
+import MissingMinimumRequirements from '../MissingMinimumRequirements'
 
 import BackButton from '../BackButton'
 
@@ -255,6 +256,7 @@ export const ReviewStudent = props => {
                 </div>
               )}
               <PreviousWeekDetails weekData={previousWeekData} />
+              {isFinalReview(props) && weekData && <MissingMinimumRequirements selectedInstance={props.selectedInstance} studentInstance={studentData} />}
               {isFinalReview(props) ? <h2>Final Review Points</h2> : <h2>Review</h2>}
               {loadedFromDraft && (
                 <div>
