@@ -14,6 +14,8 @@ import { usePersistedState } from '../../hooks/persistedState'
 
 import RepoLink from '../RepoLink'
 import BackButton from '../BackButton'
+import { Points } from '../Points'
+import { roundPoints } from '../../util/format'
 
 /**
  *  The page which is used by teacher to review submissions,.
@@ -102,7 +104,7 @@ export const ReviewStudentCodeReview = props => {
 
   const copyChecklistOutput = async e => {
     e.preventDefault()
-    pstate.points = e.target.points.value
+    pstate.points = roundPoints(Number(e.target.points.value))
   }
 
   const isChecked = (checks, checklistItemId) =>
@@ -197,10 +199,12 @@ export const ReviewStudentCodeReview = props => {
           <Grid.Row columns={2}>
             <Grid.Column>
               <div align="left">
-                <h3>Points so far: {weekPoints + codeReviewPoints} </h3>
-                Earlier code review points: {codeReviewPoints}
+                <h3>
+                  Points so far: <Points points={weekPoints + codeReviewPoints} />{' '}
+                </h3>
+                Earlier code review points: <Points points={codeReviewPoints} />
                 <br />
-                Week points: {weekPoints}
+                Week points: <Points points={weekPoints} />
               </div>
               <h3>Project to review</h3>
               {toReviewProject ? (
@@ -226,7 +230,7 @@ export const ReviewStudentCodeReview = props => {
               <Form onSubmit={handleSubmit}>
                 <Form.Group inline unstackable>
                   <Form.Field>
-                    <label className="showMaxPoints">Points{maxPoints !== null ? `0-${maxPoints}` : ''}</label>
+                    <label className="showMaxPoints">Points{maxPoints !== null ? `0-${roundPoints(maxPoints)}` : ''}</label>
 
                     <Input
                       name="points"
@@ -286,7 +290,9 @@ export const ReviewStudentCodeReview = props => {
                     ))}
                     <div>
                       <Form className="checklistOutput" onSubmit={copyChecklistOutput}>
-                        <p className="checklistOutputPoints">points: {checklistPoints.toFixed(2)}</p>
+                        <p className="checklistOutputPoints">
+                          points: <Points points={checklistPoints} />
+                        </p>
                         <input type="hidden" name="points" value={checklistPoints} />
                         <Button type="submit">Copy to review field</Button>
                       </Form>

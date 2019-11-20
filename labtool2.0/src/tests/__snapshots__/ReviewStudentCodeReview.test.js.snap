@@ -40,14 +40,20 @@ exports[`<ReviewStudentCodeReviews /> ReviewStudentCodeReview Component should r
           >
             <h3>
               Points so far: 
-              11
+              <Points
+                points={11}
+              />
                
             </h3>
             Earlier code review points: 
-            0
+            <Points
+              points={0}
+            />
             <br />
             Week points: 
-            11
+            <Points
+              points={11}
+            />
           </div>
           <h3>
             Project to review
@@ -442,7 +448,9 @@ exports[`<ReviewStudentCodeReviews /> ReviewStudentCodeReview Component should r
                   className="checklistOutputPoints"
                 >
                   points: 
-                  NaN
+                  <Points
+                    points={NaN}
+                  />
                 </p>
                 <input
                   name="points"
