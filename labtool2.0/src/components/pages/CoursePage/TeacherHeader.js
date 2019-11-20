@@ -67,7 +67,10 @@ export const CoursePageTeacherHeader = props => {
             <Table.Cell>Week max points: {selectedInstance.weekMaxPoints}</Table.Cell>
             <Table.Cell textAlign="right">
               {' '}
-              <Link to={`/labtool/ModifyCourseInstanceCodeReviews/${selectedInstance.ohid}`}>
+              <Link to={{
+                pathname: `/labtool/ModifyCourseInstanceCodeReviews/${selectedInstance.ohid}`,
+                state: { cameFromCoursePage: true }
+              }}>
                 <Popup trigger={<Button circular size="tiny" icon={{ name: 'shuffle', size: 'large', color: 'orange' }} />} content="Edit code reviews" />
               </Link>
               <Link to={`/labtool/ModifyCourseInstancePage/${selectedInstance.ohid}`}>
