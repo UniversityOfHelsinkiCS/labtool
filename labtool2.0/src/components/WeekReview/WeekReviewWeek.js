@@ -6,6 +6,7 @@ import { LabtoolAddComment } from '../LabtoolAddComment'
 import ReactMarkdown from 'react-markdown'
 
 import { WeekReviewComment } from './WeekReviewComment'
+import MissingMinimumRequirements from '../MissingMinimumRequirements'
 
 export const WeekReviewWeek = props => {
   const {
@@ -15,6 +16,7 @@ export const WeekReviewWeek = props => {
     studentInstance,
     isFinalWeek,
     selectedInstance,
+    courseData,
     courseId,
     user,
     isTeacher,
@@ -83,6 +85,7 @@ export const WeekReviewWeek = props => {
               <span />
             )}
           </Card>
+          {isFinalWeek && <MissingMinimumRequirements selectedInstance={selectedInstance} studentInstance={courseData.data.find(si => si.id === Number(studentInstance))} />}
           {week.comments.length === 0 ? null : (
             <div>
               <h4 style={{ display: 'inline-block' }}> Comments </h4>
