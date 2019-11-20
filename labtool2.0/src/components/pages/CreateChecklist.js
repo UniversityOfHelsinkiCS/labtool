@@ -421,7 +421,7 @@ export const CreateChecklist = props => {
     return props.weekDropdowns.filter(option => option.value !== state.current)
   }
 
-  const renderChecklist = () => {
+  const renderChecklist = kind => {
     let maxPoints = 0
     const checklistJsx = Object.keys(props.checklist.data || {}).map(key => {
       let bestPoints = 0
@@ -484,9 +484,11 @@ export const CreateChecklist = props => {
                 <Label>Text</Label>
                 <Input className="textField" type="text" value={row.textWhenOff} onChange={changeField(key, row.name, 'textWhenOff')} />
               </div>
-              <div className="minimumRequirement" style={{ marginTop: '1em' }}>
-                <Checkbox label="Minimum requirement" checked={row.minimumRequirement} onChange={changeField(key, row.name, 'minimumRequirement')}></Checkbox>
-              </div>
+              {kind !== 'codeReview' && (
+                <div className="minimumRequirement" style={{ marginTop: '1em' }}>
+                  <Checkbox label="Minimum requirement" checked={row.minimumRequirement} onChange={changeField(key, row.name, 'minimumRequirement')}></Checkbox>
+                </div>
+              )}
             </Card.Content>
           ))}
           <form className="addForm" onSubmit={newRow(key)}>
@@ -521,7 +523,7 @@ export const CreateChecklist = props => {
 
   const hasSelectedWeek = state.current !== undefined && state.current !== null
   const currentObj = parseChecklistValue(state.current)
-  const { checklistJsx, maxPoints } = props.loading.loading ? { checklistJsx: null, maxPoints: null } : renderChecklist()
+  const { checklistJsx, maxPoints } = props.loading.loading ? { checklistJsx: null, maxPoints: null } : renderChecklist(currentObj.kind)
   return (
     <div className="CreateChecklist">
       <BackButton preset="modifyCIPage" cleanup={state.clear} />
