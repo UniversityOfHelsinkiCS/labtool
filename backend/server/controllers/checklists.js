@@ -93,6 +93,7 @@ module.exports = {
       }
       // No validation is done to prevent creating a checklist for a week that doesn't exist.
       // Arguably, this is a feature, since the number of weeks can change.
+      let result
       if ('week' in req.body) {
         result = await Checklist.findOrCreate({ where: {
           week: req.body.week,
