@@ -3,7 +3,7 @@
 exports[`<ModifyCourseInstanceStaff /> Components renders correctly 1`] = `
 <Fragment>
   <_default
-    title="Modify course instance"
+    title="Assistants - Aineopintojen harjoitustyö: Tietokantasovellus"
   />
   <div>
     <Connect(BackButton)

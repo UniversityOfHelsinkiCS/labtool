@@ -3,7 +3,7 @@
 exports[`<CreateChecklist /> component should render correctly 1`] = `
 <Fragment>
   <_default
-    title="Create checklist"
+    title="Checklists - Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit"
   />
   <div
     className="CreateChecklist"

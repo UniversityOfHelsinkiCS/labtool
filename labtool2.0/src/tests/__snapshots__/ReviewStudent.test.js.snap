@@ -3,7 +3,7 @@
 exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] = `
 <Fragment>
   <_default
-    title="Review student"
+    title="Week 1 - Maarit Mirja Opiskelija"
   />
   <div
     className="ReviewStudent"
