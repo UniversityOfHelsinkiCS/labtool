@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { Header, Input, Label, Button, Popup, Card, Dropdown, Loader, Icon } from 'semantic-ui-react'
+import { Header, Input, Label, Button, Popup, Card, Dropdown, Loader, Icon, Checkbox } from 'semantic-ui-react'
 import { showNotification } from '../../reducers/notificationReducer'
 import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 import { createChecklist, getOneChecklist } from '../../services/checklist'
@@ -179,12 +179,12 @@ export const CreateChecklist = props => {
     }
   }
 
-  const changeField = (key, name, field) => async e => {
+  const changeField = (key, name, field) => async (_, data) => {
     props.changeField({
       key,
       name,
       field,
-      value: e.target.value
+      value: data.type === 'checkbox' ? data.checked : data.value
     })
     state.canSave = true
   }
@@ -483,6 +483,9 @@ export const CreateChecklist = props => {
               <div className="formField">
                 <Label>Text</Label>
                 <Input className="textField" type="text" value={row.textWhenOff} onChange={changeField(key, row.name, 'textWhenOff')} />
+              </div>
+              <div className="minimumRequirement" style={{ marginTop: '1em' }}>
+                <Checkbox label="Minimum requirement" checked={row.minimumRequirement} onChange={changeField(key, row.name, 'minimumRequirement')}></Checkbox>
               </div>
             </Card.Content>
           ))}
