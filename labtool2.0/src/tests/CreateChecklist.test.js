@@ -187,7 +187,8 @@ describe('<CreateChecklist /> component', () => {
 
       it('if user adds maximum points, the given points are shown', () => {
         wrapper.find('.maxPointsInput').simulate('change', { target: { value: '5' } })
-        expect(wrapper.find('.maxPointsForWeek').text()).toEqual('Maximum points for this week: 5')
+        expect(wrapper.find('.maxPointsForWeek').text()).toContain('Maximum points for this week:')
+        expect(wrapper.find('.maxPointsForWeek Points').prop('points')).toEqual(5)
         wrapper.find('.maxPointsInput').simulate('change', { target: { value: '' } })
       })
 
@@ -202,7 +203,7 @@ describe('<CreateChecklist /> component', () => {
             }
           })
         })
-        expect(wrapper.find('.totalPointsOfChecklist').text()).toEqual(String(maxPoints))
+        expect(wrapper.find('.totalPointsOfChecklist Points').prop('points')).toEqual(maxPoints)
       })
 
       it('renders the correct icon for total points of the checklist', () => {

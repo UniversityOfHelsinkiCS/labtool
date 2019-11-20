@@ -9,11 +9,11 @@ import { getOneCI, getAllCI } from '../../services/courseInstance'
 import { resetChecklist, changeField, restoreChecklist, addTopic, addRow, removeTopic, removeRow, castPointsToNumber } from '../../reducers/checklistReducer'
 import './CreateChecklist.css'
 import { usePersistedState } from '../../hooks/persistedState'
-import { roundNumber } from '../../util/format'
 import { sortCoursesByName } from '../../util/sort'
 
 import BackButton from '../BackButton'
 import JsonEdit from '../JsonEdit'
+import { Points } from '../Points'
 
 export const CreateChecklist = props => {
   const state = usePersistedState(`CreateChecklist_${props.courseId}`, {
@@ -443,7 +443,10 @@ export const CreateChecklist = props => {
             </Header>
             <div>
               <p>
-                Max points: <strong className="bestPointsNumber">{bestPoints}</strong>
+                Total points for this section:{' '}
+                <strong className="bestPointsNumber">
+                  <Points points={bestPoints} />
+                </strong>
                 {bestPoints < 0 ? (
                   <span>
                     {' '}
@@ -593,7 +596,10 @@ export const CreateChecklist = props => {
             <Card className="maxPointsCard">
               <Card.Content>
                 <p>
-                  Total points of the checklist: <strong className="totalPointsOfChecklist">{roundNumber(maxPoints, 2)}</strong>
+                  Total points of the checklist:{' '}
+                  <strong className="totalPointsOfChecklist">
+                    <Points points={maxPoints} />
+                  </strong>
                   {currentObj.kind === 'week' && currentObj.number <= props.selectedInstance.weekAmount ? (
                     <span>
                       {' '}
@@ -611,11 +617,17 @@ export const CreateChecklist = props => {
               <Card.Content>
                 {currentObj.kind === 'codeReview' ? (
                   <p>
-                    Maximum points for this code review: <strong>{state.maximumPoints}</strong>
+                    Maximum points for this code review:{' '}
+                    <strong>
+                      <Points points={state.maximumPoints} />
+                    </strong>
                   </p>
                 ) : (
                   <p className="maxPointsForWeek">
-                    Maximum points for this week: <strong>{getMaximumPointsForWeek()}</strong>
+                    Maximum points for this week:{' '}
+                    <strong>
+                      <Points points={getMaximumPointsForWeek()} />
+                    </strong>
                   </p>
                 )}
               </Card.Content>

@@ -6,7 +6,15 @@ export const WeekReviewComment = ({ user, comment, isFinalWeek, isTeacher, sendT
   /* This hack compares user's name to comment.from and hides the email notification button when they don't match. */
   const userIsCommandSender = comment.from.includes(user.firsts) && comment.from.includes(user.lastname)
 
-  return <LabtoolComment key={comment.id} comment={comment} allowNotify={!isFinalWeek && userIsCommandSender} sendCommentEmail={(isTeacher ? sendTeacherEmail : sendStudentEmail)(comment.id)} latestComment={latestComment} />
+  return (
+    <LabtoolComment
+      key={comment.id}
+      comment={comment}
+      allowNotify={!isFinalWeek && userIsCommandSender}
+      sendCommentEmail={(isTeacher ? sendTeacherEmail : sendStudentEmail)(comment.id)}
+      latestComment={latestComment}
+    />
+  )
 }
 
 WeekReviewComment.propTypes = {
