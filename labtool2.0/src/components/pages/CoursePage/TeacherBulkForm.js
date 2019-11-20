@@ -31,11 +31,11 @@ export const CoursePageTeacherBulkForm = props => {
       <Accordion>
         <Accordion.Title style={{ background: '#f0f0f0' }} active={state.showMassAssignForm} index={0} onClick={() => (state.showMassAssignForm = !state.showMassAssignForm)}>
           <Icon size="big" name={state.showMassAssignForm ? 'caret down' : 'caret up'} />
-          <h4 style={{ display: 'inline' }}>Student tools</h4>
+          <h4 style={{ display: 'inline' }}>Student tools</h4> ({numSelected > 0 ? <b>{numSelected} selected</b> : <span>{numSelected} selected</span>})
         </Accordion.Title>
         <Accordion.Content active={state.showMassAssignForm}>
           <br />
-          <h3 style={{ display: 'inline' }}> Modify selected students</h3> ({numSelected > 0 ? <b>{numSelected} selected</b> : <span>{numSelected} selected</span>})
+          <h3 style={{ display: 'inline' }}> Modify selected students</h3>
           <br />
           <br />
           <Grid columns={2} divided style={{ width: '90%', display: 'inline-block' }}>
