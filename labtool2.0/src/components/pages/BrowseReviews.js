@@ -147,22 +147,15 @@ export const BrowseReviews = props => {
     return props.courseData.role === 'teacher'
   }
 
-  const documentTitle = <DocumentTitle title={'Browse reviews'} />
-
   if (state.initialLoading) {
-    return (
-      <>
-        <Loader active />
-        {documentTitle}
-      </>
-    )
+    return <Loader active />
   }
 
   const student = props.courseData.data.find(student => student.id === Number(props.studentInstance))
 
   return (
     <>
-      {documentTitle}
+      <DocumentTitle title={`${student.User.firsts} ${student.User.lastname} - ${props.selectedInstance.ohid.substring(0, props.selectedInstance.ohid.indexOf('.'))}`} />
       <div className="BrowseReviews" style={{ overflowX: 'auto' }}>
         <Loader active={props.loading.loading} />
         {isTeacher() && student ? (

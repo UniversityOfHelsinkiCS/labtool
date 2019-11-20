@@ -524,7 +524,7 @@ export const CreateChecklist = props => {
   const { checklistJsx, maxPoints } = props.loading.loading ? { checklistJsx: null, maxPoints: null } : renderChecklist()
   return (
     <>
-      <DocumentTitle title="Create checklist" />
+      <DocumentTitle title={`Checklists - ${props.selectedInstance.name}`} />
       <div className="CreateChecklist">
         <BackButton preset="modifyCIPage" cleanup={state.clear} />
         <Header>{props.selectedInstance.name}</Header>

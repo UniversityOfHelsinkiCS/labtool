@@ -397,15 +397,8 @@ export const ModifyCourseInstanceReview = props => {
       </Button>
     )
 
-  const documentTitle = <DocumentTitle title="Code reviews" />
-
   if (props.loading.loading) {
-    return (
-      <>
-        {documentTitle}
-        <Loader active />
-      </>
-    )
+    return <Loader active />
   }
 
   const unassignedFilter = data => props.codeReviewLogic.filterByReview === 0 || isAssignedToReview(data, props.codeReviewLogic.selectedDropdown)
@@ -413,7 +406,7 @@ export const ModifyCourseInstanceReview = props => {
 
   return (
     <>
-      {documentTitle}
+      <DocumentTitle title={`Code reviews - ${props.selectedInstance.name}`} />
       <BackButton preset={arrivedFromCoursePage ? 'coursePage' : 'modifyCIPage'} cleanup={pstate.clear} />
       <div className="ModifyCourseInstanceCodeReviews" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
         <div style={{ overflowX: 'auto', overflowY: 'hidden' }}>

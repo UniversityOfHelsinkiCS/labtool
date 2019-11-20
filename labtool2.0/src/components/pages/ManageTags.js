@@ -153,7 +153,7 @@ export const ManageTags = props => {
 
   return (
     <>
-      <DocumentTitle title="Modify tags" />
+      <DocumentTitle title={`Tags - ${props.selectedInstance.name}`} />
       <div>
         <BackButton preset="modifyCIPage" />
         <Container>

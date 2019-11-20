@@ -61,7 +61,7 @@ export const ModifyCourseInstanceStaff = props => {
   }
   return (
     <>
-      <DocumentTitle title="Modify course instance" />
+      <DocumentTitle title={`Assistants - ${props.selectedInstance.name}`} />
       <div>
         <BackButton preset={props.location.state && props.location.state.fromAdmin ? 'sysopModifyCIPage' : 'modifyCIPage'} />
         <div className="sixteen wide column" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
