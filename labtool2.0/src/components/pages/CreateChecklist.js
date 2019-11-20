@@ -359,11 +359,11 @@ export const CreateChecklist = props => {
     state.canSave = true
   }
 
-  const getMaximumPoints = maximumPoints => {
-    if (!state.maximumPoints) {
-      return maximumPoints
+  const getMaximumPointsForWeek = () => {
+    if (state.maximumPoints !== '') {
+      return Number(state.maximumPoints)
     }
-    return Number(state.maximumPoints)
+    return props.selectedInstance.weekMaxPoints
   }
 
   const removeTopic = key => async () => {
@@ -424,6 +424,7 @@ export const CreateChecklist = props => {
 
   const renderChecklist = () => {
     let maxPoints = 0
+    let colorIndex = 0
     const checklistJsx = Object.keys(props.checklist.data || {}).map(key => {
       let bestPoints = 0
       props.checklist.data[key].forEach(row => {
@@ -431,10 +432,11 @@ export const CreateChecklist = props => {
         bestPoints += Number(greaterPoints)
       })
       maxPoints += bestPoints
+      colorIndex++
       return (
-        <Card fluid color="red" key={key}>
+        <Card fluid color="red" key={key} style={colorIndex % 2 === 0 ? { backgroundColor: '#EAEAEA' } : null}>
           <Card.Content>
-            <Header>
+            <Header size="huge" color="brown">
               {key}{' '}
               <Button className="deleteButton" type="button" color="red" size="tiny" onClick={removeTopic(key)}>
                 <div className="deleteButtonText">Delete topic</div>
@@ -589,27 +591,19 @@ export const CreateChecklist = props => {
                   )}
                 </form>
               </div>
-              <div>
-                <Label>Maximum points</Label>
-                <Input className="maxPointsInput" type="number" step="0.01" style={{ width: '100px' }} value={state.maximumPoints} onChange={changeMaximumPoints} />
-                <Popup
-                  className="infoText"
-                  trigger={<Icon name="question circle" />}
-                  content="Defining maximum points yourself is not mandatory. If no value is given, default weekly points remain valid."
-                />
-              </div>
-              {currentObj.kind === 'codeReview' && <strong>You must specify max points for this code review in order for them to be visible to students.</strong>}
+
+              {currentObj.kind === 'codeReview' && <strong>You need to specify max points for this code review so that the max points can be visible to students.</strong>}
               <Card className="maxPointsCard">
                 <Card.Content>
                   <p>
-                    Total max points: <strong className="maxPointsNumber">{roundNumber(getMaximumPoints(maxPoints), 2)}</strong>
+                    Total points of the checklist: <strong className="totalPointsOfChecklist">{roundNumber(maxPoints, 2)}</strong>
                     {currentObj.kind === 'week' && currentObj.number <= props.selectedInstance.weekAmount ? (
                       <span>
                         {' '}
-                        {props.selectedInstance.weekMaxPoints === getMaximumPoints(maxPoints) ? (
-                          <Popup className="maxPointsIcon" trigger={<Icon name="check" size="large" color="green" />} content="The total matches maximum weekly points for this course." />
+                        {maxPoints === (state.maximumPoints !== '' ? Number(state.maximumPoints) : props.selectedInstance.weekMaxPoints) ? (
+                          <Popup className="maxPointsIcon" trigger={<Icon name="check" size="large" color="green" />} content="The total points match the maximum points for this week." />
                         ) : (
-                          <Popup className="maxPointsIcon" trigger={<Icon name="delete" size="large" color="red" />} content="The total does not match maximum weekly points for this course." />
+                          <Popup className="maxPointsIcon" trigger={<Icon name="delete" size="large" color="red" />} content="The total points don't match the maximum points for this week." />
                         )}
                       </span>
                     ) : (
@@ -617,7 +611,32 @@ export const CreateChecklist = props => {
                     )}
                   </p>
                 </Card.Content>
+                <Card.Content>
+                  {currentObj.kind === 'codeReview' ? (
+                    <p>
+                      Maximum points for this code review: <strong>{state.maximumPoints}</strong>
+                    </p>
+                  ) : (
+                    <p className="maxPointsForWeek">
+                      Maximum points for this week: <strong>{getMaximumPointsForWeek()}</strong>
+                    </p>
+                  )}
+                </Card.Content>
               </Card>
+              <div>
+                <Label>Define maximum points yourself</Label>
+                <Input className="maxPointsInput" type="number" step="0.01" style={{ width: '100px' }} value={state.maximumPoints} onChange={changeMaximumPoints} />
+                <Popup
+                  className="infoText"
+                  trigger={<Icon name="question circle" />}
+                  content={
+                    currentObj.kind === 'week'
+                      ? `The points you define here will be the maximum points for this week. If no value is given, the maximum points for this week 
+                will stay the same as the defaulted weekly points which is ${props.selectedInstance.weekMaxPoints}`
+                      : 'You need to specify max points for this code review so that the max points can be visible to students'
+                  }
+                />
+              </div>
               <form onSubmit={handleSubmit}>
                 {/*This is a form with a single button instead of just a button because it doesn't work 
                 (doesn't call the function) as just a button with onClick.*/}
