@@ -20,8 +20,13 @@ exports[`<MassEmailPage /> MassEmailPage Component should render correctly 1`] =
     <Button
       as="button"
       onClick={[Function]}
+      style={
+        Object {
+          "marginBottom": "8px",
+        }
+      }
     >
-      Select all non-dropped students
+      Select all active students
     </Button>
     <Form
       as="form"
