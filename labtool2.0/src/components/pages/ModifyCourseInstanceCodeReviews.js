@@ -223,7 +223,7 @@ export const ModifyCourseInstanceReview = props => {
   }
 
   const bulkCheckIssuesEnabled = selected => {
-    let selectedStudents = Object.keys(selected)
+    const selectedStudents = Object.keys(selected)
       .filter(s => selected[s])
       .map(s => props.courseData.data.find(t => t.id.toString() === s))
     const studentIdsSlugs = selectedStudents.map(student => [student.userId, student.github])
