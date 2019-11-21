@@ -31,7 +31,7 @@ module.exports = {
         res.status(403).send('You must be a teacher of the course to perform this action.')
         return
       }
-      if ((typeof req.body.week !== 'number' && typeof req.body.codeReviewNumber !== 'number') || typeof req.body.courseInstanceId !== 'number') {
+      if ((typeof req.body.week !== 'number' && !req.body.forCodeReview) || typeof req.body.courseInstanceId !== 'number') {
         res.status(400).send('Missing or malformed inputs.')
         return
       }
@@ -97,15 +97,16 @@ module.exports = {
       if ('week' in req.body) {
         result = await Checklist.findOrCreate({ where: {
           week: req.body.week,
+          forCodeReview: false,
           courseInstanceId: req.body.courseInstanceId
         } })
-      } else if ('codeReviewNumber' in req.body) {
+      } else if ('forCodeReview' in req.body && req.body.forCodeReview) {
         result = await Checklist.findOrCreate({ where: {
-          codeReviewNumber: req.body.codeReviewNumber,
+          forCodeReview: true,
           courseInstanceId: req.body.courseInstanceId
         } })
       } else {
-        return res.status(400).send('You must supply either a "week" or a "codeReviewNumber".')
+        return res.status(400).send('You must supply either a "week" or a truthy "forCodeReview".')
       }
       // Update maxPoints. This cannot be done with findOrCreate as by default courses have null as maxPoints
       result = await Checklist.update(
@@ -173,7 +174,7 @@ module.exports = {
       await Promise.all(checklistWeekItems.filter(item => !checklistIdsNow.includes(item.id)).map(item => item.destroy()))
 
       res.status(200).send({
-        message: `Checklist saved successfully for ${'week' in req.body ? `week ${req.body.week}` : `code review ${req.body.codeReviewNumber}`}.`,
+        message: `Checklist saved successfully for ${'week' in req.body ? `week ${req.body.week}` : `code review`}.`,
         result: { ...result[1].dataValues, list: checklistJson },
         data: req.body
       })
@@ -192,7 +193,7 @@ module.exports = {
    */
   async getOne(req, res) {
     try {
-      if ((typeof req.body.week !== 'number' && typeof req.body.codeReviewNumber !== 'number') || typeof req.body.courseInstanceId !== 'number') {
+      if ((typeof req.body.week !== 'number' && !req.body.forCodeReview) || typeof req.body.courseInstanceId !== 'number') {
         res.status(400).send({
           message: 'Missing or malformed inputs.',
           data: req.body
@@ -212,7 +213,8 @@ module.exports = {
         },
         where: {
           courseInstanceId: req.body.courseInstanceId,
-          week: req.body.week
+          week: req.body.week,
+          forCodeReview: false
         }
       }) : await Checklist.findOne({
         attributes: {
@@ -220,7 +222,7 @@ module.exports = {
         },
         where: {
           courseInstanceId: req.body.courseInstanceId,
-          codeReviewNumber: req.body.codeReviewNumber
+          forCodeReview: true
         }
       })
 
