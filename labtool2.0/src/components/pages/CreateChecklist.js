@@ -62,12 +62,8 @@ export const CreateChecklist = props => {
         return { error: true }
       }
       return { kind: 'week', number }
-    } else if (value.startsWith('codeReview')) {
-      const number = Number(value.slice(10), 10)
-      if (!number) {
-        return { error: true }
-      }
-      return { kind: 'codeReview', number }
+    } else if (value == 'codeReview') {
+      return { kind: 'codeReview', number: null }
     } else {
       return { error: true }
     }
@@ -102,16 +98,9 @@ export const CreateChecklist = props => {
         return
       }
       data.week = number
+      data.forCodeReview = false
     } else if (kind === 'codeReview') {
-      const codeReviews = props.selectedInstance.amountOfCodeReviews
-      if (number <= 0 || number > codeReviews) {
-        props.showNotification({
-          message: 'Invalid code review.',
-          error: true
-        })
-        return
-      }
-      data.codeReviewNumber = number
+      data.forCodeReview = true
     }
 
     try {
@@ -197,8 +186,9 @@ export const CreateChecklist = props => {
       return
     } else if (obj.kind === 'week') {
       data.week = obj.number
+      data.forCodeReview = false
     } else if (obj.kind === 'codeReview') {
-      data.codeReviewNumber = obj.number
+      data.forCodeReview = true
     }
     state.canSave = false
     props.getOneChecklist(data)
@@ -219,8 +209,9 @@ export const CreateChecklist = props => {
       if (obj.kind === 'week') {
         const week = obj.number > props.selectedInstance.weekAmount ? props.courses.find(course => course.id === state.copyCourse).weekAmount + 1 : obj.number
         data.week = week
+        data.forCodeReview = false
       } else if (obj.kind === 'codeReview') {
-        data.codeReviewNumber = obj.number
+        data.forCodeReview = true
       }
       props.getOneChecklist(data)
     } else if (state.copyWeek) {
@@ -236,8 +227,9 @@ export const CreateChecklist = props => {
       }
       if (obj.kind === 'week') {
         data.week = obj.number
+        data.forCodeReview = false
       } else if (obj.kind === 'codeReview') {
-        data.codeReviewNumber = obj.number
+        data.forCodeReview = true
       }
       props.getOneChecklist(data)
     }
@@ -245,7 +237,7 @@ export const CreateChecklist = props => {
 
   const validateChecklist = checklist => {
     return (
-      (!!checklist.week || !!checklist.codeReviewNumber) &&
+      (!!checklist.week || !!checklist.forCodeReview) &&
       !!checklist.list &&
       Object.keys(checklist.list).every(listKey => {
         return (
@@ -264,8 +256,9 @@ export const CreateChecklist = props => {
     const obj = parseChecklistValue(state.current)
     if (obj.kind === 'week') {
       index.week = obj.number
+      index.forCodeReview = false
     } else if (obj.kind === 'codeReview') {
-      index.codeReviewNumber = obj.number
+      index.forCodeReview = true
     }
     if (validateChecklist({ ...index, ...data })) {
       try {
@@ -664,12 +657,10 @@ const createWeekDropdowns = selectedInstance => {
       text: `Week ${week}`
     })
   }
-  for (let cr = 1; cr <= selectedInstance.amountOfCodeReviews; ++cr) {
-    options.push({
-      value: `codeReview${cr}`,
-      text: `Code Review ${cr}`
-    })
-  }
+  options.push({
+    value: 'codeReview',
+    text: 'Code Review'
+  })
   if (selectedInstance.finalReview) {
     options.push({
       value: `week${selectedInstance.weekAmount + 1}`,

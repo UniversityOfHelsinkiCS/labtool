@@ -22,7 +22,7 @@ module.exports = {
       id: 10003,
       createdAt: '2018-03-26',
       updatedAt: '2018-03-26',
-      codeReviewNumber: 1,
+      forCodeReview: true,
       courseInstanceId: 10011,
       master: false
     }

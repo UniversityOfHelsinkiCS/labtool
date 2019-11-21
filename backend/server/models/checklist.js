@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     'Checklist',
     {
       week: DataTypes.INTEGER,
-      codeReviewNumber: DataTypes.INTEGER,
+      forCodeReview: DataTypes.BOOLEAN,
       master: DataTypes.BOOLEAN,
       maxPoints: DataTypes.DOUBLE
     },
