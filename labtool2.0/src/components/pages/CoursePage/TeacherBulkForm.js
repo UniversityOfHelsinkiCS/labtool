@@ -49,7 +49,16 @@ export const CoursePageTeacherBulkForm = props => {
           <Grid columns={2} divided style={{ width: '90%', display: 'inline-block' }}>
             <Grid.Row>
               <Grid.Column>
-                <Dropdown id="tagDropdown" style={{ float: 'left', display: 'inline', width: '48%' }} options={dropDownTags} onChange={changeSelectedTag} placeholder="Choose tag" fluid selection />
+                <Dropdown
+                  id="tagDropdown"
+                  style={{ float: 'left', display: 'inline', width: '48%' }}
+                  options={dropDownTags}
+                  disabled={disabled}
+                  onChange={changeSelectedTag}
+                  placeholder="Choose tag"
+                  fluid
+                  selection
+                />
                 <div className="two ui buttons" style={{ float: 'right', display: 'inline', width: '48%' }}>
                   <button
                     className="ui icon positive button"
@@ -80,6 +89,7 @@ export const CoursePageTeacherBulkForm = props => {
                 <Dropdown
                   id="assistantDropdown"
                   options={dropDownTeachers}
+                  disabled={disabled}
                   onChange={changeSelectedTeacher}
                   placeholder="Select teacher"
                   fluid
