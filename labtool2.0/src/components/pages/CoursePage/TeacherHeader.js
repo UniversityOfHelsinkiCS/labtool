@@ -15,7 +15,7 @@ export const CoursePageTeacherHeader = props => {
   const courseStart = selectedInstance ? new Date(selectedInstance.start) : timeNow
   const courseEnd = selectedInstance ? new Date(selectedInstance.end) : timeNow
   // suggest activations to be enabled for 30 days, or until the course ends
-  const suggestedActivationStatus = timeNow.getTime() - courseStart.getTime() < 30 * 24 * 60 * 60 * 1000 || timeNow.getTime() >= courseEnd.getTime()
+  const suggestedActivationStatus = timeNow.getTime() - courseStart.getTime() < 30 * 24 * 60 * 60 * 1000 && timeNow.getTime() < courseEnd.getTime()
   const actualActivationStatus = selectedInstance ? selectedInstance.active : null
 
   return (
