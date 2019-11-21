@@ -25,7 +25,7 @@ describe('<ReviewStudentCodeReviews />', () => {
       checklists: [
         {
           id: 20003,
-          codeReviewNumber: 1,
+          forCodeReview: true,
           list: {
             Koodi: [
               {

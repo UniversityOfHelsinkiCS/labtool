@@ -90,7 +90,7 @@ export const ReviewStudentCodeReview = props => {
   }
 
   const getMaximumPoints = () => {
-    const checklist = props.selectedInstance.checklists.find(checkl => checkl.codeReviewNumber === props.codeReviewNumber)
+    const checklist = props.selectedInstance.checklists.find(checkl => checkl.forCodeReview)
     if (checklist && checklist.maxPoints) {
       return checklist.maxPoints
     }
@@ -127,7 +127,7 @@ export const ReviewStudentCodeReview = props => {
 
   const student = props.courseData.data.find(student => student.id === Number(props.studentInstance))
   const cr = student.codeReviews.find(cr => cr.reviewNumber === Number(props.codeReviewNumber))
-  const checkList = props.selectedInstance.checklists.find(checkl => checkl.codeReviewNumber === Number(props.codeReviewNumber))
+  const checkList = props.selectedInstance.checklists.find(checkl => checkl.forCodeReview)
   const maxPoints = getMaximumPoints()
   const weekPoints = student.weeks
     .map(week => week.points)
