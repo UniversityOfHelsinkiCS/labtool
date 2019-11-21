@@ -317,8 +317,8 @@ StudentTable.propTypes = {
   selectedInstance: PropTypes.object.isRequired,
   coursePageLogic: PropTypes.object.isRequired,
   tags: PropTypes.object.isRequired,
-  courseData: PropTypes.object.isRequired,
-  loggedInUser: PropTypes.object.isRequired,
+  courseData: PropTypes.object,
+  loggedInUser: PropTypes.object,
 
   associateTeacherToStudent: PropTypes.func.isRequired,
   showAssistantDropdown: PropTypes.func.isRequired,
