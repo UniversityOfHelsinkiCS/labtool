@@ -234,10 +234,10 @@ export const CoursePage = props => {
   const { user, courseId, courseData, coursePageLogic, courseInstance, selectedInstance, tags } = props
 
   // This function activates the course, leaving other data intact.
-  const activateCourse = () => {
+  const changeCourseActive = newState => {
     props.changeCourseField({
       field: 'active',
-      value: true
+      value: newState
     })
 
     const { weekAmount, weekMaxPoints, currentWeek, ohid, finalReview, coursesPage, courseMaterial, currentCodeReview } = selectedInstance
@@ -246,7 +246,7 @@ export const CoursePage = props => {
       weekAmount,
       weekMaxPoints,
       currentWeek,
-      active: true,
+      active: newState,
       ohid,
       finalReview,
       newCr: currentCodeReview,
@@ -315,7 +315,7 @@ export const CoursePage = props => {
     }
     return (
       <div style={{ overflowX: 'auto', overflowY: 'hidden', marginBottom: '-20em', paddingBottom: '20em' }}>
-        <CoursePageTeacherHeader selectedInstance={selectedInstance} courseInstance={courseInstance} activateCourse={activateCourse} moveToNextWeek={moveToNextWeek} />
+        <CoursePageTeacherHeader selectedInstance={selectedInstance} changeCourseActive={changeCourseActive} moveToNextWeek={moveToNextWeek} />
         <CoursePageTeacherMain
           courseId={courseId}
           courseData={courseData}
