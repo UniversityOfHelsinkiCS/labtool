@@ -11,14 +11,16 @@ export const CoursePageTeacherMain = props => {
   let droppedStudentCount = 0
   let activeStudentCount = 0
 
-  // exclude students with invalid registration completely from the statistics
-  students.filter(student => student.validRegistration).forEach(student => {
-    if (student.dropped) {
-      droppedStudentCount++
-    } else {
-      activeStudentCount++
-    }
-  })
+  // exclude students with mistaken registration completely from the statistics
+  students
+    .filter(student => student.validRegistration)
+    .forEach(student => {
+      if (student.dropped) {
+        droppedStudentCount++
+      } else {
+        activeStudentCount++
+      }
+    })
 
   const totalStudentCount = activeStudentCount + droppedStudentCount
 

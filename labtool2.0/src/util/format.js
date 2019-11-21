@@ -91,3 +91,5 @@ export const roundNumber = (number, places) => {
   }
   return number.toFixed(places)
 }
+
+export const roundPoints = points => roundNumber(points, 2)

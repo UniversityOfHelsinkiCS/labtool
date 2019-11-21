@@ -116,12 +116,12 @@ export const CoursePageTeacherBulkForm = props => {
                     state.showMassAssignForm = false
                   }}
                 >
-                  Valid course registration
+                  Intended course registration
                 </Button>
               </Grid.Column>
               <Grid.Column>
                 <Popup
-                  content="Mark a registration as invalid, if the student accidentally registered onto the course"
+                  content="Mark a registration as mistaken, if the student accidentally registered onto the course"
                   trigger={
                     <Button
                       disabled={disabled}
@@ -132,7 +132,7 @@ export const CoursePageTeacherBulkForm = props => {
                         state.showMassAssignForm = false
                       }}
                     >
-                      Invalid course registration
+                      Mistaken course registration
                     </Button>
                   }
                 />

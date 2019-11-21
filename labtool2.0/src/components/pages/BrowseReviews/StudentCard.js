@@ -20,7 +20,7 @@ export const StudentCard = ({ student, otherParticipations, handleMarkAsDropped,
         {!student.validRegistration && (
           <Label style={{ marginTop: 5, float: 'right' }}>
             <Icon name="warning" color="red" />
-            Invalid course registration
+            Mistaken course registration
           </Label>
         )}
         <Header.Subheader>
@@ -57,10 +57,10 @@ export const StudentCard = ({ student, otherParticipations, handleMarkAsDropped,
       }
       {
         <Popup
-          content="Mark a registration as invalid, if the student accidentally registered onto the course"
+          content="Mark a registration as mistaken, if the student accidentally registered onto the course"
           trigger={
             <Button basic id="buttonInvalidRegistration" color="red" style={{ float: 'right' }} onClick={() => handleMarkAsValidRegistration(!student.validRegistration)}>
-              {student.validRegistration ? 'Mark registration as invalid' : 'Mark registration as valid'}
+              {student.validRegistration ? 'Mark registration as mistaken' : 'Mark registration as intended'}
             </Button>
           }
         />
