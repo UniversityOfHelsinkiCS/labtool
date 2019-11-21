@@ -182,7 +182,7 @@ export const ReviewStudentCodeReview = props => {
 
   return (
     <>
-      <DocumentTitle title="Review student" />
+      <DocumentTitle title={`Review code review - ${student.User.firsts} ${student.User.lastname}`} />
       <div className="ReviewStudentCodeReview">
         <BackButton
           preset={arrivedFromCoursePage && 'coursePage'}

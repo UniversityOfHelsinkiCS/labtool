@@ -147,7 +147,7 @@ export const ModifyCourseInstancePage = props => {
 
   return (
     <>
-      <DocumentTitle title={`${selectedInstance.name} (modify)`} />
+      <DocumentTitle title={`Modify ${selectedInstance.name}`} />
       <div>
         <BackButton preset="coursePage" />
         <div className="CoursePage" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
