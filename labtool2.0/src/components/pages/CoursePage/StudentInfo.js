@@ -45,7 +45,7 @@ export const CoursePageStudentInfo = props => {
           {courseData.role === 'student' && !courseData.data.validRegistration && (
             <>
               <Message negative>
-                <Message.Header>Your registration has been marked as invalid</Message.Header>
+                <Message.Header>Your registration has been marked as mistaken</Message.Header>
                 <p>This means you likely registered on this course by mistake. If this is not the case, please contact the teacher of the course.</p>
               </Message>
               <br />
