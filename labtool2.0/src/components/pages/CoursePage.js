@@ -324,10 +324,17 @@ export const CoursePage = props => {
           coursePageLogic={coursePageLogic}
           tags={tags}
           students={sortStudentsAlphabeticallyByDroppedValue(courseData.data)}
-          exportCSV={exportCSV}
         />
         <br />
-        <CoursePageTeacherBulkForm courseId={courseId} coursePageLogic={coursePageLogic} dropDownTags={dropDownTags} dropDownTeachers={dropDownTeachers} {...coursePageBulkFormFunctions} />
+        <CoursePageTeacherBulkForm
+          courseId={courseId}
+          coursePageLogic={coursePageLogic}
+          dropDownTags={dropDownTags}
+          dropDownTeachers={dropDownTeachers}
+          {...coursePageBulkFormFunctions}
+          exportCSV={exportCSV}
+          selectedInstance={selectedInstance}
+        />
       </div>
     )
   } else {

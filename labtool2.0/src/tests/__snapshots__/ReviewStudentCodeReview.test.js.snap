@@ -89,6 +89,7 @@ exports[`<ReviewStudentCodeReviews /> ReviewStudentCodeReview Component should r
                   className="showMaxPoints"
                 >
                   Points
+                  0-4
                 </label>
                 <Input
                   name="points"
