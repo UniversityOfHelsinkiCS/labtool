@@ -223,17 +223,19 @@ export const ModifyCourseInstanceReview = props => {
   }
 
   const bulkCheckIssuesEnabled = selected => {
-    const selectedStudents = Object.keys(selected)
+    let selectedStudents = Object.keys(selected)
       .filter(s => selected[s])
       .map(s => props.courseData.data.find(t => t.id.toString() === s))
-    const studentIdsSlugs = selectedStudents.map(student => [student.userId, student.github.replace(/^https?:\/\/github.com\//, '')])
+    const studentIdsSlugs = selectedStudents.map(student => [student.userId, student.github])
 
     Promise.all(
       studentIdsSlugs.map(([userId, repo]) => {
-        //Ignore nonexisting repos
-        return getGithubRepo(repo)
-          .result.then(result => [userId, result.data])
-          .catch(error => (error.response && error.response.status === 404 ? Promise.resolve([userId, null]) : Promise.reject(error)))
+        if (repo.indexOf('github.com') > 0) {
+          repo = repo.replace(/^https?:\/\/github.com\//, '')
+          return getGithubRepo(repo)
+            .result.then(result => [userId, result.data])
+            .catch(error => (error.response && error.response.status === 404 ? Promise.resolve([userId, null]) : Promise.reject(error)))
+        }
       })
     )
       .then(githubRepos => {
