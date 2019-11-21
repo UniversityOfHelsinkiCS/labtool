@@ -1517,7 +1517,9 @@ exports[`<StudentTableRow /> StudentTableRow Component should render correctly 1
     key="pointssum"
     textAlign="center"
   >
-    0
+    <Points
+      points={0}
+    />
   </TableCell>
 </TableRow>
 `;

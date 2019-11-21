@@ -2,6 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Icon, Accordion, Form, Input, Button, Popup } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
+import { roundPoints } from '../../util/format'
+import { Points } from '../Points'
 
 export const WeekReviewCodeReview = props => {
   const {
@@ -28,7 +30,7 @@ export const WeekReviewCodeReview = props => {
     <Accordion key={`codereview${i}`} fluid styled id={`reviewCodeReview${cr.reviewNumber}`}>
       {' '}
       <Accordion.Title className="codeReview" active={doOpen} index={i} onClick={handleClickWeek}>
-        <Icon name="dropdown" /> Code Review {cr.reviewNumber} {cr.points !== null ? `, points ${cr.points}${maxPoints !== null ? ` / ${maxPoints}` : ''}` : ''}
+        <Icon name="dropdown" /> Code Review {cr.reviewNumber} {cr.points !== null ? `, points ${roundPoints(cr.points)}${maxPoints !== null ? ` / ${roundPoints(maxPoints)}` : ''}` : ''}
       </Accordion.Title>
       <Accordion.Content active={doOpen}>
         {isTeacher ? (
@@ -59,7 +61,13 @@ export const WeekReviewCodeReview = props => {
             ) : (
               'No review linked yet'
             )}
-            {cr.points !== null ? <h4>{cr.points} points</h4> : <h4>Not graded yet</h4>}
+            {cr.points !== null ? (
+              <h4>
+                <Points points={cr.points} /> points
+              </h4>
+            ) : (
+              <h4>Not graded yet</h4>
+            )}
             {hasChecklist ? (
               <>
                 <h3>Review</h3>
@@ -77,7 +85,7 @@ export const WeekReviewCodeReview = props => {
           </>
         ) : (
           <>
-            <strong>Points: </strong> {cr.points !== null ? `${cr.points}${maxPoints !== null ? ` / ${maxPoints}` : ''}` : 'Not graded yet'}
+            <strong>Points: </strong> {cr.points !== null ? `${roundPoints(cr.points)}${maxPoints !== null ? ` / ${roundPoints(maxPoints)}` : ''}` : 'Not graded yet'}
             <br />
             <strong>GitHub: </strong>
             <a href={cr.toReview.github || cr.repoToReview} target="_blank" rel="noopener noreferrer">
