@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Accordion, Button, Icon, Dropdown, Grid, Popup } from 'semantic-ui-react'
 import { usePersistedState } from '../../../hooks/persistedState'
+import { Link } from 'react-router-dom'
 
 export const CoursePageTeacherBulkForm = props => {
   const {
@@ -17,7 +18,9 @@ export const CoursePageTeacherBulkForm = props => {
     bulkMarkDropped,
     bulkMarkNotDropped,
     bulkMarkValid,
-    bulkMarkInvalid
+    bulkMarkInvalid,
+    exportCSV,
+    selectedInstance
   } = props
   const state = usePersistedState(`CoursePage-${courseId}`, { showMassAssignForm: false })
   const numSelected = Object.keys(coursePageLogic.selectedStudents).length
@@ -28,17 +31,35 @@ export const CoursePageTeacherBulkForm = props => {
       <Accordion>
         <Accordion.Title style={{ background: '#f0f0f0' }} active={state.showMassAssignForm} index={0} onClick={() => (state.showMassAssignForm = !state.showMassAssignForm)}>
           <Icon size="big" name={state.showMassAssignForm ? 'caret down' : 'caret up'} />
-          <h4 style={{ display: 'inline' }}>Modify selected students</h4> ({numSelected > 0 ? <b>{numSelected} selected</b> : <span>{numSelected} selected</span>})
+          <h4 style={{ display: 'inline' }}>Student tools</h4> (
+          {numSelected > 0 ? (
+            <b>
+              {numSelected} student{numSelected === 1 ? '' : 's'} selected
+            </b>
+          ) : (
+            <span>{numSelected} students selected</span>
+          )}
+          )
         </Accordion.Title>
         <Accordion.Content active={state.showMassAssignForm}>
+          <br />
+          <h3 style={{ display: 'inline' }}> Modify selected students</h3>
+          <br />
           <br />
           <Grid columns={2} divided style={{ width: '90%', display: 'inline-block' }}>
             <Grid.Row>
               <Grid.Column>
-                <Dropdown id="tagDropdown" style={{ float: 'left' }} options={dropDownTags} onChange={changeSelectedTag} placeholder="Choose tag" fluid selection />
-              </Grid.Column>
-              <Grid.Column>
-                <div className="two ui buttons" style={{ float: 'left' }}>
+                <Dropdown
+                  id="tagDropdown"
+                  style={{ float: 'left', display: 'inline', width: '48%' }}
+                  options={dropDownTags}
+                  disabled={disabled}
+                  onChange={changeSelectedTag}
+                  placeholder="Choose tag"
+                  fluid
+                  selection
+                />
+                <div className="two ui buttons" style={{ float: 'right', display: 'inline', width: '48%' }}>
                   <button
                     className="ui icon positive button"
                     disabled={disabled}
@@ -50,7 +71,7 @@ export const CoursePageTeacherBulkForm = props => {
                   >
                     <i className="plus icon" />
                   </button>
-                  <div className="or" />
+                  <div className="or" style={{ display: 'inline' }} />
                   <button
                     className="ui icon button"
                     disabled={disabled}
@@ -64,13 +85,19 @@ export const CoursePageTeacherBulkForm = props => {
                   </button>
                 </div>
               </Grid.Column>
-            </Grid.Row>
-            <Grid.Row>
               <Grid.Column>
-                <Dropdown id="assistantDropdown" options={dropDownTeachers} onChange={changeSelectedTeacher} placeholder="Select teacher" fluid selection />
-              </Grid.Column>
-              <Grid.Column>
+                <Dropdown
+                  id="assistantDropdown"
+                  options={dropDownTeachers}
+                  disabled={disabled}
+                  onChange={changeSelectedTeacher}
+                  placeholder="Select teacher"
+                  fluid
+                  selection
+                  style={{ float: 'left', display: 'inline', width: '48%' }}
+                />
                 <Button
+                  style={{ float: 'right', display: 'inline', width: '48%' }}
                   disabled={disabled}
                   onClick={() => {
                     bulkUpdateTeacher()
@@ -85,6 +112,7 @@ export const CoursePageTeacherBulkForm = props => {
             <Grid.Row>
               <Grid.Column>
                 <Button
+                  style={{ float: 'left', display: 'inline', width: '48%' }}
                   disabled={disabled}
                   onClick={() => {
                     bulkMarkNotDropped()
@@ -93,9 +121,8 @@ export const CoursePageTeacherBulkForm = props => {
                 >
                   Mark as non-dropped
                 </Button>
-              </Grid.Column>
-              <Grid.Column>
                 <Button
+                  style={{ float: 'right', display: 'inline', width: '48%' }}
                   disabled={disabled}
                   color="red"
                   onClick={() => {
@@ -106,24 +133,22 @@ export const CoursePageTeacherBulkForm = props => {
                   Mark as dropped
                 </Button>
               </Grid.Column>
-            </Grid.Row>
-            <Grid.Row>
               <Grid.Column>
                 <Button
+                  style={{ float: 'left', display: 'inline', width: '48%' }}
                   disabled={disabled}
                   onClick={() => {
                     bulkMarkValid()
                     state.showMassAssignForm = false
                   }}
                 >
-                  Valid course registration
+                  Intended course registration
                 </Button>
-              </Grid.Column>
-              <Grid.Column>
                 <Popup
-                  content="Mark a registration as invalid, if the student accidentally registered onto the course"
+                  content="Mark a registration as mistaken, if the student accidentally registered onto the course"
                   trigger={
                     <Button
+                      style={{ float: 'right', display: 'inline-block', width: '48%' }}
                       disabled={disabled}
                       basic
                       color="red"
@@ -132,10 +157,26 @@ export const CoursePageTeacherBulkForm = props => {
                         state.showMassAssignForm = false
                       }}
                     >
-                      Invalid course registration
+                      Mistaken course registration
                     </Button>
                   }
                 />
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
+          <br />
+          <h3>Tools</h3>
+          <Grid columns={2} divided style={{ width: '90%', display: 'inline-block' }}>
+            <Grid.Row>
+              <Grid.Column>
+                <Link to={`/labtool/massemail/${selectedInstance.ohid}`}>
+                  <Button size="small">Send email to multiple students</Button>
+                </Link>
+              </Grid.Column>
+              <Grid.Column>
+                <Button size="small" onClick={exportCSV}>
+                  Export CSV of all students
+                </Button>
               </Grid.Column>
             </Grid.Row>
           </Grid>
@@ -162,7 +203,8 @@ CoursePageTeacherBulkForm.propTypes = {
   bulkMarkDropped: PropTypes.func.isRequired,
   bulkMarkNotDropped: PropTypes.func.isRequired,
   bulkMarkValid: PropTypes.func.isRequired,
-  bulkMarkInvalid: PropTypes.func.isRequired
+  bulkMarkInvalid: PropTypes.func.isRequired,
+  exportCSV: PropTypes.func.isRequired
 }
 
 export default CoursePageTeacherBulkForm

@@ -15,6 +15,8 @@ import { usePersistedState } from '../../hooks/persistedState'
 import RepoLink from '../RepoLink'
 import BackButton from '../BackButton'
 import DocumentTitle from '../DocumentTitle'
+import { Points } from '../Points'
+import { roundPoints } from '../../util/format'
 
 /**
  *  The page which is used by teacher to review submissions,.
@@ -89,7 +91,7 @@ export const ReviewStudentCodeReview = props => {
   }
 
   const getMaximumPoints = () => {
-    const checklist = props.selectedInstance.checklists.find(checkl => checkl.codeReviewNumber === props.codeReviewNumber)
+    const checklist = props.selectedInstance.checklists.find(checkl => checkl.forCodeReview)
     if (checklist && checklist.maxPoints) {
       return checklist.maxPoints
     }
@@ -103,7 +105,7 @@ export const ReviewStudentCodeReview = props => {
 
   const copyChecklistOutput = async e => {
     e.preventDefault()
-    pstate.points = e.target.points.value
+    pstate.points = roundPoints(Number(e.target.points.value))
   }
 
   const isChecked = (checks, checklistItemId) =>
@@ -126,7 +128,7 @@ export const ReviewStudentCodeReview = props => {
 
   const student = props.courseData.data.find(student => student.id === Number(props.studentInstance))
   const cr = student.codeReviews.find(cr => cr.reviewNumber === Number(props.codeReviewNumber))
-  const checkList = props.selectedInstance.checklists.find(checkl => checkl.codeReviewNumber === Number(props.codeReviewNumber))
+  const checkList = props.selectedInstance.checklists.find(checkl => checkl.forCodeReview)
   const maxPoints = getMaximumPoints()
   const weekPoints = student.weeks
     .map(week => week.points)
@@ -200,10 +202,12 @@ export const ReviewStudentCodeReview = props => {
             <Grid.Row columns={2}>
               <Grid.Column>
                 <div align="left">
-                  <h3>Points so far: {weekPoints + codeReviewPoints} </h3>
-                  Earlier code review points: {codeReviewPoints}
+                  <h3>
+                    Points so far: <Points points={weekPoints + codeReviewPoints} />{' '}
+                  </h3>
+                  Earlier code review points: <Points points={codeReviewPoints} />
                   <br />
-                  Week points: {weekPoints}
+                  Week points: <Points points={weekPoints} />
                 </div>
                 <h3>Project to review</h3>
                 {toReviewProject ? (
@@ -229,7 +233,7 @@ export const ReviewStudentCodeReview = props => {
                 <Form onSubmit={handleSubmit}>
                   <Form.Group inline unstackable>
                     <Form.Field>
-                      <label className="showMaxPoints">Points{maxPoints !== null ? `0-${maxPoints}` : ''}</label>
+                      <label className="showMaxPoints">Points{maxPoints !== null ? `0-${roundPoints(maxPoints)}` : ''}</label>
 
                       <Input
                         name="points"
@@ -289,7 +293,9 @@ export const ReviewStudentCodeReview = props => {
                       ))}
                       <div>
                         <Form className="checklistOutput" onSubmit={copyChecklistOutput}>
-                          <p className="checklistOutputPoints">points: {checklistPoints.toFixed(2)}</p>
+                          <p className="checklistOutputPoints">
+                            points: <Points points={checklistPoints} />
+                          </p>
                           <input type="hidden" name="points" value={checklistPoints} />
                           <Button type="submit">Copy to review field</Button>
                         </Form>

@@ -9,12 +9,12 @@ import { getOneCI, getAllCI } from '../../services/courseInstance'
 import { resetChecklist, changeField, restoreChecklist, addTopic, addRow, removeTopic, removeRow, castPointsToNumber } from '../../reducers/checklistReducer'
 import './CreateChecklist.css'
 import { usePersistedState } from '../../hooks/persistedState'
-import { roundNumber } from '../../util/format'
 import { sortCoursesByName } from '../../util/sort'
 
 import BackButton from '../BackButton'
 import JsonEdit from '../JsonEdit'
 import DocumentTitle from '../DocumentTitle'
+import { Points } from '../Points'
 
 export const CreateChecklist = props => {
   const state = usePersistedState(`CreateChecklist_${props.courseId}`, {
@@ -63,12 +63,8 @@ export const CreateChecklist = props => {
         return { error: true }
       }
       return { kind: 'week', number }
-    } else if (value.startsWith('codeReview')) {
-      const number = Number(value.slice(10), 10)
-      if (!number) {
-        return { error: true }
-      }
-      return { kind: 'codeReview', number }
+    } else if (value == 'codeReview') {
+      return { kind: 'codeReview', number: null }
     } else {
       return { error: true }
     }
@@ -103,16 +99,9 @@ export const CreateChecklist = props => {
         return
       }
       data.week = number
+      data.forCodeReview = false
     } else if (kind === 'codeReview') {
-      const codeReviews = props.selectedInstance.amountOfCodeReviews
-      if (number <= 0 || number > codeReviews) {
-        props.showNotification({
-          message: 'Invalid code review.',
-          error: true
-        })
-        return
-      }
-      data.codeReviewNumber = number
+      data.forCodeReview = true
     }
 
     try {
@@ -198,8 +187,9 @@ export const CreateChecklist = props => {
       return
     } else if (obj.kind === 'week') {
       data.week = obj.number
+      data.forCodeReview = false
     } else if (obj.kind === 'codeReview') {
-      data.codeReviewNumber = obj.number
+      data.forCodeReview = true
     }
     state.canSave = false
     props.getOneChecklist(data)
@@ -220,8 +210,9 @@ export const CreateChecklist = props => {
       if (obj.kind === 'week') {
         const week = obj.number > props.selectedInstance.weekAmount ? props.courses.find(course => course.id === state.copyCourse).weekAmount + 1 : obj.number
         data.week = week
+        data.forCodeReview = false
       } else if (obj.kind === 'codeReview') {
-        data.codeReviewNumber = obj.number
+        data.forCodeReview = true
       }
       props.getOneChecklist(data)
     } else if (state.copyWeek) {
@@ -237,8 +228,9 @@ export const CreateChecklist = props => {
       }
       if (obj.kind === 'week') {
         data.week = obj.number
+        data.forCodeReview = false
       } else if (obj.kind === 'codeReview') {
-        data.codeReviewNumber = obj.number
+        data.forCodeReview = true
       }
       props.getOneChecklist(data)
     }
@@ -246,7 +238,7 @@ export const CreateChecklist = props => {
 
   const validateChecklist = checklist => {
     return (
-      (!!checklist.week || !!checklist.codeReviewNumber) &&
+      (!!checklist.week || !!checklist.forCodeReview) &&
       !!checklist.list &&
       Object.keys(checklist.list).every(listKey => {
         return (
@@ -265,8 +257,9 @@ export const CreateChecklist = props => {
     const obj = parseChecklistValue(state.current)
     if (obj.kind === 'week') {
       index.week = obj.number
+      index.forCodeReview = false
     } else if (obj.kind === 'codeReview') {
-      index.codeReviewNumber = obj.number
+      index.forCodeReview = true
     }
     if (validateChecklist({ ...index, ...data })) {
       try {
@@ -444,7 +437,10 @@ export const CreateChecklist = props => {
             </Header>
             <div>
               <p>
-                Max points: <strong className="bestPointsNumber">{bestPoints}</strong>
+                Total points for this section:{' '}
+                <strong className="bestPointsNumber">
+                  <Points points={bestPoints} />
+                </strong>
                 {bestPoints < 0 ? (
                   <span>
                     {' '}
@@ -596,7 +592,10 @@ export const CreateChecklist = props => {
               <Card className="maxPointsCard">
                 <Card.Content>
                   <p>
-                    Total points of the checklist: <strong className="totalPointsOfChecklist">{roundNumber(maxPoints, 2)}</strong>
+                    Total points of the checklist:{' '}
+                    <strong className="totalPointsOfChecklist">
+                      <Points points={maxPoints} />
+                    </strong>
                     {currentObj.kind === 'week' && currentObj.number <= props.selectedInstance.weekAmount ? (
                       <span>
                         {' '}
@@ -612,15 +611,12 @@ export const CreateChecklist = props => {
                   </p>
                 </Card.Content>
                 <Card.Content>
-                  {currentObj.kind === 'codeReview' ? (
-                    <p>
-                      Maximum points for this code review: <strong>{state.maximumPoints}</strong>
-                    </p>
-                  ) : (
-                    <p className="maxPointsForWeek">
-                      Maximum points for this week: <strong>{getMaximumPointsForWeek()}</strong>
-                    </p>
-                  )}
+                  <p className="maxPointsForWeek">
+                    Maximum points for this review:{' '}
+                    <strong>
+                      {currentObj.kind === 'codeReview' ? state.maximumPoints === '' ? '' : <Points points={Number(state.maximumPoints)} /> : <Points points={getMaximumPointsForWeek()} />}
+                    </strong>
+                  </p>
                 </Card.Content>
               </Card>
               <div>
@@ -631,7 +627,7 @@ export const CreateChecklist = props => {
                   trigger={<Icon name="question circle" />}
                   content={
                     currentObj.kind === 'week'
-                      ? `The points you define here will be the maximum points for this week. If no value is given, the maximum points for this week 
+                      ? `The points you define here will be the maximum points for this review. If no value is given, the maximum points for this review 
                 will stay the same as the defaulted weekly points which is ${props.selectedInstance.weekMaxPoints}`
                       : 'You need to specify max points for this code review so that the max points can be visible to students'
                   }
@@ -665,12 +661,10 @@ const createWeekDropdowns = selectedInstance => {
       text: `Week ${week}`
     })
   }
-  for (let cr = 1; cr <= selectedInstance.amountOfCodeReviews; ++cr) {
-    options.push({
-      value: `codeReview${cr}`,
-      text: `Code Review ${cr}`
-    })
-  }
+  options.push({
+    value: 'codeReview',
+    text: 'Code Review'
+  })
   if (selectedInstance.finalReview) {
     options.push({
       value: `week${selectedInstance.weekAmount + 1}`,

@@ -28,6 +28,10 @@ export const ManageTags = props => {
     props.resetLoading()
     props.getAllTags()
     props.getAllCI()
+
+    return () => {
+      props.willCreateNewTag()
+    }
   }, [])
 
   useEffect(() => {
