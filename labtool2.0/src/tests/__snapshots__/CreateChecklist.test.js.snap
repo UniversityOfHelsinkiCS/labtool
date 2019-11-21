@@ -277,6 +277,20 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
                 value="Koodin laadussa parantamisen varaa"
               />
             </div>
+            <div
+              className="minimumRequirement"
+              style={
+                Object {
+                  "marginTop": "1em",
+                }
+              }
+            >
+              <Checkbox
+                label="Minimum requirement"
+                onChange={[Function]}
+                type="checkbox"
+              />
+            </div>
           </CardContent>
           <form
             className="addForm"
@@ -433,6 +447,20 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
                 onChange={[Function]}
                 type="text"
                 value="Readmessa feelua"
+              />
+            </div>
+            <div
+              className="minimumRequirement"
+              style={
+                Object {
+                  "marginTop": "1em",
+                }
+              }
+            >
+              <Checkbox
+                label="Minimum requirement"
+                onChange={[Function]}
+                type="checkbox"
               />
             </div>
           </CardContent>

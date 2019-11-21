@@ -206,6 +206,7 @@ export const WeekReviews = props => {
         openWeeks={props.openWeeks || state.openWeeks}
         selectedInstance={props.selectedInstance}
         courseId={props.courseId}
+        courseData={props.courseData}
         user={props.user.user}
         isTeacher={isTeacher()}
         {...weekReviewFunctions}

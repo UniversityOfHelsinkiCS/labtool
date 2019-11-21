@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { Header, Input, Label, Button, Popup, Card, Dropdown, Loader, Icon } from 'semantic-ui-react'
+import { Header, Input, Label, Button, Popup, Card, Dropdown, Loader, Icon, Checkbox } from 'semantic-ui-react'
 import { showNotification } from '../../reducers/notificationReducer'
 import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 import { createChecklist, getOneChecklist } from '../../services/checklist'
@@ -168,12 +168,12 @@ export const CreateChecklist = props => {
     }
   }
 
-  const changeField = (key, name, field) => async e => {
+  const changeField = (key, name, field) => async (_, data) => {
     props.changeField({
       key,
       name,
       field,
-      value: e.target.value
+      value: data.type === 'checkbox' ? data.checked : data.value
     })
     state.canSave = true
   }
@@ -414,7 +414,7 @@ export const CreateChecklist = props => {
     return props.weekDropdowns.filter(option => option.value !== state.current)
   }
 
-  const renderChecklist = () => {
+  const renderChecklist = kind => {
     let maxPoints = 0
     let colorIndex = 0
     const checklistJsx = Object.keys(props.checklist.data || {}).map(key => {
@@ -482,6 +482,11 @@ export const CreateChecklist = props => {
                 <Label>Text</Label>
                 <Input className="textField" type="text" value={row.textWhenOff} onChange={changeField(key, row.name, 'textWhenOff')} />
               </div>
+              {kind !== 'codeReview' && (
+                <div className="minimumRequirement" style={{ marginTop: '1em' }}>
+                  <Checkbox label="Minimum requirement" checked={row.minimumRequirement} onChange={changeField(key, row.name, 'minimumRequirement')}></Checkbox>
+                </div>
+              )}
             </Card.Content>
           ))}
           <form className="addForm" onSubmit={newRow(key)}>
@@ -516,7 +521,7 @@ export const CreateChecklist = props => {
 
   const hasSelectedWeek = state.current !== undefined && state.current !== null
   const currentObj = parseChecklistValue(state.current)
-  const { checklistJsx, maxPoints } = props.loading.loading ? { checklistJsx: null, maxPoints: null } : renderChecklist()
+  const { checklistJsx, maxPoints } = props.loading.loading ? { checklistJsx: null, maxPoints: null } : renderChecklist(currentObj.kind)
   return (
     <div className="CreateChecklist">
       <BackButton preset="modifyCIPage" cleanup={state.clear} />
