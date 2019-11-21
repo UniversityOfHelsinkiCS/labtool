@@ -608,21 +608,12 @@ export const CreateChecklist = props => {
                 </p>
               </Card.Content>
               <Card.Content>
-                {currentObj.kind === 'codeReview' ? (
-                  <p>
-                    Maximum points for this code review:{' '}
-                    <strong>
-                      <Points points={state.maximumPoints} />
-                    </strong>
-                  </p>
-                ) : (
-                  <p className="maxPointsForWeek">
-                    Maximum points for this week:{' '}
-                    <strong>
-                      <Points points={getMaximumPointsForWeek()} />
-                    </strong>
-                  </p>
-                )}
+                <p className="maxPointsForWeek">
+                  Maximum points for this review:{' '}
+                  <strong>
+                    {currentObj.kind === 'codeReview' ? state.maximumPoints === '' ? '' : <Points points={Number(state.maximumPoints)} /> : <Points points={getMaximumPointsForWeek()} />}
+                  </strong>
+                </p>
               </Card.Content>
             </Card>
             <div>
@@ -633,7 +624,7 @@ export const CreateChecklist = props => {
                 trigger={<Icon name="question circle" />}
                 content={
                   currentObj.kind === 'week'
-                    ? `The points you define here will be the maximum points for this week. If no value is given, the maximum points for this week 
+                    ? `The points you define here will be the maximum points for this review. If no value is given, the maximum points for this review 
                 will stay the same as the defaulted weekly points which is ${props.selectedInstance.weekMaxPoints}`
                     : 'You need to specify max points for this code review so that the max points can be visible to students'
                 }
