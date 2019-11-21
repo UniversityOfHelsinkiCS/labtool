@@ -13,8 +13,9 @@ export const CoursePageTeacherHeader = props => {
   const weekAdvanceEnabled = selectedInstance.currentWeek < selectedInstance.weekAmount + (selectedInstance.finalReview ? 1 : 0)
   const timeNow = new Date()
   const courseStart = selectedInstance ? new Date(selectedInstance.start) : timeNow
-  // suggest activations to be enabled for 30 days
-  const suggestedActivationStatus = timeNow.getTime() - courseStart.getTime() < (30 * 24 * 60 * 60 * 1000)
+  const courseEnd = selectedInstance ? new Date(selectedInstance.end) : timeNow
+  // suggest activations to be enabled for 30 days, or until the course ends
+  const suggestedActivationStatus = timeNow.getTime() - courseStart.getTime() < 30 * 24 * 60 * 60 * 1000 || timeNow.getTime() >= courseEnd.getTime()
   const actualActivationStatus = selectedInstance ? selectedInstance.active : null
 
   return (
@@ -35,7 +36,11 @@ export const CoursePageTeacherHeader = props => {
         ) : (
           <div>
             <Message compact>
-              <Message.Header>This course has been going for a while, but registrations are still active.</Message.Header>
+              <Message.Header>
+                {timeNow.getTime() < courseEnd.getTime()
+                  ? 'This course has been going for a month, but registrations are still active.'
+                  : 'This course is already over, but registrations are still active.'}
+              </Message.Header>
             </Message>
 
             <Button color="green" style={{ marginLeft: '25px' }} onClick={() => changeCourseActive(false)}>
