@@ -7,6 +7,7 @@ import ReactMarkdown from 'react-markdown'
 
 import { WeekReviewComment } from './WeekReviewComment'
 import MissingMinimumRequirements from '../MissingMinimumRequirements'
+import { Points } from '../Points'
 
 export const WeekReviewWeek = props => {
   const {
@@ -43,7 +44,7 @@ export const WeekReviewWeek = props => {
     return (
       <Accordion fluid styled id={isFinalWeek ? 'reviewFinal' : `reviewWeek${week.weekNumber}`}>
         <Accordion.Title active={isWeekOpen} index={i} onClick={handleClickWeek}>
-          <Icon name="dropdown" /> {isFinalWeek ? 'Final Review' : `Week ${week.weekNumber}`}, points {week.points} / {getMaximumPointsForWeek(week.weekNumber)}
+          <Icon name="dropdown" /> {isFinalWeek ? 'Final Review' : `Week ${week.weekNumber}`}, points <Points points={week.points} /> / <Points points={getMaximumPointsForWeek(week.weekNumber)} />
         </Accordion.Title>
         <Accordion.Content active={isWeekOpen}>
           <h3>Review</h3>
@@ -51,7 +52,7 @@ export const WeekReviewWeek = props => {
             <Card.Content>
               <h4>
                 {' '}
-                Points {week.points} / {getMaximumPointsForWeek(week.weekNumber)}{' '}
+                Points <Points points={week.points} /> / <Points points={getMaximumPointsForWeek(week.weekNumber)} />{' '}
               </h4>
               <h4> Feedback </h4>
               <ReactMarkdown>{week.feedback}</ReactMarkdown>{' '}

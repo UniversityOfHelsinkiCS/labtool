@@ -14,6 +14,7 @@ import useLegacyState from '../hooks/legacyState'
 
 import { WeekReviewWeek } from './WeekReview/WeekReviewWeek'
 import { WeekReviewCodeReview } from './WeekReview/WeekReviewCodeReview'
+import { Points } from './Points'
 
 export const WeekReviews = props => {
   const state = useLegacyState({
@@ -231,20 +232,20 @@ export const WeekReviews = props => {
         <Accordion.Title active={true} index="total">
           <Icon name="check" />
           <strong> Total Points: </strong>
-          {(
-            props.student.weeks
-              .map(week => week.points)
-              .reduce((a, b) => {
-                return a + b
-              }, 0) +
-            props.student.codeReviews
-              .map(cr => cr.points)
-              .reduce((a, b) => {
-                return a + b
-              }, 0)
-          )
-            .toFixed(2)
-            .replace(/[.,]00$/, '')}
+          <Points
+            points={
+              props.student.weeks
+                .map(week => week.points)
+                .reduce((a, b) => {
+                  return a + b
+                }, 0) +
+              props.student.codeReviews
+                .map(cr => cr.points)
+                .reduce((a, b) => {
+                  return a + b
+                }, 0)
+            }
+          />
         </Accordion.Title>
       </Accordion>
     )

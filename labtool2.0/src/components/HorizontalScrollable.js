@@ -91,7 +91,7 @@ export const HorizontalScrollable = props => {
 
   const setContentScroll = x => {
     // use translateX because a repaint is way faster than a reflow caused by using .left
-    window.requestAnimationFrame(() => (content ? content.style.transform = `translateX(-${x}px)` : null))
+    window.requestAnimationFrame(() => (content ? (content.style.transform = `translateX(-${x}px)`) : null))
   }
 
   const updateScrollX = doNotUpdate => e => {

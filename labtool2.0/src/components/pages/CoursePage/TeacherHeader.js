@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Button, Table, Label, Message, Icon, Popup } from 'semantic-ui-react'
+import { Button, Table, Label, Message, Popup } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import CoursePageHeader from './Header'
 
@@ -67,14 +67,16 @@ export const CoursePageTeacherHeader = props => {
             <Table.Cell>Week max points: {selectedInstance.weekMaxPoints}</Table.Cell>
             <Table.Cell textAlign="right">
               {' '}
-              <Link to={{
-                pathname: `/labtool/ModifyCourseInstanceCodeReviews/${selectedInstance.ohid}`,
-                state: { cameFromCoursePage: true }
-              }}>
-                <Popup trigger={<Button circular size="tiny" icon={{ name: 'shuffle', size: 'large', color: 'orange' }} />} content="Edit code reviews" />
+              <Link
+                to={{
+                  pathname: `/labtool/ModifyCourseInstanceCodeReviews/${selectedInstance.ohid}`,
+                  state: { cameFromCoursePage: true }
+                }}
+              >
+                <Popup trigger={<Button circular size="tiny" icon={{ name: 'shuffle', size: 'large', color: 'orange' }} />} content="Edit code reviews" position="bottom right" />
               </Link>
               <Link to={`/labtool/ModifyCourseInstancePage/${selectedInstance.ohid}`}>
-                <Popup trigger={<Button circular size="tiny" icon={{ name: 'edit', size: 'large', color: 'orange' }} />} content="Edit course" />
+                <Popup trigger={<Button circular size="tiny" icon={{ name: 'edit', size: 'large', color: 'orange' }} />} content="Edit course" position="top right" />
               </Link>
             </Table.Cell>
           </Table.Row>
