@@ -10,7 +10,7 @@ import { clearNotifications } from '../../reducers/notificationReducer'
 import { toggleCheckWeek, resetChecklist, restoreChecks } from '../../reducers/weekReviewReducer'
 import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 import store from '../../store'
-import { formatCourseName, trimDate } from '../../util/format'
+import { formatCourseName, trimDate, roundPoints } from '../../util/format'
 import { usePersistedState } from '../../hooks/persistedState'
 
 import { FormMarkdownTextArea } from '../MarkdownTextArea'
@@ -18,6 +18,7 @@ import RepoLink from '../RepoLink'
 import { PreviousWeekDetails } from './ReviewStudent/PreviousWeekDetails'
 
 import BackButton from '../BackButton'
+import { Points } from '../Points'
 
 const isFinalReview = props => props.weekNumber > props.selectedInstance.weekAmount
 
@@ -112,7 +113,7 @@ export const ReviewStudent = props => {
     return draftData
   }
 
-  const onClickSaveDraft = async e => {
+  const onClickSaveDraft = async () => {
     const content = {
       studentInstanceId: props.studentInstance,
       weekNumber: props.weekNumber,
@@ -127,7 +128,7 @@ export const ReviewStudent = props => {
 
   const copyChecklistOutput = async e => {
     e.preventDefault()
-    pstate.points = e.target.points.value
+    pstate.points = roundPoints(Number(e.target.points.value))
     pstate.feedback = e.target.text.value
   }
 
@@ -245,15 +246,19 @@ export const ReviewStudent = props => {
             <Grid.Column>
               {isFinalReview(props) ? (
                 <div align="left">
-                  <h3>Points before final review: {weekPoints + codeReviewPoints} </h3>
-                  Week points: {weekPoints} <br />
-                  Code review points: {codeReviewPoints}
+                  <h3>
+                    Points before final review: <Points points={weekPoints + codeReviewPoints} />{' '}
+                  </h3>
+                  Week points: <Points points={weekPoints} /> <br />
+                  Code review points: <Points points={codeReviewPoints} />
                 </div>
               ) : (
                 <div align="left">
-                  <h3>Points from previous weeks: {weekPoints + codeReviewPoints} </h3>
-                  Week points: {weekPoints} <br />
-                  Code review points: {codeReviewPoints}
+                  <h3>
+                    Points from previous weeks: <Points points={weekPoints + codeReviewPoints} />{' '}
+                  </h3>
+                  Week points: <Points points={weekPoints} /> <br />
+                  Code review points: <Points points={codeReviewPoints} />
                 </div>
               )}
               <PreviousWeekDetails weekData={previousWeekData} />
@@ -353,7 +358,9 @@ export const ReviewStudent = props => {
                     <div>
                       <Form className="checklistOutput" onSubmit={copyChecklistOutput}>
                         <Form.TextArea className="checklistOutputText" name="text" value={checklistOutput} style={{ width: '100%', height: '250px' }} />
-                        <p className="checklistOutputPoints">points: {checklistPoints.toFixed(2)}</p>
+                        <p className="checklistOutputPoints">
+                          points: <Points points={checklistPoints} />
+                        </p>
                         <input type="hidden" name="points" value={checklistPoints} />
                         <Button type="submit">Copy to review fields</Button>
                       </Form>

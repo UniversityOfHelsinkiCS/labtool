@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Button, Table, Label, Message, Icon, Popup } from 'semantic-ui-react'
+import { Button, Table, Label, Message, Popup } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import CoursePageHeader from './Header'
 
