@@ -22,6 +22,7 @@ import RevieweeDropdown from '../RevieweeDropdown'
 import RepoLink from '../RepoLink'
 import IssuesDisabledWarning from '../IssuesDisabledWarning'
 import { updateStudentProjectInfo, massUpdateStudentProjectInfo } from '../../services/studentinstances'
+import DocumentTitle from '../DocumentTitle'
 
 export const ModifyCourseInstanceReview = props => {
   const pstate = usePersistedState(`ModifyCourseInstanceCodeReviews_${props.courseId}`, {
@@ -226,7 +227,10 @@ export const ModifyCourseInstanceReview = props => {
     const selectedStudents = Object.keys(selected)
       .filter(s => selected[s])
       .map(s => props.courseData.data.find(t => t.id.toString() === s))
-    const studentIdsSlugs = selectedStudents.map(student => [student.userId, student.github.replace(/^https?:\/\/github.com\//, '')])
+    // filter out non-github repos
+    const studentIdsSlugs = selectedStudents
+      .filter(student => student.github.match(/^https?:\/\/github.com\/.+/))
+      .map(student => [student.userId, student.github.replace(/^https?:\/\/github.com\//, '')])
 
     Promise.all(
       studentIdsSlugs.map(([userId, repo]) => {
@@ -268,6 +272,9 @@ export const ModifyCourseInstanceReview = props => {
   }
 
   const displayIssuesDisabledIcon = student => {
+    if (!student.github.match(/^https?:\/\/github.com\/.+/)) {
+      return <Popup trigger={<Icon name="asterisk" size="large" color="grey" />} content={<span>This repository is not on GitHub, and its issue status cannot be checked.</span>} hoverable />
+    }
     if (!student.repoExists) {
       // display nothing, the warning will already be displayed by StudentTable
       return null
@@ -405,6 +412,7 @@ export const ModifyCourseInstanceReview = props => {
 
   return (
     <>
+      <DocumentTitle title={`Code reviews - ${props.selectedInstance.name}`} />
       <BackButton preset={arrivedFromCoursePage ? 'coursePage' : 'modifyCIPage'} cleanup={pstate.clear} />
       <div className="ModifyCourseInstanceCodeReviews" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
         <div style={{ overflowX: 'auto', overflowY: 'hidden' }}>

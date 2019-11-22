@@ -1,120 +1,125 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`<Register /> RegisterPage Component should render correctly 1`] = `
-<div
-  className="RegisterPage"
-  style={
-    Object {
-      "textAlign": "center",
-      "textAlignVertical": "center",
-    }
-  }
->
-  <Loader
-    active={false}
-    inline="centered"
+<Fragment>
+  <_default
+    title="Register"
   />
-  <Grid>
-    <GridRow
-      centered={true}
-    >
-      <div>
-        <h3>
-          Register for 
-        </h3>
-      </div>
-    </GridRow>
-  </Grid>
-  <Grid>
-    <GridRow
-      centered={true}
-    >
-      <Form
-        as="form"
-        className="Register"
-        onSubmit={[Function]}
+  <div
+    className="RegisterPage"
+    style={
+      Object {
+        "textAlign": "center",
+        "textAlignVertical": "center",
+      }
+    }
+  >
+    <Loader
+      active={false}
+      inline="centered"
+    />
+    <Grid>
+      <GridRow
+        centered={true}
       >
-        <FormGroup
-          inline={true}
+        <div>
+          <h3>
+            Register for 
+          </h3>
+        </div>
+      </GridRow>
+    </Grid>
+    <Grid>
+      <GridRow
+        centered={true}
+      >
+        <Form
+          as="form"
+          className="Register"
+          onSubmit={[Function]}
         >
-          <label
-            style={
-              Object {
-                "textAlign": "left",
-                "width": "100px",
-              }
-            }
+          <FormGroup
+            inline={true}
           >
-            Project name
-          </label>
-          <Input
-            className="form-control1"
-            icon="rocket"
-            iconPosition="left"
-            name="projectName"
-            onChange={[Function]}
-            placeholder="MyProjectName"
-            required={true}
-            style={
-              Object {
-                "minWidth": "30em",
+            <label
+              style={
+                Object {
+                  "textAlign": "left",
+                  "width": "100px",
+                }
               }
-            }
-            type="text"
-            value=""
-          />
-        </FormGroup>
-        <FormGroup
-          inline={true}
-        >
-          <label
-            style={
-              Object {
-                "textAlign": "left",
-                "width": "100px",
-              }
-            }
-          >
-            GitHub link
-          </label>
-          <Input
-            className="form-control2"
-            icon="github"
-            iconPosition="left"
-            name="github"
-            onChange={[Function]}
-            required={true}
-            style={
-              Object {
-                "minWidth": "30em",
-              }
-            }
-            type="url"
-            value="https://github.com"
-          />
-        </FormGroup>
-        <FormField>
-          <button
-            className="ui left floated blue button"
-            type="submit"
-          >
-             
-            Submit
-          </button>
-          <Link
-            to="/labtool/courses/undefined"
-          >
-             
-            <button
-              className="ui right floated button"
-              type="Cancel"
             >
-              Cancel
+              Project name
+            </label>
+            <Input
+              className="form-control1"
+              icon="rocket"
+              iconPosition="left"
+              name="projectName"
+              onChange={[Function]}
+              placeholder="MyProjectName"
+              required={true}
+              style={
+                Object {
+                  "minWidth": "30em",
+                }
+              }
+              type="text"
+              value=""
+            />
+          </FormGroup>
+          <FormGroup
+            inline={true}
+          >
+            <label
+              style={
+                Object {
+                  "textAlign": "left",
+                  "width": "100px",
+                }
+              }
+            >
+              GitHub link
+            </label>
+            <Input
+              className="form-control2"
+              icon="github"
+              iconPosition="left"
+              name="github"
+              onChange={[Function]}
+              required={true}
+              style={
+                Object {
+                  "minWidth": "30em",
+                }
+              }
+              type="url"
+              value="https://github.com"
+            />
+          </FormGroup>
+          <FormField>
+            <button
+              className="ui left floated blue button"
+              type="submit"
+            >
+               
+              Submit
             </button>
-          </Link>
-        </FormField>
-      </Form>
-    </GridRow>
-  </Grid>
-</div>
+            <Link
+              to="/labtool/courses/undefined"
+            >
+               
+              <button
+                className="ui right floated button"
+                type="Cancel"
+              >
+                Cancel
+              </button>
+            </Link>
+          </FormField>
+        </Form>
+      </GridRow>
+    </Grid>
+  </div>
+</Fragment>
 `;
