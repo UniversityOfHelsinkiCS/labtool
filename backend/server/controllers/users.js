@@ -254,15 +254,25 @@ module.exports = {
     if (req.authenticated.success) {
       try {
         const userId = req.decoded.id
+
         const siToRemove = await StudentInstance.findOne({
+          raw: true,
           where: {
-            id: req.body.id,
-            userId
+            id: req.body.id
           }
         })
         if (!siToRemove) {
-          // the student instance to be removed doesn't belong to the logged in user
-          return res.status(400).send('The student instance can be removed only by the student himself')
+          return res.status(400).send('The student instance does not exist')
+        }
+
+        const teacher = await TeacherInstance.findOne({
+          where: {
+            userId: req.decoded.id,
+            courseInstanceId: siToRemove.courseInstanceId
+          }
+        })
+        if (siToRemove.userId !== userId && !teacher) {
+          return res.status(400).send('You must be the student himself or the teacher of the courrse to remove this student instance')
         }
         if (siToRemove.validRegistration) {
           return res.status(400).send('The student instance can be removed only when his validRegistration has been marked as false')
