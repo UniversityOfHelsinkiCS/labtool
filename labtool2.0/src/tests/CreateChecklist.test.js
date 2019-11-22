@@ -187,7 +187,7 @@ describe('<CreateChecklist /> component', () => {
 
       it('if user adds maximum points, the given points are shown', () => {
         wrapper.find('.maxPointsInput').simulate('change', { target: { value: '5' } })
-        expect(wrapper.find('.maxPointsForWeek').text()).toContain('Maximum points for this week:')
+        expect(wrapper.find('.maxPointsForWeek').text()).toContain('Maximum points for this review:')
         expect(wrapper.find('.maxPointsForWeek Points').prop('points')).toEqual(5)
         wrapper.find('.maxPointsInput').simulate('change', { target: { value: '' } })
       })

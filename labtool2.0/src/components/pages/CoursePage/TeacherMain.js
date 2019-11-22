@@ -6,12 +6,12 @@ import { Link } from 'react-router-dom'
 import StudentTable from '../../StudentTable'
 
 export const CoursePageTeacherMain = props => {
-  const { loggedInUser, courseData, students, courseId, selectedInstance, coursePageLogic, tags, exportCSV } = props
+  const { loggedInUser, courseData, students, courseId, selectedInstance, coursePageLogic, tags } = props
 
   let droppedStudentCount = 0
   let activeStudentCount = 0
 
-  // exclude students with invalid registration completely from the statistics
+  // exclude students with mistaken registration completely from the statistics
   students
     .filter(student => student.validRegistration)
     .forEach(student => {
@@ -50,14 +50,6 @@ export const CoursePageTeacherMain = props => {
         persistentFilterKey={`CoursePage_filters_${courseId}`}
       />
       <br />
-      {
-        <Link to={`/labtool/massemail/${selectedInstance.ohid}`}>
-          <Button size="small">Send email to multiple students</Button>
-        </Link>
-      }
-      <Button size="small" onClick={exportCSV}>
-        Export CSV of all students
-      </Button>
     </div>
   )
 }
@@ -69,8 +61,6 @@ CoursePageTeacherMain.propTypes = {
   tags: PropTypes.object.isRequired,
   courseId: PropTypes.string.isRequired,
   students: PropTypes.array.isRequired,
-
-  exportCSV: PropTypes.func.isRequired,
   loggedInUser: PropTypes.object.isRequired
 }
 
