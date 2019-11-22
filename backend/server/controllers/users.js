@@ -1,4 +1,4 @@
-const { User, CourseInstance, TeacherInstance } = require('../models')
+const { User, CourseInstance, TeacherInstance, StudentInstance, CodeReview } = require('../models')
 const helper = require('../helpers/usersControllerHelper')
 const logger = require('../utils/logger')
 
@@ -245,5 +245,44 @@ module.exports = {
         res.status(400).send('Error removing assistant.')
       }
     }
+  },
+
+  async removeStudent(req, res) {
+    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
+    if (req.authenticated.success) {
+      try {
+        const userId = req.decoded.id
+        const siToRemove = await StudentInstance.findOne({
+          where: {
+            id: req.body.id,
+            userId
+          }
+        })
+        if (!siToRemove) {
+          // the student instance to be removed doesn't belong to the logged in user
+          return res.status(400).send('The student instance can be removed only by the student himself')
+        }
+        if (siToRemove.validRegistration) {
+          return res.status(400).send('The student instance can be removed only when his validRegistration has been marked as false')
+        }
+        // destroy the code review where toReview is req.body.id separately because the onDelete="cascade" has not been set to toReview
+        await CodeReview.destroy({
+          where: {
+            toReview: req.body.id
+          }
+        })
+        await StudentInstance.destroy({
+          where: {
+            id: req.body.id
+          }
+        })
+        res.status(200).send('The student instance was deleted')
+      } catch (exception) {
+        res.status(400).send('error removing the student')
+      }
+    }
   }
+
 }
