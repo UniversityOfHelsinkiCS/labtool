@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Form, Input, Button, Grid, Dropdown, Checkbox, Loader, Popup } from 'semantic-ui-react'
-import { getOneCI, modifyOneCI, coursePageInformation, getAllCI } from '../../services/courseInstance'
+import { getOneCI, modifyOneCI, coursePageInformation, getAllCI, copyInformationFromCourse } from '../../services/courseInstance'
 import { setFinalReview } from '../../reducers/selectedInstanceReducer'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
@@ -162,7 +162,10 @@ export const ModifyCourseInstancePage = props => {
 
   const copyCourseInformation = () => {
     if (state.copyCourse) {
-      // TODO
+      props.addRedirectHook({
+        hook: 'CI_COPY_INFO_'
+      })
+      props.copyInformationFromCourse(props.selectedInstance.ohid, state.copyCourse)
     }
   }
 
@@ -404,6 +407,7 @@ const mapDispatchToProps = {
   getAllCI,
   coursePageInformation,
   modifyOneCI,
+  copyInformationFromCourse,
   showNotification,
   clearNotifications,
   changeCourseField,
@@ -428,6 +432,7 @@ ModifyCourseInstancePage.propTypes = {
   getAllCI: PropTypes.func.isRequired,
   coursePageInformation: PropTypes.func.isRequired,
   modifyOneCI: PropTypes.func.isRequired,
+  copyInformationFromCourse: PropTypes.func.isRequired,
   showNotification: PropTypes.func.isRequired,
   clearNotifications: PropTypes.func.isRequired,
   changeCourseField: PropTypes.func.isRequired,

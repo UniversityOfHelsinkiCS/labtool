@@ -905,6 +905,25 @@ module.exports = {
   },
 
   /**
+   * Copy course information from another course. This copies
+   * the week amount, default maximum week points, checklists,
+   * course tags, and links to course page and material.
+   *   permissions: must be a teacher/assistant on the course
+   *     that we are copying to
+   *
+   * @param req
+   * @param res
+   * @returns {*|Promise<T>}
+   */
+  async copyCourseInformation(req, res) {
+    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
+
+    return res.status(200).send('TODO')
+  },
+
+  /**
    * Add a comment
    *   permissions: must be a teacher/assistant on the course,
    *     or be the student that we are commenting on

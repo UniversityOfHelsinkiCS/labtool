@@ -14,6 +14,7 @@ module.exports = (app) => {
   app.post('/api/courseinstances/coursepage', courseInstanceController.coursePage) // Tämä kysely suoritetaan kun mennään coursepage komponenttiin frontendissä.
   app.put('/api/courseinstances/:id', courseInstanceController.update) // Not public stuff could relate to issue #109
   app.get('/api/courses/:ohid', courseInstanceController.retrieveCourseStuff) // "apparently same as /api/course/instances/:ohid" no, very different info here -- hisahi
+  app.post('/api/courseinstances/copy', courseInstanceController.copyCourseInformation)
   app.post('/api/weeks/create', weekController.create)
   app.post('/api/weeks/getDraft', weekController.getDraft)
   app.post('/api/weeks/saveDraft', weekController.saveDraft)
