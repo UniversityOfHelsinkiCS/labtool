@@ -4,7 +4,7 @@ const finnish_localeCompare = (a, b) => {
 }
 
 if (Intl && Intl.Collator) {
-  const collator = new Intl.Collator('fi-u-co-trad')
+  const collator = new Intl.Collator('fi-u-co-trad') // make sure V == W
   finnish_collator = collator ? collator.compare : null
 }
 
