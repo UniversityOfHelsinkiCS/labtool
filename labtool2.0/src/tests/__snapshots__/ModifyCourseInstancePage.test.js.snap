@@ -56,6 +56,7 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
               </label>
               <Input
                 className="form-control1"
+                max={30}
                 min={1}
                 name="weekAmount"
                 onChange={[Function]}

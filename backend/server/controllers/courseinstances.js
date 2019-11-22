@@ -601,6 +601,10 @@ module.exports = {
               res.status(400).send('weekAmount must be a positive value.')
               return
             }
+            if (req.body.weekAmount > 30) {
+              res.status(400).send('weekAmount cannot be greater than 30.')
+              return
+            }
             if (req.body.weekMaxPoints < 0) {
               res.status(400).send('weekMaxPoints must be a non-negative value.')
               return
