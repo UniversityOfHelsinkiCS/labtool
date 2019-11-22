@@ -1,7 +1,7 @@
 import React from 'react'
 import { ModifyCourseInstancePage } from '../components/pages/ModifyCourseInstancePage'
 import { shallow } from 'enzyme'
-import { Popup, Dropdown, Checkbox } from 'semantic-ui-react'
+import { Popup, Checkbox } from 'semantic-ui-react'
 
 describe('<ModifyCourseInstancePage />', () => {
   let wrapper

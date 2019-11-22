@@ -1,20 +1,25 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`<CourseImport /> CourseImport Component should render correctly 1`] = `
-<div
-  className="CourseImport"
->
+<Fragment>
+  <_default
+    title="Course import"
+  />
   <div
-    className="mainContainer"
+    className="CourseImport"
   >
-    <Header
-      as="h2"
+    <div
+      className="mainContainer"
     >
-      Import courses
-    </Header>
-    <Loader
-      active={true}
-    />
+      <Header
+        as="h2"
+      >
+        Import courses
+      </Header>
+      <Loader
+        active={true}
+      />
+    </div>
   </div>
-</div>
+</Fragment>
 `;

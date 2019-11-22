@@ -1,63 +1,68 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`<Email/> Email Component should render correctly 1`] = `
-<div
-  className="Email"
-  style={
-    Object {
-      "textAlign": "center",
-      "textAlignVertical": "center",
-    }
-  }
->
-  <Loader
-    active={false}
-    inline="centered"
+<Fragment>
+  <_default
+    title="Email"
   />
-  <Grid
-    centered={true}
+  <div
+    className="Email"
+    style={
+      Object {
+        "textAlign": "center",
+        "textAlignVertical": "center",
+      }
+    }
   >
-    <div>
+    <Loader
+      active={false}
+      inline="centered"
+    />
+    <Grid
+      centered={true}
+    >
+      <div>
+        <GridRow>
+          <h3>
+            Please give your email address: 
+          </h3>
+        </GridRow>
+      </div>
       <GridRow>
-        <h3>
-          Please give your email address: 
-        </h3>
-      </GridRow>
-    </div>
-    <GridRow>
-      <Form
-        as="form"
-        onSubmit={[Function]}
-      >
-        <FormField>
-          <FormInput
-            as={[Function]}
-            className="form-control"
-            control={[Function]}
-            defaultValue=""
-            icon="mail"
-            iconPosition="left"
-            name="email"
-            placeholder="my.email@helsinki.fi"
-            style={
-              Object {
-                "minWidth": "20em",
+        <Form
+          as="form"
+          onSubmit={[Function]}
+        >
+          <FormField>
+            <FormInput
+              as={[Function]}
+              className="form-control"
+              control={[Function]}
+              defaultValue=""
+              icon="mail"
+              iconPosition="left"
+              name="email"
+              placeholder="my.email@helsinki.fi"
+              style={
+                Object {
+                  "minWidth": "20em",
+                }
               }
-            }
-            type="email"
-          />
-        </FormField>
-        <FormField>
-          <button
-            className="ui left floated green button"
-            type="submit"
-          >
-            Save
-          </button>
-          <div />
-        </FormField>
-      </Form>
-    </GridRow>
-  </Grid>
-</div>
+              type="email"
+            />
+          </FormField>
+          <FormField>
+            <button
+              className="ui left floated green button"
+              type="submit"
+            >
+              Save
+            </button>
+            <div />
+          </FormField>
+        </Form>
+      </GridRow>
+    </Grid>
+  </div>
+</Fragment>
 `;
