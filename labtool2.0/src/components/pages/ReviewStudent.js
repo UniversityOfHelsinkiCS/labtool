@@ -219,7 +219,7 @@ export const ReviewStudent = props => {
 
   return (
     <>
-      <DocumentTitle title={`Week ${weekData.weekNumber} - ${studentData.User.firsts} ${studentData.User.lastname}`} />
+      <DocumentTitle title={`Week ${weekData ? weekData.weekNumber : props.ownProps.weekNumber} - ${studentData.User.firsts} ${studentData.User.lastname}`} />
       <div className="ReviewStudent">
         <BackButton
           preset={arrivedFromCoursePage && 'coursePage'}
