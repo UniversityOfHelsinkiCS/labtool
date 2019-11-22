@@ -56,7 +56,7 @@ export const WeekReviews = props => {
   }
 
   const getMaximumPointsForCodeReview = codeReview => {
-    const checklist = props.selectedInstance.checklists.find(checkl => checkl.codeReviewNumber === codeReview)
+    const checklist = props.selectedInstance.checklists.find(checkl => checkl.forCodeReview)
     if (checklist && checklist.maxPoints) {
       return checklist.maxPoints
     }
@@ -206,6 +206,7 @@ export const WeekReviews = props => {
         openWeeks={props.openWeeks || state.openWeeks}
         selectedInstance={props.selectedInstance}
         courseId={props.courseId}
+        courseData={props.courseData}
         user={props.user.user}
         isTeacher={isTeacher()}
         {...weekReviewFunctions}

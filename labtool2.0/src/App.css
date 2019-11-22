@@ -22,6 +22,13 @@
   font-size: large;
 }
 
+.horizontalScrollableParent .icon::before {
+  /* use inline-block, since we might have horizontal scrolling 
+     in a table and the icons wouldn't scroll otherwise,
+     due to it using transform under the hood */
+  display: inline-block;
+}
+
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }

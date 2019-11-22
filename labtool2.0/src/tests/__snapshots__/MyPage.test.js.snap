@@ -1,181 +1,34 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`<MyPage /> MyPage Component should render correctly 1`] = `
-<div
-  className="MyPage"
->
-  <Container>
-    <Segment
-      padded={true}
-    >
-      <Header
-        as="h2"
+<Fragment>
+  <_default
+    title="My page"
+  />
+  <div
+    className="MyPage"
+  >
+    <Container>
+      <Segment
+        padded={true}
       >
-        Opiskelija
-        , 
-        Maarit Mirja
-      </Header>
-      <Table
-        as="table"
-        color="blue"
-        singleLine={true}
-        style={
-          Object {
-            "color": "grey",
-          }
-        }
-        textAlign="left"
-      >
-        <TableBody
-          as="tbody"
+        <Header
+          as="h2"
         >
-          <TableRow
-            as="tr"
-            cellAs="td"
-          >
-            <TableCell
-              as="td"
-            >
-              <Icon
-                as="i"
-                name="user"
-                size="big"
-                style={
-                  Object {
-                    "marginRight": 20,
-                  }
-                }
-              />
-              <em
-                style={
-                  Object {
-                    "color": "grey",
-                  }
-                }
-              >
-                tiraopiskelija1
-                 
-              </em>
-              <br />
-            </TableCell>
-            <TableCell
-              as="td"
-            />
-          </TableRow>
-          <TableRow
-            as="tr"
-            cellAs="td"
-          >
-            <TableCell
-              as="td"
-            >
-              <Icon
-                as="i"
-                name="id card outline"
-                size="big"
-                style={
-                  Object {
-                    "marginRight": 20,
-                  }
-                }
-              />
-              014578343
-              <br />
-            </TableCell>
-            <TableCell
-              as="td"
-            />
-          </TableRow>
-          <TableRow
-            as="tr"
-            cellAs="td"
-          >
-            <TableCell
-              as="td"
-            >
-              <Icon
-                as="i"
-                name="mail"
-                size="big"
-                style={
-                  Object {
-                    "marginRight": 20,
-                  }
-                }
-                tooltip="Add users to your feed"
-              />
-              maarit.opiskelija@helsinki.invalid
-              <br />
-            </TableCell>
-            <TableCell
-              as="td"
-              textAlign="right"
-              verticalAlign="bottom"
-            >
-              <Link
-                to="/labtool/email"
-              >
-                <Popup
-                  content="Edit email address"
-                  disabled={false}
-                  eventsEnabled={true}
-                  offset={0}
-                  on={
-                    Array [
-                      "click",
-                      "hover",
-                    ]
-                  }
-                  pinned={false}
-                  position="top left"
-                  trigger={
-                    <Button
-                      as="button"
-                      circular={true}
-                      icon={
-                        Object {
-                          "color": "blue",
-                          "name": "edit",
-                          "size": "large",
-                        }
-                      }
-                      size="tiny"
-                    />
-                  }
-                />
-              </Link>
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-    </Segment>
-  </Container>
-  <br />
-  <br />
-  <br />
-  <br />
-  <Container>
-    <Segment
-      padded={true}
-    >
-      <Header
-        as="h2"
-        className="CoursesHeader"
-      >
-        My Courses (Student)
-         
-      </Header>
-      <HorizontalScrollable>
+          Opiskelija
+          , 
+          Maarit Mirja
+        </Header>
         <Table
           as="table"
-          color="yellow"
-          key="grey"
+          color="blue"
           singleLine={true}
           style={
             Object {
-              "overflowX": "visible",
+              "color": "grey",
             }
           }
+          textAlign="left"
         >
           <TableBody
             as="tbody"
@@ -183,26 +36,91 @@ exports[`<MyPage /> MyPage Component should render correctly 1`] = `
             <TableRow
               as="tr"
               cellAs="td"
-              key="10011"
             >
               <TableCell
                 as="td"
               >
-                <Link
-                  to="/labtool/courses/TKT20010.2018.K.A.1"
+                <Icon
+                  as="i"
+                  name="user"
+                  size="big"
+                  style={
+                    Object {
+                      "marginRight": 20,
+                    }
+                  }
+                />
+                <em
+                  style={
+                    Object {
+                      "color": "grey",
+                    }
+                  }
                 >
-                  Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit (periodi IV, 2017-2018)
-                </Link>
+                  tiraopiskelija1
+                   
+                </em>
+                <br />
+              </TableCell>
+              <TableCell
+                as="td"
+              />
+            </TableRow>
+            <TableRow
+              as="tr"
+              cellAs="td"
+            >
+              <TableCell
+                as="td"
+              >
+                <Icon
+                  as="i"
+                  name="id card outline"
+                  size="big"
+                  style={
+                    Object {
+                      "marginRight": 20,
+                    }
+                  }
+                />
+                014578343
+                <br />
+              </TableCell>
+              <TableCell
+                as="td"
+              />
+            </TableRow>
+            <TableRow
+              as="tr"
+              cellAs="td"
+            >
+              <TableCell
+                as="td"
+              >
+                <Icon
+                  as="i"
+                  name="mail"
+                  size="big"
+                  style={
+                    Object {
+                      "marginRight": 20,
+                    }
+                  }
+                  tooltip="Add users to your feed"
+                />
+                maarit.opiskelija@helsinki.invalid
+                <br />
               </TableCell>
               <TableCell
                 as="td"
                 textAlign="right"
+                verticalAlign="bottom"
               >
                 <Link
-                  to="/labtool/courses/TKT20010.2018.K.A.1"
+                  to="/labtool/email"
                 >
                   <Popup
-                    content="View course"
+                    content="Edit email address"
                     disabled={false}
                     eventsEnabled={true}
                     offset={0}
@@ -221,7 +139,7 @@ exports[`<MyPage /> MyPage Component should render correctly 1`] = `
                         icon={
                           Object {
                             "color": "blue",
-                            "name": "eye",
+                            "name": "edit",
                             "size": "large",
                           }
                         }
@@ -234,39 +152,126 @@ exports[`<MyPage /> MyPage Component should render correctly 1`] = `
             </TableRow>
           </TableBody>
         </Table>
-      </HorizontalScrollable>
-      <div>
-        <br />
-        <Divider
-          horizontal={true}
-        />
-        <Container>
-          <Header
-            as="h2"
-            className="CoursesHeader"
-          >
-            My Courses (Teacher)
-          </Header>
-          <HorizontalScrollable>
-            <Table
-              as="table"
-              color="yellow"
-              key="grey"
-              singleLine={true}
-              style={
-                Object {
-                  "overflowX": "visible",
-                }
+      </Segment>
+    </Container>
+    <br />
+    <br />
+    <br />
+    <br />
+    <Container>
+      <Segment
+        padded={true}
+      >
+        <Header
+          as="h2"
+          className="CoursesHeader"
+        >
+          My Courses (Student)
+           
+        </Header>
+        <HorizontalScrollable>
+          <Table
+            as="table"
+            color="yellow"
+            key="grey"
+            singleLine={true}
+            style={
+              Object {
+                "overflowX": "visible",
               }
+            }
+          >
+            <TableBody
+              as="tbody"
             >
-              <TableBody
-                as="tbody"
-              />
-            </Table>
-          </HorizontalScrollable>
-        </Container>
-      </div>
-    </Segment>
-  </Container>
-</div>
+              <TableRow
+                as="tr"
+                cellAs="td"
+                key="10011"
+              >
+                <TableCell
+                  as="td"
+                >
+                  <Link
+                    to="/labtool/courses/TKT20010.2018.K.A.1"
+                  >
+                    Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit (periodi IV, 2017-2018)
+                  </Link>
+                </TableCell>
+                <TableCell
+                  as="td"
+                  textAlign="right"
+                >
+                  <Link
+                    to="/labtool/courses/TKT20010.2018.K.A.1"
+                  >
+                    <Popup
+                      content="View course"
+                      disabled={false}
+                      eventsEnabled={true}
+                      offset={0}
+                      on={
+                        Array [
+                          "click",
+                          "hover",
+                        ]
+                      }
+                      pinned={false}
+                      position="top left"
+                      trigger={
+                        <Button
+                          as="button"
+                          circular={true}
+                          icon={
+                            Object {
+                              "color": "blue",
+                              "name": "eye",
+                              "size": "large",
+                            }
+                          }
+                          size="tiny"
+                        />
+                      }
+                    />
+                  </Link>
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </HorizontalScrollable>
+        <div>
+          <br />
+          <Divider
+            horizontal={true}
+          />
+          <Container>
+            <Header
+              as="h2"
+              className="CoursesHeader"
+            >
+              My Courses (Teacher)
+            </Header>
+            <HorizontalScrollable>
+              <Table
+                as="table"
+                color="yellow"
+                key="grey"
+                singleLine={true}
+                style={
+                  Object {
+                    "overflowX": "visible",
+                  }
+                }
+              >
+                <TableBody
+                  as="tbody"
+                />
+              </Table>
+            </HorizontalScrollable>
+          </Container>
+        </div>
+      </Segment>
+    </Container>
+  </div>
+</Fragment>
 `;
