@@ -1,6 +1,14 @@
-export const finnishLocaleCompare = (a, b) => {
+let finnish_collator = null
+const finnish_localeCompare = (a, b) => {
   return a.localeCompare(b, 'fi-FI')
 }
+
+if (Intl && Intl.Collator) {
+  const collator = new Intl.Collator('fi-u-co-trad')
+  finnish_collator = collator ? collator.compare : null
+}
+
+export const finnishLocaleCompare = finnish_collator || finnish_localeCompare
 
 export const sortCourses = courses => {
   return courses
