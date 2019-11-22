@@ -22,6 +22,7 @@ import RevieweeDropdown from '../RevieweeDropdown'
 import RepoLink from '../RepoLink'
 import IssuesDisabledWarning from '../IssuesDisabledWarning'
 import { updateStudentProjectInfo, massUpdateStudentProjectInfo } from '../../services/studentinstances'
+import DocumentTitle from '../DocumentTitle'
 
 export const ModifyCourseInstanceReview = props => {
   const pstate = usePersistedState(`ModifyCourseInstanceCodeReviews_${props.courseId}`, {
@@ -405,6 +406,7 @@ export const ModifyCourseInstanceReview = props => {
 
   return (
     <>
+      <DocumentTitle title={`Code reviews - ${props.selectedInstance.name}`} />
       <BackButton preset={arrivedFromCoursePage ? 'coursePage' : 'modifyCIPage'} cleanup={pstate.clear} />
       <div className="ModifyCourseInstanceCodeReviews" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
         <div style={{ overflowX: 'auto', overflowY: 'hidden' }}>
