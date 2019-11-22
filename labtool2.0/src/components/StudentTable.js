@@ -143,6 +143,13 @@ export const StudentTable = props => {
   )
   dropDownFilterTags = dropDownFilterTags.map(tag => courseTags.find(t => t.id === tag.value))
 
+  // remove duplicate tags
+  const courseTagNames = courseTags.filter(tag => tag.courseInstanceId === props.selectedInstance.id).map(tag => tag.name)
+  // filter out tags if:
+  //     1. they are global, and
+  //     2. there is a course tag of the same name
+  dropDownTags = dropDownTags.filter(tag => !courseTagNames.includes(tag.text) || props.tags.tags.find(t => t.id === tag.value).courseInstanceId === props.selectedInstance.id)
+
   const dataFilter = data =>
     disableDefaultFilter ||
     // remove students when filtering assistants and it doesn't match

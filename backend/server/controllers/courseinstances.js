@@ -521,7 +521,7 @@ module.exports = {
         if (req.body.issuesDisabled && isAllowedToUpdate === 'student') {
           return res.status(403).send('You cannot modify this flag as a student.')
         }
-        if (req.body.github && isAllowedToUpdate === 'assistant') {
+        if (req.body.github && isAllowedToUpdate.includes('assistant')) {
           return res.status(403).send('You cannot modify the repository URL as an assistant.')
         }
         const targetStudent = await StudentInstance.findOne({

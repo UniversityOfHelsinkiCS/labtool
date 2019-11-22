@@ -56,7 +56,7 @@ export const RegisterPage = props => {
     setProjectLink(value)
     const repoLink = value.replace(/^https?:\/\//, '')
     if (repoLink.startsWith('github.com/')) {
-      setRepo(repoLink.substring(11))
+      setRepo(repoLink.substring(11).replace(/\/$/, ''))
     } else {
       setRepo(null)
     }
