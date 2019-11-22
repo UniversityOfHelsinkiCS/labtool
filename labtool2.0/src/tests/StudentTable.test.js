@@ -372,11 +372,19 @@ describe('<StudentTableRow />', () => {
         updatedAt: '2018-06-13T00:00:00.000Z'
       },
       {
-        id: 20002,
+        id: 2,
         name: 'HTML',
         color: 'yellow',
         createdAt: '2018-06-13T00:00:00.000Z',
         updatedAt: '2018-06-13T00:00:00.000Z'
+      },
+      {
+        id: 20002,
+        name: 'HTML',
+        color: 'yellow',
+        createdAt: '2018-06-13T00:00:00.000Z',
+        updatedAt: '2018-06-13T00:00:00.000Z',
+        courseInstanceId: 10011,
       },
       {
         id: 20003,

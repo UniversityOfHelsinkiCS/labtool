@@ -19,6 +19,8 @@ import CoursePageTeacherBulkForm from './CoursePage/TeacherBulkForm'
 import CoursePageTeacherHeader from './CoursePage/TeacherHeader'
 import CoursePageTeacherMain from './CoursePage/TeacherMain'
 
+import DocumentTitle from '../DocumentTitle'
+
 export const CoursePage = props => {
   useEffect(() => {
     // run on component mount
@@ -290,16 +292,21 @@ export const CoursePage = props => {
     props.modifyOneCI(content, selectedInstance.ohid)
   }
 
+  const documentTitle = <DocumentTitle title={selectedInstance.name} />
+
   /**
    * This part actually tells what to show to the user
    */
   if (props.courseData.role === 'student') {
     return (
-      <div key>
-        <CoursePageStudentRegister courseData={courseData} selectedInstance={selectedInstance} />
-        <CoursePageStudentInfo courseData={courseData} selectedInstance={selectedInstance} />
-        <CoursePageStudentWeeks courseId={courseId} courseData={courseData} />
-      </div>
+      <>
+        {documentTitle}
+        <div key>
+          <CoursePageStudentRegister courseData={courseData} selectedInstance={selectedInstance} />
+          <CoursePageStudentInfo courseData={courseData} selectedInstance={selectedInstance} />
+          <CoursePageStudentWeeks courseId={courseId} courseData={courseData} />
+        </div>
+      </>
     )
   } else if (props.courseData.role === 'teacher') {
     const coursePageBulkFormFunctions = {
@@ -314,28 +321,31 @@ export const CoursePage = props => {
       bulkMarkInvalid
     }
     return (
-      <div style={{ overflowX: 'auto', overflowY: 'hidden', marginBottom: '-20em', paddingBottom: '20em' }}>
-        <CoursePageTeacherHeader selectedInstance={selectedInstance} changeCourseActive={changeCourseActive} moveToNextWeek={moveToNextWeek} />
-        <CoursePageTeacherMain
-          courseId={courseId}
-          courseData={courseData}
-          selectedInstance={selectedInstance}
-          loggedInUser={user}
-          coursePageLogic={coursePageLogic}
-          tags={tags}
-          students={sortStudentsAlphabeticallyByDroppedValue(courseData.data)}
-        />
-        <br />
-        <CoursePageTeacherBulkForm
-          courseId={courseId}
-          coursePageLogic={coursePageLogic}
-          dropDownTags={dropDownTags}
-          dropDownTeachers={dropDownTeachers}
-          {...coursePageBulkFormFunctions}
-          exportCSV={exportCSV}
-          selectedInstance={selectedInstance}
-        />
-      </div>
+      <>
+        {documentTitle}
+        <div style={{ overflowX: 'auto', overflowY: 'hidden', marginBottom: '-20em', paddingBottom: '20em' }}>
+          <CoursePageTeacherHeader selectedInstance={selectedInstance} changeCourseActive={changeCourseActive} moveToNextWeek={moveToNextWeek} />
+          <CoursePageTeacherMain
+            courseId={courseId}
+            courseData={courseData}
+            selectedInstance={selectedInstance}
+            loggedInUser={user}
+            coursePageLogic={coursePageLogic}
+            tags={tags}
+            students={sortStudentsAlphabeticallyByDroppedValue(courseData.data)}
+          />
+          <br />
+          <CoursePageTeacherBulkForm
+            courseId={courseId}
+            coursePageLogic={coursePageLogic}
+            dropDownTags={dropDownTags}
+            dropDownTeachers={dropDownTeachers}
+            {...coursePageBulkFormFunctions}
+            exportCSV={exportCSV}
+            selectedInstance={selectedInstance}
+          />
+        </div>
+      </>
     )
   } else {
     return <div />
