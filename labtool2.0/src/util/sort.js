@@ -1,3 +1,15 @@
+let finnish_collator = null
+const finnish_localeCompare = (a, b) => {
+  return a.localeCompare(b, 'fi-FI')
+}
+
+if (Intl && Intl.Collator) {
+  const collator = new Intl.Collator('fi-u-co-trad') // make sure V == W
+  finnish_collator = collator ? collator.compare : null
+}
+
+export const finnishLocaleCompare = finnish_collator || finnish_localeCompare
+
 export const sortCourses = courses => {
   return courses
     .sort((a, b) => {
@@ -14,19 +26,13 @@ export const sortCoursesByName = courses => {
       return new Date(b.start) - new Date(a.start)
     })
     .sort((a, b) => {
-      return new Date(b.name) - new Date(a.name)
+      return finnishLocaleCompare(a.name, b.name)
     })
 }
 
 export const sortTags = tags => {
   return tags.sort((a, b) => {
-    if (a.name.toLowerCase() < b.name.toLowerCase()) {
-      return -1
-    } else if (a.name.toLowerCase() > b.name.toLowerCase()) {
-      return 1
-    } else {
-      return 0
-    }
+    return finnishLocaleCompare(a.name.toLowerCase(), b.name.toLowerCase())
   })
 }
 
@@ -35,8 +41,8 @@ export const sortStudentsAlphabeticallyByDroppedValue = students =>
     (a, b) =>
       !Number(a.validRegistration) - !Number(b.validRegistration) ||
       Number(a.dropped) - Number(b.dropped) ||
-      a.User.lastname.localeCompare(b.User.lastname) ||
-      a.User.firsts.localeCompare(b.User.firsts) ||
+      finnishLocaleCompare(a.User.lastname, b.User.lastname) ||
+      finnishLocaleCompare(a.User.firsts, b.User.firsts) ||
       a.id - b.id
   )
 
@@ -52,14 +58,9 @@ export const sortUsersByTeacherAssistantLastname = (users, assistants) => {
       return -1
     } else if (!aIsAssistant && bIsAssistant) {
       return 1
-    } else if (a.lastname > b.lastname) {
-      return 1
-    } else if (a.lastname < b.lastname) {
-      return -1
-    } else if (a.firsts > b.firsts) {
-      return -1
     } else {
-      return 1
+      return finnishLocaleCompare(a.lastname, b.lastname)
+        || finnishLocaleCompare(a.firsts, b.firsts)
     }
   })
 }
@@ -70,29 +71,17 @@ export const sortUsersBySysopLastname = users => {
       return -1
     } else if (!a.sysop && b.sysop) {
       return 1
-    } else if (a.lastname > b.lastname) {
-      return 1
-    } else if (a.lastname < b.lastname) {
-      return -1
-    } else if (a.firsts > b.firsts) {
-      return -1
     } else {
-      return 1
+      return finnishLocaleCompare(a.lastname, b.lastname)
+        || finnishLocaleCompare(a.firsts, b.firsts)
     }
   })
 }
 
 export const sortStudentsByLastname = students => {
   return students.sort((a, b) => {
-    if (a.User.lastname < b.User.lastname) {
-      return -1
-    } else if (a.User.lastname > b.User.lastname) {
-      return 1
-    } else if (a.User.firsts < b.User.firsts) {
-      return -1
-    } else {
-      return 1
-    }
+    return finnishLocaleCompare(a.User.lastname, b.User.lastname)
+      || finnishLocaleCompare(a.User.firsts, b.User.firsts)
   })
 }
 
