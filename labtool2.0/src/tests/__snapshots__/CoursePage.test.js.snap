@@ -323,8 +323,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
     }
   >
     <CoursePageTeacherHeader
-      activateCourse={[Function]}
-      courseInstance={Object {}}
+      changeCourseActive={[Function]}
       moveToNextWeek={[Function]}
       selectedInstance={
         Object {
