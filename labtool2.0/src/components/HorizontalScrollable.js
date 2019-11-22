@@ -99,7 +99,7 @@ export const HorizontalScrollable = props => {
     // pick one icon in the table and mess with it to force an update
     const icon = document.querySelector('.horizontalScrollableParent .icon')
     const display = icon.style.display
-    const frobulate = (() => {})
+    const frobulate = () => {}
 
     icon.style.display = 'none'
     frobulate(icon.offsetHeight)
@@ -139,7 +139,7 @@ export const HorizontalScrollable = props => {
       antibounce.scrollbar = true
       scrollbar.scrollLeft = newX
     }
-    
+
     // try updating icons. on Chrome, they wouldn't move when using transforms
     // use debouncing to prevent performance issues
     if (iconUpdateTimer) {
