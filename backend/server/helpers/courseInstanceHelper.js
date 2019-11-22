@@ -192,7 +192,7 @@ async function getRoleToViewStudentInstance(req, courseInstanceId, userId) {
     courseInstanceId
   } })
 
-  // Logged in user is teacher (not instructor) on the course
+  // Logged in user is assistant on course, even for some other student
   if (assistantInstance) {
     return 'other assistant'
   }
