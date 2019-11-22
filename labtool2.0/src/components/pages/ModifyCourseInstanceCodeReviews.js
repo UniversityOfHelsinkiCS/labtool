@@ -227,10 +227,11 @@ export const ModifyCourseInstanceReview = props => {
     const selectedStudents = Object.keys(selected)
       .filter(s => selected[s])
       .map(s => props.courseData.data.find(t => t.id.toString() === s))
+    const cleanSlug = slug => slug.split('/', 2).join('/')
     // filter out non-github repos
     const studentIdsSlugs = selectedStudents
       .filter(student => student.github.match(/^https?:\/\/github.com\/.+/))
-      .map(student => [student.userId, student.github.replace(/^https?:\/\/github.com\//, '')])
+      .map(student => [student.userId, cleanSlug(student.github.replace(/^https?:\/\/github.com\//, ''))])
 
     Promise.all(
       studentIdsSlugs.map(([userId, repo]) => {
@@ -267,7 +268,7 @@ export const ModifyCourseInstanceReview = props => {
 
   const disableIssuesDisabledWarning = student => {
     if (window.confirm('Hide this warning? (Perhaps the issues are enabled now?)')) {
-      props.updateStudentProjectInfo({ ...student, ohid: props.selectedInstance.ohid, issuesDisabled: false })
+      props.updateStudentProjectInfo({ ...student, ohid: props.selectedInstance.ohid, issuesDisabled: null })
     }
   }
 
