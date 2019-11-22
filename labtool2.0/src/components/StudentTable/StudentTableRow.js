@@ -117,7 +117,10 @@ export const StudentTableRow = props => {
   }
 
   const draftExists = weekNumber => {
-    return data.weekdrafts.filter(draft => draft.weekNumber === weekNumber).length === 1
+    if (data.weekdrafts && data.weekdrafts.filter(draft => draft.weekNumber === weekNumber).length === 1) {
+      return true
+    }
+    return false
   }
 
   const createWeekHeaders = (weeks, codeReviews, siId, dropped, validRegistration) => {
