@@ -152,7 +152,7 @@ module.exports = {
         }
       })
       if (!studentInstance) {
-        res.status(404).send('No student instance matched the given ID.')
+        res.status(400).send('No student instance matched the given ID.')
         return
       }
       const courseId = studentInstance.courseInstanceId
@@ -174,7 +174,7 @@ module.exports = {
         }
       })
       if (!codeReview) {
-        res.status(404).send('No code review matched the given student instance ID and review number.')
+        res.status(400).send('No code review matched the given student instance ID and review number.')
       }
       await CodeReview.update(
         {
@@ -254,7 +254,7 @@ module.exports = {
         }
       })
       if (!studentInstance) {
-        res.status(404).send('No student instance matched the given ID.')
+        res.status(400).send('No student instance matched the given ID.')
         return
       }
 
@@ -270,7 +270,7 @@ module.exports = {
         }
       )
       if (modifiedRows === 0) {
-        res.status(404).send('No code review matched the given student instance ID and review number.')
+        return res.status(400).send('No code review matched the given student instance ID and review number.')
       }
       res.status(200).send({
         message: 'Code review link added successfully.',
@@ -307,7 +307,7 @@ module.exports = {
         where: { id: req.body.reviewer }
       })
       if (!studentInstance) {
-        return res.status(404).send('no student with that ID found')
+        return res.status(400).send('no student with that ID found')
       }
       const courseInstance = await CourseInstance.findOne({
         where: { id: studentInstance.courseInstanceId }

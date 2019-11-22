@@ -118,7 +118,7 @@ const commentMessage = async (role, commentId) => {
       }
       return {
         success: false,
-        status: 404,
+        status: 400,
         error: 'Cannot send email to instructor because there is no instructor assigned to you.'
       }
     }

@@ -163,7 +163,7 @@ module.exports = {
         }
       })
       if (!tag) {
-        return res.status(404).send('There is no tag with that name.')
+        return res.status(400).send('There is no tag with that ID.')
       }
 
       const { id } = tag
@@ -218,7 +218,7 @@ module.exports = {
           }
         })
         if (!student) {
-          return res.status(404).send('Did not found student with that ID.')
+          return res.status(400).send('Did not found student with that ID.')
         }
 
         const teacher = await TeacherInstance.findOne({
@@ -237,7 +237,7 @@ module.exports = {
           }
         })
         if (!foundTag) {
-          return res.status(404).send('Did not find a tag with that ID.')
+          return res.status(400).send('Did not find a tag with that ID.')
         }
 
         const studentTag = await StudentTag.findOrCreate({
@@ -323,7 +323,7 @@ module.exports = {
           }
         })
         if (!student) {
-          return res.status(404).send('did not found student with that id')
+          return res.status(400).send('did not found student with that id')
         }
 
         const teacher = await TeacherInstance.findOne({
@@ -343,7 +343,7 @@ module.exports = {
           }
         })
         if (!studentTag) {
-          res.status(404).send('Did not find the given student tag.')
+          res.status(400).send('Did not find the given student tag.')
         }
 
         const removedTag = await studentTag.destroy()
