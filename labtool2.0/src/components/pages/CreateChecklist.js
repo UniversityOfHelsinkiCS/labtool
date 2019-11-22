@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { Header, Input, Label, Button, Popup, Card, Dropdown, Loader, Icon } from 'semantic-ui-react'
+import { Header, Input, Label, Button, Popup, Card, Dropdown, Loader, Icon, Checkbox } from 'semantic-ui-react'
 import { showNotification } from '../../reducers/notificationReducer'
 import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 import { createChecklist, getOneChecklist } from '../../services/checklist'
@@ -9,11 +9,12 @@ import { getOneCI, getAllCI } from '../../services/courseInstance'
 import { resetChecklist, changeField, restoreChecklist, addTopic, addRow, removeTopic, removeRow, castPointsToNumber } from '../../reducers/checklistReducer'
 import './CreateChecklist.css'
 import { usePersistedState } from '../../hooks/persistedState'
-import { roundNumber } from '../../util/format'
 import { sortCoursesByName } from '../../util/sort'
 
 import BackButton from '../BackButton'
 import JsonEdit from '../JsonEdit'
+import DocumentTitle from '../DocumentTitle'
+import { Points } from '../Points'
 
 export const CreateChecklist = props => {
   const state = usePersistedState(`CreateChecklist_${props.courseId}`, {
@@ -62,12 +63,8 @@ export const CreateChecklist = props => {
         return { error: true }
       }
       return { kind: 'week', number }
-    } else if (value.startsWith('codeReview')) {
-      const number = Number(value.slice(10), 10)
-      if (!number) {
-        return { error: true }
-      }
-      return { kind: 'codeReview', number }
+    } else if (value == 'codeReview') {
+      return { kind: 'codeReview', number: null }
     } else {
       return { error: true }
     }
@@ -102,16 +99,9 @@ export const CreateChecklist = props => {
         return
       }
       data.week = number
+      data.forCodeReview = false
     } else if (kind === 'codeReview') {
-      const codeReviews = props.selectedInstance.amountOfCodeReviews
-      if (number <= 0 || number > codeReviews) {
-        props.showNotification({
-          message: 'Invalid code review.',
-          error: true
-        })
-        return
-      }
-      data.codeReviewNumber = number
+      data.forCodeReview = true
     }
 
     try {
@@ -179,12 +169,12 @@ export const CreateChecklist = props => {
     }
   }
 
-  const changeField = (key, name, field) => async e => {
+  const changeField = (key, name, field) => async (_, data) => {
     props.changeField({
       key,
       name,
       field,
-      value: e.target.value
+      value: data.type === 'checkbox' ? data.checked : data.value
     })
     state.canSave = true
   }
@@ -197,8 +187,9 @@ export const CreateChecklist = props => {
       return
     } else if (obj.kind === 'week') {
       data.week = obj.number
+      data.forCodeReview = false
     } else if (obj.kind === 'codeReview') {
-      data.codeReviewNumber = obj.number
+      data.forCodeReview = true
     }
     state.canSave = false
     props.getOneChecklist(data)
@@ -219,8 +210,9 @@ export const CreateChecklist = props => {
       if (obj.kind === 'week') {
         const week = obj.number > props.selectedInstance.weekAmount ? props.courses.find(course => course.id === state.copyCourse).weekAmount + 1 : obj.number
         data.week = week
+        data.forCodeReview = false
       } else if (obj.kind === 'codeReview') {
-        data.codeReviewNumber = obj.number
+        data.forCodeReview = true
       }
       props.getOneChecklist(data)
     } else if (state.copyWeek) {
@@ -236,8 +228,9 @@ export const CreateChecklist = props => {
       }
       if (obj.kind === 'week') {
         data.week = obj.number
+        data.forCodeReview = false
       } else if (obj.kind === 'codeReview') {
-        data.codeReviewNumber = obj.number
+        data.forCodeReview = true
       }
       props.getOneChecklist(data)
     }
@@ -245,7 +238,7 @@ export const CreateChecklist = props => {
 
   const validateChecklist = checklist => {
     return (
-      (!!checklist.week || !!checklist.codeReviewNumber) &&
+      (!!checklist.week || !!checklist.forCodeReview) &&
       !!checklist.list &&
       Object.keys(checklist.list).every(listKey => {
         return (
@@ -264,8 +257,9 @@ export const CreateChecklist = props => {
     const obj = parseChecklistValue(state.current)
     if (obj.kind === 'week') {
       index.week = obj.number
+      index.forCodeReview = false
     } else if (obj.kind === 'codeReview') {
-      index.codeReviewNumber = obj.number
+      index.forCodeReview = true
     }
     if (validateChecklist({ ...index, ...data })) {
       try {
@@ -358,11 +352,11 @@ export const CreateChecklist = props => {
     state.canSave = true
   }
 
-  const getMaximumPoints = maximumPoints => {
-    if (!state.maximumPoints) {
-      return maximumPoints
+  const getMaximumPointsForWeek = () => {
+    if (state.maximumPoints !== '') {
+      return Number(state.maximumPoints)
     }
-    return Number(state.maximumPoints)
+    return props.selectedInstance.weekMaxPoints
   }
 
   const removeTopic = key => async () => {
@@ -421,8 +415,9 @@ export const CreateChecklist = props => {
     return props.weekDropdowns.filter(option => option.value !== state.current)
   }
 
-  const renderChecklist = () => {
+  const renderChecklist = kind => {
     let maxPoints = 0
+    let colorIndex = 0
     const checklistJsx = Object.keys(props.checklist.data || {}).map(key => {
       let bestPoints = 0
       props.checklist.data[key].forEach(row => {
@@ -430,10 +425,11 @@ export const CreateChecklist = props => {
         bestPoints += Number(greaterPoints)
       })
       maxPoints += bestPoints
+      colorIndex++
       return (
-        <Card fluid color="red" key={key}>
+        <Card fluid color="red" key={key} style={colorIndex % 2 === 0 ? { backgroundColor: '#EAEAEA' } : null}>
           <Card.Content>
-            <Header>
+            <Header size="huge" color="brown">
               {key}{' '}
               <Button className="deleteButton" type="button" color="red" size="tiny" onClick={removeTopic(key)}>
                 <div className="deleteButtonText">Delete topic</div>
@@ -441,7 +437,10 @@ export const CreateChecklist = props => {
             </Header>
             <div>
               <p>
-                Max points: <strong className="bestPointsNumber">{bestPoints}</strong>
+                Total points for this section:{' '}
+                <strong className="bestPointsNumber">
+                  <Points points={bestPoints} />
+                </strong>
                 {bestPoints < 0 ? (
                   <span>
                     {' '}
@@ -484,6 +483,11 @@ export const CreateChecklist = props => {
                 <Label>Text</Label>
                 <Input className="textField" type="text" value={row.textWhenOff} onChange={changeField(key, row.name, 'textWhenOff')} />
               </div>
+              {kind !== 'codeReview' && (
+                <div className="minimumRequirement" style={{ marginTop: '1em' }}>
+                  <Checkbox label="Minimum requirement" checked={row.minimumRequirement} onChange={changeField(key, row.name, 'minimumRequirement')}></Checkbox>
+                </div>
+              )}
             </Card.Content>
           ))}
           <form className="addForm" onSubmit={newRow(key)}>
@@ -518,118 +522,138 @@ export const CreateChecklist = props => {
 
   const hasSelectedWeek = state.current !== undefined && state.current !== null
   const currentObj = parseChecklistValue(state.current)
-  const { checklistJsx, maxPoints } = props.loading.loading ? { checklistJsx: null, maxPoints: null } : renderChecklist()
+  const { checklistJsx, maxPoints } = props.loading.loading ? { checklistJsx: null, maxPoints: null } : renderChecklist(currentObj.kind)
   return (
-    <div className="CreateChecklist">
-      <BackButton preset="modifyCIPage" cleanup={state.clear} />
-      <Header>{props.selectedInstance.name}</Header>
-      <div className="editForm">
-        <div className="topOptions">
-          <Dropdown id="weekDropdown" placeholder="Select Checklist" selection value={state.current} onChange={changeWeek} options={props.weekDropdowns} />
-          <div className="copyForm">
-            <Button type="button" onClick={copyChecklist} disabled={!hasSelectedWeek || (!state.copyCourse && !state.copyWeek)}>
-              Copy checklist
-            </Button>
-            <Dropdown
-              className="weekDropdown"
-              disabled={!hasSelectedWeek}
-              placeholder="...from another week"
-              selection
-              value={state.copyWeek}
-              onChange={changeCopyWeek}
-              options={state.copyWeekDropdowns}
-            />{' '}
-            <Dropdown
-              className="courseDropdown"
-              disabled={!hasSelectedWeek}
-              placeholder="...from another course"
-              selection
-              value={state.copyCourse}
-              onChange={changeCopyCourse}
-              options={state.courseDropdowns}
-            />
+    <>
+      <DocumentTitle title={`Checklists - ${props.selectedInstance.name}`} />
+      <div className="CreateChecklist">
+        <BackButton preset="modifyCIPage" cleanup={state.clear} />
+        <Header>{props.selectedInstance.name}</Header>
+        <div className="editForm">
+          <div className="topOptions">
+            <Dropdown id="weekDropdown" placeholder="Select Checklist" selection value={state.current} onChange={changeWeek} options={props.weekDropdowns} />
+            <div className="copyForm">
+              <Button type="button" onClick={copyChecklist} disabled={!hasSelectedWeek || (!state.copyCourse && !state.copyWeek)}>
+                Copy checklist
+              </Button>
+              <Dropdown
+                className="weekDropdown"
+                disabled={!hasSelectedWeek}
+                placeholder="...from another week"
+                selection
+                value={state.copyWeek}
+                onChange={changeCopyWeek}
+                options={state.copyWeekDropdowns}
+              />{' '}
+              <Dropdown
+                className="courseDropdown"
+                disabled={!hasSelectedWeek}
+                placeholder="...from another course"
+                selection
+                value={state.copyCourse}
+                onChange={changeCopyCourse}
+                options={state.courseDropdowns}
+              />
+            </div>
+            {hasSelectedWeek ? (
+              <div className="jsonButtons">
+                <JsonEdit onImport={importChecklist} initialData={props.checklist.data} downloadName={`${props.selectedInstance.ohid}_${state.current}.json`} />
+              </div>
+            ) : (
+              <div />
+            )}
           </div>
-          {hasSelectedWeek ? (
-            <div className="jsonButtons">
-              <JsonEdit onImport={importChecklist} initialData={props.checklist.data} downloadName={`${props.selectedInstance.ohid}_${state.current}.json`} />
+          {props.loading.loading ? (
+            <Loader active />
+          ) : hasSelectedWeek ? (
+            <div>
+              <form onSubmit={handleSubmit}>
+                <Button className="saveButton" type="submit" color="green" size="large" disabled={!state.canSave}>
+                  <div className="saveButtonText">Save</div>
+                </Button>
+                <br />
+                <br />
+              </form>
+              <div>
+                {checklistJsx /* This block of jsx is defined in renderChecklist */}
+                <form className="addForm" onSubmit={newTopic}>
+                  <Popup trigger={<Button type="submit" circular icon={{ name: 'add', size: 'large' }} />} content="Add new topic" />
+                  {state.openAdd === 'newTopic' ? (
+                    <div>
+                      <Label>Name</Label>
+                      <Input className="newTopicNameInput" type="text" value={state.topicName} onChange={changeTopicName} />
+                      <Button type="submit">Save</Button>
+                      <Button type="button" onClick={cancelAdd}>
+                        Cancel
+                      </Button>
+                    </div>
+                  ) : (
+                    <div />
+                  )}
+                </form>
+              </div>
+
+              {currentObj.kind === 'codeReview' && <strong>You need to specify max points for this code review so that the max points can be visible to students.</strong>}
+              <Card className="maxPointsCard">
+                <Card.Content>
+                  <p>
+                    Total points of the checklist:{' '}
+                    <strong className="totalPointsOfChecklist">
+                      <Points points={maxPoints} />
+                    </strong>
+                    {currentObj.kind === 'week' && currentObj.number <= props.selectedInstance.weekAmount ? (
+                      <span>
+                        {' '}
+                        {maxPoints === (state.maximumPoints !== '' ? Number(state.maximumPoints) : props.selectedInstance.weekMaxPoints) ? (
+                          <Popup className="maxPointsIcon" trigger={<Icon name="check" size="large" color="green" />} content="The total points match the maximum points for this week." />
+                        ) : (
+                          <Popup className="maxPointsIcon" trigger={<Icon name="delete" size="large" color="red" />} content="The total points don't match the maximum points for this week." />
+                        )}
+                      </span>
+                    ) : (
+                      <span />
+                    )}
+                  </p>
+                </Card.Content>
+                <Card.Content>
+                  <p className="maxPointsForWeek">
+                    Maximum points for this review:{' '}
+                    <strong>
+                      {currentObj.kind === 'codeReview' ? state.maximumPoints === '' ? '' : <Points points={Number(state.maximumPoints)} /> : <Points points={getMaximumPointsForWeek()} />}
+                    </strong>
+                  </p>
+                </Card.Content>
+              </Card>
+              <div>
+                <Label>Define maximum points yourself</Label>
+                <Input className="maxPointsInput" type="number" step="0.01" style={{ width: '100px' }} value={state.maximumPoints} onChange={changeMaximumPoints} />
+                <Popup
+                  className="infoText"
+                  trigger={<Icon name="question circle" />}
+                  content={
+                    currentObj.kind === 'week'
+                      ? `The points you define here will be the maximum points for this review. If no value is given, the maximum points for this review 
+                will stay the same as the defaulted weekly points which is ${props.selectedInstance.weekMaxPoints}`
+                      : 'You need to specify max points for this code review so that the max points can be visible to students'
+                  }
+                />
+              </div>
+              <form onSubmit={handleSubmit}>
+                {/*This is a form with a single button instead of just a button because it doesn't work 
+                (doesn't call the function) as just a button with onClick.*/}
+                <Button className="saveButton" type="submit" color="green" size="large" disabled={!state.canSave}>
+                  <div className="saveButtonText">Save</div>
+                </Button>
+                <br />
+                <br />
+              </form>
             </div>
           ) : (
             <div />
           )}
         </div>
-        {props.loading.loading ? (
-          <Loader active />
-        ) : hasSelectedWeek ? (
-          <div>
-            <form onSubmit={handleSubmit}>
-              <Button className="saveButton" type="submit" color="green" size="large" disabled={!state.canSave}>
-                <div className="saveButtonText">Save</div>
-              </Button>
-              <br />
-              <br />
-            </form>
-            <div>
-              {checklistJsx /* This block of jsx is defined in renderChecklist */}
-              <form className="addForm" onSubmit={newTopic}>
-                <Popup trigger={<Button type="submit" circular icon={{ name: 'add', size: 'large' }} />} content="Add new topic" />
-                {state.openAdd === 'newTopic' ? (
-                  <div>
-                    <Label>Name</Label>
-                    <Input className="newTopicNameInput" type="text" value={state.topicName} onChange={changeTopicName} />
-                    <Button type="submit">Save</Button>
-                    <Button type="button" onClick={cancelAdd}>
-                      Cancel
-                    </Button>
-                  </div>
-                ) : (
-                  <div />
-                )}
-              </form>
-            </div>
-            <div>
-              <Label>Maximum points</Label>
-              <Input className="maxPointsInput" type="number" step="0.01" style={{ width: '100px' }} value={state.maximumPoints} onChange={changeMaximumPoints} />
-              <Popup
-                className="infoText"
-                trigger={<Icon name="question circle" />}
-                content="Defining maximum points yourself is not mandatory. If no value is given, default weekly points remain valid."
-              />
-            </div>
-            {currentObj.kind === 'codeReview' && <strong>You must specify max points for this code review in order for them to be visible to students.</strong>}
-            <Card className="maxPointsCard">
-              <Card.Content>
-                <p>
-                  Total max points: <strong className="maxPointsNumber">{roundNumber(getMaximumPoints(maxPoints), 2)}</strong>
-                  {currentObj.kind === 'week' && currentObj.number <= props.selectedInstance.weekAmount ? (
-                    <span>
-                      {' '}
-                      {props.selectedInstance.weekMaxPoints === getMaximumPoints(maxPoints) ? (
-                        <Popup className="maxPointsIcon" trigger={<Icon name="check" size="large" color="green" />} content="The total matches maximum weekly points for this course." />
-                      ) : (
-                        <Popup className="maxPointsIcon" trigger={<Icon name="delete" size="large" color="red" />} content="The total does not match maximum weekly points for this course." />
-                      )}
-                    </span>
-                  ) : (
-                    <span />
-                  )}
-                </p>
-              </Card.Content>
-            </Card>
-            <form onSubmit={handleSubmit}>
-              {/*This is a form with a single button instead of just a button because it doesn't work 
-                (doesn't call the function) as just a button with onClick.*/}
-              <Button className="saveButton" type="submit" color="green" size="large" disabled={!state.canSave}>
-                <div className="saveButtonText">Save</div>
-              </Button>
-              <br />
-              <br />
-            </form>
-          </div>
-        ) : (
-          <div />
-        )}
       </div>
-    </div>
+    </>
   )
 }
 
@@ -642,12 +666,10 @@ const createWeekDropdowns = selectedInstance => {
       text: `Week ${week}`
     })
   }
-  for (let cr = 1; cr <= selectedInstance.amountOfCodeReviews; ++cr) {
-    options.push({
-      value: `codeReview${cr}`,
-      text: `Code Review ${cr}`
-    })
-  }
+  options.push({
+    value: 'codeReview',
+    text: 'Code Review'
+  })
   if (selectedInstance.finalReview) {
     options.push({
       value: `week${selectedInstance.weekAmount + 1}`,

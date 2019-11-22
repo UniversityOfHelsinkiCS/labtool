@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Button, Table, Label, Message, Icon, Popup } from 'semantic-ui-react'
+import { Button, Table, Label, Message, Popup } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import CoursePageHeader from './Header'
 
@@ -8,23 +8,43 @@ import CoursePageHeader from './Header'
  * Returns what teachers should see at the top of this page
  */
 export const CoursePageTeacherHeader = props => {
-  const { selectedInstance, courseInstance, activateCourse, moveToNextWeek } = props
+  const { selectedInstance, changeCourseActive, moveToNextWeek } = props
   const isFinalReview = selectedInstance.currentWeek > selectedInstance.weekAmount
-  const weekAdvanceEnabled = selectedInstance.currentWeek < (selectedInstance.weekAmount + (selectedInstance.finalReview ? 1 : 0))
+  const weekAdvanceEnabled = selectedInstance.currentWeek < selectedInstance.weekAmount + (selectedInstance.finalReview ? 1 : 0)
+  const timeNow = new Date()
+  const courseStart = selectedInstance ? new Date(selectedInstance.start) : timeNow
+  const courseEnd = selectedInstance ? new Date(selectedInstance.end) : timeNow
+  // suggest activations to be enabled for 30 days, or until the course ends
+  const suggestedActivationStatus = timeNow.getTime() - courseStart.getTime() < 30 * 24 * 60 * 60 * 1000 && timeNow.getTime() < courseEnd.getTime()
+  const actualActivationStatus = selectedInstance ? selectedInstance.active : null
 
   return (
     <div className="TeachersTopView" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
       <CoursePageHeader courseInstance={selectedInstance} />
-      {courseInstance &&
-        courseInstance.active !== true &&
-        (!selectedInstance.active && (
+      {actualActivationStatus !== suggestedActivationStatus &&
+        (!actualActivationStatus ? (
           <div>
             <Message compact>
               <Message.Header>The registration is not active on this course.</Message.Header>
             </Message>
 
-            <Button color="green" style={{ marginLeft: '25px' }} onClick={() => activateCourse()}>
+            <Button color="green" style={{ marginLeft: '25px' }} onClick={() => changeCourseActive(true)}>
               Activate now
+            </Button>
+            <br />
+          </div>
+        ) : (
+          <div>
+            <Message compact>
+              <Message.Header>
+                {timeNow.getTime() < courseEnd.getTime()
+                  ? 'This course has been going for a month, but registrations are still active.'
+                  : 'This course is already over, but registrations are still active.'}
+              </Message.Header>
+            </Message>
+
+            <Button color="green" style={{ marginLeft: '25px' }} onClick={() => changeCourseActive(false)}>
+              Disable registration
             </Button>
             <br />
           </div>
@@ -67,8 +87,16 @@ export const CoursePageTeacherHeader = props => {
             <Table.Cell>Week max points: {selectedInstance.weekMaxPoints}</Table.Cell>
             <Table.Cell textAlign="right">
               {' '}
+              <Link
+                to={{
+                  pathname: `/labtool/ModifyCourseInstanceCodeReviews/${selectedInstance.ohid}`,
+                  state: { cameFromCoursePage: true }
+                }}
+              >
+                <Popup trigger={<Button circular size="tiny" icon={{ name: 'shuffle', size: 'large', color: 'orange' }} />} content="Edit code reviews" position="bottom right" />
+              </Link>
               <Link to={`/labtool/ModifyCourseInstancePage/${selectedInstance.ohid}`}>
-                <Popup trigger={<Button circular size="tiny" icon={{ name: 'edit', size: 'large', color: 'orange' }} />} content="Edit course" />
+                <Popup trigger={<Button circular size="tiny" icon={{ name: 'edit', size: 'large', color: 'orange' }} />} content="Edit course" position="top right" />
               </Link>
             </Table.Cell>
           </Table.Row>
@@ -80,8 +108,7 @@ export const CoursePageTeacherHeader = props => {
 
 CoursePageTeacherHeader.propTypes = {
   selectedInstance: PropTypes.object.isRequired,
-  courseInstance: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
-  activateCourse: PropTypes.func.isRequired,
+  changeCourseActive: PropTypes.func.isRequired,
   moveToNextWeek: PropTypes.func.isRequired
 }
 

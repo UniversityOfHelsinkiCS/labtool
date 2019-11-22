@@ -1120,7 +1120,7 @@ exports[`<StudentTableRow /> StudentTableRow Component should render correctly 1
     key="studentinfo"
   >
     <Popup
-      content="This student has invalid course registration"
+      content="This student's registration has been marked as mistaken"
       disabled={false}
       eventsEnabled={true}
       offset={0}
@@ -1517,7 +1517,9 @@ exports[`<StudentTableRow /> StudentTableRow Component should render correctly 1
     key="pointssum"
     textAlign="center"
   >
-    0
+    <Points
+      points={0}
+    />
   </TableCell>
 </TableRow>
 `;

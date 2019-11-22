@@ -10,6 +10,7 @@ import { clearNotifications } from '../../reducers/notificationReducer'
 import { usePersistedState } from '../../hooks/persistedState'
 import { AdminCourseList } from './AdminPage/AdminCourseList'
 import { AdminUserList } from './AdminPage/AdminUserList'
+import DocumentTitle from '../DocumentTitle'
 
 export const AdminPage = props => {
   const state = usePersistedState('AdminPage', {
@@ -35,30 +36,40 @@ export const AdminPage = props => {
     }
   }, [state.usersList])
 
+  const documentTitle = <DocumentTitle title={'Admin'} />
+
   if (!props.user.user.sysop) {
     return <Redirect to={`/labtool`} />
   } else if (props.loading.loading) {
-    return <Loader active />
+    return (
+      <>
+        <Loader active />
+        {documentTitle}
+      </>
+    )
   }
 
   return (
-    <div className="AdminPage">
-      <h2>Welcome to the admin interface.</h2>
-      <Button compact className={`ui button`} onClick={() => (state.coursesList = !state.coursesList)}>
-        {state.coursesList ? 'Hide courses' : 'Manage courses'}
-      </Button>
-      <br />
-      <br />
-      {state.coursesList && <AdminCourseList courses={props.courseInstance} />}
-      <br />
-      <hr />
-      <br />
-      <Button compact className={`ui button`} onClick={() => (state.usersList = !state.usersList)}>
-        {state.usersList ? 'Hide users' : 'Manage users'}
-      </Button>
-      <br />
-      {state.usersList && <AdminUserList me={props.user} users={props.users} updateOtherUser={props.updateOtherUser} />}
-    </div>
+    <>
+      {documentTitle}
+      <div className="AdminPage">
+        <h2>Welcome to the admin interface.</h2>
+        <Button compact className={`ui button`} onClick={() => (state.coursesList = !state.coursesList)}>
+          {state.coursesList ? 'Hide courses' : 'Manage courses'}
+        </Button>
+        <br />
+        <br />
+        {state.coursesList && <AdminCourseList courses={props.courseInstance} />}
+        <br />
+        <hr />
+        <br />
+        <Button compact className={`ui button`} onClick={() => (state.usersList = !state.usersList)}>
+          {state.usersList ? 'Hide users' : 'Manage users'}
+        </Button>
+        <br />
+        {state.usersList && <AdminUserList me={props.user} users={props.users} updateOtherUser={props.updateOtherUser} />}
+      </div>
+    </>
   )
 }
 
