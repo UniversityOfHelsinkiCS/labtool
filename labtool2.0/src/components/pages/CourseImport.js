@@ -10,6 +10,28 @@ import { formatCourseName } from '../../util/format'
 
 import DocumentTitle from '../DocumentTitle'
 
+const ImportableCourse = ({ instance }) => (
+  <Table.Row>
+    <Table.Cell>
+      <Form.Checkbox name={'import' + instance.hid} />
+    </Table.Cell>
+    <Table.Cell>{instance.shorterId}</Table.Cell>
+    <Table.Cell>{formatCourseName(instance.cname, instance.hid, instance.starts)}</Table.Cell>
+    <Table.Cell>{instance.instructor}</Table.Cell>
+    <Table.Cell>{instance.europeanStart}</Table.Cell>
+    <Table.Cell>{instance.europeanEnd}</Table.Cell>
+  </Table.Row>
+)
+
+const sortByStartDate = (a, b) => {
+  const sort = new Date(a.starts) - new Date(b.starts)
+  if (sort === 0) {
+    return a.cname.localeCompare(b.cname, 'fi-FI')
+  } else {
+    return sort
+  }
+}
+
 /**
  *  Show all the courses in a single list.
  */
@@ -32,19 +54,6 @@ export const CourseImport = props => {
       await props.importCourses({ courses })
     }
   }
-
-  const renderCourse = instance => (
-    <Table.Row key={instance.hid}>
-      <Table.Cell>
-        <Form.Checkbox name={'import' + instance.hid} />
-      </Table.Cell>
-      <Table.Cell>{instance.shorterId}</Table.Cell>
-      <Table.Cell>{formatCourseName(instance.cname, instance.hid, instance.starts)}</Table.Cell>
-      <Table.Cell>{instance.instructor}</Table.Cell>
-      <Table.Cell>{instance.europeanStart}</Table.Cell>
-      <Table.Cell>{instance.europeanEnd}</Table.Cell>
-    </Table.Row>
-  )
 
   return (
     <>
@@ -73,7 +82,11 @@ export const CourseImport = props => {
                     </Table.Row>
                   </Table.Header>
 
-                  <Table.Body>{props.importable.map(renderCourse)}</Table.Body>
+                  <Table.Body>
+                    {props.importable.sort(sortByStartDate).map(instance => (
+                      <ImportableCourse key={instance.hid} instance={instance} />
+                    ))}
+                  </Table.Body>
                 </Table>
               </HorizontalScrollable>
 
