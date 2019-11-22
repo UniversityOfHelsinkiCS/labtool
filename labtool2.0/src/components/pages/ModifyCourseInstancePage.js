@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Form, Input, Button, Grid, Dropdown, Checkbox, Loader, Popup } from 'semantic-ui-react'
-import { getOneCI, modifyOneCI } from '../../services/courseInstance'
+import { getOneCI, modifyOneCI, coursePageInformation, getAllCI } from '../../services/courseInstance'
 import { setFinalReview } from '../../reducers/selectedInstanceReducer'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
@@ -14,6 +14,7 @@ import useLegacyState from '../../hooks/legacyState'
 
 import BackButton from '../BackButton'
 import DocumentTitle from '../DocumentTitle'
+import { sortCoursesByName } from '../../util/sort'
 
 /**
  *  Page used to modify a courseinstances information. Can only be accessed by teachers.
@@ -21,7 +22,8 @@ import DocumentTitle from '../DocumentTitle'
 export const ModifyCourseInstancePage = props => {
   const state = useLegacyState({
     toRemoveCr: [],
-    toAddCr: []
+    toAddCr: [],
+    copyCourse: undefined
   })
 
   useEffect(() => {
@@ -29,6 +31,8 @@ export const ModifyCourseInstancePage = props => {
     props.resetLoading()
     props.clearNotifications()
     props.getOneCI(props.courseId)
+    props.coursePageInformation(props.courseId)
+    props.getAllCI()
   }, [])
 
   useEffect(() => {
@@ -139,11 +143,36 @@ export const ModifyCourseInstancePage = props => {
     return options
   }
 
+  const createCourseDropdowns = () => {
+    if (!props.courseInstance) return []
+    const courses = props.courseInstance
+    if (!Array.isArray(courses)) {
+      return []
+    }
+    const options = sortCoursesByName(courses)
+      .filter(course => props.selectedInstance.id !== course.id)
+      .map(course => {
+        return {
+          value: course.id,
+          text: `${course.name} (${course.europeanStart})`
+        }
+      })
+    return options
+  }
+
+  const copyCourseInformation = () => {
+    if (state.copyCourse) {
+      // TODO
+    }
+  }
+
   if ((props.redirect && props.redirect.redirect) || props.loading.redirect) {
     return <Redirect to={`/labtool/courses/${props.selectedInstance.ohid}`} />
   }
   const selectedInstance = { ...props.selectedInstance }
   const dropdownWeeks = createDropdownWeeks()
+  const courseDropdowns = createCourseDropdowns()
+  const showCopyForm = selectedInstance && props.studentCount === 0
 
   return (
     <>
@@ -312,6 +341,28 @@ export const ModifyCourseInstancePage = props => {
               Edit tags
             </Button>
           </Link>
+
+          {showCopyForm && (
+            <div>
+              <br />
+              <h1>Copy course information</h1>
+              <p>This copies the week amount, default maximum week points, checklists, course tags and links to the course page and material.</p>
+              <Dropdown
+                className="courseDropdown"
+                disabled={courseDropdowns.length < 1}
+                placeholder={courseDropdowns.length < 1 ? 'No other courses' : 'Select course to copy from'}
+                selection
+                value={state.copyCourse}
+                onChange={(e, { value }) => (state.copyCourse = value)}
+                options={courseDropdowns}
+              />{' '}
+              <Button type="button" onClick={copyCourseInformation} disabled={!state.copyCourse}>
+                Copy course information
+              </Button>
+              <br />
+              <br />
+            </div>
+          )}
         </div>
       </div>
     </>
@@ -339,6 +390,8 @@ const mapStateToProps = (state, ownProps) => {
   return {
     selectedInstance: state.selectedInstance,
     notification: state.notification,
+    courseInstance: state.courseInstance,
+    studentCount: state.coursePage.data ? state.coursePage.data.length : null,
     ownProps,
     codeReviewDropdowns: createDropdownCodeReviews(state.selectedInstance.amountOfCodeReviews, state.selectedInstance.currentCodeReview),
     loading: state.loading,
@@ -348,6 +401,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = {
   getOneCI,
+  getAllCI,
+  coursePageInformation,
   modifyOneCI,
   showNotification,
   clearNotifications,
@@ -361,13 +416,17 @@ const mapDispatchToProps = {
 ModifyCourseInstancePage.propTypes = {
   courseId: PropTypes.string.isRequired,
 
+  courseInstance: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
   selectedInstance: PropTypes.object.isRequired,
   notification: PropTypes.object.isRequired,
   codeReviewDropdowns: PropTypes.array,
   loading: PropTypes.object.isRequired,
   redirect: PropTypes.object.isRequired,
+  studentCount: PropTypes.number,
 
   getOneCI: PropTypes.func.isRequired,
+  getAllCI: PropTypes.func.isRequired,
+  coursePageInformation: PropTypes.func.isRequired,
   modifyOneCI: PropTypes.func.isRequired,
   showNotification: PropTypes.func.isRequired,
   clearNotifications: PropTypes.func.isRequired,
