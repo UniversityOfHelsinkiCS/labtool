@@ -226,16 +226,17 @@ export const ModifyCourseInstanceReview = props => {
     const selectedStudents = Object.keys(selected)
       .filter(s => selected[s])
       .map(s => props.courseData.data.find(t => t.id.toString() === s))
-    const studentIdsSlugs = selectedStudents.map(student => [student.userId, student.github])
+    // filter out non-github repos
+    const studentIdsSlugs = selectedStudents
+      .filter(student => student.github.match(/^https?:\/\/github.com\/.+/))
+      .map(student => [student.userId, student.github.replace(/^https?:\/\/github.com\//, '')])
 
     Promise.all(
       studentIdsSlugs.map(([userId, repo]) => {
-        if (repo.indexOf('github.com') > 0) {
-          repo = repo.replace(/^https?:\/\/github.com\//, '')
-          return getGithubRepo(repo)
-            .result.then(result => [userId, result.data])
-            .catch(error => (error.response && error.response.status === 404 ? Promise.resolve([userId, null]) : Promise.reject(error)))
-        }
+        //Ignore nonexisting repos
+        return getGithubRepo(repo)
+          .result.then(result => [userId, result.data])
+          .catch(error => (error.response && error.response.status === 404 ? Promise.resolve([userId, null]) : Promise.reject(error)))
       })
     )
       .then(githubRepos => {
