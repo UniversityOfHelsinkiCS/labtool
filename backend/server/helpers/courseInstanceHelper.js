@@ -182,9 +182,21 @@ async function getRoleToViewStudentInstance(req, courseInstanceId, userId) {
 
   if (studentInstance && studentInstance.userId === req.decoded.id) {
     return 'student'
-  } if (studentInstance) {
+  } 
+  if (studentInstance) {
     return 'assistant'
   }
+
+  const assistantInstance = await TeacherInstance.findOne({ where: {
+    userId: req.decoded.id,
+    courseInstanceId
+  } })
+
+  // Logged in user is teacher (not instructor) on the course
+  if (assistantInstance) {
+    return 'other assistant'
+  }
+
   return null
 }
 
