@@ -10,6 +10,7 @@ import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import useDebounce from '../../hooks/useDebounce'
 import useGithubRepo from '../../hooks/useGithubRepo'
 import { GitHubRepoWarning } from './RegisterPage/GitHubRepoWarning'
+import DocumentTitle from '../DocumentTitle'
 
 /**
  * The page user uses to register to a course AS A STUDENT
@@ -91,80 +92,83 @@ export const RegisterPage = props => {
   }
 
   return (
-    <div
-      className="RegisterPage"
-      style={{
-        textAlignVertical: 'center',
-        textAlign: 'center'
-      }}
-    >
-      <Loader active={props.loading.loading} inline="centered" />
-      <Grid>
-        <Grid.Row centered>
-          {props.coursePage && props.coursePage.data !== null ? (
-            <div>
-              <h3>Update your info for {props.selectedInstance.name}</h3>
-            </div>
-          ) : (
-            <div>
-              <h3>Register for {props.selectedInstance.name}</h3>
-            </div>
-          )}
-        </Grid.Row>
-      </Grid>
+    <>
+      <DocumentTitle title="Register" />
+      <div
+        className="RegisterPage"
+        style={{
+          textAlignVertical: 'center',
+          textAlign: 'center'
+        }}
+      >
+        <Loader active={props.loading.loading} inline="centered" />
+        <Grid>
+          <Grid.Row centered>
+            {props.coursePage && props.coursePage.data !== null ? (
+              <div>
+                <h3>Update your info for {props.selectedInstance.name}</h3>
+              </div>
+            ) : (
+              <div>
+                <h3>Register for {props.selectedInstance.name}</h3>
+              </div>
+            )}
+          </Grid.Row>
+        </Grid>
 
-      <Grid>
-        <Grid.Row centered>
-          <Form onSubmit={handleSubmit} className="Register">
-            <Form.Group inline>
-              <label style={{ width: '100px', textAlign: 'left' }}>Project name</label>
-              <Input
-                icon="rocket"
-                iconPosition="left"
-                type="text"
-                className="form-control1"
-                name="projectName"
-                placeholder="MyProjectName"
-                value={projectName}
-                onChange={(e, { value }) => setProjectName(value)}
-                required
-                style={{ minWidth: '30em' }}
-              />
-            </Form.Group>
+        <Grid>
+          <Grid.Row centered>
+            <Form onSubmit={handleSubmit} className="Register">
+              <Form.Group inline>
+                <label style={{ width: '100px', textAlign: 'left' }}>Project name</label>
+                <Input
+                  icon="rocket"
+                  iconPosition="left"
+                  type="text"
+                  className="form-control1"
+                  name="projectName"
+                  placeholder="MyProjectName"
+                  value={projectName}
+                  onChange={(e, { value }) => setProjectName(value)}
+                  required
+                  style={{ minWidth: '30em' }}
+                />
+              </Form.Group>
 
-            <Form.Group inline>
-              <label style={{ width: '100px', textAlign: 'left' }}>GitHub link</label>
-              <Input
-                icon="github"
-                iconPosition="left"
-                type="url"
-                className="form-control2"
-                name="github"
-                value={projectLink}
-                onChange={(e, { value }) => updateRepo(value)}
-                required
-                style={{ minWidth: '30em' }}
-              />
-            </Form.Group>
+              <Form.Group inline>
+                <label style={{ width: '100px', textAlign: 'left' }}>GitHub link</label>
+                <Input
+                  icon="github"
+                  iconPosition="left"
+                  type="url"
+                  className="form-control2"
+                  name="github"
+                  value={projectLink}
+                  onChange={(e, { value }) => updateRepo(value)}
+                  required
+                  style={{ minWidth: '30em' }}
+                />
+              </Form.Group>
 
-            {githubRepoError && <GitHubRepoWarning githubRepo={githubRepo} />}
+              {githubRepoError && <GitHubRepoWarning githubRepo={githubRepo} />}
 
-            <Form.Field>
-              <button className="ui left floated blue button" type="submit">
-                {' '}
-                Submit
-              </button>
-              <Link to={`/labtool/courses/${props.selectedInstance.ohid}`}>
-                {' '}
-                <button className="ui right floated button" type="Cancel">
-                  Cancel
+              <Form.Field>
+                <button className="ui left floated blue button" type="submit">
+                  {' '}
+                  Submit
                 </button>
-              </Link>
-            </Form.Field>
-          </Form>
-        </Grid.Row>
-      </Grid>
-    </div>
+                <Link to={`/labtool/courses/${props.selectedInstance.ohid}`}>
+                  {' '}
+                  <button className="ui right floated button" type="Cancel">
+                    Cancel
+                  </button>
+                </Link>
+              </Form.Field>
+            </Form>
+          </Grid.Row>
+        </Grid>
+      </div>
+    </>
   )
 }
 
