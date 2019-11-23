@@ -48,7 +48,7 @@ export const CoursePageStudentInfo = props => {
                 <Message.Header>Your registration has been marked as mistaken</Message.Header>
                 <p>This means you likely registered on this course by mistake. If this is not the case, please contact the teacher of the course.</p>
                 <Popup
-                  content="You can remove yourself from the course if you truely registered on it by mistake."
+                  content="You can remove yourself from the course if you registered by mistake."
                   trigger={
                     <Button id="buttonRemoveRegistration" color="red" onClick={() => removeRegistration(courseData.data.id)}>
                       Remove yourself from the course
