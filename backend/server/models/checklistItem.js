@@ -8,7 +8,8 @@ module.exports = (sequelize, DataTypes) => {
       checkedPoints: DataTypes.DOUBLE,
       uncheckedPoints: DataTypes.DOUBLE,
       category: DataTypes.TEXT,
-      order: DataTypes.INTEGER
+      order: DataTypes.INTEGER,
+      minimumRequirement: DataTypes.BOOLEAN
     },
     {
       timestamps: false

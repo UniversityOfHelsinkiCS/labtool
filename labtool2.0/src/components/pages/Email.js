@@ -6,6 +6,7 @@ import { updateSelf } from '../../services/login'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router'
 import { resetLoading, addRedirectHook, forceSetLoading } from '../../reducers/loadingReducer'
+import DocumentTitle from '../DocumentTitle'
 
 /*
 take some elements from SetEmail.js, if user has already email in db
@@ -40,54 +41,57 @@ export const Email = props => {
     const user = { ...props.user.user }
     const firstLogin = user.email === ''
     return (
-      <div className="Email" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
-        <Loader active={props.loading.loading} inline="centered" />
-        <Grid centered>
-          {firstLogin ? (
-            <div>
-              <Grid.Row>
-                <h3>Please give your email address: </h3>
-              </Grid.Row>
-            </div>
-          ) : (
-            <div>
-              <Grid.Row>
-                <h3>Edit your email address: </h3>
-              </Grid.Row>
-            </div>
-          )}
+      <>
+        <DocumentTitle title="Email" />
+        <div className="Email" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
+          <Loader active={props.loading.loading} inline="centered" />
+          <Grid centered>
+            {firstLogin ? (
+              <div>
+                <Grid.Row>
+                  <h3>Please give your email address: </h3>
+                </Grid.Row>
+              </div>
+            ) : (
+              <div>
+                <Grid.Row>
+                  <h3>Edit your email address: </h3>
+                </Grid.Row>
+              </div>
+            )}
 
-          <Grid.Row>
-            <Form onSubmit={handleSubmit}>
-              <Form.Field>
-                <Form.Input
-                  defaultValue={user.email}
-                  style={{ minWidth: '20em' }}
-                  type="email"
-                  icon="mail"
-                  iconPosition="left"
-                  className="form-control"
-                  name="email"
-                  placeholder="my.email@helsinki.fi"
-                />
-              </Form.Field>
+            <Grid.Row>
+              <Form onSubmit={handleSubmit}>
+                <Form.Field>
+                  <Form.Input
+                    defaultValue={user.email}
+                    style={{ minWidth: '20em' }}
+                    type="email"
+                    icon="mail"
+                    iconPosition="left"
+                    className="form-control"
+                    name="email"
+                    placeholder="my.email@helsinki.fi"
+                  />
+                </Form.Field>
 
-              <Form.Field>
-                <button className="ui left floated green button" type="submit">
-                  Save
-                </button>
-                {firstLogin ? (
-                  <div />
-                ) : (
-                  <Link to="/labtool/mypage">
-                    <button className="ui right floated button">Cancel</button>
-                  </Link>
-                )}
-              </Form.Field>
-            </Form>
-          </Grid.Row>
-        </Grid>
-      </div>
+                <Form.Field>
+                  <button className="ui left floated green button" type="submit">
+                    Save
+                  </button>
+                  {firstLogin ? (
+                    <div />
+                  ) : (
+                    <Link to="/labtool/mypage">
+                      <button className="ui right floated button">Cancel</button>
+                    </Link>
+                  )}
+                </Form.Field>
+              </Form>
+            </Grid.Row>
+          </Grid>
+        </div>
+      </>
     )
   }
 }
