@@ -116,6 +116,10 @@ export const StudentTableRow = props => {
     return newComments.length > 0
   }
 
+  const draftExists = weekNumber => {
+    return data.weekdrafts && data.weekdrafts.filter(draft => draft.weekNumber === weekNumber).length === 1
+  }
+
   const createWeekHeaders = (weeks, codeReviews, siId, dropped, validRegistration) => {
     const cr =
       codeReviews &&
@@ -156,7 +160,11 @@ export const StudentTableRow = props => {
             <div>
               {weekPoints[i + 1] === undefined ? (
                 shouldReview && selectedInstance.currentWeek === i + 1 ? (
-                  <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'star', size: 'large' }} />} content="Review" className="reviewButton" />
+                  draftExists(selectedInstance.currentWeek) ? (
+                    <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'pause', size: 'large' }} />} content="Continue review from draft" className="reviewDraftButton" />
+                  ) : (
+                    <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'star', size: 'large' }} />} content="Review" className="reviewButton" />
+                  )
                 ) : (
                   <p style={flexCenter}>-</p>
                 )
