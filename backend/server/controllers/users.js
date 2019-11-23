@@ -277,12 +277,7 @@ module.exports = {
         if (siToRemove.validRegistration) {
           return res.status(400).send('The student instance can be removed only when his validRegistration has been marked as false')
         }
-        // destroy the code review where toReview is req.body.id separately because the onDelete="cascade" has not been set to toReview
-        await CodeReview.destroy({
-          where: {
-            toReview: req.body.id
-          }
-        })
+
         await StudentInstance.destroy({
           where: {
             id: req.body.id
