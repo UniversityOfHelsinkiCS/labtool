@@ -35,7 +35,7 @@ export const CoursePageStudentInfo = props => {
                     <Message.Header>Your project repository might not be accessible</Message.Header>
                     <p>
                       Please verify that the repository exists and that it is not private. To hide this warning, edit your repository by clicking the button on the right, make sure there is no warning
-                      (or it goes away) and click 'Submit'.
+                      (or it goes away) and click &apos;Submit&apos;.
                     </p>
                   </Message>
                 </>
@@ -45,7 +45,7 @@ export const CoursePageStudentInfo = props => {
           {courseData.role === 'student' && !courseData.data.validRegistration && (
             <>
               <Message negative>
-                <Message.Header>Your registration has been marked as invalid</Message.Header>
+                <Message.Header>Your registration has been marked as mistaken</Message.Header>
                 <p>This means you likely registered on this course by mistake. If this is not the case, please contact the teacher of the course.</p>
               </Message>
               <br />

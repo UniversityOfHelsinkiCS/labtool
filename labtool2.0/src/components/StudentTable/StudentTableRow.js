@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import RepoLink from '../RepoLink'
 
 import RepoAccessWarning from '../RepoAccessWarning'
+import { Points } from '../Points'
 
 export const StudentTableRow = props => {
   const {
@@ -115,6 +116,10 @@ export const StudentTableRow = props => {
     return newComments.length > 0
   }
 
+  const draftExists = weekNumber => {
+    return data.weekdrafts && data.weekdrafts.filter(draft => draft.weekNumber === weekNumber).length === 1
+  }
+
   const createWeekHeaders = (weeks, codeReviews, siId, dropped, validRegistration) => {
     const cr =
       codeReviews &&
@@ -155,13 +160,19 @@ export const StudentTableRow = props => {
             <div>
               {weekPoints[i + 1] === undefined ? (
                 shouldReview && selectedInstance.currentWeek === i + 1 ? (
-                  <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'star', size: 'large' }} />} content="Review" className="reviewButton" />
+                  draftExists(selectedInstance.currentWeek) ? (
+                    <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'pause', size: 'large' }} />} content="Continue review from draft" className="reviewDraftButton" />
+                  ) : (
+                    <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'star', size: 'large' }} />} content="Review" className="reviewButton" />
+                  )
                 ) : (
                   <p style={flexCenter}>-</p>
                 )
               ) : (
                 <div>
-                  <p>{weekPoints[i + 1]}</p>
+                  <p>
+                    <Points points={weekPoints[i + 1]} />
+                  </p>
                   {showNewCommentsNotification(data.id, i + 1) ? <Popup trigger={<Icon name="comments" size="big" />} content="You have new comments" /> : null}
                 </div>
               )}
@@ -185,20 +196,20 @@ export const StudentTableRow = props => {
               to={{ pathname: `/labtool/browsereviews/${selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: codeReview ? `CodeReview${codeReview.reviewNumber}` : undefined } }}
             >
               {shouldReview && selectedInstance.currentCodeReview.includes(index) && codeReview ? (
-                codeReview.linkToReview === null ? (
+                codeReview.linkToReview === null && codeReview.points === null ? (
                   <Popup
                     position="top center"
-                    trigger={<Icon color="grey" size="small" name="hourglass end" fitted />}
+                    trigger={<Icon color="grey" size="large" name="hourglass end" fitted />}
                     content="Student has not yet submitted the code review"
                     className="codeReviewNotReady"
                   />
                 ) : codeReview.points === null ? (
                   <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'star', size: 'large' }} />} content="Review" className="codeReviewButton" />
                 ) : (
-                  <p>{cr[index] || cr[index] === 0 ? cr[index] : '-'}</p>
+                  <p>{cr[index] || cr[index] === 0 ? <Points points={cr[index]} /> : '-'}</p>
                 )
               ) : (
-                <p>{cr[index] || cr[index] === 0 ? cr[index] : '-'}</p>
+                <p>{cr[index] || cr[index] === 0 ? <Points points={cr[index]} /> : '-'}</p>
               )}
             </Link>
           </Table.Cell>
@@ -227,7 +238,9 @@ export const StudentTableRow = props => {
                 )
               ) : (
                 <div>
-                  <p style={flexCenter}>{finalPoints}</p>
+                  <p style={flexCenter}>
+                    <Points points={finalPoints} />
+                  </p>
                   {showNewCommentsNotification(data.id, selectedInstance.weekAmount + 1) ? <Popup trigger={<Icon name="comments" size="big" />} content="You have new comments" /> : null}
                 </div>
               )}
@@ -252,7 +265,7 @@ export const StudentTableRow = props => {
 
       {/* Student */}
       <Table.Cell key="studentinfo">
-        {!data.validRegistration && <Popup trigger={<Icon name="warning" color="black" />} content="This student has invalid course registration" />}
+        {!data.validRegistration && <Popup trigger={<Icon name="warning" color="black" />} content="This student's registration has been marked as mistaken" />}
         {!data.dropped && data.validRegistration && data.repoExists === false && <RepoAccessWarning student={data} ohid={selectedInstance.ohid} updateStudentProjectInfo={updateStudentProjectInfo} />}
         {allowReview ? (
           <Link to={`/labtool/browsereviews/${selectedInstance.ohid}/${data.id}`}>
@@ -322,7 +335,7 @@ export const StudentTableRow = props => {
 
           {/* Sum */}
           <Table.Cell key="pointssum" textAlign="center">
-            {(data.weeks.map(week => week.points).reduce((a, b) => a + b, 0) + data.codeReviews.map(cr => cr.points).reduce((a, b) => a + b, 0)).toFixed(2).replace(/[.,]00$/, '')}
+            <Points points={data.weeks.map(week => week.points).reduce((a, b) => a + b, 0) + data.codeReviews.map(cr => cr.points).reduce((a, b) => a + b, 0)} />
           </Table.Cell>
         </>
       )}

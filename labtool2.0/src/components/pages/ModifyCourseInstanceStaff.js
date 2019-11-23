@@ -11,6 +11,7 @@ import { resetLoading } from '../../reducers/loadingReducer'
 import { sortUsersByTeacherAssistantLastname } from '../../util/sort'
 
 import BackButton from '../BackButton'
+import DocumentTitle from '../DocumentTitle'
 
 export const ModifyCourseInstanceStaff = props => {
   useEffect(() => {
@@ -59,65 +60,68 @@ export const ModifyCourseInstanceStaff = props => {
     sortedUsers = sortUsersByTeacherAssistantLastname(props.users, props.selectedInstance.teacherInstances)
   }
   return (
-    <div>
-      <BackButton preset={props.location.state && props.location.state.fromAdmin ? 'sysopModifyCIPage' : 'modifyCIPage'} />
-      <div className="sixteen wide column" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
-        <h2>Add and remove assistants</h2>
-        <h2>{props.selectedInstance.name}</h2>
-      </div>
-      <Header as="h2">Users</Header>
-      <Form id="myForm" onSubmit={handleSubmit}>
-        {props.loading.loading ? (
-          <Loader active />
-        ) : (
-          <Table singleLine color="yellow" fixed>
-            <Table.Header>
-              <Table.Row>
-                <Table.HeaderCell>Name</Table.HeaderCell>
-                <Table.HeaderCell>Status</Table.HeaderCell>
-              </Table.Row>
-            </Table.Header>
-            <Table.Body>
-              {sortedUsers.map(user => (
-                <Table.Row key={user.id}>
-                  <Table.Cell>
-                    {user.firsts} {user.lastname}
-                    <br />
-                    <a href={`mailto:${user.email}`}>{user.email}</a>
-                  </Table.Cell>
-                  <Table.Cell>
-                    {getTeacherIds().includes(user.id) ? (
-                      user.teacher ? (
-                        <div>
-                          <Label color="orange" horizontal>
-                            Teacher
-                          </Label>
-                        </div>
+    <>
+      <DocumentTitle title={`Assistants - ${props.selectedInstance.name}`} />
+      <div>
+        <BackButton preset={props.location.state && props.location.state.fromAdmin ? 'sysopModifyCIPage' : 'modifyCIPage'} />
+        <div className="sixteen wide column" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
+          <h2>Add and remove assistants</h2>
+          <h2>{props.selectedInstance.name}</h2>
+        </div>
+        <Header as="h2">Users</Header>
+        <Form id="myForm" onSubmit={handleSubmit}>
+          {props.loading.loading ? (
+            <Loader active />
+          ) : (
+            <Table singleLine color="yellow" fixed>
+              <Table.Header>
+                <Table.Row>
+                  <Table.HeaderCell>Name</Table.HeaderCell>
+                  <Table.HeaderCell>Status</Table.HeaderCell>
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
+                {sortedUsers.map(user => (
+                  <Table.Row key={user.id}>
+                    <Table.Cell>
+                      {user.firsts} {user.lastname}
+                      <br />
+                      <a href={`mailto:${user.email}`}>{user.email}</a>
+                    </Table.Cell>
+                    <Table.Cell>
+                      {getTeacherIds().includes(user.id) ? (
+                        user.teacher ? (
+                          <div>
+                            <Label color="orange" horizontal>
+                              Teacher
+                            </Label>
+                          </div>
+                        ) : (
+                          <div>
+                            <Label color="orange" horizontal>
+                              Assistant
+                            </Label>
+                            <Button onClick={handleRemoval(user.id)} size="tiny" color="green">
+                              Remove assistant
+                            </Button>
+                          </div>
+                        )
                       ) : (
                         <div>
-                          <Label color="orange" horizontal>
-                            Assistant
-                          </Label>
-                          <Button onClick={handleRemoval(user.id)} size="tiny" color="green">
-                            Remove assistant
+                          <Button onClick={handleSubmit(user.id)} size="tiny" color="green">
+                            Add assistant
                           </Button>
                         </div>
-                      )
-                    ) : (
-                      <div>
-                        <Button onClick={handleSubmit(user.id)} size="tiny" color="green">
-                          Add assistant
-                        </Button>
-                      </div>
-                    )}
-                  </Table.Cell>
-                </Table.Row>
-              ))}
-            </Table.Body>
-          </Table>
-        )}
-      </Form>
-    </div>
+                      )}
+                    </Table.Cell>
+                  </Table.Row>
+                ))}
+              </Table.Body>
+            </Table>
+          )}
+        </Form>
+      </div>
+    </>
   )
 }
 

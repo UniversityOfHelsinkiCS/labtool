@@ -8,6 +8,27 @@ import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 import { HorizontalScrollable } from '../HorizontalScrollable'
 import { formatCourseName } from '../../util/format'
 
+import DocumentTitle from '../DocumentTitle'
+import { finnishLocaleCompare } from '../../util/sort'
+
+const ImportableCourse = ({ instance }) => (
+  <Table.Row>
+    <Table.Cell>
+      <Form.Checkbox name={'import' + instance.hid} />
+    </Table.Cell>
+    <Table.Cell>{instance.shorterId}</Table.Cell>
+    <Table.Cell>{formatCourseName(instance.cname, instance.hid, instance.starts)}</Table.Cell>
+    <Table.Cell>{instance.instructor}</Table.Cell>
+    <Table.Cell>{instance.europeanStart}</Table.Cell>
+    <Table.Cell>{instance.europeanEnd}</Table.Cell>
+  </Table.Row>
+)
+
+const sortByStartDate = (a, b) => {
+  return new Date(a.starts) - new Date(b.starts)
+    || finnishLocaleCompare(a.cname, b.cname)
+}
+
 /**
  *  Show all the courses in a single list.
  */
@@ -31,75 +52,69 @@ export const CourseImport = props => {
     }
   }
 
-  const renderCourse = instance => (
-    <Table.Row key={instance.hid}>
-      <Table.Cell>
-        <Form.Checkbox name={'import' + instance.hid} />
-      </Table.Cell>
-      <Table.Cell>{instance.shorterId}</Table.Cell>
-      <Table.Cell>{formatCourseName(instance.cname, instance.hid, instance.starts)}</Table.Cell>
-      <Table.Cell>{instance.instructor}</Table.Cell>
-      <Table.Cell>{instance.europeanStart}</Table.Cell>
-      <Table.Cell>{instance.europeanEnd}</Table.Cell>
-    </Table.Row>
-  )
-
   return (
-    <div className="CourseImport">
-      <div className="mainContainer">
-        <Header as="h2">Import courses</Header>
-        {props.loading.loading || !Array.isArray(props.importable) || !props.canImport ? (
-          <Loader active />
-        ) : props.loading.redirect ? (
-          <Redirect to="/labtool/courses" />
-        ) : props.importable.length ? (
-          <Form onSubmit={handleSubmit}>
-            <HorizontalScrollable>
-              <Table singleLine color="yellow" style={{ overflowX: 'visible' }}>
-                <Table.Header>
-                  <Table.Row>
-                    <Table.HeaderCell colSpan="1" key={-1}>
-                      Import?
-                    </Table.HeaderCell>
-                    <Table.HeaderCell colSpan="1">Course ID</Table.HeaderCell>
-                    <Table.HeaderCell colSpan="1">Course name</Table.HeaderCell>
-                    <Table.HeaderCell colSpan="1">Instructor (original)</Table.HeaderCell>
-                    <Table.HeaderCell colSpan="1">Course start date</Table.HeaderCell>
-                    <Table.HeaderCell colSpan="1">Course end date</Table.HeaderCell>
-                  </Table.Row>
-                </Table.Header>
+    <>
+      <DocumentTitle title={'Course import'} />
+      <div className="CourseImport">
+        <div className="mainContainer">
+          <Header as="h2">Import courses</Header>
+          {props.loading.loading || !Array.isArray(props.importable) || !props.canImport ? (
+            <Loader active />
+          ) : props.loading.redirect ? (
+            <Redirect to="/labtool/courses" />
+          ) : props.importable.length ? (
+            <Form onSubmit={handleSubmit}>
+              <HorizontalScrollable>
+                <Table singleLine color="yellow" style={{ overflowX: 'visible' }}>
+                  <Table.Header>
+                    <Table.Row>
+                      <Table.HeaderCell colSpan="1" key={-1}>
+                        Import?
+                      </Table.HeaderCell>
+                      <Table.HeaderCell colSpan="1">Course ID</Table.HeaderCell>
+                      <Table.HeaderCell colSpan="1">Course name</Table.HeaderCell>
+                      <Table.HeaderCell colSpan="1">Instructor (original)</Table.HeaderCell>
+                      <Table.HeaderCell colSpan="1">Course start date</Table.HeaderCell>
+                      <Table.HeaderCell colSpan="1">Course end date</Table.HeaderCell>
+                    </Table.Row>
+                  </Table.Header>
 
-                <Table.Body>{props.importable.map(renderCourse)}</Table.Body>
-              </Table>
-            </HorizontalScrollable>
+                  <Table.Body>
+                    {props.importable.sort(sortByStartDate).map(instance => (
+                      <ImportableCourse key={instance.hid} instance={instance} />
+                    ))}
+                  </Table.Body>
+                </Table>
+              </HorizontalScrollable>
 
-            <br />
-            <br />
+              <br />
+              <br />
 
-            <Button type="submit" className="ui green button" content="Import" />
+              <Button type="submit" className="ui green button" content="Import" />
 
-            <br />
-            <br />
+              <br />
+              <br />
 
-            <Link to="/labtool/courses">
-              <Button className="ui button" type="cancel">
-                Cancel
-              </Button>
-            </Link>
-          </Form>
-        ) : (
-          <div>
-            <h4>There are no courses in Kurki to import</h4>
+              <Link to="/labtool/courses">
+                <Button className="ui button" type="cancel">
+                  Cancel
+                </Button>
+              </Link>
+            </Form>
+          ) : (
+            <div>
+              <h4>There are no courses in Kurki to import</h4>
 
-            <Link to="/labtool/courses">
-              <Button className="ui button" type="cancel">
-                Back
-              </Button>
-            </Link>
-          </div>
-        )}
+              <Link to="/labtool/courses">
+                <Button className="ui button" type="cancel">
+                  Back
+                </Button>
+              </Link>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 

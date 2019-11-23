@@ -10,14 +10,17 @@ import { clearNotifications } from '../../reducers/notificationReducer'
 import { toggleCheckWeek, resetChecklist, restoreChecks } from '../../reducers/weekReviewReducer'
 import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 import store from '../../store'
-import { formatCourseName, trimDate } from '../../util/format'
+import { formatCourseName, trimDate, roundPoints } from '../../util/format'
 import { usePersistedState } from '../../hooks/persistedState'
 
 import { FormMarkdownTextArea } from '../MarkdownTextArea'
 import RepoLink from '../RepoLink'
 import { PreviousWeekDetails } from './ReviewStudent/PreviousWeekDetails'
+import MissingMinimumRequirements from '../MissingMinimumRequirements'
 
 import BackButton from '../BackButton'
+import DocumentTitle from '../DocumentTitle'
+import { Points } from '../Points'
 
 const isFinalReview = props => props.weekNumber > props.selectedInstance.weekAmount
 
@@ -112,7 +115,7 @@ export const ReviewStudent = props => {
     return draftData
   }
 
-  const onClickSaveDraft = async e => {
+  const onClickSaveDraft = async () => {
     const content = {
       studentInstanceId: props.studentInstance,
       weekNumber: props.weekNumber,
@@ -127,7 +130,7 @@ export const ReviewStudent = props => {
 
   const copyChecklistOutput = async e => {
     e.preventDefault()
-    pstate.points = e.target.points.value
+    pstate.points = roundPoints(Number(e.target.points.value))
     pstate.feedback = e.target.text.value
   }
 
@@ -215,161 +218,171 @@ export const ReviewStudent = props => {
   const arrivedFromCoursePage = props.location && props.location.state && props.location.state.cameFromCoursePage
 
   return (
-    <div className="ReviewStudent">
-      <BackButton
-        preset={arrivedFromCoursePage && 'coursePage'}
-        to={!arrivedFromCoursePage && `/labtool/browsereviews/${props.selectedInstance.ohid}/${studentData.id}`}
-        text={!arrivedFromCoursePage && 'Back to student reviews'}
-      />
-      <div style={{ textAlignVertical: 'center', textAlign: 'center' }}>
-        <Link to={`/labtool/courses/${props.selectedInstance.ohid}`} style={{ textAlign: 'center' }}>
-          <h2> {formatCourseName(props.selectedInstance.name, props.selectedInstance.ohid, props.selectedInstance.start)}</h2>
-        </Link>
-        <h3>
-          {' '}
-          {studentData.User.firsts} {studentData.User.lastname}{' '}
-          <div style={{ display: 'inline-block', padding: '0px 0px 0px 25px' }}>
-            {studentData.projectName}: <RepoLink url={studentData.github} />
-          </div>
-          {studentData.Tags.map(tag => (
-            <div key={tag.id}>
-              <Button compact floated="right" className={`mini ui ${tag.color} button`}>
-                {tag.name}
-              </Button>
+    <>
+      <DocumentTitle title={`Week ${weekData ? weekData.weekNumber : props.ownProps.weekNumber} - ${studentData.User.firsts} ${studentData.User.lastname}`} />
+      <div className="ReviewStudent">
+        <BackButton
+          preset={arrivedFromCoursePage && 'coursePage'}
+          to={!arrivedFromCoursePage && `/labtool/browsereviews/${props.selectedInstance.ohid}/${studentData.id}`}
+          text={!arrivedFromCoursePage && 'Back to student reviews'}
+        />
+        <div style={{ textAlignVertical: 'center', textAlign: 'center' }}>
+          <Link to={`/labtool/courses/${props.selectedInstance.ohid}`} style={{ textAlign: 'center' }}>
+            <h2> {formatCourseName(props.selectedInstance.name, props.selectedInstance.ohid, props.selectedInstance.start)}</h2>
+          </Link>
+          <h3>
+            {' '}
+            {studentData.User.firsts} {studentData.User.lastname}{' '}
+            <div style={{ display: 'inline-block', padding: '0px 0px 0px 25px' }}>
+              {studentData.projectName}: <RepoLink url={studentData.github} />
             </div>
-          ))}
-        </h3>
-        {isFinalReview(props) ? <h3>Final Review</h3> : <h3>Week {props.weekNumber}</h3>}
-        <Grid>
-          <Grid.Row columns={2}>
-            <Grid.Column>
-              {isFinalReview(props) ? (
-                <div align="left">
-                  <h3>Points before final review: {weekPoints + codeReviewPoints} </h3>
-                  Week points: {weekPoints} <br />
-                  Code review points: {codeReviewPoints}
-                </div>
-              ) : (
-                <div align="left">
-                  <h3>Points from previous weeks: {weekPoints + codeReviewPoints} </h3>
-                  Week points: {weekPoints} <br />
-                  Code review points: {codeReviewPoints}
-                </div>
-              )}
-              <PreviousWeekDetails weekData={previousWeekData} />
-              {isFinalReview(props) ? <h2>Final Review Points</h2> : <h2>Review</h2>}
-              {loadedFromDraft && (
-                <div>
-                  <p>
-                    <em>Loaded from draft saved at {trimDate(props.weekReview.draftCreatedAt)}</em>
-                  </p>
-                  <br />
-                </div>
-              )}
-              <Form onSubmit={handleSubmit}>
-                <Form.Group inline unstackable>
-                  <Form.Field>
-                    <label className="showMaxPoints">Points 0-{getMaximumPoints()}</label>
-
-                    <Input
-                      name="points"
-                      required={true}
-                      value={pstate.points}
-                      onChange={(e, { value }) => (pstate.points = value)}
-                      type="number"
-                      step="0.01"
-                      style={{ width: '150px', align: 'center' }}
-                    />
-                  </Form.Field>
-                </Form.Group>
-                <h4>Feedback</h4>
-                <Form.Group inline unstackable style={{ textAlignVertical: 'top' }}>
-                  <div style={{ width: '100%' }}>
-                    <FormMarkdownTextArea value={pstate.feedback} onChange={(e, { value }) => (pstate.feedback = value)} name="comment" style={{ width: '500px', height: '250px' }} />
-                  </div>
-                </Form.Group>
-                <h4>Review notes</h4>
-                <p>
-                  <em>Only shown to instructors on this course</em>
-                </p>
-                <Form.Group inline unstackable style={{ textAlignVertical: 'top' }}>
-                  <div style={{ width: '100%' }}>
-                    <FormMarkdownTextArea
-                      value={pstate.instructorNotes}
-                      onChange={(e, { value }) => (pstate.instructorNotes = value)}
-                      name="instructorNotes"
-                      style={{ width: '500px', height: '150px' }}
-                    />
-                  </div>
-                </Form.Group>
-                <Form.Field>
-                  <Button className="ui center floated green button" type="submit">
-                    Save
-                  </Button>
-                  <Button className="ui center floated button" type="button" onClick={onClickSaveDraft}>
-                    Save as draft
-                  </Button>
-                  <Link to={`/labtool/browsereviews/${props.selectedInstance.ohid}/${studentData.id}`} type="Cancel">
-                    <Button className="ui center floated button" type="cancel" onClick={pstate.clear}>
-                      Cancel
-                    </Button>
-                  </Link>
-                </Form.Field>
-              </Form>
-            </Grid.Column>
-            {checkList && checks !== undefined ? (
+            {studentData.Tags.map(tag => (
+              <div key={tag.id}>
+                <Button compact floated="right" className={`mini ui ${tag.color} button`}>
+                  {tag.name}
+                </Button>
+              </div>
+            ))}
+          </h3>
+          {isFinalReview(props) ? <h3>Final Review</h3> : <h3>Week {props.weekNumber}</h3>}
+          <Grid>
+            <Grid.Row columns={2}>
               <Grid.Column>
-                <h2>Checklist</h2>
-                {checkList ? (
-                  <div className="checklist">
-                    {Object.keys(checkList.list).map(clItemCategory => (
-                      <Card className="checklistCard" fluid color="red" key={clItemCategory}>
-                        <Card.Content header={clItemCategory} />
-                        {checkList.list[clItemCategory].map(clItem => (
-                          <Card.Content className="checklistCardRow" key={clItem.id} onClick={toggleCheckbox(clItem.id, props.ownProps.studentInstance, props.ownProps.weekNumber)}>
-                            <Form.Field>
-                              <Grid>
-                                <Grid.Row style={{ cursor: 'pointer', userSelect: 'none' }}>
-                                  <Grid.Column width={3}>
-                                    <Icon
-                                      size="large"
-                                      name={isChecked(checks, clItem.id) ? 'circle check outline' : 'circle outline'}
-                                      style={{ color: isChecked(checks, clItem.id) ? 'green' : 'black' }}
-                                    />
-                                  </Grid.Column>
-                                  <Grid.Column width={10}>
-                                    <span style={{ flexGrow: 1, textAlign: 'center' }}>{clItem.name}</span>
-                                  </Grid.Column>
-                                  <Grid.Column width={3}>
-                                    <span>{`${clItem.checkedPoints} p / ${clItem.uncheckedPoints} p`}</span>
-                                  </Grid.Column>
-                                </Grid.Row>
-                              </Grid>
-                            </Form.Field>
-                          </Card.Content>
-                        ))}
-                      </Card>
-                    ))}
-                    <div>
-                      <Form className="checklistOutput" onSubmit={copyChecklistOutput}>
-                        <Form.TextArea className="checklistOutputText" name="text" value={checklistOutput} style={{ width: '100%', height: '250px' }} />
-                        <p className="checklistOutputPoints">points: {checklistPoints.toFixed(2)}</p>
-                        <input type="hidden" name="points" value={checklistPoints} />
-                        <Button type="submit">Copy to review fields</Button>
-                      </Form>
-                    </div>
+                {isFinalReview(props) ? (
+                  <div align="left">
+                    <h3>
+                      Points before final review: <Points points={weekPoints + codeReviewPoints} />{' '}
+                    </h3>
+                    Week points: <Points points={weekPoints} /> <br />
+                    Code review points: <Points points={codeReviewPoints} />
                   </div>
                 ) : (
-                  <p>There is no checklist for this week.</p>
+                  <div align="left">
+                    <h3>
+                      Points from previous weeks: <Points points={weekPoints + codeReviewPoints} />{' '}
+                    </h3>
+                    Week points: <Points points={weekPoints} /> <br />
+                    Code review points: <Points points={codeReviewPoints} />
+                  </div>
                 )}
+                <PreviousWeekDetails weekData={previousWeekData} />
+                {isFinalReview(props) && weekData && <MissingMinimumRequirements selectedInstance={props.selectedInstance} studentInstance={studentData} />}
+                {isFinalReview(props) ? <h2>Final Review Points</h2> : <h2>Review</h2>}
+                {loadedFromDraft && (
+                  <div>
+                    <p>
+                      <em>Loaded from draft saved at {trimDate(props.weekReview.draftCreatedAt)}</em>
+                    </p>
+                    <br />
+                  </div>
+                )}
+                <Form onSubmit={handleSubmit}>
+                  <Form.Group inline unstackable>
+                    <Form.Field>
+                      <label className="showMaxPoints">Points 0-{getMaximumPoints()}</label>
+
+                      <Input
+                        name="points"
+                        required={true}
+                        value={pstate.points}
+                        onChange={(e, { value }) => (pstate.points = value)}
+                        type="number"
+                        step="0.01"
+                        style={{ width: '150px', align: 'center' }}
+                      />
+                    </Form.Field>
+                  </Form.Group>
+                  <h4>Feedback</h4>
+                  <Form.Group inline unstackable style={{ textAlignVertical: 'top' }}>
+                    <div style={{ width: '100%' }}>
+                      <FormMarkdownTextArea value={pstate.feedback} onChange={(e, { value }) => (pstate.feedback = value)} name="comment" style={{ width: '500px', height: '250px' }} />
+                    </div>
+                  </Form.Group>
+                  <h4>Review notes</h4>
+                  <p>
+                    <em>Only shown to instructors on this course</em>
+                  </p>
+                  <Form.Group inline unstackable style={{ textAlignVertical: 'top' }}>
+                    <div style={{ width: '100%' }}>
+                      <FormMarkdownTextArea
+                        value={pstate.instructorNotes}
+                        onChange={(e, { value }) => (pstate.instructorNotes = value)}
+                        name="instructorNotes"
+                        style={{ width: '500px', height: '150px' }}
+                      />
+                    </div>
+                  </Form.Group>
+                  <Form.Field>
+                    <Button className="ui center floated green button" type="submit">
+                      Save
+                    </Button>
+                    <Button className="ui center floated button" type="button" onClick={onClickSaveDraft}>
+                      Save as draft
+                    </Button>
+                    <Link to={`/labtool/browsereviews/${props.selectedInstance.ohid}/${studentData.id}`} type="Cancel">
+                      <Button className="ui center floated button" type="cancel" onClick={pstate.clear}>
+                        Cancel
+                      </Button>
+                    </Link>
+                  </Form.Field>
+                </Form>
               </Grid.Column>
-            ) : (
-              <div />
-            )}
-          </Grid.Row>
-        </Grid>
+              {checkList && checks !== undefined ? (
+                <Grid.Column>
+                  <h2>Checklist</h2>
+                  {checkList ? (
+                    <div className="checklist">
+                      {Object.keys(checkList.list).map(clItemCategory => (
+                        <Card className="checklistCard" fluid color="red" key={clItemCategory}>
+                          <Card.Content header={clItemCategory} />
+                          {checkList.list[clItemCategory].map(clItem => (
+                            <Card.Content className="checklistCardRow" key={clItem.id} onClick={toggleCheckbox(clItem.id, props.ownProps.studentInstance, props.ownProps.weekNumber)}>
+                              <Form.Field>
+                                <Grid>
+                                  <Grid.Row style={{ cursor: 'pointer', userSelect: 'none' }}>
+                                    <Grid.Column width={3}>
+                                      <Icon
+                                        size="large"
+                                        name={isChecked(checks, clItem.id) ? 'circle check outline' : 'circle outline'}
+                                        style={{ color: isChecked(checks, clItem.id) ? 'green' : 'black' }}
+                                      />
+                                    </Grid.Column>
+                                    <Grid.Column width={10}>
+                                      <span style={{ flexGrow: 1, textAlign: 'center' }}>{clItem.name}</span>
+                                    </Grid.Column>
+                                    <Grid.Column width={3}>
+                                      <span>{`${clItem.checkedPoints} p / ${clItem.uncheckedPoints} p`}</span>
+                                    </Grid.Column>
+                                  </Grid.Row>
+                                </Grid>
+                              </Form.Field>
+                            </Card.Content>
+                          ))}
+                        </Card>
+                      ))}
+                      <div>
+                        <Form className="checklistOutput" onSubmit={copyChecklistOutput}>
+                          <Form.TextArea className="checklistOutputText" name="text" value={checklistOutput} style={{ width: '100%', height: '250px' }} />
+                          <p className="checklistOutputPoints">
+                            points: <Points points={checklistPoints} />
+                          </p>
+                          <input type="hidden" name="points" value={checklistPoints} />
+                          <Button type="submit">Copy to review fields</Button>
+                        </Form>
+                      </div>
+                    </div>
+                  ) : (
+                    <p>There is no checklist for this week.</p>
+                  )}
+                </Grid.Column>
+              ) : (
+                <div />
+              )}
+            </Grid.Row>
+          </Grid>
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 
