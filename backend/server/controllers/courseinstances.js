@@ -5,7 +5,7 @@ const helper = require('../helpers/courseInstanceHelper')
 const logger = require('../utils/logger')
 
 const { Op } = Sequelize
-const { User, CourseInstance, StudentInstance, TeacherInstance, Week, ReviewCheck, CodeReview, Comment, Tag, Checklist, ChecklistItem } = db
+const { User, CourseInstance, StudentInstance, TeacherInstance, Week, ReviewCheck, CodeReview, Comment, Tag, Checklist, ChecklistItem, WeekDraft } = db
 
 const env = process.env.NODE_ENV || 'development'
 const config = require('./../config/config.js')[env]
@@ -265,6 +265,11 @@ module.exports = {
             attributes: {
               exclude: ['createdAt', 'updatedAt']
             }
+          },
+          {
+            model: WeekDraft,
+            attributes: ['weekNumber'],
+            as: 'weekdrafts'
           },
           {
             model: Tag,
