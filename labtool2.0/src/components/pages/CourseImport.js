@@ -9,6 +9,7 @@ import { HorizontalScrollable } from '../HorizontalScrollable'
 import { formatCourseName } from '../../util/format'
 
 import DocumentTitle from '../DocumentTitle'
+import { finnishLocaleCompare } from '../../util/sort'
 
 const ImportableCourse = ({ instance }) => (
   <Table.Row>
@@ -24,12 +25,8 @@ const ImportableCourse = ({ instance }) => (
 )
 
 const sortByStartDate = (a, b) => {
-  const sort = new Date(a.starts) - new Date(b.starts)
-  if (sort === 0) {
-    return a.cname.localeCompare(b.cname, 'fi-FI')
-  } else {
-    return sort
-  }
+  return new Date(a.starts) - new Date(b.starts)
+    || finnishLocaleCompare(a.cname, b.cname)
 }
 
 /**

@@ -273,6 +273,7 @@ describe('<StudentTableRow />', () => {
         teacherInstanceId: 10011,
         weeks: [emptyWeek(), emptyWeek(), emptyWeek(), emptyWeek(), emptyWeek(), emptyWeek(), emptyWeek(), emptyWeek()],
         codeReviews: [],
+        weekdrafts: [],
         validRegistration: false,
         User: {
           id: 10012,
@@ -305,6 +306,7 @@ describe('<StudentTableRow />', () => {
         teacherInstanceId: 10011,
         weeks: [gradedWeek(3), emptyWeek(), emptyWeek(), emptyWeek(), emptyWeek(), emptyWeek(), emptyWeek(), emptyWeek()],
         codeReviews: [{ linkToReview: 'https://github.com/example/example/issues/1', points: null, reviewNumber: 1 }],
+        weekdrafts: [{ weekNumber: 2 }],
         validRegistration: true,
         User: {
           id: 10031,
@@ -342,6 +344,7 @@ describe('<StudentTableRow />', () => {
         teacherInstanceId: 10011,
         weeks: [emptyWeek(), emptyWeek(), emptyWeek(), emptyWeek(), emptyWeek(), emptyWeek(), emptyWeek(), emptyWeek()],
         codeReviews: [{ linkToReview: null, points: null, reviewNumber: 1 }],
+        weekdrafts: [],
         validRegistration: true,
         User: {
           id: 10011,
@@ -384,7 +387,7 @@ describe('<StudentTableRow />', () => {
         color: 'yellow',
         createdAt: '2018-06-13T00:00:00.000Z',
         updatedAt: '2018-06-13T00:00:00.000Z',
-        courseInstanceId: 10011,
+        courseInstanceId: 10011
       },
       {
         id: 20003,
@@ -517,6 +520,11 @@ describe('<StudentTableRow />', () => {
     it('displays review button for unreviewed week', () => {
       wrapper.setProps({ data: coursePage.data[1], selectedInstance: { ...coursePage, currentWeek: 4 } })
       expect(wrapper.find('.reviewButton').length).toEqual(1)
+    })
+
+    it('displays review button with pause icon for unreviewed week that has a draft', () => {
+      wrapper.setProps({ data: coursePage.data[1], selectedInstance: { ...coursePage, currentWeek: 2 } })
+      expect(wrapper.find('.reviewDraftButton').length).toEqual(1)
     })
 
     it('displays review button for final review', () => {
