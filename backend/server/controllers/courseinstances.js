@@ -945,13 +945,13 @@ module.exports = {
 
     // course info: week amount, final review?, maxpoints, links
     try {
-      console.log(await course.update({
+      await course.update({
         weekAmount: template.weekAmount,
         weekMaxPoints: template.weekMaxPoints,
         finalReview: template.finalReview,
         coursesPage: course.coursesPage || template.coursesPage,
         courseMaterial: course.courseMaterial || template.courseMaterial
-      }))
+      })
     } catch (e) {
       logger.error(e)
       return res.status(500).send('Failed to copy course information.')
@@ -976,7 +976,7 @@ module.exports = {
         const newTag = tag.get({ plain: true })
         delete newTag.id
         newTag.courseInstanceId = course.id
-        console.log((await Tag.create(newTag)).get({ plain: true }))
+        await Tag.create(newTag)
       }))
 
     // checklists
@@ -1007,13 +1007,12 @@ module.exports = {
         newClObj.courseInstanceId = course.id
         newClObj.forCodeReview = newClObj.forCodeReview || false
         const newCl = await Checklist.create(newClObj)
-        console.log(newCl.get({ plain: true }))
 
         await Promise.all(clItems.map(async (item) => {
           const newItem = item.get({ plain: true })
           delete newItem.id
           newItem.checklistId = newCl.id
-          console.log((await ChecklistItem.create(newItem)).get({ plain: true }))
+          await ChecklistItem.create(newItem)
         }))
       }))
 
