@@ -165,7 +165,7 @@ export const ModifyCourseInstancePage = props => {
       props.addRedirectHook({
         hook: 'CI_COPY_INFO_'
       })
-      props.copyInformationFromCourse(props.selectedInstance.ohid, state.copyCourse)
+      props.copyInformationFromCourse(props.selectedInstance.id, state.copyCourse)
     }
   }
 
@@ -349,7 +349,7 @@ export const ModifyCourseInstancePage = props => {
             <div>
               <br />
               <h1>Copy course information</h1>
-              <p>This copies the week amount, default maximum week points, checklists, course tags and links to the course page and material.</p>
+              <p>This copies the week amount, default maximum week points, whether there is a final review, checklists, course tags and links to the course page and material.</p>
               <Dropdown
                 className="courseDropdown"
                 disabled={courseDropdowns.length < 1}
