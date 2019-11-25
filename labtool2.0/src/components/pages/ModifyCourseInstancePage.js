@@ -176,7 +176,7 @@ export const ModifyCourseInstancePage = props => {
                 </Form.Group>
 
                 <Form.Group inline>
-                  <label style={{ width: '125px', textAlign: 'left' }}>Maximum default week points</label>
+                  <label style={{ width: '125px', textAlign: 'left' }}>Default maximum week points</label>
                   <Input
                     name="weekMaxPoints"
                     type="number"

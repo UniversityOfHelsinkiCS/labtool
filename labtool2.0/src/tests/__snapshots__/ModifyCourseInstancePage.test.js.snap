@@ -81,7 +81,7 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
                   }
                 }
               >
-                Maximum default week points
+                Default maximum week points
               </label>
               <Input
                 className="form-control2"
