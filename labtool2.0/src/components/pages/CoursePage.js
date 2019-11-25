@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { Loader, Message } from 'semantic-ui-react'
+import { Loader } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { getOneCI, coursePageInformation, modifyOneCI } from '../../services/courseInstance'
 import { getAllTags, tagStudent, unTagStudent } from '../../services/tags'
@@ -234,10 +234,6 @@ export const CoursePage = props => {
   }
 
   const { user, courseId, courseData, coursePageLogic, courseInstance, selectedInstance, tags } = props
-
-  if (courseData.error) {
-    return <Message error compact icon="warning sign" content={courseData.errorMessage} />
-  }
 
   // This function activates the course, leaving other data intact.
   const changeCourseActive = newState => {

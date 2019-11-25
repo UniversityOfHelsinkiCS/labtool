@@ -61,9 +61,6 @@ const courseInstancereducer = (store = INITIAL_STATE, action) => {
         return action.response
       }
     }
-    case 'CP_INFO_FAILURE': {
-      return { error: true, errorMessage: action.response.response.data }
-    }
     case 'ASSOCIATE_TEACHER_AND_STUDENT_SUCCESS': {
       const id = action.response.id
       const studentToChange = store.data.find(s => s.id === id)
