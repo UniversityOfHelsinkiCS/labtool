@@ -127,7 +127,7 @@ module.exports = {
         })
         const isTeacher = await helper.getTeacherId(req.decoded.id, courseInstance.id)
         if (!isTeacher) {
-          return res.status(403).send('must be instructor on the course')
+          return res.status(403).send('You must be an instructor on the course.')
         }
 
         const assistantId = studentInstance.teacherInstanceId
