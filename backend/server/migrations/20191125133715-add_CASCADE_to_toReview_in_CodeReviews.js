@@ -3,6 +3,7 @@ module.exports = {
     await queryInterface.removeConstraint('CodeReviews', 'CodeReviews_toReview_fkey')
     await queryInterface.addConstraint('CodeReviews', ['toReview'], {
       type: 'foreign key',
+      name: 'CodeReviews_toReview_fkey',
       references: {
         table: 'StudentInstances',
         field: 'id'
@@ -15,6 +16,7 @@ module.exports = {
     await queryInterface.removeConstraint('CodeReviews', 'CodeReviews_toReview_fkey')
     await queryInterface.addConstraint('CodeReviews', ['toReview'], {
       type: 'foreign key',
+      name: 'CodeReviews_toReview_fkey',
       references: {
         table: 'StudentInstances',
         field: 'id'
