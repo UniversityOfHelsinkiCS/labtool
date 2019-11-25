@@ -5,7 +5,8 @@ const logger = require('../../server/utils/logger')
 module.exports = {
   /**
    * Creates or edits a tag
-   *   permissions: must be an instructor on any course
+   *   permissions: must be an instructor on any course for global tag,
+   *     or on the specific course for a given course
    *
    * @param req
    * @param res
@@ -16,10 +17,14 @@ module.exports = {
     }
 
     try {
+      const whereTeacher = {
+        userId: req.decoded.id
+      }
+      if (req.body.courseInstanceId) {
+        whereTeacher.courseInstanceId = req.body.courseInstanceId
+      }
       const teacher = await TeacherInstance.findOne({
-        where: {
-          userId: req.decoded.id
-        }
+        where: whereTeacher
       })
       if (!teacher) {
         return res.status(403).send('You need to be a teacher or instructor to do this.')
@@ -136,7 +141,8 @@ module.exports = {
 
   /**
    * Removes a tag
-   *   permissions: must be a *course teacher* on any course
+   *   permissions: must be an instructor on any course for global tag
+   *     or on the specific course for a course tag
    *
    * @param req
    * @param res
@@ -147,23 +153,26 @@ module.exports = {
     }
 
     try {
-      const teacher = await TeacherInstance.findOne({
-        where: {
-          userId: req.decoded.id,
-          instructor: false
-        }
-      })
-      if (!teacher) {
-        return res.status(400).send('You have to be a course teacher to do this.')
-      }
-
       const tag = await Tag.findOne({
         where: {
           id: req.body.id
         }
       })
       if (!tag) {
-        return res.status(404).send('There is no tag with that name.')
+        return res.status(404).send('There is no tag with that ID.')
+      }
+
+      const whereTeacher = {
+        userId: req.decoded.id
+      }
+      if (tag.courseInstanceId) {
+        whereTeacher.courseInstanceId = tag.courseInstanceId
+      }
+      const teacher = await TeacherInstance.findOne({
+        where: whereTeacher
+      })
+      if (!teacher) {
+        return res.status(400).send('You have to be a teacher or instructor to do this.')
       }
 
       const { id } = tag

@@ -416,7 +416,7 @@ module.exports = {
    */
   /**
    * Update N student instances, used to changed issue disabled flag for one
-   *   permissions: must be teacher on course or assistant for edited students
+   *   permissions: must be instructor on course
    *
    * @param {*} req
    * @param {*} res
@@ -494,10 +494,8 @@ module.exports = {
    */
   /**
    * Update one student instance; perhaps to change dropped status, repo etc.
-   *   permissions: must be teacher on course, the instructor of the student
-   *     or the student themselves
+   *   permissions: must be instructor on course or the student themselves
    *   student cannot edit issues disabled or dropped status
-   *   instructor/assistant cannot edit student repository
    *
    * @param {*} req
    * @param {*} res
@@ -525,9 +523,6 @@ module.exports = {
         }
         if (req.body.issuesDisabled && isAllowedToUpdate === 'student') {
           return res.status(403).send('You cannot modify this flag as a student.')
-        }
-        if (req.body.github && isAllowedToUpdate.includes('assistant')) {
-          return res.status(403).send('You cannot modify the repository URL as an assistant.')
         }
         const targetStudent = await StudentInstance.findOne({
           where: {
