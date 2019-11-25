@@ -11,6 +11,7 @@ import { usePersistedState } from '../../hooks/persistedState'
 import { AdminCourseList } from './AdminPage/AdminCourseList'
 import { AdminUserList } from './AdminPage/AdminUserList'
 import DocumentTitle from '../DocumentTitle'
+import Error from '../Error'
 
 export const AdminPage = props => {
   const state = usePersistedState('AdminPage', {
@@ -40,6 +41,8 @@ export const AdminPage = props => {
 
   if (!props.user.user.sysop) {
     return <Redirect to={`/labtool`} />
+  } else if (props.errors.length > 0) {
+    return <Error errors={props.errors.map(error => `${error.response.data} (${error.response.status} ${error.response.statusText})`)} />
   } else if (props.loading.loading) {
     return (
       <>
@@ -78,7 +81,8 @@ const mapStateToProps = state => {
     user: state.user,
     courseInstance: state.courseInstance,
     users: state.users,
-    loading: state.loading
+    loading: state.loading,
+    errors: Object.values(state.loading.errors)
   }
 }
 

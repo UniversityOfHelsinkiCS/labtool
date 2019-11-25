@@ -10,6 +10,7 @@ import { getIsAllowedToImport } from '../../services/courseImport'
 import { HorizontalScrollable } from '../HorizontalScrollable'
 import { formatCourseName } from '../../util/format'
 import DocumentTitle from '../DocumentTitle'
+import Error from '../Error'
 
 /**
  * The main page that is shown after user has logged in.
@@ -35,6 +36,10 @@ export const MyPage = props => {
       </Table.Cell>
     </Table.Row>
   )
+
+  if (props.errors.length > 0) {
+    return <Error errors={props.errors.map(error => `${error.response.data} (${error.response.status} ${error.response.statusText})`)} />
+  }
 
   const user = { ...props.user.user }
   return (
@@ -128,7 +133,9 @@ const mapStateToProps = state => {
   return {
     user: state.user,
     studentInstance: state.studentInstance,
-    teacherInstance: state.teacherInstance
+    teacherInstance: state.teacherInstance,
+    loading: state.loading,
+    errors: Object.values(state.loading.errors)
   }
 }
 

@@ -7,6 +7,7 @@ import { getIsAllowedToImport, getImportableCourses, importCourses } from '../..
 import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 import { HorizontalScrollable } from '../HorizontalScrollable'
 import { formatCourseName } from '../../util/format'
+import Error from '../Error'
 
 import DocumentTitle from '../DocumentTitle'
 
@@ -53,6 +54,10 @@ export const CourseImport = props => {
       })
       await props.importCourses({ courses })
     }
+  }
+
+  if (props.errors.length > 0) {
+    return <Error errors={props.errors.map(error => `${error.response.data} (${error.response.status} ${error.response.statusText})`)} />
   }
 
   return (
@@ -125,6 +130,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     ...ownProps,
     loading: state.loading,
+    errors: Object.values(state.loading.errors),
     canImport: state.courseImport.canImport,
     importable: state.courseImport.importable
   }

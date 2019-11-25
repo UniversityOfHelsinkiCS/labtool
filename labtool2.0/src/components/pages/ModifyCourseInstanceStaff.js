@@ -12,6 +12,7 @@ import { sortUsersByTeacherAssistantLastname } from '../../util/sort'
 
 import BackButton from '../BackButton'
 import DocumentTitle from '../DocumentTitle'
+import Error from '../Error'
 
 export const ModifyCourseInstanceStaff = props => {
   useEffect(() => {
@@ -53,6 +54,10 @@ export const ModifyCourseInstanceStaff = props => {
     } catch (error) {
       console.error(error)
     }
+  }
+
+  if (props.errors.length > 0) {
+    return <Error errors={props.errors.map(error => `${error.response.data} (${error.response.status} ${error.response.statusText})`)} />
   }
 
   let sortedUsers = props.users
@@ -130,7 +135,8 @@ const mapStateToProps = (state, ownProps) => {
     courseId: ownProps.courseId,
     users: state.users,
     selectedInstance: state.selectedInstance,
-    loading: state.loading
+    loading: state.loading,
+    errors: Object.values(state.loading.errors)
   }
 }
 

@@ -5,6 +5,7 @@ import { login } from '../../services/login'
 import { resetLoading, forceSetLoading } from '../../reducers/loadingReducer'
 import { Form, Input, Button, Grid, Loader } from 'semantic-ui-react'
 import DocumentTitle from '../DocumentTitle'
+import Error from '../Error'
 
 /**
  *  The page used to login
@@ -27,6 +28,10 @@ export const LoginPage = props => {
       password: e.target.password.value
     }
     await props.login(content)
+  }
+
+  if (props.errors.length > 0) {
+    return <Error errors={props.errors.map(error => `${error.response.data} (${error.response.status} ${error.response.statusText})`)} />
   }
 
   return (
@@ -69,7 +74,8 @@ export const LoginPage = props => {
 const mapStateToProps = state => {
   return {
     user: state.user,
-    loading: state.loading
+    loading: state.loading,
+    errors: Object.values(state.loading.errors)
   }
 }
 
