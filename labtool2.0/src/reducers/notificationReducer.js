@@ -252,6 +252,16 @@ const notificationReducer = (state = {}, action) => {
         message: 'Could not import courses',
         error: true
       }
+    case 'STUDENT_REMOVE_SUCCESS':
+      return {
+        message: 'You have removed yourself from the course',
+        error: false
+      }
+    case 'STUDENT_REMOVE_FAILURE':
+      return {
+        message: 'You cannot remove yourself from the course',
+        error: true
+      }
     default:
       return state
   }

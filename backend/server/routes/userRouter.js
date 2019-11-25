@@ -6,4 +6,5 @@ module.exports = (app) => {
   app.put('/api/users/updateAdmin', userController.updateAdmin)
   app.post('/api/users/teacher/create', userController.createTeacher)
   app.post('/api/users/teacher/remove', userController.removeTeacher)
+  app.post('/api/users/student/remove', userController.removeStudent)
 }

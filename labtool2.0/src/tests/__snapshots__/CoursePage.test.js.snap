@@ -183,6 +183,7 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
           "role": "student",
         }
       }
+      removeRegistration={[Function]}
       selectedInstance={
         Object {
           "data": Object {
