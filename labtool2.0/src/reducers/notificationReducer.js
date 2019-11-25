@@ -66,6 +66,16 @@ const notificationReducer = (state = {}, action) => {
         message: 'Course instance updated successfully!',
         error: false
       }
+    case 'CI_COPY_INFO_SUCCESS':
+      return {
+        message: 'Course details copied successfully!',
+        error: false
+      }
+    case 'CI_COPY_INFO_FAILURE':
+      return {
+        message: 'Course details could not be copied.',
+        error: true
+      }
     case 'WEEKS_CREATE_ONESUCCESS':
       return {
         message: 'Week reviewed successfully!',

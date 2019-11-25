@@ -7,6 +7,7 @@ module.exports = {
       createdAt: '2018-03-26',
       updatedAt: '2018-03-26',
       week: 1,
+      forCodeReview: false,
       courseInstanceId: 10013,
       master: false
     },
@@ -15,6 +16,7 @@ module.exports = {
       createdAt: '2018-03-26',
       updatedAt: '2018-03-26',
       week: 1,
+      forCodeReview: false,
       courseInstanceId: 10011,
       master: false
     },
@@ -22,6 +24,7 @@ module.exports = {
       id: 10003,
       createdAt: '2018-03-26',
       updatedAt: '2018-03-26',
+      week: null,
       forCodeReview: true,
       courseInstanceId: 10011,
       master: false
