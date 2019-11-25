@@ -262,7 +262,7 @@ module.exports = {
           }
         })
         if (!siToRemove) {
-          return res.status(400).send('The student instance does not exist')
+          return res.status(400).send('The student instance does not exist.')
         }
 
         const teacher = await TeacherInstance.findOne({
@@ -272,10 +272,10 @@ module.exports = {
           }
         })
         if (siToRemove.userId !== userId && !teacher) {
-          return res.status(400).send('You must be the student himself or the teacher of the courrse to remove this student instance')
+          return res.status(403).send('You must be the student himself or the teacher of the course to remove this student instance.')
         }
         if (siToRemove.validRegistration) {
-          return res.status(400).send('The student instance can be removed only when his validRegistration has been marked as false')
+          return res.status(400).send('The student instance can be removed only when his validRegistration has been marked as false.')
         }
 
         await StudentInstance.destroy({
@@ -283,9 +283,9 @@ module.exports = {
             id: req.body.id
           }
         })
-        res.status(200).send('The student instance was deleted')
+        res.status(200).send('The student instance was deleted.')
       } catch (exception) {
-        res.status(400).send('error removing the student')
+        res.status(400).send('Error when removing the student.')
       }
     }
   }
