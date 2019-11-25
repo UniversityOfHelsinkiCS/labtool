@@ -14,7 +14,7 @@ const { User, StudentInstance, TeacherInstance, CourseInstance } = db
 module.exports = {
   /**
    * Associate instructor with student
-   *   permissions: must be teacher on course
+   *   permissions: must be an instructor on course
    *
    * @param {*} req
    * @param {*} res
@@ -91,7 +91,7 @@ module.exports = {
 
   /**
    * Get assistant for student instance
-   *   permissions: must be teacher on course
+   *   permissions: must be an instructor on course
    * currently not used by frontend, but has a call (getStudentsAssistant)
    *
    * @param {*} req
@@ -127,7 +127,7 @@ module.exports = {
         })
         const isTeacher = await helper.getTeacherId(req.decoded.id, courseInstance.id)
         if (!isTeacher) {
-          return res.status(403).send('must be teacher on the course')
+          return res.status(403).send('You must be an instructor on the course.')
         }
 
         const assistantId = studentInstance.teacherInstanceId
