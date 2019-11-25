@@ -54,13 +54,6 @@
 }
 
 .mainContainer {
-  margin-left: 10px;
-  margin-right: 10px;
-}
-
-@media (min-width: 1000px) {
-  .mainContainer {
-    margin-left: 20px;
-    margin-right: 20px;
-  }
+  margin-left: 20px;
+  margin-right: 20px;
 }
