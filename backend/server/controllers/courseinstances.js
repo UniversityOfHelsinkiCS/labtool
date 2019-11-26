@@ -420,7 +420,7 @@ module.exports = {
    */
   /**
    * Update N student instances, used to changed issue disabled flag for one
-   *   permissions: must be teacher on course or assistant for edited students
+   *   permissions: must be instructor on course
    *
    * @param {*} req
    * @param {*} res
@@ -498,10 +498,8 @@ module.exports = {
    */
   /**
    * Update one student instance; perhaps to change dropped status, repo etc.
-   *   permissions: must be teacher on course, the instructor of the student
-   *     or the student themselves
+   *   permissions: must be instructor on course or the student themselves
    *   student cannot edit issues disabled or dropped status
-   *   instructor/assistant cannot edit student repository
    *
    * @param {*} req
    * @param {*} res
@@ -529,9 +527,6 @@ module.exports = {
         }
         if (req.body.issuesDisabled && isAllowedToUpdate === 'student') {
           return res.status(403).send('You cannot modify this flag as a student.')
-        }
-        if (req.body.github && isAllowedToUpdate.includes('assistant')) {
-          return res.status(403).send('You cannot modify the repository URL as an assistant.')
         }
         const targetStudent = await StudentInstance.findOne({
           where: {
@@ -911,6 +906,121 @@ module.exports = {
     } catch (exception) {
       return res.status(400).send(exception)
     }
+  },
+
+  /**
+   * Copy course information from another course. This copies
+   * the week amount, default maximum week points, checklists,
+   * course tags, and links to course page and material.
+   *   permissions: must be a teacher/assistant on the course
+   *     that we are copying to
+   *
+   * @param req
+   * @param res
+   * @returns {*|Promise<T>}
+   */
+  async copyCourseInformation(req, res) {
+    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
+    if (!req.body.copyFrom || !req.body.copyTo) {
+      return res.status(400).send('You must supply both a "copyFrom" and "copyTo".')
+    }
+
+    const course = await CourseInstance.findOne({
+      where: {
+        id: req.body.copyTo
+      }
+    })
+    const template = await CourseInstance.findOne({
+      where: {
+        id: req.body.copyFrom
+      }
+    })
+    if (!course || !template) {
+      return res.status(400).send('Course not found.')
+    }
+
+    // check permissions; must be a teacher on the course we are copying to
+    const teacher = await helper.getTeacherId(req.decoded.id, course.id)
+    if (!teacher) {
+      return res.status(403).send('You must be a teacher on the course you are copying to.')
+    }
+
+    // course info: week amount, final review?, maxpoints, links
+    try {
+      await course.update({
+        weekAmount: template.weekAmount,
+        weekMaxPoints: template.weekMaxPoints,
+        finalReview: template.finalReview,
+        coursesPage: course.coursesPage || template.coursesPage,
+        courseMaterial: course.courseMaterial || template.courseMaterial
+      })
+    } catch (e) {
+      logger.error(e)
+      return res.status(500).send('Failed to copy course information.')
+    }
+
+    // course tags
+    const courseTags = await Tag.findAll({
+      where: {
+        courseInstanceId: template.id
+      }
+    })
+    const existingCourseTags = await Tag.findAll({
+      where: {
+        courseInstanceId: course.id
+      }
+    })
+
+    // do not import a tag if there would be a name clash
+    await Promise.all(courseTags
+      .filter(tag => !existingCourseTags.find(etag => etag.name === tag.name))
+      .map(async (tag) => {
+        const newTag = tag.get({ plain: true })
+        delete newTag.id
+        newTag.courseInstanceId = course.id
+        await Tag.create(newTag)
+      }))
+
+    // checklists
+    // do not replace existing checklists
+    const checklists = await Checklist.findAll({
+      where: {
+        courseInstanceId: template.id
+      }
+    })
+    const existingChecklists = await Checklist.findAll({
+      where: {
+        courseInstanceId: course.id
+      }
+    })
+
+    await Promise.all(checklists
+      .filter(cl => !existingChecklists.find(ecl => (cl.forCodeReview ? ecl.forCodeReview : (cl.week !== null && cl.week === ecl.week))))
+      .map(async (cl) => {
+        // make deep copy of checklist
+        const clItems = await ChecklistItem.findAll({
+          where: {
+            checklistId: cl.id
+          }
+        })
+
+        const newClObj = cl.get({ plain: true })
+        delete newClObj.id
+        newClObj.courseInstanceId = course.id
+        newClObj.forCodeReview = newClObj.forCodeReview || false
+        const newCl = await Checklist.create(newClObj)
+
+        await Promise.all(clItems.map(async (item) => {
+          const newItem = item.get({ plain: true })
+          delete newItem.id
+          newItem.checklistId = newCl.id
+          await ChecklistItem.create(newItem)
+        }))
+      }))
+
+    return res.status(200).send(course)
   },
 
   /**

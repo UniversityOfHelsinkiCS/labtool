@@ -41,6 +41,7 @@ module.exports = (sequelize, DataTypes) => {
     })
     CodeReview.belongsTo(models.StudentInstance, {
       foreignKey: 'toReview',
+      onDelete: 'CASCADE',
       as: 'toReviews'
     })
     CodeReview.hasMany(models.ReviewCheck, {

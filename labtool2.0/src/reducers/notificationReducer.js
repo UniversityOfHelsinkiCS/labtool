@@ -66,6 +66,16 @@ const notificationReducer = (state = {}, action) => {
         message: 'Course instance updated successfully!',
         error: false
       }
+    case 'CI_COPY_INFO_SUCCESS':
+      return {
+        message: 'Course details copied successfully!',
+        error: false
+      }
+    case 'CI_COPY_INFO_FAILURE':
+      return {
+        message: 'Course details could not be copied.',
+        error: true
+      }
     case 'WEEKS_CREATE_ONESUCCESS':
       return {
         message: 'Week reviewed successfully!',
@@ -240,6 +250,16 @@ const notificationReducer = (state = {}, action) => {
     case 'COURSE_IMPORT_DO_IMPORT_FAILURE':
       return {
         message: 'Could not import courses',
+        error: true
+      }
+    case 'STUDENT_REMOVE_SUCCESS':
+      return {
+        message: 'You have removed yourself from the course',
+        error: false
+      }
+    case 'STUDENT_REMOVE_FAILURE':
+      return {
+        message: 'You cannot remove yourself from the course',
         error: true
       }
     default:

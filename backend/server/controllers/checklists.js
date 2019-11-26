@@ -5,7 +5,7 @@ const logger = require('../utils/logger')
 module.exports = {
   /**
    * Create/edit checklist for course
-   *   permissions: must be teacher on course
+   *   permissions: must be an instructor on course
    *
    * @param {*} req
    * @param {*} res
@@ -192,7 +192,7 @@ module.exports = {
 
   /**
    * Get checklist for course
-   *   permissions: must be teacher or student on course
+   *   permissions: must be instructor or student on course
    *
    * @param {*} req
    * @param {*} res
