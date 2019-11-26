@@ -148,7 +148,7 @@ export const BrowseReviews = props => {
     return props.courseData.role === 'teacher'
   }
 
-  if (props.errors.length > 0) {
+  if (props.errors && props.errors.length > 0) {
     return <Error errors={props.errors.map(error => `${error.response.data} (${error.response.status} ${error.response.statusText})`)} />
   }
 

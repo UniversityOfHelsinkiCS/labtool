@@ -41,7 +41,7 @@ export const AdminPage = props => {
 
   if (!props.user.user.sysop) {
     return <Redirect to={`/labtool`} />
-  } else if (props.errors.length > 0) {
+  } else if (props.errors && props.errors.length > 0) {
     return <Error errors={props.errors.map(error => `${error.response.data} (${error.response.status} ${error.response.statusText})`)} />
   } else if (props.loading.loading) {
     return (

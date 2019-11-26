@@ -26,8 +26,7 @@ const ImportableCourse = ({ instance }) => (
 )
 
 const sortByStartDate = (a, b) => {
-  return new Date(a.starts) - new Date(b.starts)
-    || finnishLocaleCompare(a.cname, b.cname)
+  return new Date(a.starts) - new Date(b.starts) || finnishLocaleCompare(a.cname, b.cname)
 }
 
 /**
@@ -53,7 +52,7 @@ export const CourseImport = props => {
     }
   }
 
-  if (props.errors.length > 0) {
+  if (props.errors && props.errors.length > 0) {
     return <Error errors={props.errors.map(error => `${error.response.data} (${error.response.status} ${error.response.statusText})`)} />
   }
 
