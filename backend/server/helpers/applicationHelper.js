@@ -195,8 +195,24 @@ async function addInstructorToCourseList(course) {
   }
 }
 
+async function getInactiveFromKurki(req, res) {
+  const cur = await getCurrent(req, res)
+  const nxt = await getNewer(req, res)
+  const newobj = cur.concat(nxt)
+  const iarr = Object.keys(newobj).map(blob => newobj[blob].id)
+  const ires = await CourseInstance.findAll({
+    where: {
+      ohid: { [Op.in]: iarr }
+    }
+  })
+  const activated = ires.map(course => course.ohid)
+  const notActivated = newobj.filter(c => !activated.includes(c.id))
+  return Promise.all(notActivated.map(addInstructorToCourseList))
+}
+
 /**
- *
+ * If the function is called when importing courses, get inactive courses directly from Kurki and clear the cache
+ * Otherwise try to get inactive courses from cache.
  * @param req
  * @param res
  * @returns {Promise<*>}
@@ -204,6 +220,15 @@ async function addInstructorToCourseList(course) {
 async function getInactive(req, res) {
   const key = 'inactiveCourses'
   let inactive
+  if (req.body.courses) {
+    try {
+      inactive = getInactiveFromKurki(req, res)
+      cache.del(key)
+      return inactive
+    } catch (e) {
+      return e
+    }
+  }
   try {
     inactive = await cache.get(key)
   } catch (e) {
@@ -212,18 +237,7 @@ async function getInactive(req, res) {
 
   if (!inactive) {
     try {
-      const cur = await getCurrent(req, res)
-      const nxt = await getNewer(req, res)
-      const newobj = cur.concat(nxt)
-      const iarr = Object.keys(newobj).map(blob => newobj[blob].id)
-      const ires = await CourseInstance.findAll({
-        where: {
-          ohid: { [Op.in]: iarr }
-        }
-      })
-      const activated = ires.map(course => course.ohid)
-      const notActivated = newobj.filter(c => !activated.includes(c.id))
-      inactive = Promise.all(notActivated.map(addInstructorToCourseList))
+      inactive = getInactiveFromKurki(req, res)
       cache.set(key, inactive)
     } catch (e) {
       return e
