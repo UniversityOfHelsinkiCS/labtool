@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import { createCourseIdWithYearAndTerm } from '../../../util/format'
 
 import RepoLink from '../../RepoLink'
+import TotalPoints from '../../TotalPoints'
 
 export const StudentCard = ({ student, otherParticipations, handleMarkAsDropped, handleMarkAsValidRegistration, teacherInstance }) => (
   <Card key={student.id} fluid color="yellow" className="studentCard">
@@ -49,6 +50,7 @@ export const StudentCard = ({ student, otherParticipations, handleMarkAsDropped,
         ) : (
           <p className="noOther">Has no other participation in this course</p>
         )}
+        <TotalPoints student={student} />
       </div>
       {
         <Button color="red" style={{ float: 'right' }} onClick={() => handleMarkAsDropped(!student.dropped)}>
