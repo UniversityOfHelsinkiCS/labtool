@@ -20,6 +20,10 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'checklistId',
       onDelete: 'CASCADE'
     })
+    ChecklistItem.belongsTo(models.ChecklistItem, {
+      foreignKey: 'prerequisite',
+      onDelete: 'SET NULL'
+    })
   }
   return ChecklistItem
 }
