@@ -14,6 +14,7 @@ import useLegacyState from '../../hooks/legacyState'
 
 import BackButton from '../BackButton'
 import DocumentTitle from '../DocumentTitle'
+import Error from '../Error'
 import { sortCoursesByName } from '../../util/sort'
 
 /**
@@ -88,6 +89,17 @@ export const ModifyCourseInstancePage = props => {
       newCr = newCr.concat(state.toAddCr)
       const { weekAmount, weekMaxPoints, currentWeek, active, ohid, finalReview, coursesPage, courseMaterial } = props.selectedInstance
 
+      // This checks that the 'courses.helsinki.fi' URL actually contains that string as a part of it. Reject if not.
+      if (coursesPage !== null) {
+        if ((coursesPage.match(/courses.helsinki.fi/g) || []).length === 0) {
+          props.showNotification({
+            message: 'Link to "courses.helsinki.fi" must have that string as a part of it.',
+            error: true
+          })
+          return
+        }
+      }
+
       if (currentWeek === null || !dropdownWeeks.map(option => option.value).includes(currentWeek)) {
         props.showNotification({
           message: 'You must select a week to be the current week first!',
@@ -104,8 +116,9 @@ export const ModifyCourseInstancePage = props => {
         ohid,
         finalReview,
         newCr,
-        coursesPage,
-        courseMaterial
+        // Trim these, if they exist, for accessibility. Do not attempt to trim null (it creates black holes).
+        coursesPage: coursesPage === null ? null : coursesPage.trim(),
+        courseMaterial: courseMaterial === null ? null : courseMaterial.trim()
       }
       props.changeCourseField({
         field: 'active',
@@ -172,6 +185,11 @@ export const ModifyCourseInstancePage = props => {
   if ((props.redirect && props.redirect.redirect) || props.loading.redirect) {
     return <Redirect to={`/labtool/courses/${props.selectedInstance.ohid}`} />
   }
+
+  if (props.errors && props.errors.length > 0) {
+    return <Error errors={props.errors.map(error => `${error.response.data} (${error.response.status} ${error.response.statusText})`)} />
+  }
+
   const selectedInstance = { ...props.selectedInstance }
   const dropdownWeeks = createDropdownWeeks()
   const courseDropdowns = createCourseDropdowns()
@@ -194,11 +212,21 @@ export const ModifyCourseInstancePage = props => {
               <Form onSubmit={handleSubmit}>
                 <Form.Group inline>
                   <label style={{ width: '125px', textAlign: 'left' }}>Week amount</label>
-                  <Input name="weekAmount" type="number" min={1} required={true} style={{ maxWidth: '7em' }} value={selectedInstance.weekAmount} className="form-control1" onChange={changeField} />
+                  <Input
+                    name="weekAmount"
+                    type="number"
+                    min={1}
+                    max={30}
+                    required={true}
+                    style={{ maxWidth: '7em' }}
+                    value={selectedInstance.weekAmount}
+                    className="form-control1"
+                    onChange={changeField}
+                  />
                 </Form.Group>
 
                 <Form.Group inline>
-                  <label style={{ width: '125px', textAlign: 'left' }}>Maximum week points</label>
+                  <label style={{ width: '125px', textAlign: 'left' }}>Default maximum week points</label>
                   <Input
                     name="weekMaxPoints"
                     type="number"
@@ -231,7 +259,7 @@ export const ModifyCourseInstancePage = props => {
                   <label style={{ width: '125px', textAlign: 'left' }}>Link to courses.helsinki.fi</label>
                   <Input
                     name="coursesPage"
-                    type="text"
+                    type="url"
                     style={{ maxWidth: '12em' }}
                     value={selectedInstance.coursesPage === null ? '' : selectedInstance.coursesPage}
                     className="form-control4"
@@ -243,7 +271,7 @@ export const ModifyCourseInstancePage = props => {
                   <label style={{ width: '125px', textAlign: 'left' }}>Link to course material</label>
                   <Input
                     name="courseMaterial"
-                    type="text"
+                    type="url"
                     style={{ maxWidth: '12em' }}
                     value={selectedInstance.courseMaterial === null ? '' : selectedInstance.courseMaterial}
                     className="form-control5"

@@ -20,6 +20,7 @@ import MissingMinimumRequirements from '../MissingMinimumRequirements'
 
 import BackButton from '../BackButton'
 import DocumentTitle from '../DocumentTitle'
+import Error from '../Error'
 import { Points } from '../Points'
 
 const isFinalReview = props => props.weekNumber > props.selectedInstance.weekAmount
@@ -141,12 +142,15 @@ export const ReviewStudent = props => {
       ? props.weekReview.checks[checklistItemId]
       : false
 
-  if (props.loading.loading) {
-    return <Loader active />
-  }
   if (props.loading.redirect) {
     pstate.clear()
     return <Redirect to={`/labtool/courses/${props.selectedInstance.ohid}`} />
+  }
+  if (props.errors && props.errors.length > 0) {
+    return <Error errors={props.errors.map(error => `${error.response.data} (${error.response.status} ${error.response.statusText})`)} />
+  }
+  if (props.loading.loading) {
+    return <Loader active />
   }
   if (!Array.isArray(props.weekReview.data)) {
     return <Loader active />
@@ -393,7 +397,8 @@ const mapStateToProps = (state, ownProps) => {
     notification: state.notification,
     courseData: state.coursePage,
     weekReview: state.weekReview,
-    loading: state.loading
+    loading: state.loading,
+    errors: Object.values(state.loading.errors)
   }
 }
 

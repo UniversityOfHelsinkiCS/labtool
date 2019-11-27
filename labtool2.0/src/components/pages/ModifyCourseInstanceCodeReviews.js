@@ -23,6 +23,7 @@ import RepoLink from '../RepoLink'
 import IssuesDisabledWarning from '../IssuesDisabledWarning'
 import { updateStudentProjectInfo, massUpdateStudentProjectInfo } from '../../services/studentinstances'
 import DocumentTitle from '../DocumentTitle'
+import Error from '../Error'
 
 export const ModifyCourseInstanceReview = props => {
   const pstate = usePersistedState(`ModifyCourseInstanceCodeReviews_${props.courseId}`, {
@@ -404,6 +405,10 @@ export const ModifyCourseInstanceReview = props => {
       </Button>
     )
 
+  if (props.errors && props.errors.length > 0) {
+    return <Error errors={props.errors.map(error => `${error.response.data} (${error.response.status} ${error.response.statusText})`)} />
+  }
+
   if (props.loading.loading) {
     return <Loader active />
   }
@@ -496,7 +501,8 @@ const mapStateToProps = (state, ownProps) => {
     dropdownCodeReviews: codeReviewHelper(state.selectedInstance.amountOfCodeReviews),
     coursePageLogic: state.coursePageLogic,
     tags: state.tags,
-    loading: state.loading
+    loading: state.loading,
+    errors: Object.values(state.loading.errors)
   }
 }
 
