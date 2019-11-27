@@ -19,8 +19,6 @@ import Error from '../Error'
 import { Points } from '../Points'
 import { roundPoints } from '../../util/format'
 
-// Changes go here, possibly.
-
 /**
  *  The page which is used by teacher to review submissions,.
  */
