@@ -67,8 +67,9 @@ export const RegisterPage = props => {
     try {
       e.preventDefault()
       const data = {
-        projectName,
-        github: projectLink,
+        // Trim leading and trailing whitespace for accessibility (copy & paste content etc).
+        projectName: projectName.trim(),
+        github: projectLink.trim(),
         ohid: props.selectedInstance.ohid,
         repoExists: repo !== null ? !githubRepoError : null
       }
