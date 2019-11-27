@@ -7,6 +7,7 @@ import { connect } from 'react-redux'
 import { Redirect } from 'react-router'
 import { resetLoading, addRedirectHook, forceSetLoading } from '../../reducers/loadingReducer'
 import DocumentTitle from '../DocumentTitle'
+import Error from '../Error'
 
 /*
 take some elements from SetEmail.js, if user has already email in db
@@ -33,6 +34,10 @@ export const Email = props => {
       hook: 'USER_UPDATE_'
     })
     await props.updateSelf(content)
+  }
+
+  if (props.errors && props.errors.length > 0) {
+    return <Error errors={props.errors.map(error => `${error.response.data} (${error.response.status} ${error.response.statusText})`)} />
   }
 
   if (props.loading.redirect) {
@@ -99,7 +104,8 @@ export const Email = props => {
 const mapStateToProps = state => {
   return {
     user: state.user,
-    loading: state.loading
+    loading: state.loading,
+    errors: Object.values(state.loading.errors)
   }
 }
 
