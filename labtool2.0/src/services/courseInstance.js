@@ -57,4 +57,16 @@ export const coursePageInformation = data => {
   return callController(route, prefix, send, method)
 }
 
+/**
+ * Copies course information from another course,
+ * makes it easier to prepare new courses.
+ */
+export const copyInformationFromCourse = (copyTo, copyFrom) => {
+  const route = `/courseinstances/copy`
+  const prefix = 'CI_COPY_INFO_'
+  const data = { copyTo, copyFrom }
+  const method = 'post'
+  return callController(route, prefix, data, method)
+}
+
 export default { getAllCI }

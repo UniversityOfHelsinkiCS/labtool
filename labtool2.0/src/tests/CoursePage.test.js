@@ -484,8 +484,10 @@ describe('<CoursePage /> as student', () => {
   }
 
   let mockFn = jest.fn()
+  let mockRemoveStudent
 
   beforeEach(() => {
+    mockRemoveStudent = jest.fn()
     wrapper = shallow(
       <CoursePage
         courseData={coursePage}
@@ -516,6 +518,8 @@ describe('<CoursePage /> as student', () => {
         selectTag={mockFn}
         selectTeacher={mockFn}
         modifyOneCI={mockFn}
+        removeStudent={mockRemoveStudent}
+        addRedirectHook={mockFn}
       />
     )
   })
@@ -543,6 +547,37 @@ describe('<CoursePage /> as student', () => {
 
     it('doesnt render teachers bottom view when role is student', () => {
       expect(wrapper.find('CoursePageTeacherMain').length).toEqual(0)
+    })
+
+    describe('when registration has been marked as mistaken', () => {
+      const coursePageWithMistakenRegistration = {
+        ...coursePage,
+        data: {
+          ...coursePage.data,
+          validRegistration: false
+        }
+      }
+      beforeEach(() => {
+        wrapper.setProps({ courseData: coursePageWithMistakenRegistration })
+        wrapper = wrapper.find('CoursePageStudentInfo').dive()
+      })
+
+      it('render the message of the mistaken registration', () => {
+        expect(wrapper.find('.mistakenRegistration').exists()).toEqual(true)
+      })
+
+      it('can remove the mistaken registration', () => {
+        shallow(
+          wrapper
+            .find('.mistakenRegistration')
+            .find('Popup')
+            .prop('trigger')
+        )
+          .dive()
+          .find('#buttonRemoveRegistration')
+          .simulate('click')
+        expect(mockRemoveStudent).toBeCalledWith(expect.objectContaining({ id: 10011 }))
+      })
     })
 
     // it('renders collapsed code review points only if not null', () => {
