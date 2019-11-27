@@ -212,11 +212,21 @@ export const ModifyCourseInstancePage = props => {
               <Form onSubmit={handleSubmit}>
                 <Form.Group inline>
                   <label style={{ width: '125px', textAlign: 'left' }}>Week amount</label>
-                  <Input name="weekAmount" type="number" min={1} required={true} style={{ maxWidth: '7em' }} value={selectedInstance.weekAmount} className="form-control1" onChange={changeField} />
+                  <Input
+                    name="weekAmount"
+                    type="number"
+                    min={1}
+                    max={30}
+                    required={true}
+                    style={{ maxWidth: '7em' }}
+                    value={selectedInstance.weekAmount}
+                    className="form-control1"
+                    onChange={changeField}
+                  />
                 </Form.Group>
 
                 <Form.Group inline>
-                  <label style={{ width: '125px', textAlign: 'left' }}>Maximum week points</label>
+                  <label style={{ width: '125px', textAlign: 'left' }}>Default maximum week points</label>
                   <Input
                     name="weekMaxPoints"
                     type="number"
