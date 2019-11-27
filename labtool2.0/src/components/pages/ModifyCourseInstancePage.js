@@ -104,8 +104,9 @@ export const ModifyCourseInstancePage = props => {
         ohid,
         finalReview,
         newCr,
-        coursesPage,
-        courseMaterial
+        // Trim these, if they exist, for accessibility. Do not attempt to trim null (it creates black holes).
+        coursesPage: coursesPage === null ? null : coursesPage.trim(),
+        courseMaterial: courseMaterial === null ? null : courseMaterial.trim()
       }
       props.changeCourseField({
         field: 'active',
@@ -231,7 +232,7 @@ export const ModifyCourseInstancePage = props => {
                   <label style={{ width: '125px', textAlign: 'left' }}>Link to courses.helsinki.fi</label>
                   <Input
                     name="coursesPage"
-                    type="text"
+                    type="url"
                     style={{ maxWidth: '12em' }}
                     value={selectedInstance.coursesPage === null ? '' : selectedInstance.coursesPage}
                     className="form-control4"
@@ -243,7 +244,7 @@ export const ModifyCourseInstancePage = props => {
                   <label style={{ width: '125px', textAlign: 'left' }}>Link to course material</label>
                   <Input
                     name="courseMaterial"
-                    type="text"
+                    type="url"
                     style={{ maxWidth: '12em' }}
                     value={selectedInstance.courseMaterial === null ? '' : selectedInstance.courseMaterial}
                     className="form-control5"
