@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Form, Input, Button, Grid, Dropdown, Checkbox, Loader, Popup } from 'semantic-ui-react'
-import { getOneCI, modifyOneCI } from '../../services/courseInstance'
+import { getOneCI, modifyOneCI, coursePageInformation, getAllCI, copyInformationFromCourse } from '../../services/courseInstance'
 import { setFinalReview } from '../../reducers/selectedInstanceReducer'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
@@ -14,6 +14,8 @@ import useLegacyState from '../../hooks/legacyState'
 
 import BackButton from '../BackButton'
 import DocumentTitle from '../DocumentTitle'
+import Error from '../Error'
+import { sortCoursesByName } from '../../util/sort'
 
 /**
  *  Page used to modify a courseinstances information. Can only be accessed by teachers.
@@ -21,7 +23,8 @@ import DocumentTitle from '../DocumentTitle'
 export const ModifyCourseInstancePage = props => {
   const state = useLegacyState({
     toRemoveCr: [],
-    toAddCr: []
+    toAddCr: [],
+    copyCourse: undefined
   })
 
   useEffect(() => {
@@ -29,6 +32,8 @@ export const ModifyCourseInstancePage = props => {
     props.resetLoading()
     props.clearNotifications()
     props.getOneCI(props.courseId)
+    props.coursePageInformation(props.courseId)
+    props.getAllCI()
   }, [])
 
   useEffect(() => {
@@ -84,6 +89,17 @@ export const ModifyCourseInstancePage = props => {
       newCr = newCr.concat(state.toAddCr)
       const { weekAmount, weekMaxPoints, currentWeek, active, ohid, finalReview, coursesPage, courseMaterial } = props.selectedInstance
 
+      // This checks that the 'courses.helsinki.fi' URL actually contains that string as a part of it. Reject if not.
+      if (coursesPage !== null) {
+        if ((coursesPage.match(/courses.helsinki.fi/g) || []).length === 0) {
+          props.showNotification({
+            message: 'Link to "courses.helsinki.fi" must have that string as a part of it.',
+            error: true
+          })
+          return
+        }
+      }
+
       if (currentWeek === null || !dropdownWeeks.map(option => option.value).includes(currentWeek)) {
         props.showNotification({
           message: 'You must select a week to be the current week first!',
@@ -100,8 +116,9 @@ export const ModifyCourseInstancePage = props => {
         ohid,
         finalReview,
         newCr,
-        coursesPage,
-        courseMaterial
+        // Trim these, if they exist, for accessibility. Do not attempt to trim null (it creates black holes).
+        coursesPage: coursesPage === null ? null : coursesPage.trim(),
+        courseMaterial: courseMaterial === null ? null : courseMaterial.trim()
       }
       props.changeCourseField({
         field: 'active',
@@ -139,11 +156,44 @@ export const ModifyCourseInstancePage = props => {
     return options
   }
 
+  const createCourseDropdowns = () => {
+    if (!props.courseInstance) return []
+    const courses = props.courseInstance
+    if (!Array.isArray(courses)) {
+      return []
+    }
+    const options = sortCoursesByName(courses)
+      .filter(course => props.selectedInstance.id !== course.id)
+      .map(course => {
+        return {
+          value: course.id,
+          text: `${course.name} (${course.europeanStart})`
+        }
+      })
+    return options
+  }
+
+  const copyCourseInformation = () => {
+    if (state.copyCourse) {
+      props.addRedirectHook({
+        hook: 'CI_COPY_INFO_'
+      })
+      props.copyInformationFromCourse(props.selectedInstance.id, state.copyCourse)
+    }
+  }
+
   if ((props.redirect && props.redirect.redirect) || props.loading.redirect) {
     return <Redirect to={`/labtool/courses/${props.selectedInstance.ohid}`} />
   }
+
+  if (props.errors && props.errors.length > 0) {
+    return <Error errors={props.errors.map(error => `${error.response.data} (${error.response.status} ${error.response.statusText})`)} />
+  }
+
   const selectedInstance = { ...props.selectedInstance }
   const dropdownWeeks = createDropdownWeeks()
+  const courseDropdowns = createCourseDropdowns()
+  const showCopyForm = selectedInstance && props.studentCount === 0
 
   return (
     <>
@@ -199,7 +249,7 @@ export const ModifyCourseInstancePage = props => {
                   <label style={{ width: '125px', textAlign: 'left' }}>Link to courses.helsinki.fi</label>
                   <Input
                     name="coursesPage"
-                    type="text"
+                    type="url"
                     style={{ maxWidth: '12em' }}
                     value={selectedInstance.coursesPage === null ? '' : selectedInstance.coursesPage}
                     className="form-control4"
@@ -211,7 +261,7 @@ export const ModifyCourseInstancePage = props => {
                   <label style={{ width: '125px', textAlign: 'left' }}>Link to course material</label>
                   <Input
                     name="courseMaterial"
-                    type="text"
+                    type="url"
                     style={{ maxWidth: '12em' }}
                     value={selectedInstance.courseMaterial === null ? '' : selectedInstance.courseMaterial}
                     className="form-control5"
@@ -312,6 +362,28 @@ export const ModifyCourseInstancePage = props => {
               Edit tags
             </Button>
           </Link>
+
+          {showCopyForm && (
+            <div>
+              <br />
+              <h1>Copy course information</h1>
+              <p>This copies the week amount, default maximum week points, whether there is a final review, checklists, course tags and links to the course page and material.</p>
+              <Dropdown
+                className="courseDropdown"
+                disabled={courseDropdowns.length < 1}
+                placeholder={courseDropdowns.length < 1 ? 'No other courses' : 'Select course to copy from'}
+                selection
+                value={state.copyCourse}
+                onChange={(e, { value }) => (state.copyCourse = value)}
+                options={courseDropdowns}
+              />{' '}
+              <Button type="button" onClick={copyCourseInformation} disabled={!state.copyCourse}>
+                Copy course information
+              </Button>
+              <br />
+              <br />
+            </div>
+          )}
         </div>
       </div>
     </>
@@ -339,6 +411,8 @@ const mapStateToProps = (state, ownProps) => {
   return {
     selectedInstance: state.selectedInstance,
     notification: state.notification,
+    courseInstance: state.courseInstance,
+    studentCount: state.coursePage.data ? state.coursePage.data.length : null,
     ownProps,
     codeReviewDropdowns: createDropdownCodeReviews(state.selectedInstance.amountOfCodeReviews, state.selectedInstance.currentCodeReview),
     loading: state.loading,
@@ -348,7 +422,10 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = {
   getOneCI,
+  getAllCI,
+  coursePageInformation,
   modifyOneCI,
+  copyInformationFromCourse,
   showNotification,
   clearNotifications,
   changeCourseField,
@@ -361,14 +438,19 @@ const mapDispatchToProps = {
 ModifyCourseInstancePage.propTypes = {
   courseId: PropTypes.string.isRequired,
 
+  courseInstance: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
   selectedInstance: PropTypes.object.isRequired,
   notification: PropTypes.object.isRequired,
   codeReviewDropdowns: PropTypes.array,
   loading: PropTypes.object.isRequired,
   redirect: PropTypes.object.isRequired,
+  studentCount: PropTypes.number,
 
   getOneCI: PropTypes.func.isRequired,
+  getAllCI: PropTypes.func.isRequired,
+  coursePageInformation: PropTypes.func.isRequired,
   modifyOneCI: PropTypes.func.isRequired,
+  copyInformationFromCourse: PropTypes.func.isRequired,
   showNotification: PropTypes.func.isRequired,
   clearNotifications: PropTypes.func.isRequired,
   changeCourseField: PropTypes.func.isRequired,

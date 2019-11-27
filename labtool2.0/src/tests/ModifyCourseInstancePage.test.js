@@ -48,6 +48,9 @@ describe('<ModifyCourseInstancePage />', () => {
         setFinalReview={mockFn}
         forceRedirect={mockFn}
         showNotification={mockFn}
+        getAllCI={mockFn}
+        coursePageInformation={mockFn}
+        copyInformationFromCourse={mockFn}
       />
     )
   })

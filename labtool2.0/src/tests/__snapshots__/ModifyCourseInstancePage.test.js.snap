@@ -200,7 +200,7 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
                     "maxWidth": "12em",
                   }
                 }
-                type="text"
+                type="url"
               />
             </FormGroup>
             <FormGroup
@@ -225,7 +225,7 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
                     "maxWidth": "12em",
                   }
                 }
-                type="text"
+                type="url"
               />
             </FormGroup>
             <FormGroup
