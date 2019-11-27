@@ -108,7 +108,7 @@ export const WeekReviews = props => {
     const data = {
       reviewNumber,
       studentInstanceId: studentInstance,
-      linkToReview: e.target.reviewLink.value
+      linkToReview: e.target.reviewLink.value.trim()
     }
     e.target.reviewLink.value = ''
     props.addLinkToCodeReview(data)

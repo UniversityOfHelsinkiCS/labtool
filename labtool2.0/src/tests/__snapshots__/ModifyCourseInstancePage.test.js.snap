@@ -56,6 +56,7 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
               </label>
               <Input
                 className="form-control1"
+                max={30}
                 min={1}
                 name="weekAmount"
                 onChange={[Function]}
@@ -80,7 +81,7 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
                   }
                 }
               >
-                Maximum week points
+                Default maximum week points
               </label>
               <Input
                 className="form-control2"
@@ -200,7 +201,7 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
                     "maxWidth": "12em",
                   }
                 }
-                type="text"
+                type="url"
               />
             </FormGroup>
             <FormGroup
@@ -225,7 +226,7 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
                     "maxWidth": "12em",
                   }
                 }
-                type="text"
+                type="url"
               />
             </FormGroup>
             <FormGroup

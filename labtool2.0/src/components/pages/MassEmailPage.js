@@ -13,6 +13,7 @@ import StudentTable from '../StudentTable'
 import { usePersistedState, clearOnePersistedState } from '../../hooks/persistedState'
 import { sortStudentsAlphabeticallyByDroppedValue } from '../../util/sort'
 import DocumentTitle from '../DocumentTitle'
+import Error from '../Error'
 
 export const MassEmailPage = props => {
   const myCourseId = props.courseId
@@ -78,6 +79,10 @@ export const MassEmailPage = props => {
   }
 
   const documentTitle = <DocumentTitle title="Mass email" />
+
+  if (props.errors && props.errors.length > 0) {
+    return <Error errors={props.errors.map(error => `${error.response.data} (${error.response.status} ${error.response.statusText})`)} />
+  }
 
   if (props.loading.loading) {
     return (
@@ -188,7 +193,8 @@ const mapStateToProps = (state, ownProps) => {
     coursePageLogic: state.coursePageLogic,
     courseId: ownProps.courseId,
     tags: state.tags,
-    loading: state.loading
+    loading: state.loading,
+    errors: Object.values(state.loading.errors)
   }
 }
 

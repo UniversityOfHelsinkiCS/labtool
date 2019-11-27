@@ -153,12 +153,12 @@ const notificationReducer = (state = {}, action) => {
       }
     case 'CODE_REVIEW_ADD_LINK_SUCCESS':
       return {
-        message: 'Link added successfully',
+        message: 'Review link submitted successfully',
         error: false
       }
     case 'CODE_REVIEW_ADD_LINK_FAILURE':
       return {
-        message: 'Link could not be added. Please check URL formatting',
+        message: `Review link could not be submitted: ${action.response.response.data}`,
         error: true
       }
     case 'CHECKLIST_CREATE_SUCCESS':
