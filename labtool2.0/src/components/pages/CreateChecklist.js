@@ -14,6 +14,7 @@ import { sortCoursesByName } from '../../util/sort'
 import BackButton from '../BackButton'
 import JsonEdit from '../JsonEdit'
 import DocumentTitle from '../DocumentTitle'
+import Error from '../Error'
 import { Points } from '../Points'
 
 export const CreateChecklist = props => {
@@ -520,6 +521,10 @@ export const CreateChecklist = props => {
     window.location.reload(true)
   }
 
+  if (props.errors && props.errors.length > 0) {
+    return <Error errors={props.errors.map(error => `${error.response.data} (${error.response.status} ${error.response.statusText})`)} />
+  }
+
   const hasSelectedWeek = state.current !== undefined && state.current !== null
   const currentObj = parseChecklistValue(state.current)
   const { checklistJsx, maxPoints } = props.loading.loading ? { checklistJsx: null, maxPoints: null } : renderChecklist(currentObj.kind)
@@ -686,7 +691,8 @@ const mapStateToProps = (state, ownProps) => {
     weekDropdowns: createWeekDropdowns(selectedInstance),
     checklist: state.checklist,
     courses: state.courseInstance,
-    loading: state.loading
+    loading: state.loading,
+    errors: Object.values(state.loading.errors)
   }
 }
 

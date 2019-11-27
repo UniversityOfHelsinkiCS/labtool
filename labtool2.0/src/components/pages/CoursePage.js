@@ -20,6 +20,7 @@ import CoursePageTeacherBulkForm from './CoursePage/TeacherBulkForm'
 import CoursePageTeacherHeader from './CoursePage/TeacherHeader'
 import CoursePageTeacherMain from './CoursePage/TeacherMain'
 
+import Error from '../Error'
 import DocumentTitle from '../DocumentTitle'
 
 export const CoursePage = props => {
@@ -230,6 +231,10 @@ export const CoursePage = props => {
   let dropDownTags = []
   dropDownTags = createDropdownTags(courseTags, dropDownTags)
 
+  if (props.errors && props.errors.length > 0) {
+    return <Error errors={props.errors.map(error => `${error.response.data} (${error.response.status} ${error.response.statusText})`)} />
+  }
+
   if (props.loading.loading) {
     return <Loader active />
   }
@@ -403,6 +408,7 @@ CoursePage.propTypes = {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  console.log(state.loading)
   return {
     user: state.user,
     studentInstance: state.studentInstance,
@@ -413,7 +419,8 @@ const mapStateToProps = (state, ownProps) => {
     coursePageLogic: state.coursePageLogic,
     courseId: ownProps.courseId,
     tags: state.tags,
-    loading: state.loading
+    loading: state.loading,
+    errors: Object.values(state.loading.errors)
   }
 }
 

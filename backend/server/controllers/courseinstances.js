@@ -66,7 +66,7 @@ module.exports = {
         where: { id: req.params.id } // id is StudentInstance.id
       })
       if (!studentInstance) {
-        return res.status(404).send('student instance not found')
+        return res.status(400).send('student instance not found')
       }
       const courseInstance = await CourseInstance.findOne({
         where: { id: studentInstance.courseInstanceId }
@@ -108,6 +108,10 @@ module.exports = {
         ohid: req.body.course
       }
     })
+    if (!course) {
+      return res.status(404).send('course not found')
+    }
+
     const courseInst = course.id
     const palautus = {
       role: 'Unregistered',
@@ -290,7 +294,7 @@ module.exports = {
         palautus.role = 'teacher'
         res.status(200).send(palautus)
       } catch (e) {
-        res.status(200).send(e)
+        res.status(500).send(e)
       }
     }
   },
@@ -329,7 +333,7 @@ module.exports = {
     })
     if (!course) {
       overkillLogging(req, null)
-      return res.status(400).send({
+      return res.status(404).send({
         message: 'Course instance not found.'
       })
     }
@@ -531,7 +535,7 @@ module.exports = {
           }
         })
         if (!targetStudent) {
-          res.status(404).send('Student not found.')
+          res.status(400).send('Student not found.')
           return
         }
         try {
@@ -825,7 +829,7 @@ module.exports = {
       const currentUser = await User.findByPk(req.decoded.id)
 
       if (!currentUser) {
-        return res.status(404).send('User not found')
+        return res.status(400).send('User not found')
       }
 
       const checkRegistrationStatus = new Promise((resolve, _reject) => {
