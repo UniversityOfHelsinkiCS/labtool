@@ -23,9 +23,12 @@ const Nav = props => {
       inverted
       borderless
       animation="overlay"
+      attached
       style={{
         marginBottom: 25,
-        backgroundColor: '#e9af43'
+        backgroundColor: '#e9af43',
+        borderBottomLeftRadius: '5px',
+        borderBottomRightRadius: '5px'
       }}
     >
       <Menu.Menu position="left" as={Link} to="/labtool/mypage">
