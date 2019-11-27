@@ -1,4 +1,4 @@
-const { User, CourseInstance, TeacherInstance } = require('../models')
+const { User, CourseInstance, TeacherInstance, StudentInstance, CodeReview } = require('../models')
 const helper = require('../helpers/usersControllerHelper')
 const logger = require('../utils/logger')
 
@@ -245,5 +245,49 @@ module.exports = {
         res.status(400).send('Error removing assistant.')
       }
     }
+  },
+
+  async removeStudent(req, res) {
+    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
+    if (req.authenticated.success) {
+      try {
+        const userId = req.decoded.id
+
+        const siToRemove = await StudentInstance.findOne({
+          raw: true,
+          where: {
+            id: req.body.id
+          }
+        })
+        if (!siToRemove) {
+          return res.status(400).send('The student instance does not exist.')
+        }
+
+        const teacher = await TeacherInstance.findOne({
+          where: {
+            userId: req.decoded.id,
+            courseInstanceId: siToRemove.courseInstanceId
+          }
+        })
+        if (siToRemove.userId !== userId && !teacher) {
+          return res.status(403).send('You must be the student himself or the teacher of the course to remove this student instance.')
+        }
+        if (siToRemove.validRegistration) {
+          return res.status(400).send('The student instance can be removed only when his validRegistration has been marked as false.')
+        }
+
+        await StudentInstance.destroy({
+          where: {
+            id: req.body.id
+          }
+        })
+        res.status(200).send('The student instance was deleted.')
+      } catch (exception) {
+        res.status(400).send('Error when removing the student.')
+      }
+    }
   }
+
 }
