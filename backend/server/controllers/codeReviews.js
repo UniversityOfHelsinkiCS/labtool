@@ -237,12 +237,10 @@ module.exports = {
 
     try {
       if (!req.authenticated.success) {
-        res.status(403).send('You have to be authenticated to do this.')
-        return
+        return res.status(403).send('You have to be authenticated to do this.')
       }
       if (!(req.body.linkToReview.startsWith('http://') || req.body.linkToReview.startsWith('https://'))) {
-        res.status(400).send('The link must start with either "http://" or "https://".')
-        return
+        return res.status(400).send('The link must start with either "http://" or "https://".')
       }
 
       const studentInstance = await StudentInstance.findOne({
@@ -254,8 +252,7 @@ module.exports = {
         }
       })
       if (!studentInstance) {
-        res.status(400).send('No student instance matched the given ID.')
-        return
+        return res.status(400).send('No student instance matched the given ID.')
       }
 
       const modifiedRows = await CodeReview.update(
@@ -276,8 +273,8 @@ module.exports = {
         message: 'Code review link added successfully.',
         data: req.body
       })
-      return
     } catch (e) {
+      logger.error(e)
       res.status(500).send('Unexpected error. Please try again.') // Make this more helpful?
     }
   },
