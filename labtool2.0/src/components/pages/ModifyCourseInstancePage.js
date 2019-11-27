@@ -14,6 +14,7 @@ import useLegacyState from '../../hooks/legacyState'
 
 import BackButton from '../BackButton'
 import DocumentTitle from '../DocumentTitle'
+import Error from '../Error'
 import { sortCoursesByName } from '../../util/sort'
 
 /**
@@ -172,6 +173,11 @@ export const ModifyCourseInstancePage = props => {
   if ((props.redirect && props.redirect.redirect) || props.loading.redirect) {
     return <Redirect to={`/labtool/courses/${props.selectedInstance.ohid}`} />
   }
+
+  if (props.errors && props.errors.length > 0) {
+    return <Error errors={props.errors.map(error => `${error.response.data} (${error.response.status} ${error.response.statusText})`)} />
+  }
+
   const selectedInstance = { ...props.selectedInstance }
   const dropdownWeeks = createDropdownWeeks()
   const courseDropdowns = createCourseDropdowns()
