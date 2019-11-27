@@ -3,16 +3,16 @@ import { Dropdown } from 'semantic-ui-react'
 import PropTypes from 'prop-types'
 
 const RevieweeDropdown = props => {
-  const { dropdownUsers, studentData, codeReviewLogic, addCodeReview, create, courseData, amountOfCodeReviews } = props
+  const { dropdownUsers, studentData, codeReviewLogic, addCodeReview, create, amountOfCodeReviews } = props
 
   const checkDropped = value => {
     if (value === null) return false
-    return courseData.data.find(student => student.id === value).dropped
+    return studentData.dropped
   }
 
   const checkValidRegistration = value => {
     if (value === null) return false
-    return !courseData.data.find(student => student.id === value).validRegistration
+    return !studentData.validRegistration
   }
 
   // Check if a reviewee was reviewed by the same reviewer in previous rounds of code reviews
@@ -23,10 +23,7 @@ const RevieweeDropdown = props => {
 
     const currentRound = create ? amountOfCodeReviews + 1 : codeReviewLogic.selectedDropdown
 
-    const reviewed = courseData.data
-      .find(student => student.id === studentData.id)
-      .codeReviews.filter(cr => cr.reviewNumber < currentRound)
-      .map(cr => cr.toReview || cr.repoToReview)
+    const reviewed = studentData.codeReviews.filter(cr => cr.reviewNumber < currentRound).map(cr => cr.toReview || cr.repoToReview)
     return reviewed.includes(value)
   }
 
@@ -69,7 +66,6 @@ const RevieweeDropdown = props => {
   }
 
   const codeReviewRound = create ? -1 : codeReviewLogic.selectedDropdown
-
   return (
     <div>
       <Dropdown
@@ -99,7 +95,6 @@ RevieweeDropdown.propTypes = {
   codeReviewLogic: PropTypes.object.isRequired,
   addCodeReview: PropTypes.func.isRequired,
   create: PropTypes.bool.isRequired,
-  courseData: PropTypes.object.isRequired,
   amountOfCodeReviews: PropTypes.number
 }
 

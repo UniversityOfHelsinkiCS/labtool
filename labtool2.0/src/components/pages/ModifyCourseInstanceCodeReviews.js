@@ -363,7 +363,6 @@ export const ModifyCourseInstanceReview = props => {
         studentData={data}
         codeReviewLogic={props.codeReviewLogic}
         addCodeReview={addCodeReview}
-        courseData={props.courseData}
       />
     </Table.Cell>
   )
