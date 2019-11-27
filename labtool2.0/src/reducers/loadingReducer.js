@@ -11,7 +11,8 @@ const INITIAL_STATE = {
   loadingHooks: [],
   redirect: false,
   redirectHooks: [],
-  redirectFailure: false
+  redirectFailure: false,
+  errors: {}
 }
 
 const handleResponse = (state, hook, success) => {
@@ -46,10 +47,16 @@ const loadingReducer = (state = INITIAL_STATE, action) => {
     return { ...state, loading: true, loadingHooks: [...state.loadingHooks, prefix] }
   } else if (action.type.includes('SUCCESS')) {
     const prefix = action.type.split('SUCCESS')[0]
-    return handleResponse(state, prefix, true)
+    const newErrors = { ...state.errors }
+    delete newErrors[prefix]
+    return { ...handleResponse(state, prefix, true), errors: newErrors }
   } else if (action.type.includes('FAILURE')) {
     const prefix = action.type.split('FAILURE')[0]
-    return handleResponse(state, prefix, false)
+    const newErrors = { ...state.errors }
+    if (action.response && action.response.response && [404, 500].includes(action.response.response.status)) {
+      newErrors[prefix] = action.response
+    }
+    return { ...handleResponse(state, prefix, false), errors: newErrors }
   }
   switch (action.type) {
     case 'LOADING_RESET':

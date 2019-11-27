@@ -76,7 +76,7 @@ module.exports = {
     })
 
     if (!user) {
-      return res.status(404).send('User not found.')
+      return res.status(400).send('User not found.')
     }
 
     const updatedUser = await user.update({
@@ -160,7 +160,7 @@ module.exports = {
         const courseToAssist = courseInstance
 
         if (!userToAssistant || !courseToAssist) {
-          return res.status(404).send('User or course not found.')
+          return res.status(400).send('User or course not found.')
         }
 
         const alreadyExistingTeacherInstanceCount = await TeacherInstance.count({
@@ -208,7 +208,7 @@ module.exports = {
         })
 
         if (!teacherToRemoveAsUser || !courseInstance) {
-          return res.status(404).send('User or course not found.')
+          return res.status(400).send('User or course not found.')
         }
 
         // Make sure only teachers/assistants can remove assistants.

@@ -255,7 +255,7 @@ module.exports = {
 
         res.status(200).send({ ...checklist.dataValues, list: checklistJson })
       } else {
-        res.status(404).send({
+        res.status(400).send({
           message: 'No matching checklist found.',
           data: req.body
         })

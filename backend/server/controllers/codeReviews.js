@@ -152,7 +152,7 @@ module.exports = {
         }
       })
       if (!studentInstance) {
-        res.status(404).send('No student instance matched the given ID.')
+        res.status(400).send('No student instance matched the given ID.')
         return
       }
       const courseId = studentInstance.courseInstanceId
@@ -174,7 +174,7 @@ module.exports = {
         }
       })
       if (!codeReview) {
-        res.status(404).send('No code review matched the given student instance ID and review number.')
+        res.status(400).send('No code review matched the given student instance ID and review number.')
       }
       await CodeReview.update(
         {
@@ -237,12 +237,10 @@ module.exports = {
 
     try {
       if (!req.authenticated.success) {
-        res.status(403).send('You have to be authenticated to do this.')
-        return
+        return res.status(403).send('You have to be authenticated to do this.')
       }
       if (!(req.body.linkToReview.startsWith('http://') || req.body.linkToReview.startsWith('https://'))) {
-        res.status(400).send('The link must start with either "http://" or "https://".')
-        return
+        return res.status(400).send('The link must start with either "http://" or "https://".')
       }
 
       const studentInstance = await StudentInstance.findOne({
@@ -254,8 +252,7 @@ module.exports = {
         }
       })
       if (!studentInstance) {
-        res.status(404).send('No student instance matched the given ID.')
-        return
+        return res.status(400).send('No student instance matched the given ID.')
       }
 
       const modifiedRows = await CodeReview.update(
@@ -270,14 +267,14 @@ module.exports = {
         }
       )
       if (modifiedRows === 0) {
-        res.status(404).send('No code review matched the given student instance ID and review number.')
+        return res.status(400).send('No code review matched the given student instance ID and review number.')
       }
       res.status(200).send({
         message: 'Code review link added successfully.',
         data: req.body
       })
-      return
     } catch (e) {
+      logger.error(e)
       res.status(500).send('Unexpected error. Please try again.') // Make this more helpful?
     }
   },
@@ -307,7 +304,7 @@ module.exports = {
         where: { id: req.body.reviewer }
       })
       if (!studentInstance) {
-        return res.status(404).send('no student with that ID found')
+        return res.status(400).send('no student with that ID found')
       }
       const courseInstance = await CourseInstance.findOne({
         where: { id: studentInstance.courseInstanceId }
