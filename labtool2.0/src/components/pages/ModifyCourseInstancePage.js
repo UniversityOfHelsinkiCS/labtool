@@ -89,6 +89,17 @@ export const ModifyCourseInstancePage = props => {
       newCr = newCr.concat(state.toAddCr)
       const { weekAmount, weekMaxPoints, currentWeek, active, ohid, finalReview, coursesPage, courseMaterial } = props.selectedInstance
 
+      // This checks that the 'courses.helsinki.fi' URL actually contains that string as a part of it. Reject if not.
+      if (coursesPage !== null) {
+        if ((coursesPage.match(/courses.helsinki.fi/g) || []).length === 0) {
+          props.showNotification({
+            message: 'Link to "courses.helsinki.fi" must have that string as a part of it.',
+            error: true
+          })
+          return
+        }
+      }
+
       if (currentWeek === null || !dropdownWeeks.map(option => option.value).includes(currentWeek)) {
         props.showNotification({
           message: 'You must select a week to be the current week first!',
