@@ -198,7 +198,7 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
                 onChange={[Function]}
                 style={
                   Object {
-                    "maxWidth": "12em",
+                    "minWidth": "26em",
                   }
                 }
                 type="url"
@@ -223,7 +223,7 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
                 onChange={[Function]}
                 style={
                   Object {
-                    "maxWidth": "12em",
+                    "minWidth": "26em",
                   }
                 }
                 type="url"
