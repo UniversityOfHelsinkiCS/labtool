@@ -90,7 +90,7 @@ export const ModifyCourseInstancePage = props => {
       const { weekAmount, weekMaxPoints, currentWeek, active, ohid, finalReview, coursesPage, courseMaterial } = props.selectedInstance
 
       // This checks that the 'courses.helsinki.fi' URL actually contains that string as a part of it. Reject if not.
-      if (coursesPage !== null) {
+      if (coursesPage !== null && coursesPage !== '') {
         if ((coursesPage.match(/courses.helsinki.fi/g) || []).length === 0) {
           props.showNotification({
             message: 'Link to "courses.helsinki.fi" must have that string as a part of it.',
@@ -260,7 +260,7 @@ export const ModifyCourseInstancePage = props => {
                   <Input
                     name="coursesPage"
                     type="url"
-                    style={{ maxWidth: '12em' }}
+                    style={{ minWidth: '26em' }}
                     value={selectedInstance.coursesPage === null ? '' : selectedInstance.coursesPage}
                     className="form-control4"
                     onChange={changeField}
@@ -272,7 +272,7 @@ export const ModifyCourseInstancePage = props => {
                   <Input
                     name="courseMaterial"
                     type="url"
-                    style={{ maxWidth: '12em' }}
+                    style={{ minWidth: '26em' }}
                     value={selectedInstance.courseMaterial === null ? '' : selectedInstance.courseMaterial}
                     className="form-control5"
                     onChange={changeField}
