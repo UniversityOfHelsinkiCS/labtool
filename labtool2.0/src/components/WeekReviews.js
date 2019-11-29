@@ -226,30 +226,6 @@ export const WeekReviews = props => {
       .concat(normalWeeks)
       .concat(finalReview)
       .concat(codeReviews)
-
-    /* total points */
-    weeks.push(
-      <Accordion key="total" fluid styled style={{ marginBottom: '2em' }}>
-        <Accordion.Title active={true} index="total">
-          <Icon name="check" />
-          <strong> Total Points: </strong>
-          <Points
-            points={
-              props.student.weeks
-                .map(week => week.points)
-                .reduce((a, b) => {
-                  return a + b
-                }, 0) +
-              props.student.codeReviews
-                .map(cr => cr.points)
-                .reduce((a, b) => {
-                  return a + b
-                }, 0)
-            }
-          />
-        </Accordion.Title>
-      </Accordion>
-    )
   }
 
   return weeks
