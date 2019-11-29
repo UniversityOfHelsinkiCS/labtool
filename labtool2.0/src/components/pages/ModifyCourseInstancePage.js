@@ -439,7 +439,9 @@ ModifyCourseInstancePage.propTypes = {
   resetLoading: PropTypes.func.isRequired,
   addRedirectHook: PropTypes.func.isRequired,
   setFinalReview: PropTypes.func.isRequired,
-  forceRedirect: PropTypes.func.isRequired
+  forceRedirect: PropTypes.func.isRequired,
+
+  errors: PropTypes.array
 }
 
 export default connect(

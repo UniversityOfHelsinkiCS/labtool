@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Button, Header } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
+import { Header } from 'semantic-ui-react'
 
 import StudentTable from '../../StudentTable'
 

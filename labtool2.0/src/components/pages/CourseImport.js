@@ -24,6 +24,9 @@ const ImportableCourse = ({ instance }) => (
     <Table.Cell>{instance.europeanEnd}</Table.Cell>
   </Table.Row>
 )
+ImportableCourse.propTypes = {
+  instance: PropTypes.object.isRequired
+}
 
 const sortByStartDate = (a, b) => {
   return new Date(a.starts) - new Date(b.starts) || finnishLocaleCompare(a.cname, b.cname)
@@ -149,7 +152,9 @@ CourseImport.propTypes = {
   getIsAllowedToImport: PropTypes.func.isRequired,
   getImportableCourses: PropTypes.func.isRequired,
   importCourses: PropTypes.func.isRequired,
-  addRedirectHook: PropTypes.func.isRequired
+  addRedirectHook: PropTypes.func.isRequired,
+
+  errors: PropTypes.array
 }
 
 export default connect(

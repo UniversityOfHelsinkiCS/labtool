@@ -440,7 +440,9 @@ ReviewStudent.propTypes = {
   resetChecklist: PropTypes.func.isRequired,
   coursePageInformation: PropTypes.func.isRequired,
   resetLoading: PropTypes.func.isRequired,
-  addRedirectHook: PropTypes.func.isRequired
+  addRedirectHook: PropTypes.func.isRequired,
+
+  errors: PropTypes.array
 }
 
 export default withRouter(

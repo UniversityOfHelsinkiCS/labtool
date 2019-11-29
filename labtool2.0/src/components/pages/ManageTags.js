@@ -346,7 +346,9 @@ ManageTags.propTypes = {
   willCreateNewTag: PropTypes.func.isRequired,
   willModifyExistingTag: PropTypes.func.isRequired,
   getAllCI: PropTypes.func.isRequired,
-  showNotification: PropTypes.func.isRequired
+  showNotification: PropTypes.func.isRequired,
+
+  errors: PropTypes.array
 }
 
 export default connect(
