@@ -6,6 +6,7 @@ import RepoLink from '../RepoLink'
 
 import { Points } from '../Points'
 import StudentInfoCell from './StudentInfoCell'
+import ProjectInfoCell from './ProjectInfoCell'
 
 export const StudentTableRow = props => {
   const {
@@ -25,13 +26,10 @@ export const StudentTableRow = props => {
     courseData,
     studentInstances,
     associateTeacherToStudent,
-    updateStudentProjectInfo,
     selectStudent,
     unselectStudent,
     showAssistantDropdown,
-    showTagDropdown,
-    tagStudent,
-    unTagStudent
+    showTagDropdown
   } = props
 
   const updateTeacher = id => async (e, { value }) => {
@@ -74,35 +72,6 @@ export const StudentTableRow = props => {
   const changeHiddenTagDropdown = id => {
     return () => {
       showTagDropdown(coursePageLogic.showTagDropdown === id ? '' : id)
-    }
-  }
-
-  const addTag = id => async (e, { value }) => {
-    if (!value) {
-      return
-    }
-    try {
-      e.preventDefault()
-      const data = {
-        studentId: id,
-        tagId: value
-      }
-      await tagStudent(data)
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-  const removeTag = (id, tag) => async e => {
-    try {
-      e.preventDefault()
-      const data = {
-        studentId: id,
-        tagId: tag || coursePageLogic.selectedTag
-      }
-      await unTagStudent(data)
-    } catch (error) {
-      console.error(error)
     }
   }
 
@@ -263,47 +232,9 @@ export const StudentTableRow = props => {
         </Table.Cell>
       )}
 
-      {/* Student */}
       <StudentInfoCell studentId={data.id} extraStudentIcon={extraStudentIcon} allowReview={allowReview} />
 
-      {/* Project Info */}
-      <Table.Cell key="projectinfo">
-        <span>
-          {data.projectName}
-          <br />
-          <RepoLink url={data.github} />
-          <div>
-            {data.Tags.map(tag => (
-              <span key={data.id + ':' + tag.id} style={{ float: 'left', marginRight: '0.33em' }}>
-                <Button.Group className={'mini'}>
-                  <Button compact style={{ display: 'inline-block' }} className={`mini ui ${tag.color} button`} onClick={addFilterTag(tag)}>
-                    {tag.name}
-                  </Button>
-                  {allowModify && (
-                    <Button compact icon attached="right" className={`mini ui ${tag.color} button`} style={{ paddingLeft: 0, paddingRight: 0 }} onClick={removeTag(data.id, tag.id)}>
-                      <Icon name="remove" />
-                    </Button>
-                  )}
-                </Button.Group>
-              </span>
-            ))}
-          </div>
-          {allowModify && (
-            <Popup trigger={<Icon id={'tagModify'} onClick={changeHiddenTagDropdown(data.id)} name="add" color="green" style={{ float: 'right', fontSize: '1.25em' }} />} content="Add tag" />
-          )}
-        </span>
-        {allowModify && (
-          <div>
-            {coursePageLogic.showTagDropdown === data.id ? (
-              <div>
-                <Dropdown id={'tagDropdown'} upward={false} style={{ float: 'left' }} selectOnBlur={false} options={dropDownTags} onChange={addTag(data.id)} placeholder="Choose tag" fluid selection />
-              </div>
-            ) : (
-              <div />
-            )}
-          </div>
-        )}
-      </Table.Cell>
+      <ProjectInfoCell studentId={data.id} dropDownTags={dropDownTags} addFilterTag={addFilterTag} changeHiddenTagDropdown={changeHiddenTagDropdown} allowModify={allowModify} />
 
       {showColumn('points') && (
         <>
