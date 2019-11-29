@@ -22,15 +22,15 @@ export const CoursePageTeacherBulkForm = props => {
     exportCSV,
     selectedInstance
   } = props
-  const state = usePersistedState(`CoursePage-${courseId}`, { showMassAssignForm: false })
+  const state = usePersistedState(`CoursePage-StudentTools-${courseId}`, { showPanel: false })
   const numSelected = Object.keys(coursePageLogic.selectedStudents).length
   const disabled = numSelected < 1
 
   return (
     <span className="TeacherBulkForm" style={{ position: 'fixed', bottom: 0, background: 'rgba(255,255,255,0.9)', textAlign: 'center', left: 0, right: 0 }}>
       <Accordion>
-        <Accordion.Title style={{ background: '#f0f0f0' }} active={state.showMassAssignForm} index={0} onClick={() => (state.showMassAssignForm = !state.showMassAssignForm)}>
-          <Icon size="big" name={state.showMassAssignForm ? 'caret down' : 'caret up'} />
+        <Accordion.Title style={{ background: '#f0f0f0' }} active={state.showPanel} index={0} onClick={() => (state.showPanel = !state.showPanel)}>
+          <Icon size="big" name={state.showPanel ? 'caret down' : 'caret up'} />
           <h4 style={{ display: 'inline' }}>Student tools</h4> (
           {numSelected > 0 ? (
             <b>
@@ -41,7 +41,7 @@ export const CoursePageTeacherBulkForm = props => {
           )}
           )
         </Accordion.Title>
-        <Accordion.Content active={state.showMassAssignForm}>
+        <Accordion.Content active={state.showPanel}>
           <br />
           <h3 style={{ display: 'inline' }}> Modify selected students</h3>
           <br />
@@ -65,7 +65,7 @@ export const CoursePageTeacherBulkForm = props => {
                     disabled={disabled}
                     onClick={() => {
                       bulkAddTag()
-                      state.showMassAssignForm = false
+                      state.showPanel = false
                     }}
                     size="mini"
                   >
@@ -77,7 +77,7 @@ export const CoursePageTeacherBulkForm = props => {
                     disabled={disabled}
                     onClick={() => {
                       bulkRemoveTag()
-                      state.showMassAssignForm = false
+                      state.showPanel = false
                     }}
                     size="mini"
                   >
@@ -101,7 +101,7 @@ export const CoursePageTeacherBulkForm = props => {
                   disabled={disabled}
                   onClick={() => {
                     bulkUpdateTeacher()
-                    state.showMassAssignForm = false
+                    state.showPanel = false
                   }}
                   size="small"
                 >
@@ -116,7 +116,7 @@ export const CoursePageTeacherBulkForm = props => {
                   disabled={disabled}
                   onClick={() => {
                     bulkMarkNotDropped()
-                    state.showMassAssignForm = false
+                    state.showPanel = false
                   }}
                 >
                   Mark as non-dropped
@@ -127,7 +127,7 @@ export const CoursePageTeacherBulkForm = props => {
                   color="red"
                   onClick={() => {
                     bulkMarkDropped()
-                    state.showMassAssignForm = false
+                    state.showPanel = false
                   }}
                 >
                   Mark as dropped
@@ -139,7 +139,7 @@ export const CoursePageTeacherBulkForm = props => {
                   disabled={disabled}
                   onClick={() => {
                     bulkMarkValid()
-                    state.showMassAssignForm = false
+                    state.showPanel = false
                   }}
                 >
                   Intended course registration
@@ -154,7 +154,7 @@ export const CoursePageTeacherBulkForm = props => {
                       color="red"
                       onClick={() => {
                         bulkMarkInvalid()
-                        state.showMassAssignForm = false
+                        state.showPanel = false
                       }}
                     >
                       Mistaken course registration
@@ -194,6 +194,7 @@ CoursePageTeacherBulkForm.propTypes = {
   courseId: PropTypes.string.isRequired,
   dropDownTags: PropTypes.array.isRequired,
   dropDownTeachers: PropTypes.array.isRequired,
+  selectedInstance: PropTypes.object,
 
   changeSelectedTag: PropTypes.func.isRequired,
   changeSelectedTeacher: PropTypes.func.isRequired,

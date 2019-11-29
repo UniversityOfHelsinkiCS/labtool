@@ -19,8 +19,6 @@ import Error from '../Error'
 import { Points } from '../Points'
 import { roundPoints } from '../../util/format'
 
-// The changes go here, possibly, or somewhere else. I'll look into it.
-
 /**
  *  The page which is used by teacher to review submissions,.
  */
@@ -366,7 +364,9 @@ ReviewStudentCodeReview.propTypes = {
   resetChecklist: PropTypes.func.isRequired,
   coursePageInformation: PropTypes.func.isRequired,
   resetLoading: PropTypes.func.isRequired,
-  addRedirectHook: PropTypes.func.isRequired
+  addRedirectHook: PropTypes.func.isRequired,
+
+  errors: PropTypes.array
 }
 
 export default withRouter(

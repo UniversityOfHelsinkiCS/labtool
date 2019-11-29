@@ -737,7 +737,9 @@ CreateChecklist.propTypes = {
   addRow: PropTypes.func.isRequired,
   removeTopic: PropTypes.func.isRequired,
   removeRow: PropTypes.func.isRequired,
-  castPointsToNumber: PropTypes.func.isRequired
+  castPointsToNumber: PropTypes.func.isRequired,
+
+  errors: PropTypes.array
 }
 
 export default connect(

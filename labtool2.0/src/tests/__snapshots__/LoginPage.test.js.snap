@@ -2,7 +2,7 @@
 
 exports[`<Login /> LoginPage Component should render correctly 1`] = `
 <Fragment>
-  <_default
+  <DocumentTitle
     title="Login"
   />
   <div

@@ -351,6 +351,7 @@ describe('<CoursePage /> as student', () => {
 
   const coursePage = {
     role: 'student',
+    name: 'course',
     data: {
       id: 10011,
       github: 'http://github.com/tiralabra1',

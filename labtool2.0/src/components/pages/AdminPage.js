@@ -104,7 +104,9 @@ AdminPage.propTypes = {
   resetLoading: PropTypes.func.isRequired,
   getAllUsers: PropTypes.func.isRequired,
   updateOtherUser: PropTypes.func.isRequired,
-  clearNotifications: PropTypes.func.isRequired
+  clearNotifications: PropTypes.func.isRequired,
+
+  errors: PropTypes.array
 }
 
 export default connect(
