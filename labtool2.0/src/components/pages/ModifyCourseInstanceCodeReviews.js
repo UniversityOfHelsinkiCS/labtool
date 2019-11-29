@@ -557,7 +557,9 @@ ModifyCourseInstanceReview.propTypes = {
   removeOneCodeReview: PropTypes.func.isRequired,
   getAllTags: PropTypes.func.isRequired,
   updateStudentProjectInfo: PropTypes.func.isRequired,
-  massUpdateStudentProjectInfo: PropTypes.func.isRequired
+  massUpdateStudentProjectInfo: PropTypes.func.isRequired,
+
+  errors: PropTypes.array
 }
 
 export default withRouter(

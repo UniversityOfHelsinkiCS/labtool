@@ -1,7 +1,8 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Message, List } from 'semantic-ui-react'
 
-export default ({ header, errors }) => (
+export const LabtoolError = ({ header, errors }) => (
   <Message
     error
     icon="warning sign"
@@ -15,3 +16,9 @@ export default ({ header, errors }) => (
     }
   />
 )
+LabtoolError.propTypes = {
+  header: PropTypes.string,
+  errors: PropTypes.array
+}
+
+export default LabtoolError

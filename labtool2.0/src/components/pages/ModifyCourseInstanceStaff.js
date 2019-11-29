@@ -162,7 +162,9 @@ ModifyCourseInstanceStaff.propTypes = {
   clearNotifications: PropTypes.func.isRequired,
   createOne: PropTypes.func.isRequired,
   removeOne: PropTypes.func.isRequired,
-  resetLoading: PropTypes.func.isRequired
+  resetLoading: PropTypes.func.isRequired,
+
+  errors: PropTypes.array
 }
 
 export default withRouter(

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { Redirect } from 'react-router'
+import { withRouter, Redirect } from 'react-router'
 import { Loader } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { getOneCI, coursePageInformation, modifyOneCI } from '../../services/courseInstance'
@@ -22,6 +22,7 @@ import CoursePageTeacherMain from './CoursePage/TeacherMain'
 
 import Error from '../Error'
 import DocumentTitle from '../DocumentTitle'
+import { clearOnePersistedState } from '../../hooks/persistedState'
 
 export const CoursePage = props => {
   useEffect(() => {
@@ -37,6 +38,13 @@ export const CoursePage = props => {
       props.coursePageReset()
     }
   }, [])
+
+  useEffect(() => {
+    if (props.location.state && props.location.state.hidePanel) {
+      // remove the persisted state for the student tools panel, hiding it (as it is the default)
+      clearOnePersistedState(`CoursePage-StudentTools-${props.courseId}`)
+    }
+  }, [props.location])
 
   const downloadFile = (filename, mime, data) => {
     // create temporary element and use that to initiate download
@@ -239,7 +247,7 @@ export const CoursePage = props => {
     return <Loader active />
   }
 
-  const { user, courseId, courseData, coursePageLogic, courseInstance, selectedInstance, tags } = props
+  const { user, courseId, courseData, coursePageLogic, selectedInstance, tags } = props
 
   // This function activates the course, leaving other data intact.
   const changeCourseActive = newState => {
@@ -404,11 +412,13 @@ CoursePage.propTypes = {
   modifyOneCI: PropTypes.func.isRequired,
   downloadFile: PropTypes.func,
   addRedirectHook: PropTypes.func,
-  removeStudent: PropTypes.func
+  removeStudent: PropTypes.func,
+
+  location: PropTypes.object,
+  errors: PropTypes.array
 }
 
 const mapStateToProps = (state, ownProps) => {
-  console.log(state.loading)
   return {
     user: state.user,
     studentInstance: state.studentInstance,
@@ -443,7 +453,9 @@ const mapDispatchToProps = {
   removeStudent
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(CoursePage)
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(CoursePage)
+)
