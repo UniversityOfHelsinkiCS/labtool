@@ -4,8 +4,8 @@ import { Button, Icon, Table, Popup, Dropdown, Checkbox } from 'semantic-ui-reac
 import { Link } from 'react-router-dom'
 import RepoLink from '../RepoLink'
 
-import RepoAccessWarning from '../RepoAccessWarning'
 import { Points } from '../Points'
+import StudentInfoCell from './StudentInfoCell'
 
 export const StudentTableRow = props => {
   const {
@@ -264,30 +264,7 @@ export const StudentTableRow = props => {
       )}
 
       {/* Student */}
-      <Table.Cell key="studentinfo">
-        {!data.validRegistration && <Popup trigger={<Icon name="warning" color="black" />} content="This student's registration has been marked as mistaken" />}
-        {!data.dropped && data.validRegistration && data.repoExists === false && <RepoAccessWarning student={data} ohid={selectedInstance.ohid} updateStudentProjectInfo={updateStudentProjectInfo} />}
-        {allowReview ? (
-          <Link to={`/labtool/browsereviews/${selectedInstance.ohid}/${data.id}`}>
-            <Popup
-              trigger={
-                <span>
-                  {extraStudentIcon && extraStudentIcon(data)}
-                  {data.User.firsts} {data.User.lastname}
-                  <br />({data.User.studentNumber})
-                </span>
-              }
-              content={data.dropped ? 'Review student (this student has dropped out)' : 'Review student'}
-            />
-          </Link>
-        ) : (
-          <span>
-            {extraStudentIcon && extraStudentIcon(data)}
-            {data.User.firsts} {data.User.lastname}
-            <br />({data.User.studentNumber})
-          </span>
-        )}
-      </Table.Cell>
+      <StudentInfoCell studentId={data.id} extraStudentIcon={extraStudentIcon} allowReview={allowReview} />
 
       {/* Project Info */}
       <Table.Cell key="projectinfo">
