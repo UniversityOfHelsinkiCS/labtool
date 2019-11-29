@@ -41,6 +41,7 @@ export const CoursePage = props => {
 
   useEffect(() => {
     if (props.location.state && props.location.state.hidePanel) {
+      // remove the persisted state for the student tools panel, hiding it (as it is the default)
       clearOnePersistedState(`CoursePage-StudentTools-${props.courseId}`)
     }
   }, [props.location])
