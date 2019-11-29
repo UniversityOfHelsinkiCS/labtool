@@ -2,7 +2,9 @@
 
 exports[`<CoursePage /> as student CoursePage Component should render correctly 1`] = `
 <Fragment>
-  <_default />
+  <DocumentTitle
+    title="course"
+  />
   <div
     key="true"
   >
@@ -62,6 +64,7 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
             "userId": 10011,
             "weeks": Array [],
           },
+          "name": "course",
           "role": "student",
         }
       }
@@ -120,6 +123,7 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
             "userId": 10011,
             "weeks": Array [],
           },
+          "name": "course",
           "role": "student",
         }
       }
@@ -180,6 +184,7 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
             "userId": 10011,
             "weeks": Array [],
           },
+          "name": "course",
           "role": "student",
         }
       }
@@ -239,6 +244,7 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
             "userId": 10011,
             "weeks": Array [],
           },
+          "name": "course",
           "role": "student",
         }
       }
@@ -299,6 +305,7 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
             "userId": 10011,
             "weeks": Array [],
           },
+          "name": "course",
           "role": "student",
         }
       }
@@ -310,7 +317,7 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
 
 exports[`<CoursePage /> as teacher CoursePage Component should render correctly 1`] = `
 <Fragment>
-  <_default
+  <DocumentTitle
     title="Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit"
   />
   <div

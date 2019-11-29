@@ -242,7 +242,9 @@ BrowseReviews.propTypes = {
   resetLoading: PropTypes.func.isRequired,
   getCoursesByStudentId: PropTypes.func.isRequired,
   getAllTeacherCourses: PropTypes.func.isRequired,
-  updateStudentProjectInfo: PropTypes.func.isRequired
+  updateStudentProjectInfo: PropTypes.func.isRequired,
+
+  errors: PropTypes.array
 }
 
 export default withRouter(

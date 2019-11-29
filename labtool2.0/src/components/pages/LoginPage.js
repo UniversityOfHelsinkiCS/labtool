@@ -91,7 +91,9 @@ LoginPage.propTypes = {
 
   login: PropTypes.func.isRequired,
   resetLoading: PropTypes.func.isRequired,
-  forceSetLoading: PropTypes.func.isRequired
+  forceSetLoading: PropTypes.func.isRequired,
+
+  errors: PropTypes.array
 }
 
 export default connect(
