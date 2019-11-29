@@ -494,7 +494,7 @@ export const CreateChecklist = props => {
           <form className="addForm" onSubmit={newRow(key)}>
             {/*This, like all other addForms is here to funnel both the button press 
               as well as a user pressing enter into the same function.*/}
-            <Popup trigger={<Button type="submit" circular icon={{ name: 'add' }} />} content="Add new checkbox" />
+            {<Button type="submit" content="Add new checkbox" color="yellow" icon="plus" labelPosition="left" />}
             {state.openAdd === key ? (
               <div>
                 <Label>Name</Label>
@@ -582,7 +582,7 @@ export const CreateChecklist = props => {
               <div>
                 {checklistJsx /* This block of jsx is defined in renderChecklist */}
                 <form className="addForm" onSubmit={newTopic}>
-                  <Popup trigger={<Button type="submit" circular icon={{ name: 'add', size: 'large' }} />} content="Add new topic" />
+                  {<Button type="submit" content="Add new topic" icon="add" size="large" labelPosition="left" />}
                   {state.openAdd === 'newTopic' ? (
                     <div>
                       <Label>Name</Label>
