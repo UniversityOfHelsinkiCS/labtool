@@ -18,7 +18,7 @@ const MissingMinimumRequirements = ({ selectedInstance, studentInstance }) => {
     .map(week =>
       Object.entries(week.checks)
         .filter(([id, checked]) => !checked && minimumRequirements.has(Number(id)))
-        .map(([id, _]) => Number(id))
+        .map(([id]) => Number(id))
     )
     .flat()
     .map(id => minimumRequirements.get(id))

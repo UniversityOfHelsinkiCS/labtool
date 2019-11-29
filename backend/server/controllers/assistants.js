@@ -39,7 +39,7 @@ module.exports = {
         }
       })
       if (!studentInstance) {
-        res.status(404).send('Specified student instance could not be found.')
+        res.status(400).send('Specified student instance could not be found.')
         return
       }
       if (!teacherInsId) {
@@ -67,7 +67,7 @@ module.exports = {
         }
       })
       if (!givenTeachersTeacherInstance) {
-        res.status(404).send('There is no teacher with the given teacher instance ID.')
+        res.status(400).send('There is no teacher with the given teacher instance ID.')
         return
       }
       const teachersCourseId = givenTeachersTeacherInstance.courseInstanceId

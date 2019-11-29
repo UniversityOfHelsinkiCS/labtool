@@ -17,6 +17,7 @@ import { formatCourseName } from '../../util/format'
 import WeekReviews from '../WeekReviews'
 import { StudentCard } from './BrowseReviews/StudentCard'
 import DocumentTitle from '../DocumentTitle'
+import Error from '../Error'
 
 /**
  * Maps all comments from a single instance from coursePage reducer
@@ -147,6 +148,10 @@ export const BrowseReviews = props => {
     return props.courseData.role === 'teacher'
   }
 
+  if (props.errors && props.errors.length > 0) {
+    return <Error errors={props.errors.map(error => `${error.response.data} (${error.response.status} ${error.response.statusText})`)} />
+  }
+
   if (state.initialLoading) {
     return <Loader active />
   }
@@ -203,7 +208,8 @@ const mapStateToProps = (state, ownProps) => {
     courseData: state.coursePage,
     studentInstanceToBeReviewed: state.studentInstance,
     teacherInstance: state.teacherInstance, //courses that the teacher has
-    loading: state.loading
+    loading: state.loading,
+    errors: Object.values(state.loading.errors)
   }
 }
 
@@ -236,7 +242,9 @@ BrowseReviews.propTypes = {
   resetLoading: PropTypes.func.isRequired,
   getCoursesByStudentId: PropTypes.func.isRequired,
   getAllTeacherCourses: PropTypes.func.isRequired,
-  updateStudentProjectInfo: PropTypes.func.isRequired
+  updateStudentProjectInfo: PropTypes.func.isRequired,
+
+  errors: PropTypes.array
 }
 
 export default withRouter(

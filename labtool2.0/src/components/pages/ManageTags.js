@@ -12,6 +12,7 @@ import useLegacyState from '../../hooks/legacyState'
 import { sortCoursesByName } from '../../util/sort'
 import { showNotification } from '../../reducers/notificationReducer'
 import DocumentTitle from '../DocumentTitle'
+import Error from '../Error'
 
 export const ManageTags = props => {
   const state = useLegacyState({
@@ -153,6 +154,10 @@ export const ManageTags = props => {
   if (props.tags.tags && props.tags.modifyTag && !editTag) {
     props.willCreateNewTag()
     return <div />
+  }
+
+  if (props.errors && props.errors.length > 0) {
+    return <Error errors={props.errors.map(error => `${error.response.data} (${error.response.status} ${error.response.statusText})`)} />
   }
 
   return (
@@ -311,6 +316,7 @@ const mapStateToProps = (state, ownProps) => {
     ownProps,
     tags: state.tags,
     loading: state.loading,
+    errors: Object.values(state.loading.errors),
     selectedInstance: state.selectedInstance,
     courses: state.courseInstance
   }
@@ -340,7 +346,9 @@ ManageTags.propTypes = {
   willCreateNewTag: PropTypes.func.isRequired,
   willModifyExistingTag: PropTypes.func.isRequired,
   getAllCI: PropTypes.func.isRequired,
-  showNotification: PropTypes.func.isRequired
+  showNotification: PropTypes.func.isRequired,
+
+  errors: PropTypes.array
 }
 
 export default connect(

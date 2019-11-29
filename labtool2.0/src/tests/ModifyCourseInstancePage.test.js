@@ -1,7 +1,7 @@
 import React from 'react'
 import { ModifyCourseInstancePage } from '../components/pages/ModifyCourseInstancePage'
 import { shallow } from 'enzyme'
-import { Popup, Checkbox } from 'semantic-ui-react'
+import { Checkbox } from 'semantic-ui-react'
 
 describe('<ModifyCourseInstancePage />', () => {
   let wrapper
@@ -16,8 +16,8 @@ describe('<ModifyCourseInstancePage />', () => {
     weekMaxPoints: 2,
     currentWeek: 1,
     ohid: 'TKT20011.2018.K.A.1',
-    currentCodeReview: [1, 2],
-    amountOfCodeReviews: 3
+    currentCodeReview: [1],
+    amountOfCodeReviews: 2
   }
 
   const loading = {
@@ -30,10 +30,12 @@ describe('<ModifyCourseInstancePage />', () => {
 
   let mockFn = jest.fn()
 
+  const codeReviewLabels = [{ value: 1, text: 'Code Review 1' }, { value: 2, text: 'Code Review 2' }]
+
   beforeEach(() => {
     wrapper = shallow(
       <ModifyCourseInstancePage
-        codeReviewDropdowns={[{ value: 3, text: '3' }]}
+        codeReviewLabels={codeReviewLabels}
         getOneCI={mockFn}
         clearNotifications={mockFn}
         loading={loading}
@@ -48,6 +50,9 @@ describe('<ModifyCourseInstancePage />', () => {
         setFinalReview={mockFn}
         forceRedirect={mockFn}
         showNotification={mockFn}
+        getAllCI={mockFn}
+        coursePageInformation={mockFn}
+        copyInformationFromCourse={mockFn}
       />
     )
   })
@@ -76,25 +81,22 @@ describe('<ModifyCourseInstancePage />', () => {
     it('renders current week', () => {
       expect(wrapper.find('.weekDropdown').length).toEqual(1)
     })
-    it('renders currently visible code reviews', () => {
-      expect(
-        wrapper
-          .find(Popup)
-          .at(0)
-          .props().trigger.props.value
-      ).toEqual(1)
-      expect(
-        wrapper
-          .find(Popup)
-          .at(1)
-          .props().trigger.props.value
-      ).toEqual(2)
+
+    it('renders code review checkboxes', () => {
+      expect(wrapper.find('.crCheckboxes').exists()).toEqual(true)
+      const visibleCr = wrapper
+        .find('.crCheckboxes')
+        .find('.cr1')
+        .find('CodeReviewCheckbox')
+      expect(visibleCr.props().initialCheckState).toEqual(true)
+
+      const hiddenCr = wrapper
+        .find('.crCheckboxes')
+        .find('.cr2')
+        .find('CodeReviewCheckbox')
+      expect(hiddenCr.props().initialCheckState).toEqual(false)
     })
 
-    it('renders dropdown to show currently not visible code reviews', () => {
-      expect(wrapper.find('.codeReviewDropdown').length).toEqual(1)
-      expect(wrapper.find('.codeReviewDropdown').props().options[0].text).toEqual('3')
-    })
     it('renders active course checkbox', () => {
       const checkbox = wrapper.find(Checkbox).find({ name: 'courseActive' })
 

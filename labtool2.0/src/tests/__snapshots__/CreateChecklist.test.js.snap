@@ -2,7 +2,7 @@
 
 exports[`<CreateChecklist /> component should render correctly 1`] = `
 <Fragment>
-  <_default
+  <DocumentTitle
     title="Checklists - Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit"
   />
   <div
@@ -300,31 +300,13 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
               className="addForm"
               onSubmit={[Function]}
             >
-              <Popup
+              <Button
+                as="button"
+                color="yellow"
                 content="Add new checkbox"
-                disabled={false}
-                eventsEnabled={true}
-                offset={0}
-                on={
-                  Array [
-                    "click",
-                    "hover",
-                  ]
-                }
-                pinned={false}
-                position="top left"
-                trigger={
-                  <Button
-                    as="button"
-                    circular={true}
-                    icon={
-                      Object {
-                        "name": "add",
-                      }
-                    }
-                    type="submit"
-                  />
-                }
+                icon="plus"
+                labelPosition="left"
+                type="submit"
               />
               <div />
             </form>
@@ -472,31 +454,13 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
               className="addForm"
               onSubmit={[Function]}
             >
-              <Popup
+              <Button
+                as="button"
+                color="yellow"
                 content="Add new checkbox"
-                disabled={false}
-                eventsEnabled={true}
-                offset={0}
-                on={
-                  Array [
-                    "click",
-                    "hover",
-                  ]
-                }
-                pinned={false}
-                position="top left"
-                trigger={
-                  <Button
-                    as="button"
-                    circular={true}
-                    icon={
-                      Object {
-                        "name": "add",
-                      }
-                    }
-                    type="submit"
-                  />
-                }
+                icon="plus"
+                labelPosition="left"
+                type="submit"
               />
               <div />
             </form>
@@ -505,32 +469,13 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
             className="addForm"
             onSubmit={[Function]}
           >
-            <Popup
+            <Button
+              as="button"
               content="Add new topic"
-              disabled={false}
-              eventsEnabled={true}
-              offset={0}
-              on={
-                Array [
-                  "click",
-                  "hover",
-                ]
-              }
-              pinned={false}
-              position="top left"
-              trigger={
-                <Button
-                  as="button"
-                  circular={true}
-                  icon={
-                    Object {
-                      "name": "add",
-                      "size": "large",
-                    }
-                  }
-                  type="submit"
-                />
-              }
+              icon="add"
+              labelPosition="left"
+              size="large"
+              type="submit"
             />
             <div />
           </form>

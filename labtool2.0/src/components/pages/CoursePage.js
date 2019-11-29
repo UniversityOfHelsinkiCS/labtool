@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
+import { withRouter, Redirect } from 'react-router'
 import { Loader } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { getOneCI, coursePageInformation, modifyOneCI } from '../../services/courseInstance'
@@ -7,8 +8,8 @@ import { getAllTags, tagStudent, unTagStudent } from '../../services/tags'
 import { associateTeacherToStudent } from '../../services/assistant'
 import { prepareForCourse, coursePageReset, selectTag, selectTeacher } from '../../reducers/coursePageLogicReducer'
 import { changeCourseField } from '../../reducers/selectedInstanceReducer'
-import { updateStudentProjectInfo } from '../../services/studentinstances'
-import { resetLoading } from '../../reducers/loadingReducer'
+import { updateStudentProjectInfo, removeStudent } from '../../services/studentinstances'
+import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 import { sortStudentsAlphabeticallyByDroppedValue } from '../../util/sort'
 
 import { createDropdownTeachers, createDropdownTags } from '../../util/dropdown'
@@ -19,7 +20,9 @@ import CoursePageTeacherBulkForm from './CoursePage/TeacherBulkForm'
 import CoursePageTeacherHeader from './CoursePage/TeacherHeader'
 import CoursePageTeacherMain from './CoursePage/TeacherMain'
 
+import Error from '../Error'
 import DocumentTitle from '../DocumentTitle'
+import { clearOnePersistedState } from '../../hooks/persistedState'
 
 export const CoursePage = props => {
   useEffect(() => {
@@ -35,6 +38,13 @@ export const CoursePage = props => {
       props.coursePageReset()
     }
   }, [])
+
+  useEffect(() => {
+    if (props.location.state && props.location.state.hidePanel) {
+      // remove the persisted state for the student tools panel, hiding it (as it is the default)
+      clearOnePersistedState(`CoursePage-StudentTools-${props.courseId}`)
+    }
+  }, [props.location])
 
   const downloadFile = (filename, mime, data) => {
     // create temporary element and use that to initiate download
@@ -229,11 +239,15 @@ export const CoursePage = props => {
   let dropDownTags = []
   dropDownTags = createDropdownTags(courseTags, dropDownTags)
 
+  if (props.errors && props.errors.length > 0) {
+    return <Error errors={props.errors.map(error => `${error.response.data} (${error.response.status} ${error.response.statusText})`)} />
+  }
+
   if (props.loading.loading) {
     return <Loader active />
   }
 
-  const { user, courseId, courseData, coursePageLogic, courseInstance, selectedInstance, tags } = props
+  const { user, courseId, courseData, coursePageLogic, selectedInstance, tags } = props
 
   // This function activates the course, leaving other data intact.
   const changeCourseActive = newState => {
@@ -292,18 +306,35 @@ export const CoursePage = props => {
     props.modifyOneCI(content, selectedInstance.ohid)
   }
 
+  const removeRegistration = studentId => {
+    const si = {
+      id: studentId
+    }
+    try {
+      props.removeStudent(si)
+      props.addRedirectHook({
+        hook: 'STUDENT_REMOVE_'
+      })
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   const documentTitle = <DocumentTitle title={selectedInstance.name} />
 
   /**
    * This part actually tells what to show to the user
    */
   if (props.courseData.role === 'student') {
+    if (props.loading.redirect) {
+      return <Redirect to={'/labtool/mypage'} />
+    }
     return (
       <>
         {documentTitle}
         <div key>
           <CoursePageStudentRegister courseData={courseData} selectedInstance={selectedInstance} />
-          <CoursePageStudentInfo courseData={courseData} selectedInstance={selectedInstance} />
+          <CoursePageStudentInfo courseData={courseData} selectedInstance={selectedInstance} removeRegistration={removeRegistration} />
           <CoursePageStudentWeeks courseId={courseId} courseData={courseData} />
         </div>
       </>
@@ -379,7 +410,12 @@ CoursePage.propTypes = {
   selectTeacher: PropTypes.func.isRequired,
   changeCourseField: PropTypes.func.isRequired,
   modifyOneCI: PropTypes.func.isRequired,
-  downloadFile: PropTypes.func
+  downloadFile: PropTypes.func,
+  addRedirectHook: PropTypes.func,
+  removeStudent: PropTypes.func,
+
+  location: PropTypes.object,
+  errors: PropTypes.array
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -393,7 +429,8 @@ const mapStateToProps = (state, ownProps) => {
     coursePageLogic: state.coursePageLogic,
     courseId: ownProps.courseId,
     tags: state.tags,
-    loading: state.loading
+    loading: state.loading,
+    errors: Object.values(state.loading.errors)
   }
 }
 
@@ -406,15 +443,19 @@ const mapDispatchToProps = {
   tagStudent,
   unTagStudent,
   resetLoading,
+  addRedirectHook,
   updateStudentProjectInfo,
   associateTeacherToStudent,
   selectTag,
   selectTeacher,
   changeCourseField,
-  modifyOneCI
+  modifyOneCI,
+  removeStudent
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(CoursePage)
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(CoursePage)
+)

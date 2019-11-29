@@ -1,10 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Button, Card, Message } from 'semantic-ui-react'
+import { Button, Card, Message, Popup } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
+import TotalPoints from '../../TotalPoints'
 
 export const CoursePageStudentInfo = props => {
-  const { selectedInstance, courseData } = props
+  const { selectedInstance, courseData, removeRegistration } = props
 
   if (!(courseData && courseData.data)) {
     return <div />
@@ -40,13 +41,22 @@ export const CoursePageStudentInfo = props => {
                   </Message>
                 </>
               )}
+              <TotalPoints student={courseData.data} />
             </Card.Content>
           </Card>
           {courseData.role === 'student' && !courseData.data.validRegistration && (
             <>
-              <Message negative>
+              <Message className="mistakenRegistration" negative>
                 <Message.Header>Your registration has been marked as mistaken</Message.Header>
                 <p>This means you likely registered on this course by mistake. If this is not the case, please contact the teacher of the course.</p>
+                <Popup
+                  content="You can remove yourself from the course if you registered by mistake."
+                  trigger={
+                    <Button id="buttonRemoveRegistration" color="red" onClick={() => removeRegistration(courseData.data.id)}>
+                      Remove yourself from the course
+                    </Button>
+                  }
+                />
               </Message>
               <br />
             </>
@@ -70,7 +80,8 @@ export const CoursePageStudentInfo = props => {
 
 CoursePageStudentInfo.propTypes = {
   selectedInstance: PropTypes.object.isRequired,
-  courseData: PropTypes.object.isRequired
+  courseData: PropTypes.object.isRequired,
+  removeRegistration: PropTypes.func.isRequired
 }
 
 export default CoursePageStudentInfo

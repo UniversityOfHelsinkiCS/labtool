@@ -11,6 +11,7 @@
   currentWeek(pin): -- integer, what is the current week
   ohid(pin): -- Opetushallitus id of the course, is often used instead of the database id
   teacherInstances: all the teacherinstances related to his course instance
+  currentCodeReview: Array of code reviews which are visible to students
  * 
  */
 

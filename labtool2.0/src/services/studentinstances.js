@@ -70,6 +70,19 @@ export const massUpdateStudentProjectInfo = data => {
   return callController(route, prefix, data, method)
 }
 
+/**
+ * si:
+ * {
+ *  id, the id is studentInstance.id
+ * }
+ */
+export const removeStudent = si => {
+  const route = '/users/student/remove'
+  const prefix = 'STUDENT_REMOVE_'
+  const method = 'post'
+  return callController(route, prefix, si, method)
+}
+
 /* Will probably need something like this to review students
 
 export const getOneSI = (id) => {

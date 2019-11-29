@@ -7,6 +7,7 @@ import { getIsAllowedToImport, getImportableCourses, importCourses } from '../..
 import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 import { HorizontalScrollable } from '../HorizontalScrollable'
 import { formatCourseName } from '../../util/format'
+import Error from '../Error'
 
 import DocumentTitle from '../DocumentTitle'
 import { finnishLocaleCompare } from '../../util/sort'
@@ -23,10 +24,12 @@ const ImportableCourse = ({ instance }) => (
     <Table.Cell>{instance.europeanEnd}</Table.Cell>
   </Table.Row>
 )
+ImportableCourse.propTypes = {
+  instance: PropTypes.object.isRequired
+}
 
 const sortByStartDate = (a, b) => {
-  return new Date(a.starts) - new Date(b.starts)
-    || finnishLocaleCompare(a.cname, b.cname)
+  return new Date(a.starts) - new Date(b.starts) || finnishLocaleCompare(a.cname, b.cname)
 }
 
 /**
@@ -50,6 +53,10 @@ export const CourseImport = props => {
       })
       await props.importCourses({ courses })
     }
+  }
+
+  if (props.errors && props.errors.length > 0) {
+    return <Error errors={props.errors.map(error => `${error.response.data} (${error.response.status} ${error.response.statusText})`)} />
   }
 
   return (
@@ -122,6 +129,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     ...ownProps,
     loading: state.loading,
+    errors: Object.values(state.loading.errors),
     canImport: state.courseImport.canImport,
     importable: state.courseImport.importable
   }
@@ -144,7 +152,9 @@ CourseImport.propTypes = {
   getIsAllowedToImport: PropTypes.func.isRequired,
   getImportableCourses: PropTypes.func.isRequired,
   importCourses: PropTypes.func.isRequired,
-  addRedirectHook: PropTypes.func.isRequired
+  addRedirectHook: PropTypes.func.isRequired,
+
+  errors: PropTypes.array
 }
 
 export default connect(

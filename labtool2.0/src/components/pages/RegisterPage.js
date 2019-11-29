@@ -11,6 +11,7 @@ import useDebounce from '../../hooks/useDebounce'
 import useGithubRepo from '../../hooks/useGithubRepo'
 import { GitHubRepoWarning } from './RegisterPage/GitHubRepoWarning'
 import DocumentTitle from '../DocumentTitle'
+import Error from '../Error'
 
 /**
  * The page user uses to register to a course AS A STUDENT
@@ -66,8 +67,9 @@ export const RegisterPage = props => {
     try {
       e.preventDefault()
       const data = {
-        projectName,
-        github: projectLink,
+        // Trim leading and trailing whitespace for accessibility (copy & paste content etc).
+        projectName: projectName.trim(),
+        github: projectLink.trim(),
         ohid: props.selectedInstance.ohid,
         repoExists: repo !== null ? !githubRepoError : null
       }
@@ -89,6 +91,10 @@ export const RegisterPage = props => {
 
   if (props.loading.redirect) {
     return <Redirect to={`/labtool/courses/${props.selectedInstance.ohid}`} />
+  }
+
+  if (props.errors && props.errors.length > 0) {
+    return <Error errors={props.errors.map(error => `${error.response.data} (${error.response.status} ${error.response.statusText})`)} />
   }
 
   return (
@@ -177,7 +183,8 @@ const mapStateToProps = (state, ownProps) => {
     coursePage: state.coursePage,
     selectedInstance: state.selectedInstance,
     courseId: ownProps.courseId,
-    loading: state.loading
+    loading: state.loading,
+    errors: Object.values(state.loading.errors)
   }
 }
 
@@ -202,7 +209,9 @@ RegisterPage.propTypes = {
   getOneCI: PropTypes.func.isRequired,
   coursePageInformation: PropTypes.func.isRequired,
   resetLoading: PropTypes.func.isRequired,
-  addRedirectHook: PropTypes.func.isRequired
+  addRedirectHook: PropTypes.func.isRequired,
+
+  errors: PropTypes.array
 }
 
 export default connect(
