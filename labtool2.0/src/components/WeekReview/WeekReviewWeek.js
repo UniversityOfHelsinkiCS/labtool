@@ -23,7 +23,7 @@ export const WeekReviewWeek = props => {
     isTeacher,
     getMaximumPointsForWeek,
     handleClickWeek,
-    handleSubmit,
+    handleSubmitComment,
     sendCommentEmail,
     sendStudentEmail,
     sendWeekEmail,
@@ -128,7 +128,7 @@ export const WeekReviewWeek = props => {
               <h4> No comments </h4>
             )}
           </Comment.Group>
-          <LabtoolAddComment weekId={week.id} commentFieldId={`${courseId}:${week.id}`} handleSubmit={handleSubmit} allowHidden={isTeacher} />
+          <LabtoolAddComment weekId={week.id} commentFieldId={`${courseId}:${week.id}`} handleSubmit={e => handleSubmitComment(e, week.comments)} allowHidden={isTeacher} />
         </Accordion.Content>
       </Accordion>
     )
@@ -168,7 +168,7 @@ WeekReviewWeek.propTypes = {
 
   getMaximumPointsForWeek: PropTypes.func.isRequired,
   handleClickWeek: PropTypes.func.isRequired,
-  handleSubmit: PropTypes.func.isRequired,
+  handleSubmitComment: PropTypes.func.isRequired,
   sendCommentEmail: PropTypes.func.isRequired,
   sendStudentEmail: PropTypes.func.isRequired,
   sendWeekEmail: PropTypes.func.isRequired,

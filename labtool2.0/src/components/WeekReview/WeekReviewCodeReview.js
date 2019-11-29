@@ -24,7 +24,7 @@ export const WeekReviewCodeReview = props => {
 
   const doOpen = openWeeks[i] || (!isTeacher && cr.points === null)
   const hasChecklist = selectedInstance.checklists.find(checkl => checkl.forCodeReview)
-  const maxPoints = getMaximumPointsForCodeReview(cr.reviewNumber)
+  const maxPoints = getMaximumPointsForCodeReview()
 
   return (
     <Accordion key={`codereview${i}`} fluid styled id={`reviewCodeReview${cr.reviewNumber}`}>

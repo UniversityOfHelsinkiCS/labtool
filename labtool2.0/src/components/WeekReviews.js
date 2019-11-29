@@ -55,7 +55,7 @@ export const WeekReviews = props => {
     return props.selectedInstance.weekMaxPoints
   }
 
-  const getMaximumPointsForCodeReview = codeReview => {
+  const getMaximumPointsForCodeReview = () => {
     const checklist = props.selectedInstance.checklists.find(checkl => checkl.forCodeReview)
     if (checklist && checklist.maxPoints) {
       return checklist.maxPoints
@@ -114,7 +114,7 @@ export const WeekReviews = props => {
     props.addLinkToCodeReview(data)
   }
 
-  const handleSubmit = async e => {
+  const handleSubmitComment = (e, comments) => {
     e.preventDefault()
     const content = {
       hidden: isTeacher() ? e.target.hidden.checked : false,
@@ -124,14 +124,15 @@ export const WeekReviews = props => {
     }
     document.getElementById(e.target.name).reset()
     try {
-      await props.createOneComment(content)
+      props.markCommentsAsRead(comments)
+      props.createOneComment(content)
     } catch (error) {
       console.error(error)
     }
   }
 
-  const markComments = async comments => {
-    await props.markCommentsAsRead(comments)
+  const markComments = comments => {
+    props.markCommentsAsRead(comments)
   }
 
   const weekMatcher = i => week => week.weekNumber === i + 1
@@ -140,7 +141,7 @@ export const WeekReviews = props => {
   const weekReviewFunctions = {
     getMaximumPointsForWeek,
     handleClickWeek,
-    handleSubmit,
+    handleSubmitComment,
     sendWeekEmail,
     sendCommentEmail,
     sendStudentEmail,
