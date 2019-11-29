@@ -262,9 +262,9 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
                         "value": 1,
                       }
                     }
-                    hideCodeReview={[MockFunction]}
+                    hideCodeReview={[Function]}
                     initialCheckState={true}
-                    setCodeReviewVisible={[MockFunction]}
+                    setCodeReviewVisible={[Function]}
                   />
                 </div>
                 <div
@@ -278,9 +278,9 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
                         "value": 2,
                       }
                     }
-                    hideCodeReview={[MockFunction]}
+                    hideCodeReview={[Function]}
                     initialCheckState={false}
-                    setCodeReviewVisible={[MockFunction]}
+                    setCodeReviewVisible={[Function]}
                   />
                 </div>
               </Segment>

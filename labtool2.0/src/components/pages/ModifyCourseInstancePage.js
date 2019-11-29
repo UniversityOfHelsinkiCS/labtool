@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input, Button, Grid, Dropdown, Checkbox, Loader, Segment, Label } from 'semantic-ui-react'
+import { Form, Input, Button, Grid, Dropdown, Checkbox, Loader, Segment } from 'semantic-ui-react'
 import { getOneCI, modifyOneCI, coursePageInformation, getAllCI, copyInformationFromCourse } from '../../services/courseInstance'
-import { setFinalReview, setCodeReviewVisible, hideCodeReview } from '../../reducers/selectedInstanceReducer'
+import { setFinalReview } from '../../reducers/selectedInstanceReducer'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Redirect } from 'react-router'
@@ -23,7 +23,8 @@ import { CodeReviewCheckbox } from './ModifyCourseInstancePage/CodeReviewCheckbo
  */
 export const ModifyCourseInstancePage = props => {
   const state = useLegacyState({
-    copyCourse: undefined
+    copyCourse: undefined,
+    visibleCr: []
   })
 
   useEffect(() => {
@@ -43,6 +44,10 @@ export const ModifyCourseInstancePage = props => {
       }
     }
   }, [props.selectedInstance.weekAmount, props.selectedInstance.finalReview, props.selectedInstance.currentWeek])
+
+  useEffect(() => {
+    state.visibleCr = props.selectedInstance.currentCodeReview
+  }, [props.selectedInstance.currentCodeReview])
 
   const changeField = e => {
     props.changeCourseField({
@@ -70,12 +75,20 @@ export const ModifyCourseInstancePage = props => {
     props.setFinalReview(newValue)
   }
 
+  const setCodeReviewVisible = value => {
+    state.visibleCr = [...state.visibleCr, value]
+  }
+
+  const hideCodeReview = value => {
+    state.visibleCr = state.visibleCr.filter(cr => cr !== value)
+  }
+
   const handleSubmit = async e => {
     try {
       e.preventDefault()
 
-      const { weekAmount, weekMaxPoints, currentWeek, currentCodeReview, active, ohid, finalReview, coursesPage, courseMaterial } = props.selectedInstance
-      let newCr = currentCodeReview
+      const { weekAmount, weekMaxPoints, currentWeek, active, ohid, finalReview, coursesPage, courseMaterial } = props.selectedInstance
+      let newCr = state.visibleCr
       // This checks that the 'courses.helsinki.fi' URL actually contains that string as a part of it. Reject if not.
       if (coursesPage !== null && coursesPage !== '') {
         if ((coursesPage.match(/courses.helsinki.fi/g) || []).length === 0) {
@@ -274,8 +287,8 @@ export const ModifyCourseInstancePage = props => {
                         <div key={cr.value} className={`cr${cr.value}`}>
                           <CodeReviewCheckbox
                             codeReview={cr}
-                            setCodeReviewVisible={props.setCodeReviewVisible}
-                            hideCodeReview={props.hideCodeReview}
+                            setCodeReviewVisible={setCodeReviewVisible}
+                            hideCodeReview={hideCodeReview}
                             initialCheckState={props.selectedInstance.currentCodeReview.includes(cr.value)}
                           />
                         </div>
@@ -401,9 +414,7 @@ const mapDispatchToProps = {
   resetLoading,
   addRedirectHook,
   setFinalReview,
-  forceRedirect,
-  setCodeReviewVisible,
-  hideCodeReview
+  forceRedirect
 }
 
 ModifyCourseInstancePage.propTypes = {
@@ -428,9 +439,7 @@ ModifyCourseInstancePage.propTypes = {
   resetLoading: PropTypes.func.isRequired,
   addRedirectHook: PropTypes.func.isRequired,
   setFinalReview: PropTypes.func.isRequired,
-  forceRedirect: PropTypes.func.isRequired,
-  setCodeReviewVisible: PropTypes.func.isRequired,
-  hideCodeReview: PropTypes.func.isRequired
+  forceRedirect: PropTypes.func.isRequired
 }
 
 export default connect(

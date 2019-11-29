@@ -38,10 +38,6 @@ const selectedInstanceReducer = (store = INITIAL_STATE, action) => {
       return { ...store, finalReview: action.value }
     case 'CI_MODIFY_ONE_SUCCESS':
       return { ...store, ...action.response, currentWeek: Number(action.response.currentWeek || store.currentWeek, 10) }
-    case 'SET_CR_VISIBLE':
-      return { ...store, currentCodeReview: store.currentCodeReview.concat(action.value) }
-    case 'HIDE_CR':
-      return { ...store, currentCodeReview: store.currentCodeReview.filter(cr => cr !== action.value) }
     default:
       return store
   }
@@ -61,24 +57,6 @@ export const changeCourseField = data => {
     dispatch({
       type: 'SI_CHANGE_FIELD',
       data
-    })
-  }
-}
-
-export const setCodeReviewVisible = value => {
-  return async dispatch => {
-    dispatch({
-      type: 'SET_CR_VISIBLE',
-      value
-    })
-  }
-}
-
-export const hideCodeReview = value => {
-  return async dispatch => {
-    dispatch({
-      type: 'HIDE_CR',
-      value
     })
   }
 }

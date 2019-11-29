@@ -53,8 +53,6 @@ describe('<ModifyCourseInstancePage />', () => {
         getAllCI={mockFn}
         coursePageInformation={mockFn}
         copyInformationFromCourse={mockFn}
-        setCodeReviewVisible={mockFn}
-        hideCodeReview={mockFn}
       />
     )
   })
