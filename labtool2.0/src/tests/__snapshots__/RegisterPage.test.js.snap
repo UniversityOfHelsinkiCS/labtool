@@ -2,7 +2,7 @@
 
 exports[`<Register /> RegisterPage Component should render correctly 1`] = `
 <Fragment>
-  <_default
+  <DocumentTitle
     title="Register"
   />
   <div

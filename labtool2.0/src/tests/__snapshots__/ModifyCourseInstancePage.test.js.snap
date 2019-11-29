@@ -2,7 +2,7 @@
 
 exports[`<ModifyCourseInstancePage /> Modify Instance Component should render correctly 1`] = `
 <Fragment>
-  <_default
+  <DocumentTitle
     title="Modify Aineopintojen harjoitustyö: Tietokantasovellus (periodi IV)"
   />
   <div>
