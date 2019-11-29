@@ -1,10 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Icon } from 'semantic-ui-react'
+import { Icon, Label } from 'semantic-ui-react'
 import Points from './Points'
 
 export const TotalPoints = ({ student }) => (
-  <>
+  <Label basic color="green">
     <Icon name="check" />
     <strong> Total Points: </strong>
     <Points
@@ -21,7 +21,7 @@ export const TotalPoints = ({ student }) => (
           }, 0)
       }
     />
-  </>
+  </Label>
 )
 
 TotalPoints.propTypes = {
