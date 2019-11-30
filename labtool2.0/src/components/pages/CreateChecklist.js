@@ -41,6 +41,7 @@ export const CreateChecklist = props => {
     } else {
       props.resetChecklist()
     }
+    props.getOneCI(props.courseId)
     props.getAllCI()
   }, [])
 
