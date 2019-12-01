@@ -22,15 +22,10 @@ export const StudentTableRow = props => {
     allowReview,
     allowModify,
     addFilterTag,
-    loggedInUser,
     coursePageLogic,
-    selectedInstance,
-    courseData,
     studentInstances,
-    associateTeacherToStudent,
     selectStudent,
     unselectStudent,
-    showAssistantDropdown,
     showTagDropdown
   } = props
 
@@ -95,20 +90,15 @@ StudentTableRow.propTypes = {
   extraStudentIcon: PropTypes.func,
 
   studentInstances: PropTypes.array.isRequired,
-  selectedInstance: PropTypes.object.isRequired,
   coursePageLogic: PropTypes.object.isRequired,
 
-  associateTeacherToStudent: PropTypes.func.isRequired,
   updateStudentProjectInfo: PropTypes.func.isRequired,
-  showAssistantDropdown: PropTypes.func.isRequired,
   showTagDropdown: PropTypes.func.isRequired,
   getAllTags: PropTypes.func.isRequired,
   tagStudent: PropTypes.func.isRequired,
   unTagStudent: PropTypes.func.isRequired,
   selectStudent: PropTypes.func.isRequired,
-  unselectStudent: PropTypes.func.isRequired,
-  loggedInUser: PropTypes.object,
-  courseData: PropTypes.object
+  unselectStudent: PropTypes.func.isRequired
 }
 
 export default StudentTableRow
