@@ -7,6 +7,7 @@ import RepoLink from '../RepoLink'
 import { Points } from '../Points'
 import StudentInfoCell from './StudentInfoCell'
 import ProjectInfoCell from './ProjectInfoCell'
+import PointCells from './PointCells'
 
 export const StudentTableRow = props => {
   const {
@@ -75,154 +76,6 @@ export const StudentTableRow = props => {
     }
   }
 
-  const showNewCommentsNotification = (siId, week) => {
-    const si = courseData.data.find(si => si.id === siId)
-    const commentsForWeek = si.weeks.find(wk => wk.weekNumber === week).comments
-    if (commentsForWeek.length === 0) {
-      return false
-    }
-    const newComments = commentsForWeek.filter(comment => !(comment.isRead || []).includes(loggedInUser.user.id))
-    return newComments.length > 0
-  }
-
-  const draftExists = weekNumber => {
-    return data.weekdrafts && data.weekdrafts.filter(draft => draft.weekNumber === weekNumber).length === 1
-  }
-
-  const createWeekHeaders = (weeks, codeReviews, siId, dropped, validRegistration) => {
-    const cr =
-      codeReviews &&
-      codeReviews.reduce((a, b) => {
-        return { ...a, [b.reviewNumber]: b.points }
-      }, {})
-    const indents = []
-    let i = 0
-    let weekPoints = {}
-    let finalPoints = undefined
-    const shouldReview = !dropped && validRegistration
-
-    const tableCellLinkStyle = { position: 'absolute', display: 'inline-block', top: 0, left: 0, right: 0, bottom: 0 }
-    const flexCenter = { display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }
-
-    for (var j = 0; j < weeks.length; j++) {
-      if (weeks[j].weekNumber === selectedInstance.weekAmount + 1) {
-        finalPoints = weeks[j].points
-      } else if (weeks[j].weekNumber) {
-        weekPoints[weeks[j].weekNumber] = weeks[j].points
-      }
-    }
-    for (; i < selectedInstance.weekAmount; i++) {
-      // we have <br /> to make this easier to click, but it'd be better
-      // if we could Link an entire Table.Cell, this however breaks formatting
-      // completely.
-      indents.push(
-        <Table.Cell selectable key={'week' + i} textAlign="center" style={{ position: 'relative' }}>
-          <Link
-            style={(tableCellLinkStyle, flexCenter)}
-            key={'week' + i + 'link'}
-            to={
-              weekPoints[i + 1] === undefined
-                ? { pathname: `/labtool/reviewstudent/${selectedInstance.ohid}/${siId}/${i + 1}`, state: { cameFromCoursePage: true } }
-                : { pathname: `/labtool/browsereviews/${selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: `Week${i + 1}` } }
-            }
-          >
-            <div>
-              {weekPoints[i + 1] === undefined ? (
-                shouldReview && selectedInstance.currentWeek === i + 1 ? (
-                  draftExists(selectedInstance.currentWeek) ? (
-                    <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'pause', size: 'large' }} />} content="Continue review from draft" className="reviewDraftButton" />
-                  ) : (
-                    <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'star', size: 'large' }} />} content="Review" className="reviewButton" />
-                  )
-                ) : (
-                  <p style={flexCenter}>-</p>
-                )
-              ) : (
-                <div>
-                  <p>
-                    <Points points={weekPoints[i + 1]} />
-                  </p>
-                  {showNewCommentsNotification(data.id, i + 1) ? <Popup trigger={<Icon name="comments" size="big" />} content="You have new comments" /> : null}
-                </div>
-              )}
-            </div>
-          </Link>
-        </Table.Cell>
-      )
-    }
-
-    const { amountOfCodeReviews } = selectedInstance
-    if (amountOfCodeReviews) {
-      for (let index = 1; index <= amountOfCodeReviews; index++) {
-        const codeReview = codeReviews ? codeReviews.find(cr => cr.reviewNumber === index) : null
-
-        indents.push(
-          <Table.Cell selectable key={`cr${siId}:${index}`} textAlign="center" style={{ position: 'relative' }}>
-            <Link
-              className="codeReviewPoints"
-              style={{ tableCellLinkStyle, flexCenter }}
-              key={'codeReview' + index + 'link'}
-              to={{ pathname: `/labtool/browsereviews/${selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: codeReview ? `CodeReview${codeReview.reviewNumber}` : undefined } }}
-            >
-              {shouldReview && selectedInstance.currentCodeReview.includes(index) && codeReview ? (
-                codeReview.linkToReview === null && codeReview.points === null ? (
-                  <Popup
-                    position="top center"
-                    trigger={<Icon color="grey" size="large" name="hourglass end" fitted />}
-                    content="Student has not yet submitted the code review"
-                    className="codeReviewNotReady"
-                  />
-                ) : codeReview.points === null ? (
-                  <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'star', size: 'large' }} />} content="Review" className="codeReviewButton" />
-                ) : (
-                  <p>{cr[index] || cr[index] === 0 ? <Points points={cr[index]} /> : '-'}</p>
-                )
-              ) : (
-                <p>{cr[index] || cr[index] === 0 ? <Points points={cr[index]} /> : '-'}</p>
-              )}
-            </Link>
-          </Table.Cell>
-        )
-      }
-    }
-
-    if (selectedInstance.finalReview) {
-      let finalReviewPointsCell = (
-        <Table.Cell selectable key="finalReview" textAlign="center" style={{ position: 'relative' }}>
-          <Link
-            style={(tableCellLinkStyle, flexCenter)}
-            key={'finalReviewlink'}
-            to={
-              finalPoints === undefined
-                ? `/labtool/reviewstudent/${selectedInstance.ohid}/${siId}/${i + 1}`
-                : { pathname: `/labtool/browsereviews/${selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: 'Final' } }
-            }
-          >
-            <div style={{ width: '100%', height: '100%' }}>
-              {finalPoints === undefined ? (
-                shouldReview && selectedInstance.currentWeek === selectedInstance.weekAmount + 1 ? (
-                  <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'star', size: 'large' }} />} content="Review" className="reviewButton" />
-                ) : (
-                  <p style={flexCenter}>-</p>
-                )
-              ) : (
-                <div>
-                  <p style={flexCenter}>
-                    <Points points={finalPoints} />
-                  </p>
-                  {showNewCommentsNotification(data.id, selectedInstance.weekAmount + 1) ? <Popup trigger={<Icon name="comments" size="big" />} content="You have new comments" /> : null}
-                </div>
-              )}
-            </div>
-          </Link>
-        </Table.Cell>
-      )
-      indents.push(finalReviewPointsCell)
-    }
-
-    return indents
-  }
-
   return (
     <Table.Row key={data.id} className={data.dropped || !data.validRegistration ? 'TableRowForDroppedOutStudent' : 'TableRowForActiveStudent'}>
       {/* Select Check Box */}
@@ -238,8 +91,7 @@ export const StudentTableRow = props => {
 
       {showColumn('points') && (
         <>
-          {/* Week #, Code Review # */}
-          {createWeekHeaders(data.weeks, data.codeReviews, data.id, data.dropped, data.validRegistration)}
+          <PointCells studentId={data.id} />
 
           {/* Sum */}
           <Table.Cell key="pointssum" textAlign="center">
