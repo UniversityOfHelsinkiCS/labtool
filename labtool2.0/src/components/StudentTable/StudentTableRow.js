@@ -8,6 +8,7 @@ import { Points } from '../Points'
 import StudentInfoCell from './StudentInfoCell'
 import ProjectInfoCell from './ProjectInfoCell'
 import PointCells from './PointCells'
+import InstructorInfoCell from './InstructorInfoCell'
 
 export const StudentTableRow = props => {
   const {
@@ -33,40 +34,12 @@ export const StudentTableRow = props => {
     showTagDropdown
   } = props
 
-  const updateTeacher = id => async (e, { value }) => {
-    if (!value) {
-      return
-    }
-    try {
-      e.preventDefault()
-      let teacherId = value
-      if (teacherId === '-') {
-        // unassign
-        teacherId = null
-      }
-
-      const data = {
-        studentInstanceId: id,
-        teacherInstanceId: teacherId
-      }
-      await associateTeacherToStudent(data)
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
   const handleSelectCheck = id => (e, data) => {
     const { checked } = data
     if (checked) {
       selectStudent(id)
     } else {
       unselectStudent(id)
-    }
-  }
-
-  const changeHiddenAssistantDropdown = id => {
-    return () => {
-      showAssistantDropdown(coursePageLogic.showAssistantDropdown === id ? '' : id)
     }
   }
 
@@ -101,46 +74,7 @@ export const StudentTableRow = props => {
       )}
 
       {/* Instructor */}
-      {showColumn('instructor') && !shouldHideInstructor(studentInstances) && (
-        <Table.Cell key="instructor">
-          {!shouldHideInstructor(studentInstances) &&
-            (data.teacherInstanceId && selectedInstance.teacherInstances ? (
-              selectedInstance.teacherInstances
-                .filter(teacher => teacher.id === data.teacherInstanceId)
-                .map(teacher => (
-                  <span key={data.id + ':' + teacher.id}>
-                    {teacher.firsts} {teacher.lastname}
-                  </span>
-                ))
-            ) : (
-              <span>not assigned</span>
-            ))}
-          {allowModify && (
-            <>
-              <Popup
-                trigger={<Button circular onClick={changeHiddenAssistantDropdown(data.id)} size="small" icon={{ name: 'pencil' }} style={{ margin: '0.25em', float: 'right' }} />}
-                content="Assign instructor"
-              />
-              {coursePageLogic.showAssistantDropdown === data.id ? (
-                <div>
-                  <Dropdown
-                    id={'assistantDropdown'}
-                    selectOnBlur={false}
-                    upward={false}
-                    options={dropDownTeachers}
-                    onChange={updateTeacher(data.id, data.teacherInstanceId)}
-                    placeholder="Select teacher"
-                    fluid
-                    selection
-                  />
-                </div>
-              ) : (
-                <div />
-              )}
-            </>
-          )}
-        </Table.Cell>
-      )}
+      {showColumn('instructor') && !shouldHideInstructor(studentInstances) && <InstructorInfoCell studentId={data.id} allowModify={allowModify} dropDownTeachers={dropDownTeachers} />}
 
       {(extraColumns || []).map(([, cell]) => cell(data))}
     </Table.Row>

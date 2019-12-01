@@ -408,7 +408,6 @@ CoursePage.propTypes = {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  console.log(state.loading)
   return {
     user: state.user,
     studentInstance: state.studentInstance,
