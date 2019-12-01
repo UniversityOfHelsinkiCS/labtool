@@ -93,7 +93,7 @@ const mapDispatchToProps = {
 
 ProjectInfoCell.propTypes = {
   studentData: PropTypes.object.isRequired,
-  showTagDropdown: PropTypes.number.isRequired,
+  showTagDropdown: PropTypes.string.isRequired,
   tagStudent: PropTypes.func.isRequired,
   unTagStudent: PropTypes.func.isRequired,
   dropDownTags: PropTypes.array.isRequired,
