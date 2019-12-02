@@ -8,7 +8,7 @@ module.exports = {
     })
     await queryInterface.addColumn('ChecklistItems', 'minimumRequirementMetIf', {
       type: Sequelize.BOOLEAN,
-      defaultValue: false,
+      defaultValue: true,
       allowNull: false
     })
     await queryInterface.addColumn('ChecklistItems', 'minimumRequirementGradePenalty', {

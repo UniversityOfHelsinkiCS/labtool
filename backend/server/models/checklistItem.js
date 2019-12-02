@@ -10,8 +10,14 @@ module.exports = (sequelize, DataTypes) => {
       category: DataTypes.TEXT,
       order: DataTypes.INTEGER,
       minimumRequirement: DataTypes.BOOLEAN,
-      minimumRequirementMetIf: DataTypes.BOOLEAN,
-      minimumRequirementGradePenalty: DataTypes.INTEGER
+      minimumRequirementMetIf: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true
+      },
+      minimumRequirementGradePenalty: {
+        type: DataTypes.INTEGER,
+        defaultValue: 1
+      }
     },
     {
       timestamps: false
