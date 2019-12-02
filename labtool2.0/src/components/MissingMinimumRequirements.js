@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Header, Segment, List } from 'semantic-ui-react'
 
-const MissingMinimumRequirements = ({ selectedInstance, studentInstance }) => {
+const MissingMinimumRequirements = ({ selectedInstance, studentInstance, currentWeekChecks }) => {
   const minimumRequirements = selectedInstance.checklists.reduce((map, checklist) => {
     Object.values(checklist.list).forEach(checklistCategory => {
       checklistCategory.forEach(checklistItem => {
@@ -14,7 +14,7 @@ const MissingMinimumRequirements = ({ selectedInstance, studentInstance }) => {
     return map
   }, new Map())
 
-  const missingMinimumRequirements = studentInstance.weeks
+  const missingMinimumRequirements = [...studentInstance.weeks, { checks: !!currentWeekChecks ? currentWeekChecks : {} }]
     .map(week =>
       Object.entries(week.checks)
         .filter(([id, checked]) => !checked && minimumRequirements.has(Number(id)))
@@ -24,7 +24,7 @@ const MissingMinimumRequirements = ({ selectedInstance, studentInstance }) => {
     .map(id => minimumRequirements.get(id))
     .sort((a, b) => a.week - b.week)
 
-  if (MissingMinimumRequirements.length === 0) {
+  if (missingMinimumRequirements.length === 0) {
     return null
   }
 
@@ -48,7 +48,8 @@ const MissingMinimumRequirements = ({ selectedInstance, studentInstance }) => {
 
 MissingMinimumRequirements.propTypes = {
   selectedInstance: PropTypes.object,
-  studentInstance: PropTypes.object
+  studentInstance: PropTypes.object,
+  currentWeekChecks: PropTypes.object
 }
 
 export default MissingMinimumRequirements

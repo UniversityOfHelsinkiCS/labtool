@@ -277,7 +277,7 @@ export const ReviewStudent = props => {
                   </div>
                 )}
                 <PreviousWeekDetails weekData={previousWeekData} />
-                {isFinalReview(props) && weekData && <MissingMinimumRequirements selectedInstance={props.selectedInstance} studentInstance={studentData} />}
+                {isFinalReview(props) && <MissingMinimumRequirements selectedInstance={props.selectedInstance} studentInstance={studentData} currentWeekChecks={!checks ? {} : checks} />}
                 {isFinalReview(props) ? <h2>Final Review Points</h2> : <h2>Review</h2>}
                 {loadedFromDraft && (
                   <div>
