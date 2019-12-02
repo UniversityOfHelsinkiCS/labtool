@@ -87,6 +87,16 @@ module.exports = {
                     res.status(400).send('"minimumRequirement" must be a boolean')
                   }
                   break
+                case 'minimumRequirementMetIf':
+                  if (typeof row[key] !== 'boolean') {
+                    res.status(400).send('"minimumRequirementMetIf" must be a boolean')
+                  }
+                  break
+                case 'minimumRequirementGradePenalty':
+                  if (typeof row[key] !== 'number' || row[key] !== (row[key] | 0) || row[key] < 0) {
+                    res.status(400).send('"minimumRequirementGradePenalty" must be a non-negative integer')
+                  }
+                  break
                 default:
                   res.status(400).send(`Found unexpected key: ${key}`)
               }
@@ -156,7 +166,9 @@ module.exports = {
           category,
           checklistId: result[1].dataValues.id,
           order: checklistOrder + index,
-          minimumRequirement: checklistItem.minimumRequirement
+          minimumRequirement: checklistItem.minimumRequirement,
+          minimumRequirementMetIf: checklistItem.minimumRequirementMetIf,
+          minimumRequirementGradePenalty: checklistItem.minimumRequirementGradePenalty
         }, { returning: true })))
 
         checklistJson[category] = checklistItems.map((item) => {

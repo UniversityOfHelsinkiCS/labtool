@@ -46,7 +46,8 @@ module.exports = {
       if (week) {
         const updatedChecks = req.body.checks || {}
         await week.update({
-          points: req.body.points || week.points,
+          points: req.body.points || week.points || null,
+          grade: req.body.grade || null,
           feedback: req.body.feedback || week.feedback,
           instructorNotes: req.body.instructorNotes || week.instructorNotes
         })
@@ -67,7 +68,8 @@ module.exports = {
         })))
       } else {
         week = await Week.create({
-          points: req.body.points,
+          points: req.body.points || null,
+          grade: req.body.grade || null,
           studentInstanceId: req.body.studentInstanceId,
           feedback: req.body.feedback,
           instructorNotes: req.body.instructorNotes,
