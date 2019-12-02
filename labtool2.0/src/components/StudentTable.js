@@ -241,7 +241,7 @@ export const StudentTable = props => {
               )}
               {showColumn('grade') && !shouldHideGrade(props.selectedInstance, props.studentInstances) && (
                 <>
-                  <Table.HeaderCell>Final Grade</Table.HeaderCell>
+                  <Table.HeaderCell>Grade</Table.HeaderCell>
                 </>
               )}
               {showColumn('instructor') && !shouldHideInstructor(props.studentInstances) && (
