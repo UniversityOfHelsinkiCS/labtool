@@ -181,6 +181,16 @@ export const CreateChecklist = props => {
     state.canSave = true
   }
 
+  const changeFieldNumber = (key, name, field) => async (_, data) => {
+    props.changeField({
+      key,
+      name,
+      field,
+      value: Number(data.value)
+    })
+    state.canSave = true
+  }
+
   const changeFieldValue = (key, name, field, value) => () => {
     props.changeField({
       key,
@@ -527,7 +537,7 @@ export const CreateChecklist = props => {
                     style={{ width: '100px' }}
                     disabled={!row.minimumRequirement}
                     value={row.minimumRequirementGradePenalty}
-                    onChange={changeField(key, row.name, 'minimumRequirementGradePenalty')}
+                    onChange={changeFieldNumber(key, row.name, 'minimumRequirementGradePenalty')}
                   />
                 </div>
               )}
