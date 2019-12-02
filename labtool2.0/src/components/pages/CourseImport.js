@@ -29,7 +29,7 @@ ImportableCourse.propTypes = {
 }
 
 const sortByStartDate = (a, b) => {
-  return new Date(a.starts) - new Date(b.starts) || finnishLocaleCompare(a.cname, b.cname)
+  return new Date(a.starts.substring(0, 10)) - new Date(b.starts.substring(0, 10)) || finnishLocaleCompare(a.cname, b.cname)
 }
 
 /**
@@ -157,7 +157,4 @@ CourseImport.propTypes = {
   errors: PropTypes.array
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(CourseImport)
+export default connect(mapStateToProps, mapDispatchToProps)(CourseImport)
