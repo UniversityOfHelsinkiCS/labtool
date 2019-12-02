@@ -71,6 +71,39 @@ export const CreateChecklist = props => {
     }
   }
 
+  const validateChecklistPrerequisites = data => {
+    const items = {}
+    Object.keys(data).map(category => {
+      data[category].forEach(item => {
+        items[item.id] = item
+      })
+    })
+
+    return Object.keys(data).every(category => {
+      return data[category].every(item => {
+        if (!item.prerequisite) {
+          return true
+        }
+        if (!items[item.prerequisite]) {
+          return false
+        }
+
+        // try to find a loop
+        const visited = []
+        let curItem = item
+        while (curItem.prerequisite) {
+          if (visited.includes(curItem.id)) {
+            return false
+          }
+          visited.push(curItem.id)
+          curItem = items[curItem.prerequisite]
+        }
+
+        return true
+      })
+    })
+  }
+
   // Make api call to save checklist to database.
   const handleSubmit = async e => {
     e.preventDefault()
@@ -84,6 +117,14 @@ export const CreateChecklist = props => {
     if (error) {
       props.showNotification({
         message: 'Select a week or code review!',
+        error: true
+      })
+      return
+    }
+
+    if (!validateChecklistPrerequisites(data.checklist)) {
+      props.showNotification({
+        message: 'Your prerequisites are invalid; they either form a loop or point outside this checklist.',
         error: true
       })
       return
@@ -248,7 +289,8 @@ export const CreateChecklist = props => {
             return row.name !== null && row.textWhenOn !== null && row.textWhenOff !== null && row.checkedPoints !== null && row.uncheckedPoints !== null
           })
         )
-      })
+      }) &&
+      validateChecklistPrerequisites(checklist.list)
     )
   }
 
@@ -416,6 +458,28 @@ export const CreateChecklist = props => {
     return props.weekDropdowns.filter(option => option.value !== state.current)
   }
 
+  const createPrerequisiteDropdowns = () => {
+    const checks = [{
+      key: null,
+      text: '(none)',
+      value: null
+    }]
+
+    Object.keys(props.checklist.data).forEach(key => {
+      props.checklist.data[key].forEach(check => {
+        checks.push({
+          key: check.id,
+          text: check.name,
+          value: check.id
+        })
+      })
+    })
+
+    return checks
+  }
+
+  const prerequisiteDropdown = createPrerequisiteDropdowns()
+
   const renderChecklist = kind => {
     let maxPoints = 0
     let colorIndex = 0
@@ -489,6 +553,17 @@ export const CreateChecklist = props => {
                   <Checkbox label="Minimum requirement" checked={row.minimumRequirement} onChange={changeField(key, row.name, 'minimumRequirement')}></Checkbox>
                 </div>
               )}
+              <div className="prerequisite" style={{ marginTop: '1em' }}>
+                <Label>Prerequisite</Label>
+                <Dropdown
+                  className="prerequisiteDropdown"
+                  placeholder="(none)"
+                  selection
+                  value={row.prerequisite || null}
+                  onChange={changeField(key, row.name, 'prerequisite')}
+                  options={prerequisiteDropdown.filter(check => check.value !== row.id)}
+                />
+              </div>
             </Card.Content>
           ))}
           <form className="addForm" onSubmit={newRow(key)}>

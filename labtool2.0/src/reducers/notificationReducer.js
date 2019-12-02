@@ -262,6 +262,14 @@ const notificationReducer = (state = {}, action) => {
         message: 'You cannot remove yourself from the course',
         error: true
       }
+    case 'CHECKLIST_GET_ONE_SUCCESS':
+      if (action.response.response.data.prerequisiteWarning) {
+        return {
+          message: 'Checklist copied. Note that prerequisites cannot be currently copied; save this checklist and then re-add prerequisites manually.',
+          error: false
+        }
+      }
+      return state
     default:
       return state
   }
