@@ -24,7 +24,6 @@ const MissingMinimumRequirements = ({ selectedInstance, studentInstance, current
     .map(id => minimumRequirements.get(id))
     .sort((a, b) => a.week - b.week)
 
-  console.log(missingMinimumRequirements)
   if (missingMinimumRequirements.length === 0) {
     return null
   }

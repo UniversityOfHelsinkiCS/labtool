@@ -137,7 +137,7 @@ export const StudentTableRow = props => {
     const tableCellLinkStyle = { position: 'absolute', display: 'inline-block', top: 0, left: 0, right: 0, bottom: 0 }
     const flexCenter = { display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }
 
-    for (var j = 0; j < weeks.length; j++) {
+    for (let j = 0; j < weeks.length; j++) {
       if (weeks[j].weekNumber === selectedInstance.weekAmount + 1) {
         finalPoints = weeks[j].points
       } else if (weeks[j].weekNumber) {

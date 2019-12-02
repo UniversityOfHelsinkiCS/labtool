@@ -83,15 +83,7 @@ export const StudentTable = props => {
     return count
   }
 
-  const getStudentFinalGrade = student => {
-    for (var j = 0; j < student.weeks.length; j++) {
-      if (student.weeks[j].weekNumber === props.selectedInstance.weekAmount + 1) {
-        return student.weeks[j].grade || null
-      }
-    }
-    return null
-  }
-
+  const getStudentFinalGrade = student => (student.weeks.find(week => week.weekNumber === props.selectedInstance.weekAmount + 1) || {}).grade || null
   const shouldHideGrade = (selectedInstance, studentInstances) => !selectedInstance.finalReview || studentInstances.every(studentInstance => !getStudentFinalGrade(studentInstance))
   const shouldHideInstructor = studentInstances => studentInstances.every(studentInstance => studentInstance.teacherInstanceId === null)
 
