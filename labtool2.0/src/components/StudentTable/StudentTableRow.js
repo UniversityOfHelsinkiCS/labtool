@@ -15,6 +15,8 @@ export const StudentTableRow = props => {
     dropDownTags,
     dropDownTeachers,
     shouldHideInstructor,
+    shouldHideGrade,
+    getStudentFinalGrade,
     extraStudentIcon,
     allowReview,
     allowModify,
@@ -338,6 +340,13 @@ export const StudentTableRow = props => {
             <Points points={data.weeks.map(week => week.points).reduce((a, b) => a + b, 0) + data.codeReviews.map(cr => cr.points).reduce((a, b) => a + b, 0)} />
           </Table.Cell>
         </>
+      )}
+
+      {/* Grade */}
+      {showColumn('grade') && !shouldHideGrade(selectedInstance, studentInstances) && (
+        <Table.Cell key="grade" textAlign="center">
+          {getStudentFinalGrade(data) || '-'}
+        </Table.Cell>
       )}
 
       {/* Instructor */}
