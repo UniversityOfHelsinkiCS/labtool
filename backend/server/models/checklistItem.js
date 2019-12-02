@@ -9,7 +9,9 @@ module.exports = (sequelize, DataTypes) => {
       uncheckedPoints: DataTypes.DOUBLE,
       category: DataTypes.TEXT,
       order: DataTypes.INTEGER,
-      minimumRequirement: DataTypes.BOOLEAN
+      minimumRequirement: DataTypes.BOOLEAN,
+      minimumRequirementMetIf: DataTypes.BOOLEAN,
+      minimumRequirementGradePenalty: DataTypes.INTEGER
     },
     {
       timestamps: false

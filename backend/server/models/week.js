@@ -3,6 +3,7 @@ module.exports = (sequelize, DataTypes) => {
     'Week',
     {
       points: DataTypes.DOUBLE,
+      grade: DataTypes.INTEGER,
       weekNumber: DataTypes.INTEGER,
       feedback: DataTypes.TEXT,
       instructorNotes: DataTypes.TEXT,
