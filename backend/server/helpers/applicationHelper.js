@@ -13,6 +13,7 @@ exports.isAuthUserAdmin = isAuthUserAdmin
 const env = process.env.NODE_ENV || 'development'
 
 const Sequelize = require('sequelize')
+const NodeCache = require('node-cache')
 const https = require('https')
 const axios = require('axios')
 const config = require('../config/config.js')[env]
@@ -20,6 +21,7 @@ const logger = require('../utils/logger')
 const { CourseInstance, TeacherInstance, User } = require('../models')
 
 const { Op } = Sequelize
+const cache = new NodeCache({ stdTTL: 600 }) // standard ttl is 600s
 
 /**
  *
@@ -185,7 +187,7 @@ async function addInstructorToCourseList(course) {
       .create(options)
       .get()
       .then(barf => barf.data)
-    
+
     return { ...course, instructor: result.teachers.join('; ') }
   } catch (error) {
     logger.error('error getting instructor', { error: error.message })
@@ -193,29 +195,55 @@ async function addInstructorToCourseList(course) {
   }
 }
 
+async function getInactiveFromKurki(req, res) {
+  const cur = await getCurrent(req, res)
+  const nxt = await getNewer(req, res)
+  const newobj = cur.concat(nxt)
+  const iarr = Object.keys(newobj).map(blob => newobj[blob].id)
+  const ires = await CourseInstance.findAll({
+    where: {
+      ohid: { [Op.in]: iarr }
+    }
+  })
+  const activated = ires.map(course => course.ohid)
+  const notActivated = newobj.filter(c => !activated.includes(c.id))
+  return Promise.all(notActivated.map(addInstructorToCourseList))
+}
+
 /**
- *
+ * If the function is called when importing courses, get inactive courses directly from Kurki and clear the cache
+ * Otherwise try to get inactive courses from cache.
  * @param req
  * @param res
  * @returns {Promise<*>}
  */
 async function getInactive(req, res) {
+  const key = 'inactiveCourses'
+  let inactive
+  if (req.body.courses) {
+    try {
+      inactive = getInactiveFromKurki(req, res)
+      cache.del(key)
+      return inactive
+    } catch (e) {
+      return e
+    }
+  }
   try {
-    const cur = await getCurrent(req, res)
-    const nxt = await getNewer(req, res)
-    const newobj = cur.concat(nxt)
-    const iarr = Object.keys(newobj).map(blob => newobj[blob].id)
-    const ires = await CourseInstance.findAll({
-      where: {
-        ohid: { [Op.in]: iarr }
-      }
-    })
-    const activated = ires.map(course => course.ohid)
-    const notActivated = newobj.filter(c => !activated.includes(c.id))
-    return Promise.all(notActivated.map(addInstructorToCourseList))
+    inactive = await cache.get(key)
   } catch (e) {
     return e
   }
+
+  if (!inactive) {
+    try {
+      inactive = getInactiveFromKurki(req, res)
+      cache.set(key, inactive)
+    } catch (e) {
+      return e
+    }
+  }
+  return inactive
 }
 
 /**
