@@ -32,7 +32,7 @@ ImportableCourse.propTypes = {
 const parseKurkiDate = kurkiDate => new Date(kurkiDate.substring(0, 10))
 
 const sortByStartDate = (a, b) => {
-  return parseKurkiDate(a.starts) - parseKurkiDate(b.starts) || finnishLocaleCompare(a.cname, b.cname)
+  return parseKurkiDate(a.starts) - parseKurkiDate(b.starts) || parseKurkiDate(a.ends) - parseKurkiDate(b.ends) || finnishLocaleCompare(a.cname, b.cname)
 }
 
 /**
