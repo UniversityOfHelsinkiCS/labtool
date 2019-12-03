@@ -1,11 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Header } from 'semantic-ui-react'
+import { Header, Button } from 'semantic-ui-react'
+import { Link } from 'react-router-dom'
 
 import StudentTable from '../../StudentTable'
 
 export const CoursePageTeacherMain = props => {
-  const { loggedInUser, courseData, students, courseId, selectedInstance, coursePageLogic, tags } = props
+  const { loggedInUser, courseData, students, courseId, selectedInstance, coursePageLogic, tags, exportCSV } = props
 
   let droppedStudentCount = 0
   let activeStudentCount = 0
@@ -26,7 +27,17 @@ export const CoursePageTeacherMain = props => {
   return (
     <div className="TeachersBottomView">
       <br />
-      <Header as="h2">Students</Header>
+      <div>
+        <Header as="h2" style={{ display: 'inline-block' }}>
+          Students{' '}
+        </Header>
+        <div style={{ float: 'right' }}>
+          <Link to={`/labtool/massemail/${selectedInstance.ohid}`}>
+            <Button icon="mail outline" labelPosition="left" size="small" content="Send email to multiple students" />
+          </Link>
+          <Button icon="file alternate outline" labelPosition="left" size="small" content="Export CSV of all students" onClick={exportCSV} />
+        </div>
+      </div>
 
       <p>
         {activeStudentCount} active student{activeStudentCount === 1 ? '' : 's'}
