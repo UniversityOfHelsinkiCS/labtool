@@ -198,10 +198,12 @@ export const ReviewStudent = props => {
         const addition = checked ? clItem.textWhenOn : clItem.textWhenOff
         if (addition) checklistOutput += addition + '\n\n'
 
-        if (checked) {
-          checklistPoints += clItem.checkedPoints
-        } else {
-          checklistPoints += clItem.uncheckedPoints
+        if (!clItem.minimumRequirement) {
+          if (checked) {
+            checklistPoints += clItem.checkedPoints
+          } else {
+            checklistPoints += clItem.uncheckedPoints
+          }
         }
       })
     })
@@ -380,7 +382,9 @@ export const ReviewStudent = props => {
                                       <span style={{ flexGrow: 1, textAlign: 'center' }}>{clItem.name}</span>
                                     </Grid.Column>
                                     <Grid.Column width={3}>
-                                      <span>{`${clItem.checkedPoints} p / ${clItem.uncheckedPoints} p`}</span>
+                                      {!clItem.minimumRequirement ? (
+                                        <span>{`${clItem.checkedPoints} p / ${clItem.uncheckedPoints} p`}</span>
+                                      ) : null}
                                     </Grid.Column>
                                   </Grid.Row>
                                 </Grid>

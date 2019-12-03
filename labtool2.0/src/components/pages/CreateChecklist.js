@@ -446,8 +446,10 @@ export const CreateChecklist = props => {
     const checklistJsx = Object.keys(props.checklist.data || {}).map(key => {
       let bestPoints = 0
       props.checklist.data[key].forEach(row => {
-        const greaterPoints = row.checkedPoints > row.uncheckedPoints ? row.checkedPoints : row.uncheckedPoints
-        bestPoints += Number(greaterPoints)
+        if (!row.minimumRequirement) {
+          const greaterPoints = row.checkedPoints > row.uncheckedPoints ? row.checkedPoints : row.uncheckedPoints
+          bestPoints += Number(greaterPoints)
+        }
       })
       maxPoints += bestPoints
       colorIndex++
@@ -487,7 +489,15 @@ export const CreateChecklist = props => {
               </Header>
               <div className="formField">
                 <Label>Points when checked</Label>
-                <Input className="numberField" type="number" step="0.01" value={row.checkedPoints} onChange={changeField(key, row.name, 'checkedPoints')} onBlur={castPointsToNumber(key, row.name)} />
+                <Input
+                  className="numberField"
+                  type="number"
+                  step="0.01"
+                  value={row.checkedPoints}
+                  disabled={row.minimumRequirement}
+                  onChange={changeField(key, row.name, 'checkedPoints')}
+                  onBlur={castPointsToNumber(key, row.name)}
+                />
               </div>
               <div className="formField">
                 <Label>Text</Label>
@@ -500,6 +510,7 @@ export const CreateChecklist = props => {
                   type="number"
                   step="0.01"
                   value={row.uncheckedPoints}
+                  disabled={row.minimumRequirement}
                   onChange={changeField(key, row.name, 'uncheckedPoints')}
                   onBlur={castPointsToNumber(key, row.name)}
                 />
