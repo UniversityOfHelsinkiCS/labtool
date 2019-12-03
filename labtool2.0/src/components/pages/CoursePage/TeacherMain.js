@@ -35,7 +35,7 @@ export const CoursePageTeacherMain = props => {
           <Link to={`/labtool/massemail/${selectedInstance.ohid}`}>
             <Button icon="mail outline" labelPosition="left" size="small" content="Send email to multiple students" />
           </Link>
-          <Button icon="file alternate outline" labelPosition="left" size="small" content="Export CSV of all students" onClick={exportCSV} />
+          <Button id="csvButton" icon="file alternate outline" labelPosition="left" size="small" content="Export CSV of all students" onClick={exportCSV} />
         </div>
       </div>
 
