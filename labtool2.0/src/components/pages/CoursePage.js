@@ -42,7 +42,7 @@ export const CoursePage = props => {
   useEffect(() => {
     if (props.location.state && props.location.state.hidePanel) {
       // remove the persisted state for the student tools panel, hiding it (as it is the default)
-      clearOnePersistedState(`CoursePage-StudentTools-${props.courseId}`)
+      clearOnePersistedState(`CoursePage-ModifySelectedStudents-${props.courseId}`)
     }
   }, [props.location])
 
@@ -372,17 +372,10 @@ export const CoursePage = props => {
             coursePageLogic={coursePageLogic}
             tags={tags}
             students={sortStudentsAlphabeticallyByDroppedValue(courseData.data)}
+            exportCSV={exportCSV}
           />
           <br />
-          <CoursePageTeacherBulkForm
-            courseId={courseId}
-            coursePageLogic={coursePageLogic}
-            dropDownTags={dropDownTags}
-            dropDownTeachers={dropDownTeachers}
-            {...coursePageBulkFormFunctions}
-            exportCSV={exportCSV}
-            selectedInstance={selectedInstance}
-          />
+          <CoursePageTeacherBulkForm courseId={courseId} coursePageLogic={coursePageLogic} dropDownTags={dropDownTags} dropDownTeachers={dropDownTeachers} {...coursePageBulkFormFunctions} />
         </div>
       </>
     )
