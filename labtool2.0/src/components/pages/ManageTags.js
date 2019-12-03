@@ -2,10 +2,10 @@ import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Form, Input, Grid, Container, Button, Loader, Checkbox, Dropdown } from 'semantic-ui-react'
 import { connect } from 'react-redux'
+import { SwatchesPicker } from 'react-color'
 import { createTag, getAllTags, removeTag } from '../../services/tags'
 import { resetLoading } from '../../reducers/loadingReducer'
 import { willCreateNewTag, willModifyExistingTag } from '../../reducers/tagReducer'
-import { capitalize } from '../../util/format'
 import { getAllCI } from '../../services/courseInstance'
 import BackButton from '../BackButton'
 import useLegacyState from '../../hooks/legacyState'
@@ -108,7 +108,7 @@ export const ManageTags = props => {
       props.willModifyExistingTag(id)
 
       state.valueText = text
-      state.valueColor = validColors.includes(color) ? color : 'white'
+      state.valueColor = color ? color : 'white'
       state.valueGlobal = global
     } catch (error) {
       console.error(error)
@@ -151,6 +151,33 @@ export const ManageTags = props => {
   }
 
   const editTag = (props.tags.tags || []).find(tag => tag.id === props.tags.modifyTag)
+
+  const tagLabelClassName = color => {
+    return `mini ui button ${validColors.includes(color) ? color : ''}`
+  }
+
+  /**
+   * if the color is one of the semantic ui defaulted colors, ignore the background color since the color is already defined in className,
+   * otherwise set backgroundColor using this function
+   * @param {*} color
+   */
+  const tagLabelBackgroundColor = color => {
+    return `${validColors.includes(color) ? '' : color}`
+  }
+
+  const hexToRgb = hex => {
+    hex = '0x' + hex.substring(1, 7)
+    let r = (hex >> 16) & 0xff
+    let g = (hex >> 8) & 0xff
+    let b = hex & 0xff
+    return [r, g, b]
+  }
+
+  const textColor = hex => {
+    const rgb = hexToRgb(hex)
+    const rgbSum = Math.round((parseInt(rgb[0]) * 299 + parseInt(rgb[1]) * 587 + parseInt(rgb[2]) * 114) / 1000)
+    return rgbSum > 125 ? '#000000' : '#ffffff'
+  }
   if (props.tags.tags && props.tags.modifyTag && !editTag) {
     props.willCreateNewTag()
     return <div />
@@ -183,8 +210,14 @@ export const ManageTags = props => {
                   {props.tags.modifyTag ? <h4>Editing tag: {editTag.name}</h4> : <h4>You are creating a new tag.</h4>}
                   <div>
                     Preview:{' '}
-                    <button className={`mini ui button ${validColors.includes(state.valueColor) ? state.valueColor : ''}`} style={{ display: state.valueText ? 'inline' : 'none' }}>
-                      {state.valueText}
+                    <button
+                      className={tagLabelClassName(state.valueColor)}
+                      style={{
+                        display: state.valueText ? 'inline' : 'none',
+                        backgroundColor: `${tagLabelBackgroundColor(state.valueColor)}`
+                      }}
+                    >
+                      <p style={{ color: `${validColors.includes(state.valueColor) ? '' : textColor(state.valueColor)}` }}>{state.valueText}</p>
                     </button>
                     <br />
                     <br />
@@ -202,19 +235,11 @@ export const ManageTags = props => {
                       onChange={(e, { value }) => (state.valueText = value)}
                     />
                   </Form.Field>
-                  <Form.Field required inline>
+                  <Form.Field required>
                     <label style={{ width: '100px', textAlign: 'left' }}>Color</label>
-                    <select className="ui dropdown" value={state.valueColor} name="color" style={{ minWidth: '30em' }} required onChange={e => (state.valueColor = e.target.value)}>
-                      <option value="" disabled>
-                        Select a tag color
-                      </option>
-                      <option value="white">White</option>
-                      {validColors.map(color => (
-                        <option key={color} value={color}>
-                          {capitalize(color)}
-                        </option>
-                      ))}
-                    </select>
+                    <div style={{ display: 'block', marginLeft: '110px', marginRight: '100px' }}>
+                      <SwatchesPicker onChangeComplete={color => (state.valueColor = color.hex)} />
+                    </div>
                   </Form.Field>
                   <Form.Field inline>
                     <label style={{ width: '100px', textAlign: 'left' }}>Global?</label>
@@ -255,8 +280,13 @@ export const ManageTags = props => {
                   <div>
                     <h2>Course tags</h2>
                     {courseTags.map(tag => (
-                      <button key={tag.id} className={`mini ui ${tag.color} button`} onClick={modifyTag(tag.id, tag.name, tag.color, tag.courseInstanceId === null)}>
-                        {tag.name}
+                      <button
+                        key={tag.id}
+                        className={tagLabelClassName(tag.color)}
+                        onClick={modifyTag(tag.id, tag.name, tag.color, tag.courseInstanceId === null)}
+                        style={{ backgroundColor: `${tagLabelBackgroundColor(tag.color)}` }}
+                      >
+                        <p style={{ color: `${validColors.includes(tag.color) ? '' : textColor(tag.color)}` }}>{tag.name}</p>
                       </button>
                     ))}
                     <br />
@@ -275,8 +305,13 @@ export const ManageTags = props => {
                   <div>
                     <h2>Global tags</h2>
                     {globalTags.map(tag => (
-                      <button key={tag.id} className={`mini ui ${tag.color} button`} onClick={modifyTag(tag.id, tag.name, tag.color, tag.courseInstanceId === null)}>
-                        {tag.name}
+                      <button
+                        key={tag.id}
+                        className={tagLabelClassName(tag.color)}
+                        onClick={modifyTag(tag.id, tag.name, tag.color, tag.courseInstanceId === null)}
+                        style={{ backgroundColor: `${tagLabelBackgroundColor(tag.color)}` }}
+                      >
+                        <p style={{ color: `${validColors.includes(tag.color) ? '' : textColor(tag.color)}` }}>{tag.name}</p>
                       </button>
                     ))}
                     <br />
@@ -351,7 +386,4 @@ ManageTags.propTypes = {
   errors: PropTypes.array
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ManageTags)
+export default connect(mapStateToProps, mapDispatchToProps)(ManageTags)
