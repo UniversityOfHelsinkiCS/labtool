@@ -31,8 +31,9 @@ export const StudentCard = ({ student, otherParticipations, handleMarkAsDropped,
       <div style={{ display: 'inline-block' }}>
         {student.projectName}: <RepoLink url={student.github} />
         <br />
+        <TotalPoints student={student} />
         {otherParticipations.length > 0 ? (
-          <div className="hasOther">
+          <div className="hasOther" style={{ marginTop: '10px' }}>
             <p style={{ color: 'red' }}>Has taken this course in other periods</p>
             {otherParticipations.map(participation =>
               teacherInstance.find(course => course.id === participation.id) ? (
@@ -48,9 +49,10 @@ export const StudentCard = ({ student, otherParticipations, handleMarkAsDropped,
             )}
           </div>
         ) : (
-          <p className="noOther">Has no other participation in this course</p>
+          <p className="noOther" style={{ marginTop: '10px' }}>
+            Has no other participation in this course
+          </p>
         )}
-        <TotalPoints student={student} />
       </div>
       {
         <Button color="red" style={{ float: 'right' }} onClick={() => handleMarkAsDropped(!student.dropped)}>
