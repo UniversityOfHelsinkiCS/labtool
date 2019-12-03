@@ -71,7 +71,8 @@ CoursePageTeacherMain.propTypes = {
   tags: PropTypes.object.isRequired,
   courseId: PropTypes.string.isRequired,
   students: PropTypes.array.isRequired,
-  loggedInUser: PropTypes.object.isRequired
+  loggedInUser: PropTypes.object.isRequired,
+  exportCSV: PropTypes.func.isRequired
 }
 
 export default CoursePageTeacherMain
