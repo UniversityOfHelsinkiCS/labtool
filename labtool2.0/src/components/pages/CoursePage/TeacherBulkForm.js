@@ -172,8 +172,7 @@ CoursePageTeacherBulkForm.propTypes = {
   bulkMarkDropped: PropTypes.func.isRequired,
   bulkMarkNotDropped: PropTypes.func.isRequired,
   bulkMarkValid: PropTypes.func.isRequired,
-  bulkMarkInvalid: PropTypes.func.isRequired,
-  exportCSV: PropTypes.func.isRequired
+  bulkMarkInvalid: PropTypes.func.isRequired
 }
 
 export default CoursePageTeacherBulkForm

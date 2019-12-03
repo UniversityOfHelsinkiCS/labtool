@@ -367,14 +367,7 @@ export const CoursePage = props => {
             exportCSV={exportCSV}
           />
           <br />
-          <CoursePageTeacherBulkForm
-            courseId={courseId}
-            coursePageLogic={coursePageLogic}
-            dropDownTags={dropDownTags}
-            dropDownTeachers={dropDownTeachers}
-            {...coursePageBulkFormFunctions}
-            selectedInstance={selectedInstance}
-          />
+          <CoursePageTeacherBulkForm courseId={courseId} coursePageLogic={coursePageLogic} dropDownTags={dropDownTags} dropDownTeachers={dropDownTeachers} {...coursePageBulkFormFunctions} />
         </div>
       </>
     )
