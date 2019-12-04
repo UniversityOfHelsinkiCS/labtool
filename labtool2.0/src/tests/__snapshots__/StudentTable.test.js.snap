@@ -234,6 +234,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
           dropDownTeachers={Array []}
           extraColumns={Array []}
           getAllTags={[MockFunction]}
+          getStudentFinalGrade={[Function]}
           key="tableRow10012"
           loggedInUser={Object {}}
           selectStudent={[MockFunction]}
@@ -340,6 +341,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
               "role": "teacher",
             }
           }
+          shouldHideGrade={[Function]}
           shouldHideInstructor={[Function]}
           showAssistantDropdown={[MockFunction]}
           showColumn={[Function]}
@@ -562,6 +564,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
           dropDownTeachers={Array []}
           extraColumns={Array []}
           getAllTags={[MockFunction]}
+          getStudentFinalGrade={[Function]}
           key="tableRow10031"
           loggedInUser={Object {}}
           selectStudent={[MockFunction]}
@@ -668,6 +671,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
               "role": "teacher",
             }
           }
+          shouldHideGrade={[Function]}
           shouldHideInstructor={[Function]}
           showAssistantDropdown={[MockFunction]}
           showColumn={[Function]}
@@ -877,6 +881,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
           dropDownTeachers={Array []}
           extraColumns={Array []}
           getAllTags={[MockFunction]}
+          getStudentFinalGrade={[Function]}
           key="tableRow10011"
           loggedInUser={Object {}}
           selectStudent={[MockFunction]}
@@ -983,6 +988,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
               "role": "teacher",
             }
           }
+          shouldHideGrade={[Function]}
           shouldHideInstructor={[Function]}
           showAssistantDropdown={[MockFunction]}
           showColumn={[Function]}

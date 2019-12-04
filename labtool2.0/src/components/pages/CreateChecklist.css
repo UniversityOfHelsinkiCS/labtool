@@ -37,3 +37,7 @@
 .maxPointsCard {
   font-size: 20px;
 }
+
+.minimumRequirement .radio label {
+  padding-left: 1.35em !important;
+}

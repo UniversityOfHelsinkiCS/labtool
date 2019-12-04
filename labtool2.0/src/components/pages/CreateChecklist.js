@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { Header, Input, Label, Button, Popup, Card, Dropdown, Loader, Icon, Checkbox } from 'semantic-ui-react'
+import { Header, Input, Label, Button, Popup, Card, Dropdown, Loader, Icon, Checkbox, Radio } from 'semantic-ui-react'
 import { showNotification } from '../../reducers/notificationReducer'
 import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 import { createChecklist, getOneChecklist } from '../../services/checklist'
@@ -177,6 +177,26 @@ export const CreateChecklist = props => {
       name,
       field,
       value: data.type === 'checkbox' ? data.checked : data.value
+    })
+    state.canSave = true
+  }
+
+  const changeFieldNumber = (key, name, field) => async (_, data) => {
+    props.changeField({
+      key,
+      name,
+      field,
+      value: Number(data.value)
+    })
+    state.canSave = true
+  }
+
+  const changeFieldValue = (key, name, field, value) => () => {
+    props.changeField({
+      key,
+      name,
+      field,
+      value
     })
     state.canSave = true
   }
@@ -417,14 +437,19 @@ export const CreateChecklist = props => {
     return props.weekDropdowns.filter(option => option.value !== state.current)
   }
 
+  // later this might return client-only IDs
+  const getRowId = row => row.id
+
   const renderChecklist = kind => {
     let maxPoints = 0
     let colorIndex = 0
     const checklistJsx = Object.keys(props.checklist.data || {}).map(key => {
       let bestPoints = 0
       props.checklist.data[key].forEach(row => {
-        const greaterPoints = row.checkedPoints > row.uncheckedPoints ? row.checkedPoints : row.uncheckedPoints
-        bestPoints += Number(greaterPoints)
+        if (!row.minimumRequirement) {
+          const greaterPoints = row.checkedPoints > row.uncheckedPoints ? row.checkedPoints : row.uncheckedPoints
+          bestPoints += Number(greaterPoints)
+        }
       })
       maxPoints += bestPoints
       colorIndex++
@@ -464,7 +489,15 @@ export const CreateChecklist = props => {
               </Header>
               <div className="formField">
                 <Label>Points when checked</Label>
-                <Input className="numberField" type="number" step="0.01" value={row.checkedPoints} onChange={changeField(key, row.name, 'checkedPoints')} onBlur={castPointsToNumber(key, row.name)} />
+                <Input
+                  className="numberField"
+                  type="number"
+                  step="0.01"
+                  value={row.checkedPoints}
+                  disabled={row.minimumRequirement}
+                  onChange={changeField(key, row.name, 'checkedPoints')}
+                  onBlur={castPointsToNumber(key, row.name)}
+                />
               </div>
               <div className="formField">
                 <Label>Text</Label>
@@ -477,6 +510,7 @@ export const CreateChecklist = props => {
                   type="number"
                   step="0.01"
                   value={row.uncheckedPoints}
+                  disabled={row.minimumRequirement}
                   onChange={changeField(key, row.name, 'uncheckedPoints')}
                   onBlur={castPointsToNumber(key, row.name)}
                 />
@@ -487,7 +521,35 @@ export const CreateChecklist = props => {
               </div>
               {kind !== 'codeReview' && (
                 <div className="minimumRequirement" style={{ marginTop: '1em' }}>
-                  <Checkbox label="Minimum requirement" checked={row.minimumRequirement} onChange={changeField(key, row.name, 'minimumRequirement')}></Checkbox>
+                  <Checkbox label="Minimum requirement" checked={row.minimumRequirement} onChange={changeField(key, row.name, 'minimumRequirement')}></Checkbox>, which should be{' '}
+                  <Radio
+                    label="checked"
+                    name={`minimumRequirementMetIf_${key}_${getRowId(row)}`}
+                    value={true}
+                    disabled={!row.minimumRequirement}
+                    checked={row.minimumRequirementMetIf === true}
+                    onChange={changeFieldValue(key, row.name, 'minimumRequirementMetIf', true)}
+                  />{' '}
+                  <Radio
+                    label="not checked"
+                    name={`minimumRequirementMetIf_${key}_${getRowId(row)}`}
+                    value={false}
+                    disabled={!row.minimumRequirement}
+                    checked={row.minimumRequirementMetIf === false}
+                    onChange={changeFieldValue(key, row.name, 'minimumRequirementMetIf', false)}
+                  />
+                  , or else grade will drop by{' '}
+                  <Input
+                    className="minimumRequirementGradePenalty"
+                    type="number"
+                    step="1"
+                    min="0"
+                    max="5"
+                    style={{ width: '100px' }}
+                    disabled={!row.minimumRequirement}
+                    value={row.minimumRequirementGradePenalty}
+                    onChange={changeFieldNumber(key, row.name, 'minimumRequirementGradePenalty')}
+                  />
                 </div>
               )}
             </Card.Content>
