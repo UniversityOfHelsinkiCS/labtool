@@ -50,8 +50,9 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
       >
         <Button
           as="button"
-          className="mini ui red button basic"
+          className="tagFilter mini ui red button basic"
           compact={true}
+          disabled={false}
           onClick={[Function]}
         >
           Javascript
@@ -62,8 +63,9 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
       >
         <Button
           as="button"
-          className="mini ui yellow button basic"
+          className="tagFilter mini ui yellow button basic"
           compact={true}
+          disabled={false}
           onClick={[Function]}
         >
           HTML
@@ -74,8 +76,9 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
       >
         <Button
           as="button"
-          className="mini ui grey button basic"
+          className="tagFilter mini ui grey button basic"
           compact={true}
+          disabled={false}
           onClick={[Function]}
         >
           DROPPED
