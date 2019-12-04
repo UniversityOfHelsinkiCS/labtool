@@ -21,7 +21,9 @@ import MissingMinimumRequirements from '../MissingMinimumRequirements'
 import BackButton from '../BackButton'
 import DocumentTitle from '../DocumentTitle'
 import Error from '../Error'
+import { Header, Segment, List } from 'semantic-ui-react'
 import { Points } from '../Points'
+import '../../util/arrayFlatPolyfill'
 
 const isFinalReview = props => props.weekNumber > props.selectedInstance.weekAmount
 
