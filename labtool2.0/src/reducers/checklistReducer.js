@@ -30,7 +30,7 @@ const checklistReducer = (state = INITIAL_STATE, action) => {
     }
     case 'CHECKLIST_ADD_ROW': {
       const newData = state.data
-      const nextTempId = 1 + Math.max(Object.keys(newData).map(key => Math.max(newData[key].map(item => item.id || item.tempId))))
+      const nextTempId = 1 + Math.max(...Object.keys(newData).map(key => Math.max(...newData[key].filter(item => item.id || item.tempId).map(item => item.id || item.tempId))))
       newData[action.data.key].push({
         name: action.data.name,
         tempId: nextTempId,

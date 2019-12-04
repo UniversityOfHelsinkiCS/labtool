@@ -332,6 +332,48 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
                   type="number"
                 />
               </div>
+              <div
+                className="prerequisite"
+                style={
+                  Object {
+                    "marginTop": "1em",
+                  }
+                }
+              >
+                <Label>
+                  Prerequisite
+                </Label>
+                <Dropdown
+                  additionLabel="Add "
+                  additionPosition="top"
+                  className="prerequisiteDropdown"
+                  closeOnBlur={true}
+                  closeOnEscape={true}
+                  deburr={false}
+                  icon="dropdown"
+                  minCharacters={1}
+                  noResultsMessage="No results found."
+                  onChange={[Function]}
+                  openOnFocus={true}
+                  options={
+                    Array [
+                      Object {
+                        "key": null,
+                        "text": "(none)",
+                        "value": null,
+                      },
+                    ]
+                  }
+                  placeholder="(none)"
+                  renderLabel={[Function]}
+                  searchInput="text"
+                  selectOnBlur={true}
+                  selectOnNavigation={true}
+                  selection={true}
+                  value={null}
+                  wrapSelection={true}
+                />
+              </div>
             </CardContent>
             <form
               className="addForm"
@@ -521,6 +563,48 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
                     }
                   }
                   type="number"
+                />
+              </div>
+              <div
+                className="prerequisite"
+                style={
+                  Object {
+                    "marginTop": "1em",
+                  }
+                }
+              >
+                <Label>
+                  Prerequisite
+                </Label>
+                <Dropdown
+                  additionLabel="Add "
+                  additionPosition="top"
+                  className="prerequisiteDropdown"
+                  closeOnBlur={true}
+                  closeOnEscape={true}
+                  deburr={false}
+                  icon="dropdown"
+                  minCharacters={1}
+                  noResultsMessage="No results found."
+                  onChange={[Function]}
+                  openOnFocus={true}
+                  options={
+                    Array [
+                      Object {
+                        "key": null,
+                        "text": "(none)",
+                        "value": null,
+                      },
+                    ]
+                  }
+                  placeholder="(none)"
+                  renderLabel={[Function]}
+                  searchInput="text"
+                  selectOnBlur={true}
+                  selectOnNavigation={true}
+                  selection={true}
+                  value={null}
+                  wrapSelection={true}
                 />
               </div>
             </CardContent>
