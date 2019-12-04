@@ -186,7 +186,7 @@ module.exports = {
           category,
           checklistId: result[1].dataValues.id,
           order: checklistOrder + index,
-          prerequisite: null,
+          prerequisite: null, // map later; see below
           minimumRequirement: checklistItem.minimumRequirement,
           minimumRequirementMetIf: checklistItem.minimumRequirementMetIf,
           minimumRequirementGradePenalty: checklistItem.minimumRequirementGradePenalty
