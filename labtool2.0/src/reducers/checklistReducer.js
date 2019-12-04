@@ -30,8 +30,10 @@ const checklistReducer = (state = INITIAL_STATE, action) => {
     }
     case 'CHECKLIST_ADD_ROW': {
       const newData = state.data
+      const nextTempId = 1 + Math.max(Object.keys(newData).map(key => Math.max(newData[key].map(item => item.id || item.tempId))))
       newData[action.data.key].push({
         name: action.data.name,
+        tempId: nextTempId,
         checkedPoints: 0,
         uncheckedPoints: 0,
         textWhenOn: '',

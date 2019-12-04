@@ -479,6 +479,8 @@ export const CreateChecklist = props => {
     return props.weekDropdowns.filter(option => option.value !== state.current)
   }
 
+  const getRowId = row => row.id || row.tempId
+
   const createPrerequisiteDropdowns = () => {
     const checks = [{
       key: null,
@@ -489,9 +491,9 @@ export const CreateChecklist = props => {
     Object.keys(props.checklist.data).forEach(key => {
       props.checklist.data[key].forEach(check => {
         checks.push({
-          key: check.id,
+          key: getRowId(check),
           text: check.name,
-          value: check.id
+          value: getRowId(check)
         })
       })
     })
@@ -500,8 +502,6 @@ export const CreateChecklist = props => {
   }
 
   const prerequisiteDropdown = createPrerequisiteDropdowns()
-  // later this might return client-only IDs
-  const getRowId = row => row.id
 
   const renderChecklist = kind => {
     let maxPoints = 0

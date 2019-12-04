@@ -254,7 +254,6 @@ module.exports = {
         }
       })
 
-      let prerequisiteWarning = false
       if (checklist) {
         const checklistJson = {}
         const checklistItems = await ChecklistItem.findAll({ where: {
@@ -271,16 +270,15 @@ module.exports = {
           delete checklistItemCopy.checklistId
           delete checklistItemCopy.order
           if (req.body.copying) {
+            // tempId is the id of the checklist item we copied; it's used
+            // to map prerequisites, etc.
+            checklistItemCopy.tempId = checklistItemCopy.id
             delete checklistItemCopy.id
-            if (checklistItemCopy.prerequisite) {
-              prerequisiteWarning = true
-            }
-            delete checklistItemCopy.prerequisite
           }
           checklistJson[checklistItem.category].push(checklistItemCopy)
         })
 
-        res.status(200).send({ ...checklist.dataValues, list: checklistJson, prerequisiteWarning })
+        res.status(200).send({ ...checklist.dataValues, list: checklistJson })
       } else {
         res.status(400).send({
           message: 'No matching checklist found.',
