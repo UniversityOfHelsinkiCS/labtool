@@ -97,18 +97,6 @@ module.exports = {
       order: 6
     },
     {
-      id: 14,
-      name: 'Linkit',
-      textWhenOn: 'README:ssa on tarvittavat linkit',
-      textWhenOff: 'README:sta puuttuu linkit',
-      checkedPoints: 0.5,
-      uncheckedPoints: 0,
-      category: 'Readme',
-      checklistId: 10001,
-      prerequisite: 1,
-      order: 7
-    },
-    {
       id: 7,
       name: 'Readme',
       textWhenOn: 'README kunnossa',
@@ -162,6 +150,18 @@ module.exports = {
       category: 'Koodi',
       checklistId: 10002,
       order: 5
+    },
+    {
+      id: 14,
+      name: 'Linkit',
+      textWhenOn: 'README:ssa on tarvittavat linkit',
+      textWhenOff: 'README:sta puuttuu linkit',
+      checkedPoints: 0.5,
+      uncheckedPoints: 0,
+      category: 'Readme',
+      checklistId: 10002,
+      prerequisite: 7,
+      order: 6
     },
     {
       id: 12,
