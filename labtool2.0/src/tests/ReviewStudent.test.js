@@ -523,6 +523,7 @@ describe('<ReviewStudent />', () => {
         restoreChecks={mockFn}
         resetChecklist={mockFn}
         addRedirectHook={mockFn}
+        {...ownProps}
       />
     )
   })
