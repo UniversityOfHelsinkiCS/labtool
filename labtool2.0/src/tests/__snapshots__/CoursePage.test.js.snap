@@ -2,7 +2,9 @@
 
 exports[`<CoursePage /> as student CoursePage Component should render correctly 1`] = `
 <Fragment>
-  <_default />
+  <DocumentTitle
+    title="course"
+  />
   <div
     key="true"
   >
@@ -62,6 +64,7 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
             "userId": 10011,
             "weeks": Array [],
           },
+          "name": "course",
           "role": "student",
         }
       }
@@ -120,6 +123,7 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
             "userId": 10011,
             "weeks": Array [],
           },
+          "name": "course",
           "role": "student",
         }
       }
@@ -180,6 +184,7 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
             "userId": 10011,
             "weeks": Array [],
           },
+          "name": "course",
           "role": "student",
         }
       }
@@ -239,6 +244,7 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
             "userId": 10011,
             "weeks": Array [],
           },
+          "name": "course",
           "role": "student",
         }
       }
@@ -299,6 +305,7 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
             "userId": 10011,
             "weeks": Array [],
           },
+          "name": "course",
           "role": "student",
         }
       }
@@ -310,7 +317,7 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
 
 exports[`<CoursePage /> as teacher CoursePage Component should render correctly 1`] = `
 <Fragment>
-  <_default
+  <DocumentTitle
     title="Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit"
   />
   <div
@@ -479,6 +486,7 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
           "showDropdown": "",
         }
       }
+      exportCSV={[Function]}
       loggedInUser={Object {}}
       selectedInstance={
         Object {
@@ -783,38 +791,6 @@ exports[`<CoursePage /> as teacher CoursePage Component should render correctly 
             "value": 10011,
           },
         ]
-      }
-      exportCSV={[Function]}
-      selectedInstance={
-        Object {
-          "active": true,
-          "currentWeek": 1,
-          "end": "2018-04-29T21:00:00.000Z",
-          "id": 10011,
-          "name": "Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit",
-          "ohid": "TKT20010.2018.K.A.1",
-          "start": "2018-03-11T21:00:00.000Z",
-          "teacherInstances": Array [
-            Object {
-              "courseInstanceId": 10011,
-              "firsts": "Pää",
-              "id": 10001,
-              "instructor": false,
-              "lastname": "Opettaja",
-              "userId": 10010,
-            },
-            Object {
-              "courseInstanceId": 10011,
-              "firsts": "Ossi Ohjaaja",
-              "id": 10011,
-              "instructor": true,
-              "lastname": "Mutikainen",
-              "userId": 10015,
-            },
-          ],
-          "weekAmount": 7,
-          "weekMaxPoints": 3,
-        }
       }
     />
   </div>

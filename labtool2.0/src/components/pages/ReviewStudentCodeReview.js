@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { withRouter } from 'react-router'
-import { Button, Form, Input, Grid, Card, Loader, Icon } from 'semantic-ui-react'
+import { Button, Form, Input, Grid, Card, Loader, Icon, Popup } from 'semantic-ui-react'
 import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { getOneCI, coursePageInformation } from '../../services/courseInstance'
@@ -159,10 +159,12 @@ export const ReviewStudentCodeReview = props => {
         }
 
         const checked = isChecked(checks, clItem.id)
-        if (checked) {
-          checklistPoints += clItem.checkedPoints
-        } else {
-          checklistPoints += clItem.uncheckedPoints
+        if (!clItem.minimumRequirement) {
+          if (checked) {
+            checklistPoints += clItem.checkedPoints
+          } else {
+            checklistPoints += clItem.uncheckedPoints
+          }
         }
       })
     })
@@ -286,7 +288,19 @@ export const ReviewStudentCodeReview = props => {
                                       <span style={{ flexGrow: 1, textAlign: 'center' }}>{clItem.name}</span>
                                     </Grid.Column>
                                     <Grid.Column width={3}>
-                                      <span>{`${clItem.checkedPoints} p / ${clItem.uncheckedPoints} p`}</span>
+                                      {!clItem.minimumRequirement ? (
+                                        <span>{`${clItem.checkedPoints} p / ${clItem.uncheckedPoints} p`}</span>
+                                      ) : (
+                                        <>
+                                          <Popup
+                                            trigger={<Icon name="thumb tack" color="blue" size="big" />}
+                                            content={`This is a minimum requirement that is met when ${
+                                              clItem.minimumRequirementMetIf ? 'checked' : 'not checked'
+                                            }; if not met, the final grade will drop by ${clItem.minimumRequirementGradePenalty}`}
+                                          />
+                                          Requirement
+                                        </>
+                                      )}
                                     </Grid.Column>
                                   </Grid.Row>
                                 </Grid>
@@ -364,7 +378,9 @@ ReviewStudentCodeReview.propTypes = {
   resetChecklist: PropTypes.func.isRequired,
   coursePageInformation: PropTypes.func.isRequired,
   resetLoading: PropTypes.func.isRequired,
-  addRedirectHook: PropTypes.func.isRequired
+  addRedirectHook: PropTypes.func.isRequired,
+
+  errors: PropTypes.array
 }
 
 export default withRouter(

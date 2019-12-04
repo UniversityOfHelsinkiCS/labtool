@@ -23,7 +23,7 @@ export const WeekReviewWeek = props => {
     isTeacher,
     getMaximumPointsForWeek,
     handleClickWeek,
-    handleSubmit,
+    handleSubmitComment,
     sendCommentEmail,
     sendStudentEmail,
     sendWeekEmail,
@@ -41,10 +41,12 @@ export const WeekReviewWeek = props => {
   }
 
   if (week) {
+    const gradeInfo = week.grade ? `, grade ${week.grade}` : ''
     return (
       <Accordion fluid styled id={isFinalWeek ? 'reviewFinal' : `reviewWeek${week.weekNumber}`}>
         <Accordion.Title active={isWeekOpen} index={i} onClick={handleClickWeek}>
           <Icon name="dropdown" /> {isFinalWeek ? 'Final Review' : `Week ${week.weekNumber}`}, points <Points points={week.points} /> / <Points points={getMaximumPointsForWeek(week.weekNumber)} />
+          {gradeInfo}
         </Accordion.Title>
         <Accordion.Content active={isWeekOpen}>
           <h3>Review</h3>
@@ -52,7 +54,8 @@ export const WeekReviewWeek = props => {
             <Card.Content>
               <h4>
                 {' '}
-                Points <Points points={week.points} /> / <Points points={getMaximumPointsForWeek(week.weekNumber)} />{' '}
+                Points <Points points={week.points} /> / <Points points={getMaximumPointsForWeek(week.weekNumber)} />
+                {gradeInfo}{' '}
               </h4>
               <h4> Feedback </h4>
               <ReactMarkdown>{week.feedback}</ReactMarkdown>{' '}
@@ -128,7 +131,7 @@ export const WeekReviewWeek = props => {
               <h4> No comments </h4>
             )}
           </Comment.Group>
-          <LabtoolAddComment weekId={week.id} commentFieldId={`${courseId}:${week.id}`} handleSubmit={handleSubmit} allowHidden={isTeacher} />
+          <LabtoolAddComment weekId={week.id} commentFieldId={`${courseId}:${week.id}`} handleSubmit={e => handleSubmitComment(e, week.comments)} allowHidden={isTeacher} />
         </Accordion.Content>
       </Accordion>
     )
@@ -168,7 +171,7 @@ WeekReviewWeek.propTypes = {
 
   getMaximumPointsForWeek: PropTypes.func.isRequired,
   handleClickWeek: PropTypes.func.isRequired,
-  handleSubmit: PropTypes.func.isRequired,
+  handleSubmitComment: PropTypes.func.isRequired,
   sendCommentEmail: PropTypes.func.isRequired,
   sendStudentEmail: PropTypes.func.isRequired,
   sendWeekEmail: PropTypes.func.isRequired,

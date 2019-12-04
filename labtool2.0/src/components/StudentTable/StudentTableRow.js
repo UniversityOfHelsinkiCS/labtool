@@ -15,6 +15,8 @@ export const StudentTableRow = props => {
     dropDownTags,
     dropDownTeachers,
     shouldHideInstructor,
+    shouldHideGrade,
+    getStudentFinalGrade,
     extraStudentIcon,
     allowReview,
     allowModify,
@@ -135,7 +137,7 @@ export const StudentTableRow = props => {
     const tableCellLinkStyle = { position: 'absolute', display: 'inline-block', top: 0, left: 0, right: 0, bottom: 0 }
     const flexCenter = { display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }
 
-    for (var j = 0; j < weeks.length; j++) {
+    for (let j = 0; j < weeks.length; j++) {
       if (weeks[j].weekNumber === selectedInstance.weekAmount + 1) {
         finalPoints = weeks[j].points
       } else if (weeks[j].weekNumber) {
@@ -338,6 +340,13 @@ export const StudentTableRow = props => {
             <Points points={data.weeks.map(week => week.points).reduce((a, b) => a + b, 0) + data.codeReviews.map(cr => cr.points).reduce((a, b) => a + b, 0)} />
           </Table.Cell>
         </>
+      )}
+
+      {/* Grade */}
+      {showColumn('grade') && !shouldHideGrade(selectedInstance, studentInstances) && (
+        <Table.Cell key="grade" textAlign="center">
+          {getStudentFinalGrade(data) || '-'}
+        </Table.Cell>
       )}
 
       {/* Instructor */}

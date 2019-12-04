@@ -156,9 +156,10 @@ const courseInstancereducer = (store = INITIAL_STATE, action) => {
     }
     case 'MARK_COMMENTS_AS_READ_SUCCESS': {
       const weekId = action.response[0].weekId
+      const replaceComments = action.response
       const newStudents = store.data.map(student => ({
         ...student,
-        weeks: student.weeks.map(week => (week.id === weekId ? { ...week, comments: action.response } : week))
+        weeks: student.weeks.map(week => (week.id === weekId ? { ...week, comments: week.comments.map(comment => replaceComments.find(c => c.id === comment.id) || comment) } : week))
       }))
       return { ...store, data: newStudents }
     }

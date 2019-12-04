@@ -62,7 +62,7 @@ module.exports = {
               res.status(400).send('All objects in array must have field "points when unchecked" with number value.')
               return
             }
-            Object.keys(row).forEach((key) => {
+            if (!Object.keys(row).every((key) => {
               switch (key) {
                 case 'id':
                   break
@@ -75,22 +75,42 @@ module.exports = {
                 case 'textWhenOn':
                   if (typeof row[key] !== 'string') {
                     res.status(400).send('"textWhenOn" must have a string value or be undefined.')
+                    return false
                   }
                   break
                 case 'textWhenOff':
                   if (typeof row[key] !== 'string') {
                     res.status(400).send('"textWhenOff" must have a string value or be undefined.')
+                    return false
                   }
                   break
                 case 'minimumRequirement':
                   if (typeof row[key] !== 'boolean') {
                     res.status(400).send('"minimumRequirement" must be a boolean')
+                    return false
+                  }
+                  break
+                case 'minimumRequirementMetIf':
+                  if (typeof row[key] !== 'boolean') {
+                    res.status(400).send('"minimumRequirementMetIf" must be a boolean')
+                    return false
+                  }
+                  break
+                case 'minimumRequirementGradePenalty':
+                  if (row.minimumRequirement && (typeof row[key] !== 'number' || row[key] !== (row[key] | 0) || row[key] < 0)) {
+                    res.status(400).send('"minimumRequirementGradePenalty" must be a non-negative integer')
+                    return false
                   }
                   break
                 default:
                   res.status(400).send(`Found unexpected key: ${key}`)
+                  return false
               }
-            })
+              return true
+            })) {
+              // some validation failure
+              return
+            }
           })
         })
       } catch (e) {
@@ -156,7 +176,9 @@ module.exports = {
           category,
           checklistId: result[1].dataValues.id,
           order: checklistOrder + index,
-          minimumRequirement: checklistItem.minimumRequirement
+          minimumRequirement: checklistItem.minimumRequirement,
+          minimumRequirementMetIf: checklistItem.minimumRequirementMetIf,
+          minimumRequirementGradePenalty: checklistItem.minimumRequirementGradePenalty
         }, { returning: true })))
 
         checklistJson[category] = checklistItems.map((item) => {

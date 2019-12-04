@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Button, Card, Message, Popup } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
+import TotalPoints from '../../TotalPoints'
 
 export const CoursePageStudentInfo = props => {
   const { selectedInstance, courseData, removeRegistration } = props
@@ -40,6 +41,7 @@ export const CoursePageStudentInfo = props => {
                   </Message>
                 </>
               )}
+              <TotalPoints student={courseData.data} />
             </Card.Content>
           </Card>
           {courseData.role === 'student' && !courseData.data.validRegistration && (

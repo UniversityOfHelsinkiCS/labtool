@@ -159,44 +159,42 @@ export const BrowseReviews = props => {
   const student = props.courseData.data.find(student => student.id === Number(props.studentInstance))
 
   return (
-    <>
-      <DocumentTitle title={`${student.User.firsts} ${student.User.lastname} - ${props.selectedInstance.ohid.substring(0, props.selectedInstance.ohid.indexOf('.'))}`} />
-      <div className="BrowseReviews" style={{ overflowX: 'auto' }}>
-        <Loader active={props.loading.loading} />
-        {isTeacher() && student ? (
-          <div>
-            <BackButton preset="coursePage" />
-            <Link to={`/labtool/courses/${props.selectedInstance.ohid}`} style={{ textAlign: 'center' }}>
-              <h2> {formatCourseName(props.selectedInstance.name, props.selectedInstance.ohid, props.selectedInstance.start)}</h2>
-            </Link>
-            <StudentCard
-              student={student}
-              otherParticipations={props.studentInstanceToBeReviewed.filter(
-                courseInstance => courseInstance.ohid.includes(props.courseId.substring(0, 8)) && courseInstance.ohid !== props.courseId && courseInstance.courseInstances[0].validRegistration
-              )}
-              handleMarkAsDropped={handleMarkAsDropped}
-              handleMarkAsValidRegistration={handleMarkAsValidRegistration}
-              teacherInstance={props.teacherInstance}
-            />
-            <span>
-              {hasAllReviewsOpen(student) ? (
-                <Button type="button" onClick={handleClickHideAll} size="small">
-                  Hide all reviews
-                </Button>
-              ) : (
-                <Button type="button" onClick={handleClickShowAll(student)} size="small">
-                  Show all reviews
-                </Button>
-              )}
-              <br />
-            </span>
-            <WeekReviews courseId={props.courseId} student={student} studentInstance={props.studentInstance} openWeeks={state.openWeeks} handleClickWeek={handleClick} />
-          </div>
-        ) : (
-          <p />
-        )}
-      </div>
-    </>
+    <div className="BrowseReviews" style={{ overflowX: 'auto' }}>
+      <Loader active={props.loading.loading} />
+      {isTeacher() && student ? (
+        <div>
+          <DocumentTitle title={`${student.User.firsts} ${student.User.lastname} - ${props.selectedInstance.ohid.substring(0, props.selectedInstance.ohid.indexOf('.'))}`} />
+          <BackButton preset="coursePage" />
+          <Link to={`/labtool/courses/${props.selectedInstance.ohid}`} style={{ textAlign: 'center' }}>
+            <h2> {formatCourseName(props.selectedInstance.name, props.selectedInstance.ohid, props.selectedInstance.start)}</h2>
+          </Link>
+          <StudentCard
+            student={student}
+            otherParticipations={props.studentInstanceToBeReviewed.filter(
+              courseInstance => courseInstance.ohid.includes(props.courseId.substring(0, 8)) && courseInstance.ohid !== props.courseId && courseInstance.courseInstances[0].validRegistration
+            )}
+            handleMarkAsDropped={handleMarkAsDropped}
+            handleMarkAsValidRegistration={handleMarkAsValidRegistration}
+            teacherInstance={props.teacherInstance}
+          />
+          <span>
+            {hasAllReviewsOpen(student) ? (
+              <Button type="button" onClick={handleClickHideAll} size="small">
+                Hide all reviews
+              </Button>
+            ) : (
+              <Button type="button" onClick={handleClickShowAll(student)} size="small">
+                Show all reviews
+              </Button>
+            )}
+            <br />
+          </span>
+          <WeekReviews courseId={props.courseId} student={student} studentInstance={props.studentInstance} openWeeks={state.openWeeks} handleClickWeek={handleClick} />
+        </div>
+      ) : (
+        <p />
+      )}
+    </div>
   )
 }
 
@@ -242,7 +240,9 @@ BrowseReviews.propTypes = {
   resetLoading: PropTypes.func.isRequired,
   getCoursesByStudentId: PropTypes.func.isRequired,
   getAllTeacherCourses: PropTypes.func.isRequired,
-  updateStudentProjectInfo: PropTypes.func.isRequired
+  updateStudentProjectInfo: PropTypes.func.isRequired,
+
+  errors: PropTypes.array
 }
 
 export default withRouter(

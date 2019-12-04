@@ -1,253 +1,251 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`<BrowseReviews /> BrowseReviews Component should render correctly 1`] = `
-<Fragment>
-  <_default
-    title="Maarit Mirja Opiskelija - TKT20010"
-  />
-  <div
-    className="BrowseReviews"
-    style={
-      Object {
-        "overflowX": "auto",
-      }
+<div
+  className="BrowseReviews"
+  style={
+    Object {
+      "overflowX": "auto",
     }
-  >
-    <Loader
-      active={false}
+  }
+>
+  <Loader
+    active={false}
+  />
+  <div>
+    <DocumentTitle
+      title="Maarit Mirja Opiskelija - TKT20010"
     />
-    <div>
-      <Connect(BackButton)
-        preset="coursePage"
-      />
-      <Link
-        style={
-          Object {
-            "textAlign": "center",
-          }
+    <Connect(BackButton)
+      preset="coursePage"
+    />
+    <Link
+      style={
+        Object {
+          "textAlign": "center",
         }
-        to="/labtool/courses/TKT20010.2018.K.A.1"
+      }
+      to="/labtool/courses/TKT20010.2018.K.A.1"
+    >
+      <h2>
+         
+        Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit (periodi IV, 2017-2018)
+      </h2>
+    </Link>
+    <StudentCard
+      handleMarkAsDropped={[Function]}
+      handleMarkAsValidRegistration={[Function]}
+      otherParticipations={Array []}
+      student={
+        Object {
+          "User": Object {
+            "createdAt": "2018-03-26T00:00:00.000Z",
+            "email": "maarit.opiskelija@helsinki.invalid",
+            "firsts": "Maarit Mirja",
+            "id": 10011,
+            "lastname": "Opiskelija",
+            "studentNumber": "014578343",
+            "sysop": false,
+            "teacher": false,
+            "updatedAt": "2018-03-26T00:00:00.000Z",
+            "username": "tiraopiskelija1",
+          },
+          "codeReviews": Array [
+            Object {
+              "id": 272,
+              "linkToReview": "https:github.com/toReview/repo/pull/1",
+              "points": null,
+              "repoToReview": null,
+              "revieweNumber": 1,
+              "studentInstanceId": 10011,
+              "toReview": 10031,
+            },
+            Object {
+              "d": 273,
+              "linkToReview": null,
+              "points": null,
+              "repoToReview": "https://github.com/userName/arbitraryRepo",
+              "revieweNumber": 2,
+              "studentInstanceId": 10011,
+              "toReview": null,
+            },
+          ],
+          "courseInstanceId": 10011,
+          "createdAt": "2018-03-26T00:00:00.000Z",
+          "dropped": false,
+          "github": "http://github.com/tiralabra1",
+          "id": 10011,
+          "projectName": "Tiran labraprojekti",
+          "teacherInstanceId": 10011,
+          "updatedAt": "2018-03-26T00:00:00.000Z",
+          "userId": 10011,
+          "weeks": Array [
+            Object {
+              "comments": Array [],
+              "createdAt": "2018-03-26T00:00:00.000Z",
+              "feedback": "Melko hienoa työtä!",
+              "id": 10002,
+              "instructorNotes": "READMEssa ongelmia",
+              "points": 2,
+              "studentInstanceId": 10011,
+              "updatedAt": "2018-03-26T00:00:00.000Z",
+              "weekNumber": 2,
+            },
+            Object {
+              "comments": Array [],
+              "createdAt": "2018-03-26T00:00:00.000Z",
+              "feedback": "Hienoa työtä!",
+              "id": 10001,
+              "instructorNotes": "",
+              "points": 3,
+              "studentInstanceId": 10011,
+              "updatedAt": "2018-03-26T00:00:00.000Z",
+              "weekNumber": 1,
+            },
+            Object {
+              "comments": Array [],
+              "createdAt": "2018-03-26T00:00:00.000Z",
+              "feedback": "Erittäin hienoa työtä!",
+              "id": 10003,
+              "instructorNotes": "",
+              "points": 3,
+              "studentInstanceId": 10011,
+              "updatedAt": "2018-03-26T00:00:00.000Z",
+              "weekNumber": 3,
+            },
+            Object {
+              "comments": Array [],
+              "createdAt": "2018-03-26T00:00:00.000Z",
+              "feedback": "Hyvin menee!",
+              "id": 10004,
+              "instructorNotes": "",
+              "points": 3,
+              "studentInstanceId": 10011,
+              "updatedAt": "2018-03-26T00:00:00.000Z",
+              "weekNumber": 4,
+            },
+          ],
+        }
+      }
+      teacherInstance={
+        Array [
+          Object {
+            "id": 10000,
+          },
+          Object {
+            "id": 10011,
+          },
+        ]
+      }
+    />
+    <span>
+      <Button
+        as="button"
+        onClick={[Function]}
+        size="small"
+        type="button"
       >
-        <h2>
-           
-          Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit (periodi IV, 2017-2018)
-        </h2>
-      </Link>
-      <StudentCard
-        handleMarkAsDropped={[Function]}
-        handleMarkAsValidRegistration={[Function]}
-        otherParticipations={Array []}
-        student={
-          Object {
-            "User": Object {
-              "createdAt": "2018-03-26T00:00:00.000Z",
-              "email": "maarit.opiskelija@helsinki.invalid",
-              "firsts": "Maarit Mirja",
-              "id": 10011,
-              "lastname": "Opiskelija",
-              "studentNumber": "014578343",
-              "sysop": false,
-              "teacher": false,
-              "updatedAt": "2018-03-26T00:00:00.000Z",
-              "username": "tiraopiskelija1",
-            },
-            "codeReviews": Array [
-              Object {
-                "id": 272,
-                "linkToReview": "https:github.com/toReview/repo/pull/1",
-                "points": null,
-                "repoToReview": null,
-                "revieweNumber": 1,
-                "studentInstanceId": 10011,
-                "toReview": 10031,
-              },
-              Object {
-                "d": 273,
-                "linkToReview": null,
-                "points": null,
-                "repoToReview": "https://github.com/userName/arbitraryRepo",
-                "revieweNumber": 2,
-                "studentInstanceId": 10011,
-                "toReview": null,
-              },
-            ],
-            "courseInstanceId": 10011,
+        Show all reviews
+      </Button>
+      <br />
+    </span>
+    <Connect(WeekReviews)
+      courseId="TKT20010.2018.K.A.1"
+      handleClickWeek={[Function]}
+      openWeeks={Object {}}
+      student={
+        Object {
+          "User": Object {
             "createdAt": "2018-03-26T00:00:00.000Z",
-            "dropped": false,
-            "github": "http://github.com/tiralabra1",
+            "email": "maarit.opiskelija@helsinki.invalid",
+            "firsts": "Maarit Mirja",
             "id": 10011,
-            "projectName": "Tiran labraprojekti",
-            "teacherInstanceId": 10011,
+            "lastname": "Opiskelija",
+            "studentNumber": "014578343",
+            "sysop": false,
+            "teacher": false,
             "updatedAt": "2018-03-26T00:00:00.000Z",
-            "userId": 10011,
-            "weeks": Array [
-              Object {
-                "comments": Array [],
-                "createdAt": "2018-03-26T00:00:00.000Z",
-                "feedback": "Melko hienoa työtä!",
-                "id": 10002,
-                "instructorNotes": "READMEssa ongelmia",
-                "points": 2,
-                "studentInstanceId": 10011,
-                "updatedAt": "2018-03-26T00:00:00.000Z",
-                "weekNumber": 2,
-              },
-              Object {
-                "comments": Array [],
-                "createdAt": "2018-03-26T00:00:00.000Z",
-                "feedback": "Hienoa työtä!",
-                "id": 10001,
-                "instructorNotes": "",
-                "points": 3,
-                "studentInstanceId": 10011,
-                "updatedAt": "2018-03-26T00:00:00.000Z",
-                "weekNumber": 1,
-              },
-              Object {
-                "comments": Array [],
-                "createdAt": "2018-03-26T00:00:00.000Z",
-                "feedback": "Erittäin hienoa työtä!",
-                "id": 10003,
-                "instructorNotes": "",
-                "points": 3,
-                "studentInstanceId": 10011,
-                "updatedAt": "2018-03-26T00:00:00.000Z",
-                "weekNumber": 3,
-              },
-              Object {
-                "comments": Array [],
-                "createdAt": "2018-03-26T00:00:00.000Z",
-                "feedback": "Hyvin menee!",
-                "id": 10004,
-                "instructorNotes": "",
-                "points": 3,
-                "studentInstanceId": 10011,
-                "updatedAt": "2018-03-26T00:00:00.000Z",
-                "weekNumber": 4,
-              },
-            ],
-          }
-        }
-        teacherInstance={
-          Array [
+            "username": "tiraopiskelija1",
+          },
+          "codeReviews": Array [
             Object {
-              "id": 10000,
+              "id": 272,
+              "linkToReview": "https:github.com/toReview/repo/pull/1",
+              "points": null,
+              "repoToReview": null,
+              "revieweNumber": 1,
+              "studentInstanceId": 10011,
+              "toReview": 10031,
             },
             Object {
-              "id": 10011,
+              "d": 273,
+              "linkToReview": null,
+              "points": null,
+              "repoToReview": "https://github.com/userName/arbitraryRepo",
+              "revieweNumber": 2,
+              "studentInstanceId": 10011,
+              "toReview": null,
             },
-          ]
-        }
-      />
-      <span>
-        <Button
-          as="button"
-          onClick={[Function]}
-          size="small"
-          type="button"
-        >
-          Show all reviews
-        </Button>
-        <br />
-      </span>
-      <Connect(WeekReviews)
-        courseId="TKT20010.2018.K.A.1"
-        handleClickWeek={[Function]}
-        openWeeks={Object {}}
-        student={
-          Object {
-            "User": Object {
+          ],
+          "courseInstanceId": 10011,
+          "createdAt": "2018-03-26T00:00:00.000Z",
+          "dropped": false,
+          "github": "http://github.com/tiralabra1",
+          "id": 10011,
+          "projectName": "Tiran labraprojekti",
+          "teacherInstanceId": 10011,
+          "updatedAt": "2018-03-26T00:00:00.000Z",
+          "userId": 10011,
+          "weeks": Array [
+            Object {
+              "comments": Array [],
               "createdAt": "2018-03-26T00:00:00.000Z",
-              "email": "maarit.opiskelija@helsinki.invalid",
-              "firsts": "Maarit Mirja",
-              "id": 10011,
-              "lastname": "Opiskelija",
-              "studentNumber": "014578343",
-              "sysop": false,
-              "teacher": false,
+              "feedback": "Melko hienoa työtä!",
+              "id": 10002,
+              "instructorNotes": "READMEssa ongelmia",
+              "points": 2,
+              "studentInstanceId": 10011,
               "updatedAt": "2018-03-26T00:00:00.000Z",
-              "username": "tiraopiskelija1",
+              "weekNumber": 2,
             },
-            "codeReviews": Array [
-              Object {
-                "id": 272,
-                "linkToReview": "https:github.com/toReview/repo/pull/1",
-                "points": null,
-                "repoToReview": null,
-                "revieweNumber": 1,
-                "studentInstanceId": 10011,
-                "toReview": 10031,
-              },
-              Object {
-                "d": 273,
-                "linkToReview": null,
-                "points": null,
-                "repoToReview": "https://github.com/userName/arbitraryRepo",
-                "revieweNumber": 2,
-                "studentInstanceId": 10011,
-                "toReview": null,
-              },
-            ],
-            "courseInstanceId": 10011,
-            "createdAt": "2018-03-26T00:00:00.000Z",
-            "dropped": false,
-            "github": "http://github.com/tiralabra1",
-            "id": 10011,
-            "projectName": "Tiran labraprojekti",
-            "teacherInstanceId": 10011,
-            "updatedAt": "2018-03-26T00:00:00.000Z",
-            "userId": 10011,
-            "weeks": Array [
-              Object {
-                "comments": Array [],
-                "createdAt": "2018-03-26T00:00:00.000Z",
-                "feedback": "Melko hienoa työtä!",
-                "id": 10002,
-                "instructorNotes": "READMEssa ongelmia",
-                "points": 2,
-                "studentInstanceId": 10011,
-                "updatedAt": "2018-03-26T00:00:00.000Z",
-                "weekNumber": 2,
-              },
-              Object {
-                "comments": Array [],
-                "createdAt": "2018-03-26T00:00:00.000Z",
-                "feedback": "Hienoa työtä!",
-                "id": 10001,
-                "instructorNotes": "",
-                "points": 3,
-                "studentInstanceId": 10011,
-                "updatedAt": "2018-03-26T00:00:00.000Z",
-                "weekNumber": 1,
-              },
-              Object {
-                "comments": Array [],
-                "createdAt": "2018-03-26T00:00:00.000Z",
-                "feedback": "Erittäin hienoa työtä!",
-                "id": 10003,
-                "instructorNotes": "",
-                "points": 3,
-                "studentInstanceId": 10011,
-                "updatedAt": "2018-03-26T00:00:00.000Z",
-                "weekNumber": 3,
-              },
-              Object {
-                "comments": Array [],
-                "createdAt": "2018-03-26T00:00:00.000Z",
-                "feedback": "Hyvin menee!",
-                "id": 10004,
-                "instructorNotes": "",
-                "points": 3,
-                "studentInstanceId": 10011,
-                "updatedAt": "2018-03-26T00:00:00.000Z",
-                "weekNumber": 4,
-              },
-            ],
-          }
+            Object {
+              "comments": Array [],
+              "createdAt": "2018-03-26T00:00:00.000Z",
+              "feedback": "Hienoa työtä!",
+              "id": 10001,
+              "instructorNotes": "",
+              "points": 3,
+              "studentInstanceId": 10011,
+              "updatedAt": "2018-03-26T00:00:00.000Z",
+              "weekNumber": 1,
+            },
+            Object {
+              "comments": Array [],
+              "createdAt": "2018-03-26T00:00:00.000Z",
+              "feedback": "Erittäin hienoa työtä!",
+              "id": 10003,
+              "instructorNotes": "",
+              "points": 3,
+              "studentInstanceId": 10011,
+              "updatedAt": "2018-03-26T00:00:00.000Z",
+              "weekNumber": 3,
+            },
+            Object {
+              "comments": Array [],
+              "createdAt": "2018-03-26T00:00:00.000Z",
+              "feedback": "Hyvin menee!",
+              "id": 10004,
+              "instructorNotes": "",
+              "points": 3,
+              "studentInstanceId": 10011,
+              "updatedAt": "2018-03-26T00:00:00.000Z",
+              "weekNumber": 4,
+            },
+          ],
         }
-        studentInstance="10011"
-      />
-    </div>
+      }
+      studentInstance="10011"
+    />
   </div>
-</Fragment>
+</div>
 `;
