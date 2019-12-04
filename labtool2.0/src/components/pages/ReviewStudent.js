@@ -72,6 +72,9 @@ export const ReviewStudent = props => {
         weekNumber: props.weekNumber,
         checks
       }
+      if (isFinalReview(props) && !props.selectedInstance.finalReviewHasPoints) {
+        pstate.points = null
+      }
       pstate.clear()
       if (pstate.points.value < 0 || pstate.points.value > getMaximumPoints()) {
         store.dispatch({ type: 'WEEKS_CREATE_ONEFAILURE' })
@@ -233,7 +236,7 @@ export const ReviewStudent = props => {
   return (
     <>
       <DocumentTitle
-        title={`${isFinalReview(props) ? 'Final Review' : `Week ${weekData ? weekData.weekNumber : props.ownProps.weekNumber}`} - ${studentData.User.firsts} ${studentData.User.lastname}`}
+        title={`${isFinalReview(props) ? 'Final Review' : `Week ${weekData && weekData.weekNumber ? weekData.weekNumber : props.ownProps.weekNumber}`} - ${studentData.User.firsts} ${studentData.User.lastname}`}
       />
       <div className="ReviewStudent">
         <BackButton
@@ -282,7 +285,7 @@ export const ReviewStudent = props => {
                 )}
                 <PreviousWeekDetails weekData={previousWeekData} />
                 {isFinalReview(props) && <MissingMinimumRequirements selectedInstance={props.selectedInstance} studentInstance={studentData} currentWeekChecks={!checks ? {} : checks} />}
-                {isFinalReview(props) ? <h2>Final Review Points</h2> : <h2>Review</h2>}
+                {isFinalReview(props) ? (props.selectedInstance.finalReviewHasPoints ? <h2>Final Review Points</h2> : <h2>Final Review</h2>) : <h2>Review</h2>}
                 {loadedFromDraft && (
                   <div>
                     <p>
@@ -292,21 +295,23 @@ export const ReviewStudent = props => {
                   </div>
                 )}
                 <Form onSubmit={handleSubmit}>
-                  <Form.Group inline unstackable>
-                    <Form.Field>
-                      <label className="showMaxPoints">Points 0-{getMaximumPoints()}</label>
+                  {(!isFinalReview(props) || props.selectedInstance.finalReviewHasPoints) && (
+                    <Form.Group inline unstackable>
+                      <Form.Field>
+                        <label className="showMaxPoints">Points 0-{getMaximumPoints()}</label>
 
-                      <Input
-                        name="points"
-                        required={true}
-                        value={pstate.points}
-                        onChange={(e, { value }) => (pstate.points = value)}
-                        type="number"
-                        step="0.01"
-                        style={{ width: '150px', align: 'center' }}
-                      />
-                    </Form.Field>
-                  </Form.Group>
+                        <Input
+                          name="points"
+                          required={true}
+                          value={pstate.points}
+                          onChange={(e, { value }) => (pstate.points = value)}
+                          type="number"
+                          step="0.01"
+                          style={{ width: '150px', align: 'center' }}
+                        />
+                      </Form.Field>
+                    </Form.Group>
+                  )}
                   {isFinalReview(props) ? (
                     <Form.Group inline unstackable>
                       <Form.Field>

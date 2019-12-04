@@ -41,11 +41,17 @@ export const WeekReviewWeek = props => {
   }
 
   if (week) {
+    // week.points may be null for final review if points for the final review are disabled
+    const pointInfo = week.points !== null ? (
+      <>
+        , points <Points points={week.points} /> / <Points points={getMaximumPointsForWeek(week.weekNumber)} />
+      </>
+    ) : null
     const gradeInfo = week.grade ? `, grade ${week.grade}` : ''
     return (
       <Accordion fluid styled id={isFinalWeek ? 'reviewFinal' : `reviewWeek${week.weekNumber}`}>
         <Accordion.Title active={isWeekOpen} index={i} onClick={handleClickWeek}>
-          <Icon name="dropdown" /> {isFinalWeek ? 'Final Review' : `Week ${week.weekNumber}`}, points <Points points={week.points} /> / <Points points={getMaximumPointsForWeek(week.weekNumber)} />
+          <Icon name="dropdown" /> {isFinalWeek ? 'Final Review' : `Week ${week.weekNumber}`}{pointInfo} />
           {gradeInfo}
         </Accordion.Title>
         <Accordion.Content active={isWeekOpen}>
@@ -54,7 +60,11 @@ export const WeekReviewWeek = props => {
             <Card.Content>
               <h4>
                 {' '}
-                Points <Points points={week.points} /> / <Points points={getMaximumPointsForWeek(week.weekNumber)} />
+                {week.points !== null ? (
+                  <>
+                    Points <Points points={week.points} /> / <Points points={getMaximumPointsForWeek(week.weekNumber)} />
+                  </>
+                ) : null}
                 {gradeInfo}{' '}
               </h4>
               <h4> Feedback </h4>

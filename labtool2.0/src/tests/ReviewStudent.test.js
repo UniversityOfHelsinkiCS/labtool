@@ -21,6 +21,7 @@ describe('<ReviewStudent />', () => {
       weekAmount: 7,
       weekMaxPoints: 3,
       currentWeek: 1,
+      finalReviewHasPoints: true,
       ohid: 'TKT20010.2018.K.A.1',
       checklists: [
         {
