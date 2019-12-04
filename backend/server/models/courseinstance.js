@@ -15,7 +15,11 @@ module.exports = (sequelize, DataTypes) => {
       ohid: DataTypes.STRING,
       finalReview: DataTypes.BOOLEAN,
       coursesPage: DataTypes.STRING,
-      courseMaterial: DataTypes.STRING
+      courseMaterial: DataTypes.STRING,
+      finalReviewHasPoints: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true
+      }
     },
     {}
   )

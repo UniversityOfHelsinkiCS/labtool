@@ -22,6 +22,7 @@ import BackButton from '../BackButton'
 import DocumentTitle from '../DocumentTitle'
 import Error from '../Error'
 import { Points } from '../Points'
+import '../../util/arrayFlatPolyfill'
 
 const isFinalReview = props => props.weekNumber > props.selectedInstance.weekAmount
 
@@ -72,6 +73,9 @@ export const ReviewStudent = props => {
         weekNumber: props.weekNumber,
         checks
       }
+      if (isFinalReview(props) && !props.selectedInstance.finalReviewHasPoints) {
+        pstate.points = null
+      }
       pstate.clear()
       if (pstate.points.value < 0 || pstate.points.value > getMaximumPoints()) {
         store.dispatch({ type: 'WEEKS_CREATE_ONEFAILURE' })
@@ -90,7 +94,6 @@ export const ReviewStudent = props => {
   }
 
   const getMaximumPoints = () => {
-    const checklist = props.selectedInstance.checklists.find(checkl => checkl.week === Number(props.ownProps.weekNumber))
     if (checklist && checklist.maxPoints) {
       return checklist.maxPoints
     }
@@ -162,6 +165,8 @@ export const ReviewStudent = props => {
     return <Loader active />
   }
 
+  const checklist = props.selectedInstance.checklists.find(cl => cl.week === Number(props.weekNumber))
+
   // props.ownProps.studentInstance is a string, therefore casting to number.
   const studentData = props.weekReview.data.find(dataArray => dataArray.id === Number(props.ownProps.studentInstance))
   // do we have a draft?
@@ -169,7 +174,15 @@ export const ReviewStudent = props => {
   // props.weekNumber is a string, therefore casting to number.
   const weekData = loadedFromDraft ? props.weekReview.draftData : studentData.weeks.find(theWeek => theWeek.weekNumber === Number(props.ownProps.weekNumber))
   const previousWeekData = studentData.weeks.find(week => week.weekNumber === Number(props.ownProps.weekNumber) - 1)
-  const savedChecks = weekData ? weekData.checks || {} : {}
+  const emptyChecks = checklist
+    ? Object.values(checklist.list)
+        .flat()
+        .reduce((object, checklistItem) => {
+          object[checklistItem.id] = false
+          return object
+        }, {})
+    : {}
+  const savedChecks = weekData && weekData.checks ? weekData.checks : emptyChecks
   const checks = props.weekReview.checks !== null ? props.weekReview.checks : savedChecks //weekData ? weekData.checks || {} : {}
   const weekPoints = studentData.weeks
     .filter(week => week.weekNumber < props.weekNumber)
@@ -182,12 +195,11 @@ export const ReviewStudent = props => {
     .reduce((a, b) => {
       return a + b
     }, 0)
-  const checkList = props.selectedInstance.checklists.find(checkl => checkl.week === Number(props.ownProps.weekNumber))
   let checklistOutput = ''
   let checklistPoints = 0
-  if (checkList) {
-    Object.keys(checkList.list).forEach(category => {
-      checkList.list[category].forEach(clItem => {
+  if (checklist) {
+    Object.keys(checklist.list).forEach(category => {
+      checklist.list[category].forEach(clItem => {
         //handle existing case where clItems were saved by name in weekData.checks
         if (savedChecks[clItem.name]) {
           savedChecks[clItem.id] = savedChecks[clItem.name]
@@ -233,7 +245,7 @@ export const ReviewStudent = props => {
   return (
     <>
       <DocumentTitle
-        title={`${isFinalReview(props) ? 'Final Review' : `Week ${weekData ? weekData.weekNumber : props.ownProps.weekNumber}`} - ${studentData.User.firsts} ${studentData.User.lastname}`}
+        title={`${isFinalReview(props) ? 'Final Review' : `Week ${weekData && weekData.weekNumber ? weekData.weekNumber : props.ownProps.weekNumber}`} - ${studentData.User.firsts} ${studentData.User.lastname}`}
       />
       <div className="ReviewStudent">
         <BackButton
@@ -282,7 +294,7 @@ export const ReviewStudent = props => {
                 )}
                 <PreviousWeekDetails weekData={previousWeekData} />
                 {isFinalReview(props) && <MissingMinimumRequirements selectedInstance={props.selectedInstance} studentInstance={studentData} currentWeekChecks={!checks ? {} : checks} />}
-                {isFinalReview(props) ? <h2>Final Review Points</h2> : <h2>Review</h2>}
+                {isFinalReview(props) ? (props.selectedInstance.finalReviewHasPoints ? <h2>Final Review Points</h2> : <h2>Final Review</h2>) : <h2>Review</h2>}
                 {loadedFromDraft && (
                   <div>
                     <p>
@@ -292,21 +304,23 @@ export const ReviewStudent = props => {
                   </div>
                 )}
                 <Form onSubmit={handleSubmit}>
-                  <Form.Group inline unstackable>
-                    <Form.Field>
-                      <label className="showMaxPoints">Points 0-{getMaximumPoints()}</label>
+                  {(!isFinalReview(props) || props.selectedInstance.finalReviewHasPoints) && (
+                    <Form.Group inline unstackable>
+                      <Form.Field>
+                        <label className="showMaxPoints">Points 0-{getMaximumPoints()}</label>
 
-                      <Input
-                        name="points"
-                        required={true}
-                        value={pstate.points}
-                        onChange={(e, { value }) => (pstate.points = value)}
-                        type="number"
-                        step="0.01"
-                        style={{ width: '150px', align: 'center' }}
-                      />
-                    </Form.Field>
-                  </Form.Group>
+                        <Input
+                          name="points"
+                          required={true}
+                          value={pstate.points}
+                          onChange={(e, { value }) => (pstate.points = value)}
+                          type="number"
+                          step="0.01"
+                          style={{ width: '150px', align: 'center' }}
+                        />
+                      </Form.Field>
+                    </Form.Group>
+                  )}
                   {isFinalReview(props) ? (
                     <Form.Group inline unstackable>
                       <Form.Field>
@@ -360,15 +374,15 @@ export const ReviewStudent = props => {
                   </Form.Field>
                 </Form>
               </Grid.Column>
-              {checkList && checks !== undefined ? (
+              {checklist && checks !== undefined ? (
                 <Grid.Column>
                   <h2>Checklist</h2>
-                  {checkList ? (
+                  {checklist ? (
                     <div className="checklist">
-                      {Object.keys(checkList.list).map(clItemCategory => (
+                      {Object.keys(checklist.list).map(clItemCategory => (
                         <Card className="checklistCard" fluid color="red" key={clItemCategory}>
                           <Card.Content header={clItemCategory} />
-                          {checkList.list[clItemCategory].map(clItem => (
+                          {checklist.list[clItemCategory].map(clItem => (
                             <Card.Content className="checklistCardRow" key={clItem.id} onClick={toggleCheckbox(clItem.id, props.ownProps.studentInstance, props.ownProps.weekNumber)}>
                               <Form.Field>
                                 <Grid>
@@ -486,9 +500,4 @@ ReviewStudent.propTypes = {
   errors: PropTypes.array
 }
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(ReviewStudent)
-)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ReviewStudent))

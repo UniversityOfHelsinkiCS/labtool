@@ -713,7 +713,7 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
           <Popup
             className="infoText"
             content="The points you define here will be the maximum points for this review. If no value is given, the maximum points for this review 
-                will stay the same as the defaulted weekly points which is 3"
+                    will stay the same as the defaulted weekly points which is 3"
             disabled={false}
             eventsEnabled={true}
             offset={0}
