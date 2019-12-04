@@ -114,7 +114,7 @@ module.exports = {
               return true
             })) {
               // some validation failure
-
+              return
             }
           })
         })
