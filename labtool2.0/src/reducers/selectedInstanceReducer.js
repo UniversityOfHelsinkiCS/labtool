@@ -36,6 +36,8 @@ const selectedInstanceReducer = (store = INITIAL_STATE, action) => {
       return newStore
     case 'SET_FINAL_REVIEW':
       return { ...store, finalReview: action.value }
+    case 'SET_FINAL_REVIEW_HAS_POINTS':
+      return { ...store, finalReviewHasPoints: action.value }
     case 'CI_MODIFY_ONE_SUCCESS':
       return { ...store, ...action.response, currentWeek: Number(action.response.currentWeek || store.currentWeek, 10) }
     default:
@@ -47,6 +49,15 @@ export const setFinalReview = value => {
   return async dispatch => {
     dispatch({
       type: 'SET_FINAL_REVIEW',
+      value
+    })
+  }
+}
+
+export const setFinalReviewHasPoints = value => {
+  return async dispatch => {
+    dispatch({
+      type: 'SET_FINAL_REVIEW_HAS_POINTS',
       value
     })
   }
