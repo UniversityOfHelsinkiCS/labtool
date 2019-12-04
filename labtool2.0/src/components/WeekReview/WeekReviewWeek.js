@@ -51,7 +51,7 @@ export const WeekReviewWeek = props => {
     return (
       <Accordion fluid styled id={isFinalWeek ? 'reviewFinal' : `reviewWeek${week.weekNumber}`}>
         <Accordion.Title active={isWeekOpen} index={i} onClick={handleClickWeek}>
-          <Icon name="dropdown" /> {isFinalWeek ? 'Final Review' : `Week ${week.weekNumber}`}{pointInfo} />
+          <Icon name="dropdown" /> {isFinalWeek ? 'Final Review' : `Week ${week.weekNumber}`}{pointInfo}
           {gradeInfo}
         </Accordion.Title>
         <Accordion.Content active={isWeekOpen}>
@@ -62,10 +62,14 @@ export const WeekReviewWeek = props => {
                 {' '}
                 {week.points !== null ? (
                   <>
-                    Points <Points points={week.points} /> / <Points points={getMaximumPointsForWeek(week.weekNumber)} />
+                    Points <Points points={week.points} /> / <Points points={getMaximumPointsForWeek(week.weekNumber)} />{gradeInfo}
+                  </>
+                ) : week.grade ? (
+                  <>
+                    Grade {week.grade}
                   </>
                 ) : null}
-                {gradeInfo}{' '}
+                {' '}
               </h4>
               <h4> Feedback </h4>
               <ReactMarkdown>{week.feedback}</ReactMarkdown>{' '}
