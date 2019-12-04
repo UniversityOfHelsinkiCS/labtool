@@ -102,6 +102,11 @@ module.exports = {
                     return false
                   }
                   break
+                case 'tempId':
+                  // only used to map prerequisites to new checklist items, will not be stored
+                  break
+                case 'prerequisite':
+                  break
                 default:
                   res.status(400).send(`Found unexpected key: ${key}`)
                   return false
@@ -109,7 +114,7 @@ module.exports = {
               return true
             })) {
               // some validation failure
-              return
+
             }
           })
         })
@@ -142,6 +147,11 @@ module.exports = {
       const checklistJson = {}
       const checklistIdsNow = []
       let checklistOrder = 1
+
+      // we will remove prerequisites for now and put them onto a map
+      // also we need to map tempId => true id
+      const prerequisites = {}
+      const tempIdMap = {}
 
       for (const category in req.body.checklist) {
         const checklistForCategory = req.body.checklist[category]
@@ -176,10 +186,22 @@ module.exports = {
           category,
           checklistId: result[1].dataValues.id,
           order: checklistOrder + index,
+          prerequisite: null,
           minimumRequirement: checklistItem.minimumRequirement,
           minimumRequirementMetIf: checklistItem.minimumRequirementMetIf,
           minimumRequirementGradePenalty: checklistItem.minimumRequirementGradePenalty
         }, { returning: true })))
+        const zipped = checklistForCategoryIdFiltered.map((item, index) => [item, checklistItems[index][0]])
+
+        // if we had a temp ID, map those, and if we had prerequisites, map those too
+        zipped.forEach(([oldItem, newItem]) => {
+          if (oldItem.tempId) {
+            tempIdMap[oldItem.tempId] = newItem.id
+          }
+          if (oldItem.prerequisite !== null) {
+            prerequisites[newItem.id] = oldItem.prerequisite
+          }
+        })
 
         checklistJson[category] = checklistItems.map((item) => {
           const checklistItem = item[0].dataValues
@@ -201,8 +223,20 @@ module.exports = {
       })
       await Promise.all(checklistWeekItems.filter(item => !checklistIdsNow.includes(item.id)).map(item => item.destroy()))
 
+      // handle prerequisites
+      await Promise.all(Object.keys(prerequisites).map(async (newId) => {
+        const prerequisiteRaw = prerequisites[newId]
+        // convert possible temp ID to actual ID
+        const prerequisiteActual = prerequisiteRaw in tempIdMap ? tempIdMap[prerequisiteRaw] : prerequisiteRaw
+
+        await ChecklistItem.update(
+          { prerequisite: prerequisiteActual },
+          { where: { id: newId } }
+        )
+      }))
+
       res.status(200).send({
-        message: `Checklist saved successfully for ${'week' in req.body ? `week ${req.body.week}` : `code review`}.`,
+        message: `Checklist saved successfully for ${'week' in req.body ? `week ${req.body.week}` : 'code review'}.`,
         result: { ...result[1].dataValues, list: checklistJson },
         data: req.body
       })

@@ -72,11 +72,17 @@ export const CreateChecklist = props => {
     }
   }
 
+  const getRowId = row => row.id || row.tempId
+
   const validateChecklistPrerequisites = data => {
     const items = {}
     Object.keys(data).map(category => {
       data[category].forEach(item => {
-        items[item.id] = item
+        if (item.id !== undefined) {
+          items[item.id] = item
+        } else {
+          items[item.tempId] = item
+        }
       })
     })
 
@@ -93,10 +99,11 @@ export const CreateChecklist = props => {
         const visited = []
         let curItem = item
         while (curItem.prerequisite) {
-          if (visited.includes(curItem.id)) {
+          const curId = getRowId(curItem)
+          if (visited.includes(curId)) {
             return false
           }
-          visited.push(curItem.id)
+          visited.push(curId)
           curItem = items[curItem.prerequisite]
         }
 
@@ -478,8 +485,6 @@ export const CreateChecklist = props => {
   const createCopyWeekDropdowns = () => {
     return props.weekDropdowns.filter(option => option.value !== state.current)
   }
-
-  const getRowId = row => row.id || row.tempId
 
   const createPrerequisiteDropdowns = () => {
     const checks = [{
