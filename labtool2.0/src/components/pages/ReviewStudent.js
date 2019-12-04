@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { withRouter } from 'react-router'
-import { Button, Form, Input, Grid, Card, Loader, Icon } from 'semantic-ui-react'
+import { Button, Form, Input, Grid, Card, Loader, Icon, Popup } from 'semantic-ui-react'
 import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createOneWeek, getWeekDraft, saveWeekDraft } from '../../services/week'
@@ -384,7 +384,12 @@ export const ReviewStudent = props => {
                                     <Grid.Column width={3}>
                                       {!clItem.minimumRequirement ? (
                                         <span>{`${clItem.checkedPoints} p / ${clItem.uncheckedPoints} p`}</span>
-                                      ) : null}
+                                      ) : (
+                                        <>
+                                          <Popup trigger={<Icon name="thumb tack" color="blue" size="big" />} content={`This is a minimum requirement that is met when ${clItem.minimumRequirementMetIf ? 'checked' : 'not checked'}; if not met, the final grade will drop`} />
+                                          Requirement
+                                        </>
+                                      )}
                                     </Grid.Column>
                                   </Grid.Row>
                                 </Grid>
