@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { withRouter } from 'react-router'
-import { Button, Form, Input, Grid, Card, Loader, Icon } from 'semantic-ui-react'
+import { Button, Form, Input, Grid, Card, Loader, Icon, Popup } from 'semantic-ui-react'
 import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createOneWeek, getWeekDraft, saveWeekDraft } from '../../services/week'
@@ -33,6 +33,7 @@ export const ReviewStudent = props => {
   const [allowChecksCopy, setAllowChecksCopy] = useState(false)
   const pstate = usePersistedState(`ReviewStudent_${props.studentInstance}:${props.weekNumber}`, {
     points: '',
+    grade: '',
     feedback: '',
     instructorNotes: '',
     checks: null
@@ -63,7 +64,8 @@ export const ReviewStudent = props => {
     try {
       e.preventDefault()
       const content = {
-        points: pstate.points,
+        points: pstate.points || null,
+        grade: pstate.grade || null,
         studentInstanceId: props.studentInstance,
         feedback: pstate.feedback,
         instructorNotes: pstate.instructorNotes,
@@ -71,7 +73,10 @@ export const ReviewStudent = props => {
         checks
       }
       pstate.clear()
-      if (e.target.points.value < 0 || e.target.points.value > getMaximumPoints()) {
+      if (pstate.points.value < 0 || pstate.points.value > getMaximumPoints()) {
+        store.dispatch({ type: 'WEEKS_CREATE_ONEFAILURE' })
+      } else if (pstate.grade < 0 || (pstate.grade && !isFinalReview(props))) {
+        // cannot give grade except for final review
         store.dispatch({ type: 'WEEKS_CREATE_ONEFAILURE' })
       } else {
         props.addRedirectHook({
@@ -110,6 +115,7 @@ export const ReviewStudent = props => {
     const draftData = {}
     draftData.checks = checks
     draftData.points = pstate.points || ''
+    draftData.grade = isFinalReview(props) ? pstate.grade || '' : ''
     draftData.feedback = pstate.feedback || ''
     draftData.instructorNotes = pstate.instructorNotes || ''
     return draftData
@@ -200,10 +206,12 @@ export const ReviewStudent = props => {
         const addition = checked ? clItem.textWhenOn : clItem.textWhenOff
         if (addition) checklistOutput += addition + '\n\n'
 
-        if (checked) {
-          checklistPoints += clItem.checkedPoints
-        } else {
-          checklistPoints += clItem.uncheckedPoints
+        if (!clItem.minimumRequirement) {
+          if (checked) {
+            checklistPoints += clItem.checkedPoints
+          } else {
+            checklistPoints += clItem.uncheckedPoints
+          }
         }
       })
     })
@@ -221,6 +229,7 @@ export const ReviewStudent = props => {
       }
 
       pstate.points = pstate.points || weekData.points
+      pstate.grade = pstate.grade || weekData.grade
       pstate.feedback = pstate.feedback || weekData.feedback
       pstate.instructorNotes = pstate.instructorNotes || weekData.instructorNotes
       setLoadedWeekData(true)
@@ -231,7 +240,9 @@ export const ReviewStudent = props => {
 
   return (
     <>
-      <DocumentTitle title={`Week ${weekData ? weekData.weekNumber : props.ownProps.weekNumber} - ${studentData.User.firsts} ${studentData.User.lastname}`} />
+      <DocumentTitle
+        title={`${isFinalReview(props) ? 'Final Review' : `Week ${weekData ? weekData.weekNumber : props.ownProps.weekNumber}`} - ${studentData.User.firsts} ${studentData.User.lastname}`}
+      />
       <div className="ReviewStudent">
         <BackButton
           preset={arrivedFromCoursePage && 'coursePage'}
@@ -304,6 +315,24 @@ export const ReviewStudent = props => {
                       />
                     </Form.Field>
                   </Form.Group>
+                  {isFinalReview(props) ? (
+                    <Form.Group inline unstackable>
+                      <Form.Field>
+                        <label className="labelGrade">Grade 1-5</label>
+
+                        <Input
+                          name="grade"
+                          value={pstate.grade}
+                          onChange={(e, { value }) => (pstate.grade = value)}
+                          type="number"
+                          min="1"
+                          max="5"
+                          step="1"
+                          style={{ width: '150px', align: 'center' }}
+                        />
+                      </Form.Field>
+                    </Form.Group>
+                  ) : null}
                   <h4>Feedback</h4>
                   <Form.Group inline unstackable style={{ textAlignVertical: 'top' }}>
                     <div style={{ width: '100%' }}>
@@ -363,7 +392,19 @@ export const ReviewStudent = props => {
                                       <span style={{ flexGrow: 1, textAlign: 'center' }}>{clItem.name}</span>
                                     </Grid.Column>
                                     <Grid.Column width={3}>
-                                      <span>{`${clItem.checkedPoints} p / ${clItem.uncheckedPoints} p`}</span>
+                                      {!clItem.minimumRequirement ? (
+                                        <span>{`${clItem.checkedPoints} p / ${clItem.uncheckedPoints} p`}</span>
+                                      ) : (
+                                        <>
+                                          <Popup
+                                            trigger={<Icon name="thumb tack" color="blue" size="big" />}
+                                            content={`This is a minimum requirement that is met when ${
+                                              clItem.minimumRequirementMetIf ? 'checked' : 'not checked'
+                                            }; if not met, the final grade will drop by ${clItem.minimumRequirementGradePenalty}`}
+                                          />
+                                          Requirement
+                                        </>
+                                      )}
                                     </Grid.Column>
                                   </Grid.Row>
                                 </Grid>

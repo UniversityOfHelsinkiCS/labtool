@@ -14,10 +14,10 @@ const MissingMinimumRequirements = ({ selectedInstance, studentInstance, current
     return map
   }, new Map())
 
-  const missingMinimumRequirements = [...studentInstance.weeks, { checks: !!currentWeekChecks ? currentWeekChecks : {} }]
+  const missingMinimumRequirements = [...studentInstance.weeks, { checks: currentWeekChecks ? currentWeekChecks : {} }]
     .map(week =>
       Object.entries(week.checks)
-        .filter(([id, checked]) => !checked && minimumRequirements.has(Number(id)))
+        .filter(([id, checked]) => minimumRequirements.has(Number(id)) && checked !== minimumRequirements.get(Number(id)).minimumRequirementMetIf)
         .map(([id]) => Number(id))
     )
     .flat()
@@ -33,14 +33,14 @@ const MissingMinimumRequirements = ({ selectedInstance, studentInstance, current
       <Header as="h3">Missing minimum requirements</Header>
       <List bulleted>
         {missingMinimumRequirements.map(missingMinimumRequirement => (
-          <List.Item key={missingMinimumRequirement.id}>{`${missingMinimumRequirement.name}: ${missingMinimumRequirement.textWhenOff} (${
-            missingMinimumRequirement.week > selectedInstance.weekAmount ? 'final review' : `week ${missingMinimumRequirement.week}`
-          })`}</List.Item>
+          <List.Item key={missingMinimumRequirement.id}>{`${missingMinimumRequirement.name}: ${
+            missingMinimumRequirement.minimumRequirementMetIf ? missingMinimumRequirement.textWhenOff : missingMinimumRequirement.textWhenOn
+          } (${missingMinimumRequirement.week > selectedInstance.weekAmount ? 'final review' : `week ${missingMinimumRequirement.week}`})`}</List.Item>
         ))}
       </List>
       <br />
       <p>
-        Maximum grade: <strong>{Math.max(1, 5 - missingMinimumRequirements.length)}</strong>
+        Maximum grade: <strong>{Math.max(1, 5 - missingMinimumRequirements.reduce((a, b) => a + b.minimumRequirementGradePenalty, 0))}</strong>
       </p>
     </Segment>
   )

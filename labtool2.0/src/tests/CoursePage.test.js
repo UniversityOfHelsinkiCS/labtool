@@ -315,9 +315,9 @@ describe('<CoursePage /> as teacher', () => {
 
     it('can export students as CSV', () => {
       wrapper
-        .find('CoursePageTeacherBulkForm')
+        .find('CoursePageTeacherMain')
         .dive()
-        .find({ children: 'Export CSV of all students' })
+        .find('#csvButton')
         .simulate('click')
 
       expect(mockDownloadFile).toBeCalledWith(

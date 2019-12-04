@@ -28,8 +28,11 @@ ImportableCourse.propTypes = {
   instance: PropTypes.object.isRequired
 }
 
+//Kurki date format: "2019-10-28 00:00:00 +0200"
+const parseKurkiDate = kurkiDate => new Date(kurkiDate.substring(0, 10))
+
 const sortByStartDate = (a, b) => {
-  return new Date(a.starts) - new Date(b.starts) || finnishLocaleCompare(a.cname, b.cname)
+  return parseKurkiDate(a.starts) - parseKurkiDate(b.starts) || parseKurkiDate(a.ends) - parseKurkiDate(b.ends) || finnishLocaleCompare(a.cname, b.cname)
 }
 
 /**
@@ -157,7 +160,4 @@ CourseImport.propTypes = {
   errors: PropTypes.array
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(CourseImport)
+export default connect(mapStateToProps, mapDispatchToProps)(CourseImport)
