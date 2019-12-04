@@ -70,6 +70,8 @@ export const CoursePage = props => {
     )}`
     const csvFilename = `${courseId}_${dateFormat}.csv`
     const csvResult = []
+    const getFinalGrade = student => (student.weeks.find(w => w.weekNumber === props.selectedInstance.weekAmount + 1) || {}).grade
+    const shouldShowFinalGrade = props.selectedInstance.finalReview && students.some(student => getFinalGrade(student))
 
     const columns = ['First Name', 'Last Name', 'StudentNo', 'Email', 'ProjectName', 'ProjectURL']
     for (let i = 1; i <= props.selectedInstance.weekAmount; ++i) {
@@ -82,6 +84,9 @@ export const CoursePage = props => {
       columns.push('FinalReview')
     }
     columns.push('Sum')
+    if (shouldShowFinalGrade) {
+      columns.push('Grade')
+    }
     columns.push('Instructor')
     csvResult.push(columns.join(','))
 
@@ -124,6 +129,9 @@ export const CoursePage = props => {
         sum += points || 0
       }
       values.push(sum)
+      if (shouldShowFinalGrade) {
+        values.push(getFinalGrade(student) || '-')
+      }
       values.push(instructorName)
       csvResult.push(values.join(','))
     })

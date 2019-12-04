@@ -46,7 +46,7 @@ export const CoursePageTeacherMain = props => {
 
       <StudentTable
         key={'studentTable'}
-        columns={['select', 'points', 'instructor']}
+        columns={['select', 'points', 'grade', 'instructor']}
         allowModify={true}
         allowReview={true}
         showCommentNotification={true}

@@ -96,15 +96,16 @@ export const HorizontalScrollable = props => {
   }
 
   const iconRefresh = () => {
-    // pick one icon in the table and mess with it to force an update
-    const icon = document.querySelector('.horizontalScrollableParent .icon')
-    const display = icon.style.display
+    // mess with all icons to force an update
     const frobulate = () => {}
-
-    icon.style.display = 'none'
-    frobulate(icon.offsetHeight)
-    icon.style.display = display
-    frobulate(icon.offsetHeight)
+    document.querySelectorAll('.horizontalScrollableParent .icon').forEach(icon => {
+      const display = icon.style.display
+  
+      icon.style.display = 'none'
+      frobulate(icon.offsetHeight)
+      icon.style.display = display
+      frobulate(icon.offsetHeight)
+    })
   }
 
   const updateScrollX = doNotUpdate => e => {

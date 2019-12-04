@@ -83,6 +83,8 @@ export const StudentTable = props => {
     return count
   }
 
+  const getStudentFinalGrade = student => (student.weeks.find(week => week.weekNumber === props.selectedInstance.weekAmount + 1) || {}).grade || null
+  const shouldHideGrade = (selectedInstance, studentInstances) => !selectedInstance.finalReview || studentInstances.every(studentInstance => !getStudentFinalGrade(studentInstance))
   const shouldHideInstructor = studentInstances => studentInstances.every(studentInstance => studentInstance.teacherInstanceId === null)
 
   const createHeadersTeacher = () => {
@@ -229,6 +231,11 @@ export const StudentTable = props => {
                   <Table.HeaderCell>Sum</Table.HeaderCell>
                 </>
               )}
+              {showColumn('grade') && !shouldHideGrade(props.selectedInstance, props.studentInstances) && (
+                <>
+                  <Table.HeaderCell>Grade</Table.HeaderCell>
+                </>
+              )}
               {showColumn('instructor') && !shouldHideInstructor(props.studentInstances) && (
                 <Table.HeaderCell width={shouldHideInstructor(props.studentInstances) ? null : 'six'}>Instructor</Table.HeaderCell>
               )}
@@ -246,6 +253,8 @@ export const StudentTable = props => {
                 dropDownTeachers={dropDownTeachers}
                 addFilterTag={addFilterTag}
                 shouldHideInstructor={shouldHideInstructor}
+                shouldHideGrade={shouldHideGrade}
+                getStudentFinalGrade={getStudentFinalGrade}
                 extraStudentIcon={extraStudentIcon}
                 allowReview={props.allowReview}
                 allowModify={props.allowModify}
@@ -279,6 +288,7 @@ export const StudentTable = props => {
                 {studentFooter ? studentFooter() : <Table.HeaderCell />}
                 <Table.HeaderCell />
                 {showColumn('points') && <Table.HeaderCell />}
+                {showColumn('grade') && !shouldHideGrade(props.studentInstances) && <Table.HeaderCell />}
                 {showColumn('instructor') && !shouldHideInstructor(props.studentInstances) && <Table.HeaderCell />}
                 {showColumn('review') && <Table.HeaderCell />}
                 {extraColumns.map(([, , footer]) => footer())}
