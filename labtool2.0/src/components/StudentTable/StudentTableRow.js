@@ -307,14 +307,7 @@ export const StudentTableRow = props => {
               <span key={data.id + ':' + tag.id} style={{ float: 'left', marginRight: '0.33em' }}>
                 <Button.Group className={'mini'}>
                   <TagLabel tag={tag} handleClick={addFilterTag(tag)} />
-                  {allowModify && (
-                    // <Button compact icon attached="right" className={`mini ui ${tag.color} button`} style={{ paddingLeft: 0, paddingRight: 0 }} onClick={removeTag(data.id, tag.id)}>
-                    //   <Icon name="remove" />
-                    // </Button>
-                    <Button compact icon attached="right" size="mini" style={{ paddingLeft: 0, paddingRight: 0 }} onClick={removeTag(data.id, tag.id)}>
-                      <Icon name="remove" />
-                    </Button>
-                  )}
+                  {allowModify && <TagLabel removeLabel={true} tag={tag} handleClick={removeTag(data.id, tag.id)} />}
                 </Button.Group>
               </span>
             ))}
@@ -429,7 +422,9 @@ StudentTableRow.propTypes = {
   selectStudent: PropTypes.func.isRequired,
   unselectStudent: PropTypes.func.isRequired,
   loggedInUser: PropTypes.object,
-  courseData: PropTypes.object
+  courseData: PropTypes.object,
+  shouldHideGrade: PropTypes.func,
+  getStudentFinalGrade: PropTypes.func
 }
 
 export default StudentTableRow
