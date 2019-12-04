@@ -242,6 +242,13 @@ export const StudentTableRow = props => {
                 ) : (
                   <p style={flexCenter}>-</p>
                 )
+              ) : finalPoints === null ? (
+                <div>
+                  <p style={flexCenter}>
+                    <Popup trigger={<Icon name="check" size="big" color="grey" />} content="Final review has been given, but without any points" />
+                  </p>
+                  {showNewCommentsNotification(data.id, selectedInstance.weekAmount + 1) ? <Popup trigger={<Icon name="comments" size="big" />} content="You have new comments" /> : null}
+                </div>
               ) : (
                 <div>
                   <p style={flexCenter}>
