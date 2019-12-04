@@ -436,6 +436,8 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
           Edit tags
         </Button>
       </Link>
+      <br />
+      <br />
     </div>
   </div>
 </Fragment>

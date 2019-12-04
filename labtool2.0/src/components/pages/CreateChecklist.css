@@ -8,14 +8,29 @@
 
 .numberField {
   width: 100px;
-}
-
-.textField {
-  width: 100%;
+  margin-right: 5em;
 }
 
 .formField {
   margin-top: 10px;
+}
+
+.checkTextRow {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5em;
+}
+
+@media (max-width: 800px) {
+  /* on mobile, use vertical layout */
+  .checkTextRow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+.checkedLabel {
+  width: 7em;
 }
 
 .topOptions {

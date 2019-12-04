@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { Header, Input, Label, Button, Popup, Card, Dropdown, Loader, Icon, Checkbox, Radio } from 'semantic-ui-react'
+import { Header, Input, Label, Button, Popup, Card, Dropdown, Loader, Icon, Checkbox, Radio, Segment } from 'semantic-ui-react'
 import { showNotification } from '../../reducers/notificationReducer'
 import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 import { createChecklist, getOneChecklist } from '../../services/checklist'
 import { getOneCI, getAllCI } from '../../services/courseInstance'
-import { resetChecklist, changeField, restoreChecklist, addTopic, addRow, removeTopic, removeRow, castPointsToNumber } from '../../reducers/checklistReducer'
+import { resetChecklist, changeField, restoreChecklist, addTopic, addRow, removeTopic, removeRow, castPointsToNumber, applyCategoryPrerequisite } from '../../reducers/checklistReducer'
 import './CreateChecklist.css'
 import { usePersistedState } from '../../hooks/persistedState'
 import { sortCoursesByName } from '../../util/sort'
@@ -249,6 +249,11 @@ export const CreateChecklist = props => {
     state.canSave = true
   }
 
+  const applyCategoryPrerequisite = key => (_, data) => {
+    props.applyCategoryPrerequisite(key, data.value)
+    state.canSave = true
+  }
+
   // Make api call to receive checklist from database.
   const loadChecklist = async current => {
     const obj = parseChecklistValue(current)
@@ -487,11 +492,13 @@ export const CreateChecklist = props => {
   }
 
   const createPrerequisiteDropdowns = () => {
-    const checks = [{
-      key: null,
-      text: '(none)',
-      value: null
-    }]
+    const checks = [
+      {
+        key: null,
+        text: '(none)',
+        value: null
+      }
+    ]
 
     Object.keys(props.checklist.data).forEach(key => {
       props.checklist.data[key].forEach(check => {
@@ -522,7 +529,7 @@ export const CreateChecklist = props => {
       maxPoints += bestPoints
       colorIndex++
       return (
-        <Card fluid color="red" key={key} style={colorIndex % 2 === 0 ? { backgroundColor: '#EAEAEA' } : null}>
+        <Card fluid color="red" key={key} style={colorIndex % 2 === 0 ? { backgroundColor: '#F2F2F2' } : null}>
           <Card.Content>
             <Header size="huge" color="brown">
               {key}{' '}
@@ -546,6 +553,17 @@ export const CreateChecklist = props => {
                 )}
               </p>
             </div>
+            <div className="prerequisiteCategory" style={{ marginTop: '1em' }}>
+              Set a prerequisite for all checks in this category:{' '}
+              <Dropdown
+                className="prerequisiteCategoryDropdown"
+                placeholder="Select prerequisite..."
+                selection
+                value={undefined}
+                onChange={applyCategoryPrerequisite(key)}
+                options={prerequisiteDropdown}
+              />
+            </div>
           </Card.Content>
           {props.checklist.data[key].map(row => (
             <Card.Content key={row.name}>
@@ -555,10 +573,13 @@ export const CreateChecklist = props => {
                   <div className="deleteButtonText">Delete checkbox</div>
                 </Button>
               </Header>
-              <div className="formField">
-                <Label>Points when checked</Label>
+              <div className="checkTextRow">
+                <div className="checkedLabel">
+                  <Label basic>Checked</Label>
+                </div>
                 <Input
                   className="numberField"
+                  label="Points"
                   type="number"
                   step="0.01"
                   value={row.checkedPoints}
@@ -566,15 +587,17 @@ export const CreateChecklist = props => {
                   onChange={changeField(key, row.name, 'checkedPoints')}
                   onBlur={castPointsToNumber(key, row.name)}
                 />
+                <span style={{ flexGrow: 100 }}>
+                  <Input fluid className="textField" label="Text" type="text" value={row.textWhenOn} onChange={changeField(key, row.name, 'textWhenOn')} />
+                </span>
               </div>
-              <div className="formField">
-                <Label>Text</Label>
-                <Input className="textField" type="text" value={row.textWhenOn} onChange={changeField(key, row.name, 'textWhenOn')} />
-              </div>
-              <div className="formField">
-                <Label>Points when unchecked</Label>
+              <div className="checkTextRow">
+                <div className="checkedLabel">
+                  <Label basic>Unchecked</Label>
+                </div>
                 <Input
                   className="numberField"
+                  label="Points"
                   type="number"
                   step="0.01"
                   value={row.uncheckedPoints}
@@ -582,10 +605,9 @@ export const CreateChecklist = props => {
                   onChange={changeField(key, row.name, 'uncheckedPoints')}
                   onBlur={castPointsToNumber(key, row.name)}
                 />
-              </div>
-              <div className="formField">
-                <Label>Text</Label>
-                <Input className="textField" type="text" value={row.textWhenOff} onChange={changeField(key, row.name, 'textWhenOff')} />
+                <span style={{ flexGrow: 100 }}>
+                  <Input fluid className="textField" label="Text" type="text" value={row.textWhenOff} onChange={changeField(key, row.name, 'textWhenOff')} />
+                </span>
               </div>
               {kind !== 'codeReview' && (
                 <div className="minimumRequirement" style={{ marginTop: '1em' }}>
@@ -599,7 +621,7 @@ export const CreateChecklist = props => {
                     onChange={changeFieldValue(key, row.name, 'minimumRequirementMetIf', true)}
                   />{' '}
                   <Radio
-                    label="not checked"
+                    label="unchecked"
                     name={`minimumRequirementMetIf_${key}_${getRowId(row)}`}
                     value={false}
                     disabled={!row.minimumRequirement}
@@ -613,7 +635,7 @@ export const CreateChecklist = props => {
                     step="1"
                     min="0"
                     max="5"
-                    style={{ width: '100px' }}
+                    style={{ width: '60px' }}
                     disabled={!row.minimumRequirement}
                     value={row.minimumRequirementGradePenalty}
                     onChange={changeFieldNumber(key, row.name, 'minimumRequirementGradePenalty')}
@@ -630,26 +652,29 @@ export const CreateChecklist = props => {
                   onChange={changeField(key, row.name, 'prerequisite')}
                   options={prerequisiteDropdown.filter(check => check.value !== row.id)}
                 />
+                <Popup trigger={<Icon name="help circle" />} content="If a prerequisite is set, the prerequisite must be checked in order for this checkbox to be checkable." />
               </div>
             </Card.Content>
           ))}
-          <form className="addForm" onSubmit={newRow(key)}>
-            {/*This, like all other addForms is here to funnel both the button press 
-              as well as a user pressing enter into the same function.*/}
-            {<Button type="submit" content="Add new checkbox" color="yellow" icon="plus" labelPosition="left" />}
-            {state.openAdd === key ? (
-              <div>
-                <Label>Name</Label>
-                <Input className="newRowNameInput" type="text" value={state.rowName} onChange={changeRowName} />
-                <Button type="submit">Save</Button>
-                <Button type="button" onClick={cancelAdd}>
-                  Cancel
-                </Button>
-              </div>
-            ) : (
-              <div />
-            )}
-          </form>
+          <Card.Content>
+            <form className="addForm" onSubmit={newRow(key)}>
+              {/*This, like all other addForms is here to funnel both the button press 
+                as well as a user pressing enter into the same function.*/}
+              {<Button type="submit" content="Add new checkbox" color="yellow" icon="plus" labelPosition="left" />}
+              {state.openAdd === key ? (
+                <div>
+                  <Label>Name</Label>
+                  <Input className="newRowNameInput" type="text" value={state.rowName} onChange={changeRowName} />
+                  <Button type="submit">Save</Button>
+                  <Button type="button" onClick={cancelAdd}>
+                    Cancel
+                  </Button>
+                </div>
+              ) : (
+                <div />
+              )}
+            </form>
+          </Card.Content>
         </Card>
       )
     })
@@ -740,7 +765,7 @@ export const CreateChecklist = props => {
                 </form>
               </div>
 
-              {(props.selectedInstance.finalReviewHasPoints || currentObj.kind !== 'week' || currentObj.number < props.selectedInstance.weekAmount + 1) ? (
+              {props.selectedInstance.finalReviewHasPoints || currentObj.kind !== 'week' || currentObj.number < props.selectedInstance.weekAmount + 1 ? (
                 <>
                   {currentObj.kind === 'codeReview' && <strong>You need to specify custom maximum points for code reviews in order for the maximum points to be visible to students.</strong>}
                   <Card className="maxPointsCard">
@@ -788,7 +813,9 @@ export const CreateChecklist = props => {
                     />
                   </div>
                 </>
-              ) : <p>Points have been disabled for the final review from the course settings.</p>}
+              ) : (
+                <p>Points have been disabled for the final review from the course settings.</p>
+              )}
               <form onSubmit={handleSubmit}>
                 {/*This is a form with a single button instead of just a button because it doesn't work 
                 (doesn't call the function) as just a button with onClick.*/}
@@ -853,6 +880,7 @@ const mapDispatchToProps = {
   resetChecklist,
   restoreChecklist,
   changeField,
+  applyCategoryPrerequisite,
   addTopic,
   addRow,
   removeTopic,
@@ -879,6 +907,7 @@ CreateChecklist.propTypes = {
   resetChecklist: PropTypes.func.isRequired,
   restoreChecklist: PropTypes.func.isRequired,
   changeField: PropTypes.func.isRequired,
+  applyCategoryPrerequisite: PropTypes.func.isRequired,
   addTopic: PropTypes.func.isRequired,
   addRow: PropTypes.func.isRequired,
   removeTopic: PropTypes.func.isRequired,
