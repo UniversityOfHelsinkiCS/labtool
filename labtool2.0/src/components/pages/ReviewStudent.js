@@ -116,7 +116,7 @@ export const ReviewStudent = props => {
     const draftData = {}
     draftData.checks = checks
     draftData.points = pstate.points || ''
-    draftData.grade = isFinalReview(props) ? (pstate.grade || '') : ''
+    draftData.grade = isFinalReview(props) ? pstate.grade || '' : ''
     draftData.feedback = pstate.feedback || ''
     draftData.instructorNotes = pstate.instructorNotes || ''
     return draftData
@@ -232,7 +232,9 @@ export const ReviewStudent = props => {
 
   return (
     <>
-      <DocumentTitle title={`${isFinalReview(props) ? 'Final Review' : `Week ${weekData ? weekData.weekNumber : props.ownProps.weekNumber}`} - ${studentData.User.firsts} ${studentData.User.lastname}`} />
+      <DocumentTitle
+        title={`${isFinalReview(props) ? 'Final Review' : `Week ${weekData ? weekData.weekNumber : props.ownProps.weekNumber}`} - ${studentData.User.firsts} ${studentData.User.lastname}`}
+      />
       <div className="ReviewStudent">
         <BackButton
           preset={arrivedFromCoursePage && 'coursePage'}
@@ -386,7 +388,12 @@ export const ReviewStudent = props => {
                                         <span>{`${clItem.checkedPoints} p / ${clItem.uncheckedPoints} p`}</span>
                                       ) : (
                                         <>
-                                          <Popup trigger={<Icon name="thumb tack" color="blue" size="big" />} content={`This is a minimum requirement that is met when ${clItem.minimumRequirementMetIf ? 'checked' : 'not checked'}; if not met, the final grade will drop`} />
+                                          <Popup
+                                            trigger={<Icon name="thumb tack" color="blue" size="big" />}
+                                            content={`This is a minimum requirement that is met when ${
+                                              clItem.minimumRequirementMetIf ? 'checked' : 'not checked'
+                                            }; if not met, the final grade will drop`}
+                                          />
                                           Requirement
                                         </>
                                       )}

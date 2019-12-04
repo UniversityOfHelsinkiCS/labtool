@@ -292,7 +292,12 @@ export const ReviewStudentCodeReview = props => {
                                         <span>{`${clItem.checkedPoints} p / ${clItem.uncheckedPoints} p`}</span>
                                       ) : (
                                         <>
-                                          <Popup trigger={<Icon name="thumb tack" color="blue" size="big" />} content={`This is a minimum requirement that is met when ${clItem.minimumRequirementMetIf ? 'checked' : 'not checked'}; if not met, the final grade will drop`} />
+                                          <Popup
+                                            trigger={<Icon name="thumb tack" color="blue" size="big" />}
+                                            content={`This is a minimum requirement that is met when ${
+                                              clItem.minimumRequirementMetIf ? 'checked' : 'not checked'
+                                            }; if not met, the final grade will drop`}
+                                          />
                                           Requirement
                                         </>
                                       )}
