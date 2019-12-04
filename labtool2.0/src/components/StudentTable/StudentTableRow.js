@@ -1,8 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Button, Icon, Table, Popup, Dropdown, Checkbox } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
-import RepoLink from '../RepoLink'
+import { Table, Checkbox } from 'semantic-ui-react'
 
 import { Points } from '../Points'
 import StudentInfoCell from './StudentInfoCell'
