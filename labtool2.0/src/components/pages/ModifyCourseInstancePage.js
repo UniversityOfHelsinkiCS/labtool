@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Form, Input, Button, Grid, Dropdown, Checkbox, Loader, Segment } from 'semantic-ui-react'
 import { getOneCI, modifyOneCI, coursePageInformation, getAllCI, copyInformationFromCourse } from '../../services/courseInstance'
-import { setFinalReview } from '../../reducers/selectedInstanceReducer'
+import { setFinalReview, setFinalReviewHasPoints } from '../../reducers/selectedInstanceReducer'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Redirect } from 'react-router'
@@ -75,6 +75,11 @@ export const ModifyCourseInstancePage = props => {
     props.setFinalReview(newValue)
   }
 
+  const changeFinalReviewHasPoints = () => {
+    const newValue = !props.selectedInstance.finalReviewHasPoints
+    props.setFinalReviewHasPoints(newValue)
+  }
+
   const setCodeReviewVisible = value => {
     state.visibleCr = [...state.visibleCr, value]
   }
@@ -87,7 +92,7 @@ export const ModifyCourseInstancePage = props => {
     try {
       e.preventDefault()
 
-      const { weekAmount, weekMaxPoints, currentWeek, active, ohid, finalReview, coursesPage, courseMaterial } = props.selectedInstance
+      const { weekAmount, weekMaxPoints, currentWeek, active, ohid, finalReview, finalReviewHasPoints, coursesPage, courseMaterial } = props.selectedInstance
       let newCr = state.visibleCr
       // This checks that the 'courses.helsinki.fi' URL actually contains that string as a part of it. Reject if not.
       if (coursesPage !== null && coursesPage !== '') {
@@ -115,6 +120,7 @@ export const ModifyCourseInstancePage = props => {
         active,
         ohid,
         finalReview,
+        finalReviewHasPoints,
         newCr,
         // Trim these, if they exist, for accessibility. Do not attempt to trim null (it creates black holes).
         coursesPage: coursesPage === null ? null : coursesPage.trim(),
@@ -310,6 +316,17 @@ export const ModifyCourseInstancePage = props => {
                 </Form.Group>
 
                 <Form.Group inline>
+                  <Checkbox
+                    name="finalReviewHasPoints"
+                    checked={props.selectedInstance.finalReviewHasPoints}
+                    onChange={changeFinalReviewHasPoints}
+                    disabled={!props.selectedInstance.finalReview}
+                    label="Points are given for final review"
+                    style={{ width: '150px', textAlign: 'left' }}
+                  />
+                </Form.Group>
+
+                <Form.Group inline>
                   <Checkbox name="courseActive" label="Course registration is active" checked={selectedInstance.active} onChange={handleChange} style={{ width: '150px', textAlign: 'left' }} />
                 </Form.Group>
 
@@ -414,6 +431,7 @@ const mapDispatchToProps = {
   resetLoading,
   addRedirectHook,
   setFinalReview,
+  setFinalReviewHasPoints,
   forceRedirect
 }
 
@@ -439,12 +457,10 @@ ModifyCourseInstancePage.propTypes = {
   resetLoading: PropTypes.func.isRequired,
   addRedirectHook: PropTypes.func.isRequired,
   setFinalReview: PropTypes.func.isRequired,
+  setFinalReviewHasPoints: PropTypes.func.isRequired,
   forceRedirect: PropTypes.func.isRequired,
 
   errors: PropTypes.array
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ModifyCourseInstancePage)
+export default connect(mapStateToProps, mapDispatchToProps)(ModifyCourseInstancePage)

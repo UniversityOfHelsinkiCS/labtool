@@ -162,6 +162,14 @@ export const StudentTable = props => {
 
   const filteredData = (props.studentInstances || []).filter(dataFilter).filter(filterStudents ? filterStudents : () => true)
 
+  //Set of tags that are used by at least one student
+  const usedTags = filteredData
+    .map(student => student.Tags)
+    .reduce((set, tags) => {
+      tags.forEach(tag => set.add(tag.id))
+      return set
+    }, new Set())
+
   if (props.onFilter) {
     props.onFilter(filteredData.map(data => data.id))
   }
@@ -202,10 +210,10 @@ export const StudentTable = props => {
             <Label>none</Label>
           </span>
         ) : (
-          <span>
+          <span className="tagFilter">
             {dropDownFilterTags.map(tag => (
               <span key={tag.id}>
-                <TagLabel tag={tag} basic={!state.filterByTag.find(t => t.id === tag.id)} handleClick={addFilterTag(tag)} />
+                <TagLabel tag={tag} basic={!state.filterByTag.find(t => t.id === tag.id)} handleClick={addFilterTag(tag)} disabled={!usedTags.has(tag.id)} />
               </span>
             ))}
           </span>

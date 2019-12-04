@@ -627,7 +627,8 @@ module.exports = {
                 finalReview: req.body.finalReview,
                 currentCodeReview: newCr.length === 0 ? [] : newCr,
                 coursesPage: typeof req.body.coursesPage === 'string' ? req.body.coursesPage : courseInstance.coursesPage,
-                courseMaterial: typeof req.body.courseMaterial === 'string' ? req.body.courseMaterial : courseInstance.courseMaterial
+                courseMaterial: typeof req.body.courseMaterial === 'string' ? req.body.courseMaterial : courseInstance.courseMaterial,
+                finalReviewHasPoints: 'finalReviewHasPoints' in req.body ? req.body.finalReviewHasPoints : courseInstance.finalReviewHasPoints
               })
               .then(updatedCourseInstance => res.status(200).send(updatedCourseInstance))
               .catch((error) => {

@@ -44,12 +44,15 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
     <span>
        Tag filters: 
     </span>
-    <span>
+    <span
+      className="tagFilter"
+    >
       <span
         key="20001"
       >
         <TagLabel
           basic={true}
+          disabled={false}
           handleClick={[Function]}
           tag={
             Object {
@@ -68,6 +71,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
       >
         <TagLabel
           basic={true}
+          disabled={false}
           handleClick={[Function]}
           tag={
             Object {
@@ -86,6 +90,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
       >
         <TagLabel
           basic={true}
+          disabled={false}
           handleClick={[Function]}
           tag={
             Object {

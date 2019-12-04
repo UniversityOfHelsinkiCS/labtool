@@ -3,7 +3,7 @@ import { Button, Icon } from 'semantic-ui-react'
 import PropTypes from 'prop-types'
 
 export const TagLabel = props => {
-  const { color, text, handleClick, tag, basic, removeLabel } = props
+  const { color, text, handleClick, tag, basic, removeLabel, disabled } = props
   const validColors = ['red', 'orange', 'yellow', 'olive', 'green', 'teal', 'blue', 'violet', 'purple', 'pink', 'brown', 'grey', 'black']
 
   const tagColor = tag ? tag.color : color
@@ -14,8 +14,8 @@ export const TagLabel = props => {
   }
 
   const borderColor = backgroundColor => {
-    if (!basic) return null
-    if (validColors.includes(backgroundColor)) return null
+    if (!basic) return ''
+    if (validColors.includes(backgroundColor)) return ''
     return `1px solid ${backgroundColor}`
   }
 
@@ -32,8 +32,9 @@ export const TagLabel = props => {
    * @param {*} backgroundColor
    */
   const textColor = backgroundColor => {
-    if (validColors.includes(backgroundColor)) return null
+    if (validColors.includes(backgroundColor)) return ''
     if (basic) return 'black'
+
     const rgb = hexToRgb(backgroundColor)
     const rgbSum = Math.round((parseInt(rgb[0]) * 299 + parseInt(rgb[1]) * 587 + parseInt(rgb[2]) * 114) / 1000)
     return rgbSum > 125 ? 'black' : 'white'
@@ -51,6 +52,14 @@ export const TagLabel = props => {
         onClick={handleClick}
       >
         <Icon name="remove" style={{ color: `${textColor(tagColor)}` }} />
+      </Button>
+    )
+  }
+
+  if (disabled) {
+    return (
+      <Button compact size="mini" disabled>
+        {tagText}
       </Button>
     )
   }
@@ -79,5 +88,6 @@ TagLabel.propTypes = {
   handleClick: PropTypes.func,
   tag: PropTypes.object,
   basic: PropTypes.bool,
-  removeLabel: PropTypes.bool
+  removeLabel: PropTypes.bool,
+  disabled: PropTypes.bool
 }
