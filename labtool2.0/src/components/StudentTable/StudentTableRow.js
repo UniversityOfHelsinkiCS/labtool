@@ -234,7 +234,11 @@ export const StudentTableRow = props => {
             <div style={{ width: '100%', height: '100%' }}>
               {finalPoints === undefined ? (
                 shouldReview && selectedInstance.currentWeek === selectedInstance.weekAmount + 1 ? (
-                  <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'star', size: 'large' }} />} content="Review" className="reviewButton" />
+                  draftExists(selectedInstance.weekAmount + 1) ? (
+                    <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'pause', size: 'large' }} />} content="Continue review from draft" className="reviewDraftButton" />
+                  ) : (
+                    <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'star', size: 'large' }} />} content="Review" className="reviewButton" />
+                  )
                 ) : (
                   <p style={flexCenter}>-</p>
                 )
