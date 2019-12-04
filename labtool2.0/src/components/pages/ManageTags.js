@@ -13,6 +13,7 @@ import { sortCoursesByName } from '../../util/sort'
 import { showNotification } from '../../reducers/notificationReducer'
 import DocumentTitle from '../DocumentTitle'
 import Error from '../Error'
+import { TagLabel } from '../TagLabel'
 
 export const ManageTags = props => {
   const state = useLegacyState({
@@ -22,7 +23,6 @@ export const ManageTags = props => {
     copyCourse: null,
     courseDropdowns: []
   })
-  const validColors = ['red', 'orange', 'yellow', 'olive', 'green', 'teal', 'blue', 'violet', 'purple', 'pink', 'brown', 'grey', 'black']
 
   useEffect(() => {
     // run on component mount
@@ -152,32 +152,6 @@ export const ManageTags = props => {
 
   const editTag = (props.tags.tags || []).find(tag => tag.id === props.tags.modifyTag)
 
-  const tagLabelClassName = color => {
-    return `mini ui button ${validColors.includes(color) ? color : ''}`
-  }
-
-  /**
-   * if the color is one of the semantic ui defaulted colors, ignore the background color since the color is already defined in className,
-   * otherwise set backgroundColor using this function
-   * @param {*} color
-   */
-  const tagLabelBackgroundColor = color => {
-    return `${validColors.includes(color) ? '' : color}`
-  }
-
-  const hexToRgb = hex => {
-    hex = '0x' + hex.substring(1, 7)
-    let r = (hex >> 16) & 0xff
-    let g = (hex >> 8) & 0xff
-    let b = hex & 0xff
-    return [r, g, b]
-  }
-
-  const textColor = hex => {
-    const rgb = hexToRgb(hex)
-    const rgbSum = Math.round((parseInt(rgb[0]) * 299 + parseInt(rgb[1]) * 587 + parseInt(rgb[2]) * 114) / 1000)
-    return rgbSum > 125 ? '#000000' : '#ffffff'
-  }
   if (props.tags.tags && props.tags.modifyTag && !editTag) {
     props.willCreateNewTag()
     return <div />
@@ -209,8 +183,8 @@ export const ManageTags = props => {
                 <Form key="createOrModify" onSubmit={handleSubmit}>
                   {props.tags.modifyTag ? <h4>Editing tag: {editTag.name}</h4> : <h4>You are creating a new tag.</h4>}
                   <div>
-                    Preview:{' '}
-                    <button
+                    Preview: <TagLabel color={state.valueColor} text={state.valueText} />
+                    {/* <button
                       className={tagLabelClassName(state.valueColor)}
                       style={{
                         display: state.valueText ? 'inline' : 'none',
@@ -218,7 +192,7 @@ export const ManageTags = props => {
                       }}
                     >
                       <p style={{ color: `${validColors.includes(state.valueColor) ? '' : textColor(state.valueColor)}` }}>{state.valueText}</p>
-                    </button>
+                    </button> */}
                     <br />
                     <br />
                   </div>{' '}
@@ -280,14 +254,7 @@ export const ManageTags = props => {
                   <div>
                     <h2>Course tags</h2>
                     {courseTags.map(tag => (
-                      <button
-                        key={tag.id}
-                        className={tagLabelClassName(tag.color)}
-                        onClick={modifyTag(tag.id, tag.name, tag.color, tag.courseInstanceId === null)}
-                        style={{ backgroundColor: `${tagLabelBackgroundColor(tag.color)}` }}
-                      >
-                        <p style={{ color: `${validColors.includes(tag.color) ? '' : textColor(tag.color)}` }}>{tag.name}</p>
-                      </button>
+                      <TagLabel tag={tag} key={tag.id} handleClick={modifyTag(tag.id, tag.name, tag.color, tag.courseInstanceId === null)} />
                     ))}
                     <br />
                     <br />
@@ -305,14 +272,7 @@ export const ManageTags = props => {
                   <div>
                     <h2>Global tags</h2>
                     {globalTags.map(tag => (
-                      <button
-                        key={tag.id}
-                        className={tagLabelClassName(tag.color)}
-                        onClick={modifyTag(tag.id, tag.name, tag.color, tag.courseInstanceId === null)}
-                        style={{ backgroundColor: `${tagLabelBackgroundColor(tag.color)}` }}
-                      >
-                        <p style={{ color: `${validColors.includes(tag.color) ? '' : textColor(tag.color)}` }}>{tag.name}</p>
-                      </button>
+                      <TagLabel tag={tag} key={tag.id} handleClick={modifyTag(tag.id, tag.name, tag.color, tag.courseInstanceId === null)} />
                     ))}
                     <br />
                     <br />

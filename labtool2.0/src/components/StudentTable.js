@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Button, Table, Dropdown, Label, Checkbox } from 'semantic-ui-react'
+import { Table, Dropdown, Label, Checkbox } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import HorizontalScrollable from './HorizontalScrollable'
 import { getAllTags, tagStudent, unTagStudent } from '../services/tags'
@@ -11,6 +11,7 @@ import { usePersistedState } from '../hooks/persistedState'
 import { updateStudentProjectInfo } from '../services/studentinstances'
 
 import { StudentTableRow } from './StudentTable/StudentTableRow'
+import { TagLabel } from './TagLabel'
 
 export const StudentTable = props => {
   const state = usePersistedState(props.persistentFilterKey || null, {
@@ -204,9 +205,7 @@ export const StudentTable = props => {
           <span>
             {dropDownFilterTags.map(tag => (
               <span key={tag.id}>
-                <Button compact className={`mini ui ${tag.color} button ${!state.filterByTag.find(t => t.id === tag.id) ? 'basic' : ''}`} onClick={addFilterTag(tag)}>
-                  {tag.name}
-                </Button>
+                <TagLabel tag={tag} basic={!state.filterByTag.find(t => t.id === tag.id)} handleClick={addFilterTag(tag)} />
               </span>
             ))}
           </span>
@@ -350,7 +349,4 @@ StudentTable.propTypes = {
   updateStudentProjectInfo: PropTypes.func.isRequired
 }
 
-export default connect(
-  null,
-  mapDispatchToProps
-)(StudentTable)
+export default connect(null, mapDispatchToProps)(StudentTable)
