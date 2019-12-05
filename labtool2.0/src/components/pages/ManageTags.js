@@ -2,7 +2,8 @@ import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Form, Input, Grid, Container, Button, Loader, Checkbox, Dropdown } from 'semantic-ui-react'
 import { connect } from 'react-redux'
-import { SwatchesPicker } from 'react-color'
+import { ChromePicker } from 'react-color'
+import { capitalize } from '../../util/format'
 import { createTag, getAllTags, removeTag } from '../../services/tags'
 import { resetLoading } from '../../reducers/loadingReducer'
 import { willCreateNewTag, willModifyExistingTag } from '../../reducers/tagReducer'
@@ -21,8 +22,11 @@ export const ManageTags = props => {
     valueColor: '',
     valueGlobal: false,
     copyCourse: null,
-    courseDropdowns: []
+    courseDropdowns: [],
+    showMoreColorOptions: false
   })
+
+  const validColors = ['red', 'orange', 'yellow', 'olive', 'green', 'teal', 'blue', 'violet', 'purple', 'pink', 'brown', 'grey', 'black']
 
   useEffect(() => {
     // run on component mount
@@ -40,6 +44,10 @@ export const ManageTags = props => {
   }, [props.courses])
 
   const handleSubmit = e => {
+    if (state.valueColor === '') {
+      props.showNotification({ message: 'Please choose a color for the tag', error: true })
+      return
+    }
     try {
       e.preventDefault()
 
@@ -184,15 +192,6 @@ export const ManageTags = props => {
                   {props.tags.modifyTag ? <h4>Editing tag: {editTag.name}</h4> : <h4>You are creating a new tag.</h4>}
                   <div>
                     Preview: <TagLabel color={state.valueColor} text={state.valueText} />
-                    {/* <button
-                      className={tagLabelClassName(state.valueColor)}
-                      style={{
-                        display: state.valueText ? 'inline' : 'none',
-                        backgroundColor: `${tagLabelBackgroundColor(state.valueColor)}`
-                      }}
-                    >
-                      <p style={{ color: `${validColors.includes(state.valueColor) ? '' : textColor(state.valueColor)}` }}>{state.valueText}</p>
-                    </button> */}
                     <br />
                     <br />
                   </div>{' '}
@@ -209,12 +208,43 @@ export const ManageTags = props => {
                       onChange={(e, { value }) => (state.valueText = value)}
                     />
                   </Form.Field>
-                  <Form.Field required>
-                    <label style={{ width: '100px', textAlign: 'left' }}>Color</label>
-                    <div style={{ display: 'block', marginLeft: '110px', marginRight: '100px' }}>
-                      <SwatchesPicker onChangeComplete={color => (state.valueColor = color.hex)} />
-                    </div>
-                  </Form.Field>
+                  <Form.Group>
+                    <Form.Field inline required>
+                      <label style={{ width: '100px', textAlign: 'left' }}>Color</label>
+                      <select
+                        className="ui dropdown"
+                        value={validColors.includes(state.valueColor) ? state.valueColor : ''}
+                        name="color"
+                        style={{ minWidth: '12em', display: 'inline' }}
+                        onChange={e => (state.valueColor = e.target.value)}
+                      >
+                        <option value="" disabled>
+                          Select a tag color
+                        </option>
+                        <option value="white">White</option>
+                        {validColors.map(color => (
+                          <option key={color} value={color}>
+                            {capitalize(color)}
+                          </option>
+                        ))}
+                      </select>
+                    </Form.Field>
+
+                    <Form.Field>
+                      <Button compact type="button" onClick={() => (state.showMoreColorOptions = !state.showMoreColorOptions)} style={{ marginBottom: '10px' }}>
+                        More color options
+                      </Button>
+                      {state.showMoreColorOptions && (
+                        <ChromePicker
+                          onChangeComplete={color => {
+                            state.valueColor = color.hex
+                          }}
+                          color={state.valueColor}
+                          disableAlpha={true}
+                        />
+                      )}
+                    </Form.Field>
+                  </Form.Group>
                   <Form.Field inline>
                     <label style={{ width: '100px', textAlign: 'left' }}>Global?</label>
                     <Checkbox
