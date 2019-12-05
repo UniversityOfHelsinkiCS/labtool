@@ -11,6 +11,7 @@ import { usePersistedState } from '../hooks/persistedState'
 import { updateStudentProjectInfo } from '../services/studentinstances'
 
 import { StudentTableRow } from './StudentTable/StudentTableRow'
+import PointHeaders from './StudentTable/PointHeaders'
 
 export const StudentTable = props => {
   const state = usePersistedState(props.persistentFilterKey || null, {
@@ -84,39 +85,6 @@ export const StudentTable = props => {
   }
 
   const shouldHideInstructor = studentInstances => studentInstances.every(studentInstance => studentInstance.teacherInstanceId === null)
-
-  const createHeadersTeacher = () => {
-    const headers = []
-    let i = 0
-    for (; i < props.selectedInstance.weekAmount; i++) {
-      headers.push(
-        <Table.HeaderCell key={i}>
-          <abbr title="Week">Wk</abbr> {i + 1}
-        </Table.HeaderCell>
-      )
-    }
-    for (var ii = 1; ii <= props.selectedInstance.amountOfCodeReviews; ii++) {
-      headers.push(
-        <Table.HeaderCell key={i + ii}>
-          Code
-          <br />
-          Review
-          <br />
-          {ii}{' '}
-        </Table.HeaderCell>
-      )
-    }
-    if (props.selectedInstance.finalReview) {
-      headers.push(
-        <Table.HeaderCell key={i + ii + 1}>
-          Final
-          <br />
-          Review{' '}
-        </Table.HeaderCell>
-      )
-    }
-    return headers
-  }
 
   const { columns, disableDefaultFilter, filterStudents, studentColumnName, showFooter, extraStudentIcon, studentFooter } = props
 
@@ -225,7 +193,7 @@ export const StudentTable = props => {
               <Table.HeaderCell>Project Info</Table.HeaderCell>
               {showColumn('points') && (
                 <>
-                  {createHeadersTeacher() /* Week #, Code Review # */}
+                  <PointHeaders />
                   <Table.HeaderCell>Sum</Table.HeaderCell>
                 </>
               )}
@@ -340,7 +308,4 @@ StudentTable.propTypes = {
   updateStudentProjectInfo: PropTypes.func.isRequired
 }
 
-export default connect(
-  null,
-  mapDispatchToProps
-)(StudentTable)
+export default connect(null, mapDispatchToProps)(StudentTable)
