@@ -37,7 +37,7 @@ export const TagLabel = props => {
 
     const rgb = hexToRgb(backgroundColor)
     const rgbSum = Math.round((parseInt(rgb[0]) * 299 + parseInt(rgb[1]) * 587 + parseInt(rgb[2]) * 114) / 1000)
-    return rgbSum > 125 ? 'black' : 'white'
+    return rgbSum > 145 ? 'black' : 'white'
   }
 
   if (removeLabel) {
