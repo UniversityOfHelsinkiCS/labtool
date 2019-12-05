@@ -27,6 +27,7 @@ export const CreateChecklist = props => {
     openAdd: '', // which addForm is currently open. '' denotes no open addForms. Only one addForm can be open at one time.
     courseDropdowns: [], // Dropdown options to show for copying checklist.
     copyWeekDropdowns: [], // Dropdown options to show for copying from another week.
+    categoryPrerequisites: {},
     checklistData: null,
     maximumPoints: '',
     canSave: false
@@ -192,6 +193,7 @@ export const CreateChecklist = props => {
     state.maximumPoints = ''
     state.current = newCurrent
     state.copyCourse = copyCourse
+    state.categoryPrerequisites = {}
     if (state.copyWeek === newCurrent) {
       state.copyWeek = null
     }
@@ -251,6 +253,7 @@ export const CreateChecklist = props => {
 
   const applyCategoryPrerequisite = key => (_, data) => {
     props.applyCategoryPrerequisite(key, data.value)
+    state.categoryPrerequisites = { ...state.categoryPrerequisites, [key]: data.value }
     state.canSave = true
   }
 
@@ -408,7 +411,8 @@ export const CreateChecklist = props => {
     }
     props.addRow({
       key,
-      name: state.rowName
+      name: state.rowName,
+      prerequisite: state.categoryPrerequisites[key] || null
     })
     state.rowName = ''
     state.openAdd = 'newTopic'
@@ -559,7 +563,7 @@ export const CreateChecklist = props => {
                 className="prerequisiteCategoryDropdown"
                 placeholder="Select prerequisite..."
                 selection
-                value={undefined}
+                value={state.categoryPrerequisites[key]}
                 onChange={applyCategoryPrerequisite(key)}
                 options={prerequisiteDropdown}
               />

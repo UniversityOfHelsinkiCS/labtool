@@ -26,9 +26,7 @@ const checklistReducer = (state = INITIAL_STATE, action) => {
     case 'CHECKLIST_APPLY_PREREQUISITE_TO_CHECKS_IN_CATEGORY': {
       const newData = state.data
       const { category, prerequisite } = action
-      console.log(newData, category, prerequisite)
-      newData[category] = newData[category].map(row => ({ ...row, prerequisite: row.id === prerequisite ? null : prerequisite }))
-      console.log(newData, category, prerequisite)
+      newData[category] = newData[category].map(row => ({ ...row, prerequisite: row.id === prerequisite || row.tempId === prerequisite ? null : prerequisite }))
       return { ...state, data: newData }
     }
     case 'CHECKLIST_ADD_TOPIC': {
@@ -45,7 +43,8 @@ const checklistReducer = (state = INITIAL_STATE, action) => {
         checkedPoints: 0,
         uncheckedPoints: 0,
         textWhenOn: '',
-        textWhenOff: ''
+        textWhenOff: '',
+        prerequisite: action.data.prerequisite
       })
       return { ...state, data: newData }
     }
@@ -111,11 +110,12 @@ export const addTopic = data => {
   }
 }
 
-export const addRow = data => {
+export const addRow = (data, prerequisite) => {
   return async dispatch => {
     dispatch({
       type: 'CHECKLIST_ADD_ROW',
-      data
+      data,
+      prerequisite
     })
   }
 }
