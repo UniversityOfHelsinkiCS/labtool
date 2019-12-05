@@ -209,8 +209,10 @@ export const ReviewStudent = props => {
         prerequisites[clItem.id] = clItem.prerequisite
 
         const checked = isChecked(checks, clItem.id)
+        // do not add text if the prerequisite is not checked
+        const shouldDisplay = clItem.prerequisite === null || isChecked(checks, clItem.prerequisite)
         const addition = checked ? clItem.textWhenOn : clItem.textWhenOff
-        if (addition) checklistOutput += addition + '\n\n'
+        if (shouldDisplay && addition) checklistOutput += addition + '\n\n'
 
         if (!clItem.minimumRequirement) {
           if (checked) {
