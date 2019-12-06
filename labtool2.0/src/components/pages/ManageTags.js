@@ -2,10 +2,11 @@ import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Form, Input, Grid, Container, Button, Loader, Checkbox, Dropdown } from 'semantic-ui-react'
 import { connect } from 'react-redux'
+import { ChromePicker } from 'react-color'
+import { capitalize } from '../../util/format'
 import { createTag, getAllTags, removeTag } from '../../services/tags'
 import { resetLoading } from '../../reducers/loadingReducer'
 import { willCreateNewTag, willModifyExistingTag } from '../../reducers/tagReducer'
-import { capitalize } from '../../util/format'
 import { getAllCI } from '../../services/courseInstance'
 import BackButton from '../BackButton'
 import useLegacyState from '../../hooks/legacyState'
@@ -13,6 +14,7 @@ import { sortCoursesByName } from '../../util/sort'
 import { showNotification } from '../../reducers/notificationReducer'
 import DocumentTitle from '../DocumentTitle'
 import Error from '../Error'
+import { TagLabel } from '../TagLabel'
 
 export const ManageTags = props => {
   const state = useLegacyState({
@@ -20,8 +22,10 @@ export const ManageTags = props => {
     valueColor: '',
     valueGlobal: false,
     copyCourse: null,
-    courseDropdowns: []
+    courseDropdowns: [],
+    showMoreColorOptions: false
   })
+
   const validColors = ['red', 'orange', 'yellow', 'olive', 'green', 'teal', 'blue', 'violet', 'purple', 'pink', 'brown', 'grey', 'black']
 
   useEffect(() => {
@@ -40,6 +44,10 @@ export const ManageTags = props => {
   }, [props.courses])
 
   const handleSubmit = e => {
+    if (state.valueColor === '') {
+      props.showNotification({ message: 'Please choose a color for the tag', error: true })
+      return
+    }
     try {
       e.preventDefault()
 
@@ -108,7 +116,7 @@ export const ManageTags = props => {
       props.willModifyExistingTag(id)
 
       state.valueText = text
-      state.valueColor = validColors.includes(color) ? color : 'white'
+      state.valueColor = color ? color : 'white'
       state.valueGlobal = global
     } catch (error) {
       console.error(error)
@@ -151,6 +159,7 @@ export const ManageTags = props => {
   }
 
   const editTag = (props.tags.tags || []).find(tag => tag.id === props.tags.modifyTag)
+
   if (props.tags.tags && props.tags.modifyTag && !editTag) {
     props.willCreateNewTag()
     return <div />
@@ -182,10 +191,7 @@ export const ManageTags = props => {
                 <Form key="createOrModify" onSubmit={handleSubmit}>
                   {props.tags.modifyTag ? <h4>Editing tag: {editTag.name}</h4> : <h4>You are creating a new tag.</h4>}
                   <div>
-                    Preview:{' '}
-                    <button className={`mini ui button ${validColors.includes(state.valueColor) ? state.valueColor : ''}`} style={{ display: state.valueText ? 'inline' : 'none' }}>
-                      {state.valueText}
-                    </button>
+                    Preview: <TagLabel color={state.valueColor} text={state.valueText} />
                     <br />
                     <br />
                   </div>{' '}
@@ -202,20 +208,43 @@ export const ManageTags = props => {
                       onChange={(e, { value }) => (state.valueText = value)}
                     />
                   </Form.Field>
-                  <Form.Field required inline>
-                    <label style={{ width: '100px', textAlign: 'left' }}>Color</label>
-                    <select className="ui dropdown" value={state.valueColor} name="color" style={{ minWidth: '30em' }} required onChange={e => (state.valueColor = e.target.value)}>
-                      <option value="" disabled>
-                        Select a tag color
-                      </option>
-                      <option value="white">White</option>
-                      {validColors.map(color => (
-                        <option key={color} value={color}>
-                          {capitalize(color)}
+                  <Form.Group>
+                    <Form.Field inline required>
+                      <label style={{ width: '100px', textAlign: 'left' }}>Color</label>
+                      <select
+                        className="ui dropdown"
+                        value={validColors.includes(state.valueColor) ? state.valueColor : ''}
+                        name="color"
+                        style={{ minWidth: '12em', display: 'inline' }}
+                        onChange={e => (state.valueColor = e.target.value)}
+                      >
+                        <option value="" disabled>
+                          Select a tag color
                         </option>
-                      ))}
-                    </select>
-                  </Form.Field>
+                        <option value="white">White</option>
+                        {validColors.map(color => (
+                          <option key={color} value={color}>
+                            {capitalize(color)}
+                          </option>
+                        ))}
+                      </select>
+                    </Form.Field>
+
+                    <Form.Field>
+                      <Button compact type="button" onClick={() => (state.showMoreColorOptions = !state.showMoreColorOptions)} style={{ marginBottom: '10px' }}>
+                        More color options
+                      </Button>
+                      {state.showMoreColorOptions && (
+                        <ChromePicker
+                          onChangeComplete={color => {
+                            state.valueColor = color.hex
+                          }}
+                          color={state.valueColor}
+                          disableAlpha={true}
+                        />
+                      )}
+                    </Form.Field>
+                  </Form.Group>
                   <Form.Field inline>
                     <label style={{ width: '100px', textAlign: 'left' }}>Global?</label>
                     <Checkbox
@@ -255,9 +284,7 @@ export const ManageTags = props => {
                   <div>
                     <h2>Course tags</h2>
                     {courseTags.map(tag => (
-                      <button key={tag.id} className={`mini ui ${tag.color} button`} onClick={modifyTag(tag.id, tag.name, tag.color, tag.courseInstanceId === null)}>
-                        {tag.name}
-                      </button>
+                      <TagLabel tag={tag} key={tag.id} handleClick={modifyTag(tag.id, tag.name, tag.color, tag.courseInstanceId === null)} />
                     ))}
                     <br />
                     <br />
@@ -275,9 +302,7 @@ export const ManageTags = props => {
                   <div>
                     <h2>Global tags</h2>
                     {globalTags.map(tag => (
-                      <button key={tag.id} className={`mini ui ${tag.color} button`} onClick={modifyTag(tag.id, tag.name, tag.color, tag.courseInstanceId === null)}>
-                        {tag.name}
-                      </button>
+                      <TagLabel tag={tag} key={tag.id} handleClick={modifyTag(tag.id, tag.name, tag.color, tag.courseInstanceId === null)} />
                     ))}
                     <br />
                     <br />
@@ -351,7 +376,4 @@ ManageTags.propTypes = {
   errors: PropTypes.array
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ManageTags)
+export default connect(mapStateToProps, mapDispatchToProps)(ManageTags)

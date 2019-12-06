@@ -11,6 +11,7 @@
     "preval.macro": "^3.0.0",
     "prop-types": "^15.7.2",
     "react": "^16.12.0",
+    "react-color": "^2.17.3",
     "react-dom": "^16.12.0",
     "react-helmet": "^5.2.1",
     "react-markdown": "^4.2.2",

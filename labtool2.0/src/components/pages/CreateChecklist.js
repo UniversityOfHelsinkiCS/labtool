@@ -661,7 +661,7 @@ export const CreateChecklist = props => {
                 </form>
               </div>
 
-              {(props.selectedInstance.finalReviewHasPoints || currentObj.kind !== 'week' || currentObj.number < props.selectedInstance.weekAmount + 1) ? (
+              {props.selectedInstance.finalReviewHasPoints || currentObj.kind !== 'week' || currentObj.number < props.selectedInstance.weekAmount + 1 ? (
                 <>
                   {currentObj.kind === 'codeReview' && <strong>You need to specify custom maximum points for code reviews in order for the maximum points to be visible to students.</strong>}
                   <Card className="maxPointsCard">
@@ -709,7 +709,9 @@ export const CreateChecklist = props => {
                     />
                   </div>
                 </>
-              ) : <p>Points have been disabled for the final review from the course settings.</p>}
+              ) : (
+                <p>Points have been disabled for the final review from the course settings.</p>
+              )}
               <form onSubmit={handleSubmit}>
                 {/*This is a form with a single button instead of just a button because it doesn't work 
                 (doesn't call the function) as just a button with onClick.*/}
@@ -809,7 +811,4 @@ CreateChecklist.propTypes = {
   errors: PropTypes.array
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(CreateChecklist)
+export default connect(mapStateToProps, mapDispatchToProps)(CreateChecklist)

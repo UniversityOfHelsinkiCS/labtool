@@ -254,10 +254,17 @@ describe('<StudentTable />', () => {
     it('displays tag filter as disabled if no student uses the tag', () => {
       wrapper
         .find('.tagFilter')
-        .find({ children: 'Javascript' })
-        .first()
+        .find('TagLabel')
+        .find({ tag: tags.tags[0] })
+        .dive()
+        .find('Button')
         .simulate('click')
-      expect(wrapper.find('.tagFilter').find({ disabled: true }).length).toEqual(2)
+      expect(
+        wrapper
+          .find('.tagFilter')
+          .find('TagLabel')
+          .find({ disabled: true }).length
+      ).toEqual(2)
     })
   })
 })

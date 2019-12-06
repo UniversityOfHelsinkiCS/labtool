@@ -245,7 +245,9 @@ export const ReviewStudent = props => {
   return (
     <>
       <DocumentTitle
-        title={`${isFinalReview(props) ? 'Final Review' : `Week ${weekData && weekData.weekNumber ? weekData.weekNumber : props.ownProps.weekNumber}`} - ${studentData.User.firsts} ${studentData.User.lastname}`}
+        title={`${isFinalReview(props) ? 'Final Review' : `Week ${weekData && weekData.weekNumber ? weekData.weekNumber : props.ownProps.weekNumber}`} - ${studentData.User.firsts} ${
+          studentData.User.lastname
+        }`}
       />
       <div className="ReviewStudent">
         <BackButton
@@ -294,7 +296,7 @@ export const ReviewStudent = props => {
                 )}
                 <PreviousWeekDetails weekData={previousWeekData} />
                 {isFinalReview(props) && <MissingMinimumRequirements selectedInstance={props.selectedInstance} studentInstance={studentData} currentWeekChecks={!checks ? {} : checks} />}
-                {isFinalReview(props) ? (props.selectedInstance.finalReviewHasPoints ? <h2>Final Review Points</h2> : <h2>Final Review</h2>) : <h2>Review</h2>}
+                {isFinalReview(props) ? props.selectedInstance.finalReviewHasPoints ? <h2>Final Review Points</h2> : <h2>Final Review</h2> : <h2>Review</h2>}
                 {loadedFromDraft && (
                   <div>
                     <p>

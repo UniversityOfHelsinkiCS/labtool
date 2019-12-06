@@ -42,16 +42,18 @@ export const WeekReviewWeek = props => {
 
   if (week) {
     // week.points may be null for final review if points for the final review are disabled
-    const pointInfo = week.points !== null ? (
-      <>
-        , points <Points points={week.points} /> / <Points points={getMaximumPointsForWeek(week.weekNumber)} />
-      </>
-    ) : null
+    const pointInfo =
+      week.points !== null ? (
+        <>
+          , points <Points points={week.points} /> / <Points points={getMaximumPointsForWeek(week.weekNumber)} />
+        </>
+      ) : null
     const gradeInfo = week.grade ? `, grade ${week.grade}` : ''
     return (
       <Accordion fluid styled id={isFinalWeek ? 'reviewFinal' : `reviewWeek${week.weekNumber}`}>
         <Accordion.Title active={isWeekOpen} index={i} onClick={handleClickWeek}>
-          <Icon name="dropdown" /> {isFinalWeek ? 'Final Review' : `Week ${week.weekNumber}`}{pointInfo}
+          <Icon name="dropdown" /> {isFinalWeek ? 'Final Review' : `Week ${week.weekNumber}`}
+          {pointInfo}
           {gradeInfo}
         </Accordion.Title>
         <Accordion.Content active={isWeekOpen}>
@@ -62,14 +64,12 @@ export const WeekReviewWeek = props => {
                 {' '}
                 {week.points !== null ? (
                   <>
-                    Points <Points points={week.points} /> / <Points points={getMaximumPointsForWeek(week.weekNumber)} />{gradeInfo}
+                    Points <Points points={week.points} /> / <Points points={getMaximumPointsForWeek(week.weekNumber)} />
+                    {gradeInfo}
                   </>
                 ) : week.grade ? (
-                  <>
-                    Grade {week.grade}
-                  </>
-                ) : null}
-                {' '}
+                  <>Grade {week.grade}</>
+                ) : null}{' '}
               </h4>
               <h4> Feedback </h4>
               <ReactMarkdown>{week.feedback}</ReactMarkdown>{' '}
