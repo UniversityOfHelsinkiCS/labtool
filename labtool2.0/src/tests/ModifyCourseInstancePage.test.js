@@ -30,7 +30,10 @@ describe('<ModifyCourseInstancePage />', () => {
 
   let mockFn = jest.fn()
 
-  const codeReviewLabels = [{ value: 1, text: 'Code Review 1' }, { value: 2, text: 'Code Review 2' }]
+  const codeReviewLabels = [
+    { value: 1, text: 'Code Review 1' },
+    { value: 2, text: 'Code Review 2' }
+  ]
 
   beforeEach(() => {
     wrapper = shallow(

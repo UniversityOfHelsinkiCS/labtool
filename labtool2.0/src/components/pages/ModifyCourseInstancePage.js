@@ -465,7 +465,4 @@ ModifyCourseInstancePage.propTypes = {
   errors: PropTypes.array
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ModifyCourseInstancePage)
+export default connect(mapStateToProps, mapDispatchToProps)(ModifyCourseInstancePage)

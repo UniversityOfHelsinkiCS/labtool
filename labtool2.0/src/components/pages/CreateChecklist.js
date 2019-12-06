@@ -921,7 +921,4 @@ CreateChecklist.propTypes = {
   errors: PropTypes.array
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(CreateChecklist)
+export default connect(mapStateToProps, mapDispatchToProps)(CreateChecklist)
