@@ -13,6 +13,7 @@ import { updateStudentProjectInfo } from '../services/studentinstances'
 import { StudentTableRow } from './StudentTable/StudentTableRow'
 import PointHeaders from './StudentTable/PointHeaders'
 import InstructorFilter from './StudentTable/InstructorFilter'
+import TagFilter from './StudentTable/TagFilter'
 
 export const StudentTable = props => {
   const state = usePersistedState(props.persistentFilterKey || null, {
@@ -138,22 +139,7 @@ export const StudentTable = props => {
       <div style={{ textAlign: 'left' }}>
         {(props.extraButtons || []).map(f => f())}
         {showColumn('instructor') && <InstructorFilter dropDownFilterTeachers={dropDownFilterTeachers} changeFilterAssistant={changeFilterAssistant} defaultValue={state.filterByAssistant} />}
-        <span> Tag filters: </span>
-        {dropDownFilterTags.length === 0 ? (
-          <span>
-            <Label>none</Label>
-          </span>
-        ) : (
-          <span>
-            {dropDownFilterTags.map(tag => (
-              <span key={tag.id}>
-                <Button compact className={`mini ui ${tag.color} button ${!state.filterByTag.find(t => t.id === tag.id) ? 'basic' : ''}`} onClick={addFilterTag(tag)}>
-                  {tag.name}
-                </Button>
-              </span>
-            ))}
-          </span>
-        )}
+        <TagFilter dropDownFilterTags={dropDownFilterTags} selectedFilterTags={state.filterByTag} addFilterTag={addFilterTag} />
       </div>
       <br />
 
