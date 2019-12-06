@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Header, Segment, List } from 'semantic-ui-react'
+import '../util/arrayFlatPolyfill'
 
 const MissingMinimumRequirements = ({ selectedInstance, studentInstance, currentWeekChecks }) => {
   const minimumRequirements = selectedInstance.checklists.reduce((map, checklist) => {

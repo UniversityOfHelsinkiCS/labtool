@@ -250,6 +250,15 @@ describe('<StudentTable />', () => {
     it('should render correctly', () => {
       expect(wrapper).toMatchSnapshot()
     })
+
+    it('displays tag filter as disabled if no student uses the tag', () => {
+      wrapper
+        .find('.tagFilter')
+        .find({ children: 'Javascript' })
+        .first()
+        .simulate('click')
+      expect(wrapper.find('.tagFilter').find({ disabled: true }).length).toEqual(2)
+    })
   })
 })
 
@@ -434,7 +443,11 @@ describe('<StudentTableRow />', () => {
     ]
   }
 
-  const dropDownTeachers = [{ key: '-', text: '(unassigned)', value: '-' }, { key: 10001, text: 'Pää Opettaja', value: 10001 }, { key: 1, text: 'Ossi Ohjaaja Mutikainen', value: 1 }]
+  const dropDownTeachers = [
+    { key: '-', text: '(unassigned)', value: '-' },
+    { key: 10001, text: 'Pää Opettaja', value: 10001 },
+    { key: 1, text: 'Ossi Ohjaaja Mutikainen', value: 1 }
+  ]
 
   const dropDownTags = [
     { key: 20008, text: 'C++', value: 20008 },

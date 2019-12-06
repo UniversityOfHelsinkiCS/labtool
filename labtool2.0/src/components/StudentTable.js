@@ -161,6 +161,14 @@ export const StudentTable = props => {
 
   const filteredData = (props.studentInstances || []).filter(dataFilter).filter(filterStudents ? filterStudents : () => true)
 
+  //Set of tags that are used by at least one student
+  const usedTags = filteredData
+    .map(student => student.Tags)
+    .reduce((set, tags) => {
+      tags.forEach(tag => set.add(tag.id))
+      return set
+    }, new Set())
+
   if (props.onFilter) {
     props.onFilter(filteredData.map(data => data.id))
   }
@@ -204,7 +212,12 @@ export const StudentTable = props => {
           <span>
             {dropDownFilterTags.map(tag => (
               <span key={tag.id}>
-                <Button compact className={`mini ui ${tag.color} button ${!state.filterByTag.find(t => t.id === tag.id) ? 'basic' : ''}`} onClick={addFilterTag(tag)}>
+                <Button
+                  compact
+                  disabled={!usedTags.has(tag.id)}
+                  className={`tagFilter mini ui ${tag.color} button ${!state.filterByTag.find(t => t.id === tag.id) ? 'basic' : ''}`}
+                  onClick={addFilterTag(tag)}
+                >
                   {tag.name}
                 </Button>
               </span>
@@ -350,7 +363,4 @@ StudentTable.propTypes = {
   updateStudentProjectInfo: PropTypes.func.isRequired
 }
 
-export default connect(
-  null,
-  mapDispatchToProps
-)(StudentTable)
+export default connect(null, mapDispatchToProps)(StudentTable)
