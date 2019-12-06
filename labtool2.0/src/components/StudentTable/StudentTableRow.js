@@ -6,6 +6,7 @@ import RepoLink from '../RepoLink'
 
 import RepoAccessWarning from '../RepoAccessWarning'
 import { Points } from '../Points'
+import { TagLabel } from '../TagLabel'
 
 export const StudentTableRow = props => {
   const {
@@ -312,14 +313,8 @@ export const StudentTableRow = props => {
             {data.Tags.map(tag => (
               <span key={data.id + ':' + tag.id} style={{ float: 'left', marginRight: '0.33em' }}>
                 <Button.Group className={'mini'}>
-                  <Button compact style={{ display: 'inline-block' }} className={`mini ui ${tag.color} button`} onClick={addFilterTag(tag)}>
-                    {tag.name}
-                  </Button>
-                  {allowModify && (
-                    <Button compact icon attached="right" className={`mini ui ${tag.color} button`} style={{ paddingLeft: 0, paddingRight: 0 }} onClick={removeTag(data.id, tag.id)}>
-                      <Icon name="remove" />
-                    </Button>
-                  )}
+                  <TagLabel tag={tag} handleClick={addFilterTag(tag)} />
+                  {allowModify && <TagLabel removeLabel={true} tag={tag} handleClick={removeTag(data.id, tag.id)} />}
                 </Button.Group>
               </span>
             ))}
@@ -434,7 +429,9 @@ StudentTableRow.propTypes = {
   selectStudent: PropTypes.func.isRequired,
   unselectStudent: PropTypes.func.isRequired,
   loggedInUser: PropTypes.object,
-  courseData: PropTypes.object
+  courseData: PropTypes.object,
+  shouldHideGrade: PropTypes.func,
+  getStudentFinalGrade: PropTypes.func
 }
 
 export default StudentTableRow
