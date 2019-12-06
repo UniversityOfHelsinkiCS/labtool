@@ -152,6 +152,7 @@ module.exports = {
       // also we need to map tempId => true id
       const prerequisites = {}
       const tempIdMap = {}
+      const prerequisitesRemove = []
 
       for (const category in req.body.checklist) {
         const checklistForCategory = req.body.checklist[category]
@@ -171,6 +172,7 @@ module.exports = {
               }
             })
             if (item.checklistId !== result[1].dataValues.id) {
+              prerequisitesRemove.push(checklistItemCopy.id)
               delete checklistItemCopy.id
             }
           }
@@ -198,7 +200,7 @@ module.exports = {
           if (oldItem.tempId) {
             tempIdMap[oldItem.tempId] = newItem.id
           }
-          if (oldItem.prerequisite !== null) {
+          if (oldItem.prerequisite !== null && !prerequisitesRemove.includes(oldItem.prerequisite)) {
             prerequisites[newItem.id] = oldItem.prerequisite
           }
         })
