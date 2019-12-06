@@ -1001,6 +1001,9 @@ module.exports = {
       }
     })
 
+    const checklistIdMap = {}
+    const prerequisitesToUpdate = []
+
     await Promise.all(checklists
       .filter(cl => !existingChecklists.find(ecl => (cl.forCodeReview ? ecl.forCodeReview : (cl.week !== null && cl.week === ecl.week))))
       .map(async (cl) => {
@@ -1019,11 +1022,29 @@ module.exports = {
 
         await Promise.all(clItems.map(async (item) => {
           const newItem = item.get({ plain: true })
+          const oldId = newItem.id
+          const oldPrerequisite = newItem.prerequisite
           delete newItem.id
+          newItem.prerequisite = null
           newItem.checklistId = newCl.id
-          await ChecklistItem.create(newItem)
+          const addedItem = await ChecklistItem.create(newItem)
+          checklistIdMap[oldId] = addedItem.id
+          if (oldPrerequisite) {
+            prerequisitesToUpdate.push([addedItem.id, oldPrerequisite])
+          }
         }))
       }))
+    
+    await Promise.all(prerequisitesToUpdate.map(async ([itemId, oldPrerequisite]) => {
+      await ChecklistItem.update(
+        { prerequisite: checklistIdMap[oldPrerequisite] },
+        {
+          where: {
+            id: itemId
+          }
+        }
+      )
+    }))
 
     return res.status(200).send(course)
   },

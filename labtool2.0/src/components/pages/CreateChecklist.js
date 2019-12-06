@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { Header, Input, Label, Button, Popup, Card, Dropdown, Loader, Icon, Checkbox, Radio } from 'semantic-ui-react'
+import { Header, Input, Label, Button, Popup, Card, Dropdown, Loader, Icon, Checkbox, Radio, Segment } from 'semantic-ui-react'
 import { showNotification } from '../../reducers/notificationReducer'
 import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 import { createChecklist, getOneChecklist } from '../../services/checklist'
 import { getOneCI, getAllCI } from '../../services/courseInstance'
-import { resetChecklist, changeField, restoreChecklist, addTopic, addRow, removeTopic, removeRow, castPointsToNumber } from '../../reducers/checklistReducer'
+import { resetChecklist, changeField, restoreChecklist, addTopic, addRow, removeTopic, removeRow, castPointsToNumber, applyCategoryPrerequisite } from '../../reducers/checklistReducer'
 import './CreateChecklist.css'
 import { usePersistedState } from '../../hooks/persistedState'
 import { sortCoursesByName } from '../../util/sort'
@@ -27,6 +27,7 @@ export const CreateChecklist = props => {
     openAdd: '', // which addForm is currently open. '' denotes no open addForms. Only one addForm can be open at one time.
     courseDropdowns: [], // Dropdown options to show for copying checklist.
     copyWeekDropdowns: [], // Dropdown options to show for copying from another week.
+    categoryPrerequisites: {},
     checklistData: null,
     maximumPoints: '',
     canSave: false
@@ -72,6 +73,46 @@ export const CreateChecklist = props => {
     }
   }
 
+  const getRowId = row => row.id || row.tempId
+
+  const validateChecklistPrerequisites = data => {
+    const items = {}
+    Object.keys(data).map(category => {
+      data[category].forEach(item => {
+        if (item.id !== undefined) {
+          items[item.id] = item
+        } else {
+          items[item.tempId] = item
+        }
+      })
+    })
+
+    return Object.keys(data).every(category => {
+      return data[category].every(item => {
+        if (!item.prerequisite) {
+          return true
+        }
+        if (!items[item.prerequisite]) {
+          return false
+        }
+
+        // try to find a loop
+        const visited = []
+        let curItem = item
+        while (curItem.prerequisite) {
+          const curId = getRowId(curItem)
+          if (visited.includes(curId)) {
+            return false
+          }
+          visited.push(curId)
+          curItem = items[curItem.prerequisite]
+        }
+
+        return true
+      })
+    })
+  }
+
   // Make api call to save checklist to database.
   const handleSubmit = async e => {
     e.preventDefault()
@@ -85,6 +126,14 @@ export const CreateChecklist = props => {
     if (error) {
       props.showNotification({
         message: 'Select a week or code review!',
+        error: true
+      })
+      return
+    }
+
+    if (!validateChecklistPrerequisites(data.checklist)) {
+      props.showNotification({
+        message: 'Your prerequisites are invalid; they either form a loop or point outside this checklist.',
         error: true
       })
       return
@@ -144,6 +193,7 @@ export const CreateChecklist = props => {
     state.maximumPoints = ''
     state.current = newCurrent
     state.copyCourse = copyCourse
+    state.categoryPrerequisites = {}
     if (state.copyWeek === newCurrent) {
       state.copyWeek = null
     }
@@ -198,6 +248,12 @@ export const CreateChecklist = props => {
       field,
       value
     })
+    state.canSave = true
+  }
+
+  const applyCategoryPrerequisite = key => (_, data) => {
+    props.applyCategoryPrerequisite(key, data.value)
+    state.categoryPrerequisites = { ...state.categoryPrerequisites, [key]: data.value }
     state.canSave = true
   }
 
@@ -269,7 +325,8 @@ export const CreateChecklist = props => {
             return row.name !== null && row.textWhenOn !== null && row.textWhenOff !== null && row.checkedPoints !== null && row.uncheckedPoints !== null
           })
         )
-      })
+      }) &&
+      validateChecklistPrerequisites(checklist.list)
     )
   }
 
@@ -354,7 +411,8 @@ export const CreateChecklist = props => {
     }
     props.addRow({
       key,
-      name: state.rowName
+      name: state.rowName,
+      prerequisite: state.categoryPrerequisites[key] || null
     })
     state.rowName = ''
     state.openAdd = 'newTopic'
@@ -437,8 +495,29 @@ export const CreateChecklist = props => {
     return props.weekDropdowns.filter(option => option.value !== state.current)
   }
 
-  // later this might return client-only IDs
-  const getRowId = row => row.id
+  const createPrerequisiteDropdowns = () => {
+    const checks = [
+      {
+        key: null,
+        text: '(none)',
+        value: null
+      }
+    ]
+
+    Object.keys(props.checklist.data).forEach(key => {
+      props.checklist.data[key].forEach(check => {
+        checks.push({
+          key: getRowId(check),
+          text: check.name,
+          value: getRowId(check)
+        })
+      })
+    })
+
+    return checks
+  }
+
+  const prerequisiteDropdown = createPrerequisiteDropdowns()
 
   const renderChecklist = kind => {
     let maxPoints = 0
@@ -454,7 +533,7 @@ export const CreateChecklist = props => {
       maxPoints += bestPoints
       colorIndex++
       return (
-        <Card fluid color="red" key={key} style={colorIndex % 2 === 0 ? { backgroundColor: '#EAEAEA' } : null}>
+        <Card fluid color="red" key={key} style={colorIndex % 2 === 0 ? { backgroundColor: '#F2F2F2' } : null}>
           <Card.Content>
             <Header size="huge" color="brown">
               {key}{' '}
@@ -478,6 +557,17 @@ export const CreateChecklist = props => {
                 )}
               </p>
             </div>
+            <div className="prerequisiteCategory" style={{ marginTop: '1em' }}>
+              Set a prerequisite for all checks in this category:{' '}
+              <Dropdown
+                className="prerequisiteCategoryDropdown"
+                placeholder="Select prerequisite..."
+                selection
+                value={state.categoryPrerequisites[key]}
+                onChange={applyCategoryPrerequisite(key)}
+                options={prerequisiteDropdown}
+              />
+            </div>
           </Card.Content>
           {props.checklist.data[key].map(row => (
             <Card.Content key={row.name}>
@@ -487,10 +577,13 @@ export const CreateChecklist = props => {
                   <div className="deleteButtonText">Delete checkbox</div>
                 </Button>
               </Header>
-              <div className="formField">
-                <Label>Points when checked</Label>
+              <div className="checkTextRow">
+                <div className="checkedLabel">
+                  <Label basic>Checked</Label>
+                </div>
                 <Input
                   className="numberField"
+                  label="Points"
                   type="number"
                   step="0.01"
                   value={row.checkedPoints}
@@ -498,15 +591,17 @@ export const CreateChecklist = props => {
                   onChange={changeField(key, row.name, 'checkedPoints')}
                   onBlur={castPointsToNumber(key, row.name)}
                 />
+                <span style={{ flexGrow: 100 }}>
+                  <Input fluid className="textField" label="Text" type="text" value={row.textWhenOn} onChange={changeField(key, row.name, 'textWhenOn')} />
+                </span>
               </div>
-              <div className="formField">
-                <Label>Text</Label>
-                <Input className="textField" type="text" value={row.textWhenOn} onChange={changeField(key, row.name, 'textWhenOn')} />
-              </div>
-              <div className="formField">
-                <Label>Points when unchecked</Label>
+              <div className="checkTextRow">
+                <div className="checkedLabel">
+                  <Label basic>Unchecked</Label>
+                </div>
                 <Input
                   className="numberField"
+                  label="Points"
                   type="number"
                   step="0.01"
                   value={row.uncheckedPoints}
@@ -514,10 +609,9 @@ export const CreateChecklist = props => {
                   onChange={changeField(key, row.name, 'uncheckedPoints')}
                   onBlur={castPointsToNumber(key, row.name)}
                 />
-              </div>
-              <div className="formField">
-                <Label>Text</Label>
-                <Input className="textField" type="text" value={row.textWhenOff} onChange={changeField(key, row.name, 'textWhenOff')} />
+                <span style={{ flexGrow: 100 }}>
+                  <Input fluid className="textField" label="Text" type="text" value={row.textWhenOff} onChange={changeField(key, row.name, 'textWhenOff')} />
+                </span>
               </div>
               {kind !== 'codeReview' && (
                 <div className="minimumRequirement" style={{ marginTop: '1em' }}>
@@ -531,7 +625,7 @@ export const CreateChecklist = props => {
                     onChange={changeFieldValue(key, row.name, 'minimumRequirementMetIf', true)}
                   />{' '}
                   <Radio
-                    label="not checked"
+                    label="unchecked"
                     name={`minimumRequirementMetIf_${key}_${getRowId(row)}`}
                     value={false}
                     disabled={!row.minimumRequirement}
@@ -545,32 +639,46 @@ export const CreateChecklist = props => {
                     step="1"
                     min="0"
                     max="5"
-                    style={{ width: '100px' }}
+                    style={{ width: '60px' }}
                     disabled={!row.minimumRequirement}
                     value={row.minimumRequirementGradePenalty}
                     onChange={changeFieldNumber(key, row.name, 'minimumRequirementGradePenalty')}
                   />
                 </div>
               )}
+              <div className="prerequisite" style={{ marginTop: '1em' }}>
+                <Label>Prerequisite</Label>
+                <Dropdown
+                  className="prerequisiteDropdown"
+                  placeholder="(none)"
+                  selection
+                  value={row.prerequisite || null}
+                  onChange={changeField(key, row.name, 'prerequisite')}
+                  options={prerequisiteDropdown.filter(check => check.value !== row.id)}
+                />
+                <Popup trigger={<Icon name="help circle" />} content="If a prerequisite is set, the prerequisite must be checked in order for this checkbox to be checkable." />
+              </div>
             </Card.Content>
           ))}
-          <form className="addForm" onSubmit={newRow(key)}>
-            {/*This, like all other addForms is here to funnel both the button press 
-              as well as a user pressing enter into the same function.*/}
-            {<Button type="submit" content="Add new checkbox" color="yellow" icon="plus" labelPosition="left" />}
-            {state.openAdd === key ? (
-              <div>
-                <Label>Name</Label>
-                <Input className="newRowNameInput" type="text" value={state.rowName} onChange={changeRowName} />
-                <Button type="submit">Save</Button>
-                <Button type="button" onClick={cancelAdd}>
-                  Cancel
-                </Button>
-              </div>
-            ) : (
-              <div />
-            )}
-          </form>
+          <Card.Content>
+            <form className="addForm" onSubmit={newRow(key)}>
+              {/*This, like all other addForms is here to funnel both the button press 
+                as well as a user pressing enter into the same function.*/}
+              {<Button type="submit" content="Add new checkbox" color="yellow" icon="plus" labelPosition="left" />}
+              {state.openAdd === key ? (
+                <div>
+                  <Label>Name</Label>
+                  <Input className="newRowNameInput" type="text" value={state.rowName} onChange={changeRowName} />
+                  <Button type="submit">Save</Button>
+                  <Button type="button" onClick={cancelAdd}>
+                    Cancel
+                  </Button>
+                </div>
+              ) : (
+                <div />
+              )}
+            </form>
+          </Card.Content>
         </Card>
       )
     })
@@ -776,6 +884,7 @@ const mapDispatchToProps = {
   resetChecklist,
   restoreChecklist,
   changeField,
+  applyCategoryPrerequisite,
   addTopic,
   addRow,
   removeTopic,
@@ -802,6 +911,7 @@ CreateChecklist.propTypes = {
   resetChecklist: PropTypes.func.isRequired,
   restoreChecklist: PropTypes.func.isRequired,
   changeField: PropTypes.func.isRequired,
+  applyCategoryPrerequisite: PropTypes.func.isRequired,
   addTopic: PropTypes.func.isRequired,
   addRow: PropTypes.func.isRequired,
   removeTopic: PropTypes.func.isRequired,

@@ -387,6 +387,8 @@ export const ModifyCourseInstancePage = props => {
               <br />
             </div>
           )}
+          <br />
+          <br />
         </div>
       </div>
     </>

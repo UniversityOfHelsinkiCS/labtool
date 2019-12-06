@@ -203,6 +203,56 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
                   <span />
                 </p>
               </div>
+              <div
+                className="prerequisiteCategory"
+                style={
+                  Object {
+                    "marginTop": "1em",
+                  }
+                }
+              >
+                Set a prerequisite for all checks in this category:
+                 
+                <Dropdown
+                  additionLabel="Add "
+                  additionPosition="top"
+                  className="prerequisiteCategoryDropdown"
+                  closeOnBlur={true}
+                  closeOnEscape={true}
+                  deburr={false}
+                  icon="dropdown"
+                  minCharacters={1}
+                  noResultsMessage="No results found."
+                  onChange={[Function]}
+                  openOnFocus={true}
+                  options={
+                    Array [
+                      Object {
+                        "key": null,
+                        "text": "(none)",
+                        "value": null,
+                      },
+                      Object {
+                        "key": undefined,
+                        "text": "Koodin laatu",
+                        "value": undefined,
+                      },
+                      Object {
+                        "key": undefined,
+                        "text": "Readme kunnossa",
+                        "value": undefined,
+                      },
+                    ]
+                  }
+                  placeholder="Select prerequisite..."
+                  renderLabel={[Function]}
+                  searchInput="text"
+                  selectOnBlur={true}
+                  selectOnNavigation={true}
+                  selection={true}
+                  wrapSelection={true}
+                />
+              </div>
             </CardContent>
             <CardContent
               key="Koodin laatu"
@@ -226,60 +276,80 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
                 </Button>
               </Header>
               <div
-                className="formField"
+                className="checkTextRow"
               >
-                <Label>
-                  Points when checked
-                </Label>
+                <div
+                  className="checkedLabel"
+                >
+                  <Label
+                    basic={true}
+                  >
+                    Checked
+                  </Label>
+                </div>
                 <Input
                   className="numberField"
+                  label="Points"
                   onBlur={[Function]}
                   onChange={[Function]}
                   step="0.01"
                   type="number"
                   value={2}
                 />
+                <span
+                  style={
+                    Object {
+                      "flexGrow": 100,
+                    }
+                  }
+                >
+                  <Input
+                    className="textField"
+                    fluid={true}
+                    label="Text"
+                    onChange={[Function]}
+                    type="text"
+                    value="Koodin laatu kiitettävää"
+                  />
+                </span>
               </div>
               <div
-                className="formField"
+                className="checkTextRow"
               >
-                <Label>
-                  Text
-                </Label>
-                <Input
-                  className="textField"
-                  onChange={[Function]}
-                  type="text"
-                  value="Koodin laatu kiitettävää"
-                />
-              </div>
-              <div
-                className="formField"
-              >
-                <Label>
-                  Points when unchecked
-                </Label>
+                <div
+                  className="checkedLabel"
+                >
+                  <Label
+                    basic={true}
+                  >
+                    Unchecked
+                  </Label>
+                </div>
                 <Input
                   className="numberField"
+                  label="Points"
                   onBlur={[Function]}
                   onChange={[Function]}
                   step="0.01"
                   type="number"
                   value={0}
                 />
-              </div>
-              <div
-                className="formField"
-              >
-                <Label>
-                  Text
-                </Label>
-                <Input
-                  className="textField"
-                  onChange={[Function]}
-                  type="text"
-                  value="Koodin laadussa parantamisen varaa"
-                />
+                <span
+                  style={
+                    Object {
+                      "flexGrow": 100,
+                    }
+                  }
+                >
+                  <Input
+                    className="textField"
+                    fluid={true}
+                    label="Text"
+                    onChange={[Function]}
+                    type="text"
+                    value="Koodin laadussa parantamisen varaa"
+                  />
+                </span>
               </div>
               <div
                 className="minimumRequirement"
@@ -309,7 +379,7 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
                 <Radio
                   checked={false}
                   disabled={true}
-                  label="not checked"
+                  label="unchecked"
                   name="minimumRequirementMetIf_Koodi_undefined"
                   onChange={[Function]}
                   type="radio"
@@ -326,27 +396,91 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
                   step="1"
                   style={
                     Object {
-                      "width": "100px",
+                      "width": "60px",
                     }
                   }
                   type="number"
                 />
               </div>
+              <div
+                className="prerequisite"
+                style={
+                  Object {
+                    "marginTop": "1em",
+                  }
+                }
+              >
+                <Label>
+                  Prerequisite
+                </Label>
+                <Dropdown
+                  additionLabel="Add "
+                  additionPosition="top"
+                  className="prerequisiteDropdown"
+                  closeOnBlur={true}
+                  closeOnEscape={true}
+                  deburr={false}
+                  icon="dropdown"
+                  minCharacters={1}
+                  noResultsMessage="No results found."
+                  onChange={[Function]}
+                  openOnFocus={true}
+                  options={
+                    Array [
+                      Object {
+                        "key": null,
+                        "text": "(none)",
+                        "value": null,
+                      },
+                    ]
+                  }
+                  placeholder="(none)"
+                  renderLabel={[Function]}
+                  searchInput="text"
+                  selectOnBlur={true}
+                  selectOnNavigation={true}
+                  selection={true}
+                  value={null}
+                  wrapSelection={true}
+                />
+                <Popup
+                  content="If a prerequisite is set, the prerequisite must be checked in order for this checkbox to be checkable."
+                  disabled={false}
+                  eventsEnabled={true}
+                  offset={0}
+                  on={
+                    Array [
+                      "click",
+                      "hover",
+                    ]
+                  }
+                  pinned={false}
+                  position="top left"
+                  trigger={
+                    <Icon
+                      as="i"
+                      name="help circle"
+                    />
+                  }
+                />
+              </div>
             </CardContent>
-            <form
-              className="addForm"
-              onSubmit={[Function]}
-            >
-              <Button
-                as="button"
-                color="yellow"
-                content="Add new checkbox"
-                icon="plus"
-                labelPosition="left"
-                type="submit"
-              />
-              <div />
-            </form>
+            <CardContent>
+              <form
+                className="addForm"
+                onSubmit={[Function]}
+              >
+                <Button
+                  as="button"
+                  color="yellow"
+                  content="Add new checkbox"
+                  icon="plus"
+                  labelPosition="left"
+                  type="submit"
+                />
+                <div />
+              </form>
+            </CardContent>
           </Card>
           <Card
             color="red"
@@ -354,7 +488,7 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
             key="Repo"
             style={
               Object {
-                "backgroundColor": "#EAEAEA",
+                "backgroundColor": "#F2F2F2",
               }
             }
           >
@@ -394,6 +528,56 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
                   <span />
                 </p>
               </div>
+              <div
+                className="prerequisiteCategory"
+                style={
+                  Object {
+                    "marginTop": "1em",
+                  }
+                }
+              >
+                Set a prerequisite for all checks in this category:
+                 
+                <Dropdown
+                  additionLabel="Add "
+                  additionPosition="top"
+                  className="prerequisiteCategoryDropdown"
+                  closeOnBlur={true}
+                  closeOnEscape={true}
+                  deburr={false}
+                  icon="dropdown"
+                  minCharacters={1}
+                  noResultsMessage="No results found."
+                  onChange={[Function]}
+                  openOnFocus={true}
+                  options={
+                    Array [
+                      Object {
+                        "key": null,
+                        "text": "(none)",
+                        "value": null,
+                      },
+                      Object {
+                        "key": undefined,
+                        "text": "Koodin laatu",
+                        "value": undefined,
+                      },
+                      Object {
+                        "key": undefined,
+                        "text": "Readme kunnossa",
+                        "value": undefined,
+                      },
+                    ]
+                  }
+                  placeholder="Select prerequisite..."
+                  renderLabel={[Function]}
+                  searchInput="text"
+                  selectOnBlur={true}
+                  selectOnNavigation={true}
+                  selection={true}
+                  wrapSelection={true}
+                />
+              </div>
             </CardContent>
             <CardContent
               key="Readme kunnossa"
@@ -417,60 +601,80 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
                 </Button>
               </Header>
               <div
-                className="formField"
+                className="checkTextRow"
               >
-                <Label>
-                  Points when checked
-                </Label>
+                <div
+                  className="checkedLabel"
+                >
+                  <Label
+                    basic={true}
+                  >
+                    Checked
+                  </Label>
+                </div>
                 <Input
                   className="numberField"
+                  label="Points"
                   onBlur={[Function]}
                   onChange={[Function]}
                   step="0.01"
                   type="number"
                   value={0}
                 />
+                <span
+                  style={
+                    Object {
+                      "flexGrow": 100,
+                    }
+                  }
+                >
+                  <Input
+                    className="textField"
+                    fluid={true}
+                    label="Text"
+                    onChange={[Function]}
+                    type="text"
+                    value=""
+                  />
+                </span>
               </div>
               <div
-                className="formField"
+                className="checkTextRow"
               >
-                <Label>
-                  Text
-                </Label>
-                <Input
-                  className="textField"
-                  onChange={[Function]}
-                  type="text"
-                  value=""
-                />
-              </div>
-              <div
-                className="formField"
-              >
-                <Label>
-                  Points when unchecked
-                </Label>
+                <div
+                  className="checkedLabel"
+                >
+                  <Label
+                    basic={true}
+                  >
+                    Unchecked
+                  </Label>
+                </div>
                 <Input
                   className="numberField"
+                  label="Points"
                   onBlur={[Function]}
                   onChange={[Function]}
                   step="0.01"
                   type="number"
                   value={-1}
                 />
-              </div>
-              <div
-                className="formField"
-              >
-                <Label>
-                  Text
-                </Label>
-                <Input
-                  className="textField"
-                  onChange={[Function]}
-                  type="text"
-                  value="Readmessa feelua"
-                />
+                <span
+                  style={
+                    Object {
+                      "flexGrow": 100,
+                    }
+                  }
+                >
+                  <Input
+                    className="textField"
+                    fluid={true}
+                    label="Text"
+                    onChange={[Function]}
+                    type="text"
+                    value="Readmessa feelua"
+                  />
+                </span>
               </div>
               <div
                 className="minimumRequirement"
@@ -500,7 +704,7 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
                 <Radio
                   checked={false}
                   disabled={true}
-                  label="not checked"
+                  label="unchecked"
                   name="minimumRequirementMetIf_Repo_undefined"
                   onChange={[Function]}
                   type="radio"
@@ -517,27 +721,91 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
                   step="1"
                   style={
                     Object {
-                      "width": "100px",
+                      "width": "60px",
                     }
                   }
                   type="number"
                 />
               </div>
+              <div
+                className="prerequisite"
+                style={
+                  Object {
+                    "marginTop": "1em",
+                  }
+                }
+              >
+                <Label>
+                  Prerequisite
+                </Label>
+                <Dropdown
+                  additionLabel="Add "
+                  additionPosition="top"
+                  className="prerequisiteDropdown"
+                  closeOnBlur={true}
+                  closeOnEscape={true}
+                  deburr={false}
+                  icon="dropdown"
+                  minCharacters={1}
+                  noResultsMessage="No results found."
+                  onChange={[Function]}
+                  openOnFocus={true}
+                  options={
+                    Array [
+                      Object {
+                        "key": null,
+                        "text": "(none)",
+                        "value": null,
+                      },
+                    ]
+                  }
+                  placeholder="(none)"
+                  renderLabel={[Function]}
+                  searchInput="text"
+                  selectOnBlur={true}
+                  selectOnNavigation={true}
+                  selection={true}
+                  value={null}
+                  wrapSelection={true}
+                />
+                <Popup
+                  content="If a prerequisite is set, the prerequisite must be checked in order for this checkbox to be checkable."
+                  disabled={false}
+                  eventsEnabled={true}
+                  offset={0}
+                  on={
+                    Array [
+                      "click",
+                      "hover",
+                    ]
+                  }
+                  pinned={false}
+                  position="top left"
+                  trigger={
+                    <Icon
+                      as="i"
+                      name="help circle"
+                    />
+                  }
+                />
+              </div>
             </CardContent>
-            <form
-              className="addForm"
-              onSubmit={[Function]}
-            >
-              <Button
-                as="button"
-                color="yellow"
-                content="Add new checkbox"
-                icon="plus"
-                labelPosition="left"
-                type="submit"
-              />
-              <div />
-            </form>
+            <CardContent>
+              <form
+                className="addForm"
+                onSubmit={[Function]}
+              >
+                <Button
+                  as="button"
+                  color="yellow"
+                  content="Add new checkbox"
+                  icon="plus"
+                  labelPosition="left"
+                  type="submit"
+                />
+                <div />
+              </form>
+            </CardContent>
           </Card>
           <form
             className="addForm"

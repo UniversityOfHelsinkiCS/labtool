@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { withRouter } from 'react-router'
-import { Button, Form, Input, Grid, Card, Loader, Icon, Popup } from 'semantic-ui-react'
+import { Button, Form, Input, Grid, Loader } from 'semantic-ui-react'
 import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import { clearNotifications } from '../../reducers/notificationReducer'
 import { gradeCodeReview } from '../../services/codeReview'
-import { toggleCheckCodeReview, resetChecklist, restoreChecks } from '../../reducers/weekReviewReducer'
+import { toggleCheckCodeReview, resetChecklist, restoreChecks, verifyCheckPrerequisites } from '../../reducers/weekReviewReducer'
 import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 import store from '../../store'
 import { usePersistedState } from '../../hooks/persistedState'
@@ -16,6 +16,7 @@ import RepoLink from '../RepoLink'
 import BackButton from '../BackButton'
 import DocumentTitle from '../DocumentTitle'
 import Error from '../Error'
+import { ReviewStudentChecklist } from './ReviewStudent/Checklist'
 import { Points } from '../Points'
 import { roundPoints } from '../../util/format'
 
@@ -101,7 +102,7 @@ export const ReviewStudentCodeReview = props => {
 
   const toggleCheckbox = (checklistItemId, studentId, crNbr) => async () => {
     setAllowChecksCopy(true)
-    props.toggleCheckCodeReview(checklistItemId, studentId, crNbr)
+    props.toggleCheckCodeReview(checklistItemId, studentId, crNbr, prerequisites)
   }
 
   const copyChecklistOutput = async e => {
@@ -133,6 +134,7 @@ export const ReviewStudentCodeReview = props => {
   const student = props.courseData.data.find(student => student.id === Number(props.studentInstance))
   const cr = student.codeReviews.find(cr => cr.reviewNumber === Number(props.codeReviewNumber))
   const checkList = props.selectedInstance.checklists.find(checkl => checkl.forCodeReview)
+  const prerequisites = {}
   const maxPoints = getMaximumPoints()
   const weekPoints = student.weeks
     .map(week => week.points)
@@ -157,6 +159,7 @@ export const ReviewStudentCodeReview = props => {
           savedChecks[clItem.id] = savedChecks[clItem.name]
           delete savedChecks[clItem.name]
         }
+        prerequisites[clItem.id] = clItem.prerequisite
 
         const checked = isChecked(checks, clItem.id)
         if (!clItem.minimumRequirement) {
@@ -173,6 +176,10 @@ export const ReviewStudentCodeReview = props => {
     } else if (maxPoints !== null && checklistPoints > maxPoints) {
       checklistPoints = maxPoints
     }
+    // make sure we have not checked anything with missing prerequisites
+    // (if there is nothing to update, this won't touch the state, so it will
+    //  just fall through)
+    props.verifyCheckPrerequisites(prerequisites)
   }
 
   if (!loadedCrData) {
@@ -264,68 +271,16 @@ export const ReviewStudentCodeReview = props => {
                   </Form.Field>
                 </Form>
               </Grid.Column>
-              {checkList && checks !== undefined ? (
-                <Grid.Column>
-                  <h2>Checklist</h2>
-                  {checkList ? (
-                    <div className="checklist">
-                      {Object.keys(checkList.list).map(clItemCategory => (
-                        <Card className="checklistCard" fluid color="red" key={clItemCategory}>
-                          <Card.Content header={clItemCategory} />
-                          {checkList.list[clItemCategory].map(clItem => (
-                            <Card.Content className="checklistCardRow" key={clItem.id} onClick={toggleCheckbox(clItem.id, props.ownProps.studentInstance, props.ownProps.weekNumber)}>
-                              <Form.Field>
-                                <Grid>
-                                  <Grid.Row style={{ cursor: 'pointer', userSelect: 'none' }}>
-                                    <Grid.Column width={3}>
-                                      <Icon
-                                        size="large"
-                                        name={isChecked(checks, clItem.id) ? 'circle check outline' : 'circle outline'}
-                                        style={{ color: isChecked(checks, clItem.id) ? 'green' : 'black' }}
-                                      />
-                                    </Grid.Column>
-                                    <Grid.Column width={10}>
-                                      <span style={{ flexGrow: 1, textAlign: 'center' }}>{clItem.name}</span>
-                                    </Grid.Column>
-                                    <Grid.Column width={3}>
-                                      {!clItem.minimumRequirement ? (
-                                        <span>{`${clItem.checkedPoints} p / ${clItem.uncheckedPoints} p`}</span>
-                                      ) : (
-                                        <>
-                                          <Popup
-                                            trigger={<Icon name="thumb tack" color="blue" size="big" />}
-                                            content={`This is a minimum requirement that is met when ${
-                                              clItem.minimumRequirementMetIf ? 'checked' : 'not checked'
-                                            }; if not met, the final grade will drop by ${clItem.minimumRequirementGradePenalty}`}
-                                          />
-                                          Requirement
-                                        </>
-                                      )}
-                                    </Grid.Column>
-                                  </Grid.Row>
-                                </Grid>
-                              </Form.Field>
-                            </Card.Content>
-                          ))}
-                        </Card>
-                      ))}
-                      <div>
-                        <Form className="checklistOutput" onSubmit={copyChecklistOutput}>
-                          <p className="checklistOutputPoints">
-                            points: <Points points={checklistPoints} />
-                          </p>
-                          <input type="hidden" name="points" value={checklistPoints} />
-                          <Button type="submit">Copy to review field</Button>
-                        </Form>
-                      </div>
-                    </div>
-                  ) : (
-                    <p>There is no checklist for this code review.</p>
-                  )}
-                </Grid.Column>
-              ) : (
-                <div />
-              )}
+              <ReviewStudentChecklist
+                showOutput={false}
+                kind="code review"
+                checklist={checkList}
+                checks={checks}
+                checklistPoints={checklistPoints}
+                isChecked={isChecked}
+                toggleCheckbox={clId => toggleCheckbox(clId, props.ownProps.studentInstance, props.ownProps.weekNumber)}
+                copyChecklistOutput={copyChecklistOutput}
+              />
             </Grid.Row>
           </Grid>
         </div>
@@ -351,6 +306,7 @@ const mapDispatchToProps = {
   gradeCodeReview,
   toggleCheckCodeReview,
   restoreChecks,
+  verifyCheckPrerequisites,
   resetChecklist,
   coursePageInformation,
   resetLoading,
@@ -375,6 +331,7 @@ ReviewStudentCodeReview.propTypes = {
   gradeCodeReview: PropTypes.func.isRequired,
   toggleCheckCodeReview: PropTypes.func.isRequired,
   restoreChecks: PropTypes.func.isRequired,
+  verifyCheckPrerequisites: PropTypes.func.isRequired,
   resetChecklist: PropTypes.func.isRequired,
   coursePageInformation: PropTypes.func.isRequired,
   resetLoading: PropTypes.func.isRequired,
