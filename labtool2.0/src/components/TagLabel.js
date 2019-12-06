@@ -66,6 +66,7 @@ export const TagLabel = props => {
 
   return (
     <Button
+      type="button"
       compact
       basic={basic}
       color={validColors.includes(tagColor) ? tagColor : null}
