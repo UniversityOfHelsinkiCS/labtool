@@ -12,6 +12,7 @@ import { updateStudentProjectInfo } from '../services/studentinstances'
 
 import { StudentTableRow } from './StudentTable/StudentTableRow'
 import PointHeaders from './StudentTable/PointHeaders'
+import InstructorFilter from './StudentTable/InstructorFilter'
 
 export const StudentTable = props => {
   const state = usePersistedState(props.persistentFilterKey || null, {
@@ -35,11 +36,9 @@ export const StudentTable = props => {
     }
   }
 
-  const changeFilterAssistant = () => {
-    return (e, data) => {
-      const { value } = data
-      filterByAssistant(value)
-    }
+  const changeFilterAssistant = (_, data) => {
+    const { value } = data
+    filterByAssistant(value)
   }
 
   const addFilterTag = tag => {
@@ -134,33 +133,11 @@ export const StudentTable = props => {
   // all students currently visible selected?
   const allSelected = filteredData.length && filteredData.map(data => data.id).every(id => props.coursePageLogic.selectedStudents[id])
 
-  // calculate the length of the longest text in a drop down
-  const getBiggestWidthInDropdown = dropdownList => {
-    if (dropdownList.length === 0) {
-      return 3
-    }
-    const lengths = dropdownList.map(dp => dp.text.length)
-    return lengths.reduce((longest, comp) => (longest > comp ? longest : comp), lengths[0])
-  }
-
   return (
     <>
       <div style={{ textAlign: 'left' }}>
         {(props.extraButtons || []).map(f => f())}
-        {showColumn('instructor') && (
-          <span>
-            <span>Filter by instructor: </span>
-            <Dropdown
-              scrolling
-              options={dropDownFilterTeachers}
-              onChange={changeFilterAssistant()}
-              placeholder="Select Teacher"
-              defaultValue={state.filterByAssistant}
-              selection
-              style={{ width: `${getBiggestWidthInDropdown(dropDownFilterTeachers)}em` }}
-            />
-          </span>
-        )}
+        {showColumn('instructor') && <InstructorFilter dropDownFilterTeachers={dropDownFilterTeachers} changeFilterAssistant={changeFilterAssistant} defaultValue={state.filterByAssistant} />}
         <span> Tag filters: </span>
         {dropDownFilterTags.length === 0 ? (
           <span>
