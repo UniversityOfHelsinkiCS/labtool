@@ -113,6 +113,7 @@ describe('<CreateChecklist /> component', () => {
         removeRow={mockFn}
         getAllCI={mockFn}
         castPointsToNumber={mockFn}
+        applyCategoryPrerequisite={mockFn}
         restoreChecklist={mockFn}
         addRedirectHook={mockFn}
       />

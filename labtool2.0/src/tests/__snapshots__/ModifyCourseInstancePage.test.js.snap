@@ -305,6 +305,23 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
               inline={true}
             >
               <Checkbox
+                disabled={true}
+                label="Points are given for final review"
+                name="finalReviewHasPoints"
+                onChange={[Function]}
+                style={
+                  Object {
+                    "textAlign": "left",
+                    "width": "150px",
+                  }
+                }
+                type="checkbox"
+              />
+            </FormGroup>
+            <FormGroup
+              inline={true}
+            >
+              <Checkbox
                 checked={true}
                 label="Course registration is active"
                 name="courseActive"
@@ -419,6 +436,8 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
           Edit tags
         </Button>
       </Link>
+      <br />
+      <br />
     </div>
   </div>
 </Fragment>

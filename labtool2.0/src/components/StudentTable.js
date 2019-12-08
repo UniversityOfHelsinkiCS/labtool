@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Button, Table, Dropdown, Label, Checkbox } from 'semantic-ui-react'
+import { Table, Dropdown, Label, Checkbox } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import HorizontalScrollable from './HorizontalScrollable'
 import { getAllTags, tagStudent, unTagStudent } from '../services/tags'
@@ -11,6 +11,7 @@ import { usePersistedState } from '../hooks/persistedState'
 import { updateStudentProjectInfo } from '../services/studentinstances'
 
 import { StudentTableRow } from './StudentTable/StudentTableRow'
+import { TagLabel } from './TagLabel'
 
 export const StudentTable = props => {
   const state = usePersistedState(props.persistentFilterKey || null, {
@@ -83,6 +84,8 @@ export const StudentTable = props => {
     return count
   }
 
+  const getStudentFinalGrade = student => (student.weeks.find(week => week.weekNumber === props.selectedInstance.weekAmount + 1) || {}).grade || null
+  const shouldHideGrade = (selectedInstance, studentInstances) => !selectedInstance.finalReview || studentInstances.every(studentInstance => !getStudentFinalGrade(studentInstance))
   const shouldHideInstructor = studentInstances => studentInstances.every(studentInstance => studentInstance.teacherInstanceId === null)
 
   const createHeadersTeacher = () => {
@@ -159,6 +162,14 @@ export const StudentTable = props => {
 
   const filteredData = (props.studentInstances || []).filter(dataFilter).filter(filterStudents ? filterStudents : () => true)
 
+  //Set of tags that are used by at least one student
+  const usedTags = filteredData
+    .map(student => student.Tags)
+    .reduce((set, tags) => {
+      tags.forEach(tag => set.add(tag.id))
+      return set
+    }, new Set())
+
   if (props.onFilter) {
     props.onFilter(filteredData.map(data => data.id))
   }
@@ -199,12 +210,10 @@ export const StudentTable = props => {
             <Label>none</Label>
           </span>
         ) : (
-          <span>
+          <span className="tagFilter">
             {dropDownFilterTags.map(tag => (
               <span key={tag.id}>
-                <Button compact className={`mini ui ${tag.color} button ${!state.filterByTag.find(t => t.id === tag.id) ? 'basic' : ''}`} onClick={addFilterTag(tag)}>
-                  {tag.name}
-                </Button>
+                <TagLabel tag={tag} basic={!state.filterByTag.find(t => t.id === tag.id)} handleClick={addFilterTag(tag)} disabled={!usedTags.has(tag.id)} />
               </span>
             ))}
           </span>
@@ -229,6 +238,11 @@ export const StudentTable = props => {
                   <Table.HeaderCell>Sum</Table.HeaderCell>
                 </>
               )}
+              {showColumn('grade') && !shouldHideGrade(props.selectedInstance, props.studentInstances) && (
+                <>
+                  <Table.HeaderCell>Grade</Table.HeaderCell>
+                </>
+              )}
               {showColumn('instructor') && !shouldHideInstructor(props.studentInstances) && (
                 <Table.HeaderCell width={shouldHideInstructor(props.studentInstances) ? null : 'six'}>Instructor</Table.HeaderCell>
               )}
@@ -246,6 +260,8 @@ export const StudentTable = props => {
                 dropDownTeachers={dropDownTeachers}
                 addFilterTag={addFilterTag}
                 shouldHideInstructor={shouldHideInstructor}
+                shouldHideGrade={shouldHideGrade}
+                getStudentFinalGrade={getStudentFinalGrade}
                 extraStudentIcon={extraStudentIcon}
                 allowReview={props.allowReview}
                 allowModify={props.allowModify}
@@ -279,6 +295,7 @@ export const StudentTable = props => {
                 {studentFooter ? studentFooter() : <Table.HeaderCell />}
                 <Table.HeaderCell />
                 {showColumn('points') && <Table.HeaderCell />}
+                {showColumn('grade') && !shouldHideGrade(props.studentInstances) && <Table.HeaderCell />}
                 {showColumn('instructor') && !shouldHideInstructor(props.studentInstances) && <Table.HeaderCell />}
                 {showColumn('review') && <Table.HeaderCell />}
                 {extraColumns.map(([, , footer]) => footer())}
@@ -340,7 +357,4 @@ StudentTable.propTypes = {
   updateStudentProjectInfo: PropTypes.func.isRequired
 }
 
-export default connect(
-  null,
-  mapDispatchToProps
-)(StudentTable)
+export default connect(null, mapDispatchToProps)(StudentTable)

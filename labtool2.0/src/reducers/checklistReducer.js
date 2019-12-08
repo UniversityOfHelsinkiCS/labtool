@@ -23,6 +23,12 @@ const checklistReducer = (state = INITIAL_STATE, action) => {
       newData[action.data.key].find(row => row.name === action.data.name)[action.data.field] = action.data.value
       return { ...state, data: newData }
     }
+    case 'CHECKLIST_APPLY_PREREQUISITE_TO_CHECKS_IN_CATEGORY': {
+      const newData = state.data
+      const { category, prerequisite } = action
+      newData[category] = newData[category].map(row => ({ ...row, prerequisite: row.id === prerequisite || row.tempId === prerequisite ? null : prerequisite }))
+      return { ...state, data: newData }
+    }
     case 'CHECKLIST_ADD_TOPIC': {
       const newData = state.data
       newData[action.data.key] = []
@@ -30,12 +36,15 @@ const checklistReducer = (state = INITIAL_STATE, action) => {
     }
     case 'CHECKLIST_ADD_ROW': {
       const newData = state.data
+      const nextTempId = 1 + Math.max(...Object.keys(newData).map(key => Math.max(...newData[key].filter(item => item.id || item.tempId).map(item => item.id || item.tempId))))
       newData[action.data.key].push({
         name: action.data.name,
+        tempId: nextTempId,
         checkedPoints: 0,
         uncheckedPoints: 0,
         textWhenOn: '',
-        textWhenOff: ''
+        textWhenOff: '',
+        prerequisite: action.data.prerequisite
       })
       return { ...state, data: newData }
     }
@@ -101,11 +110,12 @@ export const addTopic = data => {
   }
 }
 
-export const addRow = data => {
+export const addRow = (data, prerequisite) => {
   return async dispatch => {
     dispatch({
       type: 'CHECKLIST_ADD_ROW',
-      data
+      data,
+      prerequisite
     })
   }
 }
@@ -133,6 +143,16 @@ export const castPointsToNumber = data => {
     dispatch({
       type: 'CHECKLIST_CAST_POINTS',
       data
+    })
+  }
+}
+
+export const applyCategoryPrerequisite = (category, prerequisite) => {
+  return async dispatch => {
+    dispatch({
+      type: 'CHECKLIST_APPLY_PREREQUISITE_TO_CHECKS_IN_CATEGORY',
+      category,
+      prerequisite
     })
   }
 }

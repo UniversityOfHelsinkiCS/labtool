@@ -92,6 +92,7 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
       </h3>
       <h3>
         Week 
+        1
       </h3>
       <Grid>
         <GridRow
@@ -254,331 +255,78 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
               </FormField>
             </Form>
           </GridColumn>
-          <GridColumn>
-            <h2>
-              Checklist
-            </h2>
-            <div
-              className="checklist"
-            >
-              <Card
-                className="checklistCard"
-                color="red"
-                fluid={true}
-                key="Koodi"
-              >
-                <CardContent
-                  header="Koodi"
-                />
-                <CardContent
-                  className="checklistCardRow"
-                  key="1"
-                  onClick={[Function]}
-                >
-                  <FormField>
-                    <Grid>
-                      <GridRow
-                        style={
-                          Object {
-                            "cursor": "pointer",
-                            "userSelect": "none",
-                          }
-                        }
-                      >
-                        <GridColumn
-                          width={3}
-                        >
-                          <Icon
-                            as="i"
-                            name="circle outline"
-                            size="large"
-                            style={
-                              Object {
-                                "color": "black",
-                              }
-                            }
-                          />
-                        </GridColumn>
-                        <GridColumn
-                          width={10}
-                        >
-                          <span
-                            style={
-                              Object {
-                                "flexGrow": 1,
-                                "textAlign": "center",
-                              }
-                            }
-                          >
-                            Koodin laatu
-                          </span>
-                        </GridColumn>
-                        <GridColumn
-                          width={3}
-                        >
-                          <span>
-                            undefined p / undefined p
-                          </span>
-                        </GridColumn>
-                      </GridRow>
-                    </Grid>
-                  </FormField>
-                </CardContent>
-              </Card>
-              <Card
-                className="checklistCard"
-                color="red"
-                fluid={true}
-                key="Algoritmit"
-              >
-                <CardContent
-                  header="Algoritmit"
-                />
-                <CardContent
-                  className="checklistCardRow"
-                  key="2"
-                  onClick={[Function]}
-                >
-                  <FormField>
-                    <Grid>
-                      <GridRow
-                        style={
-                          Object {
-                            "cursor": "pointer",
-                            "userSelect": "none",
-                          }
-                        }
-                      >
-                        <GridColumn
-                          width={3}
-                        >
-                          <Icon
-                            as="i"
-                            name="circle outline"
-                            size="large"
-                            style={
-                              Object {
-                                "color": "black",
-                              }
-                            }
-                          />
-                        </GridColumn>
-                        <GridColumn
-                          width={10}
-                        >
-                          <span
-                            style={
-                              Object {
-                                "flexGrow": 1,
-                                "textAlign": "center",
-                              }
-                            }
-                          >
-                            Algoritmin runko
-                          </span>
-                        </GridColumn>
-                        <GridColumn
-                          width={3}
-                        >
-                          <span>
-                            undefined p / undefined p
-                          </span>
-                        </GridColumn>
-                      </GridRow>
-                    </Grid>
-                  </FormField>
-                </CardContent>
-                <CardContent
-                  className="checklistCardRow"
-                  key="3"
-                  onClick={[Function]}
-                >
-                  <FormField>
-                    <Grid>
-                      <GridRow
-                        style={
-                          Object {
-                            "cursor": "pointer",
-                            "userSelect": "none",
-                          }
-                        }
-                      >
-                        <GridColumn
-                          width={3}
-                        >
-                          <Icon
-                            as="i"
-                            name="circle outline"
-                            size="large"
-                            style={
-                              Object {
-                                "color": "black",
-                              }
-                            }
-                          />
-                        </GridColumn>
-                        <GridColumn
-                          width={10}
-                        >
-                          <span
-                            style={
-                              Object {
-                                "flexGrow": 1,
-                                "textAlign": "center",
-                              }
-                            }
-                          >
-                            Tietorakenteita luotu
-                          </span>
-                        </GridColumn>
-                        <GridColumn
-                          width={3}
-                        >
-                          <span>
-                            undefined p / undefined p
-                          </span>
-                        </GridColumn>
-                      </GridRow>
-                    </Grid>
-                  </FormField>
-                </CardContent>
-              </Card>
-              <Card
-                className="checklistCard"
-                color="red"
-                fluid={true}
-                key="Dokumentaatio"
-              >
-                <CardContent
-                  header="Dokumentaatio"
-                />
-                <CardContent
-                  className="checklistCardRow"
-                  key="4"
-                  onClick={[Function]}
-                >
-                  <FormField>
-                    <Grid>
-                      <GridRow
-                        style={
-                          Object {
-                            "cursor": "pointer",
-                            "userSelect": "none",
-                          }
-                        }
-                      >
-                        <GridColumn
-                          width={3}
-                        >
-                          <Icon
-                            as="i"
-                            name="circle outline"
-                            size="large"
-                            style={
-                              Object {
-                                "color": "black",
-                              }
-                            }
-                          />
-                        </GridColumn>
-                        <GridColumn
-                          width={10}
-                        >
-                          <span
-                            style={
-                              Object {
-                                "flexGrow": 1,
-                                "textAlign": "center",
-                              }
-                            }
-                          >
-                            Readme
-                          </span>
-                        </GridColumn>
-                        <GridColumn
-                          width={3}
-                        >
-                          <span>
-                            undefined p / undefined p
-                          </span>
-                        </GridColumn>
-                      </GridRow>
-                    </Grid>
-                  </FormField>
-                </CardContent>
-                <CardContent
-                  className="checklistCardRow"
-                  key="5"
-                  onClick={[Function]}
-                >
-                  <FormField>
-                    <Grid>
-                      <GridRow
-                        style={
-                          Object {
-                            "cursor": "pointer",
-                            "userSelect": "none",
-                          }
-                        }
-                      >
-                        <GridColumn
-                          width={3}
-                        >
-                          <Icon
-                            as="i"
-                            name="circle outline"
-                            size="large"
-                            style={
-                              Object {
-                                "color": "black",
-                              }
-                            }
-                          />
-                        </GridColumn>
-                        <GridColumn
-                          width={10}
-                        >
-                          <span
-                            style={
-                              Object {
-                                "flexGrow": 1,
-                                "textAlign": "center",
-                              }
-                            }
-                          >
-                            Tuntikirjanpito
-                          </span>
-                        </GridColumn>
-                        <GridColumn
-                          width={3}
-                        >
-                          <span>
-                            undefined p / undefined p
-                          </span>
-                        </GridColumn>
-                      </GridRow>
-                    </Grid>
-                  </FormField>
-                </CardContent>
-              </Card>
-              <div>
-                <Form
-                  as="form"
-                  className="checklistOutput"
-                  onSubmit={[Function]}
-                >
-                  <FormTextArea
-                    as={[Function]}
-                    className="checklistOutputText"
-                    control={[Function]}
-                    name="text"
-                    style={
-                      Object {
-                        "height": "250px",
-                        "width": "100%",
-                      }
-                    }
-                    value="Koodin laadussa parantamisen varaa
+          <ReviewStudentChecklist
+            checklist={
+              Object {
+                "courseInstanceId": 10011,
+                "courseName": "Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit",
+                "createdAt": "2018-03-26T00:00:00.000Z",
+                "id": 10003,
+                "list": Object {
+                  "Algoritmit": Array [
+                    Object {
+                      "id": 2,
+                      "name": "Algoritmin runko",
+                      "points": 2,
+                      "prerequisite": null,
+                      "textWhenOff": "Algoritmin runko puuttuu",
+                      "textWhenOn": "Algoritmin runko luotu",
+                    },
+                    Object {
+                      "id": 3,
+                      "name": "Tietorakenteita luotu",
+                      "points": 2,
+                      "prerequisite": null,
+                      "textWhenOff": "Tietorakenteita ei ole luotu",
+                      "textWhenOn": "Tietorakenteita luotu",
+                    },
+                  ],
+                  "Dokumentaatio": Array [
+                    Object {
+                      "id": 4,
+                      "name": "Readme",
+                      "points": 1,
+                      "prerequisite": null,
+                      "textWhenOff": "README puuttuu",
+                      "textWhenOn": "README kunnossa",
+                    },
+                    Object {
+                      "id": 5,
+                      "name": "Tuntikirjanpito",
+                      "points": 1,
+                      "prerequisite": null,
+                      "textWhenOff": "Tuntikirjanpito puuttuu",
+                      "textWhenOn": "Tuntikirjanpito täytetty oikein",
+                    },
+                  ],
+                  "Koodi": Array [
+                    Object {
+                      "id": 1,
+                      "name": "Koodin laatu",
+                      "points": 2,
+                      "prerequisite": null,
+                      "textWhenOff": "Koodin laadussa parantamisen varaa",
+                      "textWhenOn": "Koodi tehty laadukkaasti ja sisältää kommentteja",
+                    },
+                  ],
+                  "README": Array [
+                    Object {
+                      "id": 6,
+                      "name": "Readme sisältää linkkejä",
+                      "points": 1,
+                      "prerequisite": 4,
+                      "textWhenOff": "README:sta puuttuu linkit",
+                      "textWhenOn": "README:ssa on tarvittavat linkit",
+                    },
+                  ],
+                },
+                "master": false,
+                "maxPoints": 4,
+                "updatedAt": "2018-03-26T00:00:00.000Z",
+                "week": 1,
+              }
+            }
+            checklistOutput="Koodin laadussa parantamisen varaa
 
 Algoritmin runko puuttuu
 
@@ -589,30 +337,14 @@ README puuttuu
 Tuntikirjanpito puuttuu
 
 "
-                  />
-                  <p
-                    className="checklistOutputPoints"
-                  >
-                    points: 
-                    <Points
-                      points={NaN}
-                    />
-                  </p>
-                  <input
-                    name="points"
-                    type="hidden"
-                    value={NaN}
-                  />
-                  <Button
-                    as="button"
-                    type="submit"
-                  >
-                    Copy to review fields
-                  </Button>
-                </Form>
-              </div>
-            </div>
-          </GridColumn>
+            checklistPoints={NaN}
+            checks={Object {}}
+            copyChecklistOutput={[Function]}
+            isChecked={[Function]}
+            kind="week"
+            showOutput={true}
+            toggleCheckbox={[Function]}
+          />
         </GridRow>
       </Grid>
     </div>

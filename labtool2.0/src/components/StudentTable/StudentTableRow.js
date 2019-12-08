@@ -6,6 +6,7 @@ import RepoLink from '../RepoLink'
 
 import RepoAccessWarning from '../RepoAccessWarning'
 import { Points } from '../Points'
+import { TagLabel } from '../TagLabel'
 
 export const StudentTableRow = props => {
   const {
@@ -15,6 +16,8 @@ export const StudentTableRow = props => {
     dropDownTags,
     dropDownTeachers,
     shouldHideInstructor,
+    shouldHideGrade,
+    getStudentFinalGrade,
     extraStudentIcon,
     allowReview,
     allowModify,
@@ -135,7 +138,7 @@ export const StudentTableRow = props => {
     const tableCellLinkStyle = { position: 'absolute', display: 'inline-block', top: 0, left: 0, right: 0, bottom: 0 }
     const flexCenter = { display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }
 
-    for (var j = 0; j < weeks.length; j++) {
+    for (let j = 0; j < weeks.length; j++) {
       if (weeks[j].weekNumber === selectedInstance.weekAmount + 1) {
         finalPoints = weeks[j].points
       } else if (weeks[j].weekNumber) {
@@ -232,10 +235,21 @@ export const StudentTableRow = props => {
             <div style={{ width: '100%', height: '100%' }}>
               {finalPoints === undefined ? (
                 shouldReview && selectedInstance.currentWeek === selectedInstance.weekAmount + 1 ? (
-                  <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'star', size: 'large' }} />} content="Review" className="reviewButton" />
+                  draftExists(selectedInstance.weekAmount + 1) ? (
+                    <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'pause', size: 'large' }} />} content="Continue review from draft" className="reviewDraftButton" />
+                  ) : (
+                    <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'star', size: 'large' }} />} content="Review" className="reviewButton" />
+                  )
                 ) : (
                   <p style={flexCenter}>-</p>
                 )
+              ) : finalPoints === null ? (
+                <div>
+                  <p style={flexCenter}>
+                    <Popup trigger={<Icon name="check" size="big" color="grey" />} content="Final review has been given, but without any points" />
+                  </p>
+                  {showNewCommentsNotification(data.id, selectedInstance.weekAmount + 1) ? <Popup trigger={<Icon name="comments" size="big" />} content="You have new comments" /> : null}
+                </div>
               ) : (
                 <div>
                   <p style={flexCenter}>
@@ -299,14 +313,8 @@ export const StudentTableRow = props => {
             {data.Tags.map(tag => (
               <span key={data.id + ':' + tag.id} style={{ float: 'left', marginRight: '0.33em' }}>
                 <Button.Group className={'mini'}>
-                  <Button compact style={{ display: 'inline-block' }} className={`mini ui ${tag.color} button`} onClick={addFilterTag(tag)}>
-                    {tag.name}
-                  </Button>
-                  {allowModify && (
-                    <Button compact icon attached="right" className={`mini ui ${tag.color} button`} style={{ paddingLeft: 0, paddingRight: 0 }} onClick={removeTag(data.id, tag.id)}>
-                      <Icon name="remove" />
-                    </Button>
-                  )}
+                  <TagLabel tag={tag} handleClick={addFilterTag(tag)} />
+                  {allowModify && <TagLabel removeLabel={true} tag={tag} handleClick={removeTag(data.id, tag.id)} />}
                 </Button.Group>
               </span>
             ))}
@@ -338,6 +346,13 @@ export const StudentTableRow = props => {
             <Points points={data.weeks.map(week => week.points).reduce((a, b) => a + b, 0) + data.codeReviews.map(cr => cr.points).reduce((a, b) => a + b, 0)} />
           </Table.Cell>
         </>
+      )}
+
+      {/* Grade */}
+      {showColumn('grade') && !shouldHideGrade(selectedInstance, studentInstances) && (
+        <Table.Cell key="grade" textAlign="center">
+          {getStudentFinalGrade(data) || '-'}
+        </Table.Cell>
       )}
 
       {/* Instructor */}
@@ -414,7 +429,9 @@ StudentTableRow.propTypes = {
   selectStudent: PropTypes.func.isRequired,
   unselectStudent: PropTypes.func.isRequired,
   loggedInUser: PropTypes.object,
-  courseData: PropTypes.object
+  courseData: PropTypes.object,
+  shouldHideGrade: PropTypes.func,
+  getStudentFinalGrade: PropTypes.func
 }
 
 export default StudentTableRow
