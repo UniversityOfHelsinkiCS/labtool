@@ -299,7 +299,7 @@ const send = async (req, res) => {
         const link = req.body.role === 'teacher'
           ? `${frontendUrl}/courses/${message.content.course.ohid}`
           : `${frontendUrl}/browsereviews/${message.content.course.ohid}/${message.studentId}`
-        html = buildEmail('You\'ve received a message from Labtool', link, message.content.course.name, null, 'Message content', message.content.text)
+        html = buildEmail(null, link, message.content.course.name, null, 'Message content', message.content.text)
       }
     } else {
       // commentId was not supplied, so use weekId instead.
@@ -459,8 +459,7 @@ const sendMass = async (req, res) => {
     // prepare email here
     const link = `${frontendUrl}/courses/${req.params.id}`
     const subject = `${courseInstance.name} new message from instructor`
-    const html = buildEmail('You\'ve received a message from Labtool', link, courseInstance.name, null, 'Message content', req.body.content)
-
+    const html = buildEmail(null, link, courseInstance.name, null, 'Message content', req.body.content)
     const { success, simulated } = await trySendEmail({
       subject,
       html,
@@ -482,7 +481,7 @@ const sendMass = async (req, res) => {
 }
 
 const buildEmail = (title, link, courseName, pointsAwarded, contentTitle, content) => `
-  <h1>${title}</h1>
+  ${title !== null ? `<h1>${title}</h1>}` : null}
   <p><a href="${link}">${link}</a></p>
   <p>course: ${courseName}</p>
   ${pointsAwarded !== null ? `<p>points awarded: ${pointsAwarded}</p>` : ''}
