@@ -481,7 +481,7 @@ const sendMass = async (req, res) => {
 }
 
 const buildEmail = (title, link, courseName, pointsAwarded, contentTitle, content) => `
-  ${title !== null ? `<h1>${title}</h1>}` : null}
+  ${title !== null ? `<h1>${title}</h1>}` : ''}
   <p><a href="${link}">${link}</a></p>
   <p>course: ${courseName}</p>
   ${pointsAwarded !== null ? `<p>points awarded: ${pointsAwarded}</p>` : ''}
