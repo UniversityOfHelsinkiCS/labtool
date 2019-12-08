@@ -952,14 +952,12 @@ module.exports = {
       return res.status(403).send('You must be a teacher on the course you are copying to.')
     }
 
-    // course info: week amount, final review?, maxpoints, links
+    // course info: week amount, final review?, maxpoints
     try {
       await course.update({
         weekAmount: template.weekAmount,
         weekMaxPoints: template.weekMaxPoints,
-        finalReview: template.finalReview,
-        coursesPage: course.coursesPage || template.coursesPage,
-        courseMaterial: course.courseMaterial || template.courseMaterial
+        finalReview: template.finalReview
       })
     } catch (e) {
       logger.error(e)
