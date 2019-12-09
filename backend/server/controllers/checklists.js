@@ -97,7 +97,7 @@ module.exports = {
                   }
                   break
                 case 'minimumRequirementGradePenalty':
-                  if (row.minimumRequirement && (typeof row[key] !== 'number' || row[key] !== (row[key] | 0) || row[key] < 0)) {
+                  if (row.minimumRequirement && (typeof row[key] !== 'number' || !Number.isInteger(row[key]) || row[key] < 0)) {
                     res.status(400).send('"minimumRequirementGradePenalty" must be a non-negative integer')
                     return false
                   }
@@ -114,7 +114,7 @@ module.exports = {
               return true
             })) {
               // some validation failure
-              return
+
             }
           })
         })
@@ -200,8 +200,8 @@ module.exports = {
           }
           return obj
         })
-        
-        const checklistItems = await Promise.all(checklistUpsert.map(async (checklistItem) => checklistItem.id === undefined ? [await ChecklistItem.create(checklistItem, { returning: true })] : await ChecklistItem.upsert(checklistItem, { returning: true })))
+
+        const checklistItems = await Promise.all(checklistUpsert.map(async checklistItem => (checklistItem.id === undefined ? [await ChecklistItem.create(checklistItem, { returning: true })] : ChecklistItem.upsert(checklistItem, { returning: true }))))
         const zipped = checklistForCategoryIdFiltered.map((item, index) => [item, checklistItems[index][0]])
 
         // if we had a temp ID, map those, and if we had prerequisites, map those too
