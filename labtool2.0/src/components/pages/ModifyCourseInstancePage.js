@@ -360,7 +360,7 @@ export const ModifyCourseInstancePage = props => {
               Edit checklists
             </Button>
           </Link>
-          <Link to={`/labtool/managetags`}>
+          <Link to={`/labtool/ManageTags/${props.selectedInstance.ohid}`}>
             <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px' }} block="true">
               Edit tags
             </Button>

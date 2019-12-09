@@ -7,7 +7,7 @@ import { capitalize } from '../../util/format'
 import { createTag, getAllTags, removeTag } from '../../services/tags'
 import { resetLoading } from '../../reducers/loadingReducer'
 import { willCreateNewTag, willModifyExistingTag } from '../../reducers/tagReducer'
-import { getAllCI } from '../../services/courseInstance'
+import { getOneCI, coursePageInformation, getAllCI } from '../../services/courseInstance'
 import BackButton from '../BackButton'
 import useLegacyState from '../../hooks/legacyState'
 import { sortCoursesByName } from '../../util/sort'
@@ -33,6 +33,8 @@ export const ManageTags = props => {
     props.resetLoading()
     props.getAllTags()
     props.getAllCI()
+    props.getOneCI(props.courseId)
+    props.coursePageInformation(props.courseId)
 
     return () => {
       props.willCreateNewTag()
@@ -329,6 +331,8 @@ export const ManageTags = props => {
             <Button type="button" onClick={copyCourseTags} disabled={!state.copyCourse}>
               Copy course tags
             </Button>
+            <br />
+            <br />
           </div>
         </Container>
       </div>
@@ -354,11 +358,15 @@ const mapDispatchToProps = {
   resetLoading,
   willCreateNewTag,
   willModifyExistingTag,
+  getOneCI,
+  coursePageInformation,
   getAllCI,
   showNotification
 }
 
 ManageTags.propTypes = {
+  courseId: PropTypes.string.isRequired,
+
   tags: PropTypes.object.isRequired,
   loading: PropTypes.object.isRequired,
   selectedInstance: PropTypes.object.isRequired,
@@ -370,6 +378,8 @@ ManageTags.propTypes = {
   resetLoading: PropTypes.func.isRequired,
   willCreateNewTag: PropTypes.func.isRequired,
   willModifyExistingTag: PropTypes.func.isRequired,
+  getOneCI: PropTypes.func.isRequired,
+  coursePageInformation: PropTypes.func.isRequired,
   getAllCI: PropTypes.func.isRequired,
   showNotification: PropTypes.func.isRequired,
 

@@ -420,7 +420,7 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
         </Button>
       </Link>
       <Link
-        to="/labtool/managetags"
+        to="/labtool/ManageTags/TKT20011.2018.K.A.1"
       >
         <Button
           as="button"
