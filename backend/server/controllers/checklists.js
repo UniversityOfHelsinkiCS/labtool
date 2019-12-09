@@ -97,7 +97,7 @@ module.exports = {
                   }
                   break
                 case 'minimumRequirementGradePenalty':
-                  if (row.minimumRequirement && (typeof row[key] !== 'number' || row[key] !== (row[key] | 0) || row[key] < 0)) {
+                  if (row.minimumRequirement && (typeof row[key] !== 'number' || !Number.isInteger(row[key]) || row[key] < 0)) {
                     res.status(400).send('"minimumRequirementGradePenalty" must be a non-negative integer')
                     return false
                   }
@@ -114,7 +114,7 @@ module.exports = {
               return true
             })) {
               // some validation failure
-              return
+
             }
           })
         })
@@ -178,21 +178,30 @@ module.exports = {
           }
           return checklistItemCopy
         }))
-        const checklistItems = await Promise.all(checklistForCategoryIdFiltered.map((checklistItem, index) => ChecklistItem.upsert({
-          id: checklistItem.id,
-          name: checklistItem.name,
-          textWhenOn: checklistItem.textWhenOn,
-          textWhenOff: checklistItem.textWhenOff,
-          checkedPoints: checklistItem.checkedPoints,
-          uncheckedPoints: checklistItem.uncheckedPoints,
-          category,
-          checklistId: result[1].dataValues.id,
-          order: checklistOrder + index,
-          prerequisite: null, // map later; see below
-          minimumRequirement: checklistItem.minimumRequirement,
-          minimumRequirementMetIf: checklistItem.minimumRequirementMetIf,
-          minimumRequirementGradePenalty: checklistItem.minimumRequirementGradePenalty
-        }, { returning: true })))
+
+        const checklistUpsert = checklistForCategoryIdFiltered.map((checklistItem, index) => {
+          const obj = {
+            id: checklistItem.id,
+            name: checklistItem.name,
+            textWhenOn: checklistItem.textWhenOn,
+            textWhenOff: checklistItem.textWhenOff,
+            checkedPoints: checklistItem.checkedPoints,
+            uncheckedPoints: checklistItem.uncheckedPoints,
+            category,
+            checklistId: result[1].dataValues.id,
+            order: checklistOrder + index,
+            prerequisite: null, // map later; see below
+            minimumRequirement: checklistItem.minimumRequirement,
+            minimumRequirementMetIf: checklistItem.minimumRequirementMetIf,
+            minimumRequirementGradePenalty: checklistItem.minimumRequirementGradePenalty
+          }
+          if (obj.id === undefined) {
+            delete obj.id
+          }
+          return obj
+        })
+
+        const checklistItems = await Promise.all(checklistUpsert.map(async checklistItem => (checklistItem.id === undefined ? [await ChecklistItem.create(checklistItem, { returning: true })] : ChecklistItem.upsert(checklistItem, { returning: true }))))
         const zipped = checklistForCategoryIdFiltered.map((item, index) => [item, checklistItems[index][0]])
 
         // if we had a temp ID, map those, and if we had prerequisites, map those too
@@ -243,6 +252,7 @@ module.exports = {
         data: req.body
       })
     } catch (e) {
+      console.error(e)
       logger.error('Checklist creation error.', { error: e.message })
       res.status(500).send('Unexpected error. Please try again.')
     }

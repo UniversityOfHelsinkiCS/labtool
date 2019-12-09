@@ -113,6 +113,7 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
         >
           <JsonEdit
             downloadName="TKT20010.2018.K.A.1_week6.json"
+            generation={2}
             initialData={
               Object {
                 "Koodi": Array [
