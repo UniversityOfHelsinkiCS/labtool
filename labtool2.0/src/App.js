@@ -132,8 +132,8 @@ const App = props => {
           <Route path={`/labtool/ModifyCourseInstancePage/:id`} render={({ match }) => <ModifyCourseInstancePage courseId={match.params.id} />} />
           <Route path={`/labtool/ModifyCourseInstanceStaff/:id`} render={({ match }) => <ModifyCourseInstanceStaff courseId={match.params.id} />} />
           <Route path={'/labtool/ModifyCourseInstanceCodeReviews/:id'} render={({ match }) => <ModifyCourseInstanceCodeReviews courseId={match.params.id} />} />
+          <Route path={'/labtool/ManageTags/:id'} render={({ match }) => <ManageTags courseId={match.params.id} />} />
           <Route path={'/labtool/checklist/:id/create'} render={({ match }) => <CreateChecklist courseId={match.params.id} />} />
-          <Route path={'/labtool/ManageTags'} component={ManageTags} />
           <Route path={'/labtool/checklist/:id/create'} render={({ match }) => <CreateChecklist courseId={match.params.id} />} />
           <Route path={'/labtool/courseimport'} render={() => <CourseImport />} />
           <Route path={`/labtool/admin`} component={AdminPage} />
