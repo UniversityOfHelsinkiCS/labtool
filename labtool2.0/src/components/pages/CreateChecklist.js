@@ -30,6 +30,7 @@ export const CreateChecklist = props => {
     categoryPrerequisites: {},
     checklistData: null,
     maximumPoints: '',
+    generation: 0,
     canSave: false
   })
 
@@ -157,6 +158,7 @@ export const CreateChecklist = props => {
 
     try {
       props.createChecklist(data)
+      state.generation = state.generation + 1
       state.canSave = false
     } catch (e) {
       props.showNotification({
@@ -269,6 +271,7 @@ export const CreateChecklist = props => {
     } else if (obj.kind === 'codeReview') {
       data.forCodeReview = true
     }
+    state.generation = state.generation + 1
     state.canSave = false
     props.getOneChecklist(data)
   }
@@ -733,7 +736,7 @@ export const CreateChecklist = props => {
             </div>
             {hasSelectedWeek ? (
               <div className="jsonButtons">
-                <JsonEdit onImport={importChecklist} initialData={props.checklist.data} downloadName={`${props.selectedInstance.ohid}_${state.current}.json`} />
+                <JsonEdit onImport={importChecklist} initialData={props.checklist.data} generation={state.generation} downloadName={`${props.selectedInstance.ohid}_${state.current}.json`} />
               </div>
             ) : (
               <div />
