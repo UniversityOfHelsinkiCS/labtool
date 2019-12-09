@@ -31,10 +31,12 @@ const Nav = props => {
         borderBottomRightRadius: '5px'
       }}
     >
-      <Menu.Menu position="left" as={Link} to="/labtool/mypage">
+      <Menu.Menu position="left">
         <Menu.Item
           header
           active={onMyPage}
+          as={Link}
+          to="/labtool/mypage"
           style={{
             bottom: '4px'
           }}
@@ -107,9 +109,4 @@ Nav.propTypes = {
   logout: PropTypes.func.isRequired
 }
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    {}
-  )(Nav)
-)
+export default withRouter(connect(mapStateToProps, {})(Nav))
