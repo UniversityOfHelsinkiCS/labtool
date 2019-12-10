@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { Button, Icon } from 'semantic-ui-react'
 
 export const LogoutButton = ({ logout, user }) => (
-  <Button style={{ backgroundColor: '#faffd9' }} onClick={logout}>
+  <Button color="red" onClick={logout}>
     <Icon name="sign out alternate" />
     {`Logout${user ? ` (${user.firsts} ${user.lastname.charAt(0)})` : ''}`}
   </Button>
