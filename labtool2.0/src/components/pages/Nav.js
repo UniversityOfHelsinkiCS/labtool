@@ -6,6 +6,10 @@ import { connect } from 'react-redux'
 import { Divider, Menu, Icon, Image } from 'semantic-ui-react'
 import LogoutButton from '../LogoutButton'
 
+import './Nav.css'
+
+const MenuText = ({ active, children }) => <span className={active ? 'activeItem' : undefined}>{children}</span>
+
 /**
  * Navigation bar component
  */
@@ -34,7 +38,6 @@ const Nav = props => {
       <Menu.Menu position="left">
         <Menu.Item
           header
-          active={onMyPage}
           as={Link}
           to="/labtool/mypage"
           style={{
@@ -52,36 +55,36 @@ const Nav = props => {
         </Menu.Item>
 
         {props.user.user ? (
-          <Menu.Item name="MyPage" active={onMyPage} as={Link} to="/labtool/mypage">
+          <Menu.Item name="MyPage" as={Link} to="/labtool/mypage">
             <Icon name="home" />
-            My page
+            <MenuText active={onMyPage}>My page</MenuText>
           </Menu.Item>
         ) : (
           <p />
         )}
 
         {props.user.user ? (
-          <Menu.Item name="Courses" active={onCourseList} as={Link} to="/labtool/courses">
+          <Menu.Item name="Courses" as={Link} to="/labtool/courses">
             <Icon name="browser" />
-            Courses
+            <MenuText active={onCourseList}>Courses</MenuText>
           </Menu.Item>
         ) : (
           <p />
         )}
 
         {props.courseImport.canImport && (
-          <Menu.Item name="CourseImport" active={onCourseImport} as={Link} to="/labtool/courseimport">
+          <Menu.Item name="CourseImport" as={Link} to="/labtool/courseimport">
             <Icon name="cloud download" />
-            Import
+            <MenuText active={onCourseImport}>Import</MenuText>
           </Menu.Item>
         )}
       </Menu.Menu>
 
       <Menu.Menu right="right">
         {user.sysop && (
-          <Menu.Item name="AdminButton" active={onAdmin} as={Link} to="/labtool/admin">
+          <Menu.Item name="AdminButton" as={Link} to="/labtool/admin">
             <Icon name="database" />
-            Admin
+            <MenuText active={onAdmin}>Admin</MenuText>
           </Menu.Item>
         )}
         {user && (
