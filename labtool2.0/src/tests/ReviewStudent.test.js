@@ -21,6 +21,7 @@ describe('<ReviewStudent />', () => {
       weekAmount: 7,
       weekMaxPoints: 3,
       currentWeek: 1,
+      finalReviewHasPoints: true,
       ohid: 'TKT20010.2018.K.A.1',
       checklists: [
         {
@@ -43,7 +44,8 @@ describe('<ReviewStudent />', () => {
                 name: 'Koodin laatu',
                 points: 2,
                 textWhenOn: 'Koodi tehty laadukkaasti ja sisältää kommentteja',
-                textWhenOff: 'Koodin laadussa parantamisen varaa'
+                textWhenOff: 'Koodin laadussa parantamisen varaa',
+                prerequisite: null
               }
             ],
             Algoritmit: [
@@ -52,14 +54,16 @@ describe('<ReviewStudent />', () => {
                 name: 'Algoritmin runko',
                 points: 2,
                 textWhenOn: 'Algoritmin runko luotu',
-                textWhenOff: 'Algoritmin runko puuttuu'
+                textWhenOff: 'Algoritmin runko puuttuu',
+                prerequisite: null
               },
               {
                 id: 3,
                 name: 'Tietorakenteita luotu',
                 points: 2,
                 textWhenOn: 'Tietorakenteita luotu',
-                textWhenOff: 'Tietorakenteita ei ole luotu'
+                textWhenOff: 'Tietorakenteita ei ole luotu',
+                prerequisite: null
               }
             ],
             Dokumentaatio: [
@@ -68,14 +72,26 @@ describe('<ReviewStudent />', () => {
                 name: 'Readme',
                 points: 1,
                 textWhenOn: 'README kunnossa',
-                textWhenOff: 'README puuttuu'
+                textWhenOff: 'README puuttuu',
+                prerequisite: null
               },
               {
                 id: 5,
                 name: 'Tuntikirjanpito',
                 points: 1,
                 textWhenOn: 'Tuntikirjanpito täytetty oikein',
-                textWhenOff: 'Tuntikirjanpito puuttuu'
+                textWhenOff: 'Tuntikirjanpito puuttuu',
+                prerequisite: null
+              }
+            ],
+            README: [
+              {
+                id: 6,
+                name: 'Readme sisältää linkkejä',
+                points: 1,
+                textWhenOn: 'README:ssa on tarvittavat linkit',
+                textWhenOff: 'README:sta puuttuu linkit',
+                prerequisite: 4
               }
             ]
           },
@@ -522,6 +538,8 @@ describe('<ReviewStudent />', () => {
         restoreChecks={mockFn}
         resetChecklist={mockFn}
         addRedirectHook={mockFn}
+        verifyCheckPrerequisites={mockFn}
+        {...ownProps}
       />
     )
   })
@@ -546,21 +564,32 @@ describe('<ReviewStudent />', () => {
 
     describe('Checklist', () => {
       it('renders a checklist', () => {
-        expect(wrapper.find('.checklist').exists()).toEqual(true)
+        expect(wrapper.find('ReviewStudentChecklist').exists()).toEqual(true)
       })
 
       it('renders a card for each checklist topic', () => {
-        const expected = Object.keys(props.selectedInstance.checklists.find(cl => cl.week === props.selectedInstance.currentWeek).list).length
-        expect(wrapper.find('.checklistCard').length).toEqual(expected)
+        const cl = props.selectedInstance.checklists.find(cl => cl.week === props.selectedInstance.currentWeek).list
+        const expected = Object.keys(cl).filter(cat => cl[cat].some(clItem => clItem.prerequisite === null)).length
+        expect(
+          wrapper
+            .find('ReviewStudentChecklist')
+            .dive()
+            .find('.checklistCard').length
+        ).toEqual(expected)
       })
 
       it('renders a row for each checklist item', () => {
         let expected = 0
         const checklist = props.selectedInstance.checklists.find(cl => cl.week === props.selectedInstance.currentWeek).list
         Object.keys(checklist).forEach(key => {
-          expected += checklist[key].length
+          expected += checklist[key].filter(clItem => clItem.prerequisite === null).length
         })
-        expect(wrapper.find('.checklistCardRow').length).toEqual(expected)
+        expect(
+          wrapper
+            .find('ReviewStudentChecklist')
+            .dive()
+            .find('.checklistCardRow').length
+        ).toEqual(expected)
       })
     })
   })

@@ -12,6 +12,27 @@ const INITIAL_STATE = {
   allowDraftLoad: true
 }
 
+const cascadeMissingPrerequisites = (checks, prerequisites) => {
+  const newChecks = { ...checks }
+  let updated = false
+  Object.keys(newChecks).forEach(checkId => {
+    while (newChecks[checkId] && prerequisites[checkId] !== null && !newChecks[prerequisites[checkId]]) {
+      updated = true
+      newChecks[checkId] = false
+      checkId = prerequisites[checkId]
+    }
+  })
+  return updated ? newChecks : checks
+}
+
+const toggleAndCascadeMissingPrerequisites = (baseChecks, thisChecks, itemId, prerequisites) => {
+  const toggledChecks = {
+    ...baseChecks,
+    [itemId]: baseChecks[itemId] !== undefined ? !baseChecks[itemId] : thisChecks ? !thisChecks.checks[itemId] : !baseChecks[itemId]
+  }
+  return cascadeMissingPrerequisites(toggledChecks, prerequisites)
+}
+
 const weekReviewReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case 'CP_INFO_SUCCESS': {
@@ -24,11 +45,7 @@ const weekReviewReducer = (state = INITIAL_STATE, action) => {
       const baseChecks = state.checks ? state.checks : thisWeek ? thisWeek.checks : {}
       return {
         ...state,
-        checks: {
-          ...baseChecks,
-          [action.checklistItemId]:
-            baseChecks[action.checklistItemId] !== undefined ? !baseChecks[action.checklistItemId] : thisWeek ? !thisWeek.checks[action.checklistItemId] : !baseChecks[action.checklistItemId]
-        }
+        checks: toggleAndCascadeMissingPrerequisites(baseChecks, thisWeek, action.checklistItemId, action.prerequisites)
       }
     }
     case 'WEEK_CODE_REVIEW_TOGGLE': {
@@ -36,15 +53,20 @@ const weekReviewReducer = (state = INITIAL_STATE, action) => {
       const baseChecks = state.checks ? state.checks : thisCr ? thisCr.checks : {}
       return {
         ...state,
-        checks: {
-          ...baseChecks,
-          [action.checklistItemId]:
-            baseChecks[action.checklistItemId] !== undefined ? !baseChecks[action.checklistItemId] : thisCr ? !thisCr.checks[action.checklistItemId] : !baseChecks[action.checklistItemId]
-        }
+        checks: toggleAndCascadeMissingPrerequisites(baseChecks, thisCr, action.checklistItemId, action.prerequisites)
       }
     }
     case 'WEEK_REVIEW_RESET':
       return INITIAL_STATE
+    case 'WEEK_REVIEW_CHECK_SCAN_PREREQUISITES':
+      const newChecks = cascadeMissingPrerequisites(state.checks, action.prerequisites)
+      // do not modify state if we don't need to change anything
+      return state.checks == newChecks
+        ? state
+        : {
+            ...state,
+            checks: newChecks
+          }
     case 'WEEK_REVIEW_CHECKS_RESTORE':
       return {
         ...state,
@@ -82,24 +104,26 @@ export const resetChecklist = () => {
   }
 }
 
-export const toggleCheckWeek = (checklistItemId, studentId, weekNbr) => {
+export const toggleCheckWeek = (checklistItemId, studentId, weekNbr, prerequisites) => {
   return async dispatch => {
     dispatch({
       type: 'WEEK_REVIEW_TOGGLE',
       checklistItemId,
       studentId,
-      weekNbr
+      weekNbr,
+      prerequisites
     })
   }
 }
 
-export const toggleCheckCodeReview = (checklistItemId, studentId, crNbr) => {
+export const toggleCheckCodeReview = (checklistItemId, studentId, crNbr, prerequisites) => {
   return async dispatch => {
     dispatch({
       type: 'WEEK_CODE_REVIEW_TOGGLE',
       checklistItemId,
       studentId,
-      crNbr
+      crNbr,
+      prerequisites
     })
   }
 }
@@ -110,6 +134,15 @@ export const restoreChecks = (studentId, checks) => {
       type: 'WEEK_REVIEW_CHECKS_RESTORE',
       studentId,
       checks
+    })
+  }
+}
+
+export const verifyCheckPrerequisites = prerequisites => {
+  return async dispatch => {
+    dispatch({
+      type: 'WEEK_REVIEW_CHECK_SCAN_PREREQUISITES',
+      prerequisites
     })
   }
 }

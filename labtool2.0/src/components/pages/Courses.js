@@ -65,14 +65,32 @@ export const Courses = props => {
                         <Table.Cell>{instance.shorterId} </Table.Cell>
                         <Table.Cell>
                           <strong>
-                            <Link to={`/labtool/courses/${instance.ohid}`}>{formatCourseName(instance.name, instance.ohid, instance.start)}</Link>
+                            <Link
+                              to={{
+                                pathname: `/labtool/courses/${instance.ohid}`,
+                                state: { hidePanel: true }
+                              }}
+                            >
+                              {formatCourseName(instance.name, instance.ohid, instance.start)}
+                            </Link>
                           </strong>
                         </Table.Cell>
 
                         <Table.Cell> {instance.europeanStart} </Table.Cell>
                         <Table.Cell textAlign="center">
                           <Popup
-                            trigger={<Button circular size="tiny" icon={{ name: 'eye', size: 'large', color: 'blue' }} as={Link} to={`/labtool/courses/${instance.ohid}`} />}
+                            trigger={
+                              <Button
+                                circular
+                                size="tiny"
+                                icon={{ name: 'eye', size: 'large', color: 'blue' }}
+                                as={Link}
+                                to={{
+                                  pathname: `/labtool/courses/${instance.ohid}`,
+                                  state: { hidePanel: true }
+                                }}
+                              />
+                            }
                             content="View course"
                           />
                         </Table.Cell>
@@ -107,10 +125,9 @@ Courses.propTypes = {
 
   getAllCI: PropTypes.func.isRequired,
   resetLoading: PropTypes.func.isRequired,
-  getIsAllowedToImport: PropTypes.func.isRequired
+  getIsAllowedToImport: PropTypes.func.isRequired,
+
+  errors: PropTypes.array
 }
 
-export default connect(
-  mapStateToProps,
-  { getAllCI, resetLoading, getIsAllowedToImport }
-)(Courses)
+export default connect(mapStateToProps, { getAllCI, resetLoading, getIsAllowedToImport })(Courses)

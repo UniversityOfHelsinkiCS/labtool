@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { Table, Popup, Icon, Button, Dropdown } from 'semantic-ui-react'
 import RepoLink from '../RepoLink'
 import { tagStudent, unTagStudent } from '../../services/tags'
+import { TagLabel } from '../TagLabel'
 
 export const ProjectInfoCell = ({ studentData, selectedTag, showTagDropdown, tagStudent, unTagStudent, dropDownTags, addFilterTag, changeHiddenTagDropdown, allowModify }) => {
   const addTag = id => async (e, { value }) => {
@@ -28,23 +29,17 @@ export const ProjectInfoCell = ({ studentData, selectedTag, showTagDropdown, tag
   }
 
   return (
-    <Table.Cell>
+    <Table.Cell key="projectinfo">
       <span>
         {studentData.projectName}
         <br />
         <RepoLink url={studentData.github} />
         <div>
           {studentData.Tags.map(tag => (
-            <span key={tag.id} style={{ float: 'left', marginRight: '0.33em' }}>
+            <span key={studentData.id + ':' + tag.id} style={{ float: 'left', marginRight: '0.33em' }}>
               <Button.Group className={'mini'}>
-                <Button compact style={{ display: 'inline-block' }} className={`mini ui ${tag.color} button`} onClick={addFilterTag(tag)}>
-                  {tag.name}
-                </Button>
-                {allowModify && (
-                  <Button compact icon attached="right" className={`mini ui ${tag.color} button`} style={{ paddingLeft: 0, paddingRight: 0 }} onClick={removeTag(studentData.id, tag.id)}>
-                    <Icon name="remove" />
-                  </Button>
-                )}
+                <TagLabel tag={tag} handleClick={addFilterTag(tag)} />
+                {allowModify && <TagLabel removeLabel={true} tag={tag} handleClick={removeTag(studentData.id, tag.id)} />}
               </Button.Group>
             </span>
           ))}
@@ -102,7 +97,4 @@ ProjectInfoCell.propTypes = {
   allowModify: PropTypes.bool.isRequired
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ProjectInfoCell)
+export default connect(mapStateToProps, mapDispatchToProps)(ProjectInfoCell)

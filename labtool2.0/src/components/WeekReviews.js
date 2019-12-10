@@ -55,7 +55,7 @@ export const WeekReviews = props => {
     return props.selectedInstance.weekMaxPoints
   }
 
-  const getMaximumPointsForCodeReview = codeReview => {
+  const getMaximumPointsForCodeReview = () => {
     const checklist = props.selectedInstance.checklists.find(checkl => checkl.forCodeReview)
     if (checklist && checklist.maxPoints) {
       return checklist.maxPoints
@@ -108,13 +108,13 @@ export const WeekReviews = props => {
     const data = {
       reviewNumber,
       studentInstanceId: studentInstance,
-      linkToReview: e.target.reviewLink.value
+      linkToReview: e.target.reviewLink.value.trim()
     }
     e.target.reviewLink.value = ''
     props.addLinkToCodeReview(data)
   }
 
-  const handleSubmit = async e => {
+  const handleSubmitComment = (e, comments) => {
     e.preventDefault()
     const content = {
       hidden: isTeacher() ? e.target.hidden.checked : false,
@@ -124,14 +124,15 @@ export const WeekReviews = props => {
     }
     document.getElementById(e.target.name).reset()
     try {
-      await props.createOneComment(content)
+      props.markCommentsAsRead(comments)
+      props.createOneComment(content)
     } catch (error) {
       console.error(error)
     }
   }
 
-  const markComments = async comments => {
-    await props.markCommentsAsRead(comments)
+  const markComments = comments => {
+    props.markCommentsAsRead(comments)
   }
 
   const weekMatcher = i => week => week.weekNumber === i + 1
@@ -140,7 +141,7 @@ export const WeekReviews = props => {
   const weekReviewFunctions = {
     getMaximumPointsForWeek,
     handleClickWeek,
-    handleSubmit,
+    handleSubmitComment,
     sendWeekEmail,
     sendCommentEmail,
     sendStudentEmail,
@@ -225,30 +226,6 @@ export const WeekReviews = props => {
       .concat(normalWeeks)
       .concat(finalReview)
       .concat(codeReviews)
-
-    /* total points */
-    weeks.push(
-      <Accordion key="total" fluid styled style={{ marginBottom: '2em' }}>
-        <Accordion.Title active={true} index="total">
-          <Icon name="check" />
-          <strong> Total Points: </strong>
-          <Points
-            points={
-              props.student.weeks
-                .map(week => week.points)
-                .reduce((a, b) => {
-                  return a + b
-                }, 0) +
-              props.student.codeReviews
-                .map(cr => cr.points)
-                .reduce((a, b) => {
-                  return a + b
-                }, 0)
-            }
-          />
-        </Accordion.Title>
-      </Accordion>
-    )
   }
 
   return weeks
@@ -311,7 +288,4 @@ const mapDispatchToProps = {
   markCommentsAsRead
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(WeekReviews)
+export default connect(mapStateToProps, mapDispatchToProps)(WeekReviews)

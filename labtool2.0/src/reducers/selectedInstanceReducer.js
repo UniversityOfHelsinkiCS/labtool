@@ -11,6 +11,7 @@
   currentWeek(pin): -- integer, what is the current week
   ohid(pin): -- Opetushallitus id of the course, is often used instead of the database id
   teacherInstances: all the teacherinstances related to his course instance
+  currentCodeReview: Array of code reviews which are visible to students
  * 
  */
 
@@ -35,6 +36,8 @@ const selectedInstanceReducer = (store = INITIAL_STATE, action) => {
       return newStore
     case 'SET_FINAL_REVIEW':
       return { ...store, finalReview: action.value }
+    case 'SET_FINAL_REVIEW_HAS_POINTS':
+      return { ...store, finalReviewHasPoints: action.value }
     case 'CI_MODIFY_ONE_SUCCESS':
       return { ...store, ...action.response, currentWeek: Number(action.response.currentWeek || store.currentWeek, 10) }
     default:
@@ -46,6 +49,15 @@ export const setFinalReview = value => {
   return async dispatch => {
     dispatch({
       type: 'SET_FINAL_REVIEW',
+      value
+    })
+  }
+}
+
+export const setFinalReviewHasPoints = value => {
+  return async dispatch => {
+    dispatch({
+      type: 'SET_FINAL_REVIEW_HAS_POINTS',
       value
     })
   }

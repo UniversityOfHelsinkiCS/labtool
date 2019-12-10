@@ -146,10 +146,9 @@ MyPage.propTypes = {
 
   getAllStudentCourses: PropTypes.func.isRequired,
   getAllTeacherCourses: PropTypes.func.isRequired,
-  getIsAllowedToImport: PropTypes.func.isRequired
+  getIsAllowedToImport: PropTypes.func.isRequired,
+
+  errors: PropTypes.array
 }
 
-export default connect(
-  mapStateToProps,
-  { getAllStudentCourses, getAllTeacherCourses, getIsAllowedToImport }
-)(MyPage)
+export default connect(mapStateToProps, { getAllStudentCourses, getAllTeacherCourses, getIsAllowedToImport })(MyPage)

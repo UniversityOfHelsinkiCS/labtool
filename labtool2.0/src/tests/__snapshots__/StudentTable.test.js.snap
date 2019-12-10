@@ -44,42 +44,65 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
     <span>
        Tag filters: 
     </span>
-    <span>
+    <span
+      className="tagFilter"
+    >
       <span
         key="20001"
       >
-        <Button
-          as="button"
-          className="mini ui red button basic"
-          compact={true}
-          onClick={[Function]}
-        >
-          Javascript
-        </Button>
+        <TagLabel
+          basic={true}
+          disabled={false}
+          handleClick={[Function]}
+          tag={
+            Object {
+              "color": "red",
+              "courseInstanceId": null,
+              "createdAt": "2018-06-13T00:00:00.000Z",
+              "id": 20001,
+              "name": "Javascript",
+              "updatedAt": "2018-06-13T00:00:00.000Z",
+            }
+          }
+        />
       </span>
       <span
         key="20002"
       >
-        <Button
-          as="button"
-          className="mini ui yellow button basic"
-          compact={true}
-          onClick={[Function]}
-        >
-          HTML
-        </Button>
+        <TagLabel
+          basic={true}
+          disabled={false}
+          handleClick={[Function]}
+          tag={
+            Object {
+              "color": "yellow",
+              "courseInstanceId": null,
+              "createdAt": "2018-06-13T00:00:00.000Z",
+              "id": 20002,
+              "name": "HTML",
+              "updatedAt": "2018-06-13T00:00:00.000Z",
+            }
+          }
+        />
       </span>
       <span
         key="20008"
       >
-        <Button
-          as="button"
-          className="mini ui grey button basic"
-          compact={true}
-          onClick={[Function]}
-        >
-          DROPPED
-        </Button>
+        <TagLabel
+          basic={true}
+          disabled={false}
+          handleClick={[Function]}
+          tag={
+            Object {
+              "color": "grey",
+              "courseInstanceId": null,
+              "createdAt": "2018-06-13T00:00:00.000Z",
+              "id": 20008,
+              "name": "DROPPED",
+              "updatedAt": "2018-06-13T00:00:00.000Z",
+            }
+          }
+        />
       </span>
     </span>
   </div>
@@ -234,6 +257,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
           dropDownTeachers={Array []}
           extraColumns={Array []}
           getAllTags={[MockFunction]}
+          getStudentFinalGrade={[Function]}
           key="tableRow10012"
           loggedInUser={Object {}}
           selectStudent={[MockFunction]}
@@ -340,6 +364,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
               "role": "teacher",
             }
           }
+          shouldHideGrade={[Function]}
           shouldHideInstructor={[Function]}
           showAssistantDropdown={[MockFunction]}
           showColumn={[Function]}
@@ -562,6 +587,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
           dropDownTeachers={Array []}
           extraColumns={Array []}
           getAllTags={[MockFunction]}
+          getStudentFinalGrade={[Function]}
           key="tableRow10031"
           loggedInUser={Object {}}
           selectStudent={[MockFunction]}
@@ -668,6 +694,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
               "role": "teacher",
             }
           }
+          shouldHideGrade={[Function]}
           shouldHideInstructor={[Function]}
           showAssistantDropdown={[MockFunction]}
           showColumn={[Function]}
@@ -877,6 +904,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
           dropDownTeachers={Array []}
           extraColumns={Array []}
           getAllTags={[MockFunction]}
+          getStudentFinalGrade={[Function]}
           key="tableRow10011"
           loggedInUser={Object {}}
           selectStudent={[MockFunction]}
@@ -983,6 +1011,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
               "role": "teacher",
             }
           }
+          shouldHideGrade={[Function]}
           shouldHideInstructor={[Function]}
           showAssistantDropdown={[MockFunction]}
           showColumn={[Function]}
@@ -1173,18 +1202,15 @@ exports[`<StudentTableRow /> StudentTableRow Component should render correctly 1
           <ButtonGroup
             className="mini"
           >
-            <Button
-              as="button"
-              className="mini ui red button"
-              compact={true}
-              style={
+            <TagLabel
+              tag={
                 Object {
-                  "display": "inline-block",
+                  "color": "red",
+                  "id": 20001,
+                  "name": "Javascript",
                 }
               }
-            >
-              Javascript
-            </Button>
+            />
           </ButtonGroup>
         </span>
       </div>

@@ -2,7 +2,7 @@
 
 exports[`<ModifyCourseInstancePage /> Modify Instance Component should render correctly 1`] = `
 <Fragment>
-  <_default
+  <DocumentTitle
     title="Modify Aineopintojen harjoitustyö: Tietokantasovellus (periodi IV)"
   />
   <div>
@@ -56,6 +56,7 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
               </label>
               <Input
                 className="form-control1"
+                max={30}
                 min={1}
                 name="weekAmount"
                 onChange={[Function]}
@@ -80,7 +81,7 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
                   }
                 }
               >
-                Maximum week points
+                Default maximum week points
               </label>
               <Input
                 className="form-control2"
@@ -197,10 +198,10 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
                 onChange={[Function]}
                 style={
                   Object {
-                    "maxWidth": "12em",
+                    "minWidth": "26em",
                   }
                 }
-                type="text"
+                type="url"
               />
             </FormGroup>
             <FormGroup
@@ -222,10 +223,10 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
                 onChange={[Function]}
                 style={
                   Object {
-                    "maxWidth": "12em",
+                    "minWidth": "26em",
                   }
                 }
-                type="text"
+                type="url"
               />
             </FormGroup>
             <FormGroup
@@ -239,92 +240,50 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
                   }
                 }
               >
-                Currently visible code reviews
+                Visible code reviews
               </label>
-              <Popup
-                content="Click to hide this code review on save"
-                disabled={false}
-                eventsEnabled={true}
-                key="1"
-                offset={0}
-                on={
-                  Array [
-                    "click",
-                    "hover",
-                  ]
+              <Segment
+                className="crCheckboxes"
+                style={
+                  Object {
+                    "maxHeight": 200,
+                    "overflow": "auto",
+                  }
                 }
-                pinned={false}
-                position="top left"
-                trigger={
-                  <Button
-                    as="button"
-                    compact={true}
-                    onClick={[Function]}
-                    value={1}
-                  >
-                    1
-                  </Button>
-                }
-              />
-              <Popup
-                content="Click to hide this code review on save"
-                disabled={false}
-                eventsEnabled={true}
-                key="2"
-                offset={0}
-                on={
-                  Array [
-                    "click",
-                    "hover",
-                  ]
-                }
-                pinned={false}
-                position="top left"
-                trigger={
-                  <Button
-                    as="button"
-                    compact={true}
-                    onClick={[Function]}
-                    value={2}
-                  >
-                    2
-                  </Button>
-                }
-              />
-            </FormGroup>
-            <FormGroup
-              inline={true}
-            >
-              <Dropdown
-                additionLabel="Add "
-                additionPosition="top"
-                className="codeReviewDropdown"
-                closeOnBlur={true}
-                closeOnEscape={true}
-                deburr={false}
-                fluid={true}
-                icon="dropdown"
-                minCharacters={1}
-                multiple={true}
-                noResultsMessage="No results found."
-                onChange={[Function]}
-                openOnFocus={true}
-                options={
-                  Array [
-                    Object {
-                      "text": "3",
-                      "value": 3,
-                    },
-                  ]
-                }
-                placeholder="Select code reviews to set visible"
-                renderLabel={[Function]}
-                searchInput="text"
-                selectOnBlur={true}
-                selectOnNavigation={true}
-                selection={true}
-                wrapSelection={true}
-              />
+              >
+                <div
+                  className="cr1"
+                  key="1"
+                >
+                  <CodeReviewCheckbox
+                    codeReview={
+                      Object {
+                        "text": "Code Review 1",
+                        "value": 1,
+                      }
+                    }
+                    hideCodeReview={[Function]}
+                    initialCheckState={true}
+                    setCodeReviewVisible={[Function]}
+                  />
+                </div>
+                <div
+                  className="cr2"
+                  key="2"
+                >
+                  <CodeReviewCheckbox
+                    codeReview={
+                      Object {
+                        "text": "Code Review 2",
+                        "value": 2,
+                      }
+                    }
+                    hideCodeReview={[Function]}
+                    initialCheckState={false}
+                    setCodeReviewVisible={[Function]}
+                  />
+                </div>
+              </Segment>
             </FormGroup>
             <FormGroup
               inline={true}
@@ -332,6 +291,23 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
               <Checkbox
                 label="Course has a final review"
                 name="finalReview"
+                onChange={[Function]}
+                style={
+                  Object {
+                    "textAlign": "left",
+                    "width": "150px",
+                  }
+                }
+                type="checkbox"
+              />
+            </FormGroup>
+            <FormGroup
+              inline={true}
+            >
+              <Checkbox
+                disabled={true}
+                label="Points are given for final review"
+                name="finalReviewHasPoints"
                 onChange={[Function]}
                 style={
                   Object {
@@ -444,7 +420,7 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
         </Button>
       </Link>
       <Link
-        to="/labtool/managetags"
+        to="/labtool/ManageTags/TKT20011.2018.K.A.1"
       >
         <Button
           as="button"
@@ -460,6 +436,8 @@ exports[`<ModifyCourseInstancePage /> Modify Instance Component should render co
           Edit tags
         </Button>
       </Link>
+      <br />
+      <br />
     </div>
   </div>
 </Fragment>

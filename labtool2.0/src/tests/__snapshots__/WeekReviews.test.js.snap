@@ -452,31 +452,5 @@ Array [
     }
     studentInstance=""
   />,
-  <Accordion
-    fluid={true}
-    key="total"
-    style={
-      Object {
-        "marginBottom": "2em",
-      }
-    }
-    styled={true}
-  >
-    <AccordionTitle
-      active={true}
-      index="total"
-    >
-      <Icon
-        as="i"
-        name="check"
-      />
-      <strong>
-         Total Points: 
-      </strong>
-      <Points
-        points={3}
-      />
-    </AccordionTitle>
-  </Accordion>,
 ]
 `;

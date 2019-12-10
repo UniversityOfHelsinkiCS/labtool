@@ -179,7 +179,9 @@ MassEmailPage.propTypes = {
   sendMassEmail: PropTypes.func.isRequired,
   resetLoading: PropTypes.func.isRequired,
   addRedirectHook: PropTypes.func.isRequired,
-  restoreStudentSelection: PropTypes.func.isRequired
+  restoreStudentSelection: PropTypes.func.isRequired,
+
+  errors: PropTypes.array
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -209,7 +211,4 @@ const mapDispatchToProps = {
   restoreStudentSelection
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(MassEmailPage)
+export default connect(mapStateToProps, mapDispatchToProps)(MassEmailPage)

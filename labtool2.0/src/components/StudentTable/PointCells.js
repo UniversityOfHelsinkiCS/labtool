@@ -130,18 +130,27 @@ export const PointCells = ({ loggedInUser, selectedInstance, studentData }) => {
           <div style={{ width: '100%', height: '100%' }}>
             {finalPoints === undefined ? (
               shouldReview && selectedInstance.currentWeek === selectedInstance.weekAmount + 1 ? (
-                <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'star', size: 'large' }} />} content="Review" className="reviewButton" />
+                draftExists(selectedInstance.weekAmount + 1) ? (
+                  <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'pause', size: 'large' }} />} content="Continue review from draft" className="reviewDraftButton" />
+                ) : (
+                  <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'star', size: 'large' }} />} content="Review" className="reviewButton" />
+                )
               ) : (
                 <p style={flexCenter}>-</p>
               )
+            ) : finalPoints === null ? (
+              <div>
+                <p style={flexCenter}>
+                  <Popup trigger={<Icon name="check" size="big" color="grey" />} content="Final review has been given, but without any points" />
+                </p>
+                {showNewCommentsNotification(studentData, selectedInstance.weekAmount + 1) ? <Popup trigger={<Icon name="comments" size="big" />} content="You have new comments" /> : null}
+              </div>
             ) : (
               <div>
                 <p style={flexCenter}>
                   <Points points={finalPoints} />
                 </p>
-                {showNewCommentsNotification(studentData, selectedInstance.weekAmount + 1, loggedInUser) ? (
-                  <Popup trigger={<Icon name="comments" size="big" />} content="You have new comments" />
-                ) : null}
+                {showNewCommentsNotification(studentData, selectedInstance.weekAmount + 1) ? <Popup trigger={<Icon name="comments" size="big" />} content="You have new comments" /> : null}
               </div>
             )}
           </div>

@@ -9,7 +9,15 @@ module.exports = (sequelize, DataTypes) => {
       uncheckedPoints: DataTypes.DOUBLE,
       category: DataTypes.TEXT,
       order: DataTypes.INTEGER,
-      minimumRequirement: DataTypes.BOOLEAN
+      minimumRequirement: DataTypes.BOOLEAN,
+      minimumRequirementMetIf: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true
+      },
+      minimumRequirementGradePenalty: {
+        type: DataTypes.INTEGER,
+        defaultValue: 1
+      }
     },
     {
       timestamps: false
@@ -19,6 +27,10 @@ module.exports = (sequelize, DataTypes) => {
     ChecklistItem.belongsTo(models.Checklist, {
       foreignKey: 'checklistId',
       onDelete: 'CASCADE'
+    })
+    ChecklistItem.belongsTo(models.ChecklistItem, {
+      foreignKey: 'prerequisite',
+      onDelete: 'SET NULL'
     })
   }
   return ChecklistItem

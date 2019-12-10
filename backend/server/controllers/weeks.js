@@ -46,9 +46,10 @@ module.exports = {
       if (week) {
         const updatedChecks = req.body.checks || {}
         await week.update({
-          points: req.body.points || week.points,
-          feedback: req.body.feedback || week.feedback,
-          instructorNotes: req.body.instructorNotes || week.instructorNotes
+          points: 'points' in req.body ? (req.body.points || null) : week.points,
+          grade: 'grade' in req.body ? (req.body.grade || null) : week.grade,
+          feedback: 'feedback' in req.body ? (req.body.feedback || '') : week.feedback,
+          instructorNotes: 'instructorNotes' in req.body ? (req.body.instructorNotes || '') : week.instructorNotes
         })
         await Promise.all(Object.keys(updatedChecks).map(check => ReviewCheck.findOrCreate({
           where: {
@@ -67,10 +68,11 @@ module.exports = {
         })))
       } else {
         week = await Week.create({
-          points: req.body.points,
+          points: req.body.points || null,
+          grade: req.body.grade || null,
           studentInstanceId: req.body.studentInstanceId,
-          feedback: req.body.feedback,
-          instructorNotes: req.body.instructorNotes,
+          feedback: req.body.feedback || '',
+          instructorNotes: req.body.instructorNotes || '',
           weekNumber: req.body.weekNumber,
           notified: false
         })

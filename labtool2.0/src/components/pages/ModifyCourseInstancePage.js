@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input, Button, Grid, Dropdown, Checkbox, Loader, Popup } from 'semantic-ui-react'
+import { Form, Input, Button, Grid, Dropdown, Checkbox, Loader, Segment } from 'semantic-ui-react'
 import { getOneCI, modifyOneCI, coursePageInformation, getAllCI, copyInformationFromCourse } from '../../services/courseInstance'
-import { setFinalReview } from '../../reducers/selectedInstanceReducer'
+import { setFinalReview, setFinalReviewHasPoints } from '../../reducers/selectedInstanceReducer'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Redirect } from 'react-router'
@@ -16,15 +16,15 @@ import BackButton from '../BackButton'
 import DocumentTitle from '../DocumentTitle'
 import Error from '../Error'
 import { sortCoursesByName } from '../../util/sort'
+import { CodeReviewCheckbox } from './ModifyCourseInstancePage/CodeReviewCheckbox'
 
 /**
  *  Page used to modify a courseinstances information. Can only be accessed by teachers.
  */
 export const ModifyCourseInstancePage = props => {
   const state = useLegacyState({
-    toRemoveCr: [],
-    toAddCr: [],
-    copyCourse: undefined
+    copyCourse: undefined,
+    visibleCr: []
   })
 
   useEffect(() => {
@@ -44,6 +44,10 @@ export const ModifyCourseInstancePage = props => {
       }
     }
   }, [props.selectedInstance.weekAmount, props.selectedInstance.finalReview, props.selectedInstance.currentWeek])
+
+  useEffect(() => {
+    state.visibleCr = props.selectedInstance.currentCodeReview
+  }, [props.selectedInstance.currentCodeReview])
 
   const changeField = e => {
     props.changeCourseField({
@@ -71,23 +75,35 @@ export const ModifyCourseInstancePage = props => {
     props.setFinalReview(newValue)
   }
 
-  const handleRemoveChange = (e, { value }) => {
-    e.preventDefault()
-    state.toRemoveCr = state.toRemoveCr.includes(value) ? state.toRemoveCr.filter(cr => cr !== value) : [...state.toRemoveCr, value]
+  const changeFinalReviewHasPoints = () => {
+    const newValue = !props.selectedInstance.finalReviewHasPoints
+    props.setFinalReviewHasPoints(newValue)
   }
 
-  const handleAddChange = (e, { value }) => {
-    e.preventDefault()
-    state.toAddCr = value
+  const setCodeReviewVisible = value => {
+    state.visibleCr = [...state.visibleCr, value]
+  }
+
+  const hideCodeReview = value => {
+    state.visibleCr = state.visibleCr.filter(cr => cr !== value)
   }
 
   const handleSubmit = async e => {
     try {
       e.preventDefault()
 
-      let newCr = props.selectedInstance.currentCodeReview.filter(cr => !state.toRemoveCr.includes(cr))
-      newCr = newCr.concat(state.toAddCr)
-      const { weekAmount, weekMaxPoints, currentWeek, active, ohid, finalReview, coursesPage, courseMaterial } = props.selectedInstance
+      const { weekAmount, weekMaxPoints, currentWeek, active, ohid, finalReview, finalReviewHasPoints, coursesPage, courseMaterial } = props.selectedInstance
+      let newCr = state.visibleCr
+      // This checks that the 'courses.helsinki.fi' URL actually contains that string as a part of it. Reject if not.
+      if (coursesPage !== null && coursesPage !== '') {
+        if ((coursesPage.match(/courses.helsinki.fi/g) || []).length === 0) {
+          props.showNotification({
+            message: 'Link to "courses.helsinki.fi" must have that string as a part of it.',
+            error: true
+          })
+          return
+        }
+      }
 
       if (currentWeek === null || !dropdownWeeks.map(option => option.value).includes(currentWeek)) {
         props.showNotification({
@@ -104,9 +120,11 @@ export const ModifyCourseInstancePage = props => {
         active,
         ohid,
         finalReview,
+        finalReviewHasPoints,
         newCr,
-        coursesPage,
-        courseMaterial
+        // Trim these, if they exist, for accessibility. Do not attempt to trim null (it creates black holes).
+        coursesPage: coursesPage === null ? null : coursesPage.trim(),
+        courseMaterial: courseMaterial === null ? null : courseMaterial.trim()
       }
       props.changeCourseField({
         field: 'active',
@@ -200,11 +218,21 @@ export const ModifyCourseInstancePage = props => {
               <Form onSubmit={handleSubmit}>
                 <Form.Group inline>
                   <label style={{ width: '125px', textAlign: 'left' }}>Week amount</label>
-                  <Input name="weekAmount" type="number" min={1} required={true} style={{ maxWidth: '7em' }} value={selectedInstance.weekAmount} className="form-control1" onChange={changeField} />
+                  <Input
+                    name="weekAmount"
+                    type="number"
+                    min={1}
+                    max={30}
+                    required={true}
+                    style={{ maxWidth: '7em' }}
+                    value={selectedInstance.weekAmount}
+                    className="form-control1"
+                    onChange={changeField}
+                  />
                 </Form.Group>
 
                 <Form.Group inline>
-                  <label style={{ width: '125px', textAlign: 'left' }}>Maximum week points</label>
+                  <label style={{ width: '125px', textAlign: 'left' }}>Default maximum week points</label>
                   <Input
                     name="weekMaxPoints"
                     type="number"
@@ -237,8 +265,8 @@ export const ModifyCourseInstancePage = props => {
                   <label style={{ width: '125px', textAlign: 'left' }}>Link to courses.helsinki.fi</label>
                   <Input
                     name="coursesPage"
-                    type="text"
-                    style={{ maxWidth: '12em' }}
+                    type="url"
+                    style={{ minWidth: '26em' }}
                     value={selectedInstance.coursesPage === null ? '' : selectedInstance.coursesPage}
                     className="form-control4"
                     onChange={changeField}
@@ -249,8 +277,8 @@ export const ModifyCourseInstancePage = props => {
                   <label style={{ width: '125px', textAlign: 'left' }}>Link to course material</label>
                   <Input
                     name="courseMaterial"
-                    type="text"
-                    style={{ maxWidth: '12em' }}
+                    type="url"
+                    style={{ minWidth: '26em' }}
                     value={selectedInstance.courseMaterial === null ? '' : selectedInstance.courseMaterial}
                     className="form-control5"
                     onChange={changeField}
@@ -258,47 +286,23 @@ export const ModifyCourseInstancePage = props => {
                 </Form.Group>
 
                 <Form.Group inline>
-                  <label style={{ width: '125px', textAlign: 'left' }}>Currently visible code reviews</label>
-                  {props.selectedInstance.currentCodeReview && props.selectedInstance.currentCodeReview.sort
-                    ? props.selectedInstance.currentCodeReview
-                        .sort((a, b) => {
-                          return a - b
-                        })
-                        .map(cr =>
-                          state.toRemoveCr.includes(cr) ? (
-                            <Popup
-                              key={cr}
-                              trigger={
-                                <Button color="red" value={cr} onClick={handleRemoveChange} compact>
-                                  {cr}
-                                </Button>
-                              }
-                              content={'This code review will be hidden on save'}
-                            />
-                          ) : (
-                            <Popup
-                              key={cr}
-                              trigger={
-                                <Button value={cr} onClick={handleRemoveChange} compact>
-                                  {cr}
-                                </Button>
-                              }
-                              content={'Click to hide this code review on save'}
-                            />
-                          )
-                        )
-                    : null}
-                </Form.Group>
-                <Form.Group inline>
-                  <Dropdown
-                    className="codeReviewDropdown"
-                    onChange={handleAddChange}
-                    options={props.codeReviewDropdowns}
-                    fluid
-                    selection
-                    multiple={true}
-                    placeholder={props.selectedInstance.amountOfCodeReviews > 0 ? 'Select code reviews to set visible' : 'No code reviews'}
-                  />
+                  <label style={{ width: '125px', textAlign: 'left' }}>Visible code reviews</label>
+                  {props.selectedInstance.amountOfCodeReviews > 0 ? (
+                    <Segment className="crCheckboxes" style={{ overflow: 'auto', maxHeight: 200 }}>
+                      {props.codeReviewLabels.map(cr => (
+                        <div key={cr.value} className={`cr${cr.value}`}>
+                          <CodeReviewCheckbox
+                            codeReview={cr}
+                            setCodeReviewVisible={setCodeReviewVisible}
+                            hideCodeReview={hideCodeReview}
+                            initialCheckState={props.selectedInstance.currentCodeReview.includes(cr.value)}
+                          />
+                        </div>
+                      ))}
+                    </Segment>
+                  ) : (
+                    <div>No code review has been created</div>
+                  )}
                 </Form.Group>
 
                 <Form.Group inline>
@@ -307,6 +311,17 @@ export const ModifyCourseInstancePage = props => {
                     checked={props.selectedInstance.finalReview}
                     onChange={changeFinalReview}
                     label="Course has a final review"
+                    style={{ width: '150px', textAlign: 'left' }}
+                  />
+                </Form.Group>
+
+                <Form.Group inline>
+                  <Checkbox
+                    name="finalReviewHasPoints"
+                    checked={props.selectedInstance.finalReviewHasPoints}
+                    onChange={changeFinalReviewHasPoints}
+                    disabled={!props.selectedInstance.finalReview}
+                    label="Points are given for final review"
                     style={{ width: '150px', textAlign: 'left' }}
                   />
                 </Form.Group>
@@ -345,7 +360,7 @@ export const ModifyCourseInstancePage = props => {
               Edit checklists
             </Button>
           </Link>
-          <Link to={`/labtool/managetags`}>
+          <Link to={`/labtool/ManageTags/${props.selectedInstance.ohid}`}>
             <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px' }} block="true">
               Edit tags
             </Button>
@@ -355,7 +370,7 @@ export const ModifyCourseInstancePage = props => {
             <div>
               <br />
               <h1>Copy course information</h1>
-              <p>This copies the week amount, default maximum week points, whether there is a final review, checklists, course tags and links to the course page and material.</p>
+              <p>This copies the week amount, default maximum week points, whether there is a final review, checklists and course tags to the course page.</p>
               <Dropdown
                 className="courseDropdown"
                 disabled={courseDropdowns.length < 1}
@@ -372,27 +387,25 @@ export const ModifyCourseInstancePage = props => {
               <br />
             </div>
           )}
+          <br />
+          <br />
         </div>
       </div>
     </>
   )
 }
 
-const createDropdownCodeReviews = (amount, current) => {
-  let ddCr = []
+const createCodeReviewLabels = amount => {
+  let cr = []
   let i = 1
-  if (amount && current) {
-    while (i <= amount) {
-      if (!current.includes(i)) {
-        ddCr.push({
-          value: i,
-          text: `Code Review ${i}`
-        })
-      }
-      i++
-    }
+  while (i <= amount) {
+    cr.push({
+      value: i,
+      text: `Code Review ${i}`
+    })
+    i++
   }
-  return ddCr
+  return cr
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -402,7 +415,7 @@ const mapStateToProps = (state, ownProps) => {
     courseInstance: state.courseInstance,
     studentCount: state.coursePage.data ? state.coursePage.data.length : null,
     ownProps,
-    codeReviewDropdowns: createDropdownCodeReviews(state.selectedInstance.amountOfCodeReviews, state.selectedInstance.currentCodeReview),
+    codeReviewLabels: createCodeReviewLabels(state.selectedInstance.amountOfCodeReviews),
     loading: state.loading,
     redirect: state.redirect
   }
@@ -420,6 +433,7 @@ const mapDispatchToProps = {
   resetLoading,
   addRedirectHook,
   setFinalReview,
+  setFinalReviewHasPoints,
   forceRedirect
 }
 
@@ -429,7 +443,7 @@ ModifyCourseInstancePage.propTypes = {
   courseInstance: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
   selectedInstance: PropTypes.object.isRequired,
   notification: PropTypes.object.isRequired,
-  codeReviewDropdowns: PropTypes.array,
+  codeReviewLabels: PropTypes.array,
   loading: PropTypes.object.isRequired,
   redirect: PropTypes.object.isRequired,
   studentCount: PropTypes.number,
@@ -445,10 +459,10 @@ ModifyCourseInstancePage.propTypes = {
   resetLoading: PropTypes.func.isRequired,
   addRedirectHook: PropTypes.func.isRequired,
   setFinalReview: PropTypes.func.isRequired,
-  forceRedirect: PropTypes.func.isRequired
+  setFinalReviewHasPoints: PropTypes.func.isRequired,
+  forceRedirect: PropTypes.func.isRequired,
+
+  errors: PropTypes.array
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ModifyCourseInstancePage)
+export default connect(mapStateToProps, mapDispatchToProps)(ModifyCourseInstancePage)

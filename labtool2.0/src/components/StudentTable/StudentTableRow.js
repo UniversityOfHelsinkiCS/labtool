@@ -7,6 +7,7 @@ import StudentInfoCell from './StudentInfoCell'
 import ProjectInfoCell from './ProjectInfoCell'
 import PointCells from './PointCells'
 import InstructorInfoCell from './InstructorInfoCell'
+import GradeCell from './GradeCell'
 
 export const StudentTableRow = props => {
   const {
@@ -16,6 +17,7 @@ export const StudentTableRow = props => {
     dropDownTags,
     dropDownTeachers,
     shouldHideInstructor,
+    shouldHideGrade,
     extraStudentIcon,
     allowReview,
     allowModify,
@@ -66,6 +68,9 @@ export const StudentTableRow = props => {
         </>
       )}
 
+      {/* Grade */}
+      {showColumn('grade') && !shouldHideGrade && <GradeCell studentId={data.id} />}
+
       {/* Instructor */}
       {showColumn('instructor') && !shouldHideInstructor(studentInstances) && <InstructorInfoCell studentId={data.id} allowModify={allowModify} dropDownTeachers={dropDownTeachers} />}
 
@@ -96,7 +101,8 @@ StudentTableRow.propTypes = {
   tagStudent: PropTypes.func.isRequired,
   unTagStudent: PropTypes.func.isRequired,
   selectStudent: PropTypes.func.isRequired,
-  unselectStudent: PropTypes.func.isRequired
+  unselectStudent: PropTypes.func.isRequired,
+  shouldHideGrade: PropTypes.bool
 }
 
 export default StudentTableRow

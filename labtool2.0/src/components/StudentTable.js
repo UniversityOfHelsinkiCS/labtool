@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Button, Table, Dropdown, Label, Checkbox } from 'semantic-ui-react'
+import { Table, Checkbox } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import HorizontalScrollable from './HorizontalScrollable'
 import { getAllTags, tagStudent, unTagStudent } from '../services/tags'
@@ -84,6 +84,8 @@ export const StudentTable = props => {
     return count
   }
 
+  const getStudentFinalGrade = student => (student.weeks.find(week => week.weekNumber === props.selectedInstance.weekAmount + 1) || {}).grade || null
+  const shouldHideGrade = !props.selectedInstance.finalReview || !props.studentInstances.some(studentInstance => !!getStudentFinalGrade(studentInstance))
   const shouldHideInstructor = studentInstances => studentInstances.every(studentInstance => studentInstance.teacherInstanceId === null)
 
   const { columns, disableDefaultFilter, filterStudents, studentColumnName, showFooter, extraStudentIcon, studentFooter } = props
@@ -127,6 +129,14 @@ export const StudentTable = props => {
 
   const filteredData = (props.studentInstances || []).filter(dataFilter).filter(filterStudents ? filterStudents : () => true)
 
+  //Set of tags that are used by at least one student
+  const usedTags = filteredData
+    .map(student => student.Tags)
+    .reduce((set, tags) => {
+      tags.forEach(tag => set.add(tag.id))
+      return set
+    }, new Set())
+
   if (props.onFilter) {
     props.onFilter(filteredData.map(data => data.id))
   }
@@ -139,7 +149,7 @@ export const StudentTable = props => {
       <div style={{ textAlign: 'left' }}>
         {(props.extraButtons || []).map(f => f())}
         {showColumn('instructor') && <InstructorFilter dropDownFilterTeachers={dropDownFilterTeachers} changeFilterAssistant={changeFilterAssistant} defaultValue={state.filterByAssistant} />}
-        <TagFilter dropDownFilterTags={dropDownFilterTags} selectedFilterTags={state.filterByTag} addFilterTag={addFilterTag} />
+        <TagFilter dropDownFilterTags={dropDownFilterTags} selectedFilterTags={state.filterByTag} addFilterTag={addFilterTag} usedTags={usedTags} />
       </div>
       <br />
 
@@ -160,6 +170,11 @@ export const StudentTable = props => {
                   <Table.HeaderCell>Sum</Table.HeaderCell>
                 </>
               )}
+              {showColumn('grade') && !shouldHideGrade && (
+                <>
+                  <Table.HeaderCell>Grade</Table.HeaderCell>
+                </>
+              )}
               {showColumn('instructor') && !shouldHideInstructor(props.studentInstances) && (
                 <Table.HeaderCell width={shouldHideInstructor(props.studentInstances) ? null : 'six'}>Instructor</Table.HeaderCell>
               )}
@@ -177,6 +192,8 @@ export const StudentTable = props => {
                 dropDownTeachers={dropDownTeachers}
                 addFilterTag={addFilterTag}
                 shouldHideInstructor={shouldHideInstructor}
+                shouldHideGrade={shouldHideGrade}
+                getStudentFinalGrade={getStudentFinalGrade}
                 extraStudentIcon={extraStudentIcon}
                 allowReview={props.allowReview}
                 allowModify={props.allowModify}
@@ -210,6 +227,7 @@ export const StudentTable = props => {
                 {studentFooter ? studentFooter() : <Table.HeaderCell />}
                 <Table.HeaderCell />
                 {showColumn('points') && <Table.HeaderCell />}
+                {showColumn('grade') && !shouldHideGrade && <Table.HeaderCell />}
                 {showColumn('instructor') && !shouldHideInstructor(props.studentInstances) && <Table.HeaderCell />}
                 {showColumn('review') && <Table.HeaderCell />}
                 {extraColumns.map(([, , footer]) => footer())}

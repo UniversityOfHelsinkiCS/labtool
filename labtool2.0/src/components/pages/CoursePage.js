@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { Redirect } from 'react-router'
+import { withRouter, Redirect } from 'react-router'
 import { Loader } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { getOneCI, coursePageInformation, modifyOneCI } from '../../services/courseInstance'
@@ -22,6 +22,7 @@ import CoursePageTeacherMain from './CoursePage/TeacherMain'
 
 import Error from '../Error'
 import DocumentTitle from '../DocumentTitle'
+import { clearOnePersistedState } from '../../hooks/persistedState'
 
 export const CoursePage = props => {
   useEffect(() => {
@@ -37,6 +38,13 @@ export const CoursePage = props => {
       props.coursePageReset()
     }
   }, [])
+
+  useEffect(() => {
+    if (props.location.state && props.location.state.hidePanel) {
+      // remove the persisted state for the student tools panel, hiding it (as it is the default)
+      clearOnePersistedState(`CoursePage-ModifySelectedStudents-${props.courseId}`)
+    }
+  }, [props.location])
 
   const downloadFile = (filename, mime, data) => {
     // create temporary element and use that to initiate download
@@ -62,6 +70,8 @@ export const CoursePage = props => {
     )}`
     const csvFilename = `${courseId}_${dateFormat}.csv`
     const csvResult = []
+    const getFinalGrade = student => (student.weeks.find(w => w.weekNumber === props.selectedInstance.weekAmount + 1) || {}).grade
+    const shouldShowFinalGrade = props.selectedInstance.finalReview && students.some(student => getFinalGrade(student))
 
     const columns = ['First Name', 'Last Name', 'StudentNo', 'Email', 'ProjectName', 'ProjectURL']
     for (let i = 1; i <= props.selectedInstance.weekAmount; ++i) {
@@ -74,6 +84,9 @@ export const CoursePage = props => {
       columns.push('FinalReview')
     }
     columns.push('Sum')
+    if (shouldShowFinalGrade) {
+      columns.push('Grade')
+    }
     columns.push('Instructor')
     csvResult.push(columns.join(','))
 
@@ -116,6 +129,9 @@ export const CoursePage = props => {
         sum += points || 0
       }
       values.push(sum)
+      if (shouldShowFinalGrade) {
+        values.push(getFinalGrade(student) || '-')
+      }
       values.push(instructorName)
       csvResult.push(values.join(','))
     })
@@ -239,7 +255,7 @@ export const CoursePage = props => {
     return <Loader active />
   }
 
-  const { user, courseId, courseData, coursePageLogic, courseInstance, selectedInstance, tags } = props
+  const { user, courseId, courseData, coursePageLogic, selectedInstance, tags } = props
 
   // This function activates the course, leaving other data intact.
   const changeCourseActive = newState => {
@@ -303,6 +319,10 @@ export const CoursePage = props => {
       id: studentId
     }
     try {
+      if (!window.confirm('Are you sure you want to remove yourself from the course?')) {
+        return
+      }
+
       props.removeStudent(si)
       props.addRedirectHook({
         hook: 'STUDENT_REMOVE_'
@@ -356,17 +376,10 @@ export const CoursePage = props => {
             coursePageLogic={coursePageLogic}
             tags={tags}
             students={sortStudentsAlphabeticallyByDroppedValue(courseData.data)}
+            exportCSV={exportCSV}
           />
           <br />
-          <CoursePageTeacherBulkForm
-            courseId={courseId}
-            coursePageLogic={coursePageLogic}
-            dropDownTags={dropDownTags}
-            dropDownTeachers={dropDownTeachers}
-            {...coursePageBulkFormFunctions}
-            exportCSV={exportCSV}
-            selectedInstance={selectedInstance}
-          />
+          <CoursePageTeacherBulkForm courseId={courseId} coursePageLogic={coursePageLogic} dropDownTags={dropDownTags} dropDownTeachers={dropDownTeachers} {...coursePageBulkFormFunctions} />
         </div>
       </>
     )
@@ -404,7 +417,10 @@ CoursePage.propTypes = {
   modifyOneCI: PropTypes.func.isRequired,
   downloadFile: PropTypes.func,
   addRedirectHook: PropTypes.func,
-  removeStudent: PropTypes.func
+  removeStudent: PropTypes.func,
+
+  location: PropTypes.object,
+  errors: PropTypes.array
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -442,7 +458,4 @@ const mapDispatchToProps = {
   removeStudent
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(CoursePage)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(CoursePage))

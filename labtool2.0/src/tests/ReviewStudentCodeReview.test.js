@@ -33,7 +33,8 @@ describe('<ReviewStudentCodeReviews />', () => {
                 name: 'Koodin laatu',
                 points: 2,
                 textWhenOn: 'Koodi tehty laadukkaasti ja sisältää kommentteja',
-                textWhenOff: 'Koodin laadussa parantamisen varaa'
+                textWhenOff: 'Koodin laadussa parantamisen varaa',
+                prerequisite: null
               }
             ],
             Algoritmit: [
@@ -42,14 +43,16 @@ describe('<ReviewStudentCodeReviews />', () => {
                 name: 'Algoritmin runko',
                 points: 2,
                 textWhenOn: 'Algoritmin runko luotu',
-                textWhenOff: 'Algoritmin runko puuttuu'
+                textWhenOff: 'Algoritmin runko puuttuu',
+                prerequisite: null
               },
               {
                 id: 3,
                 name: 'Tietorakenteita luotu',
                 points: 2,
                 textWhenOn: 'Tietorakenteita luotu',
-                textWhenOff: 'Tietorakenteita ei ole luotu'
+                textWhenOff: 'Tietorakenteita ei ole luotu',
+                prerequisite: null
               }
             ],
             Dokumentaatio: [
@@ -58,14 +61,16 @@ describe('<ReviewStudentCodeReviews />', () => {
                 name: 'Readme',
                 points: 1,
                 textWhenOn: 'README kunnossa',
-                textWhenOff: 'README puuttuu'
+                textWhenOff: 'README puuttuu',
+                prerequisite: null
               },
               {
                 id: 5,
                 name: 'Tuntikirjanpito',
                 points: 1,
                 textWhenOn: 'Tuntikirjanpito täytetty oikein',
-                textWhenOff: 'Tuntikirjanpito puuttuu'
+                textWhenOff: 'Tuntikirjanpito puuttuu',
+                prerequisite: null
               }
             ]
           },
@@ -515,6 +520,7 @@ describe('<ReviewStudentCodeReviews />', () => {
         resetChecklist={mockFn}
         addRedirectHook={mockFn}
         gradeCodeReview={mockFn}
+        verifyCheckPrerequisites={mockFn}
       />
     )
   })

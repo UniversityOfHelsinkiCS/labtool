@@ -60,6 +60,7 @@ const JsonEdit = props => {
         if (Array.isArray(items)) {
           for (const item of items) {
             delete item['id']
+            item['prerequisite'] = null
           }
         }
       }
@@ -75,9 +76,10 @@ const JsonEdit = props => {
   const onChange = e => setData(e.target.value)
   const hasValidData = () => !!state.data && !state.error
 
+  // generation only makes sure we update JSON on save
   useEffect(() => {
     setData(JSON.stringify(props.initialData, null, 4))
-  }, [props.initialData])
+  }, [props.initialData, props.generation])
 
   const { downloadName, style } = props
   const { data, open } = state
@@ -154,6 +156,7 @@ export default JsonEdit
 JsonEdit.propTypes = {
   onImport: PropTypes.func.isRequired,
   initialData: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+  generation: PropTypes.number,
   style: PropTypes.object,
   downloadName: PropTypes.string
 }
