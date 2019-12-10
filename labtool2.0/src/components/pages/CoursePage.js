@@ -319,6 +319,10 @@ export const CoursePage = props => {
       id: studentId
     }
     try {
+      if (!window.confirm('Are you sure you want to remove yourself from the course?')) {
+        return
+      }
+
       props.removeStudent(si)
       props.addRedirectHook({
         hook: 'STUDENT_REMOVE_'
@@ -454,9 +458,4 @@ const mapDispatchToProps = {
   removeStudent
 }
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(CoursePage)
-)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(CoursePage))

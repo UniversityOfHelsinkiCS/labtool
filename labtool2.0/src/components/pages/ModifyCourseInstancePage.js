@@ -360,7 +360,7 @@ export const ModifyCourseInstancePage = props => {
               Edit checklists
             </Button>
           </Link>
-          <Link to={`/labtool/managetags`}>
+          <Link to={`/labtool/ManageTags/${props.selectedInstance.ohid}`}>
             <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px' }} block="true">
               Edit tags
             </Button>
@@ -370,7 +370,7 @@ export const ModifyCourseInstancePage = props => {
             <div>
               <br />
               <h1>Copy course information</h1>
-              <p>This copies the week amount, default maximum week points, whether there is a final review, checklists, course tags and links to the course page and material.</p>
+              <p>This copies the week amount, default maximum week points, whether there is a final review, checklists and course tags to the course page.</p>
               <Dropdown
                 className="courseDropdown"
                 disabled={courseDropdowns.length < 1}
@@ -387,6 +387,8 @@ export const ModifyCourseInstancePage = props => {
               <br />
             </div>
           )}
+          <br />
+          <br />
         </div>
       </div>
     </>
@@ -463,7 +465,4 @@ ModifyCourseInstancePage.propTypes = {
   errors: PropTypes.array
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ModifyCourseInstancePage)
+export default connect(mapStateToProps, mapDispatchToProps)(ModifyCourseInstancePage)

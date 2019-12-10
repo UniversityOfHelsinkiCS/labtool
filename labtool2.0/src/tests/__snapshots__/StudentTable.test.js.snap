@@ -44,45 +44,65 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
     <span>
        Tag filters: 
     </span>
-    <span>
+    <span
+      className="tagFilter"
+    >
       <span
         key="20001"
       >
-        <Button
-          as="button"
-          className="tagFilter mini ui red button basic"
-          compact={true}
+        <TagLabel
+          basic={true}
           disabled={false}
-          onClick={[Function]}
-        >
-          Javascript
-        </Button>
+          handleClick={[Function]}
+          tag={
+            Object {
+              "color": "red",
+              "courseInstanceId": null,
+              "createdAt": "2018-06-13T00:00:00.000Z",
+              "id": 20001,
+              "name": "Javascript",
+              "updatedAt": "2018-06-13T00:00:00.000Z",
+            }
+          }
+        />
       </span>
       <span
         key="20002"
       >
-        <Button
-          as="button"
-          className="tagFilter mini ui yellow button basic"
-          compact={true}
+        <TagLabel
+          basic={true}
           disabled={false}
-          onClick={[Function]}
-        >
-          HTML
-        </Button>
+          handleClick={[Function]}
+          tag={
+            Object {
+              "color": "yellow",
+              "courseInstanceId": null,
+              "createdAt": "2018-06-13T00:00:00.000Z",
+              "id": 20002,
+              "name": "HTML",
+              "updatedAt": "2018-06-13T00:00:00.000Z",
+            }
+          }
+        />
       </span>
       <span
         key="20008"
       >
-        <Button
-          as="button"
-          className="tagFilter mini ui grey button basic"
-          compact={true}
+        <TagLabel
+          basic={true}
           disabled={false}
-          onClick={[Function]}
-        >
-          DROPPED
-        </Button>
+          handleClick={[Function]}
+          tag={
+            Object {
+              "color": "grey",
+              "courseInstanceId": null,
+              "createdAt": "2018-06-13T00:00:00.000Z",
+              "id": 20008,
+              "name": "DROPPED",
+              "updatedAt": "2018-06-13T00:00:00.000Z",
+            }
+          }
+        />
       </span>
     </span>
   </div>
@@ -1182,18 +1202,15 @@ exports[`<StudentTableRow /> StudentTableRow Component should render correctly 1
           <ButtonGroup
             className="mini"
           >
-            <Button
-              as="button"
-              className="mini ui red button"
-              compact={true}
-              style={
+            <TagLabel
+              tag={
                 Object {
-                  "display": "inline-block",
+                  "color": "red",
+                  "id": 20001,
+                  "name": "Javascript",
                 }
               }
-            >
-              Javascript
-            </Button>
+            />
           </ButtonGroup>
         </span>
       </div>

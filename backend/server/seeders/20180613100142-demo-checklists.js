@@ -31,6 +31,7 @@ module.exports = {
     }
   ]), queryInterface.bulkInsert('ChecklistItems', [
     {
+      id: 10001,
       name: 'Readme',
       textWhenOn: 'README kunnossa',
       textWhenOff: 'README puuttuu',
@@ -41,6 +42,7 @@ module.exports = {
       order: 1
     },
     {
+      id: 10002,
       name: 'Tuntikirjanpito',
       textWhenOn: 'Tuntikirjanpito täytetty oikein',
       textWhenOff: 'Tuntikirjanpito puuttuu',
@@ -51,6 +53,7 @@ module.exports = {
       order: 2
     },
     {
+      id: 10003,
       name: 'Tietokantakaavio',
       textWhenOn: 'Tietokantakaavio luotu',
       textWhenOff: 'Tietokantakaavio puuttuu',
@@ -61,6 +64,7 @@ module.exports = {
       order: 3
     },
     {
+      id: 10004,
       name: 'Tietokanta luotu',
       textWhenOn: 'Tietokanta luotu',
       textWhenOff: 'Tietokantaa ei luotu',
@@ -71,6 +75,7 @@ module.exports = {
       order: 4
     },
     {
+      id: 10005,
       name: 'Tietokannassa dataa',
       textWhenOn: 'Tietokanta sisältää dataa',
       textWhenOff: 'Tietokannassa ei dataa',
@@ -81,6 +86,7 @@ module.exports = {
       order: 5
     },
     {
+      id: 10006,
       name: 'Koodin laatu',
       textWhenOn: 'Koodi tehty laadukkaasti ja sisältää kommentteja',
       textWhenOff: 'Koodin laadussa parantamisen varaa',
@@ -91,6 +97,7 @@ module.exports = {
       order: 6
     },
     {
+      id: 10007,
       name: 'Readme',
       textWhenOn: 'README kunnossa',
       textWhenOff: 'README puuttuu',
@@ -101,6 +108,7 @@ module.exports = {
       order: 1
     },
     {
+      id: 10008,
       name: 'Tuntikirjanpito',
       textWhenOn: 'Tuntikirjanpito täytetty oikein',
       textWhenOff: 'Tuntikirjanpito puuttuu',
@@ -111,6 +119,7 @@ module.exports = {
       order: 2
     },
     {
+      id: 10009,
       name: 'Algoritmin runko',
       textWhenOn: 'Algoritmin runko luotu',
       textWhenOff: 'Algoritmin runko puuttuu',
@@ -121,6 +130,7 @@ module.exports = {
       order: 3
     },
     {
+      id: 10010,
       name: 'Tietorakenteita luotu',
       textWhenOn: 'Tietorakenteita luotu',
       textWhenOff: 'Tietorakenteita ei ole luotu',
@@ -131,6 +141,7 @@ module.exports = {
       order: 4
     },
     {
+      id: 10011,
       name: 'Koodin laatu',
       textWhenOn: 'Koodi tehty laadukkaasti ja sisältää kommentteja',
       textWhenOff: 'Koodin laadussa parantamisen varaa',
@@ -141,6 +152,7 @@ module.exports = {
       order: 5
     },
     {
+      id: 10012,
       name: 'Rakentava palaute',
       textWhenOn: 'Palaute rakentavaa',
       textWhenOff: 'Rakentava palaute puuttuu',
@@ -150,6 +162,7 @@ module.exports = {
       checklistId: 10003
     },
     {
+      id: 10013,
       name: 'Koodi selattu',
       textWhenOn: 'Koodia on katsottu',
       textWhenOff: 'Koodia ei katsottu',
@@ -157,6 +170,18 @@ module.exports = {
       uncheckedPoints: 0,
       category: 'Katselmointi',
       checklistId: 10003
+    },
+    {
+      id: 10014,
+      name: 'Linkit',
+      textWhenOn: 'README:ssa on tarvittavat linkit',
+      textWhenOff: 'README:sta puuttuu linkit',
+      checkedPoints: 0.5,
+      uncheckedPoints: 0,
+      category: 'Readme',
+      checklistId: 10002,
+      prerequisite: 10007,
+      order: 6
     }
   ])]),
 

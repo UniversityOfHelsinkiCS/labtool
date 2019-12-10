@@ -97,10 +97,15 @@ module.exports = {
                   }
                   break
                 case 'minimumRequirementGradePenalty':
-                  if (row.minimumRequirement && (typeof row[key] !== 'number' || row[key] !== (row[key] | 0) || row[key] < 0)) {
+                  if (row.minimumRequirement && (typeof row[key] !== 'number' || !Number.isInteger(row[key]) || row[key] < 0)) {
                     res.status(400).send('"minimumRequirementGradePenalty" must be a non-negative integer')
                     return false
                   }
+                  break
+                case 'tempId':
+                  // only used to map prerequisites to new checklist items, will not be stored
+                  break
+                case 'prerequisite':
                   break
                 default:
                   res.status(400).send(`Found unexpected key: ${key}`)
@@ -109,7 +114,7 @@ module.exports = {
               return true
             })) {
               // some validation failure
-              return
+
             }
           })
         })
@@ -143,6 +148,12 @@ module.exports = {
       const checklistIdsNow = []
       let checklistOrder = 1
 
+      // we will remove prerequisites for now and put them onto a map
+      // also we need to map tempId => true id
+      const prerequisites = {}
+      const tempIdMap = {}
+      const prerequisitesRemove = []
+
       for (const category in req.body.checklist) {
         const checklistForCategory = req.body.checklist[category]
 
@@ -161,25 +172,47 @@ module.exports = {
               }
             })
             if (item.checklistId !== result[1].dataValues.id) {
+              prerequisitesRemove.push(checklistItemCopy.id)
               delete checklistItemCopy.id
             }
           }
           return checklistItemCopy
         }))
-        const checklistItems = await Promise.all(checklistForCategoryIdFiltered.map((checklistItem, index) => ChecklistItem.upsert({
-          id: checklistItem.id,
-          name: checklistItem.name,
-          textWhenOn: checklistItem.textWhenOn,
-          textWhenOff: checklistItem.textWhenOff,
-          checkedPoints: checklistItem.checkedPoints,
-          uncheckedPoints: checklistItem.uncheckedPoints,
-          category,
-          checklistId: result[1].dataValues.id,
-          order: checklistOrder + index,
-          minimumRequirement: checklistItem.minimumRequirement,
-          minimumRequirementMetIf: checklistItem.minimumRequirementMetIf,
-          minimumRequirementGradePenalty: checklistItem.minimumRequirementGradePenalty
-        }, { returning: true })))
+
+        const checklistUpsert = checklistForCategoryIdFiltered.map((checklistItem, index) => {
+          const obj = {
+            id: checklistItem.id,
+            name: checklistItem.name,
+            textWhenOn: checklistItem.textWhenOn,
+            textWhenOff: checklistItem.textWhenOff,
+            checkedPoints: checklistItem.checkedPoints,
+            uncheckedPoints: checklistItem.uncheckedPoints,
+            category,
+            checklistId: result[1].dataValues.id,
+            order: checklistOrder + index,
+            prerequisite: null, // map later; see below
+            minimumRequirement: checklistItem.minimumRequirement,
+            minimumRequirementMetIf: checklistItem.minimumRequirementMetIf,
+            minimumRequirementGradePenalty: checklistItem.minimumRequirementGradePenalty
+          }
+          if (obj.id === undefined) {
+            delete obj.id
+          }
+          return obj
+        })
+
+        const checklistItems = await Promise.all(checklistUpsert.map(async checklistItem => (checklistItem.id === undefined ? [await ChecklistItem.create(checklistItem, { returning: true })] : ChecklistItem.upsert(checklistItem, { returning: true }))))
+        const zipped = checklistForCategoryIdFiltered.map((item, index) => [item, checklistItems[index][0]])
+
+        // if we had a temp ID, map those, and if we had prerequisites, map those too
+        zipped.forEach(([oldItem, newItem]) => {
+          if (oldItem.tempId) {
+            tempIdMap[oldItem.tempId] = newItem.id
+          }
+          if (oldItem.prerequisite !== null && !prerequisitesRemove.includes(oldItem.prerequisite)) {
+            prerequisites[newItem.id] = oldItem.prerequisite
+          }
+        })
 
         checklistJson[category] = checklistItems.map((item) => {
           const checklistItem = item[0].dataValues
@@ -201,12 +234,25 @@ module.exports = {
       })
       await Promise.all(checklistWeekItems.filter(item => !checklistIdsNow.includes(item.id)).map(item => item.destroy()))
 
+      // handle prerequisites
+      await Promise.all(Object.keys(prerequisites).map(async (newId) => {
+        const prerequisiteRaw = prerequisites[newId]
+        // convert possible temp ID to actual ID
+        const prerequisiteActual = prerequisiteRaw in tempIdMap ? tempIdMap[prerequisiteRaw] : prerequisiteRaw
+
+        await ChecklistItem.update(
+          { prerequisite: prerequisiteActual },
+          { where: { id: newId } }
+        )
+      }))
+
       res.status(200).send({
-        message: `Checklist saved successfully for ${'week' in req.body ? `week ${req.body.week}` : `code review`}.`,
+        message: `Checklist saved successfully for ${'week' in req.body ? `week ${req.body.week}` : 'code review'}.`,
         result: { ...result[1].dataValues, list: checklistJson },
         data: req.body
       })
     } catch (e) {
+      console.error(e)
       logger.error('Checklist creation error.', { error: e.message })
       res.status(500).send('Unexpected error. Please try again.')
     }
@@ -270,6 +316,9 @@ module.exports = {
           delete checklistItemCopy.checklistId
           delete checklistItemCopy.order
           if (req.body.copying) {
+            // tempId is the id of the checklist item we copied; it's used
+            // to map prerequisites, etc.
+            checklistItemCopy.tempId = checklistItemCopy.id
             delete checklistItemCopy.id
           }
           checklistJson[checklistItem.category].push(checklistItemCopy)
