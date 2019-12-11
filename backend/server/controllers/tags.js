@@ -116,6 +116,18 @@ module.exports = {
         }
       }
 
+      const existingTag = await Tag.findOne({
+        where: {
+          courseInstanceId: tag.courseInstanceId ? tag.courseInstanceId : null,
+          name: tag.name
+        }
+      })
+
+      if (existingTag) {
+        res.status(400).send(`Tag ${tag.name} already exists`)
+        return
+      }
+
       const newTag = req.body.id ? (await Tag.update(
         tag,
         {
