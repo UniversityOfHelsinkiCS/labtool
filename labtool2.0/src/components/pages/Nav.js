@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { withRouter } from 'react-router'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { Divider, Menu, Icon, Image } from 'semantic-ui-react'
+import { Menu, Icon, Image } from 'semantic-ui-react'
 import LogoutButton from '../LogoutButton'
 
 import './Nav.css'
@@ -35,6 +35,7 @@ const Nav = props => {
         borderBottomLeftRadius: '5px',
         borderBottomRightRadius: '5px'
       }}
+      className="navBar"
     >
       <Menu.Menu position="left">
         <Menu.Item
