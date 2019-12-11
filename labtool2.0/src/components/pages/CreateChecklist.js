@@ -498,7 +498,7 @@ export const CreateChecklist = props => {
     return props.weekDropdowns.filter(option => option.value !== state.current)
   }
 
-  const createPrerequisiteDropdowns = () => {
+  const getPrerequisiteDropdown = key => {
     const checks = [
       {
         key: null,
@@ -507,20 +507,17 @@ export const CreateChecklist = props => {
       }
     ]
 
-    Object.keys(props.checklist.data).forEach(key => {
-      props.checklist.data[key].forEach(check => {
-        checks.push({
-          key: getRowId(check),
-          text: check.name,
-          value: getRowId(check)
-        })
+    props.checklist.data[key].forEach(check => {
+      checks.push({
+        key: getRowId(check),
+        text: check.name,
+        value: getRowId(check)
       })
     })
 
     return checks
   }
 
-  const prerequisiteDropdown = createPrerequisiteDropdowns()
 
   const renderChecklist = kind => {
     let maxPoints = 0
@@ -568,7 +565,7 @@ export const CreateChecklist = props => {
                 selection
                 value={state.categoryPrerequisites[key]}
                 onChange={applyCategoryPrerequisite(key)}
-                options={prerequisiteDropdown}
+                options={getPrerequisiteDropdown(key)}
               />
             </div>
           </Card.Content>
@@ -657,7 +654,7 @@ export const CreateChecklist = props => {
                   selection
                   value={row.prerequisite || null}
                   onChange={changeField(key, row.name, 'prerequisite')}
-                  options={prerequisiteDropdown.filter(check => check.value !== row.id)}
+                  options={getPrerequisiteDropdown(key).filter(check => check.value !== row.id)}
                 />
                 <Popup trigger={<Icon name="help circle" />} content="If a prerequisite is set, the prerequisite must be checked in order for this checkbox to be checkable." />
               </div>
