@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Header, Segment, List } from 'semantic-ui-react'
 import '../util/arrayFlatPolyfill'
 
-const MissingMinimumRequirements = ({ selectedInstance, studentInstance, currentWeekChecks }) => {
+const MissingMinimumRequirements = ({ selectedInstance, studentInstance, currentWeekChecks, showOnlyCurrentWeek }) => {
   const minimumRequirements = selectedInstance.checklists.reduce((map, checklist) => {
     Object.values(checklist.list).forEach(checklistCategory => {
       checklistCategory.forEach(checklistItem => {
@@ -15,7 +15,7 @@ const MissingMinimumRequirements = ({ selectedInstance, studentInstance, current
     return map
   }, new Map())
 
-  const missingMinimumRequirements = [...studentInstance.weeks, { checks: currentWeekChecks ? currentWeekChecks : {} }]
+  const missingMinimumRequirements = [...(showOnlyCurrentWeek ? [] : studentInstance.weeks), { checks: currentWeekChecks ? currentWeekChecks : {} }]
     .map(week =>
       Object.entries(week.checks)
         .filter(([id, checked]) => minimumRequirements.has(Number(id)) && checked !== minimumRequirements.get(Number(id)).minimumRequirementMetIf)
@@ -39,10 +39,14 @@ const MissingMinimumRequirements = ({ selectedInstance, studentInstance, current
           } (${missingMinimumRequirement.week > selectedInstance.weekAmount ? 'final review' : `week ${missingMinimumRequirement.week}`})`}</List.Item>
         ))}
       </List>
-      <br />
-      <p>
-        Maximum grade: <strong>{Math.max(1, 5 - missingMinimumRequirements.reduce((a, b) => a + b.minimumRequirementGradePenalty, 0))}</strong>
-      </p>
+      {!showOnlyCurrentWeek && (
+        <>
+          <br />
+          <p>
+            Maximum grade: <strong>{Math.max(1, 5 - missingMinimumRequirements.reduce((a, b) => a + b.minimumRequirementGradePenalty, 0))}</strong>
+          </p>
+        </>
+      )}
     </Segment>
   )
 }
@@ -50,7 +54,8 @@ const MissingMinimumRequirements = ({ selectedInstance, studentInstance, current
 MissingMinimumRequirements.propTypes = {
   selectedInstance: PropTypes.object,
   studentInstance: PropTypes.object,
-  currentWeekChecks: PropTypes.object
+  currentWeekChecks: PropTypes.object,
+  showOnlyCurrentWeek: PropTypes.bool
 }
 
 export default MissingMinimumRequirements

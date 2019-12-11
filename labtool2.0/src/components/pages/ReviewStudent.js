@@ -303,7 +303,14 @@ export const ReviewStudent = props => {
                   </div>
                 )}
                 <PreviousWeekDetails weekData={previousWeekData} />
-                {isFinalReview(props) && <MissingMinimumRequirements selectedInstance={props.selectedInstance} studentInstance={studentData} currentWeekChecks={!checks ? {} : checks} />}
+                {
+                  <MissingMinimumRequirements
+                    selectedInstance={props.selectedInstance}
+                    studentInstance={studentData}
+                    currentWeekChecks={!checks ? {} : checks}
+                    showOnlyCurrentWeek={!isFinalReview(props)}
+                  />
+                }
                 {isFinalReview(props) ? props.selectedInstance.finalReviewHasPoints ? <h2>Final Review Points</h2> : <h2>Final Review</h2> : <h2>Review</h2>}
                 {loadedFromDraft && (
                   <div>
@@ -460,9 +467,4 @@ ReviewStudent.propTypes = {
   errors: PropTypes.array
 }
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(ReviewStudent)
-)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ReviewStudent))
