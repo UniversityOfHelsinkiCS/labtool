@@ -79,11 +79,12 @@ export const CreateChecklist = props => {
   const validateChecklistPrerequisites = data => {
     const items = {}
     Object.keys(data).map(category => {
+      items[category] = {}
       data[category].forEach(item => {
         if (item.id !== undefined) {
-          items[item.id] = item
+          items[category][item.id] = item
         } else {
-          items[item.tempId] = item
+          items[category][item.tempId] = item
         }
       })
     })
@@ -93,7 +94,7 @@ export const CreateChecklist = props => {
         if (!item.prerequisite) {
           return true
         }
-        if (!items[item.prerequisite]) {
+        if (!items[category][item.prerequisite]) {
           return false
         }
 
@@ -106,7 +107,7 @@ export const CreateChecklist = props => {
             return false
           }
           visited.push(curId)
-          curItem = items[curItem.prerequisite]
+          curItem = items[category][curItem.prerequisite]
         }
 
         return true
