@@ -127,7 +127,7 @@ module.exports = {
       uncheckedPoints: 0,
       category: 'Algoritmit',
       checklistId: 10002,
-      order: 3
+      order: 4
     },
     {
       id: 10010,
@@ -138,7 +138,7 @@ module.exports = {
       uncheckedPoints: 0,
       category: 'Algoritmit',
       checklistId: 10002,
-      order: 4
+      order: 5
     },
     {
       id: 10011,
@@ -149,7 +149,7 @@ module.exports = {
       uncheckedPoints: 0,
       category: 'Koodi',
       checklistId: 10002,
-      order: 5
+      order: 6
     },
     {
       id: 10012,
@@ -173,15 +173,15 @@ module.exports = {
     },
     {
       id: 10014,
-      name: 'Linkit',
+      name: 'README:n linkit',
       textWhenOn: 'README:ssa on tarvittavat linkit',
       textWhenOff: 'README:sta puuttuu linkit',
       checkedPoints: 0.5,
       uncheckedPoints: 0,
-      category: 'Readme',
+      category: 'Dokumentaatio',
       checklistId: 10002,
       prerequisite: 10007,
-      order: 6
+      order: 3
     }
   ])]),
 
