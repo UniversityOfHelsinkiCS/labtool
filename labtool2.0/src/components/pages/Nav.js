@@ -25,6 +25,7 @@ const Nav = props => {
       icon="labeled"
       stackable
       inverted
+      pointing
       borderless
       animation="overlay"
       attached
@@ -55,7 +56,7 @@ const Nav = props => {
         </Menu.Item>
 
         {props.user.user ? (
-          <Menu.Item name="MyPage" as={Link} to="/labtool/mypage">
+          <Menu.Item name="MyPage" active={onMyPage} as={Link} to="/labtool/mypage">
             <Icon name="home" />
             <MenuText active={onMyPage}>My page</MenuText>
           </Menu.Item>
@@ -64,7 +65,7 @@ const Nav = props => {
         )}
 
         {props.user.user ? (
-          <Menu.Item name="Courses" as={Link} to="/labtool/courses">
+          <Menu.Item name="Courses" active={onCourseList} as={Link} to="/labtool/courses">
             <Icon name="browser" />
             <MenuText active={onCourseList}>Courses</MenuText>
           </Menu.Item>
@@ -73,7 +74,7 @@ const Nav = props => {
         )}
 
         {props.courseImport.canImport && (
-          <Menu.Item name="CourseImport" as={Link} to="/labtool/courseimport">
+          <Menu.Item name="CourseImport" active={onCourseImport} as={Link} to="/labtool/courseimport">
             <Icon name="cloud download" />
             <MenuText active={onCourseImport}>Import</MenuText>
           </Menu.Item>
