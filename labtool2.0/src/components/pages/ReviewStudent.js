@@ -183,8 +183,8 @@ export const ReviewStudent = props => {
           return object
         }, {})
     : {}
-  const savedChecks = weekData && weekData.checks ? weekData.checks : emptyChecks
-  const checks = props.weekReview.checks !== null ? props.weekReview.checks : savedChecks //weekData ? weekData.checks || {} : {}
+  const savedChecks = weekData && weekData.checks ? weekData.checks : {}
+  const checks = { ...emptyChecks, ...(props.weekReview.checks !== null ? props.weekReview.checks : savedChecks) } //weekData ? weekData.checks || {} : {}
   const weekPoints = studentData.weeks
     .filter(week => week.weekNumber < props.weekNumber)
     .map(week => week.points)
