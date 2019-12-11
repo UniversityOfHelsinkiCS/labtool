@@ -1,0 +1,11 @@
+.activeItem {
+    font-weight: bolder;
+}
+
+.ui.inverted.pointing.menu.navBar .active.item {
+    border-bottom: 3px solid #fff;
+    border-radius: 3px;
+}
+.ui.inverted.pointing.menu.navBar .active.item::after {
+    display: none !important;
+}
