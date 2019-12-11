@@ -1,18 +1,24 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { withRouter } from 'react-router'
 import { connect } from 'react-redux'
-import { Button } from 'semantic-ui-react'
+import { Button, Icon } from 'semantic-ui-react'
 
-export const LogoutButton = ({ logout }) => <Button onClick={logout}>Logout</Button>
+export const LogoutButton = ({ logout, user }) => (
+  <Button onClick={logout}>
+    <Icon name="sign out alternate" />
+    {`Logout${user ? ` (${user.firsts} ${user.lastname.charAt(0)})` : ''}`}
+  </Button>
+)
 
 LogoutButton.propTypes = {
-  logout: PropTypes.func.isRequired
+  logout: PropTypes.func.isRequired,
+  user: PropTypes.object
 }
 
-export default withRouter(
-  connect(
-    null,
-    {}
-  )(LogoutButton)
-)
+const mapStateToProps = state => {
+  return {
+    user: state.user.user
+  }
+}
+
+export default connect(mapStateToProps)(LogoutButton)
