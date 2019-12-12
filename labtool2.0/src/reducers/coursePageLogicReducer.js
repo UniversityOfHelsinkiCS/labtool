@@ -61,7 +61,6 @@ const coursePageLogicReducer = (state = INITIAL_STATE, action) => {
       return { ...state, selectedStudents: newSelectedStudents }
     }
     case 'COURSE_PAGE_INVERT_MANY_STUDENTS': {
-      console.log('invert')
       const newSelectedStudents = { ...state.selectedStudents }
       action.ids.forEach(id => {
         if (newSelectedStudents[id]) {
