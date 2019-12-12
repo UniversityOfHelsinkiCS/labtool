@@ -47,11 +47,9 @@ const MissingMinimumRequirements = ({ selectedInstance, studentInstance, current
           <p>
             Maximum grade: <strong>{maximumGrade}</strong>
           </p>
-        ) : (selectedInstance.finalReview && maximumGrade < 5 && (
-          <p>
-            If these requirements are not met by the time of the final review, they will have an effect on the final grade.
-          </p>
-        ))}
+        ) : (
+          selectedInstance.finalReview && maximumGrade < 5 && <p>If these requirements are not met by the time of the final review, they will have an effect on the final grade.</p>
+        )}
       </>
     </Segment>
   )
