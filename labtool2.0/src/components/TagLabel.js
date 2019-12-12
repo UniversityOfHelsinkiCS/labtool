@@ -4,7 +4,8 @@ import PropTypes from 'prop-types'
 
 export const TagLabel = props => {
   const { color, text, handleClick, tag, basic, removeLabel, disabled } = props
-  const validColors = ['red', 'orange', 'yellow', 'olive', 'green', 'teal', 'blue', 'violet', 'purple', 'pink', 'brown', 'grey', 'black']
+  // Semantic UI color choices + "white" (which is actually technically the lack of color)
+  const validColors = ['white', 'red', 'orange', 'yellow', 'olive', 'green', 'teal', 'blue', 'violet', 'purple', 'pink', 'brown', 'grey', 'black']
 
   const tagColor = tag ? tag.color : color
   const tagText = tag ? tag.name : text
@@ -68,7 +69,7 @@ export const TagLabel = props => {
         attached="right"
         size="mini"
         style={{ paddingLeft: 0, paddingRight: 0, backgroundColor: `${backgroundColor(tagColor)}` }}
-        color={validColors.includes(tagColor) ? tagColor : null}
+        color={validColors.includes(tagColor) && tagColor !== 'white' ? tagColor : null}
         onClick={handleClick}
       >
         <Icon name="remove" style={{ color: `${textColor(tagColor)}` }} />

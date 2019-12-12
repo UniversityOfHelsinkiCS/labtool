@@ -26,7 +26,8 @@ export const ManageTags = props => {
     showMoreColorOptions: false
   })
 
-  const validColors = ['red', 'orange', 'yellow', 'olive', 'green', 'teal', 'blue', 'violet', 'purple', 'pink', 'brown', 'grey', 'black']
+  // Semantic UI color choices + "white"
+  const validColors = ['white', 'red', 'orange', 'yellow', 'olive', 'green', 'teal', 'blue', 'violet', 'purple', 'pink', 'brown', 'grey', 'black']
 
   useEffect(() => {
     // run on component mount
@@ -230,7 +231,6 @@ export const ManageTags = props => {
                         <option value="" disabled>
                           Select a tag color
                         </option>
-                        <option value="white">White</option>
                         {validColors.map(color => (
                           <option key={color} value={color}>
                             {capitalize(color)}
