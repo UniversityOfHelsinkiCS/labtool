@@ -250,6 +250,7 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
                   "weekMaxPoints": 3,
                 }
               }
+              showMaximumGrade={false}
               showOnlyCurrentWeek={true}
               studentInstance={
                 Object {
