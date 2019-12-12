@@ -37,26 +37,38 @@ const coursePageLogicReducer = (state = INITIAL_STATE, action) => {
     case 'COURSE_PAGE_TOGGLE_MASS_ASSIGN':
       return { ...state, showMassAssignForm: !state.showMassAssignForm }
     case 'COURSE_PAGE_SELECT_STUDENT': {
-      const newSelectedStudents = state.selectedStudents
+      const newSelectedStudents = { ...state.selectedStudents }
       newSelectedStudents[action.id] = true
       return { ...state, selectedStudents: newSelectedStudents }
     }
     case 'COURSE_PAGE_UNSELECT_STUDENT': {
-      const newSelectedStudents = state.selectedStudents
+      const newSelectedStudents = { ...state.selectedStudents }
       delete newSelectedStudents[action.id]
       return { ...state, selectedStudents: newSelectedStudents }
     }
     case 'COURSE_PAGE_SELECT_MANY_STUDENTS': {
-      const newSelectedStudents = state.selectedStudents
+      const newSelectedStudents = { ...state.selectedStudents }
       action.ids.forEach(id => {
         newSelectedStudents[id] = true
       })
       return { ...state, selectedStudents: newSelectedStudents }
     }
     case 'COURSE_PAGE_UNSELECT_MANY_STUDENTS': {
-      const newSelectedStudents = state.selectedStudents
+      const newSelectedStudents = { ...state.selectedStudents }
       action.ids.forEach(id => {
         delete newSelectedStudents[id]
+      })
+      return { ...state, selectedStudents: newSelectedStudents }
+    }
+    case 'COURSE_PAGE_INVERT_MANY_STUDENTS': {
+      console.log('invert')
+      const newSelectedStudents = { ...state.selectedStudents }
+      action.ids.forEach(id => {
+        if (newSelectedStudents[id]) {
+          delete newSelectedStudents[id]
+        } else {
+          newSelectedStudents[id] = true
+        }
       })
       return { ...state, selectedStudents: newSelectedStudents }
     }
@@ -210,6 +222,15 @@ export const unselectAllStudents = ids => {
   return async dispatch => {
     dispatch({
       type: 'COURSE_PAGE_UNSELECT_MANY_STUDENTS',
+      ids
+    })
+  }
+}
+
+export const invertStudentSelection = ids => {
+  return async dispatch => {
+    dispatch({
+      type: 'COURSE_PAGE_INVERT_MANY_STUDENTS',
       ids
     })
   }
