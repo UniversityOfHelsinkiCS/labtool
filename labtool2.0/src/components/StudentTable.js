@@ -231,7 +231,7 @@ export const StudentTable = props => {
             <Table.Row>
               {showColumn('select') && (
                 <Table.HeaderCell key={-2}>
-                  <Popup trigger={<div><Icon style={{ marginBottom: '1em', marginLeft: '0.2em' }} link name='exchange' id={'selectInvert'} size="small" onClick={handleSelectInvert} /></div>} content="Invert selection" />
+                  <Popup trigger={<div><Icon style={{ marginBottom: '1.75em', marginLeft: '0.2em' }} link name='exchange' id={'selectInvert'} size="small" onClick={handleSelectInvert} /></div>} content="Invert selection" />
                   <Checkbox id={'selectAll'} disabled={filteredData.length < 1} checked={allSelected} onChange={handleSelectAll} />
                 </Table.HeaderCell>
               )}
