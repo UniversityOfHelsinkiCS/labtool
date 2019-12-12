@@ -307,7 +307,7 @@ export const ReviewStudent = props => {
                   selectedInstance={props.selectedInstance}
                   studentInstance={studentData}
                   currentWeekChecks={!checks ? {} : checks}
-                  showOnlyCurrentWeek={true}
+                  currentWeekNumber={weekData && weekData.weekNumber ? weekData.weekNumber : props.ownProps.weekNumber}
                   showMaximumGrade={isFinalReview(props)}
                 />
                 {isFinalReview(props) ? props.selectedInstance.finalReviewHasPoints ? <h2>Final Review Points</h2> : <h2>Final Review</h2> : <h2>Review</h2>}

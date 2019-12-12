@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Header, Segment, List } from 'semantic-ui-react'
 import '../util/arrayFlatPolyfill'
 
-const MissingMinimumRequirements = ({ selectedInstance, studentInstance, currentWeekChecks, showOnlyCurrentWeek, showMaximumGrade }) => {
+const MissingMinimumRequirements = ({ selectedInstance, studentInstance, currentWeekChecks, currentWeekNumber, showMaximumGrade }) => {
   const minimumRequirements = selectedInstance.checklists.reduce((map, checklist) => {
     Object.values(checklist.list).forEach(checklistCategory => {
       checklistCategory.forEach(checklistItem => {
@@ -17,7 +17,8 @@ const MissingMinimumRequirements = ({ selectedInstance, studentInstance, current
 
   const missingMinimumRequirementIds = [
     ...new Set(
-      [...(showOnlyCurrentWeek ? [] : studentInstance.weeks), { checks: currentWeekChecks ? currentWeekChecks : {} }]
+      [studentInstance.weeks.find(week => week.weekNumber === currentWeekNumber), { checks: currentWeekChecks }]
+        .filter(week => !!week && !!week.checks)
         .map(week =>
           Object.entries(week.checks)
             .filter(([id, checked]) => minimumRequirements.has(Number(id)) && checked !== minimumRequirements.get(Number(id)).minimumRequirementMetIf)
@@ -42,7 +43,7 @@ const MissingMinimumRequirements = ({ selectedInstance, studentInstance, current
         {missingMinimumRequirements.map(missingMinimumRequirement => (
           <List.Item key={missingMinimumRequirement.id}>{`${missingMinimumRequirement.name}: ${
             missingMinimumRequirement.minimumRequirementMetIf ? missingMinimumRequirement.textWhenOff : missingMinimumRequirement.textWhenOn
-          }${!showOnlyCurrentWeek ? ` (${missingMinimumRequirement.week > selectedInstance.weekAmount ? 'final review' : `week ${missingMinimumRequirement.week}`})` : ''}`}</List.Item>
+          }`}</List.Item>
         ))}
       </List>
       <>
@@ -52,7 +53,12 @@ const MissingMinimumRequirements = ({ selectedInstance, studentInstance, current
             Maximum grade: <strong>{maximumGrade}</strong>
           </p>
         ) : (
-          selectedInstance.finalReview && maximumGrade < 5 && <p>If these requirements are not met by the time of the final review, they will have an effect on the final grade.</p>
+          selectedInstance.finalReview &&
+          maximumGrade < 5 && (
+            <p>
+              If these requirements are not met by the time of the final review, they will decrease final grade by <strong>{5 - maximumGrade}</strong>
+            </p>
+          )
         )}
       </>
     </Segment>
@@ -63,7 +69,7 @@ MissingMinimumRequirements.propTypes = {
   selectedInstance: PropTypes.object,
   studentInstance: PropTypes.object,
   currentWeekChecks: PropTypes.object,
-  showOnlyCurrentWeek: PropTypes.bool,
+  currentWeekNumber: PropTypes.number,
   showMaximumGrade: PropTypes.bool
 }
 
