@@ -15,19 +15,23 @@ const MissingMinimumRequirements = ({ selectedInstance, studentInstance, current
     return map
   }, new Map())
 
-  const missingMinimumRequirements = [...(showOnlyCurrentWeek ? [] : studentInstance.weeks), { checks: currentWeekChecks ? currentWeekChecks : {} }]
-    .map(week =>
-      Object.entries(week.checks)
-        .filter(([id, checked]) => minimumRequirements.has(Number(id)) && checked !== minimumRequirements.get(Number(id)).minimumRequirementMetIf)
-        .map(([id]) => Number(id))
+  const missingMinimumRequirementIds = [
+    ...new Set(
+      [...(showOnlyCurrentWeek ? [] : studentInstance.weeks), { checks: currentWeekChecks ? currentWeekChecks : {} }]
+        .map(week =>
+          Object.entries(week.checks)
+            .filter(([id, checked]) => minimumRequirements.has(Number(id)) && checked !== minimumRequirements.get(Number(id)).minimumRequirementMetIf)
+            .map(([id]) => Number(id))
+        )
+        .flat()
     )
-    .flat()
-    .map(id => minimumRequirements.get(id))
-    .sort((a, b) => a.week - b.week)
+  ]
 
-  if (missingMinimumRequirements.length === 0) {
+  if (missingMinimumRequirementIds.length === 0) {
     return null
   }
+
+  const missingMinimumRequirements = missingMinimumRequirementIds.map(id => minimumRequirements.get(id)).sort((a, b) => a.week - b.week)
 
   const maximumGrade = Math.max(1, 5 - missingMinimumRequirements.reduce((a, b) => a + b.minimumRequirementGradePenalty, 0))
 
