@@ -26,7 +26,8 @@ export const ManageTags = props => {
     showMoreColorOptions: false
   })
 
-  const validColors = ['red', 'orange', 'yellow', 'olive', 'green', 'teal', 'blue', 'violet', 'purple', 'pink', 'brown', 'grey', 'black']
+  // Semantic UI color choices + "white"
+  const validColors = ['white', 'red', 'orange', 'yellow', 'olive', 'green', 'teal', 'blue', 'violet', 'purple', 'pink', 'brown', 'grey', 'black']
 
   useEffect(() => {
     // run on component mount
