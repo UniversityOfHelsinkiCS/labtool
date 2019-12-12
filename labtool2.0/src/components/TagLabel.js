@@ -4,7 +4,8 @@ import PropTypes from 'prop-types'
 
 export const TagLabel = props => {
   const { color, text, handleClick, tag, basic, removeLabel, disabled } = props
-  const validColors = ['red', 'orange', 'yellow', 'olive', 'green', 'teal', 'blue', 'violet', 'purple', 'pink', 'brown', 'grey', 'black']
+  // Semantic UI color choices + "white" (which is actually technically the lack of color)
+  const validColors = ['white', 'red', 'orange', 'yellow', 'olive', 'green', 'teal', 'blue', 'violet', 'purple', 'pink', 'brown', 'grey', 'black']
 
   const tagColor = tag ? tag.color : color
   const tagText = tag ? tag.name : text
@@ -27,6 +28,19 @@ export const TagLabel = props => {
     return [r, g, b]
   }
 
+  const rgbValuesFromString = rgb => {
+    const values = rgb
+      .substring(4)
+      .split(')')[0]
+      .split(', ')
+
+    const r = values[0]
+    const g = values[1]
+    const b = values[2]
+
+    return [r, g, b]
+  }
+
   /**
    * If background color is hexcode, use this function to define text color.
    * @param {*} backgroundColor
@@ -35,7 +49,14 @@ export const TagLabel = props => {
     if (validColors.includes(backgroundColor)) return ''
     if (basic) return 'black'
 
-    const rgb = hexToRgb(backgroundColor)
+    let rgb = ''
+
+    if (backgroundColor.includes('rgb')) {
+      rgb = rgbValuesFromString(backgroundColor)
+    } else {
+      rgb = hexToRgb(backgroundColor)
+    }
+
     const rgbSum = Math.round((parseInt(rgb[0]) * 299 + parseInt(rgb[1]) * 587 + parseInt(rgb[2]) * 114) / 1000)
     return rgbSum > 160 ? 'black' : 'white'
   }
@@ -48,7 +69,7 @@ export const TagLabel = props => {
         attached="right"
         size="mini"
         style={{ paddingLeft: 0, paddingRight: 0, backgroundColor: `${backgroundColor(tagColor)}` }}
-        color={validColors.includes(tagColor) ? tagColor : null}
+        color={validColors.includes(tagColor) && tagColor !== 'white' ? tagColor : null}
         onClick={handleClick}
       >
         <Icon name="remove" style={{ color: `${textColor(tagColor)}` }} />
