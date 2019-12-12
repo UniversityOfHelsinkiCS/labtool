@@ -26,7 +26,8 @@ export const ManageTags = props => {
     showMoreColorOptions: false
   })
 
-  const validColors = ['red', 'orange', 'yellow', 'olive', 'green', 'teal', 'blue', 'violet', 'purple', 'pink', 'brown', 'grey', 'black']
+  // Semantic UI color choices + "white"
+  const validColors = ['white', 'red', 'orange', 'yellow', 'olive', 'green', 'teal', 'blue', 'violet', 'purple', 'pink', 'brown', 'grey', 'black']
 
   useEffect(() => {
     // run on component mount
@@ -74,6 +75,13 @@ export const ManageTags = props => {
     } catch (error) {
       console.error(error)
     }
+  }
+
+  const randomColor = () => {
+    const color = 'rgb(' + Math.floor(Math.random() * 256) + ', ' + Math.floor(Math.random() * 256) + ', ' + Math.floor(Math.random() * 256) + ')'
+    state.valueColor = color
+
+    return state.valueColor
   }
 
   const removeTag = e => {
@@ -217,13 +225,12 @@ export const ManageTags = props => {
                         className="ui dropdown"
                         value={validColors.includes(state.valueColor) ? state.valueColor : ''}
                         name="color"
-                        style={{ minWidth: '12em', display: 'inline' }}
+                        style={{ minWidth: '30em', display: 'inline' }}
                         onChange={e => (state.valueColor = e.target.value)}
                       >
                         <option value="" disabled>
                           Select a tag color
                         </option>
-                        <option value="white">White</option>
                         {validColors.map(color => (
                           <option key={color} value={color}>
                             {capitalize(color)}
@@ -231,7 +238,14 @@ export const ManageTags = props => {
                         ))}
                       </select>
                     </Form.Field>
-
+                  </Form.Group>
+                  <Form.Group>
+                    <Form.Field inline>
+                      <label style={{ width: '100px', textAlign: 'left' }} />
+                      <Button compact type="button" onClick={randomColor}>
+                        Random color
+                      </Button>
+                    </Form.Field>
                     <Form.Field>
                       <Button compact type="button" onClick={() => (state.showMoreColorOptions = !state.showMoreColorOptions)} style={{ marginBottom: '10px' }}>
                         More color options

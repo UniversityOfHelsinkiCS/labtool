@@ -238,11 +238,6 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
                         "text": "Koodin laatu",
                         "value": undefined,
                       },
-                      Object {
-                        "key": undefined,
-                        "text": "Readme kunnossa",
-                        "value": undefined,
-                      },
                     ]
                   }
                   placeholder="Select prerequisite..."
@@ -557,11 +552,6 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
                         "key": null,
                         "text": "(none)",
                         "value": null,
-                      },
-                      Object {
-                        "key": undefined,
-                        "text": "Koodin laatu",
-                        "value": undefined,
                       },
                       Object {
                         "key": undefined,

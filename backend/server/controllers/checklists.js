@@ -1,5 +1,5 @@
 const helper = require('../helpers/checklistHelper')
-const { TeacherInstance, Checklist, ChecklistItem, StudentInstance } = require('../models')
+const { TeacherInstance, Checklist, ChecklistItem, StudentInstance, CourseInstance } = require('../models')
 const logger = require('../utils/logger')
 
 module.exports = {
@@ -17,8 +17,7 @@ module.exports = {
 
     try {
       if (!req.authenticated.success) {
-        res.status(403).send('You have to be authenticated to do this.')
-        return
+        return res.status(403).send('You have to be authenticated to do this.')
       }
       const teacherInstance = await TeacherInstance.findOne({
         attributes: ['id'],
@@ -28,39 +27,39 @@ module.exports = {
         }
       })
       if (!teacherInstance) {
-        res.status(403).send('You must be a teacher of the course to perform this action.')
-        return
+        return res.status(403).send('You must be a teacher of the course to perform this action.')
+      }
+      const courseInstance = await CourseInstance.findOne({
+        where: {
+          id: req.body.courseInstanceId
+        }
+      })
+      if (!courseInstance) {
+        return res.status(400).send('Course not found.')
       }
       if ((typeof req.body.week !== 'number' && !req.body.forCodeReview) || typeof req.body.courseInstanceId !== 'number') {
-        res.status(400).send('Missing or malformed inputs.')
-        return
+        return res.status(400).send('Missing or malformed inputs.')
       }
       if (req.body.maxPoints < 0) {
-        res.status(400).send('Invalid maximum points.')
-        return
+        return res.status(400).send('Invalid maximum points.')
       }
       try {
         Object.keys(req.body.checklist).forEach((cl) => {
           if (!Array.isArray(req.body.checklist[cl])) {
-            res.status(400).send('Supplied JSON should be an object with strings as keys and arrays as values.')
-            return
+            return res.status(400).send('Supplied JSON should be an object with strings as keys and arrays as values.')
           }
           req.body.checklist[cl].forEach((row) => {
             if (row.id !== undefined && typeof row.id !== 'number') {
-              res.status(400).send('Field ID must be numeric.')
-              return
+              return res.status(400).send('Field ID must be numeric.')
             }
             if (typeof row.name !== 'string') {
-              res.status(400).send('All objects in array must have field "name" with string value.')
-              return
+              return res.status(400).send('All objects in array must have field "name" with string value.')
             }
             if (typeof row.checkedPoints !== 'number') {
-              res.status(400).send('All objects in array must have field "points when checked" with number value.')
-              return
+              return res.status(400).send('All objects in array must have field "points when checked" with number value.')
             }
             if (typeof row.uncheckedPoints !== 'number') {
-              res.status(400).send('All objects in array must have field "points when unchecked" with number value.')
-              return
+              return res.status(400).send('All objects in array must have field "points when unchecked" with number value.')
             }
             if (!Object.keys(row).every((key) => {
               switch (key) {
@@ -104,6 +103,9 @@ module.exports = {
                   break
                 case 'tempId':
                   // only used to map prerequisites to new checklist items, will not be stored
+                  break
+                case 'order':
+                  // ignore, because we will
                   break
                 case 'prerequisite':
                   break
@@ -189,7 +191,7 @@ module.exports = {
             uncheckedPoints: checklistItem.uncheckedPoints,
             category,
             checklistId: result[1].dataValues.id,
-            order: checklistOrder + index,
+            order: checklistOrder + index, // ignore order sent by client
             prerequisite: null, // map later; see below
             minimumRequirement: checklistItem.minimumRequirement,
             minimumRequirementMetIf: checklistItem.minimumRequirementMetIf,
@@ -247,7 +249,7 @@ module.exports = {
       }))
 
       res.status(200).send({
-        message: `Checklist saved successfully for ${'week' in req.body ? `week ${req.body.week}` : 'code review'}.`,
+        message: `Checklist saved successfully for ${'week' in req.body ? (courseInstance.finalReview && Number(req.body.week) > courseInstance.weekAmount ? 'final review' : `week ${req.body.week}`) : 'code review'}.`,
         result: { ...result[1].dataValues, list: checklistJson },
         data: req.body
       })
@@ -314,7 +316,6 @@ module.exports = {
           const checklistItemCopy = { ...checklistItem }
           delete checklistItemCopy.category
           delete checklistItemCopy.checklistId
-          delete checklistItemCopy.order
           if (req.body.copying) {
             // tempId is the id of the checklist item we copied; it's used
             // to map prerequisites, etc.
