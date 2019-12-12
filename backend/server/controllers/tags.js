@@ -32,8 +32,13 @@ module.exports = {
 
       const tag = {
         color: req.body.color || 'gray',
-        name: req.body.text,
+        name: req.body.text.trim(),
         courseInstanceId: req.body.courseInstanceId || null
+      }
+
+      if (tag.name.length === 0) {
+        res.status(400).send('Tag name cannot be empty')
+        return
       }
 
       if (req.body.id) {
@@ -115,6 +120,8 @@ module.exports = {
           }
         }
       }
+
+
 
       if (req.body.id) {
         const newTag = await Tag.update(
