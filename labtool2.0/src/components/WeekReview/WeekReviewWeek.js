@@ -104,7 +104,12 @@ export const WeekReviewWeek = props => {
             )}
           </Card>
           {courseData && courseData.role === 'teacher' && isFinalWeek && (
-            <MissingMinimumRequirements selectedInstance={selectedInstance} studentInstance={courseData.data.find(si => si.id === Number(studentInstance))} />
+            <MissingMinimumRequirements
+              selectedInstance={selectedInstance}
+              studentInstance={courseData.data.find(si => si.id === Number(studentInstance))}
+              showMaximumGrade
+              currentWeekNumber={week.weekNumber}
+            />
           )}
           {week.comments.length === 0 ? null : (
             <div>

@@ -28,8 +28,7 @@ const cascadeMissingPrerequisites = (checks, prerequisites) => {
 const toggleAndCascadeMissingPrerequisites = (baseChecks, thisChecks, itemId, prerequisites) => {
   const toggledChecks = {
     ...baseChecks,
-    [itemId]:
-      baseChecks[itemId] !== undefined ? !baseChecks[itemId] : thisChecks ? !thisChecks.checks[itemId] : !baseChecks[itemId]
+    [itemId]: baseChecks[itemId] !== undefined ? !baseChecks[itemId] : thisChecks ? !thisChecks.checks[itemId] : !baseChecks[itemId]
   }
   return cascadeMissingPrerequisites(toggledChecks, prerequisites)
 }
@@ -42,7 +41,7 @@ const weekReviewReducer = (state = INITIAL_STATE, action) => {
     case 'LOGOUT_SUCCESS':
       return INITIAL_STATE
     case 'WEEK_REVIEW_TOGGLE': {
-      const thisWeek = state.data.filter(student => student.id === Number(action.studentId, 10))[0].weeks.filter(week => week.weekNumber === Number(action.weekNbr, 10))[0]
+      const thisWeek = state.data.find(student => student.id === Number(action.studentId)).weeks.find(week => week.weekNumber === Number(action.weekNbr))
       const baseChecks = state.checks ? state.checks : thisWeek ? thisWeek.checks : {}
       return {
         ...state,
@@ -62,10 +61,12 @@ const weekReviewReducer = (state = INITIAL_STATE, action) => {
     case 'WEEK_REVIEW_CHECK_SCAN_PREREQUISITES':
       const newChecks = cascadeMissingPrerequisites(state.checks, action.prerequisites)
       // do not modify state if we don't need to change anything
-      return state.checks == newChecks ? state : {
-        ...state,
-        checks: newChecks
-      }
+      return state.checks == newChecks
+        ? state
+        : {
+            ...state,
+            checks: newChecks
+          }
     case 'WEEK_REVIEW_CHECKS_RESTORE':
       return {
         ...state,
