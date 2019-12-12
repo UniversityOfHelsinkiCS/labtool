@@ -132,6 +132,7 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
                   "6": false,
                 }
               }
+              currentWeekNumber={1}
               selectedInstance={
                 Object {
                   "active": true,
@@ -251,7 +252,6 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
                 }
               }
               showMaximumGrade={false}
-              showOnlyCurrentWeek={true}
               studentInstance={
                 Object {
                   "Tags": Array [
