@@ -7,7 +7,7 @@ Table CourseInstances {
     weekAmount int
     weekMaxPoints double
     currentWeek int
-    currentCodeReview int[]
+    currentCodeReview "int[]"
     amountOfCodeReviews int
     codeReviewActive boolean
     finalReview boolean
@@ -30,16 +30,16 @@ Table Users {
 
 Table StudentInstances {
     id int [pk]
-    userId int [ref: > Users.id]
-    courseInstanceId int [ref: > CourseInstances.id]
-    teacherInstanceId null int [ref: > TeacherInstances.id]
+    userId int [not null, ref: > Users.id]
+    courseInstanceId int [not null, ref: > CourseInstances.id]
+    teacherInstanceId int [ref: > TeacherInstances.id]
     github string
     projectName string
     dropped boolean
     issuesDisabled boolean
     issuesDisabledCheckedAt timestamp
     validRegistration boolean
-    repoExists null boolean
+    repoExists boolean [null]
 }
 
 Table TeacherInstances {
@@ -51,8 +51,9 @@ Table TeacherInstances {
 
 Table Weeks {
     id int [pk]
-    studentInstanceId [ref: > StudentInstances.id]
-    points double
+    studentInstanceId int [not null, ref: > StudentInstances.id]
+    points double [null]
+    grade int [null]
     weekNumber int
     feedback string
     notified boolean
@@ -63,13 +64,13 @@ Table Tags {
     id int [pk]
     name string
     color string
-    courseInstanceId [ref: > CourseInstances.id]
+    courseInstanceId int [not null, ref: > CourseInstances.id]
 }
 
 Table StudentTags {
     id int [pk]
-    studentInstanceId [ref: > StudentInstances.id]
-    tagId [ref: > Tags.id]
+    studentInstanceId int [not null, ref: > StudentInstances.id]
+    tagId int [not null, ref: > Tags.id]
 }
 
 Table Comments {
@@ -80,7 +81,7 @@ Table Comments {
     from string
     userId int [ref: > Users.id]
     notified boolean
-    isRead int[]
+    isRead "int[]"
 }
 
 Table CodeReviews {
@@ -89,8 +90,8 @@ Table CodeReviews {
     points double
     reviewNumber int
     linkToReview string
-    toReview null int [ref: > StudentInstances.id]
-    repoToReview null string
+    toReview int [null, ref: > StudentInstances.id]
+    repoToReview string [null]
 }
 
 Table Checklists {
@@ -98,8 +99,8 @@ Table Checklists {
     courseInstanceId int [ref: > CourseInstances.id]
     master boolean
     maxPoints double
-    week null int
-    codeReviewNumber null int
+    week int [null]
+    forCodeReview boolean
 }
 
 Table ChecklistItems {
@@ -112,14 +113,18 @@ Table ChecklistItems {
     uncheckedPoints double
     category string
     order int
+    minimumRequirement boolean
+    minimumRequirementMetIf boolean
+    minimumRequirementGradePenalty int
+    prerequisite int [ref: > ChecklistItems.id]
 }
 
 Table ReviewChecks {
     id int [pk]
     ChecklistItemId int [ref: > ChecklistItems.id]
     checked boolean
-    weekId null int [ref: > Weeks.id]
-    codeReviewId null int [ref: > CodeReviews.id]
+    weekId int [null, ref: > Weeks.id]
+    codeReviewId int [null, ref: > CodeReviews.id]
 }
 
 Table WeekDrafts {
@@ -128,4 +133,3 @@ Table WeekDrafts {
     weekNumber int
     data json
 }
-
