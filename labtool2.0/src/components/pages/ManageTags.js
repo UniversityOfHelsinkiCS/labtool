@@ -77,6 +77,13 @@ export const ManageTags = props => {
     }
   }
 
+  const randomColor = () => {
+    const color = 'rgb(' + Math.floor(Math.random() * 256) + ', ' + Math.floor(Math.random() * 256) + ', ' + Math.floor(Math.random() * 256) + ')'
+    state.valueColor = color
+
+    return state.valueColor
+  }
+
   const removeTag = e => {
     try {
       if (!window.confirm('Are you sure?')) {
@@ -218,7 +225,7 @@ export const ManageTags = props => {
                         className="ui dropdown"
                         value={validColors.includes(state.valueColor) ? state.valueColor : ''}
                         name="color"
-                        style={{ minWidth: '12em', display: 'inline' }}
+                        style={{ minWidth: '30em', display: 'inline' }}
                         onChange={e => (state.valueColor = e.target.value)}
                       >
                         <option value="" disabled>
@@ -231,7 +238,14 @@ export const ManageTags = props => {
                         ))}
                       </select>
                     </Form.Field>
-
+                  </Form.Group>
+                  <Form.Group>
+                    <Form.Field inline>
+                      <label style={{ width: '100px', textAlign: 'left' }} />
+                      <Button compact type="button" onClick={randomColor}>
+                        Random color
+                      </Button>
+                    </Form.Field>
                     <Form.Field>
                       <Button compact type="button" onClick={() => (state.showMoreColorOptions = !state.showMoreColorOptions)} style={{ marginBottom: '10px' }}>
                         More color options

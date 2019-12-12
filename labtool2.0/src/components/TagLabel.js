@@ -28,6 +28,19 @@ export const TagLabel = props => {
     return [r, g, b]
   }
 
+  const rgbValuesFromString = rgb => {
+    const values = rgb
+      .substring(4)
+      .split(')')[0]
+      .split(', ')
+
+    const r = values[0]
+    const g = values[1]
+    const b = values[2]
+
+    return [r, g, b]
+  }
+
   /**
    * If background color is hexcode, use this function to define text color.
    * @param {*} backgroundColor
@@ -36,7 +49,14 @@ export const TagLabel = props => {
     if (validColors.includes(backgroundColor)) return ''
     if (basic) return 'black'
 
-    const rgb = hexToRgb(backgroundColor)
+    let rgb = ''
+
+    if (backgroundColor.includes('rgb')) {
+      rgb = rgbValuesFromString(backgroundColor)
+    } else {
+      rgb = hexToRgb(backgroundColor)
+    }
+
     const rgbSum = Math.round((parseInt(rgb[0]) * 299 + parseInt(rgb[1]) * 587 + parseInt(rgb[2]) * 114) / 1000)
     return rgbSum > 160 ? 'black' : 'white'
   }
