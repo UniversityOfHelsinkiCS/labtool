@@ -235,6 +235,7 @@ describe('<StudentTable />', () => {
         unselectStudent={mockFn}
         selectAllStudents={mockFn}
         unselectAllStudents={mockFn}
+        invertStudentSelection={mockFn}
         updateStudentProjectInfo={mockFn}
         courseData={{}}
         loggedInUser={{}}
@@ -518,6 +519,7 @@ describe('<StudentTableRow />', () => {
         unselectStudent={mockFn}
         selectAllStudents={mockFn}
         unselectAllStudents={mockFn}
+        invertStudentSelection={mockFn}
         updateStudentProjectInfo={mockFn}
       />
     )
