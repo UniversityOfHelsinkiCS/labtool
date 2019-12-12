@@ -224,7 +224,6 @@ export const ManageTags = props => {
                         <option value="" disabled>
                           Select a tag color
                         </option>
-                        <option value="white">White</option>
                         {validColors.map(color => (
                           <option key={color} value={color}>
                             {capitalize(color)}
