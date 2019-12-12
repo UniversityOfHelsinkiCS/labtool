@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Header, Segment, List } from 'semantic-ui-react'
-import '../util/arrayFlatPolyfill'
 
 const MissingMinimumRequirements = ({ selectedInstance, studentInstance, currentWeekChecks, currentWeekNumber, showMaximumGrade }) => {
   const minimumRequirements = selectedInstance.checklists.reduce((map, checklist) => {
@@ -15,18 +14,12 @@ const MissingMinimumRequirements = ({ selectedInstance, studentInstance, current
     return map
   }, new Map())
 
-  const missingMinimumRequirementIds = [
-    ...new Set(
-      [studentInstance.weeks.find(week => week.weekNumber === currentWeekNumber), { checks: currentWeekChecks }]
-        .filter(week => !!week && !!week.checks)
-        .map(week =>
-          Object.entries(week.checks)
-            .filter(([id, checked]) => minimumRequirements.has(Number(id)) && checked !== minimumRequirements.get(Number(id)).minimumRequirementMetIf)
-            .map(([id]) => Number(id))
-        )
-        .flat()
-    )
-  ]
+  const currentWeek = studentInstance.weeks.find(week => week.weekNumber === currentWeekNumber)
+  const savedChecks = currentWeek && currentWeek.checks ? currentWeek.checks : {}
+
+  const missingMinimumRequirementIds = Object.entries({ ...savedChecks, ...currentWeekChecks })
+    .filter(([id, checked]) => minimumRequirements.has(Number(id)) && checked !== minimumRequirements.get(Number(id)).minimumRequirementMetIf)
+    .map(([id]) => Number(id))
 
   if (missingMinimumRequirementIds.length === 0) {
     return null
