@@ -105,6 +105,9 @@ module.exports = {
                 case 'tempId':
                   // only used to map prerequisites to new checklist items, will not be stored
                   break
+                case 'order':
+                  // ignore, because we will
+                  break
                 case 'prerequisite':
                   break
                 default:
@@ -189,7 +192,7 @@ module.exports = {
             uncheckedPoints: checklistItem.uncheckedPoints,
             category,
             checklistId: result[1].dataValues.id,
-            order: checklistOrder + index,
+            order: checklistOrder + index, // ignore order sent by client
             prerequisite: null, // map later; see below
             minimumRequirement: checklistItem.minimumRequirement,
             minimumRequirementMetIf: checklistItem.minimumRequirementMetIf,
@@ -314,7 +317,6 @@ module.exports = {
           const checklistItemCopy = { ...checklistItem }
           delete checklistItemCopy.category
           delete checklistItemCopy.checklistId
-          delete checklistItemCopy.order
           if (req.body.copying) {
             // tempId is the id of the checklist item we copied; it's used
             // to map prerequisites, etc.
