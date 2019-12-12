@@ -78,7 +78,7 @@ export const ReviewStudent = props => {
         pstate.points = null
       }
       pstate.clear()
-      if (pstate.points.value < 0 || pstate.points.value > getMaximumPoints()) {
+      if (props.selectedInstance.finalReviewHasPoints && (pstate.points < 0 || pstate.points > getMaximumPoints())) {
         store.dispatch({ type: 'WEEKS_CREATE_ONEFAILURE' })
       } else if (pstate.grade < 0 || (pstate.grade && !isFinalReview(props))) {
         // cannot give grade except for final review

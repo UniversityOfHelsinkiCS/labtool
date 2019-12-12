@@ -73,7 +73,7 @@ export const ReviewStudentChecklist = props => {
                                   clItem.minimumRequirementGradePenalty
                                 }`}
                               />
-                              Requirement
+                              Re<wbr />quire<wbr />ment
                             </>
                           )}
                         </Grid.Column>
