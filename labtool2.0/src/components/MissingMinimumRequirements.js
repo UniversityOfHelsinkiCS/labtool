@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Header, Segment, List } from 'semantic-ui-react'
 import '../util/arrayFlatPolyfill'
 
-const MissingMinimumRequirements = ({ selectedInstance, studentInstance, currentWeekChecks, showOnlyCurrentWeek, showMaximumGrade }) => {
+const MissingMinimumRequirements = ({ selectedInstance, studentInstance, currentWeekChecks, showOnlyCurrentWeek, showMaximumGrade, onlyShowWeek }) => {
   const minimumRequirements = selectedInstance.checklists.reduce((map, checklist) => {
     Object.values(checklist.list).forEach(checklistCategory => {
       checklistCategory.forEach(checklistItem => {
@@ -15,9 +15,11 @@ const MissingMinimumRequirements = ({ selectedInstance, studentInstance, current
     return map
   }, new Map())
 
+  const showWeek = week => !onlyShowWeek || week.weekNumber === onlyShowWeek
+
   const missingMinimumRequirementIds = [
     ...new Set(
-      [...(showOnlyCurrentWeek ? [] : studentInstance.weeks), { checks: currentWeekChecks ? currentWeekChecks : {} }]
+      [...(showOnlyCurrentWeek ? [] : studentInstance.weeks.filter(showWeek)), { checks: currentWeekChecks ? currentWeekChecks : {} }]
         .map(week =>
           Object.entries(week.checks)
             .filter(([id, checked]) => minimumRequirements.has(Number(id)) && checked !== minimumRequirements.get(Number(id)).minimumRequirementMetIf)
@@ -42,7 +44,7 @@ const MissingMinimumRequirements = ({ selectedInstance, studentInstance, current
         {missingMinimumRequirements.map(missingMinimumRequirement => (
           <List.Item key={missingMinimumRequirement.id}>{`${missingMinimumRequirement.name}: ${
             missingMinimumRequirement.minimumRequirementMetIf ? missingMinimumRequirement.textWhenOff : missingMinimumRequirement.textWhenOn
-          }${!showOnlyCurrentWeek ? ` (${missingMinimumRequirement.week > selectedInstance.weekAmount ? 'final review' : `week ${missingMinimumRequirement.week}`})` : ''}`}</List.Item>
+          }${!showOnlyCurrentWeek && !onlyShowWeek ? ` (${missingMinimumRequirement.week > selectedInstance.weekAmount ? 'final review' : `week ${missingMinimumRequirement.week}`})` : ''}`}</List.Item>
         ))}
       </List>
       <>
@@ -63,6 +65,7 @@ MissingMinimumRequirements.propTypes = {
   selectedInstance: PropTypes.object,
   studentInstance: PropTypes.object,
   currentWeekChecks: PropTypes.object,
+  onlyShowWeek: PropTypes.number,
   showOnlyCurrentWeek: PropTypes.bool,
   showMaximumGrade: PropTypes.bool
 }
