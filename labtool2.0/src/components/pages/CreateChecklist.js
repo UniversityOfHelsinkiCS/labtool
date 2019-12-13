@@ -1,12 +1,26 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { Header, Input, Label, Button, Popup, Card, Dropdown, Loader, Icon, Checkbox, Radio, Segment } from 'semantic-ui-react'
+import { Header, Input, Label, Button, Popup, Card, Dropdown, Loader, Icon, Checkbox, Radio } from 'semantic-ui-react'
 import { showNotification } from '../../reducers/notificationReducer'
 import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 import { createChecklist, getOneChecklist } from '../../services/checklist'
 import { getOneCI, getAllCI } from '../../services/courseInstance'
-import { resetChecklist, changeField, restoreChecklist, addTopic, addRow, removeTopic, removeRow, castPointsToNumber, applyCategoryPrerequisite } from '../../reducers/checklistReducer'
+import {
+  resetChecklist,
+  changeField,
+  restoreChecklist,
+  addTopic,
+  addRow,
+  removeTopic,
+  removeRow,
+  moveTopicUp,
+  moveRowUp,
+  moveTopicDown,
+  moveRowDown,
+  castPointsToNumber,
+  applyCategoryPrerequisite
+} from '../../reducers/checklistReducer'
 import './CreateChecklist.css'
 import { usePersistedState } from '../../hooks/persistedState'
 import { sortCoursesByName } from '../../util/sort'
@@ -450,8 +464,38 @@ export const CreateChecklist = props => {
     state.canSave = true
   }
 
+  const moveTopicUp = key => async () => {
+    props.moveTopicUp({
+      key
+    })
+    state.canSave = true
+  }
+
+  const moveTopicDown = key => async () => {
+    props.moveTopicDown({
+      key
+    })
+    state.canSave = true
+  }
+
   const removeRow = (key, name) => async () => {
     props.removeRow({
+      key,
+      name
+    })
+    state.canSave = true
+  }
+
+  const moveRowUp = (key, name) => async () => {
+    props.moveRowUp({
+      key,
+      name
+    })
+    state.canSave = true
+  }
+
+  const moveRowDown = (key, name) => async () => {
+    props.moveRowDown({
       key,
       name
     })
@@ -519,7 +563,6 @@ export const CreateChecklist = props => {
     return checks
   }
 
-
   const renderChecklist = kind => {
     let maxPoints = 0
     let colorIndex = 0
@@ -541,6 +584,8 @@ export const CreateChecklist = props => {
               <Button className="deleteButton" type="button" color="red" size="tiny" onClick={removeTopic(key)}>
                 <div className="deleteButtonText">Delete topic</div>
               </Button>
+              <Button className="moveButton" circular icon="arrow circle down" type="button" color="blue" onClick={moveTopicDown(key)} />
+              <Button className="moveButton" circular icon="arrow circle up" type="button" color="blue" onClick={moveTopicUp(key)} />
             </Header>
             <div>
               <p>
@@ -577,6 +622,8 @@ export const CreateChecklist = props => {
                 <Button className="deleteButton" type="button" color="red" size="tiny" onClick={removeRow(key, row.name)}>
                   <div className="deleteButtonText">Delete checkbox</div>
                 </Button>
+                <Button className="moveButtonLarge" circular icon="arrow circle down" type="button" color="blue" onClick={moveRowDown(key, row.name)} />
+                <Button className="moveButtonLarge" circular icon="arrow circle up" type="button" color="blue" onClick={moveRowUp(key, row.name)} />
               </Header>
               <div className="checkTextRow">
                 <div className="checkedLabel">
@@ -890,6 +937,10 @@ const mapDispatchToProps = {
   addRow,
   removeTopic,
   removeRow,
+  moveTopicUp,
+  moveRowUp,
+  moveTopicDown,
+  moveRowDown,
   castPointsToNumber
 }
 
@@ -917,6 +968,10 @@ CreateChecklist.propTypes = {
   addRow: PropTypes.func.isRequired,
   removeTopic: PropTypes.func.isRequired,
   removeRow: PropTypes.func.isRequired,
+  moveTopicUp: PropTypes.func.isRequired,
+  moveRowUp: PropTypes.func.isRequired,
+  moveTopicDown: PropTypes.func.isRequired,
+  moveRowDown: PropTypes.func.isRequired,
   castPointsToNumber: PropTypes.func.isRequired,
 
   errors: PropTypes.array

@@ -189,6 +189,24 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
                     Delete topic
                   </div>
                 </Button>
+                <Button
+                  as="button"
+                  circular={true}
+                  className="moveButton"
+                  color="blue"
+                  icon="arrow circle down"
+                  onClick={[Function]}
+                  type="button"
+                />
+                <Button
+                  as="button"
+                  circular={true}
+                  className="moveButton"
+                  color="blue"
+                  icon="arrow circle up"
+                  onClick={[Function]}
+                  type="button"
+                />
               </Header>
               <div>
                 <p>
@@ -270,6 +288,24 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
                     Delete checkbox
                   </div>
                 </Button>
+                <Button
+                  as="button"
+                  circular={true}
+                  className="moveButtonLarge"
+                  color="blue"
+                  icon="arrow circle down"
+                  onClick={[Function]}
+                  type="button"
+                />
+                <Button
+                  as="button"
+                  circular={true}
+                  className="moveButtonLarge"
+                  color="blue"
+                  icon="arrow circle up"
+                  onClick={[Function]}
+                  type="button"
+                />
               </Header>
               <div
                 className="checkTextRow"
@@ -509,6 +545,24 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
                     Delete topic
                   </div>
                 </Button>
+                <Button
+                  as="button"
+                  circular={true}
+                  className="moveButton"
+                  color="blue"
+                  icon="arrow circle down"
+                  onClick={[Function]}
+                  type="button"
+                />
+                <Button
+                  as="button"
+                  circular={true}
+                  className="moveButton"
+                  color="blue"
+                  icon="arrow circle up"
+                  onClick={[Function]}
+                  type="button"
+                />
               </Header>
               <div>
                 <p>
@@ -590,6 +644,24 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
                     Delete checkbox
                   </div>
                 </Button>
+                <Button
+                  as="button"
+                  circular={true}
+                  className="moveButtonLarge"
+                  color="blue"
+                  icon="arrow circle down"
+                  onClick={[Function]}
+                  type="button"
+                />
+                <Button
+                  as="button"
+                  circular={true}
+                  className="moveButtonLarge"
+                  color="blue"
+                  icon="arrow circle up"
+                  onClick={[Function]}
+                  type="button"
+                />
               </Header>
               <div
                 className="checkTextRow"
