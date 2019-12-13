@@ -53,7 +53,7 @@ const Nav = props => {
               bottom: '2px'
             }}
           />
-          Labtool 2.0
+          Labtool
         </Menu.Item>
 
         {props.user.user ? (
