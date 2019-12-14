@@ -162,113 +162,84 @@ exports[`<MyPage /> MyPage Component should render correctly 1`] = `
       <Segment
         padded={true}
       >
-        <Header
-          as="h2"
-          className="CoursesHeader"
-        >
-          My Courses (Student)
-           
-        </Header>
-        <HorizontalScrollable>
-          <Table
-            as="table"
-            color="yellow"
-            key="grey"
-            singleLine={true}
-            style={
-              Object {
-                "overflowX": "visible",
-              }
-            }
-          >
-            <TableBody
-              as="tbody"
-            >
-              <TableRow
-                as="tr"
-                cellAs="td"
-                key="10011"
-              >
-                <TableCell
-                  as="td"
-                >
-                  <Link
-                    to="/labtool/courses/TKT20010.2018.K.A.1"
-                  >
-                    Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit (periodi IV, 2017-2018)
-                  </Link>
-                </TableCell>
-                <TableCell
-                  as="td"
-                  textAlign="right"
-                >
-                  <Link
-                    to="/labtool/courses/TKT20010.2018.K.A.1"
-                  >
-                    <Popup
-                      content="View course"
-                      disabled={false}
-                      eventsEnabled={true}
-                      offset={0}
-                      on={
-                        Array [
-                          "click",
-                          "hover",
-                        ]
-                      }
-                      pinned={false}
-                      position="top left"
-                      trigger={
-                        <Button
-                          as="button"
-                          circular={true}
-                          icon={
-                            Object {
-                              "color": "blue",
-                              "name": "eye",
-                              "size": "large",
-                            }
-                          }
-                          size="tiny"
-                        />
-                      }
-                    />
-                  </Link>
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </HorizontalScrollable>
         <div>
-          <br />
-          <Divider
-            horizontal={true}
-          />
-          <Container>
-            <Header
-              as="h2"
-              className="CoursesHeader"
-            >
-              My Courses (Teacher)
-            </Header>
-            <HorizontalScrollable>
-              <Table
-                as="table"
-                color="yellow"
-                key="grey"
-                singleLine={true}
-                style={
-                  Object {
-                    "overflowX": "visible",
-                  }
+          <Header
+            as="h2"
+            className="CoursesHeader"
+          >
+            My Courses (Student)
+             
+          </Header>
+          <HorizontalScrollable>
+            <Table
+              as="table"
+              color="yellow"
+              key="grey"
+              singleLine={true}
+              style={
+                Object {
+                  "overflowX": "visible",
                 }
+              }
+            >
+              <TableBody
+                as="tbody"
               >
-                <TableBody
-                  as="tbody"
-                />
-              </Table>
-            </HorizontalScrollable>
-          </Container>
+                <TableRow
+                  as="tr"
+                  cellAs="td"
+                  key="10011"
+                >
+                  <TableCell
+                    as="td"
+                  >
+                    <Link
+                      to="/labtool/courses/TKT20010.2018.K.A.1"
+                    >
+                      Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit (periodi IV, 2017-2018)
+                    </Link>
+                  </TableCell>
+                  <TableCell
+                    as="td"
+                    textAlign="right"
+                  >
+                    <Link
+                      to="/labtool/courses/TKT20010.2018.K.A.1"
+                    >
+                      <Popup
+                        content="View course"
+                        disabled={false}
+                        eventsEnabled={true}
+                        offset={0}
+                        on={
+                          Array [
+                            "click",
+                            "hover",
+                          ]
+                        }
+                        pinned={false}
+                        position="top left"
+                        trigger={
+                          <Button
+                            as="button"
+                            circular={true}
+                            icon={
+                              Object {
+                                "color": "blue",
+                                "name": "eye",
+                                "size": "large",
+                              }
+                            }
+                            size="tiny"
+                          />
+                        }
+                      />
+                    </Link>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </HorizontalScrollable>
         </div>
       </Segment>
     </Container>

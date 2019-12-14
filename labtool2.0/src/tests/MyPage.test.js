@@ -50,6 +50,18 @@ describe('<MyPage />', () => {
     users: [],
     assistant: []
   }
+  const teacherInstance = [
+    {
+      id: 1003,
+      ohid: 'TKT20010.2018.K.A.1',
+      name: 'Teacher course',
+      instructor: false,
+      createdAt: '2018-01-16T21:00:00.000Z',
+      updatedAt: '2018-01-16T21:00:00.000Z',
+      userId: 10010,
+      courseInstanceId: 10013
+    }
+  ]
 
   let mockFn = jest.fn()
 
@@ -79,7 +91,17 @@ describe('<MyPage />', () => {
       expect(wrapper).toMatchSnapshot()
     })
 
-    it('renders courses header', () => {
+    it('renders course header for students', () => {
+      expect(wrapper.find('.CoursesHeader').length).toEqual(1)
+    })
+
+    it('renders course header for teachers', () => {
+      wrapper.setProps({ teacherInstance, studentInstance: [] })
+      expect(wrapper.find('.CoursesHeader').length).toEqual(1)
+    })
+
+    it('renders course header for both', () => {
+      wrapper.setProps({ teacherInstance })
       expect(wrapper.find('.CoursesHeader').length).toEqual(2)
     })
   })
