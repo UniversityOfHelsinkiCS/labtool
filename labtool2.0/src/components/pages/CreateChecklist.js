@@ -566,7 +566,7 @@ export const CreateChecklist = props => {
   const renderChecklist = kind => {
     let maxPoints = 0
     let colorIndex = 0
-    const checklistJsx = Object.keys(props.checklist.data || {}).map(key => {
+    const checklistJsx = Object.keys(props.checklist.data || {}).map((key, keyIndex, keyArray) => {
       let bestPoints = 0
       props.checklist.data[key].forEach(row => {
         if (!row.minimumRequirement) {
@@ -584,8 +584,8 @@ export const CreateChecklist = props => {
               <Button className="deleteButton" type="button" color="red" size="tiny" onClick={removeTopic(key)}>
                 <div className="deleteButtonText">Delete topic</div>
               </Button>
-              <Button className="moveButton" circular icon="arrow circle down" type="button" color="blue" onClick={moveTopicDown(key)} />
-              <Button className="moveButton" circular icon="arrow circle up" type="button" color="blue" onClick={moveTopicUp(key)} />
+              <Button className="moveButton" disabled={keyIndex >= keyArray.length - 1} circular icon="arrow circle down" type="button" color="blue" onClick={moveTopicDown(key)} />
+              <Button className="moveButton" disabled={keyIndex === 0} circular icon="arrow circle up" type="button" color="blue" onClick={moveTopicUp(key)} />
             </Header>
             <div>
               <p>
@@ -615,15 +615,15 @@ export const CreateChecklist = props => {
               />
             </div>
           </Card.Content>
-          {props.checklist.data[key].map(row => (
+          {props.checklist.data[key].map((row, index, arr) => (
             <Card.Content key={row.name}>
               <Header>
                 {row.name}{' '}
                 <Button className="deleteButton" type="button" color="red" size="tiny" onClick={removeRow(key, row.name)}>
                   <div className="deleteButtonText">Delete checkbox</div>
                 </Button>
-                <Button className="moveButtonLarge" circular icon="arrow circle down" type="button" color="blue" onClick={moveRowDown(key, row.name)} />
-                <Button className="moveButtonLarge" circular icon="arrow circle up" type="button" color="blue" onClick={moveRowUp(key, row.name)} />
+                <Button className="moveButtonLarge" disabled={index >= arr.length - 1} circular icon="arrow circle down" type="button" color="blue" onClick={moveRowDown(key, row.name)} />
+                <Button className="moveButtonLarge" disabled={index === 0} circular icon="arrow circle up" type="button" color="blue" onClick={moveRowUp(key, row.name)} />
               </Header>
               <div className="checkTextRow">
                 <div className="checkedLabel">
