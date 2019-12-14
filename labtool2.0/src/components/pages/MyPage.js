@@ -96,44 +96,48 @@ export const MyPage = props => {
         <br />
         <br />
 
-        <Container>
-          <Segment padded>
-            {showStudent && (
-              <div>
-                <Header as="h2" className="CoursesHeader">
-                  My Courses (Student){' '}
-                </Header>
-
-                <HorizontalScrollable>
-                  <Table singleLine key="grey" color="yellow" style={{ overflowX: 'visible' }}>
-                    <Table.Body>{props.studentInstance.map(renderCourseRow)}</Table.Body>
-                  </Table>
-                </HorizontalScrollable>
-              </div>
-            )}
-
-            {showTeacher && <div>
+        {(showStudent || showTeacher) && (
+          <Container>
+            <Segment padded>
               {showStudent && (
-                <>
-                  <br />
-                  <Divider horizontal />
-                </>
+                <div>
+                  <Header as="h2" className="CoursesHeader">
+                    My Courses (Student){' '}
+                  </Header>
+
+                  <HorizontalScrollable>
+                    <Table singleLine key="grey" color="yellow" style={{ overflowX: 'visible' }}>
+                      <Table.Body>{props.studentInstance.map(renderCourseRow)}</Table.Body>
+                    </Table>
+                  </HorizontalScrollable>
+                </div>
               )}
 
-              <Container>
-                <Header as="h2" className="CoursesHeader">
-                  My Courses (Teacher)
-                </Header>
+              {showTeacher && (
+                <div>
+                  {showStudent && (
+                    <>
+                      <br />
+                      <Divider horizontal />
+                    </>
+                  )}
 
-                <HorizontalScrollable>
-                  <Table singleLine key="grey" color="yellow" style={{ overflowX: 'visible' }}>
-                    <Table.Body>{props.teacherInstance.map(renderCourseRow)}</Table.Body>
-                  </Table>
-                </HorizontalScrollable>
-              </Container>
-            </div>}
-          </Segment>
-        </Container>
+                  <Container>
+                    <Header as="h2" className="CoursesHeader">
+                      My Courses (Teacher)
+                    </Header>
+
+                    <HorizontalScrollable>
+                      <Table singleLine key="grey" color="yellow" style={{ overflowX: 'visible' }}>
+                        <Table.Body>{props.teacherInstance.map(renderCourseRow)}</Table.Body>
+                      </Table>
+                    </HorizontalScrollable>
+                  </Container>
+                </div>
+              )}
+            </Segment>
+          </Container>
+        )}
       </div>
     </>
   )
@@ -161,7 +165,4 @@ MyPage.propTypes = {
   errors: PropTypes.array
 }
 
-export default connect(
-  mapStateToProps,
-  { getAllStudentCourses, getAllTeacherCourses, getIsAllowedToImport }
-)(MyPage)
+export default connect(mapStateToProps, { getAllStudentCourses, getAllTeacherCourses, getIsAllowedToImport })(MyPage)
