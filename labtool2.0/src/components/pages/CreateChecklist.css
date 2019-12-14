@@ -1,3 +1,27 @@
+.moveButton {
+  float: right;
+  font-size: 0.65em !important;
+  padding-left: 0.6em !important;
+  padding-right: 0.6em !important;
+}
+
+.moveButton .icon {
+  top: 0.325em !important;
+  position: relative;
+}
+
+.moveButtonLarge {
+  float: right;
+  font-size: 0.95em !important;
+  padding-left: 0.6em !important;
+  padding-right: 0.6em !important;
+}
+
+.moveButtonLarge .icon {
+  top: 0.325em !important;
+  position: relative;
+}
+
 .deleteButton {
   float: right;
 }
