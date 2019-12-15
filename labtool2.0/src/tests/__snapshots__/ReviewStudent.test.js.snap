@@ -121,6 +121,259 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
               />
             </div>
             <PreviousWeekDetails />
+            <MissingMinimumRequirements
+              currentWeekChecks={
+                Object {
+                  "1": false,
+                  "2": false,
+                  "3": false,
+                  "4": false,
+                  "5": false,
+                  "6": false,
+                }
+              }
+              currentWeekNumber={1}
+              selectedInstance={
+                Object {
+                  "active": true,
+                  "checklists": Array [
+                    Object {
+                      "courseInstanceId": 10011,
+                      "courseName": "Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit",
+                      "createdAt": "2018-03-26T00:00:00.000Z",
+                      "id": 10002,
+                      "list": Object {},
+                      "master": false,
+                      "updatedAt": "2018-03-26T00:00:00.000Z",
+                      "week": 2,
+                    },
+                    Object {
+                      "courseInstanceId": 10011,
+                      "courseName": "Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit",
+                      "createdAt": "2018-03-26T00:00:00.000Z",
+                      "id": 10003,
+                      "list": Object {
+                        "Algoritmit": Array [
+                          Object {
+                            "id": 2,
+                            "name": "Algoritmin runko",
+                            "points": 2,
+                            "prerequisite": null,
+                            "textWhenOff": "Algoritmin runko puuttuu",
+                            "textWhenOn": "Algoritmin runko luotu",
+                          },
+                          Object {
+                            "id": 3,
+                            "name": "Tietorakenteita luotu",
+                            "points": 2,
+                            "prerequisite": null,
+                            "textWhenOff": "Tietorakenteita ei ole luotu",
+                            "textWhenOn": "Tietorakenteita luotu",
+                          },
+                        ],
+                        "Dokumentaatio": Array [
+                          Object {
+                            "id": 4,
+                            "name": "Readme",
+                            "points": 1,
+                            "prerequisite": null,
+                            "textWhenOff": "README puuttuu",
+                            "textWhenOn": "README kunnossa",
+                          },
+                          Object {
+                            "id": 5,
+                            "name": "Tuntikirjanpito",
+                            "points": 1,
+                            "prerequisite": null,
+                            "textWhenOff": "Tuntikirjanpito puuttuu",
+                            "textWhenOn": "Tuntikirjanpito täytetty oikein",
+                          },
+                        ],
+                        "Koodi": Array [
+                          Object {
+                            "id": 1,
+                            "name": "Koodin laatu",
+                            "points": 2,
+                            "prerequisite": null,
+                            "textWhenOff": "Koodin laadussa parantamisen varaa",
+                            "textWhenOn": "Koodi tehty laadukkaasti ja sisältää kommentteja",
+                          },
+                        ],
+                        "README": Array [
+                          Object {
+                            "id": 6,
+                            "name": "Readme sisältää linkkejä",
+                            "points": 1,
+                            "prerequisite": 4,
+                            "textWhenOff": "README:sta puuttuu linkit",
+                            "textWhenOn": "README:ssa on tarvittavat linkit",
+                          },
+                        ],
+                      },
+                      "master": false,
+                      "maxPoints": 4,
+                      "updatedAt": "2018-03-26T00:00:00.000Z",
+                      "week": 1,
+                    },
+                  ],
+                  "createdAt": "2018-03-26T00:00:00.000Z",
+                  "currentWeek": 1,
+                  "end": "2018-04-29T21:00:00.000Z",
+                  "finalReviewHasPoints": true,
+                  "id": 10011,
+                  "name": "Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit",
+                  "ohid": "TKT20010.2018.K.A.1",
+                  "start": "2018-03-11T21:00:00.000Z",
+                  "teacherInstances": Array [
+                    Object {
+                      "courseInstanceId": 10011,
+                      "createdAt": "2018-03-26T00:00:00.000Z",
+                      "firsts": "Pää",
+                      "id": 10001,
+                      "instructor": false,
+                      "lastname": "Opettaja",
+                      "updatedAt": "2018-03-26T00:00:00.000Z",
+                      "userId": 10010,
+                    },
+                    Object {
+                      "courseInstanceId": 10011,
+                      "createdAt": "2018-03-26T00:00:00.000Z",
+                      "firsts": "Ossi Ohjaaja",
+                      "id": 10011,
+                      "instructor": true,
+                      "lastname": "Mutikainen",
+                      "updatedAt": "2018-03-26T00:00:00.000Z",
+                      "userId": 10015,
+                    },
+                  ],
+                  "updatedAt": "2018-03-26T00:00:00.000Z",
+                  "weekAmount": 7,
+                  "weekMaxPoints": 3,
+                }
+              }
+              showMaximumGrade={false}
+              studentInstance={
+                Object {
+                  "Tags": Array [
+                    Object {
+                      "StudentTag": Object {
+                        "createdAt": "2018-06-13T00:00:00.000Z",
+                        "id": 30003,
+                        "studentInstanceId": 10011,
+                        "tagId": 20003,
+                        "updatedAt": "2018-06-13T00:00:00.000Z",
+                      },
+                      "color": "black",
+                      "courseInstanceId": null,
+                      "id": 20003,
+                      "name": "game",
+                    },
+                    Object {
+                      "StudentTag": Object {
+                        "createdAt": "2018-06-13T00:00:00.000Z",
+                        "id": 30002,
+                        "studentInstanceId": 10011,
+                        "tagId": 20002,
+                        "updatedAt": "2018-06-13T00:00:00.000Z",
+                      },
+                      "color": "yellow",
+                      "courseInstanceId": null,
+                      "id": 20002,
+                      "name": "HTML",
+                    },
+                    Object {
+                      "StudentTag": Object {
+                        "createdAt": "2018-06-13T00:00:00.000Z",
+                        "id": 30001,
+                        "studentInstanceId": 10011,
+                        "tagId": 20001,
+                        "updatedAt": "2018-06-13T00:00:00.000Z",
+                      },
+                      "color": "red",
+                      "courseInstanceId": null,
+                      "id": 20001,
+                      "name": "Javascript",
+                    },
+                  ],
+                  "User": Object {
+                    "email": "maarit.opiskelija@helsinki.invalid",
+                    "firsts": "Maarit Mirja",
+                    "id": 10011,
+                    "lastname": "Opiskelija",
+                    "studentNumber": "014578343",
+                    "sysop": false,
+                    "teacher": false,
+                    "username": "tiraopiskelija1",
+                  },
+                  "codeReviews": Array [
+                    Object {
+                      "id": 10001,
+                      "linkToReview": null,
+                      "points": null,
+                      "reviewNumber": 1,
+                      "studentInstanceId": 10011,
+                      "toReview": 10012,
+                    },
+                    Object {
+                      "id": 10007,
+                      "linkToReview": null,
+                      "points": null,
+                      "reviewNumber": 2,
+                      "studentInstanceId": 10011,
+                      "toReview": 10031,
+                    },
+                  ],
+                  "courseInstanceId": 10011,
+                  "github": "http://github.com/tiraopi1/tiralabra1",
+                  "id": 10011,
+                  "projectName": "Tiran labraprojekti",
+                  "teacherInstanceId": 10011,
+                  "userId": 10011,
+                  "weeks": Array [
+                    Object {
+                      "checks": Object {},
+                      "comments": Array [],
+                      "feedback": "Melko hienoa työtä!",
+                      "id": 10002,
+                      "notified": false,
+                      "points": 2,
+                      "studentInstanceId": 10011,
+                      "weekNumber": 2,
+                    },
+                    Object {
+                      "checks": Object {},
+                      "comments": Array [],
+                      "feedback": "Hienoa työtä!",
+                      "id": 10001,
+                      "notified": false,
+                      "points": 3,
+                      "studentInstanceId": 10011,
+                      "weekNumber": 1,
+                    },
+                    Object {
+                      "checks": Object {},
+                      "comments": Array [],
+                      "feedback": "Erittäin hienoa työtä!",
+                      "id": 10003,
+                      "notified": false,
+                      "points": 3,
+                      "studentInstanceId": 10011,
+                      "weekNumber": 3,
+                    },
+                    Object {
+                      "checks": Object {},
+                      "comments": Array [],
+                      "feedback": "Hyvin menee!",
+                      "id": 10004,
+                      "notified": false,
+                      "points": 3,
+                      "studentInstanceId": 10011,
+                      "weekNumber": 4,
+                    },
+                  ],
+                }
+              }
+            />
             <h2>
               Review
             </h2>
@@ -338,7 +591,16 @@ Tuntikirjanpito puuttuu
 
 "
             checklistPoints={NaN}
-            checks={Object {}}
+            checks={
+              Object {
+                "1": false,
+                "2": false,
+                "3": false,
+                "4": false,
+                "5": false,
+                "6": false,
+              }
+            }
             copyChecklistOutput={[Function]}
             isChecked={[Function]}
             kind="week"
