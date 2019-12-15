@@ -9,102 +9,50 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
       }
     }
   >
-    <span>
-      <span>
-        Filter by instructor: 
-      </span>
-      <Dropdown
-        additionLabel="Add "
-        additionPosition="top"
-        closeOnBlur={true}
-        closeOnEscape={true}
-        deburr={false}
-        defaultValue={0}
-        icon="dropdown"
-        minCharacters={1}
-        noResultsMessage="No results found."
-        onChange={[Function]}
-        openOnFocus={true}
-        options={Array []}
-        placeholder="Select Teacher"
-        renderLabel={[Function]}
-        scrolling={true}
-        searchInput="text"
-        selectOnBlur={true}
-        selectOnNavigation={true}
-        selection={true}
-        style={
+    <InstructorFilter
+      changeFilterAssistant={[Function]}
+      defaultValue={0}
+      dropDownFilterTeachers={Array []}
+    />
+    <TagFilter
+      addFilterTag={[Function]}
+      dropDownFilterTags={
+        Array [
           Object {
-            "width": "3em",
-          }
+            "color": "red",
+            "courseInstanceId": null,
+            "createdAt": "2018-06-13T00:00:00.000Z",
+            "id": 20001,
+            "name": "Javascript",
+            "updatedAt": "2018-06-13T00:00:00.000Z",
+          },
+          Object {
+            "color": "yellow",
+            "courseInstanceId": null,
+            "createdAt": "2018-06-13T00:00:00.000Z",
+            "id": 20002,
+            "name": "HTML",
+            "updatedAt": "2018-06-13T00:00:00.000Z",
+          },
+          Object {
+            "color": "grey",
+            "courseInstanceId": null,
+            "createdAt": "2018-06-13T00:00:00.000Z",
+            "id": 20008,
+            "name": "DROPPED",
+            "updatedAt": "2018-06-13T00:00:00.000Z",
+          },
+        ]
+      }
+      selectedFilterTags={Array []}
+      usedTags={
+        Set {
+          20001,
+          20008,
+          20002,
         }
-        wrapSelection={true}
-      />
-    </span>
-    <span>
-       Tag filters: 
-    </span>
-    <span
-      className="tagFilter"
-    >
-      <span
-        key="20001"
-      >
-        <TagLabel
-          basic={true}
-          disabled={false}
-          handleClick={[Function]}
-          tag={
-            Object {
-              "color": "red",
-              "courseInstanceId": null,
-              "createdAt": "2018-06-13T00:00:00.000Z",
-              "id": 20001,
-              "name": "Javascript",
-              "updatedAt": "2018-06-13T00:00:00.000Z",
-            }
-          }
-        />
-      </span>
-      <span
-        key="20002"
-      >
-        <TagLabel
-          basic={true}
-          disabled={false}
-          handleClick={[Function]}
-          tag={
-            Object {
-              "color": "yellow",
-              "courseInstanceId": null,
-              "createdAt": "2018-06-13T00:00:00.000Z",
-              "id": 20002,
-              "name": "HTML",
-              "updatedAt": "2018-06-13T00:00:00.000Z",
-            }
-          }
-        />
-      </span>
-      <span
-        key="20008"
-      >
-        <TagLabel
-          basic={true}
-          disabled={false}
-          handleClick={[Function]}
-          tag={
-            Object {
-              "color": "grey",
-              "courseInstanceId": null,
-              "createdAt": "2018-06-13T00:00:00.000Z",
-              "id": 20008,
-              "name": "DROPPED",
-              "updatedAt": "2018-06-13T00:00:00.000Z",
-            }
-          }
-        />
-      </span>
-    </span>
+      }
+    />
   </div>
   <br />
   <Connect(HorizontalScrollable)>
@@ -364,7 +312,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
               "role": "teacher",
             }
           }
-          shouldHideGrade={[Function]}
+          shouldHideGrade={true}
           shouldHideInstructor={[Function]}
           showAssistantDropdown={[MockFunction]}
           showColumn={[Function]}
@@ -694,7 +642,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
               "role": "teacher",
             }
           }
-          shouldHideGrade={[Function]}
+          shouldHideGrade={true}
           shouldHideInstructor={[Function]}
           showAssistantDropdown={[MockFunction]}
           showColumn={[Function]}
@@ -1011,7 +959,7 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
               "role": "teacher",
             }
           }
-          shouldHideGrade={[Function]}
+          shouldHideGrade={true}
           shouldHideInstructor={[Function]}
           showAssistantDropdown={[MockFunction]}
           showColumn={[Function]}
@@ -1144,400 +1092,76 @@ exports[`<StudentTableRow /> StudentTableRow Component should render correctly 1
       type="checkbox"
     />
   </TableCell>
-  <TableCell
-    as="td"
-    key="studentinfo"
-  >
-    <Popup
-      content="This student's registration has been marked as mistaken"
-      disabled={false}
-      eventsEnabled={true}
-      offset={0}
-      on={
-        Array [
-          "click",
-          "hover",
-        ]
-      }
-      pinned={false}
-      position="top left"
-      trigger={
-        <Icon
-          as="i"
-          color="black"
-          name="warning"
-        />
-      }
-    />
-    <span>
-      Johan Wilhelm
-       
-      Studerande
-      <br />
-      (
-      014553242
-      )
-    </span>
-  </TableCell>
-  <TableCell
-    as="td"
-    key="projectinfo"
-  >
-    <span>
-      Tiran toinen labraprojekti
-      <br />
-      <RepoLink
-        url="http://github.com/tiralabra2"
-      />
-      <div>
-        <span
-          key="10012:20001"
-          style={
-            Object {
-              "float": "left",
-              "marginRight": "0.33em",
-            }
-          }
-        >
-          <ButtonGroup
-            className="mini"
-          >
-            <TagLabel
-              tag={
-                Object {
-                  "color": "red",
-                  "id": 20001,
-                  "name": "Javascript",
-                }
-              }
-            />
-          </ButtonGroup>
-        </span>
-      </div>
-    </span>
-  </TableCell>
-  <TableCell
-    as="td"
-    key="week0"
-    selectable={true}
-    style={
-      Object {
-        "position": "relative",
-      }
+  <Connect(StudentInfoCell)
+    studentId={10012}
+  />
+  <Connect(ProjectInfoCell)
+    addFilterTag={[MockFunction]}
+    changeHiddenTagDropdown={[Function]}
+    dropDownTags={
+      Array [
+        Object {
+          "key": 20008,
+          "text": "C++",
+          "value": 20008,
+        },
+        Object {
+          "key": 20011,
+          "text": "DROPPED",
+          "value": 20011,
+        },
+        Object {
+          "key": 20007,
+          "text": "FORTRAN",
+          "value": 20007,
+        },
+        Object {
+          "key": 20003,
+          "text": "game",
+          "value": 20003,
+        },
+        Object {
+          "key": 20002,
+          "text": "HTML",
+          "value": 20002,
+        },
+        Object {
+          "key": 20006,
+          "text": "Java",
+          "value": 20006,
+        },
+        Object {
+          "key": 20001,
+          "text": "Javascript",
+          "value": 20001,
+        },
+        Object {
+          "key": 20005,
+          "text": "Node.js",
+          "value": 20005,
+        },
+        Object {
+          "key": 20009,
+          "text": "Python",
+          "value": 20009,
+        },
+        Object {
+          "key": 20004,
+          "text": "React",
+          "value": 20004,
+        },
+        Object {
+          "key": 20010,
+          "text": "Unity",
+          "value": 20010,
+        },
+      ]
     }
-    textAlign="center"
-  >
-    <Link
-      key="week0link"
-      style={
-        Object {
-          "alignItems": "center",
-          "display": "flex",
-          "height": "100%",
-          "justifyContent": "center",
-        }
-      }
-      to={
-        Object {
-          "pathname": "/labtool/reviewstudent/undefined/10012/1",
-          "state": Object {
-            "cameFromCoursePage": true,
-          },
-        }
-      }
-    >
-      <div>
-        <p
-          style={
-            Object {
-              "alignItems": "center",
-              "display": "flex",
-              "height": "100%",
-              "justifyContent": "center",
-            }
-          }
-        >
-          -
-        </p>
-      </div>
-    </Link>
-  </TableCell>
-  <TableCell
-    as="td"
-    key="week1"
-    selectable={true}
-    style={
-      Object {
-        "position": "relative",
-      }
-    }
-    textAlign="center"
-  >
-    <Link
-      key="week1link"
-      style={
-        Object {
-          "alignItems": "center",
-          "display": "flex",
-          "height": "100%",
-          "justifyContent": "center",
-        }
-      }
-      to={
-        Object {
-          "pathname": "/labtool/reviewstudent/undefined/10012/2",
-          "state": Object {
-            "cameFromCoursePage": true,
-          },
-        }
-      }
-    >
-      <div>
-        <p
-          style={
-            Object {
-              "alignItems": "center",
-              "display": "flex",
-              "height": "100%",
-              "justifyContent": "center",
-            }
-          }
-        >
-          -
-        </p>
-      </div>
-    </Link>
-  </TableCell>
-  <TableCell
-    as="td"
-    key="week2"
-    selectable={true}
-    style={
-      Object {
-        "position": "relative",
-      }
-    }
-    textAlign="center"
-  >
-    <Link
-      key="week2link"
-      style={
-        Object {
-          "alignItems": "center",
-          "display": "flex",
-          "height": "100%",
-          "justifyContent": "center",
-        }
-      }
-      to={
-        Object {
-          "pathname": "/labtool/reviewstudent/undefined/10012/3",
-          "state": Object {
-            "cameFromCoursePage": true,
-          },
-        }
-      }
-    >
-      <div>
-        <p
-          style={
-            Object {
-              "alignItems": "center",
-              "display": "flex",
-              "height": "100%",
-              "justifyContent": "center",
-            }
-          }
-        >
-          -
-        </p>
-      </div>
-    </Link>
-  </TableCell>
-  <TableCell
-    as="td"
-    key="week3"
-    selectable={true}
-    style={
-      Object {
-        "position": "relative",
-      }
-    }
-    textAlign="center"
-  >
-    <Link
-      key="week3link"
-      style={
-        Object {
-          "alignItems": "center",
-          "display": "flex",
-          "height": "100%",
-          "justifyContent": "center",
-        }
-      }
-      to={
-        Object {
-          "pathname": "/labtool/reviewstudent/undefined/10012/4",
-          "state": Object {
-            "cameFromCoursePage": true,
-          },
-        }
-      }
-    >
-      <div>
-        <p
-          style={
-            Object {
-              "alignItems": "center",
-              "display": "flex",
-              "height": "100%",
-              "justifyContent": "center",
-            }
-          }
-        >
-          -
-        </p>
-      </div>
-    </Link>
-  </TableCell>
-  <TableCell
-    as="td"
-    key="week4"
-    selectable={true}
-    style={
-      Object {
-        "position": "relative",
-      }
-    }
-    textAlign="center"
-  >
-    <Link
-      key="week4link"
-      style={
-        Object {
-          "alignItems": "center",
-          "display": "flex",
-          "height": "100%",
-          "justifyContent": "center",
-        }
-      }
-      to={
-        Object {
-          "pathname": "/labtool/reviewstudent/undefined/10012/5",
-          "state": Object {
-            "cameFromCoursePage": true,
-          },
-        }
-      }
-    >
-      <div>
-        <p
-          style={
-            Object {
-              "alignItems": "center",
-              "display": "flex",
-              "height": "100%",
-              "justifyContent": "center",
-            }
-          }
-        >
-          -
-        </p>
-      </div>
-    </Link>
-  </TableCell>
-  <TableCell
-    as="td"
-    key="week5"
-    selectable={true}
-    style={
-      Object {
-        "position": "relative",
-      }
-    }
-    textAlign="center"
-  >
-    <Link
-      key="week5link"
-      style={
-        Object {
-          "alignItems": "center",
-          "display": "flex",
-          "height": "100%",
-          "justifyContent": "center",
-        }
-      }
-      to={
-        Object {
-          "pathname": "/labtool/reviewstudent/undefined/10012/6",
-          "state": Object {
-            "cameFromCoursePage": true,
-          },
-        }
-      }
-    >
-      <div>
-        <p
-          style={
-            Object {
-              "alignItems": "center",
-              "display": "flex",
-              "height": "100%",
-              "justifyContent": "center",
-            }
-          }
-        >
-          -
-        </p>
-      </div>
-    </Link>
-  </TableCell>
-  <TableCell
-    as="td"
-    key="week6"
-    selectable={true}
-    style={
-      Object {
-        "position": "relative",
-      }
-    }
-    textAlign="center"
-  >
-    <Link
-      key="week6link"
-      style={
-        Object {
-          "alignItems": "center",
-          "display": "flex",
-          "height": "100%",
-          "justifyContent": "center",
-        }
-      }
-      to={
-        Object {
-          "pathname": "/labtool/reviewstudent/undefined/10012/7",
-          "state": Object {
-            "cameFromCoursePage": true,
-          },
-        }
-      }
-    >
-      <div>
-        <p
-          style={
-            Object {
-              "alignItems": "center",
-              "display": "flex",
-              "height": "100%",
-              "justifyContent": "center",
-            }
-          }
-        >
-          -
-        </p>
-      </div>
-    </Link>
-  </TableCell>
+    studentId={10012}
+  />
+  <Connect(PointCells)
+    studentId={10012}
+  />
   <TableCell
     as="td"
     key="pointssum"
