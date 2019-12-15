@@ -67,7 +67,7 @@ export const WeekReviewWeek = props => {
                     Points <Points points={week.points} /> / <Points points={getMaximumPointsForWeek(week.weekNumber)} />
                     {gradeInfo}
                   </>
-                ) : week.grade ? (
+                ) : week.grade !== null ? (
                   <>Grade {week.grade}</>
                 ) : null}{' '}
               </h4>
