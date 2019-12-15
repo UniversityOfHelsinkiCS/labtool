@@ -360,6 +360,7 @@ export const ModifyCourseInstanceReview = props => {
         create={props.codeReviewLogic.selectedDropdown < 0}
         amountOfCodeReviews={props.selectedInstance.amountOfCodeReviews}
         dropdownUsers={props.dropdownUsers}
+        courseData={props.courseData}
         studentData={data}
         codeReviewLogic={props.codeReviewLogic}
         addCodeReview={addCodeReview}
