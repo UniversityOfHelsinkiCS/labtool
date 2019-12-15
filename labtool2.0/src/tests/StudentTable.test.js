@@ -2,6 +2,8 @@ import React from 'react'
 import { StudentTable } from '../components/StudentTable'
 import { StudentTableRow } from '../components/StudentTable/StudentTableRow'
 import { shallow } from 'enzyme'
+import TagFilter from '../components/StudentTable/TagFilter'
+import { TagLabel } from '../components/TagLabel'
 
 describe('<StudentTable />', () => {
   let wrapper
@@ -254,16 +256,20 @@ describe('<StudentTable />', () => {
 
     it('displays tag filter as disabled if no student uses the tag', () => {
       wrapper
+        .find(TagFilter)
+        .dive()
         .find('.tagFilter')
-        .find('TagLabel')
+        .find(TagLabel)
         .find({ tag: tags.tags[0] })
         .dive()
         .find('Button')
         .simulate('click')
       expect(
         wrapper
+          .find(TagFilter)
+          .dive()
           .find('.tagFilter')
-          .find('TagLabel')
+          .find(TagLabel)
           .find({ disabled: true }).length
       ).toEqual(2)
     })
