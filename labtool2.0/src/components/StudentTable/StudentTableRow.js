@@ -70,7 +70,6 @@ export const StudentTableRow = props => {
 
       {/* Grade */}
       {showColumn('grade') && !shouldHideGrade && <GradeCell studentId={data.id} />}
-
       {/* Instructor */}
       {showColumn('instructor') && !shouldHideInstructor(studentInstances) && <InstructorInfoCell studentId={data.id} allowModify={allowModify} dropDownTeachers={dropDownTeachers} />}
 

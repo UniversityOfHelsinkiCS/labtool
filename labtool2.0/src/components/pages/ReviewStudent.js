@@ -340,14 +340,14 @@ export const ReviewStudent = props => {
                   {isFinalReview(props) ? (
                     <Form.Group inline unstackable>
                       <Form.Field>
-                        <label className="labelGrade">Grade 1-5</label>
+                        <label className="labelGrade">Grade 0-5</label>
 
                         <Input
                           name="grade"
                           value={pstate.grade}
                           onChange={(e, { value }) => (pstate.grade = value)}
                           type="number"
-                          min="1"
+                          min="0"
                           max="5"
                           step="1"
                           style={{ width: '150px', align: 'center' }}

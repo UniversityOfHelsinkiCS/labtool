@@ -88,8 +88,10 @@ export const StudentTable = props => {
     return count
   }
 
-  const getStudentFinalGrade = student => (student.weeks.find(week => week.weekNumber === props.selectedInstance.weekAmount + 1) || {}).grade || null
-  const shouldHideGrade = !props.selectedInstance.finalReview || !props.studentInstances.some(studentInstance => !!getStudentFinalGrade(studentInstance))
+  const formatGrade = grade => (grade !== undefined ? grade : null)
+  const getStudentFinalGrade = student => formatGrade(student.weeks.find(week => week.weekNumber === props.selectedInstance.weekAmount + 1) || {}).grade)
+  const shouldHideGrade = !props.selectedInstance.finalReview || !props.studentInstances.some(studentInstance => !!(getStudentFinalGrade(studentInstance) === null))
+
   const shouldHideInstructor = studentInstances => studentInstances.every(studentInstance => studentInstance.teacherInstanceId === null)
 
   const { columns, disableDefaultFilter, filterStudents, studentColumnName, showFooter, extraStudentIcon, studentFooter } = props
