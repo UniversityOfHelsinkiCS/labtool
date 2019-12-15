@@ -133,9 +133,9 @@ module.exports = {
             returning: true,
             plain: true
           }
-        )[1]
+        )
 
-        res.status(200).send(newTag)
+        res.status(200).send(newTag[1].dataValues)
       } else {
         const existingTag = await Tag.findOne({
           where: {
