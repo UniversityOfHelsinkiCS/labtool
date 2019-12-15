@@ -78,7 +78,7 @@ export const ReviewStudent = props => {
         pstate.points = null
       }
       pstate.clear()
-      if (pstate.points.value < 0 || pstate.points.value > getMaximumPoints()) {
+      if (props.selectedInstance.finalReviewHasPoints && (pstate.points < 0 || pstate.points > getMaximumPoints())) {
         store.dispatch({ type: 'WEEKS_CREATE_ONEFAILURE' })
       } else if (pstate.grade < 0 || (pstate.grade && !isFinalReview(props))) {
         // cannot give grade except for final review
@@ -183,8 +183,8 @@ export const ReviewStudent = props => {
           return object
         }, {})
     : {}
-  const savedChecks = weekData && weekData.checks ? weekData.checks : emptyChecks
-  const checks = props.weekReview.checks !== null ? props.weekReview.checks : savedChecks //weekData ? weekData.checks || {} : {}
+  const savedChecks = weekData && weekData.checks ? weekData.checks : {}
+  const checks = { ...emptyChecks, ...(props.weekReview.checks !== null ? props.weekReview.checks : savedChecks) } //weekData ? weekData.checks || {} : {}
   const weekPoints = studentData.weeks
     .filter(week => week.weekNumber < props.weekNumber)
     .map(week => week.points)
@@ -303,7 +303,13 @@ export const ReviewStudent = props => {
                   </div>
                 )}
                 <PreviousWeekDetails weekData={previousWeekData} />
-                {isFinalReview(props) && <MissingMinimumRequirements selectedInstance={props.selectedInstance} studentInstance={studentData} currentWeekChecks={!checks ? {} : checks} />}
+                <MissingMinimumRequirements
+                  selectedInstance={props.selectedInstance}
+                  studentInstance={studentData}
+                  currentWeekChecks={!checks ? {} : checks}
+                  currentWeekNumber={weekData && weekData.weekNumber ? weekData.weekNumber : props.ownProps.weekNumber}
+                  showMaximumGrade={isFinalReview(props)}
+                />
                 {isFinalReview(props) ? props.selectedInstance.finalReviewHasPoints ? <h2>Final Review Points</h2> : <h2>Final Review</h2> : <h2>Review</h2>}
                 {loadedFromDraft && (
                   <div>

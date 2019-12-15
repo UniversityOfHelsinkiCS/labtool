@@ -189,6 +189,26 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
                     Delete topic
                   </div>
                 </Button>
+                <Button
+                  as="button"
+                  circular={true}
+                  className="moveButton"
+                  color="blue"
+                  disabled={false}
+                  icon="arrow circle down"
+                  onClick={[Function]}
+                  type="button"
+                />
+                <Button
+                  as="button"
+                  circular={true}
+                  className="moveButton"
+                  color="blue"
+                  disabled={true}
+                  icon="arrow circle up"
+                  onClick={[Function]}
+                  type="button"
+                />
               </Header>
               <div>
                 <p>
@@ -238,11 +258,6 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
                         "text": "Koodin laatu",
                         "value": undefined,
                       },
-                      Object {
-                        "key": undefined,
-                        "text": "Readme kunnossa",
-                        "value": undefined,
-                      },
                     ]
                   }
                   placeholder="Select prerequisite..."
@@ -275,6 +290,26 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
                     Delete checkbox
                   </div>
                 </Button>
+                <Button
+                  as="button"
+                  circular={true}
+                  className="moveButtonLarge"
+                  color="blue"
+                  disabled={true}
+                  icon="arrow circle down"
+                  onClick={[Function]}
+                  type="button"
+                />
+                <Button
+                  as="button"
+                  circular={true}
+                  className="moveButtonLarge"
+                  color="blue"
+                  disabled={true}
+                  icon="arrow circle up"
+                  onClick={[Function]}
+                  type="button"
+                />
               </Header>
               <div
                 className="checkTextRow"
@@ -514,6 +549,26 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
                     Delete topic
                   </div>
                 </Button>
+                <Button
+                  as="button"
+                  circular={true}
+                  className="moveButton"
+                  color="blue"
+                  disabled={true}
+                  icon="arrow circle down"
+                  onClick={[Function]}
+                  type="button"
+                />
+                <Button
+                  as="button"
+                  circular={true}
+                  className="moveButton"
+                  color="blue"
+                  disabled={false}
+                  icon="arrow circle up"
+                  onClick={[Function]}
+                  type="button"
+                />
               </Header>
               <div>
                 <p>
@@ -560,11 +615,6 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
                       },
                       Object {
                         "key": undefined,
-                        "text": "Koodin laatu",
-                        "value": undefined,
-                      },
-                      Object {
-                        "key": undefined,
                         "text": "Readme kunnossa",
                         "value": undefined,
                       },
@@ -600,6 +650,26 @@ exports[`<CreateChecklist /> component should render correctly 1`] = `
                     Delete checkbox
                   </div>
                 </Button>
+                <Button
+                  as="button"
+                  circular={true}
+                  className="moveButtonLarge"
+                  color="blue"
+                  disabled={true}
+                  icon="arrow circle down"
+                  onClick={[Function]}
+                  type="button"
+                />
+                <Button
+                  as="button"
+                  circular={true}
+                  className="moveButtonLarge"
+                  color="blue"
+                  disabled={true}
+                  icon="arrow circle up"
+                  onClick={[Function]}
+                  type="button"
+                />
               </Header>
               <div
                 className="checkTextRow"

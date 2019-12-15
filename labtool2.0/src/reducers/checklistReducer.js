@@ -10,6 +10,20 @@ const INITIAL_STATE = {
   maxPoints: ''
 }
 
+const swapIndex = (arr, a, b) => {
+  // we don't need no semicolons
+  // eslint-disable-next-line
+  ;[arr[a], arr[b]] = [arr[b], arr[a]]
+}
+
+const constructObjectFromEntries = kv => {
+  const obj = {}
+  kv.forEach(([k, v]) => (obj[k] = v))
+  return obj
+}
+
+const reorderProperties = (obj, keys) => (Object.fromEntries || constructObjectFromEntries)(keys.map(x => [x, obj[x]]))
+
 const checklistReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case 'LOGOUT_SUCCESS':
@@ -57,6 +71,42 @@ const checklistReducer = (state = INITIAL_STATE, action) => {
       const newData = state.data
       const index = newData[action.data.key].map(row => row.name).indexOf(action.data.name)
       newData[action.data.key].splice(index, 1)
+      return { ...state, data: newData }
+    }
+    case 'CHECKLIST_MOVE_TOPIC_UP': {
+      const newOrder = Object.keys(state.data)
+      const oldIndex = newOrder.indexOf(action.data.key)
+      if (oldIndex > 0) {
+        swapIndex(newOrder, oldIndex, oldIndex - 1)
+      }
+      return { ...state, data: reorderProperties(state.data, newOrder) }
+    }
+    case 'CHECKLIST_MOVE_TOPIC_DOWN': {
+      const newOrder = Object.keys(state.data)
+      const oldIndex = newOrder.indexOf(action.data.key)
+      if (oldIndex < newOrder.length - 1) {
+        swapIndex(newOrder, oldIndex, oldIndex + 1)
+      }
+      return { ...state, data: reorderProperties(state.data, newOrder) }
+    }
+    case 'CHECKLIST_MOVE_ROW_UP': {
+      const newData = state.data
+      const index = newData[action.data.key].map(row => row.name).indexOf(action.data.name)
+      const newArray = [...newData[action.data.key]]
+      if (index > 0) {
+        swapIndex(newArray, index, index - 1)
+      }
+      newData[action.data.key] = newArray
+      return { ...state, data: newData }
+    }
+    case 'CHECKLIST_MOVE_ROW_DOWN': {
+      const newData = state.data
+      const index = newData[action.data.key].map(row => row.name).indexOf(action.data.name)
+      const newArray = [...newData[action.data.key]]
+      if (index < newArray.length - 1) {
+        swapIndex(newArray, index, index + 1)
+      }
+      newData[action.data.key] = newArray
       return { ...state, data: newData }
     }
     case 'CHECKLIST_CAST_POINTS': {
@@ -133,6 +183,42 @@ export const removeRow = data => {
   return async dispatch => {
     dispatch({
       type: 'CHECKLIST_REMOVE_ROW',
+      data
+    })
+  }
+}
+
+export const moveTopicUp = data => {
+  return async dispatch => {
+    dispatch({
+      type: 'CHECKLIST_MOVE_TOPIC_UP',
+      data
+    })
+  }
+}
+
+export const moveTopicDown = data => {
+  return async dispatch => {
+    dispatch({
+      type: 'CHECKLIST_MOVE_TOPIC_DOWN',
+      data
+    })
+  }
+}
+
+export const moveRowUp = data => {
+  return async dispatch => {
+    dispatch({
+      type: 'CHECKLIST_MOVE_ROW_UP',
+      data
+    })
+  }
+}
+
+export const moveRowDown = data => {
+  return async dispatch => {
+    dispatch({
+      type: 'CHECKLIST_MOVE_ROW_DOWN',
       data
     })
   }

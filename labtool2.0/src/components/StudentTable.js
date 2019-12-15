@@ -1,11 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Table, Checkbox } from 'semantic-ui-react'
+import { Table, Checkbox, Popup, Icon } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import HorizontalScrollable from './HorizontalScrollable'
 import { getAllTags, tagStudent, unTagStudent } from '../services/tags'
 import { associateTeacherToStudent } from '../services/assistant'
-import { showAssistantDropdown, showTagDropdown, selectStudent, unselectStudent, selectAllStudents, unselectAllStudents } from '../reducers/coursePageLogicReducer'
+import { showAssistantDropdown, showTagDropdown, selectStudent, unselectStudent, selectAllStudents, unselectAllStudents, invertStudentSelection } from '../reducers/coursePageLogicReducer'
 import { createDropdownTeachers, createDropdownTags } from '../util/dropdown'
 import { usePersistedState } from '../hooks/persistedState'
 import { updateStudentProjectInfo } from '../services/studentinstances'
@@ -40,6 +40,10 @@ export const StudentTable = props => {
   const changeFilterAssistant = (_, data) => {
     const { value } = data
     filterByAssistant(value)
+  }
+
+  const handleSelectInvert = () => {
+    props.invertStudentSelection(filteredData.map(data => data.id))
   }
 
   const addFilterTag = tag => {
@@ -159,6 +163,14 @@ export const StudentTable = props => {
             <Table.Row>
               {showColumn('select') && (
                 <Table.HeaderCell key={-2}>
+                  <Popup
+                    trigger={
+                      <div>
+                        <Icon style={{ marginBottom: '1.75em', marginLeft: '0.2em' }} link name="exchange" id={'selectInvert'} size="small" onClick={handleSelectInvert} />
+                      </div>
+                    }
+                    content="Invert selection"
+                  />
                   <Checkbox id={'selectAll'} disabled={filteredData.length < 1} checked={allSelected} onChange={handleSelectAll} />
                 </Table.HeaderCell>
               )}
@@ -251,6 +263,7 @@ const mapDispatchToProps = {
   unselectStudent,
   selectAllStudents,
   unselectAllStudents,
+  invertStudentSelection,
   updateStudentProjectInfo
 }
 
@@ -286,6 +299,7 @@ StudentTable.propTypes = {
   unselectStudent: PropTypes.func.isRequired,
   selectAllStudents: PropTypes.func.isRequired,
   unselectAllStudents: PropTypes.func.isRequired,
+  invertStudentSelection: PropTypes.func.isRequired,
   updateStudentProjectInfo: PropTypes.func.isRequired
 }
 

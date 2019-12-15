@@ -51,17 +51,16 @@ export const FakeLoginPage = props => {
 
       <Grid>
         <Grid.Row centered>
+          <p>Secret Labtool-2019 login page</p>
+        </Grid.Row>
+        <Grid.Row centered>
           <h3>Select user to log in as</h3>
         </Grid.Row>
-      </Grid>
 
-      <Grid>
         <Grid.Row centered>
           <h1>IF THIS IS PRODUCTION, SOMETHING IS TERRIBLY WRONG!!!!!!!!!!!!!!</h1>
         </Grid.Row>
-      </Grid>
 
-      <Grid>
         <Grid.Row centered>
           <Select inline onChange={(e, v) => handleSubmit(e, v)} icon="user" options={options} />
         </Grid.Row>
@@ -91,7 +90,4 @@ FakeLoginPage.propTypes = {
   forceSetLoading: PropTypes.func.isRequired
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(FakeLoginPage)
+export default connect(mapStateToProps, mapDispatchToProps)(FakeLoginPage)
