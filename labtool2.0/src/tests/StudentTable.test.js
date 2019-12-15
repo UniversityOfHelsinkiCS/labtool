@@ -539,35 +539,5 @@ describe('<StudentTableRow />', () => {
     it('should render correctly', () => {
       expect(wrapper).toMatchSnapshot()
     })
-
-    it('displays warning if repo is not accessible', () => {
-      wrapper.setProps({ data: { ...coursePage.data[1], repoExists: false } })
-      expect(wrapper.find('RepoAccessWarning').length).toEqual(1)
-    })
-
-    it('displays review button for unreviewed week', () => {
-      wrapper.setProps({ data: coursePage.data[1], selectedInstance: { ...coursePage, currentWeek: 4 } })
-      expect(wrapper.find('.reviewButton').length).toEqual(1)
-    })
-
-    it('displays review button with pause icon for unreviewed week that has a draft', () => {
-      wrapper.setProps({ data: coursePage.data[1], selectedInstance: { ...coursePage, currentWeek: 2 } })
-      expect(wrapper.find('.reviewDraftButton').length).toEqual(1)
-    })
-
-    it('displays review button for final review', () => {
-      wrapper.setProps({ data: coursePage.data[1], selectedInstance: { ...coursePage, finalReview: true, currentWeek: coursePage.weekAmount + 1 } })
-      expect(wrapper.find('.reviewButton').length).toEqual(1)
-    })
-
-    it('displays review button for active code review if student has submitted review and code review is unreviewed', () => {
-      wrapper.setProps({ data: coursePage.data[1], selectedInstance: { ...coursePage, currentCodeReview: [1], amountOfCodeReviews: 1 } })
-      expect(wrapper.find('.codeReviewButton').length).toEqual(1)
-    })
-
-    it('displays hourglass icon for active code review if student has not submitted their review', () => {
-      wrapper.setProps({ data: coursePage.data[2], selectedInstance: { ...coursePage, currentCodeReview: [1], amountOfCodeReviews: 1 } })
-      expect(wrapper.find('.codeReviewNotReady').length).toEqual(1)
-    })
   })
 })

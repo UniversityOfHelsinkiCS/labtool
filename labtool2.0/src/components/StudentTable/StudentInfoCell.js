@@ -6,7 +6,7 @@ import { Table, Popup, Icon } from 'semantic-ui-react'
 import { updateStudentProjectInfo } from '../../services/studentinstances'
 import { RepoAccessWarning } from '../RepoAccessWarning'
 
-export const StudentInfoCell = ({ ohid, studentData, extraStudentIcon, allowReview }) => (
+export const StudentInfoCell = ({ ohid, studentData, extraStudentIcon, allowReview, updateStudentProjectInfo }) => (
   <Table.Cell>
     {!studentData.validRegistration && <Popup trigger={<Icon name="warning" color="black" />} content="This student's registration has been marked as mistaken" />}
     {!studentData.dropped && studentData.validRegistration && studentData.repoExists === false && (
@@ -50,10 +50,8 @@ StudentInfoCell.propTypes = {
   ohid: PropTypes.string.isRequired,
   studentData: PropTypes.object.isRequired,
   extraStudentIcon: PropTypes.func,
-  allowReview: PropTypes.bool
+  allowReview: PropTypes.bool,
+  updateStudentProjectInfo: PropTypes.func
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(StudentInfoCell)
+export default connect(mapStateToProps, mapDispatchToProps)(StudentInfoCell)

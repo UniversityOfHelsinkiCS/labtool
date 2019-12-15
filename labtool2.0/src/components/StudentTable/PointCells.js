@@ -160,7 +160,7 @@ export const PointCells = ({ loggedInUser, selectedInstance, studentData }) => {
     indents.push(finalReviewPointsCell)
   }
 
-  return indents
+  return <>{indents}</>
 }
 
 const mapStateToProps = (state, ownProps) => {
