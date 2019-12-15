@@ -32,8 +32,13 @@ module.exports = {
 
       const tag = {
         color: req.body.color || 'gray',
-        name: req.body.text,
+        name: req.body.text.trim(),
         courseInstanceId: req.body.courseInstanceId || null
+      }
+
+      if (tag.name.length === 0) {
+        res.status(400).send('Tag name cannot be empty')
+        return
       }
 
       if (req.body.id) {
@@ -116,23 +121,43 @@ module.exports = {
         }
       }
 
-      const newTag = req.body.id ? (await Tag.update(
-        tag,
-        {
+
+
+      if (req.body.id) {
+        const newTag = await Tag.update(
+          tag,
+          {
+            where: {
+              id: req.body.id
+            },
+            returning: true,
+            plain: true
+          }
+        )
+
+        res.status(200).send(newTag[1].dataValues)
+      } else {
+        const existingTag = await Tag.findOne({
           where: {
-            id: req.body.id
-          },
-          returning: true,
-          plain: true
+            courseInstanceId: tag.courseInstanceId ? tag.courseInstanceId : null,
+            name: tag.name
+          }
+        })
+
+        if (existingTag) {
+          res.status(400).send(`Tag ${tag.name} already exists`)
+          return
+        } else {
+          const newTag = await Tag.create(
+            tag,
+            {
+              returning: true,
+              plain: true
+            }
+          )
+          res.status(200).send(newTag)
         }
-      ))[1] : await Tag.create(
-        tag,
-        {
-          returning: true,
-          plain: true
-        }
-      )
-      res.status(200).send(newTag)
+      }
     } catch (e) {
       console.error(e)
       res.status(400).send(e)
