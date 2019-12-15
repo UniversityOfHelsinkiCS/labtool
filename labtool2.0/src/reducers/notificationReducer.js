@@ -181,6 +181,11 @@ const notificationReducer = (state = {}, action) => {
         message: 'Tag saved successfully',
         error: false
       }
+    case 'TAG_CREATE_FAILURE':
+      return {
+        message: action.response.response.data,
+        error: true
+      }
     case 'TAG_REMOVE_SUCCESS':
       return {
         message: 'Tag removed successfully',

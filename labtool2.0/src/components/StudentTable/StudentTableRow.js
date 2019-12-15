@@ -351,7 +351,7 @@ export const StudentTableRow = props => {
       {/* Grade */}
       {showColumn('grade') && !shouldHideGrade(selectedInstance, studentInstances) && (
         <Table.Cell key="grade" textAlign="center">
-          {getStudentFinalGrade(data) || '-'}
+          {getStudentFinalGrade(data) === null ? '-' : getStudentFinalGrade(data)}
         </Table.Cell>
       )}
 
