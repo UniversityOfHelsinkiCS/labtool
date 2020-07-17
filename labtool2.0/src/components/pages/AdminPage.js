@@ -109,7 +109,4 @@ AdminPage.propTypes = {
   errors: PropTypes.array
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(AdminPage)
+export default connect(mapStateToProps, mapDispatchToProps)(AdminPage)

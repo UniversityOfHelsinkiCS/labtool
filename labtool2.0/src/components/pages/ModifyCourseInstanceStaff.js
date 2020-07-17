@@ -167,9 +167,4 @@ ModifyCourseInstanceStaff.propTypes = {
   errors: PropTypes.array
 }
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(ModifyCourseInstanceStaff)
-)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ModifyCourseInstanceStaff))

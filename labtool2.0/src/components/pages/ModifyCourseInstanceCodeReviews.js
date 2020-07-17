@@ -360,10 +360,10 @@ export const ModifyCourseInstanceReview = props => {
         create={props.codeReviewLogic.selectedDropdown < 0}
         amountOfCodeReviews={props.selectedInstance.amountOfCodeReviews}
         dropdownUsers={props.dropdownUsers}
+        courseData={props.courseData}
         studentData={data}
         codeReviewLogic={props.codeReviewLogic}
         addCodeReview={addCodeReview}
-        courseData={props.courseData}
       />
     </Table.Cell>
   )
@@ -562,9 +562,4 @@ ModifyCourseInstanceReview.propTypes = {
   errors: PropTypes.array
 }
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(ModifyCourseInstanceReview)
-)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ModifyCourseInstanceReview))

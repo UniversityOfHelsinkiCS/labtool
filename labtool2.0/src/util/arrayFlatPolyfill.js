@@ -14,7 +14,7 @@ if (!Array.prototype.flat) {
   }
 
   Object.defineProperty(Array.prototype, 'flat', {
-    value: function (depth) {
+    value: function(depth) {
       if (depth === undefined || depth === 1) {
         return actualFlat(Object(this))
       } else if (depth > 1) {

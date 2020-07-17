@@ -96,7 +96,4 @@ LoginPage.propTypes = {
   errors: PropTypes.array
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(LoginPage)
+export default connect(mapStateToProps, mapDispatchToProps)(LoginPage)

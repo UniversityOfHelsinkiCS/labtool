@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Table, Dropdown, Label, Checkbox, Popup, Icon } from 'semantic-ui-react'
+import { Table, Checkbox, Popup, Icon } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import HorizontalScrollable from './HorizontalScrollable'
 import { getAllTags, tagStudent, unTagStudent } from '../services/tags'
@@ -11,7 +11,9 @@ import { usePersistedState } from '../hooks/persistedState'
 import { updateStudentProjectInfo } from '../services/studentinstances'
 
 import { StudentTableRow } from './StudentTable/StudentTableRow'
-import { TagLabel } from './TagLabel'
+import PointHeaders from './StudentTable/PointHeaders'
+import InstructorFilter from './StudentTable/InstructorFilter'
+import TagFilter from './StudentTable/TagFilter'
 
 export const StudentTable = props => {
   const state = usePersistedState(props.persistentFilterKey || null, {
@@ -35,15 +37,13 @@ export const StudentTable = props => {
     }
   }
 
-  const handleSelectInvert = () => {
-    props.invertStudentSelection(filteredData.map(data => data.id))
+  const changeFilterAssistant = (_, data) => {
+    const { value } = data
+    filterByAssistant(value)
   }
 
-  const changeFilterAssistant = () => {
-    return (e, data) => {
-      const { value } = data
-      filterByAssistant(value)
-    }
+  const handleSelectInvert = () => {
+    props.invertStudentSelection(filteredData.map(data => data.id))
   }
 
   const addFilterTag = tag => {
@@ -90,41 +90,9 @@ export const StudentTable = props => {
 
   const formatGrade = grade => (grade !== undefined ? grade : null)
   const getStudentFinalGrade = student => formatGrade((student.weeks.find(week => week.weekNumber === props.selectedInstance.weekAmount + 1) || {}).grade)
-  const shouldHideGrade = (selectedInstance, studentInstances) => !selectedInstance.finalReview || studentInstances.every(studentInstance => getStudentFinalGrade(studentInstance) === null)
-  const shouldHideInstructor = studentInstances => studentInstances.every(studentInstance => studentInstance.teacherInstanceId === null)
+  const shouldHideGrade = !props.selectedInstance.finalReview || !props.studentInstances.some(studentInstance => !!(getStudentFinalGrade(studentInstance) === null))
 
-  const createHeadersTeacher = () => {
-    const headers = []
-    let i = 0
-    for (; i < props.selectedInstance.weekAmount; i++) {
-      headers.push(
-        <Table.HeaderCell key={i}>
-          <abbr title="Week">Wk</abbr> {i + 1}
-        </Table.HeaderCell>
-      )
-    }
-    for (var ii = 1; ii <= props.selectedInstance.amountOfCodeReviews; ii++) {
-      headers.push(
-        <Table.HeaderCell key={i + ii}>
-          Code
-          <br />
-          Review
-          <br />
-          {ii}{' '}
-        </Table.HeaderCell>
-      )
-    }
-    if (props.selectedInstance.finalReview) {
-      headers.push(
-        <Table.HeaderCell key={i + ii + 1}>
-          Final
-          <br />
-          Review{' '}
-        </Table.HeaderCell>
-      )
-    }
-    return headers
-  }
+  const shouldHideInstructor = studentInstances => studentInstances.every(studentInstance => studentInstance.teacherInstanceId === null)
 
   const { columns, disableDefaultFilter, filterStudents, studentColumnName, showFooter, extraStudentIcon, studentFooter } = props
 
@@ -182,47 +150,12 @@ export const StudentTable = props => {
   // all students currently visible selected?
   const allSelected = filteredData.length && filteredData.map(data => data.id).every(id => props.coursePageLogic.selectedStudents[id])
 
-  // calculate the length of the longest text in a drop down
-  const getBiggestWidthInDropdown = dropdownList => {
-    if (dropdownList.length === 0) {
-      return 3
-    }
-    const lengths = dropdownList.map(dp => dp.text.length)
-    return lengths.reduce((longest, comp) => (longest > comp ? longest : comp), lengths[0])
-  }
-
   return (
     <>
       <div style={{ textAlign: 'left' }}>
         {(props.extraButtons || []).map(f => f())}
-        {showColumn('instructor') && (
-          <span>
-            <span>Filter by instructor: </span>
-            <Dropdown
-              scrolling
-              options={dropDownFilterTeachers}
-              onChange={changeFilterAssistant()}
-              placeholder="Select Teacher"
-              defaultValue={state.filterByAssistant}
-              selection
-              style={{ width: `${getBiggestWidthInDropdown(dropDownFilterTeachers)}em` }}
-            />
-          </span>
-        )}
-        <span> Tag filters: </span>
-        {dropDownFilterTags.length === 0 ? (
-          <span>
-            <Label>none</Label>
-          </span>
-        ) : (
-          <span className="tagFilter">
-            {dropDownFilterTags.map(tag => (
-              <span key={tag.id}>
-                <TagLabel tag={tag} basic={!state.filterByTag.find(t => t.id === tag.id)} handleClick={addFilterTag(tag)} disabled={!usedTags.has(tag.id)} />
-              </span>
-            ))}
-          </span>
-        )}
+        {showColumn('instructor') && <InstructorFilter dropDownFilterTeachers={dropDownFilterTeachers} changeFilterAssistant={changeFilterAssistant} defaultValue={state.filterByAssistant} />}
+        <TagFilter dropDownFilterTags={dropDownFilterTags} selectedFilterTags={state.filterByTag} addFilterTag={addFilterTag} usedTags={usedTags} />
       </div>
       <br />
 
@@ -247,11 +180,11 @@ export const StudentTable = props => {
               <Table.HeaderCell>Project Info</Table.HeaderCell>
               {showColumn('points') && (
                 <>
-                  {createHeadersTeacher() /* Week #, Code Review # */}
+                  <PointHeaders />
                   <Table.HeaderCell>Sum</Table.HeaderCell>
                 </>
               )}
-              {showColumn('grade') && !shouldHideGrade(props.selectedInstance, props.studentInstances) && (
+              {showColumn('grade') && !shouldHideGrade && (
                 <>
                   <Table.HeaderCell>Grade</Table.HeaderCell>
                 </>
@@ -308,7 +241,7 @@ export const StudentTable = props => {
                 {studentFooter ? studentFooter() : <Table.HeaderCell />}
                 <Table.HeaderCell />
                 {showColumn('points') && <Table.HeaderCell />}
-                {showColumn('grade') && !shouldHideGrade(props.studentInstances) && <Table.HeaderCell />}
+                {showColumn('grade') && !shouldHideGrade && <Table.HeaderCell />}
                 {showColumn('instructor') && !shouldHideInstructor(props.studentInstances) && <Table.HeaderCell />}
                 {showColumn('review') && <Table.HeaderCell />}
                 {extraColumns.map(([, , footer]) => footer())}

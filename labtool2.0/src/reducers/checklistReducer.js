@@ -13,7 +13,7 @@ const INITIAL_STATE = {
 const swapIndex = (arr, a, b) => {
   // we don't need no semicolons
   // eslint-disable-next-line
-  [arr[a], arr[b]] = [arr[b], arr[a]]
+  ;[arr[a], arr[b]] = [arr[b], arr[a]]
 }
 
 const constructObjectFromEntries = kv => {

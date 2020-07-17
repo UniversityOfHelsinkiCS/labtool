@@ -340,9 +340,4 @@ ReviewStudentCodeReview.propTypes = {
   errors: PropTypes.array
 }
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(ReviewStudentCodeReview)
-)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ReviewStudentCodeReview))

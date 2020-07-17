@@ -245,9 +245,4 @@ BrowseReviews.propTypes = {
   errors: PropTypes.array
 }
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(BrowseReviews)
-)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(BrowseReviews))

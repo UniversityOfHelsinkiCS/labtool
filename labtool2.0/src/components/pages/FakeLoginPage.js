@@ -90,7 +90,4 @@ FakeLoginPage.propTypes = {
   forceSetLoading: PropTypes.func.isRequired
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(FakeLoginPage)
+export default connect(mapStateToProps, mapDispatchToProps)(FakeLoginPage)

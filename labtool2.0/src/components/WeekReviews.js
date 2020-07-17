@@ -288,7 +288,4 @@ const mapDispatchToProps = {
   markCommentsAsRead
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(WeekReviews)
+export default connect(mapStateToProps, mapDispatchToProps)(WeekReviews)

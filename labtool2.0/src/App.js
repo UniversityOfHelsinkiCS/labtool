@@ -195,15 +195,12 @@ App.propTypes = {
 }
 
 export default withRouter(
-  connect(
-    mapStateToProps,
-    {
-      tokenLogin,
-      logout,
-      login: USE_FAKE_LOGIN ? fakeShibboLogin : login,
-      resetLoading,
-      forceSetLoading,
-      getIsAllowedToImport
-    }
-  )(App)
+  connect(mapStateToProps, {
+    tokenLogin,
+    logout,
+    login: USE_FAKE_LOGIN ? fakeShibboLogin : login,
+    resetLoading,
+    forceSetLoading,
+    getIsAllowedToImport
+  })(App)
 )

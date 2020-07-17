@@ -570,7 +570,12 @@ describe('<ReviewStudent />', () => {
       it('renders a card for each checklist topic', () => {
         const cl = props.selectedInstance.checklists.find(cl => cl.week === props.selectedInstance.currentWeek).list
         const expected = Object.keys(cl).filter(cat => cl[cat].some(clItem => clItem.prerequisite === null)).length
-        expect(wrapper.find('ReviewStudentChecklist').dive().find('.checklistCard').length).toEqual(expected)
+        expect(
+          wrapper
+            .find('ReviewStudentChecklist')
+            .dive()
+            .find('.checklistCard').length
+        ).toEqual(expected)
       })
 
       it('renders a row for each checklist item', () => {
@@ -579,7 +584,12 @@ describe('<ReviewStudent />', () => {
         Object.keys(checklist).forEach(key => {
           expected += checklist[key].filter(clItem => clItem.prerequisite === null).length
         })
-        expect(wrapper.find('ReviewStudentChecklist').dive().find('.checklistCardRow').length).toEqual(expected)
+        expect(
+          wrapper
+            .find('ReviewStudentChecklist')
+            .dive()
+            .find('.checklistCardRow').length
+        ).toEqual(expected)
       })
     })
   })
