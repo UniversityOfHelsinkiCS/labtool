@@ -14,7 +14,7 @@ export const CoursePageHeader = ({ courseInstance }) => {
       <Header.Content>
         {formatCourseName(courseInstance.name, courseInstance.ohid, courseInstance.start)}
         <Header.Subheader>
-          {courseInstance.coursesPage && <a href={courseInstance.coursesPage}>courses.helsinki.fi</a>} {courseInstance.coursesPage && courseInstance.courseMaterial && '|'}{' '}
+          {courseInstance.coursesPage && <a href={courseInstance.coursesPage}>studies.helsinki.fi</a>} {courseInstance.coursesPage && courseInstance.courseMaterial && '|'}{' '}
           {courseInstance.courseMaterial && <a href={courseInstance.courseMaterial}>Course material</a>}
         </Header.Subheader>
       </Header.Content>

@@ -96,7 +96,7 @@ export const ModifyCourseInstancePage = props => {
       let newCr = state.visibleCr
       // This checks that the 'courses.helsinki.fi' URL actually contains that string as a part of it. Reject if not.
       if (coursesPage !== null && coursesPage !== '') {
-        if ((coursesPage.match(/courses.helsinki.fi/g) || []).length === 0) {
+        if (false) {
           props.showNotification({
             message: 'Link to "courses.helsinki.fi" must have that string as a part of it.',
             error: true
