@@ -198,7 +198,7 @@ export const StudentTable = props => {
     props.onFilter(filteredData.map(data => data.id))
   }
   // if there is no students, then remove all tags
-  if (filteredData.length === 0) {
+  if (filteredData.length === 0 && state.filterByTag.length !== 0) {
     state.filterByTag = []
   }
 
