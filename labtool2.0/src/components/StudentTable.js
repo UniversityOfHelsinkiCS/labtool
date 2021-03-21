@@ -178,9 +178,14 @@ export const StudentTable = props => {
   if (props.onFilter) {
     props.onFilter(filteredData.map(data => data.id))
   }
+  // if there is no students, then remove all tags
+  if (filteredData.length === 0) {
+    state.filterByTag = []
+  }
 
   // all students currently visible selected?
-  const allSelected = filteredData.length && filteredData.map(data => data.id).every(id => props.coursePageLogic.selectedStudents[id])
+  // double ! to convert number to boolean which fixes error
+  const allSelected = !!(filteredData.length && filteredData.map(data => data.id).every(id => props.coursePageLogic.selectedStudents[id]))
 
   // calculate the length of the longest text in a drop down
   const getBiggestWidthInDropdown = dropdownList => {
@@ -189,6 +194,10 @@ export const StudentTable = props => {
     }
     const lengths = dropdownList.map(dp => dp.text.length)
     return lengths.reduce((longest, comp) => (longest > comp ? longest : comp), lengths[0])
+  }
+
+  const isDisabled = tag => {
+    return !usedTags.has(tag.id)
   }
 
   return (
@@ -218,7 +227,7 @@ export const StudentTable = props => {
           <span className="tagFilter">
             {dropDownFilterTags.map(tag => (
               <span key={tag.id}>
-                <TagLabel tag={tag} basic={!state.filterByTag.find(t => t.id === tag.id)} handleClick={addFilterTag(tag)} disabled={!usedTags.has(tag.id)} />
+                <TagLabel tag={tag} basic={!state.filterByTag.find(t => t.id === tag.id)} handleClick={addFilterTag(tag)} disabled={isDisabled(tag)} />
               </span>
             ))}
           </span>
