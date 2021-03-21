@@ -265,7 +265,7 @@ describe('<StudentTable />', () => {
           .find('.tagFilter')
           .find('TagLabel')
           .find({ disabled: true }).length
-      ).toEqual(2)
+      ).toEqual(3)
     })
   })
 })

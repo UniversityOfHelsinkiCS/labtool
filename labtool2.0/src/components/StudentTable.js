@@ -69,6 +69,12 @@ export const StudentTable = props => {
   const hasFilteringTags = (studentTagsData, filteringTags) => {
     let studentInstanceTagIds = studentTagsData.map(tag => tag.id)
     let filteringTagIds = filteringTags.map(tag => tag.id)
+
+    // Case of "no tag"
+    if (filteringTagIds.length === 1 && filteringTagIds[0] === -1) {
+      return studentInstanceTagIds.length === 0
+    }
+
     let hasRequiredTags = true
     for (let i = 0; i < filteringTagIds.length; i++) {
       if (!studentInstanceTagIds.includes(filteringTagIds[i])) {
@@ -150,7 +156,16 @@ export const StudentTable = props => {
     tag => state.filterByTag.find(t => t.id === tag.value) || (props.studentInstances && countStudentsWithTag(props.studentInstances, tag.value) > 0)
   )
   dropDownFilterTags = dropDownFilterTags.map(tag => courseTags.find(t => t.id === tag.value))
-
+  // Add option only if we have filtering tags
+  if (dropDownFilterTags.length > 0) {
+    // unshift adds to front
+    dropDownFilterTags.unshift({
+      color: 'grey',
+      courseInstanceId: null,
+      id: -1,
+      name: 'No tag'
+    })
+  }
   // remove duplicate tags
   const courseTagNames = courseTags.filter(tag => tag.courseInstanceId === props.selectedInstance.id).map(tag => tag.name)
   // filter out tags if:
@@ -171,6 +186,10 @@ export const StudentTable = props => {
   const usedTags = filteredData
     .map(student => student.Tags)
     .reduce((set, tags) => {
+      // add no tag
+      if (tags.length === 0) {
+        set.add(-1)
+      }
       tags.forEach(tag => set.add(tag.id))
       return set
     }, new Set())
@@ -197,7 +216,20 @@ export const StudentTable = props => {
   }
 
   const isDisabled = tag => {
+    if (tag.id === -1) {
+      // if some other tag is active, then we cant use "no tag"
+      for (const t of dropDownFilterTags) {
+        if (t.id !== -1 && !isBasic(t)) {
+          return true
+        }
+      }
+      return !usedTags.has(tag.id)
+    }
     return !usedTags.has(tag.id)
+  }
+
+  const isBasic = tag => {
+    return !state.filterByTag.find(t => t.id === tag.id)
   }
 
   return (
