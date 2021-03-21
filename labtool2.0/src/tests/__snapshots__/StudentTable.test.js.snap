@@ -48,6 +48,23 @@ exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
       className="tagFilter"
     >
       <span
+        key="-1"
+      >
+        <TagLabel
+          basic={true}
+          disabled={false}
+          handleClick={[Function]}
+          tag={
+            Object {
+              "color": "grey",
+              "courseInstanceId": null,
+              "id": -1,
+              "name": "No tag",
+            }
+          }
+        />
+      </span>
+      <span
         key="20001"
       >
         <TagLabel
