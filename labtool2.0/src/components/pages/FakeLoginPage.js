@@ -35,7 +35,7 @@ export const FakeLoginPage = props => {
       uid: user.username,
       employeenumber: '123' + user.student_number,
       mail: user.email,
-      hyPersonStudentId: user.student_number,
+      hypersonstudentid: user.student_number,
       givenname: given_name,
       sn: user.last_name
     }
