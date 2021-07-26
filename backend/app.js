@@ -24,7 +24,7 @@ const shibbolethHeaders = [
   'uid',
   'givenname', // First name
   'mail', // Email
-  'schacpersonaluniquecode', // Contains student number
+  'hypersonstudentid', // Contains student number
   'sn' // Last name
 ]
 app.use(headerMiddleware(shibbolethHeaders))
@@ -105,7 +105,7 @@ app.use(bodyParser.json())
 
 app.use((req, res, next) => {
   // add Shibboleth headers if fake login allowed WHICH SHOULD NEVER BE ON PRODUCTION!!
-  const extra = USE_FAKE_LOGIN ? ', uid, employeenumber, mail, schacpersonaluniquecode, givenname, sn' : ''
+  const extra = USE_FAKE_LOGIN ? ', uid, employeenumber, mail, hypersonstudentid, givenname, sn' : ''
   res.header('Access-Control-Allow-Origin', '*')
   res.header('Access-Control-Allow-Headers', `Origin, X-Requested-With, Content-Type, Accept, Authorization${extra}`)
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')

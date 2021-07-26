@@ -16,7 +16,7 @@ const login = (req, res) => {
       defaults: {
         firsts: req.headers.givenname,
         lastname: req.headers.sn,
-        studentNumber: req.headers.schacpersonaluniquecode ? req.headers.schacpersonaluniquecode.split(':')[6] : null,
+        studentNumber: req.headers.hyPersonStudentId ? req.headers.hyPersonStudentId : null,
         email: req.headers.mail
       }
     }).spread((user, created) => {
