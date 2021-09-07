@@ -29,6 +29,6 @@ module.exports = {
     dialect: 'postgres',
     operatorsAliases: 'false',
     logging: false,
-    kurki_url: 'https://opetushallinto.cs.helsinki.fi'
+    kurki_url: process.env.KURKI_URL == null ? 'https://opetushallinto.cs.helsinki.fi' : process.env.KURKI_URL
   }
 }
