@@ -36,10 +36,13 @@ function checkWebOodi(req, res, user, resolve) {
       'Content-Type': 'application/json',
       Authorization: process.env.TOKEN
     },
+    params: {
+      token: process.env.TOKEN
+    },
     strictSSL: false
   }
   if (process.env.INCLUDE_TESTERS) {
-    options.uri += '?testing=1'
+    options.uri += '&testing=1'
   }
 
   console.log('request_to', `${config.kurki_url}/labtool/courses/${req.params.ohid}`)

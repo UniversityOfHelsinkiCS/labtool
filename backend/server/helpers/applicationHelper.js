@@ -112,10 +112,15 @@ function getNextTerm(term) {
 function axiosBlaBla(year, term) {
   return {
     method: 'get',
-    baseURL: `${config.kurki_url}/labtool/courses?year=${year}&term=${term}`,
+    baseURL: `${config.kurki_url}/labtool/courses`,
     headers: {
       'Content-Type': 'application/json',
       Authorization: process.env.TOKEN
+    },
+    params: {
+      token: process.env.TOKEN,
+      year,
+      term
     },
     httpsAgent: new https.Agent({
       rejectUnauthorized: false // if you don't like this then please go ahead and do it yourself better.
@@ -137,6 +142,7 @@ function axiosCourseBla(hid) {
       Authorization: process.env.TOKEN
     },
     params: {
+      token: process.env.TOKEN,
       testing: process.env.INCLUDE_TESTERS // Set the environment variable if you want to include test users from Kurki.
     },
     httpsAgent: new https.Agent({

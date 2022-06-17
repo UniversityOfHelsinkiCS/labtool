@@ -725,10 +725,15 @@ module.exports = {
     } else {
       const options = {
         method: 'get',
-        uri: `${config.kurki_url}/labtool/courses?year=${termAndYear.currentYear}&term=${termAndYear.currentTerm}`,
+        uri: `${config.kurki_url}/labtool/courses`,
         headers: {
           'Content-Type': 'application/json',
           Authorization: process.env.TOKEN
+        },
+        params: {
+          token: process.env.TOKEN,
+          year: termAndYear.currentYear,
+          term: termAndYear.currentTerm
         },
         strictSSL: false
       }
@@ -781,10 +786,15 @@ module.exports = {
     } else {
       const options = {
         method: 'get',
-        uri: `${config.kurki_url}/labtool/courses?year=${termAndYear.nextYear}&term=${termAndYear.nextTerm}`,
+        uri: `${config.kurki_url}/labtool/courses`,
         headers: {
           'Content-Type': 'application/json',
           Authorization: process.env.TOKEN
+        },
+        params: {
+          token: process.env.TOKEN,
+          year: termAndYear.nextYear,
+          term: termAndYear.nextTerm
         },
         strictSSL: false
       }
