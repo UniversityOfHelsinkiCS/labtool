@@ -22,7 +22,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          tags: toska/labtool:test
+          tags: toska/labtool:staging
           push: true
           build-args: |
             NODE_ENV=production
@@ -43,7 +43,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: ./backend
-          tags: toska/labtool-backend:test
+          tags: toska/labtool-backend:staging
           push: true
           build-args: |
             NODE_ENV=production
