@@ -37,11 +37,11 @@ jobs:
     - dockerhub/check
     - dockerhub/build:
         path: backend
-        image: $DOCKER_USER/$CIRCLE_PROJECT_REPONAME-backend
+        image: toska/labtool-backend
         dockerfile: backend/Dockerfile
         tag: 'test'
     - dockerhub/push:
-        image: $DOCKER_USER/$CIRCLE_PROJECT_REPONAME-backend
+        image: toska/labtool-backend
         tag: 'test'
   publish-backend-master:
     executor: dockerhub/machine
@@ -50,11 +50,11 @@ jobs:
     - dockerhub/check
     - dockerhub/build:
         path: backend
-        image: $DOCKER_USER/$CIRCLE_PROJECT_REPONAME-backend
+        image: toska/labtool-backend
         dockerfile: backend/Dockerfile
         tag: 'staging'
     - dockerhub/push:
-        image: $DOCKER_USER/$CIRCLE_PROJECT_REPONAME-backend
+        image: toska/labtool-backend
         tag: 'staging'
   publish-frontend-trunk:
     executor: dockerhub/machine
@@ -62,11 +62,11 @@ jobs:
     - checkout
     - dockerhub/check
     - dockerhub/build:
-        image: $DOCKER_USER/$CIRCLE_PROJECT_REPONAME
+        image: toska/labtool
         dockerfile: Dockerfile.test
         tag: 'test'
     - dockerhub/push:
-        image: $DOCKER_USER/$CIRCLE_PROJECT_REPONAME
+        image: toska/labtool
         tag: 'test'
   publish-frontend-master:
     executor: dockerhub/machine
@@ -74,11 +74,11 @@ jobs:
     - checkout
     - dockerhub/check
     - dockerhub/build:
-        image: $DOCKER_USER/$CIRCLE_PROJECT_REPONAME
+        image: toska/labtool
         dockerfile: Dockerfile
         tag: 'staging'
     - dockerhub/push:
-        image: $DOCKER_USER/$CIRCLE_PROJECT_REPONAME
+        image: toska/labtool
         tag: 'staging'
 
 workflows:
