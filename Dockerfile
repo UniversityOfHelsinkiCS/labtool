@@ -2,16 +2,19 @@ FROM registry.access.redhat.com/ubi7/nodejs-8
 
 ENV TZ="Europe/Helsinki"
 
-WORKDIR /opt/app-root/src
+# Npm not found otherwise
+SHELL ["/usr/bin/bash", "-c"]
 
-#Install serve package
-RUN npm install -g serve@6.5.8
+WORKDIR /opt/app-root/src
 
 # Setup
 COPY ./labtool2.0/package* ../
 RUN npm ci
 COPY ./labtool2.0 ./
 RUN npm run build
+
+#Install serve package
+RUN npm install -g serve@6.5.8
 
 #Export path properly
 ENV PATH=".:${PATH}"
