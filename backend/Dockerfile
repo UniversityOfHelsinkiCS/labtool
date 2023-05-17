@@ -1,8 +1,15 @@
-FROM node:8
-ADD ./ /code
-WORKDIR /code
-COPY ./package.json ./
+FROM registry.access.redhat.com/ubi7/nodejs-8
+
+ENV TZ="Europe/Helsinki"
+
+WORKDIR /opt/app-root/src
+
+COPY ./package* ./
 RUN npm ci --only=production
+COPY . .
+
 ENV PATH=".:${PATH}"
+
 EXPOSE 3001
+
 CMD [ "sh", "start.sh" ]

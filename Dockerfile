@@ -1,15 +1,16 @@
-FROM node:8-slim
+FROM registry.access.redhat.com/ubi7/nodejs-8
+
+ENV TZ="Europe/Helsinki"
+
+WORKDIR /opt/app-root/src
 
 #Install serve package
 RUN npm install -g serve@6.5.8
 
-#Switch to workdir and copy contents
-WORKDIR /code
-COPY ./labtool2.0 ./
-COPY ./labtool2.0/package.json ../
-
-#Run ci and build
+# Setup
+COPY ./labtool2.0/package* ../
 RUN npm ci
+COPY ./labtool2.0 ./
 RUN npm run build
 
 #Export path properly
