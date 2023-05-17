@@ -8,9 +8,8 @@ SHELL ["/usr/bin/bash", "-c"]
 WORKDIR /opt/app-root/src
 
 # Setup
-COPY ./labtool2.0/package* ../
-RUN npm ci
 COPY ./labtool2.0 ./
+RUN npm ci
 RUN npm run build
 
 #Install serve package
