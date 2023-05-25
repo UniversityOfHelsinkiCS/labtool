@@ -8,8 +8,8 @@ const config = require(`${__dirname}/../config/config.js`)[env] // eslint-disabl
 const db = {}
 
 let sequelize
-if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable])
+if (config.database_url) {
+  sequelize = new Sequelize(config.database_url, { logging: false, operatorsAliases: false })
 } else {
   sequelize = new Sequelize(config.database, config.username, config.password, config)
 }

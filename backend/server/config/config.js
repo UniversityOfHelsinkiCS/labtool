@@ -22,13 +22,7 @@ module.exports = {
     kurki_url: 'https://importer.cs.helsinki.fi/api/importer'
   },
   production: {
-    username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    host: process.env.DB_HOST,
-    dialect: 'postgres',
-    operatorsAliases: 'false',
-    logging: false,
+    database_url: process.env.DATABASE_URL,
     kurki_url: process.env.KURKI_URL == null ? 'https://importer.cs.helsinki.fi/api/importer' : process.env.KURKI_URL
   }
 }
