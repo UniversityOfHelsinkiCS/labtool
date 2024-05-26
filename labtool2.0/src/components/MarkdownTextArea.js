@@ -81,7 +81,7 @@ export const FormMarkdownTextArea = props => {
       <div style={{ display: 'flex', flexDirection: changeDirection() }}>
         <Form.Field style={{ flex: getFlexPercentage(), marginRight: getHorizontalMargin(), paddingRight: getNonScalableRightPadding() }}>
           {/* resize: none -- we cannot allow resizing the area because the Markdown preview cannot resize with it */}
-          <TextArea onInput={handleChange} {...props} scalable={null} style={{ height: getTextHeight(), marginBottom: '15px', resize: 'none' }} />
+          <TextArea onInput={handleChange} {...props} scalable={null} style={{ height: getTextHeight(), marginBottom: '15px' }} />
         </Form.Field>
         <Accordion key fluid styled style={{ flex: getFlexPercentage(), textAlign: 'start', marginBottom: '2em', marginTop: 0, marginLeft: getHorizontalMargin() }}>
           <Accordion.Title
@@ -94,7 +94,7 @@ export const FormMarkdownTextArea = props => {
             {!isWide() && <Icon name="dropdown" />}
             Preview Markdown
           </Accordion.Title>
-          <Accordion.Content active={isWide() || previewOpen} style={{ height: getPreviewHeight(), overflowY: 'auto' }}>
+          <Accordion.Content active={isWide() || previewOpen} style={{ overflowY: 'auto' }}>
             <ReactMarkdown source={textValue} />
           </Accordion.Content>
         </Accordion>
