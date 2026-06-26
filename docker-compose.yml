@@ -7,7 +7,7 @@ services:
     environment:
       - HOST=0.0.0.0
       - REACT_APP_USE_FAKE_LOGIN=ThisIsNotProduction
-      - BACKEND_LOGIN_URL=http://localhost:6001/login
+      - BACKEND_LOGIN_URL=http://localhost:3001/login
       - PUBLIC_URL=http://localhost:3000
     ports:
       - "3000:3000"
@@ -29,7 +29,7 @@ services:
       - USE_FAKE_LOGIN=ThisIsNotProduction
       - KURKI_URL=http://kurki:3002
     ports:
-      - "6001:3001"
+      - "3001:3001"
     depends_on:
       db:
         condition: service_healthy
