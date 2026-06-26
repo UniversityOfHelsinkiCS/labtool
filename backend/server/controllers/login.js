@@ -9,9 +9,12 @@ const logger = require('../utils/logger')
  * @param req
  * @param res
  */
-const login = (req, res) => {
+const login = async (req, res) => {
+  console.log("login func called")
+
+
   try {
-    User.findOrCreate({
+    const [user, created] = await User.findOrCreate({
       where: { username: req.headers.uid },
       defaults: {
         firsts: req.headers.givenname,
@@ -19,15 +22,19 @@ const login = (req, res) => {
         studentNumber: req.headers.hypersonstudentid ? req.headers.hypersonstudentid : null,
         email: req.headers.mail
       }
-    }).spread((user, created) => {
-      const token = jwt.sign({ username: user.username, id: user.id }, process.env.SECRET)
-      res.status(200).send({
-        user,
-        token,
-        created
-      })
+    })
+    console.log(user)
+    console.log("signing jwt")
+    const token = jwt.sign({ username: user.username, id: user.id }, process.env.SECRET)
+    console.log("sending jwt")
+    res.status(200).send({
+      user,
+      token,
+      created
     })
   } catch (error) {
+    console.log("BOOOM from login")
+    console.log(error)
     logger.error('login error', { error: error.message })
     res.status(500).send({
       error: 'Unexpected error. Please try again.'
@@ -42,14 +49,18 @@ const login = (req, res) => {
  * @param {*} req
  * @param {*} res
  */
-const loginFake = (req, res) => {
+const loginFake = async (req, res) => {
+    console.log("login fake called")
+
   if (!req.headers.uid || !req.headers.givenname) {
     res.status(500).send({
       error: 'no info, no login'
     })
     return
   }
-  return login(req, res)
+  console.log("server saw the login req")
+  const result = await login(req, res)
+  return result
 }
 
 module.exports = {

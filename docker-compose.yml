@@ -33,6 +33,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    command: sh -c "npm run dropdb; npm run createdb && npm run migrate && npm run add_test_data && npm run watch"
 
   kurki:
     build:
