@@ -211,7 +211,4 @@ const mapDispatchToProps = {
   restoreStudentSelection
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(MassEmailPage)
+export default connect(mapStateToProps, mapDispatchToProps)(MassEmailPage)

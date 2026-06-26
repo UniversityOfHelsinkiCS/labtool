@@ -15,7 +15,4 @@ IssuesDisabledWarning.propTypes = {
   onClick: PropTypes.func
 }
 
-export default connect(
-  null,
-  {}
-)(IssuesDisabledWarning)
+export default connect(null, {})(IssuesDisabledWarning)

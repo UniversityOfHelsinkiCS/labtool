@@ -130,7 +130,4 @@ Courses.propTypes = {
   errors: PropTypes.array
 }
 
-export default connect(
-  mapStateToProps,
-  { getAllCI, resetLoading, getIsAllowedToImport }
-)(Courses)
+export default connect(mapStateToProps, { getAllCI, resetLoading, getIsAllowedToImport })(Courses)

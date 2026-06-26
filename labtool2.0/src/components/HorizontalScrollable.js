@@ -100,7 +100,7 @@ export const HorizontalScrollable = props => {
     const frobulate = () => {}
     document.querySelectorAll('.horizontalScrollableParent .icon').forEach(icon => {
       const display = icon.style.display
-  
+
       icon.style.display = 'none'
       frobulate(icon.offsetHeight)
       icon.style.display = display
@@ -207,7 +207,4 @@ HorizontalScrollable.propTypes = {
   children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node])
 }
 
-export default connect(
-  null,
-  {}
-)(HorizontalScrollable)
+export default connect(null, {})(HorizontalScrollable)

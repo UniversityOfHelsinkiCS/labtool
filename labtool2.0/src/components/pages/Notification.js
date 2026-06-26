@@ -57,7 +57,4 @@ Notification.propTypes = {
   clearNotifications: PropTypes.func.isRequired
 }
 
-export default connect(
-  mapStateToProps,
-  { clearNotifications }
-)(Notification)
+export default connect(mapStateToProps, { clearNotifications })(Notification)

@@ -10,6 +10,11 @@ import './Nav.css'
 
 const MenuText = ({ active, children }) => <span className={active ? 'activeItem' : undefined}>{children}</span>
 
+MenuText.propTypes = {
+  active: PropTypes.bool,
+  children: PropTypes.node
+}
+
 /**
  * Navigation bar component
  */

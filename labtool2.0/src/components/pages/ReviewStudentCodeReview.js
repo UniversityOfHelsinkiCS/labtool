@@ -214,7 +214,7 @@ export const ReviewStudentCodeReview = props => {
           <Grid>
             <Grid.Row columns={2}>
               <Grid.Column>
-                <div align="left">
+                <div style={{ textAlign: 'left' }}>
                   <h3>
                     Points so far: <Points points={weekPoints + codeReviewPoints} />{' '}
                   </h3>
@@ -340,9 +340,4 @@ ReviewStudentCodeReview.propTypes = {
   errors: PropTypes.array
 }
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(ReviewStudentCodeReview)
-)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ReviewStudentCodeReview))

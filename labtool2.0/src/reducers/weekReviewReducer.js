@@ -58,7 +58,7 @@ const weekReviewReducer = (state = INITIAL_STATE, action) => {
     }
     case 'WEEK_REVIEW_RESET':
       return INITIAL_STATE
-    case 'WEEK_REVIEW_CHECK_SCAN_PREREQUISITES':
+    case 'WEEK_REVIEW_CHECK_SCAN_PREREQUISITES': {
       const newChecks = cascadeMissingPrerequisites(state.checks, action.prerequisites)
       // do not modify state if we don't need to change anything
       return state.checks == newChecks
@@ -67,6 +67,7 @@ const weekReviewReducer = (state = INITIAL_STATE, action) => {
             ...state,
             checks: newChecks
           }
+    }
     case 'WEEK_REVIEW_CHECKS_RESTORE':
       return {
         ...state,

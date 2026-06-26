@@ -562,9 +562,4 @@ ModifyCourseInstanceReview.propTypes = {
   errors: PropTypes.array
 }
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(ModifyCourseInstanceReview)
-)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ModifyCourseInstanceReview))

@@ -119,6 +119,7 @@ const mapDispatchToProps = {
 Email.propTypes = {
   user: PropTypes.object.isRequired,
   loading: PropTypes.object.isRequired,
+  errors: PropTypes.array,
 
   updateSelf: PropTypes.func.isRequired,
   resetLoading: PropTypes.func.isRequired,
@@ -126,7 +127,4 @@ Email.propTypes = {
   forceSetLoading: PropTypes.func.isRequired
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Email)
+export default connect(mapStateToProps, mapDispatchToProps)(Email)

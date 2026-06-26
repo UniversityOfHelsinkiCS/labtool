@@ -60,9 +60,4 @@ LabtoolComment.propTypes = {
   sendCommentEmail: PropTypes.func
 }
 
-export default withRouter(
-  connect(
-    null,
-    {}
-  )(LabtoolComment)
-)
+export default withRouter(connect(null, {})(LabtoolComment))
