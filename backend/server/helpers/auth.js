@@ -39,7 +39,7 @@ async function enforceCurrentUser(req, res, attributes = []) {
 
 
 //checks if currently logged in user can review the given review reviewNumber
-// sends 403 if current user is not found on the reviews toReview field
+// sends 403 if review is not found in the users reviews
 async function enforceCurrentUserCanReview(req, res,  reviewNumber) {
 
   const user = await User.findByPk(req.decoded.id, { attributes: ['id'] })
@@ -53,10 +53,6 @@ async function enforceCurrentUserCanReview(req, res,  reviewNumber) {
     where: { userId: user.id },
     include: [{
       model: CodeReview,
-      as: 'toReviews'
-    },
-    {
-      model: CodeReview,
       as: 'codeReviews'
     }
     ]
@@ -66,12 +62,11 @@ async function enforceCurrentUserCanReview(req, res,  reviewNumber) {
     res.status(400).send('No student instance matched the given ID.')
     return false
   }
-
-  const toReviews = studentInstances.map(s => s.toReviews).flat()
-
-  const foundInToReviews = toReviews.find(r => r.reviewNumber === reviewNumber)
-  if (foundInToReviews) {
-    return foundInToReviews
+ 
+  const codeReviews = studentInstances.map(s => s.codeReviews).flat()
+  const foundInReviews = codeReviews.find(r => r.reviewNumber === reviewNumber)
+  if (foundInReviews) {
+    return foundInReviews
   }
 
   res.status(403).send('You are not authorized to perform this action.')
