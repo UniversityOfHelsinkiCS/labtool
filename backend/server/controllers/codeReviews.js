@@ -249,8 +249,9 @@ module.exports = {
         return res.status(400).send('The link must start with either "http://" or "https://".')
       }
 
-      const review = enforceCurrentUserCanReview(req, res, req.body.reviewNumber)
-
+     
+      const review = await enforceCurrentUserCanReview(req, res, req.body.reviewNumber)
+      if(!review) return
 
       const modifiedRows = await CodeReview.update(
         {
