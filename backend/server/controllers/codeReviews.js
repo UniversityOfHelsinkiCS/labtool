@@ -2,6 +2,7 @@ const Sequelize = require('sequelize')
 const { CodeReview, ReviewCheck, StudentInstance, TeacherInstance, CourseInstance } = require('../models')
 const helper = require('../helpers/codeReviewHelper')
 const logger = require('../utils/logger')
+const { enforceCurrentUserIsStudentOnCourse, enforceCurrentUser, enforceCurrentUserCanReview } = require('../helpers/auth')
 
 const { Op } = Sequelize
 
@@ -225,7 +226,12 @@ module.exports = {
 
   /**
    * Add a link to a code review.
-   *   permissions: should be a student
+   *   permissions:
+   *   1. should be a student
+   *   2. student should only be able to create links on reviews the student is assigned to
+   *
+   *
+   *
    *
    * @param {*} req
    * @param {*} res
@@ -243,17 +249,8 @@ module.exports = {
         return res.status(400).send('The link must start with either "http://" or "https://".')
       }
 
-      const studentInstance = await StudentInstance.findOne({
-        attributes: {
-          exclude: ['createdAt', 'updatedAt']
-        },
-        where: {
-          id: req.body.studentInstanceId
-        }
-      })
-      if (!studentInstance) {
-        return res.status(400).send('No student instance matched the given ID.')
-      }
+      const review = enforceCurrentUserCanReview(req, res, req.body.reviewNumber)
+
 
       const modifiedRows = await CodeReview.update(
         {
@@ -261,8 +258,8 @@ module.exports = {
         },
         {
           where: {
-            studentInstanceId: req.body.studentInstanceId,
-            reviewNumber: req.body.reviewNumber
+            studentInstanceId: review.studentInstanceId,
+            reviewNumber: review.reviewNumber
           }
         }
       )
