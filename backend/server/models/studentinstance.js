@@ -56,12 +56,12 @@ module.exports = (sequelize, DataTypes) => {
       as: 'weeks'
     })
 
-    StudentInstance.hasMany(models.CodeReview, {
+    StudentInstance.hasMany(models.CodeReview, { // the things that should be reviewed by this user
       foreignKey: 'studentInstanceId',
       as: 'codeReviews'
     })
 
-    StudentInstance.hasMany(models.CodeReview, {
+    StudentInstance.hasMany(models.CodeReview, { // the things that are sent under review
       foreignKey: 'toReview',
       as: 'toReviews'
     })
