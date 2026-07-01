@@ -1,9 +1,8 @@
 name: Release to production
 
 on:
-  push:
-    branches:
-      - master
+  release:
+    types: [published]
 
 jobs:
   release-frontend:
