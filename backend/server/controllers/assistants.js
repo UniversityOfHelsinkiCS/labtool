@@ -42,13 +42,7 @@ module.exports = {
         res.status(400).send('Specified student instance could not be found.')
         return
       }
-      if (!teacherInsId) {
-        studentInstance.update({
-          teacherInstanceId: null
-        })
-        res.status(200).send(studentInstance)
-        return
-      }
+
       const requestMakerAsTeacher = await TeacherInstance.findOne({
         where: {
           userId: requestMakerId,
@@ -60,6 +54,15 @@ module.exports = {
           + 'same course as the student you are assigning a teacher to.')
         return
       }
+
+      if (!teacherInsId) {
+        studentInstance.update({
+          teacherInstanceId: null
+        })
+        res.status(200).send(studentInstance)
+        return
+      }
+
       const requestMakersCoursesId = requestMakerAsTeacher.courseInstanceId
       const givenTeachersTeacherInstance = await TeacherInstance.findOne({
         where: {

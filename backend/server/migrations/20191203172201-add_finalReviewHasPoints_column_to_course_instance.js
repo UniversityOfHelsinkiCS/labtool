@@ -5,4 +5,4 @@ module.exports = {
   }),
 
   down: (queryInterface, Sequelize) => queryInterface.removeColumn('CourseInstances', 'finalReviewHasPoints')
-};
+}

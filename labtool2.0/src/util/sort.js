@@ -59,8 +59,7 @@ export const sortUsersByTeacherAssistantLastname = (users, assistants) => {
     } else if (!aIsAssistant && bIsAssistant) {
       return 1
     } else {
-      return finnishLocaleCompare(a.lastname, b.lastname)
-        || finnishLocaleCompare(a.firsts, b.firsts)
+      return finnishLocaleCompare(a.lastname, b.lastname) || finnishLocaleCompare(a.firsts, b.firsts)
     }
   })
 }
@@ -72,16 +71,14 @@ export const sortUsersBySysopLastname = users => {
     } else if (!a.sysop && b.sysop) {
       return 1
     } else {
-      return finnishLocaleCompare(a.lastname, b.lastname)
-        || finnishLocaleCompare(a.firsts, b.firsts)
+      return finnishLocaleCompare(a.lastname, b.lastname) || finnishLocaleCompare(a.firsts, b.firsts)
     }
   })
 }
 
 export const sortStudentsByLastname = students => {
   return students.sort((a, b) => {
-    return finnishLocaleCompare(a.User.lastname, b.User.lastname)
-      || finnishLocaleCompare(a.User.firsts, b.User.firsts)
+    return finnishLocaleCompare(a.User.lastname, b.User.lastname) || finnishLocaleCompare(a.User.firsts, b.User.firsts)
   })
 }
 

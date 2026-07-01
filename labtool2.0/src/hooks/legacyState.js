@@ -27,7 +27,9 @@ const useLegacyState = vars => {
       enumerable: false,
       configurable: false,
       get: () => _get[key],
-      set: val => _set[key](val)
+      set: val => {
+        _set[key](val)
+      }
     })
   }
 

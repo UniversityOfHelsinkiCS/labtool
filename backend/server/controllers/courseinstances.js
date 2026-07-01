@@ -1042,7 +1042,7 @@ module.exports = {
           }
         }))
       }))
-    
+
     await Promise.all(prerequisitesToUpdate.map(async ([itemId, oldPrerequisite]) => {
       await ChecklistItem.update(
         { prerequisite: checklistIdMap[oldPrerequisite] },

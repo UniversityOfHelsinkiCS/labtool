@@ -59,7 +59,4 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  null
-)(BackButton)
+export default connect(mapStateToProps, null)(BackButton)

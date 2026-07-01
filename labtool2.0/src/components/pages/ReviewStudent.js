@@ -286,7 +286,7 @@ export const ReviewStudent = props => {
             <Grid.Row columns={2}>
               <Grid.Column>
                 {isFinalReview(props) ? (
-                  <div align="left">
+                  <div style={{ textAlign: 'left' }}>
                     <h3>
                       Points before final review: <Points points={weekPoints + codeReviewPoints} />{' '}
                     </h3>
@@ -294,7 +294,7 @@ export const ReviewStudent = props => {
                     Code review points: <Points points={codeReviewPoints} />
                   </div>
                 ) : (
-                  <div align="left">
+                  <div style={{ textAlign: 'left' }}>
                     <h3>
                       Points from previous weeks: <Points points={weekPoints + codeReviewPoints} />{' '}
                     </h3>

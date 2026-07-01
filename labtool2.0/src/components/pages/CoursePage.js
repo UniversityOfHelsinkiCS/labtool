@@ -344,7 +344,7 @@ export const CoursePage = props => {
     return (
       <>
         {documentTitle}
-        <div key>
+        <div>
           <CoursePageStudentRegister courseData={courseData} selectedInstance={selectedInstance} />
           <CoursePageStudentInfo courseData={courseData} selectedInstance={selectedInstance} removeRegistration={removeRegistration} />
           <CoursePageStudentWeeks courseId={courseId} courseData={courseData} />

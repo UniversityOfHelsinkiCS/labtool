@@ -214,7 +214,4 @@ RegisterPage.propTypes = {
   errors: PropTypes.array
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(RegisterPage)
+export default connect(mapStateToProps, mapDispatchToProps)(RegisterPage)

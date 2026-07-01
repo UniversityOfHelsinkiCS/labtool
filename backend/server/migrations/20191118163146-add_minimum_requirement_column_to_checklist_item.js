@@ -1,4 +1,4 @@
-'use strict';
+
 
 module.exports = {
   up: (queryInterface, Sequelize) => queryInterface.addColumn('ChecklistItems', 'minimumRequirement', {
@@ -6,4 +6,4 @@ module.exports = {
     defaultValue: false
   }),
   down: (queryInterface, Sequelize) => queryInterface.removeColumn('ChecklistItems', 'minimumRequirement')
-};
+}

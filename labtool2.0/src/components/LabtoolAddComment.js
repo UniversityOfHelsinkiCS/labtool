@@ -25,7 +25,7 @@ export const LabtoolAddComment = ({ commentFieldId, weekId, handleSubmit, allowH
   }
 
   return (
-    <Accordion key fluid styled style={{ textAlign: 'start', overflow: 'auto' }}>
+    <Accordion fluid styled style={{ textAlign: 'start', overflow: 'auto' }}>
       <Accordion.Title active={state.commentOpen} onClick={toggleOpen}>
         <Icon name="dropdown" />
         Add comment
@@ -55,9 +55,4 @@ LabtoolAddComment.propTypes = {
   allowHidden: PropTypes.bool
 }
 
-export default withRouter(
-  connect(
-    null,
-    {}
-  )(LabtoolAddComment)
-)
+export default withRouter(connect(null, {})(LabtoolAddComment))

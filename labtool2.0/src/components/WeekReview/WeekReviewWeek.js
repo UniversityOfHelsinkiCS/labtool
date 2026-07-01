@@ -185,6 +185,7 @@ WeekReviewWeek.propTypes = {
   isFinalWeek: PropTypes.bool,
   studentInstance: PropTypes.string,
   selectedInstance: PropTypes.object.isRequired,
+  courseData: PropTypes.object,
   courseId: PropTypes.string.isRequired,
   user: PropTypes.object.isRequired,
 

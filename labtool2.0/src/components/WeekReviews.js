@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { Icon, Accordion } from 'semantic-ui-react'
 import { createOneComment } from '../services/comment'
 import { getOneCI, coursePageInformation } from '../services/courseInstance'
 import { associateTeacherToStudent } from '../services/assistant'
@@ -14,7 +13,6 @@ import useLegacyState from '../hooks/legacyState'
 
 import { WeekReviewWeek } from './WeekReview/WeekReviewWeek'
 import { WeekReviewCodeReview } from './WeekReview/WeekReviewCodeReview'
-import { Points } from './Points'
 
 export const WeekReviews = props => {
   const state = useLegacyState({
@@ -288,7 +286,4 @@ const mapDispatchToProps = {
   markCommentsAsRead
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(WeekReviews)
+export default connect(mapStateToProps, mapDispatchToProps)(WeekReviews)

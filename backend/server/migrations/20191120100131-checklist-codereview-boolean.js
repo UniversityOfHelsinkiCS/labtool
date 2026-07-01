@@ -17,4 +17,4 @@ module.exports = {
     await queryInterface.sequelize.query('UPDATE "Checklists" SET "codeReviewNumber" = 1 WHERE "forCodeReview" = TRUE')
     await queryInterface.removeColumn('Checklists', 'forCodeReview')
   }
-};
+}

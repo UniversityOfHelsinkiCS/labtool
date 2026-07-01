@@ -1,30 +1,61 @@
-version: '2'
+version: '3.8'
 services:
   web:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
     environment:
-      - BACKEND_LOGIN_URL=https://svm-61.cs.helsinki.fi/labtool-backend/login
-      - PUBLIC_URL=http://svm-61.cs.helsinki.fi/labtool/
-      - NODE_ENV=production
-    image: labtool/labtool:test
+      - HOST=0.0.0.0
+      - REACT_APP_USE_FAKE_LOGIN=ThisIsNotProduction
+      - BACKEND_LOGIN_URL=http://localhost:3001/login
+      - PUBLIC_URL=http://localhost:3000
     ports:
-     - "6000:3000"
-    depends_on:
-     - backend
-     - db
+      - "3000:3000"
+
   backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
     environment:
-      - TOKEN=changeme
-      - NODE_ENV=production
-      - SECRET=changeme
-    image: labtool/labtool-backend:test
+      - NODE_ENV=development
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=labtool
+      - DB_PORT=5432
+      - DB_HOST=db
+      - TOKEN=dev
+      - SECRET=dev
+      - ADMIN_PW=dev
+      - USE_FAKE_LOGIN=ThisIsNotProduction
+      - KURKI_URL=http://kurki:3002
     ports:
-      - "6001:3001"
+      - "3001:3001"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    command: sh -c "npm run dropdb; npm run createdb && npm run migrate && npm run add_test_data && npm run watch"
+
+  kurki:
+    build:
+      context: ./Kurki_simulation
+      dockerfile: Dockerfile
+    expose:
+      - "3002"
+
   db:
+    image: postgres:16-alpine
     environment:
-      PGDATA: /data/pg10.1_labtool_2018k
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: labtool
     volumes:
-      - /data/pg10.1_labtool_2018k:/data/pg10.1_labtool_2018k
-    image: postgres:10.1
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
     restart: unless-stopped
+
+volumes:
+  pgdata:

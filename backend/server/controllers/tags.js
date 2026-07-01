@@ -122,7 +122,6 @@ module.exports = {
       }
 
 
-
       if (req.body.id) {
         const newTag = await Tag.update(
           tag,
@@ -147,16 +146,15 @@ module.exports = {
         if (existingTag) {
           res.status(400).send(`Tag ${tag.name} already exists`)
           return
-        } else {
-          const newTag = await Tag.create(
-            tag,
-            {
-              returning: true,
-              plain: true
-            }
-          )
-          res.status(200).send(newTag)
         }
+        const newTag = await Tag.create(
+          tag,
+          {
+            returning: true,
+            plain: true
+          }
+        )
+        res.status(200).send(newTag)
       }
     } catch (e) {
       console.error(e)

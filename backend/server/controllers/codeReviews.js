@@ -2,6 +2,7 @@ const Sequelize = require('sequelize')
 const { CodeReview, ReviewCheck, StudentInstance, TeacherInstance, CourseInstance } = require('../models')
 const helper = require('../helpers/codeReviewHelper')
 const logger = require('../utils/logger')
+const { enforceCurrentUserIsStudentOnCourse, enforceCurrentUser, enforceCurrentUserCanReview } = require('../helpers/auth')
 
 const { Op } = Sequelize
 
@@ -187,30 +188,27 @@ module.exports = {
         }
       )
       if (req.body.checks) {
-        await Promise.all(req.body.checks.map(async check => {
-          return ReviewCheck.findOne({
-            where: {
-              codeReviewId: codeReview.id,
-              checklistItemId: check.id
-            }
-          }).then(reviewCheck => {
-            if (reviewCheck) {
-              return ReviewCheck.update({
-                checked: check.checked
-              }, {
-                where: {
-                  id: reviewCheck.id
-                }
-              })
-            } else {
-              return ReviewCheck.create({
-                checklistItemId: check.id,
-                checked: check.checked,
-                codeReviewId: codeReview.id
-              })
-            }
+        await Promise.all(req.body.checks.map(async check => ReviewCheck.findOne({
+          where: {
+            codeReviewId: codeReview.id,
+            checklistItemId: check.id
+          }
+        }).then((reviewCheck) => {
+          if (reviewCheck) {
+            return ReviewCheck.update({
+              checked: check.checked
+            }, {
+              where: {
+                id: reviewCheck.id
+              }
+            })
+          }
+          return ReviewCheck.create({
+            checklistItemId: check.id,
+            checked: check.checked,
+            codeReviewId: codeReview.id
           })
-        }))
+        })))
       }
       res.status(200).send({
         message: 'Code review points updated successfully.',
@@ -225,7 +223,12 @@ module.exports = {
 
   /**
    * Add a link to a code review.
-   *   permissions: should be a student
+   *   permissions:
+   *   1. should be a student
+   *   2. student should only be able to create links on reviews the student is assigned to
+   *
+   *
+   *
    *
    * @param {*} req
    * @param {*} res
@@ -243,26 +246,17 @@ module.exports = {
         return res.status(400).send('The link must start with either "http://" or "https://".')
       }
 
-      const studentInstance = await StudentInstance.findOne({
-        attributes: {
-          exclude: ['createdAt', 'updatedAt']
-        },
-        where: {
-          id: req.body.studentInstanceId
-        }
-      })
-      if (!studentInstance) {
-        return res.status(400).send('No student instance matched the given ID.')
-      }
 
+      const review = await enforceCurrentUserCanReview(req, res, req.body.reviewNumber)
+      if (!review) return
       const modifiedRows = await CodeReview.update(
         {
           linkToReview: req.body.linkToReview
         },
         {
           where: {
-            studentInstanceId: req.body.studentInstanceId,
-            reviewNumber: req.body.reviewNumber
+            studentInstanceId: review.studentInstanceId,
+            reviewNumber: review.reviewNumber // reviewnumber is te "id" of the codereview
           }
         }
       )

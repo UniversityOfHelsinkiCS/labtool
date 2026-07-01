@@ -22,4 +22,4 @@ module.exports = {
 
     await queryInterface.removeColumn('Checklists', 'codeReviewNumber')
   }
-};
+}
