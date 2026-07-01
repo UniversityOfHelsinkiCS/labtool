@@ -1,5 +1,6 @@
 const loginController = require('../controllers').login
 const logoutController = require('../controllers').logout
+
 const USE_FAKE_LOGIN = process.env.USE_FAKE_LOGIN === 'ThisIsNotProduction'
 
 module.exports = (app) => {

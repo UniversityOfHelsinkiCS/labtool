@@ -1,3 +1,4 @@
+const { enforceCurrentUserIsStudentOnCourse } = require('../helpers/auth')
 const helper = require('../helpers/checklistHelper')
 const { TeacherInstance, Checklist, ChecklistItem, StudentInstance, CourseInstance } = require('../models')
 const logger = require('../utils/logger')
@@ -269,6 +270,10 @@ module.exports = {
    */
   async getOne(req, res) {
     try {
+      if (!req.authenticated.success) {
+        return res.status(403).send('You have to be authenticated to do this.')
+      }
+
       if ((typeof req.body.week !== 'number' && !req.body.forCodeReview) || typeof req.body.courseInstanceId !== 'number') {
         res.status(400).send({
           message: 'Missing or malformed inputs.',
@@ -277,18 +282,21 @@ module.exports = {
         return
       }
 
+      const courseInstanceId = req.body.courseInstanceId
+
       const isTeacher = await helper.getTeacherId(req.decoded.id, req.body.courseInstanceId)
-      const isStudent = await StudentInstance.findOne({ where: { courseInstanceId: req.body.courseInstanceId } })
-      if (!isTeacher && !isStudent) {
-        return res.status(403).send('must be on the course')
+      if (!isTeacher) {
+        const currentUserStudentInstance = await enforceCurrentUserIsStudentOnCourse(req, res, courseInstanceId)
+        if (!currentUserStudentInstance) return
       }
+
 
       const checklist = 'week' in req.body ? await Checklist.findOne({
         attributes: {
           exclude: ['createdAt', 'updatedAt']
         },
         where: {
-          courseInstanceId: req.body.courseInstanceId,
+          courseInstanceId,
           week: req.body.week,
           forCodeReview: false
         }
@@ -297,7 +305,7 @@ module.exports = {
           exclude: ['createdAt', 'updatedAt']
         },
         where: {
-          courseInstanceId: req.body.courseInstanceId,
+          courseInstanceId,
           forCodeReview: true
         }
       })
@@ -334,7 +342,7 @@ module.exports = {
       }
     } catch (e) {
       logger.error('Get checklist error.', { error: e.message })
-      res.status(500).send(e)
+      res.status(500).send('Internal server error')
     }
   }
 }

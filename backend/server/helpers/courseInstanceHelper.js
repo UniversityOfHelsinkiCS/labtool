@@ -185,7 +185,7 @@ async function getRoleToViewStudentInstance(req, courseInstanceId, userId) {
 
   if (studentInstance && studentInstance.userId === req.decoded.id) {
     return 'student'
-  } 
+  }
   if (studentInstance) {
     return 'assistant'
   }

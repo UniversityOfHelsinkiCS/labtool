@@ -10,7 +10,7 @@ const logger = require('../utils/logger')
  * @param res
  */
 const login = async (req, res) => {
-  console.log("login func called")
+  console.log('login func called')
 
 
   try {
@@ -24,16 +24,16 @@ const login = async (req, res) => {
       }
     })
     console.log(user)
-    console.log("signing jwt")
+    console.log('signing jwt')
     const token = jwt.sign({ username: user.username, id: user.id }, process.env.SECRET)
-    console.log("sending jwt")
+    console.log('sending jwt')
     res.status(200).send({
       user,
       token,
       created
     })
   } catch (error) {
-    console.log("BOOOM from login")
+    console.log('BOOOM from login')
     console.log(error)
     logger.error('login error', { error: error.message })
     res.status(500).send({
@@ -50,7 +50,7 @@ const login = async (req, res) => {
  * @param {*} res
  */
 const loginFake = async (req, res) => {
-    console.log("login fake called")
+  console.log('login fake called')
 
   if (!req.headers.uid || !req.headers.givenname) {
     res.status(500).send({
@@ -58,7 +58,7 @@ const loginFake = async (req, res) => {
     })
     return
   }
-  console.log("server saw the login req")
+  console.log('server saw the login req')
   const result = await login(req, res)
   return result
 }

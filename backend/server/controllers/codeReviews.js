@@ -188,30 +188,27 @@ module.exports = {
         }
       )
       if (req.body.checks) {
-        await Promise.all(req.body.checks.map(async check => {
-          return ReviewCheck.findOne({
-            where: {
-              codeReviewId: codeReview.id,
-              checklistItemId: check.id
-            }
-          }).then(reviewCheck => {
-            if (reviewCheck) {
-              return ReviewCheck.update({
-                checked: check.checked
-              }, {
-                where: {
-                  id: reviewCheck.id
-                }
-              })
-            } else {
-              return ReviewCheck.create({
-                checklistItemId: check.id,
-                checked: check.checked,
-                codeReviewId: codeReview.id
-              })
-            }
+        await Promise.all(req.body.checks.map(async check => ReviewCheck.findOne({
+          where: {
+            codeReviewId: codeReview.id,
+            checklistItemId: check.id
+          }
+        }).then((reviewCheck) => {
+          if (reviewCheck) {
+            return ReviewCheck.update({
+              checked: check.checked
+            }, {
+              where: {
+                id: reviewCheck.id
+              }
+            })
+          }
+          return ReviewCheck.create({
+            checklistItemId: check.id,
+            checked: check.checked,
+            codeReviewId: codeReview.id
           })
-        }))
+        })))
       }
       res.status(200).send({
         message: 'Code review points updated successfully.',
@@ -251,7 +248,7 @@ module.exports = {
 
 
       const review = await enforceCurrentUserCanReview(req, res, req.body.reviewNumber)
-      if(!review) return
+      if (!review) return
       const modifiedRows = await CodeReview.update(
         {
           linkToReview: req.body.linkToReview
@@ -259,7 +256,7 @@ module.exports = {
         {
           where: {
             studentInstanceId: review.studentInstanceId,
-            reviewNumber: review.reviewNumber //reviewnumber is te "id" of the codereview
+            reviewNumber: review.reviewNumber // reviewnumber is te "id" of the codereview
           }
         }
       )

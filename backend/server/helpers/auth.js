@@ -1,13 +1,14 @@
 const { User, StudentInstance, CodeReview } = require('../models')
 
 
-//checks if the currently logged in use is a student in the course
-//sends 403 on error and returns the studentInstance if succeeds
-async function enforceCurrentUserIsStudentOnCourse(req, res, courseId) {
+// checks if the currently logged in use is a student in the course
+// sends 403 on error and returns the studentInstance if succeeds
+async function enforceCurrentUserIsStudentOnCourse(req, res, courseId, sendUnAuth = true) {
   // get the user object
   const user = await User.findByPk(req.decoded.id, { attributes: ['id'] })
   if (!user) {
-    res.status(403).send('You are not authorized to perform this action.')
+    if (sendUnAuth) res.status(403).send('You are not authorized to perform this action.')
+
     return false
   }
 
@@ -18,12 +19,12 @@ async function enforceCurrentUserIsStudentOnCourse(req, res, courseId) {
   })
 
   if (!studentInstance) {
-    res.status(403).send('You are not authorized to perform this action.')
+    if (sendUnAuth) res.status(403).send('You are not authorized to perform this action.')
+
     return false
   }
   return studentInstance
 }
-
 
 
 async function enforceCurrentUser(req, res, attributes = []) {
@@ -37,11 +38,9 @@ async function enforceCurrentUser(req, res, attributes = []) {
 }
 
 
-
-//checks if currently logged in user can review the given review reviewNumber
+// checks if currently logged in user can review the given review reviewNumber
 // sends 403 if review is not found in the users reviews
-async function enforceCurrentUserCanReview(req, res,  reviewNumber) {
-
+async function enforceCurrentUserCanReview(req, res, reviewNumber) {
   const user = await User.findByPk(req.decoded.id, { attributes: ['id'] })
   if (!user) {
     res.status(403).send('You are not authorized to perform this action.')
@@ -62,7 +61,7 @@ async function enforceCurrentUserCanReview(req, res,  reviewNumber) {
     res.status(400).send('No student instance matched the given ID.')
     return false
   }
- 
+
   const codeReviews = studentInstances.map(s => s.codeReviews).flat()
   const foundInReviews = codeReviews.find(r => r.reviewNumber === reviewNumber)
   if (foundInReviews) {
