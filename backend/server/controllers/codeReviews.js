@@ -249,7 +249,7 @@ module.exports = {
         return res.status(400).send('The link must start with either "http://" or "https://".')
       }
 
-    
+
       const review = await enforceCurrentUserCanReview(req, res, req.body.reviewNumber)
       if(!review) return
       const modifiedRows = await CodeReview.update(
@@ -259,7 +259,7 @@ module.exports = {
         {
           where: {
             studentInstanceId: review.studentInstanceId,
-            reviewNumber: review.reviewNumber
+            reviewNumber: review.reviewNumber //reviewnumber is te "id" of the codereview
           }
         }
       )
