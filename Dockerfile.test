@@ -5,7 +5,7 @@
 # 
 # You should *NOT* use this image in a production environment!
 # 
-FROM node:8
+FROM node:24-alpine
 ADD ./labtool2.0 /code
 WORKDIR /code
 COPY ./labtool2.0/package.json ../
