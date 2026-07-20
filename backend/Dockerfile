@@ -4,7 +4,7 @@ ENV TZ="Europe/Helsinki"
 
 WORKDIR /opt/app-root/src
 
-COPY ./package* ./
+COPY ./package* ./.npmrc ./
 RUN npm ci --only=production
 COPY . .
 
