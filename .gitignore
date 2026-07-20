@@ -30,3 +30,116 @@ yarn-error.log*
 
 /.vscode
 gitignored/*
+
+
+# ---------------------------------------------------------------------------
+# Toska baseline rules. Entries already covered by the block above
+# (node_modules, coverage/, build/, .DS_Store, .idea/, *.swp, gitignored/)
+# are intentionally not repeated here.
+# ---------------------------------------------------------------------------
+
+# disallow directory named "private", it can be used to store things that should not end up in version control or images
+# NOTE: needs to be at the root of the project
+/private/
+
+# disallow version control, package managment, IDEs, tools etc
+**/.venv
+**/.git
+**/.github
+**/.vscode
+**/.zed
+**/.eslintcache
+CLAUDE.md
+GEMINI.md
+AGENTS.md
+
+
+# do not include any data by default (except json)
+*.csv
+*.tsv
+
+*.db
+*.sqlite
+*.sql
+*.psql
+*.sqlz
+*.sqz
+*.sql.gz
+*.bson
+*.jsonl
+
+*.bin
+*.dat
+*.data
+
+*.tmp
+.~lock*
+*.pid
+*.seed
+*.lock
+
+*.gz
+*.tgz
+*.xz
+*.zip
+*.gzip
+*.tar
+*.7z
+*.rar
+
+*.docx
+*.doc
+*.xlsx
+*.xls
+*.pptx
+*.ppt
+*.odt
+*.odp
+*.ods
+*.pdf
+
+
+# disallow logs
+*.log
+*.log*
+**/logs/
+**/log/
+*.cpuprofile
+*.heapprofile
+*.heapsnapshot
+
+# disallow configuration
+*.toml
+*.conf
+*.ini
+**/toska_login
+cypress.env.json
+/cypress/
+
+
+# disallow secrects
+.env*
+*.env.*
+.secrects
+*.secrects
+*.s3cfg
+
+# disallow backups
+**/backups
+**/backup
+**/dump
+**/dumps
+**/*databasedumps
+**/privateData
+**/temp
+**/minio-data
+**/db_backups
+**/mongo_data
+**/uploads
+
+# additional inclusions here
+
+# exclusions here
+!.env.template
+!.env.sample
+!.env.example
