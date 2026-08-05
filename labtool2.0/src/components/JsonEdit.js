@@ -144,9 +144,6 @@ const JsonEdit = props => {
             }}
           />
         </Modal.Actions>
-        <br />
-        <br />
-        <br />
       </Modal>
     </React.Fragment>
   )
