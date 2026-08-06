@@ -100,7 +100,11 @@ exports[`<ReviewStudent /> ReviewStudent Component should render correctly 1`] =
         >
           <GridColumn>
             <div
-              align="left"
+              style={
+                Object {
+                  "textAlign": "left",
+                }
+              }
             >
               <h3>
                 Points from previous weeks: 

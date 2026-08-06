@@ -24,7 +24,7 @@ const createApiUrl = path => {
 
 export const getAxios = () => {
   let hostUrl
-  if (process.env.NODE_ENV === 'development') {
+  if (import.meta.env.DEV) {
     hostUrl = 'http://localhost:3001/api'
   } else {
     hostUrl = '/labtool-backend/api'

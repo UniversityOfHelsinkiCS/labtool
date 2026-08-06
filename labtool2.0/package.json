@@ -25,13 +25,14 @@
     "semantic-ui-react": "^2.1.5"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "vite",
     "debug": "react-scripts --inspect=0.0.0.0:9230 start .env.development.local",
-    "build": "react-scripts build",
+    "build": "vite build",
     "test": "react-scripts test --env=jsdom",
     "lint": "./node_modules/.bin/eslint .",
     "tryTest": "npm run test a q",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "dev": "vite"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.3",
@@ -57,7 +58,9 @@
     "lint-staged": "^9.5.0",
     "prettier": "^1.19.1",
     "react-test-renderer": "^16.12.0",
-    "redux-mock-store": "^1.5.3"
+    "redux-mock-store": "^1.5.3",
+    "@vitejs/plugin-react": "^6",
+    "vite": "^8"
   },
   "jest": {
     "snapshotSerializers": [

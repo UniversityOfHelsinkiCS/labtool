@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile.dev
     environment:
       - HOST=0.0.0.0
-      - REACT_APP_USE_FAKE_LOGIN=ThisIsNotProduction
+      - VITE_USE_FAKE_LOGIN=ThisIsNotProduction
       - BACKEND_LOGIN_URL=http://localhost:3001/login
       - PUBLIC_URL=http://localhost:3000
     ports:

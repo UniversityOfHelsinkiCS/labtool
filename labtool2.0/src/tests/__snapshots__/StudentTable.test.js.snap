@@ -1169,7 +1169,6 @@ exports[`<StudentTableRow /> StudentTableRow Component should render correctly 1
       content="This student's registration has been marked as mistaken"
       disabled={false}
       eventsEnabled={true}
-      offset={0}
       on={
         Array [
           "click",
@@ -1177,6 +1176,7 @@ exports[`<StudentTableRow /> StudentTableRow Component should render correctly 1
         ]
       }
       pinned={false}
+      popperModifiers={Array []}
       position="top left"
       trigger={
         <Icon
@@ -1249,9 +1249,14 @@ exports[`<StudentTableRow /> StudentTableRow Component should render correctly 1
       style={
         Object {
           "alignItems": "center",
+          "bottom": 0,
           "display": "flex",
           "height": "100%",
           "justifyContent": "center",
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
         }
       }
       to={
@@ -1295,9 +1300,14 @@ exports[`<StudentTableRow /> StudentTableRow Component should render correctly 1
       style={
         Object {
           "alignItems": "center",
+          "bottom": 0,
           "display": "flex",
           "height": "100%",
           "justifyContent": "center",
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
         }
       }
       to={
@@ -1341,9 +1351,14 @@ exports[`<StudentTableRow /> StudentTableRow Component should render correctly 1
       style={
         Object {
           "alignItems": "center",
+          "bottom": 0,
           "display": "flex",
           "height": "100%",
           "justifyContent": "center",
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
         }
       }
       to={
@@ -1387,9 +1402,14 @@ exports[`<StudentTableRow /> StudentTableRow Component should render correctly 1
       style={
         Object {
           "alignItems": "center",
+          "bottom": 0,
           "display": "flex",
           "height": "100%",
           "justifyContent": "center",
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
         }
       }
       to={
@@ -1433,9 +1453,14 @@ exports[`<StudentTableRow /> StudentTableRow Component should render correctly 1
       style={
         Object {
           "alignItems": "center",
+          "bottom": 0,
           "display": "flex",
           "height": "100%",
           "justifyContent": "center",
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
         }
       }
       to={
@@ -1479,9 +1504,14 @@ exports[`<StudentTableRow /> StudentTableRow Component should render correctly 1
       style={
         Object {
           "alignItems": "center",
+          "bottom": 0,
           "display": "flex",
           "height": "100%",
           "justifyContent": "center",
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
         }
       }
       to={
@@ -1525,9 +1555,14 @@ exports[`<StudentTableRow /> StudentTableRow Component should render correctly 1
       style={
         Object {
           "alignItems": "center",
+          "bottom": 0,
           "display": "flex",
           "height": "100%",
           "justifyContent": "center",
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
         }
       }
       to={

@@ -53,7 +53,7 @@ const Nav = props => {
         >
           <Image
             size="mini"
-            src={`${process.env.PUBLIC_URL}/favicon.ico`}
+            src={`${import.meta.env.BASE_URL}favicon.ico`}
             style={{
               bottom: '2px'
             }}

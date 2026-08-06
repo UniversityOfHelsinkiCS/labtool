@@ -5,9 +5,7 @@ exports[`<CoursePage /> as student CoursePage Component should render correctly 
   <DocumentTitle
     title="course"
   />
-  <div
-    key="true"
-  >
+  <div>
     <CoursePageStudentRegister
       courseData={
         Object {

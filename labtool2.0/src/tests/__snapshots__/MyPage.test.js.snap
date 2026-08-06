@@ -123,7 +123,6 @@ exports[`<MyPage /> MyPage Component should render correctly 1`] = `
                     content="Edit email address"
                     disabled={false}
                     eventsEnabled={true}
-                    offset={0}
                     on={
                       Array [
                         "click",
@@ -131,6 +130,7 @@ exports[`<MyPage /> MyPage Component should render correctly 1`] = `
                       ]
                     }
                     pinned={false}
+                    popperModifiers={Array []}
                     position="top left"
                     trigger={
                       <Button
@@ -210,7 +210,6 @@ exports[`<MyPage /> MyPage Component should render correctly 1`] = `
                         content="View course"
                         disabled={false}
                         eventsEnabled={true}
-                        offset={0}
                         on={
                           Array [
                             "click",
@@ -218,6 +217,7 @@ exports[`<MyPage /> MyPage Component should render correctly 1`] = `
                           ]
                         }
                         pinned={false}
+                        popperModifiers={Array []}
                         position="top left"
                         trigger={
                           <Button

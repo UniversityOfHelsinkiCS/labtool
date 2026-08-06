@@ -46,7 +46,7 @@ const reducer = combineReducers({
   courseImport: courseImport
 })
 
-const compose = process.env.NODE_ENV === 'production' ? store => store : store => composeWithDevTools(store)
+const compose = import.meta.env.PROD ? store => store : store => composeWithDevTools(store)
 
 const store = createStore(reducer, compose(applyMiddleware(thunk, handleRequest)))
 

@@ -152,7 +152,7 @@ export const StudentTableRow = props => {
       indents.push(
         <Table.Cell selectable key={'week' + i} textAlign="center" style={{ position: 'relative' }}>
           <Link
-            style={(tableCellLinkStyle, flexCenter)}
+            style={{ ...tableCellLinkStyle, ...flexCenter }}
             key={'week' + i + 'link'}
             to={
               weekPoints[i + 1] === undefined
@@ -194,7 +194,7 @@ export const StudentTableRow = props => {
           <Table.Cell selectable key={`cr${siId}:${index}`} textAlign="center" style={{ position: 'relative' }}>
             <Link
               className="codeReviewPoints"
-              style={{ tableCellLinkStyle, flexCenter }}
+              style={{ ...tableCellLinkStyle, ...flexCenter }}
               key={'codeReview' + index + 'link'}
               to={{ pathname: `/labtool/browsereviews/${selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: codeReview ? `CodeReview${codeReview.reviewNumber}` : undefined } }}
             >
@@ -224,7 +224,7 @@ export const StudentTableRow = props => {
       let finalReviewPointsCell = (
         <Table.Cell selectable key="finalReview" textAlign="center" style={{ position: 'relative' }}>
           <Link
-            style={(tableCellLinkStyle, flexCenter)}
+            style={{ ...tableCellLinkStyle, ...flexCenter }}
             key={'finalReviewlink'}
             to={
               finalPoints === undefined

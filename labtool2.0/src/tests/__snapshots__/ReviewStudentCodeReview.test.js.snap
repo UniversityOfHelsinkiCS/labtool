@@ -40,7 +40,11 @@ exports[`<ReviewStudentCodeReviews /> ReviewStudentCodeReview Component should r
         >
           <GridColumn>
             <div
-              align="left"
+              style={
+                Object {
+                  "textAlign": "left",
+                }
+              }
             >
               <h3>
                 Points so far: 

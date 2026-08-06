@@ -3,7 +3,6 @@ import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Switch, Route, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
-import preval from 'preval.macro'
 
 // Component (pages) imports
 import Courses from './components/pages/Courses'
@@ -12,7 +11,7 @@ import Notification from './components/pages/Notification'
 import RegisterPage from './components/pages/RegisterPage'
 import CoursePage from './components/pages/CoursePage'
 import MassEmailPage from './components/pages/MassEmailPage'
-import Email from './components/pages/Email.js'
+import Email from './components/pages/Email'
 import ModifyCourseInstancePage from './components/pages/ModifyCourseInstancePage'
 import ModifyCourseInstanceStaff from './components/pages/ModifyCourseInstanceStaff'
 import ModifyCourseInstanceCodeReviews from './components/pages/ModifyCourseInstanceCodeReviews'
@@ -34,15 +33,12 @@ import { getIsAllowedToImport } from './services/courseImport'
 
 import { clearAllPersistedStates } from './hooks/persistedState'
 
-const USE_FAKE_LOGIN = process.env.REACT_APP_USE_FAKE_LOGIN === 'ThisIsNotProduction'
-const SHOW_VERSION = process.env.REACT_APP_SHOW_VERSION
+const USE_FAKE_LOGIN = import.meta.env.VITE_USE_FAKE_LOGIN === 'ThisIsNotProduction'
+const SHOW_VERSION = import.meta.env.VITE_SHOW_VERSION
 
 if (SHOW_VERSION) {
-  console.log(`[Debug version] Built on: ` + preval`module.exports = new Date().toLocaleString()`)
-  console.log(
-    `[Debug version] Git commit: ` +
-      preval`module.exports = (git => { try { return git.branch() + ':' + git.long() + ', ' + git.date().toLocaleString() + '\\n"' + git.message() + '"' } catch (e) { return '(no repository available)' } })(require('git-rev-sync'))`
-  )
+  console.log(`[Debug version] Built on: ${__BUILD_TIME__}`)
+  console.log(`[Debug version] Git commit: ${__GIT_REVISION__}`)
 }
 if (USE_FAKE_LOGIN) {
   console.log('USING FAKE LOGIN!!! DISABLE ON PRODUCTION!!!')
