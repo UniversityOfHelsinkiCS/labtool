@@ -23,7 +23,6 @@ const login = async (req, res) => {
         email: req.headers.mail
       }
     })
-    console.log(user)
     console.log('signing jwt')
     const token = jwt.sign({ username: user.username, id: user.id }, process.env.SECRET)
     console.log('sending jwt')
