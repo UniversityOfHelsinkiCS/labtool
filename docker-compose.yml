@@ -11,6 +11,17 @@ services:
       - PUBLIC_URL=http://localhost:3000
     ports:
       - "3000:3000"
+    develop:
+      watch:
+        - action: sync
+          path: ./labtool2.0
+          target: /app
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: ./labtool2.0/package.json
+        - action: rebuild
+          path: ./labtool2.0/package-lock.json
 
   backend:
     build:
@@ -30,6 +41,17 @@ services:
       - KURKI_URL=http://kurki:3002
     ports:
       - "3001:3001"
+    develop:
+      watch:
+        - action: sync
+          path: ./backend
+          target: /app
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: ./backend/package.json
+        - action: rebuild
+          path: ./backend/package-lock.json
     depends_on:
       db:
         condition: service_healthy
