@@ -1,10 +1,13 @@
 import React from 'react'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { Provider } from 'react-redux'
+import { createStore } from 'redux'
+import { MemoryRouter } from 'react-router-dom'
+import { vi } from 'vitest'
 import { ReviewStudent } from '../components/pages/ReviewStudent'
-import { shallow } from 'enzyme'
 
 describe('<ReviewStudent />', () => {
-  let wrapper
-
   const ownProps = {
     courseId: 'TKT20010.2018.K.A.1',
     studentInstance: '10011',
@@ -43,6 +46,8 @@ describe('<ReviewStudent />', () => {
                 id: 1,
                 name: 'Koodin laatu',
                 points: 2,
+                checkedPoints: 2,
+                uncheckedPoints: 0,
                 textWhenOn: 'Koodi tehty laadukkaasti ja sisältää kommentteja',
                 textWhenOff: 'Koodin laadussa parantamisen varaa',
                 prerequisite: null
@@ -53,6 +58,8 @@ describe('<ReviewStudent />', () => {
                 id: 2,
                 name: 'Algoritmin runko',
                 points: 2,
+                checkedPoints: 2,
+                uncheckedPoints: 0,
                 textWhenOn: 'Algoritmin runko luotu',
                 textWhenOff: 'Algoritmin runko puuttuu',
                 prerequisite: null
@@ -61,6 +68,8 @@ describe('<ReviewStudent />', () => {
                 id: 3,
                 name: 'Tietorakenteita luotu',
                 points: 2,
+                checkedPoints: 2,
+                uncheckedPoints: 0,
                 textWhenOn: 'Tietorakenteita luotu',
                 textWhenOff: 'Tietorakenteita ei ole luotu',
                 prerequisite: null
@@ -71,6 +80,8 @@ describe('<ReviewStudent />', () => {
                 id: 4,
                 name: 'Readme',
                 points: 1,
+                checkedPoints: 1,
+                uncheckedPoints: 0,
                 textWhenOn: 'README kunnossa',
                 textWhenOff: 'README puuttuu',
                 prerequisite: null
@@ -79,6 +90,8 @@ describe('<ReviewStudent />', () => {
                 id: 5,
                 name: 'Tuntikirjanpito',
                 points: 1,
+                checkedPoints: 1,
+                uncheckedPoints: 0,
                 textWhenOn: 'Tuntikirjanpito täytetty oikein',
                 textWhenOff: 'Tuntikirjanpito puuttuu',
                 prerequisite: null
@@ -89,6 +102,8 @@ describe('<ReviewStudent />', () => {
                 id: 6,
                 name: 'Readme sisältää linkkejä',
                 points: 1,
+                checkedPoints: 1,
+                uncheckedPoints: 0,
                 textWhenOn: 'README:ssa on tarvittavat linkit',
                 textWhenOff: 'README:sta puuttuu linkit',
                 prerequisite: 4
@@ -261,7 +276,8 @@ describe('<ReviewStudent />', () => {
               id: 1,
               points: 0,
               weekNumber: 1,
-              feedback: 'Koodin laadussa parantamisen varaa\n\nAlgoritmin runko puuttuu\n\nTietorakenteita ei ole luotu\n\nREADME puuttuu\n\nTuntikirjanpito puuttuu\n\n',
+              feedback:
+                'Koodin laadussa parantamisen varaa\n\nAlgoritmin runko puuttuu\n\nTietorakenteita ei ole luotu\n\nREADME puuttuu\n\nTuntikirjanpito puuttuu\n\n',
               notified: false,
               checks: {
                 'Algoritmin runko': true,
@@ -512,74 +528,98 @@ describe('<ReviewStudent />', () => {
     }
   }
 
-  let mockFn = jest.fn()
+  const renderReviewStudent = (overrides = {}) => {
+    const mockFn = vi.fn()
+    const componentProps = {
+      getOneCI: mockFn,
+      clearNotifications: mockFn,
+      getWeekDraft: mockFn,
+      courseData: props.coursePage,
+      ownProps,
+      selectedInstance: props.selectedInstance,
+      weekReview: props.weekReview,
+      loading: props.loading,
+      resetLoading: mockFn,
+      coursePageInformation: mockFn,
+      notification: {},
+      createOneWeek: mockFn,
+      saveWeekDraft: mockFn,
+      toggleCheckWeek: mockFn,
+      restoreChecks: mockFn,
+      resetChecklist: mockFn,
+      addRedirectHook: mockFn,
+      verifyCheckPrerequisites: mockFn,
+      ...ownProps,
+      ...overrides
+    }
+    const store = createStore(() => ({ selectedInstance: props.selectedInstance }))
+
+    return render(
+      <Provider store={store}>
+        <MemoryRouter>
+          <ReviewStudent {...componentProps} />
+        </MemoryRouter>
+      </Provider>
+    )
+  }
 
   beforeEach(() => {
-    wrapper = shallow(
-      <ReviewStudent
-        getOneCI={mockFn}
-        clearNotifications={mockFn}
-        getWeekDraft={mockFn}
-        courseData={props.coursePage}
-        ownProps={ownProps}
-        selectedInstance={props.selectedInstance}
-        weekReview={props.weekReview}
-        loading={props.loading}
-        resetLoading={mockFn}
-        coursePageInformation={mockFn}
-        courseId={''}
-        studentInstance={''}
-        weekNumber={''}
-        notification={{}}
-        createOneWeek={mockFn}
-        saveWeekDraft={mockFn}
-        toggleCheckWeek={mockFn}
-        initChecks={mockFn}
-        restoreChecks={mockFn}
-        resetChecklist={mockFn}
-        addRedirectHook={mockFn}
-        verifyCheckPrerequisites={mockFn}
-        {...ownProps}
-      />
-    )
+    window.localStorage.clear()
   })
 
   describe('ReviewStudent Component', () => {
-    it('is ok', () => {
-      true
+    it('shows the student and weekly review details', () => {
+      renderReviewStudent()
+
+      expect(screen.getByRole('heading', { name: /maarit mirja opiskelija/i })).toBeInTheDocument()
+      expect(screen.getByRole('heading', { name: /week 1/i })).toBeInTheDocument()
+      expect(screen.getByRole('heading', { name: /^review$/i })).toBeInTheDocument()
+      expect(screen.getByRole('link', { name: /tiraopi1\/tiralabra1/i })).toHaveAttribute(
+        'href',
+        'http://github.com/tiraopi1/tiralabra1'
+      )
     })
 
-    it('should render without throwing an error', () => {
-      expect(wrapper.find('.ReviewStudent').exists()).toEqual(true)
+    it('shows the maximum points for the week', () => {
+      renderReviewStudent()
+
+      const maxPoints = props.selectedInstance.checklists.find(
+        cl => cl.week === props.selectedInstance.currentWeek
+      ).maxPoints
+      expect(screen.getByText(`Points 0-${maxPoints}`)).toBeInTheDocument()
     })
 
-    it('should render correctly', () => {
-      expect(wrapper).toMatchSnapshot()
+    it('allows points to be entered', async () => {
+      const user = userEvent.setup()
+      renderReviewStudent()
+
+      const pointsInput = screen.getByRole('spinbutton')
+      await user.clear(pointsInput)
+      await user.type(pointsInput, '3.5')
+
+      expect(pointsInput).toHaveValue(3.5)
     })
 
-    it('should render maximum points correctly', () => {
-      const maxPoints = props.selectedInstance.checklists.find(cl => cl.week === props.selectedInstance.currentWeek).maxPoints
-      expect(wrapper.find('.showMaxPoints').text()).toEqual('Points 0-' + maxPoints)
+    it('matches the rendered snapshot', () => {
+      renderReviewStudent()
+
+      expect(screen.getByRole('spinbutton')).toMatchSnapshot()
     })
 
     describe('Checklist', () => {
-      it('renders a checklist', () => {
-        expect(wrapper.find('ReviewStudentChecklist').exists()).toEqual(true)
-      })
+      it('shows the available checklist topics and items', () => {
+        renderReviewStudent()
 
-      it('renders a card for each checklist topic', () => {
-        const cl = props.selectedInstance.checklists.find(cl => cl.week === props.selectedInstance.currentWeek).list
-        const expected = Object.keys(cl).filter(cat => cl[cat].some(clItem => clItem.prerequisite === null)).length
-        expect(wrapper.find('ReviewStudentChecklist').dive().find('.checklistCard').length).toEqual(expected)
-      })
-
-      it('renders a row for each checklist item', () => {
-        let expected = 0
-        const checklist = props.selectedInstance.checklists.find(cl => cl.week === props.selectedInstance.currentWeek).list
-        Object.keys(checklist).forEach(key => {
-          expected += checklist[key].filter(clItem => clItem.prerequisite === null).length
-        })
-        expect(wrapper.find('ReviewStudentChecklist').dive().find('.checklistCardRow').length).toEqual(expected)
+        expect(screen.getByRole('heading', { name: /checklist/i })).toBeInTheDocument()
+        expect(screen.getByText('Koodi')).toBeInTheDocument()
+        expect(screen.getByText('Algoritmit')).toBeInTheDocument()
+        expect(screen.getByText('Dokumentaatio')).toBeInTheDocument()
+        expect(screen.getByText('Koodin laatu')).toBeInTheDocument()
+        expect(screen.getByText('Algoritmin runko')).toBeInTheDocument()
+        expect(screen.getByText('Tietorakenteita luotu')).toBeInTheDocument()
+        expect(screen.getByText('Readme')).toBeInTheDocument()
+        expect(screen.getByText('Tuntikirjanpito')).toBeInTheDocument()
+        expect(screen.queryByText('Readme sisältää linkkejä')).not.toBeInTheDocument()
       })
     })
   })

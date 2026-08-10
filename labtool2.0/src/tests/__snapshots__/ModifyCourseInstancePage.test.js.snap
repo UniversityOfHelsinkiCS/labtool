@@ -1,444 +1,356 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`<ModifyCourseInstancePage /> Modify Instance Component should render correctly 1`] = `
-<Fragment>
-  <DocumentTitle
-    title="Modify Aineopintojen harjoitustyö: Tietokantasovellus (periodi IV)"
-  />
-  <div>
-    <Connect(BackButton)
-      preset="coursePage"
-    />
-    <div
-      className="CoursePage"
-      style={
-        Object {
-          "textAlign": "center",
-          "textAlignVertical": "center",
-        }
-      }
+exports[`<ModifyCourseInstancePage /> > matches the rendered snapshot 1`] = `
+<form
+  class="ui form"
+>
+  <div
+    class="inline fields"
+  >
+    <label
+      style="width: 125px; text-align: left;"
     >
-      <Loader
-        active={false}
-        inline="centered"
+      Week amount
+    </label>
+    <div
+      class="ui input form-control1"
+      style="max-width: 7em;"
+    >
+      <input
+        max="30"
+        min="1"
+        name="weekAmount"
+        required=""
+        type="number"
+        value="7"
       />
-      <Grid>
-        <GridRow
-          centered={true}
-        >
-          <h2>
-             Edit course: 
-            Aineopintojen harjoitustyö: Tietokantasovellus (periodi IV)
-             
-          </h2>
-        </GridRow>
-      </Grid>
-      <Grid>
-        <GridRow
-          centered={true}
-        >
-          <Form
-            as="form"
-            onSubmit={[Function]}
-          >
-            <FormGroup
-              inline={true}
-            >
-              <label
-                style={
-                  Object {
-                    "textAlign": "left",
-                    "width": "125px",
-                  }
-                }
-              >
-                Week amount
-              </label>
-              <Input
-                className="form-control1"
-                max={30}
-                min={1}
-                name="weekAmount"
-                onChange={[Function]}
-                required={true}
-                style={
-                  Object {
-                    "maxWidth": "7em",
-                  }
-                }
-                type="number"
-                value={7}
-              />
-            </FormGroup>
-            <FormGroup
-              inline={true}
-            >
-              <label
-                style={
-                  Object {
-                    "textAlign": "left",
-                    "width": "125px",
-                  }
-                }
-              >
-                Default maximum week points
-              </label>
-              <Input
-                className="form-control2"
-                min={0}
-                name="weekMaxPoints"
-                onChange={[Function]}
-                required={true}
-                style={
-                  Object {
-                    "maxWidth": "7em",
-                  }
-                }
-                type="number"
-                value={2}
-              />
-            </FormGroup>
-            <FormGroup
-              inline={true}
-            >
-              <label
-                style={
-                  Object {
-                    "textAlign": "left",
-                    "width": "125px",
-                  }
-                }
-              >
-                Current week
-              </label>
-              <Dropdown
-                additionLabel="Add "
-                additionPosition="top"
-                className="weekDropdown"
-                closeOnBlur={true}
-                closeOnEscape={true}
-                deburr={false}
-                fluid={true}
-                icon="dropdown"
-                minCharacters={1}
-                noResultsMessage="No results found."
-                onChange={[Function]}
-                openOnFocus={true}
-                options={
-                  Array [
-                    Object {
-                      "key": 1,
-                      "text": "Week 1",
-                      "value": 1,
-                    },
-                    Object {
-                      "key": 2,
-                      "text": "Week 2",
-                      "value": 2,
-                    },
-                    Object {
-                      "key": 3,
-                      "text": "Week 3",
-                      "value": 3,
-                    },
-                    Object {
-                      "key": 4,
-                      "text": "Week 4",
-                      "value": 4,
-                    },
-                    Object {
-                      "key": 5,
-                      "text": "Week 5",
-                      "value": 5,
-                    },
-                    Object {
-                      "key": 6,
-                      "text": "Week 6",
-                      "value": 6,
-                    },
-                    Object {
-                      "key": 7,
-                      "text": "Week 7",
-                      "value": 7,
-                    },
-                  ]
-                }
-                placeholder="Select week!"
-                renderLabel={[Function]}
-                required={true}
-                searchInput="text"
-                selectOnBlur={true}
-                selectOnNavigation={true}
-                selection={true}
-                style={
-                  Object {
-                    "maxWidth": "12em",
-                  }
-                }
-                value={1}
-                wrapSelection={true}
-              />
-            </FormGroup>
-            <FormGroup
-              inline={true}
-            >
-              <label
-                style={
-                  Object {
-                    "textAlign": "left",
-                    "width": "125px",
-                  }
-                }
-              >
-                Link to courses.helsinki.fi
-              </label>
-              <Input
-                className="form-control4"
-                name="coursesPage"
-                onChange={[Function]}
-                style={
-                  Object {
-                    "minWidth": "26em",
-                  }
-                }
-                type="url"
-              />
-            </FormGroup>
-            <FormGroup
-              inline={true}
-            >
-              <label
-                style={
-                  Object {
-                    "textAlign": "left",
-                    "width": "125px",
-                  }
-                }
-              >
-                Link to course material
-              </label>
-              <Input
-                className="form-control5"
-                name="courseMaterial"
-                onChange={[Function]}
-                style={
-                  Object {
-                    "minWidth": "26em",
-                  }
-                }
-                type="url"
-              />
-            </FormGroup>
-            <FormGroup
-              inline={true}
-            >
-              <label
-                style={
-                  Object {
-                    "textAlign": "left",
-                    "width": "125px",
-                  }
-                }
-              >
-                Visible code reviews
-              </label>
-              <Segment
-                className="crCheckboxes"
-                style={
-                  Object {
-                    "maxHeight": 200,
-                    "overflow": "auto",
-                  }
-                }
-              >
-                <div
-                  className="cr1"
-                  key="1"
-                >
-                  <CodeReviewCheckbox
-                    codeReview={
-                      Object {
-                        "text": "Code Review 1",
-                        "value": 1,
-                      }
-                    }
-                    hideCodeReview={[Function]}
-                    initialCheckState={true}
-                    setCodeReviewVisible={[Function]}
-                  />
-                </div>
-                <div
-                  className="cr2"
-                  key="2"
-                >
-                  <CodeReviewCheckbox
-                    codeReview={
-                      Object {
-                        "text": "Code Review 2",
-                        "value": 2,
-                      }
-                    }
-                    hideCodeReview={[Function]}
-                    initialCheckState={false}
-                    setCodeReviewVisible={[Function]}
-                  />
-                </div>
-              </Segment>
-            </FormGroup>
-            <FormGroup
-              inline={true}
-            >
-              <Checkbox
-                label="Course has a final review"
-                name="finalReview"
-                onChange={[Function]}
-                style={
-                  Object {
-                    "textAlign": "left",
-                    "width": "150px",
-                  }
-                }
-                type="checkbox"
-              />
-            </FormGroup>
-            <FormGroup
-              inline={true}
-            >
-              <Checkbox
-                disabled={true}
-                label="Points are given for final review"
-                name="finalReviewHasPoints"
-                onChange={[Function]}
-                style={
-                  Object {
-                    "textAlign": "left",
-                    "width": "150px",
-                  }
-                }
-                type="checkbox"
-              />
-            </FormGroup>
-            <FormGroup
-              inline={true}
-            >
-              <Checkbox
-                checked={true}
-                label="Course registration is active"
-                name="courseActive"
-                onChange={[Function]}
-                style={
-                  Object {
-                    "textAlign": "left",
-                    "width": "150px",
-                  }
-                }
-                type="checkbox"
-              />
-            </FormGroup>
-            <FormGroup
-              style={
-                Object {
-                  "display": "inline-block",
-                  "marginLeft": "auto",
-                  "marginRight": "auto",
-                }
-              }
-            >
-              <Button
-                as="button"
-                color="green"
-                size="huge"
-                type="Submit"
-              >
-                Save
-              </Button>
-              <Link
-                to="/labtool/courses/TKT20011.2018.K.A.1"
-              >
-                <Button
-                  as="button"
-                  color="red"
-                  size="huge"
-                  type="Cancel"
-                >
-                  Cancel
-                </Button>
-              </Link>
-            </FormGroup>
-          </Form>
-        </GridRow>
-      </Grid>
-      <Link
-        to="/labtool/ModifyCourseInstanceStaff/TKT20011.2018.K.A.1"
-      >
-        <Button
-          as="button"
-          block="true"
-          style={
-            Object {
-              "marginLeft": "5px",
-              "marginRight": "5px",
-              "marginTop": "20px",
-            }
-          }
-        >
-          Manage assistant teachers
-        </Button>
-      </Link>
-      <Link
-        to="/labtool/ModifyCourseInstanceCodeReviews/TKT20011.2018.K.A.1"
-      >
-        <Button
-          as="button"
-          block="true"
-          style={
-            Object {
-              "marginLeft": "5px",
-              "marginRight": "5px",
-              "marginTop": "20px",
-            }
-          }
-        >
-          Edit code reviews
-        </Button>
-      </Link>
-      <Link
-        to="/labtool/checklist/TKT20011.2018.K.A.1/create"
-      >
-        <Button
-          as="button"
-          block="true"
-          style={
-            Object {
-              "marginLeft": "5px",
-              "marginRight": "5px",
-              "marginTop": "20px",
-            }
-          }
-        >
-          Edit checklists
-        </Button>
-      </Link>
-      <Link
-        to="/labtool/ManageTags/TKT20011.2018.K.A.1"
-      >
-        <Button
-          as="button"
-          block="true"
-          style={
-            Object {
-              "marginLeft": "5px",
-              "marginRight": "5px",
-              "marginTop": "20px",
-            }
-          }
-        >
-          Edit tags
-        </Button>
-      </Link>
-      <br />
-      <br />
     </div>
   </div>
-</Fragment>
+  <div
+    class="inline fields"
+  >
+    <label
+      style="width: 125px; text-align: left;"
+    >
+      Default maximum week points
+    </label>
+    <div
+      class="ui input form-control2"
+      style="max-width: 7em;"
+    >
+      <input
+        min="0"
+        name="weekMaxPoints"
+        required=""
+        type="number"
+        value="2"
+      />
+    </div>
+  </div>
+  <div
+    class="inline fields"
+  >
+    <label
+      style="width: 125px; text-align: left;"
+    >
+      Current week
+    </label>
+    <div
+      aria-expanded="false"
+      class="ui fluid selection dropdown weekDropdown"
+      required=""
+      role="listbox"
+      style="max-width: 12em;"
+      tabindex="0"
+    >
+      <div
+        aria-atomic="true"
+        aria-live="polite"
+        class="divider text"
+        role="alert"
+      >
+        Week 1
+      </div>
+      <i
+        aria-hidden="true"
+        class="dropdown icon"
+      />
+      <div
+        class="menu transition"
+      >
+        <div
+          aria-checked="true"
+          aria-selected="true"
+          class="active selected item"
+          role="option"
+          style="pointer-events: all;"
+        >
+          <span
+            class="text"
+          >
+            Week 1
+          </span>
+        </div>
+        <div
+          aria-checked="false"
+          aria-selected="false"
+          class="item"
+          role="option"
+          style="pointer-events: all;"
+        >
+          <span
+            class="text"
+          >
+            Week 2
+          </span>
+        </div>
+        <div
+          aria-checked="false"
+          aria-selected="false"
+          class="item"
+          role="option"
+          style="pointer-events: all;"
+        >
+          <span
+            class="text"
+          >
+            Week 3
+          </span>
+        </div>
+        <div
+          aria-checked="false"
+          aria-selected="false"
+          class="item"
+          role="option"
+          style="pointer-events: all;"
+        >
+          <span
+            class="text"
+          >
+            Week 4
+          </span>
+        </div>
+        <div
+          aria-checked="false"
+          aria-selected="false"
+          class="item"
+          role="option"
+          style="pointer-events: all;"
+        >
+          <span
+            class="text"
+          >
+            Week 5
+          </span>
+        </div>
+        <div
+          aria-checked="false"
+          aria-selected="false"
+          class="item"
+          role="option"
+          style="pointer-events: all;"
+        >
+          <span
+            class="text"
+          >
+            Week 6
+          </span>
+        </div>
+        <div
+          aria-checked="false"
+          aria-selected="false"
+          class="item"
+          role="option"
+          style="pointer-events: all;"
+        >
+          <span
+            class="text"
+          >
+            Week 7
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="inline fields"
+  >
+    <label
+      style="width: 125px; text-align: left;"
+    >
+      Link to courses.helsinki.fi
+    </label>
+    <div
+      class="ui input form-control4"
+      style="min-width: 26em;"
+    >
+      <input
+        name="coursesPage"
+        type="url"
+        value=""
+      />
+    </div>
+  </div>
+  <div
+    class="inline fields"
+  >
+    <label
+      style="width: 125px; text-align: left;"
+    >
+      Link to course material
+    </label>
+    <div
+      class="ui input form-control5"
+      style="min-width: 26em;"
+    >
+      <input
+        name="courseMaterial"
+        type="url"
+        value=""
+      />
+    </div>
+  </div>
+  <div
+    class="inline fields"
+  >
+    <label
+      style="width: 125px; text-align: left;"
+    >
+      Visible code reviews
+    </label>
+    <div
+      class="ui segment crCheckboxes"
+      style="overflow: auto; max-height: 200px;"
+    >
+      <div
+        class="cr1"
+      >
+        <div
+          class="ui vertical segment"
+        >
+          <div
+            class="ui checked checkbox"
+          >
+            <input
+              checked=""
+              class="hidden"
+              readonly=""
+              tabindex="0"
+              type="checkbox"
+              value=""
+            />
+            <label>
+              Code Review 1
+            </label>
+          </div>
+        </div>
+      </div>
+      <div
+        class="cr2"
+      >
+        <div
+          class="ui vertical segment"
+        >
+          <div
+            class="ui checkbox"
+          >
+            <input
+              class="hidden"
+              readonly=""
+              tabindex="0"
+              type="checkbox"
+              value=""
+            />
+            <label>
+              Code Review 2
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="inline fields"
+  >
+    <div
+      class="ui checkbox"
+      style="width: 150px; text-align: left;"
+    >
+      <input
+        class="hidden"
+        name="finalReview"
+        readonly=""
+        tabindex="0"
+        type="checkbox"
+        value=""
+      />
+      <label>
+        Course has a final review
+      </label>
+    </div>
+  </div>
+  <div
+    class="inline fields"
+  >
+    <div
+      class="ui disabled checkbox"
+      style="width: 150px; text-align: left;"
+    >
+      <input
+        class="hidden"
+        disabled=""
+        name="finalReviewHasPoints"
+        readonly=""
+        tabindex="-1"
+        type="checkbox"
+        value=""
+      />
+      <label>
+        Points are given for final review
+      </label>
+    </div>
+  </div>
+  <div
+    class="inline fields"
+  >
+    <div
+      class="ui checked checkbox"
+      style="width: 150px; text-align: left;"
+    >
+      <input
+        checked=""
+        class="hidden"
+        name="courseActive"
+        readonly=""
+        tabindex="0"
+        type="checkbox"
+        value=""
+      />
+      <label>
+        Course registration is active
+      </label>
+    </div>
+  </div>
+  <div
+    class="fields"
+    style="display: inline-block; margin-left: auto; margin-right: auto;"
+  >
+    <button
+      class="ui green huge button"
+      type="Submit"
+    >
+      Save
+    </button>
+    <a
+      href="/labtool/courses/TKT20011.2018.K.A.1"
+    >
+      <button
+        class="ui red huge button"
+        type="Cancel"
+      >
+        Cancel
+      </button>
+    </a>
+  </div>
+</form>
 `;

@@ -1,10 +1,13 @@
 import React from 'react'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { Provider } from 'react-redux'
+import { createStore } from 'redux'
+import { MemoryRouter } from 'react-router-dom'
+import { vi } from 'vitest'
 import { ReviewStudentCodeReview } from '../components/pages/ReviewStudentCodeReview'
-import { shallow } from 'enzyme'
 
 describe('<ReviewStudentCodeReviews />', () => {
-  let wrapper
-
   const ownProps = {
     courseId: 'TKT20010.2018.K.A.1',
     codeReviewNumber: '1',
@@ -32,6 +35,9 @@ describe('<ReviewStudentCodeReviews />', () => {
                 id: 1,
                 name: 'Koodin laatu',
                 points: 2,
+                checkedPoints: 2,
+                uncheckedPoints: 0,
+                order: 1,
                 textWhenOn: 'Koodi tehty laadukkaasti ja sisältää kommentteja',
                 textWhenOff: 'Koodin laadussa parantamisen varaa',
                 prerequisite: null
@@ -42,6 +48,9 @@ describe('<ReviewStudentCodeReviews />', () => {
                 id: 2,
                 name: 'Algoritmin runko',
                 points: 2,
+                checkedPoints: 2,
+                uncheckedPoints: 0,
+                order: 1,
                 textWhenOn: 'Algoritmin runko luotu',
                 textWhenOff: 'Algoritmin runko puuttuu',
                 prerequisite: null
@@ -50,6 +59,9 @@ describe('<ReviewStudentCodeReviews />', () => {
                 id: 3,
                 name: 'Tietorakenteita luotu',
                 points: 2,
+                checkedPoints: 2,
+                uncheckedPoints: 0,
+                order: 2,
                 textWhenOn: 'Tietorakenteita luotu',
                 textWhenOff: 'Tietorakenteita ei ole luotu',
                 prerequisite: null
@@ -60,6 +72,9 @@ describe('<ReviewStudentCodeReviews />', () => {
                 id: 4,
                 name: 'Readme',
                 points: 1,
+                checkedPoints: 1,
+                uncheckedPoints: 0,
+                order: 1,
                 textWhenOn: 'README kunnossa',
                 textWhenOff: 'README puuttuu',
                 prerequisite: null
@@ -68,6 +83,9 @@ describe('<ReviewStudentCodeReviews />', () => {
                 id: 5,
                 name: 'Tuntikirjanpito',
                 points: 1,
+                checkedPoints: 1,
+                uncheckedPoints: 0,
+                order: 2,
                 textWhenOn: 'Tuntikirjanpito täytetty oikein',
                 textWhenOff: 'Tuntikirjanpito puuttuu',
                 prerequisite: null
@@ -251,7 +269,8 @@ describe('<ReviewStudentCodeReviews />', () => {
               id: 1,
               points: 0,
               weekNumber: 1,
-              feedback: 'Koodin laadussa parantamisen varaa\n\nAlgoritmin runko puuttuu\n\nTietorakenteita ei ole luotu\n\nREADME puuttuu\n\nTuntikirjanpito puuttuu\n\n',
+              feedback:
+                'Koodin laadussa parantamisen varaa\n\nAlgoritmin runko puuttuu\n\nTietorakenteita ei ole luotu\n\nREADME puuttuu\n\nTuntikirjanpito puuttuu\n\n',
               notified: false,
               checks: {
                 'Algoritmin runko': true,
@@ -498,44 +517,75 @@ describe('<ReviewStudentCodeReviews />', () => {
     }
   }
 
-  let mockFn = jest.fn()
+  const renderReviewStudentCodeReview = (overrides = {}) => {
+    const mockFn = vi.fn()
+    const componentProps = {
+      getOneCI: mockFn,
+      clearNotifications: mockFn,
+      courseData: props.coursePage,
+      ownProps,
+      selectedInstance: props.selectedInstance,
+      weekReview: props.weekReview,
+      loading: props.loading,
+      resetLoading: mockFn,
+      coursePageInformation: mockFn,
+      ...ownProps,
+      notification: {},
+      toggleCheckCodeReview: mockFn,
+      initChecks: mockFn,
+      restoreChecks: mockFn,
+      resetChecklist: mockFn,
+      addRedirectHook: mockFn,
+      gradeCodeReview: mockFn,
+      verifyCheckPrerequisites: mockFn,
+      ...overrides
+    }
+    const store = createStore(() => ({ selectedInstance: props.selectedInstance }))
+
+    return render(
+      <Provider store={store}>
+        <MemoryRouter>
+          <ReviewStudentCodeReview {...componentProps} />
+        </MemoryRouter>
+      </Provider>
+    )
+  }
 
   beforeEach(() => {
-    wrapper = shallow(
-      <ReviewStudentCodeReview
-        getOneCI={mockFn}
-        clearNotifications={mockFn}
-        courseData={props.coursePage}
-        ownProps={ownProps}
-        selectedInstance={props.selectedInstance}
-        weekReview={props.weekReview}
-        loading={props.loading}
-        resetLoading={mockFn}
-        coursePageInformation={mockFn}
-        {...ownProps}
-        notification={{}}
-        toggleCheckCodeReview={mockFn}
-        initChecks={mockFn}
-        restoreChecks={mockFn}
-        resetChecklist={mockFn}
-        addRedirectHook={mockFn}
-        gradeCodeReview={mockFn}
-        verifyCheckPrerequisites={mockFn}
-      />
-    )
+    window.localStorage.clear()
   })
 
   describe('ReviewStudentCodeReview Component', () => {
-    it('is ok', () => {
-      true
+    it('shows the student and code review details', () => {
+      renderReviewStudentCodeReview()
+
+      expect(screen.getByRole('heading', { name: /maarit mirja opiskelija/i })).toBeInTheDocument()
+      expect(screen.getByRole('heading', { name: /code review 1/i })).toBeInTheDocument()
+      expect(screen.getByRole('heading', { name: /project to review/i })).toBeInTheDocument()
+      expect(screen.getByRole('link', { name: /tiralabra2$/i })).toHaveAttribute(
+        'href',
+        'http://github.com/tiralabra2'
+      )
+      expect(screen.getByRole('link', { name: /github\.com\/tiralabra2\/issues\/1/i })).toHaveAttribute(
+        'href',
+        'http://github.com/tiralabra2/issues/1'
+      )
     })
 
-    it('should render without throwing an error', () => {
-      expect(wrapper.find('.ReviewStudentCodeReview').exists()).toEqual(true)
+    it('allows points to be entered', async () => {
+      const user = userEvent.setup()
+      renderReviewStudentCodeReview()
+
+      const pointsInput = screen.getByRole('spinbutton')
+      await user.type(pointsInput, '3.5')
+
+      expect(pointsInput).toHaveValue(3.5)
     })
 
-    it('should render correctly', () => {
-      expect(wrapper).toMatchSnapshot()
+    it('matches the rendered snapshot', () => {
+      renderReviewStudentCodeReview()
+
+      expect(screen.getByRole('spinbutton')).toMatchSnapshot()
     })
   })
 })

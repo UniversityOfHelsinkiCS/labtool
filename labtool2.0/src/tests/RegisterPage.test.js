@@ -1,119 +1,133 @@
 import React from 'react'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { MemoryRouter } from 'react-router-dom'
+import { vi } from 'vitest'
 import { RegisterPage } from '../components/pages/RegisterPage'
-import { shallow } from 'enzyme'
-import { Input } from 'semantic-ui-react'
 
-jest.mock('../hooks/useDebounce', () => {
-  return jest.fn().mockImplementation(value => {
-    return value
-  })
+vi.mock('../hooks/useDebounce', () => {
+  return {
+    default: vi.fn().mockImplementation(value => {
+      return value
+    })
+  }
 })
 
-jest.mock('../hooks/useGithubRepo', () => {
-  return jest.fn().mockImplementation(repo => {
-    if (!repo) {
-      return { githubRepo: null, error: null }
-    }
+vi.mock('../hooks/useGithubRepo', () => {
+  return {
+    default: vi.fn().mockImplementation(repo => {
+      if (!repo) {
+        return { githubRepo: null, error: null }
+      }
 
-    return { githubRepo: null, error: 'fake error' }
-  })
+      return { githubRepo: null, error: 'fake error' }
+    })
+  }
 })
 
-describe('<Register />', () => {
-  let wrapper
-
-  const props = {
-    selectedInstance: {
-      id: 10011,
-      name: 'Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit',
-      start: '2018-03-11T21:00:00.000Z',
-      end: '2018-04-29T21:00:00.000Z',
-      active: true,
-      weekAmount: 7,
-      weekMaxPoints: 3,
-      currentWeek: 1,
-      ohid: 'TKT20010.2018.K.A.1',
+const selectedInstance = {
+  id: 10011,
+  name: 'Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit',
+  start: '2018-03-11T21:00:00.000Z',
+  end: '2018-04-29T21:00:00.000Z',
+  active: true,
+  weekAmount: 7,
+  weekMaxPoints: 3,
+  currentWeek: 1,
+  ohid: 'TKT20010.2018.K.A.1',
+  createdAt: '2018-03-26T00:00:00.000Z',
+  updatedAt: '2018-03-26T00:00:00.000Z',
+  teacherInstances: [
+    {
+      id: 10001,
+      instructor: false,
       createdAt: '2018-03-26T00:00:00.000Z',
       updatedAt: '2018-03-26T00:00:00.000Z',
-      teacherInstances: [
-        {
-          id: 10001,
-          instructor: false,
-          createdAt: '2018-03-26T00:00:00.000Z',
-          updatedAt: '2018-03-26T00:00:00.000Z',
-          userId: 10010,
-          courseInstanceId: 10011,
-          firsts: 'Pää',
-          lastname: 'Opettaja'
-        },
-        {
-          id: 10011,
-          instructor: true,
-          createdAt: '2018-03-26T00:00:00.000Z',
-          updatedAt: '2018-03-26T00:00:00.000Z',
-          userId: 10015,
-          courseInstanceId: 10011,
-          firsts: 'Ossi Ohjaaja',
-          lastname: 'Mutikainen'
-        }
-      ]
+      userId: 10010,
+      courseInstanceId: 10011,
+      firsts: 'Pää',
+      lastname: 'Opettaja'
     },
-    loading: {
-      loading: false,
-      loadingHooks: [],
-      redirect: false,
-      redirectHooks: [],
-      redirectFailure: false
+    {
+      id: 10011,
+      instructor: true,
+      createdAt: '2018-03-26T00:00:00.000Z',
+      updatedAt: '2018-03-26T00:00:00.000Z',
+      userId: 10015,
+      courseInstanceId: 10011,
+      firsts: 'Ossi Ohjaaja',
+      lastname: 'Mutikainen'
     }
+  ]
+}
+
+const loading = {
+  loading: false,
+  loadingHooks: [],
+  redirect: false,
+  redirectHooks: [],
+  redirectFailure: false
+}
+
+const renderRegisterPage = (props = {}) => {
+  const defaultProps = {
+    getOneCI: vi.fn(),
+    selectedInstance,
+    loading,
+    resetLoading: vi.fn(),
+    courseId: '10012',
+    coursePage: { data: null },
+    createStudentCourses: vi.fn(),
+    updateStudentProjectInfo: vi.fn(),
+    addRedirectHook: vi.fn(),
+    coursePageInformation: vi.fn()
   }
 
-  let mockFn = jest.fn()
+  const componentProps = { ...defaultProps, ...props }
 
-  beforeEach(() => {
-    wrapper = shallow(
-      <RegisterPage
-        getOneCI={mockFn}
-        selectedInstance={props}
-        loading={props.loading}
-        resetLoading={mockFn}
-        courseId={'10012'}
-        coursePage={{ data: null }}
-        createStudentCourses={mockFn}
-        updateStudentProjectInfo={mockFn}
-        addRedirectHook={mockFn}
-        coursePageInformation={mockFn}
-      />
-    )
-  })
+  return render(
+    <MemoryRouter>
+      <RegisterPage {...componentProps} />
+    </MemoryRouter>
+  )
+}
 
+describe('<Register />', () => {
   describe('RegisterPage Component', () => {
-    it('is ok', () => {
-      true
+    it('matches the rendered snapshot', () => {
+      const { asFragment } = renderRegisterPage()
+
+      expect(asFragment()).toMatchSnapshot()
     })
 
-    it('should render correctly', () => {
-      expect(wrapper).toMatchSnapshot()
+    it('renders the registration form', () => {
+      renderRegisterPage()
+
+      expect(
+        screen.getByRole('heading', {
+          name: `Register for ${selectedInstance.name}`
+        })
+      ).toBeInTheDocument()
+      expect(screen.getByPlaceholderText('MyProjectName')).toHaveAttribute('name', 'projectName')
+      expect(screen.getByDisplayValue('https://github.com')).toHaveAttribute('name', 'github')
+      expect(screen.getByRole('button', { name: /submit/i })).toBeInTheDocument()
+      expect(screen.getByRole('link', { name: /cancel/i })).toHaveAttribute(
+        'href',
+        `/labtool/courses/${selectedInstance.ohid}`
+      )
     })
 
-    it('should render without throwing an error', () => {
-      expect(wrapper.find('.Register').length).toEqual(1)
-    })
+    it('renders a warning if the GitHub repository does not exist', async () => {
+      const user = userEvent.setup()
+      renderRegisterPage()
 
-    it('renders project name input', () => {
-      expect(wrapper.find('.form-control1').length).toEqual(1)
-    })
+      const githubLinkInput = screen.getByDisplayValue('https://github.com')
+      await user.clear(githubLinkInput)
+      await user.type(githubLinkInput, 'https://github.com/invalid_repo')
 
-    it('renders a GitHub link input', () => {
-      expect(wrapper.find('.form-control2').length).toEqual(1)
-    })
-
-    it('renders a warning if github repo does not exist', () => {
-      wrapper
-        .find(Input)
-        .find({ name: 'github' })
-        .simulate('change', null, { value: 'https://github.com/invalid_repo' })
-
-      expect(wrapper.find('GitHubRepoWarning').length).toEqual(1)
+      expect(
+        await screen.findByText(/your github repository either is private or it does not exist/i)
+      ).toBeInTheDocument()
     })
   })
 })
