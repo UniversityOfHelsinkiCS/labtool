@@ -1,11 +1,23 @@
 import React from 'react'
+import { render, screen, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { Provider } from 'react-redux'
+import { createStore } from 'redux'
+import { MemoryRouter } from 'react-router-dom'
+import { vi } from 'vitest'
 import { StudentTable } from '../components/StudentTable'
 import { StudentTableRow } from '../components/StudentTable/StudentTableRow'
-import { shallow } from 'enzyme'
+
+vi.stubGlobal(
+  'matchMedia',
+  vi.fn().mockReturnValue({
+    matches: true,
+    addListener: vi.fn(),
+    removeListener: vi.fn()
+  })
+)
 
 describe('<StudentTable />', () => {
-  let wrapper
-
   const coursePage = {
     role: 'teacher',
     id: 10011,
@@ -209,75 +221,79 @@ describe('<StudentTable />', () => {
     redirectFailure: false
   }
 
-  let mockFn = jest.fn()
+  const mockFn = vi.fn()
 
-  beforeEach(() => {
-    wrapper = shallow(
-      <StudentTable
-        columns={['instructor']}
-        studentInstances={coursePage.data}
-        selectedInstance={coursePage}
-        coursePageLogic={coursePageLogic}
-        associateTeacherToStudent={mockFn}
-        getAllTags={mockFn}
-        tags={tags}
-        loading={loading}
-        resetLoading={mockFn}
-        showAssistantDropdown={mockFn}
-        showTagDropdown={mockFn}
-        selectTeacher={mockFn}
-        selectTag={mockFn}
-        filterByAssistant={mockFn}
-        filterByTag={mockFn}
-        tagStudent={mockFn}
-        unTagStudent={mockFn}
-        selectStudent={mockFn}
-        unselectStudent={mockFn}
-        selectAllStudents={mockFn}
-        unselectAllStudents={mockFn}
-        invertStudentSelection={mockFn}
-        updateStudentProjectInfo={mockFn}
-        courseData={{}}
-        loggedInUser={{}}
-      />
+  const renderStudentTable = (props = {}) => {
+    const store = createStore(() => ({}))
+
+    return render(
+      <Provider store={store}>
+        <MemoryRouter>
+          <StudentTable
+            columns={['instructor']}
+            studentInstances={coursePage.data}
+            selectedInstance={coursePage}
+            coursePageLogic={coursePageLogic}
+            associateTeacherToStudent={mockFn}
+            getAllTags={mockFn}
+            tags={tags}
+            loading={loading}
+            resetLoading={mockFn}
+            showAssistantDropdown={mockFn}
+            showTagDropdown={mockFn}
+            selectTeacher={mockFn}
+            selectTag={mockFn}
+            filterByAssistant={mockFn}
+            filterByTag={mockFn}
+            tagStudent={mockFn}
+            unTagStudent={mockFn}
+            selectStudent={mockFn}
+            unselectStudent={mockFn}
+            selectAllStudents={mockFn}
+            unselectAllStudents={mockFn}
+            invertStudentSelection={mockFn}
+            updateStudentProjectInfo={mockFn}
+            courseData={{}}
+            loggedInUser={{}}
+            {...props}
+          />
+        </MemoryRouter>
+      </Provider>
     )
-  })
+  }
 
   describe('StudentTable Component', () => {
-    it('is ok', () => {
-      true
-    })
-
     it('should render correctly', () => {
-      expect(wrapper).toMatchSnapshot()
+      const { asFragment } = renderStudentTable()
+
+      expect(asFragment()).toMatchSnapshot()
     })
 
-    it('displays tag filter as disabled if no student uses the tag', () => {
-      wrapper
-        .find('.tagFilter')
-        .find('TagLabel')
-        .find({ tag: tags.tags[0] })
-        .dive()
-        .find('Button')
-        .simulate('click')
-      expect(
-        wrapper
-          .find('.tagFilter')
-          .find('TagLabel')
-          .find({ disabled: true }).length
-      ).toEqual(3)
+    it('disables tag filters that no visible student uses', async () => {
+      const user = userEvent.setup()
+      renderStudentTable()
+      const filterBar = screen.getByText(/tag filters:/i).parentElement
+
+      await user.click(within(filterBar).getByRole('button', { name: 'Javascript' }))
+
+      expect(within(filterBar).getByRole('button', { name: 'No tag' })).toBeDisabled()
+      expect(within(filterBar).getByRole('button', { name: 'HTML' })).toBeDisabled()
+      expect(within(filterBar).getByRole('button', { name: 'DROPPED' })).toBeDisabled()
+      expect(within(filterBar).getByRole('button', { name: 'Javascript' })).toBeEnabled()
+      expect(screen.getByRole('link', { name: /tiralabra2/i })).toBeInTheDocument()
+      expect(screen.queryByRole('link', { name: /superprojekti/i })).not.toBeInTheDocument()
     })
   })
 })
 
 describe('<StudentTableRow />', () => {
-  let wrapper
   const emptyWeek = () => ({ points: null })
   const gradedWeek = p => ({ points: p })
 
   const coursePage = {
     role: 'teacher',
     id: 10011,
+    ohid: 'TKT20010.2018.K.A.1',
     data: [
       {
         id: 10012,
@@ -288,7 +304,16 @@ describe('<StudentTableRow />', () => {
         courseInstanceId: 10011,
         userId: 10012,
         teacherInstanceId: 10011,
-        weeks: [emptyWeek(), emptyWeek(), emptyWeek(), emptyWeek(), emptyWeek(), emptyWeek(), emptyWeek(), emptyWeek()],
+        weeks: [
+          emptyWeek(),
+          emptyWeek(),
+          emptyWeek(),
+          emptyWeek(),
+          emptyWeek(),
+          emptyWeek(),
+          emptyWeek(),
+          emptyWeek()
+        ],
         codeReviews: [],
         weekdrafts: [],
         validRegistration: false,
@@ -321,8 +346,19 @@ describe('<StudentTableRow />', () => {
         courseInstanceId: 10011,
         userId: 10031,
         teacherInstanceId: 10011,
-        weeks: [gradedWeek(3), emptyWeek(), emptyWeek(), emptyWeek(), emptyWeek(), emptyWeek(), emptyWeek(), emptyWeek()],
-        codeReviews: [{ linkToReview: 'https://github.com/example/example/issues/1', points: null, reviewNumber: 1 }],
+        weeks: [
+          gradedWeek(3),
+          emptyWeek(),
+          emptyWeek(),
+          emptyWeek(),
+          emptyWeek(),
+          emptyWeek(),
+          emptyWeek(),
+          emptyWeek()
+        ],
+        codeReviews: [
+          { linkToReview: 'https://github.com/example/example/issues/1', points: null, reviewNumber: 1 }
+        ],
         weekdrafts: [{ weekNumber: 2 }],
         validRegistration: true,
         User: {
@@ -359,7 +395,16 @@ describe('<StudentTableRow />', () => {
         courseInstanceId: 10011,
         userId: 10011,
         teacherInstanceId: 10011,
-        weeks: [emptyWeek(), emptyWeek(), emptyWeek(), emptyWeek(), emptyWeek(), emptyWeek(), emptyWeek(), emptyWeek()],
+        weeks: [
+          emptyWeek(),
+          emptyWeek(),
+          emptyWeek(),
+          emptyWeek(),
+          emptyWeek(),
+          emptyWeek(),
+          emptyWeek(),
+          emptyWeek()
+        ],
         codeReviews: [{ linkToReview: null, points: null, reviewNumber: 1 }],
         weekdrafts: [],
         validRegistration: true,
@@ -487,81 +532,140 @@ describe('<StudentTableRow />', () => {
     redirectFailure: false
   }
 
-  let mockFn = jest.fn()
+  const mockFn = vi.fn()
 
-  beforeEach(() => {
-    wrapper = shallow(
-      <StudentTableRow
-        data={coursePage.data[0]}
-        showColumn={c => c === 'select' || c === 'points'}
-        extraColumns={[]}
-        dropDownTags={dropDownTags}
-        dropDownTeachers={dropDownTeachers}
-        shouldHideInstructor={() => false}
-        addFilterTag={mockFn}
-        studentInstances={coursePage.data}
-        selectedInstance={coursePage}
-        coursePageLogic={coursePageLogic}
-        associateTeacherToStudent={mockFn}
-        getAllTags={mockFn}
-        tags={tags}
-        loading={loading}
-        resetLoading={mockFn}
-        showAssistantDropdown={mockFn}
-        showTagDropdown={mockFn}
-        selectTeacher={mockFn}
-        selectTag={mockFn}
-        filterByAssistant={mockFn}
-        filterByTag={mockFn}
-        tagStudent={mockFn}
-        unTagStudent={mockFn}
-        selectStudent={mockFn}
-        unselectStudent={mockFn}
-        selectAllStudents={mockFn}
-        unselectAllStudents={mockFn}
-        invertStudentSelection={mockFn}
-        updateStudentProjectInfo={mockFn}
-      />
+  const renderStudentTableRow = (props = {}) => {
+    const defaultProps = {
+      data: coursePage.data[0],
+      showColumn: c => c === 'select' || c === 'points',
+      extraColumns: [],
+      dropDownTags,
+      dropDownTeachers,
+      shouldHideInstructor: () => false,
+      addFilterTag: mockFn,
+      studentInstances: coursePage.data,
+      selectedInstance: coursePage,
+      coursePageLogic,
+      associateTeacherToStudent: mockFn,
+      getAllTags: mockFn,
+      tags,
+      loading,
+      resetLoading: mockFn,
+      showAssistantDropdown: mockFn,
+      showTagDropdown: mockFn,
+      selectTeacher: mockFn,
+      selectTag: mockFn,
+      filterByAssistant: mockFn,
+      filterByTag: mockFn,
+      tagStudent: mockFn,
+      unTagStudent: mockFn,
+      selectStudent: mockFn,
+      unselectStudent: mockFn,
+      selectAllStudents: mockFn,
+      unselectAllStudents: mockFn,
+      invertStudentSelection: mockFn,
+      updateStudentProjectInfo: mockFn
+    }
+
+    return render(
+      <MemoryRouter>
+        <table>
+          <tbody>
+            <StudentTableRow {...defaultProps} {...props} />
+          </tbody>
+        </table>
+      </MemoryRouter>
     )
-  })
+  }
 
   describe('StudentTableRow Component', () => {
-    it('is ok', () => {
-      true
-    })
-
     it('should render correctly', () => {
-      expect(wrapper).toMatchSnapshot()
+      const { asFragment } = renderStudentTableRow()
+
+      expect(asFragment()).toMatchSnapshot()
     })
 
-    it('displays warning if repo is not accessible', () => {
-      wrapper.setProps({ data: { ...coursePage.data[1], repoExists: false } })
-      expect(wrapper.find('RepoAccessWarning').length).toEqual(1)
+    it('displays warning if repo is not accessible', async () => {
+      const user = userEvent.setup()
+      const { container } = renderStudentTableRow({ data: { ...coursePage.data[1], repoExists: false } })
+      const warning = container.querySelector('.warning.sign.icon')
+
+      expect(warning).not.toBeNull()
+      await user.hover(warning)
+      expect(
+        await screen.findByText(/this repository might not exist or it could be private/i)
+      ).toBeInTheDocument()
     })
 
-    it('displays review button for unreviewed week', () => {
-      wrapper.setProps({ data: coursePage.data[1], selectedInstance: { ...coursePage, currentWeek: 4 } })
-      expect(wrapper.find('.reviewButton').length).toEqual(1)
+    it('displays review button for unreviewed week', async () => {
+      const user = userEvent.setup()
+      renderStudentTableRow({ data: coursePage.data[1], selectedInstance: { ...coursePage, currentWeek: 4 } })
+      const reviewButton = screen.getByRole('button', { name: '' })
+
+      await user.hover(reviewButton)
+      expect(await screen.findByText('Review')).toBeInTheDocument()
+      expect(reviewButton.closest('a')).toHaveAttribute(
+        'href',
+        '/labtool/reviewstudent/TKT20010.2018.K.A.1/10031/4'
+      )
     })
 
-    it('displays review button with pause icon for unreviewed week that has a draft', () => {
-      wrapper.setProps({ data: coursePage.data[1], selectedInstance: { ...coursePage, currentWeek: 2 } })
-      expect(wrapper.find('.reviewDraftButton').length).toEqual(1)
+    it('displays review button with pause icon for unreviewed week that has a draft', async () => {
+      const user = userEvent.setup()
+      renderStudentTableRow({ data: coursePage.data[1], selectedInstance: { ...coursePage, currentWeek: 2 } })
+      const reviewButton = screen.getByRole('button', { name: '' })
+
+      await user.hover(reviewButton)
+      expect(await screen.findByText('Continue review from draft')).toBeInTheDocument()
+      expect(reviewButton.querySelector('.pause.icon')).toBeInTheDocument()
     })
 
-    it('displays review button for final review', () => {
-      wrapper.setProps({ data: coursePage.data[1], selectedInstance: { ...coursePage, finalReview: true, currentWeek: coursePage.weekAmount + 1 } })
-      expect(wrapper.find('.reviewButton').length).toEqual(1)
+    it('displays review button for final review', async () => {
+      const user = userEvent.setup()
+      renderStudentTableRow({
+        data: coursePage.data[1],
+        selectedInstance: { ...coursePage, finalReview: true, currentWeek: coursePage.weekAmount + 1 }
+      })
+      const reviewButton = screen.getByRole('button', { name: '' })
+
+      await user.hover(reviewButton)
+      expect(await screen.findByText('Review')).toBeInTheDocument()
+      expect(reviewButton.closest('a')).toHaveAttribute(
+        'href',
+        '/labtool/reviewstudent/TKT20010.2018.K.A.1/10031/8'
+      )
     })
 
-    it('displays review button for active code review if student has submitted review and code review is unreviewed', () => {
-      wrapper.setProps({ data: coursePage.data[1], selectedInstance: { ...coursePage, currentCodeReview: [1], amountOfCodeReviews: 1 } })
-      expect(wrapper.find('.codeReviewButton').length).toEqual(1)
+    it('displays review button for active code review if student has submitted review and code review is unreviewed', async () => {
+      const user = userEvent.setup()
+      renderStudentTableRow({
+        data: coursePage.data[1],
+        selectedInstance: { ...coursePage, currentCodeReview: [1], amountOfCodeReviews: 1 }
+      })
+      const reviewButton = screen.getByRole('button', { name: '' })
+
+      await user.hover(reviewButton)
+      expect(await screen.findByText('Review')).toBeInTheDocument()
+      expect(reviewButton.closest('a')).toHaveAttribute(
+        'href',
+        '/labtool/browsereviews/TKT20010.2018.K.A.1/10031'
+      )
     })
 
-    it('displays hourglass icon for active code review if student has not submitted their review', () => {
-      wrapper.setProps({ data: coursePage.data[2], selectedInstance: { ...coursePage, currentCodeReview: [1], amountOfCodeReviews: 1 } })
-      expect(wrapper.find('.codeReviewNotReady').length).toEqual(1)
+    it('displays hourglass icon for active code review if student has not submitted their review', async () => {
+      const user = userEvent.setup()
+      const { container } = renderStudentTableRow({
+        data: coursePage.data[2],
+        selectedInstance: { ...coursePage, currentCodeReview: [1], amountOfCodeReviews: 1 }
+      })
+      const codeReviewLink = container.querySelector('.codeReviewPoints')
+      const hourglass = container.querySelector('.hourglass.icon')
+
+      expect(codeReviewLink).not.toBeNull()
+      expect(hourglass).not.toBeNull()
+      await user.hover(hourglass)
+      expect(await screen.findByText('Student has not yet submitted the code review')).toBeInTheDocument()
+      expect(codeReviewLink).toHaveAttribute('href', '/labtool/browsereviews/TKT20010.2018.K.A.1/10011')
     })
   })
 })
