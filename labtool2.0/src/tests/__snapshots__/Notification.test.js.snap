@@ -1,74 +1,31 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`<Notification /> with error Notification Component should render correctly 1`] = `
-<Transition
-  animation="fly down"
-  duration={250}
-  mountOnShow={true}
-  transitionOnMount={false}
-  unmountOnHide={false}
-  visible={true}
->
+exports[`<Notification /> > hides the previous message when there is no current notification 1`] = `<DocumentFragment />`;
+
+exports[`<Notification /> > shows a success notification and clears it when clicked 1`] = `
+<DocumentFragment>
   <div
-    className="notification-wrapper"
+    class="scale notification-wrapper visible transition"
   >
-    <Message
-      className="notification error"
-      color="red"
-      floating={true}
-      onClick={[Function]}
-      size="large"
+    <div
+      class="ui green large floating message notification success"
     >
       This is a test message, please ignore.
-    </Message>
+    </div>
   </div>
-</Transition>
+</DocumentFragment>
 `;
 
-exports[`<Notification /> without content Notification Component should render correctly 1`] = `
-<Transition
-  animation="scale"
-  duration={250}
-  mountOnShow={true}
-  transitionOnMount={false}
-  unmountOnHide={false}
-  visible={false}
->
+exports[`<Notification /> > shows an error notification and clears it when clicked 1`] = `
+<DocumentFragment>
   <div
-    className="notification-wrapper"
+    class="fly down notification-wrapper visible transition"
   >
-    <Message
-      className="notification success"
-      color="green"
-      floating={true}
-      onClick={[Function]}
-      size="large"
-    />
-  </div>
-</Transition>
-`;
-
-exports[`<Notification /> without error Notification Component should render correctly 1`] = `
-<Transition
-  animation="scale"
-  duration={250}
-  mountOnShow={true}
-  transitionOnMount={false}
-  unmountOnHide={false}
-  visible={true}
->
-  <div
-    className="notification-wrapper"
-  >
-    <Message
-      className="notification success"
-      color="green"
-      floating={true}
-      onClick={[Function]}
-      size="large"
+    <div
+      class="ui red large floating message notification error"
     >
       This is a test message, please ignore.
-    </Message>
+    </div>
   </div>
-</Transition>
+</DocumentFragment>
 `;

@@ -1,10 +1,19 @@
 import React from 'react'
+import { render, screen } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
+import { vi } from 'vitest'
 import { MyPage } from '../components/pages/MyPage'
-import { shallow } from 'enzyme'
+
+vi.stubGlobal(
+  'matchMedia',
+  vi.fn().mockReturnValue({
+    matches: false,
+    addListener: vi.fn(),
+    removeListener: vi.fn()
+  })
+)
 
 describe('<MyPage />', () => {
-  let wrapper
-
   const props = {
     courseInstance: [],
     user: {
@@ -16,7 +25,8 @@ describe('<MyPage />', () => {
         studentNumber: '014578343',
         username: 'tiraopiskelija1'
       },
-      token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRpcmFvcGlza2VsaWphMSIsImlkIjoxMDAxMSwiaWF0IjoxNTI4MjA1ODkxfQ.5XJuUcATdFylTxnEISTCM8h2uwTnMDXrcBZSVuby5_o',
+      token:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRpcmFvcGlza2VsaWphMSIsImlkIjoxMDAxMSwiaWF0IjoxNTI4MjA1ODkxfQ.5XJuUcATdFylTxnEISTCM8h2uwTnMDXrcBZSVuby5_o',
       created: false
     },
     notification: {},
@@ -63,46 +73,61 @@ describe('<MyPage />', () => {
     }
   ]
 
-  let mockFn = jest.fn()
-
-  beforeEach(() => {
-    wrapper = shallow(
-      <MyPage
-        getAllStudentCourses={mockFn}
-        getAllTeacherCourses={mockFn}
-        user={props.user}
-        studentInstance={props.studentInstance}
-        teacherInstance={props.teacherInstance}
-        getIsAllowedToImport={mockFn}
-      />
+  const renderMyPage = (overrides = {}) => {
+    const componentProps = {
+      getAllStudentCourses: vi.fn(),
+      getAllTeacherCourses: vi.fn(),
+      getIsAllowedToImport: vi.fn(),
+      user: props.user,
+      studentInstance: props.studentInstance,
+      teacherInstance: props.teacherInstance,
+      ...overrides
+    }
+    const view = render(
+      <MemoryRouter>
+        <MyPage {...componentProps} />
+      </MemoryRouter>
     )
+
+    return { ...view, props: componentProps }
+  }
+
+  it('matches the rendered snapshot', () => {
+    const { asFragment } = renderMyPage()
+
+    expect(asFragment()).toMatchSnapshot()
   })
 
-  describe('MyPage Component', () => {
-    it('is ok', () => {
-      true
-    })
+  it('shows the user profile and loads course memberships', () => {
+    const { props: componentProps } = renderMyPage()
 
-    it('should render without throwing an error', () => {
-      expect(wrapper.find('.MyPage').exists()).toEqual(true)
-    })
+    expect(screen.getByRole('heading', { name: 'Opiskelija, Maarit Mirja' })).toBeInTheDocument()
+    expect(screen.getByText('tiraopiskelija1')).toBeInTheDocument()
+    expect(screen.getByText('014578343')).toBeInTheDocument()
+    expect(screen.getByText('maarit.opiskelija@helsinki.invalid')).toBeInTheDocument()
+    expect(componentProps.getAllStudentCourses).toHaveBeenCalledOnce()
+    expect(componentProps.getAllTeacherCourses).toHaveBeenCalledOnce()
+    expect(componentProps.getIsAllowedToImport).toHaveBeenCalledOnce()
+  })
 
-    it('should render correctly', () => {
-      expect(wrapper).toMatchSnapshot()
-    })
+  it('shows student courses when the user is a student', () => {
+    renderMyPage()
 
-    it('renders course header for students', () => {
-      expect(wrapper.find('.CoursesHeader').length).toEqual(1)
-    })
+    expect(screen.getByRole('heading', { name: 'My Courses (Student)' })).toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: 'My Courses (Teacher)' })).not.toBeInTheDocument()
+  })
 
-    it('renders course header for teachers', () => {
-      wrapper.setProps({ teacherInstance, studentInstance: [] })
-      expect(wrapper.find('.CoursesHeader').length).toEqual(1)
-    })
+  it('shows teacher courses when the user is a teacher', () => {
+    renderMyPage({ teacherInstance, studentInstance: [] })
 
-    it('renders course header for both', () => {
-      wrapper.setProps({ teacherInstance })
-      expect(wrapper.find('.CoursesHeader').length).toEqual(2)
-    })
+    expect(screen.getByRole('heading', { name: 'My Courses (Teacher)' })).toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: 'My Courses (Student)' })).not.toBeInTheDocument()
+  })
+
+  it('shows both course sections when the user is a student and a teacher', () => {
+    renderMyPage({ teacherInstance })
+
+    expect(screen.getByRole('heading', { name: 'My Courses (Student)' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'My Courses (Teacher)' })).toBeInTheDocument()
   })
 })

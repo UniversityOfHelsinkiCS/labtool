@@ -1,51 +1,68 @@
 import React from 'react'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { vi } from 'vitest'
 import { Email } from '../components/pages/Email'
-import { shallow } from 'enzyme'
 
-describe('<Email/>', () => {
-  let wrapper
+const loading = {
+  loading: false,
+  loadingHooks: [],
+  redirect: false,
+  redirectHooks: [],
+  redirectFailure: false
+}
 
-  const props = {
-    loading: {
-      loading: false,
-      loadingHooks: [],
-      redirect: false,
-      redirectHooks: [],
-      redirectFailure: false
-    },
-    user: {
-      id: 2,
-      email: '',
-      firsts: 'Hans Peter',
-      lastname: 'Backlund',
-      studentNumber: '014623598',
-      username: 'tiraopiskelija4'
-    },
-    token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRpcmFvcGlza2VsaWphNCIsImlkIjoyLCJpYXQiOjE1MjgyMDIwMjZ9.UxRliHDq_cDTclh-sO4GRXfQthlmqGcCqIbuyo9j2SE',
-    created: true
+const userDetails = {
+  id: 2,
+  email: '',
+  firsts: 'Hans Peter',
+  lastname: 'Backlund',
+  studentNumber: '014623598',
+  username: 'tiraopiskelija4'
+}
+
+const renderEmail = (props = {}) => {
+  const defaultProps = {
+    loading,
+    user: { user: userDetails },
+    resetLoading: vi.fn(),
+    forceSetLoading: vi.fn(),
+    updateSelf: vi.fn(),
+    addRedirectHook: vi.fn()
   }
 
-  let mockFn = jest.fn()
+  return render(<Email {...defaultProps} {...props} />)
+}
 
-  beforeEach(() => {
-    wrapper = shallow(<Email loading={props.loading} user={props} resetLoading={mockFn} forceSetLoading={mockFn} updateSelf={mockFn} addRedirectHook={mockFn} />)
+describe('<Email />', () => {
+  it('matches the rendered snapshot', () => {
+    const { asFragment } = renderEmail()
+
+    expect(asFragment()).toMatchSnapshot()
   })
 
-  describe('Email Component', () => {
-    it('is ok', () => {
-      true
-    })
+  it('renders the email form for a first-time user', () => {
+    renderEmail()
 
-    it('should render without throwing an error', () => {
-      expect(wrapper.find('.Email').exists()).toEqual(true)
-    })
+    expect(screen.getByRole('heading', { name: /please give your email address/i })).toBeInTheDocument()
+    expect(screen.getByRole('textbox')).toHaveAttribute('type', 'email')
+    expect(screen.getByRole('button', { name: /save/i })).toBeInTheDocument()
+  })
 
-    it('should render correctly', () => {
-      expect(wrapper).toMatchSnapshot()
-    })
+  it('submits the entered email address', async () => {
+    const user = userEvent.setup()
+    const updateSelf = vi.fn().mockResolvedValue(undefined)
+    const addRedirectHook = vi.fn()
+    renderEmail({ updateSelf, addRedirectHook })
 
-    it('renders email input', () => {
-      expect(wrapper.find('.form-control').length).toEqual(1)
-    })
+    const emailInput = screen.getByRole('textbox')
+    const saveButton = screen.getByRole('button', { name: /save/i })
+
+    await user.type(emailInput, 'student@helsinki.fi')
+    Object.defineProperty(saveButton.form, 'email', { value: emailInput })
+    await user.click(saveButton)
+
+    expect(addRedirectHook).toHaveBeenCalledWith({ hook: 'USER_UPDATE_' })
+    expect(updateSelf).toHaveBeenCalledWith({ email: 'student@helsinki.fi' })
   })
 })

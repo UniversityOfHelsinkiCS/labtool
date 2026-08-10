@@ -1,248 +1,178 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`<MyPage /> MyPage Component should render correctly 1`] = `
-<Fragment>
-  <DocumentTitle
-    title="My page"
-  />
+exports[`<MyPage /> > matches the rendered snapshot 1`] = `
+<DocumentFragment>
   <div
-    className="MyPage"
+    class="MyPage"
   >
-    <Container>
-      <Segment
-        padded={true}
+    <div
+      class="ui container"
+    >
+      <div
+        class="ui padded segment"
       >
-        <Header
-          as="h2"
+        <h2
+          class="ui header"
         >
-          Opiskelija
-          , 
-          Maarit Mirja
-        </Header>
-        <Table
-          as="table"
-          color="blue"
-          singleLine={true}
-          style={
-            Object {
-              "color": "grey",
-            }
-          }
-          textAlign="left"
+          Opiskelija, Maarit Mirja
+        </h2>
+        <table
+          class="ui blue single line left aligned table"
+          style="color: grey;"
         >
-          <TableBody
-            as="tbody"
+          <tbody
+            class=""
           >
-            <TableRow
-              as="tr"
-              cellAs="td"
+            <tr
+              class=""
             >
-              <TableCell
-                as="td"
+              <td
+                class=""
               >
-                <Icon
-                  as="i"
-                  name="user"
-                  size="big"
-                  style={
-                    Object {
-                      "marginRight": 20,
-                    }
-                  }
+                <i
+                  aria-hidden="true"
+                  class="user big icon"
+                  style="margin-right: 20px;"
                 />
                 <em
-                  style={
-                    Object {
-                      "color": "grey",
-                    }
-                  }
+                  style="color: grey;"
                 >
-                  tiraopiskelija1
-                   
+                  tiraopiskelija1 
                 </em>
                 <br />
-              </TableCell>
-              <TableCell
-                as="td"
+              </td>
+              <td
+                class=""
               />
-            </TableRow>
-            <TableRow
-              as="tr"
-              cellAs="td"
+            </tr>
+            <tr
+              class=""
             >
-              <TableCell
-                as="td"
+              <td
+                class=""
               >
-                <Icon
-                  as="i"
-                  name="id card outline"
-                  size="big"
-                  style={
-                    Object {
-                      "marginRight": 20,
-                    }
-                  }
+                <i
+                  aria-hidden="true"
+                  class="id card outline big icon"
+                  style="margin-right: 20px;"
                 />
                 014578343
                 <br />
-              </TableCell>
-              <TableCell
-                as="td"
+              </td>
+              <td
+                class=""
               />
-            </TableRow>
-            <TableRow
-              as="tr"
-              cellAs="td"
+            </tr>
+            <tr
+              class=""
             >
-              <TableCell
-                as="td"
+              <td
+                class=""
               >
-                <Icon
-                  as="i"
-                  name="mail"
-                  size="big"
-                  style={
-                    Object {
-                      "marginRight": 20,
-                    }
-                  }
+                <i
+                  aria-hidden="true"
+                  class="mail big icon"
+                  style="margin-right: 20px;"
                   tooltip="Add users to your feed"
                 />
                 maarit.opiskelija@helsinki.invalid
                 <br />
-              </TableCell>
-              <TableCell
-                as="td"
-                textAlign="right"
-                verticalAlign="bottom"
+              </td>
+              <td
+                class="right aligned bottom aligned"
               >
-                <Link
-                  to="/labtool/email"
+                <a
+                  href="/labtool/email"
                 >
-                  <Popup
-                    content="Edit email address"
-                    disabled={false}
-                    eventsEnabled={true}
-                    on={
-                      Array [
-                        "click",
-                        "hover",
-                      ]
-                    }
-                    pinned={false}
-                    popperModifiers={Array []}
-                    position="top left"
-                    trigger={
-                      <Button
-                        as="button"
-                        circular={true}
-                        icon={
-                          Object {
-                            "color": "blue",
-                            "name": "edit",
-                            "size": "large",
-                          }
-                        }
-                        size="tiny"
-                      />
-                    }
-                  />
-                </Link>
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </Segment>
-    </Container>
+                  <button
+                    class="ui tiny circular icon button"
+                  >
+                    <i
+                      aria-hidden="true"
+                      class="blue edit large icon"
+                    />
+                  </button>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
     <br />
     <br />
     <br />
     <br />
-    <Container>
-      <Segment
-        padded={true}
+    <div
+      class="ui container"
+    >
+      <div
+        class="ui padded segment"
       >
         <div>
-          <Header
-            as="h2"
-            className="CoursesHeader"
+          <h2
+            class="ui header CoursesHeader"
           >
-            My Courses (Student)
-             
-          </Header>
-          <HorizontalScrollable>
-            <Table
-              as="table"
-              color="yellow"
-              key="grey"
-              singleLine={true}
-              style={
-                Object {
-                  "overflowX": "visible",
-                }
-              }
+            My Courses (Student) 
+          </h2>
+          <div
+            class="horizontalScrollableParent"
+            style="overflow: hidden; box-sizing: border-box; margin-bottom: -50vh; padding-bottom: 50vh;"
+          >
+            <div
+              style="overflow-x: visible; overflow-y: visible; position: relative;"
             >
-              <TableBody
-                as="tbody"
+              <table
+                class="ui yellow single line table"
+                style="overflow-x: visible;"
+                tabindex="0"
               >
-                <TableRow
-                  as="tr"
-                  cellAs="td"
-                  key="10011"
+                <tbody
+                  class=""
                 >
-                  <TableCell
-                    as="td"
+                  <tr
+                    class=""
                   >
-                    <Link
-                      to="/labtool/courses/TKT20010.2018.K.A.1"
+                    <td
+                      class=""
                     >
-                      Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit (periodi IV, 2017-2018)
-                    </Link>
-                  </TableCell>
-                  <TableCell
-                    as="td"
-                    textAlign="right"
-                  >
-                    <Link
-                      to="/labtool/courses/TKT20010.2018.K.A.1"
+                      <a
+                        href="/labtool/courses/TKT20010.2018.K.A.1"
+                      >
+                        Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit (periodi IV, 2017-2018)
+                      </a>
+                    </td>
+                    <td
+                      class="right aligned"
                     >
-                      <Popup
-                        content="View course"
-                        disabled={false}
-                        eventsEnabled={true}
-                        on={
-                          Array [
-                            "click",
-                            "hover",
-                          ]
-                        }
-                        pinned={false}
-                        popperModifiers={Array []}
-                        position="top left"
-                        trigger={
-                          <Button
-                            as="button"
-                            circular={true}
-                            icon={
-                              Object {
-                                "color": "blue",
-                                "name": "eye",
-                                "size": "large",
-                              }
-                            }
-                            size="tiny"
+                      <a
+                        href="/labtool/courses/TKT20010.2018.K.A.1"
+                      >
+                        <button
+                          class="ui tiny circular icon button"
+                        >
+                          <i
+                            aria-hidden="true"
+                            class="blue eye large icon"
                           />
-                        }
-                      />
-                    </Link>
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </HorizontalScrollable>
+                        </button>
+                      </a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div
+              style="overflow-x: auto; bottom: 0px; position: relative; z-index: auto; max-width: 0px; width: 0px;"
+            >
+              <div
+                style="width: 0px; height: 1px;"
+              />
+            </div>
+          </div>
         </div>
-      </Segment>
-    </Container>
+      </div>
+    </div>
   </div>
-</Fragment>
+</DocumentFragment>
 `;

@@ -1,68 +1,69 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`<Email/> Email Component should render correctly 1`] = `
-<Fragment>
-  <DocumentTitle
-    title="Email"
-  />
+exports[`<Email /> > matches the rendered snapshot 1`] = `
+<DocumentFragment>
   <div
-    className="Email"
-    style={
-      Object {
-        "textAlign": "center",
-        "textAlignVertical": "center",
-      }
-    }
+    class="Email"
+    style="text-align: center;"
   >
-    <Loader
-      active={false}
-      inline="centered"
+    <div
+      class="ui centered inline loader"
     />
-    <Grid
-      centered={true}
+    <div
+      class="ui centered grid"
     >
       <div>
-        <GridRow>
+        <div
+          class="row"
+        >
           <h3>
             Please give your email address: 
           </h3>
-        </GridRow>
+        </div>
       </div>
-      <GridRow>
-        <Form
-          as="form"
-          onSubmit={[Function]}
+      <div
+        class="row"
+      >
+        <form
+          class="ui form"
         >
-          <FormField>
-            <FormInput
-              as={[Function]}
-              className="form-control"
-              control={[Function]}
-              defaultValue=""
-              icon="mail"
-              iconPosition="left"
-              name="email"
-              placeholder="my.email@helsinki.fi"
-              style={
-                Object {
-                  "minWidth": "20em",
-                }
-              }
-              type="email"
-            />
-          </FormField>
-          <FormField>
+          <div
+            class="field"
+          >
+            <div
+              class="field form-control"
+            >
+              <div
+                class="ui left icon input"
+                style="min-width: 20em;"
+              >
+                <input
+                  name="email"
+                  placeholder="my.email@helsinki.fi"
+                  type="email"
+                  value=""
+                />
+                <i
+                  aria-hidden="true"
+                  class="mail icon"
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            class="field"
+          >
             <button
-              className="ui left floated green button"
+              class="ui left floated green button"
               type="submit"
             >
               Save
             </button>
             <div />
-          </FormField>
-        </Form>
-      </GridRow>
-    </Grid>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
-</Fragment>
+</DocumentFragment>
 `;

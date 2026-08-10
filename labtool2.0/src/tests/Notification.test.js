@@ -1,90 +1,60 @@
 import React from 'react'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { vi } from 'vitest'
 import { Notification } from '../components/pages/Notification'
-import { shallow } from 'enzyme'
 
-describe('<Notification /> without error', () => {
-  let wrapper
+describe('<Notification />', () => {
+  const message = 'This is a test message, please ignore.'
 
-  const notification = {
-    message: 'This is a test message, please ignore.',
-    error: null
-  }
+  it('shows a success notification and clears it when clicked', async () => {
+    const user = userEvent.setup()
+    const clearNotifications = vi.fn()
+    const { asFragment } = render(
+      <Notification notification={{ message, error: null }} clearNotifications={clearNotifications} />
+    )
 
-  beforeEach(() => {
-    wrapper = shallow(<Notification notification={notification} clearNotifications={jest.fn()} />)
+    const notification = screen.getByText(message)
+
+    expect(notification).toBeVisible()
+    expect(notification).toHaveClass('success')
+    expect(asFragment()).toMatchSnapshot()
+
+    await user.click(notification)
+
+    expect(clearNotifications).toHaveBeenCalledTimes(1)
   })
 
-  describe('Notification Component', () => {
-    it('is ok', () => {
-      true
-    })
+  it('shows an error notification and clears it when clicked', async () => {
+    const user = userEvent.setup()
+    const clearNotifications = vi.fn()
+    const { asFragment } = render(
+      <Notification
+        notification={{ message, error: 'Something went wrong...' }}
+        clearNotifications={clearNotifications}
+      />
+    )
 
-    it('should render without throwing an error', () => {
-      expect(wrapper.find('.success').exists()).toEqual(true)
-      expect(wrapper.find('Transition[visible=false]').exists()).toEqual(false)
-    })
+    const notification = screen.getByText(message)
 
-    it('should render correctly', () => {
-      expect(wrapper).toMatchSnapshot()
-    })
-  })
-})
+    expect(notification).toBeVisible()
+    expect(notification).toHaveClass('error')
+    expect(asFragment()).toMatchSnapshot()
 
-describe('<Notification /> with error', () => {
-  let wrapper
+    await user.click(notification)
 
-  const notification = {
-    message: 'This is a test message, please ignore.',
-    error: 'Something went wrong...'
-  }
-
-  beforeEach(() => {
-    wrapper = shallow(<Notification notification={notification} clearNotifications={jest.fn()} />)
+    expect(clearNotifications).toHaveBeenCalledTimes(1)
   })
 
-  describe('Notification Component', () => {
-    it('is ok', () => {
-      true
-    })
+  it('hides the previous message when there is no current notification', () => {
+    const { asFragment } = render(
+      <Notification
+        notification={{ message: undefined, lastMessage: message, error: null }}
+        clearNotifications={vi.fn()}
+      />
+    )
 
-    it('should render without throwing an error', () => {
-      expect(wrapper.find('.error').exists()).toEqual(true)
-      expect(wrapper.find('Transition[visible=false]').exists()).toEqual(false)
-    })
-
-    it('should render correctly', () => {
-      expect(wrapper).toMatchSnapshot()
-    })
-  })
-})
-
-describe('<Notification /> without content', () => {
-  let wrapper
-
-  const notification = {
-    message: undefined,
-    error: null
-  }
-
-  beforeEach(() => {
-    wrapper = shallow(<Notification notification={notification} clearNotifications={jest.fn()} />)
-  })
-
-  describe('Notification Component', () => {
-    it('is ok', () => {
-      true
-    })
-
-    it('should not show the message', () => {
-      expect(wrapper.find('Transition[visible=false]').exists()).toEqual(true)
-    })
-
-    it('should not give an error', () => {
-      expect(wrapper.find('.error').exists()).toEqual(false)
-    })
-
-    it('should render correctly', () => {
-      expect(wrapper).toMatchSnapshot()
-    })
+    expect(screen.queryByText(message)).not.toBeInTheDocument()
+    expect(asFragment()).toMatchSnapshot()
   })
 })
