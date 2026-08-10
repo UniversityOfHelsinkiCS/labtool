@@ -43,6 +43,7 @@ describe('<LoginPage />', () => {
   })
 
   it('submits the entered username and password', async () => {
+    const user = userEvent.setup()
     const login = vi.fn()
     renderLoginPage({ login })
 
@@ -50,14 +51,14 @@ describe('<LoginPage />', () => {
     const passwordInput = screen.getByPlaceholderText(/your password/i)
     const loginButton = screen.getByRole('button', { name: /login/i })
 
-    await userEvent.type(usernameInput, 'test-user')
-    await userEvent.type(passwordInput, 'secret')
+    await user.type(usernameInput, 'test-user')
+    await user.type(passwordInput, 'secret')
 
     Object.defineProperties(loginButton.form, {
       username: { value: usernameInput },
       password: { value: passwordInput }
     })
-    await userEvent.click(loginButton)
+    await user.click(loginButton)
 
     expect(login).toHaveBeenCalledWith({
       username: 'test-user',

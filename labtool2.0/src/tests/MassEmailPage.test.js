@@ -280,15 +280,17 @@ describe('<MassEmailPage />', () => {
     })
 
     it('lets the sender exclude instructors from the email', async () => {
+      const user = userEvent.setup()
       renderMassEmailPage()
       const instructorCopyCheckbox = getInstructorCopyCheckbox()
 
-      await userEvent.click(instructorCopyCheckbox)
+      await user.click(instructorCopyCheckbox)
 
       expect(instructorCopyCheckbox).not.toBeChecked()
     })
 
     it('sends the composed message to selected students', async () => {
+      const user = userEvent.setup()
       const sendMassEmail = vi.fn().mockResolvedValue(undefined)
       const addRedirectHook = vi.fn()
       renderMassEmailPage({ sendMassEmail, addRedirectHook })
@@ -297,12 +299,12 @@ describe('<MassEmailPage />', () => {
       const instructorCopyCheckbox = getInstructorCopyCheckbox()
       const form = messageInput.closest('form')
 
-      await userEvent.type(messageInput, 'Remember the deadline.')
+      await user.type(messageInput, 'Remember the deadline.')
       Object.defineProperties(form, {
         content: { configurable: true, value: messageInput },
         sendToInstructors: { configurable: true, value: instructorCopyCheckbox }
       })
-      await userEvent.click(screen.getByRole('button', { name: /^send$/i }))
+      await user.click(screen.getByRole('button', { name: /^send$/i }))
 
       expect(addRedirectHook).toHaveBeenCalledWith({ hook: 'MASS_EMAIL_SEND' })
       await waitFor(() =>

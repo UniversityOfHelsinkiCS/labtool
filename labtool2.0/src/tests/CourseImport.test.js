@@ -77,6 +77,7 @@ describe('<CourseImport />', () => {
   })
 
   it('imports the selected courses', async () => {
+    const user = userEvent.setup()
     const importCourses = vi.fn()
     const addRedirectHook = vi.fn()
     renderCourseImport({ importCourses, addRedirectHook })
@@ -85,9 +86,9 @@ describe('<CourseImport />', () => {
     const importButton = screen.getByRole('button', { name: /^import$/i })
     Object.defineProperty(importButton.form, checkbox.name, { value: checkbox })
 
-    await userEvent.click(checkbox)
+    await user.click(checkbox)
     expect(checkbox).toBeChecked()
-    await userEvent.click(importButton)
+    await user.click(importButton)
 
     expect(addRedirectHook).toHaveBeenCalledWith({ hook: 'COURSE_IMPORT_DO_IMPORT_' })
     expect(importCourses).toHaveBeenCalledWith({ courses: [importableCourse] })

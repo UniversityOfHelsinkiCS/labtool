@@ -225,10 +225,11 @@ describe('<CoursePage />', () => {
     })
 
     it('exports valid students as CSV', async () => {
+      const user = userEvent.setup()
       const downloadFile = vi.fn()
       renderCoursePage({ downloadFile })
 
-      await userEvent.click(screen.getByRole('button', { name: /export csv of all students/i }))
+      await user.click(screen.getByRole('button', { name: /export csv of all students/i }))
 
       expect(downloadFile).toHaveBeenCalledOnce()
       expect(downloadFile).toHaveBeenCalledWith(
@@ -270,6 +271,7 @@ describe('<CoursePage />', () => {
     })
 
     it('removes a registration marked as mistaken', async () => {
+      const user = userEvent.setup()
       const removeStudent = vi.fn()
       const addRedirectHook = vi.fn()
       renderStudentCoursePage({
@@ -283,7 +285,7 @@ describe('<CoursePage />', () => {
 
       expect(screen.getByText(/your registration has been marked as mistaken/i)).toBeInTheDocument()
 
-      await userEvent.click(screen.getByRole('button', { name: /remove yourself from the course/i }))
+      await user.click(screen.getByRole('button', { name: /remove yourself from the course/i }))
 
       expect(window.confirm).toHaveBeenCalledWith('Are you sure you want to remove yourself from the course?')
       expect(removeStudent).toHaveBeenCalledWith({ id: activeStudent.id })

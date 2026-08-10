@@ -12,10 +12,11 @@ describe('<LogoutButton />', () => {
   })
 
   it('logs out when clicked', async () => {
+    const user = userEvent.setup()
     const logout = vi.fn()
     render(<LogoutButton logout={logout} />)
 
-    await userEvent.click(screen.getByRole('button', { name: /logout/i }))
+    await user.click(screen.getByRole('button', { name: /logout/i }))
 
     expect(logout).toHaveBeenCalledTimes(1)
   })
