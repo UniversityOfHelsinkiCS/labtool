@@ -1,28 +1,22 @@
 import React from 'react'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { vi } from 'vitest'
 import { LogoutButton } from '../components/LogoutButton'
-import { shallow } from 'enzyme'
-import { Icon } from 'semantic-ui-react'
 
 describe('<LogoutButton />', () => {
-  let mockLogout
-  let wrapper
+  it('renders a logout button', () => {
+    render(<LogoutButton logout={vi.fn()} />)
 
-  beforeEach(() => {
-    mockLogout = jest.fn()
-    wrapper = shallow(<LogoutButton logout={mockLogout} />)
+    expect(screen.getByRole('button', { name: /logout/i })).toBeInTheDocument()
   })
 
-  describe('Logout Button', () => {
-    it('renders ok', () => {
-      expect(wrapper).toBeDefined()
-      expect(wrapper.find(Icon).find({ name: 'sign out alternative' })).toBeDefined()
-      expect(wrapper.findWhere(n => n.text() === 'Logout')).toBeDefined()
-    })
+  it('logs out when clicked', async () => {
+    const logout = vi.fn()
+    render(<LogoutButton logout={logout} />)
 
-    it('can be clicked to logout', () => {
-      wrapper.find('Button').simulate('click')
+    await userEvent.click(screen.getByRole('button', { name: /logout/i }))
 
-      expect(mockLogout).toHaveBeenCalled()
-    })
+    expect(logout).toHaveBeenCalledTimes(1)
   })
 })

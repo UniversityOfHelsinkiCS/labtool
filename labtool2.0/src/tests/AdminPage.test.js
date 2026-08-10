@@ -1,53 +1,77 @@
 import React from 'react'
+import { render, screen } from '@testing-library/react'
+import { MemoryRouter, Route, Switch } from 'react-router-dom'
+import { vi } from 'vitest'
 import { AdminPage } from '../components/pages/AdminPage'
-import { shallow } from 'enzyme'
-import { Redirect } from 'react-router'
+
+const user = {
+  id: 10012,
+  username: 'tiraopiskelija2',
+  email: 'johan.studerande@helsinki.invalid',
+  firsts: 'Johan Wilhelm',
+  lastname: 'Studerande',
+  studentNumber: '014553242',
+  teacher: false,
+  sysop: true,
+  createdAt: '2018-03-26T00:00:00.000Z',
+  updatedAt: '2018-03-26T00:00:00.000Z'
+}
+
+const loading = {
+  loading: false,
+  loadingHooks: [],
+  redirect: false,
+  redirectHooks: [],
+  redirectFailure: false
+}
+
+const renderAdminPage = (props = {}) => {
+  const defaultProps = {
+    user: { user },
+    courseInstance: [],
+    users: [],
+    loading,
+    resetLoading: vi.fn(),
+    getAllCI: vi.fn(),
+    getAllUsers: vi.fn(),
+    updateOtherUser: vi.fn(),
+    clearNotifications: vi.fn()
+  }
+
+  return render(
+    <MemoryRouter initialEntries={['/admin']}>
+      <Switch>
+        <Route path="/admin">
+          <AdminPage {...defaultProps} {...props} />
+        </Route>
+        <Route path="/labtool">
+          <h1>Labtool</h1>
+        </Route>
+      </Switch>
+    </MemoryRouter>
+  )
+}
 
 describe('<AdminPage />', () => {
-  let wrapper
+  it('matches the rendered snapshot', () => {
+    const { asFragment } = renderAdminPage()
 
-  const user = {
-    id: 10012,
-    username: 'tiraopiskelija2',
-    email: 'johan.studerande@helsinki.invalid',
-    firsts: 'Johan Wilhelm',
-    lastname: 'Studerande',
-    studentNumber: '014553242',
-    teacher: false,
-    sysop: true,
-    createdAt: '2018-03-26T00:00:00.000Z',
-    updatedAt: '2018-03-26T00:00:00.000Z'
-  }
-
-  const loading = {
-    loading: false,
-    loadingHooks: [],
-    redirect: false,
-    redirectHooks: [],
-    redirectFailure: false
-  }
-
-  let mockFn = jest.fn()
-
-  beforeEach(() => {
-    wrapper = shallow(
-      <AdminPage user={{ user }} courseInstance={[]} users={[]} loading={loading} resetLoading={mockFn} getAllCI={mockFn} getAllUsers={mockFn} updateOtherUser={mockFn} clearNotifications={mockFn} />
-    )
+    expect(asFragment()).toMatchSnapshot()
   })
 
-  describe('AdminPage Component', () => {
-    it('is ok', () => {
-      true
-    })
+  it('renders the admin controls for an administrator', () => {
+    renderAdminPage()
 
-    it('should render without throwing an error', () => {
-      expect(wrapper.find('.AdminPage').exists()).toEqual(true)
-    })
+    expect(screen.getByRole('heading', { name: /welcome to the admin interface/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /manage courses/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /manage users/i })).toBeInTheDocument()
+  })
 
-    it('should redirect if user is not an admin', () => {
-      const nonSysop = { ...user, sysop: false }
-      wrapper.setProps({ user: { user: nonSysop } })
-      expect(wrapper.find(Redirect)).toHaveLength(1)
-    })
+  it('redirects a non-admin user to Labtool frontpage', () => {
+    const nonSysop = { ...user, sysop: false }
+
+    renderAdminPage({ user: { user: nonSysop } })
+
+    expect(screen.getByRole('heading', { name: 'Labtool' })).toBeInTheDocument()
   })
 })

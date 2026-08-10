@@ -1,10 +1,10 @@
 import React from 'react'
 import { WeekReviews } from '../components/WeekReviews'
-import { shallow } from 'enzyme'
+import { render, screen } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
+import { vi } from 'vitest'
 
 describe('<WeekReviews /> as student', () => {
-  let wrapper
-
   const coursePage = {
     role: 'student',
     data: {
@@ -78,53 +78,62 @@ describe('<WeekReviews /> as student', () => {
     redirectFailure: false
   }
 
-  let mockFn = jest.fn()
+  const selectedInstance = {
+    currentWeek: 1,
+    weekAmount: 0,
+    weekMaxPoints: 3,
+    checklists: [],
+    finalReview: false
+  }
 
-  beforeEach(() => {
-    wrapper = shallow(
-      <WeekReviews
-        student={coursePage.data}
-        getOneCI={mockFn}
-        changeCourseField={mockFn}
-        courseData={coursePage}
-        coursePageInformation={mockFn}
-        associateTeacherToStudent={mockFn}
-        selectedInstance={coursePage}
-        coursePageLogic={coursePageLogic}
-        filterByTag={mockFn}
-        getAllTags={mockFn}
-        courseReset={mockFn}
-        loading={loading}
-        resetLoading={mockFn}
-        courseId={''}
-        user={{}}
-        createOneComment={mockFn}
-        addLinkToCodeReview={mockFn}
-        coursePageReset={mockFn}
-        toggleCodeReview={mockFn}
-        sendEmail={mockFn}
-        updateStudentProjectInfo={mockFn}
-        selectTag={mockFn}
-        selectTeacher={mockFn}
-        modifyOneCI={mockFn}
-        studentInstance={''}
-        gradeCodeReview={mockFn}
-        updateActiveIndex={mockFn}
-      />
+  const renderWeekReviews = () => {
+    const props = {
+      student: coursePage.data,
+      getOneCI: vi.fn(),
+      courseData: coursePage,
+      coursePageInformation: vi.fn(),
+      associateTeacherToStudent: vi.fn(),
+      selectedInstance,
+      coursePageLogic,
+      loading,
+      resetLoading: vi.fn(),
+      courseId: '',
+      user: { user: coursePage.data.User },
+      createOneComment: vi.fn(),
+      addLinkToCodeReview: vi.fn(),
+      coursePageReset: vi.fn(),
+      toggleCodeReview: vi.fn(),
+      sendEmail: vi.fn(),
+      selectTag: vi.fn(),
+      selectTeacher: vi.fn(),
+      studentInstance: '',
+      gradeCodeReview: vi.fn(),
+      updateActiveIndex: vi.fn(),
+      markCommentsAsRead: vi.fn()
+    }
+    return render(
+      <MemoryRouter>
+        <WeekReviews {...props} />
+      </MemoryRouter>
     )
-  })
+  }
 
   describe('WeekReviews Component', () => {
-    it('is ok', () => {
-      true
+    it('matches the rendered snapshot', () => {
+      const { asFragment } = renderWeekReviews()
+
+      expect(asFragment()).toMatchSnapshot()
     })
 
-    it('should render correctly', () => {
-      expect(wrapper).toMatchSnapshot()
-    })
+    it('renders a card for every code review', () => {
+      renderWeekReviews()
 
-    it('renders code review cards', () => {
-      expect(wrapper.find('WeekReviewCodeReview').length).toEqual(coursePage.data.codeReviews.length)
+      expect(screen.getAllByText(/^Code Review \d/)).toHaveLength(coursePage.data.codeReviews.length)
+      coursePage.data.codeReviews.forEach(review => {
+        const repository = review.toReview.github || review.repoToReview
+
+        expect(screen.getByRole('link', { name: repository })).toHaveAttribute('href', repository)
+      })
     })
   })
 })

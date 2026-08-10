@@ -106,7 +106,7 @@ export const CourseImport = props => {
               <br />
 
               <Link to="/labtool/courses">
-                <Button className="ui button" type="cancel">
+                <Button className="ui button" type="button">
                   Cancel
                 </Button>
               </Link>
@@ -116,7 +116,7 @@ export const CourseImport = props => {
               <h4>There are no courses in Kurki to import</h4>
 
               <Link to="/labtool/courses">
-                <Button className="ui button" type="cancel">
+                <Button className="ui button" type="button">
                   Back
                 </Button>
               </Link>

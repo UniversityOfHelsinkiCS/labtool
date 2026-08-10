@@ -1,25 +1,163 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`<CourseImport /> CourseImport Component should render correctly 1`] = `
-<Fragment>
-  <DocumentTitle
-    title="Course import"
-  />
+exports[`<CourseImport /> > matches the rendered snapshot 1`] = `
+<DocumentFragment>
   <div
-    className="CourseImport"
+    class="CourseImport"
   >
     <div
-      className="mainContainer"
+      class="mainContainer"
     >
-      <Header
-        as="h2"
+      <h2
+        class="ui header"
       >
         Import courses
-      </Header>
-      <Loader
-        active={true}
-      />
+      </h2>
+      <form
+        class="ui form"
+      >
+        <div
+          class="horizontalScrollableParent"
+          style="overflow: hidden; box-sizing: border-box; margin-bottom: -50vh; padding-bottom: 50vh;"
+        >
+          <div
+            style="overflow-x: visible; overflow-y: visible; position: relative;"
+          >
+            <table
+              class="ui yellow single line table"
+              style="overflow-x: visible;"
+              tabindex="0"
+            >
+              <thead
+                class=""
+              >
+                <tr
+                  class=""
+                >
+                  <th
+                    class=""
+                    colspan="1"
+                  >
+                    Import?
+                  </th>
+                  <th
+                    class=""
+                    colspan="1"
+                  >
+                    Course ID
+                  </th>
+                  <th
+                    class=""
+                    colspan="1"
+                  >
+                    Course name
+                  </th>
+                  <th
+                    class=""
+                    colspan="1"
+                  >
+                    Instructor (original)
+                  </th>
+                  <th
+                    class=""
+                    colspan="1"
+                  >
+                    Course start date
+                  </th>
+                  <th
+                    class=""
+                    colspan="1"
+                  >
+                    Course end date
+                  </th>
+                </tr>
+              </thead>
+              <tbody
+                class=""
+              >
+                <tr
+                  class=""
+                >
+                  <td
+                    class=""
+                  >
+                    <div
+                      class="field"
+                    >
+                      <div
+                        class="ui fitted checkbox"
+                      >
+                        <input
+                          class="hidden"
+                          name="importTKT20002.2019.K.K.1"
+                          readonly=""
+                          tabindex="0"
+                          type="checkbox"
+                          value=""
+                        />
+                        <label />
+                      </div>
+                    </div>
+                  </td>
+                  <td
+                    class=""
+                  >
+                    TKT20002
+                  </td>
+                  <td
+                    class=""
+                  >
+                    Ohjelmistotekniikan menetelmät (spring, 2019)
+                  </td>
+                  <td
+                    class=""
+                  >
+                    Ada Lovelace
+                  </td>
+                  <td
+                    class=""
+                  >
+                    11.03.2019
+                  </td>
+                  <td
+                    class=""
+                  >
+                    29.04.2019
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div
+            style="overflow-x: auto; bottom: 0px; position: relative; z-index: auto; max-width: 0px; width: 0px;"
+          >
+            <div
+              style="width: 0px; height: 1px;"
+            />
+          </div>
+        </div>
+        <br />
+        <br />
+        <button
+          class="ui button ui green button"
+          type="submit"
+        >
+          Import
+        </button>
+        <br />
+        <br />
+        <a
+          href="/labtool/courses"
+        >
+          <button
+            class="ui button ui button"
+            type="button"
+          >
+            Cancel
+          </button>
+        </a>
+      </form>
     </div>
   </div>
-</Fragment>
+</DocumentFragment>
 `;

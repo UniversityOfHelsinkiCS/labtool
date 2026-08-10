@@ -1,266 +1,228 @@
 import React from 'react'
+import { render, screen, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { Provider } from 'react-redux'
+import { createStore } from 'redux'
+import { MemoryRouter } from 'react-router-dom'
+import { vi } from 'vitest'
 import { CreateChecklist } from '../components/pages/CreateChecklist'
-import { shallow } from 'enzyme'
+
+const courseInstances = [
+  {
+    id: 10011,
+    name: 'Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit',
+    start: '2018-03-11T21:00:00.000Z',
+    end: '2018-04-29T21:00:00.000Z',
+    active: true,
+    weekAmount: 7,
+    weekMaxPoints: 3,
+    currentWeek: 1,
+    ohid: 'TKT20010.2018.K.A.1',
+    createdAt: '2018-03-26T00:00:00.000Z',
+    updatedAt: '2018-03-26T00:00:00.000Z',
+    europeanStart: '11.03.2018',
+    europeanEnd: '29.04.2018',
+    shorterId: 'TKT20010'
+  },
+  {
+    id: 10012,
+    name: 'Ohjelmistotekniikan menetelmät',
+    start: '2018-03-11T21:00:00.000Z',
+    end: '2018-04-29T21:00:00.000Z',
+    active: true,
+    weekAmount: 7,
+    weekMaxPoints: 3,
+    currentWeek: 1,
+    ohid: 'TKT20002.2018.K.K.1',
+    createdAt: '2018-03-26T00:00:00.000Z',
+    updatedAt: '2018-03-26T00:00:00.000Z',
+    europeanStart: '11.03.2018',
+    europeanEnd: '29.04.2018',
+    shorterId: 'TKT20002'
+  },
+  {
+    id: 10013,
+    name: 'Aineopintojen harjoitustyö: Tietokantasovellus',
+    start: '2018-01-16T21:00:00.000Z',
+    end: '2018-03-10T21:00:00.000Z',
+    active: false,
+    weekAmount: 5,
+    weekMaxPoints: 3,
+    currentWeek: 1,
+    ohid: 'TKT20011.2018.K.A.1',
+    createdAt: '2018-03-26T00:00:00.000Z',
+    updatedAt: '2018-03-26T00:00:00.000Z',
+    europeanStart: '16.01.2018',
+    europeanEnd: '10.03.2018',
+    shorterId: 'TKT20011'
+  }
+]
+
+const checklist = {
+  data: {
+    Koodi: [
+      {
+        name: 'Koodin laatu',
+        checkedPoints: 2,
+        uncheckedPoints: 0,
+        textWhenOn: 'Koodin laatu kiitettävää',
+        textWhenOff: 'Koodin laadussa parantamisen varaa'
+      }
+    ],
+    Repo: [
+      {
+        name: 'Readme kunnossa',
+        checkedPoints: 0,
+        uncheckedPoints: -1,
+        textWhenOn: '',
+        textWhenOff: 'Readmessa feelua'
+      }
+    ]
+  }
+}
+
+const loading = {
+  loading: false,
+  loadingHooks: [],
+  redirect: false,
+  redirectHooks: [],
+  redirectFailure: false
+}
+
+const weekDropdowns = Array.from({ length: courseInstances[0].weekAmount }, (_, index) => ({
+  value: `week${index + 1}`,
+  text: `Week ${index + 1}`
+}))
+
+const renderCreateChecklist = (props = {}) => {
+  const defaultProps = {
+    courses: courseInstances,
+    courseId: courseInstances[0].ohid,
+    selectedInstance: courseInstances[0],
+    checklist,
+    loading,
+    weekDropdowns,
+    showNotification: vi.fn(),
+    resetLoading: vi.fn(),
+    createChecklist: vi.fn(),
+    getOneCI: vi.fn(),
+    getOneChecklist: vi.fn(),
+    resetChecklist: vi.fn(),
+    changeField: vi.fn(),
+    addTopic: vi.fn(),
+    addRow: vi.fn(),
+    removeTopic: vi.fn(),
+    removeRow: vi.fn(),
+    moveTopicUp: vi.fn(),
+    moveTopicDown: vi.fn(),
+    moveRowUp: vi.fn(),
+    moveRowDown: vi.fn(),
+    getAllCI: vi.fn(),
+    castPointsToNumber: vi.fn(),
+    applyCategoryPrerequisite: vi.fn(),
+    restoreChecklist: vi.fn(),
+    addRedirectHook: vi.fn()
+  }
+  const componentProps = { ...defaultProps, ...props }
+  const store = createStore(() => ({ selectedInstance: componentProps.selectedInstance }))
+  const view = render(
+    <Provider store={store}>
+      <MemoryRouter>
+        <CreateChecklist {...componentProps} />
+      </MemoryRouter>
+    </Provider>
+  )
+
+  return { ...view, props: componentProps }
+}
+
+const selectWeek = async week => {
+  const checklistDropdown = screen.getAllByRole('listbox')[0]
+  await userEvent.click(checklistDropdown)
+  await userEvent.click(within(checklistDropdown).getByRole('option', { name: `Week ${week}` }))
+}
 
 describe('<CreateChecklist /> component', () => {
-  let wrapper
-
-  const courseInstance = [
-    {
-      id: 10011,
-      name: 'Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit',
-      start: '2018-03-11T21:00:00.000Z',
-      end: '2018-04-29T21:00:00.000Z',
-      active: true,
-      weekAmount: 7,
-      weekMaxPoints: 3,
-      currentWeek: 1,
-      ohid: 'TKT20010.2018.K.A.1',
-      createdAt: '2018-03-26T00:00:00.000Z',
-      updatedAt: '2018-03-26T00:00:00.000Z',
-      europeanStart: '11.03.2018',
-      europeanEnd: '29.04.2018',
-      shorterId: 'TKT20010'
-    },
-    {
-      id: 10012,
-      name: 'Ohjelmistotekniikan menetelmät',
-      start: '2018-03-11T21:00:00.000Z',
-      end: '2018-04-29T21:00:00.000Z',
-      active: true,
-      weekAmount: 7,
-      weekMaxPoints: 3,
-      currentWeek: 1,
-      ohid: 'TKT20002.2018.K.K.1',
-      createdAt: '2018-03-26T00:00:00.000Z',
-      updatedAt: '2018-03-26T00:00:00.000Z',
-      europeanStart: '11.03.2018',
-      europeanEnd: '29.04.2018',
-      shorterId: 'TKT20002'
-    },
-    {
-      id: 10013,
-      name: 'Aineopintojen harjoitustyö: Tietokantasovellus',
-      start: '2018-01-16T21:00:00.000Z',
-      end: '2018-03-10T21:00:00.000Z',
-      active: false,
-      weekAmount: 5,
-      weekMaxPoints: 3,
-      currentWeek: 1,
-      ohid: 'TKT20011.2018.K.A.1',
-      createdAt: '2018-03-26T00:00:00.000Z',
-      updatedAt: '2018-03-26T00:00:00.000Z',
-      europeanStart: '16.01.2018',
-      europeanEnd: '10.03.2018',
-      shorterId: 'TKT20011'
-    }
-  ]
-
-  const checklist = {
-    data: {
-      Koodi: [
-        {
-          name: 'Koodin laatu',
-          checkedPoints: 2,
-          uncheckedPoints: 0,
-          textWhenOn: 'Koodin laatu kiitettävää',
-          textWhenOff: 'Koodin laadussa parantamisen varaa'
-        }
-      ],
-      Repo: [
-        {
-          name: 'Readme kunnossa',
-          checkedPoints: 0,
-          uncheckedPoints: -1,
-          textWhenOn: '',
-          textWhenOff: 'Readmessa feelua'
-        }
-      ]
-    }
-  }
-
-  const loading = {
-    loading: false,
-    loadingHooks: [],
-    redirect: false,
-    redirectHooks: [],
-    redirectFailure: false
-  }
-
-  const weekChoice = 6
-
-  let mockFn = jest.fn()
-
   beforeEach(() => {
-    wrapper = shallow(
-      <CreateChecklist
-        courses={courseInstance}
-        courseId={courseInstance[0].ohid}
-        selectedInstance={courseInstance[0]}
-        checklist={checklist}
-        loading={loading}
-        weekDropdowns={[]}
-        showNotification={mockFn}
-        resetLoading={mockFn}
-        createChecklist={mockFn}
-        getOneCI={mockFn}
-        getOneChecklist={mockFn}
-        resetChecklist={mockFn}
-        changeField={mockFn}
-        addTopic={mockFn}
-        addRow={mockFn}
-        removeTopic={mockFn}
-        removeRow={mockFn}
-        moveTopicUp={mockFn}
-        moveTopicDown={mockFn}
-        moveRowUp={mockFn}
-        moveRowDown={mockFn}
-        getAllCI={mockFn}
-        castPointsToNumber={mockFn}
-        applyCategoryPrerequisite={mockFn}
-        restoreChecklist={mockFn}
-        addRedirectHook={mockFn}
-      />
+    window.localStorage.clear()
+  })
+
+  it('renders the checklist for a selected week', async () => {
+    renderCreateChecklist()
+
+    expect(screen.getByText(courseInstances[0].name)).toBeInTheDocument()
+
+    await selectWeek(6)
+
+    expect(screen.getByRole('button', { name: /add new topic/i })).toBeInTheDocument()
+    expect(screen.getAllByRole('button', { name: /add new checkbox/i })).toHaveLength(2)
+  })
+
+  it('matches the rendered snapshot', async () => {
+    const { asFragment } = renderCreateChecklist()
+
+    await selectWeek(6)
+
+    expect(asFragment()).toMatchSnapshot()
+  })
+
+  it('shows the checklist text and point values in the editing form', async () => {
+    renderCreateChecklist()
+    await selectWeek(6)
+
+    const textInputs = screen.getAllByRole('textbox')
+    expect(textInputs.map(input => input.value)).toEqual(
+      expect.arrayContaining([
+        'Koodin laatu kiitettävää',
+        'Koodin laadussa parantamisen varaa',
+        '',
+        'Readmessa feelua'
+      ])
     )
-    wrapper.find('#weekDropdown').prop('onChange')(null, { value: `week${weekChoice}` })
+
+    const pointInputs = screen.getAllByRole('spinbutton')
+    expect(pointInputs.map(input => input.value)).toEqual(expect.arrayContaining(['2', '0', '0', '-1']))
   })
 
-  it('renders without error', () => {
-    expect(wrapper.find('.CreateChecklist').exists()).toEqual(true)
+  it('offers only courses that contain the selected week', async () => {
+    renderCreateChecklist()
+    await selectWeek(6)
+
+    await userEvent.click(screen.getByText('...from another course'))
+
+    expect(screen.getByRole('option', { name: /ohjelmistotekniikan menetelmät/i })).toBeInTheDocument()
+    expect(screen.queryByRole('option', { name: /tietokantasovellus/i })).not.toBeInTheDocument()
   })
 
-  it('should render correctly', () => {
-    expect(wrapper).toMatchSnapshot()
+  it('shows the total points for each section and the whole checklist', async () => {
+    renderCreateChecklist()
+    await selectWeek(6)
+
+    const sectionTotals = screen.getAllByText(/total points for this section:/i)
+    expect(sectionTotals).toHaveLength(2)
+    expect(sectionTotals.map(total => total.textContent)).toEqual(
+      expect.arrayContaining(['Total points for this section: 2', 'Total points for this section: 0'])
+    )
+    expect(screen.getByText(/total points of the checklist:/i)).toHaveTextContent(
+      'Total points of the checklist: 2'
+    )
+    expect(screen.getByText(/maximum points for this review:/i)).toHaveTextContent(
+      'Maximum points for this review: 3'
+    )
   })
 
-  describe('Editing form', () => {
-    it('autofills text areas', () => {
-      const textInputs = wrapper.find('.textField')
-      Object.keys(checklist.data).forEach(key => {
-        checklist.data[key].forEach(row => {
-          let textWhenOnMatch = undefined
-          let textWhenOffMatch = undefined
-          textInputs.forEach(ti => {
-            if (ti.prop('value') === row.textWhenOn) {
-              textWhenOnMatch = ti
-            }
-            if (ti.prop('value') === row.textWhenOff) {
-              textWhenOffMatch = ti
-            }
-          })
-          expect(textWhenOnMatch).not.toBe(undefined)
-          expect(textWhenOffMatch).not.toBe(undefined)
-        })
-      })
-    })
+  it('shows a custom maximum-points value entered by the user', async () => {
+    renderCreateChecklist()
+    await selectWeek(6)
 
-    it('autofills point values', () => {
-      const pointInputs = wrapper.find('.numberField')
-      Object.keys(checklist.data).forEach(key => {
-        checklist.data[key].forEach(row => {
-          let checkedPointsMatch = undefined
-          pointInputs.forEach(ti => {
-            if (Number(ti.prop('value')) === row.checkedPoints) {
-              checkedPointsMatch = ti
-            }
-          })
-          expect(checkedPointsMatch).not.toBe(undefined)
-        })
-      })
-    })
+    const maximumPointsInput = screen
+      .getAllByRole('spinbutton')
+      .find(input => !input.disabled && input.value === '')
+    await userEvent.type(maximumPointsInput, '5')
 
-    describe('Copying form', () => {
-      it('Renders a copy form', () => {
-        expect(wrapper.find('.copyForm').exists()).toEqual(true)
-      })
-
-      it('Renders appropriate options for week', () => {
-        wrapper.find('#weekDropdown').prop('onChange')(null, { value: `week${weekChoice}` })
-        const options = wrapper.find('.courseDropdown').prop('options')
-        expect(options.length).toEqual(courseInstance.filter(course => course.weekAmount >= weekChoice && course !== courseInstance[0]).length)
-      })
-    })
-
-    describe('maximum points', () => {
-      it('renders a maximum points input field', () => {
-        expect(wrapper.find('.maxPointsInput').exists()).toEqual(true)
-      })
-
-      it('renders a maximum points card', () => {
-        expect(wrapper.find('.maxPointsCard').exists()).toEqual(true)
-      })
-
-      it('if user adds maximum points, the given points are shown', () => {
-        wrapper.find('.maxPointsInput').simulate('change', { target: { value: '5' } })
-        expect(wrapper.find('.maxPointsForWeek').text()).toContain('Maximum points for this review:')
-        expect(wrapper.find('.maxPointsForWeek Points').prop('points')).toEqual(5)
-        wrapper.find('.maxPointsInput').simulate('change', { target: { value: '' } })
-      })
-
-      it('renders correct value for total points of the checklist', () => {
-        let maxPoints = 0
-        Object.keys(checklist.data).forEach(key => {
-          checklist.data[key].forEach(row => {
-            if (row.checkedPoints < row.uncheckedPoints) {
-              maxPoints += row.uncheckedPoints
-            } else {
-              maxPoints += row.checkedPoints
-            }
-          })
-        })
-        expect(wrapper.find('.totalPointsOfChecklist Points').prop('points')).toEqual(maxPoints)
-      })
-
-      it('renders the correct icon for total points of the checklist', () => {
-        let totalPointsOfChecklist = 0
-        Object.keys(checklist.data).forEach(key => {
-          checklist.data[key].forEach(row => {
-            if (row.checkedPoints < row.uncheckedPoints) {
-              totalPointsOfChecklist += row.uncheckedPoints
-            } else {
-              totalPointsOfChecklist += row.checkedPoints
-            }
-          })
-        })
-        if (totalPointsOfChecklist === courseInstance[0].weekMaxPoints) {
-          expect(wrapper.find('.maxPointsIcon').prop('content')).toEqual('The total points match the maximum points for this week.')
-          wrapper.setProps({
-            selectedInstance: { ...courseInstance[0], weekMaxPoints: totalPointsOfChecklist + 1 }
-          })
-          expect(wrapper.find('.maxPointsIcon').prop('content')).toEqual(`The total points don't match the maximum points for this week.`)
-        } else {
-          expect(wrapper.find('.maxPointsIcon').prop('content')).toEqual(`The total points don't match the maximum points for this week.`)
-          wrapper.setProps({
-            selectedInstance: { ...courseInstance[0], weekMaxPoints: totalPointsOfChecklist }
-          })
-          expect(wrapper.find('.maxPointsIcon').prop('content')).toEqual('The total points match the maximum points for this week.')
-        }
-        wrapper.find('#weekDropdown').prop('onChange')(null, { value: `week${courseInstance[0].weekAmount + 1}` })
-        expect(wrapper.find('.maxPointsIcon').exists()).toEqual(false)
-      })
-
-      it('renders the correct max points for individual topics', () => {
-        const maxPoints = []
-        Object.keys(checklist.data).forEach(key => {
-          checklist.data[key].forEach(row => {
-            let bestPoints = 0
-            if (row.checkedPoints < row.uncheckedPoints) {
-              bestPoints += row.uncheckedPoints
-            } else {
-              bestPoints += row.checkedPoints
-            }
-            maxPoints.push(String(bestPoints))
-          })
-        })
-        wrapper.find('.bestPointsNumber').forEach(bestPoints => {
-          const index = maxPoints.indexOf(bestPoints.text())
-          maxPoints.splice(index, 1)
-        })
-        expect(maxPoints).toEqual([])
-      })
-    })
+    expect(maximumPointsInput).toHaveValue(5)
+    expect(screen.getByText(/maximum points for this review:/i)).toHaveTextContent(
+      'Maximum points for this review: 5'
+    )
   })
-
-  // It turns out there's no way of testing form functionality in shallow rendering.
-  // https://github.com/airbnb/enzyme/issues/308
 })

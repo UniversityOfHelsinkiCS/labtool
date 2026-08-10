@@ -1,100 +1,94 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`<Login /> LoginPage Component should render correctly 1`] = `
-<Fragment>
-  <DocumentTitle
-    title="Login"
-  />
+exports[`<LoginPage /> > matches the rendered snapshot 1`] = `
+<DocumentFragment>
   <div
-    className="LoginPage"
+    class="LoginPage"
   >
-    <Loader
-      active={false}
-      inline="centered"
+    <div
+      class="ui centered inline loader"
     />
-    <Grid>
-      <GridRow
-        centered={true}
+    <div
+      class="ui grid"
+    >
+      <div
+        class="centered row"
       >
         <h3>
           Enter your University of Helsinki username and password
         </h3>
-      </GridRow>
-    </Grid>
-    <Grid>
-      <GridRow
-        centered={true}
+      </div>
+    </div>
+    <div
+      class="ui grid"
+    >
+      <div
+        class="centered row"
       >
-        <Form
-          as="form"
-          onSubmit={[Function]}
+        <form
+          class="ui form"
         >
-          <FormGroup
-            inline={true}
+          <div
+            class="inline fields"
           >
             <label
-              style={
-                Object {
-                  "width": "75px",
-                }
-              }
+              style="width: 75px;"
             >
               Username
             </label>
-            <Input
-              className="form-control1"
-              icon="user"
-              iconPosition="left"
-              name="username"
-              placeholder="Your AD-username"
-              required="true"
-              style={
-                Object {
-                  "minWidth": "25em",
-                }
-              }
-              type="text"
-            />
-          </FormGroup>
-          <FormGroup
-            inline={true}
+            <div
+              class="ui left icon input form-control1"
+              style="min-width: 25em;"
+            >
+              <input
+                name="username"
+                placeholder="Your AD-username"
+                required=""
+                type="text"
+              />
+              <i
+                aria-hidden="true"
+                class="user icon"
+              />
+            </div>
+          </div>
+          <div
+            class="inline fields"
           >
             <label
-              style={
-                Object {
-                  "width": "75px",
-                }
-              }
+              style="width: 75px;"
             >
               Password
             </label>
-            <Input
-              className="form-control2"
-              icon="lock"
-              iconPosition="left"
-              name="password"
-              placeholder="Your password"
-              required="true"
-              style={
-                Object {
-                  "minWidth": "25em",
-                }
-              }
-              type="password"
-            />
-          </FormGroup>
-          <FormGroup>
-            <Button
-              as="button"
-              color="blue"
+            <div
+              class="ui left icon input form-control2"
+              style="min-width: 25em;"
+            >
+              <input
+                name="password"
+                placeholder="Your password"
+                required=""
+                type="password"
+              />
+              <i
+                aria-hidden="true"
+                class="lock icon"
+              />
+            </div>
+          </div>
+          <div
+            class="fields"
+          >
+            <button
+              class="ui blue button"
               type="submit"
             >
               Login
-            </Button>
-          </FormGroup>
-        </Form>
-      </GridRow>
-    </Grid>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
-</Fragment>
+</DocumentFragment>
 `;

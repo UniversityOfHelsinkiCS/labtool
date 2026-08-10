@@ -1,52 +1,51 @@
 import React from 'react'
-import { shallow } from 'enzyme'
-import { Button, TextArea } from 'semantic-ui-react'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { vi } from 'vitest'
 import JsonEdit from '../components/JsonEdit'
 
-describe('<JsonEdit />', () => {
-  let onImport
-  let wrapper
+const renderJsonEdit = (props = {}) => {
+  const onImport = vi.fn()
 
-  beforeEach(() => {
-    onImport = jest.fn()
-    wrapper = shallow(<JsonEdit onImport={onImport} />)
+  render(<JsonEdit initialData={{}} onImport={onImport} {...props} />)
+
+  return { onImport }
+}
+
+describe('<JsonEdit />', () => {
+  it('opens the JSON editor', async () => {
+    renderJsonEdit()
+
+    const editButton = screen.getByRole('button', { name: /edit as json/i })
+    await userEvent.click(editButton)
+
+    expect(screen.getByText(/^json$/i)).toBeInTheDocument()
+    expect(screen.getByRole('textbox')).toBeInTheDocument()
+    expect(editButton).toBeDisabled()
   })
 
-  describe('JsonEdit component', () => {
-    it('renders ok', () => {
-      expect(wrapper).toBeDefined()
-      expect(
-        wrapper
-          .find(Button)
-          .first()
-          .children()
-          .text()
-      ).toEqual('Edit as JSON')
-    })
+  it('imports valid JSON', async () => {
+    const { onImport } = renderJsonEdit()
+    await userEvent.click(screen.getByRole('button', { name: /edit as json/i }))
 
-    it('can import valid JSON', () => {
-      wrapper
-        .find(TextArea)
-        .first()
-        .simulate('change', { target: { value: `{ "a": "b" }` } })
+    const jsonInput = screen.getByRole('textbox')
+    await userEvent.clear(jsonInput)
+    await userEvent.type(jsonInput, '{{ "a": "b" }')
+    await userEvent.click(screen.getByRole('button', { name: /save/i }))
 
-      wrapper
-        .find(Button)
-        .find({ content: 'Save' })
-        .simulate('click')
+    expect(onImport).toHaveBeenCalledWith({ a: 'b' })
+    expect(screen.queryByText(/^json$/i)).not.toBeInTheDocument()
+  })
 
-      expect(onImport).toBeCalledWith({ a: 'b' })
-    })
+  it('displays an error for invalid JSON', async () => {
+    renderJsonEdit()
+    await userEvent.click(screen.getByRole('button', { name: /edit as json/i }))
 
-    it('displays error with invalid', () => {
-      const t = () => {
-        wrapper
-          .find(TextArea)
-          .first()
-          .simulate('change', { target: { value: `abc` } })
-      }
+    const jsonInput = screen.getByRole('textbox')
+    await userEvent.clear(jsonInput)
+    await userEvent.type(jsonInput, 'abc')
 
-      expect(t).toThrow(SyntaxError)
-    })
+    expect(screen.getByText(/failed to parse json/i)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /save/i })).toBeDisabled()
   })
 })
