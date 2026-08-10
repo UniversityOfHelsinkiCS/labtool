@@ -1,0 +1,29 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`<AdminPage /> > matches the rendered snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="AdminPage"
+  >
+    <h2>
+      Welcome to the admin interface.
+    </h2>
+    <button
+      class="ui compact button ui button"
+    >
+      Manage courses
+    </button>
+    <br />
+    <br />
+    <br />
+    <hr />
+    <br />
+    <button
+      class="ui compact button ui button"
+    >
+      Manage users
+    </button>
+    <br />
+  </div>
+</DocumentFragment>
+`;

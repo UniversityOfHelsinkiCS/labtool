@@ -1,1015 +1,1173 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`<CreateChecklist /> component should render correctly 1`] = `
-<Fragment>
-  <DocumentTitle
-    title="Checklists - Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit"
-  />
+exports[`<CreateChecklist /> component > matches the rendered snapshot 1`] = `
+<DocumentFragment>
   <div
-    className="CreateChecklist"
+    class="CreateChecklist"
   >
-    <Connect(BackButton)
-      cleanup={[Function]}
-      preset="modifyCIPage"
-    />
-    <Header>
-      Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit
-    </Header>
+    <a
+      href="/labtool/ModifyCourseInstancePage/TKT20010.2018.K.A.1"
+    >
+      <button
+        class="ui compact button"
+      >
+        <i
+          aria-hidden="true"
+          class="angle left icon"
+        />
+        <span>
+          Back to course editing
+        </span>
+      </button>
+    </a>
+    <br />
+    <br />
     <div
-      className="editForm"
+      class="ui header"
+    >
+      Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit
+    </div>
+    <div
+      class="editForm"
     >
       <div
-        className="topOptions"
+        class="topOptions"
       >
-        <Dropdown
-          additionLabel="Add "
-          additionPosition="top"
-          closeOnBlur={true}
-          closeOnEscape={true}
-          deburr={false}
-          icon="dropdown"
-          id="weekDropdown"
-          minCharacters={1}
-          noResultsMessage="No results found."
-          onChange={[Function]}
-          openOnFocus={true}
-          options={Array []}
-          placeholder="Select Checklist"
-          renderLabel={[Function]}
-          searchInput="text"
-          selectOnBlur={true}
-          selectOnNavigation={true}
-          selection={true}
-          value="week6"
-          wrapSelection={true}
-        />
         <div
-          className="copyForm"
+          aria-expanded="false"
+          class="ui selection dropdown"
+          id="weekDropdown"
+          role="listbox"
+          tabindex="0"
         >
-          <Button
-            as="button"
-            disabled={true}
-            onClick={[Function]}
+          <div
+            aria-atomic="true"
+            aria-live="polite"
+            class="divider text"
+            role="alert"
+          >
+            Week 6
+          </div>
+          <i
+            aria-hidden="true"
+            class="dropdown icon"
+          />
+          <div
+            class="menu transition"
+          >
+            <div
+              aria-checked="false"
+              aria-selected="false"
+              class="item"
+              role="option"
+              style="pointer-events: all;"
+            >
+              <span
+                class="text"
+              >
+                Week 1
+              </span>
+            </div>
+            <div
+              aria-checked="false"
+              aria-selected="false"
+              class="item"
+              role="option"
+              style="pointer-events: all;"
+            >
+              <span
+                class="text"
+              >
+                Week 2
+              </span>
+            </div>
+            <div
+              aria-checked="false"
+              aria-selected="false"
+              class="item"
+              role="option"
+              style="pointer-events: all;"
+            >
+              <span
+                class="text"
+              >
+                Week 3
+              </span>
+            </div>
+            <div
+              aria-checked="false"
+              aria-selected="false"
+              class="item"
+              role="option"
+              style="pointer-events: all;"
+            >
+              <span
+                class="text"
+              >
+                Week 4
+              </span>
+            </div>
+            <div
+              aria-checked="false"
+              aria-selected="false"
+              class="item"
+              role="option"
+              style="pointer-events: all;"
+            >
+              <span
+                class="text"
+              >
+                Week 5
+              </span>
+            </div>
+            <div
+              aria-checked="true"
+              aria-selected="true"
+              class="active selected item"
+              role="option"
+              style="pointer-events: all;"
+            >
+              <span
+                class="text"
+              >
+                Week 6
+              </span>
+            </div>
+            <div
+              aria-checked="false"
+              aria-selected="false"
+              class="item"
+              role="option"
+              style="pointer-events: all;"
+            >
+              <span
+                class="text"
+              >
+                Week 7
+              </span>
+            </div>
+          </div>
+        </div>
+        <div
+          class="copyForm"
+        >
+          <button
+            class="ui disabled button"
+            disabled=""
+            tabindex="-1"
             type="button"
           >
             Copy checklist
-          </Button>
-          <Dropdown
-            additionLabel="Add "
-            additionPosition="top"
-            className="weekDropdown"
-            closeOnBlur={true}
-            closeOnEscape={true}
-            deburr={false}
-            disabled={false}
-            icon="dropdown"
-            minCharacters={1}
-            noResultsMessage="No results found."
-            onChange={[Function]}
-            openOnFocus={true}
-            options={Array []}
-            placeholder="...from another week"
-            renderLabel={[Function]}
-            searchInput="text"
-            selectOnBlur={true}
-            selectOnNavigation={true}
-            selection={true}
-            wrapSelection={true}
-          />
+          </button>
+          <div
+            aria-disabled="false"
+            aria-expanded="false"
+            class="ui selection dropdown weekDropdown"
+            role="listbox"
+            tabindex="0"
+          >
+            <div
+              aria-atomic="true"
+              aria-live="polite"
+              class="divider default text"
+              role="alert"
+            >
+              ...from another week
+            </div>
+            <i
+              aria-hidden="true"
+              class="dropdown icon"
+            />
+            <div
+              class="menu transition"
+            >
+              <div
+                aria-checked="false"
+                aria-selected="true"
+                class="selected item"
+                role="option"
+                style="pointer-events: all;"
+              >
+                <span
+                  class="text"
+                >
+                  Week 1
+                </span>
+              </div>
+              <div
+                aria-checked="false"
+                aria-selected="false"
+                class="item"
+                role="option"
+                style="pointer-events: all;"
+              >
+                <span
+                  class="text"
+                >
+                  Week 2
+                </span>
+              </div>
+              <div
+                aria-checked="false"
+                aria-selected="false"
+                class="item"
+                role="option"
+                style="pointer-events: all;"
+              >
+                <span
+                  class="text"
+                >
+                  Week 3
+                </span>
+              </div>
+              <div
+                aria-checked="false"
+                aria-selected="false"
+                class="item"
+                role="option"
+                style="pointer-events: all;"
+              >
+                <span
+                  class="text"
+                >
+                  Week 4
+                </span>
+              </div>
+              <div
+                aria-checked="false"
+                aria-selected="false"
+                class="item"
+                role="option"
+                style="pointer-events: all;"
+              >
+                <span
+                  class="text"
+                >
+                  Week 5
+                </span>
+              </div>
+              <div
+                aria-checked="false"
+                aria-selected="false"
+                class="item"
+                role="option"
+                style="pointer-events: all;"
+              >
+                <span
+                  class="text"
+                >
+                  Week 6
+                </span>
+              </div>
+              <div
+                aria-checked="false"
+                aria-selected="false"
+                class="item"
+                role="option"
+                style="pointer-events: all;"
+              >
+                <span
+                  class="text"
+                >
+                  Week 7
+                </span>
+              </div>
+            </div>
+          </div>
            
-          <Dropdown
-            additionLabel="Add "
-            additionPosition="top"
-            className="courseDropdown"
-            closeOnBlur={true}
-            closeOnEscape={true}
-            deburr={false}
-            disabled={false}
-            icon="dropdown"
-            minCharacters={1}
-            noResultsMessage="No results found."
-            onChange={[Function]}
-            openOnFocus={true}
-            options={
-              Array [
-                Object {
-                  "text": "Ohjelmistotekniikan menetelmät (11.03.2018)",
-                  "value": 10012,
-                },
-              ]
-            }
-            placeholder="...from another course"
-            renderLabel={[Function]}
-            searchInput="text"
-            selectOnBlur={true}
-            selectOnNavigation={true}
-            selection={true}
-            value={null}
-            wrapSelection={true}
-          />
+          <div
+            aria-disabled="false"
+            aria-expanded="false"
+            class="ui selection dropdown courseDropdown"
+            role="listbox"
+            tabindex="0"
+          >
+            <div
+              aria-atomic="true"
+              aria-live="polite"
+              class="divider default text"
+              role="alert"
+            >
+              ...from another course
+            </div>
+            <i
+              aria-hidden="true"
+              class="dropdown icon"
+            />
+            <div
+              class="menu transition"
+            />
+          </div>
         </div>
         <div
-          className="jsonButtons"
+          class="jsonButtons"
         >
-          <JsonEdit
-            downloadName="TKT20010.2018.K.A.1_week6.json"
-            generation={2}
-            initialData={
-              Object {
-                "Koodi": Array [
-                  Object {
-                    "checkedPoints": 2,
-                    "name": "Koodin laatu",
-                    "textWhenOff": "Koodin laadussa parantamisen varaa",
-                    "textWhenOn": "Koodin laatu kiitettävää",
-                    "uncheckedPoints": 0,
-                  },
-                ],
-                "Repo": Array [
-                  Object {
-                    "checkedPoints": 0,
-                    "name": "Readme kunnossa",
-                    "textWhenOff": "Readmessa feelua",
-                    "textWhenOn": "",
-                    "uncheckedPoints": -1,
-                  },
-                ],
-              }
-            }
-            onImport={[Function]}
-          />
+          <button
+            class="ui button"
+          >
+            Edit as JSON
+          </button>
         </div>
       </div>
       <div>
-        <form
-          onSubmit={[Function]}
-        >
-          <Button
-            as="button"
-            className="saveButton"
-            color="green"
-            disabled={true}
-            size="large"
+        <form>
+          <button
+            class="ui green large disabled button saveButton"
+            disabled=""
+            tabindex="-1"
             type="submit"
           >
             <div
-              className="saveButtonText"
+              class="saveButtonText"
             >
               Save
             </div>
-          </Button>
+          </button>
           <br />
           <br />
         </form>
         <div>
-          <Card
-            color="red"
-            fluid={true}
-            key="Koodi"
-            style={null}
+          <div
+            class="ui red fluid card"
           >
-            <CardContent>
-              <Header
-                color="brown"
-                size="huge"
+            <div
+              class="content"
+            >
+              <div
+                class="ui brown huge header"
               >
-                Koodi
-                 
-                <Button
-                  as="button"
-                  className="deleteButton"
-                  color="red"
-                  onClick={[Function]}
-                  size="tiny"
+                Koodi 
+                <button
+                  class="ui red tiny button deleteButton"
                   type="button"
                 >
                   <div
-                    className="deleteButtonText"
+                    class="deleteButtonText"
                   >
                     Delete topic
                   </div>
-                </Button>
-                <Button
-                  as="button"
-                  circular={true}
-                  className="moveButton"
-                  color="blue"
-                  disabled={false}
-                  icon="arrow circle down"
-                  onClick={[Function]}
+                </button>
+                <button
+                  class="ui blue circular icon button moveButton"
                   type="button"
-                />
-                <Button
-                  as="button"
-                  circular={true}
-                  className="moveButton"
-                  color="blue"
-                  disabled={true}
-                  icon="arrow circle up"
-                  onClick={[Function]}
+                >
+                  <i
+                    aria-hidden="true"
+                    class="arrow circle down icon"
+                  />
+                </button>
+                <button
+                  class="ui blue circular icon disabled button moveButton"
+                  disabled=""
+                  tabindex="-1"
                   type="button"
-                />
-              </Header>
+                >
+                  <i
+                    aria-hidden="true"
+                    class="arrow circle up icon"
+                  />
+                </button>
+              </div>
               <div>
                 <p>
-                  Total points for this section:
-                   
+                  Total points for this section: 
                   <strong
-                    className="bestPointsNumber"
+                    class="bestPointsNumber"
                   >
-                    <Points
-                      points={2}
-                    />
+                    2
                   </strong>
                   <span />
                 </p>
               </div>
               <div
-                className="prerequisiteCategory"
-                style={
-                  Object {
-                    "marginTop": "1em",
-                  }
-                }
+                class="prerequisiteCategory"
+                style="margin-top: 1em;"
               >
-                Set a prerequisite for all checks in this category:
-                 
-                <Dropdown
-                  additionLabel="Add "
-                  additionPosition="top"
-                  className="prerequisiteCategoryDropdown"
-                  closeOnBlur={true}
-                  closeOnEscape={true}
-                  deburr={false}
-                  icon="dropdown"
-                  minCharacters={1}
-                  noResultsMessage="No results found."
-                  onChange={[Function]}
-                  openOnFocus={true}
-                  options={
-                    Array [
-                      Object {
-                        "key": null,
-                        "text": "(none)",
-                        "value": null,
-                      },
-                      Object {
-                        "key": undefined,
-                        "text": "Koodin laatu",
-                        "value": undefined,
-                      },
-                    ]
-                  }
-                  placeholder="Select prerequisite..."
-                  renderLabel={[Function]}
-                  searchInput="text"
-                  selectOnBlur={true}
-                  selectOnNavigation={true}
-                  selection={true}
-                  wrapSelection={true}
-                />
+                Set a prerequisite for all checks in this category: 
+                <div
+                  aria-expanded="false"
+                  class="ui selection dropdown prerequisiteCategoryDropdown"
+                  role="listbox"
+                  tabindex="0"
+                >
+                  <div
+                    aria-atomic="true"
+                    aria-live="polite"
+                    class="divider default text"
+                    role="alert"
+                  >
+                    Select prerequisite...
+                  </div>
+                  <i
+                    aria-hidden="true"
+                    class="dropdown icon"
+                  />
+                  <div
+                    class="menu transition"
+                  >
+                    <div
+                      aria-checked="false"
+                      aria-selected="true"
+                      class="selected item"
+                      role="option"
+                      style="pointer-events: all;"
+                    >
+                      <span
+                        class="text"
+                      >
+                        (none)
+                      </span>
+                    </div>
+                    <div
+                      aria-checked="false"
+                      aria-selected="false"
+                      class="item"
+                      role="option"
+                      style="pointer-events: all;"
+                    >
+                      <span
+                        class="text"
+                      >
+                        Koodin laatu
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </CardContent>
-            <CardContent
-              key="Koodin laatu"
+            </div>
+            <div
+              class="content"
             >
-              <Header>
-                Koodin laatu
-                 
-                <Button
-                  as="button"
-                  className="deleteButton"
-                  color="red"
-                  onClick={[Function]}
-                  size="tiny"
+              <div
+                class="ui header"
+              >
+                Koodin laatu 
+                <button
+                  class="ui red tiny button deleteButton"
                   type="button"
                 >
                   <div
-                    className="deleteButtonText"
+                    class="deleteButtonText"
                   >
                     Delete checkbox
                   </div>
-                </Button>
-                <Button
-                  as="button"
-                  circular={true}
-                  className="moveButtonLarge"
-                  color="blue"
-                  disabled={true}
-                  icon="arrow circle down"
-                  onClick={[Function]}
+                </button>
+                <button
+                  class="ui blue circular icon disabled button moveButtonLarge"
+                  disabled=""
+                  tabindex="-1"
                   type="button"
-                />
-                <Button
-                  as="button"
-                  circular={true}
-                  className="moveButtonLarge"
-                  color="blue"
-                  disabled={true}
-                  icon="arrow circle up"
-                  onClick={[Function]}
+                >
+                  <i
+                    aria-hidden="true"
+                    class="arrow circle down icon"
+                  />
+                </button>
+                <button
+                  class="ui blue circular icon disabled button moveButtonLarge"
+                  disabled=""
+                  tabindex="-1"
                   type="button"
-                />
-              </Header>
+                >
+                  <i
+                    aria-hidden="true"
+                    class="arrow circle up icon"
+                  />
+                </button>
+              </div>
               <div
-                className="checkTextRow"
+                class="checkTextRow"
               >
                 <div
-                  className="checkedLabel"
+                  class="checkedLabel"
                 >
-                  <Label
-                    basic={true}
+                  <div
+                    class="ui basic label"
                   >
                     Checked
-                  </Label>
+                  </div>
                 </div>
-                <Input
-                  className="numberField"
-                  label="Points"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  step="0.01"
-                  type="number"
-                  value={2}
-                />
-                <span
-                  style={
-                    Object {
-                      "flexGrow": 100,
-                    }
-                  }
+                <div
+                  class="ui labeled input numberField"
                 >
-                  <Input
-                    className="textField"
-                    fluid={true}
-                    label="Text"
-                    onChange={[Function]}
-                    type="text"
-                    value="Koodin laatu kiitettävää"
+                  <div
+                    class="ui label label"
+                  >
+                    Points
+                  </div>
+                  <input
+                    step="0.01"
+                    type="number"
+                    value="2"
                   />
+                </div>
+                <span
+                  style="flex-grow: 100;"
+                >
+                  <div
+                    class="ui fluid labeled input textField"
+                  >
+                    <div
+                      class="ui label label"
+                    >
+                      Text
+                    </div>
+                    <input
+                      type="text"
+                      value="Koodin laatu kiitettävää"
+                    />
+                  </div>
                 </span>
               </div>
               <div
-                className="checkTextRow"
+                class="checkTextRow"
               >
                 <div
-                  className="checkedLabel"
+                  class="checkedLabel"
                 >
-                  <Label
-                    basic={true}
+                  <div
+                    class="ui basic label"
                   >
                     Unchecked
-                  </Label>
+                  </div>
                 </div>
-                <Input
-                  className="numberField"
-                  label="Points"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  step="0.01"
-                  type="number"
-                  value={0}
-                />
-                <span
-                  style={
-                    Object {
-                      "flexGrow": 100,
-                    }
-                  }
+                <div
+                  class="ui labeled input numberField"
                 >
-                  <Input
-                    className="textField"
-                    fluid={true}
-                    label="Text"
-                    onChange={[Function]}
-                    type="text"
-                    value="Koodin laadussa parantamisen varaa"
+                  <div
+                    class="ui label label"
+                  >
+                    Points
+                  </div>
+                  <input
+                    step="0.01"
+                    type="number"
+                    value="0"
                   />
+                </div>
+                <span
+                  style="flex-grow: 100;"
+                >
+                  <div
+                    class="ui fluid labeled input textField"
+                  >
+                    <div
+                      class="ui label label"
+                    >
+                      Text
+                    </div>
+                    <input
+                      type="text"
+                      value="Koodin laadussa parantamisen varaa"
+                    />
+                  </div>
                 </span>
               </div>
               <div
-                className="minimumRequirement"
-                style={
-                  Object {
-                    "marginTop": "1em",
-                  }
-                }
-              >
-                <Checkbox
-                  label="Minimum requirement"
-                  onChange={[Function]}
-                  type="checkbox"
-                />
-                , which should be
-                 
-                <Radio
-                  checked={false}
-                  disabled={true}
-                  label="checked"
-                  name="minimumRequirementMetIf_Koodi_undefined"
-                  onChange={[Function]}
-                  type="radio"
-                  value={true}
-                />
-                 
-                <Radio
-                  checked={false}
-                  disabled={true}
-                  label="unchecked"
-                  name="minimumRequirementMetIf_Koodi_undefined"
-                  onChange={[Function]}
-                  type="radio"
-                  value={false}
-                />
-                , or else grade will drop by
-                 
-                <Input
-                  className="minimumRequirementGradePenalty"
-                  disabled={true}
-                  max="5"
-                  min="0"
-                  onChange={[Function]}
-                  step="1"
-                  style={
-                    Object {
-                      "width": "60px",
-                    }
-                  }
-                  type="number"
-                />
-              </div>
-              <div
-                className="prerequisite"
-                style={
-                  Object {
-                    "marginTop": "1em",
-                  }
-                }
-              >
-                <Label>
-                  Prerequisite
-                </Label>
-                <Dropdown
-                  additionLabel="Add "
-                  additionPosition="top"
-                  className="prerequisiteDropdown"
-                  closeOnBlur={true}
-                  closeOnEscape={true}
-                  deburr={false}
-                  icon="dropdown"
-                  minCharacters={1}
-                  noResultsMessage="No results found."
-                  onChange={[Function]}
-                  openOnFocus={true}
-                  options={
-                    Array [
-                      Object {
-                        "key": null,
-                        "text": "(none)",
-                        "value": null,
-                      },
-                    ]
-                  }
-                  placeholder="(none)"
-                  renderLabel={[Function]}
-                  searchInput="text"
-                  selectOnBlur={true}
-                  selectOnNavigation={true}
-                  selection={true}
-                  value={null}
-                  wrapSelection={true}
-                />
-                <Popup
-                  content="If a prerequisite is set, the prerequisite must be checked in order for this checkbox to be checkable."
-                  disabled={false}
-                  eventsEnabled={true}
-                  on={
-                    Array [
-                      "click",
-                      "hover",
-                    ]
-                  }
-                  pinned={false}
-                  popperModifiers={Array []}
-                  position="top left"
-                  trigger={
-                    <Icon
-                      as="i"
-                      name="help circle"
-                    />
-                  }
-                />
-              </div>
-            </CardContent>
-            <CardContent>
-              <form
-                className="addForm"
-                onSubmit={[Function]}
-              >
-                <Button
-                  as="button"
-                  color="yellow"
-                  content="Add new checkbox"
-                  icon="plus"
-                  labelPosition="left"
-                  type="submit"
-                />
-                <div />
-              </form>
-            </CardContent>
-          </Card>
-          <Card
-            color="red"
-            fluid={true}
-            key="Repo"
-            style={
-              Object {
-                "backgroundColor": "#F2F2F2",
-              }
-            }
-          >
-            <CardContent>
-              <Header
-                color="brown"
-                size="huge"
-              >
-                Repo
-                 
-                <Button
-                  as="button"
-                  className="deleteButton"
-                  color="red"
-                  onClick={[Function]}
-                  size="tiny"
-                  type="button"
-                >
-                  <div
-                    className="deleteButtonText"
-                  >
-                    Delete topic
-                  </div>
-                </Button>
-                <Button
-                  as="button"
-                  circular={true}
-                  className="moveButton"
-                  color="blue"
-                  disabled={true}
-                  icon="arrow circle down"
-                  onClick={[Function]}
-                  type="button"
-                />
-                <Button
-                  as="button"
-                  circular={true}
-                  className="moveButton"
-                  color="blue"
-                  disabled={false}
-                  icon="arrow circle up"
-                  onClick={[Function]}
-                  type="button"
-                />
-              </Header>
-              <div>
-                <p>
-                  Total points for this section:
-                   
-                  <strong
-                    className="bestPointsNumber"
-                  >
-                    <Points
-                      points={0}
-                    />
-                  </strong>
-                  <span />
-                </p>
-              </div>
-              <div
-                className="prerequisiteCategory"
-                style={
-                  Object {
-                    "marginTop": "1em",
-                  }
-                }
-              >
-                Set a prerequisite for all checks in this category:
-                 
-                <Dropdown
-                  additionLabel="Add "
-                  additionPosition="top"
-                  className="prerequisiteCategoryDropdown"
-                  closeOnBlur={true}
-                  closeOnEscape={true}
-                  deburr={false}
-                  icon="dropdown"
-                  minCharacters={1}
-                  noResultsMessage="No results found."
-                  onChange={[Function]}
-                  openOnFocus={true}
-                  options={
-                    Array [
-                      Object {
-                        "key": null,
-                        "text": "(none)",
-                        "value": null,
-                      },
-                      Object {
-                        "key": undefined,
-                        "text": "Readme kunnossa",
-                        "value": undefined,
-                      },
-                    ]
-                  }
-                  placeholder="Select prerequisite..."
-                  renderLabel={[Function]}
-                  searchInput="text"
-                  selectOnBlur={true}
-                  selectOnNavigation={true}
-                  selection={true}
-                  wrapSelection={true}
-                />
-              </div>
-            </CardContent>
-            <CardContent
-              key="Readme kunnossa"
-            >
-              <Header>
-                Readme kunnossa
-                 
-                <Button
-                  as="button"
-                  className="deleteButton"
-                  color="red"
-                  onClick={[Function]}
-                  size="tiny"
-                  type="button"
-                >
-                  <div
-                    className="deleteButtonText"
-                  >
-                    Delete checkbox
-                  </div>
-                </Button>
-                <Button
-                  as="button"
-                  circular={true}
-                  className="moveButtonLarge"
-                  color="blue"
-                  disabled={true}
-                  icon="arrow circle down"
-                  onClick={[Function]}
-                  type="button"
-                />
-                <Button
-                  as="button"
-                  circular={true}
-                  className="moveButtonLarge"
-                  color="blue"
-                  disabled={true}
-                  icon="arrow circle up"
-                  onClick={[Function]}
-                  type="button"
-                />
-              </Header>
-              <div
-                className="checkTextRow"
+                class="minimumRequirement"
+                style="margin-top: 1em;"
               >
                 <div
-                  className="checkedLabel"
+                  class="ui checkbox"
                 >
-                  <Label
-                    basic={true}
-                  >
-                    Checked
-                  </Label>
-                </div>
-                <Input
-                  className="numberField"
-                  label="Points"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  step="0.01"
-                  type="number"
-                  value={0}
-                />
-                <span
-                  style={
-                    Object {
-                      "flexGrow": 100,
-                    }
-                  }
-                >
-                  <Input
-                    className="textField"
-                    fluid={true}
-                    label="Text"
-                    onChange={[Function]}
-                    type="text"
+                  <input
+                    class="hidden"
+                    readonly=""
+                    tabindex="0"
+                    type="checkbox"
                     value=""
                   />
-                </span>
+                  <label>
+                    Minimum requirement
+                  </label>
+                </div>
+                , which should be 
+                <div
+                  class="ui disabled radio checkbox"
+                >
+                  <input
+                    class="hidden"
+                    disabled=""
+                    name="minimumRequirementMetIf_Koodi_undefined"
+                    readonly=""
+                    tabindex="-1"
+                    type="radio"
+                    value="true"
+                  />
+                  <label>
+                    checked
+                  </label>
+                </div>
+                 
+                <div
+                  class="ui disabled radio checkbox"
+                >
+                  <input
+                    class="hidden"
+                    disabled=""
+                    name="minimumRequirementMetIf_Koodi_undefined"
+                    readonly=""
+                    tabindex="-1"
+                    type="radio"
+                    value="false"
+                  />
+                  <label>
+                    unchecked
+                  </label>
+                </div>
+                , or else grade will drop by 
+                <div
+                  class="ui disabled input minimumRequirementGradePenalty"
+                  style="width: 60px;"
+                >
+                  <input
+                    disabled=""
+                    max="5"
+                    min="0"
+                    step="1"
+                    tabindex="-1"
+                    type="number"
+                    value=""
+                  />
+                </div>
               </div>
               <div
-                className="checkTextRow"
+                class="prerequisite"
+                style="margin-top: 1em;"
               >
                 <div
-                  className="checkedLabel"
+                  class="ui label"
                 >
-                  <Label
-                    basic={true}
-                  >
-                    Unchecked
-                  </Label>
+                  Prerequisite
                 </div>
-                <Input
-                  className="numberField"
-                  label="Points"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  step="0.01"
-                  type="number"
-                  value={-1}
-                />
-                <span
-                  style={
-                    Object {
-                      "flexGrow": 100,
-                    }
-                  }
+                <div
+                  aria-expanded="false"
+                  class="ui selection dropdown prerequisiteDropdown"
+                  role="listbox"
+                  tabindex="0"
                 >
-                  <Input
-                    className="textField"
-                    fluid={true}
-                    label="Text"
-                    onChange={[Function]}
-                    type="text"
-                    value="Readmessa feelua"
+                  <div
+                    aria-atomic="true"
+                    aria-live="polite"
+                    class="divider default text"
+                    role="alert"
+                  >
+                    (none)
+                  </div>
+                  <i
+                    aria-hidden="true"
+                    class="dropdown icon"
                   />
+                  <div
+                    class="menu transition"
+                  >
+                    <div
+                      aria-checked="true"
+                      aria-selected="true"
+                      class="active selected item"
+                      role="option"
+                      style="pointer-events: all;"
+                    >
+                      <span
+                        class="text"
+                      >
+                        (none)
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <i
+                  aria-hidden="true"
+                  class="help circle icon"
+                />
+              </div>
+            </div>
+            <div
+              class="content"
+            >
+              <form
+                class="addForm"
+              >
+                <button
+                  class="ui yellow icon left labeled button"
+                  type="submit"
+                >
+                  <i
+                    aria-hidden="true"
+                    class="plus icon"
+                  />
+                  Add new checkbox
+                </button>
+                <div />
+              </form>
+            </div>
+          </div>
+          <div
+            class="ui red fluid card"
+            style="background-color: rgb(242, 242, 242);"
+          >
+            <div
+              class="content"
+            >
+              <div
+                class="ui brown huge header"
+              >
+                Repo 
+                <button
+                  class="ui red tiny button deleteButton"
+                  type="button"
+                >
+                  <div
+                    class="deleteButtonText"
+                  >
+                    Delete topic
+                  </div>
+                </button>
+                <button
+                  class="ui blue circular icon disabled button moveButton"
+                  disabled=""
+                  tabindex="-1"
+                  type="button"
+                >
+                  <i
+                    aria-hidden="true"
+                    class="arrow circle down icon"
+                  />
+                </button>
+                <button
+                  class="ui blue circular icon button moveButton"
+                  type="button"
+                >
+                  <i
+                    aria-hidden="true"
+                    class="arrow circle up icon"
+                  />
+                </button>
+              </div>
+              <div>
+                <p>
+                  Total points for this section: 
+                  <strong
+                    class="bestPointsNumber"
+                  >
+                    0
+                  </strong>
+                  <span />
+                </p>
+              </div>
+              <div
+                class="prerequisiteCategory"
+                style="margin-top: 1em;"
+              >
+                Set a prerequisite for all checks in this category: 
+                <div
+                  aria-expanded="false"
+                  class="ui selection dropdown prerequisiteCategoryDropdown"
+                  role="listbox"
+                  tabindex="0"
+                >
+                  <div
+                    aria-atomic="true"
+                    aria-live="polite"
+                    class="divider default text"
+                    role="alert"
+                  >
+                    Select prerequisite...
+                  </div>
+                  <i
+                    aria-hidden="true"
+                    class="dropdown icon"
+                  />
+                  <div
+                    class="menu transition"
+                  >
+                    <div
+                      aria-checked="false"
+                      aria-selected="true"
+                      class="selected item"
+                      role="option"
+                      style="pointer-events: all;"
+                    >
+                      <span
+                        class="text"
+                      >
+                        (none)
+                      </span>
+                    </div>
+                    <div
+                      aria-checked="false"
+                      aria-selected="false"
+                      class="item"
+                      role="option"
+                      style="pointer-events: all;"
+                    >
+                      <span
+                        class="text"
+                      >
+                        Readme kunnossa
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="content"
+            >
+              <div
+                class="ui header"
+              >
+                Readme kunnossa 
+                <button
+                  class="ui red tiny button deleteButton"
+                  type="button"
+                >
+                  <div
+                    class="deleteButtonText"
+                  >
+                    Delete checkbox
+                  </div>
+                </button>
+                <button
+                  class="ui blue circular icon disabled button moveButtonLarge"
+                  disabled=""
+                  tabindex="-1"
+                  type="button"
+                >
+                  <i
+                    aria-hidden="true"
+                    class="arrow circle down icon"
+                  />
+                </button>
+                <button
+                  class="ui blue circular icon disabled button moveButtonLarge"
+                  disabled=""
+                  tabindex="-1"
+                  type="button"
+                >
+                  <i
+                    aria-hidden="true"
+                    class="arrow circle up icon"
+                  />
+                </button>
+              </div>
+              <div
+                class="checkTextRow"
+              >
+                <div
+                  class="checkedLabel"
+                >
+                  <div
+                    class="ui basic label"
+                  >
+                    Checked
+                  </div>
+                </div>
+                <div
+                  class="ui labeled input numberField"
+                >
+                  <div
+                    class="ui label label"
+                  >
+                    Points
+                  </div>
+                  <input
+                    step="0.01"
+                    type="number"
+                    value="0"
+                  />
+                </div>
+                <span
+                  style="flex-grow: 100;"
+                >
+                  <div
+                    class="ui fluid labeled input textField"
+                  >
+                    <div
+                      class="ui label label"
+                    >
+                      Text
+                    </div>
+                    <input
+                      type="text"
+                      value=""
+                    />
+                  </div>
                 </span>
               </div>
               <div
-                className="minimumRequirement"
-                style={
-                  Object {
-                    "marginTop": "1em",
-                  }
-                }
+                class="checkTextRow"
               >
-                <Checkbox
-                  label="Minimum requirement"
-                  onChange={[Function]}
-                  type="checkbox"
-                />
-                , which should be
-                 
-                <Radio
-                  checked={false}
-                  disabled={true}
-                  label="checked"
-                  name="minimumRequirementMetIf_Repo_undefined"
-                  onChange={[Function]}
-                  type="radio"
-                  value={true}
-                />
-                 
-                <Radio
-                  checked={false}
-                  disabled={true}
-                  label="unchecked"
-                  name="minimumRequirementMetIf_Repo_undefined"
-                  onChange={[Function]}
-                  type="radio"
-                  value={false}
-                />
-                , or else grade will drop by
-                 
-                <Input
-                  className="minimumRequirementGradePenalty"
-                  disabled={true}
-                  max="5"
-                  min="0"
-                  onChange={[Function]}
-                  step="1"
-                  style={
-                    Object {
-                      "width": "60px",
-                    }
-                  }
-                  type="number"
-                />
+                <div
+                  class="checkedLabel"
+                >
+                  <div
+                    class="ui basic label"
+                  >
+                    Unchecked
+                  </div>
+                </div>
+                <div
+                  class="ui labeled input numberField"
+                >
+                  <div
+                    class="ui label label"
+                  >
+                    Points
+                  </div>
+                  <input
+                    step="0.01"
+                    type="number"
+                    value="-1"
+                  />
+                </div>
+                <span
+                  style="flex-grow: 100;"
+                >
+                  <div
+                    class="ui fluid labeled input textField"
+                  >
+                    <div
+                      class="ui label label"
+                    >
+                      Text
+                    </div>
+                    <input
+                      type="text"
+                      value="Readmessa feelua"
+                    />
+                  </div>
+                </span>
               </div>
               <div
-                className="prerequisite"
-                style={
-                  Object {
-                    "marginTop": "1em",
-                  }
-                }
+                class="minimumRequirement"
+                style="margin-top: 1em;"
               >
-                <Label>
+                <div
+                  class="ui checkbox"
+                >
+                  <input
+                    class="hidden"
+                    readonly=""
+                    tabindex="0"
+                    type="checkbox"
+                    value=""
+                  />
+                  <label>
+                    Minimum requirement
+                  </label>
+                </div>
+                , which should be 
+                <div
+                  class="ui disabled radio checkbox"
+                >
+                  <input
+                    class="hidden"
+                    disabled=""
+                    name="minimumRequirementMetIf_Repo_undefined"
+                    readonly=""
+                    tabindex="-1"
+                    type="radio"
+                    value="true"
+                  />
+                  <label>
+                    checked
+                  </label>
+                </div>
+                 
+                <div
+                  class="ui disabled radio checkbox"
+                >
+                  <input
+                    class="hidden"
+                    disabled=""
+                    name="minimumRequirementMetIf_Repo_undefined"
+                    readonly=""
+                    tabindex="-1"
+                    type="radio"
+                    value="false"
+                  />
+                  <label>
+                    unchecked
+                  </label>
+                </div>
+                , or else grade will drop by 
+                <div
+                  class="ui disabled input minimumRequirementGradePenalty"
+                  style="width: 60px;"
+                >
+                  <input
+                    disabled=""
+                    max="5"
+                    min="0"
+                    step="1"
+                    tabindex="-1"
+                    type="number"
+                    value=""
+                  />
+                </div>
+              </div>
+              <div
+                class="prerequisite"
+                style="margin-top: 1em;"
+              >
+                <div
+                  class="ui label"
+                >
                   Prerequisite
-                </Label>
-                <Dropdown
-                  additionLabel="Add "
-                  additionPosition="top"
-                  className="prerequisiteDropdown"
-                  closeOnBlur={true}
-                  closeOnEscape={true}
-                  deburr={false}
-                  icon="dropdown"
-                  minCharacters={1}
-                  noResultsMessage="No results found."
-                  onChange={[Function]}
-                  openOnFocus={true}
-                  options={
-                    Array [
-                      Object {
-                        "key": null,
-                        "text": "(none)",
-                        "value": null,
-                      },
-                    ]
-                  }
-                  placeholder="(none)"
-                  renderLabel={[Function]}
-                  searchInput="text"
-                  selectOnBlur={true}
-                  selectOnNavigation={true}
-                  selection={true}
-                  value={null}
-                  wrapSelection={true}
-                />
-                <Popup
-                  content="If a prerequisite is set, the prerequisite must be checked in order for this checkbox to be checkable."
-                  disabled={false}
-                  eventsEnabled={true}
-                  on={
-                    Array [
-                      "click",
-                      "hover",
-                    ]
-                  }
-                  pinned={false}
-                  popperModifiers={Array []}
-                  position="top left"
-                  trigger={
-                    <Icon
-                      as="i"
-                      name="help circle"
-                    />
-                  }
+                </div>
+                <div
+                  aria-expanded="false"
+                  class="ui selection dropdown prerequisiteDropdown"
+                  role="listbox"
+                  tabindex="0"
+                >
+                  <div
+                    aria-atomic="true"
+                    aria-live="polite"
+                    class="divider default text"
+                    role="alert"
+                  >
+                    (none)
+                  </div>
+                  <i
+                    aria-hidden="true"
+                    class="dropdown icon"
+                  />
+                  <div
+                    class="menu transition"
+                  >
+                    <div
+                      aria-checked="true"
+                      aria-selected="true"
+                      class="active selected item"
+                      role="option"
+                      style="pointer-events: all;"
+                    >
+                      <span
+                        class="text"
+                      >
+                        (none)
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <i
+                  aria-hidden="true"
+                  class="help circle icon"
                 />
               </div>
-            </CardContent>
-            <CardContent>
+            </div>
+            <div
+              class="content"
+            >
               <form
-                className="addForm"
-                onSubmit={[Function]}
+                class="addForm"
               >
-                <Button
-                  as="button"
-                  color="yellow"
-                  content="Add new checkbox"
-                  icon="plus"
-                  labelPosition="left"
+                <button
+                  class="ui yellow icon left labeled button"
                   type="submit"
-                />
+                >
+                  <i
+                    aria-hidden="true"
+                    class="plus icon"
+                  />
+                  Add new checkbox
+                </button>
                 <div />
               </form>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
           <form
-            className="addForm"
-            onSubmit={[Function]}
+            class="addForm"
           >
-            <Button
-              as="button"
-              content="Add new topic"
-              icon="add"
-              labelPosition="left"
-              size="large"
+            <button
+              class="ui large icon left labeled button"
               type="submit"
-            />
+            >
+              <i
+                aria-hidden="true"
+                class="add icon"
+              />
+              Add new topic
+            </button>
             <div />
           </form>
         </div>
-        <Card
-          className="maxPointsCard"
+        <div
+          class="ui card maxPointsCard"
         >
-          <CardContent>
+          <div
+            class="content"
+          >
             <p>
-              Total points of the checklist:
-               
+              Total points of the checklist: 
               <strong
-                className="totalPointsOfChecklist"
+                class="totalPointsOfChecklist"
               >
-                <Points
-                  points={2}
-                />
+                2
               </strong>
               <span>
                  
-                <Popup
-                  className="maxPointsIcon"
-                  content="The total points don't match the maximum points for this week."
-                  disabled={false}
-                  eventsEnabled={true}
-                  on={
-                    Array [
-                      "click",
-                      "hover",
-                    ]
-                  }
-                  pinned={false}
-                  popperModifiers={Array []}
-                  position="top left"
-                  trigger={
-                    <Icon
-                      as="i"
-                      color="red"
-                      name="delete"
-                      size="large"
-                    />
-                  }
+                <i
+                  aria-hidden="true"
+                  class="red delete large icon"
                 />
               </span>
             </p>
-          </CardContent>
-          <CardContent>
+          </div>
+          <div
+            class="content"
+          >
             <p
-              className="maxPointsForWeek"
+              class="maxPointsForWeek"
             >
-              Maximum points for this review:
-               
+              Maximum points for this review: 
               <strong>
-                <Points
-                  points={3}
-                />
+                3
               </strong>
             </p>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
         <div>
-          <Label>
+          <div
+            class="ui label"
+          >
             Define maximum points yourself
-          </Label>
-          <Input
-            className="maxPointsInput"
-            onChange={[Function]}
-            step="0.01"
-            style={
-              Object {
-                "width": "100px",
-              }
-            }
-            type="number"
-            value=""
-          />
-          <Popup
-            className="infoText"
-            content="The points you define here will be the maximum points for this review. If no value is given, the maximum points for this review 
-                    will stay the same as the defaulted weekly points which is 3"
-            disabled={false}
-            eventsEnabled={true}
-            on={
-              Array [
-                "click",
-                "hover",
-              ]
-            }
-            pinned={false}
-            popperModifiers={Array []}
-            position="top left"
-            trigger={
-              <Icon
-                as="i"
-                name="question circle"
-              />
-            }
+          </div>
+          <div
+            class="ui input maxPointsInput"
+            style="width: 100px;"
+          >
+            <input
+              step="0.01"
+              type="number"
+              value=""
+            />
+          </div>
+          <i
+            aria-hidden="true"
+            class="question circle icon"
           />
         </div>
-        <form
-          onSubmit={[Function]}
-        >
-          <Button
-            as="button"
-            className="saveButton"
-            color="green"
-            disabled={true}
-            size="large"
+        <form>
+          <button
+            class="ui green large disabled button saveButton"
+            disabled=""
+            tabindex="-1"
             type="submit"
           >
             <div
-              className="saveButtonText"
+              class="saveButtonText"
             >
               Save
             </div>
-          </Button>
+          </button>
           <br />
           <br />
         </form>
       </div>
     </div>
   </div>
-</Fragment>
+</DocumentFragment>
 `;

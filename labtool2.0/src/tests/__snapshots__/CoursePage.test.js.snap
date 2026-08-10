@@ -1,796 +1,1238 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`<CoursePage /> as student CoursePage Component should render correctly 1`] = `
-<Fragment>
-  <DocumentTitle
-    title="course"
-  />
+exports[`<CoursePage /> > as student > matches the rendered snapshot 1`] = `
+<DocumentFragment>
   <div>
-    <CoursePageStudentRegister
-      courseData={
-        Object {
-          "data": Object {
-            "Tags": Array [],
-            "User": Object {
-              "createdAt": "2018-03-26T00:00:00.000Z",
-              "email": "maarit.opiskelija@helsinki.invalid",
-              "firsts": "Maarit Mirja",
-              "id": 10011,
-              "lastname": "Opiskelija",
-              "studentNumber": "014578343",
-              "sysop": false,
-              "teacher": false,
-              "updatedAt": "2018-03-26T00:00:00.000Z",
-              "username": "tiraopiskelija1",
-            },
-            "codeReviews": Array [
-              Object {
-                "points": 2,
-                "repoToReview": null,
-                "reviewNumber": 1,
-                "toReview": Object {
-                  "github": "http://github.com/tiralabra2",
-                  "projectName": "Tiran toinen labraprojekti",
-                },
-              },
-              Object {
-                "points": 1,
-                "repoToReview": null,
-                "reviewNumber": 2,
-                "toReview": Object {
-                  "github": "http://github.com/superprojekti",
-                  "projectName": "Tira super projekti",
-                },
-              },
-              Object {
-                "points": null,
-                "repoToReview": "https://github.com/userName/arbitraryRepo",
-                "reviewNumber": 3,
-                "toReview": Object {
-                  "github": null,
-                  "projectName": null,
-                },
-              },
-            ],
-            "courseInstanceId": 10011,
-            "createdAt": "2018-03-26T00:00:00.000Z",
-            "github": "http://github.com/tiralabra1",
-            "id": 10011,
-            "projectName": "Tiran labraprojekti",
-            "teacherInstanceId": 10011,
-            "updatedAt": "2018-03-26T00:00:00.000Z",
-            "userId": 10011,
-            "weeks": Array [],
-          },
-          "name": "course",
-          "role": "student",
-        }
-      }
-      selectedInstance={
-        Object {
-          "data": Object {
-            "Tags": Array [],
-            "User": Object {
-              "createdAt": "2018-03-26T00:00:00.000Z",
-              "email": "maarit.opiskelija@helsinki.invalid",
-              "firsts": "Maarit Mirja",
-              "id": 10011,
-              "lastname": "Opiskelija",
-              "studentNumber": "014578343",
-              "sysop": false,
-              "teacher": false,
-              "updatedAt": "2018-03-26T00:00:00.000Z",
-              "username": "tiraopiskelija1",
-            },
-            "codeReviews": Array [
-              Object {
-                "points": 2,
-                "repoToReview": null,
-                "reviewNumber": 1,
-                "toReview": Object {
-                  "github": "http://github.com/tiralabra2",
-                  "projectName": "Tiran toinen labraprojekti",
-                },
-              },
-              Object {
-                "points": 1,
-                "repoToReview": null,
-                "reviewNumber": 2,
-                "toReview": Object {
-                  "github": "http://github.com/superprojekti",
-                  "projectName": "Tira super projekti",
-                },
-              },
-              Object {
-                "points": null,
-                "repoToReview": "https://github.com/userName/arbitraryRepo",
-                "reviewNumber": 3,
-                "toReview": Object {
-                  "github": null,
-                  "projectName": null,
-                },
-              },
-            ],
-            "courseInstanceId": 10011,
-            "createdAt": "2018-03-26T00:00:00.000Z",
-            "github": "http://github.com/tiralabra1",
-            "id": 10011,
-            "projectName": "Tiran labraprojekti",
-            "teacherInstanceId": 10011,
-            "updatedAt": "2018-03-26T00:00:00.000Z",
-            "userId": 10011,
-            "weeks": Array [],
-          },
-          "name": "course",
-          "role": "student",
-        }
-      }
-    />
-    <CoursePageStudentInfo
-      courseData={
-        Object {
-          "data": Object {
-            "Tags": Array [],
-            "User": Object {
-              "createdAt": "2018-03-26T00:00:00.000Z",
-              "email": "maarit.opiskelija@helsinki.invalid",
-              "firsts": "Maarit Mirja",
-              "id": 10011,
-              "lastname": "Opiskelija",
-              "studentNumber": "014578343",
-              "sysop": false,
-              "teacher": false,
-              "updatedAt": "2018-03-26T00:00:00.000Z",
-              "username": "tiraopiskelija1",
-            },
-            "codeReviews": Array [
-              Object {
-                "points": 2,
-                "repoToReview": null,
-                "reviewNumber": 1,
-                "toReview": Object {
-                  "github": "http://github.com/tiralabra2",
-                  "projectName": "Tiran toinen labraprojekti",
-                },
-              },
-              Object {
-                "points": 1,
-                "repoToReview": null,
-                "reviewNumber": 2,
-                "toReview": Object {
-                  "github": "http://github.com/superprojekti",
-                  "projectName": "Tira super projekti",
-                },
-              },
-              Object {
-                "points": null,
-                "repoToReview": "https://github.com/userName/arbitraryRepo",
-                "reviewNumber": 3,
-                "toReview": Object {
-                  "github": null,
-                  "projectName": null,
-                },
-              },
-            ],
-            "courseInstanceId": 10011,
-            "createdAt": "2018-03-26T00:00:00.000Z",
-            "github": "http://github.com/tiralabra1",
-            "id": 10011,
-            "projectName": "Tiran labraprojekti",
-            "teacherInstanceId": 10011,
-            "updatedAt": "2018-03-26T00:00:00.000Z",
-            "userId": 10011,
-            "weeks": Array [],
-          },
-          "name": "course",
-          "role": "student",
-        }
-      }
-      removeRegistration={[Function]}
-      selectedInstance={
-        Object {
-          "data": Object {
-            "Tags": Array [],
-            "User": Object {
-              "createdAt": "2018-03-26T00:00:00.000Z",
-              "email": "maarit.opiskelija@helsinki.invalid",
-              "firsts": "Maarit Mirja",
-              "id": 10011,
-              "lastname": "Opiskelija",
-              "studentNumber": "014578343",
-              "sysop": false,
-              "teacher": false,
-              "updatedAt": "2018-03-26T00:00:00.000Z",
-              "username": "tiraopiskelija1",
-            },
-            "codeReviews": Array [
-              Object {
-                "points": 2,
-                "repoToReview": null,
-                "reviewNumber": 1,
-                "toReview": Object {
-                  "github": "http://github.com/tiralabra2",
-                  "projectName": "Tiran toinen labraprojekti",
-                },
-              },
-              Object {
-                "points": 1,
-                "repoToReview": null,
-                "reviewNumber": 2,
-                "toReview": Object {
-                  "github": "http://github.com/superprojekti",
-                  "projectName": "Tira super projekti",
-                },
-              },
-              Object {
-                "points": null,
-                "repoToReview": "https://github.com/userName/arbitraryRepo",
-                "reviewNumber": 3,
-                "toReview": Object {
-                  "github": null,
-                  "projectName": null,
-                },
-              },
-            ],
-            "courseInstanceId": 10011,
-            "createdAt": "2018-03-26T00:00:00.000Z",
-            "github": "http://github.com/tiralabra1",
-            "id": 10011,
-            "projectName": "Tiran labraprojekti",
-            "teacherInstanceId": 10011,
-            "updatedAt": "2018-03-26T00:00:00.000Z",
-            "userId": 10011,
-            "weeks": Array [],
-          },
-          "name": "course",
-          "role": "student",
-        }
-      }
-    />
-    <CoursePageStudentWeeks
-      courseData={
-        Object {
-          "data": Object {
-            "Tags": Array [],
-            "User": Object {
-              "createdAt": "2018-03-26T00:00:00.000Z",
-              "email": "maarit.opiskelija@helsinki.invalid",
-              "firsts": "Maarit Mirja",
-              "id": 10011,
-              "lastname": "Opiskelija",
-              "studentNumber": "014578343",
-              "sysop": false,
-              "teacher": false,
-              "updatedAt": "2018-03-26T00:00:00.000Z",
-              "username": "tiraopiskelija1",
-            },
-            "codeReviews": Array [
-              Object {
-                "points": 2,
-                "repoToReview": null,
-                "reviewNumber": 1,
-                "toReview": Object {
-                  "github": "http://github.com/tiralabra2",
-                  "projectName": "Tiran toinen labraprojekti",
-                },
-              },
-              Object {
-                "points": 1,
-                "repoToReview": null,
-                "reviewNumber": 2,
-                "toReview": Object {
-                  "github": "http://github.com/superprojekti",
-                  "projectName": "Tira super projekti",
-                },
-              },
-              Object {
-                "points": null,
-                "repoToReview": "https://github.com/userName/arbitraryRepo",
-                "reviewNumber": 3,
-                "toReview": Object {
-                  "github": null,
-                  "projectName": null,
-                },
-              },
-            ],
-            "courseInstanceId": 10011,
-            "createdAt": "2018-03-26T00:00:00.000Z",
-            "github": "http://github.com/tiralabra1",
-            "id": 10011,
-            "projectName": "Tiran labraprojekti",
-            "teacherInstanceId": 10011,
-            "updatedAt": "2018-03-26T00:00:00.000Z",
-            "userId": 10011,
-            "weeks": Array [],
-          },
-          "name": "course",
-          "role": "student",
-        }
-      }
-      courseId=""
-    />
+    <div
+      class="StudentsView"
+      style="text-align: center;"
+    >
+      <h2
+        class="ui header"
+        style="margin-bottom: 1em;"
+      >
+        <div
+          class="content"
+        >
+          Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit (spring, 2018)
+          <div
+            class="sub header"
+          >
+              
+          </div>
+        </div>
+      </h2>
+      <div
+        class="grid"
+      >
+        <p />
+      </div>
+    </div>
+    <div>
+      <div>
+        <div
+          class="ui yellow fluid card"
+        >
+          <div
+            class="content"
+          >
+            <h2>
+              Maarit Mirja Opiskelija
+            </h2>
+            <h3>
+               Tiran labraprojekti 
+            </h3>
+            <h3>
+              <a
+                href="/labtool/courseregistration/TKT20010.2018.K.A.1"
+              >
+                <button
+                  class="ui large circular icon right floated button"
+                >
+                  <i
+                    aria-hidden="true"
+                    class="orange edit large icon"
+                  />
+                </button>
+              </a>
+              <a
+                href="http://github.com/tiralabra1"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                http://github.com/tiralabra1
+              </a>
+               
+            </h3>
+            <div
+              class="ui green basic label"
+            >
+              <i
+                aria-hidden="true"
+                class="check icon"
+              />
+              <strong>
+                 Total Points: 
+              </strong>
+              0
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div
+        class="accordion ui fluid styled"
+        id="review0"
+      >
+        <div
+          class="active title"
+        >
+          <i
+            aria-hidden="true"
+            class="dropdown icon"
+          />
+           Week 1 
+        </div>
+        <div
+          class="content active"
+        >
+          <h4>
+             Not Graded 
+          </h4>
+          <h4>
+             No comments 
+          </h4>
+        </div>
+      </div>
+      <div
+        class="accordion ui fluid styled"
+        id="review1"
+      >
+        <div
+          class="title"
+        >
+          <i
+            aria-hidden="true"
+            class="dropdown icon"
+          />
+           Week 2 
+        </div>
+        <div
+          class="content"
+        >
+          <h4>
+             Not Graded 
+          </h4>
+          <h4>
+             No comments 
+          </h4>
+        </div>
+      </div>
+    </div>
   </div>
-</Fragment>
+</DocumentFragment>
 `;
 
-exports[`<CoursePage /> as teacher CoursePage Component should render correctly 1`] = `
-<Fragment>
-  <DocumentTitle
-    title="Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit"
-  />
+exports[`<CoursePage /> > as teacher > matches the rendered snapshot 1`] = `
+<DocumentFragment>
   <div
-    style={
-      Object {
-        "marginBottom": "-20em",
-        "overflowX": "auto",
-        "overflowY": "hidden",
-        "paddingBottom": "20em",
-      }
-    }
+    style="overflow-x: auto; overflow-y: hidden; margin-bottom: -20em; padding-bottom: 20em;"
   >
-    <CoursePageTeacherHeader
-      changeCourseActive={[Function]}
-      moveToNextWeek={[Function]}
-      selectedInstance={
-        Object {
-          "active": true,
-          "currentWeek": 1,
-          "end": "2018-04-29T21:00:00.000Z",
-          "id": 10011,
-          "name": "Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit",
-          "ohid": "TKT20010.2018.K.A.1",
-          "start": "2018-03-11T21:00:00.000Z",
-          "teacherInstances": Array [
-            Object {
-              "courseInstanceId": 10011,
-              "firsts": "Pää",
-              "id": 10001,
-              "instructor": false,
-              "lastname": "Opettaja",
-              "userId": 10010,
-            },
-            Object {
-              "courseInstanceId": 10011,
-              "firsts": "Ossi Ohjaaja",
-              "id": 10011,
-              "instructor": true,
-              "lastname": "Mutikainen",
-              "userId": 10015,
-            },
-          ],
-          "weekAmount": 7,
-          "weekMaxPoints": 3,
-        }
-      }
-    />
-    <CoursePageTeacherMain
-      courseData={
-        Object {
-          "data": Array [
-            Object {
-              "Tags": Array [],
-              "User": Object {
-                "createdAt": "2018-03-26T00:00:00.000Z",
-                "email": "maarit.opiskelija@helsinki.invalid",
-                "firsts": "Maarit Mirja",
-                "id": 10011,
-                "lastname": "Opiskelija",
-                "studentNumber": "014578343",
-                "sysop": false,
-                "teacher": false,
-                "updatedAt": "2018-03-26T00:00:00.000Z",
-                "username": "tiraopiskelija1",
-              },
-              "codeReviews": Array [],
-              "courseInstanceId": 10011,
-              "createdAt": "2018-03-26T00:00:00.000Z",
-              "dropped": false,
-              "github": "http://github.com/tiralabra1",
-              "id": 10011,
-              "projectName": "Tiran labraprojekti",
-              "teacherInstanceId": 10011,
-              "updatedAt": "2018-03-26T00:00:00.000Z",
-              "userId": 10011,
-              "validRegistration": true,
-              "weeks": Array [],
-            },
-            Object {
-              "Tags": Array [
-                Object {
-                  "color": "grey",
-                  "courseInstanceId": null,
-                  "id": 20008,
-                  "name": "DROPPED",
-                },
-                Object {
-                  "color": "yellow",
-                  "courseInstanceId": null,
-                  "id": 20002,
-                  "name": "HTML",
-                },
-              ],
-              "User": Object {
-                "createdAt": "2018-03-26T00:00:00.000Z",
-                "email": "teras.henkilo@helsinki.invalid",
-                "firsts": "Teräs",
-                "id": 10031,
-                "lastname": "Henkilö",
-                "studentNumber": "014666666",
-                "sysop": false,
-                "teacher": false,
-                "updatedAt": "2018-03-26T00:00:00.000Z",
-                "username": "superopiskelija",
-              },
-              "codeReviews": Array [],
-              "courseInstanceId": 10011,
-              "createdAt": "2018-03-26T00:00:00.000Z",
-              "dropped": true,
-              "github": "http://github.com/superprojekti",
-              "id": 10031,
-              "projectName": "Tira super projekti",
-              "teacherInstanceId": 10011,
-              "updatedAt": "2018-06-05T07:12:28.603Z",
-              "userId": 10031,
-              "validRegistration": true,
-              "weeks": Array [],
-            },
-            Object {
-              "Tags": Array [
-                Object {
-                  "color": "red",
-                  "courseInstanceId": null,
-                  "id": 20001,
-                  "name": "Javascript",
-                },
-              ],
-              "User": Object {
-                "createdAt": "2018-03-26T00:00:00.000Z",
-                "email": "johan.studerande@helsinki.invalid",
-                "firsts": "Johan Wilhelm",
-                "id": 10012,
-                "lastname": "Studerande",
-                "studentNumber": "014553242",
-                "sysop": false,
-                "teacher": false,
-                "updatedAt": "2018-03-26T00:00:00.000Z",
-                "username": "tiraopiskelija2",
-              },
-              "codeReviews": Array [],
-              "courseInstanceId": 10011,
-              "createdAt": "2018-03-26T00:00:00.000Z",
-              "dropped": false,
-              "github": "http://github.com/tiralabra2",
-              "id": 10012,
-              "projectName": "Tiran toinen labraprojekti",
-              "teacherInstanceId": 10011,
-              "updatedAt": "2018-03-26T00:00:00.000Z",
-              "userId": 10012,
-              "validRegistration": false,
-              "weeks": Array [],
-            },
-          ],
-          "role": "teacher",
-        }
-      }
-      courseId=""
-      coursePageLogic={
-        Object {
-          "filterByAssistant": 0,
-          "filterByTag": Array [],
-          "selectedStudents": Object {
-            "10011": true,
-          },
-          "selectedTeacher": "",
-          "showDropdown": "",
-        }
-      }
-      exportCSV={[Function]}
-      loggedInUser={Object {}}
-      selectedInstance={
-        Object {
-          "active": true,
-          "currentWeek": 1,
-          "end": "2018-04-29T21:00:00.000Z",
-          "id": 10011,
-          "name": "Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit",
-          "ohid": "TKT20010.2018.K.A.1",
-          "start": "2018-03-11T21:00:00.000Z",
-          "teacherInstances": Array [
-            Object {
-              "courseInstanceId": 10011,
-              "firsts": "Pää",
-              "id": 10001,
-              "instructor": false,
-              "lastname": "Opettaja",
-              "userId": 10010,
-            },
-            Object {
-              "courseInstanceId": 10011,
-              "firsts": "Ossi Ohjaaja",
-              "id": 10011,
-              "instructor": true,
-              "lastname": "Mutikainen",
-              "userId": 10015,
-            },
-          ],
-          "weekAmount": 7,
-          "weekMaxPoints": 3,
-        }
-      }
-      students={
-        Array [
-          Object {
-            "Tags": Array [],
-            "User": Object {
-              "createdAt": "2018-03-26T00:00:00.000Z",
-              "email": "maarit.opiskelija@helsinki.invalid",
-              "firsts": "Maarit Mirja",
-              "id": 10011,
-              "lastname": "Opiskelija",
-              "studentNumber": "014578343",
-              "sysop": false,
-              "teacher": false,
-              "updatedAt": "2018-03-26T00:00:00.000Z",
-              "username": "tiraopiskelija1",
-            },
-            "codeReviews": Array [],
-            "courseInstanceId": 10011,
-            "createdAt": "2018-03-26T00:00:00.000Z",
-            "dropped": false,
-            "github": "http://github.com/tiralabra1",
-            "id": 10011,
-            "projectName": "Tiran labraprojekti",
-            "teacherInstanceId": 10011,
-            "updatedAt": "2018-03-26T00:00:00.000Z",
-            "userId": 10011,
-            "validRegistration": true,
-            "weeks": Array [],
-          },
-          Object {
-            "Tags": Array [
-              Object {
-                "color": "grey",
-                "courseInstanceId": null,
-                "id": 20008,
-                "name": "DROPPED",
-              },
-              Object {
-                "color": "yellow",
-                "courseInstanceId": null,
-                "id": 20002,
-                "name": "HTML",
-              },
-            ],
-            "User": Object {
-              "createdAt": "2018-03-26T00:00:00.000Z",
-              "email": "teras.henkilo@helsinki.invalid",
-              "firsts": "Teräs",
-              "id": 10031,
-              "lastname": "Henkilö",
-              "studentNumber": "014666666",
-              "sysop": false,
-              "teacher": false,
-              "updatedAt": "2018-03-26T00:00:00.000Z",
-              "username": "superopiskelija",
-            },
-            "codeReviews": Array [],
-            "courseInstanceId": 10011,
-            "createdAt": "2018-03-26T00:00:00.000Z",
-            "dropped": true,
-            "github": "http://github.com/superprojekti",
-            "id": 10031,
-            "projectName": "Tira super projekti",
-            "teacherInstanceId": 10011,
-            "updatedAt": "2018-06-05T07:12:28.603Z",
-            "userId": 10031,
-            "validRegistration": true,
-            "weeks": Array [],
-          },
-          Object {
-            "Tags": Array [
-              Object {
-                "color": "red",
-                "courseInstanceId": null,
-                "id": 20001,
-                "name": "Javascript",
-              },
-            ],
-            "User": Object {
-              "createdAt": "2018-03-26T00:00:00.000Z",
-              "email": "johan.studerande@helsinki.invalid",
-              "firsts": "Johan Wilhelm",
-              "id": 10012,
-              "lastname": "Studerande",
-              "studentNumber": "014553242",
-              "sysop": false,
-              "teacher": false,
-              "updatedAt": "2018-03-26T00:00:00.000Z",
-              "username": "tiraopiskelija2",
-            },
-            "codeReviews": Array [],
-            "courseInstanceId": 10011,
-            "createdAt": "2018-03-26T00:00:00.000Z",
-            "dropped": false,
-            "github": "http://github.com/tiralabra2",
-            "id": 10012,
-            "projectName": "Tiran toinen labraprojekti",
-            "teacherInstanceId": 10011,
-            "updatedAt": "2018-03-26T00:00:00.000Z",
-            "userId": 10012,
-            "validRegistration": false,
-            "weeks": Array [],
-          },
-        ]
-      }
-      tags={
-        Object {
-          "tags": Array [
-            Object {
-              "color": "red",
-              "courseInstanceId": null,
-              "createdAt": "2018-06-13T00:00:00.000Z",
-              "id": 20001,
-              "name": "Javascript",
-              "updatedAt": "2018-06-13T00:00:00.000Z",
-            },
-            Object {
-              "color": "yellow",
-              "courseInstanceId": null,
-              "createdAt": "2018-06-13T00:00:00.000Z",
-              "id": 20002,
-              "name": "HTML",
-              "updatedAt": "2018-06-13T00:00:00.000Z",
-            },
-            Object {
-              "color": "black",
-              "courseInstanceId": null,
-              "createdAt": "2018-06-13T00:00:00.000Z",
-              "id": 20003,
-              "name": "game",
-              "updatedAt": "2018-06-13T00:00:00.000Z",
-            },
-            Object {
-              "color": "green",
-              "courseInstanceId": null,
-              "createdAt": "2018-06-13T00:00:00.000Z",
-              "id": 20004,
-              "name": "React",
-              "updatedAt": "2018-06-13T00:00:00.000Z",
-            },
-            Object {
-              "color": "blue",
-              "courseInstanceId": null,
-              "createdAt": "2018-06-13T00:00:00.000Z",
-              "id": 20005,
-              "name": "Node.js",
-              "updatedAt": "2018-06-13T00:00:00.000Z",
-            },
-            Object {
-              "color": "orange",
-              "courseInstanceId": null,
-              "createdAt": "2018-06-13T00:00:00.000Z",
-              "id": 20006,
-              "name": "Java",
-              "updatedAt": "2018-06-13T00:00:00.000Z",
-            },
-            Object {
-              "color": "pink",
-              "courseInstanceId": null,
-              "createdAt": "2018-06-13T00:00:00.000Z",
-              "id": 20007,
-              "name": "FORTRAN",
-              "updatedAt": "2018-06-13T00:00:00.000Z",
-            },
-            Object {
-              "color": "grey",
-              "courseInstanceId": null,
-              "createdAt": "2018-06-13T00:00:00.000Z",
-              "id": 20008,
-              "name": "DROPPED",
-              "updatedAt": "2018-06-13T00:00:00.000Z",
-            },
-          ],
-        }
-      }
-    />
+    <div
+      class="TeachersTopView"
+      style="text-align: center;"
+    >
+      <h2
+        class="ui header"
+        style="margin-bottom: 1em;"
+      >
+        <div
+          class="content"
+        >
+          Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit (spring, 2018)
+          <div
+            class="sub header"
+          >
+              
+          </div>
+        </div>
+      </h2>
+      <div>
+        <div
+          class="ui compact message"
+        >
+          <div
+            class="header"
+          >
+            This course is already over, but registrations are still active.
+          </div>
+        </div>
+        <button
+          class="ui green button"
+          style="margin-left: 25px;"
+        >
+          Disable registration
+        </button>
+        <br />
+      </div>
+      <table
+        class="ui table"
+      >
+        <thead
+          class=""
+        >
+          <tr
+            class=""
+          >
+            <td
+              class=""
+            >
+              <div>
+                <div
+                  class="ui ribbon label"
+                  style="background-color: rgb(33, 186, 69);"
+                >
+                  Active registration
+                </div>
+              </div>
+            </td>
+            <td
+              class=""
+            >
+              Week amount: 2
+            </td>
+            <td
+              class=""
+            >
+              Current week: 1
+              <span
+                style="margin-left: 15px;"
+              >
+                <button
+                  class="ui mini compact icon right labeled button"
+                  style="cursor: pointer;"
+                >
+                  <i
+                    aria-hidden="true"
+                    class="right arrow icon"
+                  />
+                  Advance
+                </button>
+              </span>
+            </td>
+            <td
+              class=""
+            >
+              Week max points: 3
+            </td>
+            <td
+              class="right aligned"
+            >
+               
+              <a
+                href="/labtool/ModifyCourseInstanceCodeReviews/TKT20010.2018.K.A.1"
+              >
+                <button
+                  class="ui tiny circular icon button"
+                >
+                  <i
+                    aria-hidden="true"
+                    class="orange shuffle large icon"
+                  />
+                </button>
+              </a>
+              <a
+                href="/labtool/ModifyCourseInstancePage/TKT20010.2018.K.A.1"
+              >
+                <button
+                  class="ui tiny circular icon button"
+                >
+                  <i
+                    aria-hidden="true"
+                    class="orange edit large icon"
+                  />
+                </button>
+              </a>
+            </td>
+          </tr>
+        </thead>
+      </table>
+    </div>
+    <div
+      class="TeachersBottomView"
+    >
+      <br />
+      <div>
+        <h2
+          class="ui header"
+          style="display: inline-block;"
+        >
+          Students 
+        </h2>
+        <div
+          style="float: right;"
+        >
+          <a
+            href="/labtool/massemail/TKT20010.2018.K.A.1"
+          >
+            <button
+              class="ui small icon left labeled button"
+            >
+              <i
+                aria-hidden="true"
+                class="mail outline icon"
+              />
+              Send email to multiple students
+            </button>
+          </a>
+          <button
+            class="ui small icon left labeled button"
+            id="csvButton"
+          >
+            <i
+              aria-hidden="true"
+              class="file alternate outline icon"
+            />
+            Export CSV of all students
+          </button>
+        </div>
+      </div>
+      <p>
+        1 active student, 1 dropped (2 in total)
+      </p>
+      <div
+        style="text-align: left;"
+      >
+        <span>
+          <span>
+            Filter by instructor: 
+          </span>
+          <div
+            aria-expanded="false"
+            class="ui selection scrolling dropdown"
+            role="listbox"
+            style="width: 23em;"
+            tabindex="0"
+          >
+            <div
+              aria-atomic="true"
+              aria-live="polite"
+              class="divider text"
+              role="alert"
+            >
+              no filter
+            </div>
+            <i
+              aria-hidden="true"
+              class="dropdown icon"
+            />
+            <div
+              class="menu transition"
+            >
+              <div
+                aria-checked="true"
+                aria-selected="true"
+                class="active selected item"
+                role="option"
+                style="pointer-events: all;"
+              >
+                <span
+                  class="text"
+                >
+                  no filter
+                </span>
+              </div>
+              <div
+                aria-checked="false"
+                aria-selected="false"
+                class="item"
+                role="option"
+                style="pointer-events: all;"
+              >
+                <span
+                  class="text"
+                >
+                  (unassigned)
+                </span>
+              </div>
+              <div
+                aria-checked="false"
+                aria-selected="false"
+                class="item"
+                role="option"
+                style="pointer-events: all;"
+              >
+                <span
+                  class="text"
+                >
+                  Pää Opettaja
+                </span>
+              </div>
+              <div
+                aria-checked="false"
+                aria-selected="false"
+                class="item"
+                role="option"
+                style="pointer-events: all;"
+              >
+                <span
+                  class="text"
+                >
+                  Ossi Ohjaaja Mutikainen
+                </span>
+              </div>
+            </div>
+          </div>
+        </span>
+        <span>
+           Tag filters: 
+        </span>
+        <span
+          class="tagFilter"
+        >
+          <span>
+            <button
+              class="ui grey mini basic compact button"
+              style="display: inline-block;"
+              type="button"
+            >
+              <p>
+                No tag
+              </p>
+            </button>
+          </span>
+          <span>
+            <button
+              class="ui red mini basic compact button"
+              style="display: inline-block;"
+              type="button"
+            >
+              <p>
+                Javascript
+              </p>
+            </button>
+          </span>
+          <span>
+            <button
+              class="ui yellow mini basic compact button"
+              style="display: inline-block;"
+              type="button"
+            >
+              <p>
+                HTML
+              </p>
+            </button>
+          </span>
+          <span>
+            <button
+              class="ui grey mini basic compact button"
+              style="display: inline-block;"
+              type="button"
+            >
+              <p>
+                DROPPED
+              </p>
+            </button>
+          </span>
+        </span>
+      </div>
+      <br />
+      <div
+        style="overflow-x: scroll; overflow-y: visible;"
+      >
+        <table
+          class="ui celled single line unstackable compact table"
+          style="overflow-x: visible;"
+        >
+          <thead
+            class=""
+          >
+            <tr
+              class=""
+            >
+              <th
+                class=""
+              >
+                <div>
+                  <i
+                    aria-hidden="true"
+                    class="exchange small link icon"
+                    id="selectInvert"
+                    style="margin-bottom: 1.75em; margin-left: 0.2em;"
+                  />
+                </div>
+                <div
+                  class="ui fitted checkbox"
+                >
+                  <input
+                    class="hidden"
+                    id="selectAll"
+                    readonly=""
+                    tabindex="0"
+                    type="checkbox"
+                    value=""
+                  />
+                  <label
+                    for="selectAll"
+                  />
+                </div>
+              </th>
+              <th
+                class=""
+              >
+                Student
+              </th>
+              <th
+                class=""
+              >
+                Project Info
+              </th>
+              <th
+                class=""
+              >
+                <abbr
+                  title="Week"
+                >
+                  Wk
+                </abbr>
+                 1
+              </th>
+              <th
+                class=""
+              >
+                <abbr
+                  title="Week"
+                >
+                  Wk
+                </abbr>
+                 2
+              </th>
+              <th
+                class=""
+              >
+                Sum
+              </th>
+              <th
+                class="six wide"
+              >
+                Instructor
+              </th>
+            </tr>
+          </thead>
+          <tbody
+            class=""
+          >
+            <tr
+              class="TableRowForActiveStudent"
+            >
+              <td
+                class=""
+              >
+                <div
+                  class="ui checked fitted checkbox"
+                >
+                  <input
+                    checked=""
+                    class="hidden"
+                    id="select10011"
+                    readonly=""
+                    tabindex="0"
+                    type="checkbox"
+                    value=""
+                  />
+                  <label
+                    for="select10011"
+                  />
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <a
+                  href="/labtool/browsereviews/TKT20010.2018.K.A.1/10011"
+                >
+                  <span>
+                    Maarit Mirja Opiskelija
+                    <br />
+                    (014578343)
+                  </span>
+                </a>
+              </td>
+              <td
+                class=""
+              >
+                <span>
+                  Tiran labraprojekti
+                  <br />
+                  <a
+                    href="http://github.com/tiralabra1"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    <i
+                      aria-hidden="true"
+                      class="black github icon"
+                    />
+                    tiralabra1
+                  </a>
+                  <div />
+                  <i
+                    aria-hidden="true"
+                    class="green add icon"
+                    id="tagModify"
+                    style="float: right; font-size: 1.25em;"
+                  />
+                </span>
+                <div>
+                  <div />
+                </div>
+              </td>
+              <td
+                class="selectable center aligned"
+                style="position: relative;"
+              >
+                <a
+                  href="/labtool/reviewstudent/TKT20010.2018.K.A.1/10011/1"
+                  style="position: absolute; display: flex; top: 0px; left: 0px; right: 0px; bottom: 0px; justify-content: center; align-items: center; height: 100%;"
+                >
+                  <div>
+                    <button
+                      class="ui orange tiny circular icon button"
+                    >
+                      <i
+                        aria-hidden="true"
+                        class="star large icon"
+                      />
+                    </button>
+                  </div>
+                </a>
+              </td>
+              <td
+                class="selectable center aligned"
+                style="position: relative;"
+              >
+                <a
+                  href="/labtool/reviewstudent/TKT20010.2018.K.A.1/10011/2"
+                  style="position: absolute; display: flex; top: 0px; left: 0px; right: 0px; bottom: 0px; justify-content: center; align-items: center; height: 100%;"
+                >
+                  <div>
+                    <p
+                      style="display: flex; justify-content: center; align-items: center; height: 100%;"
+                    >
+                      -
+                    </p>
+                  </div>
+                </a>
+              </td>
+              <td
+                class="center aligned"
+              >
+                0
+              </td>
+              <td
+                class=""
+              >
+                <span>
+                  Ossi Ohjaaja Mutikainen
+                </span>
+                <button
+                  class="ui small circular icon button"
+                  style="margin: 0.25em; float: right;"
+                >
+                  <i
+                    aria-hidden="true"
+                    class="pencil icon"
+                  />
+                </button>
+                <div />
+              </td>
+            </tr>
+            <tr
+              class="TableRowForDroppedOutStudent"
+            >
+              <td
+                class=""
+              >
+                <div
+                  class="ui fitted checkbox"
+                >
+                  <input
+                    class="hidden"
+                    id="select10031"
+                    readonly=""
+                    tabindex="0"
+                    type="checkbox"
+                    value=""
+                  />
+                  <label
+                    for="select10031"
+                  />
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <a
+                  href="/labtool/browsereviews/TKT20010.2018.K.A.1/10031"
+                >
+                  <span>
+                    Teräs Henkilö
+                    <br />
+                    (014666666)
+                  </span>
+                </a>
+              </td>
+              <td
+                class=""
+              >
+                <span>
+                  Tira super projekti
+                  <br />
+                  <a
+                    href="http://github.com/superprojekti"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    <i
+                      aria-hidden="true"
+                      class="black github icon"
+                    />
+                    superprojekti
+                  </a>
+                  <div>
+                    <span
+                      style="float: left; margin-right: 0.33em;"
+                    >
+                      <div
+                        class="ui buttons mini"
+                      >
+                        <button
+                          class="ui grey mini compact button"
+                          style="display: inline-block;"
+                          type="button"
+                        >
+                          <p>
+                            DROPPED
+                          </p>
+                        </button>
+                        <div
+                          class="ui grey mini compact icon right attached button"
+                          role="button"
+                          style="padding-left: 0px; padding-right: 0px;"
+                          tabindex="0"
+                        >
+                          <i
+                            aria-hidden="true"
+                            class="remove icon"
+                          />
+                        </div>
+                      </div>
+                    </span>
+                    <span
+                      style="float: left; margin-right: 0.33em;"
+                    >
+                      <div
+                        class="ui buttons mini"
+                      >
+                        <button
+                          class="ui yellow mini compact button"
+                          style="display: inline-block;"
+                          type="button"
+                        >
+                          <p>
+                            HTML
+                          </p>
+                        </button>
+                        <div
+                          class="ui yellow mini compact icon right attached button"
+                          role="button"
+                          style="padding-left: 0px; padding-right: 0px;"
+                          tabindex="0"
+                        >
+                          <i
+                            aria-hidden="true"
+                            class="remove icon"
+                          />
+                        </div>
+                      </div>
+                    </span>
+                  </div>
+                  <i
+                    aria-hidden="true"
+                    class="green add icon"
+                    id="tagModify"
+                    style="float: right; font-size: 1.25em;"
+                  />
+                </span>
+                <div>
+                  <div />
+                </div>
+              </td>
+              <td
+                class="selectable center aligned"
+                style="position: relative;"
+              >
+                <a
+                  href="/labtool/reviewstudent/TKT20010.2018.K.A.1/10031/1"
+                  style="position: absolute; display: flex; top: 0px; left: 0px; right: 0px; bottom: 0px; justify-content: center; align-items: center; height: 100%;"
+                >
+                  <div>
+                    <p
+                      style="display: flex; justify-content: center; align-items: center; height: 100%;"
+                    >
+                      -
+                    </p>
+                  </div>
+                </a>
+              </td>
+              <td
+                class="selectable center aligned"
+                style="position: relative;"
+              >
+                <a
+                  href="/labtool/reviewstudent/TKT20010.2018.K.A.1/10031/2"
+                  style="position: absolute; display: flex; top: 0px; left: 0px; right: 0px; bottom: 0px; justify-content: center; align-items: center; height: 100%;"
+                >
+                  <div>
+                    <p
+                      style="display: flex; justify-content: center; align-items: center; height: 100%;"
+                    >
+                      -
+                    </p>
+                  </div>
+                </a>
+              </td>
+              <td
+                class="center aligned"
+              >
+                0
+              </td>
+              <td
+                class=""
+              >
+                <span>
+                  Ossi Ohjaaja Mutikainen
+                </span>
+                <button
+                  class="ui small circular icon button"
+                  style="margin: 0.25em; float: right;"
+                >
+                  <i
+                    aria-hidden="true"
+                    class="pencil icon"
+                  />
+                </button>
+                <div />
+              </td>
+            </tr>
+            <tr
+              class="TableRowForDroppedOutStudent"
+            >
+              <td
+                class=""
+              >
+                <div
+                  class="ui fitted checkbox"
+                >
+                  <input
+                    class="hidden"
+                    id="select10012"
+                    readonly=""
+                    tabindex="0"
+                    type="checkbox"
+                    value=""
+                  />
+                  <label
+                    for="select10012"
+                  />
+                </div>
+              </td>
+              <td
+                class=""
+              >
+                <i
+                  aria-hidden="true"
+                  class="black warning icon"
+                />
+                <a
+                  href="/labtool/browsereviews/TKT20010.2018.K.A.1/10012"
+                >
+                  <span>
+                    Johan Wilhelm Studerande
+                    <br />
+                    (014553242)
+                  </span>
+                </a>
+              </td>
+              <td
+                class=""
+              >
+                <span>
+                  Tiran toinen labraprojekti
+                  <br />
+                  <a
+                    href="http://github.com/tiralabra2"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    <i
+                      aria-hidden="true"
+                      class="black github icon"
+                    />
+                    tiralabra2
+                  </a>
+                  <div>
+                    <span
+                      style="float: left; margin-right: 0.33em;"
+                    >
+                      <div
+                        class="ui buttons mini"
+                      >
+                        <button
+                          class="ui red mini compact button"
+                          style="display: inline-block;"
+                          type="button"
+                        >
+                          <p>
+                            Javascript
+                          </p>
+                        </button>
+                        <div
+                          class="ui red mini compact icon right attached button"
+                          role="button"
+                          style="padding-left: 0px; padding-right: 0px;"
+                          tabindex="0"
+                        >
+                          <i
+                            aria-hidden="true"
+                            class="remove icon"
+                          />
+                        </div>
+                      </div>
+                    </span>
+                  </div>
+                  <i
+                    aria-hidden="true"
+                    class="green add icon"
+                    id="tagModify"
+                    style="float: right; font-size: 1.25em;"
+                  />
+                </span>
+                <div>
+                  <div />
+                </div>
+              </td>
+              <td
+                class="selectable center aligned"
+                style="position: relative;"
+              >
+                <a
+                  href="/labtool/reviewstudent/TKT20010.2018.K.A.1/10012/1"
+                  style="position: absolute; display: flex; top: 0px; left: 0px; right: 0px; bottom: 0px; justify-content: center; align-items: center; height: 100%;"
+                >
+                  <div>
+                    <p
+                      style="display: flex; justify-content: center; align-items: center; height: 100%;"
+                    >
+                      -
+                    </p>
+                  </div>
+                </a>
+              </td>
+              <td
+                class="selectable center aligned"
+                style="position: relative;"
+              >
+                <a
+                  href="/labtool/reviewstudent/TKT20010.2018.K.A.1/10012/2"
+                  style="position: absolute; display: flex; top: 0px; left: 0px; right: 0px; bottom: 0px; justify-content: center; align-items: center; height: 100%;"
+                >
+                  <div>
+                    <p
+                      style="display: flex; justify-content: center; align-items: center; height: 100%;"
+                    >
+                      -
+                    </p>
+                  </div>
+                </a>
+              </td>
+              <td
+                class="center aligned"
+              >
+                0
+              </td>
+              <td
+                class=""
+              >
+                <span>
+                  Ossi Ohjaaja Mutikainen
+                </span>
+                <button
+                  class="ui small circular icon button"
+                  style="margin: 0.25em; float: right;"
+                >
+                  <i
+                    aria-hidden="true"
+                    class="pencil icon"
+                  />
+                </button>
+                <div />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <br />
+    </div>
     <br />
-    <CoursePageTeacherBulkForm
-      bulkAddTag={[Function]}
-      bulkMarkDropped={[Function]}
-      bulkMarkInvalid={[Function]}
-      bulkMarkNotDropped={[Function]}
-      bulkMarkValid={[Function]}
-      bulkRemoveTag={[Function]}
-      bulkUpdateTeacher={[Function]}
-      changeSelectedTag={[Function]}
-      changeSelectedTeacher={[Function]}
-      courseId=""
-      coursePageLogic={
-        Object {
-          "filterByAssistant": 0,
-          "filterByTag": Array [],
-          "selectedStudents": Object {
-            "10011": true,
-          },
-          "selectedTeacher": "",
-          "showDropdown": "",
-        }
-      }
-      dropDownTags={
-        Array [
-          Object {
-            "key": 20001,
-            "selected": false,
-            "text": "Javascript",
-            "value": 20001,
-          },
-          Object {
-            "key": 20002,
-            "selected": false,
-            "text": "HTML",
-            "value": 20002,
-          },
-          Object {
-            "key": 20003,
-            "selected": false,
-            "text": "game",
-            "value": 20003,
-          },
-          Object {
-            "key": 20004,
-            "selected": false,
-            "text": "React",
-            "value": 20004,
-          },
-          Object {
-            "key": 20005,
-            "selected": false,
-            "text": "Node.js",
-            "value": 20005,
-          },
-          Object {
-            "key": 20006,
-            "selected": false,
-            "text": "Java",
-            "value": 20006,
-          },
-          Object {
-            "key": 20007,
-            "selected": false,
-            "text": "FORTRAN",
-            "value": 20007,
-          },
-          Object {
-            "key": 20008,
-            "selected": false,
-            "text": "DROPPED",
-            "value": 20008,
-          },
-        ]
-      }
-      dropDownTeachers={
-        Array [
-          Object {
-            "key": "-",
-            "selected": false,
-            "text": "(unassigned)",
-            "value": "-",
-          },
-          Object {
-            "key": 10001,
-            "selected": false,
-            "text": "Pää Opettaja",
-            "value": 10001,
-          },
-          Object {
-            "key": 10011,
-            "selected": false,
-            "text": "Ossi Ohjaaja Mutikainen",
-            "value": 10011,
-          },
-        ]
-      }
-    />
+    <span
+      class="TeacherBulkForm"
+      style="position: fixed; bottom: 0px; background: rgba(255, 255, 255, 0.9); text-align: center; left: 0px; right: 0px;"
+    >
+      <div
+        class="accordion ui"
+      >
+        <div
+          class="title"
+          style="background: rgb(240, 240, 240);"
+        >
+          <i
+            aria-hidden="true"
+            class="caret up big icon"
+          />
+          <h4
+            style="display: inline;"
+          >
+            Modify selected students
+          </h4>
+           (
+          <b>
+            1 selected
+          </b>
+          )
+        </div>
+        <div
+          class="content"
+        >
+          <br />
+          <div
+            class="ui divided two column grid"
+            style="width: 90%; display: inline-block;"
+          >
+            <div
+              class="row"
+            >
+              <div
+                class="column"
+              >
+                <div
+                  aria-disabled="false"
+                  aria-expanded="false"
+                  class="ui fluid selection dropdown"
+                  id="tagDropdown"
+                  role="listbox"
+                  style="float: left; display: inline; width: 48%;"
+                  tabindex="0"
+                >
+                  <div
+                    aria-atomic="true"
+                    aria-live="polite"
+                    class="divider default text"
+                    role="alert"
+                  >
+                    Choose tag
+                  </div>
+                  <i
+                    aria-hidden="true"
+                    class="dropdown icon"
+                  />
+                  <div
+                    class="menu transition"
+                  >
+                    <div
+                      aria-checked="false"
+                      aria-selected="false"
+                      class="item"
+                      role="option"
+                      style="pointer-events: all;"
+                    >
+                      <span
+                        class="text"
+                      >
+                        Javascript
+                      </span>
+                    </div>
+                    <div
+                      aria-checked="false"
+                      aria-selected="false"
+                      class="item"
+                      role="option"
+                      style="pointer-events: all;"
+                    >
+                      <span
+                        class="text"
+                      >
+                        HTML
+                      </span>
+                    </div>
+                    <div
+                      aria-checked="false"
+                      aria-selected="false"
+                      class="item"
+                      role="option"
+                      style="pointer-events: all;"
+                    >
+                      <span
+                        class="text"
+                      >
+                        DROPPED
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="two ui buttons"
+                  style="float: right; display: inline; width: 48%;"
+                >
+                  <button
+                    class="ui icon positive button"
+                  >
+                    <i
+                      class="plus icon"
+                    />
+                  </button>
+                  <div
+                    class="or"
+                    style="display: inline;"
+                  />
+                  <button
+                    class="ui icon button"
+                  >
+                    <i
+                      class="trash icon"
+                    />
+                  </button>
+                </div>
+              </div>
+              <div
+                class="column"
+              >
+                <div
+                  aria-disabled="false"
+                  aria-expanded="false"
+                  class="ui fluid selection dropdown"
+                  id="assistantDropdown"
+                  role="listbox"
+                  style="float: left; display: inline; width: 48%;"
+                  tabindex="0"
+                >
+                  <div
+                    aria-atomic="true"
+                    aria-live="polite"
+                    class="divider default text"
+                    role="alert"
+                  >
+                    Select teacher
+                  </div>
+                  <i
+                    aria-hidden="true"
+                    class="dropdown icon"
+                  />
+                  <div
+                    class="menu transition"
+                  >
+                    <div
+                      aria-checked="false"
+                      aria-selected="false"
+                      class="item"
+                      role="option"
+                      style="pointer-events: all;"
+                    >
+                      <span
+                        class="text"
+                      >
+                        (unassigned)
+                      </span>
+                    </div>
+                    <div
+                      aria-checked="false"
+                      aria-selected="false"
+                      class="item"
+                      role="option"
+                      style="pointer-events: all;"
+                    >
+                      <span
+                        class="text"
+                      >
+                        Pää Opettaja
+                      </span>
+                    </div>
+                    <div
+                      aria-checked="false"
+                      aria-selected="false"
+                      class="item"
+                      role="option"
+                      style="pointer-events: all;"
+                    >
+                      <span
+                        class="text"
+                      >
+                        Ossi Ohjaaja Mutikainen
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  class="ui small button"
+                  style="float: right; display: inline; width: 48%;"
+                >
+                  Change instructor
+                </button>
+              </div>
+            </div>
+            <div
+              class="row"
+            >
+              <div
+                class="column"
+              >
+                <button
+                  class="ui button"
+                  style="float: left; display: inline; width: 48%;"
+                >
+                  Mark as non-dropped
+                </button>
+                <button
+                  class="ui red button"
+                  style="float: right; display: inline; width: 48%;"
+                >
+                  Mark as dropped
+                </button>
+              </div>
+              <div
+                class="column"
+              >
+                <button
+                  class="ui button"
+                  style="float: left; display: inline; width: 48%;"
+                >
+                  Intended course registration
+                </button>
+                <button
+                  class="ui red basic button"
+                  style="float: right; display: inline-block; width: 48%;"
+                >
+                  Mistaken course registration
+                </button>
+              </div>
+            </div>
+          </div>
+          <br />
+        </div>
+      </div>
+      <br />
+    </span>
   </div>
-</Fragment>
+</DocumentFragment>
 `;

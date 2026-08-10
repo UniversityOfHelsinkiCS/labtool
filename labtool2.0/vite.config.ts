@@ -1,14 +1,37 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
+import { defineConfig } from 'vitest/config'
+import react from '@vitejs/plugin-react'
+import { transformWithOxc } from 'vite'
+
+const transformJsxInJs = () => ({
+  name: 'transform-jsx-in-js',
+  enforce: 'pre',
+  async transform(code: string, id: string) {
+    if (!id.match(/.*\.js$/)) {
+      return null
+    }
+
+    return await transformWithOxc(code, id, {
+      lang: 'jsx'
+    })
+  }
+})
 
 export default defineConfig({
-  plugins: [react({ jsxRuntime: "classic" })],
+  plugins: [react({ jsxRuntime: 'classic' }), transformJsxInJs()],
   build: {
-    outDir: "build",
+    outDir: 'build'
   },
   server: {
-    host: "0.0.0.0",
+    host: '0.0.0.0',
     port: 3000,
-    open: true,
+    open: true
   },
-});
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    setupFiles: ['./src/setupTests.js']
+  },
+  legacy: {
+    inconsistentCjsInterop: true
+  }
+})

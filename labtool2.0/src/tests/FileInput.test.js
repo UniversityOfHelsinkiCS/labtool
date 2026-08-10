@@ -1,34 +1,28 @@
 import React from 'react'
-import { shallow } from 'enzyme'
-import { Button, Form } from 'semantic-ui-react'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import FileInput from '../components/FileInput'
 
-describe('<FileInput />', () => {
-  let wrapper
+const renderFileInput = () =>
+  render(<FileInput onFileUploaded={() => {}} allowedFileTypes={['text/plain', 'application/json']} />)
 
-  beforeEach(() => {
-    wrapper = shallow(<FileInput onFileUploaded={_ => _} allowedFileTypes={['text/plain', 'application/json']} />)
+describe('<FileInput />', () => {
+  it('opens the file selection dialog', async () => {
+    renderFileInput()
+
+    const uploadButton = screen.getByRole('button', { name: /upload/i })
+    await userEvent.click(uploadButton)
+
+    expect(screen.getByText('Select file')).toBeInTheDocument()
+    expect(uploadButton).toBeDisabled()
   })
 
-  describe('FileInput component', () => {
-    it('renders ok', () => {
-      expect(wrapper).toBeDefined()
-      expect(
-        wrapper
-          .find(Button)
-          .first()
-          .children()
-          .text()
-      ).toEqual('Upload')
-    })
+  it('accepts the specified file types', async () => {
+    const { baseElement } = renderFileInput()
 
-    it('accepts specified file types', () => {
-      expect(
-        wrapper
-          .find(Form.Input)
-          .first()
-          .prop('accept')
-      ).toEqual('text/plain,application/json')
-    })
+    await userEvent.click(screen.getByRole('button', { name: /upload/i }))
+
+    const fileInput = baseElement.querySelector('input[type="file"]')
+    expect(fileInput).toHaveAttribute('accept', 'text/plain,application/json')
   })
 })

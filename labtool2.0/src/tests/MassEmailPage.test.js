@@ -1,10 +1,22 @@
 import React from 'react'
+import { render, screen, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { Provider } from 'react-redux'
+import { createStore } from 'redux'
+import { MemoryRouter } from 'react-router-dom'
+import { vi } from 'vitest'
 import { MassEmailPage } from '../components/pages/MassEmailPage'
-import { shallow } from 'enzyme'
+
+vi.stubGlobal(
+  'matchMedia',
+  vi.fn().mockReturnValue({
+    matches: true,
+    addListener: vi.fn(),
+    removeListener: vi.fn()
+  })
+)
 
 describe('<MassEmailPage />', () => {
-  let wrapper
-
   const coursePage = {
     role: 'teacher',
     data: [
@@ -12,6 +24,8 @@ describe('<MassEmailPage />', () => {
         id: 10012,
         github: 'http://github.com/tiralabra2',
         projectName: 'Tiran toinen labraprojekti',
+        dropped: false,
+        validRegistration: false,
         createdAt: '2018-03-26T00:00:00.000Z',
         updatedAt: '2018-03-26T00:00:00.000Z',
         courseInstanceId: 10011,
@@ -43,6 +57,8 @@ describe('<MassEmailPage />', () => {
         id: 10031,
         github: 'http://github.com/superprojekti',
         projectName: 'Tira super projekti',
+        dropped: true,
+        validRegistration: true,
         createdAt: '2018-03-26T00:00:00.000Z',
         updatedAt: '2018-06-05T07:12:28.603Z',
         courseInstanceId: 10011,
@@ -79,6 +95,8 @@ describe('<MassEmailPage />', () => {
         id: 10011,
         github: 'http://github.com/tiralabra1',
         projectName: 'Tiran labraprojekti',
+        dropped: false,
+        validRegistration: true,
         createdAt: '2018-03-26T00:00:00.000Z',
         updatedAt: '2018-03-26T00:00:00.000Z',
         courseInstanceId: 10011,
@@ -168,7 +186,24 @@ describe('<MassEmailPage />', () => {
     showDropdown: '',
     selectedTeacher: '',
     filterByAssistant: 0,
-    filterByTag: []
+    filterByTag: [],
+    selectedStudents: { 10011: true }
+  }
+
+  const selectedInstance = {
+    id: 10011,
+    ohid: 'TKT20010.2018.K.A.1',
+    weekAmount: 7,
+    amountOfCodeReviews: 0,
+    currentCodeReview: [],
+    finalReview: false,
+    teacherInstances: [
+      {
+        id: 10011,
+        firsts: 'Ossi Ohjaaja',
+        lastname: 'Mutikainen'
+      }
+    ]
   }
 
   const loading = {
@@ -179,54 +214,107 @@ describe('<MassEmailPage />', () => {
     redirectFailure: false
   }
 
-  let mockFn = jest.fn()
+  const renderMassEmailPage = (overrides = {}) => {
+    const defaultProps = {
+      courseData: coursePage,
+      getOneCI: vi.fn(),
+      coursePageInformation: vi.fn(),
+      associateTeacherToStudent: vi.fn(),
+      selectedInstance,
+      coursePageLogic,
+      getAllTags: vi.fn(),
+      courseReset: vi.fn(),
+      tags,
+      loading,
+      resetLoading: vi.fn(),
+      courseId: selectedInstance.ohid,
+      user: {},
+      studentInstance: {},
+      teacherInstance: {},
+      courseInstance: {},
+      coursePageReset: vi.fn(),
+      sendMassEmail: vi.fn(),
+      addRedirectHook: vi.fn(),
+      restoreStudentSelection: vi.fn()
+    }
+    const props = { ...defaultProps, ...overrides }
+    const store = createStore(() => ({
+      coursePageLogic: props.coursePageLogic
+    }))
+    const view = render(
+      <Provider store={store}>
+        <MemoryRouter>
+          <MassEmailPage {...props} />
+        </MemoryRouter>
+      </Provider>
+    )
+
+    return { ...view, props }
+  }
 
   beforeEach(() => {
-    wrapper = shallow(
-      <MassEmailPage
-        courseData={coursePage}
-        getOneCI={mockFn}
-        coursePageInformation={mockFn}
-        associateTeacherToStudent={mockFn}
-        selectedInstance={coursePage}
-        coursePageLogic={coursePageLogic}
-        getAllTags={mockFn}
-        courseReset={mockFn}
-        tags={tags}
-        loading={loading}
-        resetLoading={mockFn}
-        courseId={''}
-        user={{}}
-        studentInstance={{}}
-        teacherInstance={{}}
-        courseInstance={{}}
-        coursePageReset={mockFn}
-        sendMassEmail={mockFn}
-        addRedirectHook={mockFn}
-        restoreStudentSelection={mockFn}
-      />
-    )
+    window.localStorage.clear()
   })
 
+  const getInstructorCopyCheckbox = () =>
+    screen.getAllByRole('checkbox').find(checkbox => checkbox.name === 'sendToInstructors')
+
   describe('MassEmailPage Component', () => {
-    it('is ok', () => {
-      true
-    })
-
-    // it('should render without throwing an error', () => {
-    //   expect(wrapper.find('.CoursePage').exists()).toEqual(true)
-    // })
-
     it('should render correctly', () => {
-      expect(wrapper).toMatchSnapshot()
+      const { asFragment } = renderMassEmailPage()
+
+      expect(asFragment()).toMatchSnapshot()
     })
 
-    it('renders view correctly', () => {
-      expect(wrapper.find('.TeacherMassEmailPart').length).toEqual(1)
+    it('renders the mass email form for eligible students', () => {
+      renderMassEmailPage()
+
+      expect(screen.getByRole('heading', { name: /send email to students/i })).toBeInTheDocument()
+      expect(screen.getByRole('row', { name: /maarit mirja opiskelija/i })).toBeInTheDocument()
+      expect(screen.getByRole('row', { name: /teräs henkilö/i })).toBeInTheDocument()
+      expect(screen.queryByRole('row', { name: /johan wilhelm studerande/i })).not.toBeInTheDocument()
+      expect(screen.getByRole('textbox')).toHaveAttribute('placeholder', 'Type email here...')
+      expect(screen.getByText(/send a copy to all instructors/i)).toBeInTheDocument()
+      expect(getInstructorCopyCheckbox()).toBeChecked()
+      expect(screen.getByRole('button', { name: /^send$/i })).toBeInTheDocument()
     })
 
-    // it('assistant dropdown menu is not shown when page loads', () => {
-    //   expect(wrapper.find('.AssistantDropdown').length).toEqual(0)
-    // })
+    it('lets the sender exclude instructors from the email', async () => {
+      renderMassEmailPage()
+      const instructorCopyCheckbox = getInstructorCopyCheckbox()
+
+      await userEvent.click(instructorCopyCheckbox)
+
+      expect(instructorCopyCheckbox).not.toBeChecked()
+    })
+
+    it('sends the composed message to selected students', async () => {
+      const sendMassEmail = vi.fn().mockResolvedValue(undefined)
+      const addRedirectHook = vi.fn()
+      renderMassEmailPage({ sendMassEmail, addRedirectHook })
+
+      const messageInput = screen.getByRole('textbox')
+      const instructorCopyCheckbox = getInstructorCopyCheckbox()
+      const form = messageInput.closest('form')
+
+      await userEvent.type(messageInput, 'Remember the deadline.')
+      Object.defineProperties(form, {
+        content: { configurable: true, value: messageInput },
+        sendToInstructors: { configurable: true, value: instructorCopyCheckbox }
+      })
+      await userEvent.click(screen.getByRole('button', { name: /^send$/i }))
+
+      expect(addRedirectHook).toHaveBeenCalledWith({ hook: 'MASS_EMAIL_SEND' })
+      await waitFor(() =>
+        expect(sendMassEmail).toHaveBeenCalledWith(
+          {
+            students: [{ id: 10011 }],
+            content: 'Remember the deadline.',
+            sendToInstructors: true
+          },
+          selectedInstance.ohid
+        )
+      )
+    })
   })
 })
