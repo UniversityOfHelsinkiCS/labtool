@@ -143,10 +143,11 @@ describe('<BrowseReviews />', () => {
   })
 
   it('marks the student as dropped', async () => {
+    const user = userEvent.setup()
     const updateStudentProjectInfo = vi.fn()
     renderBrowseReviews({ updateStudentProjectInfo })
 
-    await userEvent.click(screen.getByRole('button', { name: /mark as dropped/i }))
+    await user.click(screen.getByRole('button', { name: /mark as dropped/i }))
 
     expect(updateStudentProjectInfo).toHaveBeenCalledWith({
       ohid: coursePage.ohid,
@@ -156,10 +157,11 @@ describe('<BrowseReviews />', () => {
   })
 
   it('marks the registration as intended', async () => {
+    const user = userEvent.setup()
     const updateStudentProjectInfo = vi.fn()
     renderBrowseReviews({ updateStudentProjectInfo })
 
-    await userEvent.click(screen.getByRole('button', { name: /mark registration as intended/i }))
+    await user.click(screen.getByRole('button', { name: /mark registration as intended/i }))
 
     expect(updateStudentProjectInfo).toHaveBeenCalledWith({
       ohid: coursePage.ohid,

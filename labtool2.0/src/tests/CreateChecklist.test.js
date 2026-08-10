@@ -136,10 +136,10 @@ const renderCreateChecklist = (props = {}) => {
   return { ...view, props: componentProps }
 }
 
-const selectWeek = async week => {
+const selectWeek = async (user, week) => {
   const checklistDropdown = screen.getAllByRole('listbox')[0]
-  await userEvent.click(checklistDropdown)
-  await userEvent.click(within(checklistDropdown).getByRole('option', { name: `Week ${week}` }))
+  await user.click(checklistDropdown)
+  await user.click(within(checklistDropdown).getByRole('option', { name: `Week ${week}` }))
 }
 
 describe('<CreateChecklist /> component', () => {
@@ -148,27 +148,30 @@ describe('<CreateChecklist /> component', () => {
   })
 
   it('renders the checklist for a selected week', async () => {
+    const user = userEvent.setup()
     renderCreateChecklist()
 
     expect(screen.getByText(courseInstances[0].name)).toBeInTheDocument()
 
-    await selectWeek(6)
+    await selectWeek(user, 6)
 
     expect(screen.getByRole('button', { name: /add new topic/i })).toBeInTheDocument()
     expect(screen.getAllByRole('button', { name: /add new checkbox/i })).toHaveLength(2)
   })
 
   it('matches the rendered snapshot', async () => {
+    const user = userEvent.setup()
     const { asFragment } = renderCreateChecklist()
 
-    await selectWeek(6)
+    await selectWeek(user, 6)
 
     expect(asFragment()).toMatchSnapshot()
   })
 
   it('shows the checklist text and point values in the editing form', async () => {
+    const user = userEvent.setup()
     renderCreateChecklist()
-    await selectWeek(6)
+    await selectWeek(user, 6)
 
     const textInputs = screen.getAllByRole('textbox')
     expect(textInputs.map(input => input.value)).toEqual(
@@ -185,18 +188,20 @@ describe('<CreateChecklist /> component', () => {
   })
 
   it('offers only courses that contain the selected week', async () => {
+    const user = userEvent.setup()
     renderCreateChecklist()
-    await selectWeek(6)
+    await selectWeek(user, 6)
 
-    await userEvent.click(screen.getByText('...from another course'))
+    await user.click(screen.getByText('...from another course'))
 
     expect(screen.getByRole('option', { name: /ohjelmistotekniikan menetelmät/i })).toBeInTheDocument()
     expect(screen.queryByRole('option', { name: /tietokantasovellus/i })).not.toBeInTheDocument()
   })
 
   it('shows the total points for each section and the whole checklist', async () => {
+    const user = userEvent.setup()
     renderCreateChecklist()
-    await selectWeek(6)
+    await selectWeek(user, 6)
 
     const sectionTotals = screen.getAllByText(/total points for this section:/i)
     expect(sectionTotals).toHaveLength(2)
@@ -212,13 +217,14 @@ describe('<CreateChecklist /> component', () => {
   })
 
   it('shows a custom maximum-points value entered by the user', async () => {
+    const user = userEvent.setup()
     renderCreateChecklist()
-    await selectWeek(6)
+    await selectWeek(user, 6)
 
     const maximumPointsInput = screen
       .getAllByRole('spinbutton')
       .find(input => !input.disabled && input.value === '')
-    await userEvent.type(maximumPointsInput, '5')
+    await user.type(maximumPointsInput, '5')
 
     expect(maximumPointsInput).toHaveValue(5)
     expect(screen.getByText(/maximum points for this review:/i)).toHaveTextContent(

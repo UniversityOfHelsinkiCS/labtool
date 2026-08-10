@@ -256,19 +256,6 @@ exports[`<CreateChecklist /> component > matches the rendered snapshot 1`] = `
                 <span
                   class="text"
                 >
-                  Week 6
-                </span>
-              </div>
-              <div
-                aria-checked="false"
-                aria-selected="false"
-                class="item"
-                role="option"
-                style="pointer-events: all;"
-              >
-                <span
-                  class="text"
-                >
                   Week 7
                 </span>
               </div>
@@ -296,7 +283,21 @@ exports[`<CreateChecklist /> component > matches the rendered snapshot 1`] = `
             />
             <div
               class="menu transition"
-            />
+            >
+              <div
+                aria-checked="false"
+                aria-selected="true"
+                class="selected item"
+                role="option"
+                style="pointer-events: all;"
+              >
+                <span
+                  class="text"
+                >
+                  Ohjelmistotekniikan menetelmät (11.03.2018)
+                </span>
+              </div>
+            </div>
           </div>
         </div>
         <div
