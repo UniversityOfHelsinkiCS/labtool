@@ -1,1603 +1,518 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`<StudentTable /> StudentTable Component should render correctly 1`] = `
-<Fragment>
+exports[`<StudentTable /> > StudentTable Component > should render correctly 1`] = `
+<DocumentFragment>
   <div
-    style={
-      Object {
-        "textAlign": "left",
-      }
-    }
+    style="text-align: left;"
   >
     <span>
       <span>
         Filter by instructor: 
       </span>
-      <Dropdown
-        additionLabel="Add "
-        additionPosition="top"
-        closeOnBlur={true}
-        closeOnEscape={true}
-        deburr={false}
-        defaultValue={0}
-        icon="dropdown"
-        minCharacters={1}
-        noResultsMessage="No results found."
-        onChange={[Function]}
-        openOnFocus={true}
-        options={Array []}
-        placeholder="Select Teacher"
-        renderLabel={[Function]}
-        scrolling={true}
-        searchInput="text"
-        selectOnBlur={true}
-        selectOnNavigation={true}
-        selection={true}
-        style={
-          Object {
-            "width": "3em",
-          }
-        }
-        wrapSelection={true}
-      />
+      <div
+        aria-expanded="false"
+        class="ui selection scrolling dropdown"
+        role="listbox"
+        style="width: 3em;"
+        tabindex="0"
+      >
+        <div
+          aria-atomic="true"
+          aria-live="polite"
+          class="divider text"
+          role="alert"
+        >
+          Select Teacher
+        </div>
+        <i
+          aria-hidden="true"
+          class="dropdown icon"
+        />
+        <div
+          class="menu transition"
+        />
+      </div>
     </span>
     <span>
        Tag filters: 
     </span>
     <span
-      className="tagFilter"
+      class="tagFilter"
     >
-      <span
-        key="-1"
-      >
-        <TagLabel
-          basic={true}
-          disabled={false}
-          handleClick={[Function]}
-          tag={
-            Object {
-              "color": "grey",
-              "courseInstanceId": null,
-              "id": -1,
-              "name": "No tag",
-            }
-          }
-        />
+      <span>
+        <button
+          class="ui grey mini basic compact button"
+          style="display: inline-block;"
+          type="button"
+        >
+          <p>
+            No tag
+          </p>
+        </button>
       </span>
-      <span
-        key="20001"
-      >
-        <TagLabel
-          basic={true}
-          disabled={false}
-          handleClick={[Function]}
-          tag={
-            Object {
-              "color": "red",
-              "courseInstanceId": null,
-              "createdAt": "2018-06-13T00:00:00.000Z",
-              "id": 20001,
-              "name": "Javascript",
-              "updatedAt": "2018-06-13T00:00:00.000Z",
-            }
-          }
-        />
+      <span>
+        <button
+          class="ui red mini basic compact button"
+          style="display: inline-block;"
+          type="button"
+        >
+          <p>
+            Javascript
+          </p>
+        </button>
       </span>
-      <span
-        key="20002"
-      >
-        <TagLabel
-          basic={true}
-          disabled={false}
-          handleClick={[Function]}
-          tag={
-            Object {
-              "color": "yellow",
-              "courseInstanceId": null,
-              "createdAt": "2018-06-13T00:00:00.000Z",
-              "id": 20002,
-              "name": "HTML",
-              "updatedAt": "2018-06-13T00:00:00.000Z",
-            }
-          }
-        />
+      <span>
+        <button
+          class="ui yellow mini basic compact button"
+          style="display: inline-block;"
+          type="button"
+        >
+          <p>
+            HTML
+          </p>
+        </button>
       </span>
-      <span
-        key="20008"
-      >
-        <TagLabel
-          basic={true}
-          disabled={false}
-          handleClick={[Function]}
-          tag={
-            Object {
-              "color": "grey",
-              "courseInstanceId": null,
-              "createdAt": "2018-06-13T00:00:00.000Z",
-              "id": 20008,
-              "name": "DROPPED",
-              "updatedAt": "2018-06-13T00:00:00.000Z",
-            }
-          }
-        />
+      <span>
+        <button
+          class="ui grey mini basic compact button"
+          style="display: inline-block;"
+          type="button"
+        >
+          <p>
+            DROPPED
+          </p>
+        </button>
       </span>
     </span>
   </div>
   <br />
-  <Connect(HorizontalScrollable)>
-    <Table
-      as="table"
-      celled={true}
-      compact={true}
-      singleLine={true}
-      style={
-        Object {
-          "overflowX": "visible",
-        }
-      }
-      unstackable={true}
+  <div
+    style="overflow-x: scroll; overflow-y: visible;"
+  >
+    <table
+      class="ui celled single line unstackable compact table"
+      style="overflow-x: visible;"
     >
-      <TableHeader
-        as="thead"
+      <thead
+        class=""
       >
-        <TableRow
-          as="tr"
-          cellAs="td"
+        <tr
+          class=""
         >
-          <TableHeaderCell
-            as="th"
-            key="-1"
+          <th
+            class=""
           >
             Student
-          </TableHeaderCell>
-          <TableHeaderCell
-            as="th"
+          </th>
+          <th
+            class=""
           >
             Project Info
-          </TableHeaderCell>
-          <TableHeaderCell
-            as="th"
-            width="six"
+          </th>
+          <th
+            class="six wide"
           >
             Instructor
-          </TableHeaderCell>
-        </TableRow>
-      </TableHeader>
-      <TableBody
-        as="tbody"
+          </th>
+        </tr>
+      </thead>
+      <tbody
+        class=""
       >
-        <StudentTableRow
-          addFilterTag={[Function]}
-          associateTeacherToStudent={[MockFunction]}
-          courseData={Object {}}
-          coursePageLogic={
-            Object {
-              "filterByAssistant": 0,
-              "filterByTag": Array [],
-              "selectedStudents": Object {},
-              "selectedTeacher": "",
-              "showDropdown": "",
-            }
-          }
-          data={
-            Object {
-              "Tags": Array [
-                Object {
-                  "color": "red",
-                  "courseInstanceId": null,
-                  "id": 20001,
-                  "name": "Javascript",
-                },
-              ],
-              "User": Object {
-                "createdAt": "2018-03-26T00:00:00.000Z",
-                "email": "johan.studerande@helsinki.invalid",
-                "firsts": "Johan Wilhelm",
-                "id": 10012,
-                "lastname": "Studerande",
-                "studentNumber": "014553242",
-                "sysop": false,
-                "teacher": false,
-                "updatedAt": "2018-03-26T00:00:00.000Z",
-                "username": "tiraopiskelija2",
-              },
-              "codeReviews": Array [],
-              "courseInstanceId": 10011,
-              "createdAt": "2018-03-26T00:00:00.000Z",
-              "github": "http://github.com/tiralabra2",
-              "id": 10012,
-              "projectName": "Tiran toinen labraprojekti",
-              "teacherInstanceId": 10011,
-              "updatedAt": "2018-03-26T00:00:00.000Z",
-              "userId": 10012,
-              "weeks": Array [],
-            }
-          }
-          dropDownTags={
-            Array [
-              Object {
-                "key": 20001,
-                "selected": false,
-                "text": "Javascript",
-                "value": 20001,
-              },
-              Object {
-                "key": 20002,
-                "selected": false,
-                "text": "HTML",
-                "value": 20002,
-              },
-              Object {
-                "key": 20003,
-                "selected": false,
-                "text": "game",
-                "value": 20003,
-              },
-              Object {
-                "key": 20004,
-                "selected": false,
-                "text": "React",
-                "value": 20004,
-              },
-              Object {
-                "key": 20005,
-                "selected": false,
-                "text": "Node.js",
-                "value": 20005,
-              },
-              Object {
-                "key": 20006,
-                "selected": false,
-                "text": "Java",
-                "value": 20006,
-              },
-              Object {
-                "key": 20007,
-                "selected": false,
-                "text": "FORTRAN",
-                "value": 20007,
-              },
-              Object {
-                "key": 20008,
-                "selected": false,
-                "text": "DROPPED",
-                "value": 20008,
-              },
-              Object {
-                "key": 20009,
-                "selected": false,
-                "text": "Tag for this course",
-                "value": 20009,
-              },
-            ]
-          }
-          dropDownTeachers={Array []}
-          extraColumns={Array []}
-          getAllTags={[MockFunction]}
-          getStudentFinalGrade={[Function]}
-          key="tableRow10012"
-          loggedInUser={Object {}}
-          selectStudent={[MockFunction]}
-          selectedInstance={
-            Object {
-              "data": Array [
-                Object {
-                  "Tags": Array [
-                    Object {
-                      "color": "red",
-                      "courseInstanceId": null,
-                      "id": 20001,
-                      "name": "Javascript",
-                    },
-                  ],
-                  "User": Object {
-                    "createdAt": "2018-03-26T00:00:00.000Z",
-                    "email": "johan.studerande@helsinki.invalid",
-                    "firsts": "Johan Wilhelm",
-                    "id": 10012,
-                    "lastname": "Studerande",
-                    "studentNumber": "014553242",
-                    "sysop": false,
-                    "teacher": false,
-                    "updatedAt": "2018-03-26T00:00:00.000Z",
-                    "username": "tiraopiskelija2",
-                  },
-                  "codeReviews": Array [],
-                  "courseInstanceId": 10011,
-                  "createdAt": "2018-03-26T00:00:00.000Z",
-                  "github": "http://github.com/tiralabra2",
-                  "id": 10012,
-                  "projectName": "Tiran toinen labraprojekti",
-                  "teacherInstanceId": 10011,
-                  "updatedAt": "2018-03-26T00:00:00.000Z",
-                  "userId": 10012,
-                  "weeks": Array [],
-                },
-                Object {
-                  "Tags": Array [
-                    Object {
-                      "color": "grey",
-                      "courseInstanceId": null,
-                      "id": 20008,
-                      "name": "DROPPED",
-                    },
-                    Object {
-                      "color": "yellow",
-                      "courseInstanceId": null,
-                      "id": 20002,
-                      "name": "HTML",
-                    },
-                  ],
-                  "User": Object {
-                    "createdAt": "2018-03-26T00:00:00.000Z",
-                    "email": "teras.henkilo@helsinki.invalid",
-                    "firsts": "Teräs",
-                    "id": 10031,
-                    "lastname": "Henkilö",
-                    "studentNumber": "014666666",
-                    "sysop": false,
-                    "teacher": false,
-                    "updatedAt": "2018-03-26T00:00:00.000Z",
-                    "username": "superopiskelija",
-                  },
-                  "codeReviews": Array [],
-                  "courseInstanceId": 10011,
-                  "createdAt": "2018-03-26T00:00:00.000Z",
-                  "github": "http://github.com/superprojekti",
-                  "id": 10031,
-                  "projectName": "Tira super projekti",
-                  "teacherInstanceId": 10011,
-                  "updatedAt": "2018-06-05T07:12:28.603Z",
-                  "userId": 10031,
-                  "weeks": Array [],
-                },
-                Object {
-                  "Tags": Array [],
-                  "User": Object {
-                    "createdAt": "2018-03-26T00:00:00.000Z",
-                    "email": "maarit.opiskelija@helsinki.invalid",
-                    "firsts": "Maarit Mirja",
-                    "id": 10011,
-                    "lastname": "Opiskelija",
-                    "studentNumber": "014578343",
-                    "sysop": false,
-                    "teacher": false,
-                    "updatedAt": "2018-03-26T00:00:00.000Z",
-                    "username": "tiraopiskelija1",
-                  },
-                  "codeReviews": Array [],
-                  "courseInstanceId": 10011,
-                  "createdAt": "2018-03-26T00:00:00.000Z",
-                  "github": "http://github.com/tiralabra1",
-                  "id": 10011,
-                  "projectName": "Tiran labraprojekti",
-                  "teacherInstanceId": 10011,
-                  "updatedAt": "2018-03-26T00:00:00.000Z",
-                  "userId": 10011,
-                  "weeks": Array [],
-                },
-              ],
-              "id": 10011,
-              "role": "teacher",
-            }
-          }
-          shouldHideGrade={[Function]}
-          shouldHideInstructor={[Function]}
-          showAssistantDropdown={[MockFunction]}
-          showColumn={[Function]}
-          showTagDropdown={[MockFunction]}
-          studentInstances={
-            Array [
-              Object {
-                "Tags": Array [
-                  Object {
-                    "color": "red",
-                    "courseInstanceId": null,
-                    "id": 20001,
-                    "name": "Javascript",
-                  },
-                ],
-                "User": Object {
-                  "createdAt": "2018-03-26T00:00:00.000Z",
-                  "email": "johan.studerande@helsinki.invalid",
-                  "firsts": "Johan Wilhelm",
-                  "id": 10012,
-                  "lastname": "Studerande",
-                  "studentNumber": "014553242",
-                  "sysop": false,
-                  "teacher": false,
-                  "updatedAt": "2018-03-26T00:00:00.000Z",
-                  "username": "tiraopiskelija2",
-                },
-                "codeReviews": Array [],
-                "courseInstanceId": 10011,
-                "createdAt": "2018-03-26T00:00:00.000Z",
-                "github": "http://github.com/tiralabra2",
-                "id": 10012,
-                "projectName": "Tiran toinen labraprojekti",
-                "teacherInstanceId": 10011,
-                "updatedAt": "2018-03-26T00:00:00.000Z",
-                "userId": 10012,
-                "weeks": Array [],
-              },
-              Object {
-                "Tags": Array [
-                  Object {
-                    "color": "grey",
-                    "courseInstanceId": null,
-                    "id": 20008,
-                    "name": "DROPPED",
-                  },
-                  Object {
-                    "color": "yellow",
-                    "courseInstanceId": null,
-                    "id": 20002,
-                    "name": "HTML",
-                  },
-                ],
-                "User": Object {
-                  "createdAt": "2018-03-26T00:00:00.000Z",
-                  "email": "teras.henkilo@helsinki.invalid",
-                  "firsts": "Teräs",
-                  "id": 10031,
-                  "lastname": "Henkilö",
-                  "studentNumber": "014666666",
-                  "sysop": false,
-                  "teacher": false,
-                  "updatedAt": "2018-03-26T00:00:00.000Z",
-                  "username": "superopiskelija",
-                },
-                "codeReviews": Array [],
-                "courseInstanceId": 10011,
-                "createdAt": "2018-03-26T00:00:00.000Z",
-                "github": "http://github.com/superprojekti",
-                "id": 10031,
-                "projectName": "Tira super projekti",
-                "teacherInstanceId": 10011,
-                "updatedAt": "2018-06-05T07:12:28.603Z",
-                "userId": 10031,
-                "weeks": Array [],
-              },
-              Object {
-                "Tags": Array [],
-                "User": Object {
-                  "createdAt": "2018-03-26T00:00:00.000Z",
-                  "email": "maarit.opiskelija@helsinki.invalid",
-                  "firsts": "Maarit Mirja",
-                  "id": 10011,
-                  "lastname": "Opiskelija",
-                  "studentNumber": "014578343",
-                  "sysop": false,
-                  "teacher": false,
-                  "updatedAt": "2018-03-26T00:00:00.000Z",
-                  "username": "tiraopiskelija1",
-                },
-                "codeReviews": Array [],
-                "courseInstanceId": 10011,
-                "createdAt": "2018-03-26T00:00:00.000Z",
-                "github": "http://github.com/tiralabra1",
-                "id": 10011,
-                "projectName": "Tiran labraprojekti",
-                "teacherInstanceId": 10011,
-                "updatedAt": "2018-03-26T00:00:00.000Z",
-                "userId": 10011,
-                "weeks": Array [],
-              },
-            ]
-          }
-          tagStudent={[MockFunction]}
-          unTagStudent={[MockFunction]}
-          unselectStudent={[MockFunction]}
-          updateStudentProjectInfo={[MockFunction]}
-        />
-        <StudentTableRow
-          addFilterTag={[Function]}
-          associateTeacherToStudent={[MockFunction]}
-          courseData={Object {}}
-          coursePageLogic={
-            Object {
-              "filterByAssistant": 0,
-              "filterByTag": Array [],
-              "selectedStudents": Object {},
-              "selectedTeacher": "",
-              "showDropdown": "",
-            }
-          }
-          data={
-            Object {
-              "Tags": Array [
-                Object {
-                  "color": "grey",
-                  "courseInstanceId": null,
-                  "id": 20008,
-                  "name": "DROPPED",
-                },
-                Object {
-                  "color": "yellow",
-                  "courseInstanceId": null,
-                  "id": 20002,
-                  "name": "HTML",
-                },
-              ],
-              "User": Object {
-                "createdAt": "2018-03-26T00:00:00.000Z",
-                "email": "teras.henkilo@helsinki.invalid",
-                "firsts": "Teräs",
-                "id": 10031,
-                "lastname": "Henkilö",
-                "studentNumber": "014666666",
-                "sysop": false,
-                "teacher": false,
-                "updatedAt": "2018-03-26T00:00:00.000Z",
-                "username": "superopiskelija",
-              },
-              "codeReviews": Array [],
-              "courseInstanceId": 10011,
-              "createdAt": "2018-03-26T00:00:00.000Z",
-              "github": "http://github.com/superprojekti",
-              "id": 10031,
-              "projectName": "Tira super projekti",
-              "teacherInstanceId": 10011,
-              "updatedAt": "2018-06-05T07:12:28.603Z",
-              "userId": 10031,
-              "weeks": Array [],
-            }
-          }
-          dropDownTags={
-            Array [
-              Object {
-                "key": 20001,
-                "selected": false,
-                "text": "Javascript",
-                "value": 20001,
-              },
-              Object {
-                "key": 20002,
-                "selected": false,
-                "text": "HTML",
-                "value": 20002,
-              },
-              Object {
-                "key": 20003,
-                "selected": false,
-                "text": "game",
-                "value": 20003,
-              },
-              Object {
-                "key": 20004,
-                "selected": false,
-                "text": "React",
-                "value": 20004,
-              },
-              Object {
-                "key": 20005,
-                "selected": false,
-                "text": "Node.js",
-                "value": 20005,
-              },
-              Object {
-                "key": 20006,
-                "selected": false,
-                "text": "Java",
-                "value": 20006,
-              },
-              Object {
-                "key": 20007,
-                "selected": false,
-                "text": "FORTRAN",
-                "value": 20007,
-              },
-              Object {
-                "key": 20008,
-                "selected": false,
-                "text": "DROPPED",
-                "value": 20008,
-              },
-              Object {
-                "key": 20009,
-                "selected": false,
-                "text": "Tag for this course",
-                "value": 20009,
-              },
-            ]
-          }
-          dropDownTeachers={Array []}
-          extraColumns={Array []}
-          getAllTags={[MockFunction]}
-          getStudentFinalGrade={[Function]}
-          key="tableRow10031"
-          loggedInUser={Object {}}
-          selectStudent={[MockFunction]}
-          selectedInstance={
-            Object {
-              "data": Array [
-                Object {
-                  "Tags": Array [
-                    Object {
-                      "color": "red",
-                      "courseInstanceId": null,
-                      "id": 20001,
-                      "name": "Javascript",
-                    },
-                  ],
-                  "User": Object {
-                    "createdAt": "2018-03-26T00:00:00.000Z",
-                    "email": "johan.studerande@helsinki.invalid",
-                    "firsts": "Johan Wilhelm",
-                    "id": 10012,
-                    "lastname": "Studerande",
-                    "studentNumber": "014553242",
-                    "sysop": false,
-                    "teacher": false,
-                    "updatedAt": "2018-03-26T00:00:00.000Z",
-                    "username": "tiraopiskelija2",
-                  },
-                  "codeReviews": Array [],
-                  "courseInstanceId": 10011,
-                  "createdAt": "2018-03-26T00:00:00.000Z",
-                  "github": "http://github.com/tiralabra2",
-                  "id": 10012,
-                  "projectName": "Tiran toinen labraprojekti",
-                  "teacherInstanceId": 10011,
-                  "updatedAt": "2018-03-26T00:00:00.000Z",
-                  "userId": 10012,
-                  "weeks": Array [],
-                },
-                Object {
-                  "Tags": Array [
-                    Object {
-                      "color": "grey",
-                      "courseInstanceId": null,
-                      "id": 20008,
-                      "name": "DROPPED",
-                    },
-                    Object {
-                      "color": "yellow",
-                      "courseInstanceId": null,
-                      "id": 20002,
-                      "name": "HTML",
-                    },
-                  ],
-                  "User": Object {
-                    "createdAt": "2018-03-26T00:00:00.000Z",
-                    "email": "teras.henkilo@helsinki.invalid",
-                    "firsts": "Teräs",
-                    "id": 10031,
-                    "lastname": "Henkilö",
-                    "studentNumber": "014666666",
-                    "sysop": false,
-                    "teacher": false,
-                    "updatedAt": "2018-03-26T00:00:00.000Z",
-                    "username": "superopiskelija",
-                  },
-                  "codeReviews": Array [],
-                  "courseInstanceId": 10011,
-                  "createdAt": "2018-03-26T00:00:00.000Z",
-                  "github": "http://github.com/superprojekti",
-                  "id": 10031,
-                  "projectName": "Tira super projekti",
-                  "teacherInstanceId": 10011,
-                  "updatedAt": "2018-06-05T07:12:28.603Z",
-                  "userId": 10031,
-                  "weeks": Array [],
-                },
-                Object {
-                  "Tags": Array [],
-                  "User": Object {
-                    "createdAt": "2018-03-26T00:00:00.000Z",
-                    "email": "maarit.opiskelija@helsinki.invalid",
-                    "firsts": "Maarit Mirja",
-                    "id": 10011,
-                    "lastname": "Opiskelija",
-                    "studentNumber": "014578343",
-                    "sysop": false,
-                    "teacher": false,
-                    "updatedAt": "2018-03-26T00:00:00.000Z",
-                    "username": "tiraopiskelija1",
-                  },
-                  "codeReviews": Array [],
-                  "courseInstanceId": 10011,
-                  "createdAt": "2018-03-26T00:00:00.000Z",
-                  "github": "http://github.com/tiralabra1",
-                  "id": 10011,
-                  "projectName": "Tiran labraprojekti",
-                  "teacherInstanceId": 10011,
-                  "updatedAt": "2018-03-26T00:00:00.000Z",
-                  "userId": 10011,
-                  "weeks": Array [],
-                },
-              ],
-              "id": 10011,
-              "role": "teacher",
-            }
-          }
-          shouldHideGrade={[Function]}
-          shouldHideInstructor={[Function]}
-          showAssistantDropdown={[MockFunction]}
-          showColumn={[Function]}
-          showTagDropdown={[MockFunction]}
-          studentInstances={
-            Array [
-              Object {
-                "Tags": Array [
-                  Object {
-                    "color": "red",
-                    "courseInstanceId": null,
-                    "id": 20001,
-                    "name": "Javascript",
-                  },
-                ],
-                "User": Object {
-                  "createdAt": "2018-03-26T00:00:00.000Z",
-                  "email": "johan.studerande@helsinki.invalid",
-                  "firsts": "Johan Wilhelm",
-                  "id": 10012,
-                  "lastname": "Studerande",
-                  "studentNumber": "014553242",
-                  "sysop": false,
-                  "teacher": false,
-                  "updatedAt": "2018-03-26T00:00:00.000Z",
-                  "username": "tiraopiskelija2",
-                },
-                "codeReviews": Array [],
-                "courseInstanceId": 10011,
-                "createdAt": "2018-03-26T00:00:00.000Z",
-                "github": "http://github.com/tiralabra2",
-                "id": 10012,
-                "projectName": "Tiran toinen labraprojekti",
-                "teacherInstanceId": 10011,
-                "updatedAt": "2018-03-26T00:00:00.000Z",
-                "userId": 10012,
-                "weeks": Array [],
-              },
-              Object {
-                "Tags": Array [
-                  Object {
-                    "color": "grey",
-                    "courseInstanceId": null,
-                    "id": 20008,
-                    "name": "DROPPED",
-                  },
-                  Object {
-                    "color": "yellow",
-                    "courseInstanceId": null,
-                    "id": 20002,
-                    "name": "HTML",
-                  },
-                ],
-                "User": Object {
-                  "createdAt": "2018-03-26T00:00:00.000Z",
-                  "email": "teras.henkilo@helsinki.invalid",
-                  "firsts": "Teräs",
-                  "id": 10031,
-                  "lastname": "Henkilö",
-                  "studentNumber": "014666666",
-                  "sysop": false,
-                  "teacher": false,
-                  "updatedAt": "2018-03-26T00:00:00.000Z",
-                  "username": "superopiskelija",
-                },
-                "codeReviews": Array [],
-                "courseInstanceId": 10011,
-                "createdAt": "2018-03-26T00:00:00.000Z",
-                "github": "http://github.com/superprojekti",
-                "id": 10031,
-                "projectName": "Tira super projekti",
-                "teacherInstanceId": 10011,
-                "updatedAt": "2018-06-05T07:12:28.603Z",
-                "userId": 10031,
-                "weeks": Array [],
-              },
-              Object {
-                "Tags": Array [],
-                "User": Object {
-                  "createdAt": "2018-03-26T00:00:00.000Z",
-                  "email": "maarit.opiskelija@helsinki.invalid",
-                  "firsts": "Maarit Mirja",
-                  "id": 10011,
-                  "lastname": "Opiskelija",
-                  "studentNumber": "014578343",
-                  "sysop": false,
-                  "teacher": false,
-                  "updatedAt": "2018-03-26T00:00:00.000Z",
-                  "username": "tiraopiskelija1",
-                },
-                "codeReviews": Array [],
-                "courseInstanceId": 10011,
-                "createdAt": "2018-03-26T00:00:00.000Z",
-                "github": "http://github.com/tiralabra1",
-                "id": 10011,
-                "projectName": "Tiran labraprojekti",
-                "teacherInstanceId": 10011,
-                "updatedAt": "2018-03-26T00:00:00.000Z",
-                "userId": 10011,
-                "weeks": Array [],
-              },
-            ]
-          }
-          tagStudent={[MockFunction]}
-          unTagStudent={[MockFunction]}
-          unselectStudent={[MockFunction]}
-          updateStudentProjectInfo={[MockFunction]}
-        />
-        <StudentTableRow
-          addFilterTag={[Function]}
-          associateTeacherToStudent={[MockFunction]}
-          courseData={Object {}}
-          coursePageLogic={
-            Object {
-              "filterByAssistant": 0,
-              "filterByTag": Array [],
-              "selectedStudents": Object {},
-              "selectedTeacher": "",
-              "showDropdown": "",
-            }
-          }
-          data={
-            Object {
-              "Tags": Array [],
-              "User": Object {
-                "createdAt": "2018-03-26T00:00:00.000Z",
-                "email": "maarit.opiskelija@helsinki.invalid",
-                "firsts": "Maarit Mirja",
-                "id": 10011,
-                "lastname": "Opiskelija",
-                "studentNumber": "014578343",
-                "sysop": false,
-                "teacher": false,
-                "updatedAt": "2018-03-26T00:00:00.000Z",
-                "username": "tiraopiskelija1",
-              },
-              "codeReviews": Array [],
-              "courseInstanceId": 10011,
-              "createdAt": "2018-03-26T00:00:00.000Z",
-              "github": "http://github.com/tiralabra1",
-              "id": 10011,
-              "projectName": "Tiran labraprojekti",
-              "teacherInstanceId": 10011,
-              "updatedAt": "2018-03-26T00:00:00.000Z",
-              "userId": 10011,
-              "weeks": Array [],
-            }
-          }
-          dropDownTags={
-            Array [
-              Object {
-                "key": 20001,
-                "selected": false,
-                "text": "Javascript",
-                "value": 20001,
-              },
-              Object {
-                "key": 20002,
-                "selected": false,
-                "text": "HTML",
-                "value": 20002,
-              },
-              Object {
-                "key": 20003,
-                "selected": false,
-                "text": "game",
-                "value": 20003,
-              },
-              Object {
-                "key": 20004,
-                "selected": false,
-                "text": "React",
-                "value": 20004,
-              },
-              Object {
-                "key": 20005,
-                "selected": false,
-                "text": "Node.js",
-                "value": 20005,
-              },
-              Object {
-                "key": 20006,
-                "selected": false,
-                "text": "Java",
-                "value": 20006,
-              },
-              Object {
-                "key": 20007,
-                "selected": false,
-                "text": "FORTRAN",
-                "value": 20007,
-              },
-              Object {
-                "key": 20008,
-                "selected": false,
-                "text": "DROPPED",
-                "value": 20008,
-              },
-              Object {
-                "key": 20009,
-                "selected": false,
-                "text": "Tag for this course",
-                "value": 20009,
-              },
-            ]
-          }
-          dropDownTeachers={Array []}
-          extraColumns={Array []}
-          getAllTags={[MockFunction]}
-          getStudentFinalGrade={[Function]}
-          key="tableRow10011"
-          loggedInUser={Object {}}
-          selectStudent={[MockFunction]}
-          selectedInstance={
-            Object {
-              "data": Array [
-                Object {
-                  "Tags": Array [
-                    Object {
-                      "color": "red",
-                      "courseInstanceId": null,
-                      "id": 20001,
-                      "name": "Javascript",
-                    },
-                  ],
-                  "User": Object {
-                    "createdAt": "2018-03-26T00:00:00.000Z",
-                    "email": "johan.studerande@helsinki.invalid",
-                    "firsts": "Johan Wilhelm",
-                    "id": 10012,
-                    "lastname": "Studerande",
-                    "studentNumber": "014553242",
-                    "sysop": false,
-                    "teacher": false,
-                    "updatedAt": "2018-03-26T00:00:00.000Z",
-                    "username": "tiraopiskelija2",
-                  },
-                  "codeReviews": Array [],
-                  "courseInstanceId": 10011,
-                  "createdAt": "2018-03-26T00:00:00.000Z",
-                  "github": "http://github.com/tiralabra2",
-                  "id": 10012,
-                  "projectName": "Tiran toinen labraprojekti",
-                  "teacherInstanceId": 10011,
-                  "updatedAt": "2018-03-26T00:00:00.000Z",
-                  "userId": 10012,
-                  "weeks": Array [],
-                },
-                Object {
-                  "Tags": Array [
-                    Object {
-                      "color": "grey",
-                      "courseInstanceId": null,
-                      "id": 20008,
-                      "name": "DROPPED",
-                    },
-                    Object {
-                      "color": "yellow",
-                      "courseInstanceId": null,
-                      "id": 20002,
-                      "name": "HTML",
-                    },
-                  ],
-                  "User": Object {
-                    "createdAt": "2018-03-26T00:00:00.000Z",
-                    "email": "teras.henkilo@helsinki.invalid",
-                    "firsts": "Teräs",
-                    "id": 10031,
-                    "lastname": "Henkilö",
-                    "studentNumber": "014666666",
-                    "sysop": false,
-                    "teacher": false,
-                    "updatedAt": "2018-03-26T00:00:00.000Z",
-                    "username": "superopiskelija",
-                  },
-                  "codeReviews": Array [],
-                  "courseInstanceId": 10011,
-                  "createdAt": "2018-03-26T00:00:00.000Z",
-                  "github": "http://github.com/superprojekti",
-                  "id": 10031,
-                  "projectName": "Tira super projekti",
-                  "teacherInstanceId": 10011,
-                  "updatedAt": "2018-06-05T07:12:28.603Z",
-                  "userId": 10031,
-                  "weeks": Array [],
-                },
-                Object {
-                  "Tags": Array [],
-                  "User": Object {
-                    "createdAt": "2018-03-26T00:00:00.000Z",
-                    "email": "maarit.opiskelija@helsinki.invalid",
-                    "firsts": "Maarit Mirja",
-                    "id": 10011,
-                    "lastname": "Opiskelija",
-                    "studentNumber": "014578343",
-                    "sysop": false,
-                    "teacher": false,
-                    "updatedAt": "2018-03-26T00:00:00.000Z",
-                    "username": "tiraopiskelija1",
-                  },
-                  "codeReviews": Array [],
-                  "courseInstanceId": 10011,
-                  "createdAt": "2018-03-26T00:00:00.000Z",
-                  "github": "http://github.com/tiralabra1",
-                  "id": 10011,
-                  "projectName": "Tiran labraprojekti",
-                  "teacherInstanceId": 10011,
-                  "updatedAt": "2018-03-26T00:00:00.000Z",
-                  "userId": 10011,
-                  "weeks": Array [],
-                },
-              ],
-              "id": 10011,
-              "role": "teacher",
-            }
-          }
-          shouldHideGrade={[Function]}
-          shouldHideInstructor={[Function]}
-          showAssistantDropdown={[MockFunction]}
-          showColumn={[Function]}
-          showTagDropdown={[MockFunction]}
-          studentInstances={
-            Array [
-              Object {
-                "Tags": Array [
-                  Object {
-                    "color": "red",
-                    "courseInstanceId": null,
-                    "id": 20001,
-                    "name": "Javascript",
-                  },
-                ],
-                "User": Object {
-                  "createdAt": "2018-03-26T00:00:00.000Z",
-                  "email": "johan.studerande@helsinki.invalid",
-                  "firsts": "Johan Wilhelm",
-                  "id": 10012,
-                  "lastname": "Studerande",
-                  "studentNumber": "014553242",
-                  "sysop": false,
-                  "teacher": false,
-                  "updatedAt": "2018-03-26T00:00:00.000Z",
-                  "username": "tiraopiskelija2",
-                },
-                "codeReviews": Array [],
-                "courseInstanceId": 10011,
-                "createdAt": "2018-03-26T00:00:00.000Z",
-                "github": "http://github.com/tiralabra2",
-                "id": 10012,
-                "projectName": "Tiran toinen labraprojekti",
-                "teacherInstanceId": 10011,
-                "updatedAt": "2018-03-26T00:00:00.000Z",
-                "userId": 10012,
-                "weeks": Array [],
-              },
-              Object {
-                "Tags": Array [
-                  Object {
-                    "color": "grey",
-                    "courseInstanceId": null,
-                    "id": 20008,
-                    "name": "DROPPED",
-                  },
-                  Object {
-                    "color": "yellow",
-                    "courseInstanceId": null,
-                    "id": 20002,
-                    "name": "HTML",
-                  },
-                ],
-                "User": Object {
-                  "createdAt": "2018-03-26T00:00:00.000Z",
-                  "email": "teras.henkilo@helsinki.invalid",
-                  "firsts": "Teräs",
-                  "id": 10031,
-                  "lastname": "Henkilö",
-                  "studentNumber": "014666666",
-                  "sysop": false,
-                  "teacher": false,
-                  "updatedAt": "2018-03-26T00:00:00.000Z",
-                  "username": "superopiskelija",
-                },
-                "codeReviews": Array [],
-                "courseInstanceId": 10011,
-                "createdAt": "2018-03-26T00:00:00.000Z",
-                "github": "http://github.com/superprojekti",
-                "id": 10031,
-                "projectName": "Tira super projekti",
-                "teacherInstanceId": 10011,
-                "updatedAt": "2018-06-05T07:12:28.603Z",
-                "userId": 10031,
-                "weeks": Array [],
-              },
-              Object {
-                "Tags": Array [],
-                "User": Object {
-                  "createdAt": "2018-03-26T00:00:00.000Z",
-                  "email": "maarit.opiskelija@helsinki.invalid",
-                  "firsts": "Maarit Mirja",
-                  "id": 10011,
-                  "lastname": "Opiskelija",
-                  "studentNumber": "014578343",
-                  "sysop": false,
-                  "teacher": false,
-                  "updatedAt": "2018-03-26T00:00:00.000Z",
-                  "username": "tiraopiskelija1",
-                },
-                "codeReviews": Array [],
-                "courseInstanceId": 10011,
-                "createdAt": "2018-03-26T00:00:00.000Z",
-                "github": "http://github.com/tiralabra1",
-                "id": 10011,
-                "projectName": "Tiran labraprojekti",
-                "teacherInstanceId": 10011,
-                "updatedAt": "2018-03-26T00:00:00.000Z",
-                "userId": 10011,
-                "weeks": Array [],
-              },
-            ]
-          }
-          tagStudent={[MockFunction]}
-          unTagStudent={[MockFunction]}
-          unselectStudent={[MockFunction]}
-          updateStudentProjectInfo={[MockFunction]}
-        />
-      </TableBody>
-    </Table>
-  </Connect(HorizontalScrollable)>
-</Fragment>
+        <tr
+          class="TableRowForDroppedOutStudent"
+        >
+          <td
+            class=""
+          >
+            <i
+              aria-hidden="true"
+              class="black warning icon"
+            />
+            <span>
+              Johan Wilhelm Studerande
+              <br />
+              (014553242)
+            </span>
+          </td>
+          <td
+            class=""
+          >
+            <span>
+              Tiran toinen labraprojekti
+              <br />
+              <a
+                href="http://github.com/tiralabra2"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                <i
+                  aria-hidden="true"
+                  class="black github icon"
+                />
+                tiralabra2
+              </a>
+              <div>
+                <span
+                  style="float: left; margin-right: 0.33em;"
+                >
+                  <div
+                    class="ui buttons mini"
+                  >
+                    <button
+                      class="ui red mini compact button"
+                      style="display: inline-block;"
+                      type="button"
+                    >
+                      <p>
+                        Javascript
+                      </p>
+                    </button>
+                  </div>
+                </span>
+              </div>
+            </span>
+          </td>
+          <td
+            class=""
+          >
+            <span>
+              not assigned
+            </span>
+          </td>
+        </tr>
+        <tr
+          class="TableRowForDroppedOutStudent"
+        >
+          <td
+            class=""
+          >
+            <i
+              aria-hidden="true"
+              class="black warning icon"
+            />
+            <span>
+              Teräs Henkilö
+              <br />
+              (014666666)
+            </span>
+          </td>
+          <td
+            class=""
+          >
+            <span>
+              Tira super projekti
+              <br />
+              <a
+                href="http://github.com/superprojekti"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                <i
+                  aria-hidden="true"
+                  class="black github icon"
+                />
+                superprojekti
+              </a>
+              <div>
+                <span
+                  style="float: left; margin-right: 0.33em;"
+                >
+                  <div
+                    class="ui buttons mini"
+                  >
+                    <button
+                      class="ui grey mini compact button"
+                      style="display: inline-block;"
+                      type="button"
+                    >
+                      <p>
+                        DROPPED
+                      </p>
+                    </button>
+                  </div>
+                </span>
+                <span
+                  style="float: left; margin-right: 0.33em;"
+                >
+                  <div
+                    class="ui buttons mini"
+                  >
+                    <button
+                      class="ui yellow mini compact button"
+                      style="display: inline-block;"
+                      type="button"
+                    >
+                      <p>
+                        HTML
+                      </p>
+                    </button>
+                  </div>
+                </span>
+              </div>
+            </span>
+          </td>
+          <td
+            class=""
+          >
+            <span>
+              not assigned
+            </span>
+          </td>
+        </tr>
+        <tr
+          class="TableRowForDroppedOutStudent"
+        >
+          <td
+            class=""
+          >
+            <i
+              aria-hidden="true"
+              class="black warning icon"
+            />
+            <span>
+              Maarit Mirja Opiskelija
+              <br />
+              (014578343)
+            </span>
+          </td>
+          <td
+            class=""
+          >
+            <span>
+              Tiran labraprojekti
+              <br />
+              <a
+                href="http://github.com/tiralabra1"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                <i
+                  aria-hidden="true"
+                  class="black github icon"
+                />
+                tiralabra1
+              </a>
+              <div />
+            </span>
+          </td>
+          <td
+            class=""
+          >
+            <span>
+              not assigned
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</DocumentFragment>
 `;
 
-exports[`<StudentTableRow /> StudentTableRow Component should render correctly 1`] = `
-<TableRow
-  as="tr"
-  cellAs="td"
-  className="TableRowForDroppedOutStudent"
-  key="10012"
->
-  <TableCell
-    as="td"
-    key="select"
-  >
-    <Checkbox
-      checked={false}
-      id="select10012"
-      onChange={[Function]}
-      type="checkbox"
-    />
-  </TableCell>
-  <TableCell
-    as="td"
-    key="studentinfo"
-  >
-    <Popup
-      content="This student's registration has been marked as mistaken"
-      disabled={false}
-      eventsEnabled={true}
-      on={
-        Array [
-          "click",
-          "hover",
-        ]
-      }
-      pinned={false}
-      popperModifiers={Array []}
-      position="top left"
-      trigger={
-        <Icon
-          as="i"
-          color="black"
-          name="warning"
-        />
-      }
-    />
-    <span>
-      Johan Wilhelm
-       
-      Studerande
-      <br />
-      (
-      014553242
-      )
-    </span>
-  </TableCell>
-  <TableCell
-    as="td"
-    key="projectinfo"
-  >
-    <span>
-      Tiran toinen labraprojekti
-      <br />
-      <RepoLink
-        url="http://github.com/tiralabra2"
-      />
-      <div>
-        <span
-          key="10012:20001"
-          style={
-            Object {
-              "float": "left",
-              "marginRight": "0.33em",
-            }
-          }
+exports[`<StudentTableRow /> > StudentTableRow Component > should render correctly 1`] = `
+<DocumentFragment>
+  <table>
+    <tbody>
+      <tr
+        class="TableRowForDroppedOutStudent"
+      >
+        <td
+          class=""
         >
-          <ButtonGroup
-            className="mini"
+          <div
+            class="ui fitted checkbox"
           >
-            <TagLabel
-              tag={
-                Object {
-                  "color": "red",
-                  "id": 20001,
-                  "name": "Javascript",
-                }
-              }
+            <input
+              class="hidden"
+              id="select10012"
+              readonly=""
+              tabindex="0"
+              type="checkbox"
+              value=""
             />
-          </ButtonGroup>
-        </span>
-      </div>
-    </span>
-  </TableCell>
-  <TableCell
-    as="td"
-    key="week0"
-    selectable={true}
-    style={
-      Object {
-        "position": "relative",
-      }
-    }
-    textAlign="center"
-  >
-    <Link
-      key="week0link"
-      style={
-        Object {
-          "alignItems": "center",
-          "bottom": 0,
-          "display": "flex",
-          "height": "100%",
-          "justifyContent": "center",
-          "left": 0,
-          "position": "absolute",
-          "right": 0,
-          "top": 0,
-        }
-      }
-      to={
-        Object {
-          "pathname": "/labtool/reviewstudent/undefined/10012/1",
-          "state": Object {
-            "cameFromCoursePage": true,
-          },
-        }
-      }
-    >
-      <div>
-        <p
-          style={
-            Object {
-              "alignItems": "center",
-              "display": "flex",
-              "height": "100%",
-              "justifyContent": "center",
-            }
-          }
+            <label
+              for="select10012"
+            />
+          </div>
+        </td>
+        <td
+          class=""
         >
-          -
-        </p>
-      </div>
-    </Link>
-  </TableCell>
-  <TableCell
-    as="td"
-    key="week1"
-    selectable={true}
-    style={
-      Object {
-        "position": "relative",
-      }
-    }
-    textAlign="center"
-  >
-    <Link
-      key="week1link"
-      style={
-        Object {
-          "alignItems": "center",
-          "bottom": 0,
-          "display": "flex",
-          "height": "100%",
-          "justifyContent": "center",
-          "left": 0,
-          "position": "absolute",
-          "right": 0,
-          "top": 0,
-        }
-      }
-      to={
-        Object {
-          "pathname": "/labtool/reviewstudent/undefined/10012/2",
-          "state": Object {
-            "cameFromCoursePage": true,
-          },
-        }
-      }
-    >
-      <div>
-        <p
-          style={
-            Object {
-              "alignItems": "center",
-              "display": "flex",
-              "height": "100%",
-              "justifyContent": "center",
-            }
-          }
+          <i
+            aria-hidden="true"
+            class="black warning icon"
+          />
+          <span>
+            Johan Wilhelm Studerande
+            <br />
+            (014553242)
+          </span>
+        </td>
+        <td
+          class=""
         >
-          -
-        </p>
-      </div>
-    </Link>
-  </TableCell>
-  <TableCell
-    as="td"
-    key="week2"
-    selectable={true}
-    style={
-      Object {
-        "position": "relative",
-      }
-    }
-    textAlign="center"
-  >
-    <Link
-      key="week2link"
-      style={
-        Object {
-          "alignItems": "center",
-          "bottom": 0,
-          "display": "flex",
-          "height": "100%",
-          "justifyContent": "center",
-          "left": 0,
-          "position": "absolute",
-          "right": 0,
-          "top": 0,
-        }
-      }
-      to={
-        Object {
-          "pathname": "/labtool/reviewstudent/undefined/10012/3",
-          "state": Object {
-            "cameFromCoursePage": true,
-          },
-        }
-      }
-    >
-      <div>
-        <p
-          style={
-            Object {
-              "alignItems": "center",
-              "display": "flex",
-              "height": "100%",
-              "justifyContent": "center",
-            }
-          }
+          <span>
+            Tiran toinen labraprojekti
+            <br />
+            <a
+              href="http://github.com/tiralabra2"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <i
+                aria-hidden="true"
+                class="black github icon"
+              />
+              tiralabra2
+            </a>
+            <div>
+              <span
+                style="float: left; margin-right: 0.33em;"
+              >
+                <div
+                  class="ui buttons mini"
+                >
+                  <button
+                    class="ui red mini compact button"
+                    style="display: inline-block;"
+                    type="button"
+                  >
+                    <p>
+                      Javascript
+                    </p>
+                  </button>
+                </div>
+              </span>
+            </div>
+          </span>
+        </td>
+        <td
+          class="selectable center aligned"
+          style="position: relative;"
         >
-          -
-        </p>
-      </div>
-    </Link>
-  </TableCell>
-  <TableCell
-    as="td"
-    key="week3"
-    selectable={true}
-    style={
-      Object {
-        "position": "relative",
-      }
-    }
-    textAlign="center"
-  >
-    <Link
-      key="week3link"
-      style={
-        Object {
-          "alignItems": "center",
-          "bottom": 0,
-          "display": "flex",
-          "height": "100%",
-          "justifyContent": "center",
-          "left": 0,
-          "position": "absolute",
-          "right": 0,
-          "top": 0,
-        }
-      }
-      to={
-        Object {
-          "pathname": "/labtool/reviewstudent/undefined/10012/4",
-          "state": Object {
-            "cameFromCoursePage": true,
-          },
-        }
-      }
-    >
-      <div>
-        <p
-          style={
-            Object {
-              "alignItems": "center",
-              "display": "flex",
-              "height": "100%",
-              "justifyContent": "center",
-            }
-          }
+          <a
+            href="/labtool/reviewstudent/TKT20010.2018.K.A.1/10012/1"
+            style="position: absolute; display: flex; top: 0px; left: 0px; right: 0px; bottom: 0px; justify-content: center; align-items: center; height: 100%;"
+          >
+            <div>
+              <p
+                style="display: flex; justify-content: center; align-items: center; height: 100%;"
+              >
+                -
+              </p>
+            </div>
+          </a>
+        </td>
+        <td
+          class="selectable center aligned"
+          style="position: relative;"
         >
-          -
-        </p>
-      </div>
-    </Link>
-  </TableCell>
-  <TableCell
-    as="td"
-    key="week4"
-    selectable={true}
-    style={
-      Object {
-        "position": "relative",
-      }
-    }
-    textAlign="center"
-  >
-    <Link
-      key="week4link"
-      style={
-        Object {
-          "alignItems": "center",
-          "bottom": 0,
-          "display": "flex",
-          "height": "100%",
-          "justifyContent": "center",
-          "left": 0,
-          "position": "absolute",
-          "right": 0,
-          "top": 0,
-        }
-      }
-      to={
-        Object {
-          "pathname": "/labtool/reviewstudent/undefined/10012/5",
-          "state": Object {
-            "cameFromCoursePage": true,
-          },
-        }
-      }
-    >
-      <div>
-        <p
-          style={
-            Object {
-              "alignItems": "center",
-              "display": "flex",
-              "height": "100%",
-              "justifyContent": "center",
-            }
-          }
+          <a
+            href="/labtool/reviewstudent/TKT20010.2018.K.A.1/10012/2"
+            style="position: absolute; display: flex; top: 0px; left: 0px; right: 0px; bottom: 0px; justify-content: center; align-items: center; height: 100%;"
+          >
+            <div>
+              <p
+                style="display: flex; justify-content: center; align-items: center; height: 100%;"
+              >
+                -
+              </p>
+            </div>
+          </a>
+        </td>
+        <td
+          class="selectable center aligned"
+          style="position: relative;"
         >
-          -
-        </p>
-      </div>
-    </Link>
-  </TableCell>
-  <TableCell
-    as="td"
-    key="week5"
-    selectable={true}
-    style={
-      Object {
-        "position": "relative",
-      }
-    }
-    textAlign="center"
-  >
-    <Link
-      key="week5link"
-      style={
-        Object {
-          "alignItems": "center",
-          "bottom": 0,
-          "display": "flex",
-          "height": "100%",
-          "justifyContent": "center",
-          "left": 0,
-          "position": "absolute",
-          "right": 0,
-          "top": 0,
-        }
-      }
-      to={
-        Object {
-          "pathname": "/labtool/reviewstudent/undefined/10012/6",
-          "state": Object {
-            "cameFromCoursePage": true,
-          },
-        }
-      }
-    >
-      <div>
-        <p
-          style={
-            Object {
-              "alignItems": "center",
-              "display": "flex",
-              "height": "100%",
-              "justifyContent": "center",
-            }
-          }
+          <a
+            href="/labtool/reviewstudent/TKT20010.2018.K.A.1/10012/3"
+            style="position: absolute; display: flex; top: 0px; left: 0px; right: 0px; bottom: 0px; justify-content: center; align-items: center; height: 100%;"
+          >
+            <div>
+              <p
+                style="display: flex; justify-content: center; align-items: center; height: 100%;"
+              >
+                -
+              </p>
+            </div>
+          </a>
+        </td>
+        <td
+          class="selectable center aligned"
+          style="position: relative;"
         >
-          -
-        </p>
-      </div>
-    </Link>
-  </TableCell>
-  <TableCell
-    as="td"
-    key="week6"
-    selectable={true}
-    style={
-      Object {
-        "position": "relative",
-      }
-    }
-    textAlign="center"
-  >
-    <Link
-      key="week6link"
-      style={
-        Object {
-          "alignItems": "center",
-          "bottom": 0,
-          "display": "flex",
-          "height": "100%",
-          "justifyContent": "center",
-          "left": 0,
-          "position": "absolute",
-          "right": 0,
-          "top": 0,
-        }
-      }
-      to={
-        Object {
-          "pathname": "/labtool/reviewstudent/undefined/10012/7",
-          "state": Object {
-            "cameFromCoursePage": true,
-          },
-        }
-      }
-    >
-      <div>
-        <p
-          style={
-            Object {
-              "alignItems": "center",
-              "display": "flex",
-              "height": "100%",
-              "justifyContent": "center",
-            }
-          }
+          <a
+            href="/labtool/reviewstudent/TKT20010.2018.K.A.1/10012/4"
+            style="position: absolute; display: flex; top: 0px; left: 0px; right: 0px; bottom: 0px; justify-content: center; align-items: center; height: 100%;"
+          >
+            <div>
+              <p
+                style="display: flex; justify-content: center; align-items: center; height: 100%;"
+              >
+                -
+              </p>
+            </div>
+          </a>
+        </td>
+        <td
+          class="selectable center aligned"
+          style="position: relative;"
         >
-          -
-        </p>
-      </div>
-    </Link>
-  </TableCell>
-  <TableCell
-    as="td"
-    key="pointssum"
-    textAlign="center"
-  >
-    <Points
-      points={0}
-    />
-  </TableCell>
-</TableRow>
+          <a
+            href="/labtool/reviewstudent/TKT20010.2018.K.A.1/10012/5"
+            style="position: absolute; display: flex; top: 0px; left: 0px; right: 0px; bottom: 0px; justify-content: center; align-items: center; height: 100%;"
+          >
+            <div>
+              <p
+                style="display: flex; justify-content: center; align-items: center; height: 100%;"
+              >
+                -
+              </p>
+            </div>
+          </a>
+        </td>
+        <td
+          class="selectable center aligned"
+          style="position: relative;"
+        >
+          <a
+            href="/labtool/reviewstudent/TKT20010.2018.K.A.1/10012/6"
+            style="position: absolute; display: flex; top: 0px; left: 0px; right: 0px; bottom: 0px; justify-content: center; align-items: center; height: 100%;"
+          >
+            <div>
+              <p
+                style="display: flex; justify-content: center; align-items: center; height: 100%;"
+              >
+                -
+              </p>
+            </div>
+          </a>
+        </td>
+        <td
+          class="selectable center aligned"
+          style="position: relative;"
+        >
+          <a
+            href="/labtool/reviewstudent/TKT20010.2018.K.A.1/10012/7"
+            style="position: absolute; display: flex; top: 0px; left: 0px; right: 0px; bottom: 0px; justify-content: center; align-items: center; height: 100%;"
+          >
+            <div>
+              <p
+                style="display: flex; justify-content: center; align-items: center; height: 100%;"
+              >
+                -
+              </p>
+            </div>
+          </a>
+        </td>
+        <td
+          class="center aligned"
+        >
+          0
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</DocumentFragment>
 `;
