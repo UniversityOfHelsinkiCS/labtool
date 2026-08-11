@@ -22,7 +22,8 @@ const constructObjectFromEntries = kv => {
   return obj
 }
 
-const reorderProperties = (obj, keys) => (Object.fromEntries || constructObjectFromEntries)(keys.map(x => [x, obj[x]]))
+const reorderProperties = (obj, keys) =>
+  (Object.fromEntries || constructObjectFromEntries)(keys.map(x => [x, obj[x]]))
 
 const checklistReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
@@ -34,13 +35,17 @@ const checklistReducer = (state = INITIAL_STATE, action) => {
       return { data: {}, maxPoints: '' }
     case 'CHECKLIST_CHANGE_FIELD': {
       const newData = state.data
-      newData[action.data.key].find(row => row.name === action.data.name)[action.data.field] = action.data.value
+      newData[action.data.key].find(row => row.name === action.data.name)[action.data.field] =
+        action.data.value
       return { ...state, data: newData }
     }
     case 'CHECKLIST_APPLY_PREREQUISITE_TO_CHECKS_IN_CATEGORY': {
       const newData = state.data
       const { category, prerequisite } = action
-      newData[category] = newData[category].map(row => ({ ...row, prerequisite: row.id === prerequisite || row.tempId === prerequisite ? null : prerequisite }))
+      newData[category] = newData[category].map(row => ({
+        ...row,
+        prerequisite: row.id === prerequisite || row.tempId === prerequisite ? null : prerequisite
+      }))
       return { ...state, data: newData }
     }
     case 'CHECKLIST_ADD_TOPIC': {
@@ -50,7 +55,15 @@ const checklistReducer = (state = INITIAL_STATE, action) => {
     }
     case 'CHECKLIST_ADD_ROW': {
       const newData = state.data
-      const nextTempId = 1 + Math.max(...Object.keys(newData).map(key => Math.max(...newData[key].filter(item => item.id || item.tempId).map(item => item.id || item.tempId))))
+      const nextTempId =
+        1 +
+        Math.max(
+          ...Object.keys(newData).map(key =>
+            Math.max(
+              ...newData[key].filter(item => item.id || item.tempId).map(item => item.id || item.tempId)
+            )
+          )
+        )
       newData[action.data.key].push({
         name: action.data.name,
         tempId: nextTempId,
@@ -111,8 +124,12 @@ const checklistReducer = (state = INITIAL_STATE, action) => {
     }
     case 'CHECKLIST_CAST_POINTS': {
       const newData = state.data
-      newData[action.data.key].find(row => row.name === action.data.name).checkedPoints = Number(newData[action.data.key].find(row => row.name === action.data.name).checkedPoints)
-      newData[action.data.key].find(row => row.name === action.data.name).uncheckedPoints = Number(newData[action.data.key].find(row => row.name === action.data.name).uncheckedPoints)
+      newData[action.data.key].find(row => row.name === action.data.name).checkedPoints = Number(
+        newData[action.data.key].find(row => row.name === action.data.name).checkedPoints
+      )
+      newData[action.data.key].find(row => row.name === action.data.name).uncheckedPoints = Number(
+        newData[action.data.key].find(row => row.name === action.data.name).uncheckedPoints
+      )
       return { ...state, data: newData }
     }
     case 'CHECKLIST_RESET':

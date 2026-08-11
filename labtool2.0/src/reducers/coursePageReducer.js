@@ -106,16 +106,22 @@ const courseInstancereducer = (store = INITIAL_STATE, action) => {
         if (student.id !== action.response.data.studentInstanceId) {
           return student
         }
-        const index = student.codeReviews.map(cr => cr.reviewNumber).indexOf(action.response.data.reviewNumber)
+        const index = student.codeReviews
+          .map(cr => cr.reviewNumber)
+          .indexOf(action.response.data.reviewNumber)
         student.codeReviews[index] = { ...student.codeReviews[index], points: action.response.data.points }
         return student
       })
       return { ...store, data: newData }
     }
     case 'CODE_REVIEW_ADD_LINK_SUCCESS': {
-      let updatedCodeReview = store.data.codeReviews.filter(review => review.reviewNumber === action.response.data.reviewNumber)[0]
+      let updatedCodeReview = store.data.codeReviews.filter(
+        review => review.reviewNumber === action.response.data.reviewNumber
+      )[0]
       if (updatedCodeReview) {
-        const otherCodeReviews = store.data.codeReviews.filter(review => review.reviewNumber !== action.response.data.reviewNumber)
+        const otherCodeReviews = store.data.codeReviews.filter(
+          review => review.reviewNumber !== action.response.data.reviewNumber
+        )
         updatedCodeReview = { ...updatedCodeReview, linkToReview: action.response.data.linkToReview }
         return { ...store, data: { ...store.data, codeReviews: [...otherCodeReviews, updatedCodeReview] } }
       } else {
@@ -123,10 +129,16 @@ const courseInstancereducer = (store = INITIAL_STATE, action) => {
       }
     }
     case 'TAG_STUDENT_SUCCESS': {
-      return { ...store, data: store.data.map(student => (student.id === action.response.id ? action.response : student)) }
+      return {
+        ...store,
+        data: store.data.map(student => (student.id === action.response.id ? action.response : student))
+      }
     }
     case 'UNTAG_STUDENT_SUCCESS': {
-      return { ...store, data: store.data.map(student => (student.id === action.response.id ? action.response : student)) }
+      return {
+        ...store,
+        data: store.data.map(student => (student.id === action.response.id ? action.response : student))
+      }
     }
     case 'SEND_EMAIL_SUCCESS': {
       if (store.role === 'teacher') {
@@ -143,7 +155,11 @@ const courseInstancereducer = (store = INITIAL_STATE, action) => {
       if (store.role === 'teacher') {
         const newStudents = store.data.map(student => ({
           ...student,
-          weeks: student.weeks.map(week => (week.id === action.response.weekId ? { ...week, comments: [...week.comments, action.response] } : week))
+          weeks: student.weeks.map(week =>
+            week.id === action.response.weekId
+              ? { ...week, comments: [...week.comments, action.response] }
+              : week
+          )
         }))
         return { ...store, data: newStudents }
       } else if (store.role === 'student') {
@@ -159,14 +175,27 @@ const courseInstancereducer = (store = INITIAL_STATE, action) => {
       const replaceComments = action.response
       const newStudents = store.data.map(student => ({
         ...student,
-        weeks: student.weeks.map(week => (week.id === weekId ? { ...week, comments: week.comments.map(comment => replaceComments.find(c => c.id === comment.id) || comment) } : week))
+        weeks: student.weeks.map(week =>
+          week.id === weekId
+            ? {
+                ...week,
+                comments: week.comments.map(
+                  comment => replaceComments.find(c => c.id === comment.id) || comment
+                )
+              }
+            : week
+        )
       }))
       return { ...store, data: newStudents }
     }
     case 'CODE_REVIEW_REMOVE_ONE_SUCCESS': {
       let studentToChange = store.data.find(student => student.id === action.response.data.reviewer)
-      studentToChange.codeReviews = studentToChange.codeReviews.filter(codeR => codeR.reviewNumber !== action.response.data.codeReviewRound)
-      const newData = store.data.map(student => (student.id !== action.response.data.reviewer ? student : studentToChange))
+      studentToChange.codeReviews = studentToChange.codeReviews.filter(
+        codeR => codeR.reviewNumber !== action.response.data.codeReviewRound
+      )
+      const newData = store.data.map(student =>
+        student.id !== action.response.data.reviewer ? student : studentToChange
+      )
       return { ...store, data: newData }
     }
     case 'STUDENT_PROJECT_INFO_UPDATE_SUCCESS': {

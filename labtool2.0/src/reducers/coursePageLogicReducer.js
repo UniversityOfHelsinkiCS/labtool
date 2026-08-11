@@ -97,19 +97,29 @@ const coursePageLogicReducer = (state = INITIAL_STATE, action) => {
             const numberOfWeeks = action.response.data.weeks.length
             for (let i = 1; i < numberOfWeeks; i++) {
               const probablyNewest =
-                new Date(action.response.data.weeks[i].createdAt) > new Date(action.response.data.weeks[i - 1].createdAt) ? action.response.data.weeks[i] : action.response.data.weeks[i - 1]
-              newestWeek = new Date(probablyNewest.createdAt) > new Date(newestWeek.createdAt) ? probablyNewest : newestWeek
+                new Date(action.response.data.weeks[i].createdAt) >
+                new Date(action.response.data.weeks[i - 1].createdAt)
+                  ? action.response.data.weeks[i]
+                  : action.response.data.weeks[i - 1]
+              newestWeek =
+                new Date(probablyNewest.createdAt) > new Date(newestWeek.createdAt)
+                  ? probablyNewest
+                  : newestWeek
             }
             newestReviewWeek = newestWeek ? newestWeek.weekNumber : 0
           }
 
           // The showCodeReviews -line below sets showCodeReviews to be equal to the reviewNumbers whose points are 0.
-          const showNewestOrUserOpened = state.lastReviewedIsShownAlready ? state.activeIndex : newestReviewWeek - 1
+          const showNewestOrUserOpened = state.lastReviewedIsShownAlready
+            ? state.activeIndex
+            : newestReviewWeek - 1
           return {
             ...state,
             lastReviewedWeek: newestReviewWeek,
             activeIndex: showNewestOrUserOpened,
-            showCodeReviews: action.response.data.codeReviews.filter(cr => cr.points === null).map(cr => cr.reviewNumber)
+            showCodeReviews: action.response.data.codeReviews
+              .filter(cr => cr.points === null)
+              .map(cr => cr.reviewNumber)
           }
         } catch (e) {
           console.error('Setting initial values for shown codeReviews failed.', e)

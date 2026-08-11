@@ -14,7 +14,12 @@ const userReducer = (store = INITIAL_STATE, action) => {
       return {
         ...store,
         importable: sortedCourses.map(m => {
-          return { ...m, europeanStart: createEuropeanDate(m.starts), europeanEnd: createEuropeanDate(m.ends), shorterId: createShorterCourseid(m.hid) }
+          return {
+            ...m,
+            europeanStart: createEuropeanDate(m.starts),
+            europeanEnd: createEuropeanDate(m.ends),
+            shorterId: createShorterCourseid(m.hid)
+          }
         })
       }
     }

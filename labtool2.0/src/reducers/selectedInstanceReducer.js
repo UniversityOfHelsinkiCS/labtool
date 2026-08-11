@@ -26,20 +26,29 @@ const selectedInstanceReducer = (store = INITIAL_STATE, action) => {
     case 'TEACHER_CREATE_SUCCESS':
       return { ...store, teacherInstances: [...store.teacherInstances, action.response] }
     case 'TEACHER_REMOVE_SUCCESS':
-      return { ...store, teacherInstances: store.teacherInstances.filter(teacher => teacher.id !== action.response.id) }
+      return {
+        ...store,
+        teacherInstances: store.teacherInstances.filter(teacher => teacher.id !== action.response.id)
+      }
     case 'SI_CHANGE_FIELD':
       return { ...store, [action.data.field]: action.data.value }
     case 'CODE_REVIEW_BULKINSERT_SUCCESS':
       var amountOfCw = action.response.data.reviewNumber
       var newStore
-      amountOfCw > store.amountOfCodeReviews ? (newStore = { ...store, amountOfCodeReviews: amountOfCw }) : (newStore = store)
+      amountOfCw > store.amountOfCodeReviews
+        ? (newStore = { ...store, amountOfCodeReviews: amountOfCw })
+        : (newStore = store)
       return newStore
     case 'SET_FINAL_REVIEW':
       return { ...store, finalReview: action.value }
     case 'SET_FINAL_REVIEW_HAS_POINTS':
       return { ...store, finalReviewHasPoints: action.value }
     case 'CI_MODIFY_ONE_SUCCESS':
-      return { ...store, ...action.response, currentWeek: Number(action.response.currentWeek || store.currentWeek, 10) }
+      return {
+        ...store,
+        ...action.response,
+        currentWeek: Number(action.response.currentWeek || store.currentWeek, 10)
+      }
     default:
       return store
   }

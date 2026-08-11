@@ -231,7 +231,9 @@ const notificationReducer = (state = {}, action) => {
         error: false
       }
     case 'STUDENT_PROJECT_INFO_UPDATE_FAILURE': {
-      const { message } = action.response.response ? action.response.response.data : { message: 'Error updating project info' }
+      const { message } = action.response.response
+        ? action.response.response.data
+        : { message: 'Error updating project info' }
       return {
         message,
         error: true
@@ -244,7 +246,8 @@ const notificationReducer = (state = {}, action) => {
       }
     case 'MASS_EMAIL_SENDFAILURE':
       return {
-        message: `Could not send e-mail; ${(action.response && action.response.response.data.message) || 'no students selected'}`,
+        message: `Could not send e-mail; ${(action.response && action.response.response.data.message) ||
+          'no students selected'}`,
         error: true
       }
     case 'COURSE_IMPORT_DO_IMPORT_SUCCESS':

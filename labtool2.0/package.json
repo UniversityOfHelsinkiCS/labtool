@@ -28,7 +28,8 @@
     "debug": "vite --debug",
     "build": "vite build",
     "test": "vitest run",
-    "lint": "./node_modules/.bin/eslint .",
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix",
     "tryTest": "npm run test a q",
     "dev": "vite"
   },

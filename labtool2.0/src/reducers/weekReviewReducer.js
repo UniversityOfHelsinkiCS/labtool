@@ -28,7 +28,12 @@ const cascadeMissingPrerequisites = (checks, prerequisites) => {
 const toggleAndCascadeMissingPrerequisites = (baseChecks, thisChecks, itemId, prerequisites) => {
   const toggledChecks = {
     ...baseChecks,
-    [itemId]: baseChecks[itemId] !== undefined ? !baseChecks[itemId] : thisChecks ? !thisChecks.checks[itemId] : !baseChecks[itemId]
+    [itemId]:
+      baseChecks[itemId] !== undefined
+        ? !baseChecks[itemId]
+        : thisChecks
+        ? !thisChecks.checks[itemId]
+        : !baseChecks[itemId]
   }
   return cascadeMissingPrerequisites(toggledChecks, prerequisites)
 }
@@ -41,19 +46,33 @@ const weekReviewReducer = (state = INITIAL_STATE, action) => {
     case 'LOGOUT_SUCCESS':
       return INITIAL_STATE
     case 'WEEK_REVIEW_TOGGLE': {
-      const thisWeek = state.data.find(student => student.id === Number(action.studentId)).weeks.find(week => week.weekNumber === Number(action.weekNbr))
+      const thisWeek = state.data
+        .find(student => student.id === Number(action.studentId))
+        .weeks.find(week => week.weekNumber === Number(action.weekNbr))
       const baseChecks = state.checks ? state.checks : thisWeek ? thisWeek.checks : {}
       return {
         ...state,
-        checks: toggleAndCascadeMissingPrerequisites(baseChecks, thisWeek, action.checklistItemId, action.prerequisites)
+        checks: toggleAndCascadeMissingPrerequisites(
+          baseChecks,
+          thisWeek,
+          action.checklistItemId,
+          action.prerequisites
+        )
       }
     }
     case 'WEEK_CODE_REVIEW_TOGGLE': {
-      const thisCr = state.data.filter(student => student.id === Number(action.studentId, 10))[0].codeReviews.filter(cr => cr.reviewNumber === Number(action.crNbr, 10))[0]
+      const thisCr = state.data
+        .filter(student => student.id === Number(action.studentId, 10))[0]
+        .codeReviews.filter(cr => cr.reviewNumber === Number(action.crNbr, 10))[0]
       const baseChecks = state.checks ? state.checks : thisCr ? thisCr.checks : {}
       return {
         ...state,
-        checks: toggleAndCascadeMissingPrerequisites(baseChecks, thisCr, action.checklistItemId, action.prerequisites)
+        checks: toggleAndCascadeMissingPrerequisites(
+          baseChecks,
+          thisCr,
+          action.checklistItemId,
+          action.prerequisites
+        )
       }
     }
     case 'WEEK_REVIEW_RESET':

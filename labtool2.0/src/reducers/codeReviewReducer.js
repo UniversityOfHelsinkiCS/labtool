@@ -102,7 +102,12 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
       }
       codeReviewStates[-1] = []
       currentSelections[-1] = {}
-      return { ...state, codeReviewStates: codeReviewStates, currentSelections: currentSelections, statesCreated: true }
+      return {
+        ...state,
+        codeReviewStates: codeReviewStates,
+        currentSelections: currentSelections,
+        statesCreated: true
+      }
     }
     case 'SELECT_DROPDOWN':
       return { ...state, selectedDropdown: action.data }
@@ -131,14 +136,24 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
         toUpdate.toReview = action.data.toReview
         toUpdate.repoToReview = action.data.repoToReview
 
-        updatedReviews = oldReviews.filter(review => (review.reviewer !== action.data.reviewer ? review : toUpdate))
+        updatedReviews = oldReviews.filter(review =>
+          review.reviewer !== action.data.reviewer ? review : toUpdate
+        )
       } else {
-        updatedReviews = [...oldReviews, { reviewer: action.data.reviewer, toReview: action.data.toReview, repoToReview: action.data.repoToReview }]
+        updatedReviews = [
+          ...oldReviews,
+          {
+            reviewer: action.data.reviewer,
+            toReview: action.data.toReview,
+            repoToReview: action.data.repoToReview
+          }
+        ]
       }
       codeReviewRoundsToUpdate[action.data.round] = updatedReviews
 
       const newCurrentSelections = state.currentSelections
-      newCurrentSelections[action.data.round][action.data.reviewer] = action.data.toReview || action.data.repoToReview
+      newCurrentSelections[action.data.round][action.data.reviewer] =
+        action.data.toReview || action.data.repoToReview
       return { ...state, codeReviewStates: codeReviewRoundsToUpdate, currentSelections: newCurrentSelections }
     }
     case 'CODE_REVIEW_BULKINSERT_SUCCESS': {
@@ -159,7 +174,12 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
         dropdown = action.response.data.reviewNumber
         currentSelectionsToUpdate[-1] = {}
       }
-      return { ...state, codeReviewStates: codeReviewRoundsToUpdate, currentSelections: currentSelectionsToUpdate, selectedDropdown: dropdown }
+      return {
+        ...state,
+        codeReviewStates: codeReviewRoundsToUpdate,
+        currentSelections: currentSelectionsToUpdate,
+        selectedDropdown: dropdown
+      }
     }
     case 'CODE_REVIEW_RANDOMIZE': {
       const newCodeReviewStates = { ...state.codeReviewStates }
@@ -175,7 +195,10 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
       let shuffledReviewers
 
       shuffleArray(reviewers)
-      if (action.data.reviewNumber === 1 || (action.data.reviewNumber === -1 && Object.keys(state.currentSelections).length === 1)) {
+      if (
+        action.data.reviewNumber === 1 ||
+        (action.data.reviewNumber === -1 && Object.keys(state.currentSelections).length === 1)
+      ) {
         //if the code review round is 1 or there is no code review and the first one will be created, we don't need to care about the repetition problem
         shuffledReviewers = reviewers
       } else {

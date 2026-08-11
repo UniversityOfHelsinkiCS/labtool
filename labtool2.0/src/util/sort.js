@@ -78,7 +78,10 @@ export const sortUsersBySysopLastname = users => {
 
 export const sortStudentsByLastname = students => {
   return students.sort((a, b) => {
-    return finnishLocaleCompare(a.User.lastname, b.User.lastname) || finnishLocaleCompare(a.User.firsts, b.User.firsts)
+    return (
+      finnishLocaleCompare(a.User.lastname, b.User.lastname) ||
+      finnishLocaleCompare(a.User.firsts, b.User.firsts)
+    )
   })
 }
 

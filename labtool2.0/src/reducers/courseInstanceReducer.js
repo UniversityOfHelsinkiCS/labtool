@@ -29,7 +29,12 @@ const courseInstancereducer = (store = INITIAL_STATE, action) => {
     case 'CI_GET_ALL_SUCCESS': {
       const sortedCourses = sortCourses(action.response)
       return sortedCourses.map(m => {
-        return { ...m, europeanStart: createEuropeanDate(m.start), europeanEnd: createEuropeanDate(m.end), shorterId: createShorterCourseid(m.ohid) }
+        return {
+          ...m,
+          europeanStart: createEuropeanDate(m.start),
+          europeanEnd: createEuropeanDate(m.end),
+          shorterId: createShorterCourseid(m.ohid)
+        }
       })
     }
     // case 'CI_MODIFY_ONE_SUCCESS':
