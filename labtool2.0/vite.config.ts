@@ -16,7 +16,11 @@ const transformJsxInJs = () => ({
   }
 })
 
-export default defineConfig({
+export default defineConfig(({ command }) => ({
+  // Production serves the app under /labtool (see the routes in src/App.jsx), and
+  // the ingress strips that prefix before it reaches this container. The dev
+  // server serves from the root, which is what CRA's PUBLIC_URL used to express.
+  base: command === 'build' ? '/labtool/' : '/',
   plugins: [react({ jsxRuntime: 'classic' }), transformJsxInJs()],
   build: {
     outDir: 'build'
@@ -34,4 +38,4 @@ export default defineConfig({
   legacy: {
     inconsistentCjsInterop: true
   }
-})
+}))

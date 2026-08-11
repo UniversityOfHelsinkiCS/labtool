@@ -5,6 +5,7 @@ ENV TZ="Europe/Helsinki"
 WORKDIR /app
 
 COPY ./labtool2.0 ./
+COPY ./labtool2.0/.npmrc ./
 RUN npm ci
 
 EXPOSE 3000
