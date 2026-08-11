@@ -347,22 +347,22 @@ export const ModifyCourseInstancePage = props => {
           </Grid>
 
           <Link to={`/labtool/ModifyCourseInstanceStaff/${props.selectedInstance.ohid}`}>
-            <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px' }} fluid>
+            <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px' }} block="true">
               Manage assistant teachers
             </Button>
           </Link>
           <Link to={`/labtool/ModifyCourseInstanceCodeReviews/${props.selectedInstance.ohid}`}>
-            <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px' }} fluid>
+            <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px' }} block="true">
               Edit code reviews
             </Button>
           </Link>
           <Link to={`/labtool/checklist/${props.selectedInstance.ohid}/create`}>
-            <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px' }} fluid>
+            <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px' }} block="true">
               Edit checklists
             </Button>
           </Link>
           <Link to={`/labtool/ManageTags/${props.selectedInstance.ohid}`}>
-            <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px' }} fluid>
+            <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px' }} block="true">
               Edit tags
             </Button>
           </Link>
