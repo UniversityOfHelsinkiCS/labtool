@@ -25,7 +25,7 @@
   },
   "scripts": {
     "start": "vite",
-    "debug": "react-scripts --inspect=0.0.0.0:9230 start .env.development.local",
+    "debug": "vite --debug",
     "build": "vite build",
     "test": "vitest run",
     "lint": "./node_modules/.bin/eslint .",
