@@ -35,5 +35,8 @@ jobs:
           load: true
           tags: labtool-frontend:ci
 
+      - name: Run linting
+        run: docker run --rm labtool-frontend:ci npm run lint
+
       - name: Run frontend tests
-        run: docker compose run --build --rm --no-deps web npm run test
+        run: docker run --rm labtool-frontend:ci npm run test
