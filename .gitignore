@@ -45,7 +45,9 @@ gitignored/*
 # disallow version control, package managment, IDEs, tools etc
 **/.venv
 **/.git
-**/.github
+**/.github/*
+!**/.github/workflows/
+!**/.github/workflows/**
 **/.zed
 **/.eslintcache
 **/.vscode
