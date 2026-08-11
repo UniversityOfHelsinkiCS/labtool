@@ -46,6 +46,12 @@ gitignored/*
 **/.venv
 **/.git
 **/.github
+!.github/
+.github/*
+!.github/workflows/
+.github/workflows/*
+!.github/workflows/*.yml
+!.github/workflows/*.yaml
 **/.vscode
 **/.zed
 **/.eslintcache
