@@ -367,7 +367,7 @@ exports[`<MassEmailPage /> > MassEmailPage Component > should render correctly 1
         >
           <button
             class="ui button ui button"
-            type="cancel"
+            type="button"
           >
             Cancel
           </button>

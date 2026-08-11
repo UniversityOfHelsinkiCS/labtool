@@ -5,6 +5,7 @@ import useLegacyState from '../hooks/legacyState'
 
 export const FileInput = props => {
   const state = useLegacyState({ open: false, uploading: false, uploadProgress: null, uploadError: null })
+  const { allowedFileTypes, onFileUploaded, style, ...buttonProps } = props
 
   const openDialog = () => {
     state.open = true
@@ -32,7 +33,7 @@ export const FileInput = props => {
     state.uploadProgress = null
   }
   fileReader.onload = () => {
-    props.onFileUploaded(fileReader.result)
+    onFileUploaded(fileReader.result)
     closeDialog()
   }
 
@@ -42,13 +43,11 @@ export const FileInput = props => {
     }
   }
 
-  const { allowedFileTypes, style } = props
   const { open, uploading, uploadProgress, uploadError } = state
-  const cleanedProps = { ...props, onFileUploaded: null, allowedFileTypes: null }
 
   return (
     <React.Fragment>
-      <Button disabled={open} onClick={openDialog} style={style} {...cleanedProps}>
+      <Button {...buttonProps} disabled={open} onClick={openDialog} style={style}>
         Upload
       </Button>
 

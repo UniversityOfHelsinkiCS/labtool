@@ -1,13 +1,15 @@
 import React from 'react'
+import { render, screen, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { Provider } from 'react-redux'
+import { createStore } from 'redux'
+import { MemoryRouter } from 'react-router-dom'
+import PropTypes from 'prop-types'
+import { vi } from 'vitest'
 import { ModifyCourseInstanceReview, userHelper } from '../components/pages/ModifyCourseInstanceCodeReviews'
 import RevieweeDropdown from '../components/RevieweeDropdown'
-import { shallow } from 'enzyme'
-import configureMockStore from 'redux-mock-store'
 
 describe('<ModifyCourseInstanceCodeReviews />', () => {
-  const store = configureMockStore()({}) // eslint-disable-line no-unused-vars
-  let wrapper
-
   const coursePage = {
     id: 10011,
     name: 'Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit',
@@ -342,7 +344,8 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
     selectedTeacher: '',
     filterByAssistant: 0,
     filterByTag: [],
-    showCodeReviews: []
+    showCodeReviews: [],
+    selectedStudents: {}
   }
 
   const loading = {
@@ -353,165 +356,150 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
     redirectFailure: false
   }
 
-  let mockFn = jest.fn()
-  let mockModifyOneCI
+  const renderPage = (props = {}) => {
+    const defaultProps = {
+      courseId: 'TKT20010.2018.K.A.1',
+      courseData,
+      selectedInstance: coursePage,
+      codeReviewLogic,
+      coursePageLogic,
+      loading,
+      dropdownUsers: userHelper(courseData.data),
+      clearNotifications: vi.fn(),
+      getOneCI: vi.fn(),
+      coursePageInformation: vi.fn(),
+      initOneReview: vi.fn(),
+      bulkinsertCodeReviews: vi.fn(),
+      randomAssign: vi.fn(),
+      codeReviewReset: vi.fn(),
+      resetLoading: vi.fn(),
+      dropdownCodeReviews: [
+        { value: 1, text: 'Code review 1' },
+        { value: 2, text: 'Code review 2' }
+      ],
+      selectDropdown: vi.fn(),
+      createStates: vi.fn(),
+      filterByReview: vi.fn(),
+      showNotification: vi.fn(),
+      removeOneCodeReview: vi.fn(),
+      restoreData: vi.fn(),
+      getAllTags: vi.fn(),
+      updateStudentProjectInfo: vi.fn(),
+      massUpdateStudentProjectInfo: vi.fn(),
+      tags,
+      modifyOneCI: vi.fn()
+    }
+    const componentProps = { ...defaultProps, ...props }
+    const store = createStore(() => ({ selectedInstance: componentProps.selectedInstance }))
+    const view = render(
+      <Provider store={store}>
+        <MemoryRouter>
+          <ModifyCourseInstanceReview {...componentProps} />
+        </MemoryRouter>
+      </Provider>
+    )
 
-  beforeEach(() => {
-    mockModifyOneCI = jest.fn()
+    return { ...view, props: componentProps }
+  }
 
-    wrapper = shallow(
-      <ModifyCourseInstanceReview
-        courseId={'TKT20010.2018.K.A.1'}
-        courseData={courseData}
-        selectedInstance={coursePage}
-        codeReviewLogic={codeReviewLogic}
-        coursePageLogic={coursePageLogic}
-        loading={loading}
+  const RevieweeDropdownHarness = ({ onChange }) => {
+    const [logic, setLogic] = React.useState(codeReviewLogic)
+    const addCodeReview = (reviewRound, reviewer) => (event, { value }) => {
+      const selection = Number.isInteger(value)
+        ? { reviewer, toReview: value }
+        : { reviewer, repoToReview: value }
+
+      setLogic(current => ({
+        ...current,
+        codeReviewStates: {
+          ...current.codeReviewStates,
+          [reviewRound]: [
+            ...current.codeReviewStates[reviewRound].filter(review => review.reviewer !== reviewer),
+            selection
+          ]
+        },
+        currentSelections: {
+          ...current.currentSelections,
+          [reviewRound]: {
+            ...current.currentSelections[reviewRound],
+            [reviewer]: value
+          }
+        }
+      }))
+      onChange(value)
+    }
+
+    return (
+      <RevieweeDropdown
         dropdownUsers={userHelper(courseData.data)}
-        clearNotifications={mockFn}
-        getOneCI={mockFn}
-        coursePageInformation={mockFn}
-        initOneReview={mockFn}
-        initOrRemoveRandom={mockFn}
-        initCheckbox={mockFn}
-        initAllCheckboxes={mockFn}
-        bulkinsertCodeReviews={mockFn}
-        randomAssign={mockFn}
-        codeReviewReset={mockFn}
-        statesCreated={true}
-        filterByTag={mockFn}
-        resetLoading={mockFn}
-        dropdownCodeReviews={[{ value: 1, text: 'Codereview 1' }, { value: 2, text: 'Codereview 2' }]}
-        selectDropdown={mockFn}
-        toggleCreate={mockFn}
-        createStates={mockFn}
-        filterStatesByTags={mockFn}
-        filterByReview={mockFn}
-        showNotification={mockFn}
-        removeOneCodeReview={mockFn}
-        restoreData={mockFn}
-        getAllTags={mockFn}
-        updateStudentProjectInfo={mockFn}
-        massUpdateStudentProjectInfo={mockFn}
-        tags={tags}
-        modifyOneCI={mockModifyOneCI}
+        studentData={courseData.data[0]}
+        codeReviewLogic={logic}
+        addCodeReview={addCodeReview}
+        create={false}
+        courseData={courseData}
+        amountOfCodeReviews={coursePage.amountOfCodeReviews}
       />
     )
+  }
+
+  RevieweeDropdownHarness.propTypes = {
+    onChange: PropTypes.func.isRequired
+  }
+
+  beforeEach(() => {
+    window.localStorage.clear()
+    window.matchMedia = vi.fn().mockReturnValue({ matches: true })
   })
 
-  describe('Code review component', () => {
-    it('renders without error', () => {
-      expect(wrapper.find('.ModifyCourseInstanceCodeReviews').exists()).toEqual(true)
-    })
-    /*
+  it('renders the code review management table', () => {
+    renderPage()
 
-    doesn't work because of <StudentTable /> now. we cannot dive into that thing
-    because it uses a Redux store, and no way to provide it seems to work.
-    * wrapper cannot dive if we use <Provider>
-    * if we supply the store manually in the context, it still complains
-      about not being able to find the store in the context
-    
-    alternatively we could use mount(), but that also takes in everything else
-    and fixing all of the errors that result would be a pain.
-
-
-
-    apparently react-redux just won't work with enzyme.
-    https://github.com/airbnb/enzyme/issues/2202
-
-
-
-    describe('toReview dropdowns', () => {
-      it('renders a dropdown for each student-code review round pair.', () => {
-        console.log(wrapper.debug())
-        expect(wrapper.find('Connect(StudentTable)').dive({ context: { store } }).find('.toReviewDropdown').length).toEqual(courseData.data.length)
-      })
-
-      it('autofills values.', () => {
-        const dropdowns = wrapper.find('Connect(StudentTable)').dive({ context: { store } }).find('.toReviewDropdown')
-        const values = {
-          10011: 0,
-          10012: 0,
-          10031: 0
-        }
-        dropdowns.forEach(dropdown => {
-          values[dropdown.props().value]++
-        })
-        expect(values[10011]).toEqual(0)
-        expect(values[10012]).toEqual(2)
-        expect(values[10031]).toEqual(1)
-      })
-    })
-*/
+    expect(screen.getByRole('heading', { name: coursePage.name })).toBeInTheDocument()
+    expect(screen.getByRole('table')).toBeInTheDocument()
+    expect(screen.getByText('Show unassigned students')).toBeInTheDocument()
   })
 
-  describe('Can activate the code review which is invisible to students', () => {
-    const codeReviewLogicWithUnactivatedSelectedDropdown = {
-      ...codeReviewLogic,
-      selectedDropdown: 2
-    }
-    beforeEach(() => {
-      wrapper.setProps({ codeReviewLogic: codeReviewLogicWithUnactivatedSelectedDropdown })
-    })
-    it('show reminder to activate the code review', () => {
-      expect(
-        wrapper
-          .find('.visibilityReminder')
-          .find('span')
-          .text()
-      ).toContain('This code review is currently not visible to students')
+  it('activates a code review that is not visible to students', async () => {
+    const user = userEvent.setup()
+    const { props } = renderPage()
 
-      wrapper
-        .find('.visibilityReminder')
-        .find('Button')
-        .simulate('click')
-      expect(mockModifyOneCI).toHaveBeenCalled()
-    })
+    expect(screen.getByText('This code review is currently not visible to students.')).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Activate the code review' }))
+
+    expect(props.modifyOneCI).toHaveBeenCalledWith({ ...coursePage, newCr: [1, 2] }, coursePage.ohid)
   })
 
-  describe('<RevieweeDropdown />', () => {
-    let dropdownWrapper
-    const mockAddCodeReview = jest.fn()
-    beforeEach(() => {
-      dropdownWrapper = shallow(
-        <RevieweeDropdown
-          dropdownUsers={userHelper(courseData.data)}
-          studentData={courseData.data[0]}
-          codeReviewLogic={codeReviewLogic}
-          addCodeReview={mockAddCodeReview}
-          create={false}
-          courseData={courseData}
-        />
-      )
-    })
+  it('offers eligible reviewees and warns about a repeated assignment', async () => {
+    const user = userEvent.setup()
+    render(<RevieweeDropdownHarness onChange={vi.fn()} />)
+    const dropdown = screen.getByRole('listbox')
 
-    it('dropdown options do not include options that the student reviewed previously, dropped out students and students with invalid course registration', () => {
-      const expectedOptions = [
-        {
-          text: 'select a student or add a repo link',
-          value: null,
-          icon: null // placeholder
-        },
-        {
-          text: 'Teräs Henkilö',
-          value: 10031,
-          icon: null // not a repeat
-        },
-        {
-          text: 'Maarit Mirja Opiskelija',
-          value: 10011,
-          icon: 'repeat' // is a repeat
-        }
-      ]
-      const dropdown = dropdownWrapper.props().children[0]
-      expect(dropdown.props).toHaveProperty('options', expectedOptions)
-    })
+    await user.click(dropdown)
 
-    it('Reviewee dropdown allows to add an arbitrary repository link', () => {
-      const dropdown = dropdownWrapper.props().children[0]
-      expect(dropdown.props).toHaveProperty('allowAdditions', true)
-      dropdownWrapper.simulate('change', { target: { value: 'https://github.com/userName/repo' } })
-      expect(mockAddCodeReview).toHaveBeenCalled()
-    })
+    expect(within(dropdown).getByRole('option', { name: 'Teräs Henkilö' })).toBeInTheDocument()
+    expect(within(dropdown).getByRole('option', { name: 'Maarit Mirja Opiskelija' })).toBeInTheDocument()
+    expect(within(dropdown).queryByRole('option', { name: 'Tom Thomas Student' })).not.toBeInTheDocument()
+    expect(within(dropdown).queryByRole('option', { name: 'Tarja Student' })).not.toBeInTheDocument()
+
+    await user.click(within(dropdown).getByRole('option', { name: 'Maarit Mirja Opiskelija' }))
+
+    expect(
+      await screen.findByText('This student has already reviewed this project in an earlier code review')
+    ).toBeInTheDocument()
+  })
+
+  it('allows an arbitrary repository link as the reviewee', async () => {
+    const user = userEvent.setup()
+    const onChange = vi.fn()
+    render(<RevieweeDropdownHarness onChange={onChange} />)
+    const dropdown = screen.getByRole('listbox')
+    const repositoryUrl = 'https://github.com/userName/repo'
+
+    await user.click(dropdown)
+    await user.type(screen.getByRole('textbox'), repositoryUrl)
+    await user.click(await within(dropdown).findByRole('option', { name: new RegExp(repositoryUrl) }))
+
+    expect(onChange).toHaveBeenCalledWith(repositoryUrl)
   })
 })

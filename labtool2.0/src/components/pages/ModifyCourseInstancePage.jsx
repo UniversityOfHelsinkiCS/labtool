@@ -332,12 +332,12 @@ export const ModifyCourseInstancePage = props => {
                 </Form.Group>
 
                 <Form.Group style={{ display: 'inline-block', marginLeft: 'auto', marginRight: 'auto' }}>
-                  <Button type="Submit" color="green" size="huge">
+                  <Button type="submit" color="green" size="huge">
                     Save
                   </Button>
 
                   <Link to={`/labtool/courses/${props.selectedInstance.ohid}`}>
-                    <Button type="Cancel" color="red" size="huge">
+                    <Button type="button" color="red" size="huge">
                       Cancel
                     </Button>
                   </Link>
@@ -347,22 +347,22 @@ export const ModifyCourseInstancePage = props => {
           </Grid>
 
           <Link to={`/labtool/ModifyCourseInstanceStaff/${props.selectedInstance.ohid}`}>
-            <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px' }} block="true">
+            <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px' }} fluid>
               Manage assistant teachers
             </Button>
           </Link>
           <Link to={`/labtool/ModifyCourseInstanceCodeReviews/${props.selectedInstance.ohid}`}>
-            <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px' }} block="true">
+            <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px' }} fluid>
               Edit code reviews
             </Button>
           </Link>
           <Link to={`/labtool/checklist/${props.selectedInstance.ohid}/create`}>
-            <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px' }} block="true">
+            <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px' }} fluid>
               Edit checklists
             </Button>
           </Link>
           <Link to={`/labtool/ManageTags/${props.selectedInstance.ohid}`}>
-            <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px' }} block="true">
+            <Button style={{ marginTop: '20px', marginLeft: '5px', marginRight: '5px' }} fluid>
               Edit tags
             </Button>
           </Link>

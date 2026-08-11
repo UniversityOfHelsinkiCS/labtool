@@ -546,17 +546,20 @@ export const CreateChecklist = props => {
   const getPrerequisiteDropdown = key => {
     const checks = [
       {
-        key: null,
+        key: 'none',
         text: '(none)',
         value: null
       }
     ]
 
     props.checklist.data[key].forEach(check => {
+      const rowId = getRowId(check)
+      if (rowId === undefined || rowId === null) return
+
       checks.push({
-        key: getRowId(check),
+        key: rowId,
         text: check.name,
-        value: getRowId(check)
+        value: rowId
       })
     })
 
@@ -667,7 +670,7 @@ export const CreateChecklist = props => {
                   <Radio
                     label="checked"
                     name={`minimumRequirementMetIf_${key}_${getRowId(row)}`}
-                    value={true}
+                    value="true"
                     disabled={!row.minimumRequirement}
                     checked={row.minimumRequirementMetIf === true}
                     onChange={changeFieldValue(key, row.name, 'minimumRequirementMetIf', true)}
@@ -675,7 +678,7 @@ export const CreateChecklist = props => {
                   <Radio
                     label="unchecked"
                     name={`minimumRequirementMetIf_${key}_${getRowId(row)}`}
-                    value={false}
+                    value="false"
                     disabled={!row.minimumRequirement}
                     checked={row.minimumRequirementMetIf === false}
                     onChange={changeFieldValue(key, row.name, 'minimumRequirementMetIf', false)}

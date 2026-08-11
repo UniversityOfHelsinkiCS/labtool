@@ -165,7 +165,7 @@ export const RegisterPage = props => {
                 </button>
                 <Link to={`/labtool/courses/${props.selectedInstance.ohid}`}>
                   {' '}
-                  <button className="ui right floated button" type="Cancel">
+                  <button className="ui right floated button" type="button">
                     Cancel
                   </button>
                 </Link>

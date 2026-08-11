@@ -589,7 +589,7 @@ exports[`<CreateChecklist /> component > matches the rendered snapshot 1`] = `
                   <input
                     class="hidden"
                     disabled=""
-                    name="minimumRequirementMetIf_Koodi_undefined"
+                    name="minimumRequirementMetIf_Koodi_10001"
                     readonly=""
                     tabindex="-1"
                     type="radio"
@@ -606,7 +606,7 @@ exports[`<CreateChecklist /> component > matches the rendered snapshot 1`] = `
                   <input
                     class="hidden"
                     disabled=""
-                    name="minimumRequirementMetIf_Koodi_undefined"
+                    name="minimumRequirementMetIf_Koodi_10001"
                     readonly=""
                     tabindex="-1"
                     type="radio"
@@ -965,7 +965,7 @@ exports[`<CreateChecklist /> component > matches the rendered snapshot 1`] = `
                   <input
                     class="hidden"
                     disabled=""
-                    name="minimumRequirementMetIf_Repo_undefined"
+                    name="minimumRequirementMetIf_Repo_10002"
                     readonly=""
                     tabindex="-1"
                     type="radio"
@@ -982,7 +982,7 @@ exports[`<CreateChecklist /> component > matches the rendered snapshot 1`] = `
                   <input
                     class="hidden"
                     disabled=""
-                    name="minimumRequirementMetIf_Repo_undefined"
+                    name="minimumRequirementMetIf_Repo_10002"
                     readonly=""
                     tabindex="-1"
                     type="radio"

@@ -382,8 +382,8 @@ export const ReviewStudent = props => {
                     <Button className="ui center floated button" type="button" onClick={onClickSaveDraft}>
                       Save as draft
                     </Button>
-                    <Link to={`/labtool/browsereviews/${props.selectedInstance.ohid}/${studentData.id}`} type="Cancel">
-                      <Button className="ui center floated button" type="cancel" onClick={pstate.clear}>
+                    <Link to={`/labtool/browsereviews/${props.selectedInstance.ohid}/${studentData.id}`}>
+                      <Button className="ui center floated button" type="button" onClick={pstate.clear}>
                         Cancel
                       </Button>
                     </Link>

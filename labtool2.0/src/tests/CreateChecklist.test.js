@@ -62,6 +62,7 @@ const checklist = {
   data: {
     Koodi: [
       {
+        id: 10001,
         name: 'Koodin laatu',
         checkedPoints: 2,
         uncheckedPoints: 0,
@@ -71,6 +72,7 @@ const checklist = {
     ],
     Repo: [
       {
+        id: 10002,
         name: 'Readme kunnossa',
         checkedPoints: 0,
         uncheckedPoints: -1,
@@ -185,6 +187,15 @@ describe('<CreateChecklist /> component', () => {
 
     const pointInputs = screen.getAllByRole('spinbutton')
     expect(pointInputs.map(input => input.value)).toEqual(expect.arrayContaining(['2', '0', '0', '-1']))
+  })
+
+  it('offers checklist items as category prerequisites', async () => {
+    const user = userEvent.setup()
+    renderCreateChecklist()
+    await selectWeek(user, 6)
+
+    expect(screen.getByRole('option', { name: 'Koodin laatu' })).toBeInTheDocument()
+    expect(screen.getByRole('option', { name: 'Readme kunnossa' })).toBeInTheDocument()
   })
 
   it('offers only courses that contain the selected week', async () => {

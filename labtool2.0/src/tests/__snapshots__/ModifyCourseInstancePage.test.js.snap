@@ -337,7 +337,7 @@ exports[`<ModifyCourseInstancePage /> > matches the rendered snapshot 1`] = `
   >
     <button
       class="ui green huge button"
-      type="Submit"
+      type="submit"
     >
       Save
     </button>
@@ -346,7 +346,7 @@ exports[`<ModifyCourseInstancePage /> > matches the rendered snapshot 1`] = `
     >
       <button
         class="ui red huge button"
-        type="Cancel"
+        type="button"
       >
         Cancel
       </button>
