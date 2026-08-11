@@ -140,7 +140,7 @@ export const MassEmailPage = props => {
             <br />
 
             <Link to={`/labtool/courses/${selectedInstance.ohid}`}>
-              <Button className="ui button" type="cancel" onClick={clearState}>
+              <Button className="ui button" type="button" onClick={clearState}>
                 Cancel
               </Button>
             </Link>

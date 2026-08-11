@@ -95,7 +95,7 @@ exports[`<Register /> > RegisterPage Component > matches the rendered snapshot 1
                
               <button
                 class="ui right floated button"
-                type="Cancel"
+                type="button"
               >
                 Cancel
               </button>
