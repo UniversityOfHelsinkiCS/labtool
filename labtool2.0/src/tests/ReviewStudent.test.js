@@ -563,6 +563,14 @@ describe('<ReviewStudent />', () => {
     )
   }
 
+  const renderFinalReview = overrides =>
+    renderReviewStudent({
+      ownProps: { ...ownProps, weekNumber: '8' },
+      weekNumber: '8',
+      selectedInstance: { ...props.selectedInstance, finalReviewHasPoints: false },
+      ...overrides
+    })
+
   beforeEach(() => {
     window.localStorage.clear()
   })
@@ -598,6 +606,89 @@ describe('<ReviewStudent />', () => {
       await user.type(pointsInput, '3.5')
 
       expect(pointsInput).toHaveValue(3.5)
+    })
+
+    it('resubmits a loaded zero grade without stale final-review points', async () => {
+      const user = userEvent.setup()
+      const createOneWeek = vi.fn()
+      const finalReview = {
+        id: 10005,
+        points: 2,
+        grade: 0,
+        weekNumber: 8,
+        feedback: 'Final feedback',
+        instructorNotes: '',
+        notified: false,
+        checks: {},
+        studentInstanceId: 10011,
+        comments: []
+      }
+      const weekReview = {
+        ...props.weekReview,
+        data: props.weekReview.data.map(student =>
+          student.id === 10011 ? { ...student, weeks: [...student.weeks, finalReview] } : student
+        )
+      }
+
+      renderFinalReview({
+        weekReview,
+        createOneWeek
+      })
+
+      expect(screen.getByRole('spinbutton')).toHaveValue(0)
+      await user.click(screen.getByRole('button', { name: /^save$/i }))
+
+      expect(createOneWeek).toHaveBeenCalledOnce()
+      expect(createOneWeek).toHaveBeenCalledWith({
+        points: null,
+        grade: 0,
+        studentInstanceId: '10011',
+        feedback: 'Final feedback',
+        instructorNotes: '',
+        weekNumber: '8',
+        checks: {}
+      })
+    })
+
+    it('preserves loaded zero points when resubmitting a weekly review', async () => {
+      const user = userEvent.setup()
+      const createOneWeek = vi.fn()
+      const studentInstance = '10031'
+
+      renderReviewStudent({
+        ownProps: { ...ownProps, studentInstance },
+        studentInstance,
+        createOneWeek
+      })
+
+      expect(screen.getByRole('spinbutton')).toHaveValue(0)
+      await user.click(screen.getByRole('button', { name: /^save$/i }))
+
+      expect(createOneWeek).toHaveBeenCalledOnce()
+      expect(createOneWeek).toHaveBeenCalledWith(expect.objectContaining({ points: 0 }))
+    })
+
+    it('submits a newly entered zero grade instead of null', async () => {
+      const user = userEvent.setup()
+      const createOneWeek = vi.fn()
+
+      renderFinalReview({ createOneWeek })
+
+      await user.type(screen.getByRole('spinbutton'), '0')
+      await user.click(screen.getByRole('button', { name: /^save$/i }))
+
+      expect(createOneWeek).toHaveBeenCalledWith(expect.objectContaining({ grade: '0' }))
+    })
+
+    it('submits an untouched empty grade as null', async () => {
+      const user = userEvent.setup()
+      const createOneWeek = vi.fn()
+
+      renderFinalReview({ createOneWeek })
+
+      await user.click(screen.getByRole('button', { name: /^save$/i }))
+
+      expect(createOneWeek).toHaveBeenCalledWith(expect.objectContaining({ grade: null }))
     })
 
     it('matches the rendered snapshot', () => {
