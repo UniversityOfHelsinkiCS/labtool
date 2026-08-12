@@ -26,6 +26,7 @@ import { Points } from '../Points'
 import '../../util/arrayFlatPolyfill'
 
 const isFinalReview = props => props.weekNumber > props.selectedInstance.weekAmount
+const nullIfEmpty = value => (value === '' || value === null || value === undefined ? null : value)
 
 /**
  *  The page which is used by teacher to review submissions,.
@@ -65,16 +66,17 @@ export const ReviewStudent = props => {
   const handleSubmit = async e => {
     try {
       e.preventDefault()
+      const finalReviewWithoutPoints = isFinalReview(props) && !props.selectedInstance.finalReviewHasPoints
       const content = {
-        points: pstate.points || null,
-        grade: pstate.grade || null,
+        points: finalReviewWithoutPoints ? null : nullIfEmpty(pstate.points),
+        grade: nullIfEmpty(pstate.grade),
         studentInstanceId: props.studentInstance,
         feedback: pstate.feedback,
         instructorNotes: pstate.instructorNotes,
         weekNumber: props.weekNumber,
         checks
       }
-      if (isFinalReview(props) && !props.selectedInstance.finalReviewHasPoints) {
+      if (finalReviewWithoutPoints) {
         pstate.points = null
       }
       pstate.clear()
@@ -307,7 +309,7 @@ export const ReviewStudent = props => {
                   selectedInstance={props.selectedInstance}
                   studentInstance={studentData}
                   currentWeekChecks={!checks ? {} : checks}
-                  currentWeekNumber={weekData && weekData.weekNumber ? weekData.weekNumber : props.ownProps.weekNumber}
+                  currentWeekNumber={Number(weekData && weekData.weekNumber ? weekData.weekNumber : props.ownProps.weekNumber)}
                   showMaximumGrade={isFinalReview(props)}
                 />
                 {isFinalReview(props) ? props.selectedInstance.finalReviewHasPoints ? <h2>Final Review Points</h2> : <h2>Final Review</h2> : <h2>Review</h2>}

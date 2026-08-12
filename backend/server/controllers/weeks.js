@@ -2,6 +2,8 @@ const { Week, ReviewCheck, WeekDraft, StudentInstance } = require('../models')
 const helper = require('../helpers/weeksControllerHelper')
 const logger = require('../utils/logger')
 
+const nullIfEmpty = value => (value === '' || value === null || value === undefined ? null : value)
+
 module.exports = {
   /**
    * Submit a week review
@@ -46,8 +48,8 @@ module.exports = {
       if (week) {
         const updatedChecks = req.body.checks || {}
         await week.update({
-          points: 'points' in req.body ? (req.body.points || null) : week.points,
-          grade: 'grade' in req.body ? (req.body.grade || null) : week.grade,
+          points: 'points' in req.body ? nullIfEmpty(req.body.points) : week.points,
+          grade: 'grade' in req.body ? nullIfEmpty(req.body.grade) : week.grade,
           feedback: 'feedback' in req.body ? (req.body.feedback || '') : week.feedback,
           instructorNotes: 'instructorNotes' in req.body ? (req.body.instructorNotes || '') : week.instructorNotes
         })
@@ -68,8 +70,8 @@ module.exports = {
         })))
       } else {
         week = await Week.create({
-          points: req.body.points || null,
-          grade: req.body.grade || null,
+          points: nullIfEmpty(req.body.points),
+          grade: nullIfEmpty(req.body.grade),
           studentInstanceId: req.body.studentInstanceId,
           feedback: req.body.feedback || '',
           instructorNotes: req.body.instructorNotes || '',
