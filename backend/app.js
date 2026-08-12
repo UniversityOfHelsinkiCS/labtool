@@ -6,6 +6,7 @@ const bodyParser = require('body-parser')
 const Raven = require('raven')
 const headerMiddleware = require('unfuck-utf8-headers-middleware')
 const logger = require('./server/utils/logger')
+const requestLogger = require('./server/utils/requestLogger')
 
 Raven.config(process.env.SENTRY_ADDR).install()
 
@@ -16,6 +17,8 @@ const USE_FAKE_LOGIN = process.env.USE_FAKE_LOGIN === 'ThisIsNotProduction'
 if (USE_FAKE_LOGIN) {
   console.warn('YOU ARE USING FAKE LOGIN !!! MAKE SURE YOU ARE NOT IN PRODUCTION')
 }
+
+app.use(requestLogger)
 
 /**
  * Fix charset for shibboleth headers
