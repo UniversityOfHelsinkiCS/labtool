@@ -24,7 +24,7 @@
     "pug": "^2.0.4",
     "raven": "^2.6.4",
     "request": "^2.88.0",
-    "sequelize": "^5.21.2",
+    "sequelize": "^6.37.8",
     "sequelize-cli": "^6.0.0",
     "should": "^13.2.3",
     "tape": "^4.11.0",
