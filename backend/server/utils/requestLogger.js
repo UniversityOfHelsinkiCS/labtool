@@ -2,7 +2,6 @@ const morgan = require('morgan')
 
 const logger = require('./logger')
 
-
 const requestLogger = morgan((tokens, req, res) => {
   const { uid } = req.headers
   const method = tokens.method(req, res)
@@ -23,8 +22,14 @@ const requestLogger = morgan((tokens, req, res) => {
     userAgent
   }
 
-
-  logger.info(message, additionalInfo)
+  const statusCode = Number(status)
+  if (statusCode >= 500) {
+    logger.error(message, additionalInfo)
+  } else if (statusCode >= 400) {
+    logger.warn(message, additionalInfo)
+  } else {
+    logger.info(message, additionalInfo)
+  }
 })
 
 module.exports = requestLogger
