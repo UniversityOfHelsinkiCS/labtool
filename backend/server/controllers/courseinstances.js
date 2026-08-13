@@ -8,7 +8,7 @@ const { Op } = Sequelize
 const { User, CourseInstance, StudentInstance, TeacherInstance, Week, ReviewCheck, CodeReview, Comment, Tag, Checklist, ChecklistItem, WeekDraft } = db
 
 const env = process.env.NODE_ENV || 'development'
-const config = require('./../config/config.js')[env]
+const config = require('./../config/config')[env]
 
 const overkillLogging = (req, error) => {
   logger.debug('request: ', req)
@@ -894,6 +894,8 @@ module.exports = {
       // Add checklist items to checklists
       for (const checklist of checklists) {
         const checklistJson = {}
+        // Checklist queries are intentionally sequential.
+        // eslint-disable-next-line no-await-in-loop
         const checklistItems = await ChecklistItem.findAll({
           where: {
             checklistId: checklist.id

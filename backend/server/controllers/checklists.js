@@ -160,6 +160,8 @@ module.exports = {
       for (const category in req.body.checklist) {
         const checklistForCategory = req.body.checklist[category]
 
+        // Categories are processed sequentially so checklistOrder remains deterministic.
+        // eslint-disable-next-line no-await-in-loop
         const checklistForCategoryIdFiltered = await Promise.all(checklistForCategory.map(async (checklistItem) => {
           // if the ID conflicts with an existing checklist item
           // *on another checklist*, remove ID here. this makes
@@ -182,6 +184,7 @@ module.exports = {
           return checklistItemCopy
         }))
 
+        const categoryStartOrder = checklistOrder
         const checklistUpsert = checklistForCategoryIdFiltered.map((checklistItem, index) => {
           const obj = {
             id: checklistItem.id,
@@ -192,7 +195,7 @@ module.exports = {
             uncheckedPoints: checklistItem.uncheckedPoints,
             category,
             checklistId: result[1].dataValues.id,
-            order: checklistOrder + index, // ignore order sent by client
+            order: categoryStartOrder + index, // ignore order sent by client
             prerequisite: null, // map later; see below
             minimumRequirement: checklistItem.minimumRequirement,
             minimumRequirementMetIf: checklistItem.minimumRequirementMetIf,
@@ -204,6 +207,7 @@ module.exports = {
           return obj
         })
 
+        // eslint-disable-next-line no-await-in-loop
         const checklistItems = await Promise.all(checklistUpsert.map(async checklistItem => (checklistItem.id === undefined ? [await ChecklistItem.create(checklistItem, { returning: true })] : ChecklistItem.upsert(checklistItem, { returning: true }))))
         const zipped = checklistForCategoryIdFiltered.map((item, index) => [item, checklistItems[index][0]])
 

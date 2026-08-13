@@ -5,7 +5,7 @@ const logger = require('../utils/logger')
 const { Week, CourseInstance, StudentInstance, TeacherInstance } = require('../models')
 
 const env = process.env.NODE_ENV || 'development'
-const config = require('../config/config.js')[env]
+const config = require('../config/config')[env]
 const db = require('../models')
 
 exports.CurrentTermAndYear = applicationHelpers.CurrentTermAndYear

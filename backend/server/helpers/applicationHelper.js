@@ -16,7 +16,7 @@ const Sequelize = require('sequelize')
 const NodeCache = require('node-cache')
 const https = require('https')
 const axios = require('axios')
-const config = require('../config/config.js')[env]
+const config = require('../config/config')[env]
 const logger = require('../utils/logger')
 const { CourseInstance, TeacherInstance, User } = require('../models')
 
@@ -273,6 +273,8 @@ async function createCourse(body) {
 
     if (result.teachers.length > 0) {
       for (let i = 0; i < result.teachers.length; ++i) {
+        // Teacher records are intentionally created sequentially.
+        // eslint-disable-next-line no-await-in-loop
         const user = await User.findOrCreate({
           where: {
             username: result.teachers[i]

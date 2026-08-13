@@ -1,5 +1,5 @@
 const env = process.env.NODE_ENV || 'development'
-const config = require('./../config/config.js')[env]
+const config = require('./../config/config')[env]
 
 describe('Login', () => {
   let User
