@@ -30,7 +30,6 @@
     "test": "vitest run",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
-    "tryTest": "npm run test a q",
     "dev": "vite"
   },
   "devDependencies": {
