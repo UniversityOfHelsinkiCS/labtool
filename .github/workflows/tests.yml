@@ -1,0 +1,42 @@
+name: Tests
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+permissions:
+  contents: read
+
+jobs:
+  frontend:
+    name: Run frontend tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Build frontend image
+        run: docker build --file Dockerfile.dev --tag labtool-frontend:ci .
+
+      - name: Run frontend linting
+        run: docker run --rm labtool-frontend:ci npm run lint
+
+      - name: Run frontend tests
+        run: docker run --rm labtool-frontend:ci npm run test
+
+  backend:
+    name: Run backend linting
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Build backend image
+        run: docker build --file backend/Dockerfile.dev --tag labtool-backend:ci backend
+
+      - name: Run backend linting
+        run: docker run --rm labtool-backend:ci npm run lint
