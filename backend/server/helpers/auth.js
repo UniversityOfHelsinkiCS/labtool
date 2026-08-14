@@ -38,34 +38,31 @@ async function enforceCurrentUser(req, res, attributes = []) {
 }
 
 
-// checks if currently logged in user can review the given review reviewNumber
-// sends 403 if review is not found in the users reviews
-async function enforceCurrentUserCanReview(req, res, reviewNumber) {
+// checks if currently logged in user can review the given review
+// sends 403 if review is not found in the user's requested student instance
+async function enforceCurrentUserCanReview(req, res, studentInstanceId, reviewNumber) {
   const user = await User.findByPk(req.decoded.id, { attributes: ['id'] })
   if (!user) {
     res.status(403).send('You are not authorized to perform this action.')
     return false
   }
 
-  const studentInstances = await StudentInstance.findAll({
+  const studentInstance = await StudentInstance.findOne({
     attributes: ['id'],
-    where: { userId: user.id },
+    where: {
+      id: studentInstanceId,
+      userId: user.id
+    },
     include: [{
       model: CodeReview,
-      as: 'codeReviews'
+      as: 'codeReviews',
+      where: { reviewNumber }
     }
     ]
   })
 
-  if (!studentInstances || studentInstances.length === 0) {
-    res.status(400).send('No student instance matched the given ID.')
-    return false
-  }
-
-  const codeReviews = studentInstances.map(s => s.codeReviews).flat()
-  const foundInReviews = codeReviews.find(r => r.reviewNumber === reviewNumber)
-  if (foundInReviews) {
-    return foundInReviews
+  if (studentInstance && studentInstance.codeReviews.length > 0) {
+    return studentInstance.codeReviews[0]
   }
 
   res.status(403).send('You are not authorized to perform this action.')

@@ -247,16 +247,20 @@ module.exports = {
       }
 
 
-      const review = await enforceCurrentUserCanReview(req, res, req.body.reviewNumber)
+      const review = await enforceCurrentUserCanReview(
+        req,
+        res,
+        req.body.studentInstanceId,
+        req.body.reviewNumber
+      )
       if (!review) return
-      const modifiedRows = await CodeReview.update(
+      const [modifiedRows] = await CodeReview.update(
         {
           linkToReview: req.body.linkToReview
         },
         {
           where: {
-            studentInstanceId: review.studentInstanceId,
-            reviewNumber: review.reviewNumber // reviewnumber is te "id" of the codereview
+            id: review.id
           }
         }
       )
