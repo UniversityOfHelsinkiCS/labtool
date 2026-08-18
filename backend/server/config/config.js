@@ -21,6 +21,10 @@ module.exports = {
     logging: false,
     kurki_url: 'https://importer.cs.helsinki.fi/api/importer'
   },
+  staging: {
+    database_url: process.env.DATABASE_URL,
+    kurki_url: process.env.KURKI_URL == null ? 'https://importer.cs.helsinki.fi/api/importer' : process.env.KURKI_URL
+  },
   production: {
     database_url: process.env.DATABASE_URL,
     kurki_url: process.env.KURKI_URL == null ? 'https://importer.cs.helsinki.fi/api/importer' : process.env.KURKI_URL

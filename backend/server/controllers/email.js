@@ -232,7 +232,7 @@ const trySendEmail = async (emailOptions) => {
     ...emailOptions
   }
 
-  if (env !== 'production') {
+  if (env !== 'production' && env !== 'staging') {
     console.log('Simulated sending email.', options)
     return {
       success: true,
