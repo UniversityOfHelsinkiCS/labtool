@@ -5,6 +5,9 @@ on:
     branches:
       - master
 
+env:
+  NODE_ENV: staging
+
 jobs:
   test:
     if: ${{ github.actor != 'renovate[bot]' }}
@@ -27,7 +30,7 @@ jobs:
           containerfiles: |
             ./Dockerfile
           build-args: |
-            NODE_ENV=staging
+            NODE_ENV=${{ env.NODE_ENV }}
 
       - name: Push to version helsinki
         uses: redhat-actions/push-to-registry@v2
@@ -60,8 +63,8 @@ jobs:
           containerfiles: |
             ./backend/Dockerfile
           build-args: |
-            NODE_ENV=staging
-    
+            NODE_ENV=${{ env.NODE_ENV }}
+
       - name: Push to version helsinki
         uses: redhat-actions/push-to-registry@v2
         with:
