@@ -1,8 +1,9 @@
-name: Release to production
+name: Deploy to staging
 
 on:
-  release:
-    types: [published]
+  push:
+    branches:
+      - master
 
 jobs:
   test:
@@ -10,23 +11,23 @@ jobs:
     uses: ./.github/workflows/tests.yml
     secrets: inherit
 
-  release-frontend:
+  staging-release-frontend:
     needs: test
     if: ${{ github.actor != 'renovate[bot]' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
 
       - name: Build image
         id: build-image
         uses: redhat-actions/buildah-build@v2
         with:
           image: labtool-frontend
-          tags: production ${{ github.sha }}
+          tags: staging ${{ github.sha }}
           containerfiles: |
             ./Dockerfile
           build-args: |
-            NODE_ENV=production
+            NODE_ENV=staging
 
       - name: Push to version helsinki
         uses: redhat-actions/push-to-registry@v2
@@ -37,30 +38,31 @@ jobs:
           username: kontit
           password: ${{ secrets.VERSION_PUSH_SECRET }}
 
-  release-backend:
+      - name: Print logs on failure
+        shell: bash
+        if: failure()
+        run: docker compose -f compose.ci.yaml logs
+
+  staging-release-backend:
     needs: test
     if: ${{ github.actor != 'renovate[bot]' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
 
       - name: Build image
         id: build-image
         uses: redhat-actions/buildah-build@v2
         with:
           image: labtool-backend
-          tags: production ${{ github.sha }}
+          tags: staging ${{ github.sha }}
           context: ./backend
           containerfiles: |
             ./backend/Dockerfile
           build-args: |
-            NODE_ENV=production
+            NODE_ENV=staging
 
-      - name: Push to version helsinki
-        uses: redhat-actions/push-to-registry@v2
-        with:
-          image: ${{ steps.build-image.outputs.image }}
-          tags: ${{ steps.build-image.outputs.tags }}
-          registry: registry.version.helsinki.fi/toska/openshift/kontit/
-          username: kontit
-          password: ${{ secrets.VERSION_PUSH_SECRET }}
+      - name: Print logs on failure
+        shell: bash
+        if: failure()
+        run: docker compose -f compose.ci.yaml logs
