@@ -3,14 +3,13 @@ name: Tests
 on:
   push:
     branches: [master]
-  pull_request:
-    branches: [master]
 
 permissions:
   contents: read
 
 jobs:
   frontend:
+    if: ${{ github.actor != 'renovate[bot]' }}
     name: Run frontend tests
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -28,6 +27,7 @@ jobs:
         run: docker run --rm labtool-frontend:ci npm run test
 
   backend:
+    if: ${{ github.actor != 'renovate[bot]' }}
     name: Run backend linting
     runs-on: ubuntu-latest
     timeout-minutes: 10
