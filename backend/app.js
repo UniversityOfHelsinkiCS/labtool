@@ -12,6 +12,8 @@ Raven.config(process.env.SENTRY_ADDR).install()
 
 require('dotenv').config()
 
+const { connectToDatabase } = require('./server/utils/database')
+
 const USE_FAKE_LOGIN = process.env.USE_FAKE_LOGIN === 'ThisIsNotProduction'
 
 if (USE_FAKE_LOGIN) {
@@ -156,9 +158,24 @@ app.get('*', (req, res) => res.status(404).send({
 })
 )
 
-const server = app.listen(3001, () => {
-  const { port } = server.address()
-  logger.info(`Backend started and listening on port ${port}`)
-})
+const start = async () => {
+  await connectToDatabase()
 
-module.exports = server
+  return new Promise((resolve, reject) => {
+    const server = app.listen(3001, () => {
+      logger.info('Backend started and listening on port 3001')
+      resolve(server)
+    })
+
+    server.once('error', reject)
+  })
+}
+
+if (require.main === module) {
+  start().catch((error) => {
+    logger.error(`Backend startup failed: ${error.stack || error.message}`)
+    process.exit(1)
+  })
+}
+
+module.exports = { app, start }
