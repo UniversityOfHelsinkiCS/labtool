@@ -7,10 +7,7 @@ fi
 NPM=`which npm`
 # $NPM dropdb # not sure if ok since production server db data should persist.
 $NPM run createdb # should fail if db already exists.
-if [ "$NODE_ENV" = "staging" ]
-then
-$NPM run migrate
-fi
+$NPM run migrate  # Also should find out how I get docker env.. ahh lol.. lets build.
 if [ -e /data/scripts_labtool_2018k/before_start.sh ] # Same idea as with setup.sh.
 then
 echo "running before_start.sh"

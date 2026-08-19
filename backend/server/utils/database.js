@@ -5,8 +5,6 @@ const db = require('../models')
 const logger = require('./logger')
 
 const retryDelay = Number(process.env.DB_RETRY_DELAY_MS) || 5000
-// production database has been manually migrated, so it is risky to run migrations at the moment
-const shouldRunMigrations = process.env.NODE_ENV === 'staging'
 
 const umzug = new Umzug({
   migrations: {
@@ -24,15 +22,8 @@ const umzug = new Umzug({
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 const runMigrations = async () => {
-  if (!shouldRunMigrations) {
-    logger.info(`Skipping database migrations in ${process.env.NODE_ENV || 'development'} environment`)
-    return []
-  }
-
-  const migrations = await umzug.up()
+  await umzug.up()
   logger.info('Database migrations are up to date')
-
-  return migrations
 }
 
 const testConnection = async () => {
