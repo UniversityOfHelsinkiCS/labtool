@@ -25,6 +25,8 @@ jobs:
           tags: production ${{ github.sha }}
           containerfiles: |
             ./Dockerfile
+          build-args: |
+            NODE_ENV=production
 
       - name: Push to version helsinki
         uses: redhat-actions/push-to-registry@v2
