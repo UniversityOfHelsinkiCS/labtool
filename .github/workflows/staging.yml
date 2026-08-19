@@ -29,8 +29,6 @@ jobs:
           tags: staging ${{ github.sha }}
           containerfiles: |
             ./Dockerfile
-          build-args: |
-            NODE_ENV=${{ env.NODE_ENV }}
 
       - name: Push to version helsinki
         uses: redhat-actions/push-to-registry@v2

@@ -1,7 +1,5 @@
 FROM node:24-alpine
 
-ARG NODE_ENV=production
-
 ENV TZ="Europe/Helsinki"
 
 WORKDIR /opt/app-root/src
@@ -9,7 +7,6 @@ WORKDIR /opt/app-root/src
 # Setup
 COPY ./labtool2.0 ./
 RUN npm ci
-ENV NODE_ENV=${NODE_ENV}
 RUN npm run build
 
 #Install serve package
