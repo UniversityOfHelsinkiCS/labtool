@@ -32,7 +32,7 @@ if (isDeployedEnvironment) {
   transports.push(new LokiTransport({
     host: LOKI_HOST,
     batching: false,
-    headers: { Authorization: process.env.TOKEN },
+    headers: { token: process.env.TOKEN },
     labels: {
       app: 'labtool',
       environment: process.env.NODE_ENV || 'production'
