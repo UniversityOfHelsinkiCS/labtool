@@ -33,6 +33,11 @@ if (isDeployedEnvironment) {
     host: LOKI_HOST,
     batching: false,
     ...(process.env.LOKI_TOKEN ? { headers: { token: process.env.LOKI_TOKEN } } : {}),
+    onConnectionError: (err) => {
+      // Must not go through the logger itself, that would push to Loki and recurse
+      // eslint-disable-next-line no-console
+      console.error(`Loki push failed: ${err.statusCode || ''} ${err.message}`, err.responseBody || '')
+    },
     labels: {
       app: 'labtool',
       environment: process.env.NODE_ENV || 'production'
