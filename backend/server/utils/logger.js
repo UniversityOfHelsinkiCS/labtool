@@ -52,11 +52,13 @@ if (!inProduction) {
 
   transports.push(new LokiTransport({
     host: LOKI_HOST,
+    batching: false,
     labels: {
       app: 'labtool',
       environment: process.env.NODE_ENV || 'production'
     }
   }))
+
 }
 
 const logger = winston.createLogger({ transports })
