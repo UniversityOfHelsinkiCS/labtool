@@ -22,6 +22,9 @@ const requestLogger = morgan((tokens, req, res) => {
     userAgent
   }
 
+  // eslint-disable-next-line no-console
+  console.log('loggataan requestloggerista', message, additionalInfo)
+
   const statusCode = Number(status)
   if (statusCode >= 500) {
     logger.error(message, additionalInfo)
