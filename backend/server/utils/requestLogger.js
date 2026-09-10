@@ -23,7 +23,8 @@ const requestLogger = morgan((tokens, req, res) => {
   }
 
   // eslint-disable-next-line no-console
-  console.log('loggataan requestloggerista', message, additionalInfo)
+  console.log('loggataan requestloggerista', message, additionalInfo, logger.info, (typeof logger.info))
+  logger.info('hello, world, testataan loggerinfoa ilman statuskodea')
 
   const statusCode = Number(status)
   if (statusCode >= 500) {
