@@ -44,10 +44,6 @@ if (USE_FAKE_LOGIN) {
   console.log('USING FAKE LOGIN!!! DISABLE ON PRODUCTION!!!')
 }
 
-try {
-  Raven.config('https://d12f1efa9d2a4d88a34584707472b08f@toska.cs.helsinki.fi/8').install() // eslint-disable-line
-} catch (e) {} // eslint-disable-line
-
 // The main component of the whole application.
 const App = props => {
   useEffect(() => {

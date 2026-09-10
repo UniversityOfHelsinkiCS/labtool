@@ -3,12 +3,9 @@ const express = require('express')
 const app = express()
 const jwt = require('jsonwebtoken')
 const bodyParser = require('body-parser')
-const Raven = require('raven')
 const headerMiddleware = require('unfuck-utf8-headers-middleware')
 const logger = require('./server/utils/logger')
 const requestLogger = require('./server/utils/requestLogger')
-
-Raven.config(process.env.SENTRY_ADDR).install()
 
 require('dotenv').config()
 
