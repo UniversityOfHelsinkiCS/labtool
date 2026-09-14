@@ -7,7 +7,7 @@ const LOKI_HOST = process.env.LOKI_HOST || 'http://loki-svc.toska-lokki.svc.clus
 
 const transports = []
 
-if (process.env.NODE_ENV !== 'test') {
+if (!isDeployedEnvironment && process.env.NODE_ENV !== 'test') {
   transports.push(new winston.transports.File({ filename: 'debug.log' }))
 }
 
@@ -46,5 +46,10 @@ if (isDeployedEnvironment) {
 }
 
 const logger = winston.createLogger({ transports })
+
+logger.on('error', (err) => {
+  // eslint-disable-next-line no-console
+  console.error('Logger transport error:', err)
+})
 
 module.exports = logger
