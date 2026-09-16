@@ -525,6 +525,7 @@ exports[`<CoursePage /> > as teacher > matches the rendered snapshot 1`] = `
           >
             <tr
               class="TableRowForActiveStudent"
+              data-testid="student-row-10011"
             >
               <td
                 class=""
@@ -593,6 +594,7 @@ exports[`<CoursePage /> > as teacher > matches the rendered snapshot 1`] = `
                 style="position: relative;"
               >
                 <a
+                  data-testid="week-review-10011-1"
                   href="/labtool/reviewstudent/TKT20010.2018.K.A.1/10011/1"
                   style="position: absolute; display: flex; top: 0px; left: 0px; right: 0px; bottom: 0px; justify-content: center; align-items: center; height: 100%;"
                 >
@@ -613,6 +615,7 @@ exports[`<CoursePage /> > as teacher > matches the rendered snapshot 1`] = `
                 style="position: relative;"
               >
                 <a
+                  data-testid="week-review-10011-2"
                   href="/labtool/reviewstudent/TKT20010.2018.K.A.1/10011/2"
                   style="position: absolute; display: flex; top: 0px; left: 0px; right: 0px; bottom: 0px; justify-content: center; align-items: center; height: 100%;"
                 >
@@ -650,6 +653,7 @@ exports[`<CoursePage /> > as teacher > matches the rendered snapshot 1`] = `
             </tr>
             <tr
               class="TableRowForDroppedOutStudent"
+              data-testid="student-row-10031"
             >
               <td
                 class=""
@@ -774,6 +778,7 @@ exports[`<CoursePage /> > as teacher > matches the rendered snapshot 1`] = `
                 style="position: relative;"
               >
                 <a
+                  data-testid="week-review-10031-1"
                   href="/labtool/reviewstudent/TKT20010.2018.K.A.1/10031/1"
                   style="position: absolute; display: flex; top: 0px; left: 0px; right: 0px; bottom: 0px; justify-content: center; align-items: center; height: 100%;"
                 >
@@ -791,6 +796,7 @@ exports[`<CoursePage /> > as teacher > matches the rendered snapshot 1`] = `
                 style="position: relative;"
               >
                 <a
+                  data-testid="week-review-10031-2"
                   href="/labtool/reviewstudent/TKT20010.2018.K.A.1/10031/2"
                   style="position: absolute; display: flex; top: 0px; left: 0px; right: 0px; bottom: 0px; justify-content: center; align-items: center; height: 100%;"
                 >
@@ -828,6 +834,7 @@ exports[`<CoursePage /> > as teacher > matches the rendered snapshot 1`] = `
             </tr>
             <tr
               class="TableRowForDroppedOutStudent"
+              data-testid="student-row-10012"
             >
               <td
                 class=""
@@ -928,6 +935,7 @@ exports[`<CoursePage /> > as teacher > matches the rendered snapshot 1`] = `
                 style="position: relative;"
               >
                 <a
+                  data-testid="week-review-10012-1"
                   href="/labtool/reviewstudent/TKT20010.2018.K.A.1/10012/1"
                   style="position: absolute; display: flex; top: 0px; left: 0px; right: 0px; bottom: 0px; justify-content: center; align-items: center; height: 100%;"
                 >
@@ -945,6 +953,7 @@ exports[`<CoursePage /> > as teacher > matches the rendered snapshot 1`] = `
                 style="position: relative;"
               >
                 <a
+                  data-testid="week-review-10012-2"
                   href="/labtool/reviewstudent/TKT20010.2018.K.A.1/10012/2"
                   style="position: absolute; display: flex; top: 0px; left: 0px; right: 0px; bottom: 0px; justify-content: center; align-items: center; height: 100%;"
                 >

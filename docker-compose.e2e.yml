@@ -1,0 +1,70 @@
+name: labtool-e2e
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    environment:
+      - HOST=0.0.0.0
+      - VITE_USE_FAKE_LOGIN=ThisIsNotProduction
+      - VITE_API_URL=http://localhost:3011/api
+      - PUBLIC_URL=http://localhost:3010
+    ports:
+      - '3010:3000'
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -q -O /dev/null http://127.0.0.1:3000/ || exit 1']
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    environment:
+      - NODE_ENV=development
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=labtool
+      - DB_PORT=5432
+      - DB_HOST=db
+      - TOKEN=dev
+      - SECRET=dev
+      - ADMIN_PW=dev
+      - USE_FAKE_LOGIN=ThisIsNotProduction
+      - KURKI_URL=http://kurki:3002
+      - E2E_SEED=true
+    ports:
+      - '3011:3001'
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -q -O /dev/null http://127.0.0.1:3001/api || exit 1']
+      interval: 5s
+      timeout: 5s
+      retries: 30
+    command: sh -c "npm run dropdb; npm run createdb && npm run migrate && npm run add_test_data && npm start"
+
+  kurki:
+    build:
+      context: ./Kurki_simulation
+      dockerfile: Dockerfile
+    expose:
+      - '3002'
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: labtool
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 5s
+      timeout: 5s
+      retries: 10

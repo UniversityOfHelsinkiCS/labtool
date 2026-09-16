@@ -1,5 +1,8 @@
 # See https://help.github.com/ignore-files/ for more about ignoring files.
 
+test-results
+playwright-report
+
 # dependencies
 node_modules/
 
@@ -140,6 +143,10 @@ cypress.env.json
 **/uploads
 
 # additional inclusions here
+e2e/test-results/
+e2e/playwright-report/
+e2e/blob-report/
+e2e/.playwright/
 
 # exclusions here
 !.env.template

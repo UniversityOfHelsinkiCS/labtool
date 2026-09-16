@@ -154,6 +154,8 @@ export const StudentTableRow = props => {
           <Link
             style={{ ...tableCellLinkStyle, ...flexCenter }}
             key={'week' + i + 'link'}
+            data-testid={`week-review-${data.id}-${i + 1}`}
+            data-testid={`week-review-${data.id}-${i + 1}`}
             to={
               weekPoints[i + 1] === undefined
                 ? { pathname: `/labtool/reviewstudent/${selectedInstance.ohid}/${siId}/${i + 1}`, state: { cameFromCoursePage: true } }
@@ -269,7 +271,7 @@ export const StudentTableRow = props => {
   }
 
   return (
-    <Table.Row key={data.id} className={data.dropped || !data.validRegistration ? 'TableRowForDroppedOutStudent' : 'TableRowForActiveStudent'}>
+    <Table.Row key={data.id} data-testid={`student-row-${data.id}`} className={data.dropped || !data.validRegistration ? 'TableRowForDroppedOutStudent' : 'TableRowForActiveStudent'}>
       {/* Select Check Box */}
       {showColumn('select') && (
         <Table.Cell key="select">

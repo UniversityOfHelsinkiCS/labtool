@@ -55,7 +55,7 @@ export const ReviewStudentChecklist = props => {
               <Card className="checklistCard" fluid color="red" key={clItemCategory}>
                 <Card.Content header={clItemCategory} />
                 {sortPrerequisitesFirst(checklist.list[clItemCategory].filter(showCheck)).map(clItem => (
-                  <Card.Content className="checklistCardRow" key={clItem.id} onClick={toggleCheckbox(clItem.id)}>
+                  <Card.Content className="checklistCardRow" data-testid={`check-${clItem.id}`} key={clItem.id} onClick={toggleCheckbox(clItem.id)}>
                     <Form.Field>
                       <Grid>
                         <Grid.Row style={{ cursor: 'pointer', userSelect: 'none' }}>

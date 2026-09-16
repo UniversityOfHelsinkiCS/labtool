@@ -167,6 +167,7 @@ exports[`<MassEmailPage /> > MassEmailPage Component > should render correctly 1
             >
               <tr
                 class="TableRowForActiveStudent"
+                data-testid="student-row-10011"
               >
                 <td
                   class=""
@@ -227,6 +228,7 @@ exports[`<MassEmailPage /> > MassEmailPage Component > should render correctly 1
               </tr>
               <tr
                 class="TableRowForDroppedOutStudent"
+                data-testid="student-row-10031"
               >
                 <td
                   class=""

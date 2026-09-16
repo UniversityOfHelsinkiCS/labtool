@@ -121,6 +121,7 @@ exports[`<StudentTable /> > StudentTable Component > should render correctly 1`]
       >
         <tr
           class="TableRowForDroppedOutStudent"
+          data-testid="student-row-10012"
         >
           <td
             class=""
@@ -183,6 +184,7 @@ exports[`<StudentTable /> > StudentTable Component > should render correctly 1`]
         </tr>
         <tr
           class="TableRowForDroppedOutStudent"
+          data-testid="student-row-10031"
         >
           <td
             class=""
@@ -262,6 +264,7 @@ exports[`<StudentTable /> > StudentTable Component > should render correctly 1`]
         </tr>
         <tr
           class="TableRowForDroppedOutStudent"
+          data-testid="student-row-10011"
         >
           <td
             class=""
@@ -316,6 +319,7 @@ exports[`<StudentTableRow /> > StudentTableRow Component > should render correct
     <tbody>
       <tr
         class="TableRowForDroppedOutStudent"
+        data-testid="student-row-10012"
       >
         <td
           class=""
@@ -392,6 +396,7 @@ exports[`<StudentTableRow /> > StudentTableRow Component > should render correct
           style="position: relative;"
         >
           <a
+            data-testid="week-review-10012-1"
             href="/labtool/reviewstudent/TKT20010.2018.K.A.1/10012/1"
             style="position: absolute; display: flex; top: 0px; left: 0px; right: 0px; bottom: 0px; justify-content: center; align-items: center; height: 100%;"
           >
@@ -409,6 +414,7 @@ exports[`<StudentTableRow /> > StudentTableRow Component > should render correct
           style="position: relative;"
         >
           <a
+            data-testid="week-review-10012-2"
             href="/labtool/reviewstudent/TKT20010.2018.K.A.1/10012/2"
             style="position: absolute; display: flex; top: 0px; left: 0px; right: 0px; bottom: 0px; justify-content: center; align-items: center; height: 100%;"
           >
@@ -426,6 +432,7 @@ exports[`<StudentTableRow /> > StudentTableRow Component > should render correct
           style="position: relative;"
         >
           <a
+            data-testid="week-review-10012-3"
             href="/labtool/reviewstudent/TKT20010.2018.K.A.1/10012/3"
             style="position: absolute; display: flex; top: 0px; left: 0px; right: 0px; bottom: 0px; justify-content: center; align-items: center; height: 100%;"
           >
@@ -443,6 +450,7 @@ exports[`<StudentTableRow /> > StudentTableRow Component > should render correct
           style="position: relative;"
         >
           <a
+            data-testid="week-review-10012-4"
             href="/labtool/reviewstudent/TKT20010.2018.K.A.1/10012/4"
             style="position: absolute; display: flex; top: 0px; left: 0px; right: 0px; bottom: 0px; justify-content: center; align-items: center; height: 100%;"
           >
@@ -460,6 +468,7 @@ exports[`<StudentTableRow /> > StudentTableRow Component > should render correct
           style="position: relative;"
         >
           <a
+            data-testid="week-review-10012-5"
             href="/labtool/reviewstudent/TKT20010.2018.K.A.1/10012/5"
             style="position: absolute; display: flex; top: 0px; left: 0px; right: 0px; bottom: 0px; justify-content: center; align-items: center; height: 100%;"
           >
@@ -477,6 +486,7 @@ exports[`<StudentTableRow /> > StudentTableRow Component > should render correct
           style="position: relative;"
         >
           <a
+            data-testid="week-review-10012-6"
             href="/labtool/reviewstudent/TKT20010.2018.K.A.1/10012/6"
             style="position: absolute; display: flex; top: 0px; left: 0px; right: 0px; bottom: 0px; justify-content: center; align-items: center; height: 100%;"
           >
@@ -494,6 +504,7 @@ exports[`<StudentTableRow /> > StudentTableRow Component > should render correct
           style="position: relative;"
         >
           <a
+            data-testid="week-review-10012-7"
             href="/labtool/reviewstudent/TKT20010.2018.K.A.1/10012/7"
             style="position: absolute; display: flex; top: 0px; left: 0px; right: 0px; bottom: 0px; justify-content: center; align-items: center; height: 100%;"
           >
