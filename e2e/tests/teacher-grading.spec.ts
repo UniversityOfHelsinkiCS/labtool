@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test'
 import { loginAs } from '../fixtures/auth'
+import { clickAndWaitForApi, openAccordion } from '../fixtures/helpers'
 import { COURSE, NOTIFICATIONS, REGISTERED_STUDENT, REGISTERED_STUDENT_INSTANCE_ID, TEACHER } from '../fixtures/data'
 
 const POINTS = '2.5'
@@ -27,12 +28,15 @@ test.describe.serial('grading a week', () => {
     const studentRow = page.getByTestId(`student-row-${REGISTERED_STUDENT_INSTANCE_ID}`)
     await expect(studentRow).toContainText(REGISTERED_STUDENT.last_name)
 
-    await page.getByTestId(`week-review-${REGISTERED_STUDENT_INSTANCE_ID}-1`).click()
+    // ReviewStudent first renders from the store left over by the course page and then refetches;
+    // wait for the refetch, otherwise the typed points are lost and the required input blocks Save.
+    await clickAndWaitForApi(page, () => page.getByTestId(`week-review-${REGISTERED_STUDENT_INSTANCE_ID}-1`).click(), ['courseinstances/coursepage', 'weeks/getDraft'])
     await expect(page).toHaveURL(new RegExp(`/labtool/reviewstudent/${COURSE.ohid}/${REGISTERED_STUDENT_INSTANCE_ID}/1$`))
     await expect(page.getByRole('heading', { name: 'Week 1' })).toBeVisible()
 
     await page.locator('input[name="points"]').fill(POINTS)
     await page.locator('textarea[name="comment"]').fill(FEEDBACK)
+    await expect(page.locator('input[name="points"]')).toHaveValue(POINTS)
     await page.getByRole('button', { name: 'Save', exact: true }).click()
 
     await expect(page.locator('.notification.success')).toHaveText(NOTIFICATIONS.weekReviewed)
@@ -49,8 +53,8 @@ test.describe.serial('grading a week', () => {
     await expect(week1).toBeVisible()
     await expect(week1).toContainText(`points ${POINTS}`)
 
-    await week1.getByText('Week 1', { exact: false }).first().click()
-    await expect(week1).toContainText(FEEDBACK)
+    await openAccordion(week1)
+    await expect(week1.getByText(FEEDBACK)).toBeVisible()
     await expect(studentPage.locator('.ui.green.label', { hasText: 'Total Points' })).toContainText(POINTS)
 
     await studentContext.close()
