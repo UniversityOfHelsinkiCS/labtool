@@ -375,7 +375,7 @@ module.exports = {
           }
         })
         if (!studentTag) {
-          res.status(400).send('Did not find the given student tag.')
+          return res.status(400).send('Did not find the given student tag.')
         }
 
         const removedTag = await studentTag.destroy()

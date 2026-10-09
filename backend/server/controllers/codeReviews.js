@@ -176,6 +176,7 @@ module.exports = {
       })
       if (!codeReview) {
         res.status(400).send('No code review matched the given student instance ID and review number.')
+        return
       }
       await CodeReview.update(
         {

@@ -54,6 +54,7 @@ module.exports = {
       const nonActive = await helper.getInactive(req, res)
       res.status(200).send(helper.formatCoursesForList(nonActive))
     } catch (e) {
+      logger.error('listing importable courses error', { error: e.message })
       res.status(400).send('Error while listing importable courses.')
     }
   },
@@ -81,12 +82,18 @@ module.exports = {
       return
     }
 
-    const nonActive = await helper.getInactive(req, res)
-    await Promise.all(req.body.courses.map(async (course) => {
-      if (nonActive.find(c => c.id === course.hid)) {
-        await helper.createCourse(course)
-      }
-    }))
+    try {
+      const nonActive = await helper.getInactive(req, res)
+      await Promise.all(req.body.courses.map(async (course) => {
+        if (nonActive.find(c => c.id === course.hid)) {
+          await helper.createCourse(course)
+        }
+      }))
+    } catch (e) {
+      logger.error('course import error', { error: e.message })
+      res.status(400).send('Error while importing courses.')
+      return
+    }
     res.status(200).send()
   }
 }

@@ -75,7 +75,7 @@ function checkWebOodi(req, res, user, resolve) {
  * Check if teacher or correct student. Assumes auth already successful
  * @param user
  * @param weekId
- * @returns {*|Promise<T>}
+ * @returns {Promise<'teacher'|'student'|false>} the role that grants the permission, or false
  */
 async function checkHasCommentPermission(userId, weekId) {
   // get actual week instance to get student instance
@@ -118,10 +118,14 @@ async function checkHasCommentPermission(userId, weekId) {
   })
 
   // ok, user is a teacher?
-  const isTeacher = !!teacher
+  if (teacher) {
+    return 'teacher'
+  }
   // ok, user is the student whose review we are trying to comment on?
-  const isCorrectStudent = student && (student.userId === userId)
-  return isTeacher || isCorrectStudent
+  if (student.userId === userId) {
+    return 'student'
+  }
+  return false
 }
 
 // async function checkHasMarkCommentAsReadPermission(userId, weekId) {

@@ -3,6 +3,83 @@ const helper = require('../helpers/checklistHelper')
 const { TeacherInstance, Checklist, ChecklistItem, StudentInstance, CourseInstance } = require('../models')
 const logger = require('../utils/logger')
 
+function validateChecklistRowKey(row, key) {
+  switch (key) {
+    case 'id':
+    case 'name':
+    case 'checkedPoints':
+    case 'uncheckedPoints':
+      return null
+    case 'textWhenOn':
+      return typeof row[key] !== 'string' ? '"textWhenOn" must have a string value or be undefined.' : null
+    case 'textWhenOff':
+      return typeof row[key] !== 'string' ? '"textWhenOff" must have a string value or be undefined.' : null
+    case 'minimumRequirement':
+      return typeof row[key] !== 'boolean' ? '"minimumRequirement" must be a boolean' : null
+    case 'minimumRequirementMetIf':
+      return typeof row[key] !== 'boolean' ? '"minimumRequirementMetIf" must be a boolean' : null
+    case 'minimumRequirementGradePenalty':
+      if (row.minimumRequirement && (typeof row[key] !== 'number' || !Number.isInteger(row[key]) || row[key] < 0)) {
+        return '"minimumRequirementGradePenalty" must be a non-negative integer'
+      }
+      return null
+    case 'tempId':
+      // only used to map prerequisites to new checklist items, will not be stored
+      return null
+    case 'order':
+      // ignore, because we will
+      return null
+    case 'prerequisite':
+      return null
+    default:
+      return `Found unexpected key: ${key}`
+  }
+}
+
+function validateChecklistRow(row) {
+  if (row.id !== undefined && typeof row.id !== 'number') {
+    return 'Field ID must be numeric.'
+  }
+  if (typeof row.name !== 'string') {
+    return 'All objects in array must have field "name" with string value.'
+  }
+  if (typeof row.checkedPoints !== 'number') {
+    return 'All objects in array must have field "points when checked" with number value.'
+  }
+  if (typeof row.uncheckedPoints !== 'number') {
+    return 'All objects in array must have field "points when unchecked" with number value.'
+  }
+  for (const key of Object.keys(row)) {
+    const error = validateChecklistRowKey(row, key)
+    if (error) {
+      return error
+    }
+  }
+  return null
+}
+
+/**
+ * Validates the checklist JSON sent by the client.
+ * Returns the first validation error message, or null if the checklist is valid.
+ * Throws if the checklist is not an object.
+ *
+ * @param {*} checklist
+ */
+function validateChecklist(checklist) {
+  for (const category of Object.keys(checklist)) {
+    if (!Array.isArray(checklist[category])) {
+      return 'Supplied JSON should be an object with strings as keys and arrays as values.'
+    }
+    for (const row of checklist[category]) {
+      const error = validateChecklistRow(row)
+      if (error) {
+        return error
+      }
+    }
+  }
+  return null
+}
+
 module.exports = {
   /**
    * Create/edit checklist for course
@@ -44,85 +121,14 @@ module.exports = {
       if (req.body.maxPoints < 0) {
         return res.status(400).send('Invalid maximum points.')
       }
+      let validationError
       try {
-        Object.keys(req.body.checklist).forEach((cl) => {
-          if (!Array.isArray(req.body.checklist[cl])) {
-            return res.status(400).send('Supplied JSON should be an object with strings as keys and arrays as values.')
-          }
-          req.body.checklist[cl].forEach((row) => {
-            if (row.id !== undefined && typeof row.id !== 'number') {
-              return res.status(400).send('Field ID must be numeric.')
-            }
-            if (typeof row.name !== 'string') {
-              return res.status(400).send('All objects in array must have field "name" with string value.')
-            }
-            if (typeof row.checkedPoints !== 'number') {
-              return res.status(400).send('All objects in array must have field "points when checked" with number value.')
-            }
-            if (typeof row.uncheckedPoints !== 'number') {
-              return res.status(400).send('All objects in array must have field "points when unchecked" with number value.')
-            }
-            if (!Object.keys(row).every((key) => {
-              switch (key) {
-                case 'id':
-                  break
-                case 'name':
-                  break
-                case 'checkedPoints':
-                  break
-                case 'uncheckedPoints':
-                  break
-                case 'textWhenOn':
-                  if (typeof row[key] !== 'string') {
-                    res.status(400).send('"textWhenOn" must have a string value or be undefined.')
-                    return false
-                  }
-                  break
-                case 'textWhenOff':
-                  if (typeof row[key] !== 'string') {
-                    res.status(400).send('"textWhenOff" must have a string value or be undefined.')
-                    return false
-                  }
-                  break
-                case 'minimumRequirement':
-                  if (typeof row[key] !== 'boolean') {
-                    res.status(400).send('"minimumRequirement" must be a boolean')
-                    return false
-                  }
-                  break
-                case 'minimumRequirementMetIf':
-                  if (typeof row[key] !== 'boolean') {
-                    res.status(400).send('"minimumRequirementMetIf" must be a boolean')
-                    return false
-                  }
-                  break
-                case 'minimumRequirementGradePenalty':
-                  if (row.minimumRequirement && (typeof row[key] !== 'number' || !Number.isInteger(row[key]) || row[key] < 0)) {
-                    res.status(400).send('"minimumRequirementGradePenalty" must be a non-negative integer')
-                    return false
-                  }
-                  break
-                case 'tempId':
-                  // only used to map prerequisites to new checklist items, will not be stored
-                  break
-                case 'order':
-                  // ignore, because we will
-                  break
-                case 'prerequisite':
-                  break
-                default:
-                  res.status(400).send(`Found unexpected key: ${key}`)
-                  return false
-              }
-              return true
-            })) {
-              // some validation failure
-
-            }
-          })
-        })
+        validationError = validateChecklist(req.body.checklist)
       } catch (e) {
         return res.status(400).send('Cannot parse checklist JSON.')
+      }
+      if (validationError) {
+        return res.status(400).send(validationError)
       }
       // No validation is done to prevent creating a checklist for a week that doesn't exist.
       // Arguably, this is a feature, since the number of weeks can change.

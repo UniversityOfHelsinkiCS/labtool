@@ -401,7 +401,6 @@ module.exports = {
         message: 'Student record could not be found or created.'
       })
     } else {
-      helper.findByUserStudentInstance(req, res)
       return res.status(200).json(student)
     }
   },
@@ -1189,19 +1188,20 @@ module.exports = {
       return
     }
 
-    const hasPermission = await helper.checkHasCommentPermission(req.decoded.id, req.body.week)
-    if (!hasPermission) {
+    const role = await helper.checkHasCommentPermission(req.decoded.id, req.body.week)
+    if (!role) {
       return res.status(403).send('you cannot see the comments here')
     }
+
+    // hidden comments are for course staff only
+    const where = role === 'teacher' ? { weekId: req.body.week } : { weekId: req.body.week, hidden: false }
 
     try {
       const comments = await Comment.findAll({
         attributes: {
           exclude: ['updatedAt']
         },
-        where: {
-          weekId: req.body.week
-        }
+        where
       })
       res.status(200).send(comments)
     } catch (error) {

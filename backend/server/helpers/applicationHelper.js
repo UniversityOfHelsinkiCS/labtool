@@ -204,6 +204,9 @@ async function addInstructorToCourseList(course) {
 async function getInactiveFromKurki(req, res) {
   const cur = await getCurrent(req, res)
   const nxt = await getNewer(req, res)
+  if (!Array.isArray(cur) || !Array.isArray(nxt)) {
+    throw new Error('Could not fetch courses from Kurki')
+  }
   const newobj = cur.concat(nxt)
   const iarr = Object.keys(newobj).map(blob => newobj[blob].id)
   const ires = await CourseInstance.findAll({
@@ -225,29 +228,17 @@ async function getInactiveFromKurki(req, res) {
  */
 async function getInactive(req, res) {
   const key = 'inactiveCourses'
-  let inactive
   if (req.body.courses) {
-    try {
-      inactive = getInactiveFromKurki(req, res)
-      cache.del(key)
-      return inactive
-    } catch (e) {
-      return e
-    }
-  }
-  try {
-    inactive = await cache.get(key)
-  } catch (e) {
-    return e
+    const inactive = await getInactiveFromKurki(req, res)
+    cache.del(key)
+    return inactive
   }
 
+  let inactive = cache.get(key)
   if (!inactive) {
-    try {
-      inactive = getInactiveFromKurki(req, res)
-      cache.set(key, inactive)
-    } catch (e) {
-      return e
-    }
+    // only successful results are cached, so a Kurki failure is retried on the next request
+    inactive = await getInactiveFromKurki(req, res)
+    cache.set(key, inactive)
   }
   return inactive
 }
