@@ -1,0 +1,37 @@
+# Backend API integration tests against a throwaway Postgres.
+# Run from backend/: `npm run test:docker` (or `npm run test:docker -- test/users.spec.js`).
+# No ports are published, so this never clashes with the dev (3000/3001) or e2e (3010/3011) stacks.
+name: labtool-test
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    environment:
+      - NODE_ENV=test
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=postgres
+      - DB_HOST=db
+      - DB_PORT=5432
+      - TOKEN=test-token
+      - SECRET=test-secret
+      - ADMIN_PW=test
+    depends_on:
+      db:
+        condition: service_healthy
+    command: npm test
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: labtool_test
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d labtool_test']
+      interval: 2s
+      timeout: 5s
+      retries: 30
