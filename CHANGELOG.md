@@ -5,6 +5,23 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
 
 ## 2026-10-11
 
+### Changed (dev tooling)
+- **Backend lint and test tooling upgraded:**
+  - eslint 4 → 9.39.5 with a flat `eslint.config.js` that keeps the old style rules (no
+    semicolons, single quotes, 2-space indent, 120 columns) without the airbnb config.
+  - mocha 5 → 12.0.3; `test/mocha.opts`, which mocha no longer reads, is replaced by
+    `.mocharc.js`.
+  - supertest 3 → 7.3.1, nock 9 → 14.0.17, cross-env 5 → 10.1.0.
+  - nodemon moved to devDependencies, so it is no longer installed in the production image.
+- **Removed unused backend packages:** `should`, `tape` (both were listed as production
+  dependencies), `assert` (the tests use Node's built-in module), `js-beautify`, `standard`,
+  `prettier` and the old eslint configs and plugins.
+
+### Security
+- **pug 2 → 3.0.4** (renders the `/admin` page; fixes code execution advisories).
+- Backend `npm audit`: 24 → 5 findings, 0 critical. Production dependencies have only the 2
+  moderate `uuid` findings from Sequelize 6; the rest is nodemon's file watcher in dev.
+
 ### Fixed
 - **Blank page when opening BrowseReviews or the code review settings page directly** at the start
   of a session, for example from the link in a comment notification email. The pages could decide

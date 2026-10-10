@@ -46,7 +46,7 @@ module.exports = {
       const checksObject = {}
 
       if (week) {
-        const updatedChecks = req.body.checks || {}
+        const updatedChecks = req.body.checks || {}
         await week.update({
           points: 'points' in req.body ? nullIfEmpty(req.body.points) : week.points,
           grade: 'grade' in req.body ? nullIfEmpty(req.body.grade) : week.grade,

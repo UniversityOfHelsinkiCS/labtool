@@ -52,7 +52,7 @@ npm test                                       # when Postgres is reachable dire
 npm test -- test/users.spec.js -g "sysop"      # single file / test name
 ```
 
-`test/helpers/setup.js` (loaded via `test/mocha.opts`) runs migrations, truncates all tables before every test and blocks real network with nock. Fixtures come from `test/helpers/factories.js` (`createScenario()`: course with teacher, assistant, two students, outsider and a teacher of another course); `as(user)` in `test/helpers/api.js` signs JWTs like login does. Kurki is mocked with nock; SMTP is stubbed at `nodemailer.createTransport` (`test/helpers/mailer.js`). `it.skip` tests document known app bugs. CI (`.github/workflows/tests.yml`, on pull requests and before staging/production deploys) runs frontend lint + tests, backend lint, the backend API tests and the e2e suite.
+`test/helpers/setup.js` (loaded via `backend/.mocharc.js`) runs migrations, truncates all tables before every test and blocks real network with nock. Fixtures come from `test/helpers/factories.js` (`createScenario()`: course with teacher, assistant, two students, outsider and a teacher of another course); `as(user)` in `test/helpers/api.js` signs JWTs like login does. Kurki is mocked with nock; SMTP is stubbed at `nodemailer.createTransport` (`test/helpers/mailer.js`). `it.skip` tests document known app bugs. CI (`.github/workflows/tests.yml`, on pull requests and before staging/production deploys) runs frontend lint + tests, backend lint, the backend API tests and the e2e suite.
 
 E2E (`e2e/`, first time: `npm install && npx playwright install chromium`):
 
