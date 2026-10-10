@@ -17,28 +17,6 @@ const INITIAL_STATE = {
   filterActive: false
 }
 
-/**
- * Check if there is a repeated reviewer-toReview pair or the reviewer is same as toReview when code review round>1
- */
-const checkRepeated = (currentSelections, reviewers, toReviews, round) => {
-  if (round === -1) {
-    round = Object.keys(currentSelections).length
-  }
-  for (let i = 1; i < round; i++) {
-    for (let j = 0; j < reviewers.length; j++) {
-      if (currentSelections[i][reviewers[j]] === toReviews[j]) {
-        //repeated reviewer-toReview pair
-        return true
-      }
-      if (reviewers[j] === toReviews[j]) {
-        //reviewer is same as toReview
-        return true
-      }
-    }
-  }
-  return false
-}
-
 const swap = (array, i, j) => {
   const temp = array[i]
   array[i] = array[j]
@@ -52,29 +30,50 @@ const shuffleArray = array => {
   }
 }
 
-let shuffledArray
-let endRecursion = false
+const randomOrder = array => {
+  const result = [...array]
+  for (let i = result.length - 1; i > 0; i--) {
+    swap(result, i, Math.floor(Math.random() * (i + 1)))
+  }
+  return result
+}
+
 /**
- * find a permutation of reviwers-array which will not cause repeated review-toReview pair
- * or the situation that review and toReview are same
+ * Find reviewers for toReviews (reviewers[i] reviews toReviews[i]) so that nobody reviews themselves
+ * and nobody reviews someone they already reviewed in an earlier round. Randomized backtracking, so it
+ * always finds an assignment when one exists. Returns [] when there is none.
  */
-const findNonRepeatedPermutation = (currentSelections, reviewers, start, toReviews, round) => {
-  if (start === reviewers.length - 1) {
-    if (!checkRepeated(currentSelections, reviewers, toReviews, round)) {
-      shuffledArray = [...reviewers]
-      endRecursion = true
-    } else {
-      shuffleArray(reviewers)
+const findNonRepeatedPermutation = (currentSelections, toReviews, round) => {
+  const previousRounds =
+    round === -1
+      ? Object.keys(currentSelections)
+          .map(Number)
+          .filter(r => r > 0)
+      : Array.from({ length: round - 1 }, (_, i) => i + 1)
+  const isAllowed = (reviewer, toReview) =>
+    reviewer !== toReview &&
+    !previousRounds.some(r => currentSelections[r] && currentSelections[r][reviewer] === toReview)
+
+  const reviewers = []
+  const used = new Set()
+  const assign = position => {
+    if (position === toReviews.length) {
+      return true
     }
-  }
-  for (let i = start; i < reviewers.length; i++) {
-    if (endRecursion) {
-      break
+    const candidates = randomOrder(
+      toReviews.filter(reviewer => !used.has(reviewer) && isAllowed(reviewer, toReviews[position]))
+    )
+    for (const reviewer of candidates) {
+      used.add(reviewer)
+      reviewers[position] = reviewer
+      if (assign(position + 1)) {
+        return true
+      }
+      used.delete(reviewer)
     }
-    swap(reviewers, start, i)
-    findNonRepeatedPermutation(currentSelections, reviewers, start + 1, toReviews, round)
-    swap(reviewers, start, i)
+    return false
   }
+  return assign(0) ? reviewers : []
 }
 
 const codeReviewReducer = (state = INITIAL_STATE, action) => {
@@ -202,10 +201,11 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
         //if the code review round is 1 or there is no code review and the first one will be created, we don't need to care about the repetition problem
         shuffledReviewers = reviewers
       } else {
-        shuffledArray = []
-        endRecursion = false
-        findNonRepeatedPermutation(state.currentSelections, reviewers, 0, toReviews, action.data.reviewNumber)
-        shuffledReviewers = shuffledArray
+        shuffledReviewers = findNonRepeatedPermutation(
+          state.currentSelections,
+          toReviews,
+          action.data.reviewNumber
+        )
       }
 
       const newCurrentSelections = { ...state.currentSelections }

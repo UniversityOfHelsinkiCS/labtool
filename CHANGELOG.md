@@ -15,6 +15,11 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
   `.admin`, a column a 2019 migration renamed to `instructor` and inverted, so it never triggered.
   It now refuses to remove anyone who is not an assistant (`instructor: true`). Removing
   assistants works as before.
+- **Random code-review assignment sometimes assigned nobody** (`codeReviewReducer.js`). From round
+  2 on, the search reshuffled the list it was working through, so it could miss every valid
+  assignment and silently return none (about 1 in 4 runs with 3 students). It is now a randomized
+  backtracking search that always finds an assignment when one exists, with the same rules: nobody
+  reviews themselves or someone they reviewed in an earlier round.
 
 ## 2026-10-10
 
@@ -145,7 +150,6 @@ Backend:
   database error (no test yet).
 
 Frontend:
-- Random code-review assignment sometimes assigns nobody (`codeReviewReducer.js`).
 - New checklist rows all get the id `-Infinity` when the checklist starts empty
   (`checklistReducer.js`).
 - "Notified" labels do not update after sending an email, and several other reducer actions change
