@@ -30,16 +30,24 @@ export const WeekReviewCodeReview = props => {
     <Accordion key={`codereview${i}`} fluid styled id={`reviewCodeReview${cr.reviewNumber}`}>
       {' '}
       <Accordion.Title className="codeReview" active={doOpen} index={i} onClick={handleClickWeek}>
-        <Icon name="dropdown" /> Code Review {cr.reviewNumber} {cr.points !== null ? `, points ${roundPoints(cr.points)}${maxPoints !== null ? ` / ${roundPoints(maxPoints)}` : ''}` : ''}
+        <Icon name="dropdown" /> Code Review {cr.reviewNumber}{' '}
+        {cr.points !== null
+          ? `, points ${roundPoints(cr.points)}${maxPoints !== null ? ` / ${roundPoints(maxPoints)}` : ''}`
+          : ''}
       </Accordion.Title>
       <Accordion.Content active={doOpen}>
         {isTeacher ? (
           <>
             {cr.toReview ? (
               <p>
-                <strong>Project to review:</strong> {courseData.data.find(data => data.id === cr.toReview).projectName} <br />
+                <strong>Project to review:</strong>{' '}
+                {courseData.data.find(data => data.id === cr.toReview).projectName} <br />
                 <strong>GitHub:</strong>{' '}
-                <a href={courseData.data.find(data => data.id === cr.toReview).github} target="_blank" rel="noopener noreferrer">
+                <a
+                  href={courseData.data.find(data => data.id === cr.toReview).github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   {courseData.data.find(data => data.id === cr.toReview).github}
                 </a>
               </p>
@@ -71,21 +79,42 @@ export const WeekReviewCodeReview = props => {
             {hasChecklist ? (
               <>
                 <h3>Review</h3>
-                <Link to={`/labtool/reviewstudentcr/${selectedInstance.ohid}/${studentInstance}/${cr.reviewNumber}`}>
-                  <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'edit', color: 'black', size: 'large' }} />} content={cr.points !== null ? 'Edit review' : 'Review'} />
+                <Link
+                  to={`/labtool/reviewstudentcr/${selectedInstance.ohid}/${studentInstance}/${cr.reviewNumber}`}
+                >
+                  <Popup
+                    trigger={
+                      <Button
+                        circular
+                        color="orange"
+                        size="tiny"
+                        icon={{ name: 'edit', color: 'black', size: 'large' }}
+                      />
+                    }
+                    content={cr.points !== null ? 'Edit review' : 'Review'}
+                  />
                 </Link>
               </>
             ) : (
               <Form onSubmit={gradeCodeReview(cr.reviewNumber, studentInstance)}>
                 <label>Points </label>
-                <Input name="points" defaultValue={cr.points ? cr.points : ''} type="number" step="0.01" style={{ width: '100px' }} />
+                <Input
+                  name="points"
+                  defaultValue={cr.points ? cr.points : ''}
+                  type="number"
+                  step="0.01"
+                  style={{ width: '100px' }}
+                />
                 <Input type="submit" value="Grade" />
               </Form>
             )}
           </>
         ) : (
           <>
-            <strong>Points: </strong> {cr.points !== null ? `${roundPoints(cr.points)}${maxPoints !== null ? ` / ${roundPoints(maxPoints)}` : ''}` : 'Not graded yet'}
+            <strong>Points: </strong>{' '}
+            {cr.points !== null
+              ? `${roundPoints(cr.points)}${maxPoints !== null ? ` / ${roundPoints(maxPoints)}` : ''}`
+              : 'Not graded yet'}
             <br />
             <strong>GitHub: </strong>
             <a href={cr.toReview.github || cr.repoToReview} target="_blank" rel="noopener noreferrer">

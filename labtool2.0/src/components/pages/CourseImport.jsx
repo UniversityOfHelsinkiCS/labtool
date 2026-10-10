@@ -32,7 +32,11 @@ ImportableCourse.propTypes = {
 const parseKurkiDate = kurkiDate => new Date(kurkiDate.substring(0, 10))
 
 const sortByStartDate = (a, b) => {
-  return parseKurkiDate(a.starts) - parseKurkiDate(b.starts) || parseKurkiDate(a.ends) - parseKurkiDate(b.ends) || finnishLocaleCompare(a.cname, b.cname)
+  return (
+    parseKurkiDate(a.starts) - parseKurkiDate(b.starts) ||
+    parseKurkiDate(a.ends) - parseKurkiDate(b.ends) ||
+    finnishLocaleCompare(a.cname, b.cname)
+  )
 }
 
 /**
@@ -50,7 +54,9 @@ export const CourseImport = props => {
     e.preventDefault()
     const data = props.importable
     if (data) {
-      const courses = data.filter(entry => e.target['import' + entry.hid] && e.target['import' + entry.hid].checked)
+      const courses = data.filter(
+        entry => e.target['import' + entry.hid] && e.target['import' + entry.hid].checked
+      )
       props.addRedirectHook({
         hook: 'COURSE_IMPORT_DO_IMPORT_'
       })
@@ -59,7 +65,13 @@ export const CourseImport = props => {
   }
 
   if (props.errors && props.errors.length > 0) {
-    return <Error errors={props.errors.map(error => `${error.response.data} (${error.response.status} ${error.response.statusText})`)} />
+    return (
+      <Error
+        errors={props.errors.map(
+          error => `${error.response.data} (${error.response.status} ${error.response.statusText})`
+        )}
+      />
+    )
   }
 
   return (

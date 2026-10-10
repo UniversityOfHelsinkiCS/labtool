@@ -1,4 +1,0 @@
---exit
---timeout 15000
---reporter spec
---file test/helpers/setup.js

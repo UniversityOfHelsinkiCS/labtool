@@ -25,9 +25,9 @@ const loadAppWithRealMailer = () => {
   try {
     saved.forEach(([path]) => delete require.cache[path])
     process.env.NODE_ENV = 'production'
-    require(emailControllerPath) // eslint-disable-line global-require, import/no-dynamic-require
+    require(emailControllerPath)
     process.env.NODE_ENV = originalEnv
-    mailApp = require(appPath).app // eslint-disable-line global-require, import/no-dynamic-require
+    mailApp = require(appPath).app
   } finally {
     process.env.NODE_ENV = originalEnv
     // restore the original module instances for everybody else

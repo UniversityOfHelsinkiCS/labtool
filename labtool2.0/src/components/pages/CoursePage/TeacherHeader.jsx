@@ -10,12 +10,15 @@ import CoursePageHeader from './Header'
 export const CoursePageTeacherHeader = props => {
   const { selectedInstance, changeCourseActive, moveToNextWeek } = props
   const isFinalReview = selectedInstance.currentWeek > selectedInstance.weekAmount
-  const weekAdvanceEnabled = selectedInstance.currentWeek < selectedInstance.weekAmount + (selectedInstance.finalReview ? 1 : 0)
+  const weekAdvanceEnabled =
+    selectedInstance.currentWeek < selectedInstance.weekAmount + (selectedInstance.finalReview ? 1 : 0)
   const timeNow = new Date()
   const courseStart = selectedInstance ? new Date(selectedInstance.start) : timeNow
   const courseEnd = selectedInstance ? new Date(selectedInstance.end) : timeNow
   // suggest activations to be enabled for 30 days, or until the course ends
-  const suggestedActivationStatus = timeNow.getTime() - courseStart.getTime() < 30 * 24 * 60 * 60 * 1000 && timeNow.getTime() < courseEnd.getTime()
+  const suggestedActivationStatus =
+    timeNow.getTime() - courseStart.getTime() < 30 * 24 * 60 * 60 * 1000 &&
+    timeNow.getTime() < courseEnd.getTime()
   const actualActivationStatus = selectedInstance ? selectedInstance.active : null
 
   return (
@@ -67,7 +70,13 @@ export const CoursePageTeacherHeader = props => {
             <Table.Cell>
               Current week: {isFinalReview ? 'Final Review' : selectedInstance.currentWeek}
               <Popup
-                content={weekAdvanceEnabled ? 'Advance course by 1 week' : selectedInstance.finalReview ? 'Already at final review' : 'Already at final week'}
+                content={
+                  weekAdvanceEnabled
+                    ? 'Advance course by 1 week'
+                    : selectedInstance.finalReview
+                      ? 'Already at final review'
+                      : 'Already at final week'
+                }
                 trigger={
                   <span style={{ marginLeft: '15px' }}>
                     <Button
@@ -93,10 +102,22 @@ export const CoursePageTeacherHeader = props => {
                   state: { cameFromCoursePage: true }
                 }}
               >
-                <Popup trigger={<Button circular size="tiny" icon={{ name: 'shuffle', size: 'large', color: 'orange' }} />} content="Edit code reviews" position="bottom right" />
+                <Popup
+                  trigger={
+                    <Button circular size="tiny" icon={{ name: 'shuffle', size: 'large', color: 'orange' }} />
+                  }
+                  content="Edit code reviews"
+                  position="bottom right"
+                />
               </Link>
               <Link to={`/labtool/ModifyCourseInstancePage/${selectedInstance.ohid}`}>
-                <Popup trigger={<Button circular size="tiny" icon={{ name: 'edit', size: 'large', color: 'orange' }} />} content="Edit course" position="top right" />
+                <Popup
+                  trigger={
+                    <Button circular size="tiny" icon={{ name: 'edit', size: 'large', color: 'orange' }} />
+                  }
+                  content="Edit course"
+                  position="top right"
+                />
               </Link>
             </Table.Cell>
           </Table.Row>

@@ -24,11 +24,27 @@ export const CoursePageTeacherBulkForm = props => {
   const disabled = numSelected < 1
 
   return (
-    <span className="TeacherBulkForm" style={{ position: 'fixed', bottom: 0, background: 'rgba(255,255,255,0.9)', textAlign: 'center', left: 0, right: 0 }}>
+    <span
+      className="TeacherBulkForm"
+      style={{
+        position: 'fixed',
+        bottom: 0,
+        background: 'rgba(255,255,255,0.9)',
+        textAlign: 'center',
+        left: 0,
+        right: 0
+      }}
+    >
       <Accordion>
-        <Accordion.Title style={{ background: '#f0f0f0' }} active={state.showPanel} index={0} onClick={() => (state.showPanel = !state.showPanel)}>
+        <Accordion.Title
+          style={{ background: '#f0f0f0' }}
+          active={state.showPanel}
+          index={0}
+          onClick={() => (state.showPanel = !state.showPanel)}
+        >
           <Icon size="big" name={state.showPanel ? 'caret down' : 'caret up'} />
-          <h4 style={{ display: 'inline' }}>Modify selected students</h4> ({numSelected > 0 ? <b>{numSelected} selected</b> : <span>{numSelected} selected</span>})
+          <h4 style={{ display: 'inline' }}>Modify selected students</h4> (
+          {numSelected > 0 ? <b>{numSelected} selected</b> : <span>{numSelected} selected</span>})
         </Accordion.Title>
         <Accordion.Content active={state.showPanel}>
           <br />

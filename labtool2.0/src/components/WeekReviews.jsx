@@ -7,7 +7,13 @@ import { associateTeacherToStudent } from '../services/assistant'
 import { addLinkToCodeReview, gradeCodeReview } from '../services/codeReview'
 import { sendEmail } from '../services/email'
 import { markCommentsAsRead } from '../services/comment'
-import { coursePageReset, updateActiveIndex, toggleCodeReview, selectTag, selectTeacher } from '../reducers/coursePageLogicReducer'
+import {
+  coursePageReset,
+  updateActiveIndex,
+  toggleCodeReview,
+  selectTag,
+  selectTeacher
+} from '../reducers/coursePageLogicReducer'
 import { resetLoading } from '../reducers/loadingReducer'
 import useLegacyState from '../hooks/legacyState'
 
@@ -20,7 +26,11 @@ export const WeekReviews = props => {
   })
 
   useEffect(() => {
-    if (!props.openWeeks && !Object.keys(state.openWeeks).length && !state.openWeeks[props.selectedInstance.currentWeek - 1]) {
+    if (
+      !props.openWeeks &&
+      !Object.keys(state.openWeeks).length &&
+      !state.openWeeks[props.selectedInstance.currentWeek - 1]
+    ) {
       state.openWeeks = { [props.selectedInstance.currentWeek - 1]: true }
     }
   }, [])
@@ -215,15 +225,9 @@ export const WeekReviews = props => {
 
   let weeks
   if (isTeacher()) {
-    weeks = []
-      .concat(normalWeeks)
-      .concat(codeReviews)
-      .concat(finalReview)
+    weeks = [].concat(normalWeeks).concat(codeReviews).concat(finalReview)
   } else {
-    weeks = []
-      .concat(normalWeeks)
-      .concat(finalReview)
-      .concat(codeReviews)
+    weeks = [].concat(normalWeeks).concat(finalReview).concat(codeReviews)
   }
 
   return weeks

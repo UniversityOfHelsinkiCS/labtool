@@ -23,7 +23,12 @@ export const CoursePageStudentInfo = props => {
               <h3> {courseData.data.projectName} </h3>
               <h3>
                 <Link to={`/labtool/courseregistration/${selectedInstance.ohid}`}>
-                  <Button circular floated="right" size="large" icon={{ name: 'edit', color: 'orange', size: 'large' }} />
+                  <Button
+                    circular
+                    floated="right"
+                    size="large"
+                    icon={{ name: 'edit', color: 'orange', size: 'large' }}
+                  />
                 </Link>
                 <a href={courseData.data.github} target="_blank" rel="noopener noreferrer">
                   {courseData.data.github}
@@ -35,8 +40,9 @@ export const CoursePageStudentInfo = props => {
                   <Message warning>
                     <Message.Header>Your project repository might not be accessible</Message.Header>
                     <p>
-                      Please verify that the repository exists and that it is not private. To hide this warning, edit your repository by clicking the button on the right, make sure there is no warning
-                      (or it goes away) and click &apos;Submit&apos;.
+                      Please verify that the repository exists and that it is not private. To hide this
+                      warning, edit your repository by clicking the button on the right, make sure there is no
+                      warning (or it goes away) and click &apos;Submit&apos;.
                     </p>
                   </Message>
                 </>
@@ -48,11 +54,18 @@ export const CoursePageStudentInfo = props => {
             <>
               <Message className="mistakenRegistration" negative>
                 <Message.Header>Your registration has been marked as mistaken</Message.Header>
-                <p>This means you likely registered on this course by mistake. If this is not the case, please contact the teacher of the course.</p>
+                <p>
+                  This means you likely registered on this course by mistake. If this is not the case, please
+                  contact the teacher of the course.
+                </p>
                 <Popup
                   content="You can remove yourself from the course if you registered by mistake."
                   trigger={
-                    <Button id="buttonRemoveRegistration" color="red" onClick={() => removeRegistration(courseData.data.id)}>
+                    <Button
+                      id="buttonRemoveRegistration"
+                      color="red"
+                      onClick={() => removeRegistration(courseData.data.id)}
+                    >
                       Remove yourself from the course
                     </Button>
                   }
@@ -65,7 +78,10 @@ export const CoursePageStudentInfo = props => {
             <>
               <Message>
                 <Message.Header>You have been marked as dropped out from this course</Message.Header>
-                <p>Your further course submissions will likely not be graded. If this is a mistake, please contact the teacher of the course.</p>
+                <p>
+                  Your further course submissions will likely not be graded. If this is a mistake, please
+                  contact the teacher of the course.
+                </p>
               </Message>
               <br />
             </>

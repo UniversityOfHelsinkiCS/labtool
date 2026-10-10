@@ -43,7 +43,13 @@ export const FakeLoginPage = props => {
     await props.login(content)
   }
 
-  const options = users.filter(x => x.email).map(x => ({ key: x.username, value: x.username, text: x.last_name + ', ' + x.first_names + ' (' + x.username + ')' }))
+  const options = users
+    .filter(x => x.email)
+    .map(x => ({
+      key: x.username,
+      value: x.username,
+      text: x.last_name + ', ' + x.first_names + ' (' + x.username + ')'
+    }))
 
   return (
     <div className="FakeLoginPage">

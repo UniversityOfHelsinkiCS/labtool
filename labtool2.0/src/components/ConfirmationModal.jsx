@@ -12,7 +12,20 @@ export const ConfirmationModal = props => {
   const currentReviewee = props.getCurrentReviewee(props.selectedDropdown, props.data.id)
 
   return (
-    <Modal size="tiny" open={open} trigger={<Icon id="tag" onClick={toggleOpen} name="window close" size="large" color="red" style={{ float: 'right' }} />}>
+    <Modal
+      size="tiny"
+      open={open}
+      trigger={
+        <Icon
+          id="tag"
+          onClick={toggleOpen}
+          name="window close"
+          size="large"
+          color="red"
+          style={{ float: 'right' }}
+        />
+      }
+    >
       <Modal.Content>
         <Modal.Description>
           <p>Do you wish to remove the following code review:</p>
@@ -36,7 +49,13 @@ export const ConfirmationModal = props => {
       </Modal.Content>
       <Modal.Actions>
         <Button negative icon="close" labelPosition="right" color="red" content="No" onClick={toggleClose} />
-        <Button positive icon="checkmark" labelPosition="right" content="Yes" onClick={props.removeOne(props.data.id)} />
+        <Button
+          positive
+          icon="checkmark"
+          labelPosition="right"
+          content="Yes"
+          onClick={props.removeOne(props.data.id)}
+        />
       </Modal.Actions>
     </Modal>
   )

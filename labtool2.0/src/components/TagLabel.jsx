@@ -5,7 +5,22 @@ import PropTypes from 'prop-types'
 export const TagLabel = props => {
   const { color, text, handleClick, tag, basic, removeLabel, disabled } = props
   // Semantic UI color choices + "white" (which is actually technically the lack of color)
-  const validColors = ['white', 'red', 'orange', 'yellow', 'olive', 'green', 'teal', 'blue', 'violet', 'purple', 'pink', 'brown', 'grey', 'black']
+  const validColors = [
+    'white',
+    'red',
+    'orange',
+    'yellow',
+    'olive',
+    'green',
+    'teal',
+    'blue',
+    'violet',
+    'purple',
+    'pink',
+    'brown',
+    'grey',
+    'black'
+  ]
 
   const tagColor = tag ? tag.color : color
   const tagText = tag ? tag.name : text
@@ -29,10 +44,7 @@ export const TagLabel = props => {
   }
 
   const rgbValuesFromString = rgb => {
-    const values = rgb
-      .substring(4)
-      .split(')')[0]
-      .split(', ')
+    const values = rgb.substring(4).split(')')[0].split(', ')
 
     const r = values[0]
     const g = values[1]
@@ -57,7 +69,9 @@ export const TagLabel = props => {
       rgb = hexToRgb(backgroundColor)
     }
 
-    const rgbSum = Math.round((parseInt(rgb[0]) * 299 + parseInt(rgb[1]) * 587 + parseInt(rgb[2]) * 114) / 1000)
+    const rgbSum = Math.round(
+      (parseInt(rgb[0]) * 299 + parseInt(rgb[1]) * 587 + parseInt(rgb[2]) * 114) / 1000
+    )
     return rgbSum > 160 ? 'black' : 'white'
   }
 

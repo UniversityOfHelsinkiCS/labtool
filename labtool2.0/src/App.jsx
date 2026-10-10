@@ -106,27 +106,73 @@ const App = props => {
     return (
       <main>
         <Switch>
-          <Route path={`/labtool/courses/:id`} render={({ match, history }) => <CoursePage history={history} courseId={match.params.id} />} />
+          <Route
+            path={`/labtool/courses/:id`}
+            render={({ match, history }) => <CoursePage history={history} courseId={match.params.id} />}
+          />
           <Route exact path={`/labtool/courses`} render={({ history }) => <Courses history={history} />} />
-          <Route path={`/labtool/courseregistration/:id`} render={({ match, history }) => <RegisterPage history={history} courseId={match.params.id} />} />
-          <Route path={`/labtool/browsereviews/:id/:si/`} render={({ match, history }) => <BrowseReviews history={history} courseId={match.params.id} studentInstance={match.params.si} />} />
+          <Route
+            path={`/labtool/courseregistration/:id`}
+            render={({ match, history }) => <RegisterPage history={history} courseId={match.params.id} />}
+          />
+          <Route
+            path={`/labtool/browsereviews/:id/:si/`}
+            render={({ match, history }) => (
+              <BrowseReviews history={history} courseId={match.params.id} studentInstance={match.params.si} />
+            )}
+          />
           <Route path={`/labtool/email`} component={Email} />
-          <Route path={`/labtool/massemail/:id`} render={({ match, history }) => <MassEmailPage history={history} courseId={match.params.id} />} />
+          <Route
+            path={`/labtool/massemail/:id`}
+            render={({ match, history }) => <MassEmailPage history={history} courseId={match.params.id} />}
+          />
           <Route path={`/labtool/registerPage`} component={RegisterPage} />
           <Route
             path={`/labtool/reviewstudent/:id/:si/:wk`}
-            render={({ match, history }) => <ReviewStudent history={history} courseId={match.params.id} studentInstance={match.params.si} weekNumber={match.params.wk} />}
+            render={({ match, history }) => (
+              <ReviewStudent
+                history={history}
+                courseId={match.params.id}
+                studentInstance={match.params.si}
+                weekNumber={match.params.wk}
+              />
+            )}
           />
           <Route
             path={`/labtool/reviewstudentcr/:id/:si/:cr`}
-            render={({ match, history }) => <ReviewStudentCodeReview history={history} courseId={match.params.id} studentInstance={match.params.si} codeReviewNumber={match.params.cr} />}
+            render={({ match, history }) => (
+              <ReviewStudentCodeReview
+                history={history}
+                courseId={match.params.id}
+                studentInstance={match.params.si}
+                codeReviewNumber={match.params.cr}
+              />
+            )}
           />
-          <Route path={`/labtool/ModifyCourseInstancePage/:id`} render={({ match }) => <ModifyCourseInstancePage courseId={match.params.id} />} />
-          <Route path={`/labtool/ModifyCourseInstanceStaff/:id`} render={({ match }) => <ModifyCourseInstanceStaff courseId={match.params.id} />} />
-          <Route path={'/labtool/ModifyCourseInstanceCodeReviews/:id'} render={({ match }) => <ModifyCourseInstanceCodeReviews courseId={match.params.id} />} />
-          <Route path={'/labtool/ManageTags/:id'} render={({ match }) => <ManageTags courseId={match.params.id} />} />
-          <Route path={'/labtool/checklist/:id/create'} render={({ match }) => <CreateChecklist courseId={match.params.id} />} />
-          <Route path={'/labtool/checklist/:id/create'} render={({ match }) => <CreateChecklist courseId={match.params.id} />} />
+          <Route
+            path={`/labtool/ModifyCourseInstancePage/:id`}
+            render={({ match }) => <ModifyCourseInstancePage courseId={match.params.id} />}
+          />
+          <Route
+            path={`/labtool/ModifyCourseInstanceStaff/:id`}
+            render={({ match }) => <ModifyCourseInstanceStaff courseId={match.params.id} />}
+          />
+          <Route
+            path={'/labtool/ModifyCourseInstanceCodeReviews/:id'}
+            render={({ match }) => <ModifyCourseInstanceCodeReviews courseId={match.params.id} />}
+          />
+          <Route
+            path={'/labtool/ManageTags/:id'}
+            render={({ match }) => <ManageTags courseId={match.params.id} />}
+          />
+          <Route
+            path={'/labtool/checklist/:id/create'}
+            render={({ match }) => <CreateChecklist courseId={match.params.id} />}
+          />
+          <Route
+            path={'/labtool/checklist/:id/create'}
+            render={({ match }) => <CreateChecklist courseId={match.params.id} />}
+          />
           <Route path={'/labtool/courseimport'} render={() => <CourseImport />} />
           <Route path={`/labtool/admin`} component={AdminPage} />
           <Route path={`/`} render={() => <MyPage />} />

@@ -7,7 +7,12 @@ import { connect } from 'react-redux'
 import { createOneWeek, getWeekDraft, saveWeekDraft } from '../../services/week'
 import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import { clearNotifications } from '../../reducers/notificationReducer'
-import { toggleCheckWeek, resetChecklist, restoreChecks, verifyCheckPrerequisites } from '../../reducers/weekReviewReducer'
+import {
+  toggleCheckWeek,
+  resetChecklist,
+  restoreChecks,
+  verifyCheckPrerequisites
+} from '../../reducers/weekReviewReducer'
 import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 import store from '../../store'
 import { formatCourseName, trimDate, roundPoints } from '../../util/format'
@@ -80,7 +85,10 @@ export const ReviewStudent = props => {
         pstate.points = null
       }
       pstate.clear()
-      if (props.selectedInstance.finalReviewHasPoints && (pstate.points < 0 || pstate.points > getMaximumPoints())) {
+      if (
+        props.selectedInstance.finalReviewHasPoints &&
+        (pstate.points < 0 || pstate.points > getMaximumPoints())
+      ) {
         store.dispatch({ type: 'WEEKS_CREATE_ONEFAILURE' })
       } else if (pstate.grade < 0 || (pstate.grade && !isFinalReview(props))) {
         // cannot give grade except for final review
@@ -151,15 +159,21 @@ export const ReviewStudent = props => {
     checks !== null && checks[checklistItemId] !== undefined
       ? checks[checklistItemId]
       : props.weekReview.checks !== null && props.weekReview.checks[checklistItemId] !== undefined
-      ? props.weekReview.checks[checklistItemId]
-      : false
+        ? props.weekReview.checks[checklistItemId]
+        : false
 
   if (props.loading.redirect) {
     pstate.clear()
     return <Redirect to={`/labtool/courses/${props.selectedInstance.ohid}`} />
   }
   if (props.errors && props.errors.length > 0) {
-    return <Error errors={props.errors.map(error => `${error.response.data} (${error.response.status} ${error.response.statusText})`)} />
+    return (
+      <Error
+        errors={props.errors.map(
+          error => `${error.response.data} (${error.response.status} ${error.response.statusText})`
+        )}
+      />
+    )
   }
   if (props.loading.loading) {
     return <Loader active />
@@ -171,12 +185,18 @@ export const ReviewStudent = props => {
   const checklist = props.selectedInstance.checklists.find(cl => cl.week === Number(props.weekNumber))
   const prerequisites = {}
   // props.ownProps.studentInstance is a string, therefore casting to number.
-  const studentData = props.weekReview.data.find(dataArray => dataArray.id === Number(props.ownProps.studentInstance))
+  const studentData = props.weekReview.data.find(
+    dataArray => dataArray.id === Number(props.ownProps.studentInstance)
+  )
   // do we have a draft?
   const loadedFromDraft = !!props.weekReview.draftCreatedAt
   // props.weekNumber is a string, therefore casting to number.
-  const weekData = loadedFromDraft ? props.weekReview.draftData : studentData.weeks.find(theWeek => theWeek.weekNumber === Number(props.ownProps.weekNumber))
-  const previousWeekData = studentData.weeks.find(week => week.weekNumber === Number(props.ownProps.weekNumber) - 1)
+  const weekData = loadedFromDraft
+    ? props.weekReview.draftData
+    : studentData.weeks.find(theWeek => theWeek.weekNumber === Number(props.ownProps.weekNumber))
+  const previousWeekData = studentData.weeks.find(
+    week => week.weekNumber === Number(props.ownProps.weekNumber) - 1
+  )
   const emptyChecks = checklist
     ? Object.values(checklist.list)
         .flat()
@@ -186,7 +206,10 @@ export const ReviewStudent = props => {
         }, {})
     : {}
   const savedChecks = weekData && weekData.checks ? weekData.checks : {}
-  const checks = { ...emptyChecks, ...(props.weekReview.checks !== null ? props.weekReview.checks : savedChecks) } //weekData ? weekData.checks || {} : {}
+  const checks = {
+    ...emptyChecks,
+    ...(props.weekReview.checks !== null ? props.weekReview.checks : savedChecks)
+  } //weekData ? weekData.checks || {} : {}
   const weekPoints = studentData.weeks
     .filter(week => week.weekNumber < props.weekNumber)
     .map(week => week.points)
@@ -250,7 +273,8 @@ export const ReviewStudent = props => {
     }
   }
 
-  const arrivedFromCoursePage = props.location && props.location.state && props.location.state.cameFromCoursePage
+  const arrivedFromCoursePage =
+    props.location && props.location.state && props.location.state.cameFromCoursePage
 
   return (
     <>
@@ -262,12 +286,22 @@ export const ReviewStudent = props => {
       <div className="ReviewStudent">
         <BackButton
           preset={arrivedFromCoursePage && 'coursePage'}
-          to={!arrivedFromCoursePage && `/labtool/browsereviews/${props.selectedInstance.ohid}/${studentData.id}`}
+          to={
+            !arrivedFromCoursePage &&
+            `/labtool/browsereviews/${props.selectedInstance.ohid}/${studentData.id}`
+          }
           text={!arrivedFromCoursePage && 'Back to student reviews'}
         />
         <div style={{ textAlignVertical: 'center', textAlign: 'center' }}>
           <Link to={`/labtool/courses/${props.selectedInstance.ohid}`} style={{ textAlign: 'center' }}>
-            <h2> {formatCourseName(props.selectedInstance.name, props.selectedInstance.ohid, props.selectedInstance.start)}</h2>
+            <h2>
+              {' '}
+              {formatCourseName(
+                props.selectedInstance.name,
+                props.selectedInstance.ohid,
+                props.selectedInstance.start
+              )}
+            </h2>
           </Link>
           <h3>
             {' '}
@@ -309,10 +343,20 @@ export const ReviewStudent = props => {
                   selectedInstance={props.selectedInstance}
                   studentInstance={studentData}
                   currentWeekChecks={!checks ? {} : checks}
-                  currentWeekNumber={Number(weekData && weekData.weekNumber ? weekData.weekNumber : props.ownProps.weekNumber)}
+                  currentWeekNumber={Number(
+                    weekData && weekData.weekNumber ? weekData.weekNumber : props.ownProps.weekNumber
+                  )}
                   showMaximumGrade={isFinalReview(props)}
                 />
-                {isFinalReview(props) ? props.selectedInstance.finalReviewHasPoints ? <h2>Final Review Points</h2> : <h2>Final Review</h2> : <h2>Review</h2>}
+                {isFinalReview(props) ? (
+                  props.selectedInstance.finalReviewHasPoints ? (
+                    <h2>Final Review Points</h2>
+                  ) : (
+                    <h2>Final Review</h2>
+                  )
+                ) : (
+                  <h2>Review</h2>
+                )}
                 {loadedFromDraft && (
                   <div>
                     <p>
@@ -360,7 +404,12 @@ export const ReviewStudent = props => {
                   <h4>Feedback</h4>
                   <Form.Group inline unstackable style={{ textAlignVertical: 'top' }}>
                     <div style={{ width: '100%' }}>
-                      <FormMarkdownTextArea value={pstate.feedback} onChange={(e, { value }) => (pstate.feedback = value)} name="comment" style={{ width: '500px', height: '250px' }} />
+                      <FormMarkdownTextArea
+                        value={pstate.feedback}
+                        onChange={(e, { value }) => (pstate.feedback = value)}
+                        name="comment"
+                        style={{ width: '500px', height: '250px' }}
+                      />
                     </div>
                   </Form.Group>
                   <h4>Review notes</h4>
@@ -400,7 +449,9 @@ export const ReviewStudent = props => {
                 checklistPoints={checklistPoints}
                 checklistOutput={checklistOutput}
                 isChecked={isChecked}
-                toggleCheckbox={clId => toggleCheckbox(clId, props.ownProps.studentInstance, props.ownProps.weekNumber)}
+                toggleCheckbox={clId =>
+                  toggleCheckbox(clId, props.ownProps.studentInstance, props.ownProps.weekNumber)
+                }
                 copyChecklistOutput={copyChecklistOutput}
               />
             </Grid.Row>

@@ -19,7 +19,10 @@ const JsonEdit = props => {
       JSON.parse(json)
       state.data = json
       const conflictId = hasIdConflict(json)
-      state.error = conflictId !== null ? `There is a conflicting ID: ${conflictId}. Multiple checklist items should not have the same ID.` : null
+      state.error =
+        conflictId !== null
+          ? `There is a conflicting ID: ${conflictId}. Multiple checklist items should not have the same ID.`
+          : null
     } catch (error) {
       if (error instanceof SyntaxError) {
         state.data = json
@@ -93,7 +96,8 @@ const JsonEdit = props => {
       <Modal onClose={closeDialog} open={open}>
         <Modal.Header>JSON</Modal.Header>
         <Modal.Description style={{ padding: 15 }}>
-          Pressing &quot;Save&quot; saves immediately and overwrites the current checklist. Omit the ID when adding new items.
+          Pressing &quot;Save&quot; saves immediately and overwrites the current checklist. Omit the ID when
+          adding new items.
           <br />
           <br />
           Checklist items that do not have an ID will have the existing student scores reset for that item.
@@ -108,7 +112,12 @@ const JsonEdit = props => {
             </Message>
           )}
           <Form>
-            <TextArea rows={40} onChange={onChange} style={{ padding: 15, fontFamily: 'monospace' }} value={data} />
+            <TextArea
+              rows={40}
+              onChange={onChange}
+              style={{ padding: 15, fontFamily: 'monospace' }}
+              value={data}
+            />
           </Form>
         </Modal.Description>
         <Modal.Actions>
@@ -117,7 +126,11 @@ const JsonEdit = props => {
             content="Download"
             floated="left"
             as="a"
-            href={hasValidData() ? `data:application/json,${encodeURI(JSON.stringify(JSON.parse(data), null, 4))}` : undefined}
+            href={
+              hasValidData()
+                ? `data:application/json,${encodeURI(JSON.stringify(JSON.parse(data), null, 4))}`
+                : undefined
+            }
             download={downloadName || 'data.json'}
             target="_blank"
           />

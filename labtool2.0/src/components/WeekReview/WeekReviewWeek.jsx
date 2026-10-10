@@ -45,7 +45,8 @@ export const WeekReviewWeek = props => {
     const pointInfo =
       week.points !== null ? (
         <>
-          , points <Points points={week.points} /> / <Points points={getMaximumPointsForWeek(week.weekNumber)} />
+          , points <Points points={week.points} /> /{' '}
+          <Points points={getMaximumPointsForWeek(week.weekNumber)} />
         </>
       ) : null
     const gradeInfo = week.grade ? `, grade ${week.grade}` : ''
@@ -64,7 +65,8 @@ export const WeekReviewWeek = props => {
                 {' '}
                 {week.points !== null ? (
                   <>
-                    Points <Points points={week.points} /> / <Points points={getMaximumPointsForWeek(week.weekNumber)} />
+                    Points <Points points={week.points} /> /{' '}
+                    <Points points={getMaximumPointsForWeek(week.weekNumber)} />
                     {gradeInfo}
                   </>
                 ) : week.grade !== null ? (
@@ -95,8 +97,19 @@ export const WeekReviewWeek = props => {
                       Send email notification
                     </Button>
                   ))}
-                <Link to={`/labtool/reviewstudent/${selectedInstance.ohid}/${studentInstance}/${reviewIndex}`}>
-                  <Popup trigger={<Button circular color="orange" icon={{ name: 'edit', color: 'black', size: 'large' }} />} content={isFinalWeek ? 'Edit final review' : 'Edit review'} />
+                <Link
+                  to={`/labtool/reviewstudent/${selectedInstance.ohid}/${studentInstance}/${reviewIndex}`}
+                >
+                  <Popup
+                    trigger={
+                      <Button
+                        circular
+                        color="orange"
+                        icon={{ name: 'edit', color: 'black', size: 'large' }}
+                      />
+                    }
+                    content={isFinalWeek ? 'Edit final review' : 'Edit review'}
+                  />
                 </Link>
               </Card.Content>
             ) : (
@@ -150,7 +163,12 @@ export const WeekReviewWeek = props => {
               <h4> No comments </h4>
             )}
           </Comment.Group>
-          <LabtoolAddComment weekId={week.id} commentFieldId={`${courseId}:${week.id}`} handleSubmit={e => handleSubmitComment(e, week.comments)} allowHidden={isTeacher} />
+          <LabtoolAddComment
+            weekId={week.id}
+            commentFieldId={`${courseId}:${week.id}`}
+            handleSubmit={e => handleSubmitComment(e, week.comments)}
+            allowHidden={isTeacher}
+          />
         </Accordion.Content>
       </Accordion>
     )
@@ -164,8 +182,20 @@ export const WeekReviewWeek = props => {
           {isTeacher && (
             <>
               <h3>Review</h3>
-              <Link to={`/labtool/reviewstudent/${props.selectedInstance.ohid}/${studentInstance}/${reviewIndex}`}>
-                <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'edit', color: 'black', size: 'large' }} />} content={isFinalWeek ? 'Give Final Review' : 'Review week'} />
+              <Link
+                to={`/labtool/reviewstudent/${props.selectedInstance.ohid}/${studentInstance}/${reviewIndex}`}
+              >
+                <Popup
+                  trigger={
+                    <Button
+                      circular
+                      color="orange"
+                      size="tiny"
+                      icon={{ name: 'edit', color: 'black', size: 'large' }}
+                    />
+                  }
+                  content={isFinalWeek ? 'Give Final Review' : 'Review week'}
+                />
               </Link>
             </>
           )}

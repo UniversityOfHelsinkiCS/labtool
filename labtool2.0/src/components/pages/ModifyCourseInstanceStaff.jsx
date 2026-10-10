@@ -57,7 +57,13 @@ export const ModifyCourseInstanceStaff = props => {
   }
 
   if (props.errors && props.errors.length > 0) {
-    return <Error errors={props.errors.map(error => `${error.response.data} (${error.response.status} ${error.response.statusText})`)} />
+    return (
+      <Error
+        errors={props.errors.map(
+          error => `${error.response.data} (${error.response.status} ${error.response.statusText})`
+        )}
+      />
+    )
   }
 
   let sortedUsers = props.users
@@ -68,7 +74,11 @@ export const ModifyCourseInstanceStaff = props => {
     <>
       <DocumentTitle title={`Assistants - ${props.selectedInstance.name}`} />
       <div>
-        <BackButton preset={props.location.state && props.location.state.fromAdmin ? 'sysopModifyCIPage' : 'modifyCIPage'} />
+        <BackButton
+          preset={
+            props.location.state && props.location.state.fromAdmin ? 'sysopModifyCIPage' : 'modifyCIPage'
+          }
+        />
         <div className="sixteen wide column" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
           <h2>Add and remove assistants</h2>
           <h2>{props.selectedInstance.name}</h2>

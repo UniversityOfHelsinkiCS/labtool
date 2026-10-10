@@ -2,7 +2,15 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { LabtoolComment } from '../LabtoolComment'
 
-export const WeekReviewComment = ({ user, comment, isFinalWeek, isTeacher, sendTeacherEmail, sendStudentEmail, latestComment }) => {
+export const WeekReviewComment = ({
+  user,
+  comment,
+  isFinalWeek,
+  isTeacher,
+  sendTeacherEmail,
+  sendStudentEmail,
+  latestComment
+}) => {
   /* This hack compares user's name to comment.from and hides the email notification button when they don't match. */
   const userIsCommandSender = comment.from.includes(user.firsts) && comment.from.includes(user.lastname)
 

@@ -7,7 +7,12 @@ import { connect } from 'react-redux'
 import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import { clearNotifications } from '../../reducers/notificationReducer'
 import { gradeCodeReview } from '../../services/codeReview'
-import { toggleCheckCodeReview, resetChecklist, restoreChecks, verifyCheckPrerequisites } from '../../reducers/weekReviewReducer'
+import {
+  toggleCheckCodeReview,
+  resetChecklist,
+  restoreChecks,
+  verifyCheckPrerequisites
+} from '../../reducers/weekReviewReducer'
 import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 import store from '../../store'
 import { usePersistedState } from '../../hooks/persistedState'
@@ -26,10 +31,13 @@ import { roundPoints } from '../../util/format'
 export const ReviewStudentCodeReview = props => {
   const [loadedCrData, setLoadedCrData] = useState(false)
   const [allowChecksCopy, setAllowChecksCopy] = useState(false)
-  const pstate = usePersistedState(`ReviewStudentCodeReview_${props.studentInstance}:${props.codeReviewNumber}`, {
-    points: '',
-    checks: null
-  })
+  const pstate = usePersistedState(
+    `ReviewStudentCodeReview_${props.studentInstance}:${props.codeReviewNumber}`,
+    {
+      points: '',
+      checks: null
+    }
+  )
 
   useEffect(() => {
     // run on component mount
@@ -80,7 +88,10 @@ export const ReviewStudentCodeReview = props => {
       pstate.clear()
       const maxPoints = getMaximumPoints()
       if (e.target.points.value < 0 || (maxPoints && e.target.points.value > maxPoints)) {
-        store.dispatch({ type: 'CODE_REVIEW_GRADE_FAILURE', response: { response: { data: 'Invalid points value' } } })
+        store.dispatch({
+          type: 'CODE_REVIEW_GRADE_FAILURE',
+          response: { response: { data: 'Invalid points value' } }
+        })
       } else {
         props.addRedirectHook({
           hook: 'CODE_REVIEW_GRADE_'
@@ -114,15 +125,21 @@ export const ReviewStudentCodeReview = props => {
     checks !== null && checks[checklistItemId] !== undefined
       ? checks[checklistItemId]
       : props.weekReview.checks !== null && props.weekReview.checks[checklistItemId] !== undefined
-      ? props.weekReview.checks[checklistItemId]
-      : false
+        ? props.weekReview.checks[checklistItemId]
+        : false
 
   if (props.loading.redirect) {
     pstate.clear()
     return <Redirect to={`/labtool/courses/${props.selectedInstance.ohid}`} />
   }
   if (props.errors && props.errors.length > 0) {
-    return <Error errors={props.errors.map(error => `${error.response.data} (${error.response.status} ${error.response.statusText})`)} />
+    return (
+      <Error
+        errors={props.errors.map(
+          error => `${error.response.data} (${error.response.status} ${error.response.statusText})`
+        )}
+      />
+    )
   }
   if (props.loading.loading) {
     return <Loader active />
@@ -150,7 +167,9 @@ export const ReviewStudentCodeReview = props => {
   const savedChecks = cr ? cr.checks || {} : {}
   const checks = props.weekReview.checks !== null ? props.weekReview.checks : savedChecks
   let checklistPoints = 0
-  const toReviewProject = cr.toReview ? props.courseData.data.find(student => student.id === cr.toReview) : null
+  const toReviewProject = cr.toReview
+    ? props.courseData.data.find(student => student.id === cr.toReview)
+    : null
   if (checkList) {
     Object.keys(checkList.list).forEach(category => {
       checkList.list[category].forEach(clItem => {
@@ -193,7 +212,8 @@ export const ReviewStudentCodeReview = props => {
     }
   }
 
-  const arrivedFromCoursePage = props.location && props.location.state && props.location.state.cameFromCoursePage
+  const arrivedFromCoursePage =
+    props.location && props.location.state && props.location.state.cameFromCoursePage
 
   return (
     <>
@@ -246,7 +266,9 @@ export const ReviewStudentCodeReview = props => {
                 <Form onSubmit={handleSubmit}>
                   <Form.Group inline unstackable>
                     <Form.Field>
-                      <label className="showMaxPoints">Points{maxPoints !== null ? `0-${roundPoints(maxPoints)}` : ''}</label>
+                      <label className="showMaxPoints">
+                        Points{maxPoints !== null ? `0-${roundPoints(maxPoints)}` : ''}
+                      </label>
 
                       <Input
                         name="points"
@@ -278,7 +300,9 @@ export const ReviewStudentCodeReview = props => {
                 checks={checks}
                 checklistPoints={checklistPoints}
                 isChecked={isChecked}
-                toggleCheckbox={clId => toggleCheckbox(clId, props.ownProps.studentInstance, props.ownProps.weekNumber)}
+                toggleCheckbox={clId =>
+                  toggleCheckbox(clId, props.ownProps.studentInstance, props.ownProps.weekNumber)
+                }
                 copyChecklistOutput={copyChecklistOutput}
               />
             </Grid.Row>

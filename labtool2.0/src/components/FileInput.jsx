@@ -56,7 +56,13 @@ export const FileInput = props => {
         <Modal.Description style={{ padding: 15 }}>
           {!uploading && (
             <Form>
-              <Form.Input type="file" name="file" accept={allowedFileTypes && allowedFileTypes.join()} onChange={handleFile} onClick={e => (e.target.value = null)} />
+              <Form.Input
+                type="file"
+                name="file"
+                accept={allowedFileTypes && allowedFileTypes.join()}
+                onChange={handleFile}
+                onClick={e => (e.target.value = null)}
+              />
             </Form>
           )}
           {uploading && uploadProgress !== null && <Progress percent={uploadProgress} indicating />}

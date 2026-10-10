@@ -27,18 +27,29 @@ export const MyPage = props => {
   const renderCourseRow = instance => (
     <Table.Row key={instance.id}>
       <Table.Cell>
-        <Link to={`/labtool/courses/${instance.ohid}`}>{formatCourseName(instance.name, instance.ohid, instance.start)}</Link>
+        <Link to={`/labtool/courses/${instance.ohid}`}>
+          {formatCourseName(instance.name, instance.ohid, instance.start)}
+        </Link>
       </Table.Cell>
       <Table.Cell textAlign="right">
         <Link to={`/labtool/courses/${instance.ohid}`}>
-          <Popup trigger={<Button circular size="tiny" icon={{ name: 'eye', size: 'large', color: 'blue' }} />} content="View course" />
+          <Popup
+            trigger={<Button circular size="tiny" icon={{ name: 'eye', size: 'large', color: 'blue' }} />}
+            content="View course"
+          />
         </Link>
       </Table.Cell>
     </Table.Row>
   )
 
   if (props.errors && props.errors.length > 0) {
-    return <Error errors={props.errors.map(error => `${error.response.data} (${error.response.status} ${error.response.statusText})`)} />
+    return (
+      <Error
+        errors={props.errors.map(
+          error => `${error.response.data} (${error.response.status} ${error.response.statusText})`
+        )}
+      />
+    )
   }
 
   const user = { ...props.user.user }
@@ -76,13 +87,27 @@ export const MyPage = props => {
 
                 <Table.Row>
                   <Table.Cell>
-                    <Icon name="mail" size="big" style={{ marginRight: 20 }} tooltip="Add users to your feed" />
+                    <Icon
+                      name="mail"
+                      size="big"
+                      style={{ marginRight: 20 }}
+                      tooltip="Add users to your feed"
+                    />
                     {user.email}
                     <br />
                   </Table.Cell>
                   <Table.Cell textAlign="right" verticalAlign="bottom">
                     <Link to="/labtool/email">
-                      <Popup trigger={<Button circular size="tiny" icon={{ name: 'edit', size: 'large', color: 'blue' }} />} content="Edit email address" />
+                      <Popup
+                        trigger={
+                          <Button
+                            circular
+                            size="tiny"
+                            icon={{ name: 'edit', size: 'large', color: 'blue' }}
+                          />
+                        }
+                        content="Edit email address"
+                      />
                     </Link>
                   </Table.Cell>
                 </Table.Row>
@@ -165,4 +190,6 @@ MyPage.propTypes = {
   errors: PropTypes.array
 }
 
-export default connect(mapStateToProps, { getAllStudentCourses, getAllTeacherCourses, getIsAllowedToImport })(MyPage)
+export default connect(mapStateToProps, { getAllStudentCourses, getAllTeacherCourses, getIsAllowedToImport })(
+  MyPage
+)
