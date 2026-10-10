@@ -5,6 +5,15 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
 
 ## 2026-10-10
 
+### Operations
+- **Staging data:** added course `TKT20010.2026.S.K.SIM1` (id 1) with `jaara` as teacher and
+  students `tiraopiskelija1` and `tiraopiskelija2` (plain records, they cannot log in), using a
+  one-off script run in the staging backend pod. The repo seeders were not used: staging had none
+  of the demo users they depend on, and their undo steps empty whole tables. Staging had 2 users
+  (`admini2`, `jaara`) and no courses before this.
+- **Staging checked after the Sequelize 6 upgrade** (deployed from #1184): the new course, its
+  students and the checklists work against the existing staging database.
+
 ### Security
 - **Sequelize 5 → 6.37.8.** Fixes the SQL injection (via replacements) and information disclosure
   advisories; Sequelize 5 is no longer maintained. Code changes:
