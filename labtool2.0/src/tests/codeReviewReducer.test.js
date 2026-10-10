@@ -104,8 +104,7 @@ describe('codeReviewReducer', () => {
       expect(state.currentSelections[2]).toEqual({})
     })
 
-    // BUG: INIT_REVIEW writes into state.codeReviewStates / state.currentSelections objects in place.
-    it.skip('does not mutate the previous state', () => {
+    it('does not mutate the previous state', () => {
       const state = createdState()
       deepFreeze(state)
       expect(() =>
@@ -137,8 +136,7 @@ describe('codeReviewReducer', () => {
       expect(newState.selectedDropdown).toBe(3)
     })
 
-    // BUG: for an existing round, state.codeReviewStates is written in place.
-    it.skip('does not mutate the previous state', () => {
+    it('does not mutate the previous state', () => {
       const state = createdState()
       deepFreeze(state)
       expect(() =>
@@ -237,8 +235,7 @@ describe('codeReviewReducer', () => {
       })
     })
 
-    // BUG: newCurrentSelections is a shallow copy, so currentSelections[round] of the previous state is written.
-    it.skip('does not mutate the previous state', () => {
+    it('does not mutate the previous state', () => {
       const state = stateWithRounds()
       deepFreeze(state)
       expect(() => randomize(state, 1)).not.toThrow()
@@ -256,8 +253,7 @@ describe('codeReviewReducer', () => {
       expect(newState.currentSelections[1]).toEqual({ 2: 'https://github.com/r' })
     })
 
-    // BUG: deletes from state.currentSelections[round] in place.
-    it.skip('does not mutate the previous state', () => {
+    it('does not mutate the previous state', () => {
       const state = createdState()
       deepFreeze(state)
       expect(() => reducer(state, action)).not.toThrow()

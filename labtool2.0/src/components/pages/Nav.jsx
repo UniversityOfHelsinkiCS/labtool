@@ -94,7 +94,7 @@ const Nav = props => {
             <MenuText active={onAdmin}>Admin</MenuText>
           </Menu.Item>
         )}
-        {user && (
+        {props.user.user && (
           <Menu.Item style={{ margin: 'auto 0' }}>
             <LogoutButton logout={props.logout} />
           </Menu.Item>

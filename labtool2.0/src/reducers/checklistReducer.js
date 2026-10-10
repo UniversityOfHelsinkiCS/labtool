@@ -25,6 +25,36 @@ const constructObjectFromEntries = kv => {
 const reorderProperties = (obj, keys) =>
   (Object.fromEntries || constructObjectFromEntries)(keys.map(x => [x, obj[x]]))
 
+// Returns a copy of data where the first row named `name` in category `key` is replaced by update(row).
+const updateRow = (data, key, name, update) => {
+  const index = data[key].findIndex(row => row.name === name)
+  if (index === -1) {
+    return data
+  }
+  return { ...data, [key]: data[key].map((row, i) => (i === index ? update(row) : row)) }
+}
+
+// Returns a copy of data where the row named `name` in category `key` is moved by `offset` (-1 or 1).
+const moveRow = (data, key, name, offset) => {
+  const rows = [...data[key]]
+  const index = rows.findIndex(row => row.name === name)
+  const target = index + offset
+  if (index === -1 || target < 0 || target >= rows.length) {
+    return data
+  }
+  swapIndex(rows, index, target)
+  return { ...data, [key]: rows }
+}
+
+// The next temporary id for a new row: one more than the largest id or tempId in use, starting from 1.
+const nextTempId = data => {
+  const ids = Object.values(data)
+    .flat()
+    .map(row => row.id || row.tempId)
+    .filter(id => Number.isFinite(id))
+  return ids.length ? Math.max(...ids) + 1 : 1
+}
+
 const checklistReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case 'LOGOUT_SUCCESS':
@@ -34,57 +64,43 @@ const checklistReducer = (state = INITIAL_STATE, action) => {
     case 'CHECKLIST_GET_ONE_FAILURE':
       return { data: {}, maxPoints: '' }
     case 'CHECKLIST_CHANGE_FIELD': {
-      const newData = state.data
-      newData[action.data.key].find(row => row.name === action.data.name)[action.data.field] =
-        action.data.value
-      return { ...state, data: newData }
+      const { key, name, field, value } = action.data
+      return { ...state, data: updateRow(state.data, key, name, row => ({ ...row, [field]: value })) }
     }
     case 'CHECKLIST_APPLY_PREREQUISITE_TO_CHECKS_IN_CATEGORY': {
-      const newData = state.data
       const { category, prerequisite } = action
-      newData[category] = newData[category].map(row => ({
+      const rows = state.data[category].map(row => ({
         ...row,
         prerequisite: row.id === prerequisite || row.tempId === prerequisite ? null : prerequisite
       }))
-      return { ...state, data: newData }
+      return { ...state, data: { ...state.data, [category]: rows } }
     }
-    case 'CHECKLIST_ADD_TOPIC': {
-      const newData = state.data
-      newData[action.data.key] = []
-      return { ...state, data: newData }
-    }
+    case 'CHECKLIST_ADD_TOPIC':
+      return { ...state, data: { ...state.data, [action.data.key]: [] } }
     case 'CHECKLIST_ADD_ROW': {
-      const newData = state.data
-      const nextTempId =
-        1 +
-        Math.max(
-          ...Object.keys(newData).map(key =>
-            Math.max(
-              ...newData[key].filter(item => item.id || item.tempId).map(item => item.id || item.tempId)
-            )
-          )
-        )
-      newData[action.data.key].push({
+      const newRow = {
         name: action.data.name,
-        tempId: nextTempId,
+        tempId: nextTempId(state.data),
         checkedPoints: 0,
         uncheckedPoints: 0,
         textWhenOn: '',
         textWhenOff: '',
         prerequisite: action.data.prerequisite
-      })
-      return { ...state, data: newData }
+      }
+      const { key } = action.data
+      return { ...state, data: { ...state.data, [key]: [...state.data[key], newRow] } }
     }
     case 'CHECKLIST_REMOVE_TOPIC': {
-      const newData = state.data
-      delete newData[action.data.key]
-      return { ...state, data: newData }
+      const { [action.data.key]: removed, ...data } = state.data // eslint-disable-line no-unused-vars
+      return { ...state, data }
     }
     case 'CHECKLIST_REMOVE_ROW': {
-      const newData = state.data
-      const index = newData[action.data.key].map(row => row.name).indexOf(action.data.name)
-      newData[action.data.key].splice(index, 1)
-      return { ...state, data: newData }
+      const { key, name } = action.data
+      const index = state.data[key].findIndex(row => row.name === name)
+      if (index === -1) {
+        return state
+      }
+      return { ...state, data: { ...state.data, [key]: state.data[key].filter((_, i) => i !== index) } }
     }
     case 'CHECKLIST_MOVE_TOPIC_UP': {
       const newOrder = Object.keys(state.data)
@@ -102,35 +118,18 @@ const checklistReducer = (state = INITIAL_STATE, action) => {
       }
       return { ...state, data: reorderProperties(state.data, newOrder) }
     }
-    case 'CHECKLIST_MOVE_ROW_UP': {
-      const newData = state.data
-      const index = newData[action.data.key].map(row => row.name).indexOf(action.data.name)
-      const newArray = [...newData[action.data.key]]
-      if (index > 0) {
-        swapIndex(newArray, index, index - 1)
-      }
-      newData[action.data.key] = newArray
-      return { ...state, data: newData }
-    }
-    case 'CHECKLIST_MOVE_ROW_DOWN': {
-      const newData = state.data
-      const index = newData[action.data.key].map(row => row.name).indexOf(action.data.name)
-      const newArray = [...newData[action.data.key]]
-      if (index < newArray.length - 1) {
-        swapIndex(newArray, index, index + 1)
-      }
-      newData[action.data.key] = newArray
-      return { ...state, data: newData }
-    }
+    case 'CHECKLIST_MOVE_ROW_UP':
+      return { ...state, data: moveRow(state.data, action.data.key, action.data.name, -1) }
+    case 'CHECKLIST_MOVE_ROW_DOWN':
+      return { ...state, data: moveRow(state.data, action.data.key, action.data.name, 1) }
     case 'CHECKLIST_CAST_POINTS': {
-      const newData = state.data
-      newData[action.data.key].find(row => row.name === action.data.name).checkedPoints = Number(
-        newData[action.data.key].find(row => row.name === action.data.name).checkedPoints
-      )
-      newData[action.data.key].find(row => row.name === action.data.name).uncheckedPoints = Number(
-        newData[action.data.key].find(row => row.name === action.data.name).uncheckedPoints
-      )
-      return { ...state, data: newData }
+      const { key, name } = action.data
+      const data = updateRow(state.data, key, name, row => ({
+        ...row,
+        checkedPoints: Number(row.checkedPoints),
+        uncheckedPoints: Number(row.uncheckedPoints)
+      }))
+      return { ...state, data }
     }
     case 'CHECKLIST_RESET':
       return INITIAL_STATE

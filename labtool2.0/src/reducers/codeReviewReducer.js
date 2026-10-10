@@ -118,60 +118,46 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
       return { ...state, filterByReview: action.data, filterActive: newActiveStatus }
     }
     case 'INIT_REVIEW': {
-      const oldReviews = state.codeReviewStates[action.data.round]
-      let selections = state.currentSelections
-      let updatedReviews = {}
-      let codeReviewRoundsToUpdate = state.codeReviewStates
+      const { round, reviewer, toReview, repoToReview } = action.data
+      const oldReviews = state.codeReviewStates[round]
 
-      if (!action.data.toReview && !action.data.repoToReview) {
-        delete selections[action.data.round][action.data.reviewer]
-        updatedReviews = oldReviews.filter(cr => cr.reviewer !== action.data.reviewer)
-        codeReviewRoundsToUpdate[action.data.round] = updatedReviews
-        return { ...state, codeReviewStates: codeReviewRoundsToUpdate, currentSelections: selections }
+      if (!toReview && !repoToReview) {
+        const { [reviewer]: removed, ...remainingSelections } = state.currentSelections[round] // eslint-disable-line no-unused-vars
+        return {
+          ...state,
+          codeReviewStates: {
+            ...state.codeReviewStates,
+            [round]: oldReviews.filter(cr => cr.reviewer !== reviewer)
+          },
+          currentSelections: { ...state.currentSelections, [round]: remainingSelections }
+        }
       }
-      let toUpdate = oldReviews.find(f => f.reviewer === action.data.reviewer)
-      if (toUpdate) {
-        toUpdate.reviewer = action.data.reviewer
-        toUpdate.toReview = action.data.toReview
-        toUpdate.repoToReview = action.data.repoToReview
-
-        updatedReviews = oldReviews.filter(review =>
-          review.reviewer !== action.data.reviewer ? review : toUpdate
-        )
-      } else {
-        updatedReviews = [
-          ...oldReviews,
-          {
-            reviewer: action.data.reviewer,
-            toReview: action.data.toReview,
-            repoToReview: action.data.repoToReview
-          }
-        ]
+      const review = { reviewer, toReview, repoToReview }
+      const updatedReviews = oldReviews.some(cr => cr.reviewer === reviewer)
+        ? oldReviews.map(cr => (cr.reviewer === reviewer ? { ...cr, ...review } : cr))
+        : [...oldReviews, review]
+      return {
+        ...state,
+        codeReviewStates: { ...state.codeReviewStates, [round]: updatedReviews },
+        currentSelections: {
+          ...state.currentSelections,
+          [round]: { ...state.currentSelections[round], [reviewer]: toReview || repoToReview }
+        }
       }
-      codeReviewRoundsToUpdate[action.data.round] = updatedReviews
-
-      const newCurrentSelections = state.currentSelections
-      newCurrentSelections[action.data.round][action.data.reviewer] =
-        action.data.toReview || action.data.repoToReview
-      return { ...state, codeReviewStates: codeReviewRoundsToUpdate, currentSelections: newCurrentSelections }
     }
     case 'CODE_REVIEW_BULKINSERT_SUCCESS': {
-      var codeReviewRoundsToUpdate = state.codeReviewStates
-      var currentSelectionsToUpdate = state.currentSelections
-      var newRound = action.response.data.reviewNumber
+      const newRound = action.response.data.reviewNumber
       let dropdown = state.selectedDropdown
 
-      if (newRound > Object.keys(state.codeReviewStates).length - 1) {
-        codeReviewRoundsToUpdate = { ...codeReviewRoundsToUpdate, [newRound]: [] }
-      }
+      // the saved round's pending reviews are cleared
+      const codeReviewRoundsToUpdate = { ...state.codeReviewStates, [newRound]: [] }
+      let currentSelectionsToUpdate = state.currentSelections
       if (newRound > Object.keys(state.currentSelections).length - 1) {
         currentSelectionsToUpdate = { ...currentSelectionsToUpdate, [newRound]: {} }
       }
-      //This is double clear but if the ternary is not true we'll have to clear the array anyway
-      codeReviewRoundsToUpdate[action.response.data.reviewNumber] = []
       if (action.response.data.createTrue) {
-        dropdown = action.response.data.reviewNumber
-        currentSelectionsToUpdate[-1] = {}
+        dropdown = newRound
+        currentSelectionsToUpdate = { ...currentSelectionsToUpdate, [-1]: {} }
       }
       return {
         ...state,
@@ -208,7 +194,10 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
         )
       }
 
-      const newCurrentSelections = { ...state.currentSelections }
+      const newCurrentSelections = {
+        ...state.currentSelections,
+        [action.data.reviewNumber]: { ...state.currentSelections[action.data.reviewNumber] }
+      }
       for (let i = 0; i < shuffledReviewers.length; i++) {
         codeReviews = codeReviews.concat({
           reviewer: shuffledReviewers[i],
@@ -221,9 +210,9 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
     }
 
     case 'CODE_REVIEW_REMOVE_ONE_SUCCESS': {
-      const currentStates = state.currentSelections
-      delete currentStates[action.response.data.codeReviewRound][action.response.data.reviewer]
-      return { ...state, currentSelections: currentStates }
+      const { codeReviewRound, reviewer } = action.response.data
+      const { [reviewer]: removed, ...remaining } = state.currentSelections[codeReviewRound] || {} // eslint-disable-line no-unused-vars
+      return { ...state, currentSelections: { ...state.currentSelections, [codeReviewRound]: remaining } }
     }
 
     /* This breaks going to coursePage. So it is commented out.

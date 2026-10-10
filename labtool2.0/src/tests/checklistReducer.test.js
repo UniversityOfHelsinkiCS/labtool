@@ -124,11 +124,7 @@ describe('checklistReducer', () => {
     expect(again.data.Week3[1].tempId).toBe(6)
   })
 
-  // BUG: CHECKLIST_ADD_ROW (src/reducers/checklistReducer.js:54-62) computes the next tempId with
-  // Math.max over the existing ids; when the checklist has no rows yet, Math.max() of an empty list is
-  // -Infinity, so every new row gets tempId -Infinity. Rows then cannot be told apart by tempId,
-  // which is what prerequisites of unsaved rows refer to (and -Infinity serializes to null in JSON).
-  it.skip('addRow gives distinct finite ids when the checklist has no rows yet', () => {
+  it('addRow gives distinct finite ids when the checklist has no rows yet', () => {
     let state = { data: { Week1: [] }, maxPoints: '' }
     state = reducer(state, {
       type: 'CHECKLIST_ADD_ROW',
@@ -209,9 +205,7 @@ describe('checklistReducer', () => {
     expect(newState.data.Week1[0].uncheckedPoints).toBe(-1)
   })
 
-  // BUG: these cases modify state.data (and its row arrays/objects) in place instead of copying,
-  // so the previous state is mutated and state.data keeps the same reference.
-  it.skip.each([
+  it.each([
     ['CHECKLIST_CHANGE_FIELD', { data: { key: 'Week1', name: 'a', field: 'name', value: 'x' } }],
     ['CHECKLIST_APPLY_PREREQUISITE_TO_CHECKS_IN_CATEGORY', { category: 'Week1', prerequisite: 1 }],
     ['CHECKLIST_ADD_TOPIC', { data: { key: 'New' } }],

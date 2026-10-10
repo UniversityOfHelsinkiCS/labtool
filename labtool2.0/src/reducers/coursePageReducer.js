@@ -7,46 +7,35 @@ import { sortStudentsByLastname } from '../util/sort'
  *
  */
 
-const teacherCommentNotification = (state, commentId) => {
-  const newData = [...state.data]
-  newData.forEach(student => {
-    student.weeks.forEach(week => {
-      week.comments.forEach(comment => {
-        if (comment.id === commentId) {
-          comment.notified = true
-          return { ...state, data: newData }
+const markCommentNotified = (weeks, commentId) =>
+  weeks.map(week =>
+    week.comments.some(comment => comment.id === commentId)
+      ? {
+          ...week,
+          comments: week.comments.map(comment =>
+            comment.id === commentId ? { ...comment, notified: true } : comment
+          )
         }
-      })
-    })
-  })
-  return state
-}
+      : week
+  )
 
-const studentCommentNotification = (state, commentId) => {
-  const newWeeks = [...state.data.weeks]
-  newWeeks.forEach(week => {
-    week.comments.forEach(comment => {
-      if (comment.id === commentId) {
-        comment.notified = true
-        return { ...state, data: { ...state.data, weeks: newWeeks } }
-      }
-    })
-  })
-  return state
-}
+const teacherCommentNotification = (state, commentId) => ({
+  ...state,
+  data: state.data.map(student => ({ ...student, weeks: markCommentNotified(student.weeks, commentId) }))
+})
 
-const weekNotification = (state, weekId) => {
-  const newData = [...state.data]
-  newData.forEach(student => {
-    student.weeks.forEach(week => {
-      if (week.id === weekId) {
-        week.notified = true
-        return { ...state, data: newData }
-      }
-    })
-  })
-  return state
-}
+const studentCommentNotification = (state, commentId) => ({
+  ...state,
+  data: { ...state.data, weeks: markCommentNotified(state.data.weeks, commentId) }
+})
+
+const weekNotification = (state, weekId) => ({
+  ...state,
+  data: state.data.map(student => ({
+    ...student,
+    weeks: student.weeks.map(week => (week.id === weekId ? { ...week, notified: true } : week))
+  }))
+})
 
 const INITIAL_STATE = {}
 
@@ -69,35 +58,29 @@ const courseInstancereducer = (store = INITIAL_STATE, action) => {
       return { ...store, data: mappedData }
     }
     case 'CODE_REVIEW_BULKINSERT_SUCCESS': {
-      let assignedReviews = {}
-      let reviewNumber = action.response.data.reviewNumber
+      const assignedReviews = {}
+      const reviewNumber = action.response.data.reviewNumber
       action.response.data.codeReviews.forEach(cr => {
         assignedReviews[cr.reviewer] = cr.toReview || cr.repoToReview
       })
-      let newData = store.data.map(student => {
+      const newData = store.data.map(student => {
         const reviewee = assignedReviews[student.id]
         if (!reviewee) {
           return student
         }
-        const index = student.codeReviews.map(cr => cr.reviewNumber).indexOf(reviewNumber)
-        if (index === -1) {
-          student.codeReviews.push({
-            points: null,
-            reviewNumber: reviewNumber,
-            studentInstanceId: student.id,
-            toReview: Number.isInteger(reviewee) ? reviewee : null,
-            repoToReview: Number.isInteger(reviewee) ? null : reviewee
-          })
-        } else {
-          if (Number.isInteger(reviewee)) {
-            student.codeReviews[index].toReview = reviewee
-            student.codeReviews[index].repoToReview = null
-          } else {
-            student.codeReviews[index].toReview = null
-            student.codeReviews[index].repoToReview = reviewee
-          }
+        const assignment = {
+          toReview: Number.isInteger(reviewee) ? reviewee : null,
+          repoToReview: Number.isInteger(reviewee) ? null : reviewee
         }
-        return student
+        const index = student.codeReviews.map(cr => cr.reviewNumber).indexOf(reviewNumber)
+        const codeReviews =
+          index === -1
+            ? [
+                ...student.codeReviews,
+                { points: null, reviewNumber, studentInstanceId: student.id, ...assignment }
+              ]
+            : student.codeReviews.map((cr, i) => (i === index ? { ...cr, ...assignment } : cr))
+        return { ...student, codeReviews }
       })
       return { ...store, data: newData }
     }
@@ -106,11 +89,13 @@ const courseInstancereducer = (store = INITIAL_STATE, action) => {
         if (student.id !== action.response.data.studentInstanceId) {
           return student
         }
-        const index = student.codeReviews
-          .map(cr => cr.reviewNumber)
-          .indexOf(action.response.data.reviewNumber)
-        student.codeReviews[index] = { ...student.codeReviews[index], points: action.response.data.points }
-        return student
+        const { reviewNumber, points } = action.response.data
+        return {
+          ...student,
+          codeReviews: student.codeReviews.map(cr =>
+            cr.reviewNumber === reviewNumber ? { ...cr, points } : cr
+          )
+        }
       })
       return { ...store, data: newData }
     }
@@ -163,8 +148,11 @@ const courseInstancereducer = (store = INITIAL_STATE, action) => {
         }))
         return { ...store, data: newStudents }
       } else if (store.role === 'student') {
-        const newWeeks = [...store.data.weeks]
-        newWeeks.find(week => week.id === action.response.weekId).comments.push(action.response)
+        const newWeeks = store.data.weeks.map(week =>
+          week.id === action.response.weekId
+            ? { ...week, comments: [...week.comments, action.response] }
+            : week
+        )
         return { ...store, data: { ...store.data, weeks: newWeeks } }
       } else {
         return store
@@ -189,12 +177,11 @@ const courseInstancereducer = (store = INITIAL_STATE, action) => {
       return { ...store, data: newStudents }
     }
     case 'CODE_REVIEW_REMOVE_ONE_SUCCESS': {
-      let studentToChange = store.data.find(student => student.id === action.response.data.reviewer)
-      studentToChange.codeReviews = studentToChange.codeReviews.filter(
-        codeR => codeR.reviewNumber !== action.response.data.codeReviewRound
-      )
+      const { reviewer, codeReviewRound } = action.response.data
       const newData = store.data.map(student =>
-        student.id !== action.response.data.reviewer ? student : studentToChange
+        student.id !== reviewer
+          ? student
+          : { ...student, codeReviews: student.codeReviews.filter(cr => cr.reviewNumber !== codeReviewRound) }
       )
       return { ...store, data: newData }
     }

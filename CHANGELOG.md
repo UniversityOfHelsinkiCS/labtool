@@ -31,6 +31,17 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
   now answers 404.
 - **A student with no assistant gave a 400 instead of "No assistant assigned to student."**
   (`assistants.js`).
+- **"Notified" labels did not update after sending an email** (`coursePageReducer.js`): the reducer
+  changed the comment or week in place and returned the old state object, so nothing re-rendered.
+- **Reducers changed the existing state instead of returning a new one**, which can leave screens
+  stale: the code review bulk insert, grade and remove, and a student's new comment
+  (`coursePageReducer.js`); hiding a code review column (`coursePageLogicReducer.js`); four actions
+  in `codeReviewReducer.js`; and nine checklist editing actions (`checklistReducer.js`). All now
+  return new objects.
+- **New checklist rows all got the id `-Infinity`** when the checklist started empty, so
+  prerequisites could not tell them apart. New rows now get distinct ids starting from 1. Removing
+  a row that does not exist no longer removes the last row instead.
+- **A "Logout" button stayed in the nav after logging out** (`Nav.jsx`).
 
 ## 2026-10-10
 
@@ -148,16 +159,8 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
 
 ## Known bugs
 
-Found by the new tests and not fixed yet. Each one has a skipped test (`it.skip` / `test.fixme`)
-with an explanation, except where noted.
+None of the bugs found by the new tests are open any more; there are no skipped tests.
 
-Backend:
-
-Frontend:
-- New checklist rows all get the id `-Infinity` when the checklist starts empty
-  (`checklistReducer.js`).
-- "Notified" labels do not update after sending an email, and several other reducer actions change
-  the existing state instead of returning a new one (coursePage, coursePageLogic, codeReview and
-  checklist reducers).
-- A "Logout" button is still shown in the nav after logging out (no test).
-- `npm run lint` only checks `.js` files, so the `.jsx` pages are never linted.
+Tooling:
+- `npm run lint` in `labtool2.0` only checks `.js` files, so the `.jsx` pages are never linted
+  (and have many old formatting errors).

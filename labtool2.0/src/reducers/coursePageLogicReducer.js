@@ -133,9 +133,7 @@ const coursePageLogicReducer = (state = INITIAL_STATE, action) => {
       if (index === -1) {
         return { ...state, showCodeReviews: [...state.showCodeReviews, action.reviewNumber] }
       } else {
-        var newValue = state.showCodeReviews
-        newValue.splice(index, 1)
-        return { ...state, showCodeReviews: newValue }
+        return { ...state, showCodeReviews: state.showCodeReviews.filter((_, i) => i !== index) }
       }
     }
     case 'COURSE_PAGE_UPDATE_ACTIVE_INDEX':
