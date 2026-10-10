@@ -85,7 +85,7 @@ describe('checklistReducer', () => {
   it('changeField sets a field of a row', async () => {
     const newState = reducer(
       loaded(),
-      await dispatched(actions.changeField({ key: 'Week1', name: 'b', field: 'checkedPoints', value: '3' }))
+      await dispatched(actions.changeField({ key: 'Week1', index: 1, field: 'checkedPoints', value: '3' }))
     )
     expect(newState.data.Week1[1].checkedPoints).toBe('3')
   })
@@ -145,8 +145,35 @@ describe('checklistReducer', () => {
     expect(Object.keys(newState.data)).toEqual(['Week1', 'Week3'])
   })
 
-  it('removeRow removes the row by name', async () => {
-    const newState = reducer(loaded(), await dispatched(actions.removeRow({ key: 'Week1', name: 'b' })))
+  describe('rows with the same name (#1163)', () => {
+    const duplicates = () => ({
+      data: { Week1: [row(1, 'Test'), row(2, 'Test'), row(3, 'other')] },
+      maxPoints: 5
+    })
+
+    it('changeField changes only the row at the given position', async () => {
+      const newState = reducer(
+        duplicates(),
+        await dispatched(
+          actions.changeField({ key: 'Week1', index: 1, field: 'textWhenOn', value: 'second' })
+        )
+      )
+      expect(newState.data.Week1.map(r => r.textWhenOn)).toEqual(['', 'second', ''])
+    })
+
+    it('removeRow removes the row at the given position', async () => {
+      const newState = reducer(duplicates(), await dispatched(actions.removeRow({ key: 'Week1', index: 1 })))
+      expect(newState.data.Week1.map(r => r.id)).toEqual([1, 3])
+    })
+
+    it('moveRowUp moves the row at the given position', async () => {
+      const newState = reducer(duplicates(), await dispatched(actions.moveRowUp({ key: 'Week1', index: 1 })))
+      expect(newState.data.Week1.map(r => r.id)).toEqual([2, 1, 3])
+    })
+  })
+
+  it('removeRow removes the row at the given position', async () => {
+    const newState = reducer(loaded(), await dispatched(actions.removeRow({ key: 'Week1', index: 1 })))
     expect(newState.data.Week1.map(r => r.name)).toEqual(['a', 'c'])
   })
 
@@ -174,9 +201,9 @@ describe('checklistReducer', () => {
 
   describe('moving rows', () => {
     it('moveRowUp / moveRowDown reorder the rows', async () => {
-      const up = reducer(loaded(), await dispatched(actions.moveRowUp({ key: 'Week1', name: 'b' })))
+      const up = reducer(loaded(), await dispatched(actions.moveRowUp({ key: 'Week1', index: 1 })))
       expect(up.data.Week1.map(r => r.name)).toEqual(['b', 'a', 'c'])
-      const down = reducer(loaded(), await dispatched(actions.moveRowDown({ key: 'Week1', name: 'b' })))
+      const down = reducer(loaded(), await dispatched(actions.moveRowDown({ key: 'Week1', index: 1 })))
       expect(down.data.Week1.map(r => r.name)).toEqual(['a', 'c', 'b'])
     })
 
@@ -184,13 +211,13 @@ describe('checklistReducer', () => {
       expect(
         reducer(loaded(), {
           type: 'CHECKLIST_MOVE_ROW_UP',
-          data: { key: 'Week1', name: 'a' }
+          data: { key: 'Week1', index: 0 }
         }).data.Week1.map(r => r.name)
       ).toEqual(['a', 'b', 'c'])
       expect(
         reducer(loaded(), {
           type: 'CHECKLIST_MOVE_ROW_DOWN',
-          data: { key: 'Week1', name: 'c' }
+          data: { key: 'Week1', index: 2 }
         }).data.Week1.map(r => r.name)
       ).toEqual(['a', 'b', 'c'])
     })
@@ -200,21 +227,21 @@ describe('checklistReducer', () => {
     const state = loaded()
     state.data.Week1[0].checkedPoints = '2.5'
     state.data.Week1[0].uncheckedPoints = '-1'
-    const newState = reducer(state, await dispatched(actions.castPointsToNumber({ key: 'Week1', name: 'a' })))
+    const newState = reducer(state, await dispatched(actions.castPointsToNumber({ key: 'Week1', index: 0 })))
     expect(newState.data.Week1[0].checkedPoints).toBe(2.5)
     expect(newState.data.Week1[0].uncheckedPoints).toBe(-1)
   })
 
   it.each([
-    ['CHECKLIST_CHANGE_FIELD', { data: { key: 'Week1', name: 'a', field: 'name', value: 'x' } }],
+    ['CHECKLIST_CHANGE_FIELD', { data: { key: 'Week1', index: 0, field: 'name', value: 'x' } }],
     ['CHECKLIST_APPLY_PREREQUISITE_TO_CHECKS_IN_CATEGORY', { category: 'Week1', prerequisite: 1 }],
     ['CHECKLIST_ADD_TOPIC', { data: { key: 'New' } }],
     ['CHECKLIST_ADD_ROW', { data: { key: 'Week1', name: 'x', prerequisite: null } }],
     ['CHECKLIST_REMOVE_TOPIC', { data: { key: 'Week1' } }],
-    ['CHECKLIST_REMOVE_ROW', { data: { key: 'Week1', name: 'a' } }],
-    ['CHECKLIST_MOVE_ROW_UP', { data: { key: 'Week1', name: 'b' } }],
-    ['CHECKLIST_MOVE_ROW_DOWN', { data: { key: 'Week1', name: 'b' } }],
-    ['CHECKLIST_CAST_POINTS', { data: { key: 'Week1', name: 'a' } }]
+    ['CHECKLIST_REMOVE_ROW', { data: { key: 'Week1', index: 0 } }],
+    ['CHECKLIST_MOVE_ROW_UP', { data: { key: 'Week1', index: 1 } }],
+    ['CHECKLIST_MOVE_ROW_DOWN', { data: { key: 'Week1', index: 1 } }],
+    ['CHECKLIST_CAST_POINTS', { data: { key: 'Week1', index: 0 } }]
   ])('%s does not mutate the previous state', (type, rest) => {
     const state = loaded()
     deepFreeze(state)

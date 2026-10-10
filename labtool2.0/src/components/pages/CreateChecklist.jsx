@@ -234,30 +234,30 @@ export const CreateChecklist = props => {
     }
   }
 
-  const changeField = (key, name, field) => async (_, data) => {
+  const changeField = (key, index, field) => async (_, data) => {
     props.changeField({
       key,
-      name,
+      index,
       field,
       value: data.type === 'checkbox' ? data.checked : data.value
     })
     state.canSave = true
   }
 
-  const changeFieldNumber = (key, name, field) => async (_, data) => {
+  const changeFieldNumber = (key, index, field) => async (_, data) => {
     props.changeField({
       key,
-      name,
+      index,
       field,
       value: Number(data.value)
     })
     state.canSave = true
   }
 
-  const changeFieldValue = (key, name, field, value) => () => {
+  const changeFieldValue = (key, index, field, value) => () => {
     props.changeField({
       key,
-      name,
+      index,
       field,
       value
     })
@@ -483,26 +483,26 @@ export const CreateChecklist = props => {
     state.canSave = true
   }
 
-  const removeRow = (key, name) => async () => {
+  const removeRow = (key, index) => async () => {
     props.removeRow({
       key,
-      name
+      index
     })
     state.canSave = true
   }
 
-  const moveRowUp = (key, name) => async () => {
+  const moveRowUp = (key, index) => async () => {
     props.moveRowUp({
       key,
-      name
+      index
     })
     state.canSave = true
   }
 
-  const moveRowDown = (key, name) => async () => {
+  const moveRowDown = (key, index) => async () => {
     props.moveRowDown({
       key,
-      name
+      index
     })
     state.canSave = true
   }
@@ -511,10 +511,10 @@ export const CreateChecklist = props => {
     state.openAdd = ''
   }
 
-  const castPointsToNumber = (key, name) => async () => {
+  const castPointsToNumber = (key, index) => async () => {
     props.castPointsToNumber({
       key,
-      name
+      index
     })
   }
 
@@ -671,7 +671,7 @@ export const CreateChecklist = props => {
             </div>
           </Card.Content>
           {props.checklist.data[key].map((row, index, arr) => (
-            <Card.Content key={row.name}>
+            <Card.Content key={getRowId(row) || `${key}-${index}`}>
               <Header>
                 {row.name}{' '}
                 <Button
@@ -679,7 +679,7 @@ export const CreateChecklist = props => {
                   type="button"
                   color="red"
                   size="tiny"
-                  onClick={removeRow(key, row.name)}
+                  onClick={removeRow(key, index)}
                 >
                   <div className="deleteButtonText">Delete checkbox</div>
                 </Button>
@@ -690,7 +690,7 @@ export const CreateChecklist = props => {
                   icon="arrow circle down"
                   type="button"
                   color="blue"
-                  onClick={moveRowDown(key, row.name)}
+                  onClick={moveRowDown(key, index)}
                 />
                 <Button
                   className="moveButtonLarge"
@@ -699,7 +699,7 @@ export const CreateChecklist = props => {
                   icon="arrow circle up"
                   type="button"
                   color="blue"
-                  onClick={moveRowUp(key, row.name)}
+                  onClick={moveRowUp(key, index)}
                 />
               </Header>
               <div className="checkTextRow">
@@ -713,8 +713,8 @@ export const CreateChecklist = props => {
                   step="0.01"
                   value={row.checkedPoints}
                   disabled={row.minimumRequirement}
-                  onChange={changeField(key, row.name, 'checkedPoints')}
-                  onBlur={castPointsToNumber(key, row.name)}
+                  onChange={changeField(key, index, 'checkedPoints')}
+                  onBlur={castPointsToNumber(key, index)}
                 />
                 <span style={{ flexGrow: 100 }}>
                   <Input
@@ -723,7 +723,7 @@ export const CreateChecklist = props => {
                     label="Text"
                     type="text"
                     value={row.textWhenOn}
-                    onChange={changeField(key, row.name, 'textWhenOn')}
+                    onChange={changeField(key, index, 'textWhenOn')}
                   />
                 </span>
               </div>
@@ -738,8 +738,8 @@ export const CreateChecklist = props => {
                   step="0.01"
                   value={row.uncheckedPoints}
                   disabled={row.minimumRequirement}
-                  onChange={changeField(key, row.name, 'uncheckedPoints')}
-                  onBlur={castPointsToNumber(key, row.name)}
+                  onChange={changeField(key, index, 'uncheckedPoints')}
+                  onBlur={castPointsToNumber(key, index)}
                 />
                 <span style={{ flexGrow: 100 }}>
                   <Input
@@ -748,7 +748,7 @@ export const CreateChecklist = props => {
                     label="Text"
                     type="text"
                     value={row.textWhenOff}
-                    onChange={changeField(key, row.name, 'textWhenOff')}
+                    onChange={changeField(key, index, 'textWhenOff')}
                   />
                 </span>
               </div>
@@ -757,7 +757,7 @@ export const CreateChecklist = props => {
                   <Checkbox
                     label="Minimum requirement"
                     checked={row.minimumRequirement}
-                    onChange={changeField(key, row.name, 'minimumRequirement')}
+                    onChange={changeField(key, index, 'minimumRequirement')}
                   ></Checkbox>
                   , which should be{' '}
                   <Radio
@@ -766,7 +766,7 @@ export const CreateChecklist = props => {
                     value="true"
                     disabled={!row.minimumRequirement}
                     checked={row.minimumRequirementMetIf === true}
-                    onChange={changeFieldValue(key, row.name, 'minimumRequirementMetIf', true)}
+                    onChange={changeFieldValue(key, index, 'minimumRequirementMetIf', true)}
                   />{' '}
                   <Radio
                     label="unchecked"
@@ -774,7 +774,7 @@ export const CreateChecklist = props => {
                     value="false"
                     disabled={!row.minimumRequirement}
                     checked={row.minimumRequirementMetIf === false}
-                    onChange={changeFieldValue(key, row.name, 'minimumRequirementMetIf', false)}
+                    onChange={changeFieldValue(key, index, 'minimumRequirementMetIf', false)}
                   />
                   , or else grade will drop by{' '}
                   <Input
@@ -786,7 +786,7 @@ export const CreateChecklist = props => {
                     style={{ width: '60px' }}
                     disabled={!row.minimumRequirement}
                     value={row.minimumRequirementGradePenalty}
-                    onChange={changeFieldNumber(key, row.name, 'minimumRequirementGradePenalty')}
+                    onChange={changeFieldNumber(key, index, 'minimumRequirementGradePenalty')}
                   />
                 </div>
               )}
@@ -797,7 +797,7 @@ export const CreateChecklist = props => {
                   placeholder="(none)"
                   selection
                   value={row.prerequisite || null}
-                  onChange={changeField(key, row.name, 'prerequisite')}
+                  onChange={changeField(key, index, 'prerequisite')}
                   options={getPrerequisiteDropdown(key).filter(check => check.value !== row.id)}
                 />
                 <Popup

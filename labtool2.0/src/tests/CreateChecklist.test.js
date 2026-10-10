@@ -6,6 +6,7 @@ import { createStore } from 'redux'
 import { MemoryRouter } from 'react-router-dom'
 import { vi } from 'vitest'
 import { CreateChecklist } from '../components/pages/CreateChecklist'
+import checklistReducer, * as checklistActions from '../reducers/checklistReducer'
 
 const courseInstances = [
   {
@@ -276,5 +277,97 @@ describe('<CreateChecklist /> component', () => {
     expect(screen.getByText(/maximum points for this review:/i)).toHaveTextContent(
       'Maximum points for this review: 5'
     )
+  })
+
+  describe('two checkboxes with the same name (#1163)', () => {
+    const duplicateRow = id => ({
+      id,
+      name: 'Test',
+      checkedPoints: 1,
+      uncheckedPoints: 0,
+      textWhenOn: '',
+      textWhenOff: ''
+    })
+
+    // The editor wired to the real checklist reducer, so that edits and deletions show up on screen.
+    const Harness = () => {
+      const [state, dispatch] = React.useReducer(checklistReducer, {
+        data: { Koodi: [duplicateRow(1), duplicateRow(2)] },
+        maxPoints: ''
+      })
+      const bind = action => data => action(data)(dispatch)
+      return (
+        <CreateChecklist
+          {...renderProps()}
+          checklist={state}
+          changeField={bind(checklistActions.changeField)}
+          removeRow={bind(checklistActions.removeRow)}
+          castPointsToNumber={bind(checklistActions.castPointsToNumber)}
+        />
+      )
+    }
+
+    const renderProps = () => ({
+      courses: courseInstances,
+      copyableChecklists,
+      courseId: courseInstances[0].ohid,
+      selectedInstance: courseInstances[0],
+      loading,
+      weekDropdowns,
+      showNotification: vi.fn(),
+      resetLoading: vi.fn(),
+      createChecklist: vi.fn(),
+      getOneCI: vi.fn(),
+      getOneChecklist: vi.fn(),
+      getCopyableChecklists: vi.fn(),
+      resetChecklist: vi.fn(),
+      addTopic: vi.fn(),
+      addRow: vi.fn(),
+      removeTopic: vi.fn(),
+      moveTopicUp: vi.fn(),
+      moveTopicDown: vi.fn(),
+      moveRowUp: vi.fn(),
+      moveRowDown: vi.fn(),
+      getAllCI: vi.fn(),
+      applyCategoryPrerequisite: vi.fn(),
+      restoreChecklist: vi.fn(),
+      addRedirectHook: vi.fn()
+    })
+
+    const renderHarness = () => {
+      const store = createStore(() => ({ selectedInstance: courseInstances[0] }))
+      return render(
+        <Provider store={store}>
+          <MemoryRouter>
+            <Harness />
+          </MemoryRouter>
+        </Provider>
+      )
+    }
+
+    const textWhenOnInputs = container =>
+      [...container.querySelectorAll('.textField input')].filter((_, i) => i % 2 === 0)
+
+    it('typing into the second checkbox changes only the second one', async () => {
+      const user = userEvent.setup()
+      const { container } = renderHarness()
+      await selectWeek(user, 6)
+
+      await user.type(textWhenOnInputs(container)[1], 'second')
+
+      expect(textWhenOnInputs(container).map(input => input.value)).toEqual(['', 'second'])
+    })
+
+    it('deleting the second checkbox removes it from the editor', async () => {
+      const user = userEvent.setup()
+      const { container } = renderHarness()
+      await selectWeek(user, 6)
+      await user.type(textWhenOnInputs(container)[0], 'first')
+
+      // [0] is "Delete topic", [1] and [2] are the two checkboxes
+      await user.click(container.querySelectorAll('.deleteButtonText')[2].closest('button'))
+
+      expect(textWhenOnInputs(container).map(input => input.value)).toEqual(['first'])
+    })
   })
 })

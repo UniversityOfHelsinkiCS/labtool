@@ -23,21 +23,21 @@ const constructObjectFromEntries = kv => {
 const reorderProperties = (obj, keys) =>
   (Object.fromEntries || constructObjectFromEntries)(keys.map(x => [x, obj[x]]))
 
-// Returns a copy of data where the first row named `name` in category `key` is replaced by update(row).
-const updateRow = (data, key, name, update) => {
-  const index = data[key].findIndex(row => row.name === name)
-  if (index === -1) {
+// Rows are identified by their position in the category, not by name: names are not unique.
+
+// Returns a copy of data where the row at `index` in category `key` is replaced by update(row).
+const updateRow = (data, key, index, update) => {
+  if (!data[key] || !data[key][index]) {
     return data
   }
   return { ...data, [key]: data[key].map((row, i) => (i === index ? update(row) : row)) }
 }
 
-// Returns a copy of data where the row named `name` in category `key` is moved by `offset` (-1 or 1).
-const moveRow = (data, key, name, offset) => {
+// Returns a copy of data where the row at `index` in category `key` is moved by `offset` (-1 or 1).
+const moveRow = (data, key, index, offset) => {
   const rows = [...data[key]]
-  const index = rows.findIndex(row => row.name === name)
   const target = index + offset
-  if (index === -1 || target < 0 || target >= rows.length) {
+  if (!rows[index] || target < 0 || target >= rows.length) {
     return data
   }
   swapIndex(rows, index, target)
@@ -62,8 +62,8 @@ const checklistReducer = (state = INITIAL_STATE, action) => {
     case 'CHECKLIST_GET_ONE_FAILURE':
       return { data: {}, maxPoints: '' }
     case 'CHECKLIST_CHANGE_FIELD': {
-      const { key, name, field, value } = action.data
-      return { ...state, data: updateRow(state.data, key, name, row => ({ ...row, [field]: value })) }
+      const { key, index, field, value } = action.data
+      return { ...state, data: updateRow(state.data, key, index, row => ({ ...row, [field]: value })) }
     }
     case 'CHECKLIST_APPLY_PREREQUISITE_TO_CHECKS_IN_CATEGORY': {
       const { category, prerequisite } = action
@@ -93,9 +93,8 @@ const checklistReducer = (state = INITIAL_STATE, action) => {
       return { ...state, data }
     }
     case 'CHECKLIST_REMOVE_ROW': {
-      const { key, name } = action.data
-      const index = state.data[key].findIndex(row => row.name === name)
-      if (index === -1) {
+      const { key, index } = action.data
+      if (!state.data[key] || !state.data[key][index]) {
         return state
       }
       return { ...state, data: { ...state.data, [key]: state.data[key].filter((_, i) => i !== index) } }
@@ -117,12 +116,12 @@ const checklistReducer = (state = INITIAL_STATE, action) => {
       return { ...state, data: reorderProperties(state.data, newOrder) }
     }
     case 'CHECKLIST_MOVE_ROW_UP':
-      return { ...state, data: moveRow(state.data, action.data.key, action.data.name, -1) }
+      return { ...state, data: moveRow(state.data, action.data.key, action.data.index, -1) }
     case 'CHECKLIST_MOVE_ROW_DOWN':
-      return { ...state, data: moveRow(state.data, action.data.key, action.data.name, 1) }
+      return { ...state, data: moveRow(state.data, action.data.key, action.data.index, 1) }
     case 'CHECKLIST_CAST_POINTS': {
-      const { key, name } = action.data
-      const data = updateRow(state.data, key, name, row => ({
+      const { key, index } = action.data
+      const data = updateRow(state.data, key, index, row => ({
         ...row,
         checkedPoints: Number(row.checkedPoints),
         uncheckedPoints: Number(row.uncheckedPoints)

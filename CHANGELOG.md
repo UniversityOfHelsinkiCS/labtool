@@ -34,6 +34,10 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
 - Frontend `npm audit`: 22 → 0 findings.
 
 ### Fixed
+- **Checkboxes with the same name broke the checklist editor** (#1163): typing into the second
+  one changed the first, and deleting either did not update the screen. The editor identified rows
+  by name, both in its actions and as the React key. Rows are now identified by their position in
+  the category, and keyed by their id. Tests reproduce both symptoms.
 - **Builds with `VITE_SHOW_VERSION` set crashed on load** (`App.jsx`, used by `Dockerfile.test`):
   `__BUILD_TIME__` and `__GIT_REVISION__` were no longer defined after the move to Vite. They are
   now defined in `vite.config.ts` (the git revision can be passed as `GIT_REVISION` in Docker).
