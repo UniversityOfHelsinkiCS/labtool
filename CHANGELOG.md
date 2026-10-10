@@ -34,6 +34,18 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
 - Frontend `npm audit`: 22 → 0 findings.
 
 ### Fixed
+- **Collapsing the "Add comment" box erased the written comment** (#1162). The draft is now kept
+  until the comment is sent.
+- **Checklist topics and feedback text came out in a random order when grading** (#1125, #1130).
+  The course details endpoint loaded checklist items without sorting them; it now sorts them by
+  the order set in the checklist editor, which also fixes the order of the feedback text built
+  from the checklist.
+- **Comment and instructor note text areas can be resized vertically again** (#1126). The
+  Markdown preview keeps its height and scrolls.
+- **Prerequisites between new checkboxes** (#1124). New checkboxes all had the same id, so the
+  prerequisite dropdown could not tell them apart (fixed in #1186); a new checkbox could also be
+  chosen as its own prerequisite, which then failed as a loop. A test now covers making one new
+  checkbox require another and saving.
 - **Checkboxes with the same name broke the checklist editor** (#1163): typing into the second
   one changed the first, and deleting either did not update the screen. The editor identified rows
   by name, both in its actions and as the React key. Rows are now identified by their position in

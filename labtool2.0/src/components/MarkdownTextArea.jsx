@@ -94,12 +94,17 @@ export const FormMarkdownTextArea = props => {
             paddingRight: getNonScalableRightPadding()
           }}
         >
-          {/* resize: none -- we cannot allow resizing the area because the Markdown preview cannot resize with it */}
+          {/* vertical resizing is allowed for long texts; the Markdown preview keeps its height and scrolls */}
           <TextArea
             onInput={handleChange}
             {...props}
             scalable={null}
-            style={{ height: getTextHeight(), marginBottom: '15px', resize: 'none' }}
+            style={{
+              height: getTextHeight(),
+              minHeight: getTextHeight(),
+              marginBottom: '15px',
+              resize: 'vertical'
+            }}
           />
         </Form.Field>
         <Accordion

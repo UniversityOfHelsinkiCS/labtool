@@ -798,7 +798,7 @@ export const CreateChecklist = props => {
                   selection
                   value={row.prerequisite || null}
                   onChange={changeField(key, index, 'prerequisite')}
-                  options={getPrerequisiteDropdown(key).filter(check => check.value !== row.id)}
+                  options={getPrerequisiteDropdown(key).filter(check => check.value !== getRowId(row))}
                 />
                 <Popup
                   trigger={<Icon name="help circle" />}

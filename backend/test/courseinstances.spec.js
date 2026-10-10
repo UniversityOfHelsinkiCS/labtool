@@ -90,6 +90,26 @@ describe('Course instances API', () => {
       assert.ok(!('category' in list.Code[0]))
     })
 
+    it('returns checklist topics and items in the order set in the editor (#1125, #1130)', async () => {
+      // rows stored in the opposite physical order to their `order`, as reordering in the editor leaves them
+      const { checklist } = await f.createChecklist(s.course, { week: 2 })
+      const item = (name, category, order) => ChecklistItem.create({
+        checklistId: checklist.id, name, category, order, checkedPoints: 1, uncheckedPoints: 0, textWhenOn: '', textWhenOff: ''
+      })
+      await item('last', 'Second topic', 4)
+      await item('third', 'Second topic', 3)
+      await item('second', 'First topic', 2)
+      await item('first', 'First topic', 1)
+
+      const res = await as(s.users.teacher)
+        .get(`/api/courses/${s.course.ohid}`)
+        .expect(200)
+      const { list } = res.body.checklists.find(c => c.week === 2)
+      assert.deepStrictEqual(Object.keys(list), ['First topic', 'Second topic'])
+      assert.deepStrictEqual(list['First topic'].map(i => i.name), ['first', 'second'])
+      assert.deepStrictEqual(list['Second topic'].map(i => i.name), ['third', 'last'])
+    })
+
     it('hides the teacher list from students but shows checklists', async () => {
       const res = await as(s.users.student)
         .get(`/api/courses/${s.course.ohid}`)

@@ -370,4 +370,80 @@ describe('<CreateChecklist /> component', () => {
       expect(textWhenOnInputs(container).map(input => input.value)).toEqual(['first'])
     })
   })
+
+  describe('prerequisites between new checkboxes (#1124)', () => {
+    const showNotification = vi.fn()
+    const createChecklist = vi.fn()
+
+    const Harness = () => {
+      const [state, dispatch] = React.useReducer(checklistReducer, { data: { Koodi: [] }, maxPoints: '' })
+      const bind = action => data => action(data)(dispatch)
+      return (
+        <CreateChecklist
+          courses={courseInstances}
+          copyableChecklists={[]}
+          courseId={courseInstances[0].ohid}
+          selectedInstance={courseInstances[0]}
+          loading={loading}
+          weekDropdowns={weekDropdowns}
+          checklist={state}
+          showNotification={showNotification}
+          createChecklist={createChecklist}
+          addRow={bind(checklistActions.addRow)}
+          changeField={bind(checklistActions.changeField)}
+          castPointsToNumber={bind(checklistActions.castPointsToNumber)}
+          resetLoading={vi.fn()}
+          getOneCI={vi.fn()}
+          getOneChecklist={vi.fn()}
+          getCopyableChecklists={vi.fn()}
+          resetChecklist={vi.fn()}
+          addTopic={vi.fn()}
+          removeTopic={vi.fn()}
+          removeRow={vi.fn()}
+          moveTopicUp={vi.fn()}
+          moveTopicDown={vi.fn()}
+          moveRowUp={vi.fn()}
+          moveRowDown={vi.fn()}
+          getAllCI={vi.fn()}
+          applyCategoryPrerequisite={vi.fn()}
+          restoreChecklist={vi.fn()}
+          addRedirectHook={vi.fn()}
+        />
+      )
+    }
+
+    const addCheckbox = async (user, container, name) => {
+      await user.click(screen.getByRole('button', { name: /add new checkbox/i }))
+      await user.type(container.querySelector('.newRowNameInput input'), `${name}{enter}`)
+    }
+
+    it('a new checkbox can require another new checkbox, and the checklist saves', async () => {
+      const user = userEvent.setup()
+      const store = createStore(() => ({ selectedInstance: courseInstances[0] }))
+      const { container } = render(
+        <Provider store={store}>
+          <MemoryRouter>
+            <Harness />
+          </MemoryRouter>
+        </Provider>
+      )
+      await selectWeek(user, 6)
+      await addCheckbox(user, container, 'First')
+      await addCheckbox(user, container, 'Second')
+
+      const secondDropdown = container.querySelectorAll('.prerequisiteDropdown')[1]
+      await user.click(secondDropdown)
+      // the checkbox itself is not offered as its own prerequisite
+      expect(within(secondDropdown).queryByRole('option', { name: 'Second' })).not.toBeInTheDocument()
+      await user.click(within(secondDropdown).getByRole('option', { name: 'First' }))
+
+      await user.click(container.querySelector('.saveButton'))
+
+      expect(showNotification).not.toHaveBeenCalledWith(expect.objectContaining({ error: true }))
+      expect(createChecklist).toHaveBeenCalled()
+      const [first, second] = createChecklist.mock.calls[0][0].checklist.Koodi
+      expect(Number.isFinite(first.tempId)).toBe(true)
+      expect(second.prerequisite).toBe(first.tempId)
+    })
+  })
 })

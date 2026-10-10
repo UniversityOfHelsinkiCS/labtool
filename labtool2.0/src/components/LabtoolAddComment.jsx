@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { Accordion, Button, Form, Icon } from 'semantic-ui-react'
 import { withRouter } from 'react-router'
@@ -12,12 +12,6 @@ export const LabtoolAddComment = ({ commentFieldId, weekId, handleSubmit, allowH
   const toggleOpen = () => {
     state.commentOpen = !state.commentOpen
   }
-
-  useEffect(() => {
-    if (!state.commentOpen) {
-      state.reset()
-    }
-  }, [state.commentOpen])
 
   const doSubmit = (...args) => {
     state.reset()
