@@ -1,5 +1,6 @@
 import { execSync } from 'child_process'
 import path from 'path'
+import { clearInbox } from './mailpit'
 
 const composeFile = path.resolve(__dirname, '../../docker-compose.e2e.yml')
 
@@ -11,4 +12,5 @@ export default async () => {
   execSync(`docker compose -f ${composeFile} exec -T backend sh -c "npm run delete_test_data && npm run add_test_data"`, {
     stdio: 'inherit'
   })
+  await clearInbox()
 }

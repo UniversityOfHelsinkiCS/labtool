@@ -1,15 +1,18 @@
 // A course from the current term, as if imported from the fake Kurki (Kurki_simulation generates
-// TKT20010.2026.S.K.SIM1 for autumn 2026), with paaopettaja as teacher and two registered students.
+// TKT20010.2026.S.K.SIM1 for autumn 2026), with paaopettaja as teacher and three registered students.
+// The third student's address is rejected by the Mailpit container in the dev stack, to reproduce
+// email delivery failures (issue #1141).
 // Its timestamp must stay after the e2e fixtures seeder: seeders are undone newest first, and the
 // e2e seeder's down deletes all ".SIM" courses, which would fail while these students still exist.
 
 const COURSE_ID = 20001
 const TEACHER_INSTANCE_ID = 20001
-const STUDENT_INSTANCE_IDS = [20001, 20002]
+const STUDENT_INSTANCE_IDS = [20001, 20002, 20003]
 
 const PAAOPETTAJA = 10010
 const TIRAOPISKELIJA1 = 10011
 const TIRAOPISKELIJA2 = 10012
+const BOUNCING_STUDENT = 29001
 
 module.exports = {
   up: async (queryInterface) => {
@@ -28,6 +31,21 @@ module.exports = {
         amountOfCodeReviews: 0,
         ohid: 'TKT20010.2026.S.K.SIM1',
         finalReview: false,
+        createdAt: now,
+        updatedAt: now
+      }
+    ])
+
+    await queryInterface.bulkInsert('Users', [
+      {
+        id: BOUNCING_STUDENT,
+        username: 'tiraopiskelija3',
+        firsts: 'Pekka',
+        lastname: 'Palautuva',
+        email: 'pekka.palautuva@rejected.test',
+        studentNumber: '014999999',
+        teacher: false,
+        sysop: false,
         createdAt: now,
         updatedAt: now
       }
@@ -68,6 +86,18 @@ module.exports = {
         validRegistration: true,
         createdAt: now,
         updatedAt: now
+      },
+      {
+        id: STUDENT_INSTANCE_IDS[2],
+        github: 'https://github.com/tiraopi3/tiralabra-2026',
+        projectName: 'Polunetsintä',
+        userId: BOUNCING_STUDENT,
+        courseInstanceId: COURSE_ID,
+        teacherInstanceId: TEACHER_INSTANCE_ID,
+        dropped: false,
+        validRegistration: true,
+        createdAt: now,
+        updatedAt: now
       }
     ])
   },
@@ -88,5 +118,6 @@ module.exports = {
     await query(`DELETE FROM "StudentInstances" WHERE "courseInstanceId" = ${COURSE_ID}`)
     await query(`DELETE FROM "TeacherInstances" WHERE "courseInstanceId" = ${COURSE_ID}`)
     await query(`DELETE FROM "CourseInstances" WHERE id = ${COURSE_ID}`)
+    await query(`DELETE FROM "Users" WHERE id = ${BOUNCING_STUDENT}`)
   }
 }

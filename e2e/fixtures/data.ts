@@ -32,7 +32,8 @@ export const COURSES = {
   draft: course(90007, 'E2E.DRAFT.COURSE.1', 'E2E Draft Course'),
   staff: course(90008, 'E2E.STAFF.COURSE.1', 'E2E Staff Course'),
   drop: course(90009, 'E2E.DROP.COURSE.1', 'E2E Drop Course'),
-  email: course(90010, 'E2E.EMAIL.COURSE.1', 'E2E Email Course')
+  email: course(90010, 'E2E.EMAIL.COURSE.1', 'E2E Email Course'),
+  bounce: course(90011, 'E2E.BOUNCE.COURSE.1', 'E2E Bounce Course')
 }
 
 /** Student instance ids per course (REGISTERED_STUDENT unless noted otherwise). */
@@ -47,7 +48,9 @@ export const STUDENT_INSTANCES = {
   staff: 90008,
   drop: 90009, // SECOND_STUDENT
   email: 90010,
-  emailSecond: 90020 // SECOND_STUDENT
+  emailSecond: 90020, // SECOND_STUDENT
+  bounce: 90011,
+  bounceRejected: 90021 // BOUNCING_STUDENT_EMAIL is rejected by Mailpit
 }
 
 /** Weeks seeded as already reviewed. */
@@ -141,9 +144,12 @@ export const NOTIFICATIONS = {
   studentTagged: 'Student tagged successfully',
   studentUntagged: 'Student tag removed successfully',
   emailUpdated: 'Your email address has been updated',
-  emailSimulated: 'Email sending simulated.',
+  emailSent: 'Email sent successfully.',
   projectInfoUpdated: 'Project info updated successfully!',
   removedFromCourse: 'You have removed yourself from the course',
   coursesImported: 'Courses imported successfully',
   checklistSaved: (week: number) => `Checklist saved successfully for week ${week}.`
 }
+
+/** Address of the seeded student whose email the e2e stack's Mailpit rejects (issue #1141). */
+export const BOUNCING_STUDENT_EMAIL = 'bounce@rejected.test'

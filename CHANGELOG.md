@@ -6,6 +6,17 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
 ## 2026-10-11
 
 ### Added
+- **Local email setup for development and e2e tests** (for #1141):
+  - The dev and e2e docker compose stacks have a Mailpit mail server that catches all email; inbox
+    at http://localhost:8025 (dev) and :8026 (e2e). It rejects recipients outside the seed data's
+    domains, so delivery failures can be reproduced.
+  - The backend sends real email whenever `SMTP_HOST` / `SMTP_PORT` are set; without them,
+    behaviour is as before (sent in production/staging, simulated elsewhere).
+  - Seeded students with rejected addresses: Pekka Palautuva (`pekka.palautuva@rejected.test`) on
+    the dev course `TKT20010.2026.S.K.SIM1`, and a separate `E2E.BOUNCE.COURSE.1` in the e2e seed.
+  - The e2e email tests now check the mail delivered to Mailpit. This showed that the mass email
+    test had been turning the "copy to instructors" option off; it now checks the copy arrives.
+  - A new e2e test checks that a rejected recipient gives an error and gets no mail.
 - **Filter box on the course staff page** (#325): filters the user list by name, username, email
   or student number.
 - **Warning when two students review the same project in one code review round** (#442): in the
@@ -217,5 +228,10 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
 
 ## Known bugs
 
-None of the bugs found by the new tests are open any more; there are no skipped tests.
+- **Email delivery failures are reported badly** (#1141, reproduced with the Mailpit setup):
+  - A mass email where the mail server rejects one recipient answers 400 "Email rejected by SMTP
+    server.", although the other students did get the email. Resending would mail them twice.
+  - A mass email where every recipient is rejected answers 500 "Unexpected error. Please try
+    again.".
+  - Neither tells the teacher which addresses failed.
 

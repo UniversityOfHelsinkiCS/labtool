@@ -45,7 +45,7 @@ uploads both folders as the `playwright-report` artifact when it fails.
 
 ## What is covered
 
-43 tests in 15 spec files.
+44 tests in 15 spec files.
 
 | Spec | Tests | Covers |
 |---|---|---|
@@ -59,14 +59,17 @@ uploads both folders as the `playwright-report` artifact when it fails.
 | `tags` | 2 | A teacher creates a tag, tags a student, filters by the tag and removes it |
 | `course-settings` | 3 | A teacher changes week amount, max points, current week, material link and registration status; changes persist; registration can be reactivated |
 | `course-staff` | 4 | A teacher adds an assistant and assigns a student to them; the assistant sees the course and the student; the teacher removes the assistant |
-| `email` | 3 | Notifying a student about a reviewed week, mass email to selected students, and the error when no recipient is selected |
+| `email` | 4 | Notifying a student about a reviewed week and a mass email to all students with a copy to instructors (both checked in the Mailpit inbox), the error when no recipient is selected, and the error when the mail server rejects a recipient (#1141) |
 | `dropping-out` | 5 | A teacher marks a student dropped and the student sees it; the teacher marks a registration mistaken; the student removes themselves and disappears from the teacher's list |
 | `my-page` | 2 | A user changes their email address; a user without one must give one before using the app |
 | `logout` | 1 | Logging out clears the session |
 | `course-import` | 1 | A sysop imports a course from Kurki, becomes its teacher, and the course disappears from the import list |
 
-Email is safe to test: the backend only simulates sending outside `production`/`staging`, and the
-e2e stack runs as `development`.
+**Email.** The e2e stack has its own Mailpit mail server, which catches everything the backend
+sends; its inbox is at http://localhost:8026 while the stack runs. `fixtures/mailpit.ts` reads the
+inbox, and the global setup empties it before every run. Mailpit rejects recipients outside the
+domains used in the seed data, so the seeded student with the address `bounce@rejected.test` on
+`E2E.BOUNCE.COURSE.1` triggers a delivery failure (issue #1141).
 
 ## How the suite is set up
 

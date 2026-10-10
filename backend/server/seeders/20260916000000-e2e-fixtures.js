@@ -20,7 +20,8 @@ const USERS = {
   SECOND_STUDENT: 19001,
   ASSISTANT: 19002,
   EMAIL_CHANGER: 19003,
-  NO_EMAIL: 19004
+  NO_EMAIL: 19004,
+  BOUNCING: 19005 // address rejected by the e2e stack's Mailpit (issue #1141)
 }
 
 const COURSES = {
@@ -33,7 +34,8 @@ const COURSES = {
   DRAFT: 90007,
   STAFF: 90008,
   DROP: 90009,
-  EMAIL: 90010
+  EMAIL: 90010,
+  BOUNCE: 90011
 }
 
 const COURSE_IDS = Object.values(COURSES)
@@ -147,6 +149,18 @@ module.exports = {
         sysop: false,
         createdAt: now,
         updatedAt: now
+      },
+      {
+        id: USERS.BOUNCING,
+        username: 'e2epalautuva',
+        email: 'bounce@rejected.test',
+        firsts: 'Pauli',
+        lastname: 'Palautuva',
+        studentNumber: '019000005',
+        teacher: false,
+        sysop: false,
+        createdAt: now,
+        updatedAt: now
       }
     ])
 
@@ -164,7 +178,8 @@ module.exports = {
       course(COURSES.DRAFT, 'E2E Draft Course', 'E2E.DRAFT.COURSE.1', now),
       course(COURSES.STAFF, 'E2E Staff Course', 'E2E.STAFF.COURSE.1', now),
       course(COURSES.DROP, 'E2E Drop Course', 'E2E.DROP.COURSE.1', now),
-      course(COURSES.EMAIL, 'E2E Email Course', 'E2E.EMAIL.COURSE.1', now)
+      course(COURSES.EMAIL, 'E2E Email Course', 'E2E.EMAIL.COURSE.1', now),
+      course(COURSES.BOUNCE, 'E2E Bounce Course', 'E2E.BOUNCE.COURSE.1', now)
     ])
 
     await queryInterface.bulkInsert(
@@ -191,7 +206,9 @@ module.exports = {
       studentInstance(90008, REGISTERED_STUDENT_USER_ID, COURSES.STAFF, now),
       studentInstance(90009, USERS.SECOND_STUDENT, COURSES.DROP, now),
       studentInstance(90010, REGISTERED_STUDENT_USER_ID, COURSES.EMAIL, now),
-      studentInstance(90020, USERS.SECOND_STUDENT, COURSES.EMAIL, now)
+      studentInstance(90020, USERS.SECOND_STUDENT, COURSES.EMAIL, now),
+      studentInstance(90011, REGISTERED_STUDENT_USER_ID, COURSES.BOUNCE, now),
+      studentInstance(90021, USERS.BOUNCING, COURSES.BOUNCE, now)
     ])
 
     // already reviewed weeks for the comment and email specs

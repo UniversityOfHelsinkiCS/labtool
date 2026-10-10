@@ -44,6 +44,18 @@ describe('Email API', () => {
   })
 
   describe('POST /api/email/send (real sending path, stubbed transport)', () => {
+    it('sends to the server in SMTP_HOST / SMTP_PORT also in development, e.g. a local Mailpit', async () => {
+      const devWithSmtp = { NODE_ENV: 'development', SMTP_HOST: 'mailpit', SMTP_PORT: '1025' }
+      const res = await mailAs(s.users.teacher, devWithSmtp)
+        .post('/api/email/send')
+        .send({ role: 'teacher', weekId: week.id })
+        .expect(200)
+      assert.strictEqual(res.body.message, 'Email sent successfully.')
+      assert.strictEqual(mail.transports[0].host, 'mailpit')
+      assert.strictEqual(mail.transports[0].port, 1025)
+      assert.strictEqual(mail.sent.length, 1)
+    })
+
     it('requires authentication', async () => {
       await mailApi()
         .post('/api/email/send')

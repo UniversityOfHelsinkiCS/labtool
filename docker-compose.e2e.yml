@@ -38,10 +38,14 @@ services:
       - USE_FAKE_LOGIN=ThisIsNotProduction
       - KURKI_URL=http://kurki:3002
       - E2E_SEED=true
+      - SMTP_HOST=mailpit
+      - SMTP_PORT=1025
     ports:
       - '3011:3001'
     depends_on:
       db:
+        condition: service_healthy
+      mailpit:
         condition: service_healthy
     healthcheck:
       test: ['CMD-SHELL', 'wget -q -O /dev/null http://127.0.0.1:3001/api || exit 1']
@@ -49,6 +53,20 @@ services:
       timeout: 5s
       retries: 30
     command: sh -c "npm run dropdb; npm run createdb && npm run migrate && npm run add_test_data && npm start"
+
+  # Catches all email; inbox at http://localhost:8026. Recipients outside these domains are rejected,
+  # like bounce@rejected.test in the e2e seed (issue #1141).
+  mailpit:
+    image: axllent/mailpit:v1.31.2
+    environment:
+      MP_SMTP_ALLOWED_RECIPIENTS: '@(helsinki\.invalid|helsinki\.fi|example\.com|example\.org)$$'
+    ports:
+      - '8026:8025'
+    healthcheck:
+      test: ['CMD', '/mailpit', 'readyz']
+      interval: 5s
+      timeout: 5s
+      retries: 30
 
   kurki:
     build:
