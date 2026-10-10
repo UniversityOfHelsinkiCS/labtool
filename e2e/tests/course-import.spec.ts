@@ -1,28 +1,40 @@
 import { test, expect } from '@playwright/test'
 import { gotoWithSession, loginAs } from '../fixtures/auth'
-import { TEACHER } from '../fixtures/data'
+import { expectNoLoader, expectSuccess } from '../fixtures/helpers'
+import { NOTIFICATIONS, TEACHER } from '../fixtures/data'
 
-// FIXME: course import cannot be tested on the e2e stack yet.
-//
-// The backend asks the fake Kurki (Kurki_simulation) for the current and the next term
-// (backend/server/helpers/applicationHelper.js CurrentTermAndYear(), e.g. 2026S and 2027K), but
-// Kurki_simulation/responses only has files up to 2020, so Kurki answers 500 and the import page
-// shows "Error while listing importable courses." instead of a course list.
-//
-// To enable: give Kurki_simulation responses for the current terms (or a fallback for unknown
-// terms) whose course details list `paaopettaja` as a teacher, and remove the fixme. The steps
-// below have not been run yet.
-test.fixme('a sysop imports a course from Kurki', async ({ page }) => {
+// The fake Kurki (Kurki_simulation) generates two courses for every term it has no response file
+// for, with TEACHER (paaopettaja) as their teacher, so the current term always has courses to
+// import. Imported courses are removed by the e2e seeder before every run.
+const IMPORTED_COURSE = 'Tietokantasovellus'
+
+test('a sysop imports a course from Kurki and becomes its teacher', async ({ page }) => {
   await loginAs(page, TEACHER)
   await gotoWithSession(page, '/labtool/courseimport')
   await expect(page.getByRole('heading', { name: 'Import courses' })).toBeVisible()
 
-  const firstCourse = page.locator('tbody tr').first()
-  const courseName = (await firstCourse.locator('td').nth(2).innerText()).trim()
-  await firstCourse.locator('.ui.checkbox').click()
-  await page.getByRole('button', { name: 'Import' }).click()
+  // the earliest generated course with this name is from the current term
+  const row = page.locator('tbody tr', { hasText: IMPORTED_COURSE }).first()
+  await expect(row).toBeVisible()
+  await expect(row).toContainText(TEACHER.username)
+  const courseName = (await row.locator('td').nth(2).innerText()).trim()
 
-  await expect(page.locator('.notification.success')).toHaveText('Courses imported successfully')
+  await row.locator('.ui.checkbox').click()
+  await page.getByRole('button', { name: 'Import', exact: true }).click()
+
+  await expectSuccess(page, NOTIFICATIONS.coursesImported)
   await expect(page).toHaveURL(/\/labtool\/courses$/)
-  await expect(page.getByRole('link', { name: courseName })).toBeVisible()
+
+  // the course is listed and the Kurki teacher is a teacher on it
+  const courseLink = page.getByRole('link', { name: courseName, exact: true })
+  await expect(courseLink).toBeVisible()
+  await courseLink.click()
+  await expect(page.getByRole('heading', { name: 'Students', exact: true })).toBeVisible()
+  await expectNoLoader(page)
+
+  // and it can no longer be imported
+  await page.goto('/labtool/courseimport')
+  await expect(page.getByRole('heading', { name: 'Import courses' })).toBeVisible()
+  await expectNoLoader(page)
+  await expect(page.locator('tbody tr', { hasText: courseName })).toHaveCount(0)
 })

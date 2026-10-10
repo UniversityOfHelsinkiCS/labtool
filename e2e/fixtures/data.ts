@@ -144,5 +144,6 @@ export const NOTIFICATIONS = {
   emailSimulated: 'Email sending simulated.',
   projectInfoUpdated: 'Project info updated successfully!',
   removedFromCourse: 'You have removed yourself from the course',
+  coursesImported: 'Courses imported successfully',
   checklistSaved: (week: number) => `Checklist saved successfully for week ${week}.`
 }

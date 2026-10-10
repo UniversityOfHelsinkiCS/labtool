@@ -252,6 +252,11 @@ module.exports = {
     await query(`DELETE FROM "ChecklistItems" WHERE "checklistId" IN ${checklists}`)
     await query(`DELETE FROM "Checklists" WHERE id IN ${checklists}`)
 
+    // courses imported from the fake Kurki, whose generated course codes end in "SIM<n>"
+    const importedCourses = '(SELECT id FROM "CourseInstances" WHERE ohid LIKE \'%.SIM%\')'
+    await query(`DELETE FROM "TeacherInstances" WHERE "courseInstanceId" IN ${importedCourses}`)
+    await query(`DELETE FROM "CourseInstances" WHERE id IN ${importedCourses}`)
+
     // seeded rows
     await query(`DELETE FROM "StudentInstances" WHERE id IN ${studentInstances}`)
     await query(`DELETE FROM "TeacherInstances"
