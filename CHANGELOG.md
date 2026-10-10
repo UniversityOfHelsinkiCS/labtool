@@ -11,6 +11,10 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
   loading had finished before the course data arrived, and then crashed on `courseData.data`.
   Both now show the loader until the data is there. Regression tests reproduce the crash, and the
   e2e specs open these pages directly instead of logging in on my page first.
+- **The responsible teacher could be removed from a course** (`users.js`). The guard checked
+  `.admin`, a column a 2019 migration renamed to `instructor` and inverted, so it never triggered.
+  It now refuses to remove anyone who is not an assistant (`instructor: true`). Removing
+  assistants works as before.
 
 ## 2026-10-10
 
@@ -132,8 +136,6 @@ Found by the new tests and not fixed yet. Each one has a skipped test (`it.skip`
 with an explanation, except where noted.
 
 Backend:
-- The responsible teacher can be removed from a course: the check reads `.admin`, a column that a
-  migration renamed to `instructor` (`users.js`).
 - Changing a student's repo through bulk update always fails with 400 (`courseinstances.js`).
 - Code reviews can be saved without a review round: a misplaced parenthesis means a missing
   `reviewNumber` is never rejected (`codeReviews.js`).
