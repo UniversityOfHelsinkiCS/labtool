@@ -199,6 +199,17 @@ describe('Course instances API', () => {
       await StudentTag.create({ studentInstanceId: s.student.id, tagId: tag.id })
     })
 
+    it('answers 400 for a course that is not a course code, and keeps running', async () => {
+      await as(s.users.teacher)
+        .post('/api/courseinstances/coursepage')
+        .send({ course: 12345 })
+        .expect(400)
+      await as(s.users.teacher)
+        .post('/api/courseinstances/coursepage')
+        .send({ course: s.course.ohid })
+        .expect(200)
+    })
+
     it('requires authentication', async () => {
       await anonymous()
         .post('/api/courseinstances/coursepage')
@@ -703,10 +714,7 @@ describe('Course instances API', () => {
       assert.strictEqual(si2.dropped, false)
     })
 
-    // BUG: server/controllers/courseinstances.js:448 assigns the whole request object instead of its
-    // `github` field (`newStudentInstance.github = studentInstance`), so changing the repository
-    // through the mass update always fails validation (400).
-    it.skip('lets a teacher change a student\'s GitHub repository', async () => {
+    it('lets a teacher change a student\'s GitHub repository', async () => {
       await as(s.users.teacher)
         .post('/api/studentinstance/massupdate')
         .send({

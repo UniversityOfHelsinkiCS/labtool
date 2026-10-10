@@ -139,6 +139,10 @@ module.exports = {
             id: assistantId
           }
         })
+        if (!assistantAsTeacher) {
+          returnedAssistantInfo.status = 'No assistant assigned to student.'
+          return res.status(200).send(returnedAssistantInfo)
+        }
         const assistantAsUser = await User.findOne({
           where: {
             id: assistantAsTeacher.userId

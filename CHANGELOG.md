@@ -20,6 +20,17 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
   assignment and silently return none (about 1 in 4 runs with 3 students). It is now a randomized
   backtracking search that always finds an assignment when one exists, with the same rules: nobody
   reviews themselves or someone they reviewed in an earlier round.
+- **Changing a student's repository through bulk update always failed with 400**
+  (`courseinstances.js`): the whole request object was stored instead of its `github` field.
+- **The course page endpoint could crash the backend** (`courseinstances.js`): it had no error
+  handling, so for example a numeric `course` caused an unhandled database error. It now answers
+  400 for a `course` that is not a course code, and 500 for any other error.
+- **Code reviews could be saved without a review round** (`codeReviews.js`): a misplaced
+  parenthesis meant a missing `reviewNumber` was never rejected.
+- **Deleting a code review that does not exist left the request hanging** (`codeReviews.js`); it
+  now answers 404.
+- **A student with no assistant gave a 400 instead of "No assistant assigned to student."**
+  (`assistants.js`).
 
 ## 2026-10-10
 
@@ -141,13 +152,6 @@ Found by the new tests and not fixed yet. Each one has a skipped test (`it.skip`
 with an explanation, except where noted.
 
 Backend:
-- Changing a student's repo through bulk update always fails with 400 (`courseinstances.js`).
-- Code reviews can be saved without a review round: a misplaced parenthesis means a missing
-  `reviewNumber` is never rejected (`codeReviews.js`).
-- Deleting a code review hangs when no rows (or more than one) match (`codeReviews.js`).
-- A student with no assistant gets a 400 instead of the "no assistant" message (`assistants.js`).
-- `POST /api/courseinstances/coursepage` with a numeric `course` crashes the backend on an unhandled
-  database error (no test yet).
 
 Frontend:
 - New checklist rows all get the id `-Infinity` when the checklist starts empty

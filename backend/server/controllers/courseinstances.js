@@ -99,198 +99,209 @@ module.exports = {
       return
     }
 
-    const course = await CourseInstance.findOne({
-      where: {
-        ohid: req.body.course
-      }
-    })
-    if (!course) {
-      return res.status(404).send('course not found')
+    if (typeof req.body.course !== 'string') {
+      return res.status(400).send('Missing or malformed course.')
     }
 
-    const courseInst = course.id
-    const palautus = {
-      role: 'Unregistered',
-      data: undefined
-    }
-    const user = req.decoded.id
-    const isTeacher = await helper.getTeacherId(user, courseInst)
-    if (!isTeacher) {
-      const student = await StudentInstance.findOne({
-        attributes: {
-          exclude: ['createdAt', 'updatedAt']
-        },
+    try {
+      const course = await CourseInstance.findOne({
         where: {
-          userId: user,
-          courseInstanceId: courseInst
-        },
-        include: [
-          {
-            model: Week,
-            attributes: {
-              exclude: ['updatedAt', 'instructorNotes']
-            },
-            as: 'weeks',
-            include: [
-              {
-                model: Comment,
-                attributes: {
-                  exclude: ['updatedAt']
-                },
-                as: 'comments',
-                where: {
-                  hidden: false
-                },
-                required: false
-              },
-              {
-                model: ReviewCheck,
-                as: 'checks'
-              }
-            ]
+          ohid: req.body.course
+        }
+      })
+      if (!course) {
+        return res.status(404).send('course not found')
+      }
+
+      const courseInst = course.id
+      const palautus = {
+        role: 'Unregistered',
+        data: undefined
+      }
+      const user = req.decoded.id
+      const isTeacher = await helper.getTeacherId(user, courseInst)
+      if (!isTeacher) {
+        const student = await StudentInstance.findOne({
+          attributes: {
+            exclude: ['createdAt', 'updatedAt']
           },
-          {
-            model: CodeReview,
-            attributes: ['toReview', 'reviewNumber', 'points', 'linkToReview', 'repoToReview'],
-            as: 'codeReviews',
-            where: {
-              [Op.or]: [
+          where: {
+            userId: user,
+            courseInstanceId: courseInst
+          },
+          include: [
+            {
+              model: Week,
+              attributes: {
+                exclude: ['updatedAt', 'instructorNotes']
+              },
+              as: 'weeks',
+              include: [
                 {
-                  reviewNumber: {
-                    [Op.in]: course.currentCodeReview
-                  }
+                  model: Comment,
+                  attributes: {
+                    exclude: ['updatedAt']
+                  },
+                  as: 'comments',
+                  where: {
+                    hidden: false
+                  },
+                  required: false
                 },
                 {
-                  points: {
-                    [Op.ne]: null
-                  }
+                  model: ReviewCheck,
+                  as: 'checks'
                 }
               ]
             },
-            required: false,
-            include: [
-              {
-                model: StudentInstance,
-                attributes: ['github', 'projectName'],
-                as: 'toReviews'
-              }
-            ]
-          },
-          {
-            model: User,
-            attributes: {
-              exclude: ['createdAt', 'updatedAt']
-            }
-          }
-        ]
-      })
-
-      try {
-        if (student) {
-          palautus.data = student.dataValues
-          // Here we splice together the codeReviews field
-          if (palautus.data.codeReviews) {
-            palautus.data.codeReviews = palautus.data.codeReviews.map(cr => cr.dataValues)
-            palautus.data.codeReviews = palautus.data.codeReviews.map(cr => ({
-              toReview: {
-                github: cr.toReviews ? cr.toReviews.github : null,
-                projectName: cr.toReviews ? cr.toReviews.projectName : null
+            {
+              model: CodeReview,
+              attributes: ['toReview', 'reviewNumber', 'points', 'linkToReview', 'repoToReview'],
+              as: 'codeReviews',
+              where: {
+                [Op.or]: [
+                  {
+                    reviewNumber: {
+                      [Op.in]: course.currentCodeReview
+                    }
+                  },
+                  {
+                    points: {
+                      [Op.ne]: null
+                    }
+                  }
+                ]
               },
-              reviewNumber: cr.reviewNumber,
-              points: cr.points,
-              linkToReview: cr.linkToReview,
-              repoToReview: cr.repoToReview
-            })
-            )
-            // This was only ever included to be spliced into the codeReviews filed above.
-            delete palautus.data.toReviews
-          }
-          palautus.data.weeks = palautus.data.weeks.map(week => ({ ...week.dataValues,
-            checks: week.checks.reduce((checksObject, reviewCheck) => ({ ...checksObject, [reviewCheck.checklistItemId]: reviewCheck.checked }), {})
-          }))
-        } else {
-          palautus.data = null
-        }
-
-        palautus.role = 'student'
-        res.status(200).send(palautus)
-      } catch (error) {
-        res.status(400).send(error)
-      }
-    } else {
-      const teacherPalautus = await StudentInstance.findAll({
-        attributes: {
-          exclude: ['createdAt', 'updatedAt']
-        },
-        where: {
-          courseInstanceId: courseInst
-        },
-        include: [
-          {
-            model: Week,
-            attributes: {
-              exclude: ['createdAt', 'updatedAt']
+              required: false,
+              include: [
+                {
+                  model: StudentInstance,
+                  attributes: ['github', 'projectName'],
+                  as: 'toReviews'
+                }
+              ]
             },
-            as: 'weeks',
-            include: [
-              {
-                model: Comment,
-                attributes: {
-                  exclude: ['updatedAt']
-                },
-                as: 'comments'
-              },
-              {
-                model: ReviewCheck,
-                as: 'checks'
+            {
+              model: User,
+              attributes: {
+                exclude: ['createdAt', 'updatedAt']
               }
-            ]
-          },
-          {
-            model: CodeReview,
-            attributes: {
-              exclude: ['createdAt', 'updatedAt']
-            },
-            as: 'codeReviews',
-            include: [
-              {
-                model: ReviewCheck,
-                attributes: ['checklistItemId', 'checked'],
-                as: 'checks'
-              }
-            ]
-          },
-          {
-            model: User,
-            attributes: {
-              exclude: ['createdAt', 'updatedAt']
             }
-          },
-          {
-            model: WeekDraft,
-            attributes: ['weekNumber'],
-            as: 'weekdrafts'
-          },
-          {
-            model: Tag,
-            attributes: ['id', 'name', 'color']
-          }
-        ],
-        order: [
-          [
-            { model: CodeReview, as: 'codeReviews' },
-            'reviewNumber', 'ASC'
           ]
-        ]
-      })
-      try {
-        palautus.data = teacherPalautus.map(studentInstance => ({ ...studentInstance.dataValues,
-          weeks: studentInstance.dataValues.weeks.map(week => ({ ...week.dataValues,
-            checks: week.checks.reduce((checksObject, reviewCheck) => ({ ...checksObject, [reviewCheck.checklistItemId]: reviewCheck.checked }), {}) })) }))
-        palautus.role = 'teacher'
-        res.status(200).send(palautus)
-      } catch (e) {
-        res.status(500).send(e)
+        })
+
+        try {
+          if (student) {
+            palautus.data = student.dataValues
+            // Here we splice together the codeReviews field
+            if (palautus.data.codeReviews) {
+              palautus.data.codeReviews = palautus.data.codeReviews.map(cr => cr.dataValues)
+              palautus.data.codeReviews = palautus.data.codeReviews.map(cr => ({
+                toReview: {
+                  github: cr.toReviews ? cr.toReviews.github : null,
+                  projectName: cr.toReviews ? cr.toReviews.projectName : null
+                },
+                reviewNumber: cr.reviewNumber,
+                points: cr.points,
+                linkToReview: cr.linkToReview,
+                repoToReview: cr.repoToReview
+              })
+              )
+              // This was only ever included to be spliced into the codeReviews filed above.
+              delete palautus.data.toReviews
+            }
+            palautus.data.weeks = palautus.data.weeks.map(week => ({ ...week.dataValues,
+              checks: week.checks.reduce((checksObject, reviewCheck) => ({ ...checksObject, [reviewCheck.checklistItemId]: reviewCheck.checked }), {})
+            }))
+          } else {
+            palautus.data = null
+          }
+
+          palautus.role = 'student'
+          res.status(200).send(palautus)
+        } catch (error) {
+          res.status(400).send(error)
+        }
+      } else {
+        const teacherPalautus = await StudentInstance.findAll({
+          attributes: {
+            exclude: ['createdAt', 'updatedAt']
+          },
+          where: {
+            courseInstanceId: courseInst
+          },
+          include: [
+            {
+              model: Week,
+              attributes: {
+                exclude: ['createdAt', 'updatedAt']
+              },
+              as: 'weeks',
+              include: [
+                {
+                  model: Comment,
+                  attributes: {
+                    exclude: ['updatedAt']
+                  },
+                  as: 'comments'
+                },
+                {
+                  model: ReviewCheck,
+                  as: 'checks'
+                }
+              ]
+            },
+            {
+              model: CodeReview,
+              attributes: {
+                exclude: ['createdAt', 'updatedAt']
+              },
+              as: 'codeReviews',
+              include: [
+                {
+                  model: ReviewCheck,
+                  attributes: ['checklistItemId', 'checked'],
+                  as: 'checks'
+                }
+              ]
+            },
+            {
+              model: User,
+              attributes: {
+                exclude: ['createdAt', 'updatedAt']
+              }
+            },
+            {
+              model: WeekDraft,
+              attributes: ['weekNumber'],
+              as: 'weekdrafts'
+            },
+            {
+              model: Tag,
+              attributes: ['id', 'name', 'color']
+            }
+          ],
+          order: [
+            [
+              { model: CodeReview, as: 'codeReviews' },
+              'reviewNumber', 'ASC'
+            ]
+          ]
+        })
+        try {
+          palautus.data = teacherPalautus.map(studentInstance => ({ ...studentInstance.dataValues,
+            weeks: studentInstance.dataValues.weeks.map(week => ({ ...week.dataValues,
+              checks: week.checks.reduce((checksObject, reviewCheck) => ({ ...checksObject, [reviewCheck.checklistItemId]: reviewCheck.checked }), {}) })) }))
+          palautus.role = 'teacher'
+          res.status(200).send(palautus)
+        } catch (e) {
+          res.status(500).send(e)
+        }
+      }
+    } catch (error) {
+      logger.error('coursePage error', { error: error.message })
+      if (!res.headersSent) {
+        res.status(500).send('Unexpected error.')
       }
     }
   },
@@ -440,7 +451,7 @@ module.exports = {
           if (isAllowedToUpdate && isAllowedToUpdate !== 'student') {
             const newStudentInstance = {}
             if (studentInstance.github) {
-              newStudentInstance.github = studentInstance
+              newStudentInstance.github = studentInstance.github
             }
             if (studentInstance.projectName) {
               newStudentInstance.projectName = studentInstance.projectName
