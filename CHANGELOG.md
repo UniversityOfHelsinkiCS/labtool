@@ -16,13 +16,28 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
 - **Removed unused backend packages:** `should`, `tape` (both were listed as production
   dependencies), `assert` (the tests use Node's built-in module), `js-beautify`, `standard`,
   `prettier` and the old eslint configs and plugins.
+- **Frontend lint and format tooling upgraded:** eslint 6 → 9.39.5 with a flat
+  `eslint.config.mjs` (the same rules that were in effect before), prettier 1 → 3.9.9, vitest
+  4.1.10 → 4.1.11. Lint now also checks the `.jsx` pages, which it had skipped; `src` was
+  reformatted once with prettier 3 in a separate, formatting-only commit.
+- **Removed unused frontend packages:** `git-rev-sync`, `preval.macro` and `dotenv` (listed as
+  runtime dependencies), `redux-mock-store`, `react-test-renderer`, `identity-obj-proxy`,
+  `jest-css-modules`, `jsinspect`, `js-beautify`, `babel-eslint` and the old eslint configs and
+  plugins.
+- **Removed husky and lint-staged.** The pre-commit hook was never installed, because
+  `labtool2.0/.npmrc` sets `ignore-scripts=true`. CI lints every pull request instead.
 
 ### Security
 - **pug 2 → 3.0.4** (renders the `/admin` page; fixes code execution advisories).
 - Backend `npm audit`: 24 → 5 findings, 0 critical. Production dependencies have only the 2
   moderate `uuid` findings from Sequelize 6; the rest is nodemon's file watcher in dev.
+- Frontend `npm audit`: 22 → 0 findings.
 
 ### Fixed
+- **Builds with `VITE_SHOW_VERSION` set crashed on load** (`App.jsx`, used by `Dockerfile.test`):
+  `__BUILD_TIME__` and `__GIT_REVISION__` were no longer defined after the move to Vite. They are
+  now defined in `vite.config.ts` (the git revision can be passed as `GIT_REVISION` in Docker).
+- A duplicated `data-testid` prop in `StudentTableRow.jsx`.
 - **Blank page when opening BrowseReviews or the code review settings page directly** at the start
   of a session, for example from the link in a comment notification email. The pages could decide
   loading had finished before the course data arrived, and then crashed on `courseData.data`.
@@ -178,6 +193,3 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
 
 None of the bugs found by the new tests are open any more; there are no skipped tests.
 
-Tooling:
-- `npm run lint` in `labtool2.0` only checks `.js` files, so the `.jsx` pages are never linted
-  (and have many old formatting errors).

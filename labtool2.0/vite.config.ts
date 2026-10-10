@@ -1,6 +1,20 @@
 import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 import { transformWithOxc } from 'vite'
+import { execSync } from 'child_process'
+
+// Shown in the browser console when VITE_SHOW_VERSION is set (see src/App.jsx). Docker builds have no
+// .git directory, so GIT_REVISION can be passed in as an environment variable instead.
+const gitRevision = () => {
+  if (process.env.GIT_REVISION) {
+    return process.env.GIT_REVISION
+  }
+  try {
+    return execSync('git rev-parse --short HEAD', { stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim()
+  } catch (e) {
+    return 'unknown'
+  }
+}
 
 const transformJsxInJs = () => ({
   name: 'transform-jsx-in-js',
@@ -22,6 +36,10 @@ export default defineConfig(({ command }) => ({
   // server serves from the root, which is what CRA's PUBLIC_URL used to express.
   base: command === 'build' ? '/labtool/' : '/',
   plugins: [react({ jsxRuntime: 'classic' }), transformJsxInJs()],
+  define: {
+    __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
+    __GIT_REVISION__: JSON.stringify(gitRevision())
+  },
   build: {
     outDir: 'build'
   },

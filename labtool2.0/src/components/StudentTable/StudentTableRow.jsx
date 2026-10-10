@@ -168,7 +168,6 @@ export const StudentTableRow = props => {
             style={{ ...tableCellLinkStyle, ...flexCenter }}
             key={'week' + i + 'link'}
             data-testid={`week-review-${data.id}-${i + 1}`}
-            data-testid={`week-review-${data.id}-${i + 1}`}
             to={
               weekPoints[i + 1] === undefined
                 ? {
