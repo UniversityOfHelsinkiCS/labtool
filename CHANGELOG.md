@@ -5,6 +5,11 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
 
 ## 2026-10-10
 
+### Security
+- **axios 0.18/0.19 → 1.20.0** in the backend (Kurki calls) and the frontend (all API calls).
+  Fixes the server-side and cross-site request forgery advisories and the follow-redirects
+  credential leak. No code changes were needed. `npm audit`: backend 28 → 26, frontend 24 → 22.
+
 ### Removed
 - **Unused backend dependencies:** `cryptiles`, `fs`, `path` and `request`. `fs` and `path` were
   npm placeholders for Node built-ins; nothing used `cryptiles`; `request` was only used by the
