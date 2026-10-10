@@ -152,11 +152,15 @@ export const BrowseReviews = props => {
     return <Error errors={props.errors.map(error => `${error.response.data} (${error.response.status} ${error.response.statusText})`)} />
   }
 
-  if (state.initialLoading) {
+  // The loading flag can already be false before the course data has arrived (e.g. when the page is
+  // opened directly at the start of a session), so wait for the data as well.
+  if (state.initialLoading || !props.courseData.data) {
     return <Loader active />
   }
 
-  const student = props.courseData.data.find(student => student.id === Number(props.studentInstance))
+  const student = Array.isArray(props.courseData.data)
+    ? props.courseData.data.find(student => student.id === Number(props.studentInstance))
+    : undefined
 
   return (
     <div className="BrowseReviews" style={{ overflowX: 'auto' }}>

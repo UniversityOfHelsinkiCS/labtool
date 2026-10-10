@@ -109,6 +109,11 @@ const renderBrowseReviews = (props = {}) => {
 }
 
 describe('<BrowseReviews />', () => {
+  it('shows a loader instead of crashing when loading has finished but the course data has not arrived', () => {
+    const { container } = renderBrowseReviews({ courseData: {} })
+    expect(container.querySelector('.ui.active.loader')).toBeInTheDocument()
+  })
+
   it('matches the rendered snapshot', () => {
     const { asFragment } = renderBrowseReviews()
 

@@ -3,6 +3,15 @@
 All notable changes to Labtool are recorded here, newest first. Each entry says what changed and
 why. Bugs that tests found but that are not fixed yet are listed under "Known bugs".
 
+## 2026-10-11
+
+### Fixed
+- **Blank page when opening BrowseReviews or the code review settings page directly** at the start
+  of a session, for example from the link in a comment notification email. The pages could decide
+  loading had finished before the course data arrived, and then crashed on `courseData.data`.
+  Both now show the loader until the data is there. Regression tests reproduce the crash, and the
+  e2e specs open these pages directly instead of logging in on my page first.
+
 ## 2026-10-10
 
 ### Operations
@@ -140,7 +149,5 @@ Frontend:
 - "Notified" labels do not update after sending an email, and several other reducer actions change
   the existing state instead of returning a new one (coursePage, coursePageLogic, codeReview and
   checklist reducers).
-- Opening BrowseReviews or the code review settings page directly at the start of a session can
-  show a blank page. Comment notification emails link straight to BrowseReviews.
 - A "Logout" button is still shown in the nav after logging out (no test).
 - `npm run lint` only checks `.js` files, so the `.jsx` pages are never linted.
