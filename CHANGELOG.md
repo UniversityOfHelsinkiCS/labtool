@@ -5,6 +5,12 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
 
 ## 2026-10-10
 
+### Removed
+- **Unused backend dependencies:** `cryptiles`, `fs`, `path` and `request`. `fs` and `path` were
+  npm placeholders for Node built-ins; nothing used `cryptiles`; `request` was only used by the
+  unrouted `getNew`/`getNewer` controller methods, which are removed too. Backend `npm audit`:
+  34 → 28 vulnerabilities (7 → 6 critical).
+
 ### Added
 - **Copy checklist: only courses with something to copy.** On the checklist page, the
   "...from another course" dropdown now lists only courses that have a non-empty checklist for the
