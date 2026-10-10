@@ -787,10 +787,12 @@ module.exports = {
         const checklistJson = {}
         // Checklist queries are intentionally sequential.
         // eslint-disable-next-line no-await-in-loop
+        // in the order set in the checklist editor; topics follow the order of their first item
         const checklistItems = await ChecklistItem.findAll({
           where: {
             checklistId: checklist.id
-          }
+          },
+          order: [['order', 'ASC']]
         })
         checklistItems.forEach(({ dataValues: checklistItem }) => {
           if (checklistJson[checklistItem.category] === undefined) {
