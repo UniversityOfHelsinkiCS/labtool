@@ -233,8 +233,9 @@ module.exports = {
           return res.status(400).send('This user is not a teacher.')
         }
 
-        // Make sure teachers responsible for the course cannot be removed.
-        if (teacherInstanceToRemove.admin) {
+        // Make sure teachers responsible for the course cannot be removed. Assistants are added with
+        // instructor: true; responsible teachers (e.g. imported from Kurki) have instructor: false.
+        if (teacherInstanceToRemove.instructor !== true) {
           return res.status(400).send('Only assistants can be removed.')
         }
 

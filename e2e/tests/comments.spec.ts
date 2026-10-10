@@ -1,5 +1,5 @@
 import { test, expect, Locator, Page } from '@playwright/test'
-import { gotoWithSession, loginAs } from '../fixtures/auth'
+import { loginAs } from '../fixtures/auth'
 import { COURSES, NOTIFICATIONS, REGISTERED_STUDENT, SEEDED_WEEKS, STUDENT_INSTANCES, TEACHER } from '../fixtures/data'
 import { expectNoLoader, expectSuccess, openAccordion } from '../fixtures/helpers'
 
@@ -52,7 +52,7 @@ test.describe.serial('comments on a reviewed week', () => {
     await expect(page.getByRole('heading', { name: 'Students', exact: true })).toBeVisible()
     await expect(page.getByTestId(`week-review-${studentInstance}-1`).locator('i.comments.icon')).toBeVisible()
 
-    await gotoWithSession(page, `/labtool/browsereviews/${course.ohid}/${studentInstance}`)
+    await page.goto(`/labtool/browsereviews/${course.ohid}/${studentInstance}`)
     await expectNoLoader(page)
     const week1 = page.locator('#reviewWeek1')
     await openAccordion(week1)

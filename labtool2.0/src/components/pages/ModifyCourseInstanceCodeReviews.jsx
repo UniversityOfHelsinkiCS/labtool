@@ -409,7 +409,9 @@ export const ModifyCourseInstanceReview = props => {
     return <Error errors={props.errors.map(error => `${error.response.data} (${error.response.status} ${error.response.statusText})`)} />
   }
 
-  if (props.loading.loading) {
+  // The loading flag can already be false before the course data has arrived (e.g. when the page is
+  // opened directly at the start of a session), so wait for the data as well.
+  if (props.loading.loading || !Array.isArray(props.courseData.data)) {
     return <Loader active />
   }
 

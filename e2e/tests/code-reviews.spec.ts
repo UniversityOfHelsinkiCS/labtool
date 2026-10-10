@@ -1,5 +1,5 @@
 import { test, expect, Page } from '@playwright/test'
-import { gotoWithSession, loginAs, newPageAs } from '../fixtures/auth'
+import { loginAs, newPageAs } from '../fixtures/auth'
 import { COURSES, NOTIFICATIONS, REGISTERED_STUDENT, SECOND_STUDENT, STUDENT_INSTANCES, TEACHER } from '../fixtures/data'
 import { chooseDropdownOption, expectNoLoader, expectSuccess, openAccordion } from '../fixtures/helpers'
 
@@ -13,7 +13,7 @@ const POINTS = '2'
 const fullName = (user: { first_names: string; last_name: string }) => `${user.first_names} ${user.last_name}`
 
 const openCodeReviewPage = async (page: Page) => {
-  await gotoWithSession(page, `/labtool/ModifyCourseInstanceCodeReviews/${course.ohid}`)
+  await page.goto(`/labtool/ModifyCourseInstanceCodeReviews/${course.ohid}`)
   await expect(page.getByRole('heading', { name: course.name })).toBeVisible()
   await expectNoLoader(page)
 }
@@ -74,7 +74,7 @@ test.describe.serial('code reviews', () => {
     // a submitted, ungraded review is waiting in the code review column
     await expect(page.getByTestId(`student-row-${reviewer}`).locator('.codeReviewPoints i.star.icon')).toBeVisible()
 
-    await gotoWithSession(page, `/labtool/browsereviews/${course.ohid}/${reviewer}`)
+    await page.goto(`/labtool/browsereviews/${course.ohid}/${reviewer}`)
     await expectNoLoader(page)
     const codeReview = page.locator('#reviewCodeReview1')
     await openAccordion(codeReview)

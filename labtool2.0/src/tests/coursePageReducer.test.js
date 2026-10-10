@@ -117,9 +117,7 @@ describe('coursePageReducer', () => {
       ])
     })
 
-    // BUG: the reducer mutates student.codeReviews in place (push / index assignment)
-    // instead of copying, so the previous state is changed too.
-    it.skip('does not mutate the previous state', () => {
+    it('does not mutate the previous state', () => {
       const state = teacherState()
       deepFreeze(state)
       expect(() => coursePageReducer(state, action)).not.toThrow()
@@ -138,8 +136,7 @@ describe('coursePageReducer', () => {
       expect(newState.data[0].codeReviews[0].toReview).toBe(2)
     })
 
-    // BUG: student.codeReviews[index] is assigned in place, mutating the previous state.
-    it.skip('does not mutate the previous state', () => {
+    it('does not mutate the previous state', () => {
       const state = teacherState()
       deepFreeze(state)
       expect(() => coursePageReducer(state, action)).not.toThrow()
@@ -206,11 +203,7 @@ describe('coursePageReducer', () => {
       expect(newState.data.weeks[0].comments[0].notified).toBe(true)
     })
 
-    // BUG: teacherCommentNotification / weekNotification / studentCommentNotification
-    // (src/reducers/coursePageReducer.js:10-47) set `notified = true` on the existing objects and
-    // return the *same* state object (the `return` inside forEach is a no-op). Connected components
-    // therefore do not re-render, and the previous state is mutated.
-    it.skip('returns a new state without mutating the previous one', () => {
+    it('returns a new state without mutating the previous one', () => {
       const state = teacherState()
       deepFreeze(state)
       const newState = coursePageReducer(state, {
@@ -241,8 +234,7 @@ describe('coursePageReducer', () => {
       expect(newState.data.weeks[0].comments.map(c => c.id)).toEqual([101, 200])
     })
 
-    // BUG: the student branch pushes into the existing comments array.
-    it.skip('student: does not mutate the previous state', () => {
+    it('student: does not mutate the previous state', () => {
       const state = studentState()
       deepFreeze(state)
       expect(() =>
@@ -278,8 +270,7 @@ describe('coursePageReducer', () => {
       expect(newState.data[0].codeReviews).toEqual([])
     })
 
-    // BUG: studentToChange.codeReviews is reassigned on the existing student object.
-    it.skip('does not mutate the previous state', () => {
+    it('does not mutate the previous state', () => {
       const state = teacherState()
       deepFreeze(state)
       expect(() => coursePageReducer(state, action)).not.toThrow()

@@ -107,11 +107,7 @@ describe('Assistants API', () => {
         .expect(403)
     })
 
-    // BUG: server/controllers/assistants.js:135-155 has the "no assistant" branch on the wrong condition: when the
-    // student instance exists but has no assistant, `assistantAsTeacher` is null and `assistantAsTeacher.userId`
-    // (line 144) throws, giving a 400 with an empty body; the "No assistant assigned to student." answer is only
-    // given when the student instance does not exist at all.
-    it.skip('tells a teacher when no assistant has been assigned', async () => {
+    it('tells a teacher when no assistant has been assigned', async () => {
       const res = await as(s.users.teacher)
         .get(`/api/course/assistant/student/${s.student.id}`)
         .expect(200)

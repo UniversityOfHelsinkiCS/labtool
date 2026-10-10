@@ -104,8 +104,7 @@ describe('codeReviewReducer', () => {
       expect(state.currentSelections[2]).toEqual({})
     })
 
-    // BUG: INIT_REVIEW writes into state.codeReviewStates / state.currentSelections objects in place.
-    it.skip('does not mutate the previous state', () => {
+    it('does not mutate the previous state', () => {
       const state = createdState()
       deepFreeze(state)
       expect(() =>
@@ -137,8 +136,7 @@ describe('codeReviewReducer', () => {
       expect(newState.selectedDropdown).toBe(3)
     })
 
-    // BUG: for an existing round, state.codeReviewStates is written in place.
-    it.skip('does not mutate the previous state', () => {
+    it('does not mutate the previous state', () => {
       const state = createdState()
       deepFreeze(state)
       expect(() =>
@@ -194,15 +192,29 @@ describe('codeReviewReducer', () => {
       }
     })
 
-    // BUG: findNonRepeatedPermutation (src/reducers/codeReviewReducer.js:61-78, shuffle at line 67) shuffles the array it is
-    // permuting in the middle of the backtracking recursion, so it does not explore all permutations.
-    // When no permutation is found shuffledArray stays [] and nobody gets a review, silently.
-    // Measured: ~25% of runs with 3 students and ~10% with 4 students assign nothing in round 2,
-    // although a valid non-repeating assignment always exists for these inputs.
-    it.skip('round 2: always assigns everyone when a valid assignment exists', () => {
+    it('round 2: always assigns everyone when a valid assignment exists', () => {
       for (let i = 0; i < 200; i++) {
         expect(randomize(stateWithRounds(), 2).codeReviewStates[2]).toHaveLength(4)
       }
+    })
+
+    it('round 2: assigns nobody when no valid assignment exists', () => {
+      // two students who reviewed each other in round 1 can only review themselves or repeat
+      const state = reducer(initial(), {
+        type: 'CREATE_STATES_FOR_CODE_REVIEWS',
+        data: {
+          codeReviewAmount: 2,
+          studentData: [
+            { id: 1, codeReviews: [{ reviewNumber: 1, toReview: 2 }] },
+            { id: 2, codeReviews: [{ reviewNumber: 1, toReview: 1 }] }
+          ]
+        }
+      })
+      const newState = reducer(state, {
+        type: 'CODE_REVIEW_RANDOMIZE',
+        data: { reviewNumber: 2, selected: { 1: true, 2: true } }
+      })
+      expect(newState.codeReviewStates[2]).toEqual([])
     })
 
     it('keeps reviews of students that were not selected', () => {
@@ -223,8 +235,7 @@ describe('codeReviewReducer', () => {
       })
     })
 
-    // BUG: newCurrentSelections is a shallow copy, so currentSelections[round] of the previous state is written.
-    it.skip('does not mutate the previous state', () => {
+    it('does not mutate the previous state', () => {
       const state = stateWithRounds()
       deepFreeze(state)
       expect(() => randomize(state, 1)).not.toThrow()
@@ -242,8 +253,7 @@ describe('codeReviewReducer', () => {
       expect(newState.currentSelections[1]).toEqual({ 2: 'https://github.com/r' })
     })
 
-    // BUG: deletes from state.currentSelections[round] in place.
-    it.skip('does not mutate the previous state', () => {
+    it('does not mutate the previous state', () => {
       const state = createdState()
       deepFreeze(state)
       expect(() => reducer(state, action)).not.toThrow()

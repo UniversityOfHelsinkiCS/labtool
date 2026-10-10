@@ -53,11 +53,9 @@ export const newPageAs = async (browser: Browser, user: FakeUser) => {
 /**
  * Navigates to `path` with an already established session (token stored in localStorage).
  *
- * Deep-linking straight into some pages on a fresh session is racy in the app: BrowseReviews
- * (labtool2.0/src/components/pages/BrowseReviews.jsx:59-63) can drop its initial loader using
- * a stale `loading` value right after login and then crash on `courseData.data.find` (line 159)
- * with a blank page, depending on whether the 401 from `courseimport/allowed` or the login
- * response arrives first. Logging in on my page first avoids the race.
+ * Some pages (e.g. ManageTags, ModifyCourseInstanceStaff, CourseImport) are only tested after
+ * logging in on my page first. BrowseReviews and the code review settings page used to crash when
+ * opened directly at the start of a session; they are fixed and their specs navigate directly.
  */
 export const gotoWithSession = async (page: Page, path: string) => {
   await page.goto('/labtool/mypage')

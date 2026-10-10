@@ -57,7 +57,7 @@ module.exports = {
         res.status(403).send('You have to be authenticated to do this.')
         return
       }
-      if (!Array.isArray(req.body.codeReviews || typeof req.body.reviewNumber !== 'number')) {
+      if (!Array.isArray(req.body.codeReviews) || typeof req.body.reviewNumber !== 'number') {
         res.status(400).send('Missing or malformed inputs.')
         return
       }
@@ -319,13 +319,16 @@ module.exports = {
           reviewNumber: req.body.codeReviewRound
         }
       })
-      if (deleteOne === 1) {
-        res.status(200).send({
-          message: 'Code review link removed successfully.',
+      if (deleteOne === 0) {
+        return res.status(404).send({
+          message: 'No code review found for that student and round.',
           data: req.body
         })
       }
-      return
+      return res.status(200).send({
+        message: 'Code review link removed successfully.',
+        data: req.body
+      })
     } catch (e) {
       res.status(500).send({
         message: e

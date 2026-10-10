@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test'
-import { gotoWithSession, loginAs } from '../fixtures/auth'
+import { loginAs } from '../fixtures/auth'
 import { COURSES, NOTIFICATIONS, SEEDED_WEEKS, STUDENT_INSTANCES, TEACHER } from '../fixtures/data'
 import { expectNoLoader, expectSuccess, openAccordion } from '../fixtures/helpers'
 
@@ -11,7 +11,7 @@ const course = COURSES.email
 
 test('a teacher sends an email notification about a reviewed week', async ({ page }) => {
   await loginAs(page, TEACHER)
-  await gotoWithSession(page, `/labtool/browsereviews/${course.ohid}/${STUDENT_INSTANCES.email}`)
+  await page.goto(`/labtool/browsereviews/${course.ohid}/${STUDENT_INSTANCES.email}`)
   await expectNoLoader(page)
 
   const week1 = page.locator('#reviewWeek1')

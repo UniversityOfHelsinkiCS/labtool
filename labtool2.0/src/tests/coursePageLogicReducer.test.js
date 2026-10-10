@@ -193,9 +193,7 @@ describe('coursePageLogicReducer', () => {
       expect(removed.showCodeReviews).toEqual([])
     })
 
-    // BUG: removal splices state.showCodeReviews in place (src/reducers/coursePageLogicReducer.js:136-137),
-    // mutating the previous state and returning the same array reference.
-    it.skip('does not mutate the previous state when removing', () => {
+    it('does not mutate the previous state when removing', () => {
       const state = { ...initial(), showCodeReviews: [1, 2] }
       deepFreeze(state)
       const newState = reducer(state, { type: 'COURSE_PAGE_TOGGLE_CODE_REVIEW', reviewNumber: 2 })

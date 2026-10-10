@@ -451,6 +451,11 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
     window.matchMedia = vi.fn().mockReturnValue({ matches: true })
   })
 
+  it('shows a loader instead of crashing when loading has finished but the course data has not arrived', () => {
+    const { container } = renderPage({ courseData: {} })
+    expect(container.querySelector('.ui.active.loader')).toBeInTheDocument()
+  })
+
   it('renders the code review management table', () => {
     renderPage()
 

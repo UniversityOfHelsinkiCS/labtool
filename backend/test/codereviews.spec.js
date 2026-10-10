@@ -149,10 +149,7 @@ describe('Code reviews API', () => {
       assert.strictEqual(await CodeReview.count(), 0)
     })
 
-    // BUG: server/controllers/codeReviews.js:60 has a misplaced parenthesis:
-    // `!Array.isArray(req.body.codeReviews || typeof req.body.reviewNumber !== 'number')`
-    // so a missing/non-numeric reviewNumber is never rejected and reviews get stored without a round.
-    it.skip('rejects a missing review number', async () => {
+    it('rejects a missing review number', async () => {
       const withoutRound = assignment()
       delete withoutRound.reviewNumber
       await as(s.users.teacher)
@@ -380,14 +377,12 @@ describe('Code reviews API', () => {
         .expect(400)
     })
 
-    // BUG: server/controllers/codeReviews.js:321-326 only responds when exactly one row was deleted; when
-    // the round does not exist (or several rows match) no response is ever sent and the request hangs.
-    it.skip('answers when there is nothing to delete', async () => {
+    it('answers when there is nothing to delete', async () => {
       const res = await as(s.users.teacher)
         .post('/api/codereviews/delete/1')
         .send({ reviewer: s.student.id, codeReviewRound: 9 })
         .timeout(3000)
-      assert.ok(res.status >= 200 && res.status < 500)
+      assert.strictEqual(res.status, 404)
     })
   })
 })

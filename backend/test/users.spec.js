@@ -259,10 +259,7 @@ describe('Users API', () => {
       assert.strictEqual(res.text, 'This user is not a teacher.')
     })
 
-    // BUG: server/controllers/users.js:237 checks `teacherInstanceToRemove.admin`, but the TeacherInstances
-    // column `admin` was renamed to `instructor` (and inverted) in migration 20191028121723-add-sysop-to-users.js.
-    // The model has no `admin` attribute, so the guard is never true and the responsible teacher can be removed.
-    it.skip('does not allow removing the teacher responsible for the course', async () => {
+    it('does not allow removing the teacher responsible for the course', async () => {
       const res = await as(s.users.assistant)
         .post('/api/users/teacher/remove')
         .send({ ohid: s.course.ohid, id: s.users.teacher.id })

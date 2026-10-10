@@ -17,28 +17,6 @@ const INITIAL_STATE = {
   filterActive: false
 }
 
-/**
- * Check if there is a repeated reviewer-toReview pair or the reviewer is same as toReview when code review round>1
- */
-const checkRepeated = (currentSelections, reviewers, toReviews, round) => {
-  if (round === -1) {
-    round = Object.keys(currentSelections).length
-  }
-  for (let i = 1; i < round; i++) {
-    for (let j = 0; j < reviewers.length; j++) {
-      if (currentSelections[i][reviewers[j]] === toReviews[j]) {
-        //repeated reviewer-toReview pair
-        return true
-      }
-      if (reviewers[j] === toReviews[j]) {
-        //reviewer is same as toReview
-        return true
-      }
-    }
-  }
-  return false
-}
-
 const swap = (array, i, j) => {
   const temp = array[i]
   array[i] = array[j]
@@ -52,29 +30,50 @@ const shuffleArray = array => {
   }
 }
 
-let shuffledArray
-let endRecursion = false
+const randomOrder = array => {
+  const result = [...array]
+  for (let i = result.length - 1; i > 0; i--) {
+    swap(result, i, Math.floor(Math.random() * (i + 1)))
+  }
+  return result
+}
+
 /**
- * find a permutation of reviwers-array which will not cause repeated review-toReview pair
- * or the situation that review and toReview are same
+ * Find reviewers for toReviews (reviewers[i] reviews toReviews[i]) so that nobody reviews themselves
+ * and nobody reviews someone they already reviewed in an earlier round. Randomized backtracking, so it
+ * always finds an assignment when one exists. Returns [] when there is none.
  */
-const findNonRepeatedPermutation = (currentSelections, reviewers, start, toReviews, round) => {
-  if (start === reviewers.length - 1) {
-    if (!checkRepeated(currentSelections, reviewers, toReviews, round)) {
-      shuffledArray = [...reviewers]
-      endRecursion = true
-    } else {
-      shuffleArray(reviewers)
+const findNonRepeatedPermutation = (currentSelections, toReviews, round) => {
+  const previousRounds =
+    round === -1
+      ? Object.keys(currentSelections)
+          .map(Number)
+          .filter(r => r > 0)
+      : Array.from({ length: round - 1 }, (_, i) => i + 1)
+  const isAllowed = (reviewer, toReview) =>
+    reviewer !== toReview &&
+    !previousRounds.some(r => currentSelections[r] && currentSelections[r][reviewer] === toReview)
+
+  const reviewers = []
+  const used = new Set()
+  const assign = position => {
+    if (position === toReviews.length) {
+      return true
     }
-  }
-  for (let i = start; i < reviewers.length; i++) {
-    if (endRecursion) {
-      break
+    const candidates = randomOrder(
+      toReviews.filter(reviewer => !used.has(reviewer) && isAllowed(reviewer, toReviews[position]))
+    )
+    for (const reviewer of candidates) {
+      used.add(reviewer)
+      reviewers[position] = reviewer
+      if (assign(position + 1)) {
+        return true
+      }
+      used.delete(reviewer)
     }
-    swap(reviewers, start, i)
-    findNonRepeatedPermutation(currentSelections, reviewers, start + 1, toReviews, round)
-    swap(reviewers, start, i)
+    return false
   }
+  return assign(0) ? reviewers : []
 }
 
 const codeReviewReducer = (state = INITIAL_STATE, action) => {
@@ -119,60 +118,46 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
       return { ...state, filterByReview: action.data, filterActive: newActiveStatus }
     }
     case 'INIT_REVIEW': {
-      const oldReviews = state.codeReviewStates[action.data.round]
-      let selections = state.currentSelections
-      let updatedReviews = {}
-      let codeReviewRoundsToUpdate = state.codeReviewStates
+      const { round, reviewer, toReview, repoToReview } = action.data
+      const oldReviews = state.codeReviewStates[round]
 
-      if (!action.data.toReview && !action.data.repoToReview) {
-        delete selections[action.data.round][action.data.reviewer]
-        updatedReviews = oldReviews.filter(cr => cr.reviewer !== action.data.reviewer)
-        codeReviewRoundsToUpdate[action.data.round] = updatedReviews
-        return { ...state, codeReviewStates: codeReviewRoundsToUpdate, currentSelections: selections }
+      if (!toReview && !repoToReview) {
+        const { [reviewer]: removed, ...remainingSelections } = state.currentSelections[round] // eslint-disable-line no-unused-vars
+        return {
+          ...state,
+          codeReviewStates: {
+            ...state.codeReviewStates,
+            [round]: oldReviews.filter(cr => cr.reviewer !== reviewer)
+          },
+          currentSelections: { ...state.currentSelections, [round]: remainingSelections }
+        }
       }
-      let toUpdate = oldReviews.find(f => f.reviewer === action.data.reviewer)
-      if (toUpdate) {
-        toUpdate.reviewer = action.data.reviewer
-        toUpdate.toReview = action.data.toReview
-        toUpdate.repoToReview = action.data.repoToReview
-
-        updatedReviews = oldReviews.filter(review =>
-          review.reviewer !== action.data.reviewer ? review : toUpdate
-        )
-      } else {
-        updatedReviews = [
-          ...oldReviews,
-          {
-            reviewer: action.data.reviewer,
-            toReview: action.data.toReview,
-            repoToReview: action.data.repoToReview
-          }
-        ]
+      const review = { reviewer, toReview, repoToReview }
+      const updatedReviews = oldReviews.some(cr => cr.reviewer === reviewer)
+        ? oldReviews.map(cr => (cr.reviewer === reviewer ? { ...cr, ...review } : cr))
+        : [...oldReviews, review]
+      return {
+        ...state,
+        codeReviewStates: { ...state.codeReviewStates, [round]: updatedReviews },
+        currentSelections: {
+          ...state.currentSelections,
+          [round]: { ...state.currentSelections[round], [reviewer]: toReview || repoToReview }
+        }
       }
-      codeReviewRoundsToUpdate[action.data.round] = updatedReviews
-
-      const newCurrentSelections = state.currentSelections
-      newCurrentSelections[action.data.round][action.data.reviewer] =
-        action.data.toReview || action.data.repoToReview
-      return { ...state, codeReviewStates: codeReviewRoundsToUpdate, currentSelections: newCurrentSelections }
     }
     case 'CODE_REVIEW_BULKINSERT_SUCCESS': {
-      var codeReviewRoundsToUpdate = state.codeReviewStates
-      var currentSelectionsToUpdate = state.currentSelections
-      var newRound = action.response.data.reviewNumber
+      const newRound = action.response.data.reviewNumber
       let dropdown = state.selectedDropdown
 
-      if (newRound > Object.keys(state.codeReviewStates).length - 1) {
-        codeReviewRoundsToUpdate = { ...codeReviewRoundsToUpdate, [newRound]: [] }
-      }
+      // the saved round's pending reviews are cleared
+      const codeReviewRoundsToUpdate = { ...state.codeReviewStates, [newRound]: [] }
+      let currentSelectionsToUpdate = state.currentSelections
       if (newRound > Object.keys(state.currentSelections).length - 1) {
         currentSelectionsToUpdate = { ...currentSelectionsToUpdate, [newRound]: {} }
       }
-      //This is double clear but if the ternary is not true we'll have to clear the array anyway
-      codeReviewRoundsToUpdate[action.response.data.reviewNumber] = []
       if (action.response.data.createTrue) {
-        dropdown = action.response.data.reviewNumber
-        currentSelectionsToUpdate[-1] = {}
+        dropdown = newRound
+        currentSelectionsToUpdate = { ...currentSelectionsToUpdate, [-1]: {} }
       }
       return {
         ...state,
@@ -202,13 +187,17 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
         //if the code review round is 1 or there is no code review and the first one will be created, we don't need to care about the repetition problem
         shuffledReviewers = reviewers
       } else {
-        shuffledArray = []
-        endRecursion = false
-        findNonRepeatedPermutation(state.currentSelections, reviewers, 0, toReviews, action.data.reviewNumber)
-        shuffledReviewers = shuffledArray
+        shuffledReviewers = findNonRepeatedPermutation(
+          state.currentSelections,
+          toReviews,
+          action.data.reviewNumber
+        )
       }
 
-      const newCurrentSelections = { ...state.currentSelections }
+      const newCurrentSelections = {
+        ...state.currentSelections,
+        [action.data.reviewNumber]: { ...state.currentSelections[action.data.reviewNumber] }
+      }
       for (let i = 0; i < shuffledReviewers.length; i++) {
         codeReviews = codeReviews.concat({
           reviewer: shuffledReviewers[i],
@@ -221,9 +210,9 @@ const codeReviewReducer = (state = INITIAL_STATE, action) => {
     }
 
     case 'CODE_REVIEW_REMOVE_ONE_SUCCESS': {
-      const currentStates = state.currentSelections
-      delete currentStates[action.response.data.codeReviewRound][action.response.data.reviewer]
-      return { ...state, currentSelections: currentStates }
+      const { codeReviewRound, reviewer } = action.response.data
+      const { [reviewer]: removed, ...remaining } = state.currentSelections[codeReviewRound] || {} // eslint-disable-line no-unused-vars
+      return { ...state, currentSelections: { ...state.currentSelections, [codeReviewRound]: remaining } }
     }
 
     /* This breaks going to coursePage. So it is commented out.

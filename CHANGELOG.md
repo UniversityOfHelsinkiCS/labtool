@@ -3,7 +3,56 @@
 All notable changes to Labtool are recorded here, newest first. Each entry says what changed and
 why. Bugs that tests found but that are not fixed yet are listed under "Known bugs".
 
+## 2026-10-11
+
+### Fixed
+- **Blank page when opening BrowseReviews or the code review settings page directly** at the start
+  of a session, for example from the link in a comment notification email. The pages could decide
+  loading had finished before the course data arrived, and then crashed on `courseData.data`.
+  Both now show the loader until the data is there. Regression tests reproduce the crash, and the
+  e2e specs open these pages directly instead of logging in on my page first.
+- **The responsible teacher could be removed from a course** (`users.js`). The guard checked
+  `.admin`, a column a 2019 migration renamed to `instructor` and inverted, so it never triggered.
+  It now refuses to remove anyone who is not an assistant (`instructor: true`). Removing
+  assistants works as before.
+- **Random code-review assignment sometimes assigned nobody** (`codeReviewReducer.js`). From round
+  2 on, the search reshuffled the list it was working through, so it could miss every valid
+  assignment and silently return none (about 1 in 4 runs with 3 students). It is now a randomized
+  backtracking search that always finds an assignment when one exists, with the same rules: nobody
+  reviews themselves or someone they reviewed in an earlier round.
+- **Changing a student's repository through bulk update always failed with 400**
+  (`courseinstances.js`): the whole request object was stored instead of its `github` field.
+- **The course page endpoint could crash the backend** (`courseinstances.js`): it had no error
+  handling, so for example a numeric `course` caused an unhandled database error. It now answers
+  400 for a `course` that is not a course code, and 500 for any other error.
+- **Code reviews could be saved without a review round** (`codeReviews.js`): a misplaced
+  parenthesis meant a missing `reviewNumber` was never rejected.
+- **Deleting a code review that does not exist left the request hanging** (`codeReviews.js`); it
+  now answers 404.
+- **A student with no assistant gave a 400 instead of "No assistant assigned to student."**
+  (`assistants.js`).
+- **"Notified" labels did not update after sending an email** (`coursePageReducer.js`): the reducer
+  changed the comment or week in place and returned the old state object, so nothing re-rendered.
+- **Reducers changed the existing state instead of returning a new one**, which can leave screens
+  stale: the code review bulk insert, grade and remove, and a student's new comment
+  (`coursePageReducer.js`); hiding a code review column (`coursePageLogicReducer.js`); four actions
+  in `codeReviewReducer.js`; and nine checklist editing actions (`checklistReducer.js`). All now
+  return new objects.
+- **New checklist rows all got the id `-Infinity`** when the checklist started empty, so
+  prerequisites could not tell them apart. New rows now get distinct ids starting from 1. Removing
+  a row that does not exist no longer removes the last row instead.
+- **A "Logout" button stayed in the nav after logging out** (`Nav.jsx`).
+
 ## 2026-10-10
+
+### Operations
+- **Staging data:** added course `TKT20010.2026.S.K.SIM1` (id 1) with `jaara` as teacher and
+  students `tiraopiskelija1` and `tiraopiskelija2` (plain records, they cannot log in), using a
+  one-off script run in the staging backend pod. The repo seeders were not used: staging had none
+  of the demo users they depend on, and their undo steps empty whole tables. Staging had 2 users
+  (`admini2`, `jaara`) and no courses before this.
+- **Staging checked after the Sequelize 6 upgrade** (deployed from #1184): the new course, its
+  students and the checklists work against the existing staging database.
 
 ### Security
 - **Sequelize 5 → 6.37.8.** Fixes the SQL injection (via replacements) and information disclosure
@@ -110,28 +159,8 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
 
 ## Known bugs
 
-Found by the new tests and not fixed yet. Each one has a skipped test (`it.skip` / `test.fixme`)
-with an explanation, except where noted.
+None of the bugs found by the new tests are open any more; there are no skipped tests.
 
-Backend:
-- The responsible teacher can be removed from a course: the check reads `.admin`, a column that a
-  migration renamed to `instructor` (`users.js`).
-- Changing a student's repo through bulk update always fails with 400 (`courseinstances.js`).
-- Code reviews can be saved without a review round: a misplaced parenthesis means a missing
-  `reviewNumber` is never rejected (`codeReviews.js`).
-- Deleting a code review hangs when no rows (or more than one) match (`codeReviews.js`).
-- A student with no assistant gets a 400 instead of the "no assistant" message (`assistants.js`).
-- `POST /api/courseinstances/coursepage` with a numeric `course` crashes the backend on an unhandled
-  database error (no test yet).
-
-Frontend:
-- Random code-review assignment sometimes assigns nobody (`codeReviewReducer.js`).
-- New checklist rows all get the id `-Infinity` when the checklist starts empty
-  (`checklistReducer.js`).
-- "Notified" labels do not update after sending an email, and several other reducer actions change
-  the existing state instead of returning a new one (coursePage, coursePageLogic, codeReview and
-  checklist reducers).
-- Opening BrowseReviews or the code review settings page directly at the start of a session can
-  show a blank page. Comment notification emails link straight to BrowseReviews.
-- A "Logout" button is still shown in the nav after logging out (no test).
-- `npm run lint` only checks `.js` files, so the `.jsx` pages are never linted.
+Tooling:
+- `npm run lint` in `labtool2.0` only checks `.js` files, so the `.jsx` pages are never linted
+  (and have many old formatting errors).
