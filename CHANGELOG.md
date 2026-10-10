@@ -9,6 +9,13 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
 - **axios 0.18/0.19 → 1.20.0** in the backend (Kurki calls) and the frontend (all API calls).
   Fixes the server-side and cross-site request forgery advisories and the follow-redirects
   credential leak. No code changes were needed. `npm audit`: backend 28 → 26, frontend 24 → 22.
+- **nodemailer 4 → 10.0.13** (fixes header and command injection advisories) and
+  **jsonwebtoken 8 → 9.0.3** (fixes key-confusion advisories). `jwt.verify` now only accepts
+  HS256, the algorithm tokens are signed with, so existing tokens stay valid. Sending through
+  SMTP was checked against a local fake SMTP server, since the tests stub the transport. Backend
+  `npm audit`: 26 → 24; the remaining direct findings are sequelize and dev tooling.
+- nodemailer 10.1.0 was skipped because `backend/.npmrc` only allows packages published at least
+  7 days ago (`min-release-age=7`).
 
 ### Removed
 - **Unused backend dependencies:** `cryptiles`, `fs`, `path` and `request`. `fs` and `path` were
