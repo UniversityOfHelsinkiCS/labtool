@@ -8,7 +8,6 @@ module.exports = {
     host: process.env.DB_HOST || '127.0.0.1',
     port: process.env.DB_PORT,
     dialect: 'postgres',
-    operatorsAliases: 'false',
     kurki_url: process.env.KURKI_URL == null ? 'https://importer.cs.helsinki.fi/api/importer' : process.env.KURKI_URL
   },
   test: {
@@ -18,7 +17,6 @@ module.exports = {
     host: process.env.DB_HOST || '127.0.0.1',
     port: process.env.DB_PORT,
     dialect: 'postgres',
-    operatorsAliases: false,
     logging: false,
     kurki_url: 'https://importer.cs.helsinki.fi/api/importer'
   },

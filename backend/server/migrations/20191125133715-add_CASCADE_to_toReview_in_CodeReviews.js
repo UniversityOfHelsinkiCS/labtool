@@ -1,7 +1,8 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.removeConstraint('CodeReviews', 'CodeReviews_toReview_fkey')
-    await queryInterface.addConstraint('CodeReviews', ['toReview'], {
+    await queryInterface.addConstraint('CodeReviews', {
+      fields: ['toReview'],
       type: 'foreign key',
       name: 'CodeReviews_toReview_fkey',
       references: {
@@ -14,7 +15,8 @@ module.exports = {
 
   down: async (queryInterface, Sequelize) => {
     await queryInterface.removeConstraint('CodeReviews', 'CodeReviews_toReview_fkey')
-    await queryInterface.addConstraint('CodeReviews', ['toReview'], {
+    await queryInterface.addConstraint('CodeReviews', {
+      fields: ['toReview'],
       type: 'foreign key',
       name: 'CodeReviews_toReview_fkey',
       references: {

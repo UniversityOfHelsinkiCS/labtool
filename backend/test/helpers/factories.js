@@ -88,17 +88,12 @@ const createComment = (week, author, fields = {}) => Comment.create({
   ...fields
 })
 
-// hooks: false skips CodeReview's beforeCreate hook, whose un-awaited destroy() can race with the insert
-// and delete the row being created (see server/models/codereview.js).
-const createCodeReview = (reviewer, toReview, fields = {}) => CodeReview.create(
-  {
-    studentInstanceId: reviewer.id,
-    toReview: toReview ? toReview.id : null,
-    reviewNumber: 1,
-    ...fields
-  },
-  { hooks: false }
-)
+const createCodeReview = (reviewer, toReview, fields = {}) => CodeReview.create({
+  studentInstanceId: reviewer.id,
+  toReview: toReview ? toReview.id : null,
+  reviewNumber: 1,
+  ...fields
+})
 
 /**
  * Creates a checklist with items. items: { category: [{ name, checkedPoints, uncheckedPoints, ... }] }
