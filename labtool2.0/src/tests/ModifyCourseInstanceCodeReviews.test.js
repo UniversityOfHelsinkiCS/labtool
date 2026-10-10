@@ -402,8 +402,8 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
     return { ...view, props: componentProps }
   }
 
-  const RevieweeDropdownHarness = ({ onChange }) => {
-    const [logic, setLogic] = React.useState(codeReviewLogic)
+  const RevieweeDropdownHarness = ({ onChange, initialLogic = codeReviewLogic }) => {
+    const [logic, setLogic] = React.useState(initialLogic)
     const addCodeReview =
       (reviewRound, reviewer) =>
       (event, { value }) => {
@@ -445,7 +445,8 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
   }
 
   RevieweeDropdownHarness.propTypes = {
-    onChange: PropTypes.func.isRequired
+    onChange: PropTypes.func.isRequired,
+    initialLogic: PropTypes.object
   }
 
   beforeEach(() => {
@@ -493,6 +494,31 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
 
     expect(
       await screen.findByText('This student has already reviewed this project in an earlier code review')
+    ).toBeInTheDocument()
+  })
+
+  it('warns when another student already reviews the same project in this round (#442)', async () => {
+    const user = userEvent.setup()
+    // in round 2, Maarit Mirja Opiskelija (10011) already reviews Teräs Henkilö (10031)
+    const initialLogic = {
+      ...codeReviewLogic,
+      codeReviewStates: { ...codeReviewLogic.codeReviewStates, 2: [{ reviewer: 10011, toReview: 10031 }] },
+      currentSelections: { ...codeReviewLogic.currentSelections, 2: { 10011: 10031 } }
+    }
+    render(<RevieweeDropdownHarness onChange={vi.fn()} initialLogic={initialLogic} />)
+    const dropdown = screen.getByRole('listbox')
+
+    await user.click(dropdown)
+    const teras = within(dropdown).getByRole('option', { name: /Teräs Henkilö/ })
+    expect(teras).toHaveTextContent('also reviewed by another student')
+    expect(within(dropdown).getByRole('option', { name: /Maarit Mirja Opiskelija/ })).not.toHaveTextContent(
+      'also reviewed by another student'
+    )
+
+    await user.click(teras)
+
+    expect(
+      await screen.findByText('Another student is also reviewing this project in this code review')
     ).toBeInTheDocument()
   })
 

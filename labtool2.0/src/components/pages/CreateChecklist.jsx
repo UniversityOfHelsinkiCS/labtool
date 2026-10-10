@@ -35,7 +35,7 @@ import {
 } from '../../reducers/checklistReducer'
 import './CreateChecklist.css'
 import { usePersistedState } from '../../hooks/persistedState'
-import { sortCoursesByName } from '../../util/sort'
+import { finnishLocaleCompare } from '../../util/sort'
 
 import BackButton from '../BackButton'
 import JsonEdit from '../JsonEdit'
@@ -528,6 +528,22 @@ export const CreateChecklist = props => {
     return courses.filter(course => course.finalReview)
   }
 
+  // Earlier runs of the same course (same course code) first, then the rest; newest first within both.
+  const courseCode = course => (course.ohid || '').split('.')[0]
+  const sortCopySources = courses => {
+    const ownCode = courseCode(props.selectedInstance)
+    const newestFirst = (a, b) =>
+      new Date(b.start) - new Date(a.start) || finnishLocaleCompare(a.name, b.name)
+    return [...courses].sort((a, b) => {
+      const sameA = courseCode(a) === ownCode
+      const sameB = courseCode(b) === ownCode
+      if (sameA !== sameB) {
+        return sameA ? -1 : 1
+      }
+      return newestFirst(a, b)
+    })
+  }
+
   // whether the course has a non-empty checklist for the given week, final review or code review
   const hasCopyableChecklist = (course, obj) =>
     (props.copyableChecklists || []).some(checklist => {
@@ -547,7 +563,7 @@ export const CreateChecklist = props => {
         : obj.number > props.selectedInstance.weekAmount
           ? finalFilter(props.courses)
           : weekFilter(obj.number, props.courses)
-    const options = sortCoursesByName(courses)
+    const options = sortCopySources(courses)
       .filter(course => props.selectedInstance.id !== course.id)
       .filter(course => hasCopyableChecklist(course, obj))
       .map(course => {
