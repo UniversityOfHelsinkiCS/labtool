@@ -10,7 +10,11 @@ import useLegacyState from '../hooks/legacyState'
 // viewing the text outside the text area
 export const FormMarkdownTextArea = props => {
   const { defaultValue, scalable } = props
-  const state = useLegacyState({ previewOpen: false, textValue: defaultValue ? defaultValue : '', width: window.innerWidth })
+  const state = useLegacyState({
+    previewOpen: false,
+    textValue: defaultValue ? defaultValue : '',
+    width: window.innerWidth
+  })
 
   const handleClick = () => {
     state.previewOpen = !state.previewOpen
@@ -72,18 +76,43 @@ export const FormMarkdownTextArea = props => {
       <p>
         <i>
           This field supports{' '}
-          <a href="https://guides.github.com/features/mastering-markdown/" target="_blank" rel="noopener noreferrer">
+          <a
+            href="https://guides.github.com/features/mastering-markdown/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             Markdown
           </a>
           .
         </i>
       </p>
       <div style={{ display: 'flex', flexDirection: changeDirection() }}>
-        <Form.Field style={{ flex: getFlexPercentage(), marginRight: getHorizontalMargin(), paddingRight: getNonScalableRightPadding() }}>
+        <Form.Field
+          style={{
+            flex: getFlexPercentage(),
+            marginRight: getHorizontalMargin(),
+            paddingRight: getNonScalableRightPadding()
+          }}
+        >
           {/* resize: none -- we cannot allow resizing the area because the Markdown preview cannot resize with it */}
-          <TextArea onInput={handleChange} {...props} scalable={null} style={{ height: getTextHeight(), marginBottom: '15px', resize: 'none' }} />
+          <TextArea
+            onInput={handleChange}
+            {...props}
+            scalable={null}
+            style={{ height: getTextHeight(), marginBottom: '15px', resize: 'none' }}
+          />
         </Form.Field>
-        <Accordion fluid styled style={{ flex: getFlexPercentage(), textAlign: 'start', marginBottom: '2em', marginTop: 0, marginLeft: getHorizontalMargin() }}>
+        <Accordion
+          fluid
+          styled
+          style={{
+            flex: getFlexPercentage(),
+            textAlign: 'start',
+            marginBottom: '2em',
+            marginTop: 0,
+            marginLeft: getHorizontalMargin()
+          }}
+        >
           <Accordion.Title
             active={isWide() || previewOpen}
             onClick={() => {
@@ -94,7 +123,10 @@ export const FormMarkdownTextArea = props => {
             {!isWide() && <Icon name="dropdown" />}
             Preview Markdown
           </Accordion.Title>
-          <Accordion.Content active={isWide() || previewOpen} style={{ height: getPreviewHeight(), overflowY: 'auto' }}>
+          <Accordion.Content
+            active={isWide() || previewOpen}
+            style={{ height: getPreviewHeight(), overflowY: 'auto' }}
+          >
             <ReactMarkdown>{textValue}</ReactMarkdown>
           </Accordion.Content>
         </Accordion>

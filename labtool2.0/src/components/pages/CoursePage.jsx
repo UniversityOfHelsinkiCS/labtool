@@ -6,7 +6,12 @@ import { connect } from 'react-redux'
 import { getOneCI, coursePageInformation, modifyOneCI } from '../../services/courseInstance'
 import { getAllTags, tagStudent, unTagStudent } from '../../services/tags'
 import { associateTeacherToStudent } from '../../services/assistant'
-import { prepareForCourse, coursePageReset, selectTag, selectTeacher } from '../../reducers/coursePageLogicReducer'
+import {
+  prepareForCourse,
+  coursePageReset,
+  selectTag,
+  selectTeacher
+} from '../../reducers/coursePageLogicReducer'
 import { changeCourseField } from '../../reducers/selectedInstanceReducer'
 import { updateStudentProjectInfo, removeStudent } from '../../services/studentinstances'
 import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
@@ -63,15 +68,19 @@ export const CoursePage = props => {
     const download = props.downloadFile || downloadFile
     const twoPad = number => `00${number}`.slice(-2)
 
-    const students = sortStudentsAlphabeticallyByDroppedValue(courseData.data.filter(student => student.validRegistration))
+    const students = sortStudentsAlphabeticallyByDroppedValue(
+      courseData.data.filter(student => student.validRegistration)
+    )
     const nowDate = new Date()
     const dateFormat = `${nowDate.getUTCFullYear()}-${twoPad(nowDate.getUTCMonth() + 1)}-${twoPad(nowDate.getUTCDate())}_${twoPad(nowDate.getUTCHours())}-${twoPad(nowDate.getUTCMinutes())}-${twoPad(
       nowDate.getUTCSeconds()
     )}`
     const csvFilename = `${courseId}_${dateFormat}.csv`
     const csvResult = []
-    const getFinalGrade = student => (student.weeks.find(w => w.weekNumber === props.selectedInstance.weekAmount + 1) || {}).grade
-    const shouldShowFinalGrade = props.selectedInstance.finalReview && students.some(student => getFinalGrade(student))
+    const getFinalGrade = student =>
+      (student.weeks.find(w => w.weekNumber === props.selectedInstance.weekAmount + 1) || {}).grade
+    const shouldShowFinalGrade =
+      props.selectedInstance.finalReview && students.some(student => getFinalGrade(student))
 
     const columns = ['First Name', 'Last Name', 'StudentNo', 'Email', 'ProjectName', 'ProjectURL']
     for (let i = 1; i <= props.selectedInstance.weekAmount; ++i) {
@@ -93,10 +102,19 @@ export const CoursePage = props => {
     students.forEach(student => {
       let instructorName = 'unassigned'
       if (student.teacherInstanceId !== null) {
-        const teacherInstance = props.selectedInstance.teacherInstances.find(ti => ti.id === student.teacherInstanceId)
+        const teacherInstance = props.selectedInstance.teacherInstances.find(
+          ti => ti.id === student.teacherInstanceId
+        )
         instructorName = `${teacherInstance.firsts} ${teacherInstance.lastname}`
       }
-      const values = [student.User.firsts, student.User.lastname, student.User.studentNumber, student.User.email, student.projectName, student.github]
+      const values = [
+        student.User.firsts,
+        student.User.lastname,
+        student.User.studentNumber,
+        student.User.email,
+        student.projectName,
+        student.github
+      ]
       let sum = 0
       const cr =
         student.codeReviews &&
@@ -243,12 +261,20 @@ export const CoursePage = props => {
   let dropDownTeachers = []
   dropDownTeachers = createDropdownTeachers(props.selectedInstance.teacherInstances, dropDownTeachers)
 
-  const courseTags = (props.tags.tags || []).filter(tag => tag.courseInstanceId === null || tag.courseInstanceId === props.selectedInstance.id)
+  const courseTags = (props.tags.tags || []).filter(
+    tag => tag.courseInstanceId === null || tag.courseInstanceId === props.selectedInstance.id
+  )
   let dropDownTags = []
   dropDownTags = createDropdownTags(courseTags, dropDownTags)
 
   if (props.errors && props.errors.length > 0) {
-    return <Error errors={props.errors.map(error => `${error.response.data} (${error.response.status} ${error.response.statusText})`)} />
+    return (
+      <Error
+        errors={props.errors.map(
+          error => `${error.response.data} (${error.response.status} ${error.response.statusText})`
+        )}
+      />
+    )
   }
 
   if (props.loading.loading) {
@@ -264,7 +290,16 @@ export const CoursePage = props => {
       value: newState
     })
 
-    const { weekAmount, weekMaxPoints, currentWeek, ohid, finalReview, coursesPage, courseMaterial, currentCodeReview } = selectedInstance
+    const {
+      weekAmount,
+      weekMaxPoints,
+      currentWeek,
+      ohid,
+      finalReview,
+      coursesPage,
+      courseMaterial,
+      currentCodeReview
+    } = selectedInstance
 
     const content = {
       weekAmount,
@@ -284,7 +319,17 @@ export const CoursePage = props => {
 
   // This function advances the current week by 1, leaving other data intact.
   const moveToNextWeek = () => {
-    const { weekAmount, weekMaxPoints, currentWeek, active, ohid, finalReview, coursesPage, courseMaterial, currentCodeReview } = selectedInstance
+    const {
+      weekAmount,
+      weekMaxPoints,
+      currentWeek,
+      active,
+      ohid,
+      finalReview,
+      coursesPage,
+      courseMaterial,
+      currentCodeReview
+    } = selectedInstance
 
     // We can advance past the final week for code review purposes.
     if (currentWeek >= weekAmount + (finalReview ? 1 : 0)) {
@@ -346,7 +391,11 @@ export const CoursePage = props => {
         {documentTitle}
         <div>
           <CoursePageStudentRegister courseData={courseData} selectedInstance={selectedInstance} />
-          <CoursePageStudentInfo courseData={courseData} selectedInstance={selectedInstance} removeRegistration={removeRegistration} />
+          <CoursePageStudentInfo
+            courseData={courseData}
+            selectedInstance={selectedInstance}
+            removeRegistration={removeRegistration}
+          />
           <CoursePageStudentWeeks courseId={courseId} courseData={courseData} />
         </div>
       </>
@@ -367,7 +416,11 @@ export const CoursePage = props => {
       <>
         {documentTitle}
         <div style={{ overflowX: 'auto', overflowY: 'hidden', marginBottom: '-20em', paddingBottom: '20em' }}>
-          <CoursePageTeacherHeader selectedInstance={selectedInstance} changeCourseActive={changeCourseActive} moveToNextWeek={moveToNextWeek} />
+          <CoursePageTeacherHeader
+            selectedInstance={selectedInstance}
+            changeCourseActive={changeCourseActive}
+            moveToNextWeek={moveToNextWeek}
+          />
           <CoursePageTeacherMain
             courseId={courseId}
             courseData={courseData}
@@ -379,7 +432,13 @@ export const CoursePage = props => {
             exportCSV={exportCSV}
           />
           <br />
-          <CoursePageTeacherBulkForm courseId={courseId} coursePageLogic={coursePageLogic} dropDownTags={dropDownTags} dropDownTeachers={dropDownTeachers} {...coursePageBulkFormFunctions} />
+          <CoursePageTeacherBulkForm
+            courseId={courseId}
+            coursePageLogic={coursePageLogic}
+            dropDownTags={dropDownTags}
+            dropDownTeachers={dropDownTeachers}
+            {...coursePageBulkFormFunctions}
+          />
         </div>
       </>
     )

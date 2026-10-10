@@ -5,7 +5,15 @@ import { connect } from 'react-redux'
 import { getOneCI, modifyOneCI } from '../../services/courseInstance'
 import { coursePageInformation } from '../../services/courseInstance'
 import { bulkinsertCodeReviews, removeOneCodeReview } from '../../services/codeReview'
-import { filterByReview, initOneReview, randomAssign, codeReviewReset, selectDropdown, createStates, restoreData } from '../../reducers/codeReviewReducer'
+import {
+  filterByReview,
+  initOneReview,
+  randomAssign,
+  codeReviewReset,
+  selectDropdown,
+  createStates,
+  restoreData
+} from '../../reducers/codeReviewReducer'
 import { clearNotifications, showNotification } from '../../reducers/notificationReducer'
 import { Button, Table, Loader, Dropdown, Popup, Icon, Message } from 'semantic-ui-react'
 import StudentTable from '../StudentTable'
@@ -139,7 +147,9 @@ export const ModifyCourseInstanceReview = props => {
   }
 
   const isAssignedToReview = (studentData, reviewWeek) => {
-    const studentReviewWeeks = studentData.codeReviews.map(review => review.reviewNumber).filter(review => review === reviewWeek)
+    const studentReviewWeeks = studentData.codeReviews
+      .map(review => review.reviewNumber)
+      .filter(review => review === reviewWeek)
     return Array.isArray(studentReviewWeeks) && !studentReviewWeeks.length
   }
 
@@ -149,13 +159,17 @@ export const ModifyCourseInstanceReview = props => {
     }
     return () => {
       const selected = objectKeyFilter(props.coursePageLogic.selectedStudents, filterSelected)
-      Object.keys(selected).length > 1 ? props.randomAssign({ reviewNumber: reviewNumber }, selected) : props.showNotification({ message: 'Select at least two persons to randomize!', error: true })
+      Object.keys(selected).length > 1
+        ? props.randomAssign({ reviewNumber: reviewNumber }, selected)
+        : props.showNotification({ message: 'Select at least two persons to randomize!', error: true })
     }
   }
 
   const getCurrentReviewee = (codeReviewRound, id) => {
     let reviewer = props.courseData.data.find(studentId => studentId.id === id)
-    let reviewInstance = reviewer.codeReviews.find(cd => cd.reviewNumber === codeReviewRound && cd.studentInstanceId === id)
+    let reviewInstance = reviewer.codeReviews.find(
+      cd => cd.reviewNumber === codeReviewRound && cd.studentInstanceId === id
+    )
     if (!reviewInstance) {
       return 'None'
     }
@@ -163,7 +177,9 @@ export const ModifyCourseInstanceReview = props => {
       return reviewInstance.repoToReview
     }
 
-    let reviewee = props.dropdownUsers.find(dropDownStudent => dropDownStudent.value === reviewInstance.toReview)
+    let reviewee = props.dropdownUsers.find(
+      dropDownStudent => dropDownStudent.value === reviewInstance.toReview
+    )
     return reviewee.text
   }
 
@@ -204,7 +220,9 @@ export const ModifyCourseInstanceReview = props => {
     }
     if (!props.selectedInstance.currentCodeReview || !props.codeReviewLogic.selectedDropdown) {
       const message =
-        Object.keys(props.dropdownCodeReviews).length > 0 ? 'Please select an existing code review or create a new one from the dropdown below.' : 'Please create a code review by clicking below.'
+        Object.keys(props.dropdownCodeReviews).length > 0
+          ? 'Please select an existing code review or create a new one from the dropdown below.'
+          : 'Please create a code review by clicking below.'
       return (
         <Message className="visibilityReminder" info>
           <span>{message}</span>
@@ -217,7 +235,12 @@ export const ModifyCourseInstanceReview = props => {
     return (
       <Message className="visibilityReminder" warning>
         <span>This code review is currently not visible to students.</span>{' '}
-        <Button color="green" compact size="small" onClick={() => handleActivateCr(props.codeReviewLogic.selectedDropdown)}>
+        <Button
+          color="green"
+          compact
+          size="small"
+          onClick={() => handleActivateCr(props.codeReviewLogic.selectedDropdown)}
+        >
           Activate the code review
         </Button>
       </Message>
@@ -239,18 +262,30 @@ export const ModifyCourseInstanceReview = props => {
         //Ignore nonexisting repos
         return getGithubRepo(repo)
           .result.then(result => [userId, result.data])
-          .catch(error => (error.response && error.response.status === 404 ? Promise.resolve([userId, null]) : Promise.reject(error)))
+          .catch(error =>
+            error.response && error.response.status === 404
+              ? Promise.resolve([userId, null])
+              : Promise.reject(error)
+          )
       })
     )
       .then(githubRepos => {
-        const studentInstances = githubRepos.map(([userId, githubRepo]) => ({ userId, repoExists: !!githubRepo, issuesDisabled: githubRepo ? !githubRepo.has_issues || githubRepo.archived : false }))
+        const studentInstances = githubRepos.map(([userId, githubRepo]) => ({
+          userId,
+          repoExists: !!githubRepo,
+          issuesDisabled: githubRepo ? !githubRepo.has_issues || githubRepo.archived : false
+        }))
 
         props.massUpdateStudentProjectInfo({ ohid: props.selectedInstance.ohid, studentInstances })
       })
       .catch(error => {
         props.showNotification({
           message: `Failed to fetch data from GitHub API. Most likely you have exceeded GitHub API ratelimit or your Internet connection is down. (${
-            error.response ? (error.response.data.message ? `${error.response.status}: ${error.response.data.message}` : `${error.response.status}: ${error.response.data}`) : error
+            error.response
+              ? error.response.data.message
+                ? `${error.response.status}: ${error.response.data.message}`
+                : `${error.response.status}: ${error.response.data}`
+              : error
           })`,
           error: true
         })
@@ -275,7 +310,13 @@ export const ModifyCourseInstanceReview = props => {
 
   const displayIssuesDisabledIcon = student => {
     if (!student.github.match(/^https?:\/\/github.com\/.+/)) {
-      return <Popup trigger={<Icon name="asterisk" size="large" color="grey" />} content={<span>This repository is not on GitHub, and its issue status cannot be checked.</span>} hoverable />
+      return (
+        <Popup
+          trigger={<Icon name="asterisk" size="large" color="grey" />}
+          content={<span>This repository is not on GitHub, and its issue status cannot be checked.</span>}
+          hoverable
+        />
+      )
     }
     if (!student.repoExists) {
       // display nothing, the warning will already be displayed by StudentTable
@@ -284,7 +325,13 @@ export const ModifyCourseInstanceReview = props => {
     if (areIssuesDisabledForStudent(student)) {
       return <IssuesDisabledWarning onClick={() => disableIssuesDisabledWarning(student)} />
     } else if (areIssuesEnabledForStudent(student)) {
-      return <Popup trigger={<Icon name="checkmark" size="large" color="green" />} content={<span>This repository exists and has issues enabled!</span>} hoverable />
+      return (
+        <Popup
+          trigger={<Icon name="checkmark" size="large" color="green" />}
+          content={<span>This repository exists and has issues enabled!</span>}
+          hoverable
+        />
+      )
     }
     return null
   }
@@ -309,14 +356,25 @@ export const ModifyCourseInstanceReview = props => {
       return (
         <div>
           {showCurrentReviewee}
-          <Popup content="Cannot remove a graded code review" trigger={<Icon id="tag" name="window close" size="large" color="red" style={{ float: 'right' }} />} />
+          <Popup
+            content="Cannot remove a graded code review"
+            trigger={
+              <Icon id="tag" name="window close" size="large" color="red" style={{ float: 'right' }} />
+            }
+          />
         </div>
       )
     }
     return (
       <div>
         {showCurrentReviewee}
-        <ConfirmationModal canRemove={true} data={data} getCurrentReviewee={getCurrentReviewee} removeOne={removeOne} selectedDropdown={props.codeReviewLogic.selectedDropdown} />
+        <ConfirmationModal
+          canRemove={true}
+          data={data}
+          getCurrentReviewee={getCurrentReviewee}
+          removeOne={removeOne}
+          selectedDropdown={props.codeReviewLogic.selectedDropdown}
+        />
       </div>
     )
   }
@@ -326,7 +384,13 @@ export const ModifyCourseInstanceReview = props => {
     const selected = objectKeyFilter(props.coursePageLogic.selectedStudents, filterSelected)
     const selectedCount = Object.keys(selected).length
     const issueCheckButton = (
-      <Button compact onClick={() => bulkCheckIssuesEnabled(selected)} size="small" disabled={selectedCount < 1 || selectedCount > MAXIMUM_CHECK_COUNT} style={{ float: 'left' }}>
+      <Button
+        compact
+        onClick={() => bulkCheckIssuesEnabled(selected)}
+        size="small"
+        disabled={selectedCount < 1 || selectedCount > MAXIMUM_CHECK_COUNT}
+        style={{ float: 'left' }}
+      >
         Check if issues enabled (select max {MAXIMUM_CHECK_COUNT})
       </Button>
     )
@@ -345,7 +409,11 @@ export const ModifyCourseInstanceReview = props => {
           onChange={createDropdown()}
           defaultValue={props.codeReviewLogic.selectedDropdown}
           noResultsMessage={'Try another search.'}
-          placeholder={Object.keys(props.dropdownCodeReviews).length > 1 ? 'SELECT A CODE REVIEW HERE!' : 'CREATE NEW CODE REVIEW?'}
+          placeholder={
+            Object.keys(props.dropdownCodeReviews).length > 1
+              ? 'SELECT A CODE REVIEW HERE!'
+              : 'CREATE NEW CODE REVIEW?'
+          }
           fluid
           options={props.dropdownCodeReviews}
         />
@@ -370,10 +438,20 @@ export const ModifyCourseInstanceReview = props => {
 
   const makeCodeReviewSelectorFooter = () => (
     <Table.HeaderCell singleLine key="selectorFooter">
-      <Button compact onClick={assignRandomly(props.codeReviewLogic.selectedDropdown)} size="small" style={{ float: 'left' }}>
+      <Button
+        compact
+        onClick={assignRandomly(props.codeReviewLogic.selectedDropdown)}
+        size="small"
+        style={{ float: 'left' }}
+      >
         Assign selected randomly
       </Button>
-      <Button compact size="small" style={{ float: 'right' }} onClick={handleSubmit(props.codeReviewLogic.selectedDropdown)}>
+      <Button
+        compact
+        size="small"
+        style={{ float: 'right' }}
+        onClick={handleSubmit(props.codeReviewLogic.selectedDropdown)}
+      >
         Save
       </Button>
     </Table.HeaderCell>
@@ -406,7 +484,13 @@ export const ModifyCourseInstanceReview = props => {
     )
 
   if (props.errors && props.errors.length > 0) {
-    return <Error errors={props.errors.map(error => `${error.response.data} (${error.response.status} ${error.response.statusText})`)} />
+    return (
+      <Error
+        errors={props.errors.map(
+          error => `${error.response.data} (${error.response.status} ${error.response.statusText})`
+        )}
+      />
+    )
   }
 
   // The loading flag can already be false before the course data has arrived (e.g. when the page is
@@ -415,14 +499,20 @@ export const ModifyCourseInstanceReview = props => {
     return <Loader active />
   }
 
-  const unassignedFilter = data => props.codeReviewLogic.filterByReview === 0 || isAssignedToReview(data, props.codeReviewLogic.selectedDropdown)
-  const arrivedFromCoursePage = props.location && props.location.state && props.location.state.cameFromCoursePage
+  const unassignedFilter = data =>
+    props.codeReviewLogic.filterByReview === 0 ||
+    isAssignedToReview(data, props.codeReviewLogic.selectedDropdown)
+  const arrivedFromCoursePage =
+    props.location && props.location.state && props.location.state.cameFromCoursePage
 
   return (
     <>
       <DocumentTitle title={`Code reviews - ${props.selectedInstance.name}`} />
       <BackButton preset={arrivedFromCoursePage ? 'coursePage' : 'modifyCIPage'} cleanup={pstate.clear} />
-      <div className="ModifyCourseInstanceCodeReviews" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
+      <div
+        className="ModifyCourseInstanceCodeReviews"
+        style={{ textAlignVertical: 'center', textAlign: 'center' }}
+      >
         <div style={{ overflowX: 'auto', overflowY: 'hidden' }}>
           <div className="sixteen wide column">
             <h2>{props.selectedInstance.name}</h2> <br />
@@ -433,13 +523,21 @@ export const ModifyCourseInstanceReview = props => {
 
           <StudentTable
             extraButtons={[makeFilterButton]}
-            columns={['select', [makeCodeReviewSelectorHeader, makeCodeReviewSelectorCell, makeCodeReviewSelectorFooter]]}
+            columns={[
+              'select',
+              [makeCodeReviewSelectorHeader, makeCodeReviewSelectorCell, makeCodeReviewSelectorFooter]
+            ]}
             extraStudentIcon={displayIssuesDisabledIcon}
             studentFooter={makeStudentFooter}
             showFooter={true}
             allowModify={false}
             selectedInstance={props.selectedInstance}
-            studentInstances={props.courseData.data.filter(studentInstance => !studentInstance.dropped && studentInstance.validRegistration && unassignedFilter(studentInstance))}
+            studentInstances={props.courseData.data.filter(
+              studentInstance =>
+                !studentInstance.dropped &&
+                studentInstance.validRegistration &&
+                unassignedFilter(studentInstance)
+            )}
             coursePageLogic={props.coursePageLogic}
             tags={props.tags}
             onFilter={filtered => (filterSelected = id => filtered.includes(Number(id)))}

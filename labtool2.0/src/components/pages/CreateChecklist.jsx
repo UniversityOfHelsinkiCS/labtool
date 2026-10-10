@@ -1,7 +1,19 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { Header, Input, Label, Button, Popup, Card, Dropdown, Loader, Icon, Checkbox, Radio } from 'semantic-ui-react'
+import {
+  Header,
+  Input,
+  Label,
+  Button,
+  Popup,
+  Card,
+  Dropdown,
+  Loader,
+  Icon,
+  Checkbox,
+  Radio
+} from 'semantic-ui-react'
 import { showNotification } from '../../reducers/notificationReducer'
 import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 import { createChecklist, getOneChecklist, getCopyableChecklists } from '../../services/checklist'
@@ -189,7 +201,8 @@ export const CreateChecklist = props => {
       return
     }
     // keep the selected course only if it also has a checklist to copy for the new selection
-    const keepCopyCourse = state.copyCourse && createCourseDropdowns(newCurrent).some(option => option.value === state.copyCourse)
+    const keepCopyCourse =
+      state.copyCourse && createCourseDropdowns(newCurrent).some(option => option.value === state.copyCourse)
     const copyCourse = keepCopyCourse ? state.copyCourse : null
     state.maximumPoints = ''
     state.current = newCurrent
@@ -287,7 +300,10 @@ export const CreateChecklist = props => {
         copying: true
       }
       if (obj.kind === 'week') {
-        const week = obj.number > props.selectedInstance.weekAmount ? props.courses.find(course => course.id === state.copyCourse).weekAmount + 1 : obj.number
+        const week =
+          obj.number > props.selectedInstance.weekAmount
+            ? props.courses.find(course => course.id === state.copyCourse).weekAmount + 1
+            : obj.number
         data.week = week
         data.forCodeReview = false
       } else if (obj.kind === 'codeReview') {
@@ -323,7 +339,13 @@ export const CreateChecklist = props => {
         return (
           typeof listKey === 'string' &&
           Object.values(checklist.list[listKey]).every(row => {
-            return row.name !== null && row.textWhenOn !== null && row.textWhenOff !== null && row.checkedPoints !== null && row.uncheckedPoints !== null
+            return (
+              row.name !== null &&
+              row.textWhenOn !== null &&
+              row.textWhenOff !== null &&
+              row.checkedPoints !== null &&
+              row.uncheckedPoints !== null
+            )
           })
         )
       }) &&
@@ -520,7 +542,11 @@ export const CreateChecklist = props => {
     const obj = parseChecklistValue(current)
     if (obj.error) return []
     const courses =
-      obj.kind === 'codeReview' ? codeReviewFilter(obj.number, props.courses) : obj.number > props.selectedInstance.weekAmount ? finalFilter(props.courses) : weekFilter(obj.number, props.courses)
+      obj.kind === 'codeReview'
+        ? codeReviewFilter(obj.number, props.courses)
+        : obj.number > props.selectedInstance.weekAmount
+          ? finalFilter(props.courses)
+          : weekFilter(obj.number, props.courses)
     const options = sortCoursesByName(courses)
       .filter(course => props.selectedInstance.id !== course.id)
       .filter(course => hasCopyableChecklist(course, obj))
@@ -567,22 +593,50 @@ export const CreateChecklist = props => {
       let bestPoints = 0
       props.checklist.data[key].forEach(row => {
         if (!row.minimumRequirement) {
-          const greaterPoints = row.checkedPoints > row.uncheckedPoints ? row.checkedPoints : row.uncheckedPoints
+          const greaterPoints =
+            row.checkedPoints > row.uncheckedPoints ? row.checkedPoints : row.uncheckedPoints
           bestPoints += Number(greaterPoints)
         }
       })
       maxPoints += bestPoints
       colorIndex++
       return (
-        <Card fluid color="red" key={key} style={colorIndex % 2 === 0 ? { backgroundColor: '#F2F2F2' } : null}>
+        <Card
+          fluid
+          color="red"
+          key={key}
+          style={colorIndex % 2 === 0 ? { backgroundColor: '#F2F2F2' } : null}
+        >
           <Card.Content>
             <Header size="huge" color="brown">
               {key}{' '}
-              <Button className="deleteButton" type="button" color="red" size="tiny" onClick={removeTopic(key)}>
+              <Button
+                className="deleteButton"
+                type="button"
+                color="red"
+                size="tiny"
+                onClick={removeTopic(key)}
+              >
                 <div className="deleteButtonText">Delete topic</div>
               </Button>
-              <Button className="moveButton" disabled={keyIndex >= keyArray.length - 1} circular icon="arrow circle down" type="button" color="blue" onClick={moveTopicDown(key)} />
-              <Button className="moveButton" disabled={keyIndex === 0} circular icon="arrow circle up" type="button" color="blue" onClick={moveTopicUp(key)} />
+              <Button
+                className="moveButton"
+                disabled={keyIndex >= keyArray.length - 1}
+                circular
+                icon="arrow circle down"
+                type="button"
+                color="blue"
+                onClick={moveTopicDown(key)}
+              />
+              <Button
+                className="moveButton"
+                disabled={keyIndex === 0}
+                circular
+                icon="arrow circle up"
+                type="button"
+                color="blue"
+                onClick={moveTopicUp(key)}
+              />
             </Header>
             <div>
               <p>
@@ -593,7 +647,11 @@ export const CreateChecklist = props => {
                 {bestPoints < 0 ? (
                   <span>
                     {' '}
-                    <Popup className="bestpointsIcon" trigger={<Icon name="delete" color="red" size="large" />} content="This topic will always award negative points." />
+                    <Popup
+                      className="bestpointsIcon"
+                      trigger={<Icon name="delete" color="red" size="large" />}
+                      content="This topic will always award negative points."
+                    />
                   </span>
                 ) : (
                   <span />
@@ -616,11 +674,33 @@ export const CreateChecklist = props => {
             <Card.Content key={row.name}>
               <Header>
                 {row.name}{' '}
-                <Button className="deleteButton" type="button" color="red" size="tiny" onClick={removeRow(key, row.name)}>
+                <Button
+                  className="deleteButton"
+                  type="button"
+                  color="red"
+                  size="tiny"
+                  onClick={removeRow(key, row.name)}
+                >
                   <div className="deleteButtonText">Delete checkbox</div>
                 </Button>
-                <Button className="moveButtonLarge" disabled={index >= arr.length - 1} circular icon="arrow circle down" type="button" color="blue" onClick={moveRowDown(key, row.name)} />
-                <Button className="moveButtonLarge" disabled={index === 0} circular icon="arrow circle up" type="button" color="blue" onClick={moveRowUp(key, row.name)} />
+                <Button
+                  className="moveButtonLarge"
+                  disabled={index >= arr.length - 1}
+                  circular
+                  icon="arrow circle down"
+                  type="button"
+                  color="blue"
+                  onClick={moveRowDown(key, row.name)}
+                />
+                <Button
+                  className="moveButtonLarge"
+                  disabled={index === 0}
+                  circular
+                  icon="arrow circle up"
+                  type="button"
+                  color="blue"
+                  onClick={moveRowUp(key, row.name)}
+                />
               </Header>
               <div className="checkTextRow">
                 <div className="checkedLabel">
@@ -637,7 +717,14 @@ export const CreateChecklist = props => {
                   onBlur={castPointsToNumber(key, row.name)}
                 />
                 <span style={{ flexGrow: 100 }}>
-                  <Input fluid className="textField" label="Text" type="text" value={row.textWhenOn} onChange={changeField(key, row.name, 'textWhenOn')} />
+                  <Input
+                    fluid
+                    className="textField"
+                    label="Text"
+                    type="text"
+                    value={row.textWhenOn}
+                    onChange={changeField(key, row.name, 'textWhenOn')}
+                  />
                 </span>
               </div>
               <div className="checkTextRow">
@@ -655,12 +742,24 @@ export const CreateChecklist = props => {
                   onBlur={castPointsToNumber(key, row.name)}
                 />
                 <span style={{ flexGrow: 100 }}>
-                  <Input fluid className="textField" label="Text" type="text" value={row.textWhenOff} onChange={changeField(key, row.name, 'textWhenOff')} />
+                  <Input
+                    fluid
+                    className="textField"
+                    label="Text"
+                    type="text"
+                    value={row.textWhenOff}
+                    onChange={changeField(key, row.name, 'textWhenOff')}
+                  />
                 </span>
               </div>
               {kind !== 'codeReview' && (
                 <div className="minimumRequirement" style={{ marginTop: '1em' }}>
-                  <Checkbox label="Minimum requirement" checked={row.minimumRequirement} onChange={changeField(key, row.name, 'minimumRequirement')}></Checkbox>, which should be{' '}
+                  <Checkbox
+                    label="Minimum requirement"
+                    checked={row.minimumRequirement}
+                    onChange={changeField(key, row.name, 'minimumRequirement')}
+                  ></Checkbox>
+                  , which should be{' '}
                   <Radio
                     label="checked"
                     name={`minimumRequirementMetIf_${key}_${getRowId(row)}`}
@@ -701,7 +800,10 @@ export const CreateChecklist = props => {
                   onChange={changeField(key, row.name, 'prerequisite')}
                   options={getPrerequisiteDropdown(key).filter(check => check.value !== row.id)}
                 />
-                <Popup trigger={<Icon name="help circle" />} content="If a prerequisite is set, the prerequisite must be checked in order for this checkbox to be checkable." />
+                <Popup
+                  trigger={<Icon name="help circle" />}
+                  content="If a prerequisite is set, the prerequisite must be checked in order for this checkbox to be checkable."
+                />
               </div>
             </Card.Content>
           ))}
@@ -709,11 +811,24 @@ export const CreateChecklist = props => {
             <form className="addForm" onSubmit={newRow(key)}>
               {/*This, like all other addForms is here to funnel both the button press 
                 as well as a user pressing enter into the same function.*/}
-              {<Button type="submit" content="Add new checkbox" color="yellow" icon="plus" labelPosition="left" />}
+              {
+                <Button
+                  type="submit"
+                  content="Add new checkbox"
+                  color="yellow"
+                  icon="plus"
+                  labelPosition="left"
+                />
+              }
               {state.openAdd === key ? (
                 <div>
                   <Label>Name</Label>
-                  <Input className="newRowNameInput" type="text" value={state.rowName} onChange={changeRowName} />
+                  <Input
+                    className="newRowNameInput"
+                    type="text"
+                    value={state.rowName}
+                    onChange={changeRowName}
+                  />
                   <Button type="submit">Save</Button>
                   <Button type="button" onClick={cancelAdd}>
                     Cancel
@@ -738,13 +853,21 @@ export const CreateChecklist = props => {
   }
 
   if (props.errors && props.errors.length > 0) {
-    return <Error errors={props.errors.map(error => `${error.response.data} (${error.response.status} ${error.response.statusText})`)} />
+    return (
+      <Error
+        errors={props.errors.map(
+          error => `${error.response.data} (${error.response.status} ${error.response.statusText})`
+        )}
+      />
+    )
   }
 
   const hasSelectedWeek = state.current !== undefined && state.current !== null
   const courseDropdowns = hasSelectedWeek ? createCourseDropdowns() : []
   const currentObj = parseChecklistValue(state.current)
-  const { checklistJsx, maxPoints } = props.loading.loading ? { checklistJsx: null, maxPoints: null } : renderChecklist(currentObj.kind)
+  const { checklistJsx, maxPoints } = props.loading.loading
+    ? { checklistJsx: null, maxPoints: null }
+    : renderChecklist(currentObj.kind)
   return (
     <>
       <DocumentTitle title={`Checklists - ${props.selectedInstance.name}`} />
@@ -753,9 +876,20 @@ export const CreateChecklist = props => {
         <Header>{props.selectedInstance.name}</Header>
         <div className="editForm">
           <div className="topOptions">
-            <Dropdown id="weekDropdown" placeholder="Select Checklist" selection value={state.current} onChange={changeWeek} options={props.weekDropdowns} />
+            <Dropdown
+              id="weekDropdown"
+              placeholder="Select Checklist"
+              selection
+              value={state.current}
+              onChange={changeWeek}
+              options={props.weekDropdowns}
+            />
             <div className="copyForm">
-              <Button type="button" onClick={copyChecklist} disabled={!hasSelectedWeek || (!state.copyCourse && !state.copyWeek)}>
+              <Button
+                type="button"
+                onClick={copyChecklist}
+                disabled={!hasSelectedWeek || (!state.copyCourse && !state.copyWeek)}
+              >
                 Copy checklist
               </Button>
               <Dropdown
@@ -779,7 +913,12 @@ export const CreateChecklist = props => {
             </div>
             {hasSelectedWeek ? (
               <div className="jsonButtons">
-                <JsonEdit onImport={importChecklist} initialData={props.checklist.data} generation={state.generation} downloadName={`${props.selectedInstance.ohid}_${state.current}.json`} />
+                <JsonEdit
+                  onImport={importChecklist}
+                  initialData={props.checklist.data}
+                  generation={state.generation}
+                  downloadName={`${props.selectedInstance.ohid}_${state.current}.json`}
+                />
               </div>
             ) : (
               <div />
@@ -790,7 +929,13 @@ export const CreateChecklist = props => {
           ) : hasSelectedWeek ? (
             <div>
               <form onSubmit={handleSubmit}>
-                <Button className="saveButton" type="submit" color="green" size="large" disabled={!state.canSave}>
+                <Button
+                  className="saveButton"
+                  type="submit"
+                  color="green"
+                  size="large"
+                  disabled={!state.canSave}
+                >
                   <div className="saveButtonText">Save</div>
                 </Button>
                 <br />
@@ -799,11 +944,24 @@ export const CreateChecklist = props => {
               <div>
                 {checklistJsx /* This block of jsx is defined in renderChecklist */}
                 <form className="addForm" onSubmit={newTopic}>
-                  {<Button type="submit" content="Add new topic" icon="add" size="large" labelPosition="left" />}
+                  {
+                    <Button
+                      type="submit"
+                      content="Add new topic"
+                      icon="add"
+                      size="large"
+                      labelPosition="left"
+                    />
+                  }
                   {state.openAdd === 'newTopic' ? (
                     <div>
                       <Label>Name</Label>
-                      <Input className="newTopicNameInput" type="text" value={state.topicName} onChange={changeTopicName} />
+                      <Input
+                        className="newTopicNameInput"
+                        type="text"
+                        value={state.topicName}
+                        onChange={changeTopicName}
+                      />
                       <Button type="submit">Save</Button>
                       <Button type="button" onClick={cancelAdd}>
                         Cancel
@@ -815,9 +973,16 @@ export const CreateChecklist = props => {
                 </form>
               </div>
 
-              {props.selectedInstance.finalReviewHasPoints || currentObj.kind !== 'week' || currentObj.number < props.selectedInstance.weekAmount + 1 ? (
+              {props.selectedInstance.finalReviewHasPoints ||
+              currentObj.kind !== 'week' ||
+              currentObj.number < props.selectedInstance.weekAmount + 1 ? (
                 <>
-                  {currentObj.kind === 'codeReview' && <strong>You need to specify custom maximum points for code reviews in order for the maximum points to be visible to students.</strong>}
+                  {currentObj.kind === 'codeReview' && (
+                    <strong>
+                      You need to specify custom maximum points for code reviews in order for the maximum
+                      points to be visible to students.
+                    </strong>
+                  )}
                   <Card className="maxPointsCard">
                     <Card.Content>
                       <p>
@@ -825,13 +990,25 @@ export const CreateChecklist = props => {
                         <strong className="totalPointsOfChecklist">
                           <Points points={maxPoints} />
                         </strong>
-                        {currentObj.kind === 'week' && currentObj.number <= props.selectedInstance.weekAmount ? (
+                        {currentObj.kind === 'week' &&
+                        currentObj.number <= props.selectedInstance.weekAmount ? (
                           <span>
                             {' '}
-                            {maxPoints === (state.maximumPoints !== '' ? Number(state.maximumPoints) : props.selectedInstance.weekMaxPoints) ? (
-                              <Popup className="maxPointsIcon" trigger={<Icon name="check" size="large" color="green" />} content="The total points match the maximum points for this week." />
+                            {maxPoints ===
+                            (state.maximumPoints !== ''
+                              ? Number(state.maximumPoints)
+                              : props.selectedInstance.weekMaxPoints) ? (
+                              <Popup
+                                className="maxPointsIcon"
+                                trigger={<Icon name="check" size="large" color="green" />}
+                                content="The total points match the maximum points for this week."
+                              />
                             ) : (
-                              <Popup className="maxPointsIcon" trigger={<Icon name="delete" size="large" color="red" />} content="The total points don't match the maximum points for this week." />
+                              <Popup
+                                className="maxPointsIcon"
+                                trigger={<Icon name="delete" size="large" color="red" />}
+                                content="The total points don't match the maximum points for this week."
+                              />
                             )}
                           </span>
                         ) : (
@@ -843,14 +1020,29 @@ export const CreateChecklist = props => {
                       <p className="maxPointsForWeek">
                         Maximum points for this review:{' '}
                         <strong>
-                          {currentObj.kind === 'codeReview' ? state.maximumPoints === '' ? '' : <Points points={Number(state.maximumPoints)} /> : <Points points={getMaximumPointsForWeek()} />}
+                          {currentObj.kind === 'codeReview' ? (
+                            state.maximumPoints === '' ? (
+                              ''
+                            ) : (
+                              <Points points={Number(state.maximumPoints)} />
+                            )
+                          ) : (
+                            <Points points={getMaximumPointsForWeek()} />
+                          )}
                         </strong>
                       </p>
                     </Card.Content>
                   </Card>
                   <div>
                     <Label>Define maximum points yourself</Label>
-                    <Input className="maxPointsInput" type="number" step="0.01" style={{ width: '100px' }} value={state.maximumPoints} onChange={changeMaximumPoints} />
+                    <Input
+                      className="maxPointsInput"
+                      type="number"
+                      step="0.01"
+                      style={{ width: '100px' }}
+                      value={state.maximumPoints}
+                      onChange={changeMaximumPoints}
+                    />
                     <Popup
                       className="infoText"
                       trigger={<Icon name="question circle" />}
@@ -869,7 +1061,13 @@ export const CreateChecklist = props => {
               <form onSubmit={handleSubmit}>
                 {/*This is a form with a single button instead of just a button because it doesn't work 
                 (doesn't call the function) as just a button with onClick.*/}
-                <Button className="saveButton" type="submit" color="green" size="large" disabled={!state.canSave}>
+                <Button
+                  className="saveButton"
+                  type="submit"
+                  color="green"
+                  size="large"
+                  disabled={!state.canSave}
+                >
                   <div className="saveButtonText">Save</div>
                 </Button>
                 <br />
@@ -908,7 +1106,9 @@ const createWeekDropdowns = selectedInstance => {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const selectedInstance = Array.isArray(state.courseInstance) ? state.courseInstance.find(course => course.ohid === ownProps.courseId) : state.courseInstance
+  const selectedInstance = Array.isArray(state.courseInstance)
+    ? state.courseInstance.find(course => course.ohid === ownProps.courseId)
+    : state.courseInstance
   return {
     selectedInstance: selectedInstance || {},
     weekDropdowns: createWeekDropdowns(selectedInstance),

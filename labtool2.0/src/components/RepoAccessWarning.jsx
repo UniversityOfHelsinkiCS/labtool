@@ -12,8 +12,20 @@ export const RepoAccessWarning = ({ student, ohid, updateStudentProjectInfo }) =
   const canClick = student && ohid && updateStudentProjectInfo
   return (
     <Popup
-      trigger={<Icon name="warning sign" onClick={canClick ? disableWarning : null} size="large" color="red" style={{ cursor: canClick ? 'pointer' : 'auto' }} />}
-      content={<span>This repository might not exist or it could be private. {canClick && 'Click to hide this warning.'}</span>}
+      trigger={
+        <Icon
+          name="warning sign"
+          onClick={canClick ? disableWarning : null}
+          size="large"
+          color="red"
+          style={{ cursor: canClick ? 'pointer' : 'auto' }}
+        />
+      }
+      content={
+        <span>
+          This repository might not exist or it could be private. {canClick && 'Click to hide this warning.'}
+        </span>
+      }
       hoverable
     />
   )

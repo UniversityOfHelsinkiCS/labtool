@@ -192,11 +192,23 @@ export const HorizontalScrollable = props => {
   // the parent page should define overflowY: hidden and add some extra
   // <br />s to the bottom
   return (
-    <div className="horizontalScrollableParent" ref={containerReady} style={{ overflow: 'hidden', boxSizing: 'border-box', marginBottom: '-50vh', paddingBottom: '50vh' }}>
-      <div ref={mainElementReady} onScroll={updateScrollX('content')} style={{ overflowX: 'visible', overflowY: 'visible' }}>
+    <div
+      className="horizontalScrollableParent"
+      ref={containerReady}
+      style={{ overflow: 'hidden', boxSizing: 'border-box', marginBottom: '-50vh', paddingBottom: '50vh' }}
+    >
+      <div
+        ref={mainElementReady}
+        onScroll={updateScrollX('content')}
+        style={{ overflowX: 'visible', overflowY: 'visible' }}
+      >
         {props.children}
       </div>
-      <div ref={scrollBarReady} onScroll={updateScrollX('scrollbar')} style={{ overflowX: 'scroll', bottom: '0', position: 'sticky' }}>
+      <div
+        ref={scrollBarReady}
+        onScroll={updateScrollX('scrollbar')}
+        style={{ overflowX: 'scroll', bottom: '0', position: 'sticky' }}
+      >
         <div />
       </div>
     </div>

@@ -404,30 +404,32 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
 
   const RevieweeDropdownHarness = ({ onChange }) => {
     const [logic, setLogic] = React.useState(codeReviewLogic)
-    const addCodeReview = (reviewRound, reviewer) => (event, { value }) => {
-      const selection = Number.isInteger(value)
-        ? { reviewer, toReview: value }
-        : { reviewer, repoToReview: value }
+    const addCodeReview =
+      (reviewRound, reviewer) =>
+      (event, { value }) => {
+        const selection = Number.isInteger(value)
+          ? { reviewer, toReview: value }
+          : { reviewer, repoToReview: value }
 
-      setLogic(current => ({
-        ...current,
-        codeReviewStates: {
-          ...current.codeReviewStates,
-          [reviewRound]: [
-            ...current.codeReviewStates[reviewRound].filter(review => review.reviewer !== reviewer),
-            selection
-          ]
-        },
-        currentSelections: {
-          ...current.currentSelections,
-          [reviewRound]: {
-            ...current.currentSelections[reviewRound],
-            [reviewer]: value
+        setLogic(current => ({
+          ...current,
+          codeReviewStates: {
+            ...current.codeReviewStates,
+            [reviewRound]: [
+              ...current.codeReviewStates[reviewRound].filter(review => review.reviewer !== reviewer),
+              selection
+            ]
+          },
+          currentSelections: {
+            ...current.currentSelections,
+            [reviewRound]: {
+              ...current.currentSelections[reviewRound],
+              [reviewer]: value
+            }
           }
-        }
-      }))
-      onChange(value)
-    }
+        }))
+        onChange(value)
+      }
 
     return (
       <RevieweeDropdown

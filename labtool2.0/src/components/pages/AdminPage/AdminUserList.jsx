@@ -8,7 +8,11 @@ export const AdminUserList = ({ me, users, updateOtherUser }) => {
     const message = `Are you sure you want to ${newAdmin ? 'grant admin rights to' : 'remove admin rights from'} ${name}?`
     if (window.confirm(message)) {
       const selfInflicted = userId === me.user.id
-      if (selfInflicted && !newAdmin && !window.confirm('You probably do NOT want to remove admin rights from yourself. Are you really sure?')) {
+      if (
+        selfInflicted &&
+        !newAdmin &&
+        !window.confirm('You probably do NOT want to remove admin rights from yourself. Are you really sure?')
+      ) {
         return
       }
       updateOtherUser({ id: userId, sysop: newAdmin })
@@ -43,14 +47,22 @@ export const AdminUserList = ({ me, users, updateOtherUser }) => {
                   <Label color="orange" horizontal>
                     Admin
                   </Label>
-                  <Button onClick={setAdmin(user.id, `${user.firsts} ${user.lastname}`, false)} size="tiny" color="green">
+                  <Button
+                    onClick={setAdmin(user.id, `${user.firsts} ${user.lastname}`, false)}
+                    size="tiny"
+                    color="green"
+                  >
                     Remove admin
                   </Button>
                 </div>
               ) : (
                 <div>
                   <Label horizontal>Not admin</Label>
-                  <Button onClick={setAdmin(user.id, `${user.firsts} ${user.lastname}`, true)} size="tiny" color="green">
+                  <Button
+                    onClick={setAdmin(user.id, `${user.firsts} ${user.lastname}`, true)}
+                    size="tiny"
+                    color="green"
+                  >
                     Make admin
                   </Button>
                 </div>

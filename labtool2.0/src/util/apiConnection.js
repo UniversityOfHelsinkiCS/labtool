@@ -61,15 +61,17 @@ function callApi(url, method = 'get', data, prefix, token) {
       return Promise.reject(new Error('Invalid http method'))
   }
 }
-export const callController = (route, prefix, data, method = 'get') => dispatch => {
-  const payload = {
-    route,
-    method,
-    data,
-    prefix
+export const callController =
+  (route, prefix, data, method = 'get') =>
+  dispatch => {
+    const payload = {
+      route,
+      method,
+      data,
+      prefix
+    }
+    dispatch({ type: `${prefix}ATTEMPT`, payload }) //handleRequest will handle this, look below
   }
-  dispatch({ type: `${prefix}ATTEMPT`, payload }) //handleRequest will handle this, look below
-}
 
 let willRefresh = false
 let backendIsBroken = false

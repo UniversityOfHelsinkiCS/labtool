@@ -1,7 +1,13 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Form, Input, Button, Grid, Dropdown, Checkbox, Loader, Segment } from 'semantic-ui-react'
-import { getOneCI, modifyOneCI, coursePageInformation, getAllCI, copyInformationFromCourse } from '../../services/courseInstance'
+import {
+  getOneCI,
+  modifyOneCI,
+  coursePageInformation,
+  getAllCI,
+  copyInformationFromCourse
+} from '../../services/courseInstance'
 import { setFinalReview, setFinalReviewHasPoints } from '../../reducers/selectedInstanceReducer'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
@@ -43,7 +49,11 @@ export const ModifyCourseInstancePage = props => {
         props.changeCourseField({ field: 'currentWeek', value: null })
       }
     }
-  }, [props.selectedInstance.weekAmount, props.selectedInstance.finalReview, props.selectedInstance.currentWeek])
+  }, [
+    props.selectedInstance.weekAmount,
+    props.selectedInstance.finalReview,
+    props.selectedInstance.currentWeek
+  ])
 
   useEffect(() => {
     state.visibleCr = props.selectedInstance.currentCodeReview
@@ -56,12 +66,14 @@ export const ModifyCourseInstancePage = props => {
     })
   }
 
-  const changeDropdown = field => (e, { value }) => {
-    props.changeCourseField({
-      field,
-      value
-    })
-  }
+  const changeDropdown =
+    field =>
+    (e, { value }) => {
+      props.changeCourseField({
+        field,
+        value
+      })
+    }
 
   const handleChange = async () => {
     props.changeCourseField({
@@ -92,7 +104,17 @@ export const ModifyCourseInstancePage = props => {
     try {
       e.preventDefault()
 
-      const { weekAmount, weekMaxPoints, currentWeek, active, ohid, finalReview, finalReviewHasPoints, coursesPage, courseMaterial } = props.selectedInstance
+      const {
+        weekAmount,
+        weekMaxPoints,
+        currentWeek,
+        active,
+        ohid,
+        finalReview,
+        finalReviewHasPoints,
+        coursesPage,
+        courseMaterial
+      } = props.selectedInstance
       let newCr = state.visibleCr
       // This checks that the 'courses.helsinki.fi' URL actually contains that string as a part of it. Reject if not.
       if (coursesPage !== null && coursesPage !== '') {
@@ -194,7 +216,13 @@ export const ModifyCourseInstancePage = props => {
   }
 
   if (props.errors && props.errors.length > 0) {
-    return <Error errors={props.errors.map(error => `${error.response.data} (${error.response.status} ${error.response.statusText})`)} />
+    return (
+      <Error
+        errors={props.errors.map(
+          error => `${error.response.data} (${error.response.status} ${error.response.statusText})`
+        )}
+      />
+    )
   }
 
   const selectedInstance = { ...props.selectedInstance }
@@ -328,7 +356,13 @@ export const ModifyCourseInstancePage = props => {
                 </Form.Group>
 
                 <Form.Group inline>
-                  <Checkbox name="courseActive" label="Course registration is active" checked={selectedInstance.active} onChange={handleChange} style={{ width: '150px', textAlign: 'left' }} />
+                  <Checkbox
+                    name="courseActive"
+                    label="Course registration is active"
+                    checked={selectedInstance.active}
+                    onChange={handleChange}
+                    style={{ width: '150px', textAlign: 'left' }}
+                  />
                 </Form.Group>
 
                 <Form.Group style={{ display: 'inline-block', marginLeft: 'auto', marginRight: 'auto' }}>
@@ -371,7 +405,10 @@ export const ModifyCourseInstancePage = props => {
             <div>
               <br />
               <h1>Copy course information</h1>
-              <p>This copies the week amount, default maximum week points, whether there is a final review, checklists and course tags to the course page.</p>
+              <p>
+                This copies the week amount, default maximum week points, whether there is a final review,
+                checklists and course tags to the course page.
+              </p>
               <Dropdown
                 className="courseDropdown"
                 disabled={courseDropdowns.length < 1}

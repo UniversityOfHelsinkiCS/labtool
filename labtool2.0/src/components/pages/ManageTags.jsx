@@ -27,7 +27,22 @@ export const ManageTags = props => {
   })
 
   // Semantic UI color choices + "white"
-  const validColors = ['white', 'red', 'orange', 'yellow', 'olive', 'green', 'teal', 'blue', 'violet', 'purple', 'pink', 'brown', 'grey', 'black']
+  const validColors = [
+    'white',
+    'red',
+    'orange',
+    'yellow',
+    'olive',
+    'green',
+    'teal',
+    'blue',
+    'violet',
+    'purple',
+    'pink',
+    'brown',
+    'grey',
+    'black'
+  ]
 
   useEffect(() => {
     // run on component mount
@@ -78,7 +93,14 @@ export const ManageTags = props => {
   }
 
   const randomColor = () => {
-    const color = 'rgb(' + Math.floor(Math.random() * 256) + ', ' + Math.floor(Math.random() * 256) + ', ' + Math.floor(Math.random() * 256) + ')'
+    const color =
+      'rgb(' +
+      Math.floor(Math.random() * 256) +
+      ', ' +
+      Math.floor(Math.random() * 256) +
+      ', ' +
+      Math.floor(Math.random() * 256) +
+      ')'
     state.valueColor = color
 
     return state.valueColor
@@ -151,7 +173,9 @@ export const ManageTags = props => {
 
   const copyCourseTags = () => {
     const courseTagNames = courseTags.map(tag => tag.name)
-    const importableTags = props.tags.tags.filter(tag => tag.courseInstanceId === state.copyCourse && !courseTagNames.includes(tag.name))
+    const importableTags = props.tags.tags.filter(
+      tag => tag.courseInstanceId === state.copyCourse && !courseTagNames.includes(tag.name)
+    )
     if (importableTags.length > 0) {
       props.resetLoading()
     } else {
@@ -176,7 +200,13 @@ export const ManageTags = props => {
   }
 
   if (props.errors && props.errors.length > 0) {
-    return <Error errors={props.errors.map(error => `${error.response.data} (${error.response.status} ${error.response.statusText})`)} />
+    return (
+      <Error
+        errors={props.errors.map(
+          error => `${error.response.data} (${error.response.status} ${error.response.statusText})`
+        )}
+      />
+    )
   }
 
   return (
@@ -199,7 +229,11 @@ export const ManageTags = props => {
             <Grid>
               <Grid.Row centered>
                 <Form key="createOrModify" onSubmit={handleSubmit}>
-                  {props.tags.modifyTag ? <h4>Editing tag: {editTag.name}</h4> : <h4>You are creating a new tag.</h4>}
+                  {props.tags.modifyTag ? (
+                    <h4>Editing tag: {editTag.name}</h4>
+                  ) : (
+                    <h4>You are creating a new tag.</h4>
+                  )}
                   <div>
                     Preview: <TagLabel color={state.valueColor} text={state.valueText} />
                     <br />
@@ -247,7 +281,12 @@ export const ManageTags = props => {
                       </Button>
                     </Form.Field>
                     <Form.Field>
-                      <Button compact type="button" onClick={() => (state.showMoreColorOptions = !state.showMoreColorOptions)} style={{ marginBottom: '10px' }}>
+                      <Button
+                        compact
+                        type="button"
+                        onClick={() => (state.showMoreColorOptions = !state.showMoreColorOptions)}
+                        style={{ marginBottom: '10px' }}
+                      >
                         More color options
                       </Button>
                       {state.showMoreColorOptions && (
@@ -300,14 +339,21 @@ export const ManageTags = props => {
                   <div>
                     <h2>Course tags</h2>
                     {courseTags.map(tag => (
-                      <TagLabel tag={tag} key={tag.id} handleClick={modifyTag(tag.id, tag.name, tag.color, tag.courseInstanceId === null)} />
+                      <TagLabel
+                        tag={tag}
+                        key={tag.id}
+                        handleClick={modifyTag(tag.id, tag.name, tag.color, tag.courseInstanceId === null)}
+                      />
                     ))}
                     <br />
                     <br />
                   </div>
                 ) : globalTags.length ? (
                   <div>
-                    <i>Tip: To convert a global tag into a course tag, select a global tag below, uncheck the &quot;global&quot; box and save.</i>
+                    <i>
+                      Tip: To convert a global tag into a course tag, select a global tag below, uncheck the
+                      &quot;global&quot; box and save.
+                    </i>
                     <br />
                     <br />
                   </div>
@@ -318,7 +364,11 @@ export const ManageTags = props => {
                   <div>
                     <h2>Global tags</h2>
                     {globalTags.map(tag => (
-                      <TagLabel tag={tag} key={tag.id} handleClick={modifyTag(tag.id, tag.name, tag.color, tag.courseInstanceId === null)} />
+                      <TagLabel
+                        tag={tag}
+                        key={tag.id}
+                        handleClick={modifyTag(tag.id, tag.name, tag.color, tag.courseInstanceId === null)}
+                      />
                     ))}
                     <br />
                     <br />
@@ -336,7 +386,9 @@ export const ManageTags = props => {
             <Dropdown
               className="courseDropdown"
               disabled={state.courseDropdowns.length < 1}
-              placeholder={state.courseDropdowns.length < 1 ? 'No other courses' : 'Select course to copy from'}
+              placeholder={
+                state.courseDropdowns.length < 1 ? 'No other courses' : 'Select course to copy from'
+              }
               selection
               value={state.copyCourse}
               onChange={(e, { value }) => (state.copyCourse = value)}

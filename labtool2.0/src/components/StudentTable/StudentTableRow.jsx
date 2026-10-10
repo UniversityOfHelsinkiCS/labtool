@@ -37,27 +37,29 @@ export const StudentTableRow = props => {
     unTagStudent
   } = props
 
-  const updateTeacher = id => async (e, { value }) => {
-    if (!value) {
-      return
-    }
-    try {
-      e.preventDefault()
-      let teacherId = value
-      if (teacherId === '-') {
-        // unassign
-        teacherId = null
+  const updateTeacher =
+    id =>
+    async (e, { value }) => {
+      if (!value) {
+        return
       }
+      try {
+        e.preventDefault()
+        let teacherId = value
+        if (teacherId === '-') {
+          // unassign
+          teacherId = null
+        }
 
-      const data = {
-        studentInstanceId: id,
-        teacherInstanceId: teacherId
+        const data = {
+          studentInstanceId: id,
+          teacherInstanceId: teacherId
+        }
+        await associateTeacherToStudent(data)
+      } catch (error) {
+        console.error(error)
       }
-      await associateTeacherToStudent(data)
-    } catch (error) {
-      console.error(error)
     }
-  }
 
   const handleSelectCheck = id => (e, data) => {
     const { checked } = data
@@ -80,21 +82,23 @@ export const StudentTableRow = props => {
     }
   }
 
-  const addTag = id => async (e, { value }) => {
-    if (!value) {
-      return
-    }
-    try {
-      e.preventDefault()
-      const data = {
-        studentId: id,
-        tagId: value
+  const addTag =
+    id =>
+    async (e, { value }) => {
+      if (!value) {
+        return
       }
-      await tagStudent(data)
-    } catch (error) {
-      console.error(error)
+      try {
+        e.preventDefault()
+        const data = {
+          studentId: id,
+          tagId: value
+        }
+        await tagStudent(data)
+      } catch (error) {
+        console.error(error)
+      }
     }
-  }
 
   const removeTag = (id, tag) => async e => {
     try {
@@ -115,7 +119,9 @@ export const StudentTableRow = props => {
     if (commentsForWeek.length === 0) {
       return false
     }
-    const newComments = commentsForWeek.filter(comment => !(comment.isRead || []).includes(loggedInUser.user.id))
+    const newComments = commentsForWeek.filter(
+      comment => !(comment.isRead || []).includes(loggedInUser.user.id)
+    )
     return newComments.length > 0
   }
 
@@ -135,7 +141,14 @@ export const StudentTableRow = props => {
     let finalPoints = undefined
     const shouldReview = !dropped && validRegistration
 
-    const tableCellLinkStyle = { position: 'absolute', display: 'inline-block', top: 0, left: 0, right: 0, bottom: 0 }
+    const tableCellLinkStyle = {
+      position: 'absolute',
+      display: 'inline-block',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0
+    }
     const flexCenter = { display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }
 
     for (let j = 0; j < weeks.length; j++) {
@@ -158,17 +171,35 @@ export const StudentTableRow = props => {
             data-testid={`week-review-${data.id}-${i + 1}`}
             to={
               weekPoints[i + 1] === undefined
-                ? { pathname: `/labtool/reviewstudent/${selectedInstance.ohid}/${siId}/${i + 1}`, state: { cameFromCoursePage: true } }
-                : { pathname: `/labtool/browsereviews/${selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: `Week${i + 1}` } }
+                ? {
+                    pathname: `/labtool/reviewstudent/${selectedInstance.ohid}/${siId}/${i + 1}`,
+                    state: { cameFromCoursePage: true }
+                  }
+                : {
+                    pathname: `/labtool/browsereviews/${selectedInstance.ohid}/${siId}`,
+                    state: { openAllWeeks: true, jumpToReview: `Week${i + 1}` }
+                  }
             }
           >
             <div>
               {weekPoints[i + 1] === undefined ? (
                 shouldReview && selectedInstance.currentWeek === i + 1 ? (
                   draftExists(selectedInstance.currentWeek) ? (
-                    <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'pause', size: 'large' }} />} content="Continue review from draft" className="reviewDraftButton" />
+                    <Popup
+                      trigger={
+                        <Button circular color="orange" size="tiny" icon={{ name: 'pause', size: 'large' }} />
+                      }
+                      content="Continue review from draft"
+                      className="reviewDraftButton"
+                    />
                   ) : (
-                    <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'star', size: 'large' }} />} content="Review" className="reviewButton" />
+                    <Popup
+                      trigger={
+                        <Button circular color="orange" size="tiny" icon={{ name: 'star', size: 'large' }} />
+                      }
+                      content="Review"
+                      className="reviewButton"
+                    />
                   )
                 ) : (
                   <p style={flexCenter}>-</p>
@@ -178,7 +209,9 @@ export const StudentTableRow = props => {
                   <p>
                     <Points points={weekPoints[i + 1]} />
                   </p>
-                  {showNewCommentsNotification(data.id, i + 1) ? <Popup trigger={<Icon name="comments" size="big" />} content="You have new comments" /> : null}
+                  {showNewCommentsNotification(data.id, i + 1) ? (
+                    <Popup trigger={<Icon name="comments" size="big" />} content="You have new comments" />
+                  ) : null}
                 </div>
               )}
             </div>
@@ -193,12 +226,23 @@ export const StudentTableRow = props => {
         const codeReview = codeReviews ? codeReviews.find(cr => cr.reviewNumber === index) : null
 
         indents.push(
-          <Table.Cell selectable key={`cr${siId}:${index}`} textAlign="center" style={{ position: 'relative' }}>
+          <Table.Cell
+            selectable
+            key={`cr${siId}:${index}`}
+            textAlign="center"
+            style={{ position: 'relative' }}
+          >
             <Link
               className="codeReviewPoints"
               style={{ ...tableCellLinkStyle, ...flexCenter }}
               key={'codeReview' + index + 'link'}
-              to={{ pathname: `/labtool/browsereviews/${selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: codeReview ? `CodeReview${codeReview.reviewNumber}` : undefined } }}
+              to={{
+                pathname: `/labtool/browsereviews/${selectedInstance.ohid}/${siId}`,
+                state: {
+                  openAllWeeks: true,
+                  jumpToReview: codeReview ? `CodeReview${codeReview.reviewNumber}` : undefined
+                }
+              }}
             >
               {shouldReview && selectedInstance.currentCodeReview.includes(index) && codeReview ? (
                 codeReview.linkToReview === null && codeReview.points === null ? (
@@ -209,7 +253,13 @@ export const StudentTableRow = props => {
                     className="codeReviewNotReady"
                   />
                 ) : codeReview.points === null ? (
-                  <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'star', size: 'large' }} />} content="Review" className="codeReviewButton" />
+                  <Popup
+                    trigger={
+                      <Button circular color="orange" size="tiny" icon={{ name: 'star', size: 'large' }} />
+                    }
+                    content="Review"
+                    className="codeReviewButton"
+                  />
                 ) : (
                   <p>{cr[index] || cr[index] === 0 ? <Points points={cr[index]} /> : '-'}</p>
                 )
@@ -231,16 +281,31 @@ export const StudentTableRow = props => {
             to={
               finalPoints === undefined
                 ? `/labtool/reviewstudent/${selectedInstance.ohid}/${siId}/${i + 1}`
-                : { pathname: `/labtool/browsereviews/${selectedInstance.ohid}/${siId}`, state: { openAllWeeks: true, jumpToReview: 'Final' } }
+                : {
+                    pathname: `/labtool/browsereviews/${selectedInstance.ohid}/${siId}`,
+                    state: { openAllWeeks: true, jumpToReview: 'Final' }
+                  }
             }
           >
             <div style={{ width: '100%', height: '100%' }}>
               {finalPoints === undefined ? (
                 shouldReview && selectedInstance.currentWeek === selectedInstance.weekAmount + 1 ? (
                   draftExists(selectedInstance.weekAmount + 1) ? (
-                    <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'pause', size: 'large' }} />} content="Continue review from draft" className="reviewDraftButton" />
+                    <Popup
+                      trigger={
+                        <Button circular color="orange" size="tiny" icon={{ name: 'pause', size: 'large' }} />
+                      }
+                      content="Continue review from draft"
+                      className="reviewDraftButton"
+                    />
                   ) : (
-                    <Popup trigger={<Button circular color="orange" size="tiny" icon={{ name: 'star', size: 'large' }} />} content="Review" className="reviewButton" />
+                    <Popup
+                      trigger={
+                        <Button circular color="orange" size="tiny" icon={{ name: 'star', size: 'large' }} />
+                      }
+                      content="Review"
+                      className="reviewButton"
+                    />
                   )
                 ) : (
                   <p style={flexCenter}>-</p>
@@ -248,16 +313,23 @@ export const StudentTableRow = props => {
               ) : finalPoints === null ? (
                 <div>
                   <p style={flexCenter}>
-                    <Popup trigger={<Icon name="check" size="big" color="grey" />} content="Final review has been given, but without any points" />
+                    <Popup
+                      trigger={<Icon name="check" size="big" color="grey" />}
+                      content="Final review has been given, but without any points"
+                    />
                   </p>
-                  {showNewCommentsNotification(data.id, selectedInstance.weekAmount + 1) ? <Popup trigger={<Icon name="comments" size="big" />} content="You have new comments" /> : null}
+                  {showNewCommentsNotification(data.id, selectedInstance.weekAmount + 1) ? (
+                    <Popup trigger={<Icon name="comments" size="big" />} content="You have new comments" />
+                  ) : null}
                 </div>
               ) : (
                 <div>
                   <p style={flexCenter}>
                     <Points points={finalPoints} />
                   </p>
-                  {showNewCommentsNotification(data.id, selectedInstance.weekAmount + 1) ? <Popup trigger={<Icon name="comments" size="big" />} content="You have new comments" /> : null}
+                  {showNewCommentsNotification(data.id, selectedInstance.weekAmount + 1) ? (
+                    <Popup trigger={<Icon name="comments" size="big" />} content="You have new comments" />
+                  ) : null}
                 </div>
               )}
             </div>
@@ -271,18 +343,39 @@ export const StudentTableRow = props => {
   }
 
   return (
-    <Table.Row key={data.id} data-testid={`student-row-${data.id}`} className={data.dropped || !data.validRegistration ? 'TableRowForDroppedOutStudent' : 'TableRowForActiveStudent'}>
+    <Table.Row
+      key={data.id}
+      data-testid={`student-row-${data.id}`}
+      className={
+        data.dropped || !data.validRegistration ? 'TableRowForDroppedOutStudent' : 'TableRowForActiveStudent'
+      }
+    >
       {/* Select Check Box */}
       {showColumn('select') && (
         <Table.Cell key="select">
-          <Checkbox id={'select' + data.id} checked={coursePageLogic.selectedStudents[data.id] || false} onChange={handleSelectCheck(data.id)} />
+          <Checkbox
+            id={'select' + data.id}
+            checked={coursePageLogic.selectedStudents[data.id] || false}
+            onChange={handleSelectCheck(data.id)}
+          />
         </Table.Cell>
       )}
 
       {/* Student */}
       <Table.Cell key="studentinfo">
-        {!data.validRegistration && <Popup trigger={<Icon name="warning" color="black" />} content="This student's registration has been marked as mistaken" />}
-        {!data.dropped && data.validRegistration && data.repoExists === false && <RepoAccessWarning student={data} ohid={selectedInstance.ohid} updateStudentProjectInfo={updateStudentProjectInfo} />}
+        {!data.validRegistration && (
+          <Popup
+            trigger={<Icon name="warning" color="black" />}
+            content="This student's registration has been marked as mistaken"
+          />
+        )}
+        {!data.dropped && data.validRegistration && data.repoExists === false && (
+          <RepoAccessWarning
+            student={data}
+            ohid={selectedInstance.ohid}
+            updateStudentProjectInfo={updateStudentProjectInfo}
+          />
+        )}
         {allowReview ? (
           <Link to={`/labtool/browsereviews/${selectedInstance.ohid}/${data.id}`}>
             <Popup
@@ -316,20 +409,43 @@ export const StudentTableRow = props => {
               <span key={data.id + ':' + tag.id} style={{ float: 'left', marginRight: '0.33em' }}>
                 <Button.Group className={'mini'}>
                   <TagLabel tag={tag} handleClick={addFilterTag(tag)} />
-                  {allowModify && <TagLabel removeLabel={true} tag={tag} handleClick={removeTag(data.id, tag.id)} />}
+                  {allowModify && (
+                    <TagLabel removeLabel={true} tag={tag} handleClick={removeTag(data.id, tag.id)} />
+                  )}
                 </Button.Group>
               </span>
             ))}
           </div>
           {allowModify && (
-            <Popup trigger={<Icon id={'tagModify'} onClick={changeHiddenTagDropdown(data.id)} name="add" color="green" style={{ float: 'right', fontSize: '1.25em' }} />} content="Add tag" />
+            <Popup
+              trigger={
+                <Icon
+                  id={'tagModify'}
+                  onClick={changeHiddenTagDropdown(data.id)}
+                  name="add"
+                  color="green"
+                  style={{ float: 'right', fontSize: '1.25em' }}
+                />
+              }
+              content="Add tag"
+            />
           )}
         </span>
         {allowModify && (
           <div>
             {coursePageLogic.showTagDropdown === data.id ? (
               <div>
-                <Dropdown id={'tagDropdown'} upward={false} style={{ float: 'left' }} selectOnBlur={false} options={dropDownTags} onChange={addTag(data.id)} placeholder="Choose tag" fluid selection />
+                <Dropdown
+                  id={'tagDropdown'}
+                  upward={false}
+                  style={{ float: 'left' }}
+                  selectOnBlur={false}
+                  options={dropDownTags}
+                  onChange={addTag(data.id)}
+                  placeholder="Choose tag"
+                  fluid
+                  selection
+                />
               </div>
             ) : (
               <div />
@@ -345,7 +461,12 @@ export const StudentTableRow = props => {
 
           {/* Sum */}
           <Table.Cell key="pointssum" textAlign="center">
-            <Points points={data.weeks.map(week => week.points).reduce((a, b) => a + b, 0) + data.codeReviews.map(cr => cr.points).reduce((a, b) => a + b, 0)} />
+            <Points
+              points={
+                data.weeks.map(week => week.points).reduce((a, b) => a + b, 0) +
+                data.codeReviews.map(cr => cr.points).reduce((a, b) => a + b, 0)
+              }
+            />
           </Table.Cell>
         </>
       )}
@@ -375,7 +496,15 @@ export const StudentTableRow = props => {
           {allowModify && (
             <>
               <Popup
-                trigger={<Button circular onClick={changeHiddenAssistantDropdown(data.id)} size="small" icon={{ name: 'pencil' }} style={{ margin: '0.25em', float: 'right' }} />}
+                trigger={
+                  <Button
+                    circular
+                    onClick={changeHiddenAssistantDropdown(data.id)}
+                    size="small"
+                    icon={{ name: 'pencil' }}
+                    style={{ margin: '0.25em', float: 'right' }}
+                  />
+                }
                 content="Assign instructor"
               />
               {coursePageLogic.showAssistantDropdown === data.id ? (

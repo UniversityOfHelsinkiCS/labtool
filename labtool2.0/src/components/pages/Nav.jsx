@@ -8,7 +8,9 @@ import LogoutButton from '../LogoutButton'
 
 import './Nav.css'
 
-const MenuText = ({ active, children }) => <span className={active ? 'activeItem' : undefined}>{children}</span>
+const MenuText = ({ active, children }) => (
+  <span className={active ? 'activeItem' : undefined}>{children}</span>
+)
 
 MenuText.propTypes = {
   active: PropTypes.bool,

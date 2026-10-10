@@ -32,8 +32,8 @@ const toggleAndCascadeMissingPrerequisites = (baseChecks, thisChecks, itemId, pr
       baseChecks[itemId] !== undefined
         ? !baseChecks[itemId]
         : thisChecks
-        ? !thisChecks.checks[itemId]
-        : !baseChecks[itemId]
+          ? !thisChecks.checks[itemId]
+          : !baseChecks[itemId]
   }
   return cascadeMissingPrerequisites(toggledChecks, prerequisites)
 }

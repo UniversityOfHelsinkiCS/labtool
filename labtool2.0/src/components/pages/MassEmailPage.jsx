@@ -27,8 +27,19 @@ export const MassEmailPage = props => {
 
     return (
       <>
-        <Form.TextArea name="content" placeholder="Type email here..." value={pstate.value} onChange={(e, { value }) => (pstate.value = value)} required />
-        <Form.Checkbox name="sendToInstructors" checked={pstate.checked} onChange={(e, { checked }) => (pstate.checked = checked)} label="Send a copy to all instructors" />
+        <Form.TextArea
+          name="content"
+          placeholder="Type email here..."
+          value={pstate.value}
+          onChange={(e, { value }) => (pstate.value = value)}
+          required
+        />
+        <Form.Checkbox
+          name="sendToInstructors"
+          checked={pstate.checked}
+          onChange={(e, { checked }) => (pstate.checked = checked)}
+          label="Send a copy to all instructors"
+        />
         <Button type="submit" className="ui green button" content="Send" />
       </>
     )
@@ -60,28 +71,45 @@ export const MassEmailPage = props => {
     e.preventDefault()
     const data = (props.courseData && props.courseData.data).filter(student => student.validRegistration)
     if (data) {
-      const sendingTo = data.filter(entry => props.coursePageLogic.selectedStudents[entry.id]).map(entry => ({ id: entry.id }))
+      const sendingTo = data
+        .filter(entry => props.coursePageLogic.selectedStudents[entry.id])
+        .map(entry => ({ id: entry.id }))
       if (!sendingTo.length) {
         store.dispatch({ type: 'MASS_EMAIL_SENDFAILURE' })
       } else {
         props.addRedirectHook({
           hook: 'MASS_EMAIL_SEND'
         })
-        await props.sendMassEmail({ students: sendingTo, content: e.target.content.value, sendToInstructors: e.target.sendToInstructors.checked }, props.selectedInstance.ohid)
+        await props.sendMassEmail(
+          {
+            students: sendingTo,
+            content: e.target.content.value,
+            sendToInstructors: e.target.sendToInstructors.checked
+          },
+          props.selectedInstance.ohid
+        )
       }
     }
   }
 
   const selectAllNonDroppedStudents = () => {
     const newSelect = {}
-    props.courseData.data.filter(student => student.validRegistration && !student.dropped).forEach(student => (newSelect[student.id] = true))
+    props.courseData.data
+      .filter(student => student.validRegistration && !student.dropped)
+      .forEach(student => (newSelect[student.id] = true))
     props.restoreStudentSelection(newSelect)
   }
 
   const documentTitle = <DocumentTitle title="Mass email" />
 
   if (props.errors && props.errors.length > 0) {
-    return <Error errors={props.errors.map(error => `${error.response.data} (${error.response.status} ${error.response.statusText})`)} />
+    return (
+      <Error
+        errors={props.errors.map(
+          error => `${error.response.data} (${error.response.status} ${error.response.statusText})`
+        )}
+      />
+    )
   }
 
   if (props.loading.loading) {

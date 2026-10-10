@@ -7,7 +7,13 @@ import { createCourseIdWithYearAndTerm } from '../../../util/format'
 import RepoLink from '../../RepoLink'
 import TotalPoints from '../../TotalPoints'
 
-export const StudentCard = ({ student, otherParticipations, handleMarkAsDropped, handleMarkAsValidRegistration, teacherInstance }) => (
+export const StudentCard = ({
+  student,
+  otherParticipations,
+  handleMarkAsDropped,
+  handleMarkAsValidRegistration,
+  teacherInstance
+}) => (
   <Card key={student.id} fluid color="yellow" className="studentCard">
     <Card.Content>
       <Header as="h2">
@@ -38,8 +44,14 @@ export const StudentCard = ({ student, otherParticipations, handleMarkAsDropped,
             {otherParticipations.map(participation =>
               teacherInstance.find(course => course.id === participation.id) ? (
                 //show link to participation if the teacher/assistant has been the instructor in that course, otherwise only text
-                <Link key={participation.id} to={`/labtool/browsereviews/${participation.ohid}/${participation.courseInstances[0].id}`}>
-                  <Popup content="click to see the details" trigger={<p>{createCourseIdWithYearAndTerm(participation.ohid, participation.start)}</p>} />
+                <Link
+                  key={participation.id}
+                  to={`/labtool/browsereviews/${participation.ohid}/${participation.courseInstances[0].id}`}
+                >
+                  <Popup
+                    content="click to see the details"
+                    trigger={<p>{createCourseIdWithYearAndTerm(participation.ohid, participation.start)}</p>}
+                  />
                 </Link>
               ) : (
                 <p className="noAccess" key={participation.id}>
@@ -63,7 +75,13 @@ export const StudentCard = ({ student, otherParticipations, handleMarkAsDropped,
         <Popup
           content="Mark a registration as mistaken, if the student accidentally registered onto the course"
           trigger={
-            <Button basic id="buttonInvalidRegistration" color="red" style={{ float: 'right' }} onClick={() => handleMarkAsValidRegistration(!student.validRegistration)}>
+            <Button
+              basic
+              id="buttonInvalidRegistration"
+              color="red"
+              style={{ float: 'right' }}
+              onClick={() => handleMarkAsValidRegistration(!student.validRegistration)}
+            >
               {student.validRegistration ? 'Mark registration as mistaken' : 'Mark registration as intended'}
             </Button>
           }

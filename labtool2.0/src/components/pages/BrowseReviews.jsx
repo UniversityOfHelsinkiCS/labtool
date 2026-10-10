@@ -81,7 +81,11 @@ export const BrowseReviews = props => {
 
   const getMaximumIndexForStudent = student => {
     // how many reviews will there be?
-    return props.selectedInstance.weekAmount + student.codeReviews.length + (props.selectedInstance.finalReview ? 2 : 1)
+    return (
+      props.selectedInstance.weekAmount +
+      student.codeReviews.length +
+      (props.selectedInstance.finalReview ? 2 : 1)
+    )
   }
 
   const hasAllReviewsOpen = student => {
@@ -149,7 +153,13 @@ export const BrowseReviews = props => {
   }
 
   if (props.errors && props.errors.length > 0) {
-    return <Error errors={props.errors.map(error => `${error.response.data} (${error.response.status} ${error.response.statusText})`)} />
+    return (
+      <Error
+        errors={props.errors.map(
+          error => `${error.response.data} (${error.response.status} ${error.response.statusText})`
+        )}
+      />
+    )
   }
 
   // The loading flag can already be false before the course data has arrived (e.g. when the page is
@@ -167,15 +177,27 @@ export const BrowseReviews = props => {
       <Loader active={props.loading.loading} />
       {isTeacher() && student ? (
         <div>
-          <DocumentTitle title={`${student.User.firsts} ${student.User.lastname} - ${props.selectedInstance.ohid.substring(0, props.selectedInstance.ohid.indexOf('.'))}`} />
+          <DocumentTitle
+            title={`${student.User.firsts} ${student.User.lastname} - ${props.selectedInstance.ohid.substring(0, props.selectedInstance.ohid.indexOf('.'))}`}
+          />
           <BackButton preset="coursePage" />
           <Link to={`/labtool/courses/${props.selectedInstance.ohid}`} style={{ textAlign: 'center' }}>
-            <h2> {formatCourseName(props.selectedInstance.name, props.selectedInstance.ohid, props.selectedInstance.start)}</h2>
+            <h2>
+              {' '}
+              {formatCourseName(
+                props.selectedInstance.name,
+                props.selectedInstance.ohid,
+                props.selectedInstance.start
+              )}
+            </h2>
           </Link>
           <StudentCard
             student={student}
             otherParticipations={props.studentInstanceToBeReviewed.filter(
-              courseInstance => courseInstance.ohid.includes(props.courseId.substring(0, 8)) && courseInstance.ohid !== props.courseId && courseInstance.courseInstances[0].validRegistration
+              courseInstance =>
+                courseInstance.ohid.includes(props.courseId.substring(0, 8)) &&
+                courseInstance.ohid !== props.courseId &&
+                courseInstance.courseInstances[0].validRegistration
             )}
             handleMarkAsDropped={handleMarkAsDropped}
             handleMarkAsValidRegistration={handleMarkAsValidRegistration}
@@ -193,7 +215,13 @@ export const BrowseReviews = props => {
             )}
             <br />
           </span>
-          <WeekReviews courseId={props.courseId} student={student} studentInstance={props.studentInstance} openWeeks={state.openWeeks} handleClickWeek={handleClick} />
+          <WeekReviews
+            courseId={props.courseId}
+            student={student}
+            studentInstance={props.studentInstance}
+            openWeeks={state.openWeeks}
+            handleClickWeek={handleClick}
+          />
         </div>
       ) : (
         <p />

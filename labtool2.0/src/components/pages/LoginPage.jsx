@@ -31,7 +31,13 @@ export const LoginPage = props => {
   }
 
   if (props.errors && props.errors.length > 0) {
-    return <Error errors={props.errors.map(error => `${error.response.data} (${error.response.status} ${error.response.statusText})`)} />
+    return (
+      <Error
+        errors={props.errors.map(
+          error => `${error.response.data} (${error.response.status} ${error.response.statusText})`
+        )}
+      />
+    )
   }
 
   return (
@@ -51,12 +57,30 @@ export const LoginPage = props => {
             <Form onSubmit={handleSubmit}>
               <Form.Group inline>
                 <label style={{ width: '75px' }}>Username</label>
-                <Input type="text" name="username" icon="user" required iconPosition="left" style={{ minWidth: '25em' }} placeholder="Your AD-username" className="form-control1" />
+                <Input
+                  type="text"
+                  name="username"
+                  icon="user"
+                  required
+                  iconPosition="left"
+                  style={{ minWidth: '25em' }}
+                  placeholder="Your AD-username"
+                  className="form-control1"
+                />
               </Form.Group>
 
               <Form.Group inline>
                 <label style={{ width: '75px' }}>Password</label>
-                <Input type="password" name="password" required icon="lock" iconPosition="left" style={{ minWidth: '25em' }} placeholder="Your password" className="form-control2" />
+                <Input
+                  type="password"
+                  name="password"
+                  required
+                  icon="lock"
+                  iconPosition="left"
+                  style={{ minWidth: '25em' }}
+                  placeholder="Your password"
+                  className="form-control2"
+                />
               </Form.Group>
 
               <Form.Group>
@@ -96,7 +120,4 @@ LoginPage.propTypes = {
   errors: PropTypes.array
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(LoginPage)
+export default connect(mapStateToProps, mapDispatchToProps)(LoginPage)

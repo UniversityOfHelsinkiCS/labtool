@@ -3,7 +3,15 @@ import { Dropdown } from 'semantic-ui-react'
 import PropTypes from 'prop-types'
 
 const RevieweeDropdown = props => {
-  const { dropdownUsers, studentData, codeReviewLogic, addCodeReview, create, courseData, amountOfCodeReviews } = props
+  const {
+    dropdownUsers,
+    studentData,
+    codeReviewLogic,
+    addCodeReview,
+    create,
+    courseData,
+    amountOfCodeReviews
+  } = props
 
   const checkDropped = value => {
     if (value === null) return false
@@ -36,17 +44,23 @@ const RevieweeDropdown = props => {
       ? codeReviewLogic.currentSelections[-1][studentData.id]
       : null
     : // otherwise check if a code round has been selected
-    codeReviewLogic.selectedDropdown !== null
-    ? codeReviewLogic.currentSelections[codeReviewLogic.selectedDropdown][studentData.id]
+      codeReviewLogic.selectedDropdown !== null
       ? codeReviewLogic.currentSelections[codeReviewLogic.selectedDropdown][studentData.id]
+        ? codeReviewLogic.currentSelections[codeReviewLogic.selectedDropdown][studentData.id]
+        : null
       : null
-    : null
 
-  const initialOptions = dropdownUsers.filter(d => d.value !== studentData.id && !checkDropped(d.value) && !checkValidRegistration(d.value))
+  const initialOptions = dropdownUsers.filter(
+    d => d.value !== studentData.id && !checkDropped(d.value) && !checkValidRegistration(d.value)
+  )
   const [options, setOptions] = useState(initialOptions)
 
   useEffect(() => {
-    setOptions(!Number.isInteger(reviewee) && reviewee !== null ? [...initialOptions, { value: reviewee, text: reviewee }] : initialOptions)
+    setOptions(
+      !Number.isInteger(reviewee) && reviewee !== null
+        ? [...initialOptions, { value: reviewee, text: reviewee }]
+        : initialOptions
+    )
   }, [codeReviewLogic])
 
   const handleAdditions = (e, { value }) => {
@@ -64,7 +78,9 @@ const RevieweeDropdown = props => {
     if (create) {
       return codeReviewLogic.currentSelections[-1][studentData.id]
     }
-    const codeReview = codeReviewLogic.codeReviewStates[codeReviewLogic.selectedDropdown].find(cr => cr.reviewer === studentData.id)
+    const codeReview = codeReviewLogic.codeReviewStates[codeReviewLogic.selectedDropdown].find(
+      cr => cr.reviewer === studentData.id
+    )
     return codeReview ? codeReview.toReview || codeReview.repoToReview : null
   }
 
@@ -75,7 +91,10 @@ const RevieweeDropdown = props => {
       <Dropdown
         selection
         fluid
-        options={options.map(option => ({ ...option, icon: reviewedInPrevious(option.value) ? 'repeat' : null }))}
+        options={options.map(option => ({
+          ...option,
+          icon: reviewedInPrevious(option.value) ? 'repeat' : null
+        }))}
         value={value()}
         search
         allowAdditions

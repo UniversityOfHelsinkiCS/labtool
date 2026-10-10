@@ -6,14 +6,16 @@ export const CodeReviewCheckbox = props => {
   const { setCodeReviewVisible, hideCodeReview, initialCheckState, codeReview } = props
   const [checked, setChecked] = useState(initialCheckState)
 
-  const handleCheckChange = value => (e, { checked }) => {
-    if (checked) {
-      setCodeReviewVisible(value)
-    } else {
-      hideCodeReview(value)
+  const handleCheckChange =
+    value =>
+    (e, { checked }) => {
+      if (checked) {
+        setCodeReviewVisible(value)
+      } else {
+        hideCodeReview(value)
+      }
+      setChecked(checked)
     }
-    setChecked(checked)
-  }
   return (
     <Segment vertical>
       <Checkbox label={codeReview.text} checked={checked} onChange={handleCheckChange(codeReview.value)} />

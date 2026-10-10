@@ -16,9 +16,12 @@ export const Notification = props => {
     const { message } = props.notification
     if (message !== undefined) {
       clearTimeout(timeout)
-      timeout = setTimeout(() => {
-        props.clearNotifications()
-      }, 5000 + Math.max(0, 10 * message.length - 40))
+      timeout = setTimeout(
+        () => {
+          props.clearNotifications()
+        },
+        5000 + Math.max(0, 10 * message.length - 40)
+      )
     }
   }, [props.notification.message])
 
@@ -33,11 +36,23 @@ export const Notification = props => {
     <Transition visible={!!message} animation={!error ? 'scale' : 'fly down'} duration={250}>
       <div className="notification-wrapper">
         {!error ? (
-          <Message floating className="notification success" color="green" size="large" onClick={closeNotification}>
+          <Message
+            floating
+            className="notification success"
+            color="green"
+            size="large"
+            onClick={closeNotification}
+          >
             {message || lastMessage}
           </Message>
         ) : (
-          <Message floating className="notification error" color="red" size="large" onClick={closeNotification}>
+          <Message
+            floating
+            className="notification error"
+            color="red"
+            size="large"
+            onClick={closeNotification}
+          >
             {message || lastMessage}
           </Message>
         )}

@@ -4,7 +4,17 @@ import PropTypes from 'prop-types'
 import { Points } from '../../Points'
 
 export const ReviewStudentChecklist = props => {
-  const { showOutput, checklist, checks, isChecked, toggleCheckbox, checklistOutput, checklistPoints, copyChecklistOutput, kind } = props
+  const {
+    showOutput,
+    checklist,
+    checks,
+    isChecked,
+    toggleCheckbox,
+    checklistOutput,
+    checklistPoints,
+    copyChecklistOutput,
+    kind
+  } = props
 
   const showCheck = clItem => clItem.prerequisite === null || isChecked(checks, clItem.prerequisite)
   const showCategory = category => checklist.list[category].some(showCheck)
@@ -55,12 +65,21 @@ export const ReviewStudentChecklist = props => {
               <Card className="checklistCard" fluid color="red" key={clItemCategory}>
                 <Card.Content header={clItemCategory} />
                 {sortPrerequisitesFirst(checklist.list[clItemCategory].filter(showCheck)).map(clItem => (
-                  <Card.Content className="checklistCardRow" data-testid={`check-${clItem.id}`} key={clItem.id} onClick={toggleCheckbox(clItem.id)}>
+                  <Card.Content
+                    className="checklistCardRow"
+                    data-testid={`check-${clItem.id}`}
+                    key={clItem.id}
+                    onClick={toggleCheckbox(clItem.id)}
+                  >
                     <Form.Field>
                       <Grid>
                         <Grid.Row style={{ cursor: 'pointer', userSelect: 'none' }}>
                           <Grid.Column width={3}>
-                            <Icon size="large" name={isChecked(checks, clItem.id) ? 'circle check outline' : 'circle outline'} style={{ color: isChecked(checks, clItem.id) ? 'green' : 'black' }} />
+                            <Icon
+                              size="large"
+                              name={isChecked(checks, clItem.id) ? 'circle check outline' : 'circle outline'}
+                              style={{ color: isChecked(checks, clItem.id) ? 'green' : 'black' }}
+                            />
                           </Grid.Column>
                           <Grid.Column width={10}>
                             <span style={{ flexGrow: 1, textAlign: 'center' }}>{clItem.name}</span>
@@ -89,7 +108,14 @@ export const ReviewStudentChecklist = props => {
             ))}
           <div>
             <Form className="checklistOutput" onSubmit={copyChecklistOutput}>
-              {showOutput && <Form.TextArea className="checklistOutputText" name="text" value={checklistOutput} style={{ width: '100%', height: '250px' }} />}
+              {showOutput && (
+                <Form.TextArea
+                  className="checklistOutputText"
+                  name="text"
+                  value={checklistOutput}
+                  style={{ width: '100%', height: '250px' }}
+                />
+              )}
               <p className="checklistOutputPoints">
                 points: <Points points={checklistPoints} />
               </p>
