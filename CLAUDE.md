@@ -2,6 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Changelog
+
+Record every change in `CHANGELOG.md` (newest first, under today's date: Added / Fixed / Security / Documentation). When a test finds a bug that isn't fixed, add it under "Known bugs"; when it is fixed, move it to "Fixed".
+
 ## Overview
 
 Labtool is a grading tool for programming projects at the University of Helsinki CS department. Monorepo with:
