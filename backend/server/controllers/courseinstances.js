@@ -1,14 +1,10 @@
 const Sequelize = require('sequelize')
-const request = require('request')
 const db = require('../models')
 const helper = require('../helpers/courseInstanceHelper')
 const logger = require('../utils/logger')
 
 const { Op } = Sequelize
 const { User, CourseInstance, StudentInstance, TeacherInstance, Week, ReviewCheck, CodeReview, Comment, Tag, Checklist, ChecklistItem, WeekDraft } = db
-
-const env = process.env.NODE_ENV || 'development'
-const config = require('./../config/config')[env]
 
 const overkillLogging = (req, error) => {
   logger.debug('request: ', req)
@@ -703,121 +699,6 @@ module.exports = {
         logger.error(error)
         res.status(400).send(error)
       })
-  },
-
-  /**
-   * Import a course from Kurki
-   *   permissions: user must be allowed to import courses
-   * This endpoint is not directly available to the frontend, and it should not be
-   *
-   * @param req
-   * @param res
-   */
-  getNew(req, res) {
-    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
-      return
-    }
-
-    const termAndYear = helper.CurrentTermAndYear()
-    if (this.remoteAddress === '127.0.0.1') {
-      res.send('gtfo')
-    } else {
-      const options = {
-        method: 'get',
-        uri: `${config.kurki_url}/labtool/courses`,
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: process.env.TOKEN
-        },
-        params: {
-          token: process.env.TOKEN,
-          year: termAndYear.currentYear,
-          term: termAndYear.currentTerm
-        },
-        strictSSL: false
-      }
-      request(options, (err, resp, body) => {
-        const json = JSON.parse(body)
-        if (!json.forEach) {
-          logger.error(json)
-          return
-        }
-        json.forEach((instance) => {
-          CourseInstance.findOrCreate({
-            attributes: {
-              exclude: ['createdAt', 'updatedAt']
-            },
-            where: { ohid: instance.id },
-            defaults: {
-              name: instance.name,
-              start: instance.starts,
-              end: instance.ends,
-              ohid: instance.id
-            }
-          })
-        })
-        if (req.decoded) {
-          res.status(204).send({ hello: 'hello' }) // nodejs crashes if someone just posts here without valid token.
-        }
-      })
-    }
-  },
-
-  /**
-   * Import a course from Kurki
-   *   permissions: user must be allowed to import courses
-   * This endpoint is not directly available to the frontend, and it should not be
-   *
-   * @param req
-   * @param res
-   */
-  getNewer(req, res) {
-    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
-      return
-    }
-
-    const auth = process.env.TOKEN || 'notset' // You have to set TOKEN in .env file in order for this to work
-    const termAndYear = helper.CurrentTermAndYear()
-    if (auth === 'notset') {
-      res.send('Please restart the backend with the correct TOKEN environment variable set.')
-    } else if (this.remoteAddress === '127.0.0.1') {
-      res.send('gtfo')
-    } else {
-      const options = {
-        method: 'get',
-        uri: `${config.kurki_url}/labtool/courses`,
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: process.env.TOKEN
-        },
-        params: {
-          token: process.env.TOKEN,
-          year: termAndYear.nextYear,
-          term: termAndYear.nextTerm
-        },
-        strictSSL: false
-      }
-      request(options, (err, resp, body) => {
-        const json = JSON.parse(body)
-        json.forEach((instance) => {
-          CourseInstance.findOrCreate({
-            attributes: {
-              exclude: ['createdAt', 'updatedAt']
-            },
-            where: { ohid: instance.id },
-            defaults: {
-              name: instance.name,
-              start: instance.starts,
-              end: instance.ends,
-              ohid: instance.id
-            }
-          })
-        })
-        if (req.decoded) {
-          res.status(204).send({ hello: 'hello' }) // nodejs crashes if someone just posts here without valid token.
-        }
-      })
-    }
   },
 
   /**

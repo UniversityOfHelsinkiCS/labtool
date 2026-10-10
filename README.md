@@ -19,37 +19,57 @@ Quickstart for local development:
 - build the docker images with `docker compose build`
 - run `docker compose up` to start the application
 
-## End-to-end tests
+The frontend is at [http://localhost:3000](http://localhost:3000) and the backend at
+[http://localhost:3001](http://localhost:3001). The backend recreates and reseeds the database
+on every start, and you can log in as any of the seeded users through the fake login page.
 
-Playwright tests covering the core student and teacher flows live in `e2e/`. They run against
-their own docker compose stack (`docker-compose.e2e.yml`), which uses separate ports and an
-ephemeral database, so it can run alongside the normal dev stack.
+## Tests
 
-First time only:
+There are three test suites. CI (`.github/workflows/tests.yml`) runs all of them, plus linting,
+on every pull request and before staging and production deploys.
+
+Skipped tests (`it.skip`, `test.fixme`) mark known bugs in the app. Each one has a comment
+explaining the bug; un-skip the test when the bug is fixed.
+
+### Frontend unit tests
+
+Vitest tests in `labtool2.0/src/tests/` cover components, reducers, the service functions and the
+API middleware. HTTP is mocked with [msw](https://mswjs.io/), so the tests do not depend on axios
+internals.
+
+```
+cd labtool2.0
+npm test                                      # all tests
+npx vitest run src/tests/CoursePage.test.js   # one file
+npm run lint
+```
+
+### Backend API tests
+
+Mocha and supertest tests in `backend/test/` call the API over HTTP against a real Postgres
+database. Kurki is mocked and email is stubbed, so nothing leaves the machine. The easiest way to
+run them is in Docker, which needs no local database:
+
+```
+cd backend
+npm run test:docker                         # builds and runs docker-compose.test.yml, then tears it down
+npm run test:docker -- test/users.spec.js   # one file
+npm run lint
+```
+
+With a Postgres reachable directly (`DB_HOST`, `DB_PORT`, `DB_USERNAME`, `DB_PASSWORD`; database
+`labtool_test`), `npm test` runs the suite without Docker.
+
+### End-to-end tests
+
+Playwright tests in `e2e/` drive the real UI through the core teacher and student flows, against
+their own docker compose stack (`docker-compose.e2e.yml`) that can run alongside the dev stack.
 
 ```
 cd e2e
-npm install
-npx playwright install chromium
+npm install && npx playwright install chromium   # first time only
+npm run e2e                                      # start the stack, run the suite, tear it down
 ```
 
-Then, to run everything in one shot — starts the stack, runs the suite, tears the stack down:
-
-```
-npm run e2e
-```
-
-It exits non-zero if any test fails, and tears the stack down either way.
-
-While developing tests it is faster to keep the stack running between runs:
-
-```
-npm run e2e:up      # start the stack on :3010 (frontend) and :3011 (backend)
-npm test            # run the suite
-npm run test:ui     # or step through it interactively
-npm run e2e:down    # tear the stack down
-```
-
-The suite reseeds the database before every run, so it is safe to run repeatedly. Fixtures come
-from `backend/server/seeders/20260916000000-e2e-fixtures.js`, which only inserts anything when
-`E2E_SEED=true` and therefore leaves the dev stack untouched.
+See [e2e/README.md](e2e/README.md) for what the suite covers, how to develop tests against a
+running stack, and how test data is seeded.

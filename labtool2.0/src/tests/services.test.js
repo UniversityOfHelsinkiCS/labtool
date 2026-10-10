@@ -67,6 +67,14 @@ const cases = [
     'CHECKLIST_GET_ONE_',
     payload
   ],
+  [
+    'checklist.getCopyableChecklists',
+    () => checklist.getCopyableChecklists(),
+    'get',
+    '/checklist/copyable',
+    'CHECKLIST_GET_COPYABLE_',
+    null
+  ],
 
   [
     'codeReview.bulkinsertCodeReviews',

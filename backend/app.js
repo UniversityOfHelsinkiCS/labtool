@@ -124,7 +124,7 @@ const authenticate = (request, response, next) => {
   const excludedPaths = ['/api/login', '/api', '/admin']
   if (!excludedPaths.includes(request.path)) {
     try {
-      const decoded = jwt.verify(request.token, process.env.SECRET)
+      const decoded = jwt.verify(request.token, process.env.SECRET, { algorithms: ['HS256'] })
       request.decoded = decoded
       request.authenticated = { success: true, error: '' }
     } catch (e) {

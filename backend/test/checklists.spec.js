@@ -278,4 +278,59 @@ describe('Checklists API', () => {
         .expect(400)
     })
   })
+
+  describe('GET /api/checklist/copyable', () => {
+    const item = { Code: [{ name: 'Has tests', checkedPoints: 1, uncheckedPoints: 0 }] }
+    const sorted = list => list.slice().sort((a, b) => (a.courseInstanceId - b.courseInstanceId) || ((a.week || 0) - (b.week || 0)))
+
+    it('requires authentication', async () => {
+      await anonymous()
+        .get('/api/checklist/copyable')
+        .expect(401)
+    })
+
+    it('lists non-empty checklists on the courses the user teaches', async () => {
+      const secondCourse = await f.createCourse()
+      await f.addTeacher(s.users.teacher, secondCourse)
+      await f.createChecklist(s.course, { week: 1, items: item })
+      await f.createChecklist(s.course, { forCodeReview: true, items: item })
+      await f.createChecklist(secondCourse, { week: 2, items: item })
+
+      const res = await as(s.users.teacher)
+        .get('/api/checklist/copyable')
+        .expect(200)
+      assert.deepStrictEqual(sorted(res.body), sorted([
+        { courseInstanceId: s.course.id, week: 1, forCodeReview: false },
+        { courseInstanceId: s.course.id, week: null, forCodeReview: true },
+        { courseInstanceId: secondCourse.id, week: 2, forCodeReview: false }
+      ]))
+    })
+
+    it('leaves out empty checklists', async () => {
+      await f.createChecklist(s.course, { week: 1 })
+      const res = await as(s.users.teacher)
+        .get('/api/checklist/copyable')
+        .expect(200)
+      assert.deepStrictEqual(res.body, [])
+    })
+
+    it('leaves out checklists on courses the user is not on', async () => {
+      await f.createChecklist(s.otherCourse, { week: 1, items: item })
+      await f.createChecklist(s.course, { week: 3, items: item })
+
+      const asTeacher = await as(s.users.teacher).get('/api/checklist/copyable').expect(200)
+      assert.deepStrictEqual(asTeacher.body, [{ courseInstanceId: s.course.id, week: 3, forCodeReview: false }])
+
+      const asOutsider = await as(s.users.outsider).get('/api/checklist/copyable').expect(200)
+      assert.deepStrictEqual(asOutsider.body, [])
+    })
+
+    it('includes courses the user is a student on, like getone does', async () => {
+      await f.createChecklist(s.course, { week: 1, items: item })
+      const res = await as(s.users.student)
+        .get('/api/checklist/copyable')
+        .expect(200)
+      assert.deepStrictEqual(res.body, [{ courseInstanceId: s.course.id, week: 1, forCodeReview: false }])
+    })
+  })
 })

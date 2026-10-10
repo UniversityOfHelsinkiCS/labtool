@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { Header, Input, Label, Button, Popup, Card, Dropdown, Loader, Icon, Checkbox, Radio } from 'semantic-ui-react'
 import { showNotification } from '../../reducers/notificationReducer'
 import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
-import { createChecklist, getOneChecklist } from '../../services/checklist'
+import { createChecklist, getOneChecklist, getCopyableChecklists } from '../../services/checklist'
 import { getOneCI, getAllCI } from '../../services/courseInstance'
 import {
   resetChecklist,
@@ -39,7 +39,6 @@ export const CreateChecklist = props => {
     topicName: '', // tracks value inputted into topic creation dialog box.
     rowName: '', // tracks value inputted into row creation dialog box.
     openAdd: '', // which addForm is currently open. '' denotes no open addForms. Only one addForm can be open at one time.
-    courseDropdowns: [], // Dropdown options to show for copying checklist.
     copyWeekDropdowns: [], // Dropdown options to show for copying from another week.
     categoryPrerequisites: {},
     checklistData: null,
@@ -59,10 +58,10 @@ export const CreateChecklist = props => {
     }
     props.getOneCI(props.courseId)
     props.getAllCI()
+    props.getCopyableChecklists()
   }, [])
 
   useEffect(() => {
-    state.courseDropdowns = createCourseDropdowns()
     state.copyWeekDropdowns = createCopyWeekDropdowns()
   }, [state.current])
 
@@ -189,24 +188,9 @@ export const CreateChecklist = props => {
     if (newCurrentObj.error) {
       return
     }
-    let copyCourse
-    if (state.copyCourse) {
-      if (newCurrentObj.kind === 'week') {
-        if (newCurrentObj.number > props.selectedInstance.weekAmount) {
-          copyCourse = props.courses.find(course => course.id === state.copyCourse).finalReview ? state.copyCourse : null
-        } else {
-          copyCourse = props.courses.find(course => course.id === state.copyCourse).weekAmount >= newCurrentObj.number ? state.copyCourse : null
-        }
-      } else if (newCurrentObj.kind === 'codeReview') {
-        if (newCurrentObj.number > props.selectedInstance.amountOfCodeReviews) {
-          copyCourse = null
-        } else {
-          copyCourse = props.courses.find(course => course.id === state.copyCourse).amountOfCodeReviews >= newCurrentObj.number ? state.copyCourse : null
-        }
-      }
-    } else {
-      copyCourse = null
-    }
+    // keep the selected course only if it also has a checklist to copy for the new selection
+    const keepCopyCourse = state.copyCourse && createCourseDropdowns(newCurrent).some(option => option.value === state.copyCourse)
+    const copyCourse = keepCopyCourse ? state.copyCourse : null
     state.maximumPoints = ''
     state.current = newCurrent
     state.copyCourse = copyCourse
@@ -214,7 +198,6 @@ export const CreateChecklist = props => {
     if (state.copyWeek === newCurrent) {
       state.copyWeek = null
     }
-    state.courseDropdowns = createCourseDropdowns()
     state.copyWeekDropdowns = createCopyWeekDropdowns()
     loadChecklist(newCurrent)
   }
@@ -523,13 +506,24 @@ export const CreateChecklist = props => {
     return courses.filter(course => course.finalReview)
   }
 
-  const createCourseDropdowns = () => {
+  // whether the course has a non-empty checklist for the given week, final review or code review
+  const hasCopyableChecklist = (course, obj) =>
+    (props.copyableChecklists || []).some(checklist => {
+      if (checklist.courseInstanceId !== course.id) return false
+      if (obj.kind === 'codeReview') return checklist.forCodeReview
+      const week = obj.number > props.selectedInstance.weekAmount ? course.weekAmount + 1 : obj.number
+      return !checklist.forCodeReview && checklist.week === week
+    })
+
+  const createCourseDropdowns = (current = state.current) => {
     if (!props.courses || !props.selectedInstance || !Object.keys(props.courses).length) return []
-    const obj = parseChecklistValue(state.current)
+    const obj = parseChecklistValue(current)
+    if (obj.error) return []
     const courses =
       obj.kind === 'codeReview' ? codeReviewFilter(obj.number, props.courses) : obj.number > props.selectedInstance.weekAmount ? finalFilter(props.courses) : weekFilter(obj.number, props.courses)
     const options = sortCoursesByName(courses)
       .filter(course => props.selectedInstance.id !== course.id)
+      .filter(course => hasCopyableChecklist(course, obj))
       .map(course => {
         return {
           value: course.id,
@@ -748,6 +742,7 @@ export const CreateChecklist = props => {
   }
 
   const hasSelectedWeek = state.current !== undefined && state.current !== null
+  const courseDropdowns = hasSelectedWeek ? createCourseDropdowns() : []
   const currentObj = parseChecklistValue(state.current)
   const { checklistJsx, maxPoints } = props.loading.loading ? { checklistJsx: null, maxPoints: null } : renderChecklist(currentObj.kind)
   return (
@@ -779,7 +774,7 @@ export const CreateChecklist = props => {
                 selection
                 value={state.copyCourse}
                 onChange={changeCopyCourse}
-                options={state.courseDropdowns}
+                options={courseDropdowns}
               />
             </div>
             {hasSelectedWeek ? (
@@ -919,6 +914,7 @@ const mapStateToProps = (state, ownProps) => {
     weekDropdowns: createWeekDropdowns(selectedInstance),
     checklist: state.checklist,
     courses: state.courseInstance,
+    copyableChecklists: state.copyableChecklists,
     loading: state.loading,
     errors: Object.values(state.loading.errors)
   }
@@ -932,6 +928,7 @@ const mapDispatchToProps = {
   getOneCI,
   getAllCI,
   getOneChecklist,
+  getCopyableChecklists,
   resetChecklist,
   restoreChecklist,
   changeField,
@@ -954,6 +951,7 @@ CreateChecklist.propTypes = {
   weekDropdowns: PropTypes.array,
   checklist: PropTypes.object.isRequired,
   courses: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+  copyableChecklists: PropTypes.array,
   loading: PropTypes.object.isRequired,
 
   showNotification: PropTypes.func.isRequired,
@@ -963,6 +961,7 @@ CreateChecklist.propTypes = {
   getOneCI: PropTypes.func.isRequired,
   getAllCI: PropTypes.func.isRequired,
   getOneChecklist: PropTypes.func.isRequired,
+  getCopyableChecklists: PropTypes.func.isRequired,
   resetChecklist: PropTypes.func.isRequired,
   restoreChecklist: PropTypes.func.isRequired,
   changeField: PropTypes.func.isRequired,
