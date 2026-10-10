@@ -7,12 +7,16 @@ const logger = require('../utils/logger')
 const env = process.env.NODE_ENV || 'development'
 const frontendUrl = process.env.FRONTEND_URL || 'cs.helsinki.labtool.fi'
 
+// SMTP_HOST / SMTP_PORT point the backend at another mail server, e.g. the Mailpit container in the
+// dev and e2e docker compose stacks. When SMTP_HOST is set, email is really sent in every environment;
+// otherwise it is only sent in production and staging and simulated elsewhere.
 const SENDER_SETTINGS = {
   from: 'Labtool Robot <noreply@helsinki.fi>',
-  host: 'smtp.helsinki.fi',
-  port: 587,
+  host: process.env.SMTP_HOST || 'smtp.helsinki.fi',
+  port: Number(process.env.SMTP_PORT) || 587,
   secure: false
 }
+const SEND_REAL_EMAIL = env === 'production' || env === 'staging' || !!process.env.SMTP_HOST
 
 // Helper function for send
 // Returned fields differ based on role argument.
@@ -232,7 +236,7 @@ const trySendEmail = async (emailOptions) => {
     ...emailOptions
   }
 
-  if (env !== 'production' && env !== 'staging') {
+  if (!SEND_REAL_EMAIL) {
     console.log('Simulated sending email.', options)
     return {
       success: true,
@@ -240,7 +244,6 @@ const trySendEmail = async (emailOptions) => {
     }
   }
 
-  // In production, send email
   const transporter = nodemailer.createTransport(SENDER_SETTINGS)
   const mail = await transporter.sendMail(options)
 

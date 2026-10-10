@@ -1,13 +1,26 @@
 import { test, expect } from '@playwright/test'
 import { loginAs } from '../fixtures/auth'
-import { COURSES, NOTIFICATIONS, SEEDED_WEEKS, STUDENT_INSTANCES, TEACHER } from '../fixtures/data'
+import {
+  BOUNCING_STUDENT_EMAIL,
+  COURSES,
+  NOTIFICATIONS,
+  SEEDED_WEEKS,
+  STUDENT_INSTANCES,
+  TEACHER
+} from '../fixtures/data'
 import { expectNoLoader, expectSuccess, openAccordion } from '../fixtures/helpers'
+import { mailsWithSubject } from '../fixtures/mailpit'
 
-// The backend (server/controllers/email.js) only logs "Simulated sending email." unless
-// NODE_ENV is production or staging; the e2e stack runs with NODE_ENV=development, so no mail
-// leaves the stack. The "Email sending simulated." notification proves that branch was taken.
+// The e2e backend sends email through the stack's Mailpit (SMTP_HOST in docker-compose.e2e.yml), so
+// these tests check what was really delivered. Addresses as stored by the seeders:
+const STUDENT_ADDRESS = 'maarit.opiskelija@helsinki.invalid' // REGISTERED_STUDENT, demo seed
+const SECOND_STUDENT_ADDRESS = 'sanni.toinen@example.com'
+const TEACHER_ADDRESS = 'paa.opettaja@helsinki.invalid'
 
 const course = COURSES.email
+
+const recipientsOfMailsFor = async (courseName: string) =>
+  (await mailsWithSubject(courseName)).flatMap(mail => mail.recipients)
 
 test('a teacher sends an email notification about a reviewed week', async ({ page }) => {
   await loginAs(page, TEACHER)
@@ -20,7 +33,8 @@ test('a teacher sends an email notification about a reviewed week', async ({ pag
 
   await week1.getByRole('button', { name: 'Send email notification' }).click()
 
-  await expectSuccess(page, NOTIFICATIONS.emailSimulated)
+  await expectSuccess(page, NOTIFICATIONS.emailSent)
+  await expect.poll(() => recipientsOfMailsFor(course.name)).toContain(STUDENT_ADDRESS)
   await expect(week1.getByText('Notified')).toBeVisible()
   await expect(week1.getByRole('button', { name: 'Send email notification' })).toHaveCount(0)
 
@@ -48,11 +62,15 @@ test('a teacher sends a mass email to the students of a course', async ({ page }
   await expect(page.locator(`#select${STUDENT_INSTANCES.emailSecond}`)).toBeChecked()
 
   await page.getByPlaceholder('Type email here...').fill('The deadline for week 2 has been moved by one day.')
-  await page.locator('.ui.checkbox', { hasText: 'Send a copy to all instructors' }).click()
+  // checked by default, so the instructors get a copy
+  await expect(page.locator('.ui.checkbox', { hasText: 'Send a copy to all instructors' })).toHaveClass(/\bchecked\b/)
   await page.getByRole('button', { name: 'Send', exact: true }).click()
 
-  await expectSuccess(page, NOTIFICATIONS.emailSimulated)
+  await expectSuccess(page, NOTIFICATIONS.emailSent)
   await expect(page).toHaveURL(new RegExp(`/labtool/courses/${course.ohid}$`))
+  await expect
+    .poll(async () => (await mailsWithSubject(`${course.name} new message from instructor`))[0]?.recipients)
+    .toEqual(expect.arrayContaining([STUDENT_ADDRESS, SECOND_STUDENT_ADDRESS, TEACHER_ADDRESS]))
 })
 
 test('a mass email needs at least one recipient', async ({ page }) => {
@@ -66,4 +84,22 @@ test('a mass email needs at least one recipient', async ({ page }) => {
 
   await expect(page.locator('.notification.error')).toContainText('Could not send e-mail')
   await expect(page).toHaveURL(new RegExp(`/labtool/massemail/${course.ohid}$`))
+})
+
+// Issue #1141: a recipient the mail server rejects. The teacher must get an error, and nothing may
+// be delivered to the rejected address. (Which students did get the email is not reported yet.)
+test('a mass email to a student whose address is rejected shows an error', async ({ page }) => {
+  const bounce = COURSES.bounce
+  await loginAs(page, TEACHER)
+  await page.goto(`/labtool/massemail/${bounce.ohid}`)
+  await expect(page.getByRole('heading', { name: 'Send email to students' })).toBeVisible()
+  await expectNoLoader(page)
+
+  await page.getByRole('button', { name: 'Select all active students' }).click()
+  await expect(page.locator(`#select${STUDENT_INSTANCES.bounceRejected}`)).toBeChecked()
+  await page.getByPlaceholder('Type email here...').fill('Does this reach everyone?')
+  await page.getByRole('button', { name: 'Send', exact: true }).click()
+
+  await expect(page.locator('.notification.error')).toBeVisible()
+  expect(await recipientsOfMailsFor(bounce.name)).not.toContain(BOUNCING_STUDENT_EMAIL)
 })

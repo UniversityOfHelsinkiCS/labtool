@@ -23,6 +23,15 @@ The frontend is at [http://localhost:3000](http://localhost:3000) and the backen
 [http://localhost:3001](http://localhost:3001). The backend recreates and reseeds the database
 on every start, and you can log in as any of the seeded users through the fake login page.
 
+Email goes to a local [Mailpit](https://mailpit.axllent.org/) server instead of the university's
+SMTP server; read it at [http://localhost:8025](http://localhost:8025). Mailpit rejects recipients
+outside the domains used in the seed data (`helsinki.invalid`, `helsinki.fi`, `example.com`,
+`example.org`), the way a real server rejects a bad address. To try a delivery failure, send a mass
+email on the course `TKT20010.2026.S.K.SIM1`: the seeded student Pekka Palautuva has the address
+`pekka.palautuva@rejected.test`. The backend sends real email whenever `SMTP_HOST` (and optionally
+`SMTP_PORT`) is set; without it, email is only sent in production and staging and simulated
+elsewhere.
+
 ## Tests
 
 There are three test suites. CI (`.github/workflows/tests.yml`) runs all of them, plus linting,

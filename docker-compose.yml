@@ -39,6 +39,8 @@ services:
       - ADMIN_PW=dev
       - USE_FAKE_LOGIN=ThisIsNotProduction
       - KURKI_URL=http://kurki:3002
+      - SMTP_HOST=mailpit
+      - SMTP_PORT=1025
     ports:
       - "3001:3001"
     develop:
@@ -55,7 +57,19 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      mailpit:
+        condition: service_started
     command: sh -c "npm run dropdb; npm run createdb && npm run migrate && npm run add_test_data && npm run watch"
+
+  # Local mail server: catches all email the backend sends; inbox at http://localhost:8025.
+  # Recipients outside the domains below are rejected, as a real SMTP server would reject a bad
+  # address, e.g. pekka.palautuva@rejected.test (a seeded student) - see issue #1141.
+  mailpit:
+    image: axllent/mailpit:v1.31.2
+    environment:
+      MP_SMTP_ALLOWED_RECIPIENTS: '@(helsinki\.invalid|helsinki\.fi|example\.com|example\.org)$$'
+    ports:
+      - "8025:8025"
 
   kurki:
     build:

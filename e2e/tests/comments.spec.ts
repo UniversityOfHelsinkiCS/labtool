@@ -42,7 +42,7 @@ test.describe.serial('comments on a reviewed week', () => {
 
     // the backend only simulates sending outside production/staging
     await question.getByRole('button', { name: 'Send email notification' }).click()
-    await expectSuccess(page, NOTIFICATIONS.emailSimulated)
+    await expectSuccess(page, NOTIFICATIONS.emailSent)
     await expect(question.getByText('Notified')).toBeVisible()
   })
 
