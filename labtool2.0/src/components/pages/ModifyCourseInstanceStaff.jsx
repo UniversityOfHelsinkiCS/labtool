@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { withRouter } from 'react-router'
 import { getOneCI } from '../../services/courseInstance'
@@ -6,7 +6,7 @@ import { getAllUsers } from '../../services/user'
 import { createOne, removeOne } from '../../services/teacherinstances'
 import { connect } from 'react-redux'
 import { clearNotifications } from '../../reducers/notificationReducer'
-import { Table, Header, Button, Label, Form, Loader } from 'semantic-ui-react'
+import { Table, Header, Button, Label, Form, Loader, Input } from 'semantic-ui-react'
 import { resetLoading } from '../../reducers/loadingReducer'
 import { sortUsersByTeacherAssistantLastname } from '../../util/sort'
 
@@ -14,7 +14,19 @@ import BackButton from '../BackButton'
 import DocumentTitle from '../DocumentTitle'
 import Error from '../Error'
 
+const matchesFilter = (user, filter) => {
+  const query = filter.trim().toLowerCase()
+  if (!query) {
+    return true
+  }
+  return [`${user.firsts} ${user.lastname}`, user.username, user.email, user.studentNumber]
+    .filter(Boolean)
+    .some(field => field.toLowerCase().includes(query))
+}
+
 export const ModifyCourseInstanceStaff = props => {
+  const [filter, setFilter] = useState('')
+
   useEffect(() => {
     // run on component mount
     props.resetLoading()
@@ -70,6 +82,7 @@ export const ModifyCourseInstanceStaff = props => {
   if (props.selectedInstance && props.selectedInstance.teacherInstances && props.users) {
     sortedUsers = sortUsersByTeacherAssistantLastname(props.users, props.selectedInstance.teacherInstances)
   }
+  const shownUsers = (sortedUsers || []).filter(user => matchesFilter(user, filter))
   return (
     <>
       <DocumentTitle title={`Assistants - ${props.selectedInstance.name}`} />
@@ -84,6 +97,13 @@ export const ModifyCourseInstanceStaff = props => {
           <h2>{props.selectedInstance.name}</h2>
         </div>
         <Header as="h2">Users</Header>
+        <Input
+          icon="search"
+          placeholder="Filter by name, username, email or student number"
+          value={filter}
+          onChange={(e, { value }) => setFilter(value)}
+          style={{ width: '100%', maxWidth: '400px', marginBottom: '1em' }}
+        />
         <Form id="myForm" onSubmit={handleSubmit}>
           {props.loading.loading ? (
             <Loader active />
@@ -96,7 +116,7 @@ export const ModifyCourseInstanceStaff = props => {
                 </Table.Row>
               </Table.Header>
               <Table.Body>
-                {sortedUsers.map(user => (
+                {shownUsers.map(user => (
                   <Table.Row key={user.id}>
                     <Table.Cell>
                       {user.firsts} {user.lastname}

@@ -234,6 +234,50 @@ describe('<CreateChecklist /> component', () => {
     expect(screen.queryByRole('option', { name: /ohjelmistotekniikan menetelmät/i })).not.toBeInTheDocument()
   })
 
+  it('lists earlier runs of the same course first, newest first (#1139)', async () => {
+    const user = userEvent.setup()
+    const course = (id, ohid, name, start) => ({
+      id,
+      ohid,
+      name,
+      start,
+      europeanStart: start.slice(0, 4),
+      weekAmount: 7,
+      amountOfCodeReviews: 0,
+      finalReview: false
+    })
+    const courses = [
+      courseInstances[0],
+      course(1, 'TKT20002.2019.K.K.1', 'Ohjelmistotekniikka', '2019-01-15T00:00:00.000Z'),
+      course(2, 'TKT20010.2016.K.A.1', 'Tiralabra 2016', '2016-01-15T00:00:00.000Z'),
+      course(3, 'TKT20011.2018.K.A.1', 'Tietokantasovellus', '2018-01-15T00:00:00.000Z'),
+      course(4, 'TKT20010.2017.K.A.1', 'Tiralabra 2017', '2017-01-15T00:00:00.000Z')
+    ]
+    renderCreateChecklist({
+      courses,
+      copyableChecklists: [1, 2, 3, 4].map(courseInstanceId => ({
+        courseInstanceId,
+        week: 1,
+        forCodeReview: false
+      }))
+    })
+    await selectWeek(user, 1)
+
+    await user.click(screen.getByText('...from another course'))
+
+    const courseDropdown = screen.getAllByRole('listbox')[2]
+    expect(
+      within(courseDropdown)
+        .getAllByRole('option')
+        .map(option => option.textContent)
+    ).toEqual([
+      'Tiralabra 2017 (2017)',
+      'Tiralabra 2016 (2016)',
+      'Ohjelmistotekniikka (2019)',
+      'Tietokantasovellus (2018)'
+    ])
+  })
+
   it('offers no courses when no other course has a checklist to copy', async () => {
     const user = userEvent.setup()
     renderCreateChecklist({ copyableChecklists: [] })

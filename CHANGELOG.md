@@ -5,6 +5,16 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
 
 ## 2026-10-11
 
+### Added
+- **Filter box on the course staff page** (#325): filters the user list by name, username, email
+  or student number.
+- **Warning when two students review the same project in one code review round** (#442): in the
+  reviewee dropdown, students another reviewer already has are marked "also reviewed by another
+  student", and choosing one shows a warning.
+- **Copy checklist: better order of source courses** (#1139): earlier runs of the same course (same
+  course code) come first, then other courses, newest first within both. Courses without a
+  checklist to copy were already hidden on 2026-10-10.
+
 ### Changed (dev tooling)
 - **Backend lint and test tooling upgraded:**
   - eslint 4 → 9.39.5 with a flat `eslint.config.js` that keeps the old style rules (no

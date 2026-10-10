@@ -176,4 +176,27 @@ describe('<ModifyCourseInstanceStaff />', () => {
 
     expect(props.removeOne).toHaveBeenCalledWith({ ohid: '5', id: 10012 })
   })
+
+  it('filters the user list by name, email or username (#325)', async () => {
+    const user = userEvent.setup()
+    renderStaff()
+    const filter = screen.getByPlaceholderText(/filter by name/i)
+
+    await user.type(filter, 'aimo')
+    expect(screen.getAllByRole('row').map(row => row.textContent)).toEqual([
+      'NameStatus',
+      'Aimo Assistenttiaimo.assistentti@helsinki.invalidAssistantRemove assistant'
+    ])
+
+    await user.clear(filter)
+    await user.type(filter, 'PAA.OPETTAJA@')
+    expect(screen.getAllByRole('row')).toHaveLength(3)
+
+    await user.clear(filter)
+    await user.type(filter, 'nobody')
+    expect(screen.getAllByRole('row')).toHaveLength(1)
+
+    await user.clear(filter)
+    expect(screen.getAllByRole('row')).toHaveLength(4)
+  })
 })

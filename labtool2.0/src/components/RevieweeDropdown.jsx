@@ -38,6 +38,17 @@ const RevieweeDropdown = props => {
     return reviewed.includes(value)
   }
 
+  const codeReviewRound = create ? -1 : codeReviewLogic.selectedDropdown
+
+  // Check if another reviewer has already been assigned the same reviewee in this round
+  const reviewedByAnotherInRound = value => {
+    if (value === null || value === undefined) return false
+    const selections = codeReviewLogic.currentSelections[codeReviewRound] || {}
+    return Object.entries(selections).some(
+      ([reviewer, reviewee]) => Number(reviewer) !== studentData.id && reviewee === value
+    )
+  }
+
   const reviewee = create
     ? //if the code round is a new created one
       codeReviewLogic.currentSelections[-1][studentData.id]
@@ -84,8 +95,6 @@ const RevieweeDropdown = props => {
     return codeReview ? codeReview.toReview || codeReview.repoToReview : null
   }
 
-  const codeReviewRound = create ? -1 : codeReviewLogic.selectedDropdown
-
   return (
     <div>
       <Dropdown
@@ -93,7 +102,8 @@ const RevieweeDropdown = props => {
         fluid
         options={options.map(option => ({
           ...option,
-          icon: reviewedInPrevious(option.value) ? 'repeat' : null
+          icon: reviewedInPrevious(option.value) ? 'repeat' : null,
+          description: reviewedByAnotherInRound(option.value) ? 'also reviewed by another student' : null
         }))}
         value={value()}
         search
@@ -106,6 +116,12 @@ const RevieweeDropdown = props => {
         <>
           <br />
           <strong>This student has already reviewed this project in an earlier code review</strong>
+        </>
+      )}
+      {reviewedByAnotherInRound(value()) && (
+        <>
+          <br />
+          <strong>Another student is also reviewing this project in this code review</strong>
         </>
       )}
     </div>
