@@ -96,6 +96,24 @@ describe('notificationReducer', () => {
     expect(run({ type, response: { message } })).toEqual({ message, error: false })
   })
 
+  it('MASS_EMAIL_SENDSUCCESS is shown as an error when some recipients did not get the email (#1141)', () => {
+    const message = 'Email sent to 1 of 2 recipients. Not delivered to: Pekka Palautuva (no email address).'
+    const notDelivered = [{ name: 'Pekka Palautuva', email: null, reason: 'no email address' }]
+    expect(run({ type: 'MASS_EMAIL_SENDSUCCESS', response: { message, notDelivered } })).toEqual({
+      message,
+      error: true
+    })
+    expect(
+      run({
+        type: 'MASS_EMAIL_SENDSUCCESS',
+        response: { message: 'Email sent successfully.', notDelivered: [] }
+      })
+    ).toEqual({
+      message: 'Email sent successfully.',
+      error: false
+    })
+  })
+
   it('STUDENT_PROJECT_INFO_UPDATE_FAILURE without a response uses a default message', () => {
     expect(run({ type: 'STUDENT_PROJECT_INFO_UPDATE_FAILURE', response: new Error('x') })).toEqual({
       message: 'Error updating project info',

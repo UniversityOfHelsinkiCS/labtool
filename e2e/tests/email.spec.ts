@@ -86,20 +86,46 @@ test('a mass email needs at least one recipient', async ({ page }) => {
   await expect(page).toHaveURL(new RegExp(`/labtool/massemail/${course.ohid}$`))
 })
 
-// Issue #1141: a recipient the mail server rejects. The teacher must get an error, and nothing may
-// be delivered to the rejected address. (Which students did get the email is not reported yet.)
-test('a mass email to a student whose address is rejected shows an error', async ({ page }) => {
+// Issue #1141: recipients the mail server rejects. The others still get the email, and the teacher is
+// told exactly who did not.
+const BOUNCING_STUDENT_NAME = 'Pauli Palautuva'
+
+test.describe('mass email when the mail server rejects an address (#1141)', () => {
   const bounce = COURSES.bounce
-  await loginAs(page, TEACHER)
-  await page.goto(`/labtool/massemail/${bounce.ohid}`)
-  await expect(page.getByRole('heading', { name: 'Send email to students' })).toBeVisible()
-  await expectNoLoader(page)
 
-  await page.getByRole('button', { name: 'Select all active students' }).click()
-  await expect(page.locator(`#select${STUDENT_INSTANCES.bounceRejected}`)).toBeChecked()
-  await page.getByPlaceholder('Type email here...').fill('Does this reach everyone?')
-  await page.getByRole('button', { name: 'Send', exact: true }).click()
+  const openMassEmail = async page => {
+    await loginAs(page, TEACHER)
+    await page.goto(`/labtool/massemail/${bounce.ohid}`)
+    await expect(page.getByRole('heading', { name: 'Send email to students' })).toBeVisible()
+    await expectNoLoader(page)
+  }
 
-  await expect(page.locator('.notification.error')).toBeVisible()
-  expect(await recipientsOfMailsFor(bounce.name)).not.toContain(BOUNCING_STUDENT_EMAIL)
+  test('the other students get the email and the teacher is told who did not', async ({ page }) => {
+    await openMassEmail(page)
+    await page.getByRole('button', { name: 'Select all active students' }).click()
+    await expect(page.locator(`#select${STUDENT_INSTANCES.bounceRejected}`)).toBeChecked()
+    await page.getByPlaceholder('Type email here...').fill('Does this reach everyone?')
+    await page.getByRole('button', { name: 'Send', exact: true }).click()
+
+    const error = page.locator('.notification.error')
+    await expect(error).toContainText('Not delivered to:')
+    await expect(error).toContainText(`${BOUNCING_STUDENT_NAME} (${BOUNCING_STUDENT_EMAIL}, rejected by the mail server)`)
+    await expect.poll(() => recipientsOfMailsFor(bounce.name)).toContain(STUDENT_ADDRESS)
+    expect(await recipientsOfMailsFor(bounce.name)).not.toContain(BOUNCING_STUDENT_EMAIL)
+  })
+
+  test('nothing is sent when every address is rejected, and the teacher is told why', async ({ page }) => {
+    await openMassEmail(page)
+    await page.locator('.ui.checkbox', { has: page.locator(`#select${STUDENT_INSTANCES.bounceRejected}`) }).click()
+    await expect(page.locator(`#select${STUDENT_INSTANCES.bounceRejected}`)).toBeChecked()
+    // without the default copy to instructors, the only recipient is the rejected one
+    await page.locator('.ui.checkbox', { hasText: 'Send a copy to all instructors' }).click()
+    await page.getByPlaceholder('Type email here...').fill('Only to the bouncing student')
+    await page.getByRole('button', { name: 'Send', exact: true }).click()
+
+    const error = page.locator('.notification.error')
+    await expect(error).toContainText('No email was sent')
+    await expect(error).toContainText(`${BOUNCING_STUDENT_NAME} (${BOUNCING_STUDENT_EMAIL}, rejected by the mail server)`)
+    await expect(page).toHaveURL(new RegExp(`/labtool/massemail/${bounce.ohid}$`))
+  })
 })

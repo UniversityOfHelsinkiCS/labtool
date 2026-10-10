@@ -170,8 +170,21 @@ describe('Email API', () => {
         .post('/api/email/send')
         .send({ role: 'teacher', weekId: week.id })
         .expect(400)
-      assert.strictEqual(res.body.message, 'Email rejected by SMTP server.')
+      assert.strictEqual(
+        res.body.message,
+        `The mail server rejected the address ${s.users.student.email}; the notification was not sent.`
+      )
       assert.strictEqual((await Week.findByPk(week.id)).notified, false)
+    })
+
+    it('reports a student without an email address', async () => {
+      await s.users.student.update({ email: null })
+      const res = await mailAs(s.users.teacher)
+        .post('/api/email/send')
+        .send({ role: 'teacher', weekId: week.id })
+        .expect(400)
+      assert.strictEqual(res.body.message, 'The recipient has no email address; the notification was not sent.')
+      assert.strictEqual(mail.sent.length, 0)
     })
   })
 
@@ -215,6 +228,56 @@ describe('Email API', () => {
         .send({ students: [{ id: foreign.id }], content: 'Hello' })
         .expect(404)
       assert.strictEqual(mail.sent.length, 1)
+    })
+
+    describe('when some recipients cannot be reached (#1141)', () => {
+      const name = user => `${user.firsts} ${user.lastname}`
+
+      it('sends to the others and names the rejected students', async () => {
+        mail.restore()
+        mail = stubMailTransport({ reject: [s.users.student2.email] })
+        const res = await mailAs(s.users.teacher)
+          .post(`/api/email/sendmass/${s.course.ohid}`)
+          .send({ students: [{ id: s.student.id }, { id: s.student2.id }], content: 'Hello' })
+          .expect(200)
+
+        assert.deepStrictEqual(mail.sent[0].bcc.sort(), [s.users.student.email, s.users.student2.email].sort())
+        assert.deepStrictEqual(res.body.notDelivered, [
+          { name: name(s.users.student2), email: s.users.student2.email, reason: 'rejected by the mail server' }
+        ])
+        assert.strictEqual(
+          res.body.message,
+          `Email sent to 1 of 2 recipients. Not delivered to: ${name(s.users.student2)} (${s.users.student2.email}, rejected by the mail server).`
+        )
+      })
+
+      it('names students without an email address', async () => {
+        await s.users.student2.update({ email: null })
+        const res = await mailAs(s.users.teacher)
+          .post(`/api/email/sendmass/${s.course.ohid}`)
+          .send({ students: [{ id: s.student.id }, { id: s.student2.id }], content: 'Hello' })
+          .expect(200)
+        assert.deepStrictEqual(mail.sent[0].bcc, [s.users.student.email])
+        assert.deepStrictEqual(res.body.notDelivered, [
+          { name: name(s.users.student2), email: null, reason: 'no email address' }
+        ])
+        assert.strictEqual(
+          res.body.message,
+          `Email sent to 1 of 2 recipients. Not delivered to: ${name(s.users.student2)} (no email address).`
+        )
+      })
+
+      it('answers 400 and names everybody when every address is rejected', async () => {
+        mail.restore()
+        mail = stubMailTransport({ rejectAll: true })
+        const res = await mailAs(s.users.teacher)
+          .post(`/api/email/sendmass/${s.course.ohid}`)
+          .send({ students: [{ id: s.student.id }, { id: s.student2.id }], content: 'Hello' })
+          .expect(400)
+        assert.strictEqual(mail.sent.length, 0)
+        assert.deepStrictEqual(res.body.notDelivered.map(r => r.email).sort(), [s.users.student.email, s.users.student2.email].sort())
+        assert.ok(res.body.message.startsWith('No email was sent. Not delivered to: '))
+      })
     })
 
     it('is forbidden for students and teachers of other courses', async () => {

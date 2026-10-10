@@ -230,6 +230,14 @@ const reject = async (res, code, message) => {
   })
 }
 
+const recipientsOf = options => [].concat(options.to || [], options.cc || [], options.bcc || [])
+
+/**
+ * Sends an email, or only logs it when real sending is off.
+ * Returns the addresses the mail server accepted and the ones it rejected. nodemailer resolves when
+ * at least one recipient is accepted and throws EENVELOPE when the server rejects all of them;
+ * both are reported here the same way. Other errors (e.g. no connection) are thrown.
+ */
 const trySendEmail = async (emailOptions) => {
   const options = {
     from: SENDER_SETTINGS.from,
@@ -238,18 +246,18 @@ const trySendEmail = async (emailOptions) => {
 
   if (!SEND_REAL_EMAIL) {
     console.log('Simulated sending email.', options)
-    return {
-      success: true,
-      simulated: true
-    }
+    return { simulated: true, accepted: recipientsOf(options), rejected: [] }
   }
 
   const transporter = nodemailer.createTransport(SENDER_SETTINGS)
-  const mail = await transporter.sendMail(options)
-
-  return {
-    success: mail.rejected.length === 0,
-    simulated: false
+  try {
+    const mail = await transporter.sendMail(options)
+    return { simulated: false, accepted: mail.accepted, rejected: mail.rejected }
+  } catch (error) {
+    if (error.code === 'EENVELOPE' && Array.isArray(error.rejected)) {
+      return { simulated: false, accepted: [], rejected: error.rejected }
+    }
+    throw error
   }
 }
 
@@ -342,21 +350,24 @@ const send = async (req, res) => {
       }
     }
 
-    const { success, simulated } = await trySendEmail({
+    if (!message.address) {
+      return reject(res, 400, 'The recipient has no email address; the notification was not sent.')
+    }
+
+    const { simulated, rejected } = await trySendEmail({
       subject,
       html,
       to: message.address
     })
 
-    if (success) {
-      markAsNotified(useComment, req.body.commentId || req.body.weekId)
-      res.status(200).send({
-        message: simulated ? 'Email sending simulated.' : 'Email sent successfully.',
-        data: req.body
-      })
-    } else {
-      return reject(res, 400, 'Email rejected by SMTP server.')
+    if (rejected.length > 0) {
+      return reject(res, 400, `The mail server rejected the address ${message.address}; the notification was not sent.`)
     }
+    markAsNotified(useComment, req.body.commentId || req.body.weekId)
+    res.status(200).send({
+      message: simulated ? 'Email sending simulated.' : 'Email sent successfully.',
+      data: req.body
+    })
   } catch (e) {
     logger.error(e)
     return reject(res, 500, 'Unexpected error. Please try again.')
@@ -408,7 +419,7 @@ const sendMass = async (req, res) => {
     }
 
     const inputStudents = req.body.students
-    const studentEmails = (await Promise.all(inputStudents.map(async ({ id }) => {
+    const students = (await Promise.all(inputStudents.map(async ({ id }) => {
       const studentInstance = await StudentInstance.findOne({
         attributes: ['userId'],
         where: {
@@ -426,18 +437,17 @@ const sendMass = async (req, res) => {
           id: studentInstance.userId
         }
       })
-      if (!user) {
-        return null
-      }
+      return user
+    }))).filter(user => user)
+    const fullName = user => `${user.firsts} ${user.lastname}`
+    const studentRecipients = students.filter(user => user.email).map(user => ({ name: fullName(user), email: user.email }))
+    const studentsWithoutEmail = students.filter(user => !user.email).map(fullName)
 
-      return user.email || ''
-    }))).filter(email => email)
-
-    if (studentEmails.length === 0) {
+    if (studentRecipients.length === 0) {
       return reject(res, 404, 'No student email addresses found.')
     }
 
-    let instructorEmails = []
+    let instructorRecipients = []
     if (req.body.sendToInstructors) {
       const teachers = await TeacherInstance.findAll({
         attributes: ['userId'],
@@ -445,38 +455,54 @@ const sendMass = async (req, res) => {
           courseInstanceId: courseInstance.id
         }
       })
-      instructorEmails = (await Promise.all(teachers.map(async ({ userId }) => {
+      instructorRecipients = (await Promise.all(teachers.map(async ({ userId }) => {
         const user = await User.findOne({
           where: {
             id: userId
           }
         })
-        if (!user) {
+        if (!user || !user.email) {
           return null
         }
 
-        return user.email || ''
-      }))).filter(email => email)
+        return { name: fullName(user), email: user.email }
+      }))).filter(recipient => recipient)
     }
 
     // prepare email here
     const link = `${frontendUrl}/courses/${req.params.id}`
     const subject = `${courseInstance.name} new message from instructor`
     const html = buildEmail(null, link, courseInstance.name, null, 'Message content', req.body.content)
-    const { success, simulated } = await trySendEmail({
+    const recipients = studentRecipients.concat(instructorRecipients)
+    const { simulated, accepted, rejected } = await trySendEmail({
       subject,
       html,
-      bcc: studentEmails.concat(instructorEmails)
+      bcc: recipients.map(recipient => recipient.email)
     })
 
-    if (success) {
-      res.status(200).send({
-        message: simulated ? 'Email sending simulated.' : 'Email sent successfully.',
-        data: req.body
+    // Tell the teacher exactly who did not get the email (#1141).
+    const rejectedAddresses = rejected.map(address => address.toLowerCase())
+    const notDelivered = [
+      ...recipients
+        .filter(recipient => rejectedAddresses.includes(recipient.email.toLowerCase()))
+        .map(recipient => ({ ...recipient, reason: 'rejected by the mail server' })),
+      ...studentsWithoutEmail.map(name => ({ name, email: null, reason: 'no email address' }))
+    ]
+    const notDeliveredText = notDelivered
+      .map(({ name, email, reason }) => (email ? `${name} (${email}, ${reason})` : `${name} (${reason})`))
+      .join('; ')
+
+    if (accepted.length === 0) {
+      return res.status(400).send({
+        message: `No email was sent. Not delivered to: ${notDeliveredText}.`,
+        notDelivered
       })
-    } else {
-      return reject(res, 400, 'Email rejected by SMTP server.')
     }
+    let message = simulated ? 'Email sending simulated.' : 'Email sent successfully.'
+    if (notDelivered.length > 0) {
+      message = `Email sent to ${accepted.length} of ${accepted.length + notDelivered.length} recipients. Not delivered to: ${notDeliveredText}.`
+    }
+    res.status(200).send({ message, data: req.body, notDelivered })
   } catch (e) {
     logger.error(e)
     return reject(res, 500, 'Unexpected error. Please try again.')
