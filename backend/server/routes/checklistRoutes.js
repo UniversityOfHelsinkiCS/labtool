@@ -14,4 +14,9 @@ module.exports = (app) => {
    * courseInstanceId: id of the course.
    */
   app.post('/api/checklist/getone', checklistController.getOne)
+  /**
+   * Lists { courseInstanceId, week, forCodeReview } of the non-empty checklists on the current
+   * user's courses, i.e. the checklists that can be copied with getone.
+   */
+  app.get('/api/checklist/copyable', checklistController.getCopyable)
 }

@@ -1,3 +1,4 @@
+const { Op } = require('sequelize')
 const { enforceCurrentUserIsStudentOnCourse } = require('../helpers/auth')
 const helper = require('../helpers/checklistHelper')
 const { TeacherInstance, Checklist, ChecklistItem, StudentInstance, CourseInstance } = require('../models')
@@ -268,6 +269,46 @@ module.exports = {
       console.error(e)
       logger.error('Checklist creation error.', { error: e.message })
       res.status(500).send('Unexpected error. Please try again.')
+    }
+  },
+
+  /**
+   * List the checklists the current user can copy: checklists with at least one item
+   * on courses where the user is a teacher or a student (the same courses getOne allows).
+   *   permissions: any logged in user
+   *
+   * @param {*} req
+   * @param {*} res
+   */
+  async getCopyable(req, res) {
+    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
+    try {
+
+      const where = { userId: req.decoded.id }
+      const [teacherInstances, studentInstances] = await Promise.all([
+        TeacherInstance.findAll({ attributes: ['courseInstanceId'], where }),
+        StudentInstance.findAll({ attributes: ['courseInstanceId'], where })
+      ])
+      const courseIds = [...new Set([...teacherInstances, ...studentInstances].map(i => i.courseInstanceId))]
+
+      const checklists = await Checklist.findAll({
+        attributes: ['id', 'courseInstanceId', 'week', 'forCodeReview'],
+        where: { courseInstanceId: { [Op.in]: courseIds } }
+      })
+      const items = await ChecklistItem.findAll({
+        attributes: ['checklistId'],
+        where: { checklistId: { [Op.in]: checklists.map(c => c.id) } }
+      })
+      const withItems = new Set(items.map(item => item.checklistId))
+
+      res.status(200).send(checklists
+        .filter(c => withItems.has(c.id))
+        .map(({ courseInstanceId, week, forCodeReview }) => ({ courseInstanceId, week, forCodeReview })))
+    } catch (e) {
+      logger.error('Get copyable checklists error.', { error: e.message })
+      res.status(500).send('Internal server error')
     }
   },
 

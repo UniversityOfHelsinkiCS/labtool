@@ -19,6 +19,7 @@ import weekReview from './reducers/weekReviewReducer'
 import loading from './reducers/loadingReducer'
 import redirect from './reducers/redirectReducer'
 import courseImport from './reducers/courseImportReducer'
+import copyableChecklists from './reducers/copyableChecklistReducer'
 
 /**
  * The store, that takes all the redux reducers. Index imports it.
@@ -43,7 +44,8 @@ const reducer = combineReducers({
   loading: loading,
   weekReview: weekReview,
   redirect: redirect,
-  courseImport: courseImport
+  courseImport: courseImport,
+  copyableChecklists: copyableChecklists
 })
 
 const compose = import.meta.env.PROD ? store => store : store => composeWithDevTools(store)

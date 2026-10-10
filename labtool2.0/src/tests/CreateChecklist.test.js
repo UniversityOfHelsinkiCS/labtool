@@ -96,9 +96,16 @@ const weekDropdowns = Array.from({ length: courseInstances[0].weekAmount }, (_, 
   text: `Week ${index + 1}`
 }))
 
+// non-empty checklists on other courses that can be copied
+const copyableChecklists = [
+  { courseInstanceId: 10012, week: 6, forCodeReview: false },
+  { courseInstanceId: 10013, week: 1, forCodeReview: false }
+]
+
 const renderCreateChecklist = (props = {}) => {
   const defaultProps = {
     courses: courseInstances,
+    copyableChecklists,
     courseId: courseInstances[0].ohid,
     selectedInstance: courseInstances[0],
     checklist,
@@ -109,6 +116,7 @@ const renderCreateChecklist = (props = {}) => {
     createChecklist: vi.fn(),
     getOneCI: vi.fn(),
     getOneChecklist: vi.fn(),
+    getCopyableChecklists: vi.fn(),
     resetChecklist: vi.fn(),
     changeField: vi.fn(),
     addTopic: vi.fn(),
@@ -206,6 +214,33 @@ describe('<CreateChecklist /> component', () => {
     await user.click(screen.getByText('...from another course'))
 
     expect(screen.getByRole('option', { name: /ohjelmistotekniikan menetelmät/i })).toBeInTheDocument()
+    expect(screen.queryByRole('option', { name: /tietokantasovellus/i })).not.toBeInTheDocument()
+  })
+
+  it('fetches the checklists that can be copied', () => {
+    const { props } = renderCreateChecklist()
+    expect(props.getCopyableChecklists).toHaveBeenCalled()
+  })
+
+  it('offers only courses that have a checklist to copy for the selected week', async () => {
+    const user = userEvent.setup()
+    renderCreateChecklist()
+    await selectWeek(user, 1)
+
+    await user.click(screen.getByText('...from another course'))
+
+    expect(screen.getByRole('option', { name: /tietokantasovellus/i })).toBeInTheDocument()
+    expect(screen.queryByRole('option', { name: /ohjelmistotekniikan menetelmät/i })).not.toBeInTheDocument()
+  })
+
+  it('offers no courses when no other course has a checklist to copy', async () => {
+    const user = userEvent.setup()
+    renderCreateChecklist({ copyableChecklists: [] })
+    await selectWeek(user, 6)
+
+    await user.click(screen.getByText('...from another course'))
+
+    expect(screen.queryByRole('option', { name: /ohjelmistotekniikan menetelmät/i })).not.toBeInTheDocument()
     expect(screen.queryByRole('option', { name: /tietokantasovellus/i })).not.toBeInTheDocument()
   })
 
