@@ -6,6 +6,16 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
 ## 2026-10-10
 
 ### Security
+- **Sequelize 5 → 6.37.8.** Fixes the SQL injection (via replacements) and information disclosure
+  advisories; Sequelize 5 is no longer maintained. Code changes:
+  - `models/index.js` loads models with `require(...)(sequelize, DataTypes)` instead of the removed
+    `sequelize.import`, and the removed `operatorsAliases` option is gone from the config.
+  - Migration `20191125133715-add_CASCADE_to_toReview_in_CodeReviews.js` uses the v6
+    `addConstraint(table, { fields, ... })` signature. Databases that already ran it (production,
+    staging) are not affected; fresh databases (dev, tests, e2e) need the new form.
+  - Backend `npm audit`: critical findings 5 → 4. Sequelize 6 brings in an older `uuid` with a
+    moderate finding that only applies when a buffer is passed, which Sequelize does not do.
+
 - **axios 0.18/0.19 → 1.20.0** in the backend (Kurki calls) and the frontend (all API calls).
   Fixes the server-side and cross-site request forgery advisories and the follow-redirects
   credential leak. No code changes were needed. `npm audit`: backend 28 → 26, frontend 24 → 22.
@@ -16,6 +26,11 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
   `npm audit`: 26 → 24; the remaining direct findings are sequelize and dev tooling.
 - nodemailer 10.1.0 was skipped because `backend/.npmrc` only allows packages published at least
   7 days ago (`min-release-age=7`).
+
+### Fixed
+- **Code review creation race** (`models/codereview.js`): the `beforeCreate` hook started a delete
+  of older reviews without waiting for it, so the delete could remove the review being created.
+  The hook now awaits the delete, and the test factory no longer has to skip it.
 
 ### Removed
 - **Unused backend dependencies:** `cryptiles`, `fs`, `path` and `request`. `fs` and `path` were
@@ -106,8 +121,6 @@ Backend:
   `reviewNumber` is never rejected (`codeReviews.js`).
 - Deleting a code review hangs when no rows (or more than one) match (`codeReviews.js`).
 - A student with no assistant gets a 400 instead of the "no assistant" message (`assistants.js`).
-- Race when a code review is created: the `beforeCreate` hook starts a delete without waiting for
-  it (`models/codereview.js`).
 - `POST /api/courseinstances/coursepage` with a numeric `course` crashes the backend on an unhandled
   database error (no test yet).
 

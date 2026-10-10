@@ -10,7 +10,7 @@ Record every change in `CHANGELOG.md` (newest first, under today's date: Added /
 
 Labtool is a grading tool for programming projects at the University of Helsinki CS department. Monorepo with:
 
-- `backend/` — Express + Sequelize 5 (Postgres) API on port 3001
+- `backend/` — Express + Sequelize 6 (Postgres) API on port 3001
 - `labtool2.0/` — React 17 + Redux + Semantic UI frontend, built with Vite (port 3000)
 - `Kurki_simulation/` — fake course-registry ("Kurki") service used for course imports in dev/e2e (port 3002)
 - `e2e/` — Playwright end-to-end tests

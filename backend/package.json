@@ -19,7 +19,7 @@
     "pg": "^8.0.0",
     "pg-hstore": "^2.3.3",
     "pug": "^2.0.4",
-    "sequelize": "^5.21.2",
+    "sequelize": "6.37.8",
     "sequelize-cli": "^6.0.0",
     "should": "^13.2.3",
     "tape": "^4.11.0",
