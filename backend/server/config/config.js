@@ -12,10 +12,11 @@ module.exports = {
     kurki_url: process.env.KURKI_URL == null ? 'https://importer.cs.helsinki.fi/api/importer' : process.env.KURKI_URL
   },
   test: {
-    username: 'postgres',
+    username: process.env.DB_USERNAME || 'postgres',
     password: process.env.DB_PASSWORD,
-    database: 'labtool_test',
-    host: '127.0.0.1',
+    database: 'labtool_test', // intentionally not overridable so tests can never truncate a dev DB
+    host: process.env.DB_HOST || '127.0.0.1',
+    port: process.env.DB_PORT,
     dialect: 'postgres',
     operatorsAliases: false,
     logging: false,

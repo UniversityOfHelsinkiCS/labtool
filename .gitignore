@@ -54,7 +54,6 @@ gitignored/*
 **/.zed
 **/.eslintcache
 **/.vscode
-CLAUDE.md
 GEMINI.md
 AGENTS.md
 

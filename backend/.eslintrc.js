@@ -8,6 +8,12 @@ module.exports = {
     ecmaVersion: 2018
   },
   extends: 'airbnb-base',
+  overrides: [
+    {
+      files: ['test/**/*.js'],
+      env: { mocha: true }
+    }
+  ],
   rules: {
     quotes: ['warn', 'single'],
     indent: ['warn', 2, { SwitchCase: 1 }],
