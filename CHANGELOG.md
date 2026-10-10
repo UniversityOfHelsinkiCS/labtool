@@ -55,6 +55,17 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
 - Frontend `npm audit`: 22 → 0 findings.
 
 ### Fixed
+- **Email delivery failures were reported badly** (#1141). Reproduced with the Mailpit setup:
+  - A mass email where the mail server rejected one recipient answered 400 "Email rejected by SMTP
+    server.", although the others did get it; resending would have mailed them twice. Now it
+    answers 200, the notification says "Email sent to N of M recipients. Not delivered to: …" with
+    each name, address and reason, and is shown as an error so it is noticed.
+  - When every recipient was rejected it answered 500 "Unexpected error". Now it answers 400 "No
+    email was sent. Not delivered to: …".
+  - Students without an email address were dropped silently; they are now listed as not
+    delivered.
+  - A single notification to a rejected address answered 500; now 400 naming the address. A
+    recipient without an email address is reported instead of failing.
 - **Collapsing the "Add comment" box erased the written comment** (#1162). The draft is now kept
   until the comment is sent.
 - **Checklist topics and feedback text came out in a random order when grading** (#1125, #1130).
@@ -228,10 +239,5 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
 
 ## Known bugs
 
-- **Email delivery failures are reported badly** (#1141, reproduced with the Mailpit setup):
-  - A mass email where the mail server rejects one recipient answers 400 "Email rejected by SMTP
-    server.", although the other students did get the email. Resending would mail them twice.
-  - A mass email where every recipient is rejected answers 500 "Unexpected error. Please try
-    again.".
-  - Neither tells the teacher which addresses failed.
+None of the bugs found by the tests are open.
 

@@ -240,9 +240,10 @@ const notificationReducer = (state = {}, action) => {
       }
     }
     case 'MASS_EMAIL_SENDSUCCESS':
+      // shown as an error when some recipients did not get the email (#1141)
       return {
         message: action.response.message,
-        error: false
+        error: Array.isArray(action.response.notDelivered) && action.response.notDelivered.length > 0
       }
     case 'MASS_EMAIL_SENDFAILURE':
       return {

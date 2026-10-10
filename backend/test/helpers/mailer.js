@@ -45,22 +45,32 @@ const loadAppWithRealMailer = (env = { NODE_ENV: 'production' }) => {
 }
 
 /**
- * Replaces nodemailer.createTransport with a recording fake.
- * `rejectAll: true` makes the fake SMTP server reject every recipient.
+ * Replaces nodemailer.createTransport with a recording fake that behaves like nodemailer with a real
+ * SMTP server: rejected recipients are listed in `rejected`, and when every recipient is rejected
+ * sendMail throws an EENVELOPE error that carries the rejected addresses.
+ * `rejectAll: true` rejects every recipient; `reject: [addresses]` rejects only those.
  */
-const stubMailTransport = ({ rejectAll = false } = {}) => {
+const stubMailTransport = ({ rejectAll = false, reject = [] } = {}) => {
   const original = nodemailer.createTransport
   const record = { transports: [], sent: [] }
   nodemailer.createTransport = (settings) => {
     record.transports.push(settings)
     return {
       sendMail: async (message) => {
-        record.sent.push(message)
         const recipients = [].concat(message.to || [], message.bcc || [])
+        const rejected = recipients.filter(address => rejectAll || reject.includes(address))
+        const accepted = recipients.filter(address => !rejected.includes(address))
+        if (accepted.length === 0) {
+          const error = new Error('Can\'t send mail - all recipients were rejected')
+          error.code = 'EENVELOPE'
+          error.rejected = rejected
+          throw error
+        }
+        record.sent.push(message)
         return {
           messageId: `<test-${record.sent.length}@labtool.test>`,
-          accepted: rejectAll ? [] : recipients,
-          rejected: rejectAll ? recipients : []
+          accepted,
+          rejected
         }
       }
     }
