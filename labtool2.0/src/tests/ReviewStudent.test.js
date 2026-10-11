@@ -969,6 +969,21 @@ describe('<ReviewStudent />', () => {
     })
 
     describe('Checklist', () => {
+      it('shows the description of a topic (#525)', () => {
+        const selectedInstance = {
+          ...props.selectedInstance,
+          checklists: props.selectedInstance.checklists.map(cl =>
+            cl.week === 1
+              ? { ...cl, topicDescriptions: { Koodi: 'How readable and tested the code is' } }
+              : cl
+          )
+        }
+        const { container } = renderReviewStudent({ selectedInstance })
+
+        const descriptions = [...container.querySelectorAll('.topicDescription')].map(d => d.textContent)
+        expect(descriptions).toEqual(['How readable and tested the code is'])
+      })
+
       it('shows the available checklist topics and items', () => {
         renderReviewStudent()
 

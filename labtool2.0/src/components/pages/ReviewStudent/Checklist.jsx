@@ -63,7 +63,14 @@ export const ReviewStudentChecklist = props => {
             .filter(showCategory)
             .map(clItemCategory => (
               <Card className="checklistCard" fluid color="red" key={clItemCategory}>
-                <Card.Content header={clItemCategory} />
+                <Card.Content>
+                  <Card.Header>{clItemCategory}</Card.Header>
+                  {checklist.topicDescriptions && checklist.topicDescriptions[clItemCategory] && (
+                    <Card.Description className="topicDescription" style={{ whiteSpace: 'pre-wrap' }}>
+                      {checklist.topicDescriptions[clItemCategory]}
+                    </Card.Description>
+                  )}
+                </Card.Content>
                 {sortPrerequisitesFirst(checklist.list[clItemCategory].filter(showCheck)).map(clItem => (
                   <Card.Content
                     className="checklistCardRow"

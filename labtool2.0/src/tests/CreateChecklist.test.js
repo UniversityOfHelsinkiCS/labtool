@@ -323,6 +323,28 @@ describe('<CreateChecklist /> component', () => {
     )
   })
 
+  it('edits topic descriptions and saves them with the checklist (#525)', async () => {
+    const user = userEvent.setup()
+    const changeTopicDescription = vi.fn()
+    const createChecklist = vi.fn()
+    const { container } = renderCreateChecklist({
+      changeTopicDescription,
+      createChecklist,
+      checklist: { ...checklist, topicDescriptions: { Koodi: 'About the code' } }
+    })
+    await selectWeek(user, 6)
+
+    const inputs = [...container.querySelectorAll('.topicDescriptionInput textarea')]
+    expect(inputs.map(input => input.value)).toEqual(['About the code', ''])
+    await user.type(inputs[1], 'x')
+    expect(changeTopicDescription).toHaveBeenCalledWith({ key: 'Repo', description: 'x' })
+
+    await user.click(container.querySelector('.saveButton'))
+    expect(createChecklist).toHaveBeenCalledWith(
+      expect.objectContaining({ topicDescriptions: { Koodi: 'About the code' } })
+    )
+  })
+
   describe('two checkboxes with the same name (#1163)', () => {
     const duplicateRow = id => ({
       id,
