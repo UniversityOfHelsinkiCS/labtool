@@ -437,11 +437,15 @@ const sendMass = async (req, res) => {
           id: studentInstance.userId
         }
       })
-      return user
-    }))).filter(user => user)
+      return { user, studentInstanceId: id }
+    }))).filter(student => student)
     const fullName = user => `${user.firsts} ${user.lastname}`
-    const studentRecipients = students.filter(user => user.email).map(user => ({ name: fullName(user), email: user.email }))
-    const studentsWithoutEmail = students.filter(user => !user.email).map(fullName)
+    const studentRecipients = students
+      .filter(({ user }) => user.email)
+      .map(({ user, studentInstanceId }) => ({ name: fullName(user), email: user.email, studentInstanceId }))
+    const studentsWithoutEmail = students
+      .filter(({ user }) => !user.email)
+      .map(({ user, studentInstanceId }) => ({ name: fullName(user), email: null, studentInstanceId }))
 
     if (studentRecipients.length === 0) {
       return reject(res, 404, 'No student email addresses found.')
@@ -465,7 +469,7 @@ const sendMass = async (req, res) => {
           return null
         }
 
-        return { name: fullName(user), email: user.email }
+        return { name: fullName(user), email: user.email, studentInstanceId: null }
       }))).filter(recipient => recipient)
     }
 
@@ -486,7 +490,7 @@ const sendMass = async (req, res) => {
       ...recipients
         .filter(recipient => rejectedAddresses.includes(recipient.email.toLowerCase()))
         .map(recipient => ({ ...recipient, reason: 'rejected by the mail server' })),
-      ...studentsWithoutEmail.map(name => ({ name, email: null, reason: 'no email address' }))
+      ...studentsWithoutEmail.map(student => ({ ...student, reason: 'no email address' }))
     ]
     const notDeliveredText = notDelivered
       .map(({ name, email, reason }) => (email ? `${name} (${email}, ${reason})` : `${name} (${reason})`))
