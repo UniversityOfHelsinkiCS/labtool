@@ -395,22 +395,6 @@ export const StudentTableRow = props => {
             <br />({data.User.studentNumber})
           </span>
         )}
-        {allowModify && (
-          <div style={{ marginTop: '4px' }}>
-            <Popup
-              trigger={
-                <Link
-                  to={`/labtool/changehistory/${selectedInstance.ohid}/${data.id}`}
-                  className="changeHistoryLink"
-                  aria-label="Change history"
-                >
-                  <Icon name="history" color="orange" />
-                </Link>
-              }
-              content="Change history"
-            />
-          </div>
-        )}
       </Table.Cell>
 
       {/* Project Info */}

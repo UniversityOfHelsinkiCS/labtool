@@ -18,7 +18,6 @@ import ModifyCourseInstanceCodeReviews from './components/pages/ModifyCourseInst
 import ReviewStudent from './components/pages/ReviewStudent'
 import ReviewStudentCodeReview from './components/pages/ReviewStudentCodeReview'
 import BrowseReviews from './components/pages/BrowseReviews'
-import StudentChangeHistory from './components/pages/StudentChangeHistory'
 import MyPage from './components/pages/MyPage'
 import CreateChecklist from './components/pages/CreateChecklist'
 import ManageTags from './components/pages/ManageTags'
@@ -137,12 +136,6 @@ const App = props => {
                 studentInstance={match.params.si}
                 weekNumber={match.params.wk}
               />
-            )}
-          />
-          <Route
-            path={`/labtool/changehistory/:id/:si`}
-            render={({ match }) => (
-              <StudentChangeHistory courseId={match.params.id} studentInstance={match.params.si} />
             )}
           />
           <Route
