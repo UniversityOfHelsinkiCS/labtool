@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { withRouter } from 'react-router'
-import { Button, Form, Input, Grid, Loader, Message, Modal } from 'semantic-ui-react'
+import { Button, Form, Input, Grid, Icon, Label, Loader, Message, Modal } from 'semantic-ui-react'
 import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createOneWeek, getWeekDraft, saveWeekDraft } from '../../services/week'
@@ -517,20 +517,33 @@ export const ReviewStudent = props => {
                       />
                     </div>
                   </Form.Group>
-                  <h4>Review notes</h4>
-                  <p>
-                    <em>Only shown to instructors on this course</em>
-                  </p>
-                  <Form.Group inline unstackable style={{ textAlignVertical: 'top' }}>
-                    <div style={{ width: '100%' }}>
-                      <FormMarkdownTextArea
-                        value={pstate.instructorNotes}
-                        onChange={(e, { value }) => (pstate.instructorNotes = value)}
-                        name="instructorNotes"
-                        style={{ width: '500px', height: '150px' }}
-                      />
-                    </div>
-                  </Form.Group>
+                  {/* instructor-only, styled like instructor-only comments (#1142) */}
+                  <div
+                    className="instructorNotes"
+                    style={{
+                      border: '2px solid #f2711c',
+                      background: '#fff6ef',
+                      borderRadius: '4px',
+                      padding: '10px 12px',
+                      margin: '1em 0'
+                    }}
+                  >
+                    <h4 style={{ marginTop: 0 }}>Review notes</h4>
+                    <Label color="orange" size="small" style={{ marginBottom: '10px' }}>
+                      <Icon name="eye slash" />
+                      Instructors only: not shown to the student
+                    </Label>
+                    <Form.Group inline unstackable style={{ textAlignVertical: 'top' }}>
+                      <div style={{ width: '100%' }}>
+                        <FormMarkdownTextArea
+                          value={pstate.instructorNotes}
+                          onChange={(e, { value }) => (pstate.instructorNotes = value)}
+                          name="instructorNotes"
+                          style={{ width: '500px', height: '150px' }}
+                        />
+                      </div>
+                    </Form.Group>
+                  </div>
                   <Form.Field>
                     <Button className="ui center floated green button" type="submit">
                       Save

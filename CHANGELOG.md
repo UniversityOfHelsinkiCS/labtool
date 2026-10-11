@@ -14,6 +14,8 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
     The default stays visible to the student, and the choice returns to it after each comment.
   - Choosing "Instructors only" turns the text area border orange, changes its placeholder, and
     changes the button to an orange "Add instructor-only note".
+- **Review notes on the review page are styled as instructor-only too** (#1142): the section has
+  the same orange border, background and "Instructors only: not shown to the student" label.
 - **Local email setup for development and e2e tests** (for #1141):
   - The dev and e2e docker compose stacks have a Mailpit mail server that catches all email; inbox
     at http://localhost:8025 (dev) and :8026 (e2e). It rejects recipients outside the seed data's
