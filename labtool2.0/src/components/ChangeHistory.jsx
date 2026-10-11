@@ -75,7 +75,7 @@ const describeChanges = changes => {
 /**
  * Change history for instructors (#1129, #1132), styled like other instructor-only content.
  */
-export const ChangeHistory = ({ title, entries }) => (
+export const ChangeHistory = ({ title, entries, subjectOf }) => (
   <div
     className="changeHistory"
     style={{
@@ -102,6 +102,7 @@ export const ChangeHistory = ({ title, entries }) => (
           <List.Item key={entry.id} className="changeHistoryEntry">
             <List.Content>
               <List.Header>
+                {subjectOf && <span className="changeHistorySubject">{subjectOf(entry)} · </span>}
                 {formatTime(entry.createdAt)} · {entry.by || 'Unknown user'}
               </List.Header>
               <List bulleted>{describeChanges(entry.changes)}</List>
@@ -115,7 +116,9 @@ export const ChangeHistory = ({ title, entries }) => (
 
 ChangeHistory.propTypes = {
   title: PropTypes.string.isRequired,
-  entries: PropTypes.array.isRequired
+  entries: PropTypes.array.isRequired,
+  // labels each entry, e.g. "Week 3", when the history covers more than one review
+  subjectOf: PropTypes.func
 }
 
 export default ChangeHistory

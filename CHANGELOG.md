@@ -6,6 +6,10 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
 ## 2026-10-11
 
 ### Added
+- **Change history of a whole student:** an orange history icon under each student's name on the
+  course page opens `/labtool/changehistory/<course>/<student>`, listing all recorded changes of that
+  student's week reviews, final review, code review grading and repository, each labelled ("Week 3",
+  "Code review 1", "Repository"), with filters All / Week reviews / Code reviews / Repository.
 - **Change history of grading** (#1129). Every week review save and code review grading is logged:
   who, when, points and grade old → new, the full old and new feedback and review notes texts, and
   which checklist boxes changed. Course staff see it as an orange, instructor-only "Change history"

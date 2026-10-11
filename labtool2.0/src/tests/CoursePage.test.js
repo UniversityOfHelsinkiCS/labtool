@@ -214,6 +214,16 @@ describe('<CoursePage />', () => {
       expect(asFragment()).toMatchSnapshot()
     })
 
+    it('links each student to their change history', () => {
+      renderCoursePage()
+
+      const links = [...document.querySelectorAll('a.changeHistoryLink')]
+      expect(links.length).toBeGreaterThan(0)
+      links.forEach(link =>
+        expect(link.getAttribute('href')).toMatch(/^\/labtool\/changehistory\/[^/]+\/\d+$/)
+      )
+    })
+
     it('shows the teacher course overview and bulk editing controls', () => {
       renderCoursePage()
 

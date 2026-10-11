@@ -559,6 +559,20 @@ exports[`<CoursePage /> > as teacher > matches the rendered snapshot 1`] = `
                     (014578343)
                   </span>
                 </a>
+                <div
+                  style="margin-top: 4px;"
+                >
+                  <a
+                    aria-label="Change history"
+                    class="changeHistoryLink"
+                    href="/labtool/changehistory/TKT20010.2018.K.A.1/10011"
+                  >
+                    <i
+                      aria-hidden="true"
+                      class="orange history icon"
+                    />
+                  </a>
+                </div>
               </td>
               <td
                 class=""
@@ -686,6 +700,20 @@ exports[`<CoursePage /> > as teacher > matches the rendered snapshot 1`] = `
                     (014666666)
                   </span>
                 </a>
+                <div
+                  style="margin-top: 4px;"
+                >
+                  <a
+                    aria-label="Change history"
+                    class="changeHistoryLink"
+                    href="/labtool/changehistory/TKT20010.2018.K.A.1/10031"
+                  >
+                    <i
+                      aria-hidden="true"
+                      class="orange history icon"
+                    />
+                  </a>
+                </div>
               </td>
               <td
                 class=""
@@ -871,6 +899,20 @@ exports[`<CoursePage /> > as teacher > matches the rendered snapshot 1`] = `
                     (014553242)
                   </span>
                 </a>
+                <div
+                  style="margin-top: 4px;"
+                >
+                  <a
+                    aria-label="Change history"
+                    class="changeHistoryLink"
+                    href="/labtool/changehistory/TKT20010.2018.K.A.1/10012"
+                  >
+                    <i
+                      aria-hidden="true"
+                      class="orange history icon"
+                    />
+                  </a>
+                </div>
               </td>
               <td
                 class=""
