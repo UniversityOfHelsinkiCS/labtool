@@ -55,6 +55,7 @@ describe('<ModifyCourseInstancePage />', () => {
       addRedirectHook: vi.fn(),
       setFinalReview: vi.fn(),
       setFinalReviewHasPoints: vi.fn(),
+      setFinalReviewVisible: vi.fn(),
       forceRedirect: vi.fn(),
       showNotification: vi.fn(),
       getAllCI: vi.fn(),
@@ -125,5 +126,37 @@ describe('<ModifyCourseInstancePage />', () => {
 
     expect(screen.getByText('Course registration is active')).toBeInTheDocument()
     expect(screen.getAllByRole('checkbox').at(-1)).toBeChecked()
+  })
+
+  describe('showing the final review to students', () => {
+    const toggle = () => screen.getByText('Final review results are shown to students').closest('.checkbox')
+
+    it('is off and disabled without a final review', () => {
+      renderPage()
+      expect(toggle()).toHaveClass('disabled')
+      expect(toggle().querySelector('input')).not.toBeChecked()
+    })
+
+    it('can be switched on for a course with a final review, and is saved with the course', async () => {
+      const user = userEvent.setup()
+      const { props } = renderPage({
+        selectedInstance: { ...courseData, finalReview: true, finalReviewVisible: false }
+      })
+      expect(toggle()).not.toHaveClass('disabled')
+
+      await user.click(toggle())
+      expect(props.setFinalReviewVisible).toHaveBeenCalledWith(true)
+
+      await user.click(screen.getByRole('button', { name: 'Save' }))
+      expect(props.modifyOneCI).toHaveBeenCalledWith(
+        expect.objectContaining({ finalReview: true, finalReviewVisible: false }),
+        courseData.ohid
+      )
+    })
+
+    it('shows the current setting', () => {
+      renderPage({ selectedInstance: { ...courseData, finalReview: true, finalReviewVisible: true } })
+      expect(toggle().querySelector('input')).toBeChecked()
+    })
   })
 })

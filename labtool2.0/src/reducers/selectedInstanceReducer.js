@@ -43,6 +43,8 @@ const selectedInstanceReducer = (store = INITIAL_STATE, action) => {
       return { ...store, finalReview: action.value }
     case 'SET_FINAL_REVIEW_HAS_POINTS':
       return { ...store, finalReviewHasPoints: action.value }
+    case 'SET_FINAL_REVIEW_VISIBLE':
+      return { ...store, finalReviewVisible: action.value }
     case 'CI_MODIFY_ONE_SUCCESS':
       return {
         ...store,
@@ -58,6 +60,16 @@ export const setFinalReview = value => {
   return async dispatch => {
     dispatch({
       type: 'SET_FINAL_REVIEW',
+      value
+    })
+  }
+}
+
+// whether students see their final review results
+export const setFinalReviewVisible = value => {
+  return async dispatch => {
+    dispatch({
+      type: 'SET_FINAL_REVIEW_VISIBLE',
       value
     })
   }

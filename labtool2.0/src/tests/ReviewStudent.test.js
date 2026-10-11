@@ -593,6 +593,34 @@ describe('<ReviewStudent />', () => {
       )
     })
 
+    describe('a final review hidden from students', () => {
+      const finalReviewOf = finalReviewVisible =>
+        renderFinalReview({
+          selectedInstance: {
+            ...props.selectedInstance,
+            finalReview: true,
+            finalReviewHasPoints: false,
+            finalReviewVisible
+          }
+        })
+
+      it('tells the grader that students do not see it yet', () => {
+        const { container } = finalReviewOf(false)
+        expect(container.querySelector('.finalReviewHidden')).toHaveTextContent('hidden from students')
+      })
+
+      it('says nothing once the final review is shown', () => {
+        expect(finalReviewOf(true).container.querySelector('.finalReviewHidden')).toBeNull()
+      })
+
+      it('says nothing on a normal week', () => {
+        const { container } = renderReviewStudent({
+          selectedInstance: { ...props.selectedInstance, finalReview: true, finalReviewVisible: false }
+        })
+        expect(container.querySelector('.finalReviewHidden')).toBeNull()
+      })
+    })
+
     describe('review notes', () => {
       const studentWithNotes = notes => ({
         ...props.weekReview,

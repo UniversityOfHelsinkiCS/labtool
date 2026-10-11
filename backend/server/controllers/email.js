@@ -3,6 +3,7 @@ const nodemailer = require('nodemailer')
 const helper = require('../helpers/emailHelper')
 const { Comment, Week, StudentInstance, TeacherInstance, User, CourseInstance } = require('../models')
 const logger = require('../utils/logger')
+const { hiddenFromStudents } = require('../helpers/finalReview')
 
 const env = process.env.NODE_ENV || 'development'
 const frontendUrl = process.env.FRONTEND_URL || 'cs.helsinki.labtool.fi'
@@ -342,6 +343,13 @@ const send = async (req, res) => {
       })
       if (!teacherInstance) {
         return reject(res, 403, 'You must be a teacher of the course to perform this action.')
+      }
+      // an email would reveal a final review that students cannot see yet
+      const weekId = useComment ? (await Comment.findByPk(req.body.commentId, { attributes: ['weekId'] })).weekId : req.body.weekId
+      const week = await Week.findByPk(weekId, { attributes: ['weekNumber'] })
+      const course = await CourseInstance.findByPk(message.courseId, { attributes: ['finalReview', 'weekAmount', 'finalReviewVisible'] })
+      if (week && hiddenFromStudents(course, week.weekNumber)) {
+        return reject(res, 400, 'The final review is hidden from students; show it in the course settings before notifying the student.')
       }
     } else if (req.body.role === 'student') {
       // Student validation

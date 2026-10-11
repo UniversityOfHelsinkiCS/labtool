@@ -14,6 +14,14 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
   The dev seed checklist has a description on each of its six checks.
 
 ### Added
+- **Final review can be hidden from students.** Course settings have a new toggle "Final review results
+  are shown to students" (only for courses with a final review). While it is off, students do not get
+  their final review at all (points, grade, feedback, checks, comments are left out of the course page
+  data), cannot comment on it, and teachers cannot send email notifications about it; students see
+  "Final review results are not shown yet". Staff see a "Hidden from students" label on the final review
+  and a notice when grading it. New column `CourseInstances.finalReviewVisible` (migration
+  `20261011200000-add-finalReviewVisible-to-course-instances`): new courses hide the final review by
+  default, courses that existed before keep showing it.
 - **Checklist preview in the checklist editor.** A "Preview" button next to Save opens the checklist
   being edited, unsaved changes included, as it looks when grading: checks can be ticked to see the
   feedback text and points (prerequisites hide and uncheck dependent checks, points are capped at the

@@ -2,6 +2,7 @@ const Sequelize = require('sequelize')
 const db = require('../models')
 const helper = require('../helpers/courseInstanceHelper')
 const logger = require('../utils/logger')
+const { hiddenFromStudents } = require('../helpers/finalReview')
 const { addValueChange, logChange, pointsChangesByOthers } = require('../helpers/changeLog')
 
 // repository link changes are kept in the change history (#1132)
@@ -225,9 +226,12 @@ module.exports = {
               // This was only ever included to be spliced into the codeReviews filed above.
               delete palautus.data.toReviews
             }
-            palautus.data.weeks = palautus.data.weeks.map(week => ({ ...week.dataValues,
-              checks: week.checks.reduce((checksObject, reviewCheck) => ({ ...checksObject, [reviewCheck.checklistItemId]: reviewCheck.checked }), {})
-            }))
+            palautus.data.weeks = palautus.data.weeks
+              // a hidden final review is left out altogether: points, grade, feedback, checks and comments
+              .filter(week => !hiddenFromStudents(course, week.weekNumber))
+              .map(week => ({ ...week.dataValues,
+                checks: week.checks.reduce((checksObject, reviewCheck) => ({ ...checksObject, [reviewCheck.checklistItemId]: reviewCheck.checked }), {})
+              }))
           } else {
             palautus.data = null
           }
@@ -663,7 +667,8 @@ module.exports = {
                 currentCodeReview: newCr.length === 0 ? [] : newCr,
                 coursesPage: typeof req.body.coursesPage === 'string' ? req.body.coursesPage : courseInstance.coursesPage,
                 courseMaterial: typeof req.body.courseMaterial === 'string' ? req.body.courseMaterial : courseInstance.courseMaterial,
-                finalReviewHasPoints: 'finalReviewHasPoints' in req.body ? req.body.finalReviewHasPoints : courseInstance.finalReviewHasPoints
+                finalReviewHasPoints: 'finalReviewHasPoints' in req.body ? req.body.finalReviewHasPoints : courseInstance.finalReviewHasPoints,
+                finalReviewVisible: typeof req.body.finalReviewVisible === 'boolean' ? req.body.finalReviewVisible : courseInstance.finalReviewVisible
               })
               .then(updatedCourseInstance => res.status(200).send(updatedCourseInstance))
               .catch((error) => {

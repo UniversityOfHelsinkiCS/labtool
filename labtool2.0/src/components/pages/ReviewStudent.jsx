@@ -459,6 +459,13 @@ export const ReviewStudent = props => {
                 ) : (
                   <h2>Review</h2>
                 )}
+                {isFinalReview(props) && !props.selectedInstance.finalReviewVisible && (
+                  <Message size="small" warning className="finalReviewHidden">
+                    <Icon name="eye slash" />
+                    The final review is hidden from students. They see it once it is shown in the course
+                    settings.
+                  </Message>
+                )}
                 {assignedInstructor && (
                   <Message
                     size="small"

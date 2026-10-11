@@ -8,7 +8,11 @@ import {
   getAllCI,
   copyInformationFromCourse
 } from '../../services/courseInstance'
-import { setFinalReview, setFinalReviewHasPoints } from '../../reducers/selectedInstanceReducer'
+import {
+  setFinalReview,
+  setFinalReviewHasPoints,
+  setFinalReviewVisible
+} from '../../reducers/selectedInstanceReducer'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Redirect } from 'react-router'
@@ -87,6 +91,10 @@ export const ModifyCourseInstancePage = props => {
     props.setFinalReview(newValue)
   }
 
+  const changeFinalReviewVisible = () => {
+    props.setFinalReviewVisible(!props.selectedInstance.finalReviewVisible)
+  }
+
   const changeFinalReviewHasPoints = () => {
     const newValue = !props.selectedInstance.finalReviewHasPoints
     props.setFinalReviewHasPoints(newValue)
@@ -112,6 +120,7 @@ export const ModifyCourseInstancePage = props => {
         ohid,
         finalReview,
         finalReviewHasPoints,
+        finalReviewVisible,
         coursesPage,
         courseMaterial
       } = props.selectedInstance
@@ -144,6 +153,7 @@ export const ModifyCourseInstancePage = props => {
         ohid,
         finalReview,
         finalReviewHasPoints,
+        finalReviewVisible,
         newCr,
         // Trim these, if they exist, for accessibility. Do not attempt to trim null (it creates black holes).
         coursesPage: coursesPage === null ? null : coursesPage.trim(),
@@ -357,6 +367,17 @@ export const ModifyCourseInstancePage = props => {
 
                 <Form.Group inline>
                   <Checkbox
+                    name="finalReviewVisible"
+                    checked={Boolean(props.selectedInstance.finalReviewVisible)}
+                    onChange={changeFinalReviewVisible}
+                    disabled={!props.selectedInstance.finalReview}
+                    label="Final review results are shown to students"
+                    style={{ width: '150px', textAlign: 'left' }}
+                  />
+                </Form.Group>
+
+                <Form.Group inline>
+                  <Checkbox
                     name="courseActive"
                     label="Course registration is active"
                     checked={selectedInstance.active}
@@ -472,6 +493,7 @@ const mapDispatchToProps = {
   addRedirectHook,
   setFinalReview,
   setFinalReviewHasPoints,
+  setFinalReviewVisible,
   forceRedirect
 }
 
@@ -498,6 +520,7 @@ ModifyCourseInstancePage.propTypes = {
   addRedirectHook: PropTypes.func.isRequired,
   setFinalReview: PropTypes.func.isRequired,
   setFinalReviewHasPoints: PropTypes.func.isRequired,
+  setFinalReviewVisible: PropTypes.func.isRequired,
   forceRedirect: PropTypes.func.isRequired,
 
   errors: PropTypes.array

@@ -2,6 +2,7 @@ const Sequelize = require('sequelize')
 
 const applicationHelpers = require('./applicationHelper')
 const logger = require('../utils/logger')
+const { hiddenFromStudents } = require('./finalReview')
 const { Week, CourseInstance, StudentInstance, TeacherInstance } = require('../models')
 
 const env = process.env.NODE_ENV || 'development'
@@ -122,7 +123,8 @@ async function checkHasCommentPermission(userId, weekId) {
     return 'teacher'
   }
   // ok, user is the student whose review we are trying to comment on?
-  if (student.userId === userId) {
+  // ...unless it is a final review that is still hidden from students
+  if (student.userId === userId && !hiddenFromStudents(course, week.weekNumber)) {
     return 'student'
   }
   return false
