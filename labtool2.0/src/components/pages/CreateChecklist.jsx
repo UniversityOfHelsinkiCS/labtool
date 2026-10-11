@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import {
@@ -219,6 +219,19 @@ export const CreateChecklist = props => {
     state.copyWeekDropdowns = createCopyWeekDropdowns()
     loadChecklist(newCurrent)
   }
+
+  // Without unsaved edits, reload the selected checklist from the server once the course is loaded,
+  // so that a copy remembered from an earlier visit does not hide changes saved since then.
+  const refreshedSaved = useRef(false)
+  useEffect(() => {
+    if (refreshedSaved.current || !props.selectedInstance || props.selectedInstance.ohid !== props.courseId)
+      return
+    refreshedSaved.current = true
+    if (state.current && !state.canSave) {
+      state.maximumPoints = ''
+      loadChecklist(state.current)
+    }
+  }, [props.selectedInstance])
 
   useEffect(() => {
     // get maximum points from the checklist if not already in persistent state
@@ -660,16 +673,19 @@ export const CreateChecklist = props => {
                 onClick={moveTopicUp(key)}
               />
             </Header>
-            <Form.TextArea
-              className="topicDescriptionInput"
-              placeholder="Topic description (optional): what this topic is about, shown when grading"
-              rows={2}
-              value={(props.checklist.topicDescriptions || {})[key] || ''}
-              onChange={(e, { value }) => {
-                props.changeTopicDescription({ key, description: value })
-                state.canSave = true
-              }}
-            />
+            <Form className="topicDescriptionForm" style={{ marginBottom: '1em' }}>
+              <Form.TextArea
+                className="topicDescriptionInput"
+                label="Kuvaus (not shown to students)"
+                placeholder="Optional topic description, shown to instructors when grading: what this topic is about and what to look for"
+                rows={3}
+                value={(props.checklist.topicDescriptions || {})[key] || ''}
+                onChange={(e, { value }) => {
+                  props.changeTopicDescription({ key, description: value })
+                  state.canSave = true
+                }}
+              />
+            </Form>
             <div>
               <p>
                 Total points for this section:{' '}
