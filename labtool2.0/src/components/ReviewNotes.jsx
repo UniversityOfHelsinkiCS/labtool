@@ -8,7 +8,7 @@ import { trimDate } from '../util/format'
  * Additional review notes on a final review. Only the assigned instructor edits the review notes of the
  * final review; the rest of the course staff add notes of their own here. Never shown to students.
  */
-export const ReviewNotes = ({ notes, onAdd }) => {
+export const ReviewNotes = ({ notes, onAdd, disabledReason }) => {
   const [text, setText] = useState('')
 
   const add = () => {
@@ -35,6 +35,11 @@ export const ReviewNotes = ({ notes, onAdd }) => {
             </Comment>
           ))}
         </Comment.Group>
+      )}
+      {!onAdd && disabledReason && (
+        <p className="reviewNotesDisabled" style={{ color: 'rgba(0,0,0,.6)', fontStyle: 'italic' }}>
+          {disabledReason}
+        </p>
       )}
       {onAdd && (
         <div className="addReviewNote">
@@ -64,7 +69,9 @@ export const ReviewNotes = ({ notes, onAdd }) => {
 ReviewNotes.propTypes = {
   notes: PropTypes.array.isRequired,
   // adds a note with the given text; without it the notes are only listed
-  onAdd: PropTypes.func
+  onAdd: PropTypes.func,
+  // why notes cannot be added (shown instead of the form when onAdd is missing)
+  disabledReason: PropTypes.string
 }
 
 export default ReviewNotes

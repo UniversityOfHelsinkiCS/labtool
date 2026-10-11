@@ -1,4 +1,4 @@
-const { ReviewNote, StudentInstance, CourseInstance, TeacherInstance, User } = require('../models')
+const { ReviewNote, StudentInstance, CourseInstance, TeacherInstance, User, Week } = require('../models')
 const helper = require('../helpers/applicationHelper')
 const { isFinalReviewWeek } = require('../helpers/finalReview')
 const logger = require('../utils/logger')
@@ -45,6 +45,11 @@ module.exports = {
       const course = await CourseInstance.findByPk(studentInstance.courseInstanceId)
       if (!isFinalReviewWeek(course, Number(weekNumber))) {
         return res.status(400).send('Additional review notes are only for the final review.')
+      }
+      // additional notes add to the review notes of the instructor, so those must be there first
+      const week = await Week.findOne({ where: { studentInstanceId: studentInstance.id, weekNumber: Number(weekNumber) } })
+      if (!week || !(week.instructorNotes || '').trim()) {
+        return res.status(400).send('Notes can be added once the review notes of the final review have been written.')
       }
       const note = await ReviewNote.create({
         studentInstanceId: studentInstance.id,

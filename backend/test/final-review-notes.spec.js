@@ -83,6 +83,14 @@ describe('Final review notes', () => {
       await addNote(s.users.teacher, { weekNumber: 1 }).expect(400)
     })
 
+    it('is possible only once the review notes of the final review have been written', async () => {
+      await Week.update({ instructorNotes: '  ' }, { where: { studentInstanceId: s.student.id, weekNumber: FINAL } })
+      await addNote(s.users.teacher).expect(400)
+      await Week.destroy({ where: { studentInstanceId: s.student.id, weekNumber: FINAL } })
+      await addNote(s.users.teacher).expect(400)
+      assert.strictEqual(await ReviewNote.count(), 0)
+    })
+
     it('rejects an empty note', async () => {
       await addNote(s.users.teacher, { text: '   ' }).expect(400)
     })
