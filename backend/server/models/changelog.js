@@ -5,7 +5,9 @@ module.exports = (sequelize, DataTypes) => {
     {
       kind: { type: DataTypes.STRING, allowNull: false },
       number: { type: DataTypes.INTEGER, allowNull: true },
-      changes: { type: DataTypes.JSONB, allowNull: false }
+      changes: { type: DataTypes.JSONB, allowNull: false },
+      // the first version of a review, grading or repository, not a change from an earlier one
+      initial: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false }
     },
     {}
   )

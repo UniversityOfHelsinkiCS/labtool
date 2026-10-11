@@ -39,7 +39,9 @@ test.describe.serial('change history', () => {
     await expect(entries.nth(0)).toContainText('Aatu Assistentti')
     await expect(entries.nth(0)).toContainText('Points 1 → 2')
     await expect(entries.nth(1)).toContainText('Pää Opettaja')
-    await expect(entries.nth(1)).toContainText('Points – → 1')
+    await expect(entries.nth(1)).toContainText('Initial review')
+    await expect(entries.nth(1)).toContainText('Points 1')
+    await expect(entries.nth(1)).not.toContainText('→')
 
     await entries.nth(0).getByText('Show old and new text').click()
     await expect(entries.nth(0)).toContainText('First version of the feedback')

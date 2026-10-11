@@ -4,68 +4,80 @@ import { Header, Icon, Label, List } from 'semantic-ui-react'
 
 const formatTime = iso => new Date(iso).toLocaleString('fi-FI')
 const show = value => (value === null || value === undefined || value === '' ? '–' : String(value))
+const checkState = checked => (checked ? 'checked' : 'unchecked')
 
-const TextChange = ({ label, change }) => (
-  <List.Item>
-    {label} changed
-    <details style={{ marginTop: '4px' }}>
-      <summary style={{ cursor: 'pointer' }}>Show old and new text</summary>
-      <div style={{ marginTop: '4px' }}>
-        <strong>Before:</strong>
-        <pre style={{ whiteSpace: 'pre-wrap', margin: '2px 0 8px' }}>{show(change.from)}</pre>
-        <strong>After:</strong>
-        <pre style={{ whiteSpace: 'pre-wrap', margin: '2px 0' }}>{show(change.to)}</pre>
-      </div>
-    </details>
-  </List.Item>
-)
+// the first version of a review, grading or repository (not a change from an earlier one)
+const initialLabel = kind =>
+  ({
+    week_review: 'Initial review',
+    code_review_grade: 'Initial grading',
+    repository: 'Repository at registration'
+  })[kind] || 'Initial version'
+
+const TextChange = ({ label, change, initial }) =>
+  initial ? (
+    <List.Item>
+      {label}
+      <details style={{ marginTop: '4px' }}>
+        <summary style={{ cursor: 'pointer' }}>Show text</summary>
+        <pre style={{ whiteSpace: 'pre-wrap', margin: '4px 0' }}>{show(change.to)}</pre>
+      </details>
+    </List.Item>
+  ) : (
+    <List.Item>
+      {label} changed
+      <details style={{ marginTop: '4px' }}>
+        <summary style={{ cursor: 'pointer' }}>Show old and new text</summary>
+        <div style={{ marginTop: '4px' }}>
+          <strong>Before:</strong>
+          <pre style={{ whiteSpace: 'pre-wrap', margin: '2px 0 8px' }}>{show(change.from)}</pre>
+          <strong>After:</strong>
+          <pre style={{ whiteSpace: 'pre-wrap', margin: '2px 0' }}>{show(change.to)}</pre>
+        </div>
+      </details>
+    </List.Item>
+  )
 
 TextChange.propTypes = {
   label: PropTypes.string.isRequired,
-  change: PropTypes.object.isRequired
+  change: PropTypes.object.isRequired,
+  initial: PropTypes.bool
 }
 
-const checkState = checked => (checked ? 'checked' : 'unchecked')
-
-const describeChanges = changes => {
+// initial entries list the values; later entries list old → new
+const describeChanges = (changes, initial) => {
   const lines = []
-  if (changes.points)
-    lines.push(
-      <List.Item key="points">
-        Points {show(changes.points.from)} → {show(changes.points.to)}
-      </List.Item>
-    )
-  if (changes.grade)
-    lines.push(
-      <List.Item key="grade">
-        Grade {show(changes.grade.from)} → {show(changes.grade.to)}
-      </List.Item>
-    )
-  if (changes.feedback) lines.push(<TextChange key="feedback" label="Feedback" change={changes.feedback} />)
+  const value = (label, change) =>
+    initial ? `${label} ${show(change.to)}` : `${label} ${show(change.from)} → ${show(change.to)}`
+  if (changes.points) lines.push(<List.Item key="points">{value('Points', changes.points)}</List.Item>)
+  if (changes.grade) lines.push(<List.Item key="grade">{value('Grade', changes.grade)}</List.Item>)
+  if (changes.feedback) {
+    lines.push(<TextChange key="feedback" label="Feedback" change={changes.feedback} initial={initial} />)
+  }
   if (changes.instructorNotes) {
-    lines.push(<TextChange key="notes" label="Review notes" change={changes.instructorNotes} />)
+    lines.push(
+      <TextChange key="notes" label="Review notes" change={changes.instructorNotes} initial={initial} />
+    )
   }
   if (changes.checklist) {
     lines.push(
       <List.Item key="checklist">
-        Checklist: {changes.checklist.length} {changes.checklist.length === 1 ? 'box' : 'boxes'} changed (
-        {changes.checklist
-          .map(item => `${item.name} ${checkState(item.from)} → ${checkState(item.to)}`)
-          .join(', ')}
-        )
+        {initial
+          ? `Checklist: ${changes.checklist.map(item => `${item.name} ${checkState(item.to)}`).join(', ')}`
+          : `Checklist: ${changes.checklist.length} ${changes.checklist.length === 1 ? 'box' : 'boxes'} changed (${changes.checklist
+              .map(item => `${item.name} ${checkState(item.from)} → ${checkState(item.to)}`)
+              .join(', ')})`}
       </List.Item>
     )
   }
   if (changes.github) {
     lines.push(
       <List.Item key="github">
-        {changes.github.from ? (
-          <>
-            Repository {changes.github.from} → {show(changes.github.to)}
-          </>
-        ) : (
-          <>Repository set to {show(changes.github.to)}</>
-        )}
+        {initial
+          ? show(changes.github.to)
+          : changes.github.from
+            ? `Repository ${changes.github.from} → ${show(changes.github.to)}`
+            : `Repository set to ${show(changes.github.to)}`}
       </List.Item>
     )
   }
@@ -104,8 +116,19 @@ export const ChangeHistory = ({ title, entries, subjectOf }) => (
               <List.Header>
                 {subjectOf && <span className="changeHistorySubject">{subjectOf(entry)} · </span>}
                 {formatTime(entry.createdAt)} · {entry.by || 'Unknown user'}
+                {entry.initial && (
+                  <Label
+                    size="mini"
+                    basic
+                    color="orange"
+                    className="initialEntry"
+                    style={{ marginLeft: '6px' }}
+                  >
+                    {initialLabel(entry.kind)}
+                  </Label>
+                )}
               </List.Header>
-              <List bulleted>{describeChanges(entry.changes)}</List>
+              <List bulleted>{describeChanges(entry.changes, entry.initial)}</List>
             </List.Content>
           </List.Item>
         ))}
