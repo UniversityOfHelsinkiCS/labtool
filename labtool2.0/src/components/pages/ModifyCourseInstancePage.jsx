@@ -1,6 +1,17 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input, Button, Grid, Dropdown, Checkbox, Loader, Segment } from 'semantic-ui-react'
+import {
+  Form,
+  Input,
+  Button,
+  Grid,
+  Dropdown,
+  Checkbox,
+  Loader,
+  Segment,
+  Icon,
+  Confirm
+} from 'semantic-ui-react'
 import {
   getOneCI,
   modifyOneCI,
@@ -90,6 +101,9 @@ export const ModifyCourseInstancePage = props => {
     const newValue = !props.selectedInstance.finalReview
     props.setFinalReview(newValue)
   }
+
+  const finalReviewVisible = Boolean(props.selectedInstance.finalReviewVisible)
+  const [confirmingVisibility, setConfirmingVisibility] = useState(false)
 
   const changeFinalReviewVisible = () => {
     props.setFinalReviewVisible(!props.selectedInstance.finalReviewVisible)
@@ -346,6 +360,16 @@ export const ModifyCourseInstancePage = props => {
 
                 <Form.Group inline>
                   <Checkbox
+                    name="courseActive"
+                    label="Course registration is active"
+                    checked={selectedInstance.active}
+                    onChange={handleChange}
+                    style={{ width: '150px', textAlign: 'left' }}
+                  />
+                </Form.Group>
+
+                <Form.Group inline>
+                  <Checkbox
                     name="finalReview"
                     checked={props.selectedInstance.finalReview}
                     onChange={changeFinalReview}
@@ -365,26 +389,53 @@ export const ModifyCourseInstancePage = props => {
                   />
                 </Form.Group>
 
-                <Form.Group inline>
-                  <Checkbox
-                    name="finalReviewVisible"
-                    checked={Boolean(props.selectedInstance.finalReviewVisible)}
-                    onChange={changeFinalReviewVisible}
-                    disabled={!props.selectedInstance.finalReview}
-                    label="Final review results are shown to students"
-                    style={{ width: '150px', textAlign: 'left' }}
-                  />
-                </Form.Group>
-
-                <Form.Group inline>
-                  <Checkbox
-                    name="courseActive"
-                    label="Course registration is active"
-                    checked={selectedInstance.active}
-                    onChange={handleChange}
-                    style={{ width: '150px', textAlign: 'left' }}
-                  />
-                </Form.Group>
+                {props.selectedInstance.finalReview && (
+                  // a remarkable switch: it decides whether students see their final review (grades)
+                  <Segment
+                    className="finalReviewVisibility"
+                    color={finalReviewVisible ? 'green' : 'orange'}
+                    style={{ display: 'inline-block', textAlign: 'left', marginBottom: '1em' }}
+                  >
+                    <Checkbox
+                      toggle
+                      name="finalReviewVisible"
+                      checked={finalReviewVisible}
+                      onChange={() => setConfirmingVisibility(true)}
+                      label={
+                        <label style={{ fontWeight: 'bold' }}>Show final review results to students</label>
+                      }
+                    />
+                    <p className="finalReviewVisibilityStatus" style={{ marginTop: '0.5em' }}>
+                      <Icon
+                        name={finalReviewVisible ? 'eye' : 'eye slash'}
+                        color={finalReviewVisible ? 'green' : 'orange'}
+                      />
+                      {finalReviewVisible
+                        ? 'Students see their final review: points, grade, feedback and comments.'
+                        : 'Final review results are hidden from students.'}
+                    </p>
+                  </Segment>
+                )}
+                <Confirm
+                  className="finalReviewVisibilityConfirm"
+                  open={confirmingVisibility}
+                  header={
+                    finalReviewVisible
+                      ? 'Hide final review results?'
+                      : 'Show final review results to students?'
+                  }
+                  content={
+                    finalReviewVisible
+                      ? 'Students will no longer see their final review (points, grade, feedback and comments) once you save the settings.'
+                      : 'Every student will see their final review (points, grade, feedback and comments) once you save the settings.'
+                  }
+                  confirmButton={finalReviewVisible ? 'Hide from students' : 'Show to students'}
+                  onCancel={() => setConfirmingVisibility(false)}
+                  onConfirm={() => {
+                    setConfirmingVisibility(false)
+                    changeFinalReviewVisible()
+                  }}
+                />
 
                 <Form.Group style={{ display: 'inline-block', marginLeft: 'auto', marginRight: 'auto' }}>
                   <Button type="submit" color="green" size="huge">

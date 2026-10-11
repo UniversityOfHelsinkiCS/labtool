@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Provider } from 'react-redux'
 import { createStore } from 'redux'
@@ -125,27 +125,46 @@ describe('<ModifyCourseInstancePage />', () => {
     renderPage()
 
     expect(screen.getByText('Course registration is active')).toBeInTheDocument()
-    expect(screen.getAllByRole('checkbox').at(-1)).toBeChecked()
+    // the first of the course's checkboxes, after the code review selections
+    const registration = screen.getByText('Course registration is active').closest('.checkbox')
+    expect(registration.querySelector('input')).toBeChecked()
+    const labels = [...document.querySelectorAll('.ui.checkbox label')].map(label => label.textContent)
+    expect(labels.slice(-3)).toEqual([
+      'Course registration is active',
+      'Course has a final review',
+      'Points are given for final review'
+    ])
   })
 
   describe('showing the final review to students', () => {
-    const toggle = () => screen.getByText('Final review results are shown to students').closest('.checkbox')
+    const toggle = () => document.querySelector('.finalReviewVisibility .ui.toggle.checkbox')
+    const confirmDialog = () => document.querySelector('.finalReviewVisibilityConfirm')
 
-    it('is off and disabled without a final review', () => {
+    it('is not shown without a final review', () => {
       renderPage()
-      expect(toggle()).toHaveClass('disabled')
-      expect(toggle().querySelector('input')).not.toBeChecked()
+      expect(screen.queryByText('Show final review results to students')).toBeNull()
     })
 
-    it('can be switched on for a course with a final review, and is saved with the course', async () => {
+    it('is a toggle that is off by default and says the results are hidden', () => {
+      renderPage({ selectedInstance: { ...courseData, finalReview: true } })
+      expect(toggle().querySelector('input')).not.toBeChecked()
+      expect(document.querySelector('.finalReviewVisibilityStatus')).toHaveTextContent(
+        'Final review results are hidden from students.'
+      )
+    })
+
+    it('asks for confirmation before showing the results, and is saved with the course', async () => {
       const user = userEvent.setup()
       const { props } = renderPage({
         selectedInstance: { ...courseData, finalReview: true, finalReviewVisible: false }
       })
-      expect(toggle()).not.toHaveClass('disabled')
 
       await user.click(toggle())
+      expect(confirmDialog()).toHaveTextContent('Show final review results to students?')
+      expect(props.setFinalReviewVisible).not.toHaveBeenCalled()
+      await user.click(within(confirmDialog()).getByRole('button', { name: 'Show to students' }))
       expect(props.setFinalReviewVisible).toHaveBeenCalledWith(true)
+      expect(confirmDialog()).toBeNull()
 
       await user.click(screen.getByRole('button', { name: 'Save' }))
       expect(props.modifyOneCI).toHaveBeenCalledWith(
@@ -154,9 +173,17 @@ describe('<ModifyCourseInstancePage />', () => {
       )
     })
 
-    it('shows the current setting', () => {
-      renderPage({ selectedInstance: { ...courseData, finalReview: true, finalReviewVisible: true } })
+    it('changes nothing when the confirmation is cancelled', async () => {
+      const user = userEvent.setup()
+      const { props } = renderPage({
+        selectedInstance: { ...courseData, finalReview: true, finalReviewVisible: true }
+      })
       expect(toggle().querySelector('input')).toBeChecked()
+
+      await user.click(toggle())
+      expect(confirmDialog()).toHaveTextContent('Hide final review results?')
+      await user.click(within(confirmDialog()).getByRole('button', { name: 'Cancel' }))
+      expect(props.setFinalReviewVisible).not.toHaveBeenCalled()
     })
   })
 })
