@@ -568,6 +568,9 @@ export const CreateChecklist = props => {
 
   // A course without any checklists can copy all checklists of another course at once.
   const [copyAllFrom, setCopyAllFrom] = useState(null)
+  // the copy form is open for a week without a checklist, and collapsed when the week has one;
+  // the user can open or close it, which is remembered until another week is selected
+  const [copyFormToggle, setCopyFormToggle] = useState({ week: null, open: false })
   const copyingAll = useRef(false)
   const ownChecklistCount = (props.copyableChecklists || []).filter(
     checklist => checklist.courseInstanceId === props.selectedInstance.id
@@ -951,6 +954,8 @@ export const CreateChecklist = props => {
   // e.g. "week 2" or "code review", for the copy form
   const currentOption = (props.weekDropdowns || []).find(option => option.value === state.current)
   const currentLabel = currentOption ? currentOption.text.toLowerCase() : 'this checklist'
+  const weekHasChecklist = Object.keys(props.checklist.data || {}).length > 0
+  const copyFormOpen = copyFormToggle.week === state.current ? copyFormToggle.open : !weekHasChecklist
   const { checklistJsx, maxPoints } = props.loading.loading
     ? { checklistJsx: null, maxPoints: null }
     : renderChecklist(currentObj.kind)
@@ -1000,9 +1005,32 @@ export const CreateChecklist = props => {
               onChange={changeWeek}
               options={props.weekDropdowns}
             />
-            {hasSelectedWeek && (
+            {hasSelectedWeek && !copyFormOpen && (
+              <Button
+                type="button"
+                basic
+                className="copyFormToggle"
+                icon="copy outline"
+                content={`Copy a checklist into ${currentLabel}...`}
+                onClick={() => setCopyFormToggle({ week: state.current, open: true })}
+                style={{ float: 'right' }}
+              />
+            )}
+            {hasSelectedWeek && copyFormOpen && (
               // two separate sources: another week of this course, or the same week of another course
               <Segment className="copyForm">
+                {weekHasChecklist && (
+                  <Button
+                    type="button"
+                    basic
+                    size="mini"
+                    floated="right"
+                    className="copyFormClose"
+                    icon="close"
+                    aria-label="Close"
+                    onClick={() => setCopyFormToggle({ week: state.current, open: false })}
+                  />
+                )}
                 <Header as="h4" style={{ marginBottom: '0.3em' }}>
                   Copy a checklist into {currentLabel}
                 </Header>

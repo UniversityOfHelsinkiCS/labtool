@@ -156,6 +156,12 @@ const selectWeek = async (user, week) => {
   await user.click(within(checklistDropdown).getByRole('option', { name: `Week ${week}` }))
 }
 
+// the copy form is collapsed when the selected week already has a checklist
+const openCopyForm = async user => {
+  const toggle = document.querySelector('.copyFormToggle')
+  if (toggle) await user.click(toggle)
+}
+
 describe('<CreateChecklist /> component', () => {
   beforeEach(() => {
     window.localStorage.clear()
@@ -214,6 +220,7 @@ describe('<CreateChecklist /> component', () => {
     const user = userEvent.setup()
     renderCreateChecklist()
     await selectWeek(user, 6)
+    await openCopyForm(user)
 
     await user.click(screen.getByText('Select a course'))
 
@@ -230,6 +237,7 @@ describe('<CreateChecklist /> component', () => {
     const user = userEvent.setup()
     renderCreateChecklist()
     await selectWeek(user, 1)
+    await openCopyForm(user)
 
     await user.click(screen.getByText('Select a course'))
 
@@ -265,6 +273,7 @@ describe('<CreateChecklist /> component', () => {
       }))
     })
     await selectWeek(user, 1)
+    await openCopyForm(user)
 
     await user.click(screen.getByText('Select a course'))
 
@@ -285,6 +294,7 @@ describe('<CreateChecklist /> component', () => {
     const user = userEvent.setup()
     renderCreateChecklist({ copyableChecklists: [] })
     await selectWeek(user, 6)
+    await openCopyForm(user)
 
     // no empty dropdown, but a plain explanation
     expect(screen.queryByText('Select a course')).toBeNull()
@@ -298,6 +308,7 @@ describe('<CreateChecklist /> component', () => {
     const user = userEvent.setup()
     const { props } = renderCreateChecklist()
     await selectWeek(user, 6)
+    await openCopyForm(user)
 
     const form = document.querySelector('.copyForm')
     expect(form).toHaveTextContent('Copy a checklist into week 6')
@@ -389,6 +400,32 @@ describe('<CreateChecklist /> component', () => {
     it('is not offered when no other course has checklists', () => {
       renderCreateChecklist({ copyableChecklists: [] })
       expect(box()).toBeNull()
+    })
+  })
+
+  describe('the copy form', () => {
+    it('is collapsed when the week already has a checklist, and can be opened and closed', async () => {
+      const user = userEvent.setup()
+      renderCreateChecklist()
+      await selectWeek(user, 6)
+      expect(document.querySelector('.copyForm')).toBeNull()
+      const toggle = document.querySelector('.copyFormToggle')
+      expect(toggle).toHaveTextContent('Copy a checklist into week 6...')
+
+      await user.click(toggle)
+      expect(document.querySelector('.copyForm')).toHaveTextContent('Copy a checklist into week 6')
+      await user.click(document.querySelector('.copyFormClose'))
+      expect(document.querySelector('.copyForm')).toBeNull()
+    })
+
+    it('is open when the week has no checklist', async () => {
+      const user = userEvent.setup()
+      renderCreateChecklist({ checklist: { data: {} } })
+      await selectWeek(user, 6)
+      expect(document.querySelector('.copyForm')).toBeInTheDocument()
+      expect(document.querySelector('.copyFormToggle')).toBeNull()
+      // nothing to protect, so no close button
+      expect(document.querySelector('.copyFormClose')).toBeNull()
     })
   })
 
