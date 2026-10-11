@@ -42,6 +42,8 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
     changes the button to an orange "Add instructor-only note".
 - **Review notes on the review page are styled as instructor-only too** (#1142): the section has
   the same orange border, background and "Instructors only: not shown to the student" label.
+  While empty, the section is collapsed into an orange "Add review notes (instructors only)"
+  button that opens it; reviews with notes show it open.
 - **Local email setup for development and e2e tests** (for #1141):
   - The dev and e2e docker compose stacks have a Mailpit mail server that catches all email; inbox
     at http://localhost:8025 (dev) and :8026 (e2e). It rejects recipients outside the seed data's
