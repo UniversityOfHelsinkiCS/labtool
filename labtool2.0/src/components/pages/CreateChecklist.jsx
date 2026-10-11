@@ -43,6 +43,7 @@ import JsonEdit from '../JsonEdit'
 import DocumentTitle from '../DocumentTitle'
 import Error from '../Error'
 import { Points } from '../Points'
+import ChecklistPreview from '../ChecklistPreview'
 
 export const CreateChecklist = props => {
   const state = usePersistedState(`CreateChecklist_${props.courseId}`, {
@@ -978,6 +979,11 @@ export const CreateChecklist = props => {
                 >
                   <div className="saveButtonText">Save</div>
                 </Button>
+                <ChecklistPreview
+                  data={props.checklist.data}
+                  maxPoints={Number(state.maximumPoints) || undefined}
+                  disabled={Object.keys(props.checklist.data || {}).length === 0}
+                />
                 <br />
                 <br />
               </form>

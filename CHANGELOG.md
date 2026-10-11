@@ -14,6 +14,10 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
   The dev seed checklist has a description on each of its six checks.
 
 ### Added
+- **Checklist preview in the checklist editor.** A "Preview" button next to Save opens the checklist
+  being edited, unsaved changes included, as it looks when grading: checks can be ticked to see the
+  feedback text and points (prerequisites hide and uncheck dependent checks, points are capped at the
+  checklist's maximum). Nothing is saved; the preview starts empty each time it is opened.
 - **Dev seed course has a week 1 checklist:** `TKT20010.2026.S.K.SIM1` gets a checklist for week 1
   (max 3 points) with three described topics (Ohjelmakoodi, Testaus, Dokumentaatio) and six items,
   so the grading checklist and topic descriptions (#525) can be tried right after a reset.

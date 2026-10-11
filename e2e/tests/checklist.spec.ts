@@ -40,6 +40,17 @@ test.describe.serial('checklists', () => {
     await uncheckedRow.locator('.textField input').fill(TEXT_WHEN_OFF)
     await expect(page.locator('.totalPointsOfChecklist')).toHaveText('3')
 
+    // the unsaved checklist can be previewed as it looks when grading
+    await page.getByRole('button', { name: 'Preview' }).click()
+    const preview = page.locator('.checklistPreview')
+    await expect(preview.locator('.checklistCardRow', { hasText: CHECKBOX })).toContainText(CHECK_DESCRIPTION)
+    await expect(preview.locator('.checklistOutputPoints')).toHaveText('points: 0')
+    await preview.locator('.checklistCardRow', { hasText: CHECKBOX }).click()
+    await expect(preview.locator('.checklistOutputPoints')).toHaveText('points: 3')
+    await expect(preview.locator('textarea')).toHaveValue(new RegExp(TEXT_WHEN_ON))
+    await preview.getByRole('button', { name: 'Close' }).click()
+    await expect(preview).toBeHidden()
+
     await page.locator('.saveButton').first().click()
     await expectSuccess(page, NOTIFICATIONS.checklistSaved(1))
     await expect(page.locator('.saveButton').first()).toBeDisabled()

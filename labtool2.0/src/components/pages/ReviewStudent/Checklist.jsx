@@ -13,7 +13,8 @@ export const ReviewStudentChecklist = props => {
     checklistOutput,
     checklistPoints,
     copyChecklistOutput,
-    kind
+    kind,
+    preview
   } = props
 
   const showCheck = clItem => clItem.prerequisite === null || isChecked(checks, clItem.prerequisite)
@@ -135,7 +136,9 @@ export const ReviewStudentChecklist = props => {
                 points: <Points points={checklistPoints} />
               </p>
               <input type="hidden" name="points" value={checklistPoints} />
-              <Button type="submit">{showOutput ? 'Copy to review fields' : 'Copy to review field'}</Button>
+              {!preview && (
+                <Button type="submit">{showOutput ? 'Copy to review fields' : 'Copy to review field'}</Button>
+              )}
             </Form>
           </div>
         </div>
@@ -157,7 +160,9 @@ ReviewStudentChecklist.propTypes = {
   kind: PropTypes.string.isRequired,
   isChecked: PropTypes.func.isRequired,
   toggleCheckbox: PropTypes.func.isRequired,
-  copyChecklistOutput: PropTypes.func.isRequired
+  copyChecklistOutput: PropTypes.func.isRequired,
+  // in the checklist editor's preview, where there is no review to copy to
+  preview: PropTypes.bool
 }
 
 export default ReviewStudentChecklist
