@@ -438,7 +438,9 @@ describe('<CreateChecklist /> component', () => {
       await user.click(document.querySelector('.copyFromCourseButton'))
       const dialog = document.querySelector('.copyOverwriteConfirm')
       expect(dialog).toHaveTextContent('Overwrite the checklist of week 6?')
-      expect(dialog).toHaveTextContent('Week 6 already has a checklist (2 topics, 2 checkboxes)')
+      expect(dialog).toHaveTextContent(
+        'Week 6 already has a checklist (2 topics, 2 checkboxes). Copying replaces it with the copied checklist. The change is saved only when you press Save.'
+      )
       expect(props.getOneChecklist).not.toHaveBeenCalled()
 
       await user.click(within(dialog).getByRole('button', { name: 'Cancel' }))
