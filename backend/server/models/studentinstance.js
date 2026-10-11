@@ -85,6 +85,12 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'teacherInstanceId'
     })
 
+    // additional review notes on the final review, by staff (never shown to students)
+    StudentInstance.hasMany(models.ReviewNote, {
+      foreignKey: 'studentInstanceId',
+      as: 'reviewNotes'
+    })
+
     StudentInstance.hasMany(models.WeekDraft, {
       foreignKey: 'studentInstanceId',
       as: 'weekdrafts'

@@ -1,6 +1,7 @@
 const courseInstanceController = require('../controllers').courseInstances
 const weekController = require('../controllers').weeks
 const assistantController = require('../controllers').assistants
+const reviewNoteController = require('../controllers').reviewNotes
 
 module.exports = (app) => {
   app.post('/api/course/register/:ohid', courseInstanceController.registerToCourseInstance)
@@ -17,6 +18,7 @@ module.exports = (app) => {
   app.get('/api/courses/:ohid', courseInstanceController.retrieveCourseStuff) // "apparently same as /api/course/instances/:ohid" no, very different info here -- hisahi
   app.post('/api/courseinstances/copy', courseInstanceController.copyCourseInformation)
   app.post('/api/weeks/create', weekController.create)
+  app.post('/api/reviewnotes', reviewNoteController.create) // final review notes by other staff
   app.post('/api/weeks/getDraft', weekController.getDraft)
   app.post('/api/weeks/saveDraft', weekController.saveDraft)
   app.post('/api/comment', courseInstanceController.addComment)

@@ -22,7 +22,8 @@ const logRepositoryChange = (studentInstance, userId, from, to, initial = false)
 }
 
 const { Op } = Sequelize
-const { User, CourseInstance, StudentInstance, TeacherInstance, Week, ReviewCheck, CodeReview, Comment, Tag, Checklist, ChecklistItem, WeekDraft } = db
+const { User, CourseInstance, StudentInstance, TeacherInstance, Week, ReviewCheck, CodeReview, Comment, Tag, Checklist, ChecklistItem, WeekDraft, ReviewNote } = db
+const { toJson: reviewNoteJson } = require('./reviewNotes')
 
 const overkillLogging = (req, error) => {
   logger.debug('request: ', req)
@@ -299,6 +300,14 @@ module.exports = {
               as: 'weekdrafts'
             },
             {
+              // additional final review notes by staff; only in the staff's data
+              model: ReviewNote,
+              as: 'reviewNotes',
+              separate: true,
+              order: [['createdAt', 'ASC']],
+              include: [{ model: User, attributes: ['firsts', 'lastname'] }]
+            },
+            {
               model: Tag,
               attributes: ['id', 'name', 'color']
             }
@@ -319,7 +328,8 @@ module.exports = {
               checks: week.checks.reduce((checksObject, reviewCheck) => ({ ...checksObject, [reviewCheck.checklistItemId]: reviewCheck.checked }), {}),
               pointsChangedByOthers: othersChanges(studentInstance, 'week_review', week.weekNumber) })),
             codeReviews: studentInstance.dataValues.codeReviews.map(codeReview => ({ ...codeReview.dataValues,
-              pointsChangedByOthers: othersChanges(studentInstance, 'code_review_grade', codeReview.reviewNumber) })) }))
+              pointsChangedByOthers: othersChanges(studentInstance, 'code_review_grade', codeReview.reviewNumber) })),
+            reviewNotes: (studentInstance.dataValues.reviewNotes || []).map(note => reviewNoteJson(note, note.User)) }))
           palautus.role = 'teacher'
           res.status(200).send(palautus)
         } catch (e) {

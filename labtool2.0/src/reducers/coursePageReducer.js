@@ -50,6 +50,18 @@ const courseInstancereducer = (store = INITIAL_STATE, action) => {
         return action.response
       }
     }
+    case 'REVIEW_NOTE_CREATE_SUCCESS': {
+      if (!Array.isArray(store.data)) return store
+      const note = action.response
+      return {
+        ...store,
+        data: store.data.map(student =>
+          student.id === note.studentInstanceId
+            ? { ...student, reviewNotes: [...(student.reviewNotes || []), note] }
+            : student
+        )
+      }
+    }
     case 'ASSOCIATE_TEACHER_AND_STUDENT_SUCCESS': {
       const id = action.response.id
       const studentToChange = store.data.find(s => s.id === id)

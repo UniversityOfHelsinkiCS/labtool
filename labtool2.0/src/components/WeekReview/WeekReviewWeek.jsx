@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Icon, Accordion, Card, Comment, Button, Label, Popup } from 'semantic-ui-react'
+import ReviewNotes from '../ReviewNotes'
 import { Link } from 'react-router-dom'
 import { LabtoolAddComment } from '../LabtoolAddComment'
 import ReactMarkdown from 'react-markdown'
@@ -34,6 +35,15 @@ export const WeekReviewWeek = props => {
 
   const i = index
   const reviewIndex = isFinalWeek ? selectedInstance.weekAmount + 1 : i + 1
+  // additional final review notes by staff (only in the staff's data)
+  const studentOfWeek =
+    courseData && Array.isArray(courseData.data)
+      ? courseData.data.find(si => si.id === Number(studentInstance))
+      : null
+  const additionalNotes =
+    isFinalWeek && studentOfWeek
+      ? (studentOfWeek.reviewNotes || []).filter(note => note.weekNumber === reviewIndex)
+      : []
   // final review results stay hidden from students until shown in the course settings
   const hiddenFromStudents = isFinalWeek && !selectedInstance.finalReviewVisible
   const hiddenLabel = hiddenFromStudents && (
@@ -93,6 +103,13 @@ export const WeekReviewWeek = props => {
                 </div>
               ) : (
                 <span />
+              )}
+              {isTeacher && additionalNotes.length > 0 && (
+                <div className="additionalReviewNotes">
+                  <br />
+                  <h4>Additional review notes</h4>
+                  <ReviewNotes notes={additionalNotes} />
+                </div>
               )}
             </Card.Content>
             {isTeacher ? (

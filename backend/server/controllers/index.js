@@ -4,6 +4,7 @@ const login = require('./login')
 const logout = require('./logout')
 const admin = require('./admin')
 const weeks = require('./weeks')
+const reviewNotes = require('./reviewNotes')
 const assistants = require('./assistants')
 const codeReviews = require('./codeReviews')
 const tags = require('./tags')
@@ -16,6 +17,7 @@ module.exports = {
   logout,
   admin,
   weeks,
+  reviewNotes,
   assistants,
   codeReviews,
   tags,

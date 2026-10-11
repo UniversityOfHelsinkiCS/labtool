@@ -1,4 +1,5 @@
-const { Week, ReviewCheck, WeekDraft, StudentInstance, TeacherInstance, User } = require('../models')
+const { Week, ReviewCheck, WeekDraft, StudentInstance, TeacherInstance, User, CourseInstance } = require('../models')
+const { isFinalReviewWeek } = require('../helpers/finalReview')
 const helper = require('../helpers/weeksControllerHelper')
 const logger = require('../utils/logger')
 const { addValueChange, addChecklistChanges, logChange } = require('../helpers/changeLog')
@@ -93,6 +94,20 @@ module.exports = {
           studentInstanceId: req.body.studentInstanceId
         }
       })
+
+      // In the final review only the assigned instructor edits the review notes; the rest of the staff
+      // add notes of their own (ReviewNotes).
+      const assignedId = studentInstance.teacherInstanceId
+      if ('instructorNotes' in req.body && assignedId && assignedId !== ownTeacherInstanceId
+        && (req.body.instructorNotes || '') !== ((week && week.instructorNotes) || '')) {
+        const course = await CourseInstance.findByPk(studentInstance.courseInstanceId)
+        if (isFinalReviewWeek(course, Number(req.body.weekNumber))) {
+          return res.status(403).send({
+            code: 'NOTES_LOCKED',
+            message: 'Only the assigned instructor can edit the review notes of the final review. Add a note of your own instead.'
+          })
+        }
+      }
 
       const conflict = await findSaveConflict(req, week, studentInstance, ownTeacherInstanceId)
       if (conflict) {

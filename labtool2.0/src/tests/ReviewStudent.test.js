@@ -593,6 +593,96 @@ describe('<ReviewStudent />', () => {
       )
     })
 
+    describe('review notes of the final review', () => {
+      // student 10011's assigned instructor is the assistant (user 10015); the tests run as the teacher (10010)
+      const withFinalReview = notes => ({
+        ...props.weekReview,
+        data: props.weekReview.data.map(student =>
+          student.id === 10011
+            ? {
+                ...student,
+                weeks: [
+                  ...student.weeks,
+                  {
+                    id: 99,
+                    weekNumber: 8,
+                    points: null,
+                    grade: 4,
+                    feedback: 'Final',
+                    instructorNotes: 'Instructor notes',
+                    checks: {},
+                    comments: []
+                  }
+                ],
+                reviewNotes: notes
+              }
+            : student
+        )
+      })
+      const notes = [
+        {
+          id: 1,
+          studentInstanceId: 10011,
+          weekNumber: 8,
+          text: 'Agree with grade 4',
+          by: 'Pää Opettaja',
+          createdAt: '2026-10-11T10:00:00.000Z'
+        },
+        {
+          id: 2,
+          studentInstanceId: 10011,
+          weekNumber: 1,
+          text: 'Not on the final review',
+          by: 'Pää Opettaja',
+          createdAt: '2026-10-11T10:00:00.000Z'
+        }
+      ]
+
+      it('are read-only for others than the assigned instructor, who add notes of their own', async () => {
+        const user = userEvent.setup()
+        const createReviewNote = vi.fn()
+        const { container } = renderFinalReview({ weekReview: withFinalReview(notes), createReviewNote })
+
+        const locked = container.querySelector('.lockedNotes')
+        expect(locked).toHaveTextContent('Review notes by Ossi Ohjaaja Mutikainen')
+        expect(locked).toHaveTextContent('Instructor notes')
+        expect(container.querySelector('textarea[name="instructorNotes"]')).toBeNull()
+        expect([...locked.querySelectorAll('.reviewNote')].map(n => n.textContent)).toEqual([
+          expect.stringContaining('Agree with grade 4')
+        ])
+
+        await user.type(within(locked).getByPlaceholderText(/add a review note/i), 'Looks fine')
+        await user.click(within(locked).getByRole('button', { name: 'Add note' }))
+        expect(createReviewNote).toHaveBeenCalledWith({
+          studentInstanceId: 10011,
+          weekNumber: 8,
+          text: 'Looks fine'
+        })
+      })
+
+      it('are editable for the assigned instructor, who also sees the notes of the others', () => {
+        const { container } = renderFinalReview({ weekReview: withFinalReview(notes), currentUserId: 10015 })
+        expect(container.querySelector('.lockedNotes')).toBeNull()
+        expect(container.querySelector('textarea[name="instructorNotes"]')).toHaveValue('Instructor notes')
+        expect(container.querySelector('.reviewNote')).toHaveTextContent('Agree with grade 4')
+      })
+
+      it('leave the notes out of the save of the others', async () => {
+        const user = userEvent.setup()
+        const createOneWeek = vi.fn()
+        renderFinalReview({ weekReview: withFinalReview([]), createOneWeek })
+        await user.click(screen.getByRole('button', { name: /^save$/i }))
+        expect(createOneWeek).toHaveBeenCalledOnce()
+        expect(createOneWeek.mock.calls[0][0]).not.toHaveProperty('instructorNotes')
+      })
+
+      it('are not locked on a normal week, which has no additional notes', () => {
+        const { container } = renderReviewStudent()
+        expect(container.querySelector('.lockedNotes')).toBeNull()
+        expect(container.querySelector('.reviewNotes')).toBeNull()
+      })
+    })
+
     describe('a final review hidden from students', () => {
       const finalReviewOf = finalReviewVisible =>
         renderFinalReview({
@@ -715,7 +805,7 @@ describe('<ReviewStudent />', () => {
         grade: 0,
         studentInstanceId: '10011',
         feedback: 'Final feedback',
-        instructorNotes: '',
+        // no instructorNotes: the student has another assigned instructor, who alone edits them
         weekNumber: '8',
         checks: {},
         baseUpdatedAt: null,

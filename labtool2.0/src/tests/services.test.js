@@ -16,6 +16,7 @@ import * as courseImport from '../services/courseImport'
 import * as courseInstance from '../services/courseInstance'
 import * as email from '../services/email'
 import * as login from '../services/login'
+import * as reviewNote from '../services/reviewNote'
 import * as studentinstances from '../services/studentinstances'
 import * as tags from '../services/tags'
 import * as teacherinstances from '../services/teacherinstances'
@@ -376,6 +377,14 @@ const cases = [
 
   // note: prefixes WEEKS_CREATE_ONE and WEEKDRAFTS_CREATE_ONE have no trailing underscore
   [
+    'reviewNote.createReviewNote',
+    () => reviewNote.createReviewNote({ studentInstanceId: 1, weekNumber: 8, text: 'Note' }),
+    'post',
+    '/reviewnotes',
+    'REVIEW_NOTE_CREATE_',
+    { studentInstanceId: 1, weekNumber: 8, text: 'Note' }
+  ],
+  [
     'week.createOneWeek',
     () => week.createOneWeek(payload),
     'post',
@@ -447,6 +456,7 @@ describe('services', () => {
       courseInstance,
       email,
       login,
+      reviewNote,
       studentinstances,
       tags,
       teacherinstances,
