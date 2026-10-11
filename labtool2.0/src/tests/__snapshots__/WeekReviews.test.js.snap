@@ -8,7 +8,8 @@ exports[`<WeekReviews /> as student > WeekReviews Component > matches the render
   >
      
     <div
-      class="title codeReview"
+      class="title codeReview reviewTitle"
+      style="font-size: 1.3em;"
     >
       <i
         aria-hidden="true"
@@ -47,7 +48,8 @@ exports[`<WeekReviews /> as student > WeekReviews Component > matches the render
   >
      
     <div
-      class="title codeReview"
+      class="title codeReview reviewTitle"
+      style="font-size: 1.3em;"
     >
       <i
         aria-hidden="true"
@@ -128,7 +130,8 @@ exports[`<WeekReviews /> as student > WeekReviews Component > matches the render
   >
      
     <div
-      class="active title codeReview"
+      class="active title codeReview reviewTitle"
+      style="font-size: 1.3em;"
     >
       <i
         aria-hidden="true"
