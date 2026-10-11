@@ -234,7 +234,8 @@ describe('<MassEmailPage />', () => {
       courseInstance: {},
       coursePageReset: vi.fn(),
       sendMassEmail: vi.fn(),
-      addRedirectHook: vi.fn(),
+      massEmail: { done: false, notDelivered: [] },
+      resetMassEmail: vi.fn(),
       restoreStudentSelection: vi.fn()
     }
     const props = { ...defaultProps, ...overrides }
@@ -292,8 +293,7 @@ describe('<MassEmailPage />', () => {
     it('sends the composed message to selected students', async () => {
       const user = userEvent.setup()
       const sendMassEmail = vi.fn().mockResolvedValue(undefined)
-      const addRedirectHook = vi.fn()
-      renderMassEmailPage({ sendMassEmail, addRedirectHook })
+      renderMassEmailPage({ sendMassEmail })
 
       const messageInput = screen.getByRole('textbox')
       const instructorCopyCheckbox = getInstructorCopyCheckbox()
@@ -306,7 +306,6 @@ describe('<MassEmailPage />', () => {
       })
       await user.click(screen.getByRole('button', { name: /^send$/i }))
 
-      expect(addRedirectHook).toHaveBeenCalledWith({ hook: 'MASS_EMAIL_SEND' })
       await waitFor(() =>
         expect(sendMassEmail).toHaveBeenCalledWith(
           {
@@ -317,6 +316,53 @@ describe('<MassEmailPage />', () => {
           selectedInstance.ohid
         )
       )
+    })
+
+    describe('when some recipients did not get the email (#1141)', () => {
+      const rejected = {
+        name: 'Teräs Henkilö',
+        email: 'teras@rejected.test',
+        studentInstanceId: 10031,
+        reason: 'rejected by the mail server'
+      }
+
+      it('stays on the page, lists who did not get it and selects them', () => {
+        const restoreStudentSelection = vi.fn()
+        renderMassEmailPage({ massEmail: { done: true, notDelivered: [rejected] }, restoreStudentSelection })
+
+        expect(screen.getByRole('heading', { name: /send email to students/i })).toBeInTheDocument()
+        expect(
+          screen.getByText('The email was sent, but these recipients did not get it')
+        ).toBeInTheDocument()
+        expect(
+          screen.getByText(/Teräs Henkilö \(teras@rejected\.test\): rejected by the mail server/)
+        ).toBeInTheDocument()
+        expect(restoreStudentSelection).toHaveBeenCalledWith({ 10031: true })
+      })
+
+      it('says so when nobody got it', () => {
+        renderMassEmailPage({ massEmail: { done: false, notDelivered: [rejected] } })
+        expect(screen.getByText('The email was not sent to anybody')).toBeInTheDocument()
+      })
+
+      it('the list can be dismissed', async () => {
+        const user = userEvent.setup()
+        const resetMassEmail = vi.fn()
+        const { container } = renderMassEmailPage({
+          massEmail: { done: true, notDelivered: [rejected] },
+          resetMassEmail
+        })
+        resetMassEmail.mockClear() // called once on mount
+
+        await user.click(container.querySelector('.notDelivered .close.icon'))
+
+        expect(resetMassEmail).toHaveBeenCalled()
+      })
+
+      it('goes back to the course page when everybody got the email', () => {
+        renderMassEmailPage({ massEmail: { done: true, notDelivered: [] } })
+        expect(screen.queryByRole('heading', { name: /send email to students/i })).not.toBeInTheDocument()
+      })
     })
   })
 })

@@ -1,13 +1,14 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { Button, Form, Header, Loader } from 'semantic-ui-react'
+import { Button, Form, Header, Loader, Message } from 'semantic-ui-react'
 import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { getOneCI, coursePageInformation } from '../../services/courseInstance'
 import { getAllTags } from '../../services/tags'
 import { sendMassEmail } from '../../services/email'
 import { coursePageReset, restoreStudentSelection } from '../../reducers/coursePageLogicReducer'
-import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
+import { resetLoading } from '../../reducers/loadingReducer'
+import { resetMassEmail } from '../../reducers/massEmailReducer'
 import store from '../../store'
 import StudentTable from '../StudentTable'
 import { usePersistedState, clearOnePersistedState } from '../../hooks/persistedState'
@@ -52,6 +53,7 @@ export const MassEmailPage = props => {
   useEffect(() => {
     // run on component mount
     props.resetLoading()
+    props.resetMassEmail()
 
     props.getOneCI(props.courseId)
     props.coursePageInformation(props.courseId)
@@ -64,8 +66,20 @@ export const MassEmailPage = props => {
       // run on component unmount
       props.coursePageReset()
       props.restoreStudentSelection(oldSelectedStudents)
+      props.resetMassEmail()
     }
   }, [])
+
+  // When some recipients did not get the email, select exactly them so the email can be resent to them.
+  const { notDelivered } = props.massEmail
+  useEffect(() => {
+    const failedStudents = notDelivered.filter(recipient => recipient.studentInstanceId)
+    if (failedStudents.length > 0) {
+      const selection = {}
+      failedStudents.forEach(recipient => (selection[recipient.studentInstanceId] = true))
+      props.restoreStudentSelection(selection)
+    }
+  }, [notDelivered])
 
   const handleSubmit = async e => {
     e.preventDefault()
@@ -77,9 +91,6 @@ export const MassEmailPage = props => {
       if (!sendingTo.length) {
         store.dispatch({ type: 'MASS_EMAIL_SENDFAILURE' })
       } else {
-        props.addRedirectHook({
-          hook: 'MASS_EMAIL_SEND'
-        })
         await props.sendMassEmail(
           {
             students: sendingTo,
@@ -120,7 +131,8 @@ export const MassEmailPage = props => {
       </>
     )
   }
-  if (props.loading.redirect) {
+  // Back to the course page only when everybody got the email; otherwise stay here (#1141).
+  if (props.massEmail.done && notDelivered.length === 0) {
     clearState()
     return <Redirect to={`/labtool/courses/${props.selectedInstance.ohid}`} />
   }
@@ -142,6 +154,28 @@ export const MassEmailPage = props => {
       <div style={{ overflowX: 'auto', overflowY: 'hidden' }}>
         <div className="TeacherMassEmailPart">
           <Header as="h2">Send email to students </Header>
+
+          {notDelivered.length > 0 && (
+            <Message warning onDismiss={props.resetMassEmail} className="notDelivered">
+              <Message.Header>
+                {props.massEmail.done
+                  ? 'The email was sent, but these recipients did not get it'
+                  : 'The email was not sent to anybody'}
+              </Message.Header>
+              <Message.List>
+                {notDelivered.map(({ name, email, reason }) => (
+                  <Message.Item key={`${name}-${email}`}>
+                    {name}
+                    {email ? ` (${email})` : ''}: {reason}
+                  </Message.Item>
+                ))}
+              </Message.List>
+              <p>
+                The students who did not get the email are selected below, and the message is kept. A rejected
+                address has to be corrected (students can change it on My page) before sending to it again.
+              </p>
+            </Message>
+          )}
 
           <Button style={{ marginBottom: '8px' }} onClick={selectAllNonDroppedStudents}>
             Select all active students
@@ -199,6 +233,7 @@ MassEmailPage.propTypes = {
   coursePageLogic: PropTypes.object.isRequired,
   tags: PropTypes.object.isRequired,
   loading: PropTypes.object.isRequired,
+  massEmail: PropTypes.object.isRequired,
 
   getOneCI: PropTypes.func.isRequired,
   coursePageInformation: PropTypes.func.isRequired,
@@ -206,7 +241,7 @@ MassEmailPage.propTypes = {
   getAllTags: PropTypes.func.isRequired,
   sendMassEmail: PropTypes.func.isRequired,
   resetLoading: PropTypes.func.isRequired,
-  addRedirectHook: PropTypes.func.isRequired,
+  resetMassEmail: PropTypes.func.isRequired,
   restoreStudentSelection: PropTypes.func.isRequired,
 
   errors: PropTypes.array
@@ -224,6 +259,7 @@ const mapStateToProps = (state, ownProps) => {
     courseId: ownProps.courseId,
     tags: state.tags,
     loading: state.loading,
+    massEmail: state.massEmail,
     errors: Object.values(state.loading.errors)
   }
 }
@@ -235,7 +271,7 @@ const mapDispatchToProps = {
   getAllTags,
   sendMassEmail,
   resetLoading,
-  addRedirectHook,
+  resetMassEmail,
   restoreStudentSelection
 }
 

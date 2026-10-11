@@ -243,7 +243,12 @@ describe('Email API', () => {
 
         assert.deepStrictEqual(mail.sent[0].bcc.sort(), [s.users.student.email, s.users.student2.email].sort())
         assert.deepStrictEqual(res.body.notDelivered, [
-          { name: name(s.users.student2), email: s.users.student2.email, reason: 'rejected by the mail server' }
+          {
+            name: name(s.users.student2),
+            email: s.users.student2.email,
+            studentInstanceId: s.student2.id,
+            reason: 'rejected by the mail server'
+          }
         ])
         assert.strictEqual(
           res.body.message,
@@ -259,7 +264,7 @@ describe('Email API', () => {
           .expect(200)
         assert.deepStrictEqual(mail.sent[0].bcc, [s.users.student.email])
         assert.deepStrictEqual(res.body.notDelivered, [
-          { name: name(s.users.student2), email: null, reason: 'no email address' }
+          { name: name(s.users.student2), email: null, studentInstanceId: s.student2.id, reason: 'no email address' }
         ])
         assert.strictEqual(
           res.body.message,

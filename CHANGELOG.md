@@ -66,6 +66,12 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
     delivered.
   - A single notification to a rejected address answered 500; now 400 naming the address. A
     recipient without an email address is reported instead of failing.
+- **Mass email page when some recipients did not get the email** (follow-up to #1141): instead of
+  going back to the course page, where the notification disappeared after a few seconds, the page
+  now stays open. A box lists who did not get the email and why (until dismissed), the message is
+  kept, and exactly those students are selected, so the email can be resent once their addresses
+  are fixed. When everybody got the email, the page goes back to the course page as before. The
+  response's not-delivered entries now include `studentInstanceId`.
 - **Collapsing the "Add comment" box erased the written comment** (#1162). The draft is now kept
   until the comment is sent.
 - **Checklist topics and feedback text came out in a random order when grading** (#1125, #1130).

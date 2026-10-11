@@ -112,6 +112,17 @@ test.describe('mass email when the mail server rejects an address (#1141)', () =
     await expect(error).toContainText(`${BOUNCING_STUDENT_NAME} (${BOUNCING_STUDENT_EMAIL}, rejected by the mail server)`)
     await expect.poll(() => recipientsOfMailsFor(bounce.name)).toContain(STUDENT_ADDRESS)
     expect(await recipientsOfMailsFor(bounce.name)).not.toContain(BOUNCING_STUDENT_EMAIL)
+
+    // the teacher stays on the page with the message kept and only the failed student selected
+    await expect(page).toHaveURL(new RegExp(`/labtool/massemail/${bounce.ohid}$`))
+    const notDelivered = page.locator('.notDelivered')
+    await expect(notDelivered).toContainText('The email was sent, but these recipients did not get it')
+    await expect(notDelivered).toContainText(
+      `${BOUNCING_STUDENT_NAME} (${BOUNCING_STUDENT_EMAIL}): rejected by the mail server`
+    )
+    await expect(page.getByPlaceholder('Type email here...')).toHaveValue('Does this reach everyone?')
+    await expect(page.locator(`#select${STUDENT_INSTANCES.bounceRejected}`)).toBeChecked()
+    await expect(page.locator(`#select${STUDENT_INSTANCES.bounce}`)).not.toBeChecked()
   })
 
   test('nothing is sent when every address is rejected, and the teacher is told why', async ({ page }) => {
@@ -127,5 +138,6 @@ test.describe('mass email when the mail server rejects an address (#1141)', () =
     await expect(error).toContainText('No email was sent')
     await expect(error).toContainText(`${BOUNCING_STUDENT_NAME} (${BOUNCING_STUDENT_EMAIL}, rejected by the mail server)`)
     await expect(page).toHaveURL(new RegExp(`/labtool/massemail/${bounce.ohid}$`))
+    await expect(page.locator('.notDelivered')).toContainText('The email was not sent to anybody')
   })
 })
