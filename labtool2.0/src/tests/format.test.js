@@ -1,4 +1,7 @@
-import { createCourseIdWithYearAndTerm, formatCourseName } from '../util/format'
+import React from 'react'
+import { render } from '@testing-library/react'
+import { createCourseIdWithYearAndTerm, formatCourseName, roundPoints } from '../util/format'
+import { Points } from '../components/Points'
 
 describe('should generate courseId with year and term', () => {
   it('when course starts in 1.period', () => {
@@ -81,5 +84,28 @@ describe('should format course name correctly', () => {
     expect(
       formatCourseName('Ohjelmistotekniikan menetelmät', 'TTKT20002.2019.K.K.1', '2019-03-11T21:00:00.000Z')
     ).toEqual('Ohjelmistotekniikan menetelmät (spring, 2019)')
+  })
+})
+
+describe('roundPoints (#508)', () => {
+  it.each([
+    [0.1 + 0.2, '0.3'],
+    [2.9999999999, '3'],
+    [0.5, '0.5'],
+    [1.25, '1.25'],
+    [1.256, '1.26'],
+    [-0.5, '-0.5'],
+    [-0.0001, '0'],
+    [0, '0'],
+    [12, '12']
+  ])('shows %s as %s', (points, shown) => {
+    expect(roundPoints(points)).toBe(shown)
+  })
+})
+
+describe('<Points /> (#508)', () => {
+  it('shows a floating point sum rounded, and a missing value as a dash', () => {
+    expect(render(<Points points={0.1 + 0.2} />).container).toHaveTextContent(/^0\.3$/)
+    expect(render(<Points points={null} />).container).toHaveTextContent(/^-$/)
   })
 })

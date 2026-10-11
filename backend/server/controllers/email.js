@@ -17,6 +17,9 @@ const SENDER_SETTINGS = {
   port: Number(process.env.SMTP_PORT) || 587,
   secure: false
 }
+// points are stored as floating point numbers; show at most two decimals, e.g. 3, 0.5, 1.25 (#508)
+const roundPoints = points => String(Number(Number(points).toFixed(2)) + 0)
+
 const SEND_REAL_EMAIL = env === 'production' || env === 'staging' || !!process.env.SMTP_HOST
 
 // Helper function for send
@@ -525,7 +528,7 @@ const buildEmail = (title, link, courseName, pointsAwarded, contentTitle, conten
   ${title !== null ? `<h1>${title}</h1>` : ''}
   <p><a href="${link}">${link}</a></p>
   <p>course: ${courseName}</p>
-  ${pointsAwarded !== null ? `<p>points awarded: ${pointsAwarded}</p>` : ''}
+  ${pointsAwarded !== null && pointsAwarded !== undefined ? `<p>points awarded: ${roundPoints(pointsAwarded)}</p>` : ''}
   <p><i>This is an automated message sent using the Labtool email tool. Please do not reply to this email.</i></p>
   <h2>${contentTitle}</h2>
   <p>${escape(content).replace(/\n/g, '<br>')}</p>

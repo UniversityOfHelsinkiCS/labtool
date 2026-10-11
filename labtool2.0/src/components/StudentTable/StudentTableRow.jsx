@@ -6,6 +6,7 @@ import RepoLink from '../RepoLink'
 
 import RepoAccessWarning from '../RepoAccessWarning'
 import { Points } from '../Points'
+import { roundPoints } from '../../util/format'
 import { TagLabel } from '../TagLabel'
 
 export const StudentTableRow = props => {
@@ -160,12 +161,14 @@ export const StudentTableRow = props => {
       ? selectedInstance.teacherInstances.find(ti => ti.id === data.teacherInstanceId)
       : null
     const show = value => (value === null || value === undefined ? '–' : value)
+    // points are floating point numbers; show them rounded (#508)
+    const showPoints = value => (typeof value === 'number' ? roundPoints(value) : show(value))
     const describeChange = change =>
       [
         change.points &&
           (change.initial
-            ? `points ${show(change.points.to)}`
-            : `points ${show(change.points.from)} → ${show(change.points.to)}`),
+            ? `points ${showPoints(change.points.to)}`
+            : `points ${showPoints(change.points.from)} → ${showPoints(change.points.to)}`),
         change.grade &&
           (change.initial
             ? `grade ${show(change.grade.to)}`

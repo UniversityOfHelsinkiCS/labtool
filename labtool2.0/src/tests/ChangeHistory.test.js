@@ -97,6 +97,12 @@ describe('<ChangeHistory /> (#1129, #1132)', () => {
     expect(screen.getByText('First feedback')).toBeVisible()
   })
 
+  it('shows floating point points rounded (#508)', () => {
+    const fp = [{ ...entries[0], id: 9, changes: { points: { from: 0.1 + 0.2, to: 2.9999999999 } } }]
+    render(<ChangeHistory title="Change history" entries={fp} />)
+    expect(screen.getByText('Points 0.3 → 3')).toBeInTheDocument()
+  })
+
   it('says when nothing has been recorded', () => {
     render(<ChangeHistory title="Change history" entries={[]} />)
     expect(screen.getByText(/No changes recorded yet/)).toBeInTheDocument()

@@ -155,6 +155,10 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
 - Frontend `npm audit`: 22 → 0 findings.
 
 ### Fixed
+- **Floating point points shown rounded** (#508). Points are shown with at most two decimals and no
+  trailing zeros everywhere (`3`, `0.5`, `1.25` instead of `2.9999999999`, `3.00` or `0.50`): the
+  shared `roundNumber`, the change history, the changed-cell tooltip in the student list and the week
+  review email. The columns stay `DOUBLE`; no data is changed.
 - **Checklist editor description field:** the field is now full width and labelled "Kuvaus"; it used
   to be a tiny unlabelled box.
 - **Checklist editor showed stale contents:** reopening the editor restored the copy remembered in the

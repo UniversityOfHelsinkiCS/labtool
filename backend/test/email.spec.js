@@ -87,6 +87,12 @@ describe('Email API', () => {
       await eventually(async () => assert.strictEqual((await Week.findByPk(week.id)).notified, true))
     })
 
+    it('shows floating point points rounded in the email (#508)', async () => {
+      await week.update({ points: 0.1 + 0.2 })
+      await mailAs(s.users.teacher).post('/api/email/send').send({ role: 'teacher', weekId: week.id }).expect(200)
+      assert.ok(mail.sent[0].html.includes('<p>points awarded: 0.3</p>'))
+    })
+
     it('emails a teacher comment to the student', async () => {
       const comment = await f.createComment(week, s.users.teacher, { comment: 'See my notes' })
       await mailAs(s.users.assistant)
