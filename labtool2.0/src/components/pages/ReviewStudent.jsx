@@ -43,6 +43,9 @@ export const ReviewStudent = props => {
   const [loadedWeekData, setLoadedWeekData] = useState(false)
   const [allowChecksCopy, setAllowChecksCopy] = useState(false)
   const [discardedLocalEdits, setDiscardedLocalEdits] = useState(false)
+  // unsaved edits restored from this browser: null, or { editedAt } (editedAt may be null for old edits)
+  const [unsavedEdits, setUnsavedEdits] = useState(null)
+  const [checkedUnsavedEdits, setCheckedUnsavedEdits] = useState(false)
   const pstate = usePersistedState(`ReviewStudent_${props.studentInstance}:${props.weekNumber}`, {
     points: '',
     grade: '',
@@ -50,7 +53,9 @@ export const ReviewStudent = props => {
     instructorNotes: '',
     checks: null,
     // updatedAt of the saved review these edits are based on, null for a new review (#1127)
-    basedOn: null
+    basedOn: null,
+    // when the form was last edited in this browser
+    editedAt: null
   })
 
   useEffect(() => {
@@ -129,8 +134,15 @@ export const ReviewStudent = props => {
     return props.selectedInstance.weekMaxPoints
   }
 
+  // every edit of the form is stored in this browser until it is saved
+  const edit = (field, value) => {
+    pstate[field] = value
+    pstate.editedAt = new Date().toISOString()
+  }
+
   const toggleCheckbox = (checklistItemId, studentId, weekNbr) => async () => {
     setAllowChecksCopy(true)
+    pstate.editedAt = new Date().toISOString()
     props.toggleCheckWeek(checklistItemId, studentId, weekNbr, prerequisites)
   }
 
@@ -169,8 +181,8 @@ export const ReviewStudent = props => {
 
   const copyChecklistOutput = async e => {
     e.preventDefault()
-    pstate.points = roundPoints(Number(e.target.points.value))
-    pstate.feedback = e.target.text.value
+    edit('points', roundPoints(Number(e.target.points.value)))
+    edit('feedback', e.target.text.value)
   }
 
   const isChecked = (checks, checklistItemId) =>
@@ -287,6 +299,48 @@ export const ReviewStudent = props => {
     props.verifyCheckPrerequisites(prerequisites)
   }
 
+  // Are the values kept in this browser different from the saved review (or the draft, or an empty form)?
+  // Then the form shows unsaved edits, and the page says so.
+  const differsFromSaved = (local, saved) => {
+    const asNumber = value =>
+      value === null || value === undefined || value === '' ? '' : String(Number(value))
+    const asText = value => (value === null || value === undefined ? '' : String(value))
+    const checkedIds = checks =>
+      Object.keys(checks || {})
+        .filter(id => checks[id])
+        .sort()
+        .join(',')
+    // an empty value kept in the browser is not an edit: the form shows the saved value for it
+    const differs = (field, as) => as(local[field]) !== '' && as(local[field]) !== as(saved[field])
+    return (
+      differs('points', asNumber) ||
+      differs('grade', asNumber) ||
+      differs('feedback', asText) ||
+      differs('instructorNotes', asText) ||
+      (local.checks !== null &&
+        local.checks !== undefined &&
+        checkedIds(local.checks) !== checkedIds(saved.checks))
+    )
+  }
+
+  if (!checkedUnsavedEdits) {
+    const hasLocalValues =
+      pstate.checks || pstate.points || pstate.grade || pstate.feedback || pstate.instructorNotes
+    const basedOnCurrent = !weekData || (pstate.basedOn || null) === savedVersion
+    if (hasLocalValues && basedOnCurrent && differsFromSaved(pstate, weekData || {})) {
+      setUnsavedEdits({ editedAt: pstate.editedAt || null })
+    }
+    setCheckedUnsavedEdits(true)
+  }
+
+  // drop the unsaved edits kept in this browser and show the saved review (or an empty form)
+  const discardUnsavedEdits = () => {
+    pstate.reset()
+    props.resetChecklist()
+    setUnsavedEdits(null)
+    setLoadedWeekData(false)
+  }
+
   if (!loadedWeekData) {
     if (weekData) {
       // Unsaved edits kept in this browser win only if they are based on the review as it is saved now.
@@ -316,7 +370,7 @@ export const ReviewStudent = props => {
 
   // someone saved the review after this page was opened: start again from their version
   const loadTheirVersion = () => {
-    pstate.clear()
+    pstate.reset()
     props.resetReviewSave()
     props.resetChecklist()
     setDiscardedLocalEdits(false)
@@ -424,6 +478,21 @@ export const ReviewStudent = props => {
                       : ". You are not this student's instructor; saving changes to the grading asks for confirmation."}
                   </Message>
                 )}
+                {unsavedEdits && (
+                  <Message warning className="unsavedEdits">
+                    <Message.Header>Unsaved changes</Message.Header>
+                    <p>
+                      The form shows changes made in this browser
+                      {unsavedEdits.editedAt
+                        ? ` (last edited ${formatTime(unsavedEdits.editedAt)})`
+                        : ''}{' '}
+                      that have not been saved yet. Save to keep them.
+                    </p>
+                    <Button type="button" size="small" onClick={discardUnsavedEdits}>
+                      Discard unsaved changes
+                    </Button>
+                  </Message>
+                )}
                 {discardedLocalEdits && (
                   <Message size="small" info onDismiss={() => setDiscardedLocalEdits(false)}>
                     This review has been saved since you last edited it in this browser, so your older unsaved
@@ -483,7 +552,7 @@ export const ReviewStudent = props => {
                           name="points"
                           required={true}
                           value={pstate.points}
-                          onChange={(e, { value }) => (pstate.points = value)}
+                          onChange={(e, { value }) => edit('points', value)}
                           type="number"
                           step="0.01"
                           style={{ width: '150px', align: 'center' }}
@@ -499,7 +568,7 @@ export const ReviewStudent = props => {
                         <Input
                           name="grade"
                           value={pstate.grade}
-                          onChange={(e, { value }) => (pstate.grade = value)}
+                          onChange={(e, { value }) => edit('grade', value)}
                           type="number"
                           min="0"
                           max="5"
@@ -514,7 +583,7 @@ export const ReviewStudent = props => {
                     <div style={{ width: '100%' }}>
                       <FormMarkdownTextArea
                         value={pstate.feedback}
-                        onChange={(e, { value }) => (pstate.feedback = value)}
+                        onChange={(e, { value }) => edit('feedback', value)}
                         name="comment"
                         style={{ width: '500px', height: '250px' }}
                       />
@@ -540,7 +609,7 @@ export const ReviewStudent = props => {
                       <div style={{ width: '100%' }}>
                         <FormMarkdownTextArea
                           value={pstate.instructorNotes}
-                          onChange={(e, { value }) => (pstate.instructorNotes = value)}
+                          onChange={(e, { value }) => edit('instructorNotes', value)}
                           name="instructorNotes"
                           style={{ width: '500px', height: '150px' }}
                         />

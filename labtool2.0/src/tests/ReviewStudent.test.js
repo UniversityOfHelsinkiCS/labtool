@@ -862,6 +862,86 @@ describe('<ReviewStudent />', () => {
       })
     })
 
+    describe('unsaved changes kept in this browser', () => {
+      const VERSION = '2026-10-11T10:00:00.000Z'
+      const withSavedVersion = () => ({
+        ...props.weekReview,
+        data: props.weekReview.data.map(student =>
+          student.id === 10011
+            ? {
+                ...student,
+                weeks: student.weeks.map(week =>
+                  week.weekNumber === 1 ? { ...week, updatedAt: VERSION } : week
+                )
+              }
+            : student
+        )
+      })
+      const storeLocally = (week, key, value) =>
+        window.localStorage.setItem(
+          `labtoolPersistedState_ReviewStudent_10011:${week}_${key}`,
+          JSON.stringify(value)
+        )
+      const notice = () => document.querySelector('.unsavedEdits')
+
+      it('marks values typed for a week that has no saved review as unsaved', () => {
+        storeLocally(5, 'points', '2')
+        storeLocally(5, 'feedback', 'test')
+        renderReviewStudent({ ownProps: { ...ownProps, weekNumber: '5' }, weekNumber: '5' })
+
+        expect(screen.getByRole('spinbutton')).toHaveValue(2)
+        expect(notice()).toHaveTextContent('Unsaved changes')
+        expect(notice()).toHaveTextContent('have not been saved yet')
+      })
+
+      it('tells when the unsaved changes were made', () => {
+        storeLocally(1, 'points', '1')
+        storeLocally(1, 'basedOn', VERSION)
+        storeLocally(1, 'editedAt', '2026-10-11T11:58:00.000Z')
+        renderReviewStudent({ weekReview: withSavedVersion() })
+
+        expect(notice()).toHaveTextContent(
+          `last edited ${new Date('2026-10-11T11:58:00.000Z').toLocaleString('fi-FI')}`
+        )
+      })
+
+      it('does not mark values that are the saved review', () => {
+        storeLocally(1, 'points', '3')
+        storeLocally(1, 'basedOn', VERSION)
+        renderReviewStudent({ weekReview: withSavedVersion() })
+
+        expect(screen.getByRole('spinbutton')).toHaveValue(3)
+        expect(notice()).toBeNull()
+      })
+
+      it('can discard them to show the saved review', async () => {
+        const user = userEvent.setup()
+        const resetChecklist = vi.fn()
+        storeLocally(1, 'points', '1')
+        storeLocally(1, 'basedOn', VERSION)
+        renderReviewStudent({ weekReview: withSavedVersion(), resetChecklist })
+        expect(screen.getByRole('spinbutton')).toHaveValue(1)
+
+        await user.click(screen.getByRole('button', { name: /discard unsaved changes/i }))
+
+        expect(resetChecklist).toHaveBeenCalled()
+        expect(notice()).toBeNull()
+        expect(screen.getByRole('spinbutton')).toHaveValue(3)
+      })
+
+      it('records when the form was edited', async () => {
+        const user = userEvent.setup()
+        renderReviewStudent()
+
+        await user.type(screen.getByRole('spinbutton'), '1')
+
+        const editedAt = JSON.parse(
+          window.localStorage.getItem('labtoolPersistedState_ReviewStudent_10011:1_editedAt')
+        )
+        expect(new Date(editedAt).getTime()).toBeGreaterThan(Date.now() - 60000)
+      })
+    })
+
     describe('Checklist', () => {
       it('shows the available checklist topics and items', () => {
         renderReviewStudent()
