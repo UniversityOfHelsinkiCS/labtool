@@ -15,7 +15,10 @@ module.exports = (sequelize, DataTypes) => {
         validate: {
           isUrl: true
         }
-      }
+      },
+      // the reviewed repository when the review was assigned / when the reviewer added their link (#1132)
+      repoAtAssignment: DataTypes.STRING,
+      repoAtLinkAdded: DataTypes.STRING
     },
     {
       hooks: {
