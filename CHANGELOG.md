@@ -14,6 +14,15 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
   The dev seed checklist has a description on each of its six checks.
 
 ### Added
+- **A course can be marked invalid** (#905), when it was registered or imported by mistake. The
+  responsible teacher (not assistants) or an admin marks it, after a confirmation, on the course settings
+  page or in the admin course list, and can restore it the same way. Nothing is deleted. An invalid
+  course disappears from its students (course list, my page, course page, comments) and cannot be
+  registered to; its staff and admins see it struck through at the bottom of course lists, hidden in
+  the course list behind "Show invalid courses", with a banner on the course page. Invalid courses are
+  not offered for copying course information or checklists. New column `CourseInstances.invalid`
+  (migration `20261012000000-add-invalid-to-course-instances`) and endpoint
+  `PUT /api/courseinstances/:ohid/invalid`.
 - **Final review can be hidden from students.** Course settings have a prominent switch "Show final
   review results to students", shown only for courses with a final review, with a status line
   (hidden / shown) and a confirmation dialog before it changes. "Course registration is active" is now

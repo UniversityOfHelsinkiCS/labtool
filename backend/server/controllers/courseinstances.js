@@ -3,6 +3,7 @@ const db = require('../models')
 const helper = require('../helpers/courseInstanceHelper')
 const logger = require('../utils/logger')
 const { hiddenFromStudents } = require('../helpers/finalReview')
+const { canSeeCourse, canMarkInvalid } = require('../helpers/invalidCourse')
 const { addValueChange, logChange, pointsChangesByOthers } = require('../helpers/changeLog')
 
 // repository link changes are kept in the change history (#1132)
@@ -125,7 +126,7 @@ module.exports = {
           ohid: req.body.course
         }
       })
-      if (!course) {
+      if (!course || !(await canSeeCourse(req.decoded.id, course))) {
         return res.status(404).send('course not found')
       }
 
@@ -364,7 +365,7 @@ module.exports = {
         ohid: req.params.ohid
       }
     })
-    if (!course) {
+    if (!course || course.invalid) {
       overkillLogging(req, null)
       return res.status(404).send({
         message: 'Course instance not found.'
@@ -688,6 +689,37 @@ module.exports = {
   },
 
   /**
+   * Mark a course invalid, or valid again (#905)
+   *   permissions: the teacher responsible for the course (not an assistant) or a sysop
+   *
+   * @param req
+   * @param res
+   */
+  async setInvalid(req, res) {
+    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
+    try {
+      if (typeof req.body.invalid !== 'boolean') {
+        return res.status(400).send('"invalid" must be true or false.')
+      }
+      const course = await CourseInstance.findOne({ where: { ohid: req.params.ohid } })
+      if (!course) {
+        return res.status(404).send('Course not found.')
+      }
+      if (!(await canMarkInvalid(req.decoded.id, course))) {
+        return res.status(403).send('Only the teacher of the course or an admin can mark it invalid.')
+      }
+      await course.update({ invalid: req.body.invalid })
+      logger.info('course marked', { ohid: course.ohid, invalid: course.invalid, userId: req.decoded.id })
+      return res.status(200).send({ ohid: course.ohid, invalid: course.invalid })
+    } catch (error) {
+      logger.error('setInvalid error', { error: error.message })
+      return res.status(500).send('Unexpected error.')
+    }
+  },
+
+  /**
    * List all courses in the system
    *   permissions: any logged in user
    *
@@ -695,17 +727,21 @@ module.exports = {
    * @param res
    * @returns {Promise<Array<Model>>}
    */
-  list(req, res) {
-    return CourseInstance.findAll({
-      attributes: {
-        exclude: ['createdAt', 'updatedAt']
-      }
-    })
-      .then(instance => res.status(200).send(instance))
-      .catch((error) => {
-        logger.error(error)
-        res.status(400).send(error)
+  async list(req, res) {
+    try {
+      const courses = await CourseInstance.findAll({
+        attributes: {
+          exclude: ['createdAt', 'updatedAt']
+        }
       })
+      // invalid courses (#905) only for their staff and sysops
+      const userId = req.authenticated && req.authenticated.success ? req.decoded.id : null
+      const visible = await Promise.all(courses.map(course => canSeeCourse(userId, course)))
+      res.status(200).send(courses.filter((_, index) => visible[index]))
+    } catch (error) {
+      logger.error(error)
+      res.status(400).send(error)
+    }
   },
 
   /**
@@ -732,8 +768,8 @@ module.exports = {
       },
       {}
     )
-      .then((courseInstance) => {
-        if (!courseInstance) {
+      .then(async (courseInstance) => {
+        if (!courseInstance || !(await canSeeCourse(req.decoded.id, courseInstance))) {
           return res.status(404).send({
             message: 'Course not found.'
           })
@@ -783,7 +819,7 @@ module.exports = {
         }
       })
 
-      if (!course) {
+      if (!course || !(await canSeeCourse(req.decoded.id, course))) {
         return res.status(404).send('Course not found.')
       }
 

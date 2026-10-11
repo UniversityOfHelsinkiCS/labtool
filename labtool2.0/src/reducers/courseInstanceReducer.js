@@ -12,7 +12,7 @@
   currentWeek(pin): 1 -- integer, what is the current week
   ohid(pin): "TKT20011.2018.K.A.1" -- Opetushallitus id of the course, is often used instead of the database id
  */
-import { sortCourses } from '../util/sort'
+import { sortCourses, invalidCoursesLast } from '../util/sort'
 import { createEuropeanDate, createShorterCourseid } from '../util/format'
 
 // A few helperfunctions to create european form start / end date and to make a prettier course id `
@@ -37,6 +37,14 @@ const courseInstancereducer = (store = INITIAL_STATE, action) => {
         }
       })
     }
+    case 'CI_SET_INVALID_SUCCESS':
+      return Array.isArray(store)
+        ? invalidCoursesLast(
+            store.map(course =>
+              course.ohid === action.response.ohid ? { ...course, invalid: action.response.invalid } : course
+            )
+          )
+        : store
     // case 'CI_MODIFY_ONE_SUCCESS':
     //   return action.response
     default:

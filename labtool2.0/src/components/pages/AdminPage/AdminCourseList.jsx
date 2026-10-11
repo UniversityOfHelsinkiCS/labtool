@@ -4,8 +4,9 @@ import { Button, Table, Popup } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { HorizontalScrollable } from '../../HorizontalScrollable'
 import { formatCourseName } from '../../../util/format'
+import { CourseName, MarkInvalidButton } from '../../InvalidCourse'
 
-export const AdminCourseList = ({ courses }) => {
+export const AdminCourseList = ({ courses, setCourseInvalid }) => {
   if (!Array.isArray(courses)) {
     return <div />
   }
@@ -18,7 +19,7 @@ export const AdminCourseList = ({ courses }) => {
             <Table.HeaderCell colSpan="1">Course ID</Table.HeaderCell>
             <Table.HeaderCell colSpan="1">Course name</Table.HeaderCell>
             <Table.HeaderCell colSpan="1">Course start date</Table.HeaderCell>
-            <Table.HeaderCell colSpan="2"> </Table.HeaderCell>
+            <Table.HeaderCell colSpan="3"> </Table.HeaderCell>
           </Table.Row>
         </Table.Header>
 
@@ -27,7 +28,11 @@ export const AdminCourseList = ({ courses }) => {
             <Table.Row key={instance.id}>
               <Table.Cell>{instance.shorterId} </Table.Cell>
               <Table.Cell>
-                <strong>{formatCourseName(instance.name, instance.ohid, instance.start)}</strong>
+                <strong>
+                  <CourseName course={instance}>
+                    {formatCourseName(instance.name, instance.ohid, instance.start)}
+                  </CourseName>
+                </strong>
               </Table.Cell>
 
               <Table.Cell> {instance.europeanStart} </Table.Cell>
@@ -49,6 +54,11 @@ export const AdminCourseList = ({ courses }) => {
                   content="Manage instructors for this course"
                 />
               </Table.Cell>
+              <Table.Cell textAlign="center">
+                {setCourseInvalid && (
+                  <MarkInvalidButton course={instance} setCourseInvalid={setCourseInvalid} size="mini" />
+                )}
+              </Table.Cell>
             </Table.Row>
           ))}
         </Table.Body>
@@ -58,7 +68,9 @@ export const AdminCourseList = ({ courses }) => {
 }
 
 AdminCourseList.propTypes = {
-  courses: PropTypes.oneOfType([PropTypes.array, PropTypes.object])
+  courses: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+  // marks a course invalid or restores it (#905)
+  setCourseInvalid: PropTypes.func
 }
 
 export default AdminCourseList

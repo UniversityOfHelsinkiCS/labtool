@@ -1,5 +1,6 @@
 import React from 'react'
 import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import { vi } from 'vitest'
 import { Courses } from '../components/pages/Courses'
@@ -121,5 +122,28 @@ describe('<Courses />', () => {
 
     expect(screen.getByRole('heading', { name: 'Courses' })).toBeInTheDocument()
     expect(screen.queryByRole('table')).not.toBeInTheDocument()
+  })
+
+  describe('courses marked invalid (#905)', () => {
+    const withInvalid = courseInstances.map(course =>
+      course.id === 10013 ? { ...course, invalid: true } : course
+    )
+
+    it('are hidden behind a toggle, and shown struck through', async () => {
+      const user = userEvent.setup()
+      const { container } = renderCourses({ courseInstance: withInvalid })
+      expect(screen.queryByText(/Tietokantasovellus/)).toBeNull()
+
+      await user.click(screen.getByText('Show invalid courses (1)'))
+      const name = container.querySelector('.invalidCourseName')
+      expect(name).toHaveTextContent('Tietokantasovellus')
+      expect(name).toHaveStyle({ textDecoration: 'line-through' })
+      expect(container.querySelector('.invalidCourseLabel')).toHaveTextContent('Invalid')
+    })
+
+    it('leave no toggle when there are none', () => {
+      renderCourses()
+      expect(screen.queryByText(/Show invalid courses/)).toBeNull()
+    })
   })
 })

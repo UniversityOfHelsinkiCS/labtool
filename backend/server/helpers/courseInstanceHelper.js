@@ -123,8 +123,8 @@ async function checkHasCommentPermission(userId, weekId) {
     return 'teacher'
   }
   // ok, user is the student whose review we are trying to comment on?
-  // ...unless it is a final review that is still hidden from students
-  if (student.userId === userId && !hiddenFromStudents(course, week.weekNumber)) {
+  // ...unless the course is invalid (#905) or it is a final review that is still hidden from students
+  if (student.userId === userId && !course.invalid && !hiddenFromStudents(course, week.weekNumber)) {
     return 'student'
   }
   return false
@@ -226,7 +226,7 @@ function findByUserStudentInstance(req, res) {
       .query(
         `SELECT * FROM "CourseInstances" JOIN "StudentInstances" ON "CourseInstances"."id" = "StudentInstances"."courseInstanceId" WHERE "StudentInstances"."userId" = ${
           req.decoded.id
-        }`
+        } AND NOT "CourseInstances"."invalid"`
       )
       .then(instance => res.status(200).send(instance[0]))
       .catch((error) => {

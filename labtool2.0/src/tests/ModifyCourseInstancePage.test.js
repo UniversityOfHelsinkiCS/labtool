@@ -224,4 +224,53 @@ describe('<ModifyCourseInstancePage />', () => {
       expect(save()).toBeEnabled()
     })
   })
+
+  describe('marking the course invalid (#905)', () => {
+    const staff = [
+      { userId: 1, instructor: false },
+      { userId: 2, instructor: true }
+    ]
+    const renderAs = (user, changes = {}) =>
+      renderPage({
+        user: { user },
+        setCourseInvalid: vi.fn(),
+        selectedInstance: { ...courseData, teacherInstances: staff, ...changes }
+      })
+    const markButton = () => screen.queryByRole('button', { name: /mark course as invalid|restore course/i })
+
+    it('is offered to the teacher of the course and to admins', () => {
+      renderAs({ id: 1, sysop: false })
+      expect(markButton()).toHaveTextContent('Mark course as invalid')
+    })
+
+    it('is offered to an admin who is not on the course', () => {
+      renderAs({ id: 9, sysop: true })
+      expect(markButton()).toBeInTheDocument()
+    })
+
+    it('is not offered to assistants', () => {
+      renderAs({ id: 2, sysop: false })
+      expect(markButton()).toBeNull()
+    })
+
+    it('offers to restore an invalid course', () => {
+      const { container } = renderAs({ id: 1, sysop: false }, { invalid: true })
+      expect(container.querySelector('.invalidCourse')).toHaveTextContent('This course is marked invalid')
+      expect(markButton()).toHaveTextContent('Restore course')
+    })
+
+    it('leaves invalid courses out of the courses to copy from', async () => {
+      const user = userEvent.setup()
+      renderPage({
+        studentCount: 0,
+        courseInstance: [
+          { id: 501, name: 'Valid course', europeanStart: '1.1.2026' },
+          { id: 502, name: 'Mistake course', europeanStart: '1.1.2026', invalid: true }
+        ]
+      })
+      await user.click(document.querySelector('.courseDropdown'))
+      expect(screen.getAllByText('Valid course (1.1.2026)').length).toBeGreaterThan(0)
+      expect(screen.queryByText('Mistake course (1.1.2026)')).toBeNull()
+    })
+  })
 })

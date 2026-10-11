@@ -10,24 +10,31 @@ if (Intl && Intl.Collator) {
 
 export const finnishLocaleCompare = finnish_collator || finnish_localeCompare
 
+// courses marked invalid (#905) go to the bottom of every course list
+export const invalidCoursesLast = courses => courses.sort((a, b) => Boolean(a.invalid) - Boolean(b.invalid))
+
 export const sortCourses = courses => {
-  return courses
-    .sort((a, b) => {
-      return new Date(b.start) - new Date(a.start)
-    })
-    .sort((a, b) => {
-      return b.active - a.active
-    })
+  return invalidCoursesLast(
+    courses
+      .sort((a, b) => {
+        return new Date(b.start) - new Date(a.start)
+      })
+      .sort((a, b) => {
+        return b.active - a.active
+      })
+  )
 }
 
 export const sortCoursesByName = courses => {
-  return courses
-    .sort((a, b) => {
-      return new Date(b.start) - new Date(a.start)
-    })
-    .sort((a, b) => {
-      return finnishLocaleCompare(a.name, b.name)
-    })
+  return invalidCoursesLast(
+    courses
+      .sort((a, b) => {
+        return new Date(b.start) - new Date(a.start)
+      })
+      .sort((a, b) => {
+        return finnishLocaleCompare(a.name, b.name)
+      })
+  )
 }
 
 export const sortTags = tags => {

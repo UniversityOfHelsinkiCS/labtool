@@ -24,7 +24,19 @@ export const CoursePageTeacherHeader = props => {
   return (
     <div className="TeachersTopView" style={{ textAlignVertical: 'center', textAlign: 'center' }}>
       <CoursePageHeader courseInstance={selectedInstance} />
-      {actualActivationStatus !== suggestedActivationStatus &&
+      {selectedInstance.invalid && (
+        // registered or imported by mistake (#905)
+        <Message error compact className="invalidCourseBanner">
+          <Message.Header>This course is marked invalid</Message.Header>
+          <p>
+            Its students do not see it and nobody can register to it. The teacher of the course can restore it
+            in the{' '}
+            <Link to={`/labtool/ModifyCourseInstancePage/${selectedInstance.ohid}`}>course settings</Link>.
+          </p>
+        </Message>
+      )}
+      {!selectedInstance.invalid &&
+        actualActivationStatus !== suggestedActivationStatus &&
         (!actualActivationStatus ? (
           <div>
             <Message compact>

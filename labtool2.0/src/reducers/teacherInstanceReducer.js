@@ -21,6 +21,12 @@ const teacherInstancereducer = (store = INITIAL_STATE, action) => {
       return INITIAL_STATE
     case 'TEACHER_COURSE_GET_ALL_SUCCESS':
       return sortCourses(action.response)
+    case 'CI_SET_INVALID_SUCCESS':
+      return sortCourses(
+        store.map(course =>
+          course.ohid === action.response.ohid ? { ...course, invalid: action.response.invalid } : course
+        )
+      )
     default:
       return store
   }

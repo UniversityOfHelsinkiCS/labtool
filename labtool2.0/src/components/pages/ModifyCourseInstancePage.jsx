@@ -17,8 +17,10 @@ import {
   modifyOneCI,
   coursePageInformation,
   getAllCI,
-  copyInformationFromCourse
+  copyInformationFromCourse,
+  setCourseInvalid
 } from '../../services/courseInstance'
+import { MarkInvalidButton } from '../InvalidCourse'
 import {
   setFinalReview,
   setFinalReviewHasPoints,
@@ -216,7 +218,8 @@ export const ModifyCourseInstancePage = props => {
       return []
     }
     const options = sortCoursesByName(courses)
-      .filter(course => props.selectedInstance.id !== course.id)
+      // invalid courses (#905) are not copied from
+      .filter(course => props.selectedInstance.id !== course.id && !course.invalid)
       .map(course => {
         return {
           value: course.id,
@@ -250,6 +253,15 @@ export const ModifyCourseInstancePage = props => {
   }
 
   const selectedInstance = { ...props.selectedInstance }
+  // the teacher responsible for the course (not an assistant) or an admin (#905)
+  const me = props.user && props.user.user
+  const canMarkInvalid = Boolean(
+    me &&
+    (me.sysop ||
+      (props.selectedInstance.teacherInstances || []).some(
+        teacher => teacher.userId === me.id && !teacher.instructor
+      ))
+  )
   const unsavedChanges = hasUnsavedSettings(props.selectedInstance, state.visibleCr)
   const dropdownWeeks = createDropdownWeeks()
   const courseDropdowns = createCourseDropdowns()
@@ -507,6 +519,24 @@ export const ModifyCourseInstancePage = props => {
               <br />
             </div>
           )}
+          {canMarkInvalid && (
+            // a course registered or imported by mistake (#905)
+            <Segment
+              className="invalidCourse"
+              color="red"
+              style={{ display: 'inline-block', textAlign: 'left', marginTop: '2em' }}
+            >
+              <h4>
+                {props.selectedInstance.invalid ? 'This course is marked invalid' : 'Course not in use?'}
+              </h4>
+              <p>
+                {props.selectedInstance.invalid
+                  ? 'Only its teachers and admins see it; its students do not, and nobody can register to it.'
+                  : 'A course registered or imported by mistake can be marked invalid. Its students no longer see it.'}
+              </p>
+              <MarkInvalidButton course={props.selectedInstance} setCourseInvalid={props.setCourseInvalid} />
+            </Segment>
+          )}
           <br />
           <br />
         </div>
@@ -531,6 +561,7 @@ const createCodeReviewLabels = amount => {
 const mapStateToProps = (state, ownProps) => {
   return {
     selectedInstance: state.selectedInstance,
+    user: state.user,
     notification: state.notification,
     courseInstance: state.courseInstance,
     studentCount: state.coursePage.data ? state.coursePage.data.length : null,
@@ -543,6 +574,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = {
   getOneCI,
+  setCourseInvalid,
   getAllCI,
   coursePageInformation,
   modifyOneCI,
@@ -571,6 +603,8 @@ ModifyCourseInstancePage.propTypes = {
 
   getOneCI: PropTypes.func.isRequired,
   getAllCI: PropTypes.func.isRequired,
+  setCourseInvalid: PropTypes.func,
+  user: PropTypes.object,
   coursePageInformation: PropTypes.func.isRequired,
   modifyOneCI: PropTypes.func.isRequired,
   copyInformationFromCourse: PropTypes.func.isRequired,

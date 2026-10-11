@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Button, Loader } from 'semantic-ui-react'
 import { Redirect } from 'react-router'
-import { getAllCI } from '../../services/courseInstance'
+import { getAllCI, setCourseInvalid } from '../../services/courseInstance'
 import { resetLoading } from '../../reducers/loadingReducer'
 import { getAllUsers, updateOtherUser } from '../../services/user'
 import { clearNotifications } from '../../reducers/notificationReducer'
@@ -68,7 +68,9 @@ export const AdminPage = props => {
         </Button>
         <br />
         <br />
-        {state.coursesList && <AdminCourseList courses={props.courseInstance} />}
+        {state.coursesList && (
+          <AdminCourseList courses={props.courseInstance} setCourseInvalid={props.setCourseInvalid} />
+        )}
         <br />
         <hr />
         <br />
@@ -95,6 +97,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = {
+  setCourseInvalid,
   getAllCI,
   resetLoading,
   getAllUsers,
@@ -109,6 +112,7 @@ AdminPage.propTypes = {
   loading: PropTypes.object.isRequired,
 
   getAllCI: PropTypes.func.isRequired,
+  setCourseInvalid: PropTypes.func,
   resetLoading: PropTypes.func.isRequired,
   getAllUsers: PropTypes.func.isRequired,
   updateOtherUser: PropTypes.func.isRequired,

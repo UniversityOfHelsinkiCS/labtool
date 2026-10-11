@@ -69,4 +69,14 @@ export const copyInformationFromCourse = (copyTo, copyFrom) => {
   return callController(route, prefix, data, method)
 }
 
+/**
+ * Marks a course invalid, or valid again (#905).
+ */
+export const setCourseInvalid = (ohid, invalid) => {
+  const route = `/courseinstances/${ohid}/invalid`
+  const prefix = 'CI_SET_INVALID_'
+  const method = 'put'
+  return callController(route, prefix, { invalid }, method)
+}
+
 export default { getAllCI }

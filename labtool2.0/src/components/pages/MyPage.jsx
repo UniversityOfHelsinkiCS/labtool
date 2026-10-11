@@ -9,6 +9,7 @@ import { getAllTeacherCourses } from '../../services/teacherinstances'
 import { getIsAllowedToImport } from '../../services/courseImport'
 import { HorizontalScrollable } from '../HorizontalScrollable'
 import { formatCourseName } from '../../util/format'
+import { CourseName } from '../InvalidCourse'
 import DocumentTitle from '../DocumentTitle'
 import Error from '../Error'
 
@@ -28,7 +29,9 @@ export const MyPage = props => {
     <Table.Row key={instance.id}>
       <Table.Cell>
         <Link to={`/labtool/courses/${instance.ohid}`}>
-          {formatCourseName(instance.name, instance.ohid, instance.start)}
+          <CourseName course={instance}>
+            {formatCourseName(instance.name, instance.ohid, instance.start)}
+          </CourseName>
         </Link>
       </Table.Cell>
       <Table.Cell textAlign="right">
