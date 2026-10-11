@@ -95,8 +95,8 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
   keeps what you type in the browser until you save; reopening a week showed those values exactly
   like a saved review (e.g. points for a week the student list shows as not reviewed). Now such values
   get a "Unsaved changes" box ("... changes made in this browser (last edited ...) that have not been
-  saved yet") with a "Discard unsaved changes" button that shows the saved review (or an empty form).
-  The page records when the form was last edited. "Load their version" (#1127) now also resets the
+  saved yet. Save to keep them, or press Cancel to discard them."). The page records when the form
+  was last edited. "Load their version" (#1127) now also resets the
   form properly instead of only clearing the browser storage.
 - **Grading could silently overwrite another instructor's work** (#1127). Several checklists were
   reset or half-emptied during a final grading round. Two causes are fixed:
