@@ -81,11 +81,14 @@ const notificationReducer = (state = {}, action) => {
         message: 'Week reviewed successfully!',
         error: false
       }
-    case 'WEEKS_CREATE_ONEFAILURE':
+    case 'WEEKS_CREATE_ONEFAILURE': {
+      // a 409 means the save would overwrite someone else's work; the review page explains (#1127)
+      const response = action.response && action.response.response
       return {
-        message: 'Invalid inputs.',
+        message: response && response.status === 409 ? response.data.message : 'Invalid inputs.',
         error: true
       }
+    }
     case 'WEEKDRAFTS_CREATE_ONESUCCESS':
       return {
         message: 'Week draft saved successfully!',

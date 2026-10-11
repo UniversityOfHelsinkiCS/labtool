@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { withRouter } from 'react-router'
-import { Button, Form, Input, Grid, Loader } from 'semantic-ui-react'
+import { Button, Form, Input, Grid, Loader, Message, Modal } from 'semantic-ui-react'
 import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createOneWeek, getWeekDraft, saveWeekDraft } from '../../services/week'
@@ -14,6 +14,7 @@ import {
   verifyCheckPrerequisites
 } from '../../reducers/weekReviewReducer'
 import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
+import { resetReviewSave } from '../../reducers/reviewSaveReducer'
 import store from '../../store'
 import { formatCourseName, trimDate, roundPoints } from '../../util/format'
 import { usePersistedState } from '../../hooks/persistedState'
@@ -39,12 +40,15 @@ const nullIfEmpty = value => (value === '' || value === null || value === undefi
 export const ReviewStudent = props => {
   const [loadedWeekData, setLoadedWeekData] = useState(false)
   const [allowChecksCopy, setAllowChecksCopy] = useState(false)
+  const [discardedLocalEdits, setDiscardedLocalEdits] = useState(false)
   const pstate = usePersistedState(`ReviewStudent_${props.studentInstance}:${props.weekNumber}`, {
     points: '',
     grade: '',
     feedback: '',
     instructorNotes: '',
-    checks: null
+    checks: null,
+    // updatedAt of the saved review these edits are based on, null for a new review (#1127)
+    basedOn: null
   })
 
   useEffect(() => {
@@ -53,11 +57,13 @@ export const ReviewStudent = props => {
     props.getOneCI(props.courseId)
     props.coursePageInformation(props.courseId)
     props.clearNotifications()
+    props.resetReviewSave()
     importWeekDataFromDraft()
 
     return () => {
       // run on component unmount
       props.resetChecklist()
+      props.resetReviewSave()
     }
   }, [])
 
@@ -68,9 +74,15 @@ export const ReviewStudent = props => {
     }
   }, [props.weekReview.checks])
 
-  const handleSubmit = async e => {
+  const handleSubmit = e => {
+    e.preventDefault()
+    submitReview()
+  }
+
+  // overwrite: save even though someone else saved after this page was opened
+  // confirmedNotAssigned: save although the student has another assigned instructor
+  const submitReview = async ({ overwrite = false, confirmedNotAssigned = false } = {}) => {
     try {
-      e.preventDefault()
       const finalReviewWithoutPoints = isFinalReview(props) && !props.selectedInstance.finalReviewHasPoints
       const content = {
         points: finalReviewWithoutPoints ? null : nullIfEmpty(pstate.points),
@@ -79,12 +91,15 @@ export const ReviewStudent = props => {
         feedback: pstate.feedback,
         instructorNotes: pstate.instructorNotes,
         weekNumber: props.weekNumber,
-        checks
+        checks,
+        baseUpdatedAt: pstate.basedOn || null,
+        overwrite,
+        confirmedNotAssigned
       }
       if (finalReviewWithoutPoints) {
         pstate.points = null
       }
-      pstate.clear()
+      // the form is kept until the save succeeds (cleared on the redirect below)
       if (
         props.selectedInstance.finalReviewHasPoints &&
         (pstate.points < 0 || pstate.points > getMaximumPoints())
@@ -194,6 +209,16 @@ export const ReviewStudent = props => {
   const weekData = loadedFromDraft
     ? props.weekReview.draftData
     : studentData.weeks.find(theWeek => theWeek.weekNumber === Number(props.ownProps.weekNumber))
+  // the saved review (not a draft); its updatedAt is the version this page edits (#1127)
+  const savedWeek = studentData.weeks.find(
+    theWeek => theWeek.weekNumber === Number(props.ownProps.weekNumber)
+  )
+  const savedVersion = (savedWeek && savedWeek.updatedAt) || null
+  const assignedInstructor =
+    studentData.teacherInstanceId && props.selectedInstance.teacherInstances
+      ? props.selectedInstance.teacherInstances.find(ti => ti.id === studentData.teacherInstanceId)
+      : null
+  const assignedToMe = assignedInstructor && assignedInstructor.userId === props.currentUserId
   const previousWeekData = studentData.weeks.find(
     week => week.weekNumber === Number(props.ownProps.weekNumber) - 1
   )
@@ -261,17 +286,43 @@ export const ReviewStudent = props => {
 
   if (!loadedWeekData) {
     if (weekData) {
-      if (pstate.checks) {
-        props.restoreChecks(props.ownProps.studentInstance, pstate.checks)
+      // Unsaved edits kept in this browser win only if they are based on the review as it is saved now.
+      // Otherwise someone saved the review since, and the old edits would silently overwrite it (#1127).
+      const hasLocalEdits =
+        pstate.checks || pstate.points || pstate.grade || pstate.feedback || pstate.instructorNotes
+      const keepLocalEdits = !hasLocalEdits || (pstate.basedOn || null) === savedVersion
+      const local = keepLocalEdits
+        ? pstate
+        : { points: '', grade: '', feedback: '', instructorNotes: '', checks: null }
+      if (!keepLocalEdits) {
+        setDiscardedLocalEdits(true)
+        pstate.checks = null
+      }
+      if (local.checks) {
+        props.restoreChecks(props.ownProps.studentInstance, local.checks)
       }
 
-      pstate.points = pstate.points || weekData.points
-      pstate.grade = pstate.grade || weekData.grade
-      pstate.feedback = pstate.feedback || weekData.feedback
-      pstate.instructorNotes = pstate.instructorNotes || weekData.instructorNotes
+      pstate.points = local.points || weekData.points
+      pstate.grade = local.grade || weekData.grade
+      pstate.feedback = local.feedback || weekData.feedback
+      pstate.instructorNotes = local.instructorNotes || weekData.instructorNotes
+      pstate.basedOn = savedVersion
       setLoadedWeekData(true)
     }
   }
+
+  // someone saved the review after this page was opened: start again from their version
+  const loadTheirVersion = () => {
+    pstate.clear()
+    props.resetReviewSave()
+    props.resetChecklist()
+    setDiscardedLocalEdits(false)
+    setLoadedWeekData(false)
+    props.coursePageInformation(props.courseId)
+  }
+
+  const conflict = props.reviewSave.conflict
+  const formatTime = iso => new Date(iso).toLocaleString('fi-FI')
 
   const arrivedFromCoursePage =
     props.location && props.location.state && props.location.state.cameFromCoursePage
@@ -357,6 +408,60 @@ export const ReviewStudent = props => {
                 ) : (
                   <h2>Review</h2>
                 )}
+                {assignedInstructor && (
+                  <Message
+                    size="small"
+                    warning={!assignedToMe}
+                    info={assignedToMe}
+                    className="assignedInstructor"
+                  >
+                    Assigned instructor: {assignedInstructor.firsts} {assignedInstructor.lastname}
+                    {assignedToMe
+                      ? ' (you)'
+                      : ". You are not this student's instructor; saving changes to the grading asks for confirmation."}
+                  </Message>
+                )}
+                {discardedLocalEdits && (
+                  <Message size="small" info onDismiss={() => setDiscardedLocalEdits(false)}>
+                    This review has been saved since you last edited it in this browser, so your older unsaved
+                    changes were discarded. The form shows the saved review.
+                  </Message>
+                )}
+                {conflict && conflict.code === 'REVIEW_CHANGED' && (
+                  <Message warning className="reviewChanged">
+                    <Message.Header>This review was changed by someone else</Message.Header>
+                    <p>
+                      {conflict.message}
+                      {conflict.updatedAt && ` (saved ${formatTime(conflict.updatedAt)})`} Your changes have
+                      not been saved.
+                    </p>
+                    <Button type="button" onClick={loadTheirVersion}>
+                      Load their version
+                    </Button>
+                    <Button type="button" color="red" onClick={() => submitReview({ overwrite: true })}>
+                      Overwrite with my version
+                    </Button>
+                  </Message>
+                )}
+                <Modal size="tiny" open={!!conflict && conflict.code === 'NOT_ASSIGNED_INSTRUCTOR'}>
+                  <Modal.Header>You are not this student&apos;s instructor</Modal.Header>
+                  <Modal.Content>
+                    <p>{conflict && conflict.message}</p>
+                    <p>Do you want to save your changes to the grading anyway?</p>
+                  </Modal.Content>
+                  <Modal.Actions>
+                    <Button type="button" onClick={props.resetReviewSave}>
+                      Cancel
+                    </Button>
+                    <Button
+                      type="button"
+                      color="orange"
+                      onClick={() => submitReview({ confirmedNotAssigned: true })}
+                    >
+                      Save anyway
+                    </Button>
+                  </Modal.Actions>
+                </Modal>
                 {loadedFromDraft && (
                   <div>
                     <p>
@@ -469,6 +574,8 @@ const mapStateToProps = (state, ownProps) => {
     notification: state.notification,
     courseData: state.coursePage,
     weekReview: state.weekReview,
+    reviewSave: state.reviewSave,
+    currentUserId: state.user && state.user.user ? state.user.user.id : null,
     loading: state.loading,
     errors: Object.values(state.loading.errors)
   }
@@ -486,7 +593,8 @@ const mapDispatchToProps = {
   resetChecklist,
   coursePageInformation,
   resetLoading,
-  addRedirectHook
+  addRedirectHook,
+  resetReviewSave
 }
 
 ReviewStudent.propTypes = {
@@ -500,6 +608,8 @@ ReviewStudent.propTypes = {
   notification: PropTypes.object.isRequired,
   courseData: PropTypes.object.isRequired,
   weekReview: PropTypes.object.isRequired,
+  reviewSave: PropTypes.object.isRequired,
+  currentUserId: PropTypes.number,
   loading: PropTypes.object.isRequired,
   location: PropTypes.object,
 
@@ -515,6 +625,7 @@ ReviewStudent.propTypes = {
   coursePageInformation: PropTypes.func.isRequired,
   resetLoading: PropTypes.func.isRequired,
   addRedirectHook: PropTypes.func.isRequired,
+  resetReviewSave: PropTypes.func.isRequired,
 
   errors: PropTypes.array
 }

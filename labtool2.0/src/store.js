@@ -21,6 +21,7 @@ import redirect from './reducers/redirectReducer'
 import courseImport from './reducers/courseImportReducer'
 import copyableChecklists from './reducers/copyableChecklistReducer'
 import massEmail from './reducers/massEmailReducer'
+import reviewSave from './reducers/reviewSaveReducer'
 
 /**
  * The store, that takes all the redux reducers. Index imports it.
@@ -47,7 +48,8 @@ const reducer = combineReducers({
   redirect: redirect,
   courseImport: courseImport,
   copyableChecklists: copyableChecklists,
-  massEmail: massEmail
+  massEmail: massEmail,
+  reviewSave: reviewSave
 })
 
 const compose = import.meta.env.PROD ? store => store : store => composeWithDevTools(store)

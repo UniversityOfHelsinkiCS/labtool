@@ -234,7 +234,8 @@ module.exports = {
             {
               model: Week,
               attributes: {
-                exclude: ['createdAt', 'updatedAt']
+                // updatedAt / updatedBy let the review page detect saves made after it was opened (#1127)
+                exclude: ['createdAt']
               },
               as: 'weeks',
               include: [
