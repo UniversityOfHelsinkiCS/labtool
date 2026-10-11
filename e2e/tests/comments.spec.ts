@@ -13,11 +13,13 @@ const HIDDEN_NOTE = 'Instructor-only note: follow up next week.'
 const addComment = async (page: Page, week: Locator, text: string, { hidden = false } = {}) => {
   const addCommentAccordion = week.locator('.accordion', { has: page.getByText('Add comment', { exact: true }) })
   await openAccordion(addCommentAccordion)
-  await addCommentAccordion.getByPlaceholder('Your comment...').fill(text)
   if (hidden) {
-    await addCommentAccordion.locator('.ui.checkbox', { hasText: 'Add comment for instructors only' }).click()
+    // new comments are visible to the student unless the instructor chooses otherwise (#1142)
+    await addCommentAccordion.getByRole('button', { name: 'Instructors only' }).click()
+    await expect(addCommentAccordion.locator('.instructorOnlyDraft')).toBeVisible()
   }
-  await addCommentAccordion.getByRole('button', { name: 'Add Reply' }).click()
+  await addCommentAccordion.locator('textarea[name="content"]').fill(text)
+  await addCommentAccordion.getByRole('button', { name: hidden ? 'Add instructor-only note' : 'Add Reply' }).click()
   await expectSuccess(page, NOTIFICATIONS.commentCreated)
 }
 
@@ -60,11 +62,12 @@ test.describe.serial('comments on a reviewed week', () => {
 
     await addComment(page, week1, TEACHER_REPLY)
     await expect(comment(week1, TEACHER_REPLY)).toBeVisible()
+    await expect(comment(week1, TEACHER_REPLY)).not.toContainText('Instructors only')
 
     await addComment(page, week1, HIDDEN_NOTE, { hidden: true })
-    const note = comment(week1, HIDDEN_NOTE)
+    const note = week1.locator('.instructorOnlyComment', { hasText: HIDDEN_NOTE })
     await expect(note).toBeVisible()
-    await expect(note).toContainText('Hidden')
+    await expect(note).toContainText('Instructors only: not shown to the student')
 
     // replying marked the student's comment as read
     await expect(week1.getByText('You have read all comments')).toBeVisible()

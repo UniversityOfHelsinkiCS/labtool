@@ -8,11 +8,23 @@ import { trimDate } from '../util/format'
 
 export const LabtoolComment = ({ comment, allowNotify, latestComment, sendCommentEmail }) =>
   comment.hidden ? (
-    <Comment key={comment.id} disabled>
+    // instructor-only comments must be unmistakable (#1142)
+    <Comment
+      key={comment.id}
+      className="instructorOnlyComment"
+      style={{
+        borderLeft: '4px solid #f2711c',
+        background: '#fff6ef',
+        borderRadius: '4px',
+        padding: '8px 10px',
+        margin: '6px 0'
+      }}
+    >
       <Comment.Content>
-        <Comment.Metadata>
-          <div>Hidden</div>
-        </Comment.Metadata>
+        <Label color="orange" size="small" style={{ marginBottom: '6px' }}>
+          <Icon name="eye slash" />
+          Instructors only: not shown to the student
+        </Label>
         <Comment.Author>{comment.from}</Comment.Author>
         <Comment.Text>
           {' '}

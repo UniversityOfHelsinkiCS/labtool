@@ -125,7 +125,7 @@ export const WeekReviews = props => {
   const handleSubmitComment = (e, comments) => {
     e.preventDefault()
     const content = {
-      hidden: isTeacher() ? e.target.hidden.checked : false,
+      hidden: isTeacher() && e.target.elements.hidden ? e.target.elements.hidden.checked : false,
       comment: e.target.content.value,
       from: props.user.user.username,
       week: parseInt(e.target.name, 10)
