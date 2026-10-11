@@ -273,6 +273,27 @@ exports[`<ModifyCourseInstancePage /> > matches the rendered snapshot 1`] = `
     class="inline fields"
   >
     <div
+      class="ui checked checkbox"
+      style="width: 150px; text-align: left;"
+    >
+      <input
+        checked=""
+        class="hidden"
+        name="courseActive"
+        readonly=""
+        tabindex="0"
+        type="checkbox"
+        value=""
+      />
+      <label>
+        Course registration is active
+      </label>
+    </div>
+  </div>
+  <div
+    class="inline fields"
+  >
+    <div
       class="ui checkbox"
       style="width: 150px; text-align: left;"
     >
@@ -307,48 +328,6 @@ exports[`<ModifyCourseInstancePage /> > matches the rendered snapshot 1`] = `
       />
       <label>
         Points are given for final review
-      </label>
-    </div>
-  </div>
-  <div
-    class="inline fields"
-  >
-    <div
-      class="ui disabled checkbox"
-      style="width: 150px; text-align: left;"
-    >
-      <input
-        class="hidden"
-        disabled=""
-        name="finalReviewVisible"
-        readonly=""
-        tabindex="-1"
-        type="checkbox"
-        value=""
-      />
-      <label>
-        Final review results are shown to students
-      </label>
-    </div>
-  </div>
-  <div
-    class="inline fields"
-  >
-    <div
-      class="ui checked checkbox"
-      style="width: 150px; text-align: left;"
-    >
-      <input
-        checked=""
-        class="hidden"
-        name="courseActive"
-        readonly=""
-        tabindex="0"
-        type="checkbox"
-        value=""
-      />
-      <label>
-        Course registration is active
       </label>
     </div>
   </div>
