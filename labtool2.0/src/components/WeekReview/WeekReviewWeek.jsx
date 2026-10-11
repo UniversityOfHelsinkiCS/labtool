@@ -34,6 +34,14 @@ export const WeekReviewWeek = props => {
 
   const i = index
   const reviewIndex = isFinalWeek ? selectedInstance.weekAmount + 1 : i + 1
+  // final review results stay hidden from students until shown in the course settings
+  const hiddenFromStudents = isFinalWeek && !selectedInstance.finalReviewVisible
+  const hiddenLabel = hiddenFromStudents && (
+    <Label className="finalReviewHidden" color="orange" size="small" style={{ marginLeft: '8px' }}>
+      <Icon name="eye slash" />
+      Hidden from students
+    </Label>
+  )
   const isWeekOpen = openWeeks[i]
 
   const checkAllCommentsAreRead = weekComments => {
@@ -57,6 +65,7 @@ export const WeekReviewWeek = props => {
           <Icon name="dropdown" /> {isFinalWeek ? 'Final Review' : `Week ${week.weekNumber}`}
           {pointInfo}
           {gradeInfo}
+          {isTeacher && hiddenLabel}
         </Accordion.Title>
         <Accordion.Content active={isWeekOpen}>
           <h3>Review</h3>
@@ -178,7 +187,7 @@ export const WeekReviewWeek = props => {
     return (
       <Accordion fluid styled id={`review${i}`}>
         <Accordion.Title active={isWeekOpen} index={i} onClick={handleClickWeek}>
-          <Icon name="dropdown" /> {isFinalWeek ? 'Final Review' : `Week ${i + 1}`}{' '}
+          <Icon name="dropdown" /> {isFinalWeek ? 'Final Review' : `Week ${i + 1}`} {isTeacher && hiddenLabel}
         </Accordion.Title>
         <Accordion.Content active={isWeekOpen}>
           {isTeacher && (
@@ -201,8 +210,14 @@ export const WeekReviewWeek = props => {
               </Link>
             </>
           )}
-          <h4> Not Graded </h4>
-          <h4> No comments </h4>
+          {!isTeacher && hiddenFromStudents ? (
+            <h4 className="finalReviewNotShown">Final review results are not shown yet.</h4>
+          ) : (
+            <>
+              <h4> Not Graded </h4>
+              <h4> No comments </h4>
+            </>
+          )}
         </Accordion.Content>
       </Accordion>
     )

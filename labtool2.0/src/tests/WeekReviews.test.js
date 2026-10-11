@@ -86,7 +86,7 @@ describe('<WeekReviews /> as student', () => {
     finalReview: false
   }
 
-  const renderWeekReviews = () => {
+  const renderWeekReviews = (overrides = {}) => {
     const props = {
       student: coursePage.data,
       getOneCI: vi.fn(),
@@ -109,7 +109,8 @@ describe('<WeekReviews /> as student', () => {
       studentInstance: '',
       gradeCodeReview: vi.fn(),
       updateActiveIndex: vi.fn(),
-      markCommentsAsRead: vi.fn()
+      markCommentsAsRead: vi.fn(),
+      ...overrides
     }
     return render(
       <MemoryRouter>
@@ -134,6 +135,39 @@ describe('<WeekReviews /> as student', () => {
 
         expect(screen.getByRole('link', { name: repository })).toHaveAttribute('href', repository)
       })
+    })
+  })
+
+  describe('a final review hidden from students', () => {
+    const withFinalReview = finalReviewVisible => ({
+      ...selectedInstance,
+      finalReview: true,
+      finalReviewVisible
+    })
+
+    it('tells the student that the results are not shown yet', () => {
+      const { container } = renderWeekReviews({ selectedInstance: withFinalReview(false) })
+      expect(container.querySelector('.finalReviewNotShown')).toHaveTextContent(
+        'Final review results are not shown yet.'
+      )
+      expect(container.querySelector('.finalReviewHidden')).toBeNull()
+    })
+
+    it('says nothing of the kind once the final review is shown', () => {
+      const { container } = renderWeekReviews({ selectedInstance: withFinalReview(true) })
+      expect(container.querySelector('.finalReviewNotShown')).toBeNull()
+    })
+
+    it('is labelled hidden for the course staff', () => {
+      const student = { ...coursePage.data, codeReviews: [] }
+      const teacherPage = { ...coursePage, role: 'teacher', data: [student] }
+      const { container } = renderWeekReviews({
+        selectedInstance: withFinalReview(false),
+        courseData: teacherPage,
+        student
+      })
+      expect(container.querySelector('.finalReviewHidden')).toHaveTextContent('Hidden from students')
+      expect(container.querySelector('.finalReviewNotShown')).toBeNull()
     })
   })
 })

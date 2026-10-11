@@ -1,5 +1,6 @@
-import selectedInstanceReducer from '../reducers/selectedInstanceReducer'
+import selectedInstanceReducer, { setFinalReviewVisible } from '../reducers/selectedInstanceReducer'
 import deepFreeze from 'deep-freeze'
+import { vi } from 'vitest'
 
 describe('selectedInstanceRedurer', () => {
   let state
@@ -41,5 +42,17 @@ describe('selectedInstanceRedurer', () => {
     deepFreeze(state)
     const newState = selectedInstanceReducer(state, action)
     expect(newState.teacherInstances[1].id).toEqual(1003)
+  })
+
+  it('setFinalReviewVisible sets whether students see the final review', async () => {
+    const dispatch = vi.fn()
+    await setFinalReviewVisible(true)(dispatch)
+    const [[setAction]] = dispatch.mock.calls
+    const before = { finalReview: true, finalReviewVisible: false }
+    deepFreeze(before)
+    expect(selectedInstanceReducer(before, setAction)).toEqual({
+      finalReview: true,
+      finalReviewVisible: true
+    })
   })
 })

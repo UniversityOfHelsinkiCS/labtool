@@ -19,6 +19,12 @@ module.exports = (sequelize, DataTypes) => {
       finalReviewHasPoints: {
         type: DataTypes.BOOLEAN,
         defaultValue: true
+      },
+      // students see their final review only when this is set
+      finalReviewVisible: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
       }
     },
     {}
