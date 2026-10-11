@@ -2,6 +2,7 @@
 // TKT20010.2026.S.K.SIM1 for autumn 2026). paaopettaja is the responsible teacher and tiraohjaaja an
 // assistant; four registered students are split between them. Pekka Palautuva's address is rejected by
 // the Mailpit container in the dev stack, to reproduce email delivery failures (issue #1141).
+// Week 1 has a checklist with topic descriptions (#525).
 // Its timestamp must stay after the e2e fixtures seeder: seeders are undone newest first, and the
 // e2e seeder's down deletes all ".SIM" courses, which would fail while these students still exist.
 
@@ -15,6 +16,24 @@ const TIRAOPISKELIJA1 = 10011
 const TIRAOPISKELIJA2 = 10012
 const OTMOPISKELIJA1 = 10021
 const BOUNCING_STUDENT = 29001
+
+const CHECKLIST_ID = 20001
+
+// [topic, description, [[id, name, textWhenOn, textWhenOff, checkedPoints, uncheckedPoints], ...]]
+const CHECKLIST_TOPICS = [
+  ['Ohjelmakoodi', 'Koodin laatu ja toimivuus: luettavuus, rakenne ja algoritmin oikeellisuus.', [
+    [20001, 'Koodi on selkeää', 'Koodi on selkeää ja hyvin jäsenneltyä.', 'Koodin luettavuutta kannattaa parantaa.', 1, 0],
+    [20002, 'Algoritmi toimii', 'Algoritmi toimii oikein.', 'Algoritmissa on vielä virheitä.', 1, 0]
+  ]],
+  ['Testaus', 'Yksikkötestit kattavat ydinlogiikan ja ajetaan automaattisesti.', [
+    [20003, 'Yksikkötestit', 'Yksikkötestit on tehty.', 'Yksikkötestit puuttuvat.', 0.5, 0],
+    [20004, 'Testikattavuusraportti', 'Testikattavuus on raportoitu.', 'Testikattavuusraportti puuttuu.', 0, 0]
+  ]],
+  ['Dokumentaatio', 'Viikkoraportti, määrittelydokumentti ja tuntikirjanpito.', [
+    [20005, 'Määrittelydokumentti', 'Määrittelydokumentti on kunnossa.', 'Määrittelydokumentti puuttuu.', 0.5, 0],
+    [20006, 'Tuntikirjanpito', 'Tuntikirjanpito on ajan tasalla.', 'Tuntikirjanpito puuttuu.', 0, -0.5]
+  ]]
+]
 
 // [student instance id, user, project, assigned teacher instance]
 const STUDENTS = [
@@ -92,6 +111,35 @@ module.exports = {
       createdAt: now,
       updatedAt: now
     })))
+
+    await queryInterface.bulkInsert('Checklists', [
+      {
+        id: CHECKLIST_ID,
+        week: 1,
+        forCodeReview: false,
+        master: false,
+        maxPoints: 3,
+        courseInstanceId: COURSE_ID,
+        topicDescriptions: JSON.stringify(
+          Object.fromEntries(CHECKLIST_TOPICS.map(([topic, description]) => [topic, description]))
+        ),
+        createdAt: now,
+        updatedAt: now
+      }
+    ])
+    let order = 1
+    await queryInterface.bulkInsert('ChecklistItems', CHECKLIST_TOPICS.flatMap(([category, , items]) =>
+      items.map(([id, name, textWhenOn, textWhenOff, checkedPoints, uncheckedPoints]) => ({
+        id,
+        name,
+        textWhenOn,
+        textWhenOff,
+        checkedPoints,
+        uncheckedPoints,
+        category,
+        checklistId: CHECKLIST_ID,
+        order: order++
+      }))))
   },
 
   down: async (queryInterface) => {
@@ -106,6 +154,12 @@ module.exports = {
     await query(`DELETE FROM "WeekDrafts" WHERE "studentInstanceId" IN ${students}`)
     await query(`DELETE FROM "CodeReviews" WHERE "studentInstanceId" IN ${students} OR "toReview" IN ${students}`)
     await query(`DELETE FROM "StudentTags" WHERE "studentInstanceId" IN ${students}`)
+
+    const checklists = `(SELECT id FROM "Checklists" WHERE "courseInstanceId" = ${COURSE_ID})`
+    const checklistItems = `(SELECT id FROM "ChecklistItems" WHERE "checklistId" IN ${checklists})`
+    await query(`DELETE FROM "ReviewChecks" WHERE "checklistItemId" IN ${checklistItems}`)
+    await query(`DELETE FROM "ChecklistItems" WHERE "checklistId" IN ${checklists}`)
+    await query(`DELETE FROM "Checklists" WHERE "courseInstanceId" = ${COURSE_ID}`)
 
     await query(`DELETE FROM "StudentInstances" WHERE "courseInstanceId" = ${COURSE_ID}`)
     await query(`DELETE FROM "TeacherInstances" WHERE "courseInstanceId" = ${COURSE_ID}`)
