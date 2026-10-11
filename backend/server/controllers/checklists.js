@@ -122,6 +122,12 @@ module.exports = {
       if (req.body.maxPoints < 0) {
         return res.status(400).send('Invalid maximum points.')
       }
+      const descriptions = req.body.topicDescriptions
+      if (descriptions !== undefined && descriptions !== null
+        && (typeof descriptions !== 'object' || Array.isArray(descriptions)
+          || Object.values(descriptions).some(text => typeof text !== 'string'))) {
+        return res.status(400).send('Topic descriptions must be an object with text values.')
+      }
       let validationError
       try {
         validationError = validateChecklist(req.body.checklist)
@@ -149,8 +155,12 @@ module.exports = {
         return res.status(400).send('You must supply either a "week" or a truthy "forCodeReview".')
       }
       // Update maxPoints. This cannot be done with findOrCreate as by default courses have null as maxPoints
+      // keep descriptions only for topics that are in the checklist, and only non-empty ones (#525)
+      const topicDescriptions = Object.fromEntries(Object.entries(descriptions || {})
+        .filter(([topic, text]) => topic in req.body.checklist && text.trim().length > 0)
+        .map(([topic, text]) => [topic, text.trim()]))
       result = await Checklist.update(
-        { maxPoints: req.body.maxPoints },
+        { maxPoints: req.body.maxPoints, topicDescriptions },
         { where: { id: result[0].dataValues.id }, returning: true, plain: true }
       )
 

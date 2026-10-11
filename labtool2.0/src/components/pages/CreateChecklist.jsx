@@ -12,7 +12,8 @@ import {
   Loader,
   Icon,
   Checkbox,
-  Radio
+  Radio,
+  Form
 } from 'semantic-ui-react'
 import { showNotification } from '../../reducers/notificationReducer'
 import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
@@ -22,6 +23,7 @@ import {
   resetChecklist,
   changeField,
   restoreChecklist,
+  changeTopicDescription,
   addTopic,
   addRow,
   removeTopic,
@@ -54,6 +56,7 @@ export const CreateChecklist = props => {
     copyWeekDropdowns: [], // Dropdown options to show for copying from another week.
     categoryPrerequisites: {},
     checklistData: null,
+    checklistTopicDescriptions: null,
     maximumPoints: '',
     generation: 0,
     canSave: false
@@ -64,7 +67,7 @@ export const CreateChecklist = props => {
     props.resetLoading()
 
     if (state.checklistData) {
-      props.restoreChecklist(state.checklistData, state.maximumPoints)
+      props.restoreChecklist(state.checklistData, state.maximumPoints, state.checklistTopicDescriptions)
     } else {
       props.resetChecklist()
     }
@@ -79,6 +82,7 @@ export const CreateChecklist = props => {
 
   useEffect(() => {
     state.checklistData = props.checklist.data
+    state.checklistTopicDescriptions = props.checklist.topicDescriptions
   }, [props.checklist])
 
   const parseChecklistValue = value => {
@@ -146,7 +150,8 @@ export const CreateChecklist = props => {
     const data = {
       courseInstanceId: props.selectedInstance.id,
       checklist: props.checklist.data,
-      maxPoints: Number(state.maximumPoints)
+      maxPoints: Number(state.maximumPoints),
+      topicDescriptions: props.checklist.topicDescriptions || {}
     }
 
     const { error, kind, number } = parseChecklistValue(state.current)
@@ -372,7 +377,8 @@ export const CreateChecklist = props => {
           courseInstanceId: props.selectedInstance.id,
           ...index,
           checklist: checklistForWeek,
-          maxPoints: Number(state.maximumPoints)
+          maxPoints: Number(state.maximumPoints),
+          topicDescriptions: props.checklist.topicDescriptions || {}
         })
         state.checklistData = checklistForWeek
         state.canSave = false
@@ -654,6 +660,16 @@ export const CreateChecklist = props => {
                 onClick={moveTopicUp(key)}
               />
             </Header>
+            <Form.TextArea
+              className="topicDescriptionInput"
+              placeholder="Topic description (optional): what this topic is about, shown when grading"
+              rows={2}
+              value={(props.checklist.topicDescriptions || {})[key] || ''}
+              onChange={(e, { value }) => {
+                props.changeTopicDescription({ key, description: value })
+                state.canSave = true
+              }}
+            />
             <div>
               <p>
                 Total points for this section:{' '}
@@ -1147,6 +1163,7 @@ const mapDispatchToProps = {
   getCopyableChecklists,
   resetChecklist,
   restoreChecklist,
+  changeTopicDescription,
   changeField,
   applyCategoryPrerequisite,
   addTopic,
@@ -1180,6 +1197,7 @@ CreateChecklist.propTypes = {
   getCopyableChecklists: PropTypes.func.isRequired,
   resetChecklist: PropTypes.func.isRequired,
   restoreChecklist: PropTypes.func.isRequired,
+  changeTopicDescription: PropTypes.func.isRequired,
   changeField: PropTypes.func.isRequired,
   applyCategoryPrerequisite: PropTypes.func.isRequired,
   addTopic: PropTypes.func.isRequired,

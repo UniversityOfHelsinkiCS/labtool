@@ -6,6 +6,12 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
 ## 2026-10-11
 
 ### Added
+- **Checklist topic descriptions** (#525). Each topic in the checklist editor has an optional
+  "Topic description" field; the description is shown under the topic when grading with the
+  checklist (week reviews and code reviews). Descriptions are saved with the checklist, kept only for
+  existing topics, removed with their topic, and copied along with checklists and course details.
+  New column `Checklists.topicDescriptions` (migration
+  `20261011160000-add-topicDescriptions-to-checklists.js`).
 - **Editing comments** (#534). The author of a comment (instructor or student) can edit its text:
   "Edit" under their own comments opens an inline editor with Save / Cancel. Edited comments show
   "(edited <time>)" and become unread again for the others. Only the author can edit, visibility

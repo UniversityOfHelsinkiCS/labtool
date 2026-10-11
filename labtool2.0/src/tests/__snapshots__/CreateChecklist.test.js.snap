@@ -369,6 +369,14 @@ exports[`<CreateChecklist /> component > matches the rendered snapshot 1`] = `
                   />
                 </button>
               </div>
+              <div
+                class="field topicDescriptionInput"
+              >
+                <textarea
+                  placeholder="Topic description (optional): what this topic is about, shown when grading"
+                  rows="2"
+                />
+              </div>
               <div>
                 <p>
                   Total points for this section: 
@@ -744,6 +752,14 @@ exports[`<CreateChecklist /> component > matches the rendered snapshot 1`] = `
                     class="arrow circle up icon"
                   />
                 </button>
+              </div>
+              <div
+                class="field topicDescriptionInput"
+              >
+                <textarea
+                  placeholder="Topic description (optional): what this topic is about, shown when grading"
+                  rows="2"
+                />
               </div>
               <div>
                 <p>

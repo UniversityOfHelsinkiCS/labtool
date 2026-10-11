@@ -7,7 +7,9 @@
 
 const INITIAL_STATE = {
   data: {},
-  maxPoints: ''
+  maxPoints: '',
+  // { topic: description } (#525)
+  topicDescriptions: {}
 }
 
 const swapIndex = (arr, a, b) => {
@@ -58,9 +60,13 @@ const checklistReducer = (state = INITIAL_STATE, action) => {
     case 'LOGOUT_SUCCESS':
       return {}
     case 'CHECKLIST_GET_ONE_SUCCESS':
-      return { data: action.response.list, maxPoints: action.response.maxPoints || '' }
+      return {
+        data: action.response.list,
+        maxPoints: action.response.maxPoints || '',
+        topicDescriptions: action.response.topicDescriptions || {}
+      }
     case 'CHECKLIST_GET_ONE_FAILURE':
-      return { data: {}, maxPoints: '' }
+      return { data: {}, maxPoints: '', topicDescriptions: {} }
     case 'CHECKLIST_CHANGE_FIELD': {
       const { key, index, field, value } = action.data
       return { ...state, data: updateRow(state.data, key, index, row => ({ ...row, [field]: value })) }
@@ -90,8 +96,14 @@ const checklistReducer = (state = INITIAL_STATE, action) => {
     }
     case 'CHECKLIST_REMOVE_TOPIC': {
       const { [action.data.key]: removed, ...data } = state.data // eslint-disable-line no-unused-vars
-      return { ...state, data }
+      const { [action.data.key]: removedDescription, ...topicDescriptions } = state.topicDescriptions || {} // eslint-disable-line no-unused-vars
+      return { ...state, data, topicDescriptions }
     }
+    case 'CHECKLIST_CHANGE_TOPIC_DESCRIPTION':
+      return {
+        ...state,
+        topicDescriptions: { ...(state.topicDescriptions || {}), [action.data.key]: action.data.description }
+      }
     case 'CHECKLIST_REMOVE_ROW': {
       const { key, index } = action.data
       if (!state.data[key] || !state.data[key][index]) {
@@ -152,14 +164,25 @@ export const changeField = data => {
   }
 }
 
-export const restoreChecklist = (data, maxPoints) => {
+export const restoreChecklist = (data, maxPoints, topicDescriptions) => {
   return async dispatch => {
     dispatch({
       type: 'CHECKLIST_GET_ONE_SUCCESS',
       response: {
         list: data,
-        maxPoints: maxPoints
+        maxPoints: maxPoints,
+        topicDescriptions
       }
+    })
+  }
+}
+
+// data: { key: topic, description } (#525)
+export const changeTopicDescription = data => {
+  return async dispatch => {
+    dispatch({
+      type: 'CHECKLIST_CHANGE_TOPIC_DESCRIPTION',
+      data
     })
   }
 }
