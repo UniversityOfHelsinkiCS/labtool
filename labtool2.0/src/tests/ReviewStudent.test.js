@@ -914,19 +914,17 @@ describe('<ReviewStudent />', () => {
         expect(notice()).toBeNull()
       })
 
-      it('can discard them to show the saved review', async () => {
+      it('says that Cancel discards them, and Cancel does', async () => {
         const user = userEvent.setup()
-        const resetChecklist = vi.fn()
         storeLocally(1, 'points', '1')
         storeLocally(1, 'basedOn', VERSION)
-        renderReviewStudent({ weekReview: withSavedVersion(), resetChecklist })
-        expect(screen.getByRole('spinbutton')).toHaveValue(1)
+        renderReviewStudent({ weekReview: withSavedVersion() })
+        expect(notice()).toHaveTextContent('press Cancel to discard them')
+        expect(screen.queryByRole('button', { name: /discard/i })).not.toBeInTheDocument()
 
-        await user.click(screen.getByRole('button', { name: /discard unsaved changes/i }))
+        await user.click(screen.getByRole('button', { name: /^cancel$/i }))
 
-        expect(resetChecklist).toHaveBeenCalled()
-        expect(notice()).toBeNull()
-        expect(screen.getByRole('spinbutton')).toHaveValue(3)
+        expect(window.localStorage.getItem('labtoolPersistedState_ReviewStudent_10011:1_points')).toBeNull()
       })
 
       it('records when the form was edited', async () => {

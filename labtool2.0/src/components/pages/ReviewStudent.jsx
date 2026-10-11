@@ -333,14 +333,6 @@ export const ReviewStudent = props => {
     setCheckedUnsavedEdits(true)
   }
 
-  // drop the unsaved edits kept in this browser and show the saved review (or an empty form)
-  const discardUnsavedEdits = () => {
-    pstate.reset()
-    props.resetChecklist()
-    setUnsavedEdits(null)
-    setLoadedWeekData(false)
-  }
-
   if (!loadedWeekData) {
     if (weekData) {
       // Unsaved edits kept in this browser win only if they are based on the review as it is saved now.
@@ -486,11 +478,8 @@ export const ReviewStudent = props => {
                       {unsavedEdits.editedAt
                         ? ` (last edited ${formatTime(unsavedEdits.editedAt)})`
                         : ''}{' '}
-                      that have not been saved yet. Save to keep them.
+                      that have not been saved yet. Save to keep them, or press Cancel to discard them.
                     </p>
-                    <Button type="button" size="small" onClick={discardUnsavedEdits}>
-                      Discard unsaved changes
-                    </Button>
                   </Message>
                 )}
                 {discardedLocalEdits && (
