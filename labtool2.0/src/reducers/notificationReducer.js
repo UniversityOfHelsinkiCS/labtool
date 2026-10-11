@@ -71,6 +71,16 @@ const notificationReducer = (state = {}, action) => {
         message: 'Course details copied successfully!',
         error: false
       }
+    case 'CI_SET_INVALID_SUCCESS':
+      return {
+        message: action.response.invalid ? 'The course is marked invalid.' : 'The course is in use again.',
+        error: false
+      }
+    case 'CI_SET_INVALID_FAILURE':
+      return {
+        message: 'The course could not be marked.',
+        error: true
+      }
     case 'CI_COPY_INFO_FAILURE':
       return {
         message: 'Course details could not be copied.',

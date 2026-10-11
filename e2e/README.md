@@ -45,7 +45,7 @@ uploads both folders as the `playwright-report` artifact when it fails.
 
 ## What is covered
 
-52 tests in 17 spec files.
+55 tests in 18 spec files.
 
 | Spec | Tests | Covers |
 |---|---|---|
@@ -65,6 +65,7 @@ uploads both folders as the `playwright-report` artifact when it fails.
 | `dropping-out` | 5 | A teacher marks a student dropped and the student sees it; the teacher marks a registration mistaken; the student removes themselves and disappears from the teacher's list |
 | `my-page` | 2 | A user changes their email address; a user without one must give one before using the app |
 | `logout` | 1 | Logging out clears the session |
+| `invalid-course` | 3 | The teacher marks a course invalid with a confirmation; it is struck through in the teacher's lists and hidden in the course list behind a toggle; it disappears from its students; the teacher restores it and the students see it again (#905) |
 | `course-import` | 1 | A sysop imports a course from Kurki, becomes its teacher, and the course disappears from the import list |
 
 **Email.** The e2e stack has its own Mailpit mail server, which catches everything the backend

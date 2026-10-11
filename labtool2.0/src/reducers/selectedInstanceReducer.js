@@ -68,6 +68,8 @@ const selectedInstanceReducer = (store = INITIAL_STATE, action) => {
       return { ...store, finalReview: action.value }
     case 'SET_FINAL_REVIEW_HAS_POINTS':
       return { ...store, finalReviewHasPoints: action.value }
+    case 'CI_SET_INVALID_SUCCESS':
+      return store.ohid === action.response.ohid ? { ...store, invalid: action.response.invalid } : store
     case 'SET_FINAL_REVIEW_VISIBLE':
       return { ...store, finalReviewVisible: action.value }
     case 'CI_MODIFY_ONE_SUCCESS': {

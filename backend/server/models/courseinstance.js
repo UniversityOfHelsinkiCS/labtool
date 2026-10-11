@@ -20,6 +20,12 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN,
         defaultValue: true
       },
+      // registered or imported by mistake (#905); only the staff and sysops see the course
+      invalid: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+      },
       // students see their final review only when this is set
       finalReviewVisible: {
         type: DataTypes.BOOLEAN,

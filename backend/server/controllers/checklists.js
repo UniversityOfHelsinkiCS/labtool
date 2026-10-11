@@ -295,7 +295,12 @@ module.exports = {
         TeacherInstance.findAll({ attributes: ['courseInstanceId'], where }),
         StudentInstance.findAll({ attributes: ['courseInstanceId'], where })
       ])
-      const courseIds = [...new Set([...teacherInstances, ...studentInstances].map(i => i.courseInstanceId))]
+      const memberOf = [...new Set([...teacherInstances, ...studentInstances].map(i => i.courseInstanceId))]
+      // invalid courses (#905) are not copied from
+      const courseIds = (await CourseInstance.findAll({
+        attributes: ['id'],
+        where: { id: { [Op.in]: memberOf }, invalid: false }
+      })).map(course => course.id)
 
       const checklists = await Checklist.findAll({
         attributes: ['id', 'courseInstanceId', 'week', 'forCodeReview'],

@@ -12,6 +12,7 @@ module.exports = (app) => {
   app.get('/api/courseinstances', courseInstanceController.list) // Skolen kurssit on julkista tietoa eli periaattessa ok.
   app.get('/api/courseinstances/:ohid', courseInstanceController.retrieve) // En tiedä joten ei käy
   app.post('/api/courseinstances/coursepage', courseInstanceController.coursePage) // Tämä kysely suoritetaan kun mennään coursepage komponenttiin frontendissä.
+  app.put('/api/courseinstances/:ohid/invalid', courseInstanceController.setInvalid) // #905
   app.put('/api/courseinstances/:id', courseInstanceController.update) // Not public stuff could relate to issue #109
   app.get('/api/courses/:ohid', courseInstanceController.retrieveCourseStuff) // "apparently same as /api/course/instances/:ohid" no, very different info here -- hisahi
   app.post('/api/courseinstances/copy', courseInstanceController.copyCourseInformation)

@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { Button, Header, Table, Label, Popup, Loader } from 'semantic-ui-react'
+import { Button, Header, Table, Label, Popup, Loader, Checkbox } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { getAllCI } from '../../services/courseInstance'
@@ -9,12 +9,17 @@ import { resetLoading } from '../../reducers/loadingReducer'
 import { HorizontalScrollable } from '../HorizontalScrollable'
 import { formatCourseName } from '../../util/format'
 import DocumentTitle from '../DocumentTitle'
+import { CourseName } from '../InvalidCourse'
 import Error from '../Error'
 
 /**
  *  Show all the courses in a single list.
  */
 export const Courses = props => {
+  const [showInvalid, setShowInvalid] = useState(false)
+  const invalidCount = Array.isArray(props.courseInstance)
+    ? props.courseInstance.filter(instance => instance.invalid).length
+    : 0
   useEffect(() => {
     // run on component mount
     props.resetLoading()
@@ -55,56 +60,74 @@ export const Courses = props => {
                   </Table.Header>
 
                   <Table.Body>
-                    {props.courseInstance.map(instance => (
-                      <Table.Row key={instance.id}>
-                        <Table.Cell>
-                          <div>
-                            {instance.active === true ? (
-                              <Label ribbon style={{ backgroundColor: '#21ba45' }}>
-                                Active registration
-                              </Label>
-                            ) : (
-                              ''
-                            )}
-                          </div>
-                        </Table.Cell>
-                        <Table.Cell>{instance.shorterId} </Table.Cell>
-                        <Table.Cell>
-                          <strong>
-                            <Link
-                              to={{
-                                pathname: `/labtool/courses/${instance.ohid}`,
-                                state: { hidePanel: true }
-                              }}
-                            >
-                              {formatCourseName(instance.name, instance.ohid, instance.start)}
-                            </Link>
-                          </strong>
-                        </Table.Cell>
-
-                        <Table.Cell> {instance.europeanStart} </Table.Cell>
-                        <Table.Cell textAlign="center">
-                          <Popup
-                            trigger={
-                              <Button
-                                circular
-                                size="tiny"
-                                icon={{ name: 'eye', size: 'large', color: 'blue' }}
-                                as={Link}
+                    {props.courseInstance
+                      .filter(instance => showInvalid || !instance.invalid)
+                      .map(instance => (
+                        <Table.Row
+                          key={instance.id}
+                          className={instance.invalid ? 'invalidCourse' : undefined}
+                        >
+                          <Table.Cell>
+                            <div>
+                              {instance.active === true ? (
+                                <Label ribbon style={{ backgroundColor: '#21ba45' }}>
+                                  Active registration
+                                </Label>
+                              ) : (
+                                ''
+                              )}
+                            </div>
+                          </Table.Cell>
+                          <Table.Cell>{instance.shorterId} </Table.Cell>
+                          <Table.Cell>
+                            <strong>
+                              <Link
                                 to={{
                                   pathname: `/labtool/courses/${instance.ohid}`,
                                   state: { hidePanel: true }
                                 }}
-                              />
-                            }
-                            content="View course"
-                          />
-                        </Table.Cell>
-                      </Table.Row>
-                    ))}
+                              >
+                                <CourseName course={instance}>
+                                  {formatCourseName(instance.name, instance.ohid, instance.start)}
+                                </CourseName>
+                              </Link>
+                            </strong>
+                          </Table.Cell>
+
+                          <Table.Cell> {instance.europeanStart} </Table.Cell>
+                          <Table.Cell textAlign="center">
+                            <Popup
+                              trigger={
+                                <Button
+                                  circular
+                                  size="tiny"
+                                  icon={{ name: 'eye', size: 'large', color: 'blue' }}
+                                  as={Link}
+                                  to={{
+                                    pathname: `/labtool/courses/${instance.ohid}`,
+                                    state: { hidePanel: true }
+                                  }}
+                                />
+                              }
+                              content="View course"
+                            />
+                          </Table.Cell>
+                        </Table.Row>
+                      ))}
                   </Table.Body>
                 </Table>
               </HorizontalScrollable>
+              {invalidCount > 0 && (
+                // courses marked invalid (#905), shown only to their staff and admins
+                <Checkbox
+                  toggle
+                  className="showInvalidCourses"
+                  label={`Show invalid courses (${invalidCount})`}
+                  checked={showInvalid}
+                  onChange={() => setShowInvalid(!showInvalid)}
+                  style={{ marginTop: '1em' }}
+                />
+              )}
             </div>
           )}
         </div>

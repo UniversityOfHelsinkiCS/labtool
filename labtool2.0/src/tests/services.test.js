@@ -209,6 +209,14 @@ const cases = [
     'CI_COPY_INFO_',
     { copyTo: 3, copyFrom: 1 }
   ],
+  [
+    'courseInstance.setCourseInvalid',
+    () => courseInstance.setCourseInvalid('TKT1', true),
+    'put',
+    '/courseinstances/TKT1/invalid',
+    'CI_SET_INVALID_',
+    { invalid: true }
+  ],
 
   [
     'email.sendEmail',
