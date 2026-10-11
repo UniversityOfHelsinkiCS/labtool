@@ -391,16 +391,17 @@ export const ModifyCourseInstancePage = props => {
                   />
                 </Form.Group>
 
-                <Form.Group inline>
-                  <Checkbox
-                    name="finalReviewHasPoints"
-                    checked={props.selectedInstance.finalReviewHasPoints}
-                    onChange={changeFinalReviewHasPoints}
-                    disabled={!props.selectedInstance.finalReview}
-                    label="Points are given for final review"
-                    style={{ width: '150px', textAlign: 'left' }}
-                  />
-                </Form.Group>
+                {props.selectedInstance.finalReview && (
+                  <Form.Group inline>
+                    <Checkbox
+                      name="finalReviewHasPoints"
+                      checked={props.selectedInstance.finalReviewHasPoints}
+                      onChange={changeFinalReviewHasPoints}
+                      label="Points are given for final review"
+                      style={{ width: '150px', textAlign: 'left' }}
+                    />
+                  </Form.Group>
+                )}
 
                 {/* a remarkable switch: it decides whether students see their final review (grades) */}
                 {props.selectedInstance.finalReview && (
