@@ -369,22 +369,6 @@ exports[`<CreateChecklist /> component > matches the rendered snapshot 1`] = `
                   />
                 </button>
               </div>
-              <form
-                class="ui form topicDescriptionForm"
-                style="margin-bottom: 1em;"
-              >
-                <div
-                  class="field topicDescriptionInput"
-                >
-                  <label>
-                    Kuvaus
-                  </label>
-                  <textarea
-                    placeholder="Optional topic description, shown to instructors when grading: what this topic is about and what to look for"
-                    rows="3"
-                  />
-                </div>
-              </form>
               <div>
                 <p>
                   Total points for this section: 
@@ -492,6 +476,22 @@ exports[`<CreateChecklist /> component > matches the rendered snapshot 1`] = `
                   />
                 </button>
               </div>
+              <form
+                class="ui form checkDescriptionForm"
+                style="margin-bottom: 1em;"
+              >
+                <div
+                  class="field checkDescriptionInput"
+                >
+                  <label>
+                    Kuvaus
+                  </label>
+                  <textarea
+                    placeholder="Optional description of this check, shown to instructors when grading"
+                    rows="2"
+                  />
+                </div>
+              </form>
               <div
                 class="checkTextRow"
               >
@@ -761,22 +761,6 @@ exports[`<CreateChecklist /> component > matches the rendered snapshot 1`] = `
                   />
                 </button>
               </div>
-              <form
-                class="ui form topicDescriptionForm"
-                style="margin-bottom: 1em;"
-              >
-                <div
-                  class="field topicDescriptionInput"
-                >
-                  <label>
-                    Kuvaus
-                  </label>
-                  <textarea
-                    placeholder="Optional topic description, shown to instructors when grading: what this topic is about and what to look for"
-                    rows="3"
-                  />
-                </div>
-              </form>
               <div>
                 <p>
                   Total points for this section: 
@@ -884,6 +868,22 @@ exports[`<CreateChecklist /> component > matches the rendered snapshot 1`] = `
                   />
                 </button>
               </div>
+              <form
+                class="ui form checkDescriptionForm"
+                style="margin-bottom: 1em;"
+              >
+                <div
+                  class="field checkDescriptionInput"
+                >
+                  <label>
+                    Kuvaus
+                  </label>
+                  <textarea
+                    placeholder="Optional description of this check, shown to instructors when grading"
+                    rows="2"
+                  />
+                </div>
+              </form>
               <div
                 class="checkTextRow"
               >

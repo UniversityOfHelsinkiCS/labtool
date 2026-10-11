@@ -23,7 +23,6 @@ import {
   resetChecklist,
   changeField,
   restoreChecklist,
-  changeTopicDescription,
   addTopic,
   addRow,
   removeTopic,
@@ -56,7 +55,6 @@ export const CreateChecklist = props => {
     copyWeekDropdowns: [], // Dropdown options to show for copying from another week.
     categoryPrerequisites: {},
     checklistData: null,
-    checklistTopicDescriptions: null,
     maximumPoints: '',
     generation: 0,
     canSave: false
@@ -67,7 +65,7 @@ export const CreateChecklist = props => {
     props.resetLoading()
 
     if (state.checklistData) {
-      props.restoreChecklist(state.checklistData, state.maximumPoints, state.checklistTopicDescriptions)
+      props.restoreChecklist(state.checklistData, state.maximumPoints)
     } else {
       props.resetChecklist()
     }
@@ -82,7 +80,6 @@ export const CreateChecklist = props => {
 
   useEffect(() => {
     state.checklistData = props.checklist.data
-    state.checklistTopicDescriptions = props.checklist.topicDescriptions
   }, [props.checklist])
 
   const parseChecklistValue = value => {
@@ -150,8 +147,7 @@ export const CreateChecklist = props => {
     const data = {
       courseInstanceId: props.selectedInstance.id,
       checklist: props.checklist.data,
-      maxPoints: Number(state.maximumPoints),
-      topicDescriptions: props.checklist.topicDescriptions || {}
+      maxPoints: Number(state.maximumPoints)
     }
 
     const { error, kind, number } = parseChecklistValue(state.current)
@@ -390,8 +386,7 @@ export const CreateChecklist = props => {
           courseInstanceId: props.selectedInstance.id,
           ...index,
           checklist: checklistForWeek,
-          maxPoints: Number(state.maximumPoints),
-          topicDescriptions: props.checklist.topicDescriptions || {}
+          maxPoints: Number(state.maximumPoints)
         })
         state.checklistData = checklistForWeek
         state.canSave = false
@@ -673,19 +668,6 @@ export const CreateChecklist = props => {
                 onClick={moveTopicUp(key)}
               />
             </Header>
-            <Form className="topicDescriptionForm" style={{ marginBottom: '1em' }}>
-              <Form.TextArea
-                className="topicDescriptionInput"
-                label="Kuvaus"
-                placeholder="Optional topic description, shown to instructors when grading: what this topic is about and what to look for"
-                rows={3}
-                value={(props.checklist.topicDescriptions || {})[key] || ''}
-                onChange={(e, { value }) => {
-                  props.changeTopicDescription({ key, description: value })
-                  state.canSave = true
-                }}
-              />
-            </Form>
             <div>
               <p>
                 Total points for this section:{' '}
@@ -750,6 +732,16 @@ export const CreateChecklist = props => {
                   onClick={moveRowUp(key, index)}
                 />
               </Header>
+              <Form className="checkDescriptionForm" style={{ marginBottom: '1em' }}>
+                <Form.TextArea
+                  className="checkDescriptionInput"
+                  label="Kuvaus"
+                  placeholder="Optional description of this check, shown to instructors when grading"
+                  rows={2}
+                  value={row.description || ''}
+                  onChange={changeField(key, index, 'description')}
+                />
+              </Form>
               <div className="checkTextRow">
                 <div className="checkedLabel">
                   <Label basic>Checked</Label>
@@ -1179,7 +1171,6 @@ const mapDispatchToProps = {
   getCopyableChecklists,
   resetChecklist,
   restoreChecklist,
-  changeTopicDescription,
   changeField,
   applyCategoryPrerequisite,
   addTopic,
@@ -1213,7 +1204,6 @@ CreateChecklist.propTypes = {
   getCopyableChecklists: PropTypes.func.isRequired,
   resetChecklist: PropTypes.func.isRequired,
   restoreChecklist: PropTypes.func.isRequired,
-  changeTopicDescription: PropTypes.func.isRequired,
   changeField: PropTypes.func.isRequired,
   applyCategoryPrerequisite: PropTypes.func.isRequired,
   addTopic: PropTypes.func.isRequired,

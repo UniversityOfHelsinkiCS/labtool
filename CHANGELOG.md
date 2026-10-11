@@ -5,6 +5,14 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
 
 ## 2026-10-11
 
+### Changed
+- **Checklist descriptions belong to checks, not topics** (#525). Each checkbox in the checklist editor
+  has its own optional "Kuvaus" field (replacing the per-topic description), shown under the check's
+  name when grading. Saved as `ChecklistItems.description` (trimmed, empty → null), returned with the
+  checklist and copied with it. Migration `20261011180000-move-descriptions-to-checklist-items` adds the
+  column and drops `Checklists.topicDescriptions`; topic descriptions written before it are discarded.
+  The dev seed checklist has a description on each of its six checks.
+
 ### Added
 - **Dev seed course has a week 1 checklist:** `TKT20010.2026.S.K.SIM1` gets a checklist for week 1
   (max 3 points) with three described topics (Ohjelmakoodi, Testaus, Dokumentaatio) and six items,
@@ -121,8 +129,8 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
 - Frontend `npm audit`: 22 → 0 findings.
 
 ### Fixed
-- **Checklist editor topic description field:** the field is now full width (3 rows) and labelled
-  "Kuvaus"; it used to be a tiny unlabelled box.
+- **Checklist editor description field:** the field is now full width and labelled "Kuvaus"; it used
+  to be a tiny unlabelled box.
 - **Checklist editor showed stale contents:** reopening the editor restored the copy remembered in the
   browser instead of the saved checklist, so later changes (e.g. topic descriptions) could be missing.
   Without unsaved edits it now reloads the checklist from the server.

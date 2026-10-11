@@ -65,11 +65,6 @@ export const ReviewStudentChecklist = props => {
               <Card className="checklistCard" fluid color="red" key={clItemCategory}>
                 <Card.Content>
                   <Card.Header>{clItemCategory}</Card.Header>
-                  {checklist.topicDescriptions && checklist.topicDescriptions[clItemCategory] && (
-                    <Card.Description className="topicDescription" style={{ whiteSpace: 'pre-wrap' }}>
-                      {checklist.topicDescriptions[clItemCategory]}
-                    </Card.Description>
-                  )}
                 </Card.Content>
                 {sortPrerequisitesFirst(checklist.list[clItemCategory].filter(showCheck)).map(clItem => (
                   <Card.Content
@@ -90,6 +85,19 @@ export const ReviewStudentChecklist = props => {
                           </Grid.Column>
                           <Grid.Column width={10}>
                             <span style={{ flexGrow: 1, textAlign: 'center' }}>{clItem.name}</span>
+                            {clItem.description && (
+                              <div
+                                className="checkDescription"
+                                style={{
+                                  color: 'rgba(0,0,0,.6)',
+                                  fontSize: '0.9em',
+                                  whiteSpace: 'pre-wrap',
+                                  marginTop: '4px'
+                                }}
+                              >
+                                {clItem.description}
+                              </div>
+                            )}
                           </Grid.Column>
                           <Grid.Column width={3}>
                             {!clItem.minimumRequirement ? (

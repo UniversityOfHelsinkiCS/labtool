@@ -32,7 +32,7 @@ const loaded = () => ({
 
 describe('checklistReducer', () => {
   it('has the expected initial state', () => {
-    expect(initial()).toEqual({ data: {}, maxPoints: '', topicDescriptions: {} })
+    expect(initial()).toEqual({ data: {}, maxPoints: '' })
   })
 
   it('LOGOUT_SUCCESS empties the state', () => {
@@ -51,8 +51,7 @@ describe('checklistReducer', () => {
       expect(reducer(state, { type: 'CHECKLIST_GET_ONE_SUCCESS', response: { list, maxPoints: 7 } })).toEqual(
         {
           data: list,
-          maxPoints: 7,
-          topicDescriptions: {}
+          maxPoints: 7
         }
       )
     })
@@ -62,36 +61,15 @@ describe('checklistReducer', () => {
         reducer(initial(), { type: 'CHECKLIST_GET_ONE_SUCCESS', response: { list: {}, maxPoints: null } })
       ).toEqual({
         data: {},
-        maxPoints: '',
-        topicDescriptions: {}
+        maxPoints: ''
       })
     })
 
     it('restoreChecklist dispatches the same action', async () => {
-      expect(await dispatched(actions.restoreChecklist({ a: [] }, 3, { a: 'About a' }))).toEqual({
+      expect(await dispatched(actions.restoreChecklist({ a: [] }, 3))).toEqual({
         type: 'CHECKLIST_GET_ONE_SUCCESS',
-        response: { list: { a: [] }, maxPoints: 3, topicDescriptions: { a: 'About a' } }
+        response: { list: { a: [] }, maxPoints: 3 }
       })
-    })
-
-    it('stores the topic descriptions of a loaded checklist (#525)', () => {
-      const response = { list: { a: [] }, maxPoints: 3, topicDescriptions: { a: 'About a' } }
-      expect(reducer(initial(), { type: 'CHECKLIST_GET_ONE_SUCCESS', response }).topicDescriptions).toEqual({
-        a: 'About a'
-      })
-    })
-
-    it('changes a topic description, and drops it when the topic is removed (#525)', async () => {
-      let state = loaded()
-      deepFreeze(state)
-      state = reducer(
-        state,
-        await dispatched(actions.changeTopicDescription({ key: 'Week1', description: 'First' }))
-      )
-      expect(state.topicDescriptions).toEqual({ Week1: 'First' })
-      deepFreeze(state)
-      state = reducer(state, await dispatched(actions.removeTopic({ key: 'Week1' })))
-      expect(state.topicDescriptions).toEqual({})
     })
   })
 
@@ -100,8 +78,7 @@ describe('checklistReducer', () => {
     deepFreeze(state)
     expect(reducer(state, { type: 'CHECKLIST_GET_ONE_FAILURE', response: new Error('x') })).toEqual({
       data: {},
-      maxPoints: '',
-      topicDescriptions: {}
+      maxPoints: ''
     })
   })
 
@@ -137,6 +114,7 @@ describe('checklistReducer', () => {
         uncheckedPoints: 0,
         textWhenOn: '',
         textWhenOff: '',
+        description: '',
         prerequisite: 1
       }
     ])
