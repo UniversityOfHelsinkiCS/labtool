@@ -14,7 +14,9 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
   collapsed into a "Copy a checklist into week N..." button (and can be closed again); for a week
   without a checklist it is open. Copying on top of a week that already has a checklist asks first
   ("Overwrite the checklist of week N?", with its number of topics and checkboxes, saying that copying
-  replaces it and the change is saved only when Save is pressed).
+  replaces it and the change is saved only when Save is pressed). "From another week of this course" lists only the weeks (and code
+  review / final review) that have a saved checklist, refreshed whenever a week is loaded; when there are
+  none, it says "No other week of this course has a checklist."
 - **Checklist descriptions belong to checks, not topics** (#525). Each checkbox in the checklist editor
   has its own optional "Kuvaus" field (replacing the per-topic description), shown under the check's
   name when grading. Saved as `ChecklistItems.description` (trimmed, empty → null), returned with the
