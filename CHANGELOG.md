@@ -19,6 +19,15 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
   The dev seed checklist has a description on each of its six checks.
 
 ### Added
+- **Copy all checklists of another course.** When a course has no checklists yet, the checklist editor
+  offers a "This course has no checklists yet" box: choose one of your other courses (listed with how
+  many checklists they have) and copy all its checklists at once. Weeks keep their numbers, a final
+  review checklist goes to this course's final review, the code review checklist is copied too, and
+  checklists for weeks this course does not have are skipped (the notification says which). Items,
+  descriptions, maximum points and prerequisites are copied. New endpoint `POST /api/checklist/copyall`
+  (staff of the course copied to; teacher or student of the course copied from; refused with 409 when the
+  course already has checklists). The checklist copying of `copyCourseInformation` now shares the same
+  helper (`server/helpers/copyChecklists.js`).
 - **A course can be marked invalid** (#905), when it was registered or imported by mistake. The
   responsible teacher (not assistants) or an admin marks it, after a confirmation, on the course settings
   page or in the admin course list, and can restore it the same way. Nothing is deleted. An invalid

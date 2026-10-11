@@ -45,7 +45,7 @@ uploads both folders as the `playwright-report` artifact when it fails.
 
 ## What is covered
 
-55 tests in 18 spec files.
+56 tests in 18 spec files.
 
 | Spec | Tests | Covers |
 |---|---|---|
@@ -53,7 +53,7 @@ uploads both folders as the `playwright-report` artifact when it fails.
 | `student-registration` | 2 | A student finds a course, registers with project name and repo and stays registered; the teacher sees the new student |
 | `teacher-grading` | 2 | Points above the week maximum are rejected; a teacher grades week 1 and the student sees points and feedback |
 | `week-review-draft` | 3 | A teacher saves a review as a draft and the student cannot see it; the teacher continues from the draft and publishes it |
-| `checklist` | 2 | A teacher creates a week 1 checklist; when reviewing, ticking items fills in points and feedback |
+| `checklist` | 3 | A teacher creates a week 1 checklist (previewing it before saving); when reviewing, ticking items fills in points and feedback; a course without checklists copies all checklists of another course |
 | `code-reviews` | 3 | A teacher creates a review round and assigns reviewers; the student sees whom to review and submits a link; the teacher grades it and the student sees the points |
 | `comments` | 3 | A student comments on a reviewed week; the teacher replies and adds an instructor-only note; the student sees the reply but not the note |
 | `tags` | 2 | A teacher creates a tag, tags a student, filters by the tag and removes it |

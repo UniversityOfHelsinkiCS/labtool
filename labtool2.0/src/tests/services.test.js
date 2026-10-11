@@ -84,6 +84,14 @@ const cases = [
     'CHECKLIST_GET_COPYABLE_',
     null
   ],
+  [
+    'checklist.copyAllChecklists',
+    () => checklist.copyAllChecklists(2, 3),
+    'post',
+    '/checklist/copyall',
+    'CHECKLIST_COPY_ALL_',
+    { copyFrom: 2, copyTo: 3 }
+  ],
 
   [
     'codeReview.bulkinsertCodeReviews',

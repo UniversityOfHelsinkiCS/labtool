@@ -14,6 +14,14 @@ export const getOneChecklist = data => {
   return callController(route, prefix, data, method)
 }
 
+// all checklists of another course onto a course that has none yet
+export const copyAllChecklists = (copyFrom, copyTo) => {
+  const route = `/checklist/copyall`
+  const prefix = 'CHECKLIST_COPY_ALL_'
+  const method = 'post'
+  return callController(route, prefix, { copyFrom, copyTo }, method)
+}
+
 export const getCopyableChecklists = () => {
   const route = `/checklist/copyable`
   const prefix = 'CHECKLIST_GET_COPYABLE_'

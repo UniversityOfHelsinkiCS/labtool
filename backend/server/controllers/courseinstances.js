@@ -4,6 +4,7 @@ const helper = require('../helpers/courseInstanceHelper')
 const logger = require('../utils/logger')
 const { hiddenFromStudents } = require('../helpers/finalReview')
 const { canSeeCourse, canMarkInvalid } = require('../helpers/invalidCourse')
+const { copyChecklists } = require('../helpers/copyChecklists')
 const { addValueChange, logChange, pointsChangesByOthers } = require('../helpers/changeLog')
 
 // repository link changes are kept in the change history (#1132)
@@ -974,50 +975,12 @@ module.exports = {
       }
     })
 
-    const checklistIdMap = {}
-    const prerequisitesToUpdate = []
-
-    await Promise.all(checklists
-      .filter(cl => !existingChecklists.find(ecl => (cl.forCodeReview ? ecl.forCodeReview : (cl.week !== null && cl.week === ecl.week))))
-      .map(async (cl) => {
-        // make deep copy of checklist
-        const clItems = await ChecklistItem.findAll({
-          where: {
-            checklistId: cl.id
-          }
-        })
-
-        const newClObj = cl.get({ plain: true })
-        delete newClObj.id
-        newClObj.courseInstanceId = course.id
-        newClObj.forCodeReview = newClObj.forCodeReview || false
-        const newCl = await Checklist.create(newClObj)
-
-        await Promise.all(clItems.map(async (item) => {
-          const newItem = item.get({ plain: true })
-          const oldId = newItem.id
-          const oldPrerequisite = newItem.prerequisite
-          delete newItem.id
-          newItem.prerequisite = null
-          newItem.checklistId = newCl.id
-          const addedItem = await ChecklistItem.create(newItem)
-          checklistIdMap[oldId] = addedItem.id
-          if (oldPrerequisite) {
-            prerequisitesToUpdate.push([addedItem.id, oldPrerequisite])
-          }
-        }))
-      }))
-
-    await Promise.all(prerequisitesToUpdate.map(async ([itemId, oldPrerequisite]) => {
-      await ChecklistItem.update(
-        { prerequisite: checklistIdMap[oldPrerequisite] },
-        {
-          where: {
-            id: itemId
-          }
-        }
-      )
-    }))
+    await copyChecklists(
+      checklists
+        .filter(cl => !existingChecklists.find(ecl => (cl.forCodeReview ? ecl.forCodeReview : (cl.week !== null && cl.week === ecl.week))))
+        .map(checklist => ({ checklist, week: checklist.week })),
+      course.id
+    )
 
     return res.status(200).send(course)
   },

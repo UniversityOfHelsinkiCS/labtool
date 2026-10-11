@@ -96,4 +96,26 @@ test.describe.serial('checklists', () => {
     await expect(week1.getByText(TEXT_WHEN_ON)).toBeVisible()
     await student.context.close()
   })
+
+  test('a course without checklists copies all checklists of another course', async ({ page }) => {
+    const target = COURSES.settings // has no checklists
+    await loginAs(page, TEACHER)
+    await page.goto(`/labtool/checklist/${target.ohid}/create`)
+    await expectNoLoader(page)
+
+    const box = page.locator('.copyAllForm')
+    await expect(box).toContainText('This course has no checklists yet')
+    await chooseDropdownOption(page, box.locator('.copyAllDropdown'), course.name)
+    await box.getByRole('button', { name: 'Copy all checklists' }).click()
+    await expectSuccess(page, 'Copied 1 checklist: week 1.')
+    await expect(box).toBeHidden()
+
+    // the copy is saved: week 1 has the topic, the check and its description
+    await page.reload()
+    await expectNoLoader(page)
+    await Promise.all([waitForApi(page, 'checklist/getone'), chooseDropdownOption(page, page.locator('#weekDropdown'), 'Week 1')])
+    await expectNoLoader(page)
+    await expect(page.locator('.ui.header', { hasText: TOPIC })).toBeVisible()
+    await expect(page.locator('.checkDescriptionInput textarea').first()).toHaveValue(CHECK_DESCRIPTION)
+  })
 })

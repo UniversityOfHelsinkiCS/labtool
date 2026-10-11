@@ -3,6 +3,7 @@ const { enforceCurrentUserIsStudentOnCourse } = require('../helpers/auth')
 const helper = require('../helpers/checklistHelper')
 const { TeacherInstance, Checklist, ChecklistItem, StudentInstance, CourseInstance } = require('../models')
 const logger = require('../utils/logger')
+const { copyChecklists } = require('../helpers/copyChecklists')
 
 function validateChecklistRowKey(row, key) {
   switch (key) {
@@ -318,6 +319,93 @@ module.exports = {
     } catch (e) {
       logger.error('Get copyable checklists error.', { error: e.message })
       res.status(500).send('Internal server error')
+    }
+  },
+
+  /**
+   * Copy all checklists of another course onto a course that has none yet
+   *   permissions: must be a teacher or an assistant of the course copied to, and a teacher or a student
+   *   of the course copied from (the same courses getCopyable offers)
+   *
+   * Weeks keep their numbers; a final review checklist goes to the final review of the course copied to.
+   * Checklists for weeks the course does not have are skipped.
+   *
+   * @param {*} req
+   * @param {*} res
+   */
+  async copyAll(req, res) {
+    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
+    try {
+      const { copyFrom, copyTo } = req.body
+      if (typeof copyFrom !== 'number' || typeof copyTo !== 'number' || copyFrom === copyTo) {
+        return res.status(400).send('You must supply two different courses, "copyFrom" and "copyTo".')
+      }
+      const [target, source] = await Promise.all([CourseInstance.findByPk(copyTo), CourseInstance.findByPk(copyFrom)])
+      if (!target || !source || source.invalid) {
+        return res.status(404).send('Course not found.')
+      }
+      const userId = req.decoded.id
+      const [staff, sourceTeacher, sourceStudent] = await Promise.all([
+        TeacherInstance.findOne({ attributes: ['id'], where: { userId, courseInstanceId: target.id } }),
+        TeacherInstance.findOne({ attributes: ['id'], where: { userId, courseInstanceId: source.id } }),
+        StudentInstance.findOne({ attributes: ['id'], where: { userId, courseInstanceId: source.id } })
+      ])
+      if (!staff) {
+        return res.status(403).send('You must be a teacher of the course to perform this action.')
+      }
+      if (!sourceTeacher && !sourceStudent) {
+        return res.status(403).send('You can only copy checklists from your own courses.')
+      }
+
+      const withItems = async courseInstanceId => {
+        const checklists = await Checklist.findAll({ where: { courseInstanceId } })
+        const counts = await Promise.all(checklists.map(c => ChecklistItem.count({ where: { checklistId: c.id } })))
+        return { checklists, nonEmpty: checklists.filter((_, index) => counts[index] > 0) }
+      }
+      const existing = await withItems(target.id)
+      if (existing.nonEmpty.length > 0) {
+        return res.status(409).send('The course already has checklists; copy them one at a time in the checklist editor.')
+      }
+
+      const label = (checklist, course) => {
+        if (checklist.forCodeReview) return 'code review'
+        return course.finalReview && checklist.week > course.weekAmount ? 'final review' : `week ${checklist.week}`
+      }
+      const copies = []
+      const skipped = []
+      const { nonEmpty } = await withItems(source.id)
+      nonEmpty.forEach((checklist) => {
+        if (checklist.forCodeReview) {
+          copies.push({ checklist, week: null })
+        } else if (checklist.week > source.weekAmount) {
+          // the final review of the source
+          if (target.finalReview) copies.push({ checklist, week: target.weekAmount + 1 })
+          else skipped.push(label(checklist, source))
+        } else if (checklist.week <= target.weekAmount) {
+          copies.push({ checklist, week: checklist.week })
+        } else {
+          skipped.push(label(checklist, source))
+        }
+      })
+
+      // empty checklists left behind by the editor would clash with the copies
+      await Checklist.destroy({ where: { id: existing.checklists.map(c => c.id) } })
+      await copyChecklists(copies, target.id)
+
+      const copied = copies.map(({ checklist, week }) => (checklist.forCodeReview ? 'code review'
+        : label({ week, forCodeReview: false }, target)))
+      // the new checklists, in the shape getCopyable uses
+      const checklists = copies.map(({ checklist, week }) => ({
+        courseInstanceId: target.id,
+        week: checklist.forCodeReview ? null : week,
+        forCodeReview: Boolean(checklist.forCodeReview)
+      }))
+      return res.status(200).send({ copied, skipped, checklists })
+    } catch (e) {
+      logger.error('Copy all checklists error.', { error: e.message })
+      return res.status(500).send('Internal server error')
     }
   },
 
