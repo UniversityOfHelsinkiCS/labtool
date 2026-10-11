@@ -6,6 +6,9 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
 ## 2026-10-11
 
 ### Added
+- **Dev seed course has a week 1 checklist:** `TKT20010.2026.S.K.SIM1` gets a checklist for week 1
+  (max 3 points) with three described topics (Ohjelmakoodi, Testaus, Dokumentaatio) and six items,
+  so the grading checklist and topic descriptions (#525) can be tried right after a reset.
 - **Checklist topic descriptions** (#525). Each topic in the checklist editor has an optional
   "Topic description" field; the description is shown under the topic when grading with the
   checklist (week reviews and code reviews). Descriptions are saved with the checklist, kept only for
