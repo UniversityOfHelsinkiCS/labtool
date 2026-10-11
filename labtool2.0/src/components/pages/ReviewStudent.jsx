@@ -258,6 +258,8 @@ export const ReviewStudent = props => {
   const additionalNotes = (studentData.reviewNotes || []).filter(
     note => note.weekNumber === Number(props.ownProps.weekNumber)
   )
+  // additional notes add to the saved review notes, so those must be there first
+  const canAddNotes = Boolean(savedWeek && (savedWeek.instructorNotes || '').trim())
   const addReviewNote = text =>
     props.createReviewNote({
       studentInstanceId: studentData.id,
@@ -637,11 +639,19 @@ export const ReviewStudent = props => {
                         </p>
                       )}
                       <h4>Additional review notes</h4>
-                      <ReviewNotes notes={additionalNotes} onAdd={addReviewNote} />
+                      <ReviewNotes
+                        notes={additionalNotes}
+                        onAdd={canAddNotes ? addReviewNote : undefined}
+                        disabledReason={
+                          canAddNotes
+                            ? undefined
+                            : 'Notes can be added once the review notes of the final review have been saved.'
+                        }
+                      />
                     </div>
                   ) : (
                     <>
-                      {!notesOpened && !pstate.instructorNotes ? (
+                      {!notesOpened && !pstate.instructorNotes && !isFinalReview(props) ? (
                         <Button
                           type="button"
                           basic
@@ -684,7 +694,15 @@ export const ReviewStudent = props => {
                       {isFinalReview(props) && (
                         <div className="instructorNotes" style={notesBoxStyle}>
                           <h4 style={{ marginTop: 0 }}>Additional review notes</h4>
-                          <ReviewNotes notes={additionalNotes} onAdd={addReviewNote} />
+                          <ReviewNotes
+                            notes={additionalNotes}
+                            onAdd={canAddNotes ? addReviewNote : undefined}
+                            disabledReason={
+                              canAddNotes
+                                ? undefined
+                                : 'Notes can be added once the review notes of the final review have been saved.'
+                            }
+                          />
                         </div>
                       )}
                     </>

@@ -32,7 +32,9 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
   time on the review page and under the final review in the student's review list. Like review notes
   they are never shown to students. New table `ReviewNotes` (migration
   `20261012020000-create-review-notes`), endpoint `POST /api/reviewnotes` (course staff, final review
-  only); the notes come with the staff's course page data.
+  only, and only once the review notes of the final review have been written); the notes come with the
+  staff's course page data. In the final review the review notes field is open from the start instead of
+  collapsed into an "Add review notes" button.
 - **Copy all checklists of another course.** When a course has no checklists yet, the checklist editor
   offers a "This course has no checklists yet" box: choose one of your other courses (listed with how
   many checklists they have) and copy all its checklists at once. Weeks keep their numbers, a final

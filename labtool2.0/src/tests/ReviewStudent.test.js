@@ -667,6 +667,34 @@ describe('<ReviewStudent />', () => {
         expect(container.querySelector('.reviewNote')).toHaveTextContent('Agree with grade 4')
       })
 
+      it('cannot get additional notes before the review notes have been saved', () => {
+        const noNotes = withFinalReview([])
+        noNotes.data = noNotes.data.map(student =>
+          student.id === 10011
+            ? {
+                ...student,
+                weeks: student.weeks.map(w => (w.weekNumber === 8 ? { ...w, instructorNotes: '' } : w))
+              }
+            : student
+        )
+        const { container } = renderFinalReview({ weekReview: noNotes })
+        expect(container.querySelector('.addReviewNote')).toBeNull()
+        expect(container.querySelector('.reviewNotesDisabled')).toHaveTextContent(
+          'Notes can be added once the review notes of the final review have been saved.'
+        )
+      })
+
+      it('shows the review notes field open from the start', () => {
+        const { container } = renderFinalReview({ weekReview: withFinalReview([]), currentUserId: 10015 })
+        expect(container.querySelector('.addInstructorNotes')).toBeNull()
+        expect(container.querySelector('textarea[name="instructorNotes"]')).toBeInTheDocument()
+
+        // with no final review saved yet, too
+        const fresh = renderFinalReview({ currentUserId: 10015 })
+        expect(fresh.container.querySelector('.addInstructorNotes')).toBeNull()
+        expect(fresh.container.querySelector('textarea[name="instructorNotes"]')).toBeInTheDocument()
+      })
+
       it('leave the notes out of the save of the others', async () => {
         const user = userEvent.setup()
         const createOneWeek = vi.fn()
