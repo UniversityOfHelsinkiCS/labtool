@@ -28,6 +28,7 @@ export const WeekReviewWeek = props => {
     sendStudentEmail,
     sendWeekEmail,
     sortCommentsByDate,
+    editComment,
     markComments
   } = props
 
@@ -156,6 +157,7 @@ export const WeekReviewWeek = props => {
                     sendTeacherEmail={sendCommentEmail}
                     sendStudentEmail={sendStudentEmail}
                     latestComment={index >= array.length - 1}
+                    editComment={editComment}
                   />
                 ))}
               </div>
@@ -226,6 +228,7 @@ WeekReviewWeek.propTypes = {
   sendStudentEmail: PropTypes.func.isRequired,
   sendWeekEmail: PropTypes.func.isRequired,
   sortCommentsByDate: PropTypes.func.isRequired,
+  editComment: PropTypes.func,
   markComments: PropTypes.func
 }
 

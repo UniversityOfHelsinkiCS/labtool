@@ -9,7 +9,8 @@ export const WeekReviewComment = ({
   isTeacher,
   sendTeacherEmail,
   sendStudentEmail,
-  latestComment
+  latestComment,
+  editComment
 }) => {
   /* This hack compares user's name to comment.from and hides the email notification button when they don't match. */
   const userIsCommandSender = comment.from.includes(user.firsts) && comment.from.includes(user.lastname)
@@ -21,6 +22,8 @@ export const WeekReviewComment = ({
       allowNotify={!isFinalWeek && userIsCommandSender}
       sendCommentEmail={(isTeacher ? sendTeacherEmail : sendStudentEmail)(comment.id)}
       latestComment={latestComment}
+      canEdit={Boolean(editComment && comment.userId && user && comment.userId === user.id)}
+      onEdit={editComment ? editComment(comment.id) : undefined}
     />
   )
 }
@@ -32,7 +35,8 @@ WeekReviewComment.propTypes = {
   isTeacher: PropTypes.bool,
   latestComment: PropTypes.bool,
   sendTeacherEmail: PropTypes.func.isRequired,
-  sendStudentEmail: PropTypes.func.isRequired
+  sendStudentEmail: PropTypes.func.isRequired,
+  editComment: PropTypes.func
 }
 
 export default WeekReviewComment

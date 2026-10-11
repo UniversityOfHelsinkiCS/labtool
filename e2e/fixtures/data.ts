@@ -138,6 +138,7 @@ export const NOTIFICATIONS = {
   invalidInputs: 'Invalid inputs.',
   courseUpdated: 'Course instance updated successfully!',
   commentCreated: 'Comment created successfully!',
+  commentUpdated: 'Comment updated',
   assistantAdded: 'Added a new assistant successfully!',
   assistantRemoved: 'Removed an assistant successfully!',
   codeReviewsSaved: 'Code reviews saved successfully',

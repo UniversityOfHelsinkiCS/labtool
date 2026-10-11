@@ -19,6 +19,7 @@ module.exports = (app) => {
   app.post('/api/weeks/getDraft', weekController.getDraft)
   app.post('/api/weeks/saveDraft', weekController.saveDraft)
   app.post('/api/comment', courseInstanceController.addComment)
+  app.put('/api/comment/:id', courseInstanceController.editComment) // the author edits their own comment (#534)
   app.post('/api/comments', courseInstanceController.getCommentsForWeek)
   app.put('/api/comments/update', courseInstanceController.markCommentsAsRead)
   app.post('/api/studentinstance/update', courseInstanceController.updateStudentInstance)

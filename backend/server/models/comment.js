@@ -33,6 +33,11 @@ module.exports = (sequelize, DataTypes) => {
       isRead: {
         type: DataTypes.ARRAY(DataTypes.INTEGER), // userIds who read the comment
         allowNull: true
+      },
+      // when the author last edited the text (#534)
+      editedAt: {
+        type: DataTypes.DATE,
+        allowNull: true
       }
     },
     {}

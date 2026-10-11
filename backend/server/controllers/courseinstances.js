@@ -1098,6 +1098,39 @@ module.exports = {
   },
 
   /**
+   * Edit the text of a comment (#534)
+   *   permissions: only the author of the comment, while they can still comment on that week.
+   *   Visibility (hidden) cannot be changed. The edited comment becomes unread for everyone else.
+   */
+  async editComment(req, res) {
+    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
+    try {
+      const comment = await Comment.findByPk(Number(req.params.id))
+      if (!comment) {
+        return res.status(404).send({ message: 'Comment not found.' })
+      }
+      if (!comment.userId || comment.userId !== req.decoded.id) {
+        return res.status(403).send({ message: 'You can only edit your own comments.' })
+      }
+      const hasPermission = await helper.checkHasCommentPermission(req.decoded.id, comment.weekId)
+      if (!hasPermission) {
+        return res.status(403).send({ message: 'You are not allowed to comment here.' })
+      }
+      const text = typeof req.body.comment === 'string' ? req.body.comment : ''
+      if (text.trim().length === 0) {
+        return res.status(400).send({ message: 'Comment cannot be empty.' })
+      }
+      await comment.update({ comment: text, editedAt: new Date(), isRead: [req.decoded.id] })
+      res.status(200).send(comment)
+    } catch (error) {
+      logger.error('Edit comment error', { error: error.message })
+      res.status(500).send({ message: 'Unexpected error.' })
+    }
+  },
+
+  /**
    * Get comments for week
    *   permissions: must be a teacher/assistant on the course,
    *     or be the student that we are commenting on
