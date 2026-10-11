@@ -45,7 +45,7 @@ uploads both folders as the `playwright-report` artifact when it fails.
 
 ## What is covered
 
-45 tests in 15 spec files.
+49 tests in 16 spec files.
 
 | Spec | Tests | Covers |
 |---|---|---|
@@ -60,6 +60,7 @@ uploads both folders as the `playwright-report` artifact when it fails.
 | `course-settings` | 3 | A teacher changes week amount, max points, current week, material link and registration status; changes persist; registration can be reactivated |
 | `course-staff` | 4 | A teacher adds an assistant and assigns a student to them; the assistant sees the course and the student; the teacher removes the assistant |
 | `email` | 5 | Notifying a student about a reviewed week and a mass email to all students with a copy to instructors (both checked in the Mailpit inbox), the error when no recipient is selected, and a rejected address (#1141): the others still get the email and the teacher is told who did not, or nothing is sent when every address is rejected |
+| `grading-safety` | 4 | Two instructors grading the same review in two browsers: the second save is stopped, and the instructor can load the other version or overwrite it on purpose; grading a student with another assigned instructor asks for confirmation, the assigned instructor is not asked (#1127) |
 | `dropping-out` | 5 | A teacher marks a student dropped and the student sees it; the teacher marks a registration mistaken; the student removes themselves and disappears from the teacher's list |
 | `my-page` | 2 | A user changes their email address; a user without one must give one before using the app |
 | `logout` | 1 | Logging out clears the session |

@@ -146,6 +146,88 @@ describe('Week reviews and drafts API', () => {
     })
   })
 
+  describe('protection against overwriting another instructor\'s work (#1127)', () => {
+    const save = (user, body) => as(user).post('/api/weeks/create').send({ ...review(), ...body })
+
+    it('rejects a save based on an older version and says who saved it', async () => {
+      const first = await save(s.users.teacher, { baseUpdatedAt: null }).expect(200)
+      assert.strictEqual(first.body.updatedBy, s.users.teacher.id)
+
+      // the assistant opened the page before the teacher saved, so they think there is no review yet
+      const res = await save(s.users.assistant, { baseUpdatedAt: null, points: 1, feedback: 'Mine' }).expect(409)
+      assert.strictEqual(res.body.code, 'REVIEW_CHANGED')
+      assert.strictEqual(res.body.updatedBy, 'Terhi Teacher')
+      assert.strictEqual(res.body.message, 'Terhi Teacher saved this review after you opened it.')
+      assert.strictEqual(res.body.updatedAt, first.body.updatedAt)
+
+      const week = await Week.findOne({ where: { studentInstanceId: s.student.id } })
+      assert.strictEqual(week.points, 2.5)
+      assert.strictEqual(week.feedback, 'Well done')
+    })
+
+    it('accepts a save based on the current version and records who saved it', async () => {
+      const first = await save(s.users.teacher, { baseUpdatedAt: null }).expect(200)
+      const second = await save(s.users.assistant, { baseUpdatedAt: first.body.updatedAt, points: 1 }).expect(200)
+      assert.strictEqual(second.body.updatedBy, s.users.assistant.id)
+      assert.notStrictEqual(second.body.updatedAt, first.body.updatedAt)
+    })
+
+    it('treats a change of only checklist checks as a new version', async () => {
+      const first = await save(s.users.teacher, { baseUpdatedAt: null }).expect(200)
+      const checksOnly = { [items[0].id]: false, [items[1].id]: true }
+      const second = await save(s.users.teacher, { baseUpdatedAt: first.body.updatedAt, checks: checksOnly }).expect(200)
+      assert.notStrictEqual(second.body.updatedAt, first.body.updatedAt)
+
+      await save(s.users.assistant, { baseUpdatedAt: first.body.updatedAt }).expect(409)
+    })
+
+    it('saves anyway with overwrite', async () => {
+      await save(s.users.teacher, { baseUpdatedAt: null }).expect(200)
+      await save(s.users.assistant, { baseUpdatedAt: null, points: 1, overwrite: true }).expect(200)
+      assert.strictEqual((await Week.findOne({ where: { studentInstanceId: s.student.id } })).points, 1)
+    })
+
+    describe('when the student has an assigned instructor', () => {
+      beforeEach(async () => {
+        await s.student.update({ teacherInstanceId: s.assistant.id })
+      })
+
+      it('asks someone else to confirm before changing the grading', async () => {
+        const res = await save(s.users.teacher, { baseUpdatedAt: null }).expect(409)
+        assert.strictEqual(res.body.code, 'NOT_ASSIGNED_INSTRUCTOR')
+        assert.strictEqual(res.body.assignedInstructor, 'Antti Assistant')
+        assert.strictEqual(res.body.message, 'Antti Assistant is the instructor of this student, not you.')
+        assert.strictEqual(await Week.count(), 0)
+
+        await save(s.users.teacher, { baseUpdatedAt: null, confirmedNotAssigned: true }).expect(200)
+        assert.strictEqual(await Week.count(), 1)
+      })
+
+      it('does not ask the assigned instructor', async () => {
+        await save(s.users.assistant, { baseUpdatedAt: null }).expect(200)
+      })
+
+      it('does not ask when only the instructor notes change', async () => {
+        const first = await save(s.users.assistant, { baseUpdatedAt: null }).expect(200)
+        await save(s.users.teacher, { baseUpdatedAt: first.body.updatedAt, instructorNotes: 'Checked the README too' })
+          .expect(200)
+        assert.strictEqual(
+          (await Week.findOne({ where: { studentInstanceId: s.student.id } })).instructorNotes,
+          'Checked the README too'
+        )
+      })
+
+      it('asks when only checklist checks change', async () => {
+        const first = await save(s.users.assistant, { baseUpdatedAt: null }).expect(200)
+        const res = await save(s.users.teacher, {
+          baseUpdatedAt: first.body.updatedAt,
+          checks: { [items[0].id]: false, [items[1].id]: false }
+        }).expect(409)
+        assert.strictEqual(res.body.code, 'NOT_ASSIGNED_INSTRUCTOR')
+      })
+    })
+  })
+
   describe('week review drafts', () => {
     const draft = () => ({
       studentInstanceId: s.student.id,

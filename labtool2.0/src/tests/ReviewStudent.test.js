@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Provider } from 'react-redux'
 import { createStore } from 'redux'
@@ -549,6 +549,9 @@ describe('<ReviewStudent />', () => {
       resetChecklist: mockFn,
       addRedirectHook: mockFn,
       verifyCheckPrerequisites: mockFn,
+      reviewSave: { conflict: null },
+      resetReviewSave: mockFn,
+      currentUserId: 10010,
       ...ownProps,
       ...overrides
     }
@@ -646,7 +649,10 @@ describe('<ReviewStudent />', () => {
         feedback: 'Final feedback',
         instructorNotes: '',
         weekNumber: '8',
-        checks: {}
+        checks: {},
+        baseUpdatedAt: null,
+        overwrite: false,
+        confirmedNotAssigned: false
       })
     })
 
@@ -695,6 +701,128 @@ describe('<ReviewStudent />', () => {
       renderReviewStudent()
 
       expect(screen.getByRole('spinbutton')).toMatchSnapshot()
+    })
+
+    describe("protection against overwriting another instructor's work (#1127)", () => {
+      const VERSION = '2026-10-11T10:00:00.000Z'
+      // student 10011 has a saved week 1 review; give it a version
+      const withSavedVersion = version => ({
+        ...props.weekReview,
+        data: props.weekReview.data.map(student =>
+          student.id === 10011
+            ? {
+                ...student,
+                weeks: student.weeks.map(week =>
+                  week.weekNumber === 1 ? { ...week, updatedAt: version } : week
+                )
+              }
+            : student
+        )
+      })
+      const storeLocally = (key, value) =>
+        window.localStorage.setItem(
+          `labtoolPersistedState_ReviewStudent_10011:1_${key}`,
+          JSON.stringify(value)
+        )
+
+      it('sends the version of the saved review it is based on', async () => {
+        const user = userEvent.setup()
+        const createOneWeek = vi.fn()
+        renderReviewStudent({ weekReview: withSavedVersion(VERSION), createOneWeek })
+
+        await user.click(screen.getByRole('button', { name: /^save$/i }))
+
+        expect(createOneWeek).toHaveBeenCalledWith(
+          expect.objectContaining({ baseUpdatedAt: VERSION, overwrite: false, confirmedNotAssigned: false })
+        )
+      })
+
+      it('discards unsaved changes in this browser that are older than the saved review', () => {
+        storeLocally('points', '1')
+        storeLocally('basedOn', '2026-01-01T00:00:00.000Z')
+        renderReviewStudent({ weekReview: withSavedVersion(VERSION) })
+
+        expect(screen.getByRole('spinbutton')).toHaveValue(3)
+        expect(screen.getByText(/your older unsaved changes were discarded/i)).toBeInTheDocument()
+      })
+
+      it('keeps unsaved changes in this browser that are based on the saved review', () => {
+        storeLocally('points', '1')
+        storeLocally('basedOn', VERSION)
+        renderReviewStudent({ weekReview: withSavedVersion(VERSION) })
+
+        expect(screen.getByRole('spinbutton')).toHaveValue(1)
+        expect(screen.queryByText(/your older unsaved changes were discarded/i)).not.toBeInTheDocument()
+      })
+
+      it('offers to load the other version or to overwrite it when someone else saved first', async () => {
+        const user = userEvent.setup()
+        const createOneWeek = vi.fn()
+        const resetReviewSave = vi.fn()
+        const coursePageInformation = vi.fn()
+        const conflict = {
+          code: 'REVIEW_CHANGED',
+          message: 'Ossi Ohjaaja Mutikainen saved this review after you opened it.',
+          updatedAt: VERSION,
+          updatedBy: 'Ossi Ohjaaja Mutikainen'
+        }
+        renderReviewStudent({
+          weekReview: withSavedVersion(VERSION),
+          reviewSave: { conflict },
+          createOneWeek,
+          resetReviewSave,
+          coursePageInformation
+        })
+
+        expect(screen.getByText('This review was changed by someone else')).toBeInTheDocument()
+        expect(
+          screen.getByText(/Ossi Ohjaaja Mutikainen saved this review after you opened it/)
+        ).toBeInTheDocument()
+
+        await user.click(screen.getByRole('button', { name: /overwrite with my version/i }))
+        expect(createOneWeek).toHaveBeenCalledWith(expect.objectContaining({ overwrite: true }))
+
+        resetReviewSave.mockClear()
+        coursePageInformation.mockClear()
+        await user.click(screen.getByRole('button', { name: /load their version/i }))
+        expect(resetReviewSave).toHaveBeenCalled()
+        expect(coursePageInformation).toHaveBeenCalled()
+      })
+
+      it('shows the assigned instructor', () => {
+        renderReviewStudent({ currentUserId: 10015 })
+        expect(screen.getByText('Assigned instructor: Ossi Ohjaaja Mutikainen (you)')).toBeInTheDocument()
+      })
+
+      it('warns when the student has another instructor and asks before saving anyway', async () => {
+        const user = userEvent.setup()
+        const createOneWeek = vi.fn()
+        const resetReviewSave = vi.fn()
+        renderReviewStudent({
+          createOneWeek,
+          resetReviewSave,
+          reviewSave: {
+            conflict: {
+              code: 'NOT_ASSIGNED_INSTRUCTOR',
+              message: 'Ossi Ohjaaja Mutikainen is the instructor of this student, not you.',
+              assignedInstructor: 'Ossi Ohjaaja Mutikainen'
+            }
+          }
+        })
+
+        expect(screen.getByText(/You are not this student's instructor; saving changes/)).toBeInTheDocument()
+        expect(
+          screen.getByText('Ossi Ohjaaja Mutikainen is the instructor of this student, not you.')
+        ).toBeInTheDocument()
+
+        await user.click(screen.getByRole('button', { name: /save anyway/i }))
+        expect(createOneWeek).toHaveBeenCalledWith(expect.objectContaining({ confirmedNotAssigned: true }))
+
+        await user.click(
+          within(document.querySelector('.ui.modal')).getByRole('button', { name: /^cancel$/i })
+        )
+        expect(resetReviewSave).toHaveBeenCalled()
+      })
     })
 
     describe('Checklist', () => {

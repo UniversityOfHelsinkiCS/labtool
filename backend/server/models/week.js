@@ -13,7 +13,12 @@ module.exports = (sequelize, DataTypes) => {
       weekNumber: DataTypes.INTEGER,
       feedback: DataTypes.TEXT,
       instructorNotes: DataTypes.TEXT,
-      notified: DataTypes.BOOLEAN
+      notified: DataTypes.BOOLEAN,
+      // user who saved the review last
+      updatedBy: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+      }
     },
     {}
   )

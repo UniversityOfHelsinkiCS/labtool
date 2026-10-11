@@ -35,8 +35,12 @@ const COURSES = {
   STAFF: 90008,
   DROP: 90009,
   EMAIL: 90010,
-  BOUNCE: 90011
+  BOUNCE: 90011,
+  GRADING: 90012 // two instructors grading the same student (#1127)
 }
+
+// the assistant on the grading course; GRADING_ASSIGNED_STUDENT is assigned to them
+const GRADING_ASSISTANT_INSTANCE = 90112
 
 const COURSE_IDS = Object.values(COURSES)
 const USER_IDS = Object.values(USERS)
@@ -179,13 +183,22 @@ module.exports = {
       course(COURSES.STAFF, 'E2E Staff Course', 'E2E.STAFF.COURSE.1', now),
       course(COURSES.DROP, 'E2E Drop Course', 'E2E.DROP.COURSE.1', now),
       course(COURSES.EMAIL, 'E2E Email Course', 'E2E.EMAIL.COURSE.1', now),
-      course(COURSES.BOUNCE, 'E2E Bounce Course', 'E2E.BOUNCE.COURSE.1', now)
+      course(COURSES.BOUNCE, 'E2E Bounce Course', 'E2E.BOUNCE.COURSE.1', now),
+      course(COURSES.GRADING, 'E2E Grading Course', 'E2E.GRADING.COURSE.1', now)
     ])
 
     await queryInterface.bulkInsert(
       'TeacherInstances',
       COURSE_IDS.map(id => teacherInstance(id, now))
     )
+    await queryInterface.bulkInsert('TeacherInstances', [
+      {
+        ...teacherInstance(COURSES.GRADING, now),
+        id: GRADING_ASSISTANT_INSTANCE,
+        userId: USERS.ASSISTANT,
+        instructor: true
+      }
+    ])
 
     await queryInterface.bulkInsert('StudentInstances', [
       studentInstance(90001, REGISTERED_STUDENT_USER_ID, COURSES.MAIN, now, {
@@ -208,7 +221,11 @@ module.exports = {
       studentInstance(90010, REGISTERED_STUDENT_USER_ID, COURSES.EMAIL, now),
       studentInstance(90020, USERS.SECOND_STUDENT, COURSES.EMAIL, now),
       studentInstance(90011, REGISTERED_STUDENT_USER_ID, COURSES.BOUNCE, now),
-      studentInstance(90021, USERS.BOUNCING, COURSES.BOUNCE, now)
+      studentInstance(90021, USERS.BOUNCING, COURSES.BOUNCE, now),
+      studentInstance(90012, REGISTERED_STUDENT_USER_ID, COURSES.GRADING, now),
+      studentInstance(90022, USERS.SECOND_STUDENT, COURSES.GRADING, now, {
+        teacherInstanceId: GRADING_ASSISTANT_INSTANCE
+      })
     ])
 
     // already reviewed weeks for the comment and email specs

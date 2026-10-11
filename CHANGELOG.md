@@ -55,6 +55,25 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
 - Frontend `npm audit`: 22 → 0 findings.
 
 ### Fixed
+- **Grading could silently overwrite another instructor's work** (#1127). Several checklists were
+  reset or half-emptied during a final grading round. Two causes are fixed:
+  - **Old unsaved edits in the browser won over the saved review.** The review page keeps edits in
+    the browser and preferred them over the saved review, even when someone had saved the review
+    since; saving then overwrote their work. Now such older edits are discarded (with a note) and
+    the saved review is shown.
+  - **The last save always won.** The review page now sends the version it loaded. If someone saved
+    the review after it was opened, the save is refused (409): "Aatu Assistentti saved this review
+    after you opened it", with the choice to **load their version** or **overwrite with my
+    version**. Saving only checklist checks also counts as a new version.
+  - New column `Weeks.updatedBy` records who saved a review last (migration
+    `20261011120000-add-updatedBy-to-weeks.js`); a first step towards the audit log in #1129.
+- **Grading a student who has another assigned instructor now asks for confirmation** (#1127). The
+  review page shows the assigned instructor ("(you)", or a warning when it is someone else).
+  Changing points, grade, feedback or checklist checks of someone else's student asks "Save
+  anyway?"; changing only the instructor notes does not. The backend enforces the same rule.
+- **A failed review save no longer empties the form** (helps #1145): the form used to be cleared
+  before sending, so a failed save (e.g. a conflict or an expired login) lost the typed review. It
+  is now cleared only after a successful save.
 - **Email delivery failures were reported badly** (#1141). Reproduced with the Mailpit setup:
   - A mass email where the mail server rejected one recipient answered 400 "Email rejected by SMTP
     server.", although the others did get it; resending would have mailed them twice. Now it

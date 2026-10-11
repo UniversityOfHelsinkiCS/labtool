@@ -33,7 +33,8 @@ export const COURSES = {
   staff: course(90008, 'E2E.STAFF.COURSE.1', 'E2E Staff Course'),
   drop: course(90009, 'E2E.DROP.COURSE.1', 'E2E Drop Course'),
   email: course(90010, 'E2E.EMAIL.COURSE.1', 'E2E Email Course'),
-  bounce: course(90011, 'E2E.BOUNCE.COURSE.1', 'E2E Bounce Course')
+  bounce: course(90011, 'E2E.BOUNCE.COURSE.1', 'E2E Bounce Course'),
+  grading: course(90012, 'E2E.GRADING.COURSE.1', 'E2E Grading Course')
 }
 
 /** Student instance ids per course (REGISTERED_STUDENT unless noted otherwise). */
@@ -50,7 +51,9 @@ export const STUDENT_INSTANCES = {
   email: 90010,
   emailSecond: 90020, // SECOND_STUDENT
   bounce: 90011,
-  bounceRejected: 90021 // BOUNCING_STUDENT_EMAIL is rejected by Mailpit
+  bounceRejected: 90021, // BOUNCING_STUDENT_EMAIL is rejected by Mailpit
+  grading: 90012, // no assigned instructor
+  gradingAssigned: 90022 // SECOND_STUDENT, assigned to ASSISTANT
 }
 
 /** Weeks seeded as already reviewed. */
