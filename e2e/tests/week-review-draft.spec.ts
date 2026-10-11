@@ -20,6 +20,8 @@ test.describe.serial('week review drafts', () => {
 
     await page.locator('input[name="points"]').fill(DRAFT_POINTS)
     await page.locator('textarea[name="comment"]').fill(DRAFT_FEEDBACK)
+    // empty review notes are collapsed into a button
+    await page.getByRole('button', { name: 'Add review notes (instructors only)' }).click()
     await page.locator('textarea[name="instructorNotes"]').fill(DRAFT_NOTES)
     await page.getByRole('button', { name: 'Save as draft' }).click()
 

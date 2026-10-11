@@ -593,14 +593,42 @@ describe('<ReviewStudent />', () => {
       )
     })
 
-    it('marks the review notes as instructors only (#1142)', () => {
-      const { container } = renderReviewStudent()
+    describe('review notes', () => {
+      const studentWithNotes = notes => ({
+        ...props.weekReview,
+        data: props.weekReview.data.map(student =>
+          student.id === 10011
+            ? {
+                ...student,
+                weeks: student.weeks.map(week =>
+                  week.weekNumber === 1 ? { ...week, instructorNotes: notes } : week
+                )
+              }
+            : student
+        )
+      })
 
-      const notes = container.querySelector('.instructorNotes')
-      expect(notes).not.toBeNull()
-      expect(notes).toHaveTextContent('Review notes')
-      expect(notes).toHaveTextContent('Instructors only: not shown to the student')
-      expect(notes.querySelector('textarea[name="instructorNotes"]')).not.toBeNull()
+      it('are collapsed into an "Add review notes" button while empty', async () => {
+        const user = userEvent.setup()
+        const { container } = renderReviewStudent({ weekReview: studentWithNotes('') })
+        expect(container.querySelector('.instructorNotes')).toBeNull()
+
+        await user.click(screen.getByRole('button', { name: 'Add review notes (instructors only)' }))
+
+        const notes = container.querySelector('.instructorNotes')
+        expect(notes).toHaveTextContent('Review notes')
+        expect(notes).toHaveTextContent('Instructors only: not shown to the student')
+        expect(notes.querySelector('textarea[name="instructorNotes"]')).not.toBeNull()
+      })
+
+      it('are shown, marked as instructors only, when there are notes (#1142)', () => {
+        const { container } = renderReviewStudent({ weekReview: studentWithNotes('Copied the README') })
+
+        const notes = container.querySelector('.instructorNotes')
+        expect(notes).toHaveTextContent('Instructors only: not shown to the student')
+        expect(notes.querySelector('textarea[name="instructorNotes"]')).toHaveValue('Copied the README')
+        expect(screen.queryByRole('button', { name: /add review notes/i })).not.toBeInTheDocument()
+      })
     })
 
     it('shows the maximum points for the week', () => {

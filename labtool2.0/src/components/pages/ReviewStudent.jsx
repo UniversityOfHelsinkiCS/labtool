@@ -46,6 +46,8 @@ export const ReviewStudent = props => {
   // unsaved edits restored from this browser: null, or { editedAt } (editedAt may be null for old edits)
   const [unsavedEdits, setUnsavedEdits] = useState(null)
   const [checkedUnsavedEdits, setCheckedUnsavedEdits] = useState(false)
+  // empty review notes are collapsed into an "Add review notes" button
+  const [notesOpened, setNotesOpened] = useState(false)
   const pstate = usePersistedState(`ReviewStudent_${props.studentInstance}:${props.weekNumber}`, {
     points: '',
     grade: '',
@@ -578,33 +580,47 @@ export const ReviewStudent = props => {
                       />
                     </div>
                   </Form.Group>
-                  {/* instructor-only, styled like instructor-only comments (#1142) */}
-                  <div
-                    className="instructorNotes"
-                    style={{
-                      border: '2px solid #f2711c',
-                      background: '#fff6ef',
-                      borderRadius: '4px',
-                      padding: '10px 12px',
-                      margin: '1em 0'
-                    }}
-                  >
-                    <h4 style={{ marginTop: 0 }}>Review notes</h4>
-                    <Label color="orange" size="small" style={{ marginBottom: '10px' }}>
+                  {/* instructor-only, styled like instructor-only comments (#1142); collapsed while empty */}
+                  {!notesOpened && !pstate.instructorNotes ? (
+                    <Button
+                      type="button"
+                      basic
+                      color="orange"
+                      className="addInstructorNotes"
+                      style={{ margin: '1em 0' }}
+                      onClick={() => setNotesOpened(true)}
+                    >
                       <Icon name="eye slash" />
-                      Instructors only: not shown to the student
-                    </Label>
-                    <Form.Group inline unstackable style={{ textAlignVertical: 'top' }}>
-                      <div style={{ width: '100%' }}>
-                        <FormMarkdownTextArea
-                          value={pstate.instructorNotes}
-                          onChange={(e, { value }) => edit('instructorNotes', value)}
-                          name="instructorNotes"
-                          style={{ width: '500px', height: '150px' }}
-                        />
-                      </div>
-                    </Form.Group>
-                  </div>
+                      Add review notes (instructors only)
+                    </Button>
+                  ) : (
+                    <div
+                      className="instructorNotes"
+                      style={{
+                        border: '2px solid #f2711c',
+                        background: '#fff6ef',
+                        borderRadius: '4px',
+                        padding: '10px 12px',
+                        margin: '1em 0'
+                      }}
+                    >
+                      <h4 style={{ marginTop: 0 }}>Review notes</h4>
+                      <Label color="orange" size="small" style={{ marginBottom: '10px' }}>
+                        <Icon name="eye slash" />
+                        Instructors only: not shown to the student
+                      </Label>
+                      <Form.Group inline unstackable style={{ textAlignVertical: 'top' }}>
+                        <div style={{ width: '100%' }}>
+                          <FormMarkdownTextArea
+                            value={pstate.instructorNotes}
+                            onChange={(e, { value }) => edit('instructorNotes', value)}
+                            name="instructorNotes"
+                            style={{ width: '500px', height: '150px' }}
+                          />
+                        </div>
+                      </Form.Group>
+                    </div>
+                  )}
                   <Form.Field>
                     <Button className="ui center floated green button" type="submit">
                       Save
