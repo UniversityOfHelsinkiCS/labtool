@@ -85,7 +85,6 @@ export const WeekReviewWeek = props => {
           {isTeacher && hiddenLabel}
         </Accordion.Title>
         <Accordion.Content active={isWeekOpen}>
-          <h3>Review</h3>
           <Card fluid color="yellow">
             <Card.Content>
               <h4>
@@ -222,7 +221,6 @@ export const WeekReviewWeek = props => {
         <Accordion.Content active={isWeekOpen}>
           {isTeacher && (
             <>
-              <h3>Review</h3>
               <Link
                 to={`/labtool/reviewstudent/${props.selectedInstance.ohid}/${studentInstance}/${reviewIndex}`}
               >

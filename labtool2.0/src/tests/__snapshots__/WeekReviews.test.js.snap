@@ -9,7 +9,7 @@ exports[`<WeekReviews /> as student > WeekReviews Component > matches the render
      
     <div
       class="title codeReview reviewTitle"
-      style="font-size: 1.3em;"
+      style="font-size: 1.3em; border-top: 3px solid rgba(34, 36, 38, 0.2);"
     >
       <i
         aria-hidden="true"
@@ -49,7 +49,7 @@ exports[`<WeekReviews /> as student > WeekReviews Component > matches the render
      
     <div
       class="title codeReview reviewTitle"
-      style="font-size: 1.3em;"
+      style="font-size: 1.3em; border-top: 3px solid rgba(34, 36, 38, 0.2);"
     >
       <i
         aria-hidden="true"
@@ -131,7 +131,7 @@ exports[`<WeekReviews /> as student > WeekReviews Component > matches the render
      
     <div
       class="active title codeReview reviewTitle"
-      style="font-size: 1.3em;"
+      style="font-size: 1.3em; border-top: 3px solid rgba(34, 36, 38, 0.2);"
     >
       <i
         aria-hidden="true"

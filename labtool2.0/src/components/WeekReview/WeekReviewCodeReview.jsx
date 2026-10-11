@@ -106,7 +106,6 @@ export const WeekReviewCodeReview = props => {
             )}
             {hasChecklist ? (
               <>
-                <h3>Review</h3>
                 <Link
                   to={`/labtool/reviewstudentcr/${selectedInstance.ohid}/${studentInstance}/${cr.reviewNumber}`}
                 >
