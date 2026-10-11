@@ -170,4 +170,45 @@ describe('<WeekReviews /> as student', () => {
       expect(container.querySelector('.finalReviewNotShown')).toBeNull()
     })
   })
+
+  describe('additional review notes of the final review', () => {
+    it('are listed for the course staff under the final review', () => {
+      const student = {
+        ...coursePage.data,
+        codeReviews: [],
+        weeks: [
+          {
+            id: 5,
+            weekNumber: 1,
+            points: null,
+            grade: 4,
+            feedback: 'Final',
+            instructorNotes: 'Notes',
+            comments: []
+          }
+        ],
+        reviewNotes: [
+          {
+            id: 1,
+            studentInstanceId: 10011,
+            weekNumber: 1,
+            text: 'Agree',
+            by: 'Pää Opettaja',
+            createdAt: '2026-10-11T10:00:00.000Z'
+          }
+        ]
+      }
+      const teacherPage = { ...coursePage, role: 'teacher', data: [student] }
+      const { container } = renderWeekReviews({
+        selectedInstance: { ...selectedInstance, finalReview: true, finalReviewVisible: true },
+        courseData: teacherPage,
+        student,
+        studentInstance: '10011'
+      })
+      const notes = container.querySelector('.additionalReviewNotes')
+      expect(notes).toHaveTextContent('Additional review notes')
+      expect(notes).toHaveTextContent('Pää Opettaja')
+      expect(notes).toHaveTextContent('Agree')
+    })
+  })
 })

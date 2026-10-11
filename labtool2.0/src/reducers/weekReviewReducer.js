@@ -43,6 +43,18 @@ const weekReviewReducer = (state = INITIAL_STATE, action) => {
     case 'CP_INFO_SUCCESS': {
       return { ...state, data: action.response.data }
     }
+    case 'REVIEW_NOTE_CREATE_SUCCESS': {
+      if (!Array.isArray(state.data)) return state
+      const note = action.response
+      return {
+        ...state,
+        data: state.data.map(student =>
+          student.id === note.studentInstanceId
+            ? { ...student, reviewNotes: [...(student.reviewNotes || []), note] }
+            : student
+        )
+      }
+    }
     case 'LOGOUT_SUCCESS':
       return INITIAL_STATE
     case 'WEEK_REVIEW_TOGGLE': {

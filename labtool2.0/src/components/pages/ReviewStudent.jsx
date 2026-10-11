@@ -22,6 +22,9 @@ import { formatCourseName, trimDate, roundPoints } from '../../util/format'
 import { usePersistedState } from '../../hooks/persistedState'
 
 import { FormMarkdownTextArea } from '../MarkdownTextArea'
+import ReactMarkdown from 'react-markdown'
+import ReviewNotes from '../ReviewNotes'
+import { createReviewNote } from '../../services/reviewNote'
 import RepoLink from '../RepoLink'
 import { PreviousWeekDetails } from './ReviewStudent/PreviousWeekDetails'
 import { ReviewStudentChecklist } from './ReviewStudent/Checklist'
@@ -34,6 +37,15 @@ import { Points } from '../Points'
 import '../../util/arrayFlatPolyfill'
 
 const isFinalReview = props => props.weekNumber > props.selectedInstance.weekAmount
+
+// instructor-only boxes are styled like instructor-only comments (#1142)
+const notesBoxStyle = {
+  border: '2px solid #f2711c',
+  background: '#fff6ef',
+  borderRadius: '4px',
+  padding: '10px 12px',
+  margin: '1em 0'
+}
 const nullIfEmpty = value => (value === '' || value === null || value === undefined ? null : value)
 
 /**
@@ -105,6 +117,10 @@ export const ReviewStudent = props => {
         baseUpdatedAt: pstate.basedOn || null,
         overwrite,
         confirmedNotAssigned
+      }
+      if (notesLocked) {
+        // only the assigned instructor edits the review notes of the final review
+        delete content.instructorNotes
       }
       if (finalReviewWithoutPoints) {
         pstate.points = null
@@ -236,6 +252,18 @@ export const ReviewStudent = props => {
       ? props.selectedInstance.teacherInstances.find(ti => ti.id === studentData.teacherInstanceId)
       : null
   const assignedToMe = assignedInstructor && assignedInstructor.userId === props.currentUserId
+  // In the final review only the assigned instructor edits the review notes; the others add notes of
+  // their own (additional review notes, never shown to students).
+  const notesLocked = Boolean(isFinalReview(props) && assignedInstructor && !assignedToMe)
+  const additionalNotes = (studentData.reviewNotes || []).filter(
+    note => note.weekNumber === Number(props.ownProps.weekNumber)
+  )
+  const addReviewNote = text =>
+    props.createReviewNote({
+      studentInstanceId: studentData.id,
+      weekNumber: Number(props.ownProps.weekNumber),
+      text
+    })
   const previousWeekData = studentData.weeks.find(
     week => week.weekNumber === Number(props.ownProps.weekNumber) - 1
   )
@@ -588,45 +616,78 @@ export const ReviewStudent = props => {
                     </div>
                   </Form.Group>
                   {/* instructor-only, styled like instructor-only comments (#1142); collapsed while empty */}
-                  {!notesOpened && !pstate.instructorNotes ? (
-                    <Button
-                      type="button"
-                      basic
-                      color="orange"
-                      className="addInstructorNotes"
-                      style={{ margin: '1em 0' }}
-                      onClick={() => setNotesOpened(true)}
-                    >
-                      <Icon name="eye slash" />
-                      Add review notes (instructors only)
-                    </Button>
-                  ) : (
-                    <div
-                      className="instructorNotes"
-                      style={{
-                        border: '2px solid #f2711c',
-                        background: '#fff6ef',
-                        borderRadius: '4px',
-                        padding: '10px 12px',
-                        margin: '1em 0'
-                      }}
-                    >
-                      <h4 style={{ marginTop: 0 }}>Review notes</h4>
+                  {notesLocked ? (
+                    <div className="instructorNotes lockedNotes" style={notesBoxStyle}>
+                      <h4 style={{ marginTop: 0 }}>
+                        Review notes by {assignedInstructor.firsts} {assignedInstructor.lastname}
+                      </h4>
                       <Label color="orange" size="small" style={{ marginBottom: '10px' }}>
                         <Icon name="eye slash" />
                         Instructors only: not shown to the student
                       </Label>
-                      <Form.Group inline unstackable style={{ textAlignVertical: 'top' }}>
-                        <div style={{ width: '100%' }}>
-                          <FormMarkdownTextArea
-                            value={pstate.instructorNotes}
-                            onChange={(e, { value }) => edit('instructorNotes', value)}
-                            name="instructorNotes"
-                            style={{ width: '500px', height: '150px' }}
-                          />
-                        </div>
-                      </Form.Group>
+                      <p className="notesLockedInfo" style={{ color: 'rgba(0,0,0,.6)' }}>
+                        Only the assigned instructor edits the review notes of the final review. Add your own
+                        note below.
+                      </p>
+                      {savedWeek && savedWeek.instructorNotes ? (
+                        <ReactMarkdown>{savedWeek.instructorNotes}</ReactMarkdown>
+                      ) : (
+                        <p>
+                          <em>No review notes yet.</em>
+                        </p>
+                      )}
+                      <h4>Additional review notes</h4>
+                      <ReviewNotes notes={additionalNotes} onAdd={addReviewNote} />
                     </div>
+                  ) : (
+                    <>
+                      {!notesOpened && !pstate.instructorNotes ? (
+                        <Button
+                          type="button"
+                          basic
+                          color="orange"
+                          className="addInstructorNotes"
+                          style={{ margin: '1em 0' }}
+                          onClick={() => setNotesOpened(true)}
+                        >
+                          <Icon name="eye slash" />
+                          Add review notes (instructors only)
+                        </Button>
+                      ) : (
+                        <div
+                          className="instructorNotes"
+                          style={{
+                            border: '2px solid #f2711c',
+                            background: '#fff6ef',
+                            borderRadius: '4px',
+                            padding: '10px 12px',
+                            margin: '1em 0'
+                          }}
+                        >
+                          <h4 style={{ marginTop: 0 }}>Review notes</h4>
+                          <Label color="orange" size="small" style={{ marginBottom: '10px' }}>
+                            <Icon name="eye slash" />
+                            Instructors only: not shown to the student
+                          </Label>
+                          <Form.Group inline unstackable style={{ textAlignVertical: 'top' }}>
+                            <div style={{ width: '100%' }}>
+                              <FormMarkdownTextArea
+                                value={pstate.instructorNotes}
+                                onChange={(e, { value }) => edit('instructorNotes', value)}
+                                name="instructorNotes"
+                                style={{ width: '500px', height: '150px' }}
+                              />
+                            </div>
+                          </Form.Group>
+                        </div>
+                      )}
+                      {isFinalReview(props) && (
+                        <div className="instructorNotes" style={notesBoxStyle}>
+                          <h4 style={{ marginTop: 0 }}>Additional review notes</h4>
+                          <ReviewNotes notes={additionalNotes} onAdd={addReviewNote} />
+                        </div>
+                      )}
+                    </>
                   )}
                   <Form.Field>
                     <Button className="ui center floated green button" type="submit">
@@ -686,6 +747,7 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 const mapDispatchToProps = {
+  createReviewNote,
   createOneWeek,
   getWeekDraft,
   saveWeekDraft,
@@ -733,6 +795,7 @@ ReviewStudent.propTypes = {
   addRedirectHook: PropTypes.func.isRequired,
   resetReviewSave: PropTypes.func.isRequired,
   getChangeLog: PropTypes.func.isRequired,
+  createReviewNote: PropTypes.func,
 
   errors: PropTypes.array
 }

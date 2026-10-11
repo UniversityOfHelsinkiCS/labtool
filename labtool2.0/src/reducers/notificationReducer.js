@@ -87,6 +87,18 @@ const notificationReducer = (state = {}, action) => {
         error: true
       }
     }
+    case 'REVIEW_NOTE_CREATE_SUCCESS':
+      return {
+        message: 'Review note added.',
+        error: false
+      }
+    case 'REVIEW_NOTE_CREATE_FAILURE': {
+      const data = action.response && action.response.response && action.response.response.data
+      return {
+        message: typeof data === 'string' ? data : 'The review note could not be added.',
+        error: true
+      }
+    }
     case 'CI_SET_INVALID_SUCCESS':
       return {
         message: action.response.invalid ? 'The course is marked invalid.' : 'The course is in use again.',
@@ -111,7 +123,7 @@ const notificationReducer = (state = {}, action) => {
       // a 409 means the save would overwrite someone else's work; the review page explains (#1127)
       const response = action.response && action.response.response
       return {
-        message: response && response.status === 409 ? response.data.message : 'Invalid inputs.',
+        message: (response && response.data && response.data.message) || 'Invalid inputs.',
         error: true
       }
     }
