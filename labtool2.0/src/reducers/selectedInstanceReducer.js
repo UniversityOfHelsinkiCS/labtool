@@ -17,12 +17,37 @@
 
 const INITIAL_STATE = {}
 
+const text = value => (value === null || value === undefined ? '' : String(value))
+
+/**
+ * The settings edited on the course settings page, normalised for comparison (inputs give strings).
+ * savedSettings keeps them as last loaded from or saved to the server, so the page knows when there
+ * are unsaved changes.
+ */
+export const courseSettings = course => ({
+  weekAmount: text(course.weekAmount),
+  weekMaxPoints: text(course.weekMaxPoints),
+  currentWeek: text(course.currentWeek),
+  active: Boolean(course.active) && String(course.active) !== 'false',
+  finalReview: Boolean(course.finalReview),
+  finalReviewHasPoints: Boolean(course.finalReviewHasPoints),
+  finalReviewVisible: Boolean(course.finalReviewVisible),
+  coursesPage: text(course.coursesPage).trim(),
+  courseMaterial: text(course.courseMaterial).trim(),
+  currentCodeReview: [...(course.currentCodeReview || [])].map(Number).sort((a, b) => a - b)
+})
+
+export const hasUnsavedSettings = (course, visibleCodeReviews) =>
+  Boolean(course.savedSettings) &&
+  JSON.stringify(courseSettings({ ...course, currentCodeReview: visibleCodeReviews })) !==
+    JSON.stringify(course.savedSettings)
+
 const selectedInstanceReducer = (store = INITIAL_STATE, action) => {
   switch (action.type) {
     case 'LOGOUT_SUCCESS':
       return INITIAL_STATE
     case 'CI_GET_ONE_SUCCESS':
-      return action.response
+      return { ...action.response, savedSettings: courseSettings(action.response) }
     case 'TEACHER_CREATE_SUCCESS':
       return { ...store, teacherInstances: [...store.teacherInstances, action.response] }
     case 'TEACHER_REMOVE_SUCCESS':
@@ -45,12 +70,14 @@ const selectedInstanceReducer = (store = INITIAL_STATE, action) => {
       return { ...store, finalReviewHasPoints: action.value }
     case 'SET_FINAL_REVIEW_VISIBLE':
       return { ...store, finalReviewVisible: action.value }
-    case 'CI_MODIFY_ONE_SUCCESS':
-      return {
+    case 'CI_MODIFY_ONE_SUCCESS': {
+      const saved = {
         ...store,
         ...action.response,
         currentWeek: Number(action.response.currentWeek || store.currentWeek, 10)
       }
+      return { ...saved, savedSettings: courseSettings(saved) }
+    }
     default:
       return store
   }

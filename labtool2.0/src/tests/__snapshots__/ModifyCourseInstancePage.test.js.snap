@@ -336,21 +336,21 @@ exports[`<ModifyCourseInstancePage /> > matches the rendered snapshot 1`] = `
     style="display: inline-block; margin-left: auto; margin-right: auto;"
   >
     <button
-      class="ui green huge button"
+      class="ui green huge disabled button"
+      disabled=""
+      tabindex="-1"
       type="submit"
     >
       Save
     </button>
-    <a
-      href="/labtool/courses/TKT20011.2018.K.A.1"
+    <button
+      class="ui red huge disabled button"
+      disabled=""
+      tabindex="-1"
+      type="button"
     >
-      <button
-        class="ui red huge button"
-        type="button"
-      >
-        Cancel
-      </button>
-    </a>
+      Cancel
+    </button>
   </div>
 </form>
 `;
