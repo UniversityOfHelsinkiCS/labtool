@@ -100,7 +100,9 @@ const weekDropdowns = Array.from({ length: courseInstances[0].weekAmount }, (_, 
 // non-empty checklists on other courses that can be copied
 const copyableChecklists = [
   { courseInstanceId: 10012, week: 6, forCodeReview: false },
-  { courseInstanceId: 10013, week: 1, forCodeReview: false }
+  { courseInstanceId: 10013, week: 1, forCodeReview: false },
+  // the course itself has a checklist, so the "copy all" box is not shown
+  { courseInstanceId: 10011, week: 2, forCodeReview: false }
 ]
 
 const renderCreateChecklist = (props = {}) => {
@@ -116,6 +118,7 @@ const renderCreateChecklist = (props = {}) => {
     resetLoading: vi.fn(),
     createChecklist: vi.fn(),
     getOneCI: vi.fn(),
+    copyAllChecklists: vi.fn(),
     getOneChecklist: vi.fn(),
     getCopyableChecklists: vi.fn(),
     resetChecklist: vi.fn(),
@@ -148,7 +151,7 @@ const renderCreateChecklist = (props = {}) => {
 }
 
 const selectWeek = async (user, week) => {
-  const checklistDropdown = screen.getAllByRole('listbox')[0]
+  const checklistDropdown = document.querySelector('#weekDropdown')
   await user.click(checklistDropdown)
   await user.click(within(checklistDropdown).getByRole('option', { name: `Week ${week}` }))
 }
@@ -255,9 +258,9 @@ describe('<CreateChecklist /> component', () => {
     ]
     renderCreateChecklist({
       courses,
-      copyableChecklists: [1, 2, 3, 4].map(courseInstanceId => ({
+      copyableChecklists: [courseInstances[0].id, 1, 2, 3, 4].map(courseInstanceId => ({
         courseInstanceId,
-        week: 1,
+        week: courseInstanceId === courseInstances[0].id ? 2 : 1,
         forCodeReview: false
       }))
     })
@@ -326,6 +329,67 @@ describe('<CreateChecklist /> component', () => {
     expect(props.getOneChecklist).toHaveBeenCalledWith(
       expect.objectContaining({ courseInstanceId: courseInstances[0].id, week: 2, copying: true })
     )
+  })
+
+  describe('copying all checklists of another course', () => {
+    const noOwnChecklists = copyableChecklists.filter(checklist => checklist.courseInstanceId !== 10011)
+    const box = () => document.querySelector('.copyAllForm')
+
+    it('is offered when the course has no checklists, listing the courses that have some', async () => {
+      const user = userEvent.setup()
+      const copyAllChecklists = vi.fn()
+      renderCreateChecklist({ copyableChecklists: noOwnChecklists, copyAllChecklists })
+      expect(box()).toHaveTextContent('This course has no checklists yet')
+      const copy = box().querySelector('.copyAllButton')
+      expect(copy).toBeDisabled()
+
+      await user.click(within(box()).getByText('Select a course'))
+      const options = within(box())
+        .getAllByRole('option')
+        .map(option => option.textContent)
+      expect(options).toEqual([
+        'Ohjelmistotekniikan menetelmät (11.03.2018), 1 checklist',
+        'Aineopintojen harjoitustyö: Tietokantasovellus (16.01.2018), 1 checklist'
+      ])
+      await user.click(within(box()).getByRole('option', { name: /ohjelmistotekniikan/i }))
+      await user.click(copy)
+      expect(copyAllChecklists).toHaveBeenCalledWith(10012, 10011)
+    })
+
+    it('reloads the course and the selected week once the copies have arrived', async () => {
+      const user = userEvent.setup()
+      const { rerender, props } = renderCreateChecklist({ copyableChecklists: noOwnChecklists })
+      await selectWeek(user, 6)
+      await user.click(within(box()).getByText('Select a course'))
+      await user.click(within(box()).getByRole('option', { name: /ohjelmistotekniikan/i }))
+      await user.click(box().querySelector('.copyAllButton'))
+      props.getOneChecklist.mockClear()
+      props.getOneCI.mockClear()
+
+      const copied = [...noOwnChecklists, { courseInstanceId: 10011, week: 6, forCodeReview: false }]
+      rerender(
+        <Provider store={createStore(() => ({ selectedInstance: props.selectedInstance }))}>
+          <MemoryRouter>
+            <CreateChecklist {...props} copyableChecklists={copied} />
+          </MemoryRouter>
+        </Provider>
+      )
+      expect(box()).toBeNull()
+      expect(props.getOneCI).toHaveBeenCalledWith(props.courseId)
+      expect(props.getOneChecklist).toHaveBeenCalledWith(
+        expect.objectContaining({ week: 6, courseInstanceId: 10011 })
+      )
+    })
+
+    it('is not offered when the course has checklists', () => {
+      renderCreateChecklist()
+      expect(box()).toBeNull()
+    })
+
+    it('is not offered when no other course has checklists', () => {
+      renderCreateChecklist({ copyableChecklists: [] })
+      expect(box()).toBeNull()
+    })
   })
 
   it('shows no copy form before a week is selected', () => {

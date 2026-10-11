@@ -71,6 +71,22 @@ const notificationReducer = (state = {}, action) => {
         message: 'Course details copied successfully!',
         error: false
       }
+    case 'CHECKLIST_COPY_ALL_SUCCESS': {
+      const { copied = [], skipped = [] } = action.response || {}
+      return {
+        message:
+          `Copied ${copied.length} ${copied.length === 1 ? 'checklist' : 'checklists'}: ${copied.join(', ')}.` +
+          (skipped.length ? ` Not copied, as this course has no ${skipped.join(', ')}.` : ''),
+        error: false
+      }
+    }
+    case 'CHECKLIST_COPY_ALL_FAILURE': {
+      const data = action.response && action.response.response && action.response.response.data
+      return {
+        message: typeof data === 'string' ? data : 'The checklists could not be copied.',
+        error: true
+      }
+    }
     case 'CI_SET_INVALID_SUCCESS':
       return {
         message: action.response.invalid ? 'The course is marked invalid.' : 'The course is in use again.',

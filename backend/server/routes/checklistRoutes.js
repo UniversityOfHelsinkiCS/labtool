@@ -19,4 +19,5 @@ module.exports = (app) => {
    * user's courses, i.e. the checklists that can be copied with getone.
    */
   app.get('/api/checklist/copyable', checklistController.getCopyable)
+  app.post('/api/checklist/copyall', checklistController.copyAll) // all checklists of another course
 }

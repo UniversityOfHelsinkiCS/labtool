@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import {
@@ -19,7 +19,12 @@ import {
 } from 'semantic-ui-react'
 import { showNotification } from '../../reducers/notificationReducer'
 import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
-import { createChecklist, getOneChecklist, getCopyableChecklists } from '../../services/checklist'
+import {
+  createChecklist,
+  getOneChecklist,
+  getCopyableChecklists,
+  copyAllChecklists
+} from '../../services/checklist'
 import { getOneCI, getAllCI } from '../../services/courseInstance'
 import {
   resetChecklist,
@@ -561,6 +566,41 @@ export const CreateChecklist = props => {
     })
   }
 
+  // A course without any checklists can copy all checklists of another course at once.
+  const [copyAllFrom, setCopyAllFrom] = useState(null)
+  const copyingAll = useRef(false)
+  const ownChecklistCount = (props.copyableChecklists || []).filter(
+    checklist => checklist.courseInstanceId === props.selectedInstance.id
+  ).length
+  const createCopyAllDropdowns = () => {
+    const counts = {}
+    ;(props.copyableChecklists || []).forEach(checklist => {
+      counts[checklist.courseInstanceId] = (counts[checklist.courseInstanceId] || 0) + 1
+    })
+    const courses = Array.isArray(props.courses) ? props.courses : []
+    return sortCopySources(
+      courses.filter(course => course.id !== props.selectedInstance.id && counts[course.id])
+    ).map(course => ({
+      value: course.id,
+      text: `${course.name} (${course.europeanStart}), ${counts[course.id]} ${
+        counts[course.id] === 1 ? 'checklist' : 'checklists'
+      }`
+    }))
+  }
+  const copyAll = () => {
+    copyingAll.current = true
+    props.copyAllChecklists(copyAllFrom, props.selectedInstance.id)
+  }
+  useEffect(() => {
+    // once the copies have arrived, show the copied checklist of the selected week
+    if (copyingAll.current && ownChecklistCount > 0) {
+      copyingAll.current = false
+      setCopyAllFrom(null)
+      props.getOneCI(props.courseId)
+      if (state.current) loadChecklist(state.current)
+    }
+  }, [ownChecklistCount])
+
   // whether the course has a non-empty checklist for the given week, final review or code review
   const hasCopyableChecklist = (course, obj) =>
     (props.copyableChecklists || []).some(checklist => {
@@ -921,6 +961,36 @@ export const CreateChecklist = props => {
         <BackButton preset="modifyCIPage" cleanup={state.clear} />
         <Header>{props.selectedInstance.name}</Header>
         <div className="editForm">
+          {ownChecklistCount === 0 && createCopyAllDropdowns().length > 0 && (
+            <Segment color="blue" className="copyAllForm">
+              <Header as="h4" style={{ marginBottom: '0.3em' }}>
+                This course has no checklists yet
+              </Header>
+              <p className="copyHint">
+                Copy all checklists of another course at once. Weeks keep their numbers, and a final review
+                checklist goes to this course&apos;s final review.
+              </p>
+              <div className="copySource">
+                <Dropdown
+                  className="copyAllDropdown"
+                  placeholder="Select a course"
+                  selection
+                  value={copyAllFrom}
+                  onChange={(e, { value }) => setCopyAllFrom(value)}
+                  options={createCopyAllDropdowns()}
+                />
+                <Button
+                  type="button"
+                  className="copyAllButton"
+                  primary
+                  onClick={copyAll}
+                  disabled={!copyAllFrom}
+                >
+                  Copy all checklists
+                </Button>
+              </div>
+            </Segment>
+          )}
           <div className="topOptions">
             <Dropdown
               id="weekDropdown"
@@ -1212,6 +1282,7 @@ const mapDispatchToProps = {
   getAllCI,
   getOneChecklist,
   getCopyableChecklists,
+  copyAllChecklists,
   resetChecklist,
   restoreChecklist,
   changeField,
@@ -1245,6 +1316,7 @@ CreateChecklist.propTypes = {
   getAllCI: PropTypes.func.isRequired,
   getOneChecklist: PropTypes.func.isRequired,
   getCopyableChecklists: PropTypes.func.isRequired,
+  copyAllChecklists: PropTypes.func,
   resetChecklist: PropTypes.func.isRequired,
   restoreChecklist: PropTypes.func.isRequired,
   changeField: PropTypes.func.isRequired,
