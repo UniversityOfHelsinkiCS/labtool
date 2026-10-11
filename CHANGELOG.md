@@ -33,8 +33,9 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
   data), cannot comment on it, and teachers cannot send email notifications about it; students see
   "Final review results are not shown yet". Staff see a "Hidden from students" label on the final review
   and a notice when grading it. New column `CourseInstances.finalReviewVisible` (migration
-  `20261011200000-add-finalReviewVisible-to-course-instances`): new courses hide the final review by
-  default, courses that existed before keep showing it.
+  `20261011200000-add-finalReviewVisible-to-course-instances`): final reviews are hidden by default, on
+  existing courses too (migration `20261012010000-hide-final-reviews-by-default` hides them on courses
+  where an earlier version of the first migration had shown them).
 - **Checklist preview in the checklist editor.** A "Preview" button next to Save opens the checklist
   being edited, unsaved changes included, as it looks when grading: checks can be ticked to see the
   feedback text and points (prerequisites hide and uncheck dependent checks, points are capped at the

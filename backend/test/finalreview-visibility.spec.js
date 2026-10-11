@@ -2,7 +2,8 @@ const assert = require('assert')
 const { as } = require('./helpers/api')
 const f = require('./helpers/factories')
 const { stubMailTransport } = require('./helpers/mailer')
-const { CourseInstance } = require('../server/models')
+const { CourseInstance, sequelize } = require('../server/models')
+const hideByDefault = require('../server/migrations/20261012010000-hide-final-reviews-by-default')
 
 // The final review is the week after the last one; its results stay hidden from students until shown.
 describe('Hiding the final review from students', () => {
@@ -32,6 +33,12 @@ describe('Hiding the final review from students', () => {
       .expect(200)
     return res.body.data.weeks.map(week => week.weekNumber).sort()
   }
+
+  it('hides the final review of courses that showed it before the default was hidden', async () => {
+    await show(true)
+    await hideByDefault.up(sequelize.getQueryInterface())
+    assert.strictEqual((await CourseInstance.findByPk(s.course.id)).finalReviewVisible, false)
+  })
 
   it('hides the final review of new courses by default', async () => {
     const course = await f.createCourse({ finalReview: true })
