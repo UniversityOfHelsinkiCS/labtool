@@ -2,7 +2,7 @@
 // TKT20010.2026.S.K.SIM1 for autumn 2026). paaopettaja is the responsible teacher and tiraohjaaja an
 // assistant; four registered students are split between them. Pekka Palautuva's address is rejected by
 // the Mailpit container in the dev stack, to reproduce email delivery failures (issue #1141).
-// Week 1 has a checklist with topic descriptions (#525).
+// Week 1 has a checklist whose checks have descriptions (#525).
 // Its timestamp must stay after the e2e fixtures seeder: seeders are undone newest first, and the
 // e2e seeder's down deletes all ".SIM" courses, which would fail while these students still exist.
 
@@ -19,19 +19,25 @@ const BOUNCING_STUDENT = 29001
 
 const CHECKLIST_ID = 20001
 
-// [topic, description, [[id, name, textWhenOn, textWhenOff, checkedPoints, uncheckedPoints], ...]]
+// [topic, [[id, name, description, textWhenOn, textWhenOff, checkedPoints, uncheckedPoints], ...]]
 const CHECKLIST_TOPICS = [
-  ['Ohjelmakoodi', 'Koodin laatu ja toimivuus: luettavuus, rakenne ja algoritmin oikeellisuus.', [
-    [20001, 'Koodi on selkeää', 'Koodi on selkeää ja hyvin jäsenneltyä.', 'Koodin luettavuutta kannattaa parantaa.', 1, 0],
-    [20002, 'Algoritmi toimii', 'Algoritmi toimii oikein.', 'Algoritmissa on vielä virheitä.', 1, 0]
+  ['Ohjelmakoodi', [
+    [20001, 'Koodi on selkeää', 'Nimet kuvaavat tarkoitustaan, funktiot ovat lyhyitä eikä koodissa ole toistoa.',
+      'Koodi on selkeää ja hyvin jäsenneltyä.', 'Koodin luettavuutta kannattaa parantaa.', 1, 0],
+    [20002, 'Algoritmi toimii', 'Algoritmi antaa oikeat tulokset myös reunatapauksissa, esim. tyhjällä syötteellä.',
+      'Algoritmi toimii oikein.', 'Algoritmissa on vielä virheitä.', 1, 0]
   ]],
-  ['Testaus', 'Yksikkötestit kattavat ydinlogiikan ja ajetaan automaattisesti.', [
-    [20003, 'Yksikkötestit', 'Yksikkötestit on tehty.', 'Yksikkötestit puuttuvat.', 0.5, 0],
-    [20004, 'Testikattavuusraportti', 'Testikattavuus on raportoitu.', 'Testikattavuusraportti puuttuu.', 0, 0]
+  ['Testaus', [
+    [20003, 'Yksikkötestit', 'Yksikkötestit kattavat ydinlogiikan ja ne ajetaan automaattisesti.',
+      'Yksikkötestit on tehty.', 'Yksikkötestit puuttuvat.', 0.5, 0],
+    [20004, 'Testikattavuusraportti', 'Repositoriossa on ajantasainen testikattavuusraportti.',
+      'Testikattavuus on raportoitu.', 'Testikattavuusraportti puuttuu.', 0, 0]
   ]],
-  ['Dokumentaatio', 'Viikkoraportti, määrittelydokumentti ja tuntikirjanpito.', [
-    [20005, 'Määrittelydokumentti', 'Määrittelydokumentti on kunnossa.', 'Määrittelydokumentti puuttuu.', 0.5, 0],
-    [20006, 'Tuntikirjanpito', 'Tuntikirjanpito on ajan tasalla.', 'Tuntikirjanpito puuttuu.', 0, -0.5]
+  ['Dokumentaatio', [
+    [20005, 'Määrittelydokumentti', 'Dokumentissa kerrotaan ongelma, käytettävät algoritmit ja tietorakenteet.',
+      'Määrittelydokumentti on kunnossa.', 'Määrittelydokumentti puuttuu.', 0.5, 0],
+    [20006, 'Tuntikirjanpito', 'Tuntikirjanpidossa on viikon työtunnit ja mitä niillä tehtiin.',
+      'Tuntikirjanpito on ajan tasalla.', 'Tuntikirjanpito puuttuu.', 0, -0.5]
   ]]
 ]
 
@@ -120,18 +126,16 @@ module.exports = {
         master: false,
         maxPoints: 3,
         courseInstanceId: COURSE_ID,
-        topicDescriptions: JSON.stringify(
-          Object.fromEntries(CHECKLIST_TOPICS.map(([topic, description]) => [topic, description]))
-        ),
         createdAt: now,
         updatedAt: now
       }
     ])
     let order = 1
-    await queryInterface.bulkInsert('ChecklistItems', CHECKLIST_TOPICS.flatMap(([category, , items]) =>
-      items.map(([id, name, textWhenOn, textWhenOff, checkedPoints, uncheckedPoints]) => ({
+    await queryInterface.bulkInsert('ChecklistItems', CHECKLIST_TOPICS.flatMap(([category, items]) =>
+      items.map(([id, name, description, textWhenOn, textWhenOff, checkedPoints, uncheckedPoints]) => ({
         id,
         name,
+        description,
         textWhenOn,
         textWhenOff,
         checkedPoints,

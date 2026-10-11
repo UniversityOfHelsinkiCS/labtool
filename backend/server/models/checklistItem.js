@@ -5,6 +5,8 @@ module.exports = (sequelize, DataTypes) => {
       name: DataTypes.TEXT,
       textWhenOff: DataTypes.TEXT,
       textWhenOn: DataTypes.TEXT,
+      // what the check is about, shown to graders (#525)
+      description: DataTypes.TEXT,
       checkedPoints: DataTypes.DOUBLE,
       uncheckedPoints: DataTypes.DOUBLE,
       category: DataTypes.TEXT,

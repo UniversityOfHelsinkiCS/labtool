@@ -7,7 +7,7 @@ const course = COURSES.checklist
 const studentInstance = STUDENT_INSTANCES.checklist
 
 const TOPIC = 'Testing'
-const TOPIC_DESCRIPTION = 'Unit tests cover the core logic and run in CI.'
+const CHECK_DESCRIPTION = 'Unit tests cover the core logic and run in CI.'
 const CHECKBOX = 'Has unit tests'
 const TEXT_WHEN_ON = 'Unit tests look good.'
 const TEXT_WHEN_OFF = 'Please add unit tests.'
@@ -26,12 +26,12 @@ test.describe.serial('checklists', () => {
     await page.locator('.newTopicNameInput input').fill(TOPIC)
     await page.locator('.newTopicNameInput input').press('Enter')
     await expect(page.locator('.ui.header', { hasText: TOPIC })).toBeVisible()
-    // a topic can have a description (#525)
-    await page.locator('.topicDescriptionInput textarea').first().fill(TOPIC_DESCRIPTION)
 
     await page.getByRole('button', { name: 'Add new checkbox' }).click()
     await page.locator('.newRowNameInput input').fill(CHECKBOX)
     await page.locator('.newRowNameInput input').press('Enter')
+    // each check can have a description, the kuvaus (#525)
+    await page.locator('.checkDescriptionInput textarea').first().fill(CHECK_DESCRIPTION)
 
     const [checkedRow, uncheckedRow] = [page.locator('.checkTextRow').nth(0), page.locator('.checkTextRow').nth(1)]
     await checkedRow.locator('.numberField input').fill('3')
@@ -59,8 +59,8 @@ test.describe.serial('checklists', () => {
 
     await expect(page.getByRole('heading', { name: 'Checklist', exact: true })).toBeVisible()
     const card = page.locator('.checklistCard', { hasText: TOPIC })
-    await expect(card.locator('.topicDescription')).toHaveText(TOPIC_DESCRIPTION)
     const row = card.locator('.checklistCardRow', { hasText: CHECKBOX })
+    await expect(row.locator('.checkDescription')).toHaveText(CHECK_DESCRIPTION)
     await expect(row).toContainText('3 p / 0 p')
     await expect(page.locator('.checklistOutputPoints')).toHaveText('points: 0')
     await expect(page.locator('.checklistOutputText textarea, textarea.checklistOutputText').first()).toHaveValue(new RegExp(TEXT_WHEN_OFF))

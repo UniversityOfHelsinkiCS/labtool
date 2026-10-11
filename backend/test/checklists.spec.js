@@ -187,54 +187,58 @@ describe('Checklists API', () => {
     })
   })
 
-  describe('topic descriptions (#525)', () => {
-    const checklistWithDescriptions = topicDescriptions => ({
+  describe('check descriptions (#525)', () => {
+    const checklistWithDescriptions = (...descriptions) => ({
       courseInstanceId: s.course.id,
       week: 1,
       maxPoints: 3,
       checklist: {
-        Code: [{ name: 'Has tests', checkedPoints: 1, uncheckedPoints: 0 }],
-        Documentation: [{ name: 'README', checkedPoints: 1, uncheckedPoints: 0 }]
-      },
-      topicDescriptions
-    })
-
-    it('saves the descriptions of the checklist\'s topics and returns them with the checklist', async () => {
-      await as(s.users.teacher).post('/api/checklist/create')
-        .send(checklistWithDescriptions({
-          Code: '  How the code is written  ',
-          Documentation: '',
-          'Not a topic': 'dropped'
+        Code: descriptions.map((description, index) => ({
+          name: `Check ${index + 1}`,
+          checkedPoints: 1,
+          uncheckedPoints: 0,
+          ...(description === undefined ? {} : { description })
         }))
-        .expect(200)
+      }
+    })
+    const savedDescriptions = async () => (await ChecklistItem.findAll({ order: [['order', 'ASC']] }))
+      .map(item => item.description)
 
-      const saved = await Checklist.findOne({ where: { courseInstanceId: s.course.id, week: 1 } })
-      assert.deepStrictEqual(saved.topicDescriptions, { Code: 'How the code is written' })
+    it('saves the description of each check and returns it with the checklist', async () => {
+      await as(s.users.teacher).post('/api/checklist/create')
+        .send(checklistWithDescriptions('  Tests cover the core logic  ', '', null, undefined))
+        .expect(200)
+      assert.deepStrictEqual(await savedDescriptions(), ['Tests cover the core logic', null, null, null])
 
       const res = await as(s.users.teacher).post('/api/checklist/getone')
         .send({ courseInstanceId: s.course.id, week: 1 })
         .expect(200)
-      assert.deepStrictEqual(res.body.topicDescriptions, { Code: 'How the code is written' })
+      assert.strictEqual(res.body.list.Code[0].description, 'Tests cover the core logic')
 
       const details = await as(s.users.teacher).get(`/api/courses/${s.course.ohid}`).expect(200)
-      assert.deepStrictEqual(details.body.checklists.find(c => c.week === 1).topicDescriptions, {
-        Code: 'How the code is written'
-      })
+      assert.strictEqual(details.body.checklists.find(c => c.week === 1).list.Code[0].description,
+        'Tests cover the core logic')
+    })
+
+    it('updates and clears a description when the checklist is saved again', async () => {
+      await as(s.users.teacher).post('/api/checklist/create')
+        .send(checklistWithDescriptions('First', 'Second'))
+        .expect(200)
+      const res = await as(s.users.teacher).post('/api/checklist/getone')
+        .send({ courseInstanceId: s.course.id, week: 1 })
+        .expect(200)
+      const [first, second] = res.body.list.Code
+        .map(({ id, name, checkedPoints, uncheckedPoints }) => ({ id, name, checkedPoints, uncheckedPoints }))
+      await as(s.users.teacher).post('/api/checklist/create')
+        .send({ ...checklistWithDescriptions(), checklist: { Code: [{ ...first, description: 'Changed' }, { ...second, description: '' }] } })
+        .expect(200)
+      assert.deepStrictEqual(await savedDescriptions(), ['Changed', null])
     })
 
     it('rejects descriptions that are not texts', async () => {
       await as(s.users.teacher).post('/api/checklist/create')
-        .send(checklistWithDescriptions({ Code: 42 }))
+        .send(checklistWithDescriptions(42))
         .expect(400)
-      await as(s.users.teacher).post('/api/checklist/create')
-        .send(checklistWithDescriptions(['Code']))
-        .expect(400)
-    })
-
-    it('works without descriptions', async () => {
-      await as(s.users.teacher).post('/api/checklist/create').send(checklistWithDescriptions(undefined)).expect(200)
-      const saved = await Checklist.findOne({ where: { courseInstanceId: s.course.id, week: 1 } })
-      assert.deepStrictEqual(saved.topicDescriptions, {})
     })
   })
 

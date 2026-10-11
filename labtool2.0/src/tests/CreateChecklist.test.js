@@ -348,28 +348,31 @@ describe('<CreateChecklist /> component', () => {
     })
   })
 
-  it('edits topic descriptions and saves them with the checklist (#525)', async () => {
+  it('edits the description of each check and saves it with the checklist (#525)', async () => {
     const user = userEvent.setup()
-    const changeTopicDescription = vi.fn()
+    const changeField = vi.fn()
     const createChecklist = vi.fn()
-    const { container } = renderCreateChecklist({
-      changeTopicDescription,
-      createChecklist,
-      checklist: { ...checklist, topicDescriptions: { Koodi: 'About the code' } }
-    })
+    const described = {
+      data: { ...checklist.data, Koodi: [{ ...checklist.data.Koodi[0], description: 'About the code' }] }
+    }
+    const { container } = renderCreateChecklist({ changeField, createChecklist, checklist: described })
     await selectWeek(user, 6)
 
-    const inputs = [...container.querySelectorAll('.topicDescriptionInput textarea')]
+    // one kuvaus per check, none per topic
+    const inputs = [...container.querySelectorAll('.checkDescriptionInput textarea')]
     expect(inputs.map(input => input.value)).toEqual(['About the code', ''])
-    // labelled as the kuvaus
-    const labels = [...container.querySelectorAll('.topicDescriptionInput label')]
+    const labels = [...container.querySelectorAll('.checkDescriptionInput label')]
     expect(labels.map(label => label.textContent)).toEqual(['Kuvaus', 'Kuvaus'])
     await user.type(inputs[1], 'x')
-    expect(changeTopicDescription).toHaveBeenCalledWith({ key: 'Repo', description: 'x' })
+    expect(changeField).toHaveBeenCalledWith({ key: 'Repo', index: 0, field: 'description', value: 'x' })
 
     await user.click(container.querySelector('.saveButton'))
     expect(createChecklist).toHaveBeenCalledWith(
-      expect.objectContaining({ topicDescriptions: { Koodi: 'About the code' } })
+      expect.objectContaining({
+        checklist: expect.objectContaining({
+          Koodi: [expect.objectContaining({ description: 'About the code' })]
+        })
+      })
     )
   })
 

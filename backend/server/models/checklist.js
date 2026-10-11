@@ -10,9 +10,7 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: false
       },
       master: DataTypes.BOOLEAN,
-      maxPoints: DataTypes.DOUBLE,
-      // { topic: description } (#525)
-      topicDescriptions: DataTypes.JSONB
+      maxPoints: DataTypes.DOUBLE
     },
     /* {
       hooks: {
