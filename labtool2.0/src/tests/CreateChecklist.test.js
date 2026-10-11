@@ -376,6 +376,26 @@ describe('<CreateChecklist /> component', () => {
     )
   })
 
+  it('previews the checklist being edited, unsaved changes included, without saving it', async () => {
+    const user = userEvent.setup()
+    const createChecklist = vi.fn()
+    renderCreateChecklist({
+      createChecklist,
+      checklist: {
+        data: { ...checklist.data, Koodi: [{ ...checklist.data.Koodi[0], name: 'Unsaved name' }] }
+      }
+    })
+    await selectWeek(user, 6)
+
+    await user.click(screen.getByRole('button', { name: /preview/i }))
+    const modal = document.querySelector('.checklistPreview')
+    expect(modal).toHaveTextContent('Unsaved name')
+    expect(modal).toHaveTextContent('Readme kunnossa')
+    await user.click(modal.querySelector('[data-testid="check-10001"]'))
+    expect(modal.querySelector('.checklistOutputPoints')).toHaveTextContent('points: 1')
+    expect(createChecklist).not.toHaveBeenCalled()
+  })
+
   describe('two checkboxes with the same name (#1163)', () => {
     const duplicateRow = id => ({
       id,

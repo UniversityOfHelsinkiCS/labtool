@@ -324,6 +324,16 @@ exports[`<CreateChecklist /> component > matches the rendered snapshot 1`] = `
               Save
             </div>
           </button>
+          <button
+            class="ui large button previewButton"
+            type="button"
+          >
+            <i
+              aria-hidden="true"
+              class="eye icon"
+            />
+            Preview
+          </button>
           <br />
           <br />
         </form>
