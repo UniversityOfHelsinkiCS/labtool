@@ -6,6 +6,14 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
 ## 2026-10-11
 
 ### Added
+- **Student list marks points changed by someone other than the assigned instructor.** On the
+  course page, a week, final review or code review cell whose points (or grade) were changed by
+  someone else than the student's assigned instructor gets a light orange background; hovering it
+  shows who changed what and when ("Changed by someone other than the assigned instructor (Aatu
+  Assistentti): 11.10.2026 14.32 Pää Opettaja: points 2 → 2.5"). Based on the change history, so
+  only changes since it was added count, compared to the current assigned instructor; students
+  without one are not marked. The teacher's course page data includes `pointsChangedByOthers` per
+  week and code review.
 - **Change history of a whole student in Browse reviews:** the student's Browse reviews page (opened
   from their name on the course page) ends with their whole change history: all recorded week
   review, final review, code review grading and repository changes, each labelled ("Week 3",

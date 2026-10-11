@@ -151,6 +151,55 @@ export const StudentTableRow = props => {
     }
     const flexCenter = { display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }
 
+    // points / grades changed by someone other than the assigned instructor, per week number
+    const changedByOthers = {}
+    weeks.forEach(week => {
+      changedByOthers[week.weekNumber] = week.pointsChangedByOthers || []
+    })
+    const assigned = selectedInstance.teacherInstances
+      ? selectedInstance.teacherInstances.find(ti => ti.id === data.teacherInstanceId)
+      : null
+    const show = value => (value === null || value === undefined ? '–' : value)
+    const describeChange = change =>
+      [
+        change.points &&
+          (change.initial
+            ? `points ${show(change.points.to)}`
+            : `points ${show(change.points.from)} → ${show(change.points.to)}`),
+        change.grade &&
+          (change.initial
+            ? `grade ${show(change.grade.to)}`
+            : `grade ${show(change.grade.from)} → ${show(change.grade.to)}`)
+      ]
+        .filter(Boolean)
+        .join(', ')
+    const changedStyle = changes => (changes.length > 0 ? { background: '#ffe5cc' } : {})
+    // marks a cell whose points someone other than the assigned instructor changed: color + tooltip
+    const markChanged = (cell, changes, key) =>
+      changes.length > 0 ? (
+        <Popup
+          key={key}
+          trigger={cell}
+          wide
+          content={
+            <div className="pointsChangedByOthersInfo">
+              <strong>
+                Changed by someone other than the assigned instructor
+                {assigned ? ` (${assigned.firsts} ${assigned.lastname})` : ''}:
+              </strong>
+              {changes.map((change, k) => (
+                <div key={k}>
+                  {new Date(change.at).toLocaleString('fi-FI')} {change.by || 'Unknown user'}:{' '}
+                  {describeChange(change)}
+                </div>
+              ))}
+            </div>
+          }
+        />
+      ) : (
+        cell
+      )
+
     for (let j = 0; j < weeks.length; j++) {
       if (weeks[j].weekNumber === selectedInstance.weekAmount + 1) {
         finalPoints = weeks[j].points
@@ -162,60 +211,81 @@ export const StudentTableRow = props => {
       // we have <br /> to make this easier to click, but it'd be better
       // if we could Link an entire Table.Cell, this however breaks formatting
       // completely.
+      const weekChanges = changedByOthers[i + 1] || []
       indents.push(
-        <Table.Cell selectable key={'week' + i} textAlign="center" style={{ position: 'relative' }}>
-          <Link
-            style={{ ...tableCellLinkStyle, ...flexCenter }}
-            key={'week' + i + 'link'}
-            data-testid={`week-review-${data.id}-${i + 1}`}
-            to={
-              weekPoints[i + 1] === undefined
-                ? {
-                    pathname: `/labtool/reviewstudent/${selectedInstance.ohid}/${siId}/${i + 1}`,
-                    state: { cameFromCoursePage: true }
-                  }
-                : {
-                    pathname: `/labtool/browsereviews/${selectedInstance.ohid}/${siId}`,
-                    state: { openAllWeeks: true, jumpToReview: `Week${i + 1}` }
-                  }
-            }
+        markChanged(
+          <Table.Cell
+            selectable
+            key={'week' + i}
+            textAlign="center"
+            className={weekChanges.length > 0 ? 'pointsChangedByOthers' : undefined}
+            style={{ position: 'relative', ...changedStyle(weekChanges) }}
           >
-            <div>
-              {weekPoints[i + 1] === undefined ? (
-                shouldReview && selectedInstance.currentWeek === i + 1 ? (
-                  draftExists(selectedInstance.currentWeek) ? (
-                    <Popup
-                      trigger={
-                        <Button circular color="orange" size="tiny" icon={{ name: 'pause', size: 'large' }} />
-                      }
-                      content="Continue review from draft"
-                      className="reviewDraftButton"
-                    />
+            <Link
+              style={{ ...tableCellLinkStyle, ...flexCenter }}
+              key={'week' + i + 'link'}
+              data-testid={`week-review-${data.id}-${i + 1}`}
+              to={
+                weekPoints[i + 1] === undefined
+                  ? {
+                      pathname: `/labtool/reviewstudent/${selectedInstance.ohid}/${siId}/${i + 1}`,
+                      state: { cameFromCoursePage: true }
+                    }
+                  : {
+                      pathname: `/labtool/browsereviews/${selectedInstance.ohid}/${siId}`,
+                      state: { openAllWeeks: true, jumpToReview: `Week${i + 1}` }
+                    }
+              }
+            >
+              <div>
+                {weekPoints[i + 1] === undefined ? (
+                  shouldReview && selectedInstance.currentWeek === i + 1 ? (
+                    draftExists(selectedInstance.currentWeek) ? (
+                      <Popup
+                        trigger={
+                          <Button
+                            circular
+                            color="orange"
+                            size="tiny"
+                            icon={{ name: 'pause', size: 'large' }}
+                          />
+                        }
+                        content="Continue review from draft"
+                        className="reviewDraftButton"
+                      />
+                    ) : (
+                      <Popup
+                        trigger={
+                          <Button
+                            circular
+                            color="orange"
+                            size="tiny"
+                            icon={{ name: 'star', size: 'large' }}
+                          />
+                        }
+                        content="Review"
+                        className="reviewButton"
+                      />
+                    )
                   ) : (
-                    <Popup
-                      trigger={
-                        <Button circular color="orange" size="tiny" icon={{ name: 'star', size: 'large' }} />
-                      }
-                      content="Review"
-                      className="reviewButton"
-                    />
+                    <p style={flexCenter}>-</p>
                   )
                 ) : (
-                  <p style={flexCenter}>-</p>
-                )
-              ) : (
-                <div>
-                  <p>
-                    <Points points={weekPoints[i + 1]} />
-                  </p>
-                  {showNewCommentsNotification(data.id, i + 1) ? (
-                    <Popup trigger={<Icon name="comments" size="big" />} content="You have new comments" />
-                  ) : null}
-                </div>
-              )}
-            </div>
-          </Link>
-        </Table.Cell>
+                  <div>
+                    <p>
+                      <Points points={weekPoints[i + 1]} />
+                    </p>
+                    {showNewCommentsNotification(data.id, i + 1) ? (
+                      <Popup trigger={<Icon name="comments" size="big" />} content="You have new comments" />
+                    ) : null}
+                  </div>
+                )}
+              </div>
+            </Link>
+          </Table.Cell>,
+          weekChanges,
+          'week' + i
+        )
       )
     }
 
@@ -224,56 +294,69 @@ export const StudentTableRow = props => {
       for (let index = 1; index <= amountOfCodeReviews; index++) {
         const codeReview = codeReviews ? codeReviews.find(cr => cr.reviewNumber === index) : null
 
+        const codeReviewChanges = (codeReview && codeReview.pointsChangedByOthers) || []
         indents.push(
-          <Table.Cell
-            selectable
-            key={`cr${siId}:${index}`}
-            textAlign="center"
-            style={{ position: 'relative' }}
-          >
-            <Link
-              className="codeReviewPoints"
-              style={{ ...tableCellLinkStyle, ...flexCenter }}
-              key={'codeReview' + index + 'link'}
-              to={{
-                pathname: `/labtool/browsereviews/${selectedInstance.ohid}/${siId}`,
-                state: {
-                  openAllWeeks: true,
-                  jumpToReview: codeReview ? `CodeReview${codeReview.reviewNumber}` : undefined
-                }
-              }}
+          markChanged(
+            <Table.Cell
+              selectable
+              key={`cr${siId}:${index}`}
+              textAlign="center"
+              className={codeReviewChanges.length > 0 ? 'pointsChangedByOthers' : undefined}
+              style={{ position: 'relative', ...changedStyle(codeReviewChanges) }}
             >
-              {shouldReview && selectedInstance.currentCodeReview.includes(index) && codeReview ? (
-                codeReview.linkToReview === null && codeReview.points === null ? (
-                  <Popup
-                    position="top center"
-                    trigger={<Icon color="grey" size="large" name="hourglass end" fitted />}
-                    content="Student has not yet submitted the code review"
-                    className="codeReviewNotReady"
-                  />
-                ) : codeReview.points === null ? (
-                  <Popup
-                    trigger={
-                      <Button circular color="orange" size="tiny" icon={{ name: 'star', size: 'large' }} />
-                    }
-                    content="Review"
-                    className="codeReviewButton"
-                  />
+              <Link
+                className="codeReviewPoints"
+                style={{ ...tableCellLinkStyle, ...flexCenter }}
+                key={'codeReview' + index + 'link'}
+                to={{
+                  pathname: `/labtool/browsereviews/${selectedInstance.ohid}/${siId}`,
+                  state: {
+                    openAllWeeks: true,
+                    jumpToReview: codeReview ? `CodeReview${codeReview.reviewNumber}` : undefined
+                  }
+                }}
+              >
+                {shouldReview && selectedInstance.currentCodeReview.includes(index) && codeReview ? (
+                  codeReview.linkToReview === null && codeReview.points === null ? (
+                    <Popup
+                      position="top center"
+                      trigger={<Icon color="grey" size="large" name="hourglass end" fitted />}
+                      content="Student has not yet submitted the code review"
+                      className="codeReviewNotReady"
+                    />
+                  ) : codeReview.points === null ? (
+                    <Popup
+                      trigger={
+                        <Button circular color="orange" size="tiny" icon={{ name: 'star', size: 'large' }} />
+                      }
+                      content="Review"
+                      className="codeReviewButton"
+                    />
+                  ) : (
+                    <p>{cr[index] || cr[index] === 0 ? <Points points={cr[index]} /> : '-'}</p>
+                  )
                 ) : (
                   <p>{cr[index] || cr[index] === 0 ? <Points points={cr[index]} /> : '-'}</p>
-                )
-              ) : (
-                <p>{cr[index] || cr[index] === 0 ? <Points points={cr[index]} /> : '-'}</p>
-              )}
-            </Link>
-          </Table.Cell>
+                )}
+              </Link>
+            </Table.Cell>,
+            codeReviewChanges,
+            `cr${siId}:${index}`
+          )
         )
       }
     }
 
     if (selectedInstance.finalReview) {
+      const finalChanges = changedByOthers[selectedInstance.weekAmount + 1] || []
       let finalReviewPointsCell = (
-        <Table.Cell selectable key="finalReview" textAlign="center" style={{ position: 'relative' }}>
+        <Table.Cell
+          selectable
+          key="finalReview"
+          textAlign="center"
+          className={finalChanges.length > 0 ? 'pointsChangedByOthers' : undefined}
+          style={{ position: 'relative', ...changedStyle(finalChanges) }}
+        >
           <Link
             style={{ ...tableCellLinkStyle, ...flexCenter }}
             key={'finalReviewlink'}
@@ -335,7 +418,7 @@ export const StudentTableRow = props => {
           </Link>
         </Table.Cell>
       )
-      indents.push(finalReviewPointsCell)
+      indents.push(markChanged(finalReviewPointsCell, finalChanges, 'finalReview'))
     }
 
     return indents

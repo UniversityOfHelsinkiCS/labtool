@@ -185,4 +185,49 @@ describe('Change history (#1129, #1132)', () => {
       await as(s.users.teacher).get('/api/changelog/999999').expect(404)
     })
   })
+
+  describe('points changed by someone other than the assigned instructor', () => {
+    const coursePageStudent = async () => {
+      const res = await as(s.users.teacher).post('/api/courseinstances/coursepage').send({ course: s.course.ohid }).expect(200)
+      return res.body.data.find(student => student.id === s.student.id)
+    }
+    const grade = (user, points) => as(user).post('/api/weeks/create').send({
+      studentInstanceId: s.student.id, weekNumber: 1, points, checks: {}, confirmedNotAssigned: true
+    })
+
+    beforeEach(async () => {
+      await s.student.update({ teacherInstanceId: s.assistant.id })
+    })
+
+    it('lists who else changed the points of a week, and not the assigned instructor\'s own changes', async () => {
+      await grade(s.users.assistant, 1).expect(200)
+      await grade(s.users.teacher, 2).expect(200)
+
+      const week = (await coursePageStudent()).weeks.find(w => w.weekNumber === 1)
+      assert.strictEqual(week.pointsChangedByOthers.length, 1)
+      const [change] = week.pointsChangedByOthers
+      assert.strictEqual(change.by, 'Terhi Teacher')
+      assert.deepStrictEqual(change.points, { from: 1, to: 2 })
+      assert.strictEqual(change.initial, false)
+      assert.ok(change.at)
+    })
+
+    it('does not mark anything for a student without an assigned instructor', async () => {
+      await s.student.update({ teacherInstanceId: null })
+      await grade(s.users.teacher, 2).expect(200)
+      const week = (await coursePageStudent()).weeks.find(w => w.weekNumber === 1)
+      assert.deepStrictEqual(week.pointsChangedByOthers, [])
+    })
+
+    it('covers code review grading too', async () => {
+      await f.createCodeReview(s.student, s.student2, { reviewNumber: 1 })
+      await as(s.users.teacher).put('/api/codereviews/grade')
+        .send({ studentInstanceId: s.student.id, reviewNumber: 1, points: 3 })
+        .expect(200)
+      const codeReview = (await coursePageStudent()).codeReviews.find(cr => cr.reviewNumber === 1)
+      assert.strictEqual(codeReview.pointsChangedByOthers.length, 1)
+      assert.strictEqual(codeReview.pointsChangedByOthers[0].initial, true)
+      assert.deepStrictEqual(codeReview.pointsChangedByOthers[0].points, { from: null, to: 3 })
+    })
+  })
 })
