@@ -1,18 +1,28 @@
 // A course from the current term, as if imported from the fake Kurki (Kurki_simulation generates
-// TKT20010.2026.S.K.SIM1 for autumn 2026), with paaopettaja as teacher and three registered students.
-// The third student's address is rejected by the Mailpit container in the dev stack, to reproduce
-// email delivery failures (issue #1141).
+// TKT20010.2026.S.K.SIM1 for autumn 2026). paaopettaja is the responsible teacher and tiraohjaaja an
+// assistant; four registered students are split between them. Pekka Palautuva's address is rejected by
+// the Mailpit container in the dev stack, to reproduce email delivery failures (issue #1141).
 // Its timestamp must stay after the e2e fixtures seeder: seeders are undone newest first, and the
 // e2e seeder's down deletes all ".SIM" courses, which would fail while these students still exist.
 
 const COURSE_ID = 20001
-const TEACHER_INSTANCE_ID = 20001
-const STUDENT_INSTANCE_IDS = [20001, 20002, 20003]
+const TEACHER_INSTANCE_ID = 20001 // paaopettaja
+const ASSISTANT_INSTANCE_ID = 20002 // tiraohjaaja
 
 const PAAOPETTAJA = 10010
+const TIRAOHJAAJA = 10015
 const TIRAOPISKELIJA1 = 10011
 const TIRAOPISKELIJA2 = 10012
+const OTMOPISKELIJA1 = 10021
 const BOUNCING_STUDENT = 29001
+
+// [student instance id, user, project, assigned teacher instance]
+const STUDENTS = [
+  [20001, TIRAOPISKELIJA1, 'Reittihaku', TEACHER_INSTANCE_ID],
+  [20002, TIRAOPISKELIJA2, 'Pakkausalgoritmit', ASSISTANT_INSTANCE_ID],
+  [20003, BOUNCING_STUDENT, 'Polunetsintä', TEACHER_INSTANCE_ID],
+  [20004, OTMOPISKELIJA1, 'Shakkitekoäly', ASSISTANT_INSTANCE_ID]
+]
 
 module.exports = {
   up: async (queryInterface) => {
@@ -59,47 +69,29 @@ module.exports = {
         instructor: false,
         createdAt: now,
         updatedAt: now
-      }
-    ])
-
-    await queryInterface.bulkInsert('StudentInstances', [
-      {
-        id: STUDENT_INSTANCE_IDS[0],
-        github: 'https://github.com/tiraopi1/tiralabra-2026',
-        projectName: 'Reittihaku',
-        userId: TIRAOPISKELIJA1,
-        courseInstanceId: COURSE_ID,
-        teacherInstanceId: TEACHER_INSTANCE_ID,
-        dropped: false,
-        validRegistration: true,
-        createdAt: now,
-        updatedAt: now
       },
       {
-        id: STUDENT_INSTANCE_IDS[1],
-        github: 'https://github.com/tiraopi2/tiralabra-2026',
-        projectName: 'Pakkausalgoritmit',
-        userId: TIRAOPISKELIJA2,
+        id: ASSISTANT_INSTANCE_ID,
+        userId: TIRAOHJAAJA,
         courseInstanceId: COURSE_ID,
-        teacherInstanceId: TEACHER_INSTANCE_ID,
-        dropped: false,
-        validRegistration: true,
-        createdAt: now,
-        updatedAt: now
-      },
-      {
-        id: STUDENT_INSTANCE_IDS[2],
-        github: 'https://github.com/tiraopi3/tiralabra-2026',
-        projectName: 'Polunetsintä',
-        userId: BOUNCING_STUDENT,
-        courseInstanceId: COURSE_ID,
-        teacherInstanceId: TEACHER_INSTANCE_ID,
-        dropped: false,
-        validRegistration: true,
+        instructor: true,
         createdAt: now,
         updatedAt: now
       }
     ])
+
+    await queryInterface.bulkInsert('StudentInstances', STUDENTS.map(([id, userId, projectName, teacherInstanceId]) => ({
+      id,
+      github: `https://github.com/tiralabra-2026/student-${id}`,
+      projectName,
+      userId,
+      courseInstanceId: COURSE_ID,
+      teacherInstanceId,
+      dropped: false,
+      validRegistration: true,
+      createdAt: now,
+      updatedAt: now
+    })))
   },
 
   down: async (queryInterface) => {

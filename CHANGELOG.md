@@ -6,6 +6,10 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
 ## 2026-10-11
 
 ### Added
+- **Dev seed course has two teachers:** on `TKT20010.2026.S.K.SIM1`, Ossi Ohjaaja Mutikainen
+  (`tiraohjaaja`) is an assistant next to Pää Opettaja, and the four students (a new one, Sanna Sofia
+  Makkonen, was added) are split between them, two each. Useful for trying the assigned-instructor
+  confirmation (#1127) and instructor-only comments (#1142).
 - **Instructor-only comments are unmistakable** (#1142, the comment part):
   - They are shown with an orange border and background and the label "Instructors only: not shown
     to the student", instead of greyed out with a small "Hidden".
