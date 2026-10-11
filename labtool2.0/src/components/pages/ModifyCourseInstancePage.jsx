@@ -28,7 +28,7 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Redirect } from 'react-router'
 import { showNotification, clearNotifications } from '../../reducers/notificationReducer'
-import { changeCourseField } from '../../reducers/selectedInstanceReducer'
+import { changeCourseField, hasUnsavedSettings } from '../../reducers/selectedInstanceReducer'
 import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 import { forceRedirect } from '../../reducers/redirectReducer'
 import useLegacyState from '../../hooks/legacyState'
@@ -250,6 +250,7 @@ export const ModifyCourseInstancePage = props => {
   }
 
   const selectedInstance = { ...props.selectedInstance }
+  const unsavedChanges = hasUnsavedSettings(props.selectedInstance, state.visibleCr)
   const dropdownWeeks = createDropdownWeeks()
   const courseDropdowns = createCourseDropdowns()
   const showCopyForm = selectedInstance && props.studentCount === 0
@@ -389,32 +390,34 @@ export const ModifyCourseInstancePage = props => {
                   />
                 </Form.Group>
 
+                {/* a remarkable switch: it decides whether students see their final review (grades) */}
                 {props.selectedInstance.finalReview && (
-                  // a remarkable switch: it decides whether students see their final review (grades)
-                  <Segment
-                    className="finalReviewVisibility"
-                    color={finalReviewVisible ? 'green' : 'orange'}
-                    style={{ display: 'inline-block', textAlign: 'left', marginBottom: '1em' }}
-                  >
-                    <Checkbox
-                      toggle
-                      name="finalReviewVisible"
-                      checked={finalReviewVisible}
-                      onChange={() => setConfirmingVisibility(true)}
-                      label={
-                        <label style={{ fontWeight: 'bold' }}>Show final review results to students</label>
-                      }
-                    />
-                    <p className="finalReviewVisibilityStatus" style={{ marginTop: '0.5em' }}>
-                      <Icon
-                        name={finalReviewVisible ? 'eye' : 'eye slash'}
-                        color={finalReviewVisible ? 'green' : 'orange'}
+                  <div>
+                    <Segment
+                      className="finalReviewVisibility"
+                      color={finalReviewVisible ? 'green' : 'orange'}
+                      style={{ display: 'inline-block', textAlign: 'left', marginBottom: '1em' }}
+                    >
+                      <Checkbox
+                        toggle
+                        name="finalReviewVisible"
+                        checked={finalReviewVisible}
+                        onChange={() => setConfirmingVisibility(true)}
+                        label={
+                          <label style={{ fontWeight: 'bold' }}>Show final review results to students</label>
+                        }
                       />
-                      {finalReviewVisible
-                        ? 'Students see their final review: points, grade, feedback and comments.'
-                        : 'Final review results are hidden from students.'}
-                    </p>
-                  </Segment>
+                      <p className="finalReviewVisibilityStatus" style={{ marginTop: '0.5em' }}>
+                        <Icon
+                          name={finalReviewVisible ? 'eye' : 'eye slash'}
+                          color={finalReviewVisible ? 'green' : 'orange'}
+                        />
+                        {finalReviewVisible
+                          ? 'Students see their final review: points, grade, feedback and comments.'
+                          : 'Final review results are hidden from students.'}
+                      </p>
+                    </Segment>
+                  </div>
                 )}
                 <Confirm
                   className="finalReviewVisibilityConfirm"
@@ -438,15 +441,22 @@ export const ModifyCourseInstancePage = props => {
                 />
 
                 <Form.Group style={{ display: 'inline-block', marginLeft: 'auto', marginRight: 'auto' }}>
-                  <Button type="submit" color="green" size="huge">
+                  {/* enabled only when the settings differ from the saved ones */}
+                  <Button type="submit" color="green" size="huge" disabled={!unsavedChanges}>
                     Save
                   </Button>
 
-                  <Link to={`/labtool/courses/${props.selectedInstance.ohid}`}>
-                    <Button type="button" color="red" size="huge">
+                  {unsavedChanges ? (
+                    <Link to={`/labtool/courses/${props.selectedInstance.ohid}`}>
+                      <Button type="button" color="red" size="huge">
+                        Cancel
+                      </Button>
+                    </Link>
+                  ) : (
+                    <Button type="button" color="red" size="huge" disabled>
                       Cancel
                     </Button>
-                  </Link>
+                  )}
                 </Form.Group>
               </Form>
             </Grid.Row>

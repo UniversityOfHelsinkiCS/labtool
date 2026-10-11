@@ -5,6 +5,7 @@ import { Provider } from 'react-redux'
 import { createStore } from 'redux'
 import { MemoryRouter } from 'react-router-dom'
 import { vi } from 'vitest'
+import { courseSettings } from '../reducers/selectedInstanceReducer'
 import { ModifyCourseInstancePage } from '../components/pages/ModifyCourseInstancePage'
 
 describe('<ModifyCourseInstancePage />', () => {
@@ -153,7 +154,7 @@ describe('<ModifyCourseInstancePage />', () => {
       )
     })
 
-    it('asks for confirmation before showing the results, and is saved with the course', async () => {
+    it('asks for confirmation before showing the results', async () => {
       const user = userEvent.setup()
       const { props } = renderPage({
         selectedInstance: { ...courseData, finalReview: true, finalReviewVisible: false }
@@ -165,12 +166,6 @@ describe('<ModifyCourseInstancePage />', () => {
       await user.click(within(confirmDialog()).getByRole('button', { name: 'Show to students' }))
       expect(props.setFinalReviewVisible).toHaveBeenCalledWith(true)
       expect(confirmDialog()).toBeNull()
-
-      await user.click(screen.getByRole('button', { name: 'Save' }))
-      expect(props.modifyOneCI).toHaveBeenCalledWith(
-        expect.objectContaining({ finalReview: true, finalReviewVisible: false }),
-        courseData.ohid
-      )
     })
 
     it('changes nothing when the confirmation is cancelled', async () => {
@@ -184,6 +179,49 @@ describe('<ModifyCourseInstancePage />', () => {
       expect(confirmDialog()).toHaveTextContent('Hide final review results?')
       await user.click(within(confirmDialog()).getByRole('button', { name: 'Cancel' }))
       expect(props.setFinalReviewVisible).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('Save and Cancel', () => {
+    // as loaded from the server; the form then shows the course with the given changes
+    const editedCourse = changes => ({ ...courseData, savedSettings: courseSettings(courseData), ...changes })
+    const save = () => screen.getByRole('button', { name: 'Save' })
+    const cancel = () => screen.getByRole('button', { name: 'Cancel' })
+
+    it('are disabled while nothing has changed', () => {
+      renderPage({ selectedInstance: editedCourse({}) })
+      expect(save()).toBeDisabled()
+      expect(cancel()).toBeDisabled()
+      expect(cancel().closest('a')).toBeNull()
+    })
+
+    it('are disabled when a change is undone, e.g. a number typed back as text', () => {
+      renderPage({ selectedInstance: editedCourse({ weekAmount: String(courseData.weekAmount) }) })
+      expect(save()).toBeDisabled()
+    })
+
+    it('are enabled after a change, and Save saves it', async () => {
+      const user = userEvent.setup()
+      const { props } = renderPage({
+        selectedInstance: editedCourse({ finalReview: true, finalReviewVisible: true })
+      })
+      expect(save()).toBeEnabled()
+      expect(cancel()).toBeEnabled()
+      expect(cancel().closest('a')).toHaveAttribute('href', `/labtool/courses/${courseData.ohid}`)
+
+      await user.click(save())
+      expect(props.modifyOneCI).toHaveBeenCalledWith(
+        expect.objectContaining({ finalReview: true, finalReviewVisible: true }),
+        courseData.ohid
+      )
+    })
+
+    it('are enabled after changing the visible code reviews', async () => {
+      const user = userEvent.setup()
+      renderPage({ selectedInstance: editedCourse({}) })
+      expect(save()).toBeDisabled()
+      await user.click(screen.getAllByRole('checkbox')[1])
+      expect(save()).toBeEnabled()
     })
   })
 })

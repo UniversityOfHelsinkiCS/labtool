@@ -17,7 +17,9 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
 - **Final review can be hidden from students.** Course settings have a prominent switch "Show final
   review results to students", shown only for courses with a final review, with a status line
   (hidden / shown) and a confirmation dialog before it changes. "Course registration is active" is now
-  the first of the course settings checkboxes. While it is off, students do not get
+  the first of the course settings checkboxes.
+- **Course settings Save and Cancel** sit below the final review switch and are enabled only when the
+  settings differ from the saved ones (the reducer keeps `savedSettings` from the last load or save). While it is off, students do not get
   their final review at all (points, grade, feedback, checks, comments are left out of the course page
   data), cannot comment on it, and teachers cannot send email notifications about it; students see
   "Final review results are not shown yet". Staff see a "Hidden from students" label on the final review
