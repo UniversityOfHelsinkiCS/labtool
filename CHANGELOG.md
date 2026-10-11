@@ -7,7 +7,8 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
 
 ### Changed
 - **Bigger review titles:** the week, final review and code review titles in a student's review list
-  (course page, Browse reviews) use a larger font.
+  (course page, Browse reviews) use a larger font with a thicker separator between them, and the
+  redundant "Review" heading inside each review is gone.
 - **Checklist editor copy form** shows its two sources as separate choices in a "Copy a checklist into
   week N" box: "From another week of this course" and "From week N of another course", each with its own
   Copy button and an "or" between them, so choosing a week no longer looks like it filters the courses.

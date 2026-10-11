@@ -130,7 +130,7 @@ exports[`<BrowseReviews /> > matches the rendered snapshot 1`] = `
       >
         <div
           class="active title reviewTitle"
-          style="font-size: 1.3em;"
+          style="font-size: 1.3em; border-top: 3px solid rgba(34, 36, 38, 0.2);"
         >
           <i
             aria-hidden="true"
@@ -141,9 +141,6 @@ exports[`<BrowseReviews /> > matches the rendered snapshot 1`] = `
         <div
           class="content active"
         >
-          <h3>
-            Review
-          </h3>
           <a
             href="/labtool/reviewstudent/TKT20010.2018.K.A.1/10011/1"
           >
@@ -170,7 +167,7 @@ exports[`<BrowseReviews /> > matches the rendered snapshot 1`] = `
       >
         <div
           class="title reviewTitle"
-          style="font-size: 1.3em;"
+          style="font-size: 1.3em; border-top: 3px solid rgba(34, 36, 38, 0.2);"
         >
           <i
             aria-hidden="true"
@@ -181,9 +178,6 @@ exports[`<BrowseReviews /> > matches the rendered snapshot 1`] = `
         <div
           class="content"
         >
-          <h3>
-            Review
-          </h3>
           <a
             href="/labtool/reviewstudent/TKT20010.2018.K.A.1/10011/2"
           >
@@ -210,7 +204,7 @@ exports[`<BrowseReviews /> > matches the rendered snapshot 1`] = `
       >
         <div
           class="title reviewTitle"
-          style="font-size: 1.3em;"
+          style="font-size: 1.3em; border-top: 3px solid rgba(34, 36, 38, 0.2);"
         >
           <i
             aria-hidden="true"
@@ -221,9 +215,6 @@ exports[`<BrowseReviews /> > matches the rendered snapshot 1`] = `
         <div
           class="content"
         >
-          <h3>
-            Review
-          </h3>
           <a
             href="/labtool/reviewstudent/TKT20010.2018.K.A.1/10011/3"
           >
@@ -250,7 +241,7 @@ exports[`<BrowseReviews /> > matches the rendered snapshot 1`] = `
       >
         <div
           class="title reviewTitle"
-          style="font-size: 1.3em;"
+          style="font-size: 1.3em; border-top: 3px solid rgba(34, 36, 38, 0.2);"
         >
           <i
             aria-hidden="true"
@@ -261,9 +252,6 @@ exports[`<BrowseReviews /> > matches the rendered snapshot 1`] = `
         <div
           class="content"
         >
-          <h3>
-            Review
-          </h3>
           <a
             href="/labtool/reviewstudent/TKT20010.2018.K.A.1/10011/4"
           >
@@ -290,7 +278,7 @@ exports[`<BrowseReviews /> > matches the rendered snapshot 1`] = `
       >
         <div
           class="title reviewTitle"
-          style="font-size: 1.3em;"
+          style="font-size: 1.3em; border-top: 3px solid rgba(34, 36, 38, 0.2);"
         >
           <i
             aria-hidden="true"
@@ -301,9 +289,6 @@ exports[`<BrowseReviews /> > matches the rendered snapshot 1`] = `
         <div
           class="content"
         >
-          <h3>
-            Review
-          </h3>
           <a
             href="/labtool/reviewstudent/TKT20010.2018.K.A.1/10011/5"
           >
@@ -330,7 +315,7 @@ exports[`<BrowseReviews /> > matches the rendered snapshot 1`] = `
       >
         <div
           class="title reviewTitle"
-          style="font-size: 1.3em;"
+          style="font-size: 1.3em; border-top: 3px solid rgba(34, 36, 38, 0.2);"
         >
           <i
             aria-hidden="true"
@@ -341,9 +326,6 @@ exports[`<BrowseReviews /> > matches the rendered snapshot 1`] = `
         <div
           class="content"
         >
-          <h3>
-            Review
-          </h3>
           <a
             href="/labtool/reviewstudent/TKT20010.2018.K.A.1/10011/6"
           >
@@ -370,7 +352,7 @@ exports[`<BrowseReviews /> > matches the rendered snapshot 1`] = `
       >
         <div
           class="title reviewTitle"
-          style="font-size: 1.3em;"
+          style="font-size: 1.3em; border-top: 3px solid rgba(34, 36, 38, 0.2);"
         >
           <i
             aria-hidden="true"
@@ -381,9 +363,6 @@ exports[`<BrowseReviews /> > matches the rendered snapshot 1`] = `
         <div
           class="content"
         >
-          <h3>
-            Review
-          </h3>
           <a
             href="/labtool/reviewstudent/TKT20010.2018.K.A.1/10011/7"
           >
