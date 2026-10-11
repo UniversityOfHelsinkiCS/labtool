@@ -128,6 +128,14 @@ const cases = [
     payload
   ],
   [
+    'comment.editComment',
+    () => comment.editComment({ id: 7, comment: 'Corrected' }),
+    'put',
+    '/comment/7',
+    'COMMENT_EDIT_ONE_',
+    { comment: 'Corrected' }
+  ],
+  [
     'comment.markCommentsAsRead',
     () => comment.markCommentsAsRead(payload),
     'put',

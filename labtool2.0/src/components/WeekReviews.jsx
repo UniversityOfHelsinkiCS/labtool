@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { createOneComment } from '../services/comment'
+import { createOneComment, editComment as editCommentService } from '../services/comment'
 import { getOneCI, coursePageInformation } from '../services/courseInstance'
 import { associateTeacherToStudent } from '../services/assistant'
 import { addLinkToCodeReview, gradeCodeReview } from '../services/codeReview'
@@ -146,6 +146,9 @@ export const WeekReviews = props => {
   const weekMatcher = i => week => week.weekNumber === i + 1
   const weekAmount = props.selectedInstance.weekAmount
 
+  // the author edits their comment (#534)
+  const editComment = commentId => text => props.editComment({ id: commentId, comment: text })
+
   const weekReviewFunctions = {
     getMaximumPointsForWeek,
     handleClickWeek,
@@ -154,7 +157,8 @@ export const WeekReviews = props => {
     sendCommentEmail,
     sendStudentEmail,
     sortCommentsByDate,
-    markComments
+    markComments,
+    editComment
   }
 
   const codeReviewFunctions = {
@@ -247,6 +251,7 @@ WeekReviews.propTypes = {
   loading: PropTypes.object.isRequired,
 
   createOneComment: PropTypes.func.isRequired,
+  editComment: PropTypes.func,
   getOneCI: PropTypes.func.isRequired,
   coursePageInformation: PropTypes.func.isRequired,
   addLinkToCodeReview: PropTypes.func.isRequired,
@@ -275,6 +280,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = {
   createOneComment,
+  editComment: editCommentService,
   getOneCI,
   coursePageInformation,
   addLinkToCodeReview,

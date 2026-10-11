@@ -158,6 +158,30 @@ const courseInstancereducer = (store = INITIAL_STATE, action) => {
         return store
       }
     }
+    case 'COMMENT_EDIT_ONE_SUCCESS': {
+      const edited = action.response
+      const replaceIn = weeks =>
+        weeks.map(week =>
+          week.id === edited.weekId
+            ? {
+                ...week,
+                comments: week.comments.map(comment =>
+                  comment.id === edited.id ? { ...comment, ...edited } : comment
+                )
+              }
+            : week
+        )
+      if (Array.isArray(store.data)) {
+        return {
+          ...store,
+          data: store.data.map(student => ({ ...student, weeks: replaceIn(student.weeks) }))
+        }
+      }
+      if (store.data && store.data.weeks) {
+        return { ...store, data: { ...store.data, weeks: replaceIn(store.data.weeks) } }
+      }
+      return store
+    }
     case 'MARK_COMMENTS_AS_READ_SUCCESS': {
       const weekId = action.response[0].weekId
       const replaceComments = action.response

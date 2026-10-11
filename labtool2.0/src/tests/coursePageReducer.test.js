@@ -324,4 +324,32 @@ describe('coursePageReducer', () => {
       ).toBe(state)
     })
   })
+
+  describe('COMMENT_EDIT_ONE_SUCCESS (#534)', () => {
+    const edited = { id: 2, weekId: 10, comment: 'Corrected', editedAt: '2026-10-11T12:00:00.000Z' }
+    const weeks = () => [
+      {
+        id: 10,
+        comments: [
+          { id: 1, comment: 'Other' },
+          { id: 2, comment: 'Original' }
+        ]
+      }
+    ]
+
+    it('replaces the edited comment in the teacher view', () => {
+      const state = { role: 'teacher', data: [{ id: 5, weeks: weeks() }] }
+      deepFreeze(state)
+      const newState = coursePageReducer(state, { type: 'COMMENT_EDIT_ONE_SUCCESS', response: edited })
+      expect(newState.data[0].weeks[0].comments.map(c => c.comment)).toEqual(['Other', 'Corrected'])
+      expect(newState.data[0].weeks[0].comments[1].editedAt).toBe(edited.editedAt)
+    })
+
+    it('replaces the edited comment in the student view', () => {
+      const state = { role: 'student', data: { id: 5, weeks: weeks() } }
+      deepFreeze(state)
+      const newState = coursePageReducer(state, { type: 'COMMENT_EDIT_ONE_SUCCESS', response: edited })
+      expect(newState.data.weeks[0].comments[1].comment).toBe('Corrected')
+    })
+  })
 })

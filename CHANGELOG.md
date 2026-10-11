@@ -6,6 +6,12 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
 ## 2026-10-11
 
 ### Added
+- **Editing comments** (#534). The author of a comment (instructor or student) can edit its text:
+  "Edit" under their own comments opens an inline editor with Save / Cancel. Edited comments show
+  "(edited <time>)" and become unread again for the others. Only the author can edit, visibility
+  (instructors only or not) cannot be changed, and old comments without a known author cannot be
+  edited. New endpoint `PUT /api/comment/:id` and column `Comments.editedAt` (migration
+  `20261011150000-add-editedAt-to-comments.js`).
 - **Student list marks points changed by someone other than the assigned instructor.** On the
   course page, a week, final review or code review cell whose points (or grade) were changed by
   someone else than the student's assigned instructor gets a light orange background; hovering it

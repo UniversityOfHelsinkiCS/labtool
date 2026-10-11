@@ -8,6 +8,7 @@ const studentInstance = STUDENT_INSTANCES.comments
 
 const STUDENT_QUESTION = 'Could you clarify the feedback about the tests?'
 const TEACHER_REPLY = 'Sure: add tests for the edge cases too.'
+const EDITED_REPLY = 'Sure: add tests for the edge cases and the empty input too.'
 const HIDDEN_NOTE = 'Instructor-only note: follow up next week.'
 
 const addComment = async (page: Page, week: Locator, text: string, { hidden = false } = {}) => {
@@ -62,7 +63,17 @@ test.describe.serial('comments on a reviewed week', () => {
 
     await addComment(page, week1, TEACHER_REPLY)
     await expect(comment(week1, TEACHER_REPLY)).toBeVisible()
-    await expect(comment(week1, TEACHER_REPLY)).not.toContainText('Instructors only')
+
+    // the author can edit their comment (#534); the student's comment cannot be edited by the teacher
+    await expect(comment(week1, STUDENT_QUESTION).getByText('Edit', { exact: true })).toHaveCount(0)
+    const reply = comment(week1, TEACHER_REPLY)
+    await reply.getByText('Edit', { exact: true }).click()
+    const editor = week1.locator('.editComment')
+    await editor.locator('textarea[name="editedComment"]').fill(EDITED_REPLY)
+    await editor.getByRole('button', { name: 'Save' }).click()
+    await expectSuccess(page, NOTIFICATIONS.commentUpdated)
+    await expect(comment(week1, EDITED_REPLY)).toContainText('(edited')
+    await expect(comment(week1, EDITED_REPLY)).not.toContainText('Instructors only')
 
     await addComment(page, week1, HIDDEN_NOTE, { hidden: true })
     const note = week1.locator('.instructorOnlyComment', { hasText: HIDDEN_NOTE })
@@ -81,8 +92,9 @@ test.describe.serial('comments on a reviewed week', () => {
     const week1 = page.locator('#reviewWeek1')
     await openAccordion(week1)
     await expect(comment(week1, STUDENT_QUESTION)).toBeVisible()
-    await expect(comment(week1, TEACHER_REPLY)).toBeVisible()
-    await expect(comment(week1, TEACHER_REPLY)).toContainText(`${TEACHER.first_names} ${TEACHER.last_name}`)
+    await expect(comment(week1, EDITED_REPLY)).toBeVisible()
+    await expect(comment(week1, EDITED_REPLY)).toContainText(`${TEACHER.first_names} ${TEACHER.last_name}`)
+    await expect(comment(week1, EDITED_REPLY)).toContainText('(edited')
     await expect(week1.getByText(HIDDEN_NOTE)).toHaveCount(0)
   })
 })

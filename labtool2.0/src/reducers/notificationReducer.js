@@ -99,6 +99,18 @@ const notificationReducer = (state = {}, action) => {
         message: 'Invalid inputs.',
         error: true
       }
+    case 'COMMENT_EDIT_ONE_SUCCESS':
+      return {
+        message: 'Comment updated',
+        error: false
+      }
+    case 'COMMENT_EDIT_ONE_FAILURE': {
+      const data = action.response && action.response.response && action.response.response.data
+      return {
+        message: (data && data.message) || 'The comment could not be updated.',
+        error: true
+      }
+    }
     case 'COMMENT_CREATE_ONE_SUCCESS':
       return {
         message: 'Comment created successfully!',
