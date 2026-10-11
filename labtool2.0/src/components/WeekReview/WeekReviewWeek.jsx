@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Icon, Accordion, Card, Comment, Button, Label, Popup } from 'semantic-ui-react'
 import ReviewNotes from '../ReviewNotes'
+import { reviewTitleStyle } from './reviewTitleStyle'
 import { Link } from 'react-router-dom'
 import { LabtoolAddComment } from '../LabtoolAddComment'
 import ReactMarkdown from 'react-markdown'
@@ -71,7 +72,13 @@ export const WeekReviewWeek = props => {
     const gradeInfo = week.grade ? `, grade ${week.grade}` : ''
     return (
       <Accordion fluid styled id={isFinalWeek ? 'reviewFinal' : `reviewWeek${week.weekNumber}`}>
-        <Accordion.Title active={isWeekOpen} index={i} onClick={handleClickWeek}>
+        <Accordion.Title
+          className="reviewTitle"
+          style={reviewTitleStyle}
+          active={isWeekOpen}
+          index={i}
+          onClick={handleClickWeek}
+        >
           <Icon name="dropdown" /> {isFinalWeek ? 'Final Review' : `Week ${week.weekNumber}`}
           {pointInfo}
           {gradeInfo}
@@ -203,7 +210,13 @@ export const WeekReviewWeek = props => {
   } else {
     return (
       <Accordion fluid styled id={`review${i}`}>
-        <Accordion.Title active={isWeekOpen} index={i} onClick={handleClickWeek}>
+        <Accordion.Title
+          className="reviewTitle"
+          style={reviewTitleStyle}
+          active={isWeekOpen}
+          index={i}
+          onClick={handleClickWeek}
+        >
           <Icon name="dropdown" /> {isFinalWeek ? 'Final Review' : `Week ${i + 1}`} {isTeacher && hiddenLabel}
         </Accordion.Title>
         <Accordion.Content active={isWeekOpen}>

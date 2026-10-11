@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Icon, Accordion, Form, Input, Button, Popup } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { roundPoints } from '../../util/format'
+import { reviewTitleStyle } from './reviewTitleStyle'
 import { Points } from '../Points'
 import { reviewedRepository } from '../../util/reviewedRepository'
 
@@ -58,7 +59,13 @@ export const WeekReviewCodeReview = props => {
   return (
     <Accordion key={`codereview${i}`} fluid styled id={`reviewCodeReview${cr.reviewNumber}`}>
       {' '}
-      <Accordion.Title className="codeReview" active={doOpen} index={i} onClick={handleClickWeek}>
+      <Accordion.Title
+        className="codeReview reviewTitle"
+        style={reviewTitleStyle}
+        active={doOpen}
+        index={i}
+        onClick={handleClickWeek}
+      >
         <Icon name="dropdown" /> Code Review {cr.reviewNumber}{' '}
         {cr.points !== null
           ? `, points ${roundPoints(cr.points)}${maxPoints !== null ? ` / ${roundPoints(maxPoints)}` : ''}`

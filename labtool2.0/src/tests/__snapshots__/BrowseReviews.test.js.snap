@@ -129,7 +129,8 @@ exports[`<BrowseReviews /> > matches the rendered snapshot 1`] = `
         id="review0"
       >
         <div
-          class="active title"
+          class="active title reviewTitle"
+          style="font-size: 1.3em;"
         >
           <i
             aria-hidden="true"
@@ -168,7 +169,8 @@ exports[`<BrowseReviews /> > matches the rendered snapshot 1`] = `
         id="review1"
       >
         <div
-          class="title"
+          class="title reviewTitle"
+          style="font-size: 1.3em;"
         >
           <i
             aria-hidden="true"
@@ -207,7 +209,8 @@ exports[`<BrowseReviews /> > matches the rendered snapshot 1`] = `
         id="review2"
       >
         <div
-          class="title"
+          class="title reviewTitle"
+          style="font-size: 1.3em;"
         >
           <i
             aria-hidden="true"
@@ -246,7 +249,8 @@ exports[`<BrowseReviews /> > matches the rendered snapshot 1`] = `
         id="review3"
       >
         <div
-          class="title"
+          class="title reviewTitle"
+          style="font-size: 1.3em;"
         >
           <i
             aria-hidden="true"
@@ -285,7 +289,8 @@ exports[`<BrowseReviews /> > matches the rendered snapshot 1`] = `
         id="review4"
       >
         <div
-          class="title"
+          class="title reviewTitle"
+          style="font-size: 1.3em;"
         >
           <i
             aria-hidden="true"
@@ -324,7 +329,8 @@ exports[`<BrowseReviews /> > matches the rendered snapshot 1`] = `
         id="review5"
       >
         <div
-          class="title"
+          class="title reviewTitle"
+          style="font-size: 1.3em;"
         >
           <i
             aria-hidden="true"
@@ -363,7 +369,8 @@ exports[`<BrowseReviews /> > matches the rendered snapshot 1`] = `
         id="review6"
       >
         <div
-          class="title"
+          class="title reviewTitle"
+          style="font-size: 1.3em;"
         >
           <i
             aria-hidden="true"
