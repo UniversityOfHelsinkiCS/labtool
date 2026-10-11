@@ -377,7 +377,7 @@ exports[`<CreateChecklist /> component > matches the rendered snapshot 1`] = `
                   class="field topicDescriptionInput"
                 >
                   <label>
-                    Kuvaus (not shown to students)
+                    Kuvaus
                   </label>
                   <textarea
                     placeholder="Optional topic description, shown to instructors when grading: what this topic is about and what to look for"
@@ -769,7 +769,7 @@ exports[`<CreateChecklist /> component > matches the rendered snapshot 1`] = `
                   class="field topicDescriptionInput"
                 >
                   <label>
-                    Kuvaus (not shown to students)
+                    Kuvaus
                   </label>
                   <textarea
                     placeholder="Optional topic description, shown to instructors when grading: what this topic is about and what to look for"

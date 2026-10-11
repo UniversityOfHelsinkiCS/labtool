@@ -676,7 +676,7 @@ export const CreateChecklist = props => {
             <Form className="topicDescriptionForm" style={{ marginBottom: '1em' }}>
               <Form.TextArea
                 className="topicDescriptionInput"
-                label="Kuvaus (not shown to students)"
+                label="Kuvaus"
                 placeholder="Optional topic description, shown to instructors when grading: what this topic is about and what to look for"
                 rows={3}
                 value={(props.checklist.topicDescriptions || {})[key] || ''}
