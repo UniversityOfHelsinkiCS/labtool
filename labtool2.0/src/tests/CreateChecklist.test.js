@@ -157,6 +157,12 @@ const selectWeek = async (user, week) => {
 }
 
 // the copy form is collapsed when the selected week already has a checklist
+// the week already has a checklist, so copying asks before overwriting it
+const confirmOverwrite = async user => {
+  const dialog = document.querySelector('.copyOverwriteConfirm')
+  await user.click(within(dialog).getByRole('button', { name: 'Overwrite' }))
+}
+
 const openCopyForm = async user => {
   const toggle = document.querySelector('.copyFormToggle')
   if (toggle) await user.click(toggle)
@@ -326,6 +332,7 @@ describe('<CreateChecklist /> component', () => {
     expect(weekCopy).toBeDisabled()
     props.getOneChecklist.mockClear()
     await user.click(courseCopy)
+    await confirmOverwrite(user)
     expect(props.getOneChecklist).toHaveBeenCalledWith(
       expect.objectContaining({ courseInstanceId: 10012, week: 6, copying: true })
     )
@@ -337,6 +344,7 @@ describe('<CreateChecklist /> component', () => {
     expect(courseCopy).toBeDisabled()
     props.getOneChecklist.mockClear()
     await user.click(weekCopy)
+    await confirmOverwrite(user)
     expect(props.getOneChecklist).toHaveBeenCalledWith(
       expect.objectContaining({ courseInstanceId: courseInstances[0].id, week: 2, copying: true })
     )
@@ -416,6 +424,41 @@ describe('<CreateChecklist /> component', () => {
       expect(document.querySelector('.copyForm')).toHaveTextContent('Copy a checklist into week 6')
       await user.click(document.querySelector('.copyFormClose'))
       expect(document.querySelector('.copyForm')).toBeNull()
+    })
+
+    it('warns before copying on top of the checklist of the week', async () => {
+      const user = userEvent.setup()
+      const { props } = renderCreateChecklist()
+      await selectWeek(user, 6)
+      await openCopyForm(user)
+      await user.click(screen.getByText('Select a course'))
+      await user.click(screen.getByRole('option', { name: /ohjelmistotekniikan menetelmät/i }))
+      props.getOneChecklist.mockClear()
+
+      await user.click(document.querySelector('.copyFromCourseButton'))
+      const dialog = document.querySelector('.copyOverwriteConfirm')
+      expect(dialog).toHaveTextContent('Overwrite the checklist of week 6?')
+      expect(dialog).toHaveTextContent('Week 6 already has a checklist (2 topics, 2 checkboxes)')
+      expect(props.getOneChecklist).not.toHaveBeenCalled()
+
+      await user.click(within(dialog).getByRole('button', { name: 'Cancel' }))
+      expect(document.querySelector('.copyOverwriteConfirm')).toBeNull()
+      expect(props.getOneChecklist).not.toHaveBeenCalled()
+    })
+
+    it('copies into a week without a checklist without asking', async () => {
+      const user = userEvent.setup()
+      const { props } = renderCreateChecklist({ checklist: { data: {} } })
+      await selectWeek(user, 6)
+      await user.click(screen.getByText('Select a course'))
+      await user.click(screen.getByRole('option', { name: /ohjelmistotekniikan menetelmät/i }))
+      props.getOneChecklist.mockClear()
+
+      await user.click(document.querySelector('.copyFromCourseButton'))
+      expect(document.querySelector('.copyOverwriteConfirm')).toBeNull()
+      expect(props.getOneChecklist).toHaveBeenCalledWith(
+        expect.objectContaining({ courseInstanceId: 10012, copying: true })
+      )
     })
 
     it('is open when the week has no checklist', async () => {
