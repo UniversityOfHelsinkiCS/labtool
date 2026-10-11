@@ -591,6 +591,16 @@ describe('<ReviewStudent />', () => {
       )
     })
 
+    it('marks the review notes as instructors only (#1142)', () => {
+      const { container } = renderReviewStudent()
+
+      const notes = container.querySelector('.instructorNotes')
+      expect(notes).not.toBeNull()
+      expect(notes).toHaveTextContent('Review notes')
+      expect(notes).toHaveTextContent('Instructors only: not shown to the student')
+      expect(notes.querySelector('textarea[name="instructorNotes"]')).not.toBeNull()
+    })
+
     it('shows the maximum points for the week', () => {
       renderReviewStudent()
 

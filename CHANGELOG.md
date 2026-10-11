@@ -6,6 +6,10 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
 ## 2026-10-11
 
 ### Added
+- **Dev seed course has two teachers:** on `TKT20010.2026.S.K.SIM1`, Ossi Ohjaaja Mutikainen
+  (`tiraohjaaja`) is an assistant next to Pää Opettaja, and the four students (a new one, Sanna Sofia
+  Makkonen, was added) are split between them, two each. Useful for trying the assigned-instructor
+  confirmation (#1127) and instructor-only comments (#1142).
 - **Instructor-only comments are unmistakable** (#1142, the comment part):
   - They are shown with an orange border and background and the label "Instructors only: not shown
     to the student", instead of greyed out with a small "Hidden".
@@ -14,6 +18,8 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
     The default stays visible to the student, and the choice returns to it after each comment.
   - Choosing "Instructors only" turns the text area border orange, changes its placeholder, and
     changes the button to an orange "Add instructor-only note".
+- **Review notes on the review page are styled as instructor-only too** (#1142): the section has
+  the same orange border, background and "Instructors only: not shown to the student" label.
 - **Local email setup for development and e2e tests** (for #1141):
   - The dev and e2e docker compose stacks have a Mailpit mail server that catches all email; inbox
     at http://localhost:8025 (dev) and :8026 (e2e). It rejects recipients outside the seed data's
