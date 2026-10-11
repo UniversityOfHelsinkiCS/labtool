@@ -15,7 +15,8 @@ import {
   Radio,
   Form,
   Segment,
-  Divider
+  Divider,
+  Confirm
 } from 'semantic-ui-react'
 import { showNotification } from '../../reducers/notificationReducer'
 import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
@@ -571,6 +572,8 @@ export const CreateChecklist = props => {
   // the copy form is open for a week without a checklist, and collapsed when the week has one;
   // the user can open or close it, which is remembered until another week is selected
   const [copyFormToggle, setCopyFormToggle] = useState({ week: null, open: false })
+  // copying on top of an existing checklist asks first
+  const [confirmingCopy, setConfirmingCopy] = useState(false)
   const copyingAll = useRef(false)
   const ownChecklistCount = (props.copyableChecklists || []).filter(
     checklist => checklist.courseInstanceId === props.selectedInstance.id
@@ -956,6 +959,9 @@ export const CreateChecklist = props => {
   const currentLabel = currentOption ? currentOption.text.toLowerCase() : 'this checklist'
   const weekHasChecklist = Object.keys(props.checklist.data || {}).length > 0
   const copyFormOpen = copyFormToggle.week === state.current ? copyFormToggle.open : !weekHasChecklist
+  const requestCopy = () => (weekHasChecklist ? setConfirmingCopy(true) : copyChecklist())
+  const topicCount = Object.keys(props.checklist.data || {}).length
+  const checkCount = Object.values(props.checklist.data || {}).reduce((sum, rows) => sum + rows.length, 0)
   const { checklistJsx, maxPoints } = props.loading.loading
     ? { checklistJsx: null, maxPoints: null }
     : renderChecklist(currentObj.kind)
@@ -1052,7 +1058,7 @@ export const CreateChecklist = props => {
                   <Button
                     type="button"
                     className="copyFromWeekButton"
-                    onClick={copyChecklist}
+                    onClick={requestCopy}
                     disabled={!state.copyWeek}
                   >
                     Copy
@@ -1079,7 +1085,7 @@ export const CreateChecklist = props => {
                   <Button
                     type="button"
                     className="copyFromCourseButton"
-                    onClick={copyChecklist}
+                    onClick={requestCopy}
                     disabled={!state.copyCourse}
                   >
                     Copy
@@ -1087,6 +1093,23 @@ export const CreateChecklist = props => {
                 </div>
               </Segment>
             )}
+            <Confirm
+              className="copyOverwriteConfirm"
+              open={confirmingCopy}
+              header={`Overwrite the checklist of ${currentLabel}?`}
+              content={`${currentLabel.charAt(0).toUpperCase()}${currentLabel.slice(1)} already has a checklist (${topicCount} ${
+                topicCount === 1 ? 'topic' : 'topics'
+              }, ${checkCount} ${
+                checkCount === 1 ? 'checkbox' : 'checkboxes'
+              }). The copy replaces it in the editor; the saved checklist is overwritten when you press Save.`}
+              confirmButton="Overwrite"
+              cancelButton="Cancel"
+              onCancel={() => setConfirmingCopy(false)}
+              onConfirm={() => {
+                setConfirmingCopy(false)
+                copyChecklist()
+              }}
+            />
             {hasSelectedWeek ? (
               <div className="jsonButtons">
                 <JsonEdit

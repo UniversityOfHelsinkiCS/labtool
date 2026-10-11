@@ -12,7 +12,8 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
   When no other course has a checklist for the week, that row says so instead of showing an empty
   dropdown. The copy logic is unchanged. When the selected week already has a checklist, the box is
   collapsed into a "Copy a checklist into week N..." button (and can be closed again); for a week
-  without a checklist it is open.
+  without a checklist it is open. Copying on top of a week that already has a checklist asks first
+  ("Overwrite the checklist of week N?", with its number of topics and checkboxes).
 - **Checklist descriptions belong to checks, not topics** (#525). Each checkbox in the checklist editor
   has its own optional "Kuvaus" field (replacing the per-topic description), shown under the check's
   name when grading. Saved as `ChecklistItems.description` (trimmed, empty → null), returned with the
