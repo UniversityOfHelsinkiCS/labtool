@@ -6,18 +6,20 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
 ## 2026-10-11
 
 ### Added
-- **Change history of a whole student:** an orange history icon under each student's name on the
-  course page opens `/labtool/changehistory/<course>/<student>`, listing all recorded changes of that
-  student's week reviews, final review, code review grading and repository, each labelled ("Week 3",
-  "Code review 1", "Repository"), with filters All / Week reviews / Code reviews / Repository.
+- **Change history of a whole student in Browse reviews:** the student's Browse reviews page (opened
+  from their name on the course page) ends with their whole change history: all recorded week
+  review, final review, code review grading and repository changes, each labelled ("Week 3",
+  "Code review 1", "Repository"), with filters All / Week reviews / Code reviews / Repository. It
+  replaces the repository-only history there. (A separate history page linked from an icon in the
+  course page's student table was tried first and removed.)
 - **Change history of grading** (#1129). Every week review save and code review grading is logged:
   who, when, points and grade old → new, the full old and new feedback and review notes texts, and
   which checklist boxes changed. Course staff see it as an orange, instructor-only "Change history"
   under the review on the week review and code review grading pages; old and new texts open with
   "Show old and new text". Changes are recorded from this release on.
 - **Repository link history** (#1132). Repository changes (at registration, by the student, or by a
-  teacher's bulk update) are logged with old → new and who made them; course staff see a
-  "Repository history" in Browse reviews.
+  teacher's bulk update) are logged with old → new and who made them; course staff see them in the
+  student's change history in Browse reviews.
 - **Code reviews remember the reviewed repository** (#1132). A code review stores the reviewee's
   repository when it is assigned and when the reviewer adds their link, so a later repository change
   no longer silently changes which repository a past review shows. If the student has changed their

@@ -12,7 +12,7 @@ import { getCoursesByStudentId } from '../../services/studentinstances'
 import { getAllTeacherCourses } from '../../services/teacherinstances'
 import useLegacyState from '../../hooks/legacyState'
 import { getChangeLog } from '../../services/changeLog'
-import ChangeHistory from '../ChangeHistory'
+import StudentHistory from '../StudentHistory'
 
 import BackButton from '../BackButton'
 import { formatCourseName } from '../../util/format'
@@ -206,10 +206,7 @@ export const BrowseReviews = props => {
             handleMarkAsValidRegistration={handleMarkAsValidRegistration}
             teacherInstance={props.teacherInstance}
           />
-          <ChangeHistory
-            title="Repository history"
-            entries={(props.changeLog || []).filter(entry => entry.kind === 'repository')}
-          />
+
           <span>
             {hasAllReviewsOpen(student) ? (
               <Button type="button" onClick={handleClickHideAll} size="small">
@@ -229,6 +226,7 @@ export const BrowseReviews = props => {
             openWeeks={state.openWeeks}
             handleClickWeek={handleClick}
           />
+          <StudentHistory entries={props.changeLog || []} weekAmount={props.selectedInstance.weekAmount} />
         </div>
       ) : (
         <p />
