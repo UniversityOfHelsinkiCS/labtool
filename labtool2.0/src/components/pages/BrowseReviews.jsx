@@ -11,6 +11,8 @@ import { resetLoading } from '../../reducers/loadingReducer'
 import { getCoursesByStudentId } from '../../services/studentinstances'
 import { getAllTeacherCourses } from '../../services/teacherinstances'
 import useLegacyState from '../../hooks/legacyState'
+import { getChangeLog } from '../../services/changeLog'
+import ChangeHistory from '../ChangeHistory'
 
 import BackButton from '../BackButton'
 import { formatCourseName } from '../../util/format'
@@ -36,6 +38,7 @@ export const BrowseReviews = props => {
     props.coursePageInformation(props.courseId)
     props.getAllTeacherCourses()
     props.getCoursesByStudentId(Number(props.studentInstance))
+    props.getChangeLog(Number(props.studentInstance))
     if (!Object.keys(state.openWeeks).length && !state.openWeeks[props.selectedInstance.currentWeek - 1]) {
       state.openWeeks = { [props.selectedInstance.currentWeek - 1]: true }
     }
@@ -203,6 +206,10 @@ export const BrowseReviews = props => {
             handleMarkAsValidRegistration={handleMarkAsValidRegistration}
             teacherInstance={props.teacherInstance}
           />
+          <ChangeHistory
+            title="Repository history"
+            entries={(props.changeLog || []).filter(entry => entry.kind === 'repository')}
+          />
           <span>
             {hasAllReviewsOpen(student) ? (
               <Button type="button" onClick={handleClickHideAll} size="small">
@@ -239,6 +246,7 @@ const mapStateToProps = (state, ownProps) => {
     studentInstanceToBeReviewed: state.studentInstance,
     teacherInstance: state.teacherInstance, //courses that the teacher has
     loading: state.loading,
+    changeLog: state.changeLog.entries,
     errors: Object.values(state.loading.errors)
   }
 }
@@ -250,7 +258,8 @@ const mapDispatchToProps = {
   resetLoading,
   getCoursesByStudentId,
   getAllTeacherCourses,
-  updateStudentProjectInfo
+  updateStudentProjectInfo,
+  getChangeLog
 }
 
 BrowseReviews.propTypes = {
@@ -273,6 +282,8 @@ BrowseReviews.propTypes = {
   getCoursesByStudentId: PropTypes.func.isRequired,
   getAllTeacherCourses: PropTypes.func.isRequired,
   updateStudentProjectInfo: PropTypes.func.isRequired,
+  getChangeLog: PropTypes.func.isRequired,
+  changeLog: PropTypes.array,
 
   errors: PropTypes.array
 }

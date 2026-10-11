@@ -536,6 +536,8 @@ describe('<ReviewStudentCodeReviews />', () => {
       restoreChecks: mockFn,
       resetChecklist: mockFn,
       addRedirectHook: mockFn,
+      getChangeLog: mockFn,
+      changeLog: [],
       gradeCodeReview: mockFn,
       verifyCheckPrerequisites: mockFn,
       ...overrides

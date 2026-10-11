@@ -552,6 +552,8 @@ describe('<ReviewStudent />', () => {
       reviewSave: { conflict: null },
       resetReviewSave: mockFn,
       currentUserId: 10010,
+      getChangeLog: mockFn,
+      changeLog: [],
       ...ownProps,
       ...overrides
     }
@@ -797,6 +799,31 @@ describe('<ReviewStudent />', () => {
         await user.click(screen.getByRole('button', { name: /load their version/i }))
         expect(resetReviewSave).toHaveBeenCalled()
         expect(coursePageInformation).toHaveBeenCalled()
+      })
+
+      it('loads and shows the change history of this week only (#1129)', () => {
+        const getChangeLog = vi.fn()
+        const entry = (id, kind, number, points) => ({
+          id,
+          kind,
+          number,
+          createdAt: VERSION,
+          by: 'Aatu Assistentti',
+          changes: { points: { from: 1, to: points } }
+        })
+        renderReviewStudent({
+          getChangeLog,
+          changeLog: [
+            entry(1, 'week_review', 1, 2),
+            entry(2, 'week_review', 2, 3),
+            entry(3, 'code_review_grade', 1, 4)
+          ]
+        })
+
+        expect(getChangeLog).toHaveBeenCalledWith('10011')
+        expect(screen.getByText('Points 1 → 2')).toBeInTheDocument()
+        expect(screen.queryByText('Points 1 → 3')).not.toBeInTheDocument()
+        expect(screen.queryByText('Points 1 → 4')).not.toBeInTheDocument()
       })
 
       it('shows the assigned instructor', () => {

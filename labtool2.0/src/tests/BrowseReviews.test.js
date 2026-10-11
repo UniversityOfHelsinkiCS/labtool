@@ -79,6 +79,8 @@ const renderBrowseReviews = (props = {}) => {
     studentInstanceToBeReviewed: [coursePage],
     teacherInstance: teacherCourses,
     getAllTeacherCourses: vi.fn(),
+    getChangeLog: vi.fn(),
+    changeLog: [],
     courseId: coursePage.ohid,
     studentInstance: String(student.id),
     loading,

@@ -15,6 +15,8 @@ import {
 } from '../../reducers/weekReviewReducer'
 import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
 import { resetReviewSave } from '../../reducers/reviewSaveReducer'
+import { getChangeLog } from '../../services/changeLog'
+import ChangeHistory from '../ChangeHistory'
 import store from '../../store'
 import { formatCourseName, trimDate, roundPoints } from '../../util/format'
 import { usePersistedState } from '../../hooks/persistedState'
@@ -58,6 +60,7 @@ export const ReviewStudent = props => {
     props.coursePageInformation(props.courseId)
     props.clearNotifications()
     props.resetReviewSave()
+    props.getChangeLog(props.studentInstance)
     importWeekDataFromDraft()
 
     return () => {
@@ -574,6 +577,12 @@ export const ReviewStudent = props => {
               />
             </Grid.Row>
           </Grid>
+          <ChangeHistory
+            title="Change history"
+            entries={props.changeLog.filter(
+              entry => entry.kind === 'week_review' && entry.number === Number(props.ownProps.weekNumber)
+            )}
+          />
         </div>
       </div>
     </>
@@ -588,6 +597,7 @@ const mapStateToProps = (state, ownProps) => {
     courseData: state.coursePage,
     weekReview: state.weekReview,
     reviewSave: state.reviewSave,
+    changeLog: state.changeLog.entries,
     currentUserId: state.user && state.user.user ? state.user.user.id : null,
     loading: state.loading,
     errors: Object.values(state.loading.errors)
@@ -607,7 +617,8 @@ const mapDispatchToProps = {
   coursePageInformation,
   resetLoading,
   addRedirectHook,
-  resetReviewSave
+  resetReviewSave,
+  getChangeLog
 }
 
 ReviewStudent.propTypes = {
@@ -622,6 +633,7 @@ ReviewStudent.propTypes = {
   courseData: PropTypes.object.isRequired,
   weekReview: PropTypes.object.isRequired,
   reviewSave: PropTypes.object.isRequired,
+  changeLog: PropTypes.array.isRequired,
   currentUserId: PropTypes.number,
   loading: PropTypes.object.isRequired,
   location: PropTypes.object,
@@ -639,6 +651,7 @@ ReviewStudent.propTypes = {
   resetLoading: PropTypes.func.isRequired,
   addRedirectHook: PropTypes.func.isRequired,
   resetReviewSave: PropTypes.func.isRequired,
+  getChangeLog: PropTypes.func.isRequired,
 
   errors: PropTypes.array
 }
