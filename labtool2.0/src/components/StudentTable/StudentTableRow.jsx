@@ -372,7 +372,8 @@ export const StudentTableRow = props => {
                   }
             }
           >
-            <div style={{ width: '100%', height: '100%' }}>
+            {/* centred by the link like the weekly cells; a full-height wrapper put the points at the top */}
+            <div>
               {finalPoints === undefined ? (
                 shouldReview && selectedInstance.currentWeek === selectedInstance.weekAmount + 1 ? (
                   draftExists(selectedInstance.weekAmount + 1) ? (

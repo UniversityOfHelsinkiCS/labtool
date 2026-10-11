@@ -186,6 +186,8 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
 - Frontend `npm audit`: 22 → 0 findings.
 
 ### Fixed
+- **Final review points aligned in the student list:** the final review cell put its points at the top
+  of the cell; they are now vertically centred like the weekly points.
 - **Floating point points shown rounded** (#508). Points are shown with at most two decimals and no
   trailing zeros everywhere (`3`, `0.5`, `1.25` instead of `2.9999999999`, `3.00` or `0.50`): the
   shared `roundNumber`, the change history, the changed-cell tooltip in the student list and the week
