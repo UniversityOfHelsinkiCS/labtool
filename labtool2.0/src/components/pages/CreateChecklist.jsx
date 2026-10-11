@@ -308,6 +308,8 @@ export const CreateChecklist = props => {
     state.generation = state.generation + 1
     state.canSave = false
     props.getOneChecklist(data)
+    // which weeks have a saved checklist may have changed, e.g. after saving one
+    props.getCopyableChecklists()
   }
 
   const copyChecklist = async () => {
@@ -638,9 +640,13 @@ export const CreateChecklist = props => {
     return options
   }
 
-  const createCopyWeekDropdowns = () => {
-    return props.weekDropdowns.filter(option => option.value !== state.current)
-  }
+  // only the other weeks (and the code review / final review) of this course that have a checklist
+  const createCopyWeekDropdowns = () =>
+    (props.weekDropdowns || []).filter(option => {
+      if (option.value === state.current) return false
+      const obj = parseChecklistValue(option.value)
+      return !obj.error && hasCopyableChecklist(props.selectedInstance, obj)
+    })
 
   const getPrerequisiteDropdown = key => {
     const checks = [
@@ -958,6 +964,7 @@ export const CreateChecklist = props => {
   const currentOption = (props.weekDropdowns || []).find(option => option.value === state.current)
   const currentLabel = currentOption ? currentOption.text.toLowerCase() : 'this checklist'
   const weekHasChecklist = Object.keys(props.checklist.data || {}).length > 0
+  const copyWeekOptions = hasSelectedWeek ? createCopyWeekDropdowns() : []
   const copyFormOpen = copyFormToggle.week === state.current ? copyFormToggle.open : !weekHasChecklist
   const requestCopy = () => (weekHasChecklist ? setConfirmingCopy(true) : copyChecklist())
   const topicCount = Object.keys(props.checklist.data || {}).length
@@ -1046,15 +1053,19 @@ export const CreateChecklist = props => {
                 </p>
                 <div className="copySource copyFromWeek">
                   <label htmlFor="copyWeekDropdown">From another week of this course</label>
-                  <Dropdown
-                    id="copyWeekDropdown"
-                    className="weekDropdown"
-                    placeholder="Select a week"
-                    selection
-                    value={state.copyWeek}
-                    onChange={changeCopyWeek}
-                    options={state.copyWeekDropdowns}
-                  />
+                  {copyWeekOptions.length > 0 ? (
+                    <Dropdown
+                      id="copyWeekDropdown"
+                      className="weekDropdown"
+                      placeholder="Select a week"
+                      selection
+                      value={state.copyWeek}
+                      onChange={changeCopyWeek}
+                      options={copyWeekOptions}
+                    />
+                  ) : (
+                    <span className="noWeekToCopy">No other week of this course has a checklist.</span>
+                  )}
                   <Button
                     type="button"
                     className="copyFromWeekButton"

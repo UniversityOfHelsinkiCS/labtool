@@ -97,7 +97,8 @@
   flex-grow: 1;
 }
 
-.copyForm .noCourseToCopy {
+.copyForm .noCourseToCopy,
+.copyForm .noWeekToCopy {
   flex-grow: 1;
   color: rgba(0, 0, 0, 0.6);
   font-style: italic;

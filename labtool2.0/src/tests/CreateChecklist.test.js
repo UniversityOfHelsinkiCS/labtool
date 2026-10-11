@@ -463,6 +463,44 @@ describe('<CreateChecklist /> component', () => {
       )
     })
 
+    it('lists only the other weeks of this course that have a checklist', async () => {
+      const user = userEvent.setup()
+      renderCreateChecklist({
+        copyableChecklists: [
+          ...copyableChecklists,
+          { courseInstanceId: 10011, week: 4, forCodeReview: false },
+          { courseInstanceId: 10011, week: 6, forCodeReview: false }
+        ]
+      })
+      await selectWeek(user, 6)
+      await openCopyForm(user)
+      await user.click(screen.getByText('Select a week'))
+      const options = within(document.querySelector('#copyWeekDropdown'))
+        .getAllByRole('option')
+        .map(option => option.textContent)
+      // week 6 is the one being edited
+      expect(options).toEqual(['Week 2', 'Week 4'])
+    })
+
+    it('says so when no other week of this course has a checklist', async () => {
+      const user = userEvent.setup()
+      renderCreateChecklist({ copyableChecklists: copyableChecklists.filter(c => c.week !== 2) })
+      await selectWeek(user, 6)
+      await openCopyForm(user)
+      expect(document.querySelector('#copyWeekDropdown')).toBeNull()
+      expect(document.querySelector('.noWeekToCopy')).toHaveTextContent(
+        'No other week of this course has a checklist.'
+      )
+    })
+
+    it('refreshes which weeks have a checklist when a week is loaded', async () => {
+      const user = userEvent.setup()
+      const { props } = renderCreateChecklist()
+      props.getCopyableChecklists.mockClear()
+      await selectWeek(user, 6)
+      expect(props.getCopyableChecklists).toHaveBeenCalled()
+    })
+
     it('is open when the week has no checklist', async () => {
       const user = userEvent.setup()
       renderCreateChecklist({ checklist: { data: {} } })
