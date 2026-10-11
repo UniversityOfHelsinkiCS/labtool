@@ -6,6 +6,22 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
 ## 2026-10-11
 
 ### Added
+- **Change history of grading** (#1129). Every week review save and code review grading is logged:
+  who, when, points and grade old → new, the full old and new feedback and review notes texts, and
+  which checklist boxes changed. Course staff see it as an orange, instructor-only "Change history"
+  under the review on the week review and code review grading pages; old and new texts open with
+  "Show old and new text". Changes are recorded from this release on.
+- **Repository link history** (#1132). Repository changes (at registration, by the student, or by a
+  teacher's bulk update) are logged with old → new and who made them; course staff see a
+  "Repository history" in Browse reviews.
+- **Code reviews remember the reviewed repository** (#1132). A code review stores the reviewee's
+  repository when it is assigned and when the reviewer adds their link, so a later repository change
+  no longer silently changes which repository a past review shows. If the student has changed their
+  repository since, instructors see "The student has changed their repository since; it is now …".
+  Older reviews show the current repository as before.
+- New table `ChangeLogs` and columns `CodeReviews.repoAtAssignment` / `repoAtLinkAdded` (migration
+  `20261011130000-create-change-logs.js`), endpoint `GET /api/changelog/:studentInstanceId` (course
+  staff only).
 - **Dev seed course has two teachers:** on `TKT20010.2026.S.K.SIM1`, Ossi Ohjaaja Mutikainen
   (`tiraohjaaja`) is an assistant next to Pää Opettaja, and the four students (a new one, Sanna Sofia
   Makkonen, was added) are split between them, two each. Useful for trying the assigned-instructor

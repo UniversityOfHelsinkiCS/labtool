@@ -1,6 +1,7 @@
 const { Week, ReviewCheck, WeekDraft, StudentInstance, TeacherInstance, User } = require('../models')
 const helper = require('../helpers/weeksControllerHelper')
 const logger = require('../utils/logger')
+const { addValueChange, addChecklistChanges, logChange } = require('../helpers/changeLog')
 
 const nullIfEmpty = value => (value === '' || value === null || value === undefined ? null : value)
 
@@ -98,6 +99,15 @@ module.exports = {
         return res.status(409).send(conflict)
       }
 
+      // the review before this save, for the change history (#1129)
+      const before = week
+        ? { points: week.points, grade: week.grade, feedback: week.feedback, instructorNotes: week.instructorNotes }
+        : {}
+      const checksBefore = week
+        ? Object.fromEntries((await ReviewCheck.findAll({ where: { weekId: week.id } }))
+          .map(check => [check.checklistItemId, check.checked]))
+        : {}
+
       // Collect checklist checks from DB to this object
       // This is to keep backend backwards compatible
       const checksObject = {}
@@ -148,6 +158,21 @@ module.exports = {
           checksObject[reviewCheck.checklistItemId] = reviewCheck.checked
         })))
       }
+
+      const changes = {}
+      addValueChange(changes, 'points', before.points, week.points, { numeric: true })
+      addValueChange(changes, 'grade', before.grade, week.grade, { numeric: true })
+      addValueChange(changes, 'feedback', before.feedback, week.feedback)
+      addValueChange(changes, 'instructorNotes', before.instructorNotes, week.instructorNotes)
+      await addChecklistChanges(changes, checksBefore, { ...checksBefore, ...checksObject })
+      await logChange({
+        courseInstanceId: studentInstance.courseInstanceId,
+        studentInstanceId: studentInstance.id,
+        userId: req.decoded.id,
+        kind: 'week_review',
+        number: Number(req.body.weekNumber),
+        changes
+      })
 
       // Remove draft.
       await WeekDraft.destroy({

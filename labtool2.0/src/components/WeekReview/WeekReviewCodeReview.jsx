@@ -4,6 +4,35 @@ import { Icon, Accordion, Form, Input, Button, Popup } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { roundPoints } from '../../util/format'
 import { Points } from '../Points'
+import { reviewedRepository } from '../../util/reviewedRepository'
+
+// The project a code review was done against (#1132), with a warning when the student has changed
+// their repository since.
+const ReviewedProject = ({ codeReview, reviewee }) => {
+  const { repository, current, changed } = reviewedRepository(codeReview, reviewee.github)
+  return (
+    <p>
+      <strong>Project to review:</strong> {reviewee.projectName} <br />
+      <strong>GitHub:</strong>{' '}
+      <a href={repository} target="_blank" rel="noopener noreferrer">
+        {repository}
+      </a>
+      {changed && (
+        <span className="repositoryChanged" style={{ display: 'block', color: '#c55a11' }}>
+          The student has changed their repository since; it is now{' '}
+          <a href={current} target="_blank" rel="noopener noreferrer">
+            {current}
+          </a>
+        </span>
+      )}
+    </p>
+  )
+}
+
+ReviewedProject.propTypes = {
+  codeReview: PropTypes.object.isRequired,
+  reviewee: PropTypes.object.isRequired
+}
 
 export const WeekReviewCodeReview = props => {
   const {
@@ -39,18 +68,10 @@ export const WeekReviewCodeReview = props => {
         {isTeacher ? (
           <>
             {cr.toReview ? (
-              <p>
-                <strong>Project to review:</strong>{' '}
-                {courseData.data.find(data => data.id === cr.toReview).projectName} <br />
-                <strong>GitHub:</strong>{' '}
-                <a
-                  href={courseData.data.find(data => data.id === cr.toReview).github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {courseData.data.find(data => data.id === cr.toReview).github}
-                </a>
-              </p>
+              <ReviewedProject
+                codeReview={cr}
+                reviewee={courseData.data.find(data => data.id === cr.toReview)}
+              />
             ) : (
               <p>
                 <span>This student is assigned a repo that doesn&#39;t belong to this course to review</span>

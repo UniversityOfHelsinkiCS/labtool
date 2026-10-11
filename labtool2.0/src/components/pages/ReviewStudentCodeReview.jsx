@@ -24,6 +24,9 @@ import Error from '../Error'
 import { ReviewStudentChecklist } from './ReviewStudent/Checklist'
 import { Points } from '../Points'
 import { roundPoints } from '../../util/format'
+import { getChangeLog } from '../../services/changeLog'
+import { reviewedRepository } from '../../util/reviewedRepository'
+import ChangeHistory from '../ChangeHistory'
 
 /**
  *  The page which is used by teacher to review submissions,.
@@ -45,6 +48,7 @@ export const ReviewStudentCodeReview = props => {
     props.getOneCI(props.courseId)
     props.coursePageInformation(props.courseId)
     props.clearNotifications()
+    props.getChangeLog(props.studentInstance)
 
     return () => {
       // run on component unmount
@@ -245,7 +249,14 @@ export const ReviewStudentCodeReview = props => {
                 <h3>Project to review</h3>
                 {toReviewProject ? (
                   <p>
-                    {toReviewProject.projectName}: <RepoLink url={toReviewProject.github} />
+                    {toReviewProject.projectName}:{' '}
+                    <RepoLink url={reviewedRepository(cr, toReviewProject.github).repository} />
+                    {reviewedRepository(cr, toReviewProject.github).changed && (
+                      <span className="repositoryChanged" style={{ display: 'block', color: '#c55a11' }}>
+                        The student has changed their repository since; it is now{' '}
+                        <RepoLink url={toReviewProject.github} />
+                      </span>
+                    )}
                   </p>
                 ) : cr.repoToReview ? (
                   <RepoLink url={cr.repoToReview} />
@@ -307,6 +318,12 @@ export const ReviewStudentCodeReview = props => {
               />
             </Grid.Row>
           </Grid>
+          <ChangeHistory
+            title="Change history"
+            entries={props.changeLog.filter(
+              entry => entry.kind === 'code_review_grade' && entry.number === Number(props.codeReviewNumber)
+            )}
+          />
         </div>
       </div>
     </>
@@ -320,6 +337,7 @@ const mapStateToProps = (state, ownProps) => {
     courseData: state.coursePage,
     weekReview: state.weekReview,
     loading: state.loading,
+    changeLog: state.changeLog.entries,
     errors: Object.values(state.loading.errors)
   }
 }
@@ -334,7 +352,8 @@ const mapDispatchToProps = {
   resetChecklist,
   coursePageInformation,
   resetLoading,
-  addRedirectHook
+  addRedirectHook,
+  getChangeLog
 }
 
 ReviewStudentCodeReview.propTypes = {
@@ -348,6 +367,7 @@ ReviewStudentCodeReview.propTypes = {
   courseData: PropTypes.object.isRequired,
   weekReview: PropTypes.object.isRequired,
   loading: PropTypes.object.isRequired,
+  changeLog: PropTypes.array.isRequired,
   location: PropTypes.object,
 
   getOneCI: PropTypes.func.isRequired,
@@ -360,6 +380,7 @@ ReviewStudentCodeReview.propTypes = {
   coursePageInformation: PropTypes.func.isRequired,
   resetLoading: PropTypes.func.isRequired,
   addRedirectHook: PropTypes.func.isRequired,
+  getChangeLog: PropTypes.func.isRequired,
 
   errors: PropTypes.array
 }

@@ -2,6 +2,7 @@ const Sequelize = require('sequelize')
 const { CodeReview, ReviewCheck, StudentInstance, TeacherInstance, CourseInstance } = require('../models')
 const helper = require('../helpers/codeReviewHelper')
 const logger = require('../utils/logger')
+const { addValueChange, addChecklistChanges, logChange } = require('../helpers/changeLog')
 const { enforceCurrentUserIsStudentOnCourse, enforceCurrentUser, enforceCurrentUserCanReview } = require('../helpers/auth')
 
 const { Op } = Sequelize
@@ -101,6 +102,15 @@ module.exports = {
         res.status(403).send('You must be a teacher of the course to perform this action.')
         return
       }
+      // remember which repository was assigned, so later repository changes do not move the review (#1132)
+      const reviewees = await StudentInstance.findAll({
+        attributes: ['id', 'github'],
+        where: { id: values.map(value => value.toReview).filter(id => id) }
+      })
+      const repoOf = Object.fromEntries(reviewees.map(reviewee => [reviewee.id, reviewee.github]))
+      values.forEach((value) => {
+        value.repoAtAssignment = value.toReview ? repoOf[value.toReview] || null : value.repoToReview
+      })
       await CodeReview.bulkCreate(values, { individualHooks: true }) // This is where the magic happens.
 
       const courseToUpdate = await CourseInstance.findOne({
@@ -178,6 +188,8 @@ module.exports = {
         res.status(400).send('No code review matched the given student instance ID and review number.')
         return
       }
+      const checksBefore = Object.fromEntries((await ReviewCheck.findAll({ where: { codeReviewId: codeReview.id } }))
+        .map(check => [check.checklistItemId, check.checked]))
       await CodeReview.update(
         {
           points: req.body.points
@@ -211,6 +223,19 @@ module.exports = {
           })
         })))
       }
+      // change history (#1129)
+      const changes = {}
+      addValueChange(changes, 'points', codeReview.points, req.body.points, { numeric: true })
+      const checksAfter = Object.fromEntries((req.body.checks || []).map(check => [check.id, check.checked]))
+      await addChecklistChanges(changes, checksBefore, { ...checksBefore, ...checksAfter })
+      await logChange({
+        courseInstanceId: courseId,
+        studentInstanceId: studentInstance.id,
+        userId: req.decoded.id,
+        kind: 'code_review_grade',
+        number: req.body.reviewNumber,
+        changes
+      })
       res.status(200).send({
         message: 'Code review points updated successfully.',
         data: req.body
@@ -255,9 +280,13 @@ module.exports = {
         req.body.reviewNumber
       )
       if (!review) return
+      // the repository that was reviewed when the reviewer added their link (#1132)
+      const codeReview = await CodeReview.findByPk(review.id, { include: [{ model: StudentInstance, as: 'toReviews' }] })
+      const reviewedRepo = codeReview && codeReview.toReviews ? codeReview.toReviews.github : codeReview && codeReview.repoToReview
       const [modifiedRows] = await CodeReview.update(
         {
-          linkToReview: req.body.linkToReview
+          linkToReview: req.body.linkToReview,
+          repoAtLinkAdded: reviewedRepo || null
         },
         {
           where: {

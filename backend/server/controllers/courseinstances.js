@@ -2,6 +2,20 @@ const Sequelize = require('sequelize')
 const db = require('../models')
 const helper = require('../helpers/courseInstanceHelper')
 const logger = require('../utils/logger')
+const { addValueChange, logChange } = require('../helpers/changeLog')
+
+// repository link changes are kept in the change history (#1132)
+const logRepositoryChange = (studentInstance, userId, from, to) => {
+  const changes = {}
+  addValueChange(changes, 'github', from, to)
+  return logChange({
+    courseInstanceId: studentInstance.courseInstanceId,
+    studentInstanceId: studentInstance.id,
+    userId,
+    kind: 'repository',
+    changes
+  })
+}
 
 const { Op } = Sequelize
 const { User, CourseInstance, StudentInstance, TeacherInstance, Week, ReviewCheck, CodeReview, Comment, Tag, Checklist, ChecklistItem, WeekDraft } = db
@@ -409,6 +423,10 @@ module.exports = {
         message: 'Student record could not be found or created.'
       })
     } else {
+      const [studentInstance, created] = student
+      if (created) {
+        await logRepositoryChange(studentInstance, user.id, null, studentInstance.github)
+      }
       return res.status(200).json(student)
     }
   },
@@ -468,14 +486,15 @@ module.exports = {
               newStudentInstance.issuesDisabledCheckedAt = currentTime.toISOString()
             }
 
-            return StudentInstance.update(newStudentInstance,
-              {
-                returning: true,
-                where: {
-                  userId: studentInstance.userId,
-                  courseInstanceId: course.id
-                }
-              }).then(([_, [updatedStudentInstance]]) => updatedStudentInstance)
+            const where = { userId: studentInstance.userId, courseInstanceId: course.id }
+            return StudentInstance.findOne({ attributes: ['github'], where })
+              .then(previous => StudentInstance.update(newStudentInstance, { returning: true, where })
+                .then(async ([_, [updatedStudentInstance]]) => {
+                  if (previous && updatedStudentInstance) {
+                    await logRepositoryChange(updatedStudentInstance, req.decoded.id, previous.github, updatedStudentInstance.github)
+                  }
+                  return updatedStudentInstance
+                }))
           }
           return Promise.resolve()
         }))).then((updatedStudents) => {
@@ -546,6 +565,7 @@ module.exports = {
           return
         }
         try {
+          const previousGithub = targetStudent.github
           const updatedStudentInstance = await targetStudent.update({
             github: req.body.github || targetStudent.github,
             projectName: req.body.projectName || targetStudent.projectName,
@@ -555,6 +575,7 @@ module.exports = {
             issuesDisabled: 'issuesDisabled' in req.body ? req.body.issuesDisabled : targetStudent.issuesDisabled,
             issuesDisabledCheckedAt: 'issuesDisabled' in req.body ? new Date().toISOString() : targetStudent.issuesDisabledCheckedAt
           })
+          await logRepositoryChange(updatedStudentInstance, req.decoded.id, previousGithub, updatedStudentInstance.github)
           res.status(200).send(updatedStudentInstance)
         } catch (error) {
           if (error.name === 'SequelizeValidationError') {

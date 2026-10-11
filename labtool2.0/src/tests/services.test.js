@@ -9,6 +9,7 @@ import { handleRequest } from '../util/apiConnection'
 
 import * as assistant from '../services/assistant'
 import * as checklist from '../services/checklist'
+import * as changeLog from '../services/changeLog'
 import * as codeReview from '../services/codeReview'
 import * as comment from '../services/comment'
 import * as courseImport from '../services/courseImport'
@@ -51,6 +52,14 @@ const cases = [
     null
   ],
 
+  [
+    'changeLog.getChangeLog',
+    () => changeLog.getChangeLog(42),
+    'get',
+    '/changelog/42',
+    'CHANGELOG_GET_',
+    null
+  ],
   [
     'checklist.createChecklist',
     () => checklist.createChecklist(payload),
@@ -407,6 +416,7 @@ describe('services', () => {
     const modules = {
       assistant,
       checklist,
+      changeLog,
       codeReview,
       comment,
       courseImport,
