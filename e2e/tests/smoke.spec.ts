@@ -46,7 +46,7 @@ const routes: Route[] = [
       await expect(page.getByRole('heading', { name: 'Students', exact: true })).toBeVisible()
       await page.locator(`a[href="/labtool/browsereviews/${COURSE.ohid}/${REGISTERED_STUDENT_INSTANCE_ID}"]`).first().click()
     },
-    expected: async page => expect(page.getByRole('button', { name: /reviews$/ })).toBeVisible()
+    expected: async page => expect(page.getByRole('button', { name: /all reviews$/ })).toBeVisible()
   },
   {
     name: 'course settings as a teacher',
