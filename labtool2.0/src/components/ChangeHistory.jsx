@@ -1,9 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Header, Icon, Label, List } from 'semantic-ui-react'
+import { roundPoints } from '../util/format'
 
 const formatTime = iso => new Date(iso).toLocaleString('fi-FI')
 const show = value => (value === null || value === undefined || value === '' ? '–' : String(value))
+// points are floating point numbers; show them rounded (#508)
+const showPoints = value => (typeof value === 'number' ? roundPoints(value) : show(value))
 const checkState = checked => (checked ? 'checked' : 'unchecked')
 
 // the first version of a review, grading or repository (not a change from an earlier one)
@@ -47,9 +50,11 @@ TextChange.propTypes = {
 // initial entries list the values; later entries list old → new
 const describeChanges = (changes, initial) => {
   const lines = []
-  const value = (label, change) =>
-    initial ? `${label} ${show(change.to)}` : `${label} ${show(change.from)} → ${show(change.to)}`
-  if (changes.points) lines.push(<List.Item key="points">{value('Points', changes.points)}</List.Item>)
+  const value = (label, change, format = show) =>
+    initial ? `${label} ${format(change.to)}` : `${label} ${format(change.from)} → ${format(change.to)}`
+  if (changes.points) {
+    lines.push(<List.Item key="points">{value('Points', changes.points, showPoints)}</List.Item>)
+  }
   if (changes.grade) lines.push(<List.Item key="grade">{value('Grade', changes.grade)}</List.Item>)
   if (changes.feedback) {
     lines.push(<TextChange key="feedback" label="Feedback" change={changes.feedback} initial={initial} />)

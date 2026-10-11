@@ -91,12 +91,8 @@ export const capitalize = text => {
   }
 }
 
-export const roundNumber = (number, places) => {
-  // do not display fractional part if the number is an integer
-  if (number === Math.floor(number)) {
-    return number.toString()
-  }
-  return number.toFixed(places)
-}
+// Rounds to the given number of decimals and drops trailing zeros, so that floating point sums show as
+// e.g. 3, 0.5 and 1.25 rather than 2.9999999999, 3.00 or 0.50 (#508).
+export const roundNumber = (number, places) => String(Number(number.toFixed(places)) + 0)
 
 export const roundPoints = points => roundNumber(points, 2)
