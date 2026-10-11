@@ -58,6 +58,45 @@ describe('<ChangeHistory /> (#1129, #1132)', () => {
     expect(screen.getByText('Review notes changed')).toBeInTheDocument()
   })
 
+  it('shows the first version as initial, not as a change from empty', async () => {
+    const user = userEvent.setup()
+    const initialEntries = [
+      {
+        id: 10,
+        kind: 'week_review',
+        number: 1,
+        initial: true,
+        createdAt: '2026-10-11T09:00:00.000Z',
+        by: 'Pää Opettaja',
+        changes: {
+          points: { from: null, to: 2 },
+          feedback: { from: null, to: 'First feedback' },
+          checklist: [{ id: 1, name: 'Tests', from: false, to: true }]
+        }
+      },
+      {
+        id: 11,
+        kind: 'repository',
+        number: null,
+        initial: true,
+        createdAt: '2026-10-10T09:00:00.000Z',
+        by: 'Maarit Opiskelija',
+        changes: { github: { from: null, to: 'https://github.com/first/repo' } }
+      }
+    ]
+    render(<ChangeHistory title="Change history" entries={initialEntries} />)
+
+    expect(screen.getByText('Initial review')).toBeInTheDocument()
+    expect(screen.getByText('Points 2')).toBeInTheDocument()
+    expect(screen.queryByText(/→/)).not.toBeInTheDocument()
+    expect(screen.getByText('Checklist: Tests checked')).toBeInTheDocument()
+    expect(screen.getByText('Repository at registration')).toBeInTheDocument()
+    expect(screen.getByText('https://github.com/first/repo')).toBeInTheDocument()
+
+    await user.click(screen.getByText('Show text'))
+    expect(screen.getByText('First feedback')).toBeVisible()
+  })
+
   it('says when nothing has been recorded', () => {
     render(<ChangeHistory title="Change history" entries={[]} />)
     expect(screen.getByText(/No changes recorded yet/)).toBeInTheDocument()

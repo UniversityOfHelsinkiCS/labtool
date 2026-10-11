@@ -42,6 +42,8 @@ describe('Change history (#1129, #1132)', () => {
 
       const [first, second] = await logged('week_review')
       assert.strictEqual(first.number, 1)
+      assert.strictEqual(first.initial, true)
+      assert.strictEqual(second.initial, false)
       assert.strictEqual(first.userId, s.users.teacher.id)
       assert.deepStrictEqual(first.changes.points, { from: null, to: 2.5 })
       assert.deepStrictEqual(first.changes.feedback, { from: null, to: 'Well done' })
@@ -78,6 +80,7 @@ describe('Change history (#1129, #1132)', () => {
 
       const [entry] = await logged('code_review_grade')
       assert.strictEqual(entry.number, 1)
+      assert.strictEqual(entry.initial, true)
       assert.deepStrictEqual(entry.changes, {
         points: { from: null, to: 2 },
         checklist: [{ id: cl.items[0].id, name: 'Found bugs', from: false, to: true }]
@@ -92,6 +95,7 @@ describe('Change history (#1129, #1132)', () => {
         .expect(200)
       const [entry] = await ChangeLog.findAll({ where: { kind: 'repository', userId: s.users.outsider.id } })
       assert.deepStrictEqual(entry.changes, { github: { from: null, to: 'https://github.com/outsider/first' } })
+      assert.strictEqual(entry.initial, true)
     })
 
     it('logs a student changing their repository, but not a save that keeps it', async () => {
@@ -105,6 +109,7 @@ describe('Change history (#1129, #1132)', () => {
 
       const entries = await logged('repository')
       assert.strictEqual(entries.length, 1)
+      assert.strictEqual(entries[0].initial, false)
       assert.strictEqual(entries[0].userId, s.users.student.id)
       assert.deepStrictEqual(entries[0].changes, { github: { from: old, to: 'https://github.com/student/moved' } })
     })
@@ -166,6 +171,7 @@ describe('Change history (#1129, #1132)', () => {
     it('gives course staff the history, newest first, with who made each change', async () => {
       const res = await history(s.users.assistant).expect(200)
       assert.deepStrictEqual(res.body.map(entry => entry.by), ['Antti Assistant', 'Terhi Teacher'])
+      assert.deepStrictEqual(res.body.map(entry => entry.initial), [false, true])
       assert.deepStrictEqual(res.body[0].changes.points, { from: 1, to: 2 })
       assert.strictEqual(res.body[0].kind, 'week_review')
       assert.strictEqual(res.body[0].number, 1)

@@ -33,9 +33,10 @@ const addChecklistChanges = async (changes, before, after) => {
   }))
 }
 
-const logChange = async ({ courseInstanceId, studentInstanceId, userId, kind, number = null, changes }) => {
+// initial: the first version (a new review, the first grading, the repository at registration)
+const logChange = async ({ courseInstanceId, studentInstanceId, userId, kind, number = null, changes, initial = false }) => {
   if (!changes || Object.keys(changes).length === 0) return null
-  return ChangeLog.create({ courseInstanceId, studentInstanceId, userId, kind, number, changes })
+  return ChangeLog.create({ courseInstanceId, studentInstanceId, userId, kind, number, changes, initial })
 }
 
 module.exports = { addValueChange, addChecklistChanges, logChange }

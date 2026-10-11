@@ -28,6 +28,11 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
 - New table `ChangeLogs` and columns `CodeReviews.repoAtAssignment` / `repoAtLinkAdded` (migration
   `20261011130000-create-change-logs.js`), endpoint `GET /api/changelog/:studentInstanceId` (course
   staff only).
+- **The first entry is marked as initial:** a review's first save ("Initial review"), the first
+  grading of a code review ("Initial grading") and the repository given at registration ("Repository
+  at registration") are shown as the initial version (values, and "Show text" for texts) instead of a
+  change from empty. New column `ChangeLogs.initial` (migration
+  `20261011140000-add-initial-to-change-logs.js`); entries recorded before it are not marked.
 - **Dev seed course has two teachers:** on `TKT20010.2026.S.K.SIM1`, Ossi Ohjaaja Mutikainen
   (`tiraohjaaja`) is an assistant next to Pää Opettaja, and the four students (a new one, Sanna Sofia
   Makkonen, was added) are split between them, two each. Useful for trying the assigned-instructor

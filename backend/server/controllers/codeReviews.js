@@ -234,7 +234,8 @@ module.exports = {
         userId: req.decoded.id,
         kind: 'code_review_grade',
         number: req.body.reviewNumber,
-        changes
+        changes,
+        initial: codeReview.points === null && Object.keys(checksBefore).length === 0
       })
       res.status(200).send({
         message: 'Code review points updated successfully.',

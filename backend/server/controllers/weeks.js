@@ -171,7 +171,8 @@ module.exports = {
         userId: req.decoded.id,
         kind: 'week_review',
         number: Number(req.body.weekNumber),
-        changes
+        changes,
+        initial: Object.keys(before).length === 0
       })
 
       // Remove draft.

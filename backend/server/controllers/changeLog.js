@@ -31,6 +31,7 @@ module.exports = {
         kind: entry.kind,
         number: entry.number,
         changes: entry.changes,
+        initial: entry.initial,
         createdAt: entry.createdAt,
         by: entry.User ? `${entry.User.firsts} ${entry.User.lastname}` : null
       })))

@@ -5,7 +5,7 @@ const logger = require('../utils/logger')
 const { addValueChange, logChange } = require('../helpers/changeLog')
 
 // repository link changes are kept in the change history (#1132)
-const logRepositoryChange = (studentInstance, userId, from, to) => {
+const logRepositoryChange = (studentInstance, userId, from, to, initial = false) => {
   const changes = {}
   addValueChange(changes, 'github', from, to)
   return logChange({
@@ -13,7 +13,8 @@ const logRepositoryChange = (studentInstance, userId, from, to) => {
     studentInstanceId: studentInstance.id,
     userId,
     kind: 'repository',
-    changes
+    changes,
+    initial
   })
 }
 
@@ -425,7 +426,7 @@ module.exports = {
     } else {
       const [studentInstance, created] = student
       if (created) {
-        await logRepositoryChange(studentInstance, user.id, null, studentInstance.github)
+        await logRepositoryChange(studentInstance, user.id, null, studentInstance.github, true)
       }
       return res.status(200).json(student)
     }
