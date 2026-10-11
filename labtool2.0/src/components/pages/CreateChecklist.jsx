@@ -1041,8 +1041,8 @@ export const CreateChecklist = props => {
                   Copy a checklist into {currentLabel}
                 </Header>
                 <p className="copyHint">
-                  Choose one of the two sources. The copy replaces the checklist in the editor; nothing is
-                  saved until you press Save.
+                  Choose one of the two sources. Copying replaces the checklist shown below. The change is
+                  saved only when you press Save.
                 </p>
                 <div className="copySource copyFromWeek">
                   <label htmlFor="copyWeekDropdown">From another week of this course</label>
@@ -1101,7 +1101,7 @@ export const CreateChecklist = props => {
                 topicCount === 1 ? 'topic' : 'topics'
               }, ${checkCount} ${
                 checkCount === 1 ? 'checkbox' : 'checkboxes'
-              }). The copy replaces it in the editor; the saved checklist is overwritten when you press Save.`}
+              }). Copying replaces it with the copied checklist. The change is saved only when you press Save.`}
               confirmButton="Overwrite"
               cancelButton="Cancel"
               onCancel={() => setConfirmingCopy(false)}
