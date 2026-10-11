@@ -122,7 +122,7 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
 
 ### Fixed
 - **Checklist editor topic description field:** the field is now full width (3 rows) and labelled
-  "Kuvaus (not shown to students)"; it used to be a tiny unlabelled box.
+  "Kuvaus"; it used to be a tiny unlabelled box.
 - **Checklist editor showed stale contents:** reopening the editor restored the copy remembered in the
   browser instead of the saved checklist, so later changes (e.g. topic descriptions) could be missing.
   Without unsaved edits it now reloads the checklist from the server.

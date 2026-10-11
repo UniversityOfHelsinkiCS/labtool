@@ -361,12 +361,9 @@ describe('<CreateChecklist /> component', () => {
 
     const inputs = [...container.querySelectorAll('.topicDescriptionInput textarea')]
     expect(inputs.map(input => input.value)).toEqual(['About the code', ''])
-    // labelled as the kuvaus, which students never see
+    // labelled as the kuvaus
     const labels = [...container.querySelectorAll('.topicDescriptionInput label')]
-    expect(labels.map(label => label.textContent)).toEqual([
-      'Kuvaus (not shown to students)',
-      'Kuvaus (not shown to students)'
-    ])
+    expect(labels.map(label => label.textContent)).toEqual(['Kuvaus', 'Kuvaus'])
     await user.type(inputs[1], 'x')
     expect(changeTopicDescription).toHaveBeenCalledWith({ key: 'Repo', description: 'x' })
 
