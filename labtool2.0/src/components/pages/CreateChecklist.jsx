@@ -13,7 +13,9 @@ import {
   Icon,
   Checkbox,
   Radio,
-  Form
+  Form,
+  Segment,
+  Divider
 } from 'semantic-ui-react'
 import { showNotification } from '../../reducers/notificationReducer'
 import { resetLoading, addRedirectHook } from '../../reducers/loadingReducer'
@@ -906,6 +908,9 @@ export const CreateChecklist = props => {
   const hasSelectedWeek = state.current !== undefined && state.current !== null
   const courseDropdowns = hasSelectedWeek ? createCourseDropdowns() : []
   const currentObj = parseChecklistValue(state.current)
+  // e.g. "week 2" or "code review", for the copy form
+  const currentOption = (props.weekDropdowns || []).find(option => option.value === state.current)
+  const currentLabel = currentOption ? currentOption.text.toLowerCase() : 'this checklist'
   const { checklistJsx, maxPoints } = props.loading.loading
     ? { checklistJsx: null, maxPoints: null }
     : renderChecklist(currentObj.kind)
@@ -925,33 +930,65 @@ export const CreateChecklist = props => {
               onChange={changeWeek}
               options={props.weekDropdowns}
             />
-            <div className="copyForm">
-              <Button
-                type="button"
-                onClick={copyChecklist}
-                disabled={!hasSelectedWeek || (!state.copyCourse && !state.copyWeek)}
-              >
-                Copy checklist
-              </Button>
-              <Dropdown
-                className="weekDropdown"
-                disabled={!hasSelectedWeek}
-                placeholder="...from another week"
-                selection
-                value={state.copyWeek}
-                onChange={changeCopyWeek}
-                options={state.copyWeekDropdowns}
-              />{' '}
-              <Dropdown
-                className="courseDropdown"
-                disabled={!hasSelectedWeek}
-                placeholder="...from another course"
-                selection
-                value={state.copyCourse}
-                onChange={changeCopyCourse}
-                options={courseDropdowns}
-              />
-            </div>
+            {hasSelectedWeek && (
+              // two separate sources: another week of this course, or the same week of another course
+              <Segment className="copyForm">
+                <Header as="h4" style={{ marginBottom: '0.3em' }}>
+                  Copy a checklist into {currentLabel}
+                </Header>
+                <p className="copyHint">
+                  Choose one of the two sources. The copy replaces the checklist in the editor; nothing is
+                  saved until you press Save.
+                </p>
+                <div className="copySource copyFromWeek">
+                  <label htmlFor="copyWeekDropdown">From another week of this course</label>
+                  <Dropdown
+                    id="copyWeekDropdown"
+                    className="weekDropdown"
+                    placeholder="Select a week"
+                    selection
+                    value={state.copyWeek}
+                    onChange={changeCopyWeek}
+                    options={state.copyWeekDropdowns}
+                  />
+                  <Button
+                    type="button"
+                    className="copyFromWeekButton"
+                    onClick={copyChecklist}
+                    disabled={!state.copyWeek}
+                  >
+                    Copy
+                  </Button>
+                </div>
+                <Divider horizontal>or</Divider>
+                <div className="copySource copyFromCourse">
+                  <label htmlFor="copyCourseDropdown">From {currentLabel} of another course</label>
+                  {courseDropdowns.length > 0 ? (
+                    <Dropdown
+                      id="copyCourseDropdown"
+                      className="courseDropdown"
+                      placeholder="Select a course"
+                      selection
+                      value={state.copyCourse}
+                      onChange={changeCopyCourse}
+                      options={courseDropdowns}
+                    />
+                  ) : (
+                    <span className="noCourseToCopy">
+                      None of your other courses has a checklist for {currentLabel}.
+                    </span>
+                  )}
+                  <Button
+                    type="button"
+                    className="copyFromCourseButton"
+                    onClick={copyChecklist}
+                    disabled={!state.copyCourse}
+                  >
+                    Copy
+                  </Button>
+                </div>
+              </Segment>
+            )}
             {hasSelectedWeek ? (
               <div className="jsonButtons">
                 <JsonEdit

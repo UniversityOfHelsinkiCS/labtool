@@ -6,6 +6,11 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
 ## 2026-10-11
 
 ### Changed
+- **Checklist editor copy form** shows its two sources as separate choices in a "Copy a checklist into
+  week N" box: "From another week of this course" and "From week N of another course", each with its own
+  Copy button and an "or" between them, so choosing a week no longer looks like it filters the courses.
+  When no other course has a checklist for the week, that row says so instead of showing an empty
+  dropdown. The copy logic is unchanged.
 - **Checklist descriptions belong to checks, not topics** (#525). Each checkbox in the checklist editor
   has its own optional "Kuvaus" field (replacing the per-topic description), shown under the check's
   name when grading. Saved as `ChecklistItems.description` (trimmed, empty → null), returned with the

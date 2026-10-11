@@ -69,8 +69,38 @@
   font-size: 14px;
 }
 
-.copyForm {
+.copyForm.ui.segment {
   float: right;
+  max-width: 520px;
+  margin-top: 0;
+  text-align: left;
+}
+
+.copyForm .copyHint {
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 0.9em;
+}
+
+.copyForm .copySource {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.copyForm .copySource label {
+  flex-basis: 100%;
+  font-weight: bold;
+}
+
+.copyForm .copySource .ui.dropdown {
+  flex-grow: 1;
+}
+
+.copyForm .noCourseToCopy {
+  flex-grow: 1;
+  color: rgba(0, 0, 0, 0.6);
+  font-style: italic;
 }
 
 .maxPointsCard {

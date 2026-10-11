@@ -212,7 +212,7 @@ describe('<CreateChecklist /> component', () => {
     renderCreateChecklist()
     await selectWeek(user, 6)
 
-    await user.click(screen.getByText('...from another course'))
+    await user.click(screen.getByText('Select a course'))
 
     expect(screen.getByRole('option', { name: /ohjelmistotekniikan menetelmät/i })).toBeInTheDocument()
     expect(screen.queryByRole('option', { name: /tietokantasovellus/i })).not.toBeInTheDocument()
@@ -228,7 +228,7 @@ describe('<CreateChecklist /> component', () => {
     renderCreateChecklist()
     await selectWeek(user, 1)
 
-    await user.click(screen.getByText('...from another course'))
+    await user.click(screen.getByText('Select a course'))
 
     expect(screen.getByRole('option', { name: /tietokantasovellus/i })).toBeInTheDocument()
     expect(screen.queryByRole('option', { name: /ohjelmistotekniikan menetelmät/i })).not.toBeInTheDocument()
@@ -263,7 +263,7 @@ describe('<CreateChecklist /> component', () => {
     })
     await selectWeek(user, 1)
 
-    await user.click(screen.getByText('...from another course'))
+    await user.click(screen.getByText('Select a course'))
 
     const courseDropdown = screen.getAllByRole('listbox')[2]
     expect(
@@ -283,10 +283,54 @@ describe('<CreateChecklist /> component', () => {
     renderCreateChecklist({ copyableChecklists: [] })
     await selectWeek(user, 6)
 
-    await user.click(screen.getByText('...from another course'))
-
+    // no empty dropdown, but a plain explanation
+    expect(screen.queryByText('Select a course')).toBeNull()
+    expect(document.querySelector('.noCourseToCopy')).toHaveTextContent(
+      'None of your other courses has a checklist for week 6.'
+    )
     expect(screen.queryByRole('option', { name: /ohjelmistotekniikan menetelmät/i })).not.toBeInTheDocument()
-    expect(screen.queryByRole('option', { name: /tietokantasovellus/i })).not.toBeInTheDocument()
+  })
+
+  it('shows the two copy sources as separate choices, each with its own Copy button', async () => {
+    const user = userEvent.setup()
+    const { props } = renderCreateChecklist()
+    await selectWeek(user, 6)
+
+    const form = document.querySelector('.copyForm')
+    expect(form).toHaveTextContent('Copy a checklist into week 6')
+    expect(form.querySelector('.copyFromWeek')).toHaveTextContent('From another week of this course')
+    expect(form.querySelector('.copyFromCourse')).toHaveTextContent('From week 6 of another course')
+    const weekCopy = form.querySelector('.copyFromWeekButton')
+    const courseCopy = form.querySelector('.copyFromCourseButton')
+    expect(weekCopy).toBeDisabled()
+    expect(courseCopy).toBeDisabled()
+
+    // choosing a course enables only its own Copy button
+    await user.click(screen.getByText('Select a course'))
+    await user.click(screen.getByRole('option', { name: /ohjelmistotekniikan menetelmät/i }))
+    expect(courseCopy).toBeEnabled()
+    expect(weekCopy).toBeDisabled()
+    props.getOneChecklist.mockClear()
+    await user.click(courseCopy)
+    expect(props.getOneChecklist).toHaveBeenCalledWith(
+      expect.objectContaining({ courseInstanceId: 10012, week: 6, copying: true })
+    )
+
+    // choosing a week instead clears the course
+    await user.click(screen.getByText('Select a week'))
+    await user.click(within(screen.getAllByRole('listbox')[1]).getByRole('option', { name: 'Week 2' }))
+    expect(weekCopy).toBeEnabled()
+    expect(courseCopy).toBeDisabled()
+    props.getOneChecklist.mockClear()
+    await user.click(weekCopy)
+    expect(props.getOneChecklist).toHaveBeenCalledWith(
+      expect.objectContaining({ courseInstanceId: courseInstances[0].id, week: 2, copying: true })
+    )
+  })
+
+  it('shows no copy form before a week is selected', () => {
+    renderCreateChecklist()
+    expect(document.querySelector('.copyForm')).toBeNull()
   })
 
   it('shows the total points for each section and the whole checklist', async () => {
