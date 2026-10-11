@@ -585,6 +585,44 @@ describe('<StudentTableRow />', () => {
       expect(asFragment()).toMatchSnapshot()
     })
 
+    it('marks points changed by someone other than the assigned instructor', async () => {
+      const user = userEvent.setup()
+      const change = {
+        by: 'Pää Opettaja',
+        at: '2026-10-11T11:32:00.000Z',
+        initial: false,
+        points: { from: 2, to: 3 },
+        grade: null
+      }
+      const data = {
+        ...coursePage.data[0],
+        weeks: [
+          { weekNumber: 1, points: 2, comments: [], pointsChangedByOthers: [] },
+          { weekNumber: 2, points: 3, comments: [], pointsChangedByOthers: [change] }
+        ]
+      }
+      const selectedInstance = {
+        ...coursePage,
+        teacherInstances: [{ id: 10011, firsts: 'Ossi Ohjaaja', lastname: 'Mutikainen' }]
+      }
+      const { container } = renderStudentTableRow({ data, selectedInstance, courseData: { data: [data] } })
+
+      const marked = container.querySelectorAll('td.pointsChangedByOthers')
+      expect(marked).toHaveLength(1)
+      expect(marked[0]).toHaveTextContent('3')
+      expect(marked[0].style.background).not.toBe('')
+
+      await user.hover(marked[0])
+      expect(
+        await screen.findByText(
+          /Changed by someone other than the assigned instructor \(Ossi Ohjaaja Mutikainen\)/
+        )
+      ).toBeInTheDocument()
+      expect(
+        screen.getByText(`${new Date(change.at).toLocaleString('fi-FI')} Pää Opettaja: points 2 → 3`)
+      ).toBeInTheDocument()
+    })
+
     it('displays warning if repo is not accessible', async () => {
       const user = userEvent.setup()
       const { container } = renderStudentTableRow({ data: { ...coursePage.data[1], repoExists: false } })

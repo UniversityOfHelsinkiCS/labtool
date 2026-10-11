@@ -1,4 +1,4 @@
-const { ChangeLog, ChecklistItem } = require('../models')
+const { ChangeLog, ChecklistItem, TeacherInstance, StudentInstance, User } = require('../models')
 
 /**
  * Change history (#1129, #1132). Every save that changes a student's grading or repository link writes
@@ -39,4 +39,38 @@ const logChange = async ({ courseInstanceId, studentInstanceId, userId, kind, nu
   return ChangeLog.create({ courseInstanceId, studentInstanceId, userId, kind, number, changes, initial })
 }
 
-module.exports = { addValueChange, addChecklistChanges, logChange }
+/**
+ * Points and grade changes made by someone other than the student's assigned instructor, for marking
+ * them in the course page's student list. Returns { 'studentInstanceId:kind:number': [change, ...] },
+ * oldest first; students without an assigned instructor are not included.
+ */
+const pointsChangesByOthers = async (courseInstanceId) => {
+  const teachers = await TeacherInstance.findAll({ attributes: ['id', 'userId'], where: { courseInstanceId } })
+  const userOfTeacher = Object.fromEntries(teachers.map(teacher => [teacher.id, teacher.userId]))
+  const students = await StudentInstance.findAll({ attributes: ['id', 'teacherInstanceId'], where: { courseInstanceId } })
+  const assignedUser = Object.fromEntries(students.map(student => [student.id, userOfTeacher[student.teacherInstanceId]]))
+
+  const entries = await ChangeLog.findAll({
+    where: { courseInstanceId, kind: ['week_review', 'code_review_grade'] },
+    include: [{ model: User, attributes: ['firsts', 'lastname'] }],
+    order: [['createdAt', 'ASC'], ['id', 'ASC']]
+  })
+  const result = {}
+  entries.forEach((entry) => {
+    const assigned = assignedUser[entry.studentInstanceId]
+    const { points, grade } = entry.changes
+    if (!assigned || entry.userId === assigned || (!points && !grade)) return
+    const key = `${entry.studentInstanceId}:${entry.kind}:${entry.number}`
+    result[key] = result[key] || []
+    result[key].push({
+      by: entry.User ? `${entry.User.firsts} ${entry.User.lastname}` : null,
+      at: entry.createdAt,
+      initial: entry.initial,
+      points: points || null,
+      grade: grade || null
+    })
+  })
+  return result
+}
+
+module.exports = { addValueChange, addChecklistChanges, logChange, pointsChangesByOthers }

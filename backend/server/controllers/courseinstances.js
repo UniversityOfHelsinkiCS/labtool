@@ -2,7 +2,7 @@ const Sequelize = require('sequelize')
 const db = require('../models')
 const helper = require('../helpers/courseInstanceHelper')
 const logger = require('../utils/logger')
-const { addValueChange, logChange } = require('../helpers/changeLog')
+const { addValueChange, logChange, pointsChangesByOthers } = require('../helpers/changeLog')
 
 // repository link changes are kept in the change history (#1132)
 const logRepositoryChange = (studentInstance, userId, from, to, initial = false) => {
@@ -305,9 +305,15 @@ module.exports = {
           ]
         })
         try {
+          // points / grades changed by someone other than the assigned instructor are marked in the list
+          const changedByOthers = await pointsChangesByOthers(courseInst)
+          const othersChanges = (studentInstance, kind, number) => changedByOthers[`${studentInstance.id}:${kind}:${number}`] || []
           palautus.data = teacherPalautus.map(studentInstance => ({ ...studentInstance.dataValues,
             weeks: studentInstance.dataValues.weeks.map(week => ({ ...week.dataValues,
-              checks: week.checks.reduce((checksObject, reviewCheck) => ({ ...checksObject, [reviewCheck.checklistItemId]: reviewCheck.checked }), {}) })) }))
+              checks: week.checks.reduce((checksObject, reviewCheck) => ({ ...checksObject, [reviewCheck.checklistItemId]: reviewCheck.checked }), {}),
+              pointsChangedByOthers: othersChanges(studentInstance, 'week_review', week.weekNumber) })),
+            codeReviews: studentInstance.dataValues.codeReviews.map(codeReview => ({ ...codeReview.dataValues,
+              pointsChangedByOthers: othersChanges(studentInstance, 'code_review_grade', codeReview.reviewNumber) })) }))
           palautus.role = 'teacher'
           res.status(200).send(palautus)
         } catch (e) {

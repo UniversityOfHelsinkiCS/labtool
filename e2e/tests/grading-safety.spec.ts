@@ -86,6 +86,17 @@ test.describe('a student with an assigned instructor', () => {
     await expect(dialog).toContainText('Aatu Assistentti is the instructor of this student, not you.')
     await dialog.getByRole('button', { name: 'Save anyway' }).click()
     await expectSuccess(page, NOTIFICATIONS.weekReviewed)
+
+    // the student list marks the week as changed by someone other than the assigned instructor
+    await page.goto(`/labtool/courses/${course.ohid}`)
+    await expect(page.getByRole('heading', { name: 'Students', exact: true })).toBeVisible()
+    const cell = page.locator('td', { has: page.getByTestId(`week-review-${STUDENT_INSTANCES.gradingAssigned}-1`) })
+    await expect(cell).toHaveClass(/pointsChangedByOthers/)
+    await cell.hover()
+    await expect(page.locator('.pointsChangedByOthersInfo')).toContainText(
+      'Changed by someone other than the assigned instructor (Aatu Assistentti)'
+    )
+    await expect(page.locator('.pointsChangedByOthersInfo')).toContainText('Pää Opettaja: points 2')
   })
 
   test('the assigned instructor saves without a question', async ({ page }) => {
