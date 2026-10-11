@@ -311,27 +311,6 @@ exports[`<ModifyCourseInstancePage /> > matches the rendered snapshot 1`] = `
     </div>
   </div>
   <div
-    class="inline fields"
-  >
-    <div
-      class="ui disabled checkbox"
-      style="width: 150px; text-align: left;"
-    >
-      <input
-        class="hidden"
-        disabled=""
-        name="finalReviewHasPoints"
-        readonly=""
-        tabindex="-1"
-        type="checkbox"
-        value=""
-      />
-      <label>
-        Points are given for final review
-      </label>
-    </div>
-  </div>
-  <div
     class="fields"
     style="display: inline-block; margin-left: auto; margin-right: auto;"
   >

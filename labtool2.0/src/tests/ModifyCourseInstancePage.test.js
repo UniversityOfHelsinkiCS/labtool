@@ -130,11 +130,25 @@ describe('<ModifyCourseInstancePage />', () => {
     const registration = screen.getByText('Course registration is active').closest('.checkbox')
     expect(registration.querySelector('input')).toBeChecked()
     const labels = [...document.querySelectorAll('.ui.checkbox label')].map(label => label.textContent)
-    expect(labels.slice(-3)).toEqual([
-      'Course registration is active',
-      'Course has a final review',
-      'Points are given for final review'
-    ])
+    expect(labels.slice(-2)).toEqual(['Course registration is active', 'Course has a final review'])
+  })
+
+  describe('points for the final review', () => {
+    it('are asked about only when the course has a final review', () => {
+      renderPage()
+      expect(screen.queryByText('Points are given for final review')).toBeNull()
+    })
+
+    it('can be switched for a course with a final review', async () => {
+      const user = userEvent.setup()
+      const { props } = renderPage({
+        selectedInstance: { ...courseData, finalReview: true, finalReviewHasPoints: true }
+      })
+      const checkbox = screen.getByText('Points are given for final review').closest('.checkbox')
+      expect(checkbox.querySelector('input')).toBeChecked()
+      await user.click(checkbox)
+      expect(props.setFinalReviewHasPoints).toHaveBeenCalledWith(false)
+    })
   })
 
   describe('showing the final review to students', () => {
