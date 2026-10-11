@@ -121,6 +121,11 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
 - Frontend `npm audit`: 22 → 0 findings.
 
 ### Fixed
+- **Checklist editor topic description field:** the field is now full width (3 rows) and labelled
+  "Kuvaus (not shown to students)"; it used to be a tiny unlabelled box.
+- **Checklist editor showed stale contents:** reopening the editor restored the copy remembered in the
+  browser instead of the saved checklist, so later changes (e.g. topic descriptions) could be missing.
+  Without unsaved edits it now reloads the checklist from the server.
 - **Unsaved review edits restored from the browser looked like the saved review.** The review page
   keeps what you type in the browser until you save; reopening a week showed those values exactly
   like a saved review (e.g. points for a week the student list shows as not reviewed). Now such values

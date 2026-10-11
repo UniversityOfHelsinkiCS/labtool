@@ -323,6 +323,31 @@ describe('<CreateChecklist /> component', () => {
     )
   })
 
+  describe('when a week is remembered from an earlier visit', () => {
+    const remember = (key, value) =>
+      window.localStorage.setItem(
+        `labtoolPersistedState_CreateChecklist_${courseInstances[0].ohid}_${key}`,
+        JSON.stringify(value)
+      )
+
+    it('reloads the saved checklist from the server', () => {
+      remember('current', 'week1')
+      remember('canSave', false)
+      const { props } = renderCreateChecklist()
+      expect(props.getOneChecklist).toHaveBeenCalledTimes(1)
+      expect(props.getOneChecklist).toHaveBeenCalledWith(
+        expect.objectContaining({ courseInstanceId: courseInstances[0].id, week: 1, forCodeReview: false })
+      )
+    })
+
+    it('keeps unsaved edits instead of reloading', () => {
+      remember('current', 'week1')
+      remember('canSave', true)
+      const { props } = renderCreateChecklist()
+      expect(props.getOneChecklist).not.toHaveBeenCalled()
+    })
+  })
+
   it('edits topic descriptions and saves them with the checklist (#525)', async () => {
     const user = userEvent.setup()
     const changeTopicDescription = vi.fn()
@@ -336,6 +361,12 @@ describe('<CreateChecklist /> component', () => {
 
     const inputs = [...container.querySelectorAll('.topicDescriptionInput textarea')]
     expect(inputs.map(input => input.value)).toEqual(['About the code', ''])
+    // labelled as the kuvaus, which students never see
+    const labels = [...container.querySelectorAll('.topicDescriptionInput label')]
+    expect(labels.map(label => label.textContent)).toEqual([
+      'Kuvaus (not shown to students)',
+      'Kuvaus (not shown to students)'
+    ])
     await user.type(inputs[1], 'x')
     expect(changeTopicDescription).toHaveBeenCalledWith({ key: 'Repo', description: 'x' })
 
