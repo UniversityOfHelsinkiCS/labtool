@@ -12,6 +12,7 @@ import { formatCourseName } from '../../util/format'
 import { CourseName } from '../InvalidCourse'
 import DocumentTitle from '../DocumentTitle'
 import Error from '../Error'
+import { errorMessage } from '../../util/errorMessage'
 
 /**
  * The main page that is shown after user has logged in.
@@ -49,7 +50,7 @@ export const MyPage = props => {
     return (
       <Error
         errors={props.errors.map(
-          error => `${error.response.data} (${error.response.status} ${error.response.statusText})`
+          error => `${errorMessage(error, 'Error')} (${error.response.status} ${error.response.statusText})`
         )}
       />
     )

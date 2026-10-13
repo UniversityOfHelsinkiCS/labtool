@@ -13,6 +13,9 @@ import { sortUsersByTeacherAssistantLastname } from '../../util/sort'
 import BackButton from '../BackButton'
 import DocumentTitle from '../DocumentTitle'
 import Error from '../Error'
+import { errorMessage } from '../../util/errorMessage'
+import { noStaffAccessByCourse } from '../../util/courseAccess'
+import NoAccess from '../NoAccess'
 
 const matchesFilter = (user, filter) => {
   const query = filter.trim().toLowerCase()
@@ -68,11 +71,15 @@ export const ModifyCourseInstanceStaff = props => {
     }
   }
 
+  if (props.noAccess) {
+    return <NoAccess />
+  }
+
   if (props.errors && props.errors.length > 0) {
     return (
       <Error
         errors={props.errors.map(
-          error => `${error.response.data} (${error.response.status} ${error.response.statusText})`
+          error => `${errorMessage(error, 'Error')} (${error.response.status} ${error.response.statusText})`
         )}
       />
     )
@@ -166,6 +173,7 @@ export const ModifyCourseInstanceStaff = props => {
 
 const mapStateToProps = (state, ownProps) => {
   return {
+    noAccess: noStaffAccessByCourse(state.selectedInstance, ownProps.courseId, state.user && state.user.user),
     courseId: ownProps.courseId,
     users: state.users,
     selectedInstance: state.selectedInstance,
@@ -184,6 +192,7 @@ const mapDispatchToProps = {
 }
 
 ModifyCourseInstanceStaff.propTypes = {
+  noAccess: PropTypes.bool,
   courseId: PropTypes.string.isRequired,
   location: PropTypes.object,
 

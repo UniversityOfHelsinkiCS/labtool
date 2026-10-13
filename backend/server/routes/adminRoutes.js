@@ -10,6 +10,6 @@ const staticUserAuth = basicAuth({
 const parser = bodyParser.urlencoded({ extended: true })
 
 module.exports = (app) => {
-  app.get('/admin', staticUserAuth, parser, admin.list).set('view engine', 'pug')
-  app.post('/admin', staticUserAuth, parser, admin.process).set('view engine', 'pug')
+  app.get('/admin', staticUserAuth, parser, admin.list)
+  app.post('/admin', staticUserAuth, parser, admin.process)
 }

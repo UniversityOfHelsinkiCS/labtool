@@ -1,4 +1,5 @@
-import { test, expect, Page } from '@playwright/test'
+import { Page } from '@playwright/test'
+import { test, expect } from '../fixtures/test'
 import { loginAs, newPageAs } from '../fixtures/auth'
 import { COURSES, NOTIFICATIONS, REGISTERED_STUDENT, SECOND_STUDENT, STUDENT_INSTANCES, TEACHER } from '../fixtures/data'
 import { chooseDropdownOption, expectNoLoader, expectSuccess, openAccordion } from '../fixtures/helpers'

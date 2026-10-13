@@ -1,9 +1,15 @@
 const { Op } = require('sequelize')
-const { enforceCurrentUserIsStudentOnCourse } = require('../helpers/auth')
-const helper = require('../helpers/checklistHelper')
-const { TeacherInstance, Checklist, ChecklistItem, StudentInstance, CourseInstance } = require('../models')
-const logger = require('../utils/logger')
+const { getTeacherId, isCourseStaff, findStudentInstance, requireCourseStaff } = require('../helpers/auth')
+const { TeacherInstance, Checklist, ChecklistItem, StudentInstance, CourseInstance, sequelize } = require('../models')
 const { copyChecklists } = require('../helpers/copyChecklists')
+const { isFinalReviewWeek } = require('../helpers/finalReview')
+const { HttpError, badRequest, forbidden, notFound } = require('../utils/httpError')
+
+/** How a checklist is named in messages: "week 2", "final review" or "code review". */
+const checklistLabel = (course, { week, forCodeReview }) => {
+  if (forCodeReview) return 'code review'
+  return isFinalReviewWeek(course, Number(week)) ? 'final review' : `week ${week}`
+}
 
 function validateChecklistRowKey(row, key) {
   switch (key) {
@@ -93,188 +99,165 @@ module.exports = {
    * @param {*} res
    */
   async create(req, res) {
-    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
-      return
+    if (typeof req.body.courseInstanceId !== 'number') {
+      throw badRequest('Missing or malformed inputs.')
     }
-
+    await requireCourseStaff(req, req.body.courseInstanceId)
+    const courseInstance = await CourseInstance.findByPk(req.body.courseInstanceId)
+    if (!courseInstance) {
+      throw badRequest('Course not found.')
+    }
+    if (typeof req.body.week !== 'number' && !req.body.forCodeReview) {
+      throw badRequest('Missing or malformed inputs.')
+    }
+    if (req.body.maxPoints < 0) {
+      throw badRequest('Invalid maximum points.')
+    }
+    let validationError
     try {
-      if (!req.authenticated.success) {
-        return res.status(403).send('You have to be authenticated to do this.')
-      }
-      const teacherInstance = await TeacherInstance.findOne({
-        attributes: ['id'],
-        where: {
-          userId: req.decoded.id,
-          courseInstanceId: req.body.courseInstanceId
-        }
-      })
-      if (!teacherInstance) {
-        return res.status(403).send('You must be a teacher of the course to perform this action.')
-      }
-      const courseInstance = await CourseInstance.findOne({
-        where: {
-          id: req.body.courseInstanceId
-        }
-      })
-      if (!courseInstance) {
-        return res.status(400).send('Course not found.')
-      }
-      if ((typeof req.body.week !== 'number' && !req.body.forCodeReview) || typeof req.body.courseInstanceId !== 'number') {
-        return res.status(400).send('Missing or malformed inputs.')
-      }
-      if (req.body.maxPoints < 0) {
-        return res.status(400).send('Invalid maximum points.')
-      }
-      let validationError
-      try {
-        validationError = validateChecklist(req.body.checklist)
-      } catch (e) {
-        return res.status(400).send('Cannot parse checklist JSON.')
-      }
-      if (validationError) {
-        return res.status(400).send(validationError)
-      }
-      // No validation is done to prevent creating a checklist for a week that doesn't exist.
-      // Arguably, this is a feature, since the number of weeks can change.
-      let result
-      if ('week' in req.body) {
-        result = await Checklist.findOrCreate({ where: {
-          week: req.body.week,
-          forCodeReview: false,
-          courseInstanceId: req.body.courseInstanceId
-        } })
-      } else if ('forCodeReview' in req.body && req.body.forCodeReview) {
-        result = await Checklist.findOrCreate({ where: {
-          forCodeReview: true,
-          courseInstanceId: req.body.courseInstanceId
-        } })
-      } else {
-        return res.status(400).send('You must supply either a "week" or a truthy "forCodeReview".')
-      }
-      // Update maxPoints. This cannot be done with findOrCreate as by default courses have null as maxPoints
-      result = await Checklist.update(
-        { maxPoints: req.body.maxPoints },
-        { where: { id: result[0].dataValues.id }, returning: true, plain: true }
-      )
+      validationError = validateChecklist(req.body.checklist)
+    } catch (e) {
+      throw badRequest('Cannot parse checklist JSON.')
+    }
+    if (validationError) {
+      throw badRequest(validationError)
+    }
+    // No validation is done to prevent creating a checklist for a week that doesn't exist.
+    // Arguably, this is a feature, since the number of weeks can change.
+    let result
+    if ('week' in req.body) {
+      result = await Checklist.findOrCreate({ where: {
+        week: req.body.week,
+        forCodeReview: false,
+        courseInstanceId: req.body.courseInstanceId
+      } })
+    } else if ('forCodeReview' in req.body && req.body.forCodeReview) {
+      result = await Checklist.findOrCreate({ where: {
+        forCodeReview: true,
+        courseInstanceId: req.body.courseInstanceId
+      } })
+    } else {
+      throw badRequest('You must supply either a "week" or a truthy "forCodeReview".')
+    }
+    // Update maxPoints. This cannot be done with findOrCreate as by default courses have null as maxPoints
+    result = await Checklist.update(
+      { maxPoints: req.body.maxPoints },
+      { where: { id: result[0].dataValues.id }, returning: true, plain: true }
+    )
 
-      const checklistJson = {}
-      const checklistIdsNow = []
-      let checklistOrder = 1
+    const checklistJson = {}
+    const checklistIdsNow = []
+    let checklistOrder = 1
 
-      // we will remove prerequisites for now and put them onto a map
-      // also we need to map tempId => true id
-      const prerequisites = {}
-      const tempIdMap = {}
-      const prerequisitesRemove = []
+    // we will remove prerequisites for now and put them onto a map
+    // also we need to map tempId => true id
+    const prerequisites = {}
+    const tempIdMap = {}
+    const prerequisitesRemove = []
 
-      for (const category in req.body.checklist) {
-        const checklistForCategory = req.body.checklist[category]
+    for (const category in req.body.checklist) {
+      const checklistForCategory = req.body.checklist[category]
 
-        // Categories are processed sequentially so checklistOrder remains deterministic.
-        // eslint-disable-next-line no-await-in-loop
-        const checklistForCategoryIdFiltered = await Promise.all(checklistForCategory.map(async (checklistItem) => {
-          // if the ID conflicts with an existing checklist item
-          // *on another checklist*, remove ID here. this makes
-          // copying a lot easier, since it won't overwrite the
-          // checklist items on another week/course
+      // Categories are processed sequentially so checklistOrder remains deterministic.
+      const checklistForCategoryIdFiltered = await Promise.all(checklistForCategory.map(async (checklistItem) => {
+        // if the ID conflicts with an existing checklist item
+        // *on another checklist*, remove ID here. this makes
+        // copying a lot easier, since it won't overwrite the
+        // checklist items on another week/course
 
-          const checklistItemCopy = { ...checklistItem }
-          if (checklistItemCopy.id) {
-            const item = await ChecklistItem.findOne({
-              attributes: ['checklistId'],
-              where: {
-                id: checklistItemCopy.id
-              }
-            })
-            if (item.checklistId !== result[1].dataValues.id) {
-              prerequisitesRemove.push(checklistItemCopy.id)
-              delete checklistItemCopy.id
+        const checklistItemCopy = { ...checklistItem }
+        if (checklistItemCopy.id) {
+          const item = await ChecklistItem.findOne({
+            attributes: ['checklistId'],
+            where: {
+              id: checklistItemCopy.id
             }
+          })
+          // an id that does not exist is treated like one on another checklist: a new item is created
+          if (!item || item.checklistId !== result[1].dataValues.id) {
+            prerequisitesRemove.push(checklistItemCopy.id)
+            delete checklistItemCopy.id
           }
-          return checklistItemCopy
-        }))
-
-        const categoryStartOrder = checklistOrder
-        const checklistUpsert = checklistForCategoryIdFiltered.map((checklistItem, index) => {
-          const obj = {
-            id: checklistItem.id,
-            name: checklistItem.name,
-            textWhenOn: checklistItem.textWhenOn,
-            textWhenOff: checklistItem.textWhenOff,
-            description: typeof checklistItem.description === 'string' && checklistItem.description.trim()
-              ? checklistItem.description.trim() : null,
-            checkedPoints: checklistItem.checkedPoints,
-            uncheckedPoints: checklistItem.uncheckedPoints,
-            category,
-            checklistId: result[1].dataValues.id,
-            order: categoryStartOrder + index, // ignore order sent by client
-            prerequisite: null, // map later; see below
-            minimumRequirement: checklistItem.minimumRequirement,
-            minimumRequirementMetIf: checklistItem.minimumRequirementMetIf,
-            minimumRequirementGradePenalty: checklistItem.minimumRequirementGradePenalty
-          }
-          if (obj.id === undefined) {
-            delete obj.id
-          }
-          return obj
-        })
-
-        // eslint-disable-next-line no-await-in-loop
-        const checklistItems = await Promise.all(checklistUpsert.map(async checklistItem => (checklistItem.id === undefined ? [await ChecklistItem.create(checklistItem, { returning: true })] : ChecklistItem.upsert(checklistItem, { returning: true }))))
-        const zipped = checklistForCategoryIdFiltered.map((item, index) => [item, checklistItems[index][0]])
-
-        // if we had a temp ID, map those, and if we had prerequisites, map those too
-        zipped.forEach(([oldItem, newItem]) => {
-          if (oldItem.tempId) {
-            tempIdMap[oldItem.tempId] = newItem.id
-          }
-          if (oldItem.prerequisite !== null && !prerequisitesRemove.includes(oldItem.prerequisite)) {
-            prerequisites[newItem.id] = oldItem.prerequisite
-          }
-        })
-
-        checklistJson[category] = checklistItems.map((item) => {
-          const checklistItem = item[0].dataValues
-          const checklistItemCopy = { ...checklistItem }
-          checklistIdsNow.push(checklistItemCopy.id)
-          delete checklistItemCopy.category
-          delete checklistItemCopy.checklistId
-          return checklistItemCopy
-        })
-
-        checklistOrder += checklistItems.length
-      }
-
-      // remove the other stuff that we do not want
-      const checklistWeekItems = await ChecklistItem.findAll({
-        where: {
-          checklistId: result[1].dataValues.id
         }
-      })
-      await Promise.all(checklistWeekItems.filter(item => !checklistIdsNow.includes(item.id)).map(item => item.destroy()))
-
-      // handle prerequisites
-      await Promise.all(Object.keys(prerequisites).map(async (newId) => {
-        const prerequisiteRaw = prerequisites[newId]
-        // convert possible temp ID to actual ID
-        const prerequisiteActual = prerequisiteRaw in tempIdMap ? tempIdMap[prerequisiteRaw] : prerequisiteRaw
-
-        await ChecklistItem.update(
-          { prerequisite: prerequisiteActual },
-          { where: { id: newId } }
-        )
+        return checklistItemCopy
       }))
 
-      res.status(200).send({
-        message: `Checklist saved successfully for ${'week' in req.body ? (courseInstance.finalReview && Number(req.body.week) > courseInstance.weekAmount ? 'final review' : `week ${req.body.week}`) : 'code review'}.`,
-        result: { ...result[1].dataValues, list: checklistJson },
-        data: req.body
+      const categoryStartOrder = checklistOrder
+      const checklistUpsert = checklistForCategoryIdFiltered.map((checklistItem, index) => {
+        const obj = {
+          id: checklistItem.id,
+          name: checklistItem.name,
+          textWhenOn: checklistItem.textWhenOn,
+          textWhenOff: checklistItem.textWhenOff,
+          description: typeof checklistItem.description === 'string' && checklistItem.description.trim()
+            ? checklistItem.description.trim() : null,
+          checkedPoints: checklistItem.checkedPoints,
+          uncheckedPoints: checklistItem.uncheckedPoints,
+          category,
+          checklistId: result[1].dataValues.id,
+          order: categoryStartOrder + index, // ignore order sent by client
+          prerequisite: null, // map later; see below
+          minimumRequirement: checklistItem.minimumRequirement,
+          minimumRequirementMetIf: checklistItem.minimumRequirementMetIf,
+          minimumRequirementGradePenalty: checklistItem.minimumRequirementGradePenalty
+        }
+        if (obj.id === undefined) {
+          delete obj.id
+        }
+        return obj
       })
-    } catch (e) {
-      console.error(e)
-      logger.error('Checklist creation error.', { error: e.message })
-      res.status(500).send('Unexpected error. Please try again.')
+
+      const checklistItems = await Promise.all(checklistUpsert.map(async checklistItem => (checklistItem.id === undefined ? [await ChecklistItem.create(checklistItem, { returning: true })] : ChecklistItem.upsert(checklistItem, { returning: true }))))
+      const zipped = checklistForCategoryIdFiltered.map((item, index) => [item, checklistItems[index][0]])
+
+      // if we had a temp ID, map those, and if we had prerequisites, map those too
+      zipped.forEach(([oldItem, newItem]) => {
+        if (oldItem.tempId) {
+          tempIdMap[oldItem.tempId] = newItem.id
+        }
+        if (oldItem.prerequisite !== null && !prerequisitesRemove.includes(oldItem.prerequisite)) {
+          prerequisites[newItem.id] = oldItem.prerequisite
+        }
+      })
+
+      checklistJson[category] = checklistItems.map((item) => {
+        const checklistItem = item[0].dataValues
+        const checklistItemCopy = { ...checklistItem }
+        checklistIdsNow.push(checklistItemCopy.id)
+        delete checklistItemCopy.category
+        delete checklistItemCopy.checklistId
+        return checklistItemCopy
+      })
+
+      checklistOrder += checklistItems.length
     }
+
+    // remove the other stuff that we do not want
+    const checklistWeekItems = await ChecklistItem.findAll({
+      where: {
+        checklistId: result[1].dataValues.id
+      }
+    })
+    await Promise.all(checklistWeekItems.filter(item => !checklistIdsNow.includes(item.id)).map(item => item.destroy()))
+
+    // handle prerequisites
+    await Promise.all(Object.keys(prerequisites).map(async (newId) => {
+      const prerequisiteRaw = prerequisites[newId]
+      // convert possible temp ID to actual ID
+      const prerequisiteActual = prerequisiteRaw in tempIdMap ? tempIdMap[prerequisiteRaw] : prerequisiteRaw
+
+      await ChecklistItem.update(
+        { prerequisite: prerequisiteActual },
+        { where: { id: newId } }
+      )
+    }))
+
+    const label = checklistLabel(courseInstance, { week: req.body.week, forCodeReview: !('week' in req.body) })
+    res.status(200).send({
+      message: `Checklist saved successfully for ${label}.`,
+      result: { ...result[1].dataValues, list: checklistJson },
+      data: req.body
+    })
   },
 
   /**
@@ -286,40 +269,31 @@ module.exports = {
    * @param {*} res
    */
   async getCopyable(req, res) {
-    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
-      return
-    }
-    try {
+    const where = { userId: req.decoded.id }
+    const [teacherInstances, studentInstances] = await Promise.all([
+      TeacherInstance.findAll({ attributes: ['courseInstanceId'], where }),
+      StudentInstance.findAll({ attributes: ['courseInstanceId'], where })
+    ])
+    const memberOf = [...new Set([...teacherInstances, ...studentInstances].map(i => i.courseInstanceId))]
+    // invalid courses (#905) are not copied from
+    const courseIds = (await CourseInstance.findAll({
+      attributes: ['id'],
+      where: { id: { [Op.in]: memberOf }, invalid: false }
+    })).map(course => course.id)
 
-      const where = { userId: req.decoded.id }
-      const [teacherInstances, studentInstances] = await Promise.all([
-        TeacherInstance.findAll({ attributes: ['courseInstanceId'], where }),
-        StudentInstance.findAll({ attributes: ['courseInstanceId'], where })
-      ])
-      const memberOf = [...new Set([...teacherInstances, ...studentInstances].map(i => i.courseInstanceId))]
-      // invalid courses (#905) are not copied from
-      const courseIds = (await CourseInstance.findAll({
-        attributes: ['id'],
-        where: { id: { [Op.in]: memberOf }, invalid: false }
-      })).map(course => course.id)
+    const checklists = await Checklist.findAll({
+      attributes: ['id', 'courseInstanceId', 'week', 'forCodeReview'],
+      where: { courseInstanceId: { [Op.in]: courseIds } }
+    })
+    const items = await ChecklistItem.findAll({
+      attributes: ['checklistId'],
+      where: { checklistId: { [Op.in]: checklists.map(c => c.id) } }
+    })
+    const withItems = new Set(items.map(item => item.checklistId))
 
-      const checklists = await Checklist.findAll({
-        attributes: ['id', 'courseInstanceId', 'week', 'forCodeReview'],
-        where: { courseInstanceId: { [Op.in]: courseIds } }
-      })
-      const items = await ChecklistItem.findAll({
-        attributes: ['checklistId'],
-        where: { checklistId: { [Op.in]: checklists.map(c => c.id) } }
-      })
-      const withItems = new Set(items.map(item => item.checklistId))
-
-      res.status(200).send(checklists
-        .filter(c => withItems.has(c.id))
-        .map(({ courseInstanceId, week, forCodeReview }) => ({ courseInstanceId, week, forCodeReview })))
-    } catch (e) {
-      logger.error('Get copyable checklists error.', { error: e.message })
-      res.status(500).send('Internal server error')
-    }
+    res.status(200).send(checklists
+      .filter(c => withItems.has(c.id))
+      .map(({ courseInstanceId, week, forCodeReview }) => ({ courseInstanceId, week, forCodeReview })))
   },
 
   /**
@@ -334,163 +308,131 @@ module.exports = {
    * @param {*} res
    */
   async copyAll(req, res) {
-    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
-      return
+    const { copyFrom, copyTo } = req.body
+    if (typeof copyFrom !== 'number' || typeof copyTo !== 'number' || copyFrom === copyTo) {
+      throw badRequest('You must supply two different courses, "copyFrom" and "copyTo".')
     }
-    try {
-      const { copyFrom, copyTo } = req.body
-      if (typeof copyFrom !== 'number' || typeof copyTo !== 'number' || copyFrom === copyTo) {
-        return res.status(400).send('You must supply two different courses, "copyFrom" and "copyTo".')
-      }
-      const [target, source] = await Promise.all([CourseInstance.findByPk(copyTo), CourseInstance.findByPk(copyFrom)])
-      if (!target || !source || source.invalid) {
-        return res.status(404).send('Course not found.')
-      }
-      const userId = req.decoded.id
-      const [staff, sourceTeacher, sourceStudent] = await Promise.all([
-        TeacherInstance.findOne({ attributes: ['id'], where: { userId, courseInstanceId: target.id } }),
-        TeacherInstance.findOne({ attributes: ['id'], where: { userId, courseInstanceId: source.id } }),
-        StudentInstance.findOne({ attributes: ['id'], where: { userId, courseInstanceId: source.id } })
-      ])
-      if (!staff) {
-        return res.status(403).send('You must be a teacher of the course to perform this action.')
-      }
-      if (!sourceTeacher && !sourceStudent) {
-        return res.status(403).send('You can only copy checklists from your own courses.')
-      }
-
-      const withItems = async courseInstanceId => {
-        const checklists = await Checklist.findAll({ where: { courseInstanceId } })
-        const counts = await Promise.all(checklists.map(c => ChecklistItem.count({ where: { checklistId: c.id } })))
-        return { checklists, nonEmpty: checklists.filter((_, index) => counts[index] > 0) }
-      }
-      const existing = await withItems(target.id)
-      if (existing.nonEmpty.length > 0) {
-        return res.status(409).send('The course already has checklists; copy them one at a time in the checklist editor.')
-      }
-
-      const label = (checklist, course) => {
-        if (checklist.forCodeReview) return 'code review'
-        return course.finalReview && checklist.week > course.weekAmount ? 'final review' : `week ${checklist.week}`
-      }
-      const copies = []
-      const skipped = []
-      const { nonEmpty } = await withItems(source.id)
-      nonEmpty.forEach((checklist) => {
-        if (checklist.forCodeReview) {
-          copies.push({ checklist, week: null })
-        } else if (checklist.week > source.weekAmount) {
-          // the final review of the source
-          if (target.finalReview) copies.push({ checklist, week: target.weekAmount + 1 })
-          else skipped.push(label(checklist, source))
-        } else if (checklist.week <= target.weekAmount) {
-          copies.push({ checklist, week: checklist.week })
-        } else {
-          skipped.push(label(checklist, source))
-        }
-      })
-
-      // empty checklists left behind by the editor would clash with the copies
-      await Checklist.destroy({ where: { id: existing.checklists.map(c => c.id) } })
-      await copyChecklists(copies, target.id)
-
-      const copied = copies.map(({ checklist, week }) => (checklist.forCodeReview ? 'code review'
-        : label({ week, forCodeReview: false }, target)))
-      // the new checklists, in the shape getCopyable uses
-      const checklists = copies.map(({ checklist, week }) => ({
-        courseInstanceId: target.id,
-        week: checklist.forCodeReview ? null : week,
-        forCodeReview: Boolean(checklist.forCodeReview)
-      }))
-      return res.status(200).send({ copied, skipped, checklists })
-    } catch (e) {
-      logger.error('Copy all checklists error.', { error: e.message })
-      return res.status(500).send('Internal server error')
+    const [target, source] = await Promise.all([CourseInstance.findByPk(copyTo), CourseInstance.findByPk(copyFrom)])
+    if (!target || !source || source.invalid) {
+      throw notFound('Course not found.')
     }
+    const userId = req.decoded.id
+    await requireCourseStaff(req, target.id)
+    const [sourceStaff, sourceStudent] = await Promise.all([
+      isCourseStaff(userId, source.id),
+      findStudentInstance(userId, source.id)
+    ])
+    if (!sourceStaff && !sourceStudent) {
+      throw forbidden('You can only copy checklists from your own courses.')
+    }
+
+    const withItems = async (courseInstanceId) => {
+      const checklists = await Checklist.findAll({ where: { courseInstanceId } })
+      const counts = await Promise.all(checklists.map(c => ChecklistItem.count({ where: { checklistId: c.id } })))
+      return { checklists, nonEmpty: checklists.filter((_, index) => counts[index] > 0) }
+    }
+    const existing = await withItems(target.id)
+    if (existing.nonEmpty.length > 0) {
+      throw new HttpError(409, 'The course already has checklists; copy them one at a time in the checklist editor.')
+    }
+
+    const copies = []
+    const skipped = []
+    const { nonEmpty } = await withItems(source.id)
+    nonEmpty.forEach((checklist) => {
+      if (checklist.forCodeReview) {
+        copies.push({ checklist, week: null })
+      } else if (checklist.week > source.weekAmount) {
+        // the final review of the source
+        if (target.finalReview) copies.push({ checklist, week: target.weekAmount + 1 })
+        else skipped.push(checklistLabel(source, checklist))
+      } else if (checklist.week <= target.weekAmount) {
+        copies.push({ checklist, week: checklist.week })
+      } else {
+        skipped.push(checklistLabel(source, checklist))
+      }
+    })
+
+    // empty checklists left behind by the editor would clash with the copies
+    await sequelize.transaction(async (transaction) => {
+      await Checklist.destroy({ where: { id: existing.checklists.map(c => c.id) }, transaction })
+      await copyChecklists(copies, target.id, { transaction })
+    })
+
+    const copied = copies.map(({ checklist, week }) => (
+      checklistLabel(target, { week, forCodeReview: checklist.forCodeReview })))
+    // the new checklists, in the shape getCopyable uses
+    const checklists = copies.map(({ checklist, week }) => ({
+      courseInstanceId: target.id,
+      week: checklist.forCodeReview ? null : week,
+      forCodeReview: Boolean(checklist.forCodeReview)
+    }))
+    return res.status(200).send({ copied, skipped, checklists })
   },
 
   /**
    * Get checklist for course
    *   permissions: must be instructor or student on course
    *
+   * The 400 answers are { message, data: req.body }: the checklist editor reads data.copying.
+   *
    * @param {*} req
    * @param {*} res
    */
   async getOne(req, res) {
-    try {
-      if (!req.authenticated.success) {
-        return res.status(403).send('You have to be authenticated to do this.')
-      }
-
-      if ((typeof req.body.week !== 'number' && !req.body.forCodeReview) || typeof req.body.courseInstanceId !== 'number') {
-        res.status(400).send({
-          message: 'Missing or malformed inputs.',
-          data: req.body
-        })
-        return
-      }
-
-      const courseInstanceId = req.body.courseInstanceId
-
-      const isTeacher = await helper.getTeacherId(req.decoded.id, req.body.courseInstanceId)
-      if (!isTeacher) {
-        const currentUserStudentInstance = await enforceCurrentUserIsStudentOnCourse(req, res, courseInstanceId)
-        if (!currentUserStudentInstance) return
-      }
-
-
-      const checklist = 'week' in req.body ? await Checklist.findOne({
-        attributes: {
-          exclude: ['createdAt', 'updatedAt']
-        },
-        where: {
-          courseInstanceId,
-          week: req.body.week,
-          forCodeReview: false
-        }
-      }) : await Checklist.findOne({
-        attributes: {
-          exclude: ['createdAt', 'updatedAt']
-        },
-        where: {
-          courseInstanceId,
-          forCodeReview: true
-        }
+    if ((typeof req.body.week !== 'number' && !req.body.forCodeReview)
+      || typeof req.body.courseInstanceId !== 'number') {
+      return res.status(400).send({
+        message: 'Missing or malformed inputs.',
+        data: req.body
       })
-
-      if (checklist) {
-        const checklistJson = {}
-        const checklistItems = await ChecklistItem.findAll({ where: {
-          checklistId: checklist.id
-        },
-        order: [['order', 'ASC']] })
-        checklistItems.forEach(({ dataValues: checklistItem }) => {
-          if (checklistJson[checklistItem.category] === undefined) {
-            checklistJson[checklistItem.category] = []
-          }
-
-          const checklistItemCopy = { ...checklistItem }
-          delete checklistItemCopy.category
-          delete checklistItemCopy.checklistId
-          if (req.body.copying) {
-            // tempId is the id of the checklist item we copied; it's used
-            // to map prerequisites, etc.
-            checklistItemCopy.tempId = checklistItemCopy.id
-            delete checklistItemCopy.id
-          }
-          checklistJson[checklistItem.category].push(checklistItemCopy)
-        })
-
-        res.status(200).send({ ...checklist.dataValues, list: checklistJson })
-      } else {
-        res.status(400).send({
-          message: 'No matching checklist found.',
-          data: req.body
-        })
-      }
-    } catch (e) {
-      logger.error('Get checklist error.', { error: e.message })
-      res.status(500).send('Internal server error')
     }
+
+    const { courseInstanceId } = req.body
+    const isTeacher = await getTeacherId(req.decoded.id, courseInstanceId)
+    if (!isTeacher && !(await findStudentInstance(req.decoded.id, courseInstanceId))) {
+      throw forbidden()
+    }
+
+    const checklist = await Checklist.findOne({
+      attributes: {
+        exclude: ['createdAt', 'updatedAt']
+      },
+      where: 'week' in req.body
+        ? { courseInstanceId, week: req.body.week, forCodeReview: false }
+        : { courseInstanceId, forCodeReview: true }
+    })
+    if (!checklist) {
+      return res.status(400).send({
+        message: 'No matching checklist found.',
+        data: req.body
+      })
+    }
+
+    const checklistJson = {}
+    const checklistItems = await ChecklistItem.findAll({
+      where: {
+        checklistId: checklist.id
+      },
+      order: [['order', 'ASC']]
+    })
+    checklistItems.forEach(({ dataValues: checklistItem }) => {
+      if (checklistJson[checklistItem.category] === undefined) {
+        checklistJson[checklistItem.category] = []
+      }
+
+      const checklistItemCopy = { ...checklistItem }
+      delete checklistItemCopy.category
+      delete checklistItemCopy.checklistId
+      if (req.body.copying) {
+        // tempId is the id of the checklist item we copied; it's used
+        // to map prerequisites, etc.
+        checklistItemCopy.tempId = checklistItemCopy.id
+        delete checklistItemCopy.id
+      }
+      checklistJson[checklistItem.category].push(checklistItemCopy)
+    })
+
+    return res.status(200).send({ ...checklist.dataValues, list: checklistJson })
   }
 }

@@ -9,11 +9,11 @@ const INITIAL_STATE = { conflict: null }
 
 const reviewSaveReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case 'WEEKS_CREATE_ONEATTEMPT':
+    case 'WEEKS_CREATE_ONE_ATTEMPT':
     case 'REVIEW_SAVE_RESET':
     case 'LOGOUT_SUCCESS':
       return INITIAL_STATE
-    case 'WEEKS_CREATE_ONEFAILURE': {
+    case 'WEEKS_CREATE_ONE_FAILURE': {
       const response = action.response && action.response.response
       return response && response.status === 409 ? { conflict: response.data } : INITIAL_STATE
     }

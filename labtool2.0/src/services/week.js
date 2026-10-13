@@ -5,7 +5,7 @@ import { callController } from '../util/apiConnection'
  */
 export const createOneWeek = data => {
   const route = '/weeks/create'
-  const prefix = 'WEEKS_CREATE_ONE'
+  const prefix = 'WEEKS_CREATE_ONE_'
   const method = 'post'
   return callController(route, prefix, data, method)
 }
@@ -25,7 +25,7 @@ export const getWeekDraft = data => {
  */
 export const saveWeekDraft = data => {
   const route = '/weeks/saveDraft'
-  const prefix = 'WEEKDRAFTS_CREATE_ONE'
+  const prefix = 'WEEKDRAFTS_CREATE_ONE_'
   const method = 'post'
   return callController(route, prefix, data, method)
 }

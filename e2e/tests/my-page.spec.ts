@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test'
+import { test, expect } from '../fixtures/test'
 import { loginAs } from '../fixtures/auth'
 import { EMAIL_CHANGER, NO_EMAIL_USER, NOTIFICATIONS } from '../fixtures/data'
 import { expectSuccess } from '../fixtures/helpers'

@@ -51,3 +51,14 @@ export const openAccordion = async (accordion: Locator) => {
   }
   await expect(title).toHaveClass(/\bactive\b/)
 }
+
+/**
+ * A red error notification shows exactly `message`, e.g. the `{ message }` the backend answered
+ * with, and nothing like `[object Object]` or `undefined` from a misread error body.
+ */
+export const expectError = async (page: Page, message: string | RegExp) => {
+  const notification = page.locator('.notification.error')
+  await expect(notification).toHaveText(message)
+  await expect(notification).not.toContainText('[object Object]')
+  await expect(notification).not.toContainText('undefined')
+}

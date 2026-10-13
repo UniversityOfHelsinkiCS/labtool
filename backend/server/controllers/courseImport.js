@@ -1,5 +1,23 @@
 const helper = require('../helpers/courseImportHelper')
-const logger = require('../utils/logger')
+const { badRequest, forbidden } = require('../utils/httpError')
+
+const requirePermissionToImport = async (req) => {
+  if (!(await helper.hasPermissionToImport(req.decoded.id))) {
+    throw forbidden('You are not allowed to import courses.')
+  }
+}
+
+/** Kurki failures are answered with the given message, other errors propagate. */
+const answeringKurkiErrorWith = async (message, action) => {
+  try {
+    return await action()
+  } catch (error) {
+    if (error instanceof helper.KurkiError) {
+      throw badRequest(message)
+    }
+    throw error
+  }
+}
 
 module.exports = {
   /**
@@ -10,21 +28,7 @@ module.exports = {
    * @param {*} res
    */
   async hasPermission(req, res) {
-    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
-      return
-    }
-
-    if (!req.authenticated.success) {
-      res.status(401).send('You must be authenticated.').end()
-    }
-    const user = req.decoded.id
-
-    try {
-      res.status(200).send({ allowed: await helper.hasPermissionToImport(user) })
-    } catch (e) {
-      logger.error(e)
-      res.status(200).send({ allowed: false })
-    }
+    res.status(200).send({ allowed: await helper.hasPermissionToImport(req.decoded.id) })
   },
 
   /**
@@ -35,65 +39,36 @@ module.exports = {
    * @param {*} res
    */
   async list(req, res) {
-    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
-      return
-    }
+    await requirePermissionToImport(req)
 
-    if (!req.authenticated.success) {
-      res.status(401).send('You must be authenticated.').end()
-    }
-    const user = req.decoded.id
-
-    const gotPermission = await helper.hasPermissionToImport(user)
-    if (!gotPermission) {
-      res.status(403).send('You are not allowed to import courses.')
-      return
-    }
-
-    try {
-      const nonActive = await helper.getInactive(req, res)
-      res.status(200).send(helper.formatCoursesForList(nonActive))
-    } catch (e) {
-      logger.error('listing importable courses error', { error: e.message })
-      res.status(400).send('Error while listing importable courses.')
-    }
+    const nonActive = await answeringKurkiErrorWith(
+      'Error while listing importable courses.',
+      () => helper.getInactive()
+    )
+    res.status(200).send(helper.formatCoursesForList(nonActive))
   },
 
   /**
-   * Import N courses.
+   * Import N courses. Courses that are not importable from Kurki (unknown or already imported) are ignored.
    *   permissions: any logged in user that is allowed to import courses
    *
    * @param {*} req
    * @param {*} res
    */
   async import(req, res) {
-    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
-      return
+    await requirePermissionToImport(req)
+    if (!Array.isArray(req.body.courses)) {
+      throw badRequest('Missing field "courses".')
     }
 
-    if (!req.authenticated.success) {
-      res.status(401).send('You must be authenticated.').end()
-    }
-    const user = req.decoded.id
-
-    const gotPermission = await helper.hasPermissionToImport(user)
-    if (!gotPermission) {
-      res.status(403).send('You are not allowed to import courses.')
-      return
-    }
-
-    try {
-      const nonActive = await helper.getInactive(req, res)
-      await Promise.all(req.body.courses.map(async (course) => {
-        if (nonActive.find(c => c.id === course.hid)) {
-          await helper.createCourse(course)
-        }
-      }))
-    } catch (e) {
-      logger.error('course import error', { error: e.message })
-      res.status(400).send('Error while importing courses.')
-      return
-    }
+    await answeringKurkiErrorWith('Error while importing courses.', async () => {
+      const nonActive = await helper.getInactive({ refresh: true })
+      const toImport = req.body.courses.filter(course => nonActive.find(c => c.id === course.hid))
+      // one at a time: a failure stops the import instead of leaving other imports running
+      for (const course of toImport) {
+        await helper.createCourse(course)
+      }
+    })
     res.status(200).send()
   }
 }

@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test'
+import { test, expect } from '../fixtures/test'
 import { loginOnceAs } from '../fixtures/auth'
 import { REGISTERED_STUDENT } from '../fixtures/data'
 
@@ -20,4 +20,18 @@ test('a user logs out', async ({ page }) => {
   await page.goto('/labtool/courses')
   await expect(page.getByRole('heading', { name: 'Select user to log in as' })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'My Courses (Student)' })).toHaveCount(0)
+})
+
+test('a logged out page load sends no requests the backend refuses', async ({ page }) => {
+  const refused: string[] = []
+  page.on('response', response => {
+    if (response.url().includes('/api/') && response.status() === 401) {
+      refused.push(`${response.request().method()} ${response.url()}`)
+    }
+  })
+
+  await page.goto('/labtool/mypage')
+  await expect(page.getByRole('heading', { name: 'Select user to log in as' })).toBeVisible()
+  await page.waitForLoadState('networkidle')
+  expect(refused).toEqual([])
 })

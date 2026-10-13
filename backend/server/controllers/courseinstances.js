@@ -1,12 +1,14 @@
 const Sequelize = require('sequelize')
 const db = require('../models')
 const helper = require('../helpers/courseInstanceHelper')
-const logger = require('../utils/logger')
+const { isCourseStaff, requireCourseStaff } = require('../helpers/auth')
+const { badRequest, forbidden, notFound } = require('../utils/httpError')
 const { isHttpUrl } = require('../helpers/links')
 const { hiddenFromStudents } = require('../helpers/finalReview')
 const { canSeeCourse, canMarkInvalid } = require('../helpers/invalidCourse')
 const { copyChecklists } = require('../helpers/copyChecklists')
 const { addValueChange, logChange, pointsChangesByOthers } = require('../helpers/changeLog')
+const logger = require('../utils/logger')
 
 // repository link changes are kept in the change history (#1132)
 const logRepositoryChange = (studentInstance, userId, from, to, initial = false) => {
@@ -26,15 +28,38 @@ const { Op } = Sequelize
 const { User, CourseInstance, StudentInstance, TeacherInstance, Week, ReviewCheck, CodeReview, Comment, Tag, Checklist, ChecklistItem, WeekDraft, ReviewNote } = db
 const { toJson: reviewNoteJson } = require('./reviewNotes')
 
-const overkillLogging = (req, error) => {
-  logger.debug('request: ', req)
-  logger.error('error: ', error)
-}
-
 const invalidProjectNameErrorMessage = {
   projectName: 'Project name contains illegal characters.\n Characters allowed '
     + ' in the project name are letters from a-ö, numbers, apostrophe, - and '
     + ' whitespace (not multiple in a row or at first/last character).'
+}
+
+const invalidGithubLinkMessage = 'GitHub link must be a web address starting with http:// or https://.'
+
+// fields of a student instance that only the course staff may change
+const staffOnlyStudentFields = ['dropped', 'validRegistration', 'issuesDisabled']
+
+const isId = value => value !== null && value !== '' && typeof value !== 'boolean' && Number.isInteger(Number(value))
+
+/**
+ * The given fields of source that are set, i.e. not undefined (or, with the isSet argument, whatever it accepts).
+ * A field missing from a request body keeps its value; a field that is there is applied.
+ */
+const pickDefined = (source, fields, isSet = value => value !== undefined) => fields
+  .filter(field => isSet(source[field]))
+  .reduce((picked, field) => ({ ...picked, [field]: source[field] }), {})
+
+/** Runs a write; a Sequelize validation error becomes a 400 with the messages of the failed validations. */
+const withValidation = async (write) => {
+  try {
+    return await write()
+  } catch (error) {
+    if (error.name === 'SequelizeValidationError') {
+      const messages = error.errors.map(e => invalidProjectNameErrorMessage[e.path] || e.message || 'Unknown validation error.')
+      throw badRequest(messages.join('\n'))
+    }
+    throw error
+  }
 }
 
 module.exports = {
@@ -45,24 +70,15 @@ module.exports = {
    * @param res
    */
   async findByUserTeacherInstance(req, res) {
-    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
-      return
-    }
-
-    if (req.authenticated.success) {
-      await CourseInstance.findAll({
-        include: [{
-          model: TeacherInstance,
-          required: true,
-          where: { userId: req.decoded.id },
-          as: 'teachercourseInstances'
-        }]
-      }).then(courseInstances => res.status(200).send(courseInstances))
-        .catch((error) => {
-          logger.error(error)
-          res.status(400).send('An error occurred. Please try again.')
-        })
-    }
+    const courseInstances = await CourseInstance.findAll({
+      include: [{
+        model: TeacherInstance,
+        required: true,
+        where: { userId: req.decoded.id },
+        as: 'teachercourseInstances'
+      }]
+    })
+    res.status(200).send(courseInstances)
   },
 
   /**
@@ -73,38 +89,23 @@ module.exports = {
    * @param {*} res
    */
   async findByStudentInstanceId(req, res) {
-    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
-      return
+    const studentInstance = isId(req.params.id) ? await StudentInstance.findOne({
+      where: { id: req.params.id } // id is StudentInstance.id
+    }) : null
+    if (!studentInstance) {
+      throw badRequest('student instance not found')
     }
+    await requireCourseStaff(req, studentInstance.courseInstanceId, 'must be teacher on the course')
 
-    if (req.authenticated.success) {
-      const studentInstance = await StudentInstance.findOne({
-        where: { id: req.params.id } // id is StudentInstance.id
-      })
-      if (!studentInstance) {
-        return res.status(400).send('student instance not found')
-      }
-      const courseInstance = await CourseInstance.findOne({
-        where: { id: studentInstance.courseInstanceId }
-      })
-      const isTeacher = await helper.getTeacherId(req.decoded.id, courseInstance.id)
-      if (!isTeacher) {
-        return res.status(403).send('must be teacher on the course')
-      }
-
-      await CourseInstance.findAll({
-        include: [{
-          model: StudentInstance,
-          required: true,
-          where: { userId: studentInstance.userId },
-          as: 'courseInstances'
-        }]
-      }).then(courseInstances => res.status(200).send(courseInstances))
-        .catch((error) => {
-          logger.error(error)
-          res.status(400).send('An error occurred. Please try again.')
-        })
-    }
+    const courseInstances = await CourseInstance.findAll({
+      include: [{
+        model: StudentInstance,
+        required: true,
+        where: { userId: studentInstance.userId },
+        as: 'courseInstances'
+      }]
+    })
+    res.status(200).send(courseInstances)
   },
 
   /**
@@ -115,236 +116,217 @@ module.exports = {
    * @returns {Promise<void>}
    */
   async coursePage(req, res) {
-    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+    if (typeof req.body.course !== 'string') {
+      throw badRequest('Missing or malformed course.')
+    }
+
+    const course = await CourseInstance.findOne({
+      where: {
+        ohid: req.body.course
+      }
+    })
+    if (!course || !(await canSeeCourse(req.decoded.id, course))) {
+      throw notFound('course not found')
+    }
+
+    const courseInst = course.id
+    const palautus = {
+      // the course the role is for, so that the frontend does not use the role of a previous course
+      ohid: course.ohid,
+      role: 'Unregistered',
+      data: undefined
+    }
+    const user = req.decoded.id
+    if (!(await isCourseStaff(user, courseInst))) {
+      const student = await StudentInstance.findOne({
+        attributes: {
+          exclude: ['createdAt', 'updatedAt']
+        },
+        where: {
+          userId: user,
+          courseInstanceId: courseInst
+        },
+        include: [
+          {
+            model: Week,
+            attributes: {
+              exclude: ['updatedAt', 'instructorNotes']
+            },
+            as: 'weeks',
+            include: [
+              {
+                model: Comment,
+                attributes: {
+                  exclude: ['updatedAt']
+                },
+                as: 'comments',
+                where: {
+                  hidden: false
+                },
+                required: false
+              },
+              {
+                model: ReviewCheck,
+                as: 'checks'
+              }
+            ]
+          },
+          {
+            model: CodeReview,
+            attributes: ['toReview', 'reviewNumber', 'points', 'linkToReview', 'repoToReview'],
+            as: 'codeReviews',
+            where: {
+              [Op.or]: [
+                {
+                  reviewNumber: {
+                    [Op.in]: course.currentCodeReview
+                  }
+                },
+                {
+                  points: {
+                    [Op.ne]: null
+                  }
+                }
+              ]
+            },
+            required: false,
+            include: [
+              {
+                model: StudentInstance,
+                attributes: ['github', 'projectName'],
+                as: 'toReviews'
+              }
+            ]
+          },
+          {
+            model: User,
+            attributes: {
+              exclude: ['createdAt', 'updatedAt']
+            }
+          }
+        ]
+      })
+
+      if (student) {
+        palautus.data = student.dataValues
+        // Here we splice together the codeReviews field
+        if (palautus.data.codeReviews) {
+          palautus.data.codeReviews = palautus.data.codeReviews.map(cr => cr.dataValues)
+          palautus.data.codeReviews = palautus.data.codeReviews.map(cr => ({
+            toReview: {
+              github: cr.toReviews ? cr.toReviews.github : null,
+              projectName: cr.toReviews ? cr.toReviews.projectName : null
+            },
+            reviewNumber: cr.reviewNumber,
+            points: cr.points,
+            linkToReview: cr.linkToReview,
+            repoToReview: cr.repoToReview
+          })
+          )
+          // This was only ever included to be spliced into the codeReviews filed above.
+          delete palautus.data.toReviews
+        }
+        palautus.data.weeks = palautus.data.weeks
+          // a hidden final review is left out altogether: points, grade, feedback, checks and comments
+          .filter(week => !hiddenFromStudents(course, week.weekNumber))
+          .map(week => ({ ...week.dataValues,
+            checks: week.checks.reduce((checksObject, reviewCheck) => ({ ...checksObject, [reviewCheck.checklistItemId]: reviewCheck.checked }), {})
+          }))
+      } else {
+        palautus.data = null
+      }
+
+      palautus.role = 'student'
+      res.status(200).send(palautus)
       return
     }
 
-    if (typeof req.body.course !== 'string') {
-      return res.status(400).send('Missing or malformed course.')
-    }
-
-    try {
-      const course = await CourseInstance.findOne({
-        where: {
-          ohid: req.body.course
-        }
-      })
-      if (!course || !(await canSeeCourse(req.decoded.id, course))) {
-        return res.status(404).send('course not found')
-      }
-
-      const courseInst = course.id
-      const palautus = {
-        role: 'Unregistered',
-        data: undefined
-      }
-      const user = req.decoded.id
-      const isTeacher = await helper.getTeacherId(user, courseInst)
-      if (!isTeacher) {
-        const student = await StudentInstance.findOne({
+    const teacherPalautus = await StudentInstance.findAll({
+      attributes: {
+        exclude: ['createdAt', 'updatedAt']
+      },
+      where: {
+        courseInstanceId: courseInst
+      },
+      include: [
+        {
+          model: Week,
+          attributes: {
+            // updatedAt / updatedBy let the review page detect saves made after it was opened (#1127)
+            exclude: ['createdAt']
+          },
+          as: 'weeks',
+          include: [
+            {
+              model: Comment,
+              attributes: {
+                exclude: ['updatedAt']
+              },
+              as: 'comments'
+            },
+            {
+              model: ReviewCheck,
+              as: 'checks'
+            }
+          ]
+        },
+        {
+          model: CodeReview,
           attributes: {
             exclude: ['createdAt', 'updatedAt']
           },
-          where: {
-            userId: user,
-            courseInstanceId: courseInst
-          },
+          as: 'codeReviews',
           include: [
             {
-              model: Week,
-              attributes: {
-                exclude: ['updatedAt', 'instructorNotes']
-              },
-              as: 'weeks',
-              include: [
-                {
-                  model: Comment,
-                  attributes: {
-                    exclude: ['updatedAt']
-                  },
-                  as: 'comments',
-                  where: {
-                    hidden: false
-                  },
-                  required: false
-                },
-                {
-                  model: ReviewCheck,
-                  as: 'checks'
-                }
-              ]
-            },
-            {
-              model: CodeReview,
-              attributes: ['toReview', 'reviewNumber', 'points', 'linkToReview', 'repoToReview'],
-              as: 'codeReviews',
-              where: {
-                [Op.or]: [
-                  {
-                    reviewNumber: {
-                      [Op.in]: course.currentCodeReview
-                    }
-                  },
-                  {
-                    points: {
-                      [Op.ne]: null
-                    }
-                  }
-                ]
-              },
-              required: false,
-              include: [
-                {
-                  model: StudentInstance,
-                  attributes: ['github', 'projectName'],
-                  as: 'toReviews'
-                }
-              ]
-            },
-            {
-              model: User,
-              attributes: {
-                exclude: ['createdAt', 'updatedAt']
-              }
+              model: ReviewCheck,
+              attributes: ['checklistItemId', 'checked'],
+              as: 'checks'
             }
           ]
-        })
-
-        try {
-          if (student) {
-            palautus.data = student.dataValues
-            // Here we splice together the codeReviews field
-            if (palautus.data.codeReviews) {
-              palautus.data.codeReviews = palautus.data.codeReviews.map(cr => cr.dataValues)
-              palautus.data.codeReviews = palautus.data.codeReviews.map(cr => ({
-                toReview: {
-                  github: cr.toReviews ? cr.toReviews.github : null,
-                  projectName: cr.toReviews ? cr.toReviews.projectName : null
-                },
-                reviewNumber: cr.reviewNumber,
-                points: cr.points,
-                linkToReview: cr.linkToReview,
-                repoToReview: cr.repoToReview
-              })
-              )
-              // This was only ever included to be spliced into the codeReviews filed above.
-              delete palautus.data.toReviews
-            }
-            palautus.data.weeks = palautus.data.weeks
-              // a hidden final review is left out altogether: points, grade, feedback, checks and comments
-              .filter(week => !hiddenFromStudents(course, week.weekNumber))
-              .map(week => ({ ...week.dataValues,
-                checks: week.checks.reduce((checksObject, reviewCheck) => ({ ...checksObject, [reviewCheck.checklistItemId]: reviewCheck.checked }), {})
-              }))
-          } else {
-            palautus.data = null
+        },
+        {
+          model: User,
+          attributes: {
+            exclude: ['createdAt', 'updatedAt']
           }
-
-          palautus.role = 'student'
-          res.status(200).send(palautus)
-        } catch (error) {
-          logger.error(error)
-          res.status(400).send('An error occurred. Please try again.')
+        },
+        {
+          model: WeekDraft,
+          attributes: ['weekNumber'],
+          as: 'weekdrafts'
+        },
+        {
+          // additional final review notes by staff; only in the staff's data
+          model: ReviewNote,
+          as: 'reviewNotes',
+          separate: true,
+          order: [['createdAt', 'ASC']],
+          include: [{ model: User, attributes: ['firsts', 'lastname'] }]
+        },
+        {
+          model: Tag,
+          attributes: ['id', 'name', 'color']
         }
-      } else {
-        const teacherPalautus = await StudentInstance.findAll({
-          attributes: {
-            exclude: ['createdAt', 'updatedAt']
-          },
-          where: {
-            courseInstanceId: courseInst
-          },
-          include: [
-            {
-              model: Week,
-              attributes: {
-                // updatedAt / updatedBy let the review page detect saves made after it was opened (#1127)
-                exclude: ['createdAt']
-              },
-              as: 'weeks',
-              include: [
-                {
-                  model: Comment,
-                  attributes: {
-                    exclude: ['updatedAt']
-                  },
-                  as: 'comments'
-                },
-                {
-                  model: ReviewCheck,
-                  as: 'checks'
-                }
-              ]
-            },
-            {
-              model: CodeReview,
-              attributes: {
-                exclude: ['createdAt', 'updatedAt']
-              },
-              as: 'codeReviews',
-              include: [
-                {
-                  model: ReviewCheck,
-                  attributes: ['checklistItemId', 'checked'],
-                  as: 'checks'
-                }
-              ]
-            },
-            {
-              model: User,
-              attributes: {
-                exclude: ['createdAt', 'updatedAt']
-              }
-            },
-            {
-              model: WeekDraft,
-              attributes: ['weekNumber'],
-              as: 'weekdrafts'
-            },
-            {
-              // additional final review notes by staff; only in the staff's data
-              model: ReviewNote,
-              as: 'reviewNotes',
-              separate: true,
-              order: [['createdAt', 'ASC']],
-              include: [{ model: User, attributes: ['firsts', 'lastname'] }]
-            },
-            {
-              model: Tag,
-              attributes: ['id', 'name', 'color']
-            }
-          ],
-          order: [
-            [
-              { model: CodeReview, as: 'codeReviews' },
-              'reviewNumber', 'ASC'
-            ]
-          ]
-        })
-        try {
-          // points / grades changed by someone other than the assigned instructor are marked in the list
-          const changedByOthers = await pointsChangesByOthers(courseInst)
-          const othersChanges = (studentInstance, kind, number) => changedByOthers[`${studentInstance.id}:${kind}:${number}`] || []
-          palautus.data = teacherPalautus.map(studentInstance => ({ ...studentInstance.dataValues,
-            weeks: studentInstance.dataValues.weeks.map(week => ({ ...week.dataValues,
-              checks: week.checks.reduce((checksObject, reviewCheck) => ({ ...checksObject, [reviewCheck.checklistItemId]: reviewCheck.checked }), {}),
-              pointsChangedByOthers: othersChanges(studentInstance, 'week_review', week.weekNumber) })),
-            codeReviews: studentInstance.dataValues.codeReviews.map(codeReview => ({ ...codeReview.dataValues,
-              pointsChangedByOthers: othersChanges(studentInstance, 'code_review_grade', codeReview.reviewNumber) })),
-            reviewNotes: (studentInstance.dataValues.reviewNotes || []).map(note => reviewNoteJson(note, note.User)) }))
-          palautus.role = 'teacher'
-          res.status(200).send(palautus)
-        } catch (e) {
-          logger.error(e)
-          res.status(500).send('An error occurred. Please try again.')
-        }
-      }
-    } catch (error) {
-      logger.error('coursePage error', { error: error.message })
-      if (!res.headersSent) {
-        res.status(500).send('Unexpected error.')
-      }
-    }
+      ],
+      order: [
+        [
+          { model: CodeReview, as: 'codeReviews' },
+          'reviewNumber', 'ASC'
+        ]
+      ]
+    })
+    // points / grades changed by someone other than the assigned instructor are marked in the list
+    const changedByOthers = await pointsChangesByOthers(courseInst)
+    const othersChanges = (studentInstance, kind, number) => changedByOthers[`${studentInstance.id}:${kind}:${number}`] || []
+    palautus.data = teacherPalautus.map(studentInstance => ({ ...studentInstance.dataValues,
+      weeks: studentInstance.dataValues.weeks.map(week => ({ ...week.dataValues,
+        checks: week.checks.reduce((checksObject, reviewCheck) => ({ ...checksObject, [reviewCheck.checklistItemId]: reviewCheck.checked }), {}),
+        pointsChangedByOthers: othersChanges(studentInstance, 'week_review', week.weekNumber) })),
+      codeReviews: studentInstance.dataValues.codeReviews.map(codeReview => ({ ...codeReview.dataValues,
+        pointsChangedByOthers: othersChanges(studentInstance, 'code_review_grade', codeReview.reviewNumber) })),
+      reviewNotes: (studentInstance.dataValues.reviewNotes || []).map(note => reviewNoteJson(note, note.User)) }))
+    palautus.role = 'teacher'
+    res.status(200).send(palautus)
   },
 
   /**
@@ -354,12 +336,8 @@ module.exports = {
    * @param req
    * @param res
    */
-  findByUserStudentInstance(req, res) {
-    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
-      return
-    }
-
-    helper.findByUserStudentInstance(req, res)
+  async findByUserStudentInstance(req, res) {
+    res.status(200).send(await helper.findByUserStudentInstance(req.decoded.id))
   },
 
   /**
@@ -370,343 +348,220 @@ module.exports = {
    * @param res
    */
   async registerToCourseInstance(req, res) {
-    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
-      return
-    }
-
     const course = await CourseInstance.findOne({
       where: {
         ohid: req.params.ohid
       }
     })
     if (!course || course.invalid) {
-      overkillLogging(req, null)
-      return res.status(404).send({
-        message: 'Course instance not found.'
-      })
+      throw notFound('Course instance not found.')
     }
     if (course.active === false) {
-      logger.info('Course registration failed because course is not active.')
-      overkillLogging(req, null)
-      return res.status(400).send({
-        message: 'Course is not active.'
-      })
+      throw badRequest('Course is not active.')
     }
     const user = await User.findByPk(req.decoded.id)
     if (!user) {
-      overkillLogging(req, null)
-      return res.status(400).send({
-        message: 'User could not be found.'
-      })
+      throw badRequest('User could not be found.')
     }
-    const webOodiStatus = await new Promise((resolve) => {
-      helper.checkWebOodi(req, res, user, resolve) // this does not work.
+    if (req.body.github !== undefined && !isHttpUrl(req.body.github)) {
+      throw badRequest(invalidGithubLinkMessage)
+    }
 
-      setTimeout(() => {
-        overkillLogging(req, null)
-        resolve('shitaintright') // Yay! everything went to hell.
-      }, 5000) // set a high timeout value since you really want to wait x)
-    })
-
-    if (webOodiStatus !== 'found') {
-      overkillLogging(req, null)
-      return res.status(403).json({
-        message: 'You have not yet registered to this course at WebOodi. If you have already registered at WebOodi, try again in two hours.'
-      })
-    }
-    let student
-    try {
-      student = await StudentInstance.findOrCreate({
-        where: {
-          userId: user.id,
-          courseInstanceId: course.dataValues.id
-        },
-        defaults: {
-          userId: user.id,
-          name: user,
-          courseInstanceId: course.dataValues.id,
-          // model would like to validate this to be an URL but seems like crap
-          github: req.body.github || '',
-          // model would like to validate this to alphanumeric but seems like this needs specific nulls or empties or whatever
-          projectName: req.body.projectName || ''
-        }
-      })
-    } catch (error) {
-      if (error.name === 'SequelizeValidationError') {
-        const errorMessage = error.errors.map(e => invalidProjectNameErrorMessage[e.path] || e.message || 'Unknown validation error.')
-        return res.status(400).json({
-          message: errorMessage.join('\n')
-        })
+    const student = await withValidation(() => StudentInstance.findOrCreate({
+      where: {
+        userId: user.id,
+        courseInstanceId: course.id
+      },
+      defaults: {
+        userId: user.id,
+        courseInstanceId: course.id,
+        github: req.body.github || '',
+        projectName: req.body.projectName || ''
       }
-      overkillLogging(req, error)
-      return res.status(500).json({
-        message: 'Unexpected error. Please try again.'
-      })
+    }))
+    const [studentInstance, created] = student
+    if (created) {
+      await logRepositoryChange(studentInstance, user.id, null, studentInstance.github, true)
     }
-    if (!student) {
-      overkillLogging(req, null)
-      res.status(400).json({
-        message: 'Student record could not be found or created.'
-      })
-    } else {
-      const [studentInstance, created] = student
-      if (created) {
-        await logRepositoryChange(studentInstance, user.id, null, studentInstance.github, true)
-      }
-      return res.status(200).json(student)
-    }
+    res.status(200).json(student)
   },
 
   /**
-   * req.body: {
-   *   ohid,
-   *   studentInstances: [
-   *     {
-   *       userId,
-   *       dropped,
-   *       ....
-   *     }
-   *   ]
-   * }
-   */
-  /**
    * Update N student instances, used to changed issue disabled flag for one
    *   permissions: must be instructor on course
+   *   students the caller may not update are silently skipped
+   *
+   * req.body: {
+   *   ohid,
+   *   studentInstances: [{ userId, github?, projectName?, dropped?, repoExists?, issuesDisabled? }]
+   * }
    *
    * @param {*} req
    * @param {*} res
    */
-  massUpdateStudentInstance(req, res) {
-    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
-      return
+  async massUpdateStudentInstance(req, res) {
+    const course = await CourseInstance.findOne({
+      where: { ohid: req.body.ohid }
+    })
+    if (!course) {
+      throw notFound('Course not found.')
+    }
+    const { studentInstances } = req.body
+    if (!Array.isArray(studentInstances)) {
+      throw badRequest('studentInstances must be a list.')
+    }
+    if (studentInstances.some(studentInstance => studentInstance.github && !isHttpUrl(studentInstance.github))) {
+      throw badRequest(invalidGithubLinkMessage)
     }
 
-    try {
-      CourseInstance.findOne({
-        where: { ohid: req.body.ohid }
-      }).then((course) => {
-        if (!course) {
-          res.status(404).send('Course not found.')
-          return
-        }
+    const currentTime = new Date()
+    const updateOne = async (studentInstance) => {
+      const role = await helper.getRoleToViewStudentInstance(req.decoded.id, course.id, studentInstance.userId)
+      if (!role || role === 'student') {
+        return null
+      }
+      const newStudentInstance = pickDefined(studentInstance, ['dropped', 'repoExists', 'issuesDisabled'])
+      if (studentInstance.github) {
+        newStudentInstance.github = studentInstance.github
+      }
+      if (studentInstance.projectName) {
+        newStudentInstance.projectName = studentInstance.projectName
+      }
+      if ('issuesDisabled' in newStudentInstance) {
+        newStudentInstance.issuesDisabledCheckedAt = currentTime.toISOString()
+      }
 
-        const currentTime = new Date()
-
-        Promise.all(req.body.studentInstances.map(studentInstance => helper.getRoleToViewStudentInstance(req, course.id, studentInstance.userId).then((isAllowedToUpdate) => {
-          if (isAllowedToUpdate && isAllowedToUpdate !== 'student') {
-            const newStudentInstance = {}
-            if (studentInstance.github) {
-              newStudentInstance.github = studentInstance.github
-            }
-            if (studentInstance.projectName) {
-              newStudentInstance.projectName = studentInstance.projectName
-            }
-            if ('dropped' in studentInstance) {
-              newStudentInstance.dropped = studentInstance.dropped
-            }
-            if ('repoExists' in studentInstance) {
-              newStudentInstance.repoExists = studentInstance.repoExists
-            }
-            if ('issuesDisabled' in studentInstance) {
-              newStudentInstance.issuesDisabled = studentInstance.issuesDisabled
-              newStudentInstance.issuesDisabledCheckedAt = currentTime.toISOString()
-            }
-
-            const where = { userId: studentInstance.userId, courseInstanceId: course.id }
-            return StudentInstance.findOne({ attributes: ['github'], where })
-              .then(previous => StudentInstance.update(newStudentInstance, { returning: true, where })
-                .then(async ([_, [updatedStudentInstance]]) => {
-                  if (previous && updatedStudentInstance) {
-                    await logRepositoryChange(updatedStudentInstance, req.decoded.id, previous.github, updatedStudentInstance.github)
-                  }
-                  return updatedStudentInstance
-                }))
-          }
-          return Promise.resolve()
-        }))).then((updatedStudents) => {
-          res.status(200).send(updatedStudents.filter(updatedStudent => !!updatedStudent).map(({ dataValues }) => dataValues))
-        }).catch((error) => {
-          logger.error(error)
-          res.status(400).send('An error occurred. Please try again.')
-        })
-      }).catch((error) => {
-        logger.error(error)
-        res.status(400).send('An error occurred. Please try again.')
-      })
-    } catch (e) {
-      logger.error(e)
-      res.status(400).send('An error occurred. Please try again.')
+      const where = { userId: studentInstance.userId, courseInstanceId: course.id }
+      const previous = await StudentInstance.findOne({ attributes: ['github'], where })
+      const [, [updatedStudentInstance]] = await withValidation(
+        () => StudentInstance.update(newStudentInstance, { returning: true, where })
+      )
+      if (previous && updatedStudentInstance) {
+        await logRepositoryChange(
+          updatedStudentInstance, req.decoded.id, previous.github, updatedStudentInstance.github
+        )
+      }
+      return updatedStudentInstance
     }
+
+    const updatedStudents = await Promise.all(studentInstances.map(updateOne))
+    res.status(200).send(updatedStudents.filter(updatedStudent => !!updatedStudent).map(({ dataValues }) => dataValues))
   },
 
   /**
-   * req.body:
-   *    {
-   *      userId, //Only required if updating student instance of other user than the currently logged in
-   *      github,
-   *      projectname,
-   *      dropped
-   *    }
-   */
-  /**
    * Update one student instance; perhaps to change dropped status, repo etc.
    *   permissions: must be instructor on course or the student themselves
-   *   student cannot edit issues disabled or dropped status
+   *   a student can change only their repository (github, repoExists) and project name
+   *
+   * req.body: {
+   *   ohid,
+   *   userId, // only required if updating student instance of other user than the currently logged in
+   *   github, projectName, repoExists, dropped, validRegistration, issuesDisabled // the ones to change
+   * }
    *
    * @param {*} req
    * @param {*} res
    */
   async updateStudentInstance(req, res) {
-    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
-      return
-    }
+    const userId = req.body.userId || req.decoded.id
 
-    try {
-      if (req.authenticated.success) {
-        const userId = req.body.userId || req.decoded.id
-
-        const course = await CourseInstance.findOne({
-          where: {
-            ohid: req.body.ohid
-          }
-        })
-        if (!course) {
-          return res.status(404).send('Course not found.')
-        }
-        const isAllowedToUpdate = await helper.getRoleToViewStudentInstance(req, course.id, userId)
-        if (!isAllowedToUpdate) {
-          return res.status(403).send(`You are not allowed to update student instance for user ${userId}.`)
-        }
-        if (req.body.issuesDisabled && isAllowedToUpdate === 'student') {
-          return res.status(403).send('You cannot modify this flag as a student.')
-        }
-        const targetStudent = await StudentInstance.findOne({
-          where: {
-            userId,
-            courseInstanceId: course.id
-          }
-        })
-        if (!targetStudent) {
-          res.status(400).send('Student not found.')
-          return
-        }
-        try {
-          const previousGithub = targetStudent.github
-          const updatedStudentInstance = await targetStudent.update({
-            github: req.body.github || targetStudent.github,
-            projectName: req.body.projectName || targetStudent.projectName,
-            dropped: 'dropped' in req.body ? req.body.dropped : targetStudent.dropped,
-            validRegistration: 'validRegistration' in req.body ? req.body.validRegistration : targetStudent.validRegistration,
-            repoExists: 'repoExists' in req.body ? req.body.repoExists : targetStudent.repoExists,
-            issuesDisabled: 'issuesDisabled' in req.body ? req.body.issuesDisabled : targetStudent.issuesDisabled,
-            issuesDisabledCheckedAt: 'issuesDisabled' in req.body ? new Date().toISOString() : targetStudent.issuesDisabledCheckedAt
-          })
-          await logRepositoryChange(updatedStudentInstance, req.decoded.id, previousGithub, updatedStudentInstance.github)
-          res.status(200).send(updatedStudentInstance)
-        } catch (error) {
-          if (error.name === 'SequelizeValidationError') {
-            const errorMessage = error.errors.map(
-              e => invalidProjectNameErrorMessage[e.path] || e.message || 'Unknown validation error.')
-            logger.error(error)
-            return res.status(400).send({ message: errorMessage.join('\n') })
-          }
-          res.status(400).send('\n\n\n\nAn error occurred: ', error)
-        }
+    const course = await CourseInstance.findOne({
+      where: {
+        ohid: req.body.ohid
       }
-    } catch (e) {
-      logger.error(e)
-      res.status(400).send('An error occurred. Please try again.')
+    })
+    if (!course) {
+      throw notFound('Course not found.')
     }
+    const role = await helper.getRoleToViewStudentInstance(req.decoded.id, course.id, userId)
+    if (!role) {
+      throw forbidden(`You are not allowed to update student instance for user ${userId}.`)
+    }
+    if (role === 'student' && staffOnlyStudentFields.some(field => req.body[field] !== undefined)) {
+      throw forbidden('You cannot modify this flag as a student.')
+    }
+    const targetStudent = await StudentInstance.findOne({
+      where: {
+        userId,
+        courseInstanceId: course.id
+      }
+    })
+    if (!targetStudent) {
+      throw badRequest('Student not found.')
+    }
+
+    const changes = pickDefined(req.body, ['github', 'projectName', 'repoExists', ...staffOnlyStudentFields])
+    if ('issuesDisabled' in changes) {
+      changes.issuesDisabledCheckedAt = new Date().toISOString()
+    }
+    // links stored before links were checked may be kept as they are
+    if ('github' in changes && changes.github !== targetStudent.github && !isHttpUrl(changes.github)) {
+      throw badRequest(invalidGithubLinkMessage)
+    }
+
+    const previousGithub = targetStudent.github
+    const updatedStudentInstance = await withValidation(() => targetStudent.update(changes))
+    await logRepositoryChange(updatedStudentInstance, req.decoded.id, previousGithub, updatedStudentInstance.github)
+    res.status(200).send(updatedStudentInstance)
   },
 
   /**
    * update course info
    *   permissions: must be teacher or assistant on the course
+   *   a field missing from the request keeps its value
    *
    * @param req
    * @param res
-   * @returns {*|Promise<T>}
    */
-  update(req, res) {
-    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
-      return
-    }
-
+  async update(req, res) {
     const badLink = ['coursesPage', 'courseMaterial']
       .find(field => typeof req.body[field] === 'string' && req.body[field] !== '' && !isHttpUrl(req.body[field]))
     if (badLink) {
-      res.status(400).send({ message: `${badLink === 'coursesPage' ? 'The course page link' : 'The course material link'} must be a web address starting with http:// or https://.` })
-      return
+      const name = badLink === 'coursesPage' ? 'The course page link' : 'The course material link'
+      throw badRequest(`${name} must be a web address starting with http:// or https://.`)
     }
 
-    CourseInstance.findOne({
+    const courseInstance = await CourseInstance.findOne({
       where: {
         ohid: req.params.id
       }
     })
-      .then((courseInstance) => {
-        if (!courseInstance) {
-          res.status(400).send({
-            message: 'Course instance not found.'
-          })
-          return
-        }
-        TeacherInstance.findOne({
-          where: {
-            userId: req.decoded.id,
-            courseInstanceId: courseInstance.id
-          }
-        })
-          .then((teacher) => {
-            if (!teacher || !req.authenticated.success) {
-              res.status(400).send('You have to be a teacher to update course info.')
-              return
-            }
-            if (req.body.weekAmount < 1) {
-              res.status(400).send('weekAmount must be a positive value.')
-              return
-            }
-            if (req.body.weekAmount > 30) {
-              res.status(400).send('weekAmount cannot be greater than 30.')
-              return
-            }
-            if (req.body.weekMaxPoints < 0) {
-              res.status(400).send('weekMaxPoints must be a non-negative value.')
-              return
-            }
-            const newCr = req.body.newCr || []
-            courseInstance
-              .update({
-                name: req.body.name || courseInstance.name,
-                start: req.body.start || courseInstance.start,
-                end: req.body.end || courseInstance.end,
-                // Without stringifying req.body.active this gets interpreted as a boolean operation. Go javascript.
-                active: String(req.body.active) || courseInstance.active,
-                weekAmount: req.body.weekAmount || courseInstance.weekAmount,
-                weekMaxPoints: req.body.weekMaxPoints || courseInstance.weekMaxPoints,
-                currentWeek: req.body.currentWeek || courseInstance.currentWeek,
-                finalReview: req.body.finalReview,
-                currentCodeReview: newCr.length === 0 ? [] : newCr,
-                coursesPage: typeof req.body.coursesPage === 'string' ? req.body.coursesPage : courseInstance.coursesPage,
-                courseMaterial: typeof req.body.courseMaterial === 'string' ? req.body.courseMaterial : courseInstance.courseMaterial,
-                finalReviewHasPoints: 'finalReviewHasPoints' in req.body ? req.body.finalReviewHasPoints : courseInstance.finalReviewHasPoints,
-                finalReviewVisible: typeof req.body.finalReviewVisible === 'boolean' ? req.body.finalReviewVisible : courseInstance.finalReviewVisible
-              })
-              .then(updatedCourseInstance => res.status(200).send(updatedCourseInstance))
-              .catch((error) => {
-                res.status(400).send('An error occurred. Please try again.')
-                logger.error(error)
-              })
-          })
-          .catch((error) => {
-            res.status(400).send('An error occurred. Please try again.')
-            logger.error(error)
-          })
-      })
-      .catch((error) => {
-        res.status(400).send('An error occurred. Please try again.')
-        logger.error(error)
-      })
+    if (!courseInstance) {
+      throw badRequest('Course instance not found.')
+    }
+    await requireCourseStaff(req, courseInstance.id, 'You have to be a teacher to update course info.')
+
+    if (req.body.weekAmount < 1) {
+      throw badRequest('weekAmount must be a positive value.')
+    }
+    if (req.body.weekAmount > 30) {
+      throw badRequest('weekAmount cannot be greater than 30.')
+    }
+    if (req.body.weekMaxPoints < 0) {
+      throw badRequest('weekMaxPoints must be a non-negative value.')
+    }
+
+    // null and '' (an emptied input) keep the value, as before; 0 and false are applied
+    const changes = pickDefined(
+      req.body,
+      ['name', 'start', 'end', 'active', 'weekAmount', 'weekMaxPoints', 'currentWeek',
+        'finalReview', 'finalReviewHasPoints'],
+      value => value !== undefined && value !== null && value !== ''
+    )
+    if (Array.isArray(req.body.newCr)) {
+      changes.currentCodeReview = req.body.newCr
+    }
+    ['coursesPage', 'courseMaterial'].forEach((field) => {
+      if (typeof req.body[field] === 'string') {
+        changes[field] = req.body[field]
+      }
+    })
+    if (typeof req.body.finalReviewVisible === 'boolean') {
+      changes.finalReviewVisible = req.body.finalReviewVisible
+    }
+
+    const updatedCourseInstance = await courseInstance.update(changes)
+    res.status(200).send(updatedCourseInstance)
   },
 
   /**
@@ -717,27 +572,19 @@ module.exports = {
    * @param res
    */
   async setInvalid(req, res) {
-    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
-      return
+    if (typeof req.body.invalid !== 'boolean') {
+      throw badRequest('"invalid" must be true or false.')
     }
-    try {
-      if (typeof req.body.invalid !== 'boolean') {
-        return res.status(400).send('"invalid" must be true or false.')
-      }
-      const course = await CourseInstance.findOne({ where: { ohid: req.params.ohid } })
-      if (!course) {
-        return res.status(404).send('Course not found.')
-      }
-      if (!(await canMarkInvalid(req.decoded.id, course))) {
-        return res.status(403).send('Only the teacher of the course or an admin can mark it invalid.')
-      }
-      await course.update({ invalid: req.body.invalid })
-      logger.info('course marked', { ohid: course.ohid, invalid: course.invalid, userId: req.decoded.id })
-      return res.status(200).send({ ohid: course.ohid, invalid: course.invalid })
-    } catch (error) {
-      logger.error('setInvalid error', { error: error.message })
-      return res.status(500).send('Unexpected error.')
+    const course = await CourseInstance.findOne({ where: { ohid: req.params.ohid } })
+    if (!course) {
+      throw notFound('Course not found.')
     }
+    if (!(await canMarkInvalid(req.decoded.id, course))) {
+      throw forbidden('Only the teacher of the course or an admin can mark it invalid.')
+    }
+    await course.update({ invalid: req.body.invalid })
+    logger.info('course marked', { ohid: course.ohid, invalid: course.invalid, userId: req.decoded.id })
+    res.status(200).send({ ohid: course.ohid, invalid: course.invalid })
   },
 
   /**
@@ -746,23 +593,16 @@ module.exports = {
    *
    * @param req
    * @param res
-   * @returns {Promise<Array<Model>>}
    */
   async list(req, res) {
-    try {
-      const courses = await CourseInstance.findAll({
-        attributes: {
-          exclude: ['createdAt', 'updatedAt']
-        }
-      })
-      // invalid courses (#905) only for their staff and sysops
-      const userId = req.authenticated && req.authenticated.success ? req.decoded.id : null
-      const visible = await Promise.all(courses.map(course => canSeeCourse(userId, course)))
-      res.status(200).send(courses.filter((_, index) => visible[index]))
-    } catch (error) {
-      logger.error(error)
-      res.status(400).send('An error occurred. Please try again.')
-    }
+    const courses = await CourseInstance.findAll({
+      attributes: {
+        exclude: ['createdAt', 'updatedAt']
+      }
+    })
+    // invalid courses (#905) only for their staff and sysops
+    const visible = await Promise.all(courses.map(course => canSeeCourse(req.decoded.id, course)))
+    res.status(200).send(courses.filter((_, index) => visible[index]))
   },
 
   /**
@@ -773,34 +613,19 @@ module.exports = {
    * @param req
    * @param res
    */
-  retrieve(req, res) {
-    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
-      return
-    }
-
-    CourseInstance.findOne(
-      {
-        attributes: {
-          exclude: ['createdAt', 'updatedAt']
-        },
-        where: {
-          ohid: req.params.ohid
-        }
+  async retrieve(req, res) {
+    const courseInstance = await CourseInstance.findOne({
+      attributes: {
+        exclude: ['createdAt', 'updatedAt']
       },
-      {}
-    )
-      .then(async (courseInstance) => {
-        if (!courseInstance || !(await canSeeCourse(req.decoded.id, courseInstance))) {
-          return res.status(404).send({
-            message: 'Course not found.'
-          })
-        }
-        return res.status(200).send(courseInstance)
-      })
-      .catch((error) => {
-        logger.error(error)
-        res.status(400).send('An error occurred. Please try again.')
-      })
+      where: {
+        ohid: req.params.ohid
+      }
+    })
+    if (!courseInstance || !(await canSeeCourse(req.decoded.id, courseInstance))) {
+      throw notFound('Course not found.')
+    }
+    res.status(200).send(courseInstance)
   },
 
   /**
@@ -811,154 +636,100 @@ module.exports = {
    *
    * @param req
    * @param res
-   * @returns {Promise<Model>}
    */
   async retrieveCourseStuff(req, res) {
-    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
-      return
+    const currentUser = await User.findByPk(req.decoded.id, { attributes: ['id'] })
+    if (!currentUser) {
+      throw badRequest('User not found')
     }
 
-    try {
-      const currentUser = await User.findByPk(req.decoded.id)
-
-      if (!currentUser) {
-        return res.status(400).send('User not found')
+    const course = await CourseInstance.findOne({
+      where: {
+        ohid: req.params.ohid
       }
+    })
+    if (!course || !(await canSeeCourse(req.decoded.id, course))) {
+      throw notFound('Course not found.')
+    }
 
-      const checkRegistrationStatus = new Promise((resolve, _reject) => {
-        helper.checkWebOodi(req, res, currentUser, resolve)
-        setTimeout(() => {
-          resolve('failure')
-        }, 5000)
-      })
-
-      const registrationAtWebOodi = await checkRegistrationStatus
-
-      const course = await CourseInstance.findOne({
-        where: {
-          ohid: req.params.ohid
-        }
-      })
-
-      if (!course || !(await canSeeCourse(req.decoded.id, course))) {
-        return res.status(404).send('Course not found.')
-      }
-
-      const isTeacher = await helper.getTeacherId(req.decoded.id, course.id)
-      const teachers = isTeacher ? await TeacherInstance.findAll({
+    const teachers = await isCourseStaff(req.decoded.id, course.id)
+      ? await TeacherInstance.findAll({
         where: {
           courseInstanceId: course.id
-        }
-      }) : []
-
-      const names = {}
-      if (teachers.length > 0) {
-        const users = await User.findAll()
-        users.forEach((user) => {
-          names[user.id] = {
-            firsts: user.firsts,
-            lastname: user.lastname
-          }
-        })
-
-        for (const i in Object.keys(teachers)) {
-          const teacher = teachers[i]
-          teacher.dataValues.firsts = names[teacher.userId].firsts
-          teacher.dataValues.lastname = names[teacher.userId].lastname
-        }
-      }
-
-      const checklists = await Checklist.findAll({
-        where: {
-          courseInstanceId: course.id
-        }
+        },
+        include: [{ model: User, attributes: ['firsts', 'lastname'] }]
       })
-      // Add checklist items to checklists
-      for (const checklist of checklists) {
-        const checklistJson = {}
-        // Checklist queries are intentionally sequential.
-        // eslint-disable-next-line no-await-in-loop
-        // in the order set in the checklist editor; topics follow the order of their first item
-        const checklistItems = await ChecklistItem.findAll({
-          where: {
-            checklistId: checklist.id
-          },
-          order: [['order', 'ASC']]
-        })
-        checklistItems.forEach(({ dataValues: checklistItem }) => {
+      : []
+
+    const checklists = await Checklist.findAll({
+      where: {
+        courseInstanceId: course.id
+      }
+    })
+    // in the order set in the checklist editor; topics follow the order of their first item
+    const checklistItems = await ChecklistItem.findAll({
+      where: {
+        checklistId: checklists.map(checklist => checklist.id)
+      },
+      order: [['order', 'ASC'], ['id', 'ASC']]
+    })
+    checklists.forEach((checklist) => {
+      const checklistJson = {}
+      checklistItems
+        .filter(item => item.checklistId === checklist.id)
+        .forEach(({ dataValues: checklistItem }) => {
           if (checklistJson[checklistItem.category] === undefined) {
             checklistJson[checklistItem.category] = []
           }
-
           const checklistItemCopy = { ...checklistItem }
           delete checklistItemCopy.category
           delete checklistItemCopy.checklistId
           checklistJson[checklistItem.category].push(checklistItemCopy)
         })
+      checklist.dataValues.list = checklistJson
+    })
 
-        checklist.dataValues.list = checklistJson
-      }
+    course.dataValues.teacherInstances = teachers.map((teacher) => {
+      const { User: teacherUser, ...teacherInstance } = teacher.get({ plain: true })
+      return { ...teacherInstance, firsts: teacherUser.firsts, lastname: teacherUser.lastname }
+    })
+    // registrations are no longer checked at WebOodi; the frontend still reads the field
+    course.dataValues.registrationAtWebOodi = 'found'
+    course.dataValues.checklists = checklists
 
-      course.dataValues.teacherInstances = teachers
-      course.dataValues.registrationAtWebOodi = registrationAtWebOodi
-      course.dataValues.checklists = checklists
-
-      return res.status(200).send(course)
-    } catch (exception) {
-      return res.status(400).send(exception)
-    }
+    res.status(200).send(course)
   },
 
   /**
    * Copy course information from another course. This copies
    * the week amount, default maximum week points, checklists,
    * course tags, and links to course page and material.
-   *   permissions: must be a teacher/assistant on the course
-   *     that we are copying to
+   *   permissions: must be a teacher/assistant on both courses
    *
    * @param req
    * @param res
-   * @returns {*|Promise<T>}
    */
   async copyCourseInformation(req, res) {
-    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
-      return
-    }
     if (!req.body.copyFrom || !req.body.copyTo) {
-      return res.status(400).send('You must supply both a "copyFrom" and "copyTo".')
+      throw badRequest('You must supply both a "copyFrom" and "copyTo".')
     }
 
-    const course = await CourseInstance.findOne({
-      where: {
-        id: req.body.copyTo
-      }
-    })
-    const template = await CourseInstance.findOne({
-      where: {
-        id: req.body.copyFrom
-      }
-    })
-    if (!course || !template) {
-      return res.status(400).send('Course not found.')
+    const findCourse = id => (isId(id) ? CourseInstance.findOne({ where: { id } }) : null)
+    const [course, template] = await Promise.all([findCourse(req.body.copyTo), findCourse(req.body.copyFrom)])
+    // an invalid course (#905) is not offered as a template
+    if (!course || !template || template.invalid) {
+      throw badRequest('Course not found.')
     }
 
-    // check permissions; must be a teacher on the course we are copying to
-    const teacher = await helper.getTeacherId(req.decoded.id, course.id)
-    if (!teacher) {
-      return res.status(403).send('You must be a teacher on the course you are copying to.')
-    }
+    await requireCourseStaff(req, course.id, 'You must be a teacher on the course you are copying to.')
+    await requireCourseStaff(req, template.id, 'You can only copy course information from your own courses.')
 
     // course info: week amount, final review?, maxpoints
-    try {
-      await course.update({
-        weekAmount: template.weekAmount,
-        weekMaxPoints: template.weekMaxPoints,
-        finalReview: template.finalReview
-      })
-    } catch (e) {
-      logger.error(e)
-      return res.status(500).send('Failed to copy course information.')
-    }
+    await course.update({
+      weekAmount: template.weekAmount,
+      weekMaxPoints: template.weekMaxPoints,
+      finalReview: template.finalReview
+    })
 
     // course tags
     const courseTags = await Tag.findAll({
@@ -1002,7 +773,7 @@ module.exports = {
       course.id
     )
 
-    return res.status(200).send(course)
+    res.status(200).send(course)
   },
 
   /**
@@ -1012,113 +783,71 @@ module.exports = {
    *
    * @param req
    * @param res
-   * @returns {*|Promise<T>}
    */
   async addComment(req, res) {
-    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
-      return
+    const userId = req.decoded.id
+    const message = req.body
+
+    const user = await User.findByPk(userId)
+    if (!user) {
+      throw badRequest('You are not an user in the system.')
+    }
+    if (!isId(message.week) || !(await helper.checkHasCommentPermission(userId, message.week))) {
+      throw forbidden('You are not allowed to comment here.')
+    }
+    if (typeof message.comment !== 'string' || message.comment.trim().length === 0) {
+      throw badRequest('Comment cannot be empty.')
     }
 
-    if (req.authenticated.success) {
-      const userId = req.decoded.id
-      try {
-        const message = req.body
-
-        const user = await User.findByPk(userId)
-        if (!user) {
-          res.status(400).send('You are not an user in the system.')
-          return
-        }
-        const hasPermission = await helper.checkHasCommentPermission(userId, message.week)
-        if (!hasPermission) {
-          res.status(403).send('You are not allowed to comment here.')
-          return
-        }
-        const name = user.firsts.concat(' ').concat(user.lastname)
-
-        if (message.comment.trim().length === 0) {
-          res.status(400).send('Comment cannot be empty.')
-          return
-        }
-
-        const comment = await Comment.create({
-          userId,
-          weekId: message.week,
-          hidden: message.hidden,
-          comment: message.comment,
-          from: name,
-          notified: false,
-          isRead: [userId]
-        })
-
-        if (!comment) {
-          res.status(400).send('Week not found.')
-        } else {
-          res.status(200).send(comment)
-        }
-      } catch (e) {
-        res.status(400).send('An error occurred. Please try again.')
-        logger.error(e)
-      }
-    }
+    const comment = await Comment.create({
+      userId,
+      weekId: message.week,
+      hidden: message.hidden,
+      comment: message.comment,
+      from: `${user.firsts} ${user.lastname}`,
+      notified: false,
+      isRead: [userId]
+    })
+    res.status(200).send(comment)
   },
 
   /**
-   * Mark a comment as read
-   *   permissions: must be able to see the comment (see above)
+   * Mark comments as read
+   *   permissions: must be able to see the comments (see above)
+   *
+   * req.body: [{ id, weekId, ... }], comments of one week review
    *
    * @param req
    * @param res
-   * @returns {*|Promise<T>}
    */
   async markCommentsAsRead(req, res) {
-    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
-      return
+    const userId = req.decoded.id
+    const commentsToUpdate = req.body
+    if (!Array.isArray(commentsToUpdate) || commentsToUpdate.length === 0) {
+      throw badRequest('No comments given.')
     }
-    if (req.authenticated.success) {
-      try {
-        const userId = req.decoded.id
-        const commentsToUpdate = req.body
-        const weekId = commentsToUpdate[0].weekId
-        // comments should have same weekId
-        if (commentsToUpdate.filter(comment => comment.weekId !== weekId).length > 0) {
-          return res.status(400).send('the comments do not belong to the same week review')
-        }
-        // comments should exist
-        let arr = []
-        for (let i = 0; i < commentsToUpdate.length; i++) {
-          arr.push(Comment.findByPk(commentsToUpdate[i].id))
-        }
-        arr = await Promise.all(arr)
-        if (arr.includes(null)) {
-          return res.status(400).send('comment not found')
-        }
+    const { weekId } = commentsToUpdate[0]
+    // comments should have same weekId
+    if (commentsToUpdate.some(comment => comment.weekId !== weekId)) {
+      throw badRequest('the comments do not belong to the same week review')
+    }
+    // comments should exist, and really be comments of that week
+    const comments = await Promise.all(commentsToUpdate
+      .map(comment => (isId(comment.id) ? Comment.findByPk(comment.id) : null)))
+    if (comments.includes(null)) {
+      throw badRequest('comment not found')
+    }
+    if (comments.some(comment => comment.weekId !== weekId)) {
+      throw badRequest('the comments do not belong to the same week review')
+    }
 
-        const hasPermission = await helper.checkHasCommentPermission(userId, weekId)
-        if (!hasPermission) {
-          return res.status(403).send('you have no permission to update these comments')
-        }
-        commentsToUpdate.map((comment) => {
-          if (comment.isRead === null) {
-            comment.isRead = [userId]
-          } else if (!comment.isRead.includes(userId)) {
-            comment.isRead.push(userId)
-          }
-        })
-        await Promise.all(commentsToUpdate.map(comment => Comment.update(
-          { isRead: comment.isRead },
-          {
-            where: {
-              id: comment.id
-            }
-          }
-        )))
-        res.status(200).send(commentsToUpdate)
-      } catch (e) {
-        res.status(400).send('An error occurred. Please try again.')
-        logger.error(e)
-      }
+    if (!(await helper.checkHasCommentPermission(userId, weekId))) {
+      throw forbidden('you have no permission to update these comments')
     }
+    // the readers are taken from the database, not from the request
+    const isRead = ({ isRead: readers }) => (readers && readers.includes(userId) ? readers : [...(readers || []), userId])
+    await Promise.all(comments.map(comment => comment.update({ isRead: isRead(comment) })))
+    res.status(200).send(commentsToUpdate.map((comment, index) => ({ ...comment, isRead: comments[index].isRead })))
   },
 
   /**
@@ -1127,31 +856,22 @@ module.exports = {
    *   Visibility (hidden) cannot be changed. The edited comment becomes unread for everyone else.
    */
   async editComment(req, res) {
-    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
-      return
+    const comment = isId(req.params.id) ? await Comment.findByPk(Number(req.params.id)) : null
+    if (!comment) {
+      throw notFound('Comment not found.')
     }
-    try {
-      const comment = await Comment.findByPk(Number(req.params.id))
-      if (!comment) {
-        return res.status(404).send({ message: 'Comment not found.' })
-      }
-      if (!comment.userId || comment.userId !== req.decoded.id) {
-        return res.status(403).send({ message: 'You can only edit your own comments.' })
-      }
-      const hasPermission = await helper.checkHasCommentPermission(req.decoded.id, comment.weekId)
-      if (!hasPermission) {
-        return res.status(403).send({ message: 'You are not allowed to comment here.' })
-      }
-      const text = typeof req.body.comment === 'string' ? req.body.comment : ''
-      if (text.trim().length === 0) {
-        return res.status(400).send({ message: 'Comment cannot be empty.' })
-      }
-      await comment.update({ comment: text, editedAt: new Date(), isRead: [req.decoded.id] })
-      res.status(200).send(comment)
-    } catch (error) {
-      logger.error('Edit comment error', { error: error.message })
-      res.status(500).send({ message: 'Unexpected error.' })
+    if (!comment.userId || comment.userId !== req.decoded.id) {
+      throw forbidden('You can only edit your own comments.')
     }
+    if (!(await helper.checkHasCommentPermission(req.decoded.id, comment.weekId))) {
+      throw forbidden('You are not allowed to comment here.')
+    }
+    const text = typeof req.body.comment === 'string' ? req.body.comment : ''
+    if (text.trim().length === 0) {
+      throw badRequest('Comment cannot be empty.')
+    }
+    await comment.update({ comment: text, editedAt: new Date(), isRead: [req.decoded.id] })
+    res.status(200).send(comment)
   },
 
   /**
@@ -1161,32 +881,21 @@ module.exports = {
    *
    * @param req
    * @param res
-   * @returns {Promise<Array<Model>>}
    */
   async getCommentsForWeek(req, res) {
-    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
-      return
-    }
-
-    const role = await helper.checkHasCommentPermission(req.decoded.id, req.body.week)
+    const role = isId(req.body.week) ? await helper.checkHasCommentPermission(req.decoded.id, req.body.week) : false
     if (!role) {
-      return res.status(403).send('you cannot see the comments here')
+      throw forbidden('you cannot see the comments here')
     }
 
     // hidden comments are for course staff only
     const where = role === 'teacher' ? { weekId: req.body.week } : { weekId: req.body.week, hidden: false }
-
-    try {
-      const comments = await Comment.findAll({
-        attributes: {
-          exclude: ['updatedAt']
-        },
-        where
-      })
-      res.status(200).send(comments)
-    } catch (error) {
-      res.status(400).send('An error occurred. Please try again.')
-      logger.error(error)
-    }
+    const comments = await Comment.findAll({
+      attributes: {
+        exclude: ['updatedAt']
+      },
+      where
+    })
+    res.status(200).send(comments)
   }
 }

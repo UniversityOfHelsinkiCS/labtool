@@ -134,7 +134,7 @@ describe('Login, logout and general API behavior', () => {
   describe('authentication middleware', () => {
     it('rejects requests without a token', async () => {
       const res = await api.get('/api/tags/list').expect(401)
-      assert.strictEqual(res.text, 'you have to be authenticated')
+      assert.strictEqual(res.body.message, 'you have to be authenticated')
     })
 
     it('rejects a token signed with another secret', async () => {
@@ -180,8 +180,10 @@ describe('Login, logout and general API behavior', () => {
     })
 
     it('unknown GET routes return 404 JSON', async () => {
-      const res = await api.get('/api/does-not-exist').expect(404)
+      const res = await as(await createUser()).get('/api/does-not-exist').expect(404)
       assert.deepStrictEqual(res.body, { message: 'Not found.' })
+      // without a token every non-public API path answers 401 before routing
+      await api.get('/api/does-not-exist').expect(401)
     })
 
     it('sets CORS headers', async () => {

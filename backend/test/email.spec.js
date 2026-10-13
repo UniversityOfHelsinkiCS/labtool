@@ -112,7 +112,7 @@ describe('Email API', () => {
         .post('/api/email/send')
         .send({ role: 'teacher', commentId: comment.id })
         .expect(400)
-      assert.match(res.text, /hidden/)
+      assert.match(res.body.message, /hidden/)
       assert.strictEqual(mail.sent.length, 0)
       assert.strictEqual((await Comment.findByPk(comment.id)).notified, false)
     })
@@ -133,11 +133,67 @@ describe('Email API', () => {
 
     it('refuses a student notification when no assistant is assigned', async () => {
       const comment = await f.createComment(week, s.users.student)
-      await mailAs(s.users.student)
+      const res = await mailAs(s.users.student)
         .post('/api/email/send')
         .send({ role: 'student', commentId: comment.id })
         .expect(400)
+      // was a plain text body, which the frontend (data.message) could not show
+      assert.strictEqual(
+        res.body.message,
+        'Cannot send email to instructor because there is no instructor assigned to you.'
+      )
       assert.strictEqual(mail.sent.length, 0)
+    })
+
+    it('answers 404 for a comment or week that does not exist', async () => {
+      let res = await mailAs(s.users.teacher)
+        .post('/api/email/send')
+        .send({ role: 'teacher', commentId: 999999 })
+        .expect(404)
+      assert.strictEqual(res.body.message, 'Comment not found.')
+      res = await mailAs(s.users.student)
+        .post('/api/email/send')
+        .send({ role: 'student', commentId: 999999 })
+        .expect(404)
+      assert.strictEqual(res.body.message, 'Comment not found.')
+      res = await mailAs(s.users.teacher)
+        .post('/api/email/send')
+        .send({ role: 'teacher', weekId: 999999 })
+        .expect(404)
+      assert.strictEqual(res.body.message, 'Week not found.')
+      assert.strictEqual(mail.sent.length, 0)
+    })
+
+    it('has marked the comment as notified when it answers', async () => {
+      const comment = await f.createComment(week, s.users.teacher)
+      await mailAs(s.users.teacher)
+        .post('/api/email/send')
+        .send({ role: 'teacher', commentId: comment.id })
+        .expect(200)
+      assert.strictEqual((await Comment.findByPk(comment.id)).notified, true)
+    })
+
+    it('links to the production frontend by default, to FRONTEND_URL when set and to localhost in development', async () => {
+      await mailAs(s.users.teacher)
+        .post('/api/email/send')
+        .send({ role: 'teacher', weekId: week.id })
+        .expect(200)
+      const ownUrl = { NODE_ENV: 'production', FRONTEND_URL: 'https://labtool.example/labtool/' }
+      await mailAs(s.users.teacher, ownUrl)
+        .post('/api/email/send')
+        .send({ role: 'teacher', weekId: week.id })
+        .expect(200)
+      await mailAs(s.users.teacher, { NODE_ENV: 'development', SMTP_HOST: 'mailpit', SMTP_PORT: '1025' })
+        .post('/api/email/send')
+        .send({ role: 'teacher', weekId: week.id })
+        .expect(200)
+
+      const links = mail.sent.map(message => message.html.match(/<a href="([^"]+)">/)[1])
+      assert.deepStrictEqual(links, [
+        `https://study.cs.helsinki.fi/labtool/courses/${s.course.ohid}`,
+        `https://labtool.example/labtool/courses/${s.course.ohid}`,
+        `http://localhost:3000/labtool/courses/${s.course.ohid}`
+      ])
     })
 
     it('does not let a student notify about another student\'s comment', async () => {

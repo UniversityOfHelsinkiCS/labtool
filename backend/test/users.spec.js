@@ -21,8 +21,8 @@ describe('Users API', () => {
     it('is not available to students', async () => {
       const res = await as(s.users.student)
         .get('/api/users')
-        .expect(401)
-      assert.strictEqual(res.text, 'Unauthorized.')
+        .expect(403)
+      assert.strictEqual(res.body.message, 'Unauthorized.')
     })
 
     it('lists all users for a teacher without student numbers or timestamps', async () => {
@@ -96,17 +96,17 @@ describe('Users API', () => {
         .put('/api/users/update')
         .send({ email: '' })
         .expect(400)
-      assert.deepStrictEqual(res.body, { error: 'Email was too short.' })
+      assert.deepStrictEqual(res.body, { message: 'Email was too short.' })
       res = await as(s.users.student)
         .put('/api/users/update')
         .send({ email: 'no-at-sign' })
         .expect(400)
-      assert.deepStrictEqual(res.body, { error: 'Input was not a valid email address.' })
+      assert.deepStrictEqual(res.body, { message: 'Input was not a valid email address.' })
       res = await as(s.users.student)
         .put('/api/users/update')
         .send({ email: `${'a'.repeat(130)}@x.fi` })
         .expect(400)
-      assert.deepStrictEqual(res.body, { error: 'Email was too long.' })
+      assert.deepStrictEqual(res.body, { message: 'Email was too long.' })
 
       const user = await User.findByPk(s.users.student.id)
       assert.strictEqual(user.email, s.users.student.email)
@@ -126,6 +126,7 @@ describe('Users API', () => {
         .put('/api/users/updateAdmin')
         .send({ id: s.users.teacher.id, sysop: true })
         .expect(403)
+        .expect(res => assert.strictEqual(res.body.message, 'You must be a sysop.'))
       const user = await User.findByPk(s.users.teacher.id)
       assert.strictEqual(user.sysop, false)
     })
@@ -150,14 +151,16 @@ describe('Users API', () => {
 
     it('validates the target user', async () => {
       const sysop = await createUser({ sysop: true })
-      await as(sysop)
+      let res = await as(sysop)
         .put('/api/users/updateAdmin')
         .send({ sysop: true })
         .expect(400)
-      await as(sysop)
+      assert.strictEqual(res.body.message, 'You must provide a user ID.')
+      res = await as(sysop)
         .put('/api/users/updateAdmin')
         .send({ id: 999999, sysop: true })
         .expect(400)
+      assert.strictEqual(res.body.message, 'User not found.')
     })
   })
 
@@ -204,11 +207,12 @@ describe('Users API', () => {
       await as(s.users.student)
         .post('/api/users/teacher/create')
         .send({ ohid: s.course.ohid, id: s.users.student.id })
-        .expect(400)
-      await as(s.users.otherTeacher)
+        .expect(403)
+      const res = await as(s.users.otherTeacher)
         .post('/api/users/teacher/create')
         .send({ ohid: s.course.ohid, id: s.users.otherTeacher.id })
-        .expect(400)
+        .expect(403)
+      assert.strictEqual(res.body.message, 'You must be a teacher on the course to add assistants.')
 
       assert.strictEqual(await TeacherInstance.count({ where: { courseInstanceId: s.course.id } }), 2)
     })
@@ -218,19 +222,24 @@ describe('Users API', () => {
         .post('/api/users/teacher/create')
         .send({ ohid: s.course.ohid, id: s.users.assistant.id })
         .expect(400)
-      assert.strictEqual(res.text, 'This user is already a teacher.')
+      assert.strictEqual(res.body.message, 'This user is already a teacher.')
       assert.strictEqual(await TeacherInstance.count({ where: { userId: s.users.assistant.id } }), 1)
     })
 
-    it('fails for an unknown course or user', async () => {
-      await as(s.users.teacher)
-        .post('/api/users/teacher/create')
-        .send({ ohid: 'nope', id: s.users.outsider.id })
-        .expect(400)
-      await as(s.users.teacher)
-        .post('/api/users/teacher/create')
-        .send({ ohid: s.course.ohid, id: 999999 })
-        .expect(400)
+    it('fails for an unknown or missing course or user', async () => {
+      const bodies = [
+        { ohid: 'nope', id: s.users.outsider.id },
+        { ohid: s.course.ohid, id: 999999 },
+        { id: s.users.outsider.id },
+        { ohid: s.course.ohid }
+      ]
+      for (const body of bodies) {
+        const res = await as(s.users.teacher)
+          .post('/api/users/teacher/create')
+          .send(body)
+          .expect(400)
+        assert.strictEqual(res.body.message, 'User or course not found.')
+      }
     })
   })
 
@@ -255,11 +264,12 @@ describe('Users API', () => {
       await as(s.users.student)
         .post('/api/users/teacher/remove')
         .send({ ohid: s.course.ohid, id: s.users.assistant.id })
-        .expect(400)
-      await as(s.users.otherTeacher)
+        .expect(403)
+      const res = await as(s.users.otherTeacher)
         .post('/api/users/teacher/remove')
         .send({ ohid: s.course.ohid, id: s.users.assistant.id })
-        .expect(400)
+        .expect(403)
+      assert.strictEqual(res.body.message, 'You must teach or assist on the course to remove assistants.')
       assert.strictEqual(await TeacherInstance.count({ where: { userId: s.users.assistant.id } }), 1)
     })
 
@@ -268,7 +278,7 @@ describe('Users API', () => {
         .post('/api/users/teacher/remove')
         .send({ ohid: s.course.ohid, id: s.users.student.id })
         .expect(400)
-      assert.strictEqual(res.text, 'This user is not a teacher.')
+      assert.strictEqual(res.body.message, 'This user is not a teacher.')
     })
 
     it('does not allow removing the teacher responsible for the course', async () => {
@@ -276,7 +286,7 @@ describe('Users API', () => {
         .post('/api/users/teacher/remove')
         .send({ ohid: s.course.ohid, id: s.users.teacher.id })
         .expect(400)
-      assert.strictEqual(res.text, 'Only assistants can be removed.')
+      assert.strictEqual(res.body.message, 'Only assistants can be removed.')
       assert.strictEqual(await TeacherInstance.count({ where: { userId: s.users.teacher.id } }), 1)
     })
   })
@@ -329,11 +339,17 @@ describe('Users API', () => {
       assert.ok(await StudentInstance.findByPk(s.student.id))
     })
 
-    it('fails for an unknown student instance', async () => {
-      await as(s.users.teacher)
+    it('fails for an unknown or missing student instance', async () => {
+      let res = await as(s.users.teacher)
         .post('/api/users/student/remove')
         .send({ id: 999999 })
         .expect(400)
+      assert.strictEqual(res.body.message, 'The student instance does not exist.')
+      res = await as(s.users.teacher)
+        .post('/api/users/student/remove')
+        .send({})
+        .expect(400)
+      assert.strictEqual(res.body.message, 'The student instance does not exist.')
     })
   })
 })

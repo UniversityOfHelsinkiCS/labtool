@@ -11,6 +11,7 @@ import Error from '../Error'
 
 import DocumentTitle from '../DocumentTitle'
 import { finnishLocaleCompare } from '../../util/sort'
+import { errorMessage } from '../../util/errorMessage'
 
 const ImportableCourse = ({ instance }) => (
   <Table.Row>
@@ -68,7 +69,7 @@ export const CourseImport = props => {
     return (
       <Error
         errors={props.errors.map(
-          error => `${error.response.data} (${error.response.status} ${error.response.statusText})`
+          error => `${errorMessage(error, 'Error')} (${error.response.status} ${error.response.statusText})`
         )}
       />
     )

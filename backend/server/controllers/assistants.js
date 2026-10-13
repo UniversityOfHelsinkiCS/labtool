@@ -1,168 +1,104 @@
-const db = require('../models')
-const helper = require('../helpers/courseInstanceHelper')
-const logger = require('../utils/logger')
-/*
-const Sequelize = require('sequelize')
-const env = process.env.NODE_ENV || 'development'
-const StudentInstanceController = require('../controllers').studentInstances
-const config = require('./../config/config.js')[env]
-const Op = Sequelize.Op
-*/
+const { User, StudentInstance, TeacherInstance } = require('../models')
+const { getTeacherId, requireCourseStaff } = require('../helpers/auth')
+const { badRequest, forbidden } = require('../utils/httpError')
 
-const { User, StudentInstance, TeacherInstance, CourseInstance } = db
+const isId = value => Number.isInteger(Number(value)) && value !== null && value !== ''
 
 module.exports = {
   /**
    * Associate instructor with student
-   *   permissions: must be an instructor on course
+   *   permissions: must be a teacher or an assistant on the course
    *
    * @param {*} req
    * @param {*} res
    */
   async create(req, res) {
-    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+    const { teacherInstanceId, studentInstanceId } = req.body
+
+    const studentInstance = isId(studentInstanceId) ? await StudentInstance.findOne({
+      where: {
+        id: studentInstanceId
+      }
+    }) : null
+    if (!studentInstance) {
+      throw badRequest('Specified student instance could not be found.')
+    }
+
+    if (!(await getTeacherId(req.decoded.id, studentInstance.courseInstanceId))) {
+      throw forbidden('You have to be an assistant or teacher in the '
+        + 'same course as the student you are assigning a teacher to.')
+    }
+
+    if (!teacherInstanceId) {
+      await studentInstance.update({
+        teacherInstanceId: null
+      })
+      res.status(200).send(studentInstance)
       return
     }
 
-    try {
-      const teacherInsId = req.body.teacherInstanceId
-      const studentInsId = req.body.studentInstanceId
-
-      if (!req.authenticated.success) {
-        res.status(400).send('You have to be authenticated to do this.')
-        return
+    const givenTeachersTeacherInstance = isId(teacherInstanceId) ? await TeacherInstance.findOne({
+      where: {
+        id: teacherInstanceId
       }
-      const requestMakerId = req.decoded.id
-      const studentInstance = await StudentInstance.findOne({
-        where: {
-          id: studentInsId
-        }
-      })
-      if (!studentInstance) {
-        res.status(400).send('Specified student instance could not be found.')
-        return
-      }
-
-      const requestMakerAsTeacher = await TeacherInstance.findOne({
-        where: {
-          userId: requestMakerId,
-          courseInstanceId: studentInstance.courseInstanceId
-        }
-      })
-      if (!requestMakerAsTeacher) {
-        res.status(400).send('You have to be an assistant or teacher in the'
-          + 'same course as the student you are assigning a teacher to.')
-        return
-      }
-
-      if (!teacherInsId) {
-        studentInstance.update({
-          teacherInstanceId: null
-        })
-        res.status(200).send(studentInstance)
-        return
-      }
-
-      const requestMakersCoursesId = requestMakerAsTeacher.courseInstanceId
-      const givenTeachersTeacherInstance = await TeacherInstance.findOne({
-        where: {
-          id: teacherInsId
-        }
-      })
-      if (!givenTeachersTeacherInstance) {
-        res.status(400).send('There is no teacher with the given teacher instance ID.')
-        return
-      }
-      const teachersCourseId = givenTeachersTeacherInstance.courseInstanceId
-      if (teachersCourseId !== requestMakersCoursesId) {
-        res.status(400).send('You have to be an assistant or teacher in the same course as the teacher you are adding.')
-        return
-      }
-      if (studentInstance.courseInstanceId !== teachersCourseId) {
-        // This might be an unenterable code block.
-        res.status(400).send('The teacher is not from the same course as this student.')
-        return
-      }
-      studentInstance.update({
-        teacherInstanceId: teacherInsId
-      })
-      res.status(200).send(studentInstance)
-    } catch (e) {
-      logger.error('Error when creating an assistant.', { error: e.message })
+    }) : null
+    if (!givenTeachersTeacherInstance) {
+      throw badRequest('There is no teacher with the given teacher instance ID.')
     }
+    if (givenTeachersTeacherInstance.courseInstanceId !== studentInstance.courseInstanceId) {
+      throw badRequest('You have to be an assistant or teacher in the same course as the teacher you are adding.')
+    }
+    await studentInstance.update({
+      teacherInstanceId
+    })
+    res.status(200).send(studentInstance)
   },
 
   /**
    * Get assistant for student instance
-   *   permissions: must be an instructor on course
+   *   permissions: must be a teacher or an assistant on the course
    * currently not used by frontend, but has a call (getStudentsAssistant)
    *
    * @param {*} req
    * @param {*} res
    */
   async findAssistantByStudentInstance(req, res) {
-    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
-      return
-    }
-
     const returnedAssistantInfo = {
       status: undefined,
       data: undefined
     }
-    let studentInstanceId
 
-    try {
-      studentInstanceId = req.params.id
-    } catch (e) {
-      logger.error(e)
-      res.status(400).send('An error occurred. Please try again.')
-    }
-
-    try {
-      const studentInstance = await StudentInstance.findOne({
-        where: {
-          id: studentInstanceId
-        }
-      })
-
-      if (studentInstance) {
-        const courseInstance = await CourseInstance.findOne({
-          where: { id: studentInstance.courseInstanceId }
-        })
-        const isTeacher = await helper.getTeacherId(req.decoded.id, courseInstance.id)
-        if (!isTeacher) {
-          return res.status(403).send('You must be an instructor on the course.')
-        }
-
-        const assistantId = studentInstance.teacherInstanceId
-        const assistantAsTeacher = await TeacherInstance.findOne({
-          where: {
-            id: assistantId
-          }
-        })
-        if (!assistantAsTeacher) {
-          returnedAssistantInfo.status = 'No assistant assigned to student.'
-          return res.status(200).send(returnedAssistantInfo)
-        }
-        const assistantAsUser = await User.findOne({
-          where: {
-            id: assistantAsTeacher.userId
-          }
-        })
-        returnedAssistantInfo.data = {
-          firsts: assistantAsUser.firsts,
-          lastname: assistantAsUser.lastname
-        }
-        returnedAssistantInfo.status = 'Student already has an assigned assistant.'
-
-        res.status(200).send(returnedAssistantInfo)
-      } else {
-        returnedAssistantInfo.status = 'No assistant assigned to student.'
-        res.status(200).send(returnedAssistantInfo)
+    const studentInstance = isId(req.params.id) ? await StudentInstance.findOne({
+      where: {
+        id: req.params.id
       }
-    } catch (e) {
-      logger.error(e)
-      res.status(400).send('An error occurred. Please try again.')
+    }) : null
+
+    if (!studentInstance) {
+      returnedAssistantInfo.status = 'No assistant assigned to student.'
+      res.status(200).send(returnedAssistantInfo)
+      return
     }
+
+    await requireCourseStaff(req, studentInstance.courseInstanceId, 'You must be an instructor on the course.')
+
+    const assistantAsTeacher = await TeacherInstance.findOne({
+      where: {
+        id: studentInstance.teacherInstanceId
+      },
+      include: [{ model: User, attributes: ['firsts', 'lastname'] }]
+    })
+    if (!assistantAsTeacher) {
+      returnedAssistantInfo.status = 'No assistant assigned to student.'
+      res.status(200).send(returnedAssistantInfo)
+      return
+    }
+    returnedAssistantInfo.data = {
+      firsts: assistantAsTeacher.User.firsts,
+      lastname: assistantAsTeacher.User.lastname
+    }
+    returnedAssistantInfo.status = 'Student already has an assigned assistant.'
+
+    res.status(200).send(returnedAssistantInfo)
   }
 }

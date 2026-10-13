@@ -1,7 +1,7 @@
-const { ReviewNote, StudentInstance, CourseInstance, TeacherInstance, User, Week } = require('../models')
-const helper = require('../helpers/applicationHelper')
+const { ReviewNote, StudentInstance, CourseInstance, User, Week } = require('../models')
+const { requireCourseStaff } = require('../helpers/auth')
 const { isFinalReviewWeek } = require('../helpers/finalReview')
-const logger = require('../utils/logger')
+const { badRequest, notFound } = require('../utils/httpError')
 
 // the shape sent to the frontend
 const toJson = (note, user) => ({
@@ -22,46 +22,33 @@ module.exports = {
    *   permissions: must be a teacher or an assistant of the course
    */
   async create(req, res) {
-    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
-      return
+    const { studentInstanceId, weekNumber } = req.body
+    const text = typeof req.body.text === 'string' ? req.body.text.trim() : ''
+    if (!text) {
+      throw badRequest('The note cannot be empty.')
     }
-    try {
-      const { studentInstanceId, weekNumber } = req.body
-      const text = typeof req.body.text === 'string' ? req.body.text.trim() : ''
-      if (!text) {
-        return res.status(400).send('The note cannot be empty.')
-      }
-      const studentInstance = await StudentInstance.findByPk(studentInstanceId)
-      if (!studentInstance) {
-        return res.status(404).send('Student not found.')
-      }
-      const staff = await TeacherInstance.findOne({
-        attributes: ['id'],
-        where: { userId: req.decoded.id, courseInstanceId: studentInstance.courseInstanceId }
-      })
-      if (!staff) {
-        return res.status(403).send('You must be a teacher of the course to perform this action.')
-      }
-      const course = await CourseInstance.findByPk(studentInstance.courseInstanceId)
-      if (!isFinalReviewWeek(course, Number(weekNumber))) {
-        return res.status(400).send('Additional review notes are only for the final review.')
-      }
-      // additional notes add to the review notes of the instructor, so those must be there first
-      const week = await Week.findOne({ where: { studentInstanceId: studentInstance.id, weekNumber: Number(weekNumber) } })
-      if (!week || !(week.instructorNotes || '').trim()) {
-        return res.status(400).send('Notes can be added once the review notes of the final review have been written.')
-      }
-      const note = await ReviewNote.create({
-        studentInstanceId: studentInstance.id,
-        weekNumber: Number(weekNumber),
-        userId: req.decoded.id,
-        text
-      })
-      const user = await User.findByPk(req.decoded.id)
-      return res.status(200).send(toJson(note, user))
-    } catch (e) {
-      logger.error('Review note error.', { error: e.message })
-      return res.status(500).send('Internal server error')
+    const id = Number(studentInstanceId)
+    const studentInstance = Number.isInteger(id) ? await StudentInstance.findByPk(id) : null
+    if (!studentInstance) {
+      throw notFound('Student not found.')
     }
+    await requireCourseStaff(req, studentInstance.courseInstanceId)
+    const course = await CourseInstance.findByPk(studentInstance.courseInstanceId)
+    if (!isFinalReviewWeek(course, Number(weekNumber))) {
+      throw badRequest('Additional review notes are only for the final review.')
+    }
+    // additional notes add to the review notes of the instructor, so those must be there first
+    const week = await Week.findOne({ where: { studentInstanceId: studentInstance.id, weekNumber: Number(weekNumber) } })
+    if (!week || !(week.instructorNotes || '').trim()) {
+      throw badRequest('Notes can be added once the review notes of the final review have been written.')
+    }
+    const note = await ReviewNote.create({
+      studentInstanceId: studentInstance.id,
+      weekNumber: Number(weekNumber),
+      userId: req.decoded.id,
+      text
+    })
+    const user = await User.findByPk(req.decoded.id)
+    return res.status(200).send(toJson(note, user))
   }
 }

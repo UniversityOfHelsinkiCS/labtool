@@ -459,6 +459,15 @@ describe('<ModifyCourseInstanceCodeReviews />', () => {
     expect(container.querySelector('.ui.active.loader')).toBeInTheDocument()
   })
 
+  it('shows nothing to a student who opens the page', () => {
+    // the course page data of a student is their own registration, not a list of students
+    const studentData = { role: 'student', data: courseData.data[0] }
+    expect(userHelper(studentData.data)).toEqual([])
+    const { container } = renderPage({ courseData: studentData, dropdownUsers: userHelper(studentData.data) })
+    expect(container.querySelector('table')).not.toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: coursePage.name })).not.toBeInTheDocument()
+  })
+
   it('renders the code review management table', () => {
     renderPage()
 

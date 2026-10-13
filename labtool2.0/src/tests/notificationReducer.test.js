@@ -39,10 +39,10 @@ describe('notificationReducer', () => {
     ['CI_MODIFY_ONE_SUCCESS', 'Course instance updated successfully!', false],
     ['CI_COPY_INFO_SUCCESS', 'Course details copied successfully!', false],
     ['CI_COPY_INFO_FAILURE', 'Course details could not be copied.', true],
-    ['WEEKS_CREATE_ONESUCCESS', 'Week reviewed successfully!', false],
-    ['WEEKS_CREATE_ONEFAILURE', 'Invalid inputs.', true],
-    ['WEEKDRAFTS_CREATE_ONESUCCESS', 'Week draft saved successfully!', false],
-    ['WEEKDRAFTS_CREATE_ONEFAILURE', 'Invalid inputs.', true],
+    ['WEEKS_CREATE_ONE_SUCCESS', 'Week reviewed successfully!', false],
+    ['WEEKS_CREATE_ONE_FAILURE', 'Invalid inputs.', true],
+    ['WEEKDRAFTS_CREATE_ONE_SUCCESS', 'Week draft saved successfully!', false],
+    ['WEEKDRAFTS_CREATE_ONE_FAILURE', 'Invalid inputs.', true],
     ['COMMENT_CREATE_ONE_SUCCESS', 'Comment created successfully!', false],
     ['COMMENT_CREATE_ONE_FAILURE', 'Creating comment failed!', true],
     ['TEACHER_CREATE_SUCCESS', 'Added a new assistant successfully!', false],
@@ -71,7 +71,7 @@ describe('notificationReducer', () => {
     ['STUDENT_COURSE_CREATE_ONE_FAILURE', { message: 'Already registered' }, 'Already registered'],
     ['SEND_EMAIL_FAILURE', { message: 'No email address' }, 'No email address'],
     ['STUDENT_PROJECT_INFO_UPDATE_FAILURE', { message: 'Bad github' }, 'Bad github'],
-    ['MASS_EMAIL_SENDFAILURE', { message: 'smtp down' }, 'Could not send e-mail; smtp down']
+    ['MASS_EMAIL_SEND_FAILURE', { message: 'smtp down' }, 'Could not send e-mail; smtp down']
   ])('%s shows the message from the response body', (type, data, message) => {
     expect(run({ type, response: httpError(data) })).toEqual({ message, error: true })
   })
@@ -91,21 +91,21 @@ describe('notificationReducer', () => {
   it.each([
     ['CHECKLIST_CREATE_SUCCESS', 'Checklist saved'],
     ['SEND_EMAIL_SUCCESS', 'Email sent'],
-    ['MASS_EMAIL_SENDSUCCESS', 'Emails sent']
+    ['MASS_EMAIL_SEND_SUCCESS', 'Emails sent']
   ])('%s shows the message from the response', (type, message) => {
     expect(run({ type, response: { message } })).toEqual({ message, error: false })
   })
 
-  it('MASS_EMAIL_SENDSUCCESS is shown as an error when some recipients did not get the email (#1141)', () => {
+  it('MASS_EMAIL_SEND_SUCCESS is shown as an error when some recipients did not get the email (#1141)', () => {
     const message = 'Email sent to 1 of 2 recipients. Not delivered to: Pekka Palautuva (no email address).'
     const notDelivered = [{ name: 'Pekka Palautuva', email: null, reason: 'no email address' }]
-    expect(run({ type: 'MASS_EMAIL_SENDSUCCESS', response: { message, notDelivered } })).toEqual({
+    expect(run({ type: 'MASS_EMAIL_SEND_SUCCESS', response: { message, notDelivered } })).toEqual({
       message,
       error: true
     })
     expect(
       run({
-        type: 'MASS_EMAIL_SENDSUCCESS',
+        type: 'MASS_EMAIL_SEND_SUCCESS',
         response: { message: 'Email sent successfully.', notDelivered: [] }
       })
     ).toEqual({
@@ -121,8 +121,8 @@ describe('notificationReducer', () => {
     })
   })
 
-  it('MASS_EMAIL_SENDFAILURE without a response says no students were selected', () => {
-    expect(run({ type: 'MASS_EMAIL_SENDFAILURE' })).toEqual({
+  it('MASS_EMAIL_SEND_FAILURE without a response says no students were selected', () => {
+    expect(run({ type: 'MASS_EMAIL_SEND_FAILURE' })).toEqual({
       message: 'Could not send e-mail; no students selected',
       error: true
     })
@@ -145,6 +145,43 @@ describe('notificationReducer', () => {
         state
       )
     ).toBe(state)
+  })
+
+  // a timeout or a network error has no response; a reducer that throws breaks every later dispatch
+  it.each([
+    'USER_UPDATE_FAILURE',
+    'STUDENT_COURSE_CREATE_ONE_FAILURE',
+    'TEACHER_CREATE_FAILURE',
+    'ASSOCIATE_TEACHER_AND_STUDENT_FAILURE',
+    'CODE_REVIEW_BULKINSERT_FAILURE',
+    'CODE_REVIEW_GRADE_FAILURE',
+    'CODE_REVIEW_ADD_LINK_FAILURE',
+    'TAG_CREATE_FAILURE',
+    'CHECKLIST_CREATE_FAILURE',
+    'SEND_EMAIL_FAILURE'
+  ])('%s without a response shows a default message', type => {
+    const notification = run({ type, response: { message: 'Network Error' } })
+    expect(notification.error).toBe(true)
+    expect(typeof notification.message).toBe('string')
+    expect(notification.message).not.toMatch(/undefined|object Object/)
+  })
+
+  it.each([
+    ['a { message } body', { message: 'Tag name taken' }],
+    ['an { error } body', { error: 'Tag name taken' }],
+    ['a plain string body', 'Tag name taken']
+  ])('failures show the backend message from %s', (_, data) => {
+    expect(run({ type: 'TAG_CREATE_FAILURE', response: httpError(data) })).toEqual({
+      message: 'Tag name taken',
+      error: true
+    })
+  })
+
+  it('CHECKLIST_GET_ONE_FAILURE without a response keeps the state', () => {
+    const state = { message: 'previous', error: false }
+    expect(run({ type: 'CHECKLIST_GET_ONE_FAILURE', response: { message: 'Network Error' } }, state)).toBe(
+      state
+    )
   })
 
   it('ignores other actions', () => {

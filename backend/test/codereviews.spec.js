@@ -76,6 +76,41 @@ describe('Code reviews API', () => {
       })
     })
 
+    it('increments the round count of the course of the students, not of a course named in the request', async () => {
+      await as(s.users.teacher)
+        .put('/api/codereviews/bulkinsert')
+        .send({ ...assignment(), courseId: s.otherCourse.id, createTrue: true })
+        .expect(201)
+      assert.strictEqual((await CourseInstance.findByPk(s.course.id)).amountOfCodeReviews, 1)
+      assert.strictEqual((await CourseInstance.findByPk(s.otherCourse.id)).amountOfCodeReviews, 0)
+
+      const withoutCourse = { ...assignment(), reviewNumber: 2, createTrue: true }
+      delete withoutCourse.courseId
+      await as(s.users.teacher)
+        .put('/api/codereviews/bulkinsert')
+        .send(withoutCourse)
+        .expect(201)
+      assert.strictEqual((await CourseInstance.findByPk(s.course.id)).amountOfCodeReviews, 2)
+    })
+
+    it('rejects unknown students and reviewed students of another course', async () => {
+      const foreign = await f.addStudent(await f.createUser(), s.otherCourse)
+      await as(s.users.teacher)
+        .put('/api/codereviews/bulkinsert')
+        .send({ ...assignment(), codeReviews: [{ reviewer: 999999, toReview: s.student.id }] })
+        .expect(400)
+      await as(s.users.teacher)
+        .put('/api/codereviews/bulkinsert')
+        .send({ ...assignment(), codeReviews: [{ reviewer: s.student.id, toReview: 999999 }] })
+        .expect(400)
+      const res = await as(s.users.teacher)
+        .put('/api/codereviews/bulkinsert')
+        .send({ ...assignment(), codeReviews: [{ reviewer: s.student.id, toReview: foreign.id }] })
+        .expect(400)
+      assert.strictEqual(res.body.message, 'Given student instances are from multiple courses.')
+      assert.strictEqual(await CodeReview.count(), 0)
+    })
+
     it('replaces an earlier assignment of the same round', async () => {
       await f.createCodeReview(s.student, s.student2, { reviewNumber: 1 })
       await f.createCodeReview(s.student, s.student2, { reviewNumber: 2 })
@@ -140,7 +175,7 @@ describe('Code reviews API', () => {
 
       for (const repo of ['javascript:alert(1)//http', 'https://gitlab.com/o/r', 'https://github.com/only-owner', 'https://github.com.evil.example/o/r']) {
         const res = await assignRepo(repo).expect(400)
-        assert.match(res.text, /GitHub repository/)
+        assert.match(res.body.message, /GitHub repository/)
       }
       assert.strictEqual(await CodeReview.count(), 0)
       await assignRepo('https://github.com/owner/repo/tree/main/part2').expect(201)
@@ -158,7 +193,7 @@ describe('Code reviews API', () => {
           ]
         })
         .expect(400)
-      assert.strictEqual(res.text, 'Given student instances are from multiple courses.')
+      assert.strictEqual(res.body.message, 'Given student instances are from multiple courses.')
       assert.strictEqual(await CodeReview.count(), 0)
     })
 
@@ -320,10 +355,17 @@ describe('Code reviews API', () => {
     })
 
     it('requires an http(s) link', async () => {
-      await as(s.users.student)
+      const res = await as(s.users.student)
         .put('/api/codereviews/link')
         .send({ ...link(), linkToReview: 'github.com/x' })
         .expect(400)
+      assert.strictEqual(res.body.message, 'The link must start with either "http://" or "https://".')
+      for (const linkToReview of [undefined, 42, { href: 'https://example.com' }, 'javascript:alert(1)//https://']) {
+        await as(s.users.student)
+          .put('/api/codereviews/link')
+          .send({ ...link(), linkToReview })
+          .expect(400)
+      }
       const [review] = await reviewsOf(s.student)
       assert.strictEqual(review.linkToReview, null)
     })
@@ -388,6 +430,19 @@ describe('Code reviews API', () => {
         .post('/api/codereviews/delete/1')
         .send({ reviewer: 999999, codeReviewRound: 1 })
         .expect(400)
+    })
+
+    it('answers 400 for a missing reviewer or round', async () => {
+      const res = await as(s.users.teacher)
+        .post('/api/codereviews/delete/1')
+        .send({ codeReviewRound: 1 })
+        .expect(400)
+      assert.strictEqual(res.body.message, 'Missing or malformed inputs.')
+      await as(s.users.teacher)
+        .post('/api/codereviews/delete/1')
+        .send({ reviewer: s.student.id })
+        .expect(400)
+      assert.strictEqual((await reviewsOf(s.student)).length, 2)
     })
 
     it('answers when there is nothing to delete', async () => {

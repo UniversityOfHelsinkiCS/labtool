@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { withRouter, Redirect } from 'react-router'
 import { Loader } from 'semantic-ui-react'
@@ -28,8 +28,12 @@ import CoursePageTeacherMain from './CoursePage/TeacherMain'
 import Error from '../Error'
 import DocumentTitle from '../DocumentTitle'
 import { clearOnePersistedState } from '../../hooks/persistedState'
+import { errorMessage } from '../../util/errorMessage'
 
 export const CoursePage = props => {
+  // set when the student removes themselves; only then does a finished redirect hook lead to my page
+  const [removedSelf, setRemovedSelf] = useState(false)
+
   useEffect(() => {
     // run on component mount
     props.resetLoading()
@@ -271,7 +275,7 @@ export const CoursePage = props => {
     return (
       <Error
         errors={props.errors.map(
-          error => `${error.response.data} (${error.response.status} ${error.response.statusText})`
+          error => `${errorMessage(error, 'Error')} (${error.response.status} ${error.response.statusText})`
         )}
       />
     )
@@ -368,6 +372,7 @@ export const CoursePage = props => {
         return
       }
 
+      setRemovedSelf(true)
       props.removeStudent(si)
       props.addRedirectHook({
         hook: 'STUDENT_REMOVE_'
@@ -383,7 +388,9 @@ export const CoursePage = props => {
    * This part actually tells what to show to the user
    */
   if (props.courseData.role === 'student') {
-    if (props.loading.redirect) {
+    // the redirect flag may also be left over from the page that sent the student here, e.g. the
+    // project info form, which redirects to this page after saving
+    if (removedSelf && props.loading.redirect) {
       return <Redirect to={'/labtool/mypage'} />
     }
     return (

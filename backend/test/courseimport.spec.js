@@ -3,8 +3,8 @@ const { URL } = require('url')
 const nock = require('nock')
 const { as, anonymous } = require('./helpers/api')
 const f = require('./helpers/factories')
-const { eventually } = require('./helpers/db')
 const { CourseInstance, TeacherInstance, User } = require('../server/models')
+const applicationHelper = require('../server/helpers/applicationHelper')
 const config = require('../server/config/config').test
 
 const kurki = new URL(config.kurki_url)
@@ -59,7 +59,7 @@ const kurkiTeachers = {
 /**
  * Mocks the Kurki importer API. Returns the list of request descriptions it received.
  */
-const mockKurki = ({ failing = false } = {}) => {
+const mockKurki = ({ failing = false, failingCourse = false } = {}) => {
   const requests = []
   const { current, next } = termsNow()
   nock(kurkiOrigin)
@@ -92,7 +92,7 @@ const mockKurki = ({ failing = false } = {}) => {
         authorization: this.req.headers.authorization,
         token: url.searchParams.get('token')
       })
-      if (failing) return [500, 'Kurki is down']
+      if (failing || failingCourse) return [500, 'Kurki is down']
       return [200, { id: hid, teachers: kurkiTeachers[hid] || [], students: ['014000001'] }]
     })
   return requests
@@ -210,7 +210,7 @@ describe('Course import API (Kurki)', () => {
       const res = await as(s.users.teacher)
         .get('/api/courseimport/get')
         .expect(400)
-      assert.strictEqual(res.text, 'Error while listing importable courses.')
+      assert.strictEqual(res.body.message, 'Error while listing importable courses.')
     })
   })
 
@@ -251,11 +251,10 @@ describe('Course import API (Kurki)', () => {
       assert.strictEqual(course.start.toISOString(), toImport.starts)
       assert.strictEqual(course.end.toISOString(), toImport.ends)
 
-      await eventually(async () => {
-        const teachers = await TeacherInstance.findAll({ where: { courseInstanceId: course.id }, include: [User] })
-        assert.deepStrictEqual(teachers.map(t => t.User.username).sort(), ['kurkiope', 'teacher'])
-        teachers.forEach(t => assert.strictEqual(t.instructor, false))
-      })
+      // the teachers have been added when the import answers
+      const teachers = await TeacherInstance.findAll({ where: { courseInstanceId: course.id }, include: [User] })
+      assert.deepStrictEqual(teachers.map(t => t.User.username).sort(), ['kurkiope', 'teacher'])
+      teachers.forEach(t => assert.strictEqual(t.instructor, false))
       const newUser = await User.findOne({ where: { username: 'kurkiope' } })
       assert.strictEqual(newUser.teacher, true)
       // existing users are reused
@@ -285,8 +284,66 @@ describe('Course import API (Kurki)', () => {
         .post('/api/courseimport/import')
         .send({ courses: [toImport] })
         .timeout(3000)
-      assert.ok(res.status >= 400)
+        .expect(400)
+      assert.strictEqual(res.body.message, 'Error while importing courses.')
       assert.strictEqual(await CourseInstance.count({ where: { ohid: toImport.hid } }), 0)
+    })
+
+    // createCourse used to swallow every error, so the import answered 200 without importing anything
+    it('answers with an error when Kurki cannot give the course to import', async () => {
+      mockKurki({ failingCourse: true })
+      const res = await as(s.users.teacher)
+        .post('/api/courseimport/import')
+        .send({ courses: [toImport] })
+        .expect(400)
+      assert.strictEqual(res.body.message, 'Error while importing courses.')
+      assert.strictEqual(await CourseInstance.count({ where: { ohid: toImport.hid } }), 0)
+    })
+
+    it('answers 500 and creates no course when saving it fails', async () => {
+      mockKurki()
+      const original = TeacherInstance.create
+      TeacherInstance.create = async () => { throw new Error('database is down') }
+      try {
+        const res = await as(s.users.teacher)
+          .post('/api/courseimport/import')
+          .send({ courses: [toImport] })
+          .expect(500)
+        assert.strictEqual(res.body.message, 'Unexpected error. Please try again.')
+      } finally {
+        TeacherInstance.create = original
+      }
+      // the course and its teachers are created in one transaction
+      assert.strictEqual(await CourseInstance.count({ where: { ohid: toImport.hid } }), 0)
+    })
+
+    it('validates the request', async () => {
+      mockKurki()
+      const res = await as(s.users.teacher)
+        .post('/api/courseimport/import')
+        .send({})
+        .expect(400)
+      assert.strictEqual(res.body.message, 'Missing field "courses".')
+    })
+  })
+
+  describe('applicationHelper', () => {
+    // getNextTerm used to be exported as getCurrentTerm
+    it('exports getNextTerm', () => {
+      assert.strictEqual(applicationHelper.getNextTerm('K'), 'V')
+      assert.strictEqual(applicationHelper.getNextTerm('V'), 'S')
+      assert.strictEqual(applicationHelper.getNextTerm('S'), 'K')
+    })
+
+    // getActive used to return a database error as its value
+    it('getActive rejects when the database fails', async () => {
+      const original = CourseInstance.findAll
+      CourseInstance.findAll = async () => { throw new Error('database is down') }
+      try {
+        await assert.rejects(applicationHelper.getActive(), /database is down/)
+      } finally {
+        CourseInstance.findAll = original
+      }
     })
   })
 })

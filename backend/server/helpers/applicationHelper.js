@@ -3,12 +3,9 @@ exports.getCurrentTerm = getCurrentTerm
 exports.getInactive = getInactive
 exports.getActive = getActive
 exports.getNextYear = getNextYear
-exports.getNextTerm = getCurrentTerm
-exports.controllerBeforeAuthCheckAction = controllerBeforeAuthCheckAction
+exports.getNextTerm = getNextTerm
 exports.getCurrent = getCurrent
 exports.createCourse = createCourse
-exports.getTeacherId = getTeacherId
-exports.isAuthUserAdmin = isAuthUserAdmin
 
 const env = process.env.NODE_ENV || 'development'
 
@@ -18,30 +15,10 @@ const https = require('https')
 const axios = require('axios')
 const config = require('../config/config')[env]
 const logger = require('../utils/logger')
-const { CourseInstance, TeacherInstance, User } = require('../models')
+const { CourseInstance, TeacherInstance, User, sequelize } = require('../models')
 
 const { Op } = Sequelize
 const cache = new NodeCache({ stdTTL: 600 }) // standard ttl is 600s
-
-/**
- *
- */
-function controllerBeforeAuthCheckAction(req, res) {
-  if (!req.authenticated.success) {
-    res.status(401).send('you have to be authenticated').end()
-  }
-  return req.authenticated.success
-}
-
-async function isAuthUserAdmin(id) {
-  const user = await User.findOne({
-    attributes: ['sysop'],
-    where: {
-      id
-    }
-  })
-  return user && user.sysop
-}
 
 /**
  *
@@ -104,12 +81,22 @@ function getNextTerm(term) {
 }
 
 /**
- *
+ * A failed request to Kurki (the course registry / importer).
+ */
+class KurkiError extends Error {
+  constructor(message, cause) {
+    super(message)
+    this.name = 'KurkiError'
+    this.cause = cause
+  }
+}
+
+/**
+ * axios options for listing the Kurki courses of a term.
  * @param year
  * @param term
- * @returns {{method: string, baseURL: string, headers: {'Content-Type': string, Authorization: string}, httpsAgent: "https".Agent}}
  */
-function axiosBlaBla(year, term) {
+function kurkiCourseListRequest(year, term) {
   return {
     method: 'get',
     baseURL: `${config.kurki_url}/labtool/courses`,
@@ -129,11 +116,10 @@ function axiosBlaBla(year, term) {
 }
 
 /**
- *
+ * axios options for fetching one Kurki course (its teachers and students).
  * @param hid
- * @returns {{method: string, baseURL: string, headers: {'Content-Type': string, Authorization: string}, httpsAgent: "https".Agent}}
  */
-function axiosCourseBla(hid) {
+function kurkiCourseRequest(hid) {
   return {
     method: 'get',
     baseURL: `${config.kurki_url}/labtool/courses/${hid}`,
@@ -152,84 +138,69 @@ function axiosCourseBla(hid) {
 }
 
 /**
- *
- * @param req
- * @param res
- * @returns {Promise<*>}
+ * The response data of a Kurki request. Throws a KurkiError when the request fails.
+ * @param options axios options
  */
-async function getTeacherId(userId, courseInstanceId) {
-  const teacher = await TeacherInstance.findOne({
-    attributes: ['id'],
-    where: {
-      userId,
-      courseInstanceId
-    }
-  })
-
-  return teacher ? teacher.id : null
+async function fetchFromKurki(options) {
+  try {
+    const response = await axios.create(options).get()
+    return response.data
+  } catch (error) {
+    logger.error('Kurki request failed', { url: options.baseURL, error: error.message })
+    throw new KurkiError(`Kurki request failed: ${error.message}`, error)
+  }
 }
 
 /**
- *
- * @param req
- * @param res
- * @returns {Promise<*>}
+ * All course instances, newest first.
  */
-async function getActive(req, _res) {
-  try {
-    return await CourseInstance.findAll({
-      order: [['createdAt', 'DESC']]
-    })
-  } catch (e) {
-    return e
-  }
+async function getActive() {
+  return CourseInstance.findAll({
+    order: [['createdAt', 'DESC']]
+  })
 }
 
 // adds .instructor to Kurki courses
 async function addInstructorToCourseList(course) {
-  const options = await axiosCourseBla(course.id)
   try {
-    const result = await axios
-      .create(options)
-      .get()
-      .then(barf => barf.data)
-
-    return { ...course, instructor: result.teachers.join('; ') }
+    const kurkiCourse = await fetchFromKurki(kurkiCourseRequest(course.id))
+    return { ...course, instructor: kurkiCourse.teachers.join('; ') }
   } catch (error) {
+    // the course can be listed without its teachers
     logger.error('error getting instructor', { error: error.message })
     return { ...course, instructor: '' }
   }
 }
 
-async function getInactiveFromKurki(req, res) {
-  const cur = await getCurrent(req, res)
-  const nxt = await getNewer(req, res)
-  if (!Array.isArray(cur) || !Array.isArray(nxt)) {
-    throw new Error('Could not fetch courses from Kurki')
+async function getInactiveFromKurki() {
+  const current = await getCurrent()
+  const next = await getNewer()
+  if (!Array.isArray(current) || !Array.isArray(next)) {
+    throw new KurkiError('Could not fetch courses from Kurki')
   }
-  const newobj = cur.concat(nxt)
-  const iarr = Object.keys(newobj).map(blob => newobj[blob].id)
-  const ires = await CourseInstance.findAll({
+  const kurkiCourses = current.concat(next)
+  const imported = await CourseInstance.findAll({
+    attributes: ['ohid'],
     where: {
-      ohid: { [Op.in]: iarr }
+      ohid: { [Op.in]: kurkiCourses.map(course => course.id) }
     }
   })
-  const activated = ires.map(course => course.ohid)
-  const notActivated = newobj.filter(c => !activated.includes(c.id))
-  return Promise.all(notActivated.map(addInstructorToCourseList))
+  const importedOhids = imported.map(course => course.ohid)
+  const notImported = kurkiCourses.filter(c => !importedOhids.includes(c.id))
+  return Promise.all(notImported.map(addInstructorToCourseList))
 }
 
 /**
- * If the function is called when importing courses, get inactive courses directly from Kurki and clear the cache
- * Otherwise try to get inactive courses from cache.
- * @param req
- * @param res
+ * The Kurki courses of this and the next term that are not imported yet. They are cached for 10 minutes;
+ * with refresh (when importing courses) they are fetched directly from Kurki and the cache is cleared.
+ * Throws a KurkiError when Kurki cannot be reached.
+ * @param refresh
  * @returns {Promise<*>}
  */
-async function getInactive(req, res) {
+async function getInactive({ refresh = false } = {}) {
   const key = 'inactiveCourses'
-  if (req.body.courses) {
-    const inactive = await getInactiveFromKurki(req, res)
+  if (refresh) {
+    const inactive = await getInactiveFromKurki()
     cache.del(key)
     return inactive
   }
@@ -237,93 +208,64 @@ async function getInactive(req, res) {
   let inactive = cache.get(key)
   if (!inactive) {
     // only successful results are cached, so a Kurki failure is retried on the next request
-    inactive = await getInactiveFromKurki(req, res)
+    inactive = await getInactiveFromKurki()
     cache.set(key, inactive)
   }
   return inactive
 }
 
 /**
- *
- * @param body
- * @returns {Promise<*>}
+ * Imports a Kurki course and makes its Kurki teachers responsible teachers of it. Throws a KurkiError
+ * when Kurki cannot be reached; the course is created only when all its teachers can be added too.
+ * @param body { hid, cname, starts, ends }
+ * @returns {Promise<*>} the course data from Kurki
  */
 async function createCourse(body) {
-  const options = await axiosCourseBla(body.hid)
-  try {
-    const result = await axios
-      .create(options)
-      .get()
-      .then(barf => barf.data)
-    const newCourse = await CourseInstance.build({
+  const kurkiCourse = await fetchFromKurki(kurkiCourseRequest(body.hid))
+  const teachers = Array.isArray(kurkiCourse.teachers) ? kurkiCourse.teachers : []
+
+  await sequelize.transaction(async (transaction) => {
+    const newCourse = await CourseInstance.create({
       name: body.cname,
       start: body.starts,
       end: body.ends,
       ohid: body.hid
-    }).save()
+    }, { transaction })
 
-    if (result.teachers.length > 0) {
-      for (let i = 0; i < result.teachers.length; ++i) {
-        // Teacher records are intentionally created sequentially.
-        // eslint-disable-next-line no-await-in-loop
-        const user = await User.findOrCreate({
-          where: {
-            username: result.teachers[i]
-          },
-          defaults: {
-            username: result.teachers[i],
-            teacher: true
-          }
-        })
-        TeacherInstance.build({
-          userId: user[0].id,
-          courseInstanceId: newCourse.id,
-          instructor: false
-        }).save()
-      }
+    // Teacher records are intentionally created sequentially.
+    for (const username of teachers) {
+      const [user] = await User.findOrCreate({
+        where: { username },
+        defaults: { username, teacher: true },
+        transaction
+      })
+      await TeacherInstance.create({
+        userId: user.id,
+        courseInstanceId: newCourse.id,
+        instructor: false
+      }, { transaction })
     }
-    return result
-  } catch (error) {
-    logger.error('createCourse error', { error: error.message })
-  }
+  })
+  return kurkiCourse
 }
 
 /**
- *
- * @param req
- * @param res
+ * The Kurki courses of the current term. Throws a KurkiError when Kurki cannot be reached.
  * @returns {Promise<*>}
  */
-async function getCurrent(req, _res) {
-  const timeMachine = CurrentTermAndYear()
-  const options = await axiosBlaBla(timeMachine.currentYear, timeMachine.currentTerm)
-  try {
-    const result = await axios
-      .create(options)
-      .get()
-      .then(barf => barf.data)
-    return result
-  } catch (error) {
-    logger.error('getCurrent error', { error: error.message })
-  }
+async function getCurrent() {
+  const terms = CurrentTermAndYear()
+  return fetchFromKurki(kurkiCourseListRequest(terms.currentYear, terms.currentTerm))
 }
 
 /**
- *
- * @param req
- * @param res
+ * The Kurki courses of the next term. Throws a KurkiError when Kurki cannot be reached.
  * @returns {Promise<*>}
  */
-async function getNewer(req, _res) {
-  const timeMachine = CurrentTermAndYear()
-  const options = await axiosBlaBla(timeMachine.nextYear, timeMachine.nextTerm)
-  try {
-    const result = await axios
-      .create(options)
-      .get()
-      .then(barf => barf.data)
-    return result
-  } catch (error) {
-    logger.error('getNewer error', { error: error.message })
-  }
+async function getNewer() {
+  const terms = CurrentTermAndYear()
+  return fetchFromKurki(kurkiCourseListRequest(terms.nextYear, terms.nextTerm))
 }
+
+// a class is not hoisted, so it is exported after its declaration
+exports.KurkiError = KurkiError

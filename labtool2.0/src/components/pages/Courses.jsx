@@ -11,6 +11,7 @@ import { formatCourseName } from '../../util/format'
 import DocumentTitle from '../DocumentTitle'
 import { CourseName } from '../InvalidCourse'
 import Error from '../Error'
+import { errorMessage } from '../../util/errorMessage'
 
 /**
  *  Show all the courses in a single list.
@@ -31,7 +32,7 @@ export const Courses = props => {
     return (
       <Error
         errors={props.errors.map(
-          error => `${error.response.data} (${error.response.status} ${error.response.statusText})`
+          error => `${errorMessage(error, 'Error')} (${error.response.status} ${error.response.statusText})`
         )}
       />
     )

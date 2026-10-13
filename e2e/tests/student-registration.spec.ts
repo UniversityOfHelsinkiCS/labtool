@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test'
+import { test, expect } from '../fixtures/test'
 import { loginAs } from '../fixtures/auth'
 import { COURSE, NOTIFICATIONS, TEACHER, UNREGISTERED_STUDENT } from '../fixtures/data'
 
@@ -40,7 +40,9 @@ test.describe.serial('joining a course', () => {
 
     // confirmed
     await expect(page.locator('.notification.success')).toHaveText(NOTIFICATIONS.registrationSuccess)
-    await expect(page).toHaveURL(/\/labtool\/mypage$/)
+    await expect(page).toHaveURL(new RegExp(`/labtool/courses/${COURSE.ohid}$`))
+    await expect(page.getByRole('heading', { name: PROJECT_NAME })).toBeVisible()
+    await page.getByRole('link', { name: 'My page' }).click()
     await expect(page.getByText(COURSE.name).first()).toBeVisible()
 
     // persisted

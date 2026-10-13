@@ -1,43 +1,25 @@
-const Sequelize = require('sequelize')
-const { CodeReview, ReviewCheck, StudentInstance, TeacherInstance, CourseInstance } = require('../models')
-const helper = require('../helpers/codeReviewHelper')
-const logger = require('../utils/logger')
-const { isGithubRepoUrl } = require('../helpers/links')
+const { CodeReview, ReviewCheck, StudentInstance, CourseInstance } = require('../models')
+const { isGithubRepoUrl, isHttpUrl } = require('../helpers/links')
 const { addValueChange, addChecklistChanges, logChange } = require('../helpers/changeLog')
-const { enforceCurrentUserIsStudentOnCourse, enforceCurrentUser, enforceCurrentUserCanReview } = require('../helpers/auth')
+const { requireCourseStaff, requireCanReview } = require('../helpers/auth')
+const { badRequest, notFound } = require('../utils/httpError')
 
-const { Op } = Sequelize
-
-async function formatCodeReview(codeReview, allStudentInstancesIds, reviewNumber) {
-  if (typeof codeReview.reviewer !== 'number') {
-    return null// This will lead to rejection later.
-  }
-  if (typeof codeReview.toReview !== 'number' && !isGithubRepoUrl(codeReview.repoToReview)) {
+/** The row to insert for one assignment sent by the client, or null when it is malformed. */
+function formatCodeReview(codeReview, reviewNumber) {
+  if (!codeReview || !Number.isInteger(codeReview.reviewer)) {
     return null
   }
-  const reviewed = await CodeReview.findAll({
-    raw: true,
-    attributes: ['toReview', 'repoToReview'],
-    where: {
-      reviewNumber: { [Op.lt]: reviewNumber },
-      studentInstanceId: codeReview.reviewer
-    }
-  }).then(r => r)
-  const repeated = reviewed.filter(r => r.toReview === codeReview.toReview || r.repoToReview === codeReview.repoToReview).length > 0
-  /*  do not prevent repeats in backend -- hisahi
-  if (repeated) {
+  const toReview = Number.isInteger(codeReview.toReview) ? codeReview.toReview : null
+  if (toReview === null && !isGithubRepoUrl(codeReview.repoToReview)) {
     return null
-  } */
-
-  allStudentInstancesIds.push(codeReview.reviewer)
+  }
   return {
     studentInstanceId: codeReview.reviewer,
     reviewNumber,
-    toReview: Number.isInteger(codeReview.toReview) ? codeReview.toReview : null,
-    repoToReview: Number.isInteger(codeReview.toReview) ? null : codeReview.repoToReview
+    toReview,
+    repoToReview: toReview === null ? codeReview.repoToReview : null
   }
 }
-
 
 module.exports = {
   /**
@@ -48,92 +30,53 @@ module.exports = {
    * @param {*} res
    */
   async bulkInsert(req, res) {
-    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
-      return
+    if (!Array.isArray(req.body.codeReviews) || typeof req.body.reviewNumber !== 'number') {
+      throw badRequest('Missing or malformed inputs.')
     }
-
-    try {
-      if (!req.authenticated.success) {
-        res.status(403).send('You have to be authenticated to do this.')
-        return
-      }
-      if (!Array.isArray(req.body.codeReviews) || typeof req.body.reviewNumber !== 'number') {
-        res.status(400).send('Missing or malformed inputs.')
-        return
-      }
-      if (req.body.codeReviews.length === 0) {
-        res.status(400).send('No code reviews were provided.')
-        return
-      }
-      const badRepo = req.body.codeReviews.find(codeReview => codeReview && typeof codeReview.toReview !== 'number'
-        && !isGithubRepoUrl(codeReview.repoToReview))
-      if (badRepo) {
-        res.status(400).send('A repository to review must be a GitHub repository link, e.g. https://github.com/owner/repo.')
-        return
-      }
-      const allStudentInstancesIds = [] // Gather all student instance ids for future query
-      const values = await Promise.all(
-        req.body.codeReviews.map(
-          codeReview => formatCodeReview(codeReview, allStudentInstancesIds, req.body.reviewNumber)
-        )
-      )
-      if (values.indexOf(null) !== -1) {
-        // Malformed items in codeReviews are replaced by null.
-        res.status(400).send('Malformed code review.')
-        return
-      }
-      // Get all studentInstances that have been referenced for validation purposes.
-      const allStudentInstances = await StudentInstance.findAll({
-        where: {
-          id: allStudentInstancesIds
-        }
-      })
-      // All studentInstances and the teacherInstance must share this common course.
-      const courseId = allStudentInstances[0].courseInstanceId
-      if (allStudentInstances.map(si => si.courseInstanceId).filter(ciid => ciid !== courseId).length > 0) {
-        // All studentInstances should be on the same course.
-        res.status(400).send('Given student instances are from multiple courses.')
-        return
-      }
-      // Getting the request maker's teacher instance for validation purposes.
-      const requestMakerAsTeacher = await TeacherInstance.findOne({
-        where: {
-          userId: req.decoded.id,
-          courseInstanceId: courseId
-        }
-      })
-      if (!requestMakerAsTeacher) {
-        // If the request maker is not a teacher on the course, reject.
-        res.status(403).send('You must be a teacher of the course to perform this action.')
-        return
-      }
-      // remember which repository was assigned, so later repository changes do not move the review (#1132)
-      const reviewees = await StudentInstance.findAll({
-        attributes: ['id', 'github'],
-        where: { id: values.map(value => value.toReview).filter(id => id) }
-      })
-      const repoOf = Object.fromEntries(reviewees.map(reviewee => [reviewee.id, reviewee.github]))
-      values.forEach((value) => {
-        value.repoAtAssignment = value.toReview ? repoOf[value.toReview] || null : value.repoToReview
-      })
-      await CodeReview.bulkCreate(values, { individualHooks: true }) // This is where the magic happens.
-
-      const courseToUpdate = await CourseInstance.findOne({
-        where: { id: req.body.courseId }
-      })
-      if (req.body.createTrue) {
-        courseToUpdate.update({
-          amountOfCodeReviews: courseToUpdate.amountOfCodeReviews + 1
-        })
-      }
-      res.status(201).send({
-        message: 'All code reviews inserted.',
-        data: req.body
-      })
-    } catch (e) {
-      logger.error('Code review bulk insert failed.', { error: e.message })
-      res.status(500).send('Unexpected error. Please try again.')
+    if (req.body.codeReviews.length === 0) {
+      throw badRequest('No code reviews were provided.')
     }
+    const badRepo = req.body.codeReviews.find(codeReview => codeReview && typeof codeReview.toReview !== 'number'
+      && !isGithubRepoUrl(codeReview.repoToReview))
+    if (badRepo) {
+      throw badRequest('A repository to review must be a GitHub repository link, e.g. https://github.com/owner/repo.')
+    }
+    const values = req.body.codeReviews.map(codeReview => formatCodeReview(codeReview, req.body.reviewNumber))
+    if (values.includes(null)) {
+      throw badRequest('Malformed code review.')
+    }
+    // The reviewers and the reviewed students must all exist and be on one course, which is the course
+    // the request maker must be a teacher of.
+    const referencedIds = [...new Set(values.flatMap(value => [value.studentInstanceId, value.toReview]))]
+      .filter(id => id !== null)
+    const referenced = await StudentInstance.findAll({
+      attributes: ['id', 'courseInstanceId', 'github'],
+      where: { id: referencedIds }
+    })
+    if (referenced.length !== referencedIds.length) {
+      throw badRequest('Malformed code review.')
+    }
+    const courseId = referenced[0].courseInstanceId
+    if (referenced.some(si => si.courseInstanceId !== courseId)) {
+      throw badRequest('Given student instances are from multiple courses.')
+    }
+    await requireCourseStaff(req, courseId)
+
+    // remember which repository was assigned, so later repository changes do not move the review (#1132)
+    const repoOf = Object.fromEntries(referenced.map(si => [si.id, si.github]))
+    values.forEach((value) => {
+      value.repoAtAssignment = value.toReview ? repoOf[value.toReview] || null : value.repoToReview
+    })
+    await CodeReview.bulkCreate(values, { individualHooks: true }) // the beforeCreate hook replaces old rows
+
+    // a new round; the course is the validated one, not one named in the request
+    if (req.body.createTrue) {
+      await CourseInstance.increment('amountOfCodeReviews', { where: { id: courseId } })
+    }
+    res.status(201).send({
+      message: 'All code reviews inserted.',
+      data: req.body
+    })
   },
 
   /**
@@ -144,113 +87,66 @@ module.exports = {
    * @param {*} res
    */
   async grade(req, res) {
-    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
-      return
+    if (typeof req.body.studentInstanceId !== 'number'
+      || typeof req.body.reviewNumber !== 'number'
+      || typeof req.body.points !== 'number'
+      || (req.body.checks !== undefined && req.body.checks !== null && !Array.isArray(req.body.checks))) {
+      throw badRequest('Missing or malformed inputs.')
     }
-
-    try {
-      if (!req.authenticated.success) {
-        res.status(403).send('You have to be authenticated to do this.')
-        return
-      }
-      if (typeof req.body.studentInstanceId !== 'number'
-        || typeof req.body.reviewNumber !== 'number'
-        || typeof req.body.points !== 'number') {
-        res.status(400).send('Missing or malformed inputs.')
-        return
-      }
-      const studentInstance = await StudentInstance.findOne({
-        attributes: {
-          exclude: ['createdAt', 'updatedAt']
-        },
-        where: {
-          id: req.body.studentInstanceId
-        }
-      })
-      if (!studentInstance) {
-        res.status(400).send('No student instance matched the given ID.')
-        return
-      }
-      const courseId = studentInstance.courseInstanceId
-      const requestMakerAsTeacher = await TeacherInstance.findOne({
-        where: {
-          userId: req.decoded.id,
-          courseInstanceId: courseId
-        }
-      })
-      if (!requestMakerAsTeacher) {
-        // If the request maker is not a teacher on the course, reject.
-        res.status(403).send('You must be a teacher of the course to perform this action.')
-        return
-      }
-      const codeReview = await CodeReview.findOne({
-        where: {
-          studentInstanceId: req.body.studentInstanceId,
-          reviewNumber: req.body.reviewNumber
-        }
-      })
-      if (!codeReview) {
-        res.status(400).send('No code review matched the given student instance ID and review number.')
-        return
-      }
-      const checksBefore = Object.fromEntries((await ReviewCheck.findAll({ where: { codeReviewId: codeReview.id } }))
-        .map(check => [check.checklistItemId, check.checked]))
-      await CodeReview.update(
-        {
-          points: req.body.points
-        },
-        {
-          where: {
-            id: codeReview.id
-          }
-        }
-      )
-      if (req.body.checks) {
-        await Promise.all(req.body.checks.map(async check => ReviewCheck.findOne({
-          where: {
-            codeReviewId: codeReview.id,
-            checklistItemId: check.id
-          }
-        }).then((reviewCheck) => {
-          if (reviewCheck) {
-            return ReviewCheck.update({
-              checked: check.checked
-            }, {
-              where: {
-                id: reviewCheck.id
-              }
-            })
-          }
-          return ReviewCheck.create({
-            checklistItemId: check.id,
-            checked: check.checked,
-            codeReviewId: codeReview.id
-          })
-        })))
-      }
-      // change history (#1129)
-      const changes = {}
-      addValueChange(changes, 'points', codeReview.points, req.body.points, { numeric: true })
-      const checksAfter = Object.fromEntries((req.body.checks || []).map(check => [check.id, check.checked]))
-      await addChecklistChanges(changes, checksBefore, { ...checksBefore, ...checksAfter })
-      await logChange({
-        courseInstanceId: courseId,
-        studentInstanceId: studentInstance.id,
-        userId: req.decoded.id,
-        kind: 'code_review_grade',
-        number: req.body.reviewNumber,
-        changes,
-        initial: codeReview.points === null && Object.keys(checksBefore).length === 0
-      })
-      res.status(200).send({
-        message: 'Code review points updated successfully.',
-        data: req.body
-      })
-      return
-    } catch (e) {
-      console.error(e)
-      res.status(500).send('Unexpected error. Please try again.')
+    const studentInstance = await StudentInstance.findByPk(req.body.studentInstanceId)
+    if (!studentInstance) {
+      throw badRequest('No student instance matched the given ID.')
     }
+    const courseId = studentInstance.courseInstanceId
+    await requireCourseStaff(req, courseId)
+    const codeReview = await CodeReview.findOne({
+      where: {
+        studentInstanceId: req.body.studentInstanceId,
+        reviewNumber: req.body.reviewNumber
+      }
+    })
+    if (!codeReview) {
+      throw badRequest('No code review matched the given student instance ID and review number.')
+    }
+    const checks = req.body.checks || []
+    const checksBefore = Object.fromEntries((await ReviewCheck.findAll({ where: { codeReviewId: codeReview.id } }))
+      .map(check => [check.checklistItemId, check.checked]))
+    await CodeReview.update({ points: req.body.points }, { where: { id: codeReview.id } })
+    await Promise.all(checks.map(async (check) => {
+      const reviewCheck = await ReviewCheck.findOne({
+        where: {
+          codeReviewId: codeReview.id,
+          checklistItemId: check.id
+        }
+      })
+      if (reviewCheck) {
+        await reviewCheck.update({ checked: check.checked })
+      } else {
+        await ReviewCheck.create({
+          checklistItemId: check.id,
+          checked: check.checked,
+          codeReviewId: codeReview.id
+        })
+      }
+    }))
+    // change history (#1129)
+    const changes = {}
+    addValueChange(changes, 'points', codeReview.points, req.body.points, { numeric: true })
+    const checksAfter = Object.fromEntries(checks.map(check => [check.id, check.checked]))
+    await addChecklistChanges(changes, checksBefore, { ...checksBefore, ...checksAfter })
+    await logChange({
+      courseInstanceId: courseId,
+      studentInstanceId: studentInstance.id,
+      userId: req.decoded.id,
+      kind: 'code_review_grade',
+      number: req.body.reviewNumber,
+      changes,
+      initial: codeReview.points === null && Object.keys(checksBefore).length === 0
+    })
+    res.status(200).send({
+      message: 'Code review points updated successfully.',
+      data: req.body
+    })
   },
 
   /**
@@ -259,116 +155,75 @@ module.exports = {
    *   1. should be a student
    *   2. student should only be able to create links on reviews the student is assigned to
    *
-   *
-   *
-   *
    * @param {*} req
    * @param {*} res
    */
   async addLink(req, res) {
-    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
-      return
+    if (!isHttpUrl(req.body.linkToReview)) {
+      throw badRequest('The link must start with either "http://" or "https://".')
+    }
+    const isId = value => (typeof value === 'number' || typeof value === 'string')
+      && value !== '' && Number.isInteger(Number(value))
+    if (!isId(req.body.studentInstanceId) || !isId(req.body.reviewNumber)) {
+      throw badRequest('Missing or malformed inputs.')
     }
 
-    try {
-      if (!req.authenticated.success) {
-        return res.status(403).send('You have to be authenticated to do this.')
-      }
-      if (!(req.body.linkToReview.startsWith('http://') || req.body.linkToReview.startsWith('https://'))) {
-        return res.status(400).send('The link must start with either "http://" or "https://".')
-      }
-
-
-      const review = await enforceCurrentUserCanReview(
-        req,
-        res,
-        req.body.studentInstanceId,
-        req.body.reviewNumber
-      )
-      if (!review) return
-      // the repository that was reviewed when the reviewer added their link (#1132)
-      const codeReview = await CodeReview.findByPk(review.id, { include: [{ model: StudentInstance, as: 'toReviews' }] })
-      const reviewedRepo = codeReview && codeReview.toReviews ? codeReview.toReviews.github : codeReview && codeReview.repoToReview
-      const [modifiedRows] = await CodeReview.update(
-        {
-          linkToReview: req.body.linkToReview,
-          repoAtLinkAdded: reviewedRepo || null
-        },
-        {
-          where: {
-            id: review.id
-          }
+    const review = await requireCanReview(req, Number(req.body.studentInstanceId), Number(req.body.reviewNumber))
+    // the repository that was reviewed when the reviewer added their link (#1132)
+    const codeReview = await CodeReview.findByPk(review.id, { include: [{ model: StudentInstance, as: 'toReviews' }] })
+    const reviewedRepo = codeReview && codeReview.toReviews ? codeReview.toReviews.github : codeReview && codeReview.repoToReview
+    const [modifiedRows] = await CodeReview.update(
+      {
+        linkToReview: req.body.linkToReview,
+        repoAtLinkAdded: reviewedRepo || null
+      },
+      {
+        where: {
+          id: review.id
         }
-      )
-      if (modifiedRows === 0) {
-        return res.status(400).send('No code review matched the given student instance ID and review number.')
       }
-      res.status(200).send({
-        message: 'Code review link added successfully.',
-        data: req.body
-      })
-    } catch (e) {
-      logger.error(e)
-      res.status(500).send('Unexpected error. Please try again.') // Make this more helpful?
+    )
+    if (modifiedRows === 0) {
+      throw badRequest('No code review matched the given student instance ID and review number.')
     }
+    res.status(200).send({
+      message: 'Code review link added successfully.',
+      data: req.body
+    })
   },
 
   /**
    * Remove one code review from a student.
    *   permissions: must be teacher/instructor on course
    *
+   * The review is identified by the body ({ reviewer, codeReviewRound }); the :id of the route is not used.
+   *
    * @param {*} req
    * @param {*} res
    */
   async removeOne(req, res) {
-    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
-      return
+    const { reviewer, codeReviewRound } = req.body
+    if (!Number.isInteger(reviewer) || !Number.isInteger(codeReviewRound)) {
+      throw badRequest('Missing or malformed inputs.')
     }
-
-    try {
-      if (!req.authenticated.success) {
-        res.status(403).send('You have to be authenticated to do this.')
-        return
-      }
-      if (!req.params.id) {
-        res.status(403).send('Cannot delete from null.')
-        return
-      }
-      const studentInstance = await StudentInstance.findOne({
-        where: { id: req.body.reviewer }
-      })
-      if (!studentInstance) {
-        return res.status(400).send('no student with that ID found')
-      }
-      const courseInstance = await CourseInstance.findOne({
-        where: { id: studentInstance.courseInstanceId }
-      })
-      const isTeacher = await helper.getTeacherId(req.decoded.id, courseInstance.id)
-      if (!isTeacher) {
-        return res.status(403).send('must be teacher on the course')
-      }
-
-      const deleteOne = await CodeReview.destroy({
-        where: {
-          studentInstanceId: req.body.reviewer,
-          reviewNumber: req.body.codeReviewRound
-        }
-      })
-      if (deleteOne === 0) {
-        return res.status(404).send({
-          message: 'No code review found for that student and round.',
-          data: req.body
-        })
-      }
-      return res.status(200).send({
-        message: 'Code review link removed successfully.',
-        data: req.body
-      })
-    } catch (e) {
-      logger.error(e)
-      res.status(500).send({
-        message: 'Removing the code review failed. Please try again.'
-      })
+    const studentInstance = await StudentInstance.findByPk(reviewer)
+    if (!studentInstance) {
+      throw badRequest('no student with that ID found')
     }
+    await requireCourseStaff(req, studentInstance.courseInstanceId, 'must be teacher on the course')
+
+    const deleted = await CodeReview.destroy({
+      where: {
+        studentInstanceId: reviewer,
+        reviewNumber: codeReviewRound
+      }
+    })
+    if (deleted === 0) {
+      throw notFound('No code review found for that student and round.')
+    }
+    return res.status(200).send({
+      message: 'Code review link removed successfully.',
+      data: req.body
+    })
   }
 }

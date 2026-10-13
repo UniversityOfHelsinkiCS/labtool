@@ -8,6 +8,7 @@ import { Redirect } from 'react-router'
 import { resetLoading, addRedirectHook, forceSetLoading } from '../../reducers/loadingReducer'
 import DocumentTitle from '../DocumentTitle'
 import Error from '../Error'
+import { errorMessage } from '../../util/errorMessage'
 
 /*
 take some elements from SetEmail.js, if user has already email in db
@@ -40,7 +41,7 @@ export const Email = props => {
     return (
       <Error
         errors={props.errors.map(
-          error => `${error.response.data} (${error.response.status} ${error.response.statusText})`
+          error => `${errorMessage(error, 'Error')} (${error.response.status} ${error.response.statusText})`
         )}
       />
     )

@@ -291,5 +291,33 @@ describe('<CoursePage />', () => {
       expect(removeStudent).toHaveBeenCalledWith({ id: activeStudent.id })
       expect(addRedirectHook).toHaveBeenCalledWith({ hook: 'STUDENT_REMOVE_' })
     })
+
+    it('stays on the course page when arriving with a finished redirect from another page', () => {
+      // e.g. the project info form redirects here after saving, with loading.redirect still set
+      renderStudentCoursePage({ loading: { ...loading, redirect: true } })
+
+      expect(screen.getByRole('heading', { name: /maarit mirja opiskelija/i })).toBeInTheDocument()
+    })
+
+    it('redirects to my page once the student has removed themselves', async () => {
+      const user = userEvent.setup()
+      const view = renderStudentCoursePage({
+        courseData: {
+          ...studentCourseData,
+          data: { ...activeStudent, validRegistration: false }
+        }
+      })
+
+      await user.click(screen.getByRole('button', { name: /remove yourself from the course/i }))
+      view.rerender(
+        <Provider store={createStore(() => ({ user: {}, loading: { ...loading, redirect: true } }))}>
+          <MemoryRouter initialEntries={['/labtool/courses/x']}>
+            <CoursePage {...view.props} loading={{ ...loading, redirect: true }} />
+          </MemoryRouter>
+        </Provider>
+      )
+
+      expect(screen.queryByRole('heading', { name: /maarit mirja opiskelija/i })).not.toBeInTheDocument()
+    })
   })
 })

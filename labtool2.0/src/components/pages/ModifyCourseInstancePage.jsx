@@ -41,6 +41,9 @@ import Error from '../Error'
 import { sortCoursesByName } from '../../util/sort'
 import { isHttpUrl } from '../../util/links'
 import { CodeReviewCheckbox } from './ModifyCourseInstancePage/CodeReviewCheckbox'
+import { errorMessage } from '../../util/errorMessage'
+import { noStaffAccessByRole } from '../../util/courseAccess'
+import NoAccess from '../NoAccess'
 
 /**
  *  Page used to modify a courseinstances information. Can only be accessed by teachers.
@@ -244,11 +247,15 @@ export const ModifyCourseInstancePage = props => {
     return <Redirect to={`/labtool/courses/${props.selectedInstance.ohid}`} />
   }
 
+  if (props.noAccess) {
+    return <NoAccess />
+  }
+
   if (props.errors && props.errors.length > 0) {
     return (
       <Error
         errors={props.errors.map(
-          error => `${error.response.data} (${error.response.status} ${error.response.statusText})`
+          error => `${errorMessage(error, 'Error')} (${error.response.status} ${error.response.statusText})`
         )}
       />
     )
@@ -563,6 +570,7 @@ const createCodeReviewLabels = amount => {
 
 const mapStateToProps = (state, ownProps) => {
   return {
+    noAccess: noStaffAccessByRole(state.coursePage, ownProps.courseId, state.user && state.user.user),
     selectedInstance: state.selectedInstance,
     user: state.user,
     notification: state.notification,
@@ -594,6 +602,7 @@ const mapDispatchToProps = {
 }
 
 ModifyCourseInstancePage.propTypes = {
+  noAccess: PropTypes.bool,
   courseId: PropTypes.string.isRequired,
 
   courseInstance: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),

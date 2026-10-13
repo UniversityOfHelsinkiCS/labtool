@@ -44,6 +44,85 @@ if (USE_FAKE_LOGIN) {
   console.log('USING FAKE LOGIN!!! DISABLE ON PRODUCTION!!!')
 }
 
+/**
+ * The main component that shows the applications pages.
+ * Defined at module level so that re-rendering App does not remount the page tree.
+ */
+const Main = () => {
+  return (
+    <main>
+      <Switch>
+        <Route
+          path={`/labtool/courses/:id`}
+          render={({ match, history }) => <CoursePage history={history} courseId={match.params.id} />}
+        />
+        <Route exact path={`/labtool/courses`} render={({ history }) => <Courses history={history} />} />
+        <Route
+          path={`/labtool/courseregistration/:id`}
+          render={({ match, history }) => <RegisterPage history={history} courseId={match.params.id} />}
+        />
+        <Route
+          path={`/labtool/browsereviews/:id/:si/`}
+          render={({ match, history }) => (
+            <BrowseReviews history={history} courseId={match.params.id} studentInstance={match.params.si} />
+          )}
+        />
+        <Route path={`/labtool/email`} component={Email} />
+        <Route
+          path={`/labtool/massemail/:id`}
+          render={({ match, history }) => <MassEmailPage history={history} courseId={match.params.id} />}
+        />
+        <Route path={`/labtool/registerPage`} component={RegisterPage} />
+        <Route
+          path={`/labtool/reviewstudent/:id/:si/:wk`}
+          render={({ match, history }) => (
+            <ReviewStudent
+              history={history}
+              courseId={match.params.id}
+              studentInstance={match.params.si}
+              weekNumber={match.params.wk}
+            />
+          )}
+        />
+        <Route
+          path={`/labtool/reviewstudentcr/:id/:si/:cr`}
+          render={({ match, history }) => (
+            <ReviewStudentCodeReview
+              history={history}
+              courseId={match.params.id}
+              studentInstance={match.params.si}
+              codeReviewNumber={match.params.cr}
+            />
+          )}
+        />
+        <Route
+          path={`/labtool/ModifyCourseInstancePage/:id`}
+          render={({ match }) => <ModifyCourseInstancePage courseId={match.params.id} />}
+        />
+        <Route
+          path={`/labtool/ModifyCourseInstanceStaff/:id`}
+          render={({ match }) => <ModifyCourseInstanceStaff courseId={match.params.id} />}
+        />
+        <Route
+          path={'/labtool/ModifyCourseInstanceCodeReviews/:id'}
+          render={({ match }) => <ModifyCourseInstanceCodeReviews courseId={match.params.id} />}
+        />
+        <Route
+          path={'/labtool/ManageTags/:id'}
+          render={({ match }) => <ManageTags courseId={match.params.id} />}
+        />
+        <Route
+          path={'/labtool/checklist/:id/create'}
+          render={({ match }) => <CreateChecklist courseId={match.params.id} />}
+        />
+        <Route path={'/labtool/courseimport'} render={() => <CourseImport />} />
+        <Route path={`/labtool/admin`} component={AdminPage} />
+        <Route path={`/`} render={() => <MyPage />} />
+      </Switch>
+    </main>
+  )
+}
+
 // The main component of the whole application.
 const App = props => {
   useEffect(() => {
@@ -95,97 +174,11 @@ const App = props => {
       created: props.created
     }
     window.localStorage.setItem('loggedLabtool', JSON.stringify(userAndToken))
-    props.getIsAllowedToImport()
+    // the backend answers 401 without a token
+    if (props.token) {
+      props.getIsAllowedToImport()
+    }
   }, [props.user, props.token, props.created])
-
-  /**
-   *  The main component that shows the applications pages.
-   */
-
-  const Main = () => {
-    return (
-      <main>
-        <Switch>
-          <Route
-            path={`/labtool/courses/:id`}
-            render={({ match, history }) => <CoursePage history={history} courseId={match.params.id} />}
-          />
-          <Route exact path={`/labtool/courses`} render={({ history }) => <Courses history={history} />} />
-          <Route
-            path={`/labtool/courseregistration/:id`}
-            render={({ match, history }) => <RegisterPage history={history} courseId={match.params.id} />}
-          />
-          <Route
-            path={`/labtool/browsereviews/:id/:si/`}
-            render={({ match, history }) => (
-              <BrowseReviews history={history} courseId={match.params.id} studentInstance={match.params.si} />
-            )}
-          />
-          <Route path={`/labtool/email`} component={Email} />
-          <Route
-            path={`/labtool/massemail/:id`}
-            render={({ match, history }) => <MassEmailPage history={history} courseId={match.params.id} />}
-          />
-          <Route path={`/labtool/registerPage`} component={RegisterPage} />
-          <Route
-            path={`/labtool/reviewstudent/:id/:si/:wk`}
-            render={({ match, history }) => (
-              <ReviewStudent
-                history={history}
-                courseId={match.params.id}
-                studentInstance={match.params.si}
-                weekNumber={match.params.wk}
-              />
-            )}
-          />
-          <Route
-            path={`/labtool/reviewstudentcr/:id/:si/:cr`}
-            render={({ match, history }) => (
-              <ReviewStudentCodeReview
-                history={history}
-                courseId={match.params.id}
-                studentInstance={match.params.si}
-                codeReviewNumber={match.params.cr}
-              />
-            )}
-          />
-          <Route
-            path={`/labtool/ModifyCourseInstancePage/:id`}
-            render={({ match }) => <ModifyCourseInstancePage courseId={match.params.id} />}
-          />
-          <Route
-            path={`/labtool/ModifyCourseInstanceStaff/:id`}
-            render={({ match }) => <ModifyCourseInstanceStaff courseId={match.params.id} />}
-          />
-          <Route
-            path={'/labtool/ModifyCourseInstanceCodeReviews/:id'}
-            render={({ match }) => <ModifyCourseInstanceCodeReviews courseId={match.params.id} />}
-          />
-          <Route
-            path={'/labtool/ManageTags/:id'}
-            render={({ match }) => <ManageTags courseId={match.params.id} />}
-          />
-          <Route
-            path={'/labtool/checklist/:id/create'}
-            render={({ match }) => <CreateChecklist courseId={match.params.id} />}
-          />
-          <Route
-            path={'/labtool/checklist/:id/create'}
-            render={({ match }) => <CreateChecklist courseId={match.params.id} />}
-          />
-          <Route path={'/labtool/courseimport'} render={() => <CourseImport />} />
-          <Route path={`/labtool/admin`} component={AdminPage} />
-          <Route path={`/`} render={() => <MyPage />} />
-        </Switch>
-      </main>
-    )
-  }
-
-  /**
-   * a component that forces the user to put an email.
-   * Checks the email from redux store.
-   */
-  const EmailChecker = () => (props.user.email === '' || props.user.email === null ? <Email /> : <Main />)
 
   /**
    * Logout code.
@@ -203,7 +196,16 @@ const App = props => {
     <div className="mainContainer">
       <Nav logout={doLogout} />
       <Notification />
-      {props.user ? EmailChecker() : USE_FAKE_LOGIN ? <FakeLoginPage /> : null}
+      {props.user ? (
+        // force the user to set an email before showing the pages
+        props.user.email === '' || props.user.email === null ? (
+          <Email />
+        ) : (
+          <Main />
+        )
+      ) : USE_FAKE_LOGIN ? (
+        <FakeLoginPage />
+      ) : null}
     </div>
   )
 }

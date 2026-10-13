@@ -1,10 +1,10 @@
 const applicationHelpers = require('./applicationHelper')
-const { User, TeacherInstance } = require('../models')
+const { TeacherInstance } = require('../models')
+const { isSysop } = require('./auth')
 
-exports.controllerBeforeAuthCheckAction = applicationHelpers.controllerBeforeAuthCheckAction
 exports.getInactive = applicationHelpers.getInactive
 exports.createCourse = applicationHelpers.createCourse
-exports.getActive = applicationHelpers.getActive
+exports.KurkiError = applicationHelpers.KurkiError
 exports.hasPermissionToImport = hasPermissionToImport
 exports.formatCoursesForList = formatCoursesForList
 
@@ -14,13 +14,7 @@ exports.formatCoursesForList = formatCoursesForList
  * @param userId
  */
 async function hasPermissionToImport(userId) {
-  const user = await User.findOne({
-    attributes: ['sysop'],
-    where: {
-      id: userId
-    }
-  })
-  if (user && user.sysop) {
+  if (await isSysop(userId)) {
     return true
   }
 
@@ -39,17 +33,11 @@ async function hasPermissionToImport(userId) {
  * @param courses
  */
 function formatCoursesForList(courses) {
-  const result = []
-
-  courses.forEach((course) => {
-    result.push({
-      hid: course.id,
-      cname: course.name,
-      starts: course.starts,
-      ends: course.ends,
-      instructor: course.instructor
-    })
-  })
-
-  return result
+  return courses.map(course => ({
+    hid: course.id,
+    cname: course.name,
+    starts: course.starts,
+    ends: course.ends,
+    instructor: course.instructor
+  }))
 }

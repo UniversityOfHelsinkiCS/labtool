@@ -45,18 +45,25 @@ uploads both folders as the `playwright-report` artifact when it fails.
 
 ## What is covered
 
-56 tests in 18 spec files.
+94 tests in 24 spec files. Every test also fails on an uncaught page error or a 5xx answer from
+the backend (see the error guard below).
 
 | Spec | Tests | Covers |
 |---|---|---|
-| `smoke` | 7 | Main pages render without uncaught errors, stuck loaders or error notifications: my page, course list, course page (student and teacher), browse reviews, course settings, admin |
-| `student-registration` | 2 | A student finds a course, registers with project name and repo and stays registered; the teacher sees the new student |
+| `smoke` | 15 | Pages opened directly render without uncaught errors, stuck loaders or error notifications: my page, course list, course page (student and teacher), browse reviews, course settings, admin, the student's project info form, course staff, code review settings, tag management, checklist creation, mass email, course import, code review grading |
+| `student-registration` | 2 | A student finds a course, registers with project name and repo, lands on the course page and stays registered; the teacher sees the new student |
+| `project-info` | 2 | A student edits their project name and repository: an invalid link (`ftp://…`) is refused with the backend's exact message, a valid change is saved and the teacher sees it |
+| `error-messages` | 3 | Backend `{ message }` errors reach the red notification word for word (and never as `[object Object]` or `undefined`): a tag name of only spaces, a duplicate tag name, a code review link without http(s) |
+| `final-review` | 5 | A teacher enables the final review and grades it with points, a grade and review notes; an assistant adds a review note of their own (the student is assigned to the teacher); the student does not see the hidden final review; once the teacher shows it, the student sees points, grade and feedback but no review notes |
+| `permissions` | 14 | A student opening teacher pages directly (course settings, review pages of another student and of their own, code review grading, Browse reviews, mass email, code review settings, course staff, checklist creation, tag management) gets "No access" and no teacher UI, crash or endless loader; course import shows the backend's reason; an assistant edits course settings but is not offered marking the course invalid, the responsible teacher is |
+| `code-review-changes` | 2 | A teacher removes an assigned code review (with confirmation) and the student no longer sees it; a teacher assigns a repository URL that is not a student on the course, and the student sees it |
+| `admin` | 3 | A sysop grants admin rights to a user, who then gets the admin page and the Admin link, and revokes them, after which the user is redirected away |
 | `teacher-grading` | 2 | Points above the week maximum are rejected; a teacher grades week 1 and the student sees points and feedback |
 | `week-review-draft` | 3 | A teacher saves a review as a draft and the student cannot see it; the teacher continues from the draft and publishes it |
 | `checklist` | 3 | A teacher creates a week 1 checklist (previewing it before saving); when reviewing, ticking items fills in points and feedback; a course without checklists copies all checklists of another course |
 | `code-reviews` | 3 | A teacher creates a review round and assigns reviewers; the student sees whom to review and submits a link; the teacher grades it and the student sees the points |
 | `comments` | 3 | A student comments on a reviewed week; the teacher replies and adds an instructor-only note; the student sees the reply but not the note |
-| `tags` | 2 | A teacher creates a tag, tags a student, filters by the tag and removes it |
+| `tags` | 3 | A teacher creates a tag, tags a student, filters by the tag and removes it; deleting the tag removes it from every tagged student |
 | `course-settings` | 3 | A teacher changes week amount, max points, current week, material link and registration status; changes persist; registration can be reactivated |
 | `course-staff` | 4 | A teacher adds an assistant and assigns a student to them; the assistant sees the course and the student; the teacher removes the assistant |
 | `email` | 5 | Notifying a student about a reviewed week and a mass email to all students with a copy to instructors (both checked in the Mailpit inbox), the error when no recipient is selected, and a rejected address (#1141): the others still get the email and the teacher is told who did not, or nothing is sent when every address is rejected |
@@ -64,7 +71,7 @@ uploads both folders as the `playwright-report` artifact when it fails.
 | `change-history` | 3 | The review page shows who changed a week's grading with the old and new texts; a student's repository change shows in their change history; Browse reviews shows the student's whole change history, which can be filtered (#1129, #1132) |
 | `dropping-out` | 5 | A teacher marks a student dropped and the student sees it; the teacher marks a registration mistaken; the student removes themselves and disappears from the teacher's list |
 | `my-page` | 2 | A user changes their email address; a user without one must give one before using the app |
-| `logout` | 1 | Logging out clears the session |
+| `logout` | 2 | Logging out clears the session; a page load before login sends no requests the backend refuses |
 | `invalid-course` | 3 | The teacher marks a course invalid with a confirmation; it is struck through in the teacher's lists and hidden in the course list behind a toggle; it disappears from its students; the teacher restores it and the students see it again (#905) |
 | `course-import` | 1 | A sysop imports a course from Kurki, becomes its teacher, and the course disappears from the import list |
 
@@ -88,15 +95,26 @@ removes everything the tests create through the UI, including courses imported f
 therefore always has courses from the current term to import, and the seeder recognises imported
 courses by that suffix.
 
-**One course per spec.** Each spec has its own seeded course (ids 90001–90010, see `COURSES` in
-`fixtures/data.ts`), so specs do not share data and can run in any order. Steps that build on each
+**One course per spec.** Each spec has its own seeded course (ids 90001–90017, see `COURSES` in
+`fixtures/data.ts`), so specs do not share data and can run in any order. Student instances of the
+newer courses have ids from 90031 up (`STUDENT_INSTANCES`). Steps that build on each
 other within a file use `test.describe.serial`. Tests run with a single worker.
+
+**Error guard.** Specs import `test` and `expect` from `fixtures/test.ts`, not from
+`@playwright/test`. Its automatic `errorGuard` fixture records, for the whole test, every uncaught
+error in a page (`weberror`, i.e. a crash that usually leaves a blank page) and every `/api/`
+response with a status of 500 or more, and fails the test at teardown with the list. It watches the
+default `page` and every context the test opens itself (`newPageAs`, `browser.newPage()`), by
+wrapping `browser.newContext` for the duration of the test. A test that triggers such an error on
+purpose can allow it with `test.use({ allowedServerErrors: [/\/api\/.../], allowedPageErrors: [/.../] })`;
+no current test needs to.
 
 **Fixtures** (`fixtures/`):
 
+- `test.ts` — `test` and `expect` with the error guard (above).
 - `data.ts` — all ids, course codes, users and notification texts. They must match the seeder.
   Users: `TEACHER` (also sysop), `REGISTERED_STUDENT`, `UNREGISTERED_STUDENT`, `SECOND_STUDENT`,
-  `ASSISTANT`, `EMAIL_CHANGER`, `NO_EMAIL_USER`.
+  `ASSISTANT`, `EMAIL_CHANGER`, `NO_EMAIL_USER`, `ADMIN_CANDIDATE`.
 - `auth.ts` — fake Shibboleth login through localStorage (`fake-shibbo-data`):
   - `loginAs(page, user)` logs in on every page load
   - `loginOnceAs(page, user)` logs in once, so a logout sticks
@@ -107,16 +125,21 @@ other within a file use `test.describe.serial`. Tests run with a single worker.
     test types into it. Some pages, like ReviewStudent, first render stale store data, then reset
     and refetch, and input typed in between is lost.
   - `chooseDropdownOption` and `openAccordion` handle Semantic UI widgets.
-  - `expectNoLoader` and `expectSuccess` are common assertions.
+  - `expectNoLoader`, `expectSuccess` and `expectError` are common assertions; `expectError` also
+    checks that the message is not `[object Object]` or `undefined`.
 
-**Writing tests.** Prefer role, text and label locators over CSS or test ids, and add shared
-constants to `fixtures/data.ts`. If a spec needs new data, add it to the e2e seeder (keeping it
+**Writing tests.** Import `test` and `expect` from `../fixtures/test`. Prefer role, text and label
+locators over CSS or test ids, and add shared constants to `fixtures/data.ts`. If a spec needs new data, add it to the e2e seeder (keeping it
 behind `E2E_SEED` and removing it in `down`) under a new course id. Do not use fixed sleeps; wait
 for responses or UI state instead.
 
 ## Known issues
 
-- **Opening some pages directly at the start of a session can show a blank page.** BrowseReviews
-  and the code review settings page crash if a page's first render sees stale loading state, which
-  depends on the order in which two responses arrive. `gotoWithSession` works around it. This is
-  an app bug, not a test bug.
+- **Opening some pages directly at the start of a session used to show a blank page.** BrowseReviews
+  and the code review settings page crashed if a page's first render saw stale loading state. Both
+  are fixed, and the smoke spec now opens every page directly; some older specs still go through
+  my page first with `gotoWithSession`.
+- A student opening some teacher pages directly sees a loader that never goes away (another
+  student's review page, the code review grading page, course import), and the checklist and course
+  staff pages show their (empty) forms. The backend refuses every action there; see "Known bugs" in
+  `../CHANGELOG.md`.

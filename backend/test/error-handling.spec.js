@@ -1,7 +1,7 @@
 const assert = require('assert')
 const { as, api } = require('./helpers/api')
 const f = require('./helpers/factories')
-const { User } = require('../server/models')
+const { User, StudentInstance } = require('../server/models')
 
 /*
  * A rejected promise in an async handler used to be unhandled, which on Node 15+ crashes the whole
@@ -44,7 +44,7 @@ describe('Error handling', () => {
     await assertNoUnhandledRejections()
   })
 
-  it('answers 500 with a generic message when an async handler fails', async () => {
+  it('answers malformed requests without crashing or leaking details', async () => {
     const responses = [
       await as(s.users.student).post('/api/weeks/getDraft').send({}),
       await as(s.users.student).post('/api/comments').send({ week: 'abc' }),
@@ -54,8 +54,26 @@ describe('Error handling', () => {
       assert.ok(res.status >= 400, `expected an error status, got ${res.status}`)
       assertNoSql(res)
     })
-    assert.strictEqual(responses[0].status, 500)
-    assert.strictEqual(responses[0].body.error, 'Unexpected error. Please try again.')
+    assert.strictEqual(responses[0].status, 400)
+    assert.deepStrictEqual(responses[0].body, { message: 'Missing or malformed inputs.' })
+    await assertNoUnhandledRejections()
+  })
+
+  it('answers 500 { message } without details when a query fails', async () => {
+    const { findByPk } = StudentInstance
+    StudentInstance.findByPk = async () => {
+      throw new Error('select * from "StudentInstances" where secret')
+    }
+    try {
+      const res = await as(s.users.teacher)
+        .post('/api/weeks/getDraft')
+        .send({ studentInstanceId: s.student.id, weekNumber: 1 })
+        .expect(500)
+      assert.deepStrictEqual(res.body, { message: 'Unexpected error. Please try again.' })
+      assertNoSql(res)
+    } finally {
+      StudentInstance.findByPk = findByPk
+    }
     await assertNoUnhandledRejections()
   })
 
@@ -64,7 +82,7 @@ describe('Error handling', () => {
       .put('/api/users/update')
       .send({ email: ['@'] })
       .expect(400)
-    assert.strictEqual(res.body.error, 'Email was too short.')
+    assert.strictEqual(res.body.message, 'Email was too short.')
     await as(s.users.student)
       .put('/api/users/update')
       .send({ email: 'new@example.com' })
@@ -79,7 +97,7 @@ describe('Error handling', () => {
       .set('Content-Type', 'application/json')
       .send('{"broken":')
       .expect(400)
-    assert.deepStrictEqual(res.body, { error: 'Invalid request.' })
+    assert.deepStrictEqual(res.body, { message: 'Invalid request.' })
   })
 
   it('does not send database errors to the client', async () => {

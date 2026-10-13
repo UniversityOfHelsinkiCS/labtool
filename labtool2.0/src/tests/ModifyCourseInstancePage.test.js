@@ -83,6 +83,14 @@ describe('<ModifyCourseInstancePage />', () => {
     expect(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument()
   })
 
+  it('shows no settings form to a student who opens the page directly', () => {
+    renderPage({ noAccess: true })
+
+    expect(screen.getByText('You do not have access to this page.')).toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: `Edit course: ${courseData.name}` })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Save' })).not.toBeInTheDocument()
+  })
+
   it('matches the rendered snapshot', () => {
     renderPage()
     const form = screen.getByRole('button', { name: 'Save' }).closest('form')
