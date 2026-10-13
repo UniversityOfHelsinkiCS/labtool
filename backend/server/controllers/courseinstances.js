@@ -2,6 +2,7 @@ const Sequelize = require('sequelize')
 const db = require('../models')
 const helper = require('../helpers/courseInstanceHelper')
 const logger = require('../utils/logger')
+const { isHttpUrl } = require('../helpers/links')
 const { hiddenFromStudents } = require('../helpers/finalReview')
 const { canSeeCourse, canMarkInvalid } = require('../helpers/invalidCourse')
 const { copyChecklists } = require('../helpers/copyChecklists')
@@ -59,7 +60,7 @@ module.exports = {
       }).then(courseInstances => res.status(200).send(courseInstances))
         .catch((error) => {
           logger.error(error)
-          res.status(400).send(error)
+          res.status(400).send('An error occurred. Please try again.')
         })
     }
   },
@@ -101,7 +102,7 @@ module.exports = {
       }).then(courseInstances => res.status(200).send(courseInstances))
         .catch((error) => {
           logger.error(error)
-          res.status(400).send(error)
+          res.status(400).send('An error occurred. Please try again.')
         })
     }
   },
@@ -242,7 +243,8 @@ module.exports = {
           palautus.role = 'student'
           res.status(200).send(palautus)
         } catch (error) {
-          res.status(400).send(error)
+          logger.error(error)
+          res.status(400).send('An error occurred. Please try again.')
         }
       } else {
         const teacherPalautus = await StudentInstance.findAll({
@@ -333,7 +335,8 @@ module.exports = {
           palautus.role = 'teacher'
           res.status(200).send(palautus)
         } catch (e) {
-          res.status(500).send(e)
+          logger.error(e)
+          res.status(500).send('An error occurred. Please try again.')
         }
       }
     } catch (error) {
@@ -524,15 +527,15 @@ module.exports = {
           res.status(200).send(updatedStudents.filter(updatedStudent => !!updatedStudent).map(({ dataValues }) => dataValues))
         }).catch((error) => {
           logger.error(error)
-          res.status(400).send(error)
+          res.status(400).send('An error occurred. Please try again.')
         })
       }).catch((error) => {
         logger.error(error)
-        res.status(400).send(error)
+        res.status(400).send('An error occurred. Please try again.')
       })
     } catch (e) {
       logger.error(e)
-      res.status(400).send(e)
+      res.status(400).send('An error occurred. Please try again.')
     }
   },
 
@@ -612,7 +615,7 @@ module.exports = {
       }
     } catch (e) {
       logger.error(e)
-      res.status(400).send(e)
+      res.status(400).send('An error occurred. Please try again.')
     }
   },
 
@@ -626,6 +629,13 @@ module.exports = {
    */
   update(req, res) {
     if (!helper.controllerBeforeAuthCheckAction(req, res)) {
+      return
+    }
+
+    const badLink = ['coursesPage', 'courseMaterial']
+      .find(field => typeof req.body[field] === 'string' && req.body[field] !== '' && !isHttpUrl(req.body[field]))
+    if (badLink) {
+      res.status(400).send({ message: `${badLink === 'coursesPage' ? 'The course page link' : 'The course material link'} must be a web address starting with http:// or https://.` })
       return
     }
 
@@ -684,17 +694,17 @@ module.exports = {
               })
               .then(updatedCourseInstance => res.status(200).send(updatedCourseInstance))
               .catch((error) => {
-                res.status(400).send(error)
+                res.status(400).send('An error occurred. Please try again.')
                 logger.error(error)
               })
           })
           .catch((error) => {
-            res.status(400).send(error)
+            res.status(400).send('An error occurred. Please try again.')
             logger.error(error)
           })
       })
       .catch((error) => {
-        res.status(400).send(error)
+        res.status(400).send('An error occurred. Please try again.')
         logger.error(error)
       })
   },
@@ -751,7 +761,7 @@ module.exports = {
       res.status(200).send(courses.filter((_, index) => visible[index]))
     } catch (error) {
       logger.error(error)
-      res.status(400).send(error)
+      res.status(400).send('An error occurred. Please try again.')
     }
   },
 
@@ -789,7 +799,7 @@ module.exports = {
       })
       .catch((error) => {
         logger.error(error)
-        res.status(400).send(error)
+        res.status(400).send('An error occurred. Please try again.')
       })
   },
 
@@ -1047,7 +1057,7 @@ module.exports = {
           res.status(200).send(comment)
         }
       } catch (e) {
-        res.status(400).send(e)
+        res.status(400).send('An error occurred. Please try again.')
         logger.error(e)
       }
     }
@@ -1105,7 +1115,7 @@ module.exports = {
         )))
         res.status(200).send(commentsToUpdate)
       } catch (e) {
-        res.status(400).send(e)
+        res.status(400).send('An error occurred. Please try again.')
         logger.error(e)
       }
     }
@@ -1175,7 +1185,7 @@ module.exports = {
       })
       res.status(200).send(comments)
     } catch (error) {
-      res.status(400).send(error)
+      res.status(400).send('An error occurred. Please try again.')
       logger.error(error)
     }
   }

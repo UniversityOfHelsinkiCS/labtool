@@ -4,6 +4,7 @@ const app = express()
 const jwt = require('jsonwebtoken')
 const bodyParser = require('body-parser')
 const headerMiddleware = require('unfuck-utf8-headers-middleware')
+const helmet = require('helmet')
 const logger = require('./server/utils/logger')
 const requestLogger = require('./server/utils/requestLogger')
 
@@ -18,6 +19,10 @@ if (USE_FAKE_LOGIN) {
 }
 
 app.use(requestLogger)
+
+// Security headers (CSP, nosniff, frame and referrer policies, HSTS, no X-Powered-By). The frontend is
+// on another port in development, so resources may be read same-site rather than only same-origin.
+app.use(helmet({ crossOriginResourcePolicy: { policy: 'same-site' } }))
 
 /**
  * Fix charset for shibboleth headers
@@ -137,6 +142,27 @@ const authenticate = (request, response, next) => {
 }
 app.use(authenticate)
 
+/**
+ * Express 4 does not catch rejected promises of async route handlers, and on Node 15+ an
+ * unhandled rejection crashes the whole backend. Pass them on to the error handler below.
+ */
+const catchAsyncErrors = handler => (typeof handler === 'function' && handler.length < 4
+  ? (req, res, next) => {
+    const result = handler(req, res, next)
+    if (result && typeof result.catch === 'function') {
+      result.catch(next)
+    }
+  }
+  : handler)
+
+;['get', 'post', 'put', 'delete'].forEach((method) => {
+  const register = app[method].bind(app)
+  // app.get(name) with a single argument reads a setting
+  app[method] = (path, ...handlers) => (handlers.length === 0
+    ? register(path)
+    : register(path, ...handlers.map(catchAsyncErrors)))
+})
+
 // Express reitti määrittelyt
 require('./server/routes')(app)
 require('./server/routes/userRouter')(app)
@@ -156,6 +182,21 @@ app.get('*', (req, res) => res.status(404).send({
 })
 )
 
+// Errors are logged but never sent to the client: Sequelize errors contain SQL and parameters.
+// eslint-disable-next-line no-unused-vars
+app.use((error, req, res, next) => {
+  logger.error(`Unhandled error in ${req.method} ${req.path}: ${error.stack || error.message || error}`)
+  if (res.headersSent) {
+    return
+  }
+  const status = error.status || error.statusCode
+  if (status >= 400 && status < 500) {
+    res.status(status).send({ error: 'Invalid request.' })
+  } else {
+    res.status(500).send({ error: 'Unexpected error. Please try again.' })
+  }
+})
+
 const start = async () => {
   await connectToDatabase()
 
@@ -170,6 +211,11 @@ const start = async () => {
 }
 
 if (require.main === module) {
+  // A promise a handler did not await must not take the whole backend down.
+  process.on('unhandledRejection', (reason) => {
+    logger.error(`Unhandled promise rejection: ${(reason && reason.stack) || reason}`)
+  })
+
   start().catch((error) => {
     logger.error(`Backend startup failed: ${error.stack || error.message}`)
     process.exit(1)

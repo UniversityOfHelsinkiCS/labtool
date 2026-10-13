@@ -368,6 +368,25 @@ describe('Course instances API', () => {
         .expect(401)
     })
 
+    it('accepts only http(s) links as course page and material links', async () => {
+      for (const field of ['coursesPage', 'courseMaterial']) {
+        for (const link of ['javascript:alert(1)', 'data:text/html,x', 'courses.example/page']) {
+          const res = await as(s.users.assistant)
+            .put(`/api/courseinstances/${s.course.ohid}`)
+            .send({ ...update, [field]: link })
+            .expect(400)
+          assert.match(res.body.message, /http/)
+        }
+      }
+      const course = await CourseInstance.findByPk(s.course.id)
+      assert.notStrictEqual(course.name, 'Renamed course')
+
+      await as(s.users.teacher)
+        .put(`/api/courseinstances/${s.course.ohid}`)
+        .send({ ...update, courseMaterial: '' })
+        .expect(200)
+    })
+
     it('lets a teacher of the course update it', async () => {
       const res = await as(s.users.teacher)
         .put(`/api/courseinstances/${s.course.ohid}`)

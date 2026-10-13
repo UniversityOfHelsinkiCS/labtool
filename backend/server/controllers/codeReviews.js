@@ -2,6 +2,7 @@ const Sequelize = require('sequelize')
 const { CodeReview, ReviewCheck, StudentInstance, TeacherInstance, CourseInstance } = require('../models')
 const helper = require('../helpers/codeReviewHelper')
 const logger = require('../utils/logger')
+const { isGithubRepoUrl } = require('../helpers/links')
 const { addValueChange, addChecklistChanges, logChange } = require('../helpers/changeLog')
 const { enforceCurrentUserIsStudentOnCourse, enforceCurrentUser, enforceCurrentUserCanReview } = require('../helpers/auth')
 
@@ -11,10 +12,8 @@ async function formatCodeReview(codeReview, allStudentInstancesIds, reviewNumber
   if (typeof codeReview.reviewer !== 'number') {
     return null// This will lead to rejection later.
   }
-  if (typeof codeReview.toReview !== 'number') {
-    if (!codeReview.repoToReview || !codeReview.repoToReview.includes('http')) {
-      return null
-    }
+  if (typeof codeReview.toReview !== 'number' && !isGithubRepoUrl(codeReview.repoToReview)) {
+    return null
   }
   const reviewed = await CodeReview.findAll({
     raw: true,
@@ -64,6 +63,12 @@ module.exports = {
       }
       if (req.body.codeReviews.length === 0) {
         res.status(400).send('No code reviews were provided.')
+        return
+      }
+      const badRepo = req.body.codeReviews.find(codeReview => codeReview && typeof codeReview.toReview !== 'number'
+        && !isGithubRepoUrl(codeReview.repoToReview))
+      if (badRepo) {
+        res.status(400).send('A repository to review must be a GitHub repository link, e.g. https://github.com/owner/repo.')
         return
       }
       const allStudentInstancesIds = [] // Gather all student instance ids for future query
@@ -360,8 +365,9 @@ module.exports = {
         data: req.body
       })
     } catch (e) {
+      logger.error(e)
       res.status(500).send({
-        message: e
+        message: 'Removing the code review failed. Please try again.'
       })
     }
   }

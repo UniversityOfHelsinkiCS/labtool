@@ -39,6 +39,7 @@ import BackButton from '../BackButton'
 import DocumentTitle from '../DocumentTitle'
 import Error from '../Error'
 import { sortCoursesByName } from '../../util/sort'
+import { isHttpUrl } from '../../util/links'
 import { CodeReviewCheckbox } from './ModifyCourseInstancePage/CodeReviewCheckbox'
 
 /**
@@ -141,16 +142,17 @@ export const ModifyCourseInstancePage = props => {
         courseMaterial
       } = props.selectedInstance
       let newCr = state.visibleCr
-      // This checks that the 'courses.helsinki.fi' URL actually contains that string as a part of it. Reject if not.
-      if (coursesPage !== null && coursesPage !== '') {
-        // eslint-disable-next-line no-constant-condition
-        if (false) {
-          props.showNotification({
-            message: 'Link to "courses.helsinki.fi" must have that string as a part of it.',
-            error: true
-          })
-          return
-        }
+      // the links are shown on the course page, so only web links are accepted (the backend checks this too)
+      const badLink = [
+        [coursesPage, 'The course page link'],
+        [courseMaterial, 'The course material link']
+      ].find(([link]) => link && link.trim() !== '' && !isHttpUrl(link.trim()))
+      if (badLink) {
+        props.showNotification({
+          message: `${badLink[1]} must be a web address starting with http:// or https://.`,
+          error: true
+        })
+        return
       }
 
       if (currentWeek === null || !dropdownWeeks.map(option => option.value).includes(currentWeek)) {

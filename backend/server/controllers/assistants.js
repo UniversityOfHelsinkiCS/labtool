@@ -114,7 +114,8 @@ module.exports = {
     try {
       studentInstanceId = req.params.id
     } catch (e) {
-      res.status(400).send(e)
+      logger.error(e)
+      res.status(400).send('An error occurred. Please try again.')
     }
 
     try {
@@ -160,7 +161,8 @@ module.exports = {
         res.status(200).send(returnedAssistantInfo)
       }
     } catch (e) {
-      res.status(400).send(e)
+      logger.error(e)
+      res.status(400).send('An error occurred. Please try again.')
     }
   }
 }

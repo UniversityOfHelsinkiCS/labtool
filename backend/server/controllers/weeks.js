@@ -201,7 +201,7 @@ module.exports = {
     } catch (error) {
       logger.error('Create weeks error.')
       logger.error(error)
-      res.status(500).send(error.message)
+      res.status(500).send({ message: 'Saving the review failed. Please try again.' })
     }
   },
 
@@ -225,6 +225,10 @@ module.exports = {
           id: req.body.studentInstanceId
         }
       })
+      if (!studentInstance) {
+        res.status(404).send('Student not found.')
+        return
+      }
       const isTeacher = await helper.getTeacherId(req.decoded.id, studentInstance.courseInstanceId)
       if (!isTeacher) {
         res.status(400).send('You must be a teacher to get review drafts.')
@@ -266,6 +270,10 @@ module.exports = {
           id: req.body.studentInstanceId
         }
       })
+      if (!studentInstance) {
+        res.status(404).send('Student not found.')
+        return
+      }
       const isTeacher = await helper.getTeacherId(req.decoded.id, studentInstance.courseInstanceId)
       if (!isTeacher) {
         res.status(400).send('You must be a teacher to save review drafts.')

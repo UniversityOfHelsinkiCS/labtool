@@ -29,7 +29,7 @@ const commentMessage = async (role, commentId) => {
     if (role === 'teacher') {
       // Database query
       const queryResult = await Comment.findOne({
-        attributes: ['weekId', 'comment'],
+        attributes: ['weekId', 'comment', 'hidden'],
         where: {
           id: commentId
         },
@@ -66,6 +66,7 @@ const commentMessage = async (role, commentId) => {
           },
           text: queryResult.dataValues.comment
         },
+        hidden: queryResult.dataValues.hidden,
         courseId: queryResult.dataValues.Week.StudentInstance.CourseInstance.dataValues.id
       }
     } if (role === 'student') {
@@ -346,6 +347,9 @@ const send = async (req, res) => {
       })
       if (!teacherInstance) {
         return reject(res, 403, 'You must be a teacher of the course to perform this action.')
+      }
+      if (message.hidden) {
+        return reject(res, 400, 'The comment is hidden from the student, so the student cannot be notified about it.')
       }
       // an email would reveal a final review that students cannot see yet
       const weekId = useComment ? (await Comment.findByPk(req.body.commentId, { attributes: ['weekId'] })).weekId : req.body.weekId

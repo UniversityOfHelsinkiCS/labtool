@@ -66,6 +66,14 @@ const notificationReducer = (state = {}, action) => {
         message: 'Course instance updated successfully!',
         error: false
       }
+    case 'CI_MODIFY_ONE_FAILURE': {
+      const data = action.response && action.response.response && action.response.response.data
+      return {
+        message:
+          (data && data.message) || (typeof data === 'string' ? data : 'The course could not be updated.'),
+        error: true
+      }
+    }
     case 'CI_COPY_INFO_SUCCESS':
       return {
         message: 'Course details copied successfully!',
@@ -244,6 +252,13 @@ const notificationReducer = (state = {}, action) => {
         message: 'Tag removed successfully',
         error: false
       }
+    case 'TAG_REMOVE_FAILURE': {
+      const data = action.response && action.response.response && action.response.response.data
+      return {
+        message: typeof data === 'string' ? data : 'The tag could not be removed.',
+        error: true
+      }
+    }
     case 'CHECKLIST_CREATE_FAILURE':
       return {
         message: action.response.response.data,

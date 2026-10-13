@@ -41,12 +41,24 @@ describe('Users API', () => {
       })
     })
 
+    it('lists users without email addresses for an assistant', async () => {
+      const res = await as(s.users.assistant)
+        .get('/api/users')
+        .expect(200)
+      assert.strictEqual(res.body.length, 6)
+      res.body.forEach((user) => {
+        assert.ok(!('email' in user))
+        assert.ok('firsts' in user)
+      })
+    })
+
     it('lists users for a sysop who teaches nothing', async () => {
       const sysop = await createUser({ sysop: true })
       const res = await as(sysop)
         .get('/api/users')
         .expect(200)
       assert.strictEqual(res.body.length, 7)
+      assert.ok(res.body.every(user => 'email' in user))
     })
   })
 

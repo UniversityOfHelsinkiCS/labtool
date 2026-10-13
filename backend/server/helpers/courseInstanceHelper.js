@@ -231,7 +231,7 @@ function findByUserStudentInstance(req, res) {
       .then(instance => res.status(200).send(instance[0]))
       .catch((error) => {
         logger.error('findByUserStudentInstance error', { error: error.message })
-        res.status(400).send(error)
+        res.status(400).send('An error occurred. Please try again.')
       })
   } else {
     errors.push('\nsomething went wrong')

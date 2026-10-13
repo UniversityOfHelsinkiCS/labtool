@@ -120,8 +120,12 @@ export const ModifyCourseInstanceStaff = props => {
                   <Table.Row key={user.id}>
                     <Table.Cell>
                       {user.firsts} {user.lastname}
-                      <br />
-                      <a href={`mailto:${user.email}`}>{user.email}</a>
+                      {user.email && (
+                        <>
+                          <br />
+                          <a href={`mailto:${user.email}`}>{user.email}</a>
+                        </>
+                      )}
                     </Table.Cell>
                     <Table.Cell>
                       {getTeacherIds().includes(user.id) ? (

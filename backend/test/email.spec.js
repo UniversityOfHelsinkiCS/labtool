@@ -106,6 +106,17 @@ describe('Email API', () => {
       await eventually(async () => assert.strictEqual((await Comment.findByPk(comment.id)).notified, true))
     })
 
+    it('does not email a hidden (instructors only) comment to the student', async () => {
+      const comment = await f.createComment(week, s.users.teacher, { comment: 'Probably copied', hidden: true })
+      const res = await mailAs(s.users.teacher)
+        .post('/api/email/send')
+        .send({ role: 'teacher', commentId: comment.id })
+        .expect(400)
+      assert.match(res.text, /hidden/)
+      assert.strictEqual(mail.sent.length, 0)
+      assert.strictEqual((await Comment.findByPk(comment.id)).notified, false)
+    })
+
     it('emails a student comment to the assigned assistant', async () => {
       await s.student.update({ teacherInstanceId: s.assistant.id })
       const comment = await f.createComment(week, s.users.student, { comment: 'Question about week 1' })
