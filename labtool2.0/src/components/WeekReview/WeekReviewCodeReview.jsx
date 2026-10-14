@@ -6,6 +6,7 @@ import { roundPoints } from '../../util/format'
 import { reviewTitleStyle } from './reviewTitleStyle'
 import { Points } from '../Points'
 import { reviewedRepository } from '../../util/reviewedRepository'
+import { safeHref } from '../../util/links'
 
 // The project a code review was done against (#1132), with a warning when the student has changed
 // their repository since.
@@ -84,7 +85,7 @@ export const WeekReviewCodeReview = props => {
                 <span>This student is assigned a repo that doesn&#39;t belong to this course to review</span>
                 <br />
                 <strong>GitHub:</strong>{' '}
-                <a href={cr.repoToReview} target="_blank" rel="noopener noreferrer">
+                <a href={safeHref(cr.repoToReview)} target="_blank" rel="noopener noreferrer">
                   {cr.repoToReview}
                 </a>
               </p>
@@ -144,7 +145,11 @@ export const WeekReviewCodeReview = props => {
               : 'Not graded yet'}
             <br />
             <strong>GitHub: </strong>
-            <a href={cr.toReview.github || cr.repoToReview} target="_blank" rel="noopener noreferrer">
+            <a
+              href={safeHref(cr.toReview.github || cr.repoToReview)}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               {cr.toReview.github || cr.repoToReview}
             </a>
             <br /> <br />

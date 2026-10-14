@@ -9,8 +9,8 @@ COPY ./labtool2.0 ./
 RUN npm ci
 RUN npm run build
 
-#Install serve package
-RUN npm install -g serve@6.5.8
+# Static file server; security headers (CSP etc.) are in serve.json
+RUN npm install -g serve@14.2.6
 
 #Export path properly
 ENV PATH=".:${PATH}"
@@ -19,4 +19,5 @@ ENV PATH=".:${PATH}"
 EXPOSE 3000
 
 ENTRYPOINT ["serve"]
-CMD [ "-p", "3000", "-s", "build" ]
+# the config path is relative to the served directory
+CMD [ "-l", "3000", "-s", "build", "-c", "../serve.json" ]

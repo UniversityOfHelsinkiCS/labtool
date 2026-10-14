@@ -1,6 +1,7 @@
 import React from 'react'
 import { Icon } from 'semantic-ui-react'
 import PropTypes from 'prop-types'
+import { safeHref } from '../util/links'
 
 const RepoLink = ({ url }) => {
   const { Fragment } = React
@@ -18,7 +19,7 @@ const RepoLink = ({ url }) => {
   }
 
   return (
-    <a href={url} target="_blank" rel="noopener noreferrer">
+    <a href={safeHref(url)} target="_blank" rel="noopener noreferrer">
       {cleanUrl}
     </a>
   )

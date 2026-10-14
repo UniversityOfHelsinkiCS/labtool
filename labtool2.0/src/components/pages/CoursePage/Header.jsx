@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Header } from 'semantic-ui-react'
 
 import { formatCourseName } from '../../../util/format'
+import { safeHref } from '../../../util/links'
 
 export const CoursePageHeader = ({ courseInstance }) => {
   if (!courseInstance) {
@@ -14,9 +15,13 @@ export const CoursePageHeader = ({ courseInstance }) => {
       <Header.Content>
         {formatCourseName(courseInstance.name, courseInstance.ohid, courseInstance.start)}
         <Header.Subheader>
-          {courseInstance.coursesPage && <a href={courseInstance.coursesPage}>studies.helsinki.fi</a>}{' '}
+          {courseInstance.coursesPage && (
+            <a href={safeHref(courseInstance.coursesPage)}>studies.helsinki.fi</a>
+          )}{' '}
           {courseInstance.coursesPage && courseInstance.courseMaterial && '|'}{' '}
-          {courseInstance.courseMaterial && <a href={courseInstance.courseMaterial}>Course material</a>}
+          {courseInstance.courseMaterial && (
+            <a href={safeHref(courseInstance.courseMaterial)}>Course material</a>
+          )}
         </Header.Subheader>
       </Header.Content>
     </Header>

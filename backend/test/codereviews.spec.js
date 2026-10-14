@@ -133,6 +133,19 @@ describe('Code reviews API', () => {
       assert.strictEqual(await CodeReview.count(), 0)
     })
 
+    it('accepts only GitHub repository links as external repositories', async () => {
+      const assignRepo = repoToReview => as(s.users.teacher)
+        .put('/api/codereviews/bulkinsert')
+        .send({ ...assignment(), codeReviews: [{ reviewer: s.student.id, toReview: null, repoToReview }] })
+
+      for (const repo of ['javascript:alert(1)//http', 'https://gitlab.com/o/r', 'https://github.com/only-owner', 'https://github.com.evil.example/o/r']) {
+        const res = await assignRepo(repo).expect(400)
+        assert.match(res.text, /GitHub repository/)
+      }
+      assert.strictEqual(await CodeReview.count(), 0)
+      await assignRepo('https://github.com/owner/repo/tree/main/part2').expect(201)
+    })
+
     it('rejects reviewers from several courses', async () => {
       const foreign = await f.addStudent(await f.createUser(), s.otherCourse)
       const res = await as(s.users.teacher)

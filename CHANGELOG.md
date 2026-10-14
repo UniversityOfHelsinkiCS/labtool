@@ -3,6 +3,48 @@
 All notable changes to Labtool are recorded here, newest first. Each entry says what changed and
 why. Bugs that tests found but that are not fixed yet are listed under "Known bugs".
 
+## 2026-10-13
+
+### Security
+- **Frontend server upgraded from `serve` 6.5.8 to 14.2.6.** The 2017 version had known path traversal
+  and XSS advisories. The production image (`Dockerfile`) now runs `serve -l 3000 -s build -c ../serve.json`.
+- **Security headers.** The frontend sends a Content Security Policy (scripts only from the app itself,
+  styles and fonts from cdnjs and Google Fonts, API calls to the app and api.github.com), plus nosniff,
+  `X-Frame-Options: DENY`, a referrer policy, HSTS and a permissions policy (`labtool2.0/serve.json`).
+  The backend sets the same kind of headers with `helmet` and no longer sends `X-Powered-By`. The
+  Semantic UI stylesheet is loaded over explicit https instead of a protocol-relative URL.
+- **Email addresses in the user list** (`GET /api/users`, used on the "Add and remove assistants" page)
+  are only sent to sysops and teachers responsible for a course. Assistants still get the list, without
+  email addresses.
+
+## 2026-10-12
+
+### Security
+- **One request could crash the backend.** Express 4 does not catch rejected promises of async route
+  handlers, and on Node 15+ an unhandled rejection ends the process, so any logged-in user could take the
+  backend down with a malformed request (e.g. `POST /api/weeks/getDraft` with an unknown student). Route
+  handlers registered in `app.js` now pass rejections to a final error handler (logged, answered with a
+  generic 500, or 400 for malformed JSON), and `node app.js` logs unhandled rejections instead of
+  crashing. Week drafts of an unknown student answer 404, and `PUT /api/users/update` checks that the
+  email is a string and awaits the update properly.
+- **Database errors are no longer sent to the client.** About twenty handlers answered with the raw
+  Sequelize error, which contains SQL and its parameters; they now log it and answer with a generic
+  message.
+- **Tags of other courses could be edited by id.** `POST /api/tags/create` with an `id` only checked the
+  course in the request, so staff of one course could rename, move or globalize another course's tag. The
+  tag being edited must now belong to a course the user is staff on (404 for an unknown tag).
+- **Global tags** are shown on every course, so editing and removing them is limited to sysops and
+  teachers responsible for a course; assistants get 403 (creating global tags is unchanged). The tag
+  removal failure is now shown in the UI.
+- **Hidden comments could be emailed to the student.** The teacher notification for an instructors-only
+  comment is refused (the UI never offered it).
+- **Links that could run scripts.** The course page and course material links accept only http(s)
+  addresses (backend 400, and the course settings form says so; failures of saving course settings are
+  now shown), and an external repository to review must be a GitHub repository link
+  (`https://github.com/owner/repo[/path]`). Before, a `javascript:` link set by any course staff member
+  ran on the labtool page when clicked. Links stored earlier are rendered without a link target unless
+  they are http(s) (`labtool2.0/src/util/links.js`).
+
 ## 2026-10-11
 
 ### Changed

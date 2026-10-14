@@ -127,6 +127,49 @@ describe('Tags API', () => {
         .expect(403)
       assert.strictEqual(await Tag.count(), 0)
     })
+
+    it('does not let staff of another course edit, move or globalize a course tag by its id', async () => {
+      const tag = await f.createTag({ name: 'theirs', color: 'red', courseInstanceId: s.course.id })
+      for (const body of [
+        { id: tag.id, text: 'hijacked' },
+        { id: tag.id, text: 'hijacked', courseInstanceId: s.otherCourse.id }
+      ]) {
+        await as(s.users.otherTeacher)
+          .post('/api/tags/create')
+          .send(body)
+          .expect(403)
+      }
+      await tag.reload()
+      assert.strictEqual(tag.name, 'theirs')
+      assert.strictEqual(tag.courseInstanceId, s.course.id)
+    })
+
+    it('lets only responsible teachers (not assistants) edit a global tag', async () => {
+      const tag = await f.createTag({ name: 'global', courseInstanceId: null })
+      await as(s.users.assistant)
+        .post('/api/tags/create')
+        .send({ id: tag.id, text: 'renamed by assistant' })
+        .expect(403)
+      await as(s.users.assistant)
+        .post('/api/tags/create')
+        .send({ id: tag.id, text: 'made a course tag', courseInstanceId: s.course.id })
+        .expect(403)
+      await tag.reload()
+      assert.strictEqual(tag.name, 'global')
+      assert.strictEqual(tag.courseInstanceId, null)
+
+      await as(s.users.otherTeacher)
+        .post('/api/tags/create')
+        .send({ id: tag.id, text: 'renamed' })
+        .expect(200)
+    })
+
+    it('answers 404 when editing a tag that does not exist', async () => {
+      await as(s.users.teacher)
+        .post('/api/tags/create')
+        .send({ id: 999999, text: 'x', courseInstanceId: s.course.id })
+        .expect(404)
+    })
   })
 
   describe('GET /api/tags/list', () => {
@@ -270,13 +313,22 @@ describe('Tags API', () => {
       assert.strictEqual(await StudentTag.count(), 0)
     })
 
-    it('lets any teacher remove a global tag', async () => {
+    it('lets a responsible teacher of any course remove a global tag', async () => {
       const tag = await f.createTag({ courseInstanceId: null })
       await as(s.users.otherTeacher)
         .post('/api/tags/remove')
         .send({ id: tag.id })
         .expect(200)
       assert.strictEqual(await Tag.count(), 0)
+    })
+
+    it('does not let an assistant remove a global tag', async () => {
+      const tag = await f.createTag({ courseInstanceId: null })
+      await as(s.users.assistant)
+        .post('/api/tags/remove')
+        .send({ id: tag.id })
+        .expect(403)
+      assert.ok(await Tag.findByPk(tag.id))
     })
 
     it('is rejected for students and teachers of other courses', async () => {

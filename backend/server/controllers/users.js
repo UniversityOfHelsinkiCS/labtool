@@ -15,12 +15,12 @@ module.exports = {
    * @param res
    * @returns {*}
    */
-  updateSelf(req, res) {
+  async updateSelf(req, res) {
     if (!helper.controllerBeforeAuthCheckAction(req, res)) {
       return
     }
 
-    if (!req.body.email || req.body.email.length < 1) {
+    if (typeof req.body.email !== 'string' || req.body.email.length < 1) {
       invalidInputResponse(res, 'Email was too short.')
     } else if (req.body.email.length > 127) {
       // 127 is an arbitrary limit, but there has to be some limit to avoid problems with the database.
@@ -29,23 +29,21 @@ module.exports = {
       // This doesn't actually check for email validity, but it's a start.
       invalidInputResponse(res, 'Input was not a valid email address.')
     } else {
-      User.update({ email: req.body.email }, { where: { id: req.decoded.id } }).then(
-        User.findByPk(req.decoded.id)
-          .then((user) => {
-            const returnedUser = {
-              email: req.body.email,
-              firsts: user.firsts,
-              lastname: user.lastname,
-              studentNumber: user.studentNumber,
-              username: user.username
-            }
-            res.status(201).send(returnedUser)
-          })
-          .catch((error) => {
-            res.status(400).send(error)
-            logger.error('User update error.', { error: error.message })
-          })
-      )
+      try {
+        await User.update({ email: req.body.email }, { where: { id: req.decoded.id } })
+        const user = await User.findByPk(req.decoded.id)
+        const returnedUser = {
+          email: user.email,
+          firsts: user.firsts,
+          lastname: user.lastname,
+          studentNumber: user.studentNumber,
+          username: user.username
+        }
+        res.status(201).send(returnedUser)
+      } catch (error) {
+        logger.error('User update error.', { error: error.message })
+        invalidInputResponse(res, 'Updating the email address failed.')
+      }
     }
   },
 
@@ -87,7 +85,8 @@ module.exports = {
 
   /**
    * List all users in the system
-   *   permissions: must be an admin, or a teacher/an instructor on any course
+   *   permissions: must be an admin, or a teacher/an instructor on any course.
+   *     Email addresses only for admins and teachers responsible for a course, not for assistants.
    *
    * @param req
    * @param res
@@ -112,10 +111,19 @@ module.exports = {
           return res.status(401).send('Unauthorized.')
         }
 
-        const users = await User.findAll({
-          attributes: {
-            exclude: ['createdAt', 'updatedAt', 'studentNumber']
+        const responsibleTeacherInstances = await TeacherInstance.count({
+          where: {
+            userId: req.decoded.id,
+            instructor: false
           }
+        })
+        const exclude = ['createdAt', 'updatedAt', 'studentNumber']
+        if (!isAdmin && !responsibleTeacherInstances) {
+          exclude.push('email')
+        }
+
+        const users = await User.findAll({
+          attributes: { exclude }
         })
         res.status(200).send(users)
       } catch (exception) {

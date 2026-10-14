@@ -157,6 +157,13 @@ describe('<ModifyCourseInstanceStaff />', () => {
     expect(within(row).getByRole('button', { name: 'Remove assistant' })).toBeInTheDocument()
   })
 
+  it('shows no email link when the list has no email addresses (as for assistants)', () => {
+    const { container } = renderStaff({ users: users.map(user => ({ ...user, email: undefined })) })
+
+    expect(screen.getByRole('row', { name: /Sivu Opiskelija/ })).toBeInTheDocument()
+    expect(container.querySelector('a[href^="mailto:"]')).toBeNull()
+  })
+
   it('adds a user as an assistant', async () => {
     const user = userEvent.setup()
     const { props } = renderStaff()

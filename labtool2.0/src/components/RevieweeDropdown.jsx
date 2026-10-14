@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Dropdown } from 'semantic-ui-react'
 import PropTypes from 'prop-types'
+import { isGithubRepoUrl } from '../util/links'
 
 const RevieweeDropdown = props => {
   const {
@@ -75,7 +76,7 @@ const RevieweeDropdown = props => {
   }, [codeReviewLogic])
 
   const handleAdditions = (e, { value }) => {
-    if (value.includes('http')) {
+    if (isGithubRepoUrl(value)) {
       const newOption = { text: value, value }
       setOptions(options.concat(newOption))
     }

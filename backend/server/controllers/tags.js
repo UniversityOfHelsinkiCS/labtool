@@ -1,12 +1,30 @@
 const { Tag, StudentTag, TeacherInstance, StudentInstance, CourseInstance, Week, User, Comment, CodeReview } = require('../models')
 const helper = require('../helpers/courseInstanceHelper')
+const { isAuthUserAdmin } = require('../helpers/applicationHelper')
 const logger = require('../../server/utils/logger')
+
+/**
+ * Global tags are shown on every course, so only sysops and teachers responsible for a course
+ * (not assistants) may change or remove them.
+ */
+const canManageGlobalTags = async (userId) => {
+  if (await isAuthUserAdmin(userId)) {
+    return true
+  }
+  const responsibleTeacher = await TeacherInstance.findOne({ where: { userId, instructor: false } })
+  return !!responsibleTeacher
+}
+
+const isStaffOnCourse = async (userId, courseInstanceId) => !!(await TeacherInstance.findOne({
+  where: { userId, courseInstanceId }
+}))
 
 module.exports = {
   /**
    * Creates or edits a tag
-   *   permissions: must be an instructor on any course for global tag,
-   *     or on the specific course for a given course
+   *   permissions: must be an instructor on any course for a new global tag,
+   *     or on the specific course for a given course. Editing an existing tag also needs
+   *     the rights to that tag: staff on its course, or canManageGlobalTags for a global tag.
    *
    * @param req
    * @param res
@@ -42,9 +60,20 @@ module.exports = {
       }
 
       if (req.body.id) {
-        // find existing tag, if there is one
         const oldTag = await Tag.findOne({ where: { id: req.body.id } })
-        if (tag.courseInstanceId !== null && oldTag && oldTag.courseInstanceId === null) {
+        if (!oldTag) {
+          return res.status(404).send('There is no tag with that ID.')
+        }
+        const mayEdit = oldTag.courseInstanceId === null
+          ? await canManageGlobalTags(req.decoded.id)
+          : await isStaffOnCourse(req.decoded.id, oldTag.courseInstanceId)
+        if (!mayEdit) {
+          return res.status(403).send(oldTag.courseInstanceId === null
+            ? 'Only teachers responsible for a course can edit global tags.'
+            : 'You need to be a teacher or instructor on the course of this tag.')
+        }
+
+        if (tag.courseInstanceId !== null && oldTag.courseInstanceId === null) {
           // if old tag was global, duplicate that tag to every other
           // course it was used in
           const studentTags = await StudentTag.findAll({
@@ -86,7 +115,7 @@ module.exports = {
               ))
             }
           }))
-        } else if (tag.courseInstanceId === null && oldTag && oldTag.courseInstanceId !== null) {
+        } else if (tag.courseInstanceId === null && oldTag.courseInstanceId !== null) {
           // converting to a global tag
           // if there already is a global tag with the same name and color,
           // merge the two tags (the existing global tag stays)
@@ -158,14 +187,15 @@ module.exports = {
       }
     } catch (e) {
       console.error(e)
-      res.status(400).send(e)
+      logger.error(e)
+      res.status(400).send('An error occurred. Please try again.')
     }
   },
 
   /**
    * Removes a tag
-   *   permissions: must be an instructor on any course for global tag
-   *     or on the specific course for a course tag
+   *   permissions: canManageGlobalTags for a global tag,
+   *     or an instructor on the specific course for a course tag
    *
    * @param req
    * @param res
@@ -185,16 +215,11 @@ module.exports = {
         return res.status(404).send('There is no tag with that ID.')
       }
 
-      const whereTeacher = {
-        userId: req.decoded.id
-      }
-      if (tag.courseInstanceId) {
-        whereTeacher.courseInstanceId = tag.courseInstanceId
-      }
-      const teacher = await TeacherInstance.findOne({
-        where: whereTeacher
-      })
-      if (!teacher) {
+      if (tag.courseInstanceId === null) {
+        if (!(await canManageGlobalTags(req.decoded.id))) {
+          return res.status(403).send('Only teachers responsible for a course can remove global tags.')
+        }
+      } else if (!(await isStaffOnCourse(req.decoded.id, tag.courseInstanceId))) {
         return res.status(400).send('You have to be a teacher or instructor to do this.')
       }
 
@@ -202,7 +227,8 @@ module.exports = {
       await tag.destroy()
       return res.status(200).send(id.toString())
     } catch (e) {
-      return res.status(400).send(e)
+      logger.error(e)
+      return res.status(400).send('An error occurred. Please try again.')
     }
   },
 
