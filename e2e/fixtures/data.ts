@@ -34,7 +34,12 @@ export const COURSES = {
   drop: course(90009, 'E2E.DROP.COURSE.1', 'E2E Drop Course'),
   email: course(90010, 'E2E.EMAIL.COURSE.1', 'E2E Email Course'),
   bounce: course(90011, 'E2E.BOUNCE.COURSE.1', 'E2E Bounce Course'),
-  grading: course(90012, 'E2E.GRADING.COURSE.1', 'E2E Grading Course')
+  grading: course(90012, 'E2E.GRADING.COURSE.1', 'E2E Grading Course'),
+  projectInfo: course(90013, 'E2E.PROJECTINFO.COURSE.1', 'E2E Project Info Course'),
+  finalReview: course(90014, 'E2E.FINALREVIEW.COURSE.1', 'E2E Final Review Course'),
+  messages: course(90015, 'E2E.MESSAGES.COURSE.1', 'E2E Messages Course'),
+  permissions: course(90016, 'E2E.PERMISSIONS.COURSE.1', 'E2E Permissions Course'),
+  codeReviewChanges: course(90017, 'E2E.CRCHANGES.COURSE.1', 'E2E Code Review Changes Course')
 }
 
 /** Student instance ids per course (REGISTERED_STUDENT unless noted otherwise). */
@@ -53,8 +58,19 @@ export const STUDENT_INSTANCES = {
   bounce: 90011,
   bounceRejected: 90021, // BOUNCING_STUDENT_EMAIL is rejected by Mailpit
   grading: 90012, // no assigned instructor
-  gradingAssigned: 90022 // SECOND_STUDENT, assigned to ASSISTANT
+  gradingAssigned: 90022, // SECOND_STUDENT, assigned to ASSISTANT
+  projectInfo: 90031,
+  finalReview: 90032, // assigned to TEACHER; ASSISTANT is an assistant on the course
+  messages: 90033, // reviews messagesSecond in the seeded, visible code review 1
+  messagesSecond: 90034, // SECOND_STUDENT
+  permissions: 90035, // ASSISTANT is an assistant on the course
+  permissionsSecond: 90036, // SECOND_STUDENT
+  codeReviewChanges: 90037, // seeded code review 1: these two review each other
+  codeReviewChangesSecond: 90038 // SECOND_STUDENT
 }
+
+/** Repository the main course's REGISTERED_STUDENT reviews in the seeded code review 1. */
+export const SEEDED_REVIEWED_REPO = 'https://github.com/e2e/reviewed-project'
 
 /** Weeks seeded as already reviewed. */
 export const SEEDED_WEEKS = {
@@ -129,6 +145,15 @@ export const NO_EMAIL_USER: FakeUser = {
   email: null
 }
 
+/** Seeded without sysop rights; the admin spec grants and revokes them. */
+export const ADMIN_CANDIDATE: FakeUser = {
+  username: 'e2eyllapitaja',
+  student_number: '019000006',
+  first_names: 'Ylva',
+  last_name: 'Valvoja',
+  email: 'ylva.valvoja@example.com'
+}
+
 export const REGISTERED_STUDENT_INSTANCE_ID = 90001
 
 export const NOTIFICATIONS = {
@@ -150,6 +175,10 @@ export const NOTIFICATIONS = {
   emailUpdated: 'Your email address has been updated',
   emailSent: 'Email sent successfully.',
   projectInfoUpdated: 'Project info updated successfully!',
+  reviewNoteAdded: 'Review note added.',
+  tagRemoved: 'Tag removed successfully',
+  codeReviewRemoved: 'Code review removed successfully!',
+  userUpdated: 'User updated',
   removedFromCourse: 'You have removed yourself from the course',
   coursesImported: 'Courses imported successfully',
   checklistSaved: (week: number) => `Checklist saved successfully for week ${week}.`

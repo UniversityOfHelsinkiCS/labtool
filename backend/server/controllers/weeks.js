@@ -1,7 +1,9 @@
-const { Week, ReviewCheck, WeekDraft, StudentInstance, TeacherInstance, User, CourseInstance } = require('../models')
+const {
+  Week, ReviewCheck, WeekDraft, StudentInstance, TeacherInstance, User, CourseInstance, sequelize
+} = require('../models')
 const { isFinalReviewWeek } = require('../helpers/finalReview')
-const helper = require('../helpers/weeksControllerHelper')
-const logger = require('../utils/logger')
+const { requireCourseStaff } = require('../helpers/auth')
+const { badRequest, notFound } = require('../utils/httpError')
 const { addValueChange, addChecklistChanges, logChange } = require('../helpers/changeLog')
 
 const nullIfEmpty = value => (value === '' || value === null || value === undefined ? null : value)
@@ -58,6 +60,44 @@ const findSaveConflict = async (req, week, studentInstance, ownTeacherInstanceId
   return null
 }
 
+// the review page sends ids from the URL, as strings
+const isInteger = value => (typeof value === 'number' || typeof value === 'string')
+  && value !== '' && Number.isInteger(Number(value))
+const isChecksObject = value => value === undefined || value === null
+  || (typeof value === 'object' && !Array.isArray(value))
+
+/** The student instance of a review or a draft, when the current user is staff on its course. */
+const findStudentForStaff = async (req, message) => {
+  const { studentInstanceId, weekNumber } = req.body
+  if (!isInteger(studentInstanceId) || !isInteger(weekNumber)) {
+    throw badRequest('Missing or malformed inputs.')
+  }
+  const studentInstance = await StudentInstance.findByPk(Number(studentInstanceId))
+  if (!studentInstance) {
+    throw notFound('Student not found.')
+  }
+  const teacherInstanceId = await requireCourseStaff(req, studentInstance.courseInstanceId, message)
+  return { studentInstance, teacherInstanceId, weekNumber: Number(weekNumber) }
+}
+
+/** Saves the checklist checks of a review; returns { checklistItemId: checked } of the saved checks. */
+const saveChecks = async (week, checks, transaction) => {
+  const saved = {}
+  // sequentially: the queries share the transaction's connection
+  for (const itemId of Object.keys(checks)) {
+    const where = { checklistItemId: Number(itemId), weekId: week.id }
+    const existing = await ReviewCheck.findOne({ where, transaction })
+    if (existing) {
+      await existing.update({ checked: checks[itemId] }, { transaction })
+      saved[existing.checklistItemId] = existing.checked
+    } else {
+      const created = await ReviewCheck.create({ ...where, checked: checks[itemId] }, { transaction })
+      saved[created.checklistItemId] = created.checked
+    }
+  }
+  return saved
+}
+
 module.exports = {
   /**
    * Submit a week review
@@ -67,68 +107,54 @@ module.exports = {
    * @param {*} res
    */
   async create(req, res) {
-    try {
-      if (!helper.controllerBeforeAuthCheckAction(req, res)) {
-        return
+    if (!isChecksObject(req.body.checks)) {
+      throw badRequest('Missing or malformed inputs.')
+    }
+    const { studentInstance, teacherInstanceId: ownTeacherInstanceId, weekNumber } = await findStudentForStaff(
+      req, 'You must be a teacher to give points.'
+    )
+    const checks = req.body.checks || {}
+
+    let week = await Week.findOne({
+      where: {
+        weekNumber,
+        studentInstanceId: studentInstance.id
       }
+    })
 
-      if (!req.authenticated.success) {
-        return res.status(400).send('Token verification failed.')
+    // In the final review only the assigned instructor edits the review notes; the rest of the staff
+    // add notes of their own (ReviewNotes).
+    const assignedId = studentInstance.teacherInstanceId
+    if ('instructorNotes' in req.body && assignedId && assignedId !== ownTeacherInstanceId
+      && (req.body.instructorNotes || '') !== ((week && week.instructorNotes) || '')) {
+      const course = await CourseInstance.findByPk(studentInstance.courseInstanceId)
+      if (isFinalReviewWeek(course, weekNumber)) {
+        // the code tells the review page why; the body is kept as it is
+        return res.status(403).send({
+          code: 'NOTES_LOCKED',
+          message: 'Only the assigned instructor can edit the review notes of the final review. Add a note of your own instead.'
+        })
       }
+    }
 
-      // Check that there is a TeacherInstance for this user and this course.
-      const studentInstance = await StudentInstance.findOne({
-        where: {
-          id: req.body.studentInstanceId
-        }
-      })
-      const ownTeacherInstanceId = await helper.getTeacherId(req.decoded.id, studentInstance.courseInstanceId)
-      if (!ownTeacherInstanceId) {
-        res.status(400).send('You must be a teacher to give points.')
-        return
-      }
+    const conflict = await findSaveConflict(req, week, studentInstance, ownTeacherInstanceId)
+    if (conflict) {
+      // the review page reads the whole body as the conflict (reviewSaveReducer)
+      return res.status(409).send(conflict)
+    }
 
-      let week = await Week.findOne({
-        where: {
-          weekNumber: req.body.weekNumber,
-          studentInstanceId: req.body.studentInstanceId
-        }
-      })
+    // the review before this save, for the change history (#1129)
+    const before = week
+      ? { points: week.points, grade: week.grade, feedback: week.feedback, instructorNotes: week.instructorNotes }
+      : {}
+    const checksBefore = week
+      ? Object.fromEntries((await ReviewCheck.findAll({ where: { weekId: week.id } }))
+        .map(check => [check.checklistItemId, check.checked]))
+      : {}
 
-      // In the final review only the assigned instructor edits the review notes; the rest of the staff
-      // add notes of their own (ReviewNotes).
-      const assignedId = studentInstance.teacherInstanceId
-      if ('instructorNotes' in req.body && assignedId && assignedId !== ownTeacherInstanceId
-        && (req.body.instructorNotes || '') !== ((week && week.instructorNotes) || '')) {
-        const course = await CourseInstance.findByPk(studentInstance.courseInstanceId)
-        if (isFinalReviewWeek(course, Number(req.body.weekNumber))) {
-          return res.status(403).send({
-            code: 'NOTES_LOCKED',
-            message: 'Only the assigned instructor can edit the review notes of the final review. Add a note of your own instead.'
-          })
-        }
-      }
-
-      const conflict = await findSaveConflict(req, week, studentInstance, ownTeacherInstanceId)
-      if (conflict) {
-        return res.status(409).send(conflict)
-      }
-
-      // the review before this save, for the change history (#1129)
-      const before = week
-        ? { points: week.points, grade: week.grade, feedback: week.feedback, instructorNotes: week.instructorNotes }
-        : {}
-      const checksBefore = week
-        ? Object.fromEntries((await ReviewCheck.findAll({ where: { weekId: week.id } }))
-          .map(check => [check.checklistItemId, check.checked]))
-        : {}
-
-      // Collect checklist checks from DB to this object
-      // This is to keep backend backwards compatible
-      const checksObject = {}
-
+    // the review, its checks, the change history row and the removal of the draft are saved together
+    const checksObject = await sequelize.transaction(async (transaction) => {
       if (week) {
-        const updatedChecks = req.body.checks || {}
         week.set({
           points: 'points' in req.body ? nullIfEmpty(req.body.points) : week.points,
           grade: 'grade' in req.body ? nullIfEmpty(req.body.grade) : week.grade,
@@ -138,71 +164,47 @@ module.exports = {
         })
         // every save is a new version, also when only checklist checks (another table) changed
         week.changed('updatedAt', true)
-        await week.save()
-        await Promise.all(Object.keys(updatedChecks).map(check => ReviewCheck.findOrCreate({
-          where: {
-            checklistItemId: Number(check),
-            weekId: week.id
-          }
-        }).then(reviewCheck => ReviewCheck.update({
-          checked: updatedChecks[check]
-        }, {
-          where: {
-            id: reviewCheck[0].dataValues.id
-          },
-          returning: true
-        })).then(([_, [updatedReviewCheck]]) => {
-          checksObject[updatedReviewCheck.checklistItemId] = updatedReviewCheck.dataValues.checked
-        })))
+        await week.save({ transaction })
       } else {
         week = await Week.create({
           points: nullIfEmpty(req.body.points),
           grade: nullIfEmpty(req.body.grade),
-          studentInstanceId: req.body.studentInstanceId,
+          studentInstanceId: studentInstance.id,
           feedback: req.body.feedback || '',
           instructorNotes: req.body.instructorNotes || '',
-          weekNumber: req.body.weekNumber,
+          weekNumber,
           notified: false,
           updatedBy: req.decoded.id
-        })
-        await Promise.all(Object.keys(req.body.checks).map(check => ReviewCheck.create({
-          checklistItemId: Number(check),
-          checked: req.body.checks[check],
-          weekId: week.id
-        }).then((reviewCheck) => {
-          checksObject[reviewCheck.checklistItemId] = reviewCheck.checked
-        })))
+        }, { transaction })
       }
+      const savedChecks = await saveChecks(week, checks, transaction)
 
       const changes = {}
       addValueChange(changes, 'points', before.points, week.points, { numeric: true })
       addValueChange(changes, 'grade', before.grade, week.grade, { numeric: true })
       addValueChange(changes, 'feedback', before.feedback, week.feedback)
       addValueChange(changes, 'instructorNotes', before.instructorNotes, week.instructorNotes)
-      await addChecklistChanges(changes, checksBefore, { ...checksBefore, ...checksObject })
+      await addChecklistChanges(changes, checksBefore, { ...checksBefore, ...savedChecks })
       await logChange({
         courseInstanceId: studentInstance.courseInstanceId,
         studentInstanceId: studentInstance.id,
         userId: req.decoded.id,
         kind: 'week_review',
-        number: Number(req.body.weekNumber),
+        number: weekNumber,
         changes,
         initial: Object.keys(before).length === 0
-      })
+      }, { transaction })
 
-      // Remove draft.
       await WeekDraft.destroy({
         where: {
-          weekNumber: req.body.weekNumber,
-          studentInstanceId: req.body.studentInstanceId
-        }
+          weekNumber,
+          studentInstanceId: studentInstance.id
+        },
+        transaction
       })
-      res.status(200).send({ ...week.dataValues, checks: checksObject })
-    } catch (error) {
-      logger.error('Create weeks error.')
-      logger.error(error)
-      res.status(500).send({ message: 'Saving the review failed. Please try again.' })
-    }
+      return savedChecks
+    })
+    return res.status(200).send({ ...week.dataValues, checks: checksObject })
   },
 
   /**
@@ -211,42 +213,18 @@ module.exports = {
    *
    * @param req
    * @param res
-   * @returns {*|Promise<T>}
    */
   async getDraft(req, res) {
-    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
-      return
-    }
+    const { studentInstance, weekNumber } = await findStudentForStaff(req, 'You must be a teacher to get review drafts.')
 
-    if (req.authenticated.success) {
-      // Check that there is a TeacherInstance for this user and this course.
-      const studentInstance = await StudentInstance.findOne({
-        where: {
-          id: req.body.studentInstanceId
-        }
-      })
-      if (!studentInstance) {
-        res.status(404).send('Student not found.')
-        return
-      }
-      const isTeacher = await helper.getTeacherId(req.decoded.id, studentInstance.courseInstanceId)
-      if (!isTeacher) {
-        res.status(400).send('You must be a teacher to get review drafts.')
-        return
-      }
+    const weekDraft = await WeekDraft.findOne({
+      where: { weekNumber, studentInstanceId: studentInstance.id }
+    })
 
-      const weekDraft = await WeekDraft.findOne({
-        where: {
-          weekNumber: req.body.weekNumber,
-          studentInstanceId: req.body.studentInstanceId
-        }
-      })
-
-      if (weekDraft) {
-        res.status(200).send(weekDraft)
-      } else {
-        res.status(204).send()
-      }
+    if (weekDraft) {
+      res.status(200).send(weekDraft)
+    } else {
+      res.status(204).send()
     }
   },
 
@@ -256,48 +234,24 @@ module.exports = {
    *
    * @param req
    * @param res
-   * @returns {*|Promise<T>}
    */
   async saveDraft(req, res) {
-    if (!helper.controllerBeforeAuthCheckAction(req, res)) {
-      return
-    }
+    const { studentInstance, weekNumber } = await findStudentForStaff(req, 'You must be a teacher to save review drafts.')
 
-    if (req.authenticated.success) {
-      // Check that there is a TeacherInstance for this user and this course.
-      const studentInstance = await StudentInstance.findOne({
-        where: {
-          id: req.body.studentInstanceId
-        }
+    const weekDraft = await WeekDraft.findOne({
+      where: { weekNumber, studentInstanceId: studentInstance.id }
+    })
+    if (weekDraft) {
+      await weekDraft.update({
+        data: req.body.reviewData
       })
-      if (!studentInstance) {
-        res.status(404).send('Student not found.')
-        return
-      }
-      const isTeacher = await helper.getTeacherId(req.decoded.id, studentInstance.courseInstanceId)
-      if (!isTeacher) {
-        res.status(400).send('You must be a teacher to save review drafts.')
-        return
-      }
-
-      const weekDraft = await WeekDraft.findOne({
-        where: {
-          weekNumber: req.body.weekNumber,
-          studentInstanceId: req.body.studentInstanceId
-        }
+    } else {
+      await WeekDraft.create({
+        studentInstanceId: studentInstance.id,
+        weekNumber,
+        data: req.body.reviewData
       })
-      if (weekDraft) {
-        await weekDraft.update({
-          data: req.body.reviewData
-        })
-      } else {
-        await WeekDraft.create({
-          studentInstanceId: req.body.studentInstanceId,
-          weekNumber: req.body.weekNumber,
-          data: req.body.reviewData
-        })
-      }
-      res.status(200).send(weekDraft)
     }
+    res.status(200).send(weekDraft)
   }
 }

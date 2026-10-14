@@ -56,14 +56,14 @@ describe('loadingReducer', () => {
   it('works with prefixes that have no trailing underscore', () => {
     const state = apply(
       initial(),
-      { type: 'WEEKS_CREATE_ONEATTEMPT', payload: {} },
-      { type: 'WEEKS_CREATE_ONESUCCESS' }
+      { type: 'WEEKS_CREATE_ONE_ATTEMPT', payload: {} },
+      { type: 'WEEKS_CREATE_ONE_SUCCESS' }
     )
     expect(state.loadingHooks).toEqual([])
     expect(state.loading).toBe(false)
   })
 
-  it.each([404, 500])('FAILURE with status %i is stored in errors', status => {
+  it.each([403, 404, 500])('FAILURE with status %i is stored in errors', status => {
     const error = { message: 'x', response: { status, data: {} } }
     const state = apply(
       initial(),
@@ -73,7 +73,7 @@ describe('loadingReducer', () => {
     expect(state.errors).toEqual({ CP_INFO_: error })
   })
 
-  it.each([400, 401, 403])('FAILURE with status %i is not stored in errors', status => {
+  it.each([400, 401])('FAILURE with status %i is not stored in errors', status => {
     const state = apply(
       initial(),
       { type: 'CP_INFO_ATTEMPT', payload: {} },

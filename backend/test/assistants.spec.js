@@ -1,7 +1,6 @@
 const assert = require('assert')
 const { as, anonymous } = require('./helpers/api')
 const f = require('./helpers/factories')
-const { eventually } = require('./helpers/db')
 const { StudentInstance } = require('../server/models')
 
 const assignedTeacherOf = async (studentInstance) => {
@@ -30,7 +29,8 @@ describe('Assistants API', () => {
         .send({ studentInstanceId: s.student.id, teacherInstanceId: s.assistant.id })
         .expect(200)
       assert.strictEqual(res.body.id, s.student.id)
-      await eventually(async () => assert.strictEqual(await assignedTeacherOf(s.student), s.assistant.id))
+      // the assignment is saved before the response
+      assert.strictEqual(await assignedTeacherOf(s.student), s.assistant.id)
       assert.strictEqual(await assignedTeacherOf(s.student2), null)
     })
 
@@ -40,18 +40,18 @@ describe('Assistants API', () => {
         .post('/api/course/assistant/create')
         .send({ studentInstanceId: s.student.id })
         .expect(200)
-      await eventually(async () => assert.strictEqual(await assignedTeacherOf(s.student), null))
+      assert.strictEqual(await assignedTeacherOf(s.student), null)
     })
 
-    it('is rejected for students and teachers of other courses', async () => {
+    it('is forbidden for students and teachers of other courses', async () => {
       await as(s.users.student)
         .post('/api/course/assistant/create')
         .send({ studentInstanceId: s.student.id, teacherInstanceId: s.assistant.id })
-        .expect(400)
+        .expect(403)
       await as(s.users.otherTeacher)
         .post('/api/course/assistant/create')
         .send({ studentInstanceId: s.student.id, teacherInstanceId: s.otherTeacher.id })
-        .expect(400)
+        .expect(403)
       assert.strictEqual(await assignedTeacherOf(s.student), null)
     })
 
@@ -61,7 +61,7 @@ describe('Assistants API', () => {
         .send({ studentInstanceId: s.student.id, teacherInstanceId: s.otherTeacher.id })
         .expect(400)
       assert.strictEqual(
-        res.text,
+        res.body.message,
         'You have to be an assistant or teacher in the same course as the teacher you are adding.'
       )
       assert.strictEqual(await assignedTeacherOf(s.student), null)
@@ -75,6 +75,21 @@ describe('Assistants API', () => {
       await as(s.users.teacher)
         .post('/api/course/assistant/create')
         .send({ studentInstanceId: s.student.id, teacherInstanceId: 999999 })
+        .expect(400)
+    })
+
+    it('answers malformed requests instead of leaving them hanging', async () => {
+      await as(s.users.teacher)
+        .post('/api/course/assistant/create')
+        .send({})
+        .expect(400)
+      await as(s.users.teacher)
+        .post('/api/course/assistant/create')
+        .send({ studentInstanceId: 'abc', teacherInstanceId: s.assistant.id })
+        .expect(400)
+      await as(s.users.teacher)
+        .post('/api/course/assistant/create')
+        .send({ studentInstanceId: s.student.id, teacherInstanceId: 'abc' })
         .expect(400)
     })
   })

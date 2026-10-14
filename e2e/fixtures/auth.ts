@@ -53,9 +53,9 @@ export const newPageAs = async (browser: Browser, user: FakeUser) => {
 /**
  * Navigates to `path` with an already established session (token stored in localStorage).
  *
- * Some pages (e.g. ManageTags, ModifyCourseInstanceStaff, CourseImport) are only tested after
- * logging in on my page first. BrowseReviews and the code review settings page used to crash when
- * opened directly at the start of a session; they are fixed and their specs navigate directly.
+ * Some older specs (ManageTags, ModifyCourseInstanceStaff, CourseImport) open their page this way.
+ * BrowseReviews and the code review settings page used to crash when opened directly at the start
+ * of a session; they are fixed, and the smoke spec opens every page directly.
  */
 export const gotoWithSession = async (page: Page, path: string) => {
   await page.goto('/labtool/mypage')

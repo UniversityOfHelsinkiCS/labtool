@@ -52,6 +52,9 @@ import DocumentTitle from '../DocumentTitle'
 import Error from '../Error'
 import { Points } from '../Points'
 import ChecklistPreview from '../ChecklistPreview'
+import { errorMessage } from '../../util/errorMessage'
+import { noStaffAccessByCourse } from '../../util/courseAccess'
+import NoAccess from '../NoAccess'
 
 export const CreateChecklist = props => {
   const state = usePersistedState(`CreateChecklist_${props.courseId}`, {
@@ -947,11 +950,15 @@ export const CreateChecklist = props => {
     window.location.reload(true)
   }
 
+  if (props.noAccess) {
+    return <NoAccess />
+  }
+
   if (props.errors && props.errors.length > 0) {
     return (
       <Error
         errors={props.errors.map(
-          error => `${error.response.data} (${error.response.status} ${error.response.statusText})`
+          error => `${errorMessage(error, 'Error')} (${error.response.status} ${error.response.statusText})`
         )}
       />
     )
@@ -1325,6 +1332,7 @@ const mapStateToProps = (state, ownProps) => {
     ? state.courseInstance.find(course => course.ohid === ownProps.courseId)
     : state.courseInstance
   return {
+    noAccess: noStaffAccessByCourse(state.selectedInstance, ownProps.courseId, state.user && state.user.user),
     selectedInstance: selectedInstance || {},
     weekDropdowns: createWeekDropdowns(selectedInstance),
     checklist: state.checklist,
@@ -1361,6 +1369,7 @@ const mapDispatchToProps = {
 }
 
 CreateChecklist.propTypes = {
+  noAccess: PropTypes.bool,
   courseId: PropTypes.string.isRequired,
 
   selectedInstance: PropTypes.object.isRequired,

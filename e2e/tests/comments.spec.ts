@@ -1,4 +1,5 @@
-import { test, expect, Locator, Page } from '@playwright/test'
+import { Locator, Page } from '@playwright/test'
+import { test, expect } from '../fixtures/test'
 import { loginAs } from '../fixtures/auth'
 import { COURSES, NOTIFICATIONS, REGISTERED_STUDENT, SEEDED_WEEKS, STUDENT_INSTANCES, TEACHER } from '../fixtures/data'
 import { expectNoLoader, expectSuccess, openAccordion } from '../fixtures/helpers'

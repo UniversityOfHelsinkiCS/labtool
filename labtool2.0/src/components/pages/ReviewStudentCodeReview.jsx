@@ -27,6 +27,9 @@ import { roundPoints } from '../../util/format'
 import { getChangeLog } from '../../services/changeLog'
 import { reviewedRepository } from '../../util/reviewedRepository'
 import ChangeHistory from '../ChangeHistory'
+import { errorMessage } from '../../util/errorMessage'
+import { noStaffAccessByRole } from '../../util/courseAccess'
+import NoAccess from '../NoAccess'
 
 /**
  *  The page which is used by teacher to review submissions,.
@@ -136,11 +139,15 @@ export const ReviewStudentCodeReview = props => {
     pstate.clear()
     return <Redirect to={`/labtool/courses/${props.selectedInstance.ohid}`} />
   }
+  if (props.noAccess) {
+    return <NoAccess />
+  }
+
   if (props.errors && props.errors.length > 0) {
     return (
       <Error
         errors={props.errors.map(
-          error => `${error.response.data} (${error.response.status} ${error.response.statusText})`
+          error => `${errorMessage(error, 'Error')} (${error.response.status} ${error.response.statusText})`
         )}
       />
     )
@@ -332,6 +339,7 @@ export const ReviewStudentCodeReview = props => {
 
 const mapStateToProps = (state, ownProps) => {
   return {
+    noAccess: noStaffAccessByRole(state.coursePage, ownProps.courseId, state.user && state.user.user),
     ownProps,
     selectedInstance: state.selectedInstance,
     courseData: state.coursePage,
@@ -357,6 +365,7 @@ const mapDispatchToProps = {
 }
 
 ReviewStudentCodeReview.propTypes = {
+  noAccess: PropTypes.bool,
   ownProps: PropTypes.object.isRequired,
 
   courseId: PropTypes.string.isRequired,

@@ -1,4 +1,5 @@
-import { test, expect, Page } from '@playwright/test'
+import { Page } from '@playwright/test'
+import { test, expect } from '../fixtures/test'
 import { gotoWithSession, loginAs } from '../fixtures/auth'
 import { COURSES, NOTIFICATIONS, STUDENT_INSTANCES, TEACHER } from '../fixtures/data'
 import { chooseDropdownOption, expectNoLoader, expectSuccess } from '../fixtures/helpers'
@@ -17,12 +18,16 @@ const openCoursePage = async (page: Page) => {
   await expectNoLoader(page)
 }
 
+const openManageTags = async (page: Page) => {
+  await gotoWithSession(page, `/labtool/ManageTags/${course.ohid}`)
+  await expect(page.getByRole('heading', { name: 'Add, modify or remove tags' })).toBeVisible()
+  await expectNoLoader(page)
+}
+
 test.describe.serial('tags', () => {
   test('a teacher creates a course tag', async ({ page }) => {
     await loginAs(page, TEACHER)
-    await gotoWithSession(page, `/labtool/ManageTags/${course.ohid}`)
-    await expect(page.getByRole('heading', { name: 'Add, modify or remove tags' })).toBeVisible()
-    await expectNoLoader(page)
+    await openManageTags(page)
     await expect(page.getByRole('heading', { name: 'You are creating a new tag.' })).toBeVisible()
 
     await page.getByPlaceholder('Tag name').fill(TAG)
@@ -66,6 +71,31 @@ test.describe.serial('tags', () => {
 
     await openCoursePage(page)
     await expect(tagLabel(page, tagged)).toHaveCount(0)
+    await expect(page.locator('.tagFilter')).toHaveCount(0)
+  })
+
+  test('a teacher deletes the tag and it disappears from the tagged students', async ({ page }) => {
+    await loginAs(page, TEACHER)
+    await openCoursePage(page)
+    for (const studentInstance of [tagged, untagged]) {
+      await row(page, studentInstance).locator('#tagModify').click()
+      await chooseDropdownOption(page, row(page, studentInstance).locator('#tagDropdown'), TAG)
+      await expectSuccess(page, NOTIFICATIONS.studentTagged)
+      await expect(tagLabel(page, studentInstance)).toBeVisible()
+    }
+
+    await openManageTags(page)
+    await page.getByRole('button', { name: TAG, exact: true }).click()
+    await expect(page.getByRole('heading', { name: `Editing tag: ${TAG}` })).toBeVisible()
+    page.once('dialog', dialog => dialog.accept())
+    await page.getByRole('button', { name: 'Remove', exact: true }).click()
+
+    await expectSuccess(page, NOTIFICATIONS.tagRemoved)
+    await expect(page.getByRole('button', { name: TAG, exact: true })).toHaveCount(0)
+
+    await openCoursePage(page)
+    await expect(tagLabel(page, tagged)).toHaveCount(0)
+    await expect(tagLabel(page, untagged)).toHaveCount(0)
     await expect(page.locator('.tagFilter')).toHaveCount(0)
   })
 })

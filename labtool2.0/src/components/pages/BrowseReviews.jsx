@@ -20,6 +20,9 @@ import WeekReviews from '../WeekReviews'
 import { StudentCard } from './BrowseReviews/StudentCard'
 import DocumentTitle from '../DocumentTitle'
 import Error from '../Error'
+import { errorMessage } from '../../util/errorMessage'
+import { noStaffAccessByRole } from '../../util/courseAccess'
+import NoAccess from '../NoAccess'
 
 /**
  * Maps all comments from a single instance from coursePage reducer
@@ -155,11 +158,15 @@ export const BrowseReviews = props => {
     return props.courseData.role === 'teacher'
   }
 
+  if (props.noAccess) {
+    return <NoAccess />
+  }
+
   if (props.errors && props.errors.length > 0) {
     return (
       <Error
         errors={props.errors.map(
-          error => `${error.response.data} (${error.response.status} ${error.response.statusText})`
+          error => `${errorMessage(error, 'Error')} (${error.response.status} ${error.response.statusText})`
         )}
       />
     )
@@ -237,6 +244,7 @@ export const BrowseReviews = props => {
 
 const mapStateToProps = (state, ownProps) => {
   return {
+    noAccess: noStaffAccessByRole(state.coursePage, ownProps.courseId, state.user && state.user.user),
     ...ownProps,
     user: state.user,
     selectedInstance: state.selectedInstance,
@@ -261,6 +269,7 @@ const mapDispatchToProps = {
 }
 
 BrowseReviews.propTypes = {
+  noAccess: PropTypes.bool,
   courseId: PropTypes.string.isRequired,
   studentInstance: PropTypes.string.isRequired,
   initialLoading: PropTypes.bool,

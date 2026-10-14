@@ -29,7 +29,7 @@ export const sendEmail = data => {
  */
 export const sendMassEmail = (data, id) => {
   const route = `/email/sendmass/${id}`
-  const prefix = 'MASS_EMAIL_SEND'
+  const prefix = 'MASS_EMAIL_SEND_'
   const method = 'post'
   return callController(route, prefix, data, method)
 }

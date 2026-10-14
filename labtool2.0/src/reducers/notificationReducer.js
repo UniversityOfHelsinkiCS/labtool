@@ -1,3 +1,5 @@
+import { errorMessage, errorData } from '../util/errorMessage'
+
 /**
  * Notification reducer. You can add context-sensitive
  * notification messages that are related to the operation.
@@ -10,35 +12,19 @@ const notificationReducer = (state = {}, action) => {
   switch (action.type) {
     case 'NOTIFICATION_SHOW':
       return action.notification
-    //case 'LOGIN_SUCCESS':
-    //  return {
-    //    message: 'You have logged in',
-    //    error: false
-    //  }
     case 'NOTIFICATION_CLEAR':
       return {
         lastMessage: state.message,
         error: state.error
       }
-    //case 'LOGIN_FAILURE':
-    //  return {
-    //    message: 'Wrong username or password',
-    //    error: true
-    //  }
-    //case 'LOGOUT_SUCCESS':
-    //  return {
-    //    message: 'You have logged out',
-    //    error: false
-    //  }
     case 'USER_UPDATE_SUCCESS':
       return {
         message: 'Your email address has been updated',
         error: false
       }
     case 'USER_UPDATE_FAILURE':
-      // action.response.response.data refers to the json sent by backend
       return {
-        message: action.response.response.data.error,
+        message: errorMessage(action.response, 'Your email address could not be updated.'),
         error: true
       }
     case 'USER_UPDATE_ADMIN_SUCCESS':
@@ -58,7 +44,7 @@ const notificationReducer = (state = {}, action) => {
       }
     case 'STUDENT_COURSE_CREATE_ONE_FAILURE':
       return {
-        message: action.response.response.data.message,
+        message: errorMessage(action.response, 'Course registration failed.'),
         error: true
       }
     case 'CI_MODIFY_ONE_SUCCESS':
@@ -66,14 +52,11 @@ const notificationReducer = (state = {}, action) => {
         message: 'Course instance updated successfully!',
         error: false
       }
-    case 'CI_MODIFY_ONE_FAILURE': {
-      const data = action.response && action.response.response && action.response.response.data
+    case 'CI_MODIFY_ONE_FAILURE':
       return {
-        message:
-          (data && data.message) || (typeof data === 'string' ? data : 'The course could not be updated.'),
+        message: errorMessage(action.response, 'The course could not be updated.'),
         error: true
       }
-    }
     case 'CI_COPY_INFO_SUCCESS':
       return {
         message: 'Course details copied successfully!',
@@ -88,25 +71,21 @@ const notificationReducer = (state = {}, action) => {
         error: false
       }
     }
-    case 'CHECKLIST_COPY_ALL_FAILURE': {
-      const data = action.response && action.response.response && action.response.response.data
+    case 'CHECKLIST_COPY_ALL_FAILURE':
       return {
-        message: typeof data === 'string' ? data : 'The checklists could not be copied.',
+        message: errorMessage(action.response, 'The checklists could not be copied.'),
         error: true
       }
-    }
     case 'REVIEW_NOTE_CREATE_SUCCESS':
       return {
         message: 'Review note added.',
         error: false
       }
-    case 'REVIEW_NOTE_CREATE_FAILURE': {
-      const data = action.response && action.response.response && action.response.response.data
+    case 'REVIEW_NOTE_CREATE_FAILURE':
       return {
-        message: typeof data === 'string' ? data : 'The review note could not be added.',
+        message: errorMessage(action.response, 'The review note could not be added.'),
         error: true
       }
-    }
     case 'CI_SET_INVALID_SUCCESS':
       return {
         message: action.response.invalid ? 'The course is marked invalid.' : 'The course is in use again.',
@@ -122,25 +101,23 @@ const notificationReducer = (state = {}, action) => {
         message: 'Course details could not be copied.',
         error: true
       }
-    case 'WEEKS_CREATE_ONESUCCESS':
+    case 'WEEKS_CREATE_ONE_SUCCESS':
       return {
         message: 'Week reviewed successfully!',
         error: false
       }
-    case 'WEEKS_CREATE_ONEFAILURE': {
+    case 'WEEKS_CREATE_ONE_FAILURE':
       // a 409 means the save would overwrite someone else's work; the review page explains (#1127)
-      const response = action.response && action.response.response
       return {
-        message: (response && response.data && response.data.message) || 'Invalid inputs.',
+        message: errorMessage(action.response, 'Invalid inputs.'),
         error: true
       }
-    }
-    case 'WEEKDRAFTS_CREATE_ONESUCCESS':
+    case 'WEEKDRAFTS_CREATE_ONE_SUCCESS':
       return {
         message: 'Week draft saved successfully!',
         error: false
       }
-    case 'WEEKDRAFTS_CREATE_ONEFAILURE':
+    case 'WEEKDRAFTS_CREATE_ONE_FAILURE':
       return {
         message: 'Invalid inputs.',
         error: true
@@ -150,13 +127,11 @@ const notificationReducer = (state = {}, action) => {
         message: 'Comment updated',
         error: false
       }
-    case 'COMMENT_EDIT_ONE_FAILURE': {
-      const data = action.response && action.response.response && action.response.response.data
+    case 'COMMENT_EDIT_ONE_FAILURE':
       return {
-        message: (data && data.message) || 'The comment could not be updated.',
+        message: errorMessage(action.response, 'The comment could not be updated.'),
         error: true
       }
-    }
     case 'COMMENT_CREATE_ONE_SUCCESS':
       return {
         message: 'Comment created successfully!',
@@ -174,7 +149,7 @@ const notificationReducer = (state = {}, action) => {
       }
     case 'TEACHER_CREATE_FAILURE':
       return {
-        message: action.response.response.data,
+        message: errorMessage(action.response, 'Adding the assistant failed.'),
         error: true
       }
     case 'TEACHER_REMOVE_SUCCESS':
@@ -189,7 +164,7 @@ const notificationReducer = (state = {}, action) => {
       }
     case 'ASSOCIATE_TEACHER_AND_STUDENT_FAILURE':
       return {
-        message: action.response.response.data,
+        message: errorMessage(action.response, 'The instructor could not be assigned.'),
         error: true
       }
     case 'CODE_REVIEW_BULKINSERT_SUCCESS':
@@ -199,7 +174,7 @@ const notificationReducer = (state = {}, action) => {
       }
     case 'CODE_REVIEW_BULKINSERT_FAILURE':
       return {
-        message: action.response.response.data,
+        message: errorMessage(action.response, 'Code reviews could not be saved.'),
         error: true
       }
     case 'CODE_REVIEW_GRADE_SUCCESS':
@@ -209,7 +184,7 @@ const notificationReducer = (state = {}, action) => {
       }
     case 'CODE_REVIEW_GRADE_FAILURE':
       return {
-        message: action.response.response.data,
+        message: errorMessage(action.response, 'The code review could not be graded.'),
         error: true
       }
     case 'CODE_REVIEW_ADD_LINK_SUCCESS':
@@ -219,7 +194,7 @@ const notificationReducer = (state = {}, action) => {
       }
     case 'CODE_REVIEW_ADD_LINK_FAILURE':
       return {
-        message: `Review link could not be submitted: ${action.response.response.data}`,
+        message: `Review link could not be submitted: ${errorMessage(action.response, 'please try again.')}`,
         error: true
       }
     case 'CHECKLIST_CREATE_SUCCESS':
@@ -244,7 +219,7 @@ const notificationReducer = (state = {}, action) => {
       }
     case 'TAG_CREATE_FAILURE':
       return {
-        message: action.response.response.data,
+        message: errorMessage(action.response, 'The tag could not be saved.'),
         error: true
       }
     case 'TAG_REMOVE_SUCCESS':
@@ -252,26 +227,26 @@ const notificationReducer = (state = {}, action) => {
         message: 'Tag removed successfully',
         error: false
       }
-    case 'TAG_REMOVE_FAILURE': {
-      const data = action.response && action.response.response && action.response.response.data
+    case 'TAG_REMOVE_FAILURE':
       return {
-        message: typeof data === 'string' ? data : 'The tag could not be removed.',
+        message: errorMessage(action.response, 'The tag could not be removed.'),
         error: true
       }
-    }
     case 'CHECKLIST_CREATE_FAILURE':
       return {
-        message: action.response.response.data,
+        message: errorMessage(action.response, 'The checklist could not be saved.'),
         error: true
       }
-    case 'CHECKLIST_GET_ONE_FAILURE':
-      if (action.response.response.data.data.copying) {
+    case 'CHECKLIST_GET_ONE_FAILURE': {
+      const data = errorData(action.response)
+      if (data && data.data && data.data.copying) {
         return {
-          message: action.response.response.data.message,
+          message: errorMessage(action.response, 'The checklist could not be copied.'),
           error: true
         }
       }
       return state
+    }
     case 'CODE_REVIEW_RANDOMIZE':
       return {
         message: 'Code reviews randomized, changes need to be saved',
@@ -289,7 +264,7 @@ const notificationReducer = (state = {}, action) => {
       }
     case 'SEND_EMAIL_FAILURE':
       return {
-        message: action.response.response.data.message,
+        message: errorMessage(action.response, 'The email could not be sent.'),
         error: true
       }
 
@@ -298,26 +273,20 @@ const notificationReducer = (state = {}, action) => {
         message: 'Code review removed successfully!',
         error: false
       }
-    case 'STUDENT_PROJECT_INFO_UPDATE_FAILURE': {
-      const { message } = action.response.response
-        ? action.response.response.data
-        : { message: 'Error updating project info' }
+    case 'STUDENT_PROJECT_INFO_UPDATE_FAILURE':
       return {
-        message,
+        message: errorMessage(action.response, 'Error updating project info'),
         error: true
       }
-    }
-    case 'MASS_EMAIL_SENDSUCCESS':
+    case 'MASS_EMAIL_SEND_SUCCESS':
       // shown as an error when some recipients did not get the email (#1141)
       return {
         message: action.response.message,
         error: Array.isArray(action.response.notDelivered) && action.response.notDelivered.length > 0
       }
-    case 'MASS_EMAIL_SENDFAILURE':
+    case 'MASS_EMAIL_SEND_FAILURE':
       return {
-        message: `Could not send e-mail; ${
-          (action.response && action.response.response.data.message) || 'no students selected'
-        }`,
+        message: `Could not send e-mail; ${errorMessage(action.response, 'no students selected')}`,
         error: true
       }
     case 'COURSE_IMPORT_DO_IMPORT_SUCCESS':

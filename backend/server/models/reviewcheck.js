@@ -15,8 +15,6 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'CASCADE',
       allowNull: true
     })
-  }
-  ReviewCheck.associate = (models) => {
     ReviewCheck.belongsTo(models.CodeReview, {
       foreignKey: 'codeReviewId',
       onDelete: 'CASCADE',

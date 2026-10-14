@@ -32,6 +32,9 @@ import IssuesDisabledWarning from '../IssuesDisabledWarning'
 import { updateStudentProjectInfo, massUpdateStudentProjectInfo } from '../../services/studentinstances'
 import DocumentTitle from '../DocumentTitle'
 import Error from '../Error'
+import { errorMessage } from '../../util/errorMessage'
+import { noStaffAccessByRole } from '../../util/courseAccess'
+import NoAccess from '../NoAccess'
 
 export const ModifyCourseInstanceReview = props => {
   const pstate = usePersistedState(`ModifyCourseInstanceCodeReviews_${props.courseId}`, {
@@ -483,11 +486,15 @@ export const ModifyCourseInstanceReview = props => {
       </Button>
     )
 
+  if (props.noAccess) {
+    return <NoAccess />
+  }
+
   if (props.errors && props.errors.length > 0) {
     return (
       <Error
         errors={props.errors.map(
-          error => `${error.response.data} (${error.response.status} ${error.response.statusText})`
+          error => `${errorMessage(error, 'Error')} (${error.response.status} ${error.response.statusText})`
         )}
       />
     )
@@ -558,7 +565,8 @@ export const ModifyCourseInstanceReview = props => {
 
 export const userHelper = data => {
   let users = []
-  if (data) {
+  // for a student, the course page data is their own registration, not a list of students
+  if (Array.isArray(data)) {
     users.push({
       value: null,
       text: 'select a student or add a repo link'
@@ -593,6 +601,7 @@ const codeReviewHelper = data => {
 
 const mapStateToProps = (state, ownProps) => {
   return {
+    noAccess: noStaffAccessByRole(state.coursePage, ownProps.courseId, state.user && state.user.user),
     courseId: ownProps.courseId,
     courseData: state.coursePage,
     selectedInstance: state.selectedInstance,
@@ -628,6 +637,7 @@ const mapDispatchToProps = {
 }
 
 ModifyCourseInstanceReview.propTypes = {
+  noAccess: PropTypes.bool,
   courseId: PropTypes.string.isRequired,
 
   courseData: PropTypes.object.isRequired,

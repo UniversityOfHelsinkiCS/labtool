@@ -12,6 +12,7 @@ import { AdminCourseList } from './AdminPage/AdminCourseList'
 import { AdminUserList } from './AdminPage/AdminUserList'
 import DocumentTitle from '../DocumentTitle'
 import Error from '../Error'
+import { errorMessage } from '../../util/errorMessage'
 
 export const AdminPage = props => {
   const state = usePersistedState('AdminPage', {
@@ -45,7 +46,7 @@ export const AdminPage = props => {
     return (
       <Error
         errors={props.errors.map(
-          error => `${error.response.data} (${error.response.status} ${error.response.statusText})`
+          error => `${errorMessage(error, 'Error')} (${error.response.status} ${error.response.statusText})`
         )}
       />
     )

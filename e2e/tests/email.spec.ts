@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test'
+import { test, expect } from '../fixtures/test'
 import { loginAs } from '../fixtures/auth'
 import {
   BOUNCING_STUDENT_EMAIL,

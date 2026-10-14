@@ -175,6 +175,29 @@ describe('Checklists API', () => {
       assert.strictEqual(await Checklist.count(), 0)
     })
 
+    it('creates a new item for an item id that does not exist', async () => {
+      const body = weekChecklist()
+      body.checklist.Code[1].id = 999999
+      const res = await as(s.users.teacher)
+        .post('/api/checklist/create')
+        .send(body)
+        .expect(200)
+      const names = res.body.result.list.Code.map(item => item.name)
+      assert.deepStrictEqual(names, ['Has tests', 'Tests pass'])
+      assert.ok(res.body.result.list.Code.every(item => item.id !== 999999))
+      assert.strictEqual(await ChecklistItem.count(), 3)
+    })
+
+    it('answers the validation error as the message', async () => {
+      const body = weekChecklist()
+      body.checklist.Code[0].unexpected = 'x'
+      const res = await as(s.users.teacher)
+        .post('/api/checklist/create')
+        .send(body)
+        .expect(400)
+      assert.strictEqual(res.body.message, 'Found unexpected key: unexpected')
+    })
+
     it('rejects checklist rows with unexpected keys without saving anything', async () => {
       const body = weekChecklist()
       body.checklist.Code[0].unexpected = 'x'
@@ -265,7 +288,7 @@ describe('Checklists API', () => {
       await anonymous()
         .post('/api/checklist/getone')
         .send({ courseInstanceId: s.course.id, week: 2 })
-        .expect(403)
+        .expect(401)
     })
 
     it('returns the week checklist grouped by category for a teacher', async () => {

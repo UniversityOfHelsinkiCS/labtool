@@ -1,5 +1,5 @@
 const assert = require('assert')
-const { api, as, anonymous } = require('./helpers/api')
+const { as, anonymous } = require('./helpers/api')
 const f = require('./helpers/factories')
 const {
   CourseInstance,
@@ -20,8 +20,14 @@ describe('Course instances API', () => {
   })
 
   describe('GET /api/courseinstances', () => {
-    it('lists all courses without timestamps (public)', async () => {
-      const res = await api.get('/api/courseinstances').expect(200)
+    it('requires authentication', async () => {
+      await anonymous()
+        .get('/api/courseinstances')
+        .expect(401)
+    })
+
+    it('lists all courses without timestamps', async () => {
+      const res = await as(s.users.outsider).get('/api/courseinstances').expect(200)
       assert.strictEqual(res.body.length, 2)
       const course = res.body.find(c => c.id === s.course.id)
       assert.strictEqual(course.ohid, s.course.ohid)
@@ -158,6 +164,9 @@ describe('Course instances API', () => {
       assert.strictEqual(res.body.length, 1)
       assert.strictEqual(res.body[0].ohid, s.course.ohid)
       assert.strictEqual(res.body[0].github, s.student.github)
+      // the id is that of the course, not of the student instance
+      assert.strictEqual(res.body[0].id, s.course.id)
+      assert.strictEqual(res.body[0].name, s.course.name)
 
       const none = await as(s.users.teacher)
         .post('/api/course/student')
@@ -230,6 +239,21 @@ describe('Course instances API', () => {
         .expect(200)
     })
 
+    it('names the course the role is for', async () => {
+      const asTeacher = await as(s.users.teacher)
+        .post('/api/courseinstances/coursepage')
+        .send({ course: s.course.ohid })
+        .expect(200)
+      assert.strictEqual(asTeacher.body.ohid, s.course.ohid)
+      assert.strictEqual(asTeacher.body.role, 'teacher')
+      const asStudent = await as(s.users.student)
+        .post('/api/courseinstances/coursepage')
+        .send({ course: s.course.ohid })
+        .expect(200)
+      assert.strictEqual(asStudent.body.ohid, s.course.ohid)
+      assert.strictEqual(asStudent.body.role, 'student')
+    })
+
     it('requires authentication', async () => {
       await anonymous()
         .post('/api/courseinstances/coursepage')
@@ -295,7 +319,7 @@ describe('Course instances API', () => {
         .post('/api/courseinstances/coursepage')
         .send({ course: s.course.ohid })
         .expect(200)
-      assert.deepStrictEqual(res.body, { role: 'student', data: null })
+      assert.deepStrictEqual(res.body, { ohid: s.course.ohid, role: 'student', data: null })
     })
 
     it('gives a teacher every student with full review data', async () => {
@@ -343,7 +367,7 @@ describe('Course instances API', () => {
         .post('/api/courseinstances/coursepage')
         .send({ course: s.course.ohid })
         .expect(200)
-      assert.deepStrictEqual(res.body, { role: 'student', data: null })
+      assert.deepStrictEqual(res.body, { ohid: s.course.ohid, role: 'student', data: null })
     })
   })
 
@@ -415,16 +439,47 @@ describe('Course instances API', () => {
       assert.strictEqual((await CourseInstance.findByPk(s.course.id)).name, 'Renamed course')
     })
 
-    it('is rejected for students and teachers of other courses', async () => {
-      await as(s.users.student)
+    it('is forbidden for students and teachers of other courses', async () => {
+      const res = await as(s.users.student)
         .put(`/api/courseinstances/${s.course.ohid}`)
         .send(update)
-        .expect(400)
+        .expect(403)
+      assert.strictEqual(res.body.message, 'You have to be a teacher to update course info.')
       await as(s.users.otherTeacher)
         .put(`/api/courseinstances/${s.course.ohid}`)
         .send(update)
-        .expect(400)
+        .expect(403)
       assert.strictEqual((await CourseInstance.findByPk(s.course.id)).name, s.course.name)
+    })
+
+    it('keeps the fields missing from the request', async () => {
+      await s.course.update({ finalReview: true, currentCodeReview: [1], weekMaxPoints: 3, finalReviewHasPoints: false })
+      await as(s.users.teacher)
+        .put(`/api/courseinstances/${s.course.ohid}`)
+        .send({ currentWeek: 2 })
+        .expect(200)
+      const course = await CourseInstance.findByPk(s.course.id)
+      assert.strictEqual(course.currentWeek, 2)
+      assert.strictEqual(course.active, true)
+      assert.strictEqual(course.finalReview, true)
+      assert.deepStrictEqual(course.currentCodeReview, [1])
+      assert.strictEqual(course.weekAmount, 7)
+      assert.strictEqual(course.weekMaxPoints, 3)
+      assert.strictEqual(course.finalReviewHasPoints, false)
+      assert.strictEqual(course.name, s.course.name)
+    })
+
+    it('applies zero and false values', async () => {
+      await as(s.users.teacher)
+        .put(`/api/courseinstances/${s.course.ohid}`)
+        .send({ weekMaxPoints: 0, currentWeek: 0, active: false, finalReview: false, newCr: [] })
+        .expect(200)
+      const course = await CourseInstance.findByPk(s.course.id)
+      assert.strictEqual(course.weekMaxPoints, 0)
+      assert.strictEqual(course.currentWeek, 0)
+      assert.strictEqual(course.active, false)
+      assert.strictEqual(course.finalReview, false)
+      assert.deepStrictEqual(course.currentCodeReview, [])
     })
 
     it('validates week settings', async () => {
@@ -519,11 +574,14 @@ describe('Course instances API', () => {
     })
 
     it('rejects an invalid GitHub link', async () => {
-      const res = await as(s.users.outsider)
-        .post(`/api/course/register/${s.course.ohid}`)
-        .send({ ...registration, github: 'not a url' })
-        .expect(400)
-      assert.ok(res.body.message.includes('GitHub link'))
+      for (const github of ['not a url', 'javascript:alert(1)//github.com/a/b']) {
+        // eslint-disable-next-line no-await-in-loop
+        const res = await as(s.users.outsider)
+          .post(`/api/course/register/${s.course.ohid}`)
+          .send({ ...registration, github })
+          .expect(400)
+        assert.ok(res.body.message.includes('GitHub link'))
+      }
       assert.strictEqual(await StudentInstance.count({ where: { userId: s.users.outsider.id } }), 0)
     })
   })
@@ -551,6 +609,7 @@ describe('Course instances API', () => {
         forCodeReview: true,
         items: { Review: [{ name: 'Helpful', checkedPoints: 1, uncheckedPoints: 0 }] }
       })
+      await f.addTeacher(s.users.teacher, template)
     })
 
     it('requires authentication', async () => {
@@ -622,6 +681,26 @@ describe('Course instances API', () => {
       assert.strictEqual(await Checklist.count({ where: { courseInstanceId: s.course.id } }), 0)
     })
 
+    it('is forbidden unless the user is staff on the course copied from', async () => {
+      const foreign = await f.createCourse({ weekAmount: 3 })
+      await f.addStudent(s.users.teacher, foreign)
+      const res = await as(s.users.teacher)
+        .post('/api/courseinstances/copy')
+        .send({ copyFrom: foreign.id, copyTo: s.course.id })
+        .expect(403)
+      assert.strictEqual(res.body.message, 'You can only copy course information from your own courses.')
+      assert.strictEqual((await CourseInstance.findByPk(s.course.id)).weekAmount, 7)
+    })
+
+    it('does not copy from an invalid course', async () => {
+      await template.update({ invalid: true })
+      await as(s.users.teacher)
+        .post('/api/courseinstances/copy')
+        .send({ copyFrom: template.id, copyTo: s.course.id })
+        .expect(400)
+      assert.strictEqual((await CourseInstance.findByPk(s.course.id)).weekAmount, 7)
+    })
+
     it('validates input', async () => {
       await as(s.users.teacher)
         .post('/api/courseinstances/copy')
@@ -630,6 +709,10 @@ describe('Course instances API', () => {
       await as(s.users.teacher)
         .post('/api/courseinstances/copy')
         .send({ copyFrom: 999999, copyTo: s.course.id })
+        .expect(400)
+      await as(s.users.teacher)
+        .post('/api/courseinstances/copy')
+        .send({ copyFrom: 'abc', copyTo: s.course.id })
         .expect(400)
     })
   })
@@ -660,6 +743,46 @@ describe('Course instances API', () => {
         .send({ ohid: s.course.ohid, issuesDisabled: true })
         .expect(403)
       assert.strictEqual((await StudentInstance.findByPk(s.student.id)).issuesDisabled, null)
+    })
+
+    it('does not let a student change their own dropped or registration status', async () => {
+      for (const flags of [{ dropped: true }, { validRegistration: false }, { issuesDisabled: false }]) {
+        // eslint-disable-next-line no-await-in-loop
+        const res = await as(s.users.student)
+          .post('/api/studentinstance/update')
+          .send({ ohid: s.course.ohid, ...flags })
+          .expect(403)
+        assert.strictEqual(res.body.message, 'You cannot modify this flag as a student.')
+      }
+      const si = await StudentInstance.findByPk(s.student.id)
+      assert.strictEqual(si.dropped, false)
+      assert.strictEqual(si.validRegistration, true)
+      assert.strictEqual(si.issuesDisabled, null)
+    })
+
+    it('lets a student report whether their repository exists (registration page)', async () => {
+      await as(s.users.student)
+        .post('/api/studentinstance/update')
+        .send({ ohid: s.course.ohid, github: s.student.github, projectName: 'Same', repoExists: true })
+        .expect(200)
+      assert.strictEqual((await StudentInstance.findByPk(s.student.id)).repoExists, true)
+    })
+
+    it('accepts only http(s) links as the repository', async () => {
+      const res = await as(s.users.student)
+        .post('/api/studentinstance/update')
+        .send({ ohid: s.course.ohid, github: 'javascript:alert(1)//github.com/a/b' })
+        .expect(400)
+      assert.ok(res.body.message.includes('GitHub link'))
+      assert.strictEqual((await StudentInstance.findByPk(s.student.id)).github, s.student.github)
+    })
+
+    it('keeps an old repository link that is sent back unchanged', async () => {
+      await StudentInstance.update({ github: 'github.com/old/link' }, { where: { id: s.student.id } })
+      await as(s.users.teacher)
+        .post('/api/studentinstance/update')
+        .send({ ohid: s.course.ohid, userId: s.users.student.id, github: 'github.com/old/link', issuesDisabled: null })
+        .expect(200)
     })
 
     it('lets a teacher update a student\'s flags', async () => {
@@ -762,6 +885,21 @@ describe('Course instances API', () => {
         })
         .expect(200)
       assert.strictEqual((await StudentInstance.findByPk(s.student.id)).github, 'https://github.com/x/moved')
+    })
+
+    it('accepts only http(s) links as repositories', async () => {
+      const res = await as(s.users.teacher)
+        .post('/api/studentinstance/massupdate')
+        .send({
+          ohid: s.course.ohid,
+          studentInstances: [
+            { userId: s.users.student.id, dropped: true },
+            { userId: s.users.student2.id, github: 'javascript:alert(1)//github.com/a/b' }
+          ]
+        })
+        .expect(400)
+      assert.ok(res.body.message.includes('GitHub link'))
+      assert.strictEqual((await StudentInstance.findByPk(s.student.id)).dropped, false)
     })
 
     it('silently ignores students the caller may not update', async () => {
@@ -943,6 +1081,7 @@ describe('Course instances API', () => {
       })
 
       it('handles comments that nobody has read yet', async () => {
+        await comment.update({ isRead: null })
         await as(s.users.assistant)
           .put('/api/comments/update')
           .send([{ id: comment.id, weekId: week.id, isRead: null }])
@@ -958,6 +1097,27 @@ describe('Course instances API', () => {
           .expect(403)
         await comment.reload()
         assert.deepStrictEqual(comment.isRead, [s.users.teacher.id])
+      })
+
+      it('takes the readers from the database and checks the week of each comment', async () => {
+        const otherStudentsWeek = await f.createWeek(s.student2)
+        const other = await f.createComment(otherStudentsWeek, s.users.teacher, { isRead: [s.users.teacher.id] })
+        // a comment of another student's week cannot be passed off as one of the student's own week
+        await as(s.users.student)
+          .put('/api/comments/update')
+          .send([{ id: other.id, weekId: week.id, isRead: [] }])
+          .expect(400)
+        await other.reload()
+        assert.deepStrictEqual(other.isRead, [s.users.teacher.id])
+
+        // readers sent by the client are ignored
+        const res = await as(s.users.student)
+          .put('/api/comments/update')
+          .send([{ id: comment.id, weekId: week.id, isRead: [] }])
+          .expect(200)
+        assert.deepStrictEqual(res.body[0].isRead, [s.users.teacher.id, s.users.student.id])
+        await comment.reload()
+        assert.deepStrictEqual(comment.isRead, [s.users.teacher.id, s.users.student.id])
       })
 
       it('rejects comments from different weeks and unknown comments', async () => {

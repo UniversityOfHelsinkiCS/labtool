@@ -235,13 +235,12 @@ const cases = [
     'SEND_EMAIL_',
     { commentId: 1, role: 'teacher' }
   ],
-  // note: prefix has no trailing underscore, reducers listen to MASS_EMAIL_SENDSUCCESS
   [
     'email.sendMassEmail',
     () => email.sendMassEmail(payload, 'TKT1'),
     'post',
     '/email/sendmass/TKT1',
-    'MASS_EMAIL_SEND',
+    'MASS_EMAIL_SEND_',
     payload
   ],
 
@@ -375,7 +374,6 @@ const cases = [
     payload
   ],
 
-  // note: prefixes WEEKS_CREATE_ONE and WEEKDRAFTS_CREATE_ONE have no trailing underscore
   [
     'reviewNote.createReviewNote',
     () => reviewNote.createReviewNote({ studentInstanceId: 1, weekNumber: 8, text: 'Note' }),
@@ -389,7 +387,7 @@ const cases = [
     () => week.createOneWeek(payload),
     'post',
     '/weeks/create',
-    'WEEKS_CREATE_ONE',
+    'WEEKS_CREATE_ONE_',
     payload
   ],
   [
@@ -405,7 +403,7 @@ const cases = [
     () => week.saveWeekDraft(payload),
     'post',
     '/weeks/saveDraft',
-    'WEEKDRAFTS_CREATE_ONE',
+    'WEEKDRAFTS_CREATE_ONE_',
     payload
   ]
 ]
@@ -470,5 +468,16 @@ describe('services', () => {
         .map(key => `${moduleName}.${key}`)
     )
     expect(exported.filter(name => !covered.has(name))).toEqual([])
+  })
+
+  // reducers listen to `${prefix}SUCCESS` etc.; a prefix without the trailing underscore
+  // produced types like MASS_EMAIL_SENDSUCCESS that were easy to get wrong
+  it.each(cases)('%s uses an action type prefix ending with an underscore', (name, thunk) => {
+    const dispatched = []
+    thunk()(action => dispatched.push(action))
+    expect(dispatched).toHaveLength(1)
+    const { prefix } = dispatched[0].payload
+    expect(prefix).toMatch(/^[A-Z][A-Z_]*_$/)
+    expect(dispatched[0].type).toBe(`${prefix}ATTEMPT`)
   })
 })

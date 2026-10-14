@@ -5,7 +5,111 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
 
 ## 2026-10-13
 
+### Changed (maintainability review)
+- **Authentication is checked once, in `app.js`.** A `requireAuth` middleware answers 401 to every API
+  request without a valid token, except `/api`, `/api/ping`, login, fake login, logout and CORS
+  preflights. The 46 hand-written `controllerBeforeAuthCheckAction` calls and the `req.authenticated`
+  checks after them are gone, as are the six helper files that only re-exported it.
+- **One permission module.** `server/helpers/auth.js` has `isCourseStaff`, `isSysop`, `getTeacherId`,
+  `findStudentInstance` and `require*` versions that throw a 403. They replace about 35 copies of the
+  staff lookup. Authorization failures that answered 400 or 401 now answer 403.
+- **One error format.** Handlers throw `HttpError` (`server/utils/httpError.js`), and the error handler
+  answers `{ message }`; unexpected errors are logged and answered with a generic 500 `{ message }`. Error
+  bodies used to be a plain string, `{ error }`, `{ message }` or `{ message, data: req.body }`. Kept on
+  purpose: the week review 409 conflict and `NOTES_LOCKED` bodies, the mass email `notDelivered` list and
+  the checklist `data.copying` flag, which the frontend reads.
+- **Frontend reads error messages in one place** (`src/util/errorMessage.js`), accepting `{ message }`,
+  `{ error }` or a string. Notifications no longer crash the reducer when a request fails without a
+  response (timeout, network error), and error pages no longer show `[object Object]`.
+- Controllers use async/await throughout; the try/catch blocks that only logged and answered a generic
+  error are gone, so errors reach the central handler. `courseinstances.js` shrank from 1192 to 891 lines.
+- Removed dead code: the WebOodi stub and the 5-second timer around it on every registration, the unused
+  per-review query in code review assignment, commented-out code, the bogus `pug` view engine chaining in
+  the admin route, `console.log` debugging in login. Opaque names (`axiosBlaBla`, `barf`, `timeMachine`)
+  are renamed.
+
+### Added
+- **E2E error guard** (`e2e/fixtures/test.ts`): every spec now imports `test`/`expect` from it, and every
+  test fails if a page it opened (including pages of other users opened with `newPageAs`) throws an
+  uncaught error or the backend answers an API request with a 5xx. Tests can allow specific ones with
+  `test.use({ allowedServerErrors, allowedPageErrors })`; none needs to. It found no errors in the
+  existing flows.
+- **E2E tests** (56 → 88 tests, 18 → 24 specs), each new spec on its own seeded course (90013–90017) or
+  user (`ADMIN_CANDIDATE`):
+  - `project-info`: a student edits project name and repository; an `ftp://` link is refused with the
+    backend's exact `{ message }`, a valid change shows to the teacher.
+  - `error-messages`: backend messages reach the red notification word for word (a tag name of only
+    spaces, a duplicate tag, a code review link without http(s)), never as `[object Object]`.
+  - `final-review`: enabling the final review, grading it with a grade and review notes, an assistant's
+    review note (REVIEW_NOTE_CREATE), and the student's view following "final review visible".
+  - `permissions`: a student opening teacher pages directly gets no teacher UI and no crash; an assistant
+    is not offered marking the course invalid.
+  - `code-review-changes`: removing an assigned code review; assigning a repository URL as the reviewee.
+  - `admin`: a sysop grants and revokes admin rights, and the user's access to the admin page follows.
+  - `tags`: deleting a course tag removes it from the tagged students. `smoke`: 8 more pages, all opened
+    directly (course staff, code review settings, tags, checklist creation, mass email, course import,
+    the project info form, code review grading).
+
+### Fixed
+- **After saving their project info, a student landed on My page instead of the course page**
+  (`CoursePage.jsx`). The project info form redirects to the course page, but the course page took the
+  still-set redirect flag for its own "removed yourself from the course" redirect. The same happened
+  right after registering for a course. The course page now redirects to My page only after the student
+  removed themselves (found by the new `project-info` e2e test; unit tests in `CoursePage.test.js`).
+- **The code review settings page crashed (blank page) for a student** who opened it directly
+  (`data.map is not a function` in `ModifyCourseInstanceCodeReviews.jsx`): the student's course data is
+  their own registration, not a list. It now shows nothing to anyone but course staff (found by the
+  error guard in the new `permissions` e2e test; unit test in `ModifyCourseInstanceCodeReviews.test.js`).
+- **Course settings and tag management showed their forms to students** who opened them directly
+  (`ModifyCourseInstancePage.jsx`, `ManageTags.jsx`); the backend refused every save. They now show
+  nothing to users who are not course staff (admins still get the settings page). Unit tests in
+  `ModifyCourseInstancePage.test.js` and the new `ManageTags.test.js`.
+- **Frontend: every `App` re-render remounted all pages**, losing their local state, because `Main` and
+  `EmailChecker` were components defined inside `App`. The duplicate `/labtool/checklist/:id/create` route
+  is removed.
+- **Frontend: action types `MASS_EMAIL_SENDSUCCESS`, `WEEKS_CREATE_ONESUCCESS` and
+  `WEEKDRAFTS_CREATE_ONESUCCESS`** had no underscore before the suffix. The prefixes are renamed, and a test
+  checks that every service prefix ends with `_`.
+- **Course settings update** overwrote fields missing from the request: `active` became the string
+  `'undefined'`, `finalReview` was cleared and the current code reviews were reset. Week max points and
+  current week can now be set to 0.
+- **Course import answered 200 when Kurki or the database failed.** It now answers 400 (Kurki) or 500, and a
+  course is created together with its teachers in one transaction. `getNextTerm` exported `getCurrentTerm`.
+- **Assigning an assistant** answered before saving, and a failing request never got an answer.
+- **Saving a code review round** incremented the round count of the course named in the request, not of the
+  students' course, without waiting for it. Unknown students or reviewed students of another course are
+  rejected (400) instead of crashing.
+- **Week reviews**: an unknown student or malformed input answered 500 (now 404/400). The review, its
+  checks, change history and draft removal are saved in one transaction. Copying all checklists is one
+  transaction too.
+- 500s become 400s for a non-text code review link, a checklist item id that does not exist (a new item is
+  created), and email notifications about a missing comment or week (404).
+- `ReviewCheck` had two `associate` functions, so its association to `Week` was never registered.
+- `checklistRoutes` were registered twice.
+- **The course staff pages say "No access" to everyone else.** A student who opened one directly (course
+  settings, review and code review grading pages, including their own, Browse reviews, mass email, code
+  review settings, course staff, checklist creation, tags) saw a loader that never went away, or forms the
+  backend refused to save. The pages decide by the user's role on the course (`util/courseAccess.js`;
+  the course page data now names its course, so a role on a previously opened course is not used).
+  Sysops may use every page.
+- A request the backend refuses with 403 shows its reason on the page, as 404 and 500 already did,
+  instead of a loader that never goes away (e.g. course import for a student).
+- Every page load before login asked `GET /api/courseimport/allowed` without a token and got a 401. The
+  import permission is now asked only once logged in (e2e test in `logout.spec.ts`).
+- Email links had no scheme when `FRONTEND_URL` was unset. The default is now
+  `https://study.cs.helsinki.fi/labtool` in production and staging, `http://localhost:3000/labtool` otherwise.
+- `/api/course/student` returned the student instance id as the course `id`.
+- Course details (`/api/courses/:ohid`) loaded all users and ran one query per checklist.
+
 ### Security
+- Students could set their own `dropped`, `validRegistration` and `issuesDisabled` through the project
+  info update.
+- Course information could be copied from a course the user is not staff on, or from an invalid course.
+- A course tag could be attached to students of another course.
+- Marking comments read trusted the readers list and the week sent by the client.
+- Repository links are accepted only as http(s) addresses on registration, project info update and mass
+  update; code review links use the same check.
+- The student course list no longer builds SQL by string interpolation.
 - **Frontend server upgraded from `serve` 6.5.8 to 14.2.6.** The 2017 version had known path traversal
   and XSS advisories. The production image (`Dockerfile`) now runs `serve -l 3000 -s build -c ../serve.json`.
 - **Security headers.** The frontend sends a Content Security Policy (scripts only from the app itself,
@@ -458,5 +562,43 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
 
 ## Known bugs
 
-None of the bugs found by the tests are open.
+Found by the code review of 2026-10-13 and not fixed yet.
+
+Data integrity
+- No unique constraints in the database. Two simultaneous first logins create duplicate users
+  (`User.findOrCreate` on a non-unique `username`); code reviews are kept unique by a hook that deletes and
+  re-inserts (a race that can drop rows); `ReviewCheck.findOrCreate` has no constraint behind it.
+- Foreign keys missing or wrong: the checklist migration has `onDelelete` (typo), so deleting a course
+  leaves its checklists; `Comments.weekId`, `Comments.userId` and `ReviewChecks.checklistItemId` have no
+  foreign key, so removing checklist items leaves orphaned checks. `Weeks.updatedBy` has no association.
+- Only one secondary index; foreign key columns are not indexed.
+- Models declare NOT NULL for `StudentInstance.github`, `projectName`, `dropped`, `validRegistration`,
+  `Comment.hidden` and `Checklist.forCodeReview`, but the columns are nullable.
+- `checklists.create` and code review assignment do several writes without a transaction; the code
+  review `beforeCreate` hook deletes rows outside the caller's transaction. Course import is not
+  all-or-nothing across several courses.
+- The `/gm` flags on the `StudentInstance` validators let a multi-line value pass if any line is valid.
+
+Frontend
+- The review pages (`ReviewStudent`, `ReviewStudentCodeReview`) mutate week data in the Redux store and
+  dispatch actions during render.
+- `ReviewStudentCodeReview` clears the saved form before validating, so invalid points lose the edits; it
+  crashes when the code review is missing.
+- CSV export does not quote fields: commas or newlines in names break it, and cells starting with `=`
+  allow formula injection.
+- After a network error the API middleware returns without dispatching `FAILURE`, so the loader stays on.
+- The API middleware calls the backend for any action with a `payload` key, which would break a move to
+  Redux Toolkit.
+- `LOGOUT_SUCCESS` is handled in 17 reducers, but `loadingReducer`, `coursePageLogicReducer` and
+  `redirectReducer` are not reset on logout.
+
+Backend and operations
+- Kurki requests disable TLS verification (`rejectUnauthorized: false`).
+- `POST /api/login` without Shibboleth headers answers 500 instead of 400.
+- Staging emails link to production unless `FRONTEND_URL` is set there.
+- The production `start.sh` runs sequelize-cli migrations that cannot read the `database_url` config and
+  fail silently; Umzug then migrates on startup and retries a failing migration forever as if the
+  database were down.
+- The staging workflow reads logs from `compose.ci.yaml`, which does not exist.
+- `pug` and `cors` are unused dependencies.
 

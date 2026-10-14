@@ -21,7 +21,8 @@ const USERS = {
   ASSISTANT: 19002,
   EMAIL_CHANGER: 19003,
   NO_EMAIL: 19004,
-  BOUNCING: 19005 // address rejected by the e2e stack's Mailpit (issue #1141)
+  BOUNCING: 19005, // address rejected by the e2e stack's Mailpit (issue #1141)
+  ADMIN_CANDIDATE: 19006 // gets and loses sysop rights in the admin spec
 }
 
 const COURSES = {
@@ -36,11 +37,19 @@ const COURSES = {
   DROP: 90009,
   EMAIL: 90010,
   BOUNCE: 90011,
-  GRADING: 90012 // two instructors grading the same student (#1127)
+  GRADING: 90012, // two instructors grading the same student (#1127)
+  PROJECT_INFO: 90013,
+  FINAL_REVIEW: 90014,
+  MESSAGES: 90015, // error messages from the backend shown in the UI
+  PERMISSIONS: 90016,
+  CODE_REVIEW_CHANGES: 90017
 }
 
 // the assistant on the grading course; GRADING_ASSIGNED_STUDENT is assigned to them
 const GRADING_ASSISTANT_INSTANCE = 90112
+// the assistant on the final review and permissions courses
+const FINAL_REVIEW_ASSISTANT_INSTANCE = 90114
+const PERMISSIONS_ASSISTANT_INSTANCE = 90116
 
 const COURSE_IDS = Object.values(COURSES)
 const USER_IDS = Object.values(USERS)
@@ -165,6 +174,18 @@ module.exports = {
         sysop: false,
         createdAt: now,
         updatedAt: now
+      },
+      {
+        id: USERS.ADMIN_CANDIDATE,
+        username: 'e2eyllapitaja',
+        email: 'ylva.valvoja@example.com',
+        firsts: 'Ylva',
+        lastname: 'Valvoja',
+        studentNumber: '019000006',
+        teacher: false,
+        sysop: false,
+        createdAt: now,
+        updatedAt: now
       }
     ])
 
@@ -184,7 +205,20 @@ module.exports = {
       course(COURSES.DROP, 'E2E Drop Course', 'E2E.DROP.COURSE.1', now),
       course(COURSES.EMAIL, 'E2E Email Course', 'E2E.EMAIL.COURSE.1', now),
       course(COURSES.BOUNCE, 'E2E Bounce Course', 'E2E.BOUNCE.COURSE.1', now),
-      course(COURSES.GRADING, 'E2E Grading Course', 'E2E.GRADING.COURSE.1', now)
+      course(COURSES.GRADING, 'E2E Grading Course', 'E2E.GRADING.COURSE.1', now),
+      course(COURSES.PROJECT_INFO, 'E2E Project Info Course', 'E2E.PROJECTINFO.COURSE.1', now),
+      course(COURSES.FINAL_REVIEW, 'E2E Final Review Course', 'E2E.FINALREVIEW.COURSE.1', now),
+      course(COURSES.MESSAGES, 'E2E Messages Course', 'E2E.MESSAGES.COURSE.1', now, {
+        currentCodeReview: [1],
+        codeReviewActive: true,
+        amountOfCodeReviews: 1
+      }),
+      course(COURSES.PERMISSIONS, 'E2E Permissions Course', 'E2E.PERMISSIONS.COURSE.1', now),
+      course(COURSES.CODE_REVIEW_CHANGES, 'E2E Code Review Changes Course', 'E2E.CRCHANGES.COURSE.1', now, {
+        currentCodeReview: [1],
+        codeReviewActive: true,
+        amountOfCodeReviews: 1
+      })
     ])
 
     await queryInterface.bulkInsert(
@@ -195,6 +229,18 @@ module.exports = {
       {
         ...teacherInstance(COURSES.GRADING, now),
         id: GRADING_ASSISTANT_INSTANCE,
+        userId: USERS.ASSISTANT,
+        instructor: true
+      },
+      {
+        ...teacherInstance(COURSES.FINAL_REVIEW, now),
+        id: FINAL_REVIEW_ASSISTANT_INSTANCE,
+        userId: USERS.ASSISTANT,
+        instructor: true
+      },
+      {
+        ...teacherInstance(COURSES.PERMISSIONS, now),
+        id: PERMISSIONS_ASSISTANT_INSTANCE,
         userId: USERS.ASSISTANT,
         instructor: true
       }
@@ -225,7 +271,38 @@ module.exports = {
       studentInstance(90012, REGISTERED_STUDENT_USER_ID, COURSES.GRADING, now),
       studentInstance(90022, USERS.SECOND_STUDENT, COURSES.GRADING, now, {
         teacherInstanceId: GRADING_ASSISTANT_INSTANCE
-      })
+      }),
+      studentInstance(90031, REGISTERED_STUDENT_USER_ID, COURSES.PROJECT_INFO, now),
+      // assigned to the teacher, so the assistant adds review notes of their own
+      studentInstance(90032, REGISTERED_STUDENT_USER_ID, COURSES.FINAL_REVIEW, now, {
+        teacherInstanceId: COURSES.FINAL_REVIEW
+      }),
+      studentInstance(90033, REGISTERED_STUDENT_USER_ID, COURSES.MESSAGES, now),
+      studentInstance(90034, USERS.SECOND_STUDENT, COURSES.MESSAGES, now),
+      studentInstance(90035, REGISTERED_STUDENT_USER_ID, COURSES.PERMISSIONS, now),
+      studentInstance(90036, USERS.SECOND_STUDENT, COURSES.PERMISSIONS, now),
+      studentInstance(90037, REGISTERED_STUDENT_USER_ID, COURSES.CODE_REVIEW_CHANGES, now),
+      studentInstance(90038, USERS.SECOND_STUDENT, COURSES.CODE_REVIEW_CHANGES, now)
+    ])
+
+    // visible code review rounds: the main course (for the code review grading page in the smoke
+    // spec), the messages course and the code review changes course
+    const codeReview = (id, studentInstanceId, toReview, repoToReview = null) => ({
+      id,
+      reviewNumber: 1,
+      studentInstanceId,
+      toReview,
+      repoToReview,
+      points: null,
+      linkToReview: null,
+      createdAt: now,
+      updatedAt: now
+    })
+    await queryInterface.bulkInsert('CodeReviews', [
+      codeReview(90001, 90001, null, 'https://github.com/e2e/reviewed-project'),
+      codeReview(90033, 90033, 90034),
+      codeReview(90037, 90037, 90038),
+      codeReview(90038, 90038, 90037)
     ])
 
     // already reviewed weeks for the comment and email specs

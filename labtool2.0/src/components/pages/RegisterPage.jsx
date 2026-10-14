@@ -12,6 +12,7 @@ import useGithubRepo from '../../hooks/useGithubRepo'
 import { GitHubRepoWarning } from './RegisterPage/GitHubRepoWarning'
 import DocumentTitle from '../DocumentTitle'
 import Error from '../Error'
+import { errorMessage } from '../../util/errorMessage'
 
 /**
  * The page user uses to register to a course AS A STUDENT
@@ -97,7 +98,7 @@ export const RegisterPage = props => {
     return (
       <Error
         errors={props.errors.map(
-          error => `${error.response.data} (${error.response.status} ${error.response.statusText})`
+          error => `${errorMessage(error, 'Error')} (${error.response.status} ${error.response.statusText})`
         )}
       />
     )

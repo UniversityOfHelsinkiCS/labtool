@@ -5,6 +5,8 @@
  * notDelivered: [{ name, email, studentInstanceId, reason }] recipients who did not get it
  */
 
+import { errorData } from '../util/errorMessage'
+
 const INITIAL_STATE = { done: false, notDelivered: [] }
 
 const notDeliveredIn = response =>
@@ -12,15 +14,14 @@ const notDeliveredIn = response =>
 
 const massEmailReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case 'MASS_EMAIL_SENDATTEMPT':
+    case 'MASS_EMAIL_SEND_ATTEMPT':
     case 'MASS_EMAIL_RESET':
     case 'LOGOUT_SUCCESS':
       return INITIAL_STATE
-    case 'MASS_EMAIL_SENDSUCCESS':
+    case 'MASS_EMAIL_SEND_SUCCESS':
       return { done: true, notDelivered: notDeliveredIn(action.response) }
-    case 'MASS_EMAIL_SENDFAILURE': {
-      const data = action.response && action.response.response && action.response.response.data
-      return { done: false, notDelivered: notDeliveredIn(data) }
+    case 'MASS_EMAIL_SEND_FAILURE': {
+      return { done: false, notDelivered: notDeliveredIn(errorData(action.response)) }
     }
     default:
       return state

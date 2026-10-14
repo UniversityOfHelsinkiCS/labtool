@@ -15,6 +15,9 @@ import { usePersistedState, clearOnePersistedState } from '../../hooks/persisted
 import { sortStudentsAlphabeticallyByDroppedValue } from '../../util/sort'
 import DocumentTitle from '../DocumentTitle'
 import Error from '../Error'
+import { errorMessage } from '../../util/errorMessage'
+import { noStaffAccessByRole } from '../../util/courseAccess'
+import NoAccess from '../NoAccess'
 
 export const MassEmailPage = props => {
   const myCourseId = props.courseId
@@ -89,7 +92,7 @@ export const MassEmailPage = props => {
         .filter(entry => props.coursePageLogic.selectedStudents[entry.id])
         .map(entry => ({ id: entry.id }))
       if (!sendingTo.length) {
-        store.dispatch({ type: 'MASS_EMAIL_SENDFAILURE' })
+        store.dispatch({ type: 'MASS_EMAIL_SEND_FAILURE' })
       } else {
         await props.sendMassEmail(
           {
@@ -113,11 +116,15 @@ export const MassEmailPage = props => {
 
   const documentTitle = <DocumentTitle title="Mass email" />
 
+  if (props.noAccess) {
+    return <NoAccess />
+  }
+
   if (props.errors && props.errors.length > 0) {
     return (
       <Error
         errors={props.errors.map(
-          error => `${error.response.data} (${error.response.status} ${error.response.statusText})`
+          error => `${errorMessage(error, 'Error')} (${error.response.status} ${error.response.statusText})`
         )}
       />
     )
@@ -222,6 +229,7 @@ export const MassEmailPage = props => {
 }
 
 MassEmailPage.propTypes = {
+  noAccess: PropTypes.bool,
   courseId: PropTypes.string.isRequired,
 
   user: PropTypes.object.isRequired,
@@ -249,6 +257,7 @@ MassEmailPage.propTypes = {
 
 const mapStateToProps = (state, ownProps) => {
   return {
+    noAccess: noStaffAccessByRole(state.coursePage, ownProps.courseId, state.user && state.user.user),
     user: state.user,
     studentInstance: state.studentInstance,
     teacherInstance: state.teacherInstance,

@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test'
+import { test, expect } from '../fixtures/test'
 import { loginAs } from '../fixtures/auth'
 import { clickAndWaitForApi, openAccordion } from '../fixtures/helpers'
 import { COURSE, NOTIFICATIONS, REGISTERED_STUDENT, REGISTERED_STUDENT_INSTANCE_ID, TEACHER } from '../fixtures/data'

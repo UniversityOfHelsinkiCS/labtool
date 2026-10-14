@@ -7,6 +7,7 @@ const headerMiddleware = require('unfuck-utf8-headers-middleware')
 const helmet = require('helmet')
 const logger = require('./server/utils/logger')
 const requestLogger = require('./server/utils/requestLogger')
+const { HttpError } = require('./server/utils/httpError')
 
 require('dotenv').config()
 
@@ -143,6 +144,26 @@ const authenticate = (request, response, next) => {
 app.use(authenticate)
 
 /**
+ * Every API route except these requires a valid token. Handlers can therefore rely on req.decoded
+ * and only check permissions (server/helpers/auth.js). CORS preflights carry no token.
+ */
+const publicApiPaths = ['/api', '/api/ping', '/api/login', '/api/loginFake', '/api/logout']
+
+const requireAuth = (req, res, next) => {
+  const path = req.path.length > 1 ? req.path.replace(/\/+$/, '') : req.path
+  if (req.method === 'OPTIONS' || !path.startsWith('/api') || publicApiPaths.includes(path)) {
+    next()
+    return
+  }
+  if (!req.authenticated.success) {
+    res.status(401).send({ message: 'you have to be authenticated' })
+    return
+  }
+  next()
+}
+app.use(requireAuth)
+
+/**
  * Express 4 does not catch rejected promises of async route handlers, and on Node 15+ an
  * unhandled rejection crashes the whole backend. Pass them on to the error handler below.
  */
@@ -172,7 +193,6 @@ require('./server/routes/adminRoutes')(app)
 require('./server/routes/codeReviewRoutes')(app)
 require('./server/routes/checklistRoutes')(app)
 require('./server/routes/tagRoutes')(app)
-require('./server/routes/checklistRoutes')(app)
 require('./server/routes/emailRoutes')(app)
 require('./server/routes/courseImportRoutes')(app)
 require('./server/routes/changeLogRoutes')(app)
@@ -182,18 +202,25 @@ app.get('*', (req, res) => res.status(404).send({
 })
 )
 
-// Errors are logged but never sent to the client: Sequelize errors contain SQL and parameters.
+// Every error response is { message }. An HttpError (server/utils/httpError.js) carries a message meant
+// for the user; other errors are logged but never sent to the client: Sequelize errors contain SQL and parameters.
 // eslint-disable-next-line no-unused-vars
 app.use((error, req, res, next) => {
+  if (error instanceof HttpError) {
+    if (!res.headersSent) {
+      res.status(error.status).send({ message: error.message })
+    }
+    return
+  }
   logger.error(`Unhandled error in ${req.method} ${req.path}: ${error.stack || error.message || error}`)
   if (res.headersSent) {
     return
   }
   const status = error.status || error.statusCode
   if (status >= 400 && status < 500) {
-    res.status(status).send({ error: 'Invalid request.' })
+    res.status(status).send({ message: 'Invalid request.' })
   } else {
-    res.status(500).send({ error: 'Unexpected error. Please try again.' })
+    res.status(500).send({ message: 'Unexpected error. Please try again.' })
   }
 })
 

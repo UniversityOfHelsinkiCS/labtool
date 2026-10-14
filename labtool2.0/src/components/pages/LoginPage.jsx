@@ -6,6 +6,7 @@ import { resetLoading, forceSetLoading } from '../../reducers/loadingReducer'
 import { Form, Input, Button, Grid, Loader } from 'semantic-ui-react'
 import DocumentTitle from '../DocumentTitle'
 import Error from '../Error'
+import { errorMessage } from '../../util/errorMessage'
 
 /**
  *  The page used to login
@@ -34,7 +35,7 @@ export const LoginPage = props => {
     return (
       <Error
         errors={props.errors.map(
-          error => `${error.response.data} (${error.response.status} ${error.response.statusText})`
+          error => `${errorMessage(error, 'Error')} (${error.response.status} ${error.response.statusText})`
         )}
       />
     )

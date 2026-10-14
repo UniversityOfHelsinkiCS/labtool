@@ -35,6 +35,9 @@ import DocumentTitle from '../DocumentTitle'
 import Error from '../Error'
 import { Points } from '../Points'
 import '../../util/arrayFlatPolyfill'
+import { errorMessage } from '../../util/errorMessage'
+import { noStaffAccessByRole } from '../../util/courseAccess'
+import NoAccess from '../NoAccess'
 
 const isFinalReview = props => props.weekNumber > props.selectedInstance.weekAmount
 
@@ -130,13 +133,13 @@ export const ReviewStudent = props => {
         props.selectedInstance.finalReviewHasPoints &&
         (pstate.points < 0 || pstate.points > getMaximumPoints())
       ) {
-        store.dispatch({ type: 'WEEKS_CREATE_ONEFAILURE' })
+        store.dispatch({ type: 'WEEKS_CREATE_ONE_FAILURE' })
       } else if (pstate.grade < 0 || (pstate.grade && !isFinalReview(props))) {
         // cannot give grade except for final review
-        store.dispatch({ type: 'WEEKS_CREATE_ONEFAILURE' })
+        store.dispatch({ type: 'WEEKS_CREATE_ONE_FAILURE' })
       } else {
         props.addRedirectHook({
-          hook: 'WEEKS_CREATE_ONE'
+          hook: 'WEEKS_CREATE_ONE_'
         })
         await props.createOneWeek(content)
       }
@@ -192,7 +195,7 @@ export const ReviewStudent = props => {
     }
     pstate.clear()
     props.addRedirectHook({
-      hook: 'WEEKDRAFTS_CREATE_ONE'
+      hook: 'WEEKDRAFTS_CREATE_ONE_'
     })
     await props.saveWeekDraft(content)
   }
@@ -214,11 +217,15 @@ export const ReviewStudent = props => {
     pstate.clear()
     return <Redirect to={`/labtool/courses/${props.selectedInstance.ohid}`} />
   }
+  if (props.noAccess) {
+    return <NoAccess />
+  }
+
   if (props.errors && props.errors.length > 0) {
     return (
       <Error
         errors={props.errors.map(
-          error => `${error.response.data} (${error.response.status} ${error.response.statusText})`
+          error => `${errorMessage(error, 'Error')} (${error.response.status} ${error.response.statusText})`
         )}
       />
     )
@@ -751,6 +758,7 @@ export const ReviewStudent = props => {
 
 const mapStateToProps = (state, ownProps) => {
   return {
+    noAccess: noStaffAccessByRole(state.coursePage, ownProps.courseId, state.user && state.user.user),
     ownProps,
     selectedInstance: state.selectedInstance,
     notification: state.notification,
@@ -783,6 +791,7 @@ const mapDispatchToProps = {
 }
 
 ReviewStudent.propTypes = {
+  noAccess: PropTypes.bool,
   ownProps: PropTypes.object.isRequired,
 
   courseId: PropTypes.string.isRequired,

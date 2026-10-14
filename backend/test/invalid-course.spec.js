@@ -72,8 +72,7 @@ describe('Invalid courses', () => {
       assert.strictEqual(await listedFor(sysop), true)
       assert.strictEqual(await listedFor(s.users.student), false)
       assert.strictEqual(await listedFor(s.users.otherTeacher), false)
-      const res = await anonymous().get('/api/courseinstances').expect(200)
-      assert.ok(!res.body.some(course => course.id === s.course.id))
+      await anonymous().get('/api/courseinstances').expect(401)
     })
 
     it('disappears from the courses of its students', async () => {

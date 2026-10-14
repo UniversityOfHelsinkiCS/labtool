@@ -1,12 +1,17 @@
 const escape = require('escape-html')
 const nodemailer = require('nodemailer')
-const helper = require('../helpers/emailHelper')
 const { Comment, Week, StudentInstance, TeacherInstance, User, CourseInstance } = require('../models')
 const logger = require('../utils/logger')
 const { hiddenFromStudents } = require('../helpers/finalReview')
+const { requireCourseStaff } = require('../helpers/auth')
+const { badRequest, forbidden, notFound } = require('../utils/httpError')
 
 const env = process.env.NODE_ENV || 'development'
-const frontendUrl = process.env.FRONTEND_URL || 'cs.helsinki.labtool.fi'
+// Base of the links in the emails; the frontend routes are under /labtool.
+const DEFAULT_FRONTEND_URL = env === 'production' || env === 'staging'
+  ? 'https://study.cs.helsinki.fi/labtool'
+  : 'http://localhost:3000/labtool'
+const frontendUrl = (process.env.FRONTEND_URL || DEFAULT_FRONTEND_URL).replace(/\/+$/, '')
 
 // SMTP_HOST / SMTP_PORT point the backend at another mail server, e.g. the Mailpit container in the
 // dev and e2e docker compose stacks. When SMTP_HOST is set, email is really sent in every environment;
@@ -22,141 +27,20 @@ const roundPoints = points => String(Number(Number(points).toFixed(2)) + 0)
 
 const SEND_REAL_EMAIL = env === 'production' || env === 'staging' || !!process.env.SMTP_HOST
 
-// Helper function for send
+// Helper function for send: the recipient and content of a notification about a comment.
 // Returned fields differ based on role argument.
 const commentMessage = async (role, commentId) => {
-  try {
-    if (role === 'teacher') {
-      // Database query
-      const queryResult = await Comment.findOne({
-        attributes: ['weekId', 'comment', 'hidden'],
-        where: {
-          id: commentId
-        },
-        include: [
-          {
-            model: Week,
-            attributes: ['studentInstanceId'],
-            include: {
-              model: StudentInstance,
-              attributes: ['userId'],
-              include: [
-                {
-                  model: User,
-                  attributes: ['email']
-                },
-                {
-                  model: CourseInstance,
-                  attributes: ['name', 'ohid', 'id']
-                }
-              ]
-            }
-          }
-        ]
-      })
-
-      // Parse queryResult into a more succinct form.
-      return {
-        success: true,
-        address: queryResult.dataValues.Week.StudentInstance.User.dataValues.email,
-        content: {
-          course: {
-            name: queryResult.dataValues.Week.StudentInstance.CourseInstance.dataValues.name,
-            ohid: queryResult.dataValues.Week.StudentInstance.CourseInstance.dataValues.ohid
-          },
-          text: queryResult.dataValues.comment
-        },
-        hidden: queryResult.dataValues.hidden,
-        courseId: queryResult.dataValues.Week.StudentInstance.CourseInstance.dataValues.id
-      }
-    } if (role === 'student') {
-      // Database query
-      const queryResult = await Comment.findOne({
-        attributes: ['weekId', 'comment'],
-        where: {
-          id: commentId
-        },
-        include: [
-          {
-            model: Week,
-            attributes: ['studentInstanceId'],
-            include: [
-              {
-                model: StudentInstance,
-                attributes: ['teacherInstanceId', 'userId'],
-                include: [
-                  {
-                    model: TeacherInstance,
-                    attributes: ['userId'],
-                    required: false,
-                    include: [
-                      {
-                        model: User,
-                        attributes: ['email']
-                      }
-                    ]
-                  },
-                  {
-                    model: CourseInstance,
-                    attributes: ['name', 'ohid']
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      })
-      const student = queryResult.dataValues.Week.StudentInstance
-      if (student.TeacherInstance) {
-        // If student has an instructor assigned.
-
-        // Parse queryResult into a more succinct form.
-        return {
-          success: true,
-          address: student.TeacherInstance.User.dataValues.email,
-          content: {
-            course: {
-              name: student.CourseInstance.dataValues.name,
-              ohid: student.CourseInstance.dataValues.ohid
-            },
-            text: queryResult.dataValues.comment
-          },
-          studentId: queryResult.dataValues.Week.dataValues.studentInstanceId,
-          userId: student.dataValues.userId
-        }
-      }
-      return {
-        success: false,
-        status: 400,
-        error: 'Cannot send email to instructor because there is no instructor assigned to you.'
-      }
-    }
-    return {
-      success: false,
-      status: 400,
-      error: 'Bad value for "role".'
-    }
-  } catch (e) {
-    return {
-      success: false,
-      status: 500,
-      error: 'Unexpected error. Please try again.'
-    }
-  }
-}
-
-// Helper function for send
-const weekMessage = async (role, weekId) => {
-  try {
-    if (role === 'teacher') {
-      // Database query
-      const queryResult = await Week.findOne({
-        attributes: ['studentInstanceId', 'feedback', 'points'],
-        where: {
-          id: weekId
-        },
-        include: [
-          {
+  if (role === 'teacher') {
+    const comment = await Comment.findOne({
+      attributes: ['weekId', 'comment', 'hidden'],
+      where: {
+        id: commentId
+      },
+      include: [
+        {
+          model: Week,
+          attributes: ['studentInstanceId'],
+          include: {
             model: StudentInstance,
             attributes: ['userId'],
             include: [
@@ -170,69 +54,137 @@ const weekMessage = async (role, weekId) => {
               }
             ]
           }
-        ]
-      })
+        }
+      ]
+    })
+    if (!comment) {
+      throw notFound('Comment not found.')
+    }
 
-      // Parse queryResult into a more succinct form.
-      return {
-        success: true,
-        address: queryResult.dataValues.StudentInstance.User.dataValues.email,
-        content: {
-          course: {
-            name: queryResult.dataValues.StudentInstance.CourseInstance.dataValues.name,
-            ohid: queryResult.dataValues.StudentInstance.CourseInstance.dataValues.ohid
-          },
-          text: queryResult.dataValues.feedback,
-          points: queryResult.dataValues.points
+    const { StudentInstance: student } = comment.Week
+    return {
+      address: student.User.email,
+      content: {
+        course: {
+          name: student.CourseInstance.name,
+          ohid: student.CourseInstance.ohid
         },
-        courseId: queryResult.dataValues.StudentInstance.CourseInstance.dataValues.id
-      }
-    }
-    return {
-      success: false,
-      status: 400,
-      error: 'Bad value for "role".'
-    }
-  } catch (e) {
-    return {
-      success: false,
-      status: 500,
-      error: 'Unexpected error. Please try again.'
+        text: comment.comment
+      },
+      hidden: comment.hidden,
+      weekId: comment.weekId,
+      courseId: student.CourseInstance.id
     }
   }
-}
+  if (role === 'student') {
+    const comment = await Comment.findOne({
+      attributes: ['weekId', 'comment'],
+      where: {
+        id: commentId
+      },
+      include: [
+        {
+          model: Week,
+          attributes: ['studentInstanceId'],
+          include: [
+            {
+              model: StudentInstance,
+              attributes: ['teacherInstanceId', 'userId'],
+              include: [
+                {
+                  model: TeacherInstance,
+                  attributes: ['userId'],
+                  required: false,
+                  include: [
+                    {
+                      model: User,
+                      attributes: ['email']
+                    }
+                  ]
+                },
+                {
+                  model: CourseInstance,
+                  attributes: ['name', 'ohid']
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    })
+    if (!comment) {
+      throw notFound('Comment not found.')
+    }
 
-const markAsNotified = (useComment, id) => {
-  // Mark the comment/week as notified asynchronously in the background.
-  if (useComment) {
-    Comment.update(
-      {
-        notified: true
+    const { StudentInstance: student } = comment.Week
+    return {
+      // null when the student has no instructor assigned
+      instructor: student.TeacherInstance,
+      address: student.TeacherInstance ? student.TeacherInstance.User.email : null,
+      content: {
+        course: {
+          name: student.CourseInstance.name,
+          ohid: student.CourseInstance.ohid
+        },
+        text: comment.comment
       },
-      {
-        where: {
-          id
-        }
-      }
-    )
-  } else {
-    Week.update(
-      {
-        notified: true
-      },
-      {
-        where: {
-          id
-        }
-      }
-    )
+      studentId: comment.Week.studentInstanceId,
+      userId: student.userId
+    }
   }
+  throw badRequest('Bad value for "role".')
 }
 
-const reject = async (res, code, message) => {
-  res.status(code).send({
-    message
+// Helper function for send: the recipient and content of a notification about a week review.
+const weekMessage = async (role, weekId) => {
+  if (role !== 'teacher') {
+    throw badRequest('Bad value for "role".')
+  }
+  const week = await Week.findOne({
+    attributes: ['studentInstanceId', 'feedback', 'points'],
+    where: {
+      id: weekId
+    },
+    include: [
+      {
+        model: StudentInstance,
+        attributes: ['userId'],
+        include: [
+          {
+            model: User,
+            attributes: ['email']
+          },
+          {
+            model: CourseInstance,
+            attributes: ['name', 'ohid', 'id']
+          }
+        ]
+      }
+    ]
   })
+  if (!week) {
+    throw notFound('Week not found.')
+  }
+
+  const { StudentInstance: student } = week
+  return {
+    address: student.User.email,
+    content: {
+      course: {
+        name: student.CourseInstance.name,
+        ohid: student.CourseInstance.ohid
+      },
+      text: week.feedback,
+      points: week.points
+    },
+    weekId,
+    courseId: student.CourseInstance.id
+  }
+}
+
+const markAsNotified = async (useComment, id) => {
+  const Model = useComment ? Comment : Week
+  await Model.update({ notified: true }, { where: { id } })
 }
 
 const recipientsOf = options => [].concat(options.to || [], options.cc || [], options.bcc || [])
@@ -250,7 +202,7 @@ const trySendEmail = async (emailOptions) => {
   }
 
   if (!SEND_REAL_EMAIL) {
-    console.log('Simulated sending email.', options)
+    logger.info('Simulated sending email.', { subject: options.subject, to: options.to, bcc: options.bcc })
     return { simulated: true, accepted: recipientsOf(options), rejected: [] }
   }
 
@@ -278,115 +230,79 @@ const trySendEmail = async (emailOptions) => {
  * @param {*} res
  */
 const send = async (req, res) => {
-  if (!helper.controllerBeforeAuthCheckAction(req, res)) {
-    return
+  const { role } = req.body
+  if (!(role === 'teacher' || role === 'student')) {
+    throw badRequest('Missing field "role".')
+  }
+  if (typeof req.body.weekId !== 'number' && typeof req.body.commentId !== 'number') {
+    throw badRequest('Missing required field "weekId" or "commentId".')
   }
 
-  try {
-    // Basic validations
-    if (!req.authenticated.success) {
-      return reject(res, 403, 'You have to be authenticated to do this.')
-    }
-    if (!(req.body.role === 'teacher' || req.body.role === 'student')) {
-      return reject(res, 400, 'Missing field "role".')
-    }
-    if (typeof req.body.weekId !== 'number' && typeof req.body.commentId !== 'number') {
-      return reject(res, 400, 'Missing required field "weekId" or "commentId".')
-    }
+  // If commentId has been supplied, use it. Otherwise use weekId.
+  const useComment = req.body.commentId !== undefined
 
-    // If commentId has been supplied, use it. Otherwise use weekId.
-    const useComment = req.body.commentId !== undefined
-
-    if (!useComment && req.body.role === 'student') {
-      return reject(res, 400, 'Must send a notification about a comment as a student')
-    }
-
-    let subject
-    let html
-
-    // message is an object supplied by a helper function.
-    let message
-    if (useComment) {
-      message = await commentMessage(req.body.role, req.body.commentId)
-      if (message.content) {
-        subject = `${message.content.course.name} new message` // Email tile
-
-        // Email body defined as html
-        const link = req.body.role === 'teacher'
-          ? `${frontendUrl}/courses/${message.content.course.ohid}`
-          : `${frontendUrl}/browsereviews/${message.content.course.ohid}/${message.studentId}`
-        html = buildEmail(null, link, message.content.course.name, null, 'Message content', message.content.text)
-      }
-    } else {
-      // commentId was not supplied, so use weekId instead.
-      message = await weekMessage(req.body.role, req.body.weekId)
-      if (message.content) {
-        subject = `${message.content.course.name} new message` // Email title
-
-        // Email body defined as html
-        const link = `${frontendUrl}/courses/${message.content.course.ohid}`
-        html = buildEmail('Your submission has been reviewed', link, message.content.course.name, message.content.points, 'Feedback', message.content.text)
-      }
-    }
-
-    // If the helper function failed, report it here
-    if (!message.success) {
-      res.status(message.status).send(message.error)
-      return
-    }
-
-    if (req.body.role === 'teacher') {
-      // Teacher validation
-      // Since a comment cannot be tracked down to its author, we just check that the request amker is a teacher.
-      const teacherInstance = await TeacherInstance.findOne({
-        attributes: ['id'],
-        where: {
-          userId: req.decoded.id,
-          courseInstanceId: message.courseId
-        }
-      })
-      if (!teacherInstance) {
-        return reject(res, 403, 'You must be a teacher of the course to perform this action.')
-      }
-      if (message.hidden) {
-        return reject(res, 400, 'The comment is hidden from the student, so the student cannot be notified about it.')
-      }
-      // an email would reveal a final review that students cannot see yet
-      const weekId = useComment ? (await Comment.findByPk(req.body.commentId, { attributes: ['weekId'] })).weekId : req.body.weekId
-      const week = await Week.findByPk(weekId, { attributes: ['weekNumber'] })
-      const course = await CourseInstance.findByPk(message.courseId, { attributes: ['finalReview', 'weekAmount', 'finalReviewVisible'] })
-      if (week && hiddenFromStudents(course, week.weekNumber)) {
-        return reject(res, 400, 'The final review is hidden from students; show it in the course settings before notifying the student.')
-      }
-    } else if (req.body.role === 'student') {
-      // Student validation
-      if (message.userId !== req.decoded.id) {
-        return reject(res, 403, 'You cannot send an email notification about someone else\'s comment.')
-      }
-    }
-
-    if (!message.address) {
-      return reject(res, 400, 'The recipient has no email address; the notification was not sent.')
-    }
-
-    const { simulated, rejected } = await trySendEmail({
-      subject,
-      html,
-      to: message.address
-    })
-
-    if (rejected.length > 0) {
-      return reject(res, 400, `The mail server rejected the address ${message.address}; the notification was not sent.`)
-    }
-    markAsNotified(useComment, req.body.commentId || req.body.weekId)
-    res.status(200).send({
-      message: simulated ? 'Email sending simulated.' : 'Email sent successfully.',
-      data: req.body
-    })
-  } catch (e) {
-    logger.error(e)
-    return reject(res, 500, 'Unexpected error. Please try again.')
+  if (!useComment && role === 'student') {
+    throw badRequest('Must send a notification about a comment as a student')
   }
+
+  const message = useComment
+    ? await commentMessage(role, req.body.commentId)
+    : await weekMessage(role, req.body.weekId)
+
+  if (role === 'teacher') {
+    // Since a comment cannot be tracked down to its author, we just check that the request maker is course staff.
+    await requireCourseStaff(req, message.courseId)
+    if (message.hidden) {
+      throw badRequest('The comment is hidden from the student, so the student cannot be notified about it.')
+    }
+    // an email would reveal a final review that students cannot see yet
+    const week = await Week.findByPk(message.weekId, { attributes: ['weekNumber'] })
+    const course = await CourseInstance.findByPk(message.courseId, {
+      attributes: ['finalReview', 'weekAmount', 'finalReviewVisible']
+    })
+    if (week && hiddenFromStudents(course, week.weekNumber)) {
+      throw badRequest('The final review is hidden from students; show it in the course settings before notifying the student.')
+    }
+  } else {
+    if (message.userId !== req.decoded.id) {
+      throw forbidden('You cannot send an email notification about someone else\'s comment.')
+    }
+    if (!message.instructor) {
+      throw badRequest('Cannot send email to instructor because there is no instructor assigned to you.')
+    }
+  }
+
+  if (!message.address) {
+    throw badRequest('The recipient has no email address; the notification was not sent.')
+  }
+
+  const { course, text, points } = message.content
+  const subject = `${course.name} new message`
+  let html
+  if (useComment) {
+    const link = role === 'teacher'
+      ? `${frontendUrl}/courses/${course.ohid}`
+      : `${frontendUrl}/browsereviews/${course.ohid}/${message.studentId}`
+    html = buildEmail(null, link, course.name, null, 'Message content', text)
+  } else {
+    const link = `${frontendUrl}/courses/${course.ohid}`
+    html = buildEmail('Your submission has been reviewed', link, course.name, points, 'Feedback', text)
+  }
+
+  const { simulated, rejected } = await trySendEmail({
+    subject,
+    html,
+    to: message.address
+  })
+
+  if (rejected.length > 0) {
+    throw badRequest(`The mail server rejected the address ${message.address}; the notification was not sent.`)
+  }
+  await markAsNotified(useComment, useComment ? req.body.commentId : req.body.weekId)
+  res.status(200).send({
+    message: simulated ? 'Email sending simulated.' : 'Email sent successfully.',
+    data: req.body
+  })
 }
 
 /**
@@ -397,135 +313,104 @@ const send = async (req, res) => {
  * @param {*} res
  */
 const sendMass = async (req, res) => {
-  if (!helper.controllerBeforeAuthCheckAction(req, res)) {
-    return
+  if (!Array.isArray(req.body.students)) {
+    throw badRequest('Missing field "students".')
+  }
+  if (!(req.body.content) || req.body.content.length > 4096) {
+    throw badRequest('Missing field "content".')
   }
 
-  try {
-    // Basic validations
-    if (!req.authenticated.success) {
-      return reject(res, 403, 'You have to be authenticated to do this.')
+  const courseInstance = await CourseInstance.findOne({
+    where: {
+      ohid: req.params.id
     }
-    if (!(req.body.students)) {
-      return reject(res, 400, 'Missing field "students".')
-    }
-    if (!(req.body.content) || req.body.content.length > 4096) {
-      return reject(res, 400, 'Missing field "content".')
-    }
+  })
+  if (!courseInstance) {
+    throw notFound('Course instance not found.')
+  }
 
-    const courseInstance = await CourseInstance.findOne({
-      where: {
-        ohid: req.params.id
-      }
-    })
-    if (!courseInstance) {
-      return reject(res, 404, 'Course instance not found.')
-    }
+  await requireCourseStaff(req, courseInstance.id, 'You have to be a teacher of the course to send mass emails.')
 
-    const teacher = await TeacherInstance.findOne({
-      attributes: ['id'],
+  const students = (await Promise.all(req.body.students.map(async ({ id }) => {
+    const studentInstance = await StudentInstance.findOne({
+      attributes: ['userId'],
       where: {
-        userId: req.decoded.id,
+        id,
         courseInstanceId: courseInstance.id
       }
     })
-    if (!teacher || !req.authenticated.success) {
-      return reject(res, 403, 'You have to be a teacher of the course to send mass emails.')
+    if (!studentInstance) {
+      return null
     }
 
-    const inputStudents = req.body.students
-    const students = (await Promise.all(inputStudents.map(async ({ id }) => {
-      const studentInstance = await StudentInstance.findOne({
-        attributes: ['userId'],
-        where: {
-          id,
-          courseInstanceId: courseInstance.id
-        }
-      })
-      if (!studentInstance) {
+    const user = await User.findByPk(studentInstance.userId)
+    return { user, studentInstanceId: id }
+  }))).filter(student => student)
+  const fullName = user => `${user.firsts} ${user.lastname}`
+  const studentRecipients = students
+    .filter(({ user }) => user.email)
+    .map(({ user, studentInstanceId }) => ({ name: fullName(user), email: user.email, studentInstanceId }))
+  const studentsWithoutEmail = students
+    .filter(({ user }) => !user.email)
+    .map(({ user, studentInstanceId }) => ({ name: fullName(user), email: null, studentInstanceId }))
+
+  if (studentRecipients.length === 0) {
+    throw notFound('No student email addresses found.')
+  }
+
+  let instructorRecipients = []
+  if (req.body.sendToInstructors) {
+    const teachers = await TeacherInstance.findAll({
+      attributes: ['userId'],
+      where: {
+        courseInstanceId: courseInstance.id
+      }
+    })
+    instructorRecipients = (await Promise.all(teachers.map(async ({ userId }) => {
+      const user = await User.findByPk(userId)
+      if (!user || !user.email) {
         return null
       }
 
-      // ok, get user
-      const user = await User.findOne({
-        where: {
-          id: studentInstance.userId
-        }
-      })
-      return { user, studentInstanceId: id }
-    }))).filter(student => student)
-    const fullName = user => `${user.firsts} ${user.lastname}`
-    const studentRecipients = students
-      .filter(({ user }) => user.email)
-      .map(({ user, studentInstanceId }) => ({ name: fullName(user), email: user.email, studentInstanceId }))
-    const studentsWithoutEmail = students
-      .filter(({ user }) => !user.email)
-      .map(({ user, studentInstanceId }) => ({ name: fullName(user), email: null, studentInstanceId }))
-
-    if (studentRecipients.length === 0) {
-      return reject(res, 404, 'No student email addresses found.')
-    }
-
-    let instructorRecipients = []
-    if (req.body.sendToInstructors) {
-      const teachers = await TeacherInstance.findAll({
-        attributes: ['userId'],
-        where: {
-          courseInstanceId: courseInstance.id
-        }
-      })
-      instructorRecipients = (await Promise.all(teachers.map(async ({ userId }) => {
-        const user = await User.findOne({
-          where: {
-            id: userId
-          }
-        })
-        if (!user || !user.email) {
-          return null
-        }
-
-        return { name: fullName(user), email: user.email, studentInstanceId: null }
-      }))).filter(recipient => recipient)
-    }
-
-    // prepare email here
-    const link = `${frontendUrl}/courses/${req.params.id}`
-    const subject = `${courseInstance.name} new message from instructor`
-    const html = buildEmail(null, link, courseInstance.name, null, 'Message content', req.body.content)
-    const recipients = studentRecipients.concat(instructorRecipients)
-    const { simulated, accepted, rejected } = await trySendEmail({
-      subject,
-      html,
-      bcc: recipients.map(recipient => recipient.email)
-    })
-
-    // Tell the teacher exactly who did not get the email (#1141).
-    const rejectedAddresses = rejected.map(address => address.toLowerCase())
-    const notDelivered = [
-      ...recipients
-        .filter(recipient => rejectedAddresses.includes(recipient.email.toLowerCase()))
-        .map(recipient => ({ ...recipient, reason: 'rejected by the mail server' })),
-      ...studentsWithoutEmail.map(student => ({ ...student, reason: 'no email address' }))
-    ]
-    const notDeliveredText = notDelivered
-      .map(({ name, email, reason }) => (email ? `${name} (${email}, ${reason})` : `${name} (${reason})`))
-      .join('; ')
-
-    if (accepted.length === 0) {
-      return res.status(400).send({
-        message: `No email was sent. Not delivered to: ${notDeliveredText}.`,
-        notDelivered
-      })
-    }
-    let message = simulated ? 'Email sending simulated.' : 'Email sent successfully.'
-    if (notDelivered.length > 0) {
-      message = `Email sent to ${accepted.length} of ${accepted.length + notDelivered.length} recipients. Not delivered to: ${notDeliveredText}.`
-    }
-    res.status(200).send({ message, data: req.body, notDelivered })
-  } catch (e) {
-    logger.error(e)
-    return reject(res, 500, 'Unexpected error. Please try again.')
+      return { name: fullName(user), email: user.email, studentInstanceId: null }
+    }))).filter(recipient => recipient)
   }
+
+  const link = `${frontendUrl}/courses/${req.params.id}`
+  const subject = `${courseInstance.name} new message from instructor`
+  const html = buildEmail(null, link, courseInstance.name, null, 'Message content', req.body.content)
+  const recipients = studentRecipients.concat(instructorRecipients)
+  const { simulated, accepted, rejected } = await trySendEmail({
+    subject,
+    html,
+    bcc: recipients.map(recipient => recipient.email)
+  })
+
+  // Tell the teacher exactly who did not get the email (#1141).
+  const rejectedAddresses = rejected.map(address => address.toLowerCase())
+  const notDelivered = [
+    ...recipients
+      .filter(recipient => rejectedAddresses.includes(recipient.email.toLowerCase()))
+      .map(recipient => ({ ...recipient, reason: 'rejected by the mail server' })),
+    ...studentsWithoutEmail.map(student => ({ ...student, reason: 'no email address' }))
+  ]
+  const notDeliveredText = notDelivered
+    .map(({ name, email, reason }) => (email ? `${name} (${email}, ${reason})` : `${name} (${reason})`))
+    .join('; ')
+
+  if (accepted.length === 0) {
+    // not an HttpError: the frontend lists notDelivered next to the message
+    res.status(400).send({
+      message: `No email was sent. Not delivered to: ${notDeliveredText}.`,
+      notDelivered
+    })
+    return
+  }
+  let message = simulated ? 'Email sending simulated.' : 'Email sent successfully.'
+  if (notDelivered.length > 0) {
+    message = `Email sent to ${accepted.length} of ${accepted.length + notDelivered.length} recipients. Not delivered to: ${notDeliveredText}.`
+  }
+  res.status(200).send({ message, data: req.body, notDelivered })
 }
 
 const buildEmail = (title, link, courseName, pointsAwarded, contentTitle, content) => `

@@ -34,9 +34,13 @@ const addChecklistChanges = async (changes, before, after) => {
 }
 
 // initial: the first version (a new review, the first grading, the repository at registration)
-const logChange = async ({ courseInstanceId, studentInstanceId, userId, kind, number = null, changes, initial = false }) => {
+// options are passed to create, e.g. { transaction }
+const logChange = async (
+  { courseInstanceId, studentInstanceId, userId, kind, number = null, changes, initial = false },
+  options = {}
+) => {
   if (!changes || Object.keys(changes).length === 0) return null
-  return ChangeLog.create({ courseInstanceId, studentInstanceId, userId, kind, number, changes, initial })
+  return ChangeLog.create({ courseInstanceId, studentInstanceId, userId, kind, number, changes, initial }, options)
 }
 
 /**

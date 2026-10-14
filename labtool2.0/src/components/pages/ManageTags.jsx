@@ -15,6 +15,9 @@ import { showNotification } from '../../reducers/notificationReducer'
 import DocumentTitle from '../DocumentTitle'
 import Error from '../Error'
 import { TagLabel } from '../TagLabel'
+import { errorMessage } from '../../util/errorMessage'
+import { noStaffAccessByRole } from '../../util/courseAccess'
+import NoAccess from '../NoAccess'
 
 export const ManageTags = props => {
   const state = useLegacyState({
@@ -199,11 +202,15 @@ export const ManageTags = props => {
     return <div />
   }
 
+  if (props.noAccess) {
+    return <NoAccess />
+  }
+
   if (props.errors && props.errors.length > 0) {
     return (
       <Error
         errors={props.errors.map(
-          error => `${error.response.data} (${error.response.status} ${error.response.statusText})`
+          error => `${errorMessage(error, 'Error')} (${error.response.status} ${error.response.statusText})`
         )}
       />
     )
@@ -408,6 +415,7 @@ export const ManageTags = props => {
 
 const mapStateToProps = (state, ownProps) => {
   return {
+    noAccess: noStaffAccessByRole(state.coursePage, ownProps.courseId, state.user && state.user.user),
     ownProps,
     tags: state.tags,
     loading: state.loading,
@@ -431,6 +439,7 @@ const mapDispatchToProps = {
 }
 
 ManageTags.propTypes = {
+  noAccess: PropTypes.bool,
   courseId: PropTypes.string.isRequired,
 
   tags: PropTypes.object.isRequired,
