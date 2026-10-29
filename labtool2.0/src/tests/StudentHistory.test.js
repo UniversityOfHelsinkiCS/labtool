@@ -13,6 +13,7 @@ describe('<StudentHistory />', () => {
     by: 'Ossi Ohjaaja Mutikainen'
   })
   const entries = [
+    entry(5, 'week_draft', 3, { points: { from: 1.5, to: 2 } }),
     entry(4, 'week_review', 8, { grade: { from: null, to: 4 } }),
     entry(3, 'code_review_grade', 1, { points: { from: null, to: 2 } }),
     entry(2, 'repository', null, {
@@ -26,7 +27,13 @@ describe('<StudentHistory />', () => {
     render(<StudentHistory entries={entries} weekAmount={7} />)
 
     expect(screen.getByText('Change history')).toBeInTheDocument()
-    expect(subjects()).toEqual(['Final review · ', 'Code review 1 · ', 'Repository · ', 'Week 3 · '])
+    expect(subjects()).toEqual([
+      'Week 3 draft · ',
+      'Final review · ',
+      'Code review 1 · ',
+      'Repository · ',
+      'Week 3 · '
+    ])
     expect(screen.getByText('Points – → 1.5')).toBeInTheDocument()
   })
 
@@ -36,7 +43,7 @@ describe('<StudentHistory />', () => {
     const filters = document.querySelector('.changeHistoryFilters')
 
     await user.click(within(filters).getByRole('button', { name: 'Week reviews' }))
-    expect(subjects()).toEqual(['Final review · ', 'Week 3 · '])
+    expect(subjects()).toEqual(['Week 3 draft · ', 'Final review · ', 'Week 3 · '])
 
     await user.click(within(filters).getByRole('button', { name: 'Code reviews' }))
     expect(subjects()).toEqual(['Code review 1 · '])
@@ -45,6 +52,6 @@ describe('<StudentHistory />', () => {
     expect(subjects()).toEqual(['Repository · '])
 
     await user.click(within(filters).getByRole('button', { name: 'All' }))
-    expect(subjects()).toHaveLength(4)
+    expect(subjects()).toHaveLength(5)
   })
 })

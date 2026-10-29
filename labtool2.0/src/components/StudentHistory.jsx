@@ -5,7 +5,7 @@ import ChangeHistory from './ChangeHistory'
 
 const FILTERS = [
   { key: 'all', text: 'All', kinds: null },
-  { key: 'week', text: 'Week reviews', kinds: ['week_review'] },
+  { key: 'week', text: 'Week reviews', kinds: ['week_review', 'week_draft'] },
   { key: 'codeReview', text: 'Code reviews', kinds: ['code_review_grade'] },
   { key: 'repository', text: 'Repository', kinds: ['repository'] }
 ]
@@ -19,7 +19,8 @@ export const StudentHistory = ({ entries, weekAmount }) => {
   const subjectOf = entry => {
     if (entry.kind === 'repository') return 'Repository'
     if (entry.kind === 'code_review_grade') return `Code review ${entry.number}`
-    return entry.number > weekAmount ? 'Final review' : `Week ${entry.number}`
+    const review = entry.number > weekAmount ? 'Final review' : `Week ${entry.number}`
+    return entry.kind === 'week_draft' ? `${review} draft` : review
   }
   const { kinds } = FILTERS.find(f => f.key === filter)
   const shown = kinds ? entries.filter(entry => kinds.includes(entry.kind)) : entries

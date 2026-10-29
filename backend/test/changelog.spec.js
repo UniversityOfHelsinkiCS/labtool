@@ -64,6 +64,46 @@ describe('Change history (#1129, #1132)', () => {
     })
   })
 
+  describe('week review drafts', () => {
+    const saveDraft = reviewData => as(s.users.assistant).post('/api/weeks/saveDraft').send({
+      studentInstanceId: s.student.id, weekNumber: 1, reviewData
+    })
+
+    it('logs who changed what in a draft, compared with the earlier draft', async () => {
+      await saveDraft({ points: '1', feedback: 'half way', checks: { [items[0].id]: true } }).expect(200)
+      await saveDraft({ points: '2', feedback: 'half way', checks: { [items[0].id]: true, [items[1].id]: true } })
+        .expect(200)
+
+      const [first, second] = await logged('week_draft')
+      assert.strictEqual(first.number, 1)
+      assert.strictEqual(first.initial, true)
+      assert.strictEqual(first.userId, s.users.assistant.id)
+      assert.deepStrictEqual(first.changes.points, { from: null, to: 1 })
+      assert.deepStrictEqual(first.changes.feedback, { from: null, to: 'half way' })
+      assert.deepStrictEqual(second.changes, {
+        points: { from: 1, to: 2 },
+        checklist: [{ id: items[1].id, name: 'Lint', from: false, to: true }]
+      })
+    })
+
+    it('compares the first draft with the saved review', async () => {
+      await as(s.users.teacher).post('/api/weeks/create').send({
+        studentInstanceId: s.student.id, weekNumber: 1, points: 2.5, feedback: 'Well done', checks: {}
+      }).expect(200)
+      await saveDraft({ points: '2.5', feedback: 'Well done, almost', checks: {} }).expect(200)
+
+      const [entry] = await logged('week_draft')
+      assert.strictEqual(entry.initial, false)
+      assert.deepStrictEqual(entry.changes, { feedback: { from: 'Well done', to: 'Well done, almost' } })
+    })
+
+    it('does not log a draft that changes nothing', async () => {
+      await saveDraft({ points: '1', checks: {} }).expect(200)
+      await saveDraft({ points: 1, checks: {} }).expect(200)
+      assert.strictEqual((await logged('week_draft')).length, 1)
+    })
+  })
+
   describe('code review grading', () => {
     it('logs points and checklist changes', async () => {
       const cl = await f.createChecklist(s.course, {

@@ -118,8 +118,9 @@ const notificationReducer = (state = {}, action) => {
         error: false
       }
     case 'WEEKDRAFTS_CREATE_ONE_FAILURE':
+      // a 409 means the save would overwrite someone else's work; the review page explains (#1127)
       return {
-        message: 'Invalid inputs.',
+        message: errorMessage(action.response, 'Invalid inputs.'),
         error: true
       }
     case 'COMMENT_EDIT_ONE_SUCCESS':

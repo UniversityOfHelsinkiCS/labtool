@@ -71,6 +71,8 @@ export const ReviewStudent = props => {
     checks: null,
     // updatedAt of the saved review these edits are based on, null for a new review (#1127)
     basedOn: null,
+    // updatedAt of the draft these edits are based on, null when there was no draft (#1127)
+    draftBasedOn: null,
     // when the form was last edited in this browser
     editedAt: null
   })
@@ -118,6 +120,7 @@ export const ReviewStudent = props => {
         weekNumber: props.weekNumber,
         checks,
         baseUpdatedAt: pstate.basedOn || null,
+        baseDraftUpdatedAt: pstate.draftBasedOn || null,
         overwrite,
         confirmedNotAssigned
       }
@@ -187,13 +190,18 @@ export const ReviewStudent = props => {
     return draftData
   }
 
-  const onClickSaveDraft = async () => {
+  // overwrite and confirmedNotAssigned as in submitReview
+  const saveDraft = async ({ overwrite = false, confirmedNotAssigned = false } = {}) => {
     const content = {
       studentInstanceId: props.studentInstance,
       weekNumber: props.weekNumber,
-      reviewData: exportToDraft()
+      reviewData: exportToDraft(),
+      baseUpdatedAt: pstate.basedOn || null,
+      baseDraftUpdatedAt: pstate.draftBasedOn || null,
+      overwrite,
+      confirmedNotAssigned
     }
-    pstate.clear()
+    // the form is kept until the save succeeds (cleared on the redirect)
     props.addRedirectHook({
       hook: 'WEEKDRAFTS_CREATE_ONE_'
     })
@@ -254,6 +262,7 @@ export const ReviewStudent = props => {
     theWeek => theWeek.weekNumber === Number(props.ownProps.weekNumber)
   )
   const savedVersion = (savedWeek && savedWeek.updatedAt) || null
+  const draftVersion = props.weekReview.draftCreatedAt || null
   const assignedInstructor =
     studentData.teacherInstanceId && props.selectedInstance.teacherInstances
       ? props.selectedInstance.teacherInstances.find(ti => ti.id === studentData.teacherInstanceId)
@@ -365,7 +374,9 @@ export const ReviewStudent = props => {
   if (!checkedUnsavedEdits) {
     const hasLocalValues =
       pstate.checks || pstate.points || pstate.grade || pstate.feedback || pstate.instructorNotes
-    const basedOnCurrent = !weekData || (pstate.basedOn || null) === savedVersion
+    const basedOnCurrent =
+      !weekData ||
+      ((pstate.basedOn || null) === savedVersion && (pstate.draftBasedOn || null) === draftVersion)
     if (hasLocalValues && basedOnCurrent && differsFromSaved(pstate, weekData || {})) {
       setUnsavedEdits({ editedAt: pstate.editedAt || null })
     }
@@ -374,11 +385,13 @@ export const ReviewStudent = props => {
 
   if (!loadedWeekData) {
     if (weekData) {
-      // Unsaved edits kept in this browser win only if they are based on the review as it is saved now.
-      // Otherwise someone saved the review since, and the old edits would silently overwrite it (#1127).
+      // Unsaved edits kept in this browser win only if they are based on the review and its draft as they
+      // are saved now. Otherwise someone saved since, and the old edits would silently overwrite it (#1127).
       const hasLocalEdits =
         pstate.checks || pstate.points || pstate.grade || pstate.feedback || pstate.instructorNotes
-      const keepLocalEdits = !hasLocalEdits || (pstate.basedOn || null) === savedVersion
+      const keepLocalEdits =
+        !hasLocalEdits ||
+        ((pstate.basedOn || null) === savedVersion && (pstate.draftBasedOn || null) === draftVersion)
       const local = keepLocalEdits
         ? pstate
         : { points: '', grade: '', feedback: '', instructorNotes: '', checks: null }
@@ -395,6 +408,7 @@ export const ReviewStudent = props => {
       pstate.feedback = local.feedback || weekData.feedback
       pstate.instructorNotes = local.instructorNotes || weekData.instructorNotes
       pstate.basedOn = savedVersion
+      pstate.draftBasedOn = draftVersion
       setLoadedWeekData(true)
     }
   }
@@ -407,6 +421,7 @@ export const ReviewStudent = props => {
     setDiscardedLocalEdits(false)
     setLoadedWeekData(false)
     props.coursePageInformation(props.courseId)
+    importWeekDataFromDraft()
   }
 
   const conflict = props.reviewSave.conflict
@@ -545,7 +560,11 @@ export const ReviewStudent = props => {
                     <Button type="button" onClick={loadTheirVersion}>
                       Load their version
                     </Button>
-                    <Button type="button" color="red" onClick={() => submitReview({ overwrite: true })}>
+                    <Button
+                      type="button"
+                      color="red"
+                      onClick={() => (conflict.draft ? saveDraft : submitReview)({ overwrite: true })}
+                    >
                       Overwrite with my version
                     </Button>
                   </Message>
@@ -563,7 +582,9 @@ export const ReviewStudent = props => {
                     <Button
                       type="button"
                       color="orange"
-                      onClick={() => submitReview({ confirmedNotAssigned: true })}
+                      onClick={() =>
+                        (conflict.draft ? saveDraft : submitReview)({ confirmedNotAssigned: true })
+                      }
                     >
                       Save anyway
                     </Button>
@@ -718,7 +739,7 @@ export const ReviewStudent = props => {
                     <Button className="ui center floated green button" type="submit">
                       Save
                     </Button>
-                    <Button className="ui center floated button" type="button" onClick={onClickSaveDraft}>
+                    <Button className="ui center floated button" type="button" onClick={() => saveDraft()}>
                       Save as draft
                     </Button>
                     <Link to={`/labtool/browsereviews/${props.selectedInstance.ohid}/${studentData.id}`}>
@@ -747,7 +768,9 @@ export const ReviewStudent = props => {
           <ChangeHistory
             title="Change history"
             entries={props.changeLog.filter(
-              entry => entry.kind === 'week_review' && entry.number === Number(props.ownProps.weekNumber)
+              entry =>
+                ['week_review', 'week_draft'].includes(entry.kind) &&
+                entry.number === Number(props.ownProps.weekNumber)
             )}
           />
         </div>

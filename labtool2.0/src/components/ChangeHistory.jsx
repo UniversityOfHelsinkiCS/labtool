@@ -13,6 +13,7 @@ const checkState = checked => (checked ? 'checked' : 'unchecked')
 const initialLabel = kind =>
   ({
     week_review: 'Initial review',
+    week_draft: 'Initial draft',
     code_review_grade: 'Initial grading',
     repository: 'Repository at registration'
   })[kind] || 'Initial version'
@@ -121,6 +122,11 @@ export const ChangeHistory = ({ title, entries, subjectOf }) => (
               <List.Header>
                 {subjectOf && <span className="changeHistorySubject">{subjectOf(entry)} · </span>}
                 {formatTime(entry.createdAt)} · {entry.by || 'Unknown user'}
+                {entry.kind === 'week_draft' && (
+                  <Label size="mini" basic className="draftEntry" style={{ marginLeft: '6px' }}>
+                    Draft
+                  </Label>
+                )}
                 {entry.initial && (
                   <Label
                     size="mini"

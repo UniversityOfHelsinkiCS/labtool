@@ -365,5 +365,110 @@ describe('Week reviews and drafts API', () => {
         .send({ studentInstanceId: 999999, weekNumber: 2 })
         .expect(404)
     })
+
+    it('answers 400 for malformed review data', async () => {
+      await as(s.users.teacher)
+        .post('/api/weeks/saveDraft')
+        .send({ ...draft(), reviewData: { checks: [1] } })
+        .expect(400)
+      assert.strictEqual(await WeekDraft.count(), 0)
+    })
+  })
+
+  describe('protection of drafts against overwriting another instructor\'s work (#1127)', () => {
+    const saveDraft = (user, body) => as(user).post('/api/weeks/saveDraft').send({
+      studentInstanceId: s.student.id,
+      weekNumber: 1,
+      reviewData: { points: 1, feedback: 'half way', checks: { [items[0].id]: true } },
+      ...body
+    })
+    const save = (user, body) => as(user).post('/api/weeks/create').send({ ...review(), ...body })
+
+    it('records who saved the draft', async () => {
+      const res = await saveDraft(s.users.teacher, { baseDraftUpdatedAt: null }).expect(200)
+      assert.strictEqual(res.body.updatedBy, s.users.teacher.id)
+    })
+
+    it('rejects a draft based on an older draft and says who saved it', async () => {
+      const first = await saveDraft(s.users.teacher, { baseDraftUpdatedAt: null }).expect(200)
+
+      const res = await saveDraft(s.users.assistant, {
+        baseDraftUpdatedAt: null,
+        reviewData: { points: 2, feedback: 'Mine', checks: {} }
+      }).expect(409)
+      assert.strictEqual(res.body.code, 'REVIEW_CHANGED')
+      assert.strictEqual(res.body.message, 'Terhi Teacher saved a draft of this review after you opened it.')
+      assert.strictEqual(res.body.updatedAt, first.body.updatedAt)
+      assert.strictEqual((await WeekDraft.findOne()).data.feedback, 'half way')
+
+      await saveDraft(s.users.assistant, { baseDraftUpdatedAt: first.body.updatedAt }).expect(200)
+    })
+
+    it('rejects a draft when the review was saved after the page was opened', async () => {
+      await save(s.users.teacher, { baseUpdatedAt: null }).expect(200)
+      const res = await saveDraft(s.users.assistant, { baseUpdatedAt: null, baseDraftUpdatedAt: null }).expect(409)
+      assert.strictEqual(res.body.message, 'Terhi Teacher saved this review after you opened it.')
+      assert.strictEqual(await WeekDraft.count(), 0)
+    })
+
+    it('rejects a review save that would remove a draft saved after the page was opened', async () => {
+      await saveDraft(s.users.teacher, { baseDraftUpdatedAt: null }).expect(200)
+      const res = await save(s.users.assistant, { baseUpdatedAt: null, baseDraftUpdatedAt: null }).expect(409)
+      assert.strictEqual(res.body.message, 'Terhi Teacher saved a draft of this review after you opened it.')
+      assert.strictEqual(await WeekDraft.count(), 1)
+      assert.strictEqual(await Week.count(), 0)
+    })
+
+    it('saves anyway with overwrite', async () => {
+      await saveDraft(s.users.teacher, { baseDraftUpdatedAt: null }).expect(200)
+      await saveDraft(s.users.assistant, {
+        baseDraftUpdatedAt: null,
+        overwrite: true,
+        reviewData: { points: 2, checks: {} }
+      }).expect(200)
+      assert.strictEqual((await WeekDraft.findOne()).data.points, 2)
+    })
+
+    describe('when the student has an assigned instructor', () => {
+      beforeEach(async () => {
+        await s.student.update({ teacherInstanceId: s.assistant.id })
+      })
+
+      it('asks someone else to confirm before a draft changes the grading', async () => {
+        const res = await saveDraft(s.users.teacher).expect(409)
+        assert.strictEqual(res.body.code, 'NOT_ASSIGNED_INSTRUCTOR')
+        assert.strictEqual(res.body.message, 'Antti Assistant is the instructor of this student, not you.')
+        assert.strictEqual(await WeekDraft.count(), 0)
+
+        await saveDraft(s.users.teacher, { confirmedNotAssigned: true }).expect(200)
+        assert.strictEqual(await WeekDraft.count(), 1)
+      })
+
+      it('does not ask the assigned instructor', async () => {
+        await saveDraft(s.users.assistant).expect(200)
+      })
+
+      it('compares the draft with the saved review when there is no earlier draft', async () => {
+        await save(s.users.assistant, {}).expect(200)
+        // the same grading as the review, only the notes differ
+        await saveDraft(s.users.teacher, {
+          reviewData: {
+            points: '2.5', grade: '', feedback: 'Well done', instructorNotes: 'Also checked the tests',
+            checks: { [items[0].id]: true, [items[1].id]: false }
+          }
+        }).expect(200)
+      })
+
+      it('compares the draft with the earlier draft', async () => {
+        await saveDraft(s.users.assistant).expect(200)
+        await saveDraft(s.users.teacher, {
+          reviewData: { points: 1, feedback: 'half way', instructorNotes: 'note', checks: { [items[0].id]: true } }
+        }).expect(200)
+        const res = await saveDraft(s.users.teacher, {
+          reviewData: { points: 1, feedback: 'half way', checks: { [items[0].id]: false } }
+        }).expect(409)
+        assert.strictEqual(res.body.code, 'NOT_ASSIGNED_INSTRUCTOR')
+      })
+    })
   })
 })
