@@ -90,6 +90,13 @@ describe('POST /api/checklist/copyall', () => {
     await copyAll(s.users.assistant, { copyFrom: source.id, copyTo: s.course.id }).expect(200)
   })
 
+  it('does not copy from a course the user is only a student on', async () => {
+    await f.addStudent(s.users.assistant, source)
+    const res = await copyAll(s.users.assistant, { copyFrom: source.id, copyTo: s.course.id }).expect(403)
+    assert.strictEqual(res.body.message, 'You can only copy checklists from your own courses.')
+    assert.strictEqual((await checklistsOf(s.course)).length, 0)
+  })
+
   it('is not allowed for students, outsiders or anonymous users', async () => {
     await copyAll(s.users.student, { copyFrom: source.id, copyTo: s.course.id }).expect(403)
     await copyAll(s.users.outsider, { copyFrom: source.id, copyTo: s.course.id }).expect(403)

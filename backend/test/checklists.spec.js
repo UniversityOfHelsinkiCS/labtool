@@ -304,12 +304,11 @@ describe('Checklists API', () => {
       assert.ok(!('category' in res.body.list.B[0]))
     })
 
-    it('returns the checklist to a student of the course', async () => {
-      const res = await as(s.users.student)
+    it('does not return the checklist to a student of the course', async () => {
+      await as(s.users.student)
         .post('/api/checklist/getone')
         .send({ courseInstanceId: s.course.id, week: 2 })
-        .expect(200)
-      assert.strictEqual(res.body.list.A[0].name, 'First')
+        .expect(403)
     })
 
     it('returns the code review checklist', async () => {
@@ -403,12 +402,12 @@ describe('Checklists API', () => {
       assert.deepStrictEqual(asOutsider.body, [])
     })
 
-    it('includes courses the user is a student on, like getone does', async () => {
+    it('leaves out courses the user is a student on, like getone does', async () => {
       await f.createChecklist(s.course, { week: 1, items: item })
       const res = await as(s.users.student)
         .get('/api/checklist/copyable')
         .expect(200)
-      assert.deepStrictEqual(res.body, [{ courseInstanceId: s.course.id, week: 1, forCodeReview: false }])
+      assert.deepStrictEqual(res.body, [])
     })
   })
 })

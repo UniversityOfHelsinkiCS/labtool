@@ -164,11 +164,8 @@ module.exports = {
                   hidden: false
                 },
                 required: false
-              },
-              {
-                model: ReviewCheck,
-                as: 'checks'
               }
+              // no checklist checks: students do not see the checklists or the choices made in them
             ]
           },
           {
@@ -227,11 +224,9 @@ module.exports = {
           delete palautus.data.toReviews
         }
         palautus.data.weeks = palautus.data.weeks
-          // a hidden final review is left out altogether: points, grade, feedback, checks and comments
+          // a hidden final review is left out altogether: points, grade, feedback and comments
           .filter(week => !hiddenFromStudents(course, week.weekNumber))
-          .map(week => ({ ...week.dataValues,
-            checks: week.checks.reduce((checksObject, reviewCheck) => ({ ...checksObject, [reviewCheck.checklistItemId]: reviewCheck.checked }), {})
-          }))
+          .map(week => week.dataValues)
       } else {
         palautus.data = null
       }
@@ -652,7 +647,8 @@ module.exports = {
       throw notFound('Course not found.')
     }
 
-    const teachers = await isCourseStaff(req.decoded.id, course.id)
+    const isStaff = await isCourseStaff(req.decoded.id, course.id)
+    const teachers = isStaff
       ? await TeacherInstance.findAll({
         where: {
           courseInstanceId: course.id
@@ -666,13 +662,17 @@ module.exports = {
         courseInstanceId: course.id
       }
     })
-    // in the order set in the checklist editor; topics follow the order of their first item
-    const checklistItems = await ChecklistItem.findAll({
-      where: {
-        checklistId: checklists.map(checklist => checklist.id)
-      },
-      order: [['order', 'ASC'], ['id', 'ASC']]
-    })
+    // Others than course staff get no checklist items: students do not see the checklists or the
+    // choices made in them. They get only what the maximum points of a review are based on.
+    // In the order set in the checklist editor; topics follow the order of their first item.
+    const checklistItems = isStaff
+      ? await ChecklistItem.findAll({
+        where: {
+          checklistId: checklists.map(checklist => checklist.id)
+        },
+        order: [['order', 'ASC'], ['id', 'ASC']]
+      })
+      : []
     checklists.forEach((checklist) => {
       const checklistJson = {}
       checklistItems
@@ -695,7 +695,9 @@ module.exports = {
     })
     // registrations are no longer checked at WebOodi; the frontend still reads the field
     course.dataValues.registrationAtWebOodi = 'found'
-    course.dataValues.checklists = checklists
+    course.dataValues.checklists = isStaff
+      ? checklists
+      : checklists.map(({ id, week, forCodeReview, maxPoints }) => ({ id, week, forCodeReview, maxPoints, list: {} }))
 
     res.status(200).send(course)
   },
