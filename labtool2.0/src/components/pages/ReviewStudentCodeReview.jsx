@@ -87,14 +87,16 @@ export const ReviewStudentCodeReview = props => {
     try {
       e.preventDefault()
       const content = {
-        points: Number(e.target.points.value),
+        // the points field shows pstate.points
+        points: Number(pstate.points),
         checks: constructChecks(props.weekReview.checks),
         studentInstanceId: Number(props.studentInstance),
         reviewNumber: Number(props.codeReviewNumber)
       }
-      pstate.clear()
+      // the form is kept in this browser until the save succeeds (cleared on the redirect), so that it
+      // is not lost if the login has expired and the page is reloaded (#1145)
       const maxPoints = getMaximumPoints()
-      if (e.target.points.value < 0 || (maxPoints && e.target.points.value > maxPoints)) {
+      if (pstate.points < 0 || (maxPoints && pstate.points > maxPoints)) {
         store.dispatch({
           type: 'CODE_REVIEW_GRADE_FAILURE',
           response: { response: { data: 'Invalid points value' } }
@@ -213,8 +215,14 @@ export const ReviewStudentCodeReview = props => {
   }
 
   if (!loadedCrData) {
+    // unsaved checks kept in this browser win over the saved ones, e.g. after the page was reloaded
+    // because the login had expired (#1145)
+    if (pstate.checks) {
+      props.restoreChecks(props.ownProps.studentInstance, pstate.checks)
+      setLoadedCrData(true)
+    }
     if (cr.points) {
-      if (cr.checks) {
+      if (cr.checks && !pstate.checks) {
         props.restoreChecks(props.ownProps.studentInstance, decodeChecks(cr.checks))
       }
 

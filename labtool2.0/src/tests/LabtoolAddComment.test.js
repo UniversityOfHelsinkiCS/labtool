@@ -47,6 +47,47 @@ describe('<LabtoolAddComment />', () => {
     expect(textarea()).toHaveValue('')
   })
 
+  describe('if the login has expired and the page is reloaded (#1145)', () => {
+    const submit = async (user, text) => {
+      await toggle(user)
+      await user.type(textarea(), text)
+      await user.click(screen.getByRole('button', { name: /add reply/i }))
+    }
+    const handleSubmit = () => vi.fn(e => e && e.preventDefault && e.preventDefault())
+
+    it('puts a sent comment that was not saved back into the form', async () => {
+      const user = userEvent.setup()
+      const { unmount } = renderComment(handleSubmit())
+      await submit(user, 'long thoughts')
+      unmount()
+
+      // the page is loaded again, and the comment is not among the comments
+      render(<LabtoolAddComment commentFieldId="week1" weekId={1} handleSubmit={vi.fn()} comments={[]} />)
+      expect(textarea()).toHaveValue('long thoughts')
+    })
+
+    it('forgets a sent comment once it is among the comments', async () => {
+      const user = userEvent.setup()
+      const { rerender, unmount } = render(
+        <LabtoolAddComment commentFieldId="week1" weekId={1} handleSubmit={handleSubmit()} comments={[]} />
+      )
+      await submit(user, 'saved thoughts')
+      rerender(
+        <LabtoolAddComment
+          commentFieldId="week1"
+          weekId={1}
+          handleSubmit={vi.fn()}
+          comments={[{ id: 1, comment: 'saved thoughts' }]}
+        />
+      )
+      unmount()
+
+      render(<LabtoolAddComment commentFieldId="week1" weekId={1} handleSubmit={vi.fn()} comments={[]} />)
+      await toggle(user)
+      expect(textarea()).toHaveValue('')
+    })
+  })
+
   describe('who can see the comment (#1142)', () => {
     const renderForTeacher = (handleSubmit = vi.fn(e => e.preventDefault())) =>
       render(<LabtoolAddComment commentFieldId="week1" weekId={1} handleSubmit={handleSubmit} allowHidden />)

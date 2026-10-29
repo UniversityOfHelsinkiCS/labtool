@@ -584,6 +584,38 @@ describe('<ReviewStudentCodeReviews />', () => {
       expect(pointsInput).toHaveValue(3.5)
     })
 
+    describe('if the login has expired and the page is reloaded (#1145)', () => {
+      const stored = key =>
+        JSON.parse(
+          window.localStorage.getItem(`labtoolPersistedState_ReviewStudentCodeReview_10011:1_${key}`)
+        )
+      const storeLocally = (key, value) =>
+        window.localStorage.setItem(
+          `labtoolPersistedState_ReviewStudentCodeReview_10011:1_${key}`,
+          JSON.stringify(value)
+        )
+
+      it('keeps the grading in this browser when saving, until the save succeeds', async () => {
+        const user = userEvent.setup()
+        const gradeCodeReview = vi.fn()
+        renderReviewStudentCodeReview({ gradeCodeReview })
+
+        await user.type(screen.getByRole('spinbutton'), '3.5')
+        await user.click(screen.getByRole('button', { name: /^save$/i }))
+
+        expect(gradeCodeReview).toHaveBeenCalled()
+        expect(stored('points')).toBe('3.5')
+      })
+
+      it('restores the unsaved checks kept in this browser', () => {
+        const restoreChecks = vi.fn()
+        storeLocally('checks', { 5: true })
+        renderReviewStudentCodeReview({ restoreChecks })
+
+        expect(restoreChecks).toHaveBeenCalledWith('10011', { 5: true })
+      })
+    })
+
     it('matches the rendered snapshot', () => {
       renderReviewStudentCodeReview()
 
