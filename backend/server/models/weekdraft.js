@@ -3,7 +3,12 @@ module.exports = (sequelize, DataTypes) => {
     'WeekDraft',
     {
       weekNumber: DataTypes.INTEGER,
-      data: DataTypes.JSONB
+      data: DataTypes.JSONB,
+      // user who saved the draft last
+      updatedBy: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+      }
     },
     {}
   )

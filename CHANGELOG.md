@@ -3,6 +3,30 @@
 All notable changes to Labtool are recorded here, newest first. Each entry says what changed and
 why. Bugs that tests found but that are not fixed yet are listed under "Known bugs".
 
+## 2026-10-29
+
+### Fixed
+- **Drafts could silently overwrite another instructor's work** (#1127). "Save as draft" had none of
+  the protections of "Save":
+  - A draft save is refused (409 `REVIEW_CHANGED`) when someone saved the review or its draft after the
+    page was opened. The page sends `baseUpdatedAt` and the new `baseDraftUpdatedAt`, and offers "Load
+    their version" (which now also reloads the draft) or "Overwrite with my version".
+  - A review save is also refused when someone saved a draft after the page was opened, because saving
+    the review removes the draft.
+  - A draft that changes the grading of a student with another assigned instructor asks for
+    confirmation (409 `NOT_ASSIGNED_INSTRUCTOR`). The draft is compared with the earlier draft, or with
+    the saved review when there is no draft.
+  - Unsaved edits kept in the browser that are older than the draft are discarded, as they already were
+    for the saved review. The edits are also no longer cleared before the draft save succeeds.
+  - Drafts record who saved them last (`WeekDrafts.updatedBy`, migration
+    `20261029120000-add-updatedBy-to-week-drafts.js`).
+- **Draft saves were missing from the change history** (#1129). Each draft save writes a `week_draft`
+  row, compared with the earlier draft or the saved review. The history marks these rows "Draft", the
+  review page shows them with the week's reviews, and Browse reviews labels them "Week N draft" under the
+  "Week reviews" filter.
+- The draft save failure notification shows the backend's message instead of always "Invalid inputs.".
+  The draft save response is now the saved draft (it was `null` for a new draft).
+
 ## 2026-10-13
 
 ### Changed (maintainability review)

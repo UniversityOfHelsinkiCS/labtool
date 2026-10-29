@@ -837,6 +837,7 @@ describe('<ReviewStudent />', () => {
         weekNumber: '8',
         checks: {},
         baseUpdatedAt: null,
+        baseDraftUpdatedAt: null,
         overwrite: false,
         confirmedNotAssigned: false
       })
@@ -975,6 +976,108 @@ describe('<ReviewStudent />', () => {
         expect(coursePageInformation).toHaveBeenCalled()
       })
 
+      describe('drafts', () => {
+        const DRAFT_VERSION = '2026-10-12T08:00:00.000Z'
+        const withDraft = () => ({
+          ...withSavedVersion(VERSION),
+          draftData: { points: '2', grade: '', feedback: 'Draft feedback', instructorNotes: '', checks: {} },
+          draftCreatedAt: DRAFT_VERSION
+        })
+
+        it('sends the versions of the saved review and of the draft it is based on', async () => {
+          const user = userEvent.setup()
+          const createOneWeek = vi.fn()
+          const saveWeekDraft = vi.fn()
+          renderReviewStudent({ weekReview: withDraft(), createOneWeek, saveWeekDraft })
+
+          await user.click(screen.getByRole('button', { name: /save as draft/i }))
+          expect(saveWeekDraft).toHaveBeenCalledWith(
+            expect.objectContaining({
+              baseUpdatedAt: VERSION,
+              baseDraftUpdatedAt: DRAFT_VERSION,
+              overwrite: false,
+              confirmedNotAssigned: false
+            })
+          )
+
+          await user.click(screen.getByRole('button', { name: /^save$/i }))
+          expect(createOneWeek).toHaveBeenCalledWith(
+            expect.objectContaining({ baseUpdatedAt: VERSION, baseDraftUpdatedAt: DRAFT_VERSION })
+          )
+        })
+
+        it('keeps the unsaved changes in this browser until the draft has been saved', async () => {
+          const user = userEvent.setup()
+          renderReviewStudent({ weekReview: withDraft() })
+
+          await user.click(screen.getByRole('button', { name: /save as draft/i }))
+          expect(window.localStorage.getItem('labtoolPersistedState_ReviewStudent_10011:1_feedback')).toBe(
+            JSON.stringify('Draft feedback')
+          )
+        })
+
+        it('discards unsaved changes in this browser that are older than the draft', () => {
+          storeLocally('points', '1')
+          storeLocally('basedOn', VERSION)
+          storeLocally('draftBasedOn', '2026-01-01T00:00:00.000Z')
+          renderReviewStudent({ weekReview: withDraft() })
+
+          expect(screen.getByRole('spinbutton')).toHaveValue(2)
+          expect(screen.getByText(/your older unsaved changes were discarded/i)).toBeInTheDocument()
+        })
+
+        it('saves the draft again, not the review, when overwriting or confirming', async () => {
+          const user = userEvent.setup()
+          const createOneWeek = vi.fn()
+          const saveWeekDraft = vi.fn()
+          const { unmount } = renderReviewStudent({
+            weekReview: withDraft(),
+            createOneWeek,
+            saveWeekDraft,
+            reviewSave: {
+              conflict: {
+                code: 'REVIEW_CHANGED',
+                message: 'Ossi Ohjaaja Mutikainen saved a draft of this review after you opened it.',
+                draft: true
+              }
+            }
+          })
+          await user.click(screen.getByRole('button', { name: /overwrite with my version/i }))
+          expect(saveWeekDraft).toHaveBeenCalledWith(expect.objectContaining({ overwrite: true }))
+          unmount()
+
+          renderReviewStudent({
+            weekReview: withDraft(),
+            createOneWeek,
+            saveWeekDraft,
+            reviewSave: {
+              conflict: {
+                code: 'NOT_ASSIGNED_INSTRUCTOR',
+                message: 'Ossi Ohjaaja Mutikainen is the instructor of this student, not you.',
+                draft: true
+              }
+            }
+          })
+          await user.click(screen.getByRole('button', { name: /save anyway/i }))
+          expect(saveWeekDraft).toHaveBeenCalledWith(expect.objectContaining({ confirmedNotAssigned: true }))
+          expect(createOneWeek).not.toHaveBeenCalled()
+        })
+
+        it('loads the draft again with their version', async () => {
+          const user = userEvent.setup()
+          const getWeekDraft = vi.fn()
+          renderReviewStudent({
+            weekReview: withDraft(),
+            getWeekDraft,
+            reviewSave: { conflict: { code: 'REVIEW_CHANGED', message: 'Changed.', draft: true } }
+          })
+          getWeekDraft.mockClear()
+
+          await user.click(screen.getByRole('button', { name: /load their version/i }))
+          expect(getWeekDraft).toHaveBeenCalledWith({ studentInstanceId: '10011', weekNumber: '1' })
+        })
+      })
+
       it('loads and shows the change history of this week only (#1129)', () => {
         const getChangeLog = vi.fn()
         const entry = (id, kind, number, points) => ({
@@ -990,7 +1093,8 @@ describe('<ReviewStudent />', () => {
           changeLog: [
             entry(1, 'week_review', 1, 2),
             entry(2, 'week_review', 2, 3),
-            entry(3, 'code_review_grade', 1, 4)
+            entry(3, 'code_review_grade', 1, 4),
+            entry(4, 'week_draft', 1, 5)
           ]
         })
 
@@ -998,6 +1102,9 @@ describe('<ReviewStudent />', () => {
         expect(screen.getByText('Points 1 → 2')).toBeInTheDocument()
         expect(screen.queryByText('Points 1 → 3')).not.toBeInTheDocument()
         expect(screen.queryByText('Points 1 → 4')).not.toBeInTheDocument()
+        // drafts of this week too, marked as drafts
+        expect(screen.getByText('Points 1 → 5')).toBeInTheDocument()
+        expect(document.querySelectorAll('.draftEntry')).toHaveLength(1)
       })
 
       it('shows the assigned instructor', () => {
