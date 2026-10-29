@@ -116,12 +116,20 @@ describe('Course instances API', () => {
       assert.deepStrictEqual(list['Second topic'].map(i => i.name), ['third', 'last'])
     })
 
-    it('hides the teacher list from students but shows checklists', async () => {
+    it('hides the teacher list and the checklist items from students', async () => {
+      await Checklist.update({ maxPoints: 4 }, { where: { courseInstanceId: s.course.id } })
       const res = await as(s.users.student)
         .get(`/api/courses/${s.course.ohid}`)
         .expect(200)
       assert.deepStrictEqual(res.body.teacherInstances, [])
+      // only what the maximum points of a review are based on
       assert.strictEqual(res.body.checklists.length, 1)
+      const [checklist] = res.body.checklists
+      assert.deepStrictEqual(
+        { ...checklist, id: undefined },
+        { id: undefined, week: 1, forCodeReview: false, maxPoints: 4, list: {} }
+      )
+      assert.ok(!JSON.stringify(res.body).includes('README'))
     })
 
     it('returns 404 for an unknown course', async () => {
@@ -284,7 +292,8 @@ describe('Course instances API', () => {
       assert.strictEqual(data.weeks[0].points, 2.5)
       assert.strictEqual(data.weeks[0].feedback, 'Nice')
       assert.ok(!('instructorNotes' in data.weeks[0]))
-      assert.deepStrictEqual(data.weeks[0].checks, { [checklistItem.id]: true })
+      // the choices made in the checklist are not shown to the student
+      assert.ok(!('checks' in data.weeks[0]))
       assert.deepStrictEqual(
         data.weeks[0].comments.map(c => c.comment),
         ['visible']

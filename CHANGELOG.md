@@ -5,6 +5,18 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
 
 ## 2026-10-29
 
+### Security
+- **Students no longer receive the checklists of their course or the choices made in them.** The
+  student UI never showed them, but the API sent them, which was not apparent to graders:
+  - The student's course page (`POST /api/courseinstances/coursepage`) no longer includes the checklist
+    checks (`weeks[].checks`) of their reviews.
+  - Course details (`GET /api/courses/:ohid`) give others than course staff only `id`, `week`,
+    `forCodeReview` and `maxPoints` of each checklist, which the student UI needs for the maximum points,
+    with an empty `list` instead of the items, texts and points.
+  - `POST /api/checklist/getone`, `GET /api/checklist/copyable` and `POST /api/checklist/copyall` (as
+    the course copied from) are limited to course staff. Before, a student of a course could fetch its
+    checklists, and checklists could be copied from a course the user was only a student on.
+
 ### Fixed
 - **Drafts could silently overwrite another instructor's work** (#1127). "Save as draft" had none of
   the protections of "Save":

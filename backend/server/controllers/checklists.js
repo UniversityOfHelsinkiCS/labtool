@@ -1,6 +1,6 @@
 const { Op } = require('sequelize')
-const { getTeacherId, isCourseStaff, findStudentInstance, requireCourseStaff } = require('../helpers/auth')
-const { TeacherInstance, Checklist, ChecklistItem, StudentInstance, CourseInstance, sequelize } = require('../models')
+const { getTeacherId, isCourseStaff, requireCourseStaff } = require('../helpers/auth')
+const { TeacherInstance, Checklist, ChecklistItem, CourseInstance, sequelize } = require('../models')
 const { copyChecklists } = require('../helpers/copyChecklists')
 const { isFinalReviewWeek } = require('../helpers/finalReview')
 const { HttpError, badRequest, forbidden, notFound } = require('../utils/httpError')
@@ -262,19 +262,19 @@ module.exports = {
 
   /**
    * List the checklists the current user can copy: checklists with at least one item
-   * on courses where the user is a teacher or a student (the same courses getOne allows).
+   * on courses where the user is staff (the same courses getOne allows).
    *   permissions: any logged in user
    *
    * @param {*} req
    * @param {*} res
    */
   async getCopyable(req, res) {
-    const where = { userId: req.decoded.id }
-    const [teacherInstances, studentInstances] = await Promise.all([
-      TeacherInstance.findAll({ attributes: ['courseInstanceId'], where }),
-      StudentInstance.findAll({ attributes: ['courseInstanceId'], where })
-    ])
-    const memberOf = [...new Set([...teacherInstances, ...studentInstances].map(i => i.courseInstanceId))]
+    // only courses where the user is staff: students do not see the checklists of their courses
+    const teacherInstances = await TeacherInstance.findAll({
+      attributes: ['courseInstanceId'],
+      where: { userId: req.decoded.id }
+    })
+    const memberOf = [...new Set(teacherInstances.map(i => i.courseInstanceId))]
     // invalid courses (#905) are not copied from
     const courseIds = (await CourseInstance.findAll({
       attributes: ['id'],
@@ -298,8 +298,8 @@ module.exports = {
 
   /**
    * Copy all checklists of another course onto a course that has none yet
-   *   permissions: must be a teacher or an assistant of the course copied to, and a teacher or a student
-   *   of the course copied from (the same courses getCopyable offers)
+   *   permissions: must be a teacher or an assistant of both the course copied to and the course copied
+   *   from (the same courses getCopyable offers)
    *
    * Weeks keep their numbers; a final review checklist goes to the final review of the course copied to.
    * Checklists for weeks the course does not have are skipped.
@@ -318,11 +318,8 @@ module.exports = {
     }
     const userId = req.decoded.id
     await requireCourseStaff(req, target.id)
-    const [sourceStaff, sourceStudent] = await Promise.all([
-      isCourseStaff(userId, source.id),
-      findStudentInstance(userId, source.id)
-    ])
-    if (!sourceStaff && !sourceStudent) {
+    // only from courses where the user is staff: students do not see the checklists of their courses
+    if (!(await isCourseStaff(userId, source.id))) {
       throw forbidden('You can only copy checklists from your own courses.')
     }
 
@@ -372,7 +369,7 @@ module.exports = {
 
   /**
    * Get checklist for course
-   *   permissions: must be instructor or student on course
+   *   permissions: must be staff on the course
    *
    * The 400 answers are { message, data: req.body }: the checklist editor reads data.copying.
    *
@@ -389,8 +386,8 @@ module.exports = {
     }
 
     const { courseInstanceId } = req.body
-    const isTeacher = await getTeacherId(req.decoded.id, courseInstanceId)
-    if (!isTeacher && !(await findStudentInstance(req.decoded.id, courseInstanceId))) {
+    // students do not see the checklists of their courses
+    if (!(await getTeacherId(req.decoded.id, courseInstanceId))) {
       throw forbidden()
     }
 
