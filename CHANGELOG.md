@@ -6,6 +6,13 @@ why. Bugs that tests found but that are not fixed yet are listed under "Known bu
 ## 2026-10-29
 
 ### Fixed
+- **Code review grading and comments were lost when the login had expired** (#1145). An expired
+  Shibboleth session makes the save fail and reloads the page, and these forms cleared what was kept in
+  the browser before sending it (the week review form already kept it until the save succeeded):
+  - Code review grading keeps the points and checks in the browser until the save succeeds, and the
+    unsaved checks are now restored on page load too (only the points were).
+  - A sent comment is kept in the browser until it shows up among the week's comments; if the page is
+    loaded again before that, it is put back into the comment form.
 - **Drafts could silently overwrite another instructor's work** (#1127). "Save as draft" had none of
   the protections of "Save":
   - A draft save is refused (409 `REVIEW_CHANGED`) when someone saved the review or its draft after the

@@ -202,6 +202,7 @@ export const WeekReviewWeek = props => {
             commentFieldId={`${courseId}:${week.id}`}
             handleSubmit={e => handleSubmitComment(e, week.comments)}
             allowHidden={isTeacher}
+            comments={week.comments}
           />
         </Accordion.Content>
       </Accordion>
