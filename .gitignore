@@ -151,3 +151,5 @@ e2e/.playwright/
 !.env.template
 !.env.sample
 !.env.example
+
+.claude/settings.local.json
