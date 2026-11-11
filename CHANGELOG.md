@@ -3,6 +3,14 @@
 All notable changes to Labtool are recorded here, newest first. Each entry says what changed and
 why. Bugs that tests found but that are not fixed yet are listed under "Known bugs".
 
+## 2026-11-11
+
+### Added
+- **The course page shows whether the final review is published.** Next to the "Active registration"
+  label, a course with a final review shows "Final review hidden" (orange) or "Final review published"
+  (green), so that publishing the results is not forgotten. Before, this was seen only when viewing a
+  single student or in the course settings.
+
 ## 2026-10-29
 
 ### Security
