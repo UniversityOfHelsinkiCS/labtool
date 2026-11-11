@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Button, Table, Label, Message, Popup } from 'semantic-ui-react'
+import { Button, Table, Label, Message, Popup, Icon } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import CoursePageHeader from './Header'
 
@@ -76,6 +76,28 @@ export const CoursePageTeacherHeader = props => {
                 ) : (
                   <div />
                 )}
+                {selectedInstance.finalReview &&
+                  (selectedInstance.finalReviewVisible ? (
+                    <Popup
+                      trigger={
+                        <Label className="finalReviewStatus" color="green">
+                          <Icon name="eye" />
+                          Final review published
+                        </Label>
+                      }
+                      content="Students see the results of their final review. You can hide them in the course settings."
+                    />
+                  ) : (
+                    <Popup
+                      trigger={
+                        <Label className="finalReviewStatus" color="orange">
+                          <Icon name="eye slash" />
+                          Final review hidden
+                        </Label>
+                      }
+                      content="Students do not see the results of their final review yet. Publish them in the course settings."
+                    />
+                  ))}
               </div>
             </Table.Cell>
             <Table.Cell>Week amount: {selectedInstance.weekAmount}</Table.Cell>
